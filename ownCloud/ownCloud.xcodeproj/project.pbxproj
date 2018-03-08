@@ -18,6 +18,12 @@
 		DC7DF17E205141C100189B9A /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DF17D205141C100189B9A /* BookmarkManager.swift */; };
 		DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */; };
 		DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */; };
+		DCF4F165205192AA00189B9A /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F163205192AA00189B9A /* BookmarkViewController.swift */; };
+		DCF4F166205192AA00189B9A /* BookmarkViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DCF4F164205192AA00189B9A /* BookmarkViewController.xib */; };
+		DCF4F17920519F8C00189B9A /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */; };
+		DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */; };
+		DCF4F17F2051A0D000189B9A /* StaticTableViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */; };
+		DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +93,12 @@
 		DC7DF17D205141C100189B9A /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
 		DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableViewController.swift; sourceTree = "<group>"; };
 		DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServerListTableViewController.xib; sourceTree = "<group>"; };
+		DCF4F163205192AA00189B9A /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
+		DCF4F164205192AA00189B9A /* BookmarkViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BookmarkViewController.xib; sourceTree = "<group>"; };
+		DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewController.swift; sourceTree = "<group>"; };
+		DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewSection.swift; sourceTree = "<group>"; };
+		DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewRow.swift; sourceTree = "<group>"; };
+		DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,9 +145,10 @@
 			children = (
 				DC0B37952051541C00189B9A /* ownCloud.entitlements */,
 				233BDE9F204FEFE500C06732 /* AppDelegate.swift */,
-				DC7DF17D205141C100189B9A /* BookmarkManager.swift */,
-				DC0B37962051681600189B9A /* ActionButton.swift */,
+				DCF4F1612051925A00189B9A /* Bookmarks */,
 				DC7DF17C205140F400189B9A /* Server List */,
+				DCF4F1802051A91500189B9A /* Settings */,
+				DCF4F1622051927200189B9A /* UI Elements */,
 				DC85573120513C7500189B9A /* Resources */,
 			);
 			path = ownCloud;
@@ -185,6 +198,35 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DCF4F1612051925A00189B9A /* Bookmarks */ = {
+			isa = PBXGroup;
+			children = (
+				DC7DF17D205141C100189B9A /* BookmarkManager.swift */,
+				DCF4F163205192AA00189B9A /* BookmarkViewController.swift */,
+				DCF4F164205192AA00189B9A /* BookmarkViewController.xib */,
+			);
+			path = Bookmarks;
+			sourceTree = "<group>";
+		};
+		DCF4F1622051927200189B9A /* UI Elements */ = {
+			isa = PBXGroup;
+			children = (
+				DC0B37962051681600189B9A /* ActionButton.swift */,
+				DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */,
+				DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */,
+				DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */,
+			);
+			path = "UI Elements";
+			sourceTree = "<group>";
+		};
+		DCF4F1802051A91500189B9A /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -310,6 +352,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCF4F166205192AA00189B9A /* BookmarkViewController.xib in Resources */,
 				DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */,
 				233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */,
 				233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */,
@@ -330,11 +373,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCF4F17920519F8C00189B9A /* StaticTableViewController.swift in Sources */,
 				DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */,
 				DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */,
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
+				DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */,
 				DC7DF17E205141C100189B9A /* BookmarkManager.swift in Sources */,
+				DCF4F165205192AA00189B9A /* BookmarkViewController.swift in Sources */,
 				DC0B37972051681600189B9A /* ActionButton.swift in Sources */,
+				DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */,
+				DCF4F17F2051A0D000189B9A /* StaticTableViewRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

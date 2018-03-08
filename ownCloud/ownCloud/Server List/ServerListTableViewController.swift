@@ -18,7 +18,7 @@ class ServerListTableViewController: UITableViewController {
 		
 		self.tableView.register(ServerListBookmarkCell.self, forCellReuseIdentifier: "bookmark-cell")
 		self.tableView.rowHeight = UITableViewAutomaticDimension
-		self.tableView.estimatedRowHeight = 40
+		self.tableView.estimatedRowHeight = 80
 
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
 		
@@ -32,14 +32,64 @@ class ServerListTableViewController: UITableViewController {
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
 		
-		self.view.addSubview(welcomeOverlayView)
+		updateNoServerMessageVisibility(reattachConstraints: true)
 		
-		welcomeOverlayView.centerXAnchor.constraint(equalTo: self.navigationController!.view.centerXAnchor).isActive = true
-		welcomeOverlayView.centerYAnchor.constraint(equalTo: self.navigationController!.view.centerYAnchor).isActive = true
+		self.navigationController?.setToolbarHidden(false, animated: false)
+		self.toolbarItems = [
+			UIBarButtonItem.init(title: "Help", style: UIBarButtonItemStyle.plain, target: self, action: #selector(help)),
+			UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
+			UIBarButtonItem.init(title: "Settings", style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
+		]
+	}
+	
+	func updateNoServerMessageVisibility(reattachConstraints reattach: Bool) {
+		if (BookmarkManager.sharedBookmarkManager.bookmarks.count == 0)
+		{
+			let parentView : UIView = self.navigationController!.view
+			var constraint : NSLayoutConstraint
+			var reattachConstraints : Bool = reattach
 
-		tableView.separatorStyle = UITableViewCellSeparatorStyle.none
-		tableView.reloadData()
+			if (welcomeOverlayView.superview != self.view) {
+			
+				welcomeOverlayView.alpha = 0
+			
+				self.view.addSubview(welcomeOverlayView)
+				
+				UIView.animate(withDuration: 0.2, animations: {
+					self.welcomeOverlayView.alpha = 1
+				})
+				
+				reattachConstraints = true
+			}
+				
+			if (reattachConstraints) {
+				welcomeOverlayView.centerXAnchor.constraint(equalTo: parentView.centerXAnchor).isActive = true
+				welcomeOverlayView.centerYAnchor.constraint(equalTo: parentView.centerYAnchor).isActive = true
+
+				constraint = welcomeOverlayView.leftAnchor.constraint(greaterThanOrEqualTo: parentView.leftAnchor, constant: 30)
+				constraint.priority = UILayoutPriority(rawValue: 900)
+				constraint.isActive = true
+
+				constraint = welcomeOverlayView.rightAnchor.constraint(greaterThanOrEqualTo: parentView.rightAnchor, constant: 30)
+				constraint.priority = UILayoutPriority(rawValue: 900)
+				constraint.isActive = true
+
+				tableView.separatorStyle = UITableViewCellSeparatorStyle.none
+				tableView.reloadData()
+			}
+		}
+		else
+		{
+			if (welcomeOverlayView.superview == self.view)
+			{
+				welcomeOverlayView.removeFromSuperview()
+
+				tableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
+				tableView.reloadData()
+			}
+		}
 	}
 	
 	override func didReceiveMemoryWarning() {
@@ -47,6 +97,26 @@ class ServerListTableViewController: UITableViewController {
 		// Dispose of any resources that can be recreated.
 	}
 	
+	// MARK: - Actions
+	@IBAction func addBookmark() {
+		let bookmark = OCBookmark.init(for: URL.init(string: "https://demo.owncloud.org"))
+	
+		BookmarkManager.sharedBookmarkManager.addBookmark(bookmark!)
+		
+		tableView.reloadData()
+		
+		updateNoServerMessageVisibility(reattachConstraints: false)
+	}
+
+	@IBAction func help() {
+	}
+
+	@IBAction func settings() {
+		let viewController : GlobalSettingsViewController = GlobalSettingsViewController.init(style: UITableViewStyle.grouped)
+		
+		self.navigationController?.pushViewController(viewController, animated: true)
+	}
+
 	// MARK: - Table view data source
 	
 	override func numberOfSections(in tableView: UITableView) -> Int {
@@ -60,15 +130,9 @@ class ServerListTableViewController: UITableViewController {
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
-		
-	}
-	
-	@objc func addBookmark() {
-		let bookmark = OCBookmark.init(for: URL.init(string: "https://demo.owncloud.org"))
-	
-		BookmarkManager.sharedBookmarkManager.addBookmark(bookmark: bookmark!)
-		
-		tableView.reloadData()
+		super.viewWillAppear(animated)
+
+		welcomeOverlayView.layoutSubviews()
 	}
 	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -80,6 +144,26 @@ class ServerListTableViewController: UITableViewController {
 		bookmarkCell.imageView?.image = UIImage.init(named: "owncloud-primary-small")
 		
 		return bookmarkCell
+	}
+	
+	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+		return [
+				UITableViewRowAction.init(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (action, indexPath) in
+					let bookmark : OCBookmark
+
+					bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row)
+
+					BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
+					
+					// TODO: Add confirmation prompt
+					
+					tableView.performBatchUpdates({
+						tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
+					}, completion: nil)
+
+					self.updateNoServerMessageVisibility(reattachConstraints: false)
+				})
+			]
 	}
 }
 	
