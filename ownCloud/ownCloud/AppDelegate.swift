@@ -12,10 +12,22 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var serverListTableViewController: ServerListTableViewController?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+	var navigationController: UINavigationController?;
+
+	window = UIWindow.init(frame: UIScreen.main.bounds)
+	
+	serverListTableViewController = ServerListTableViewController.init(style: UITableViewStyle.plain)
+	
+	navigationController = UINavigationController.init(rootViewController: serverListTableViewController!)
+
+	window?.rootViewController = navigationController!
+	window?.addSubview((navigationController?.view)!)
+	window?.makeKeyAndVisible()
+
         return true
     }
 
