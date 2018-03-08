@@ -7,6 +7,8 @@
 //
 
 import XCTest
+import EarlGrey
+
 @testable import ownCloud
 
 class ownCloudTests: XCTestCase {
@@ -21,9 +23,16 @@ class ownCloudTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    
+    /*
+     * Passed if: "Add Server" button is enabled
+     */
+    func testAddServerButtonIsEnabled() {
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(with: grey_enabled())
+    }
+    
+    func testClickOnTheButtonAndNothingHappens() {
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
     }
     
     func testPerformanceExample() {
