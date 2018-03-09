@@ -58,10 +58,23 @@ class BookmarkManager: NSObject
 	// MARK: - Administration
 	func addBookmark(_ bookmark: OCBookmark) {
 		bookmarks.add(bookmark)
+
+		saveBookmarks()
 	}
 	
 	func removeBookmark(_ bookmark: OCBookmark) {
 		bookmarks.remove(bookmark)
+
+		saveBookmarks()
+	}
+
+	func moveBookmark(from: Int, to: Int) {
+		let bookmark = bookmarks.object(at: from)
+
+		bookmarks.removeObject(at: from)
+		bookmarks.insert(bookmark, at: to)
+
+		saveBookmarks()
 	}
 	
 	func bookmark(at index: Int) -> OCBookmark {

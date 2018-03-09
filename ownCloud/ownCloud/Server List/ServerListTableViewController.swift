@@ -165,6 +165,10 @@ class ServerListTableViewController: UITableViewController {
 				})
 			]
 	}
+
+	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+		BookmarkManager.sharedBookmarkManager.moveBookmark(from: fromIndexPath.row, to: to.row)
+	}
 }
 	
 	

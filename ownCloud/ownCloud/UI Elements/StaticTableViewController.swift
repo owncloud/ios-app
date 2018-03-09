@@ -8,15 +8,25 @@
 
 import UIKit
 
+enum StaticTableViewEvent {
+	case Initial
+	case AppBecameActive
+	case TableViewWillAppear
+	case TableViewWillDisappear
+	case TableViewDidDisappear
+}
+
 class StaticTableViewController: UITableViewController {
 	public var sections : Array<StaticTableViewSection> = Array()
 
 	// MARK: - Section administration
-	func addSection(_ section: StaticTableViewSection, animated animateThis: Bool) {
+	func addSection(_ section: StaticTableViewSection, animated animateThis: Bool = false) {
 		self.insertSection(section, at: sections.count, animated: animateThis)
 	}
 	
-	func insertSection(_ section: StaticTableViewSection, at index: Int, animated: Bool) {
+	func insertSection(_ section: StaticTableViewSection, at index: Int, animated: Bool = false) {
+		section.viewController = self
+
 		if (animated) {
 			tableView.performBatchUpdates({
 				sections.insert(section, at: index)
@@ -33,7 +43,7 @@ class StaticTableViewController: UITableViewController {
 		}
 	}
 
-	func removeSection(_ section: StaticTableViewSection, animated: Bool) {
+	func removeSection(_ section: StaticTableViewSection, animated: Bool = false) {
 		if (animated) {
 			tableView.performBatchUpdates({
 				if let index : Int = sections.index(of: section)
@@ -42,15 +52,42 @@ class StaticTableViewController: UITableViewController {
 					tableView.deleteSections(IndexSet.init(integer: index), with: UITableViewRowAnimation.fade)
 				}
 			}, completion: { (completed) in
-
+				section.viewController = nil
 			})
 		}
 		else
 		{
 			sections.remove(at: sections.index(of: section)!)
-			
+
+			section.viewController = nil
+
 			tableView.reloadData()
 		}
+	}
+
+	// MARK: - Search
+	func sectionForIdentifier(_ sectionID: String) -> StaticTableViewSection? {
+		for section in sections {
+			if (section.identifier == sectionID) {
+				return section
+			}
+		}
+
+		return nil
+	}
+
+	func rowInSection(_ inSection: StaticTableViewSection?, rowIdentifier: String) -> StaticTableViewRow? {
+		if (inSection == nil) {
+			for section in sections {
+				for row in section.rows {
+					if (row.identifier == rowIdentifier) {
+						return (row)
+					}
+				}
+			}
+		}
+
+		return nil
 	}
 
 	// MARK: - View Controller
@@ -63,7 +100,12 @@ class StaticTableViewController: UITableViewController {
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 		// self.navigationItem.rightBarButtonItem = self.editButtonItem
 	}
-	
+
+	// MARK: - Tools
+	func staticRowForIndexPath(_ indexPath: IndexPath) -> StaticTableViewRow {
+		return (sections[indexPath.section].rows[indexPath.row])
+	}
+
 	// MARK: - Table view data source
 	override func numberOfSections(in tableView: UITableView) -> Int {
 		// #warning Incomplete implementation, return the number of sections
@@ -80,9 +122,11 @@ class StaticTableViewController: UITableViewController {
 	}
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let staticRow : StaticTableViewRow = sections[indexPath.section].rows[indexPath.row]
-	
-		staticRow.action!(staticRow)
+		let staticRow : StaticTableViewRow = staticRowForIndexPath(indexPath)
+
+		staticRow.action!(staticRow, self)
+
+		tableView.deselectRow(at: indexPath, animated: true)
 	}
 	
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
