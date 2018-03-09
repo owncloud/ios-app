@@ -24,13 +24,18 @@ class ActionButton: UIButton {
 		
 		self.setAttributedTitle(NSAttributedString.init(string: self.title(for: UIControlState.normal)!,
 								attributes: [
-									NSAttributedStringKey.font : UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.semibold),
-									NSAttributedStringKey.foregroundColor : self.titleColor(for: UIControlState.normal) as Any
+									NSAttributedStringKey.font : UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.semibold)
+									// NSAttributedStringKey.foregroundColor : self.titleColor(for: UIControlState.normal) as Any
 								]),
-								for: UIControlState.normal
-					)
+					for: UIControlState.normal)
+		
+		/*
+			TODO:
+			- change text and background color when pressing button
+			- derive colors from theme object (TBD)
+		*/
 	}
-	
+
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		styleButton()

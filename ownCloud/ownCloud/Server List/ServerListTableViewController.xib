@@ -47,13 +47,18 @@
                     <rect key="frame" x="0.0" y="264" width="320" height="30"/>
                     <color key="backgroundColor" red="0.27450980390000002" green="0.54901960780000003" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
                     <accessibility key="accessibilityConfiguration" identifier="addServer"/>
+                    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <state key="normal" title="Add server">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <connections>
+                        <action selector="addBookmark" destination="-1" eventType="touchUpInside" id="1zc-e5-1Po"/>
+                    </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" ambiguous="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IEC-5d-Hb5">
-                    <rect key="frame" x="0.0" y="205" width="320" height="41"/>
-                    <string key="text">Thanks for choosing ownCloud!
+                    <rect key="frame" x="0.0" y="205" width="320" height="61"/>
+                    <string key="text">Thanks for choosing ownCloud! Thanks for choosing ownCloud!
+ Thanks for choosing ownCloud!
 Start by adding your server.</string>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>

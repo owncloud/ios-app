@@ -53,11 +53,11 @@ class BookmarkManager: NSObject
 		}
 	}
 	
-	func addBookmark(bookmark: OCBookmark) {
+	func addBookmark(_ bookmark: OCBookmark) {
 		bookmarks.add(bookmark)
 	}
 	
-	func removeBookmark(bookmark: OCBookmark) {
+	func removeBookmark(_ bookmark: OCBookmark) {
 		bookmarks.remove(bookmark)
 	}
 	
