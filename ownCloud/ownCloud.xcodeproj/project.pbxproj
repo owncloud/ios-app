@@ -168,7 +168,6 @@
 		233BDE9E204FEFE500C06732 /* ownCloud */ = {
 			isa = PBXGroup;
 			children = (
-				DC0B37952051541C00189B9A /* ownCloud.entitlements */,
 				233BDE9F204FEFE500C06732 /* AppDelegate.swift */,
 				DCF4F1612051925A00189B9A /* Bookmarks */,
 				DC7DF17C205140F400189B9A /* Server List */,
@@ -176,6 +175,7 @@
 				DCF4F1622051927200189B9A /* UI Elements */,
 				DCF4F1872052BA3500189B9A /* Tools */,
 				DC85573120513C7500189B9A /* Resources */,
+				DC0B37952051541C00189B9A /* ownCloud.entitlements */,
 			);
 			path = ownCloud;
 			sourceTree = "<group>";
@@ -327,7 +327,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
 				LastUpgradeCheck = 0920;
-				ORGANIZATIONNAME = ownCloud;
+				ORGANIZATIONNAME = "ownCloud GmbH";
 				TargetAttributes = {
 					233BDE9B204FEFE500C06732 = {
 						CreatedOnToolsVersion = 9.2;
