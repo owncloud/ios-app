@@ -27,66 +27,78 @@
                 <outlet property="delegate" destination="-1" id="9aC-8N-iBw"/>
             </connections>
         </tableView>
-        <view contentMode="scaleToFill" id="PJc-v9-DYn" userLabel="Empty View">
+        <view contentMode="scaleToFill" id="T7c-kV-xII" userLabel="Container View We Don't Need But Place Here Anyway To Make IB Happy :-D ">
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-            <autoresizingMask key="autoresizingMask"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" image="owncloud-primary-small" translatesAutoresizingMaskIntoConstraints="NO" id="fP1-O2-lkg">
-                    <rect key="frame" x="0.0" y="20" width="320" height="128"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="128" id="r4R-sD-MMg"/>
-                    </constraints>
-                </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" ambiguous="YES" text="Welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c8n-gy-7HF">
-                    <rect key="frame" x="0.0" y="155" width="320" height="32"/>
-                    <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
-                    <nil key="textColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jaa-D8-ghC" customClass="ActionButton" customModule="ownCloud" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="264" width="320" height="30"/>
-                    <color key="backgroundColor" red="0.27450980390000002" green="0.54901960780000003" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
-                    <accessibility key="accessibilityConfiguration" identifier="addServer"/>
-                    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <state key="normal" title="Add server">
-                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </state>
-                    <connections>
-                        <action selector="addBookmark" destination="-1" eventType="touchUpInside" id="1zc-e5-1Po"/>
-                    </connections>
-                </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" ambiguous="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IEC-5d-Hb5">
-                    <rect key="frame" x="0.0" y="205" width="320" height="61"/>
-                    <string key="text">Thanks for choosing ownCloud! Thanks for choosing ownCloud!
- Thanks for choosing ownCloud!
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PJc-v9-DYn" userLabel="Welcome Overlay">
+                    <rect key="frame" x="39.5" y="128" width="241.5" height="313"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" image="owncloud-primary-small" translatesAutoresizingMaskIntoConstraints="NO" id="fP1-O2-lkg">
+                            <rect key="frame" x="0.0" y="0.0" width="241.5" height="128"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="128" id="r4R-sD-MMg"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c8n-gy-7HF">
+                            <rect key="frame" x="0.0" y="158" width="241.5" height="41"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jaa-D8-ghC" customClass="ActionButton" customModule="ownCloud" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="283" width="241.5" height="30"/>
+                            <color key="backgroundColor" red="0.27450980390000002" green="0.54901960780000003" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
+                            <accessibility key="accessibilityConfiguration" identifier="addServer"/>
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <state key="normal" title="Add server">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="addBookmark" destination="-1" eventType="touchUpInside" id="1zc-e5-1Po"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IEC-5d-Hb5">
+                            <rect key="frame" x="0.0" y="217" width="241.5" height="41"/>
+                            <string key="text">Thanks for choosing ownCloud!
 Start by adding your server.</string>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <nil key="textColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="Jaa-D8-ghC" firstAttribute="leading" secondItem="IEC-5d-Hb5" secondAttribute="leading" id="52z-ez-wTm"/>
+                        <constraint firstItem="IEC-5d-Hb5" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="5VX-tG-MwV"/>
+                        <constraint firstItem="Jaa-D8-ghC" firstAttribute="trailing" secondItem="IEC-5d-Hb5" secondAttribute="trailing" id="7v3-R6-kKd"/>
+                        <constraint firstItem="c8n-gy-7HF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="xJw-Td-7h2" secondAttribute="leading" id="9hZ-i6-GgM"/>
+                        <constraint firstItem="c8n-gy-7HF" firstAttribute="top" secondItem="fP1-O2-lkg" secondAttribute="bottom" constant="30" id="9vT-H5-xlR"/>
+                        <constraint firstItem="IEC-5d-Hb5" firstAttribute="leading" relation="lessThanOrEqual" secondItem="xJw-Td-7h2" secondAttribute="leading" id="AcY-Wr-x1B"/>
+                        <constraint firstItem="fP1-O2-lkg" firstAttribute="leading" secondItem="xJw-Td-7h2" secondAttribute="leading" id="EUt-hl-KHW"/>
+                        <constraint firstItem="IEC-5d-Hb5" firstAttribute="top" secondItem="c8n-gy-7HF" secondAttribute="bottom" constant="18" id="JKy-pp-VWR"/>
+                        <constraint firstItem="xJw-Td-7h2" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="IEC-5d-Hb5" secondAttribute="trailing" id="M0K-QJ-Qdj"/>
+                        <constraint firstItem="fP1-O2-lkg" firstAttribute="top" secondItem="xJw-Td-7h2" secondAttribute="top" id="c7O-MV-CAw"/>
+                        <constraint firstItem="xJw-Td-7h2" firstAttribute="trailing" secondItem="fP1-O2-lkg" secondAttribute="trailing" id="cF9-UI-9xL"/>
+                        <constraint firstItem="xJw-Td-7h2" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="c8n-gy-7HF" secondAttribute="trailing" id="fQE-8k-zir"/>
+                        <constraint firstItem="fP1-O2-lkg" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="iBg-us-cdK"/>
+                        <constraint firstItem="xJw-Td-7h2" firstAttribute="bottom" secondItem="Jaa-D8-ghC" secondAttribute="bottom" id="jPt-3z-e1W"/>
+                        <constraint firstItem="Jaa-D8-ghC" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="rYy-mZ-wyn"/>
+                        <constraint firstItem="c8n-gy-7HF" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="u0i-ca-Uiz"/>
+                        <constraint firstItem="Jaa-D8-ghC" firstAttribute="top" secondItem="IEC-5d-Hb5" secondAttribute="bottom" constant="25" id="wen-iH-60d"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="xJw-Td-7h2"/>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="Jaa-D8-ghC" firstAttribute="leading" secondItem="IEC-5d-Hb5" secondAttribute="leading" id="52z-ez-wTm"/>
-                <constraint firstItem="IEC-5d-Hb5" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="5VX-tG-MwV"/>
-                <constraint firstItem="Jaa-D8-ghC" firstAttribute="trailing" secondItem="IEC-5d-Hb5" secondAttribute="trailing" id="7v3-R6-kKd"/>
-                <constraint firstItem="c8n-gy-7HF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="xJw-Td-7h2" secondAttribute="leading" id="9hZ-i6-GgM"/>
-                <constraint firstItem="c8n-gy-7HF" firstAttribute="top" secondItem="fP1-O2-lkg" secondAttribute="bottom" constant="30" id="9vT-H5-xlR"/>
-                <constraint firstItem="IEC-5d-Hb5" firstAttribute="leading" relation="lessThanOrEqual" secondItem="xJw-Td-7h2" secondAttribute="leading" id="AcY-Wr-x1B"/>
-                <constraint firstItem="fP1-O2-lkg" firstAttribute="leading" secondItem="xJw-Td-7h2" secondAttribute="leading" id="EUt-hl-KHW"/>
-                <constraint firstItem="IEC-5d-Hb5" firstAttribute="top" secondItem="c8n-gy-7HF" secondAttribute="bottom" constant="18" id="JKy-pp-VWR"/>
-                <constraint firstItem="xJw-Td-7h2" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="IEC-5d-Hb5" secondAttribute="trailing" id="M0K-QJ-Qdj"/>
-                <constraint firstItem="fP1-O2-lkg" firstAttribute="top" secondItem="xJw-Td-7h2" secondAttribute="top" id="c7O-MV-CAw"/>
-                <constraint firstItem="xJw-Td-7h2" firstAttribute="trailing" secondItem="fP1-O2-lkg" secondAttribute="trailing" id="cF9-UI-9xL"/>
-                <constraint firstItem="xJw-Td-7h2" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="c8n-gy-7HF" secondAttribute="trailing" id="fQE-8k-zir"/>
-                <constraint firstItem="fP1-O2-lkg" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="iBg-us-cdK"/>
-                <constraint firstItem="xJw-Td-7h2" firstAttribute="bottom" secondItem="Jaa-D8-ghC" secondAttribute="bottom" id="jPt-3z-e1W"/>
-                <constraint firstItem="Jaa-D8-ghC" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="rYy-mZ-wyn"/>
-                <constraint firstItem="c8n-gy-7HF" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="u0i-ca-Uiz"/>
-                <constraint firstItem="Jaa-D8-ghC" firstAttribute="top" secondItem="IEC-5d-Hb5" secondAttribute="bottom" constant="25" id="wen-iH-60d"/>
+                <constraint firstItem="PJc-v9-DYn" firstAttribute="centerY" secondItem="T7c-kV-xII" secondAttribute="centerY" id="5HM-DO-dRS"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="PJc-v9-DYn" secondAttribute="trailing" constant="20" id="6Sa-PH-mEP"/>
+                <constraint firstItem="PJc-v9-DYn" firstAttribute="centerX" secondItem="T7c-kV-xII" secondAttribute="centerX" id="87f-aj-n0g"/>
+                <constraint firstItem="PJc-v9-DYn" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="T7c-kV-xII" secondAttribute="leading" constant="20" id="oMp-WQ-Udb"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="xJw-Td-7h2"/>
-            <point key="canvasLocation" x="-503" y="308"/>
+            <viewLayoutGuide key="safeArea" id="hcy-2V-cIV"/>
+            <point key="canvasLocation" x="-997" y="370"/>
         </view>
     </objects>
     <resources>

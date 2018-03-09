@@ -8,6 +8,7 @@
 
 import UIKit
 
+@IBDesignable
 class ActionButton: UIButton {
 	override var intrinsicContentSize: CGSize
 	{

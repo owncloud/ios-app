@@ -34,7 +34,7 @@ class ServerListTableViewController: UITableViewController {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
-		updateNoServerMessageVisibility(reattachConstraints: true)
+		updateNoServerMessageVisibility()
 		
 		self.navigationController?.setToolbarHidden(false, animated: false)
 		self.toolbarItems = [
@@ -44,12 +44,11 @@ class ServerListTableViewController: UITableViewController {
 		]
 	}
 	
-	func updateNoServerMessageVisibility(reattachConstraints reattach: Bool) {
+	func updateNoServerMessageVisibility() {
 		if (BookmarkManager.sharedBookmarkManager.bookmarks.count == 0)
 		{
-			let parentView : UIView = self.navigationController!.view
+			let safeAreaLayoutGuide : UILayoutGuide = self.tableView.safeAreaLayoutGuide
 			var constraint : NSLayoutConstraint
-			var reattachConstraints : Bool = reattach
 
 			if (welcomeOverlayView.superview != self.view) {
 			
@@ -60,19 +59,15 @@ class ServerListTableViewController: UITableViewController {
 				UIView.animate(withDuration: 0.2, animations: {
 					self.welcomeOverlayView.alpha = 1
 				})
-				
-				reattachConstraints = true
-			}
-				
-			if (reattachConstraints) {
-				welcomeOverlayView.centerXAnchor.constraint(equalTo: parentView.centerXAnchor).isActive = true
-				welcomeOverlayView.centerYAnchor.constraint(equalTo: parentView.centerYAnchor).isActive = true
 
-				constraint = welcomeOverlayView.leftAnchor.constraint(greaterThanOrEqualTo: parentView.leftAnchor, constant: 30)
+				welcomeOverlayView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
+				welcomeOverlayView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor).isActive = true
+
+				constraint = welcomeOverlayView.leftAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.leftAnchor, constant: 30)
 				constraint.priority = UILayoutPriority(rawValue: 900)
 				constraint.isActive = true
 
-				constraint = welcomeOverlayView.rightAnchor.constraint(greaterThanOrEqualTo: parentView.rightAnchor, constant: 30)
+				constraint = welcomeOverlayView.rightAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.rightAnchor, constant: 30)
 				constraint.priority = UILayoutPriority(rawValue: 900)
 				constraint.isActive = true
 
@@ -105,7 +100,7 @@ class ServerListTableViewController: UITableViewController {
 		
 		tableView.reloadData()
 		
-		updateNoServerMessageVisibility(reattachConstraints: false)
+		updateNoServerMessageVisibility()
 	}
 
 	@IBAction func help() {
@@ -161,7 +156,7 @@ class ServerListTableViewController: UITableViewController {
 						tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
 					}, completion: nil)
 
-					self.updateNoServerMessageVisibility(reattachConstraints: false)
+					self.updateNoServerMessageVisibility()
 				})
 			]
 	}
