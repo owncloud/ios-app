@@ -11,24 +11,49 @@ import UIKit
 class StaticTableViewController: UITableViewController {
 	public var sections : Array<StaticTableViewSection> = Array()
 
-	func addSection(section: StaticTableViewSection) {
-		sections.append(section)
-		
-		tableView.reloadData()
+	// MARK: - Section administration
+	func addSection(_ section: StaticTableViewSection, animated animateThis: Bool) {
+		self.insertSection(section, at: sections.count, animated: animateThis)
 	}
 	
-	func insertSection(section: StaticTableViewSection, at index: Int) {
-		sections.insert(section, at: index)
-		
-		tableView.reloadData()
+	func insertSection(_ section: StaticTableViewSection, at index: Int, animated: Bool) {
+		if (animated) {
+			tableView.performBatchUpdates({
+				sections.insert(section, at: index)
+				tableView.insertSections(IndexSet.init(integer: index), with: UITableViewRowAnimation.fade)
+			}, completion: { (completed) in
+
+			})
+		}
+		else
+		{
+			sections.insert(section, at: index)
+			
+			tableView.reloadData()
+		}
 	}
 
-	func removeSection(section: StaticTableViewSection) {
-		sections.remove(at: sections.index(of: section)!)
-		
-		tableView.reloadData()
+	func removeSection(_ section: StaticTableViewSection, animated: Bool) {
+		if (animated) {
+			tableView.performBatchUpdates({
+				if let index : Int = sections.index(of: section)
+				{
+					sections.remove(at: index)
+					tableView.deleteSections(IndexSet.init(integer: index), with: UITableViewRowAnimation.fade)
+				}
+			}, completion: { (completed) in
+
+			})
+		}
+		else
+		{
+			sections.remove(at: sections.index(of: section)!)
+			
+			tableView.reloadData()
+		}
 	}
 
+	// MARK: - View Controller
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -37,11 +62,6 @@ class StaticTableViewController: UITableViewController {
 		
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 		// self.navigationItem.rightBarButtonItem = self.editButtonItem
-	}
-	
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-		// Dispose of any resources that can be recreated.
 	}
 	
 	// MARK: - Table view data source
