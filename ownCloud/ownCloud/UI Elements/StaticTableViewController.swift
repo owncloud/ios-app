@@ -40,15 +40,13 @@ class StaticTableViewController: UITableViewController {
 		if (animated) {
 			tableView.performBatchUpdates({
 				sections.insert(section, at: index)
-				tableView.insertSections(IndexSet.init(integer: index), with: UITableViewRowAnimation.fade)
+				tableView.insertSections(IndexSet(integer: index), with: UITableViewRowAnimation.fade)
 			}, completion: { (completed) in
 
 			})
-		}
-		else
-		{
+		} else {
 			sections.insert(section, at: index)
-			
+
 			tableView.reloadData()
 		}
 	}
@@ -56,17 +54,14 @@ class StaticTableViewController: UITableViewController {
 	func removeSection(_ section: StaticTableViewSection, animated: Bool = false) {
 		if (animated) {
 			tableView.performBatchUpdates({
-				if let index : Int = sections.index(of: section)
-				{
+				if let index : Int = sections.index(of: section) {
 					sections.remove(at: index)
-					tableView.deleteSections(IndexSet.init(integer: index), with: UITableViewRowAnimation.fade)
+					tableView.deleteSections(IndexSet(integer: index), with: UITableViewRowAnimation.fade)
 				}
 			}, completion: { (completed) in
 				section.viewController = nil
 			})
-		}
-		else
-		{
+		} else {
 			sections.remove(at: sections.index(of: section)!)
 
 			section.viewController = nil

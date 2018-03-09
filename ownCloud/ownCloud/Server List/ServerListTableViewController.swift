@@ -38,7 +38,7 @@ class ServerListTableViewController: UITableViewController {
 		// self.clearsSelectionOnViewWillAppear = false
 
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-		
+
 		self.navigationItem.title = "ownCloud"
 	}
 
@@ -52,7 +52,7 @@ class ServerListTableViewController: UITableViewController {
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		
+
 		updateNoServerMessageVisibility()
 		
 		self.toolbarItems = [
@@ -119,12 +119,12 @@ class ServerListTableViewController: UITableViewController {
 
 	// MARK: - Actions
 	@IBAction func addBookmark() {
-		let bookmark = OCBookmark(for: URL.init(string: "https://demo.owncloud.org"))
+		let bookmark = OCBookmark(for: URL(string: "https://demo.owncloud.org"))
 
 		BookmarkManager.sharedBookmarkManager.addBookmark(bookmark!)
 
 		tableView.reloadData()
-		
+
 		updateNoServerMessageVisibility()
 	}
 
@@ -132,7 +132,7 @@ class ServerListTableViewController: UITableViewController {
 	}
 
 	@IBAction func settings() {
-		let viewController : GlobalSettingsViewController = GlobalSettingsViewController.init(style: UITableViewStyle.grouped)
+		let viewController : GlobalSettingsViewController = GlobalSettingsViewController(style: UITableViewStyle.grouped)
 
 		self.navigationController?.pushViewController(viewController, animated: true)
 	}
@@ -161,14 +161,14 @@ class ServerListTableViewController: UITableViewController {
 
 		bookmarkCell.titleLabel.text = bookmark.url.host
 		bookmarkCell.detailLabel.text = bookmark.url.absoluteString
-		bookmarkCell.imageView?.image = UIImage.init(named: "owncloud-primary-small")
+		bookmarkCell.imageView?.image = UIImage(named: "owncloud-primary-small")
 
 		return bookmarkCell
 	}
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		return [
-				UITableViewRowAction.init(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (action, indexPath) in
+				UITableViewRowAction(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (action, indexPath) in
 					let bookmark : OCBookmark
 
 					bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row)

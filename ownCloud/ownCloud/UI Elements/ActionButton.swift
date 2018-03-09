@@ -32,7 +32,7 @@ class ActionButton: UIButton {
 	private func styleButton() {
 		self.layer.cornerRadius = 5
 
-		self.setAttributedTitle(NSAttributedString.init(string: self.title(for: UIControlState.normal)!,
+		self.setAttributedTitle(NSAttributedString(string: self.title(for: UIControlState.normal)!,
 								attributes: [
 									NSAttributedStringKey.font : UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.semibold)
 									// NSAttributedStringKey.foregroundColor : self.titleColor(for: UIControlState.normal) as Any
