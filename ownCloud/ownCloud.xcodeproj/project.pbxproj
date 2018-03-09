@@ -11,6 +11,9 @@
 		233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA6204FEFE500C06732 /* Assets.xcassets */; };
 		233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA8204FEFE500C06732 /* LaunchScreen.storyboard */; };
 		233BDEB5204FEFE500C06732 /* ownCloudTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233BDEB4204FEFE500C06732 /* ownCloudTests.swift */; };
+		6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */; };
+		75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */; };
+		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DC0B378D205146D300189B9A /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC4AF6E52051466800189B9A /* ownCloudSDK.framework */; };
 		DC0B378E205146D900189B9A /* ownCloudSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DC4AF6E52051466800189B9A /* ownCloudSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */; };
@@ -24,6 +27,7 @@
 		DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */; };
 		DCF4F17F2051A0D000189B9A /* StaticTableViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */; };
 		DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */; };
+		EA1D571C6B1E95925C459228 /* EarlGrey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +69,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		D9876310DCEA650662AA6AF7 /* EarlGrey Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(TEST_HOST)/../";
+			dstSubfolderSpec = 0;
+			files = (
+				A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */,
+			);
+			name = "EarlGrey Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DC85573420513CCC00189B9A /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -78,6 +93,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		05D694726A3BC5C5FE8AECB9 /* Pods-ownCloudTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.debug.xcconfig"; sourceTree = "<group>"; };
 		233BDE9C204FEFE500C06732 /* ownCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ownCloud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		233BDE9F204FEFE500C06732 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		233BDEA6204FEFE500C06732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -87,6 +103,10 @@
 		233BDEB4204FEFE500C06732 /* ownCloudTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ownCloudTests.swift; sourceTree = "<group>"; };
 		233BDEB6204FEFE500C06732 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ownCloudSDK.xcodeproj; path = "../ios-sdk/ownCloudSDK.xcodeproj"; sourceTree = "<group>"; };
+		6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.release.xcconfig"; sourceTree = "<group>"; };
+		A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ownCloudTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0D9C062DD1E85A838608B0F /* EarlGrey.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EarlGrey.framework; path = Pods/EarlGrey/EarlGrey/EarlGrey.framework; sourceTree = SOURCE_ROOT; };
+		D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarlGrey.swift; sourceTree = "<group>"; };
 		DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListBookmarkCell.swift; sourceTree = "<group>"; };
 		DC0B37952051541C00189B9A /* ownCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ownCloud.entitlements; sourceTree = "<group>"; };
 		DC0B37962051681600189B9A /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
@@ -114,6 +134,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA1D571C6B1E95925C459228 /* EarlGrey.framework in Frameworks */,
+				75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,6 +150,7 @@
 				233BDEB3204FEFE500C06732 /* ownCloudTests */,
 				233BDE9D204FEFE500C06732 /* Products */,
 				DC85573220513CC700189B9A /* Frameworks */,
+				5EE06126BB49344475598790 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -159,8 +182,18 @@
 			children = (
 				233BDEB4204FEFE500C06732 /* ownCloudTests.swift */,
 				233BDEB6204FEFE500C06732 /* Info.plist */,
+				D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */,
 			);
 			path = ownCloudTests;
+			sourceTree = "<group>";
+		};
+		5EE06126BB49344475598790 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				05D694726A3BC5C5FE8AECB9 /* Pods-ownCloudTests.debug.xcconfig */,
+				6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		DC4AF6DF2051466800189B9A /* Products */ = {
@@ -196,6 +229,8 @@
 		DC85573220513CC700189B9A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D0D9C062DD1E85A838608B0F /* EarlGrey.framework */,
+				A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -255,9 +290,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 233BDEBC204FEFE600C06732 /* Build configuration list for PBXNativeTarget "ownCloudTests" */;
 			buildPhases = (
+				CCD5F274B7E08D493D596856 /* [CP] Check Pods Manifest.lock */,
 				233BDEAC204FEFE500C06732 /* Sources */,
 				233BDEAD204FEFE500C06732 /* Frameworks */,
 				233BDEAE204FEFE500C06732 /* Resources */,
+				D9876310DCEA650662AA6AF7 /* EarlGrey Copy Files */,
+				FF929A2C3849C01CA20C4475 /* [CP] Embed Pods Frameworks */,
+				0FE837304B0D01190D24E459 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -368,6 +407,60 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		0FE837304B0D01190D24E459 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CCD5F274B7E08D493D596856 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ownCloudTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FF929A2C3849C01CA20C4475 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests-frameworks.sh",
+				"${PODS_ROOT}/EarlGrey/EarlGrey/EarlGrey.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EarlGrey.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		233BDE98204FEFE500C06732 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -391,6 +484,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				233BDEB5204FEFE500C06732 /* ownCloudTests.swift in Sources */,
+				6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,6 +662,7 @@
 		};
 		233BDEBD204FEFE600C06732 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 05D694726A3BC5C5FE8AECB9 /* Pods-ownCloudTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -585,6 +680,7 @@
 		};
 		233BDEBE204FEFE600C06732 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
