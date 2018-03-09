@@ -25,18 +25,18 @@ class ServerListTableViewController: UITableViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
+
 		self.tableView.register(ServerListBookmarkCell.self, forCellReuseIdentifier: "bookmark-cell")
 		self.tableView.rowHeight = UITableViewAutomaticDimension
 		self.tableView.estimatedRowHeight = 80
 
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
-		
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
+
 		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
 
 		// Uncomment the following line to preserve selection between presentations
 		// self.clearsSelectionOnViewWillAppear = false
-		
+
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 		
 		self.navigationItem.title = "ownCloud"
@@ -56,9 +56,9 @@ class ServerListTableViewController: UITableViewController {
 		updateNoServerMessageVisibility()
 		
 		self.toolbarItems = [
-			UIBarButtonItem.init(title: "Help", style: UIBarButtonItemStyle.plain, target: self, action: #selector(help)),
-			UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
-			UIBarButtonItem.init(title: "Settings", style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
+			UIBarButtonItem(title: "Help", style: UIBarButtonItemStyle.plain, target: self, action: #selector(help)),
+			UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
+			UIBarButtonItem(title: "Settings", style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
 		]
 	}
 
@@ -73,12 +73,12 @@ class ServerListTableViewController: UITableViewController {
 			let safeAreaLayoutGuide : UILayoutGuide = self.tableView.safeAreaLayoutGuide
 			var constraint : NSLayoutConstraint
 
-			if (welcomeOverlayView.superview != self.view) {
-			
+			if welcomeOverlayView.superview != self.view {
+
 				welcomeOverlayView.alpha = 0
-			
+
 				self.view.addSubview(welcomeOverlayView)
-				
+
 				UIView.animate(withDuration: 0.2, animations: {
 					self.welcomeOverlayView.alpha = 1
 				})
@@ -119,10 +119,10 @@ class ServerListTableViewController: UITableViewController {
 
 	// MARK: - Actions
 	@IBAction func addBookmark() {
-		let bookmark = OCBookmark.init(for: URL.init(string: "https://demo.owncloud.org"))
-	
+		let bookmark = OCBookmark(for: URL.init(string: "https://demo.owncloud.org"))
+
 		BookmarkManager.sharedBookmarkManager.addBookmark(bookmark!)
-		
+
 		tableView.reloadData()
 		
 		updateNoServerMessageVisibility()
@@ -133,33 +133,39 @@ class ServerListTableViewController: UITableViewController {
 
 	@IBAction func settings() {
 		let viewController : GlobalSettingsViewController = GlobalSettingsViewController.init(style: UITableViewStyle.grouped)
-		
+
 		self.navigationController?.pushViewController(viewController, animated: true)
 	}
 
 	// MARK: - Table view data source
-	
+
 	override func numberOfSections(in tableView: UITableView) -> Int {
 		// #warning Incomplete implementation, return the number of sections
 		return 1
 	}
-	
+
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		// #warning Incomplete implementation, return the number of rows
 		return BookmarkManager.sharedBookmarkManager.bookmarks.count
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let bookmarkCell : ServerListBookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "bookmark-cell") as! ServerListBookmarkCell
+
+        guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "bookmark-cell", for: indexPath) as? ServerListBookmarkCell else {
+
+            let cell = ServerListBookmarkCell()
+            return cell
+        }
+
 		let bookmark : OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row)
-		
+
 		bookmarkCell.titleLabel.text = bookmark.url.host
 		bookmarkCell.detailLabel.text = bookmark.url.absoluteString
 		bookmarkCell.imageView?.image = UIImage.init(named: "owncloud-primary-small")
-		
+
 		return bookmarkCell
 	}
-	
+
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		return [
 				UITableViewRowAction.init(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (action, indexPath) in
@@ -168,9 +174,9 @@ class ServerListTableViewController: UITableViewController {
 					bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row)
 
 					BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
-					
+
 					// TODO: Add confirmation prompt
-					
+
 					tableView.performBatchUpdates({
 						tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
 					}, completion: nil)

@@ -19,7 +19,7 @@
 import UIKit
 
 class GlobalSettingsViewController: StaticTableViewController {
-	
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 

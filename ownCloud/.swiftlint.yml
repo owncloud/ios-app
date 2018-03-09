@@ -1,0 +1,31 @@
+excluded:
+    - ownCloudTests/EarlGrey.swift 
+
+function_body_length: 50
+# warning_threshold: 5
+line_length:
+  warning: 150
+  ignores_function_declarations: true
+  ignores_comments: true
+force_cast: warning
+identifier_name:
+    excluded:
+        - x
+        - y
+
+disabled_rules:
+    - colon
+    - cyclomatic_complexity
+    - file_length
+    - for_where
+    - operator_whitespace
+    - type_body_length
+
+custom_rules:
+  empty_line_after_guard_statement:
+    included: ".*\\.swift"
+    name: "Empty line after guard statement"
+    regex: "((?<=\n)([ ]*)guard[^\\}]*?\\}\n\\2[^\n])" # Follow https://regex101.com/r/i1IaQH/1 for the explanation on the regex
+    message: "Add a newline after guard statement to make it easier to read"
+    severity: warning
+

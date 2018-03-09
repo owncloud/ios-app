@@ -23,7 +23,7 @@ class StaticTableViewSection: NSObject {
 
 	public var identifier : String?
 
-	public var rows : Array<StaticTableViewRow> = Array()
+	public var rows : [StaticTableViewRow] = Array()
 
 	public var headerTitle : String?
 	public var footerTitle : String?

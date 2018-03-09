@@ -27,7 +27,7 @@ enum StaticTableViewEvent {
 }
 
 class StaticTableViewController: UITableViewController {
-	public var sections : Array<StaticTableViewSection> = Array()
+	public var sections : [StaticTableViewSection] = Array()
 
 	// MARK: - Section administration
 	func addSection(_ section: StaticTableViewSection, animated animateThis: Bool = false) {
@@ -103,10 +103,10 @@ class StaticTableViewController: UITableViewController {
 	// MARK: - View Controller
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
+
 		// Uncomment the following line to preserve selection between presentations
 		// self.clearsSelectionOnViewWillAppear = false
-		
+
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 		// self.navigationItem.rightBarButtonItem = self.editButtonItem
 	}
@@ -121,28 +121,29 @@ class StaticTableViewController: UITableViewController {
 		// #warning Incomplete implementation, return the number of sections
 		return sections.count
 	}
-	
+
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		// #warning Incomplete implementation, return the number of rows
 		return sections[section].rows.count
 	}
-	
+
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		return sections[indexPath.section].rows[indexPath.row].cell!
 	}
-	
+
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
 		let staticRow : StaticTableViewRow = staticRowForIndexPath(indexPath)
 
 		staticRow.action!(staticRow, self)
 
 		tableView.deselectRow(at: indexPath, animated: true)
 	}
-	
+
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		return sections[section].headerTitle
 	}
-	
+
 	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
 		return sections[section].footerTitle
 	}

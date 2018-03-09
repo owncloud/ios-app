@@ -19,15 +19,14 @@
 import UIKit
 import ownCloudSDK
 
-class BookmarkManager: NSObject
-{
+class BookmarkManager: NSObject {
 	public var bookmarks : NSMutableArray
 
 	static var sharedBookmarkManager : BookmarkManager = {
 		let sharedInstance = BookmarkManager()
-		
+
 		sharedInstance.loadBookmarks()
-		
+
 		return (sharedInstance)
 	}()
 
@@ -48,15 +47,15 @@ class BookmarkManager: NSObject
 
 		do {
 			loadedBookmarks = try NSKeyedUnarchiver.unarchiveObject(with: Data.init(contentsOf: self.bookmarkStoreURL())) as! NSMutableArray?
-			
-			if (loadedBookmarks != nil) {
+
+			if loadedBookmarks != nil {
 				bookmarks = loadedBookmarks!
 			}
 		} catch {
 			Log.debug("Loading bookmarks failed with \(error)")
 		}
 	}
-	
+
 	func saveBookmarks() {
 		do {
 			try NSKeyedArchiver.archivedData(withRootObject: bookmarks as Any).write(to: self.bookmarkStoreURL())
@@ -71,7 +70,7 @@ class BookmarkManager: NSObject
 
 		saveBookmarks()
 	}
-	
+
 	func removeBookmark(_ bookmark: OCBookmark) {
 		bookmarks.remove(bookmark)
 
@@ -86,7 +85,7 @@ class BookmarkManager: NSObject
 
 		saveBookmarks()
 	}
-	
+
 	func bookmark(at index: Int) -> OCBookmark {
 		return (bookmarks.object(at: index) as! OCBookmark)
 	}
