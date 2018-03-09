@@ -27,6 +27,7 @@
 		DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */; };
 		DCF4F17F2051A0D000189B9A /* StaticTableViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */; };
 		DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */; };
+		DCF4F18B2052BA4C00189B9A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F18A2052BA4C00189B9A /* Log.swift */; };
 		EA1D571C6B1E95925C459228 /* EarlGrey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; };
 /* End PBXBuildFile section */
 
@@ -119,6 +120,7 @@
 		DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewSection.swift; sourceTree = "<group>"; };
 		DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewRow.swift; sourceTree = "<group>"; };
 		DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsViewController.swift; sourceTree = "<group>"; };
+		DCF4F18A2052BA4C00189B9A /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +174,7 @@
 				DC7DF17C205140F400189B9A /* Server List */,
 				DCF4F1802051A91500189B9A /* Settings */,
 				DCF4F1622051927200189B9A /* UI Elements */,
+				DCF4F1872052BA3500189B9A /* Tools */,
 				DC85573120513C7500189B9A /* Resources */,
 			);
 			path = ownCloud;
@@ -262,6 +265,14 @@
 				DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		DCF4F1872052BA3500189B9A /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				DCF4F18A2052BA4C00189B9A /* Log.swift */,
+			);
+			path = Tools;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -468,6 +479,7 @@
 			files = (
 				DCF4F17920519F8C00189B9A /* StaticTableViewController.swift in Sources */,
 				DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */,
+				DCF4F18B2052BA4C00189B9A /* Log.swift in Sources */,
 				DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */,
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
 				DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */,

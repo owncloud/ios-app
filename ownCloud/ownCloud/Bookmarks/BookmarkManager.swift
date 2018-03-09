@@ -43,7 +43,7 @@ class BookmarkManager: NSObject
 				bookmarks = loadedBookmarks!
 			}
 		} catch {
-			debugPrint("Loading bookmarks failed with \(error)")
+			Log.debug("Loading bookmarks failed with \(error)")
 		}
 	}
 	
@@ -51,7 +51,7 @@ class BookmarkManager: NSObject
 		do {
 			try NSKeyedArchiver.archivedData(withRootObject: bookmarks as Any).write(to: self.bookmarkStoreURL())
 		} catch {
-			debugPrint("Saving bookmarks failed with \(error)")
+			Log.error("Loading bookmarks failed with \(error)")
 		}
 	}
 	
