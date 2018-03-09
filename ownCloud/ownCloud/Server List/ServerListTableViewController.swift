@@ -28,7 +28,8 @@ class ServerListTableViewController: UITableViewController {
 		// self.clearsSelectionOnViewWillAppear = false
 		
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-		// self.navigationItem.rightBarButtonItem = self.editButtonItem
+		
+		self.navigationItem.title = "ownCloud"
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -71,6 +72,8 @@ class ServerListTableViewController: UITableViewController {
 				constraint.priority = UILayoutPriority(rawValue: 900)
 				constraint.isActive = true
 
+				self.navigationItem.leftBarButtonItem = nil
+
 				tableView.separatorStyle = UITableViewCellSeparatorStyle.none
 				tableView.reloadData()
 			}
@@ -80,6 +83,8 @@ class ServerListTableViewController: UITableViewController {
 			if (welcomeOverlayView.superview == self.view)
 			{
 				welcomeOverlayView.removeFromSuperview()
+
+				self.navigationItem.leftBarButtonItem = self.editButtonItem
 
 				tableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
 				tableView.reloadData()

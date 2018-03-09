@@ -181,8 +181,8 @@
 			isa = PBXGroup;
 			children = (
 				233BDEB4204FEFE500C06732 /* ownCloudTests.swift */,
-				233BDEB6204FEFE500C06732 /* Info.plist */,
 				D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */,
+				233BDEB6204FEFE500C06732 /* Info.plist */,
 			);
 			path = ownCloudTests;
 			sourceTree = "<group>";

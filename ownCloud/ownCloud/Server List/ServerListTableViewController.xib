@@ -26,6 +26,7 @@
                 <outlet property="dataSource" destination="-1" id="Tng-2m-Rnh"/>
                 <outlet property="delegate" destination="-1" id="9aC-8N-iBw"/>
             </connections>
+            <point key="canvasLocation" x="-621" y="370"/>
         </tableView>
         <view contentMode="scaleToFill" id="T7c-kV-xII" userLabel="Container View We Don't Need But Place Here Anyway To Make IB Happy :-D ">
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
