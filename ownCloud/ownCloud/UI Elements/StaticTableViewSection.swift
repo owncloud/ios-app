@@ -55,7 +55,7 @@ class StaticTableViewSection: NSObject {
 
 				if let selectedValueObject = selectedValue as? NSObject, let valueObject = value as? NSObject, (selectedValueObject == valueObject) { selected = true }
 
-				radioGroupRows.append(StaticTableViewRow.init(radioAction: radioAction, groupIdentifier: groupIdentifier, value: value, title: label, selected: selected))
+				radioGroupRows.append(StaticTableViewRow.init(radioItemWithAction: radioAction, groupIdentifier: groupIdentifier, value: value, title: label, selected: selected))
 			}
 		}
 
@@ -87,5 +87,16 @@ class StaticTableViewSection: NSObject {
 				}
 			}
 		}
+	}
+
+	// MARK: - Finding rows
+	func row(withIdentifier: String) -> StaticTableViewRow? {
+		for row in rows {
+			if row.identifier == withIdentifier {
+				return row
+			}
+		}
+
+		return nil
 	}
 }

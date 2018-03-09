@@ -79,12 +79,12 @@ class StaticTableViewController: UITableViewController {
 	func rowInSection(_ inSection: StaticTableViewSection?, rowIdentifier: String) -> StaticTableViewRow? {
 		if (inSection == nil) {
 			for section in sections {
-				for row in section.rows {
-					if (row.identifier == rowIdentifier) {
-						return (row)
-					}
+				if let row = section.row(withIdentifier: rowIdentifier) {
+					return row
 				}
 			}
+		} else {
+			return inSection?.row(withIdentifier: rowIdentifier)
 		}
 
 		return nil

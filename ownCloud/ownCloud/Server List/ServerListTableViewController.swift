@@ -31,23 +31,35 @@ class ServerListTableViewController: UITableViewController {
 		
 		self.navigationItem.title = "ownCloud"
 	}
-	
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		self.navigationController?.setToolbarHidden(false, animated: animated)
+
+		welcomeOverlayView.layoutSubviews()
+	}
+
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
 		updateNoServerMessageVisibility()
 		
-		self.navigationController?.setToolbarHidden(false, animated: false)
 		self.toolbarItems = [
 			UIBarButtonItem.init(title: "Help", style: UIBarButtonItemStyle.plain, target: self, action: #selector(help)),
 			UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
 			UIBarButtonItem.init(title: "Settings", style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
 		]
 	}
+
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+
+		self.navigationController?.setToolbarHidden(true, animated: animated)
+	}
 	
 	func updateNoServerMessageVisibility() {
-		if (BookmarkManager.sharedBookmarkManager.bookmarks.count == 0)
-		{
+		if (BookmarkManager.sharedBookmarkManager.bookmarks.count == 0) {
 			let safeAreaLayoutGuide : UILayoutGuide = self.tableView.safeAreaLayoutGuide
 			var constraint : NSLayoutConstraint
 
@@ -72,31 +84,29 @@ class ServerListTableViewController: UITableViewController {
 				constraint.priority = UILayoutPriority(rawValue: 900)
 				constraint.isActive = true
 
-				self.navigationItem.leftBarButtonItem = nil
-
 				tableView.separatorStyle = UITableViewCellSeparatorStyle.none
 				tableView.reloadData()
 			}
-		}
-		else
-		{
-			if (welcomeOverlayView.superview == self.view)
-			{
-				welcomeOverlayView.removeFromSuperview()
 
-				self.navigationItem.leftBarButtonItem = self.editButtonItem
+			if (self.navigationItem.leftBarButtonItem != nil) {
+				self.navigationItem.leftBarButtonItem = nil
+			}
+
+		} else {
+
+			if (welcomeOverlayView.superview == self.view) {
+				welcomeOverlayView.removeFromSuperview()
 
 				tableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
 				tableView.reloadData()
 			}
+
+			if (self.navigationItem.leftBarButtonItem == nil) {
+				self.navigationItem.leftBarButtonItem = self.editButtonItem
+			}
 		}
 	}
-	
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-		// Dispose of any resources that can be recreated.
-	}
-	
+
 	// MARK: - Actions
 	@IBAction func addBookmark() {
 		let bookmark = OCBookmark.init(for: URL.init(string: "https://demo.owncloud.org"))
@@ -128,13 +138,7 @@ class ServerListTableViewController: UITableViewController {
 		// #warning Incomplete implementation, return the number of rows
 		return BookmarkManager.sharedBookmarkManager.bookmarks.count
 	}
-	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
 
-		welcomeOverlayView.layoutSubviews()
-	}
-	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let bookmarkCell : ServerListBookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "bookmark-cell") as! ServerListBookmarkCell
 		let bookmark : OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row)
@@ -170,62 +174,3 @@ class ServerListTableViewController: UITableViewController {
 		BookmarkManager.sharedBookmarkManager.moveBookmark(from: fromIndexPath.row, to: to.row)
 	}
 }
-	
-	
-	
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-

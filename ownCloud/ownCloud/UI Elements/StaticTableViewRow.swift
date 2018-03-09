@@ -11,13 +11,28 @@ import UIKit
 typealias StaticTableViewRowAction = (_ staticRow : StaticTableViewRow, _ sender: Any?) -> Void
 typealias StaticTableViewRowEventHandler = (_ staticRow : StaticTableViewRow, _ event : StaticTableViewEvent) -> Void
 
-class StaticTableViewRow: NSObject {
+enum StaticTableViewRowButtonStyle {
+	case plain
+	case proceed
+	case destructive
+	case custom(textColor: UIColor, selectedTextColor: UIColor? , backgroundColor: UIColor?, selectedBackgroundColor: UIColor?)
+}
+
+class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	public weak var section : StaticTableViewSection?
 
 	public var identifier : String?
 	public var groupIdentifier : String?
 
-	public var value : Any?
+	public var value : Any? {
+		didSet {
+			if updateViewFromValue != nil {
+				updateViewFromValue!(self)
+			}
+		}
+	}
+
+	private var updateViewFromValue : ((_ row: StaticTableViewRow) -> Void)?
 
 	public var cell : UITableViewCell?
 
@@ -30,17 +45,23 @@ class StaticTableViewRow: NSObject {
 		return (section?.viewController)
 	}
 
-	convenience init(text: String, action: @escaping StaticTableViewRowAction) {
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
 		self.init()
+
+		self.identifier = identifier
 		
 		self.cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: nil)
-		self.cell?.textLabel?.text = text
-		
-		self.action = action
+		self.cell?.textLabel?.text = title
+		self.cell?.accessoryType = accessoryType
+
+		self.action = rowWithAction
 	}
 
-	convenience init(radioAction: StaticTableViewRowAction?, groupIdentifier: String, value: Any, title: String, selected: Bool) {
+	// MARK: - Radio Item
+	convenience init(radioItemWithAction: StaticTableViewRowAction?, groupIdentifier: String, value: Any, title: String, selected: Bool, identifier : String? = nil) {
 		self.init()
+
+		self.identifier = identifier
 
 		self.cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
@@ -54,7 +75,156 @@ class StaticTableViewRow: NSObject {
 
 		self.action = { (row, sender) in
 			row.section?.setSelected(row.value!, groupIdentifier: row.groupIdentifier!)
-			radioAction?(row, sender)
+			radioItemWithAction?(row, sender)
 		}
 	}
+
+	// MARK: - Text Field
+	convenience init(textFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil) {
+
+		self.init()
+
+		self.identifier = identifier
+
+		self.cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell?.selectionStyle = UITableViewCellSelectionStyle.none
+
+		self.action = action
+		self.value = textValue
+
+		let textField = UITextField.init()
+		textField.translatesAutoresizingMaskIntoConstraints = false
+
+		textField.delegate = self
+		textField.placeholder = placeholderString
+		textField.keyboardType = keyboardType
+		textField.autocorrectionType = autocorrectionType
+		textField.isSecureTextEntry = secureTextEntry
+		textField.autocapitalizationType = autocapitalizationType
+		textField.enablesReturnKeyAutomatically = enablesReturnKeyAutomatically
+		textField.returnKeyType = returnKeyType
+		textField.text = textValue
+
+		textField.addTarget(self, action: #selector(textFieldContentChanged(_:)), for: UIControlEvents.editingChanged)
+
+		if (cell != nil) {
+			cell?.contentView.addSubview(textField)
+			textField.leftAnchor.constraint(equalTo: (cell?.contentView.leftAnchor)!, constant:18).isActive = true;
+			textField.rightAnchor.constraint(equalTo: (cell?.contentView.rightAnchor)!, constant:-18).isActive = true;
+			textField.topAnchor.constraint(equalTo: (cell?.contentView.topAnchor)!, constant:14).isActive = true;
+			textField.bottomAnchor.constraint(equalTo: (cell?.contentView.bottomAnchor)!, constant:-14).isActive = true;
+		}
+
+		self.updateViewFromValue = { (row) in
+			textField.text = row.value as! String?
+		}
+	}
+
+	convenience init(secureTextFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil) {
+		self.init(textFieldWithAction: action, placeholder: placeholderString, value: textValue, secureTextEntry: true, keyboardType: keyboardType, autocorrectionType: autocorrectionType, autocapitalizationType: autocapitalizationType, enablesReturnKeyAutomatically: enablesReturnKeyAutomatically, returnKeyType: returnKeyType, identifier : identifier)
+	}
+
+	@objc func textFieldContentChanged(_ sender: UITextField) {
+		self.value = sender.text
+
+		self.action?(self, sender)
+	}
+
+	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+		textField.resignFirstResponder()
+
+		return true
+	}
+
+	// MARK: - Switches
+	convenience init(switchWithAction action:  StaticTableViewRowAction?, title: String, value switchValue: Bool = false, identifier : String? = nil) {
+		self.init()
+
+		self.identifier = identifier
+
+		let switchView = UISwitch.init()
+
+		self.cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell?.textLabel?.text = title
+		self.cell?.accessoryView = switchView
+
+		switchView.isOn = switchValue
+
+		self.value = switchValue
+
+		self.action = action
+
+		switchView.addTarget(self, action: #selector(switchValueChanged(_:)), for: UIControlEvents.valueChanged)
+
+		self.updateViewFromValue = { (row) in
+			if (row.value != nil) {
+				switchView.setOn(row.value as! Bool, animated: true)
+			}
+		}
+	}
+
+	@objc func switchValueChanged(_ sender: UISwitch) {
+		self.value = sender.isOn
+
+		self.action?(self, sender)
+	}
+
+	// MARK: - Buttons
+	convenience init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = StaticTableViewRowButtonStyle.proceed, identifier : String? = nil) {
+		self.init()
+
+		self.identifier = identifier
+
+		var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
+
+		self.cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell?.textLabel?.text = title
+		self.cell?.textLabel?.textAlignment = NSTextAlignment.center
+
+		switch (style) {
+			case .plain:
+				textColor = UIColor.blue
+			break
+
+			case .proceed:
+				textColor = UIColor.white
+				backgroundColor = UIColor.blue
+				selectedBackgroundColor = UIColor.green
+			break
+
+			case .destructive:
+				textColor = UIColor.red
+				backgroundColor = UIColor.white
+			break
+
+			case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
+				textColor = customTextColor
+				selectedTextColor = customSelectedTextColor
+				backgroundColor = customBackgroundColor
+				selectedBackgroundColor = customSelectedBackgroundColor
+			break
+		}
+
+		self.cell?.textLabel?.textColor = textColor
+
+		if (selectedTextColor != nil) {
+			self.cell?.textLabel?.highlightedTextColor = selectedTextColor
+		}
+
+		if (backgroundColor != nil) {
+			self.cell?.backgroundColor = backgroundColor
+		}
+
+		if (selectedBackgroundColor != nil) {
+			let selectedBackgroundView = UIView.init()
+
+			selectedBackgroundView.backgroundColor = selectedBackgroundColor
+
+			self.cell?.selectedBackgroundView? = selectedBackgroundView
+		}
+
+		self.action = action
+	}
 }
+
+
