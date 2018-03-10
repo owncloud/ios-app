@@ -42,23 +42,23 @@ class ServerListBookmarkCell: UITableViewCell {
 		
 		detailLabel.textColor = UIColor.gray
 
-		self.addSubview(titleLabel)
-		self.addSubview(detailLabel)
-		self.addSubview(iconView)
+		self.contentView.addSubview(titleLabel)
+		self.contentView.addSubview(detailLabel)
+		self.contentView.addSubview(iconView)
 		
-		iconView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 20).isActive = true
+		iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 20).isActive = true
 		iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -20).isActive = true
 		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -20).isActive = true
 		
-		titleLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20).isActive = true
-		detailLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20).isActive = true
+		titleLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -20).isActive = true
+		detailLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -20).isActive = true
 		
-		iconView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
-		iconView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 20).isActive = true
+		iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20).isActive = true
+		iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 20).isActive = true
 		
-		titleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
+		titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20).isActive = true
 		titleLabel.bottomAnchor.constraint(equalTo: detailLabel.topAnchor, constant: -5).isActive = true
-		detailLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20).isActive = true
+		detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -20).isActive = true
 		
 		iconView.widthAnchor.constraint(equalToConstant: 40).isActive = true
 		iconView.heightAnchor.constraint(greaterThanOrEqualToConstant: 40).isActive = true
