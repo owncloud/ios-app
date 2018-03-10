@@ -30,7 +30,8 @@ class ServerListTableViewController: UITableViewController {
 		self.tableView.rowHeight = UITableViewAutomaticDimension
 		self.tableView.estimatedRowHeight = 80
 
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
+		self.navigationItem.rightBarButtonItem =
+            UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
 
 		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -54,7 +55,7 @@ class ServerListTableViewController: UITableViewController {
 		super.viewDidAppear(animated)
 
 		updateNoServerMessageVisibility()
-		
+
 		self.toolbarItems = [
 			UIBarButtonItem(title: "Help", style: UIBarButtonItemStyle.plain, target: self, action: #selector(help)),
 			UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
@@ -67,9 +68,9 @@ class ServerListTableViewController: UITableViewController {
 
 		self.navigationController?.setToolbarHidden(true, animated: animated)
 	}
-	
+
 	func updateNoServerMessageVisibility() {
-		if (BookmarkManager.sharedBookmarkManager.bookmarks.count == 0) {
+		if BookmarkManager.sharedBookmarkManager.bookmarks.count == 0 {
 			let safeAreaLayoutGuide : UILayoutGuide = self.tableView.safeAreaLayoutGuide
 			var constraint : NSLayoutConstraint
 
@@ -98,20 +99,20 @@ class ServerListTableViewController: UITableViewController {
 				tableView.reloadData()
 			}
 
-			if (self.navigationItem.leftBarButtonItem != nil) {
+			if self.navigationItem.leftBarButtonItem != nil {
 				self.navigationItem.leftBarButtonItem = nil
 			}
 
 		} else {
 
-			if (welcomeOverlayView.superview == self.view) {
+			if welcomeOverlayView.superview == self.view {
 				welcomeOverlayView.removeFromSuperview()
 
 				tableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
 				tableView.reloadData()
 			}
 
-			if (self.navigationItem.leftBarButtonItem == nil) {
+			if self.navigationItem.leftBarButtonItem == nil {
 				self.navigationItem.leftBarButtonItem = self.editButtonItem
 			}
 		}

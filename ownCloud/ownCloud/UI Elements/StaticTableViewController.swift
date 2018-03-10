@@ -19,11 +19,11 @@
 import UIKit
 
 enum StaticTableViewEvent {
-	case Initial
-	case AppBecameActive
-	case TableViewWillAppear
-	case TableViewWillDisappear
-	case TableViewDidDisappear
+	case initial
+	case appBecameActive
+	case tableViewWillAppear
+	case tableViewWillDisappear
+	case tableViewDidDisappear
 }
 
 class StaticTableViewController: UITableViewController {
@@ -33,11 +33,11 @@ class StaticTableViewController: UITableViewController {
 	func addSection(_ section: StaticTableViewSection, animated animateThis: Bool = false) {
 		self.insertSection(section, at: sections.count, animated: animateThis)
 	}
-	
+
 	func insertSection(_ section: StaticTableViewSection, at index: Int, animated: Bool = false) {
 		section.viewController = self
 
-		if (animated) {
+		if animated {
 			tableView.performBatchUpdates({
 				sections.insert(section, at: index)
 				tableView.insertSections(IndexSet(integer: index), with: UITableViewRowAnimation.fade)
@@ -52,7 +52,7 @@ class StaticTableViewController: UITableViewController {
 	}
 
 	func removeSection(_ section: StaticTableViewSection, animated: Bool = false) {
-		if (animated) {
+		if animated {
 			tableView.performBatchUpdates({
 				if let index : Int = sections.index(of: section) {
 					sections.remove(at: index)
@@ -73,7 +73,7 @@ class StaticTableViewController: UITableViewController {
 	// MARK: - Search
 	func sectionForIdentifier(_ sectionID: String) -> StaticTableViewSection? {
 		for section in sections {
-			if (section.identifier == sectionID) {
+			if section.identifier == sectionID {
 				return section
 			}
 		}
@@ -82,7 +82,7 @@ class StaticTableViewController: UITableViewController {
 	}
 
 	func rowInSection(_ inSection: StaticTableViewSection?, rowIdentifier: String) -> StaticTableViewRow? {
-		if (inSection == nil) {
+		if inSection == nil {
 			for section in sections {
 				if let row = section.row(withIdentifier: rowIdentifier) {
 					return row

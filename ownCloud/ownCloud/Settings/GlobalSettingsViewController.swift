@@ -24,35 +24,35 @@ class GlobalSettingsViewController: StaticTableViewController {
 		super.viewDidLoad()
 
 		// Add dynamic sections demo section
-		var section : StaticTableViewSection = StaticTableViewSection.init(headerTitle: "Dynamic sections demo", footerTitle: "Tap the items above to add a section - or remove the last section", rows: [
+		var section : StaticTableViewSection = StaticTableViewSection(headerTitle: "Dynamic sections demo", footerTitle: "Tap the items above to add a section - or remove the last section", rows: [
 			// .. with two rows
-			StaticTableViewRow.init(rowWithAction: { (row, sender) in
+			StaticTableViewRow(rowWithAction: { (row, sender) in
 				let sectionCount = row.viewController!.sections.count
 
-				row.viewController?.insertSection(StaticTableViewSection.init(headerTitle: "Section \(sectionCount)", footerTitle: "Footer of section \(sectionCount)", rows: [
-					StaticTableViewRow.init(rowWithAction: { (row, sender) in
+				row.viewController?.insertSection(StaticTableViewSection(headerTitle: "Section \(sectionCount)", footerTitle: "Footer of section \(sectionCount)", rows: [
+					StaticTableViewRow(rowWithAction: { (row, sender) in
 						print ("Line 1 tapped in \(row.section!.headerTitle!)")
 					}, title: "Line 1"),
-					StaticTableViewRow.init(rowWithAction: { (row, sender) in
+					StaticTableViewRow(rowWithAction: { (row, sender) in
 						print ("Line 2 tapped in \(row.section!.headerTitle!)")
 					}, title: "Line 2"),
-					StaticTableViewRow.init(rowWithAction: { (row, sender) in
+					StaticTableViewRow(rowWithAction: { (row, sender) in
 						row.viewController?.removeSection(row.section!, animated: true)
 					}, title: "Remove section")
 				]), at: 1, animated:true)
 			}, title:"Insert Section"),
 
-			StaticTableViewRow.init(rowWithAction: { (row, sender) in
+			StaticTableViewRow(rowWithAction: { (row, sender) in
 				if let removeSection = row.viewController?.sections.last {
 					row.viewController?.removeSection(removeSection, animated:true)
 				}
 			}, title:"Remove Last Section")
-		]);
+		])
 
 		self.addSection(section)
 
 		// Add a radio group section
-		section = StaticTableViewSection.init(headerTitle: "Radio group", footerTitle: nil)
+		section = StaticTableViewSection(headerTitle: "Radio group", footerTitle: nil)
 
 		section.add(radioGroupWithArrayOfLabelValueDictionaries: [
 				["Line 1" : "value-of-line-1"],
@@ -68,58 +68,62 @@ class GlobalSettingsViewController: StaticTableViewController {
 		self.addSection(section)
 
 		// Add text field section
-		section = StaticTableViewSection.init(headerTitle: "Text fields", footerTitle: nil)
+		section = StaticTableViewSection(headerTitle: "Text fields", footerTitle: nil)
 		section.add(rows: [
-			StaticTableViewRow.init(textFieldWithAction: { (row, sender) in
+			StaticTableViewRow(textFieldWithAction: { (row, sender) in
 				Log.log("New content: \(row.value!)")
 			}, placeholder: "Text Field", keyboardType: UIKeyboardType.emailAddress, identifier: "plainText"),
 
-			StaticTableViewRow.init(secureTextFieldWithAction: { (row, sender) in
+			StaticTableViewRow(secureTextFieldWithAction: { (row, sender) in
 				Log.log("New content: \(row.value!)")
 			}, placeholder: "Secure Text Field", identifier: "secureText"),
 
-			StaticTableViewRow.init(buttonWithAction: { (row, sender) in
+			StaticTableViewRow(buttonWithAction: { (row, sender) in
 				row.section?.row(withIdentifier: "plainText")?.value = "Plain"
 				row.section?.row(withIdentifier: "secureText")?.value = "Secret"
-			}, title: "Set values", style: StaticTableViewRowButtonStyle.plain),
+			}, title: "Set values", style: StaticTableViewRowButtonStyle.plain)
 		])
 
 		self.addSection(section)
 
 		// Add switch section
-		section = StaticTableViewSection.init(headerTitle: "Switches", footerTitle: nil)
+		section = StaticTableViewSection(headerTitle: "Switches", footerTitle: nil)
 		section.add(rows: [
-			StaticTableViewRow.init(switchWithAction: { (row, sender) in
+			StaticTableViewRow(switchWithAction: { (row, sender) in
 				Log.log("Switch 1 value: \(row.value!)")
 			}, title: "Switch 1", value: true, identifier: "switch1"),
 
-			StaticTableViewRow.init(switchWithAction: { (row, sender) in
+			StaticTableViewRow(switchWithAction: { (row, sender) in
 				Log.log("Switch 2 value: \(row.value!)")
 			}, title: "Switch 2", value: false, identifier: "switch2"),
 
-			StaticTableViewRow.init(buttonWithAction: { (row, sender) in
+			StaticTableViewRow(buttonWithAction: { (row, sender) in
 				row.section?.row(withIdentifier: "switch1")?.value = !(row.section?.row(withIdentifier: "switch1")?.value as! Bool)
 				row.section?.row(withIdentifier: "switch2")?.value = !(row.section?.row(withIdentifier: "switch2")?.value as! Bool)
-			}, title: "Toggle values", style: StaticTableViewRowButtonStyle.plain),
+			}, title: "Toggle values", style: StaticTableViewRowButtonStyle.plain)
 		])
 
 		self.addSection(section)
 
 		// Add buttons section
-		section = StaticTableViewSection.init(headerTitle: "Buttons", footerTitle: nil)
+		section = StaticTableViewSection(headerTitle: "Buttons", footerTitle: nil)
 		section.add(rows: [
 
-			StaticTableViewRow.init(buttonWithAction: { (row, sender) in
+			StaticTableViewRow(buttonWithAction: { (row, sender) in
 				Log.log("Proceed pressed")
 			}, title: "Proceed", style: StaticTableViewRowButtonStyle.proceed),
 
-			StaticTableViewRow.init(buttonWithAction: { (row, sender) in
+			StaticTableViewRow(buttonWithAction: { (row, sender) in
 				Log.log("Destructive pressed")
 			}, title: "Destructive", style: StaticTableViewRowButtonStyle.destructive),
 
-			StaticTableViewRow.init(buttonWithAction: { (row, sender) in
+			StaticTableViewRow(buttonWithAction: { (row, sender) in
 				Log.log("Custom pressed")
-			}, title: "Custom", style: StaticTableViewRowButtonStyle.custom(textColor: UIColor.magenta, selectedTextColor: UIColor.cyan, backgroundColor: UIColor.green, selectedBackgroundColor: UIColor.blue)),
+			}, title: "Custom", style:
+                StaticTableViewRowButtonStyle.custom(textColor: UIColor.magenta,
+                                                     selectedTextColor: UIColor.cyan,
+                                                     backgroundColor: UIColor.green,
+                                                     selectedBackgroundColor: UIColor.blue))
 		])
 
 		self.addSection(section)

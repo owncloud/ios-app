@@ -25,7 +25,7 @@ enum StaticTableViewRowButtonStyle {
 	case plain
 	case proceed
 	case destructive
-	case custom(textColor: UIColor, selectedTextColor: UIColor? , backgroundColor: UIColor?, selectedBackgroundColor: UIColor?)
+	case custom(textColor: UIColor, selectedTextColor: UIColor?, backgroundColor: UIColor?, selectedBackgroundColor: UIColor?)
 }
 
 class StaticTableViewRow : NSObject, UITextFieldDelegate {
@@ -47,7 +47,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	public var cell : UITableViewCell?
 
 	public var selectable : Bool = true
-	
+
 	public var action : StaticTableViewRowAction?
 	public var eventHandler : StaticTableViewRowEventHandler?
 
@@ -59,8 +59,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.init()
 
 		self.identifier = identifier
-		
-		self.cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+
+		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.accessoryType = accessoryType
 
@@ -73,13 +73,13 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		self.cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 
 		self.groupIdentifier = groupIdentifier
 		self.value = value
 
-		if (selected) {
+		if selected {
 			self.cell?.accessoryType = UITableViewCellAccessoryType.checkmark
 		}
 
@@ -96,13 +96,13 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		self.cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.selectionStyle = UITableViewCellSelectionStyle.none
 
 		self.action = action
 		self.value = textValue
 
-		let textField = UITextField.init()
+		let textField = UITextField()
 		textField.translatesAutoresizingMaskIntoConstraints = false
 
 		textField.delegate = self
@@ -117,12 +117,12 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		textField.addTarget(self, action: #selector(textFieldContentChanged(_:)), for: UIControlEvents.editingChanged)
 
-		if (cell != nil) {
+		if cell != nil {
 			cell?.contentView.addSubview(textField)
-			textField.leftAnchor.constraint(equalTo: (cell?.contentView.leftAnchor)!, constant:18).isActive = true;
-			textField.rightAnchor.constraint(equalTo: (cell?.contentView.rightAnchor)!, constant:-18).isActive = true;
-			textField.topAnchor.constraint(equalTo: (cell?.contentView.topAnchor)!, constant:14).isActive = true;
-			textField.bottomAnchor.constraint(equalTo: (cell?.contentView.bottomAnchor)!, constant:-14).isActive = true;
+			textField.leftAnchor.constraint(equalTo: (cell?.contentView.leftAnchor)!, constant:18).isActive = true
+			textField.rightAnchor.constraint(equalTo: (cell?.contentView.rightAnchor)!, constant:-18).isActive = true
+			textField.topAnchor.constraint(equalTo: (cell?.contentView.topAnchor)!, constant:14).isActive = true
+			textField.bottomAnchor.constraint(equalTo: (cell?.contentView.bottomAnchor)!, constant:-14).isActive = true
 		}
 
 		self.updateViewFromValue = { (row) in
@@ -131,7 +131,14 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	convenience init(secureTextFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil) {
-		self.init(textFieldWithAction: action, placeholder: placeholderString, value: textValue, secureTextEntry: true, keyboardType: keyboardType, autocorrectionType: autocorrectionType, autocapitalizationType: autocapitalizationType, enablesReturnKeyAutomatically: enablesReturnKeyAutomatically, returnKeyType: returnKeyType, identifier : identifier)
+		self.init(textFieldWithAction: action,
+                  placeholder: placeholderString,
+                  value: textValue, secureTextEntry: true,
+                  keyboardType: keyboardType,
+                  autocorrectionType: autocorrectionType,
+                  autocapitalizationType: autocapitalizationType,
+                  enablesReturnKeyAutomatically: enablesReturnKeyAutomatically,
+                  returnKeyType: returnKeyType, identifier : identifier)
 	}
 
 	@objc func textFieldContentChanged(_ sender: UITextField) {
@@ -152,9 +159,9 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		let switchView = UISwitch.init()
+		let switchView = UISwitch()
 
-		self.cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.accessoryView = switchView
 
@@ -167,7 +174,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		switchView.addTarget(self, action: #selector(switchValueChanged(_:)), for: UIControlEvents.valueChanged)
 
 		self.updateViewFromValue = { (row) in
-			if (row.value != nil) {
+			if row.value != nil {
 				switchView.setOn(row.value as! Bool, animated: true)
 			}
 		}
@@ -187,46 +194,46 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
 
-		self.cell = UITableViewCell.init(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = NSTextAlignment.center
 
-		switch (style) {
+		switch style {
 			case .plain:
 				textColor = UIColor.blue
-			break
 
 			case .proceed:
 				textColor = UIColor.white
 				backgroundColor = UIColor.blue
 				selectedBackgroundColor = UIColor.green
-			break
 
 			case .destructive:
 				textColor = UIColor.red
 				backgroundColor = UIColor.white
-			break
 
 			case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
 				textColor = customTextColor
 				selectedTextColor = customSelectedTextColor
 				backgroundColor = customBackgroundColor
 				selectedBackgroundColor = customSelectedBackgroundColor
-			break
+
 		}
 
 		self.cell?.textLabel?.textColor = textColor
 
-		if (selectedTextColor != nil) {
+		if selectedTextColor != nil {
+
 			self.cell?.textLabel?.highlightedTextColor = selectedTextColor
 		}
 
-		if (backgroundColor != nil) {
+		if backgroundColor != nil {
+
 			self.cell?.backgroundColor = backgroundColor
 		}
 
-		if (selectedBackgroundColor != nil) {
-			let selectedBackgroundView = UIView.init()
+		if selectedBackgroundColor != nil {
+
+			let selectedBackgroundView = UIView()
 
 			selectedBackgroundView.backgroundColor = selectedBackgroundColor
 
@@ -236,5 +243,3 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.action = action
 	}
 }
-
-
