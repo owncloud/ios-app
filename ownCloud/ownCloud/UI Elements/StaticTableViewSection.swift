@@ -23,14 +23,14 @@ class StaticTableViewSection: NSObject {
 
 	public var identifier : String?
 
-	public var rows : Array<StaticTableViewRow> = Array()
+	public var rows : [StaticTableViewRow] = Array()
 
 	public var headerTitle : String?
 	public var footerTitle : String?
-	
+
 	convenience init( headerTitle theHeaderTitle: String?, footerTitle theFooterTitle: String?, identifier : String? = nil, rows rowsToAdd: Array<StaticTableViewRow> = Array()) {
 		self.init()
-		
+
 		self.headerTitle = theHeaderTitle
 		self.footerTitle = theFooterTitle
 
@@ -38,14 +38,13 @@ class StaticTableViewSection: NSObject {
 
 		self.add(rows: rowsToAdd)
 	}
-	
+
 	// MARK: - Adding rows
 	func add(rows rowsToAdd: Array<StaticTableViewRow>) {
 		// Add reference to section to row
 		for row in rowsToAdd {
-			if (row.section == nil)
-			{
-				row.eventHandler?(row, StaticTableViewEvent.Initial)
+			if row.section == nil {
+				row.eventHandler?(row, StaticTableViewEvent.initial)
 			}
 
 			row.section = self
@@ -65,7 +64,7 @@ class StaticTableViewSection: NSObject {
 
 				if let selectedValueObject = selectedValue as? NSObject, let valueObject = value as? NSObject, (selectedValueObject == valueObject) { selected = true }
 
-				radioGroupRows.append(StaticTableViewRow.init(radioItemWithAction: radioAction, groupIdentifier: groupIdentifier, value: value, title: label, selected: selected))
+				radioGroupRows.append(StaticTableViewRow(radioItemWithAction: radioAction, groupIdentifier: groupIdentifier, value: value, title: label, selected: selected))
 			}
 		}
 
@@ -77,8 +76,8 @@ class StaticTableViewSection: NSObject {
 	// MARK: - Radio group value setter/getter
 	func selectedValue(forGroupIdentifier groupIdentifier: String) -> Any? {
 		for row in rows {
-			if (row.groupIdentifier == groupIdentifier) {
-				if (row.cell?.accessoryType == UITableViewCellAccessoryType.checkmark) {
+			if row.groupIdentifier == groupIdentifier {
+				if row.cell?.accessoryType == UITableViewCellAccessoryType.checkmark {
 					return (row.value)
 				}
 			}
@@ -89,7 +88,7 @@ class StaticTableViewSection: NSObject {
 
 	func setSelected(_ value: Any, groupIdentifier: String) {
 		for row in rows {
-			if (row.groupIdentifier == groupIdentifier) {
+			if row.groupIdentifier == groupIdentifier {
 				if let rowValueObject = row.value as? NSObject, let valueObject = value as? NSObject, rowValueObject == valueObject {
 					row.cell?.accessoryType = UITableViewCellAccessoryType.checkmark
 				} else {

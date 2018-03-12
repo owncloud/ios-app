@@ -19,54 +19,49 @@
 import UIKit
 
 enum StaticTableViewEvent {
-	case Initial
-	case AppBecameActive
-	case TableViewWillAppear
-	case TableViewWillDisappear
-	case TableViewDidDisappear
+	case initial
+	case appBecameActive
+	case tableViewWillAppear
+	case tableViewWillDisappear
+	case tableViewDidDisappear
 }
 
 class StaticTableViewController: UITableViewController {
-	public var sections : Array<StaticTableViewSection> = Array()
+	public var sections : [StaticTableViewSection] = Array()
 
 	// MARK: - Section administration
 	func addSection(_ section: StaticTableViewSection, animated animateThis: Bool = false) {
 		self.insertSection(section, at: sections.count, animated: animateThis)
 	}
-	
+
 	func insertSection(_ section: StaticTableViewSection, at index: Int, animated: Bool = false) {
 		section.viewController = self
 
-		if (animated) {
+		if animated {
 			tableView.performBatchUpdates({
 				sections.insert(section, at: index)
-				tableView.insertSections(IndexSet.init(integer: index), with: UITableViewRowAnimation.fade)
+				tableView.insertSections(IndexSet(integer: index), with: UITableViewRowAnimation.fade)
 			}, completion: { (completed) in
 
 			})
-		}
-		else
-		{
+		} else {
 			sections.insert(section, at: index)
-			
+
 			tableView.reloadData()
 		}
 	}
 
 	func removeSection(_ section: StaticTableViewSection, animated: Bool = false) {
-		if (animated) {
+		if animated {
 			tableView.performBatchUpdates({
-				if let index : Int = sections.index(of: section)
-				{
+				if let index : Int = sections.index(of: section) {
 					sections.remove(at: index)
-					tableView.deleteSections(IndexSet.init(integer: index), with: UITableViewRowAnimation.fade)
+					tableView.deleteSections(IndexSet(integer: index), with: UITableViewRowAnimation.fade)
 				}
 			}, completion: { (completed) in
 				section.viewController = nil
 			})
-		}
-		else
-		{
+		} else {
 			sections.remove(at: sections.index(of: section)!)
 
 			section.viewController = nil
@@ -78,7 +73,7 @@ class StaticTableViewController: UITableViewController {
 	// MARK: - Search
 	func sectionForIdentifier(_ sectionID: String) -> StaticTableViewSection? {
 		for section in sections {
-			if (section.identifier == sectionID) {
+			if section.identifier == sectionID {
 				return section
 			}
 		}
@@ -87,7 +82,7 @@ class StaticTableViewController: UITableViewController {
 	}
 
 	func rowInSection(_ inSection: StaticTableViewSection?, rowIdentifier: String) -> StaticTableViewRow? {
-		if (inSection == nil) {
+		if inSection == nil {
 			for section in sections {
 				if let row = section.row(withIdentifier: rowIdentifier) {
 					return row
@@ -103,10 +98,10 @@ class StaticTableViewController: UITableViewController {
 	// MARK: - View Controller
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
+
 		// Uncomment the following line to preserve selection between presentations
 		// self.clearsSelectionOnViewWillAppear = false
-		
+
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 		// self.navigationItem.rightBarButtonItem = self.editButtonItem
 	}
@@ -121,28 +116,29 @@ class StaticTableViewController: UITableViewController {
 		// #warning Incomplete implementation, return the number of sections
 		return sections.count
 	}
-	
+
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		// #warning Incomplete implementation, return the number of rows
 		return sections[section].rows.count
 	}
-	
+
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		return sections[indexPath.section].rows[indexPath.row].cell!
 	}
-	
+
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
 		let staticRow : StaticTableViewRow = staticRowForIndexPath(indexPath)
 
 		staticRow.action!(staticRow, self)
 
 		tableView.deselectRow(at: indexPath, animated: true)
 	}
-	
+
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		return sections[section].headerTitle
 	}
-	
+
 	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
 		return sections[section].footerTitle
 	}

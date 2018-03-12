@@ -20,26 +20,25 @@ import UIKit
 
 @IBDesignable
 class ActionButton: UIButton {
-	override var intrinsicContentSize: CGSize
-	{
+	override var intrinsicContentSize: CGSize {
 		var intrinsicContentSize = super.intrinsicContentSize
-		
+
 		intrinsicContentSize.width += 30
 		intrinsicContentSize.height += 10
 
 		return (intrinsicContentSize)
 	}
-	
+
 	private func styleButton() {
 		self.layer.cornerRadius = 5
-		
-		self.setAttributedTitle(NSAttributedString.init(string: self.title(for: UIControlState.normal)!,
+
+		self.setAttributedTitle(NSAttributedString(string: self.title(for: UIControlState.normal)!,
 								attributes: [
 									NSAttributedStringKey.font : UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.semibold)
 									// NSAttributedStringKey.foregroundColor : self.titleColor(for: UIControlState.normal) as Any
 								]),
 					for: UIControlState.normal)
-		
+
 		/*
 			TODO:
 			- change text and background color when pressing button
@@ -51,12 +50,12 @@ class ActionButton: UIButton {
 		super.init(frame: frame)
 		styleButton()
 	}
-	
+
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		styleButton()
 	}
-	
+
 	override func prepareForInterfaceBuilder() {
 		super.prepareForInterfaceBuilder()
 		styleButton()

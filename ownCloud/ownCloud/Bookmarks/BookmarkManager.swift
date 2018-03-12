@@ -19,15 +19,14 @@
 import UIKit
 import ownCloudSDK
 
-class BookmarkManager: NSObject
-{
+class BookmarkManager: NSObject {
 	public var bookmarks : NSMutableArray
 
 	static var sharedBookmarkManager : BookmarkManager = {
 		let sharedInstance = BookmarkManager()
-		
+
 		sharedInstance.loadBookmarks()
-		
+
 		return (sharedInstance)
 	}()
 
@@ -36,27 +35,27 @@ class BookmarkManager: NSObject
 
 		super.init()
 	}
-	
+
 	// MARK: - Storage Location
 	func bookmarkStoreURL() -> URL {
 		return OCAppIdentity.shared().appGroupContainerURL.appendingPathComponent("bookmarks.dat")
 	}
-	
+
 	// MARK: - Loading and Saving
 	func loadBookmarks() {
 		var loadedBookmarks : NSMutableArray?
 
 		do {
-			loadedBookmarks = try NSKeyedUnarchiver.unarchiveObject(with: Data.init(contentsOf: self.bookmarkStoreURL())) as! NSMutableArray?
-			
-			if (loadedBookmarks != nil) {
+			loadedBookmarks = try NSKeyedUnarchiver.unarchiveObject(with: Data(contentsOf: self.bookmarkStoreURL())) as! NSMutableArray?
+
+			if loadedBookmarks != nil {
 				bookmarks = loadedBookmarks!
 			}
 		} catch {
 			Log.debug("Loading bookmarks failed with \(error)")
 		}
 	}
-	
+
 	func saveBookmarks() {
 		do {
 			try NSKeyedArchiver.archivedData(withRootObject: bookmarks as Any).write(to: self.bookmarkStoreURL())
@@ -64,14 +63,14 @@ class BookmarkManager: NSObject
 			Log.error("Loading bookmarks failed with \(error)")
 		}
 	}
-	
+
 	// MARK: - Administration
 	func addBookmark(_ bookmark: OCBookmark) {
 		bookmarks.add(bookmark)
 
 		saveBookmarks()
 	}
-	
+
 	func removeBookmark(_ bookmark: OCBookmark) {
 		bookmarks.remove(bookmark)
 
@@ -86,7 +85,7 @@ class BookmarkManager: NSObject
 
 		saveBookmarks()
 	}
-	
+
 	func bookmark(at index: Int) -> OCBookmark {
 		return (bookmarks.object(at: index) as! OCBookmark)
 	}
