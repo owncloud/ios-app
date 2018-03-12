@@ -60,7 +60,7 @@ class ServerListBookmarkCell: UITableViewCell {
 		titleLabel.bottomAnchor.constraint(equalTo: detailLabel.topAnchor, constant: -5).isActive = true
 		detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -20).isActive = true
 
-    iconView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+		iconView.widthAnchor.constraint(equalToConstant: 40).isActive = true
 		iconView.heightAnchor.constraint(greaterThanOrEqualToConstant: 40).isActive = true
 
 		iconView.setContentHuggingPriority(UILayoutPriority.defaultLow, for: UILayoutConstraintAxis.vertical)
