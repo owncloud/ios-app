@@ -46,6 +46,10 @@ class BookmarkManager: NSObject {
 		var loadedBookmarks : NSMutableArray?
 
 		do {
+<<<<<<< HEAD
+=======
+
+>>>>>>> - Fixed force unwrapping lint warnings
 			loadedBookmarks = try NSKeyedUnarchiver.unarchiveObject(with: Data(contentsOf: self.bookmarkStoreURL())) as? NSMutableArray
 
 			if loadedBookmarks != nil {
