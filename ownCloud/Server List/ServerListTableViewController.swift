@@ -184,15 +184,9 @@ class ServerListTableViewController: UITableViewController {
 
 		guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "bookmark-cell", for: indexPath) as? ServerListBookmarkCell else {
 
-		    let cell = ServerListBookmarkCell()
-		    return cell
-		}
-
-		if let bookmark : OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
-			bookmarkCell.titleLabel.text = bookmark.url.host
-			bookmarkCell.detailLabel.text = bookmark.url.absoluteString
-			bookmarkCell.imageView?.image = UIImage(named: "owncloud-primary-small")
-		}
+            let cell = ServerListBookmarkCell()
+            return cell
+        }
 
 		return bookmarkCell
 	}
