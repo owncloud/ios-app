@@ -23,6 +23,8 @@ disabled_rules:
     - for_where
     - operator_whitespace
     - type_body_length
+    - force_cast
+    - unused_closure_parameter
 
 custom_rules:
   empty_line_after_guard_statement:

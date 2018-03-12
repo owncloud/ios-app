@@ -28,7 +28,7 @@ class StaticTableViewSection: NSObject {
 	public var headerTitle : String?
 	public var footerTitle : String?
 
-	convenience init( headerTitle theHeaderTitle: String?, footerTitle theFooterTitle: String?, identifier : String? = nil, rows rowsToAdd: Array<StaticTableViewRow> = Array()) {
+	convenience init( headerTitle theHeaderTitle: String?, footerTitle theFooterTitle: String?, identifier : String? = nil, rows rowsToAdd: [StaticTableViewRow] = Array()) {
 		self.init()
 
 		self.headerTitle = theHeaderTitle
@@ -40,7 +40,7 @@ class StaticTableViewSection: NSObject {
 	}
 
 	// MARK: - Adding rows
-	func add(rows rowsToAdd: Array<StaticTableViewRow>) {
+	func add(rows rowsToAdd: [StaticTableViewRow]) {
 		// Add reference to section to row
 		for row in rowsToAdd {
 			if row.section == nil {
@@ -55,8 +55,8 @@ class StaticTableViewSection: NSObject {
 	}
 
 	@discardableResult
-	func add(radioGroupWithArrayOfLabelValueDictionaries labelValueDictRows: Array<Dictionary<String, Any>>, radioAction:StaticTableViewRowAction?, groupIdentifier: String, selectedValue: Any) -> Array<StaticTableViewRow> {
-		var radioGroupRows : Array<StaticTableViewRow> = Array()
+	func add(radioGroupWithArrayOfLabelValueDictionaries labelValueDictRows: [[String : Any]], radioAction:StaticTableViewRowAction?, groupIdentifier: String, selectedValue: Any) -> [StaticTableViewRow] {
+		var radioGroupRows : [StaticTableViewRow] = Array()
 
 		for labelValueDict in labelValueDictRows {
 			for (label, value) in labelValueDict {
