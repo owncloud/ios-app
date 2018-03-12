@@ -17,96 +17,73 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 enum BookmarkViewControllerMode {
 	case add
 	case edit
 }
 
-class BookmarkViewController: UITableViewController {
+class BookmarkViewController: StaticTableViewController {
 
 	public var mode : BookmarkViewControllerMode = .add
+    private var bookmarkToAdd : OCBookmark?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+        self.navigationController?.title = "Add Server"
 
-		// Uncomment the following line to preserve selection between presentations
-		// self.clearsSelectionOnViewWillAppear = false
+        switch mode {
+        case .add:
+            addServerUrl()
+        case .edit:
+            // TODO: Make this go directly to the edit view with all the things.
+            print("edit")
+        }
 
-		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-		// self.navigationItem.rightBarButtonItem = self.editButtonItem
 	}
 
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-		// Dispose of any resources that can be recreated.
-	}
+    private func addServerUrl() {
+        let serverURLSection = StaticTableViewSection(headerTitle: "Server Url", footerTitle: nil)
 
-	// MARK: - Table view data source
+        serverURLSection.add(rows: [
+            StaticTableViewRow(textFieldWithAction: { (row, sender) in
+            }, placeholder: "https://example.com",
+               value: "",
+               keyboardType: .default,
+               autocorrectionType: .no,
+               autocapitalizationType: .none,
+               enablesReturnKeyAutomatically: false,
+               returnKeyType: .continue,
+               identifier: "server-url-textfield")
+            ])
+        self.addSection(serverURLSection, animated: true)
 
-	override func numberOfSections(in tableView: UITableView) -> Int {
-		// #warning Incomplete implementation, return the number of sections
-		return 0
-	}
+        let continueButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "continue-button-section", rows: [
+                StaticTableViewRow(buttonWithAction: { (row, sender) in
 
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		// #warning Incomplete implementation, return the number of rows
-		return 0
-	}
+                    if let textfield = row.section? as? UITextField {
+                        self.bookmarkToAdd = OCBookmark(for: URL(string: textfield.text!))
 
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+                        if let bookmark = self.bookmarkToAdd {
+                            let connection = OCConnection(bookmark: bookmark)
+                            connection?.generateAuthenticationData(withMethod: OCAuthenticationMethodOAuth2Identifier,
+                                                                   options: [:],
+                                                                   completionHandler: { (error, authenticationMethodIdentifier, authenticationData) in
 
-        // Configure the cell...
+                                                                    if error != nil {
+                                                                        print("error != nil")
+                                                                    } else {
+                                                                        bookmark.authenticationData = authenticationData!
+                                                                        bookmark.authenticationMethodIdentifier = authenticationMethodIdentifier
+                                                                    }
 
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+                            })
+                        }
+                    }
+                }, title: "Continue", style: .proceed, identifier: "continue-button-row")
+            ])
+        self.addSection(continueButtonSection, animated: true)
 
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

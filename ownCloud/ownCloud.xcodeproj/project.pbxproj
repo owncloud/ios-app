@@ -26,7 +26,6 @@
 		DCD344B8205BD11000189B9A /* openssl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DCD344B4205BD0FA00189B9A /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DCD344B9205BD11000189B9A /* ownCloudUI.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DCD344A3205BD0B700189B9A /* ownCloudUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DCF4F165205192AA00189B9A /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F163205192AA00189B9A /* BookmarkViewController.swift */; };
-		DCF4F166205192AA00189B9A /* BookmarkViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DCF4F164205192AA00189B9A /* BookmarkViewController.xib */; };
 		DCF4F17920519F8C00189B9A /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */; };
 		DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */; };
 		DCF4F17F2051A0D000189B9A /* StaticTableViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */; };
@@ -151,7 +150,6 @@
 		DCD344A5205BD0C000189B9A /* openssl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = openssl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "../ios-sdk/ownCloudUI/openssl/framework/openssl.xcodeproj"; sourceTree = "<group>"; };
 		DCF4F163205192AA00189B9A /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
-		DCF4F164205192AA00189B9A /* BookmarkViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BookmarkViewController.xib; sourceTree = "<group>"; };
 		DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewController.swift; sourceTree = "<group>"; };
 		DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewSection.swift; sourceTree = "<group>"; };
 		DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewRow.swift; sourceTree = "<group>"; };
@@ -292,7 +290,6 @@
 			children = (
 				DC7DF17D205141C100189B9A /* BookmarkManager.swift */,
 				DCF4F163205192AA00189B9A /* BookmarkViewController.swift */,
-				DCF4F164205192AA00189B9A /* BookmarkViewController.xib */,
 			);
 			path = Bookmarks;
 			sourceTree = "<group>";
@@ -472,7 +469,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCF4F166205192AA00189B9A /* BookmarkViewController.xib in Resources */,
 				DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */,
 				233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */,
 				233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */,
