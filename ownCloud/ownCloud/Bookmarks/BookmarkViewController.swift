@@ -37,13 +37,13 @@ class BookmarkViewController: StaticTableViewController {
         DispatchQueue.main.async {
             switch self.mode {
             case .add:
-                self.navigationController?.navigationBar.topItem?.title = "Add Server"
+                self.navigationController?.navigationBar.topItem?.title = NSLocalizedString("Add Server", comment: "")
                 self.addServerUrl()
                 self.addContinueButton()
 
             case .edit:
                 // TODO: Make this go directly to the edit view with all the things.
-                self.navigationController?.navigationBar.topItem?.title = "Edit Server"
+                self.navigationController?.navigationBar.topItem?.title = NSLocalizedString("Edit Server", comment: "")
                 self.addServerName()
                 self.addServerUrl()
                 self.addConnectButton()
@@ -55,10 +55,10 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
     private func addServerUrl() {
-        let serverURLSection = StaticTableViewSection(headerTitle: "Server Url", footerTitle: nil, identifier: "server-url-section", rows: [
+        let serverURLSection = StaticTableViewSection(headerTitle:NSLocalizedString("Server Url", comment: ""), footerTitle: nil, identifier: "server-url-section", rows: [
             StaticTableViewRow(textFieldWithAction: { (_, _) in},
-                               placeholder: "https://example.com",
-                               value: "https://pablos-mbp.solidgear.prv",
+                               placeholder: NSLocalizedString("https://example.com", comment: ""),
+                               value: "",
                                keyboardType: .default,
                                autocorrectionType: .no,
                                autocapitalizationType: .none,
@@ -124,7 +124,7 @@ class BookmarkViewController: StaticTableViewController {
 
                     })
                 }
-            }, title: "Continue", style: .proceed, identifier: "continue-button-row")
+            }, title: NSLocalizedString("Continue", comment: ""), style: .proceed, identifier: "continue-button-row")
             ])
 
         self.addSection(continueButtonSection, animated: true)
@@ -142,9 +142,9 @@ class BookmarkViewController: StaticTableViewController {
             }
         }
 
-        let section = StaticTableViewSection(headerTitle: "Name", footerTitle: nil, identifier: "server-name-section", rows: [
+        let section = StaticTableViewSection(headerTitle: NSLocalizedString("Name", comment: ""), footerTitle: nil, identifier: "server-name-section", rows: [
             StaticTableViewRow(textFieldWithAction: nil,
-                placeholder: "Example Server",
+                placeholder: NSLocalizedString("Example Server", comment: ""),
                 value: serverName,
                 secureTextEntry: false,
                 keyboardType: .default,
@@ -160,7 +160,7 @@ class BookmarkViewController: StaticTableViewController {
         section?.add(rows: [
             StaticTableViewRow(rowWithAction: {(_, _) in
 
-            }, title: "Show Certificate Details", accessoryType: .disclosureIndicator, identifier: "certificate-details-button")
+            }, title: NSLocalizedString("Show Certificate Details", comment: ""), accessoryType: .disclosureIndicator, identifier: "certificate-details-button")
             ])
     }
 
@@ -199,7 +199,7 @@ class BookmarkViewController: StaticTableViewController {
                         }
                     }
                 })
-            }, title: "Connect")
+            }, title: NSLocalizedString("Connect", comment: ""))
             ])
         self.addSection(connectButtonSection)
 
@@ -213,7 +213,7 @@ class BookmarkViewController: StaticTableViewController {
                         bookmark.authenticationData = nil
                     }
 
-                }, title: "Delete Authentication Data", style: .destructive, identifier: "delete-auth-button")
+                }, title: NSLocalizedString("Delete Authentication Data", comment: ""), style: .destructive, identifier: "delete-auth-button")
                 ])
         }
     }
@@ -225,10 +225,10 @@ class BookmarkViewController: StaticTableViewController {
     }
 
     private func showBasicAuthCredentials() {
-        let section = StaticTableViewSection(headerTitle: "Authentication", footerTitle: nil, identifier: "passphrase-auth-section", rows:
+        let section = StaticTableViewSection(headerTitle:NSLocalizedString("Authentication", comment: ""), footerTitle: nil, identifier: "passphrase-auth-section", rows:
             [ StaticTableViewRow(textFieldWithAction: {(_, _) in
 
-            }, placeholder: "Username",
+            }, placeholder: NSLocalizedString("Username", comment: ""),
                value: "",
                secureTextEntry: false,
                keyboardType: .emailAddress,
@@ -240,7 +240,7 @@ class BookmarkViewController: StaticTableViewController {
 
             StaticTableViewRow(textFieldWithAction: {(_, _) in
 
-            }, placeholder: "Password",
+            }, placeholder: NSLocalizedString("Password", comment: ""),
                value: "",
                secureTextEntry: true,
                keyboardType: .emailAddress,
