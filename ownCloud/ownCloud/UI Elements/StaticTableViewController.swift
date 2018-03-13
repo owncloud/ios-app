@@ -34,6 +34,10 @@ class StaticTableViewController: UITableViewController {
 		self.insertSection(section, at: sections.count, animated: animateThis)
 	}
 
+    func addSection(_ section: StaticTableViewSection, at index: Int, animated animateThis: Bool = false) {
+        self.insertSection(section, at: index, animated: animateThis)
+    }
+
 	func insertSection(_ section: StaticTableViewSection, at index: Int, animated: Bool = false) {
 		section.viewController = self
 
@@ -130,7 +134,9 @@ class StaticTableViewController: UITableViewController {
 
 		let staticRow : StaticTableViewRow = staticRowForIndexPath(indexPath)
 
-		staticRow.action!(staticRow, self)
+        if let action = staticRow.action {
+            action(staticRow, self)
+        }
 
 		tableView.deselectRow(at: indexPath, animated: true)
 	}
