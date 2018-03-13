@@ -188,6 +188,12 @@ class ServerListTableViewController: UITableViewController {
             return cell
         }
 
+        if let bookmark : OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
+            bookmarkCell.titleLabel.text = bookmark.name
+            bookmarkCell.detailLabel.text = bookmark.url.absoluteString
+            bookmarkCell.imageView?.image = UIImage(named: "owncloud-primary-small")
+        }
+
 		return bookmarkCell
 	}
 
