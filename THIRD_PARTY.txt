@@ -1,0 +1,64 @@
+###################################################################
+
+	Copyright (C) 2018, ownCloud GmbH.
+
+
+  	This code is covered by the GNU Public License Version 3.
+  
+  	For distribution utilizing Apple mechanisms please see
+ 	https://owncloud.org/contribute/iOS-license-exception/
+
+	
+	You should have received a copy of this license along with this program. 
+	If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>,
+	<https://owncloud.com/de/licenses/owncloud-commercial/>.
+	
+	
+###################################################################
+
+
+###########
+# LICENSE #
+###########
+ 
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License verions 3,
+as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+The source distribution of this program should include a full copy
+of the GNU GPL version 3 license in the LICENSE.txt file located 
+in its root directory. If not, see <http://www.gnu.org/licenses/>.
+
+
+########################
+# THIRD PARTY LICENSES #
+########################
+
+Both the source and binary distributions of this software contain
+some third party software. All the third party software included
+or linked is redistributed under the terms and conditions of their 
+original licenses. These licenses are compatible the GPL license 
+that govern this software, for the purposes they are being used.
+
+The third party software included and used by this project is:
+
+ * 	ownCloud iOS SDK v 0.0.1
+   	Copyright (c) 2018 ownCloud GmbH. (http://www.owncloud.org/)
+   	Licensed under GNU Public License, Version 3.
+   	Placed at ios-sdk
+	Original license document included at ios-sdk/LICENSE.
+   	See https://github.com/owncloud/ios-sdk
+   	
+ * 	earlGrey v 1.12.1
+   	Copyright (c) 2016 Google Inc.
+   	Licensed under Apache License, Version 2.0.
+   	Placed at Pods/EarlGrey
+	Original license document included at Pods/EarlGrey/EarlGrey/LICENSE
+	See https://github.com/google/EarlGrey
+
+
