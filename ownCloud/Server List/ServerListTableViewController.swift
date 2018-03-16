@@ -135,10 +135,19 @@ class ServerListTableViewController: UITableViewController {
 	// MARK: - Actions
 	@IBAction func addBookmark() {
 
-        let viewController : BookmarkViewController = BookmarkViewController(style: UITableViewStyle.grouped)
+        let viewController : BookmarkViewController = BookmarkViewController(mode:.add, bookmark:nil)
+
         self.navigationController?.pushViewController(viewController, animated: true)
 		updateNoServerMessageVisibility()
 	}
+
+    func editBookmark(_ bookmark: OCBookmark) {
+
+        let viewController : BookmarkViewController = BookmarkViewController(mode:.edit, bookmark:bookmark)
+
+        self.navigationController?.pushViewController(viewController, animated: true)
+
+    }
 
 	@IBAction func help() {
 	}
@@ -233,4 +242,13 @@ class ServerListTableViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		BookmarkManager.sharedBookmarkManager.moveBookmark(from: fromIndexPath.row, to: to.row)
 	}
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let bookmark: OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
+
+            self.editBookmark(bookmark)
+        }
+
+    }
+
 }

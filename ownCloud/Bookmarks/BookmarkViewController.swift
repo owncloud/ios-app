@@ -12,7 +12,8 @@
  * This code is covered by the GNU Public License Version 3.
  *
  * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
- * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ * You should have received a copy of this license along with this program.
+ * If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
  *
  */
 
@@ -30,10 +31,17 @@ let BookmarkURLEditableKey = "url-editable"
 
 class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport {
 
-    public var mode : BookmarkViewControllerMode = .add
-    public var bookmarkToAdd : OCBookmark?
+    public var mode : BookmarkViewControllerMode!
+    public var bookmark: OCBookmark?
     public var connection: OCConnection?
     private var authMethodType: OCAuthenticationMethodType?
+
+    convenience init( mode: BookmarkViewControllerMode!, bookmark: OCBookmark?) {
+        self.init(style: UITableViewStyle.grouped)
+
+        self.mode = mode
+        self.bookmark = bookmark
+    }
 
     static func classSettingsIdentifier() -> String! {
         return "bookmark"
@@ -49,15 +57,24 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         super.viewDidLoad()
         self.tableView.bounces = false
 
-            switch self.mode {
-            case .add:
-                print("Add mode")
-                self.navigationItem.title = "Add Server".localized
-                self.addServerUrl()
-                self.addContinueButton(action: self.continueButtonAction)
-            case .edit:
-                print("Edit mode")
-                self.navigationItem.title = "Edit Server".localized
+        DispatchQueue.main.async {
+            if let loginMode = self.mode {
+                switch loginMode {
+                case .add:
+                    print("Add mode")
+                    self.navigationItem.title = "Add Server".localized
+                    self.addServerUrl()
+                    self.addContinueButton(action: self.continueButtonAction)
+
+                case .edit:
+                    print("Edit mode")
+                    self.navigationItem.title = "Edit Server".localized
+                    self.addServerName()
+                    self.addServerUrl()
+                    self.addConnectButton()
+                    self.addDeleteAuthDataButton()
+                    self.tableView.reloadData()
+                }
             }
     }
 
@@ -68,11 +85,24 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
     private func addServerUrl() {
 
+        var serverURLName = self.classSetting(forOCClassSettingsKey: BookmarkDefaultURLKey) as? String ?? ""
+
+        if let loginMode = self.mode {
+            switch loginMode {
+            case .add:
+                break
+            case .edit:
+                if let url = self.bookmark?.url {
+                    serverURLName = url.absoluteString
+                }
+            }
+        }
+
         let serverURLSection: StaticTableViewSection = StaticTableViewSection(headerTitle:NSLocalizedString("Server URL", comment: ""), footerTitle: nil, identifier: "server-url-section")
 
         let serverURLRow: StaticTableViewRow = StaticTableViewRow(textFieldWithAction: nil,
                                                                   placeholder: NSLocalizedString("https://example.com", comment: ""),
-                                                                  value: self.classSetting(forOCClassSettingsKey: BookmarkDefaultURLKey) as? String ?? "" ,
+                                                                  value: serverURLName,
                                                                   keyboardType: .default,
                                                                   autocorrectionType: .no,
                                                                   autocapitalizationType: .none,
@@ -84,6 +114,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         serverURLSection.add(rows: [serverURLRow])
         addSection(serverURLSection, animated: false)
     }
+
 
     private func addContinueButton(action: @escaping StaticTableViewRowAction) {
 
@@ -99,12 +130,14 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     private func addServerName() {
 
         var serverName = ""
-        switch self.mode {
-        case .add:
-            break
-        case .edit:
-            if let name = self.bookmarkToAdd?.name {
-                serverName = name
+        if let loginMode = self.mode {
+            switch loginMode {
+            case .add:
+                break
+            case .edit:
+                if let name = self.bookmark?.name {
+                    serverName = name
+                }
             }
         }
 
@@ -156,10 +189,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
                     if error == nil {
                         let serverName = self.sectionForIdentifier("server-name-section")?.row(withIdentifier: "server-name-textfield")?.value as? String
-                        self.bookmarkToAdd?.name = (serverName != nil && serverName != "") ? serverName: self.bookmarkToAdd!.url.absoluteString
-                        self.bookmarkToAdd?.authenticationMethodIdentifier = authenticationMethodIdentifier
-                        self.bookmarkToAdd?.authenticationData = authenticationData
-                        BookmarkManager.sharedBookmarkManager.addBookmark(self.bookmarkToAdd!)
+                        self.bookmark?.name = (serverName != nil && serverName != "") ? serverName: self.bookmark!.url.absoluteString
+                        self.bookmark?.authenticationMethodIdentifier = authenticationMethodIdentifier
+                        self.bookmark?.authenticationData = authenticationData
+                        BookmarkManager.sharedBookmarkManager.addBookmark(self.bookmark!)
 
                         DispatchQueue.main.async {
                             self.navigationController?.popViewController(animated: true)
@@ -184,7 +217,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         if let section = self.sectionForIdentifier("connect-button-section") {
             section.add(rows: [
                 StaticTableViewRow(buttonWithAction: { (_, _) in
-                    if let bookmark = self.bookmarkToAdd {
+                    if let bookmark = self.bookmark {
                         bookmark.authenticationData = nil
                     }
 
@@ -238,8 +271,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         if let bookmark: OCBookmark = OCBookmark(for: NSURL(username: &username, password: &password, afterNormalizingURLString: afterURL, protocolWasPrepended: &protocolAppended) as URL),
             let newConnection: OCConnection = OCConnection(bookmark: bookmark) {
 
-            self.bookmarkToAdd = bookmark
-            self.connection = newConnection
+            self.bookmark = bookmark
+            self.connection = connection
 
             newConnection.prepareForSetup(options: nil, completionHandler: { (issuesFromSDK, _, _, preferredAuthMethods) in
 
