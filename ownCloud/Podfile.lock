@@ -1,11 +1,11 @@
 PODS:
-  - EarlGrey (1.12.1)
+  - EarlGrey (1.11.0)
 
 DEPENDENCIES:
   - EarlGrey
 
 SPEC CHECKSUMS:
-  EarlGrey: f7774b813c888ebdb9a21e612d67874d17d5a326
+  EarlGrey: 7515b05c7f448374ad7ca2c454f3ea566fcb1a2f
 
 PODFILE CHECKSUM: 9de74386bc9cfbd23b086eff3507630b400b4518
 
