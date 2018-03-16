@@ -18,21 +18,22 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudUI
 
 enum BookmarkViewControllerMode {
-	case add
-	case edit
+    case add
+    case edit
 }
 
 class BookmarkViewController: StaticTableViewController {
 
-	public var mode : BookmarkViewControllerMode = .add
+    public var mode : BookmarkViewControllerMode = .add
     private var bookmarkToAdd : OCBookmark?
     private var connection: OCConnection?
     private var authMethodType: OCAuthenticationMethodType?
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
         DispatchQueue.main.async {
             switch self.mode {
@@ -42,7 +43,6 @@ class BookmarkViewController: StaticTableViewController {
                 self.addContinueButton()
 
             case .edit:
-                // TODO: Make this go directly to the edit view with all the things.
                 self.navigationController?.navigationBar.topItem?.title = NSLocalizedString("Edit Server", comment: "")
                 self.addServerName()
                 self.addServerUrl()
@@ -52,7 +52,7 @@ class BookmarkViewController: StaticTableViewController {
             }
         }
 
-	}
+    }
 
     private func addServerUrl() {
         let serverURLSection = StaticTableViewSection(headerTitle:NSLocalizedString("Server Url", comment: ""), footerTitle: nil, identifier: "server-url-section", rows: [
@@ -82,46 +82,58 @@ class BookmarkViewController: StaticTableViewController {
 
                     self.bookmarkToAdd = bookmark
                     self.connection = connection
-                    connection.prepareForSetup(options: nil, completionHandler: { (issue, _, _, preferedAuthMethods) in
+                    connection.prepareForSetup(options: nil, completionHandler: { (issuesFromSDK, _, _, preferedAuthMethods) in
 
-                        let issues: [OCConnectionIssue]? = issue?.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.error)
-                        let warningAndErrorIssues : [OCConnectionIssue]? = issue?.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.warning)
+                        let issues: [OCConnectionIssue]? = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.error)
+                        let warningIssues : [OCConnectionIssue]? = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.warning)
+                        let informalIssues: [OCConnectionIssue]? = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to:OCConnectionIssueLevel.informal)
 
                         row.selectable = true
 
                         if issues != nil && issues!.count > 0 {
-                            // TODO: present issues to the user.
                             DispatchQueue.main.async {
-                                self.present(UIAlertController(title: "ErrorIssues", message: "ErrorIssues", preferredStyle: .alert), animated: true, completion: nil)
+                                let issuesVC = ErrorsViewController(issues: issues!)
+                                issuesVC.modalPresentationStyle = .overCurrentContext
+                                self.present(issuesVC, animated: true, completion: nil)
                             }
+                            return
+                        }
 
-                        } else {
-                            if warningAndErrorIssues != nil && warningAndErrorIssues!.count > 0 {
-                                // TODO: ask the user for confirmation
-                                DispatchQueue.main.async {
-                                    self.present(UIAlertController(title: "warningAndErrorIssues", message: "warningAndErrorIssues", preferredStyle: .alert), animated: true, completion: nil)
-                                }
+                        if warningIssues != nil && warningIssues!.count > 0 {
+                            DispatchQueue.main.async {
+                                let issuesVC = WarningsViewController(issues: warningIssues!)
+                                issuesVC.modalPresentationStyle = .overCurrentContext
+                                self.present(issuesVC, animated: true, completion: nil)
+                            }
+                            return
+                        }
 
-                            } else {
-                                let authMethodType = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethods?.first).type()
-                                self.authMethodType = authMethodType
-
-                                DispatchQueue.main.async {
-                                    self.addServerName()
-                                    if issue?.issues.filter({ $0.type == .certificate}) != nil {
-                                        self.addCertificateDetails()
-                                    }
-
-                                    if authMethodType == .passphrase {
-                                        self.showBasicAuthCredentials()
-                                    }
-                                    self.removeContinueButton()
-                                    self.addConnectButton()
-                                    self.tableView.reloadData()
-                                }
+                        if informalIssues != nil && informalIssues!.count > 0 {
+                            DispatchQueue.main.async {
+                                let issuesVC = WarningsViewController(issues: informalIssues!)
+                                issuesVC.modalPresentationStyle = .overCurrentContext
+                                self.present(issuesVC, animated: true, completion: nil)
                             }
                         }
 
+                        if let preferedAuthMethod = preferedAuthMethods?.first {
+
+                            self.authMethodType = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type()
+
+                            DispatchQueue.main.async {
+                                self.addServerName()
+                                if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
+                                    self.addCertificateDetails(certificate: certificateIssue.certificate)
+                                }
+
+                                if self.authMethodType == .passphrase {
+                                    self.showBasicAuthCredentials()
+                                }
+                                self.removeContinueButton()
+                                self.addConnectButton()
+                                self.tableView.reloadData()
+                            }
+                        }
                     })
                 }
             }, title: NSLocalizedString("Continue", comment: ""), style: .proceed, identifier: "continue-button-row")
@@ -144,22 +156,30 @@ class BookmarkViewController: StaticTableViewController {
 
         let section = StaticTableViewSection(headerTitle: NSLocalizedString("Name", comment: ""), footerTitle: nil, identifier: "server-name-section", rows: [
             StaticTableViewRow(textFieldWithAction: nil,
-                placeholder: NSLocalizedString("Example Server", comment: ""),
-                value: serverName,
-                secureTextEntry: false,
-                keyboardType: .default,
-                autocorrectionType: .yes, autocapitalizationType: .sentences, enablesReturnKeyAutomatically: true, returnKeyType: .done, identifier: "server-name-textfield")
+                               placeholder: NSLocalizedString("Example Server", comment: ""),
+                               value: serverName,
+                               secureTextEntry: false,
+                               keyboardType: .default,
+                               autocorrectionType: .yes, autocapitalizationType: .sentences, enablesReturnKeyAutomatically: true, returnKeyType: .done, identifier: "server-name-textfield")
 
             ])
 
         self.addSection(section, at: 0)
     }
 
-    private func addCertificateDetails() {
+    private func addCertificateDetails(certificate: OCCertificate) {
         let section =  self.sectionForIdentifier("server-url-section")
         section?.add(rows: [
             StaticTableViewRow(rowWithAction: {(_, _) in
 
+                OCCertificateDetailsViewNode .certificateDetailsViewNodes(for: certificate, withValidationCompletionHandler: { (certificateNodes) in
+                    let certDetails: NSAttributedString = OCCertificateDetailsViewNode .attributedString(withCertificateDetails: certificateNodes)
+                    DispatchQueue.main.async {
+                        let issuesVC = CertificateViewController(certificateDescription: certDetails, nibName: nil, bundle: nil)
+                        issuesVC.modalPresentationStyle = .overCurrentContext
+                        self.present(issuesVC, animated: true, completion: nil)
+                    }
+                })
             }, title: NSLocalizedString("Show Certificate Details", comment: ""), accessoryType: .disclosureIndicator, identifier: "certificate-details-button")
             ])
     }
@@ -238,17 +258,17 @@ class BookmarkViewController: StaticTableViewController {
                returnKeyType: .continue,
                identifier: "passphrase-username-textfield-row"),
 
-            StaticTableViewRow(textFieldWithAction: {(_, _) in
+              StaticTableViewRow(textFieldWithAction: {(_, _) in
 
-            }, placeholder: NSLocalizedString("Password", comment: ""),
-               value: "",
-               secureTextEntry: true,
-               keyboardType: .emailAddress,
-               autocorrectionType: .no,
-               autocapitalizationType: .none,
-               enablesReturnKeyAutomatically: true,
-               returnKeyType: .go,
-               identifier: "passphrase-password-textfield-row")
+              }, placeholder: NSLocalizedString("Password", comment: ""),
+                 value: "",
+                 secureTextEntry: true,
+                 keyboardType: .emailAddress,
+                 autocorrectionType: .no,
+                 autocapitalizationType: .none,
+                 enablesReturnKeyAutomatically: true,
+                 returnKeyType: .go,
+                 identifier: "passphrase-password-textfield-row")
             ])
         self.addSection(section, at: self.sections.count-1)
     }
