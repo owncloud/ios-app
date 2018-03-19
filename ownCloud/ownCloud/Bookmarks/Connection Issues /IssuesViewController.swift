@@ -16,6 +16,7 @@ class IssuesViewController: UIViewController {
     public let bottomContainer: UIView = UIView()
     private var issues: [OCConnectionIssue] = []
     private var tableHeighConstraint: NSLayoutConstraint?
+    private var headerTitle: String?
 
     private var modalPresentationVC: UIViewControllerTransitioningDelegate?
 
@@ -24,8 +25,9 @@ class IssuesViewController: UIViewController {
         self.setupTransitions()
     }
 
-    init(issues: [OCConnectionIssue]?) {
+    init(issues: [OCConnectionIssue]?, headerTitle: String?) {
         super.init(nibName: nil, bundle: nil)
+        self.headerTitle = headerTitle
         if issues != nil {
             self.issues = issues!
         }
@@ -80,6 +82,7 @@ class IssuesViewController: UIViewController {
         tableHeighConstraint = issuesTableView.heightAnchor.constraint(equalToConstant: issuesTableView.contentSize.height)
         tableHeighConstraint?.isActive = true
 
+        issuesTableView.tableHeaderView?.backgroundColor = UIColor.white
     }
 
     override func viewWillLayoutSubviews() {
@@ -107,9 +110,26 @@ extension IssuesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+
+        guard self.headerTitle != nil else {
+            return 0
+        }
+
+        return 40
+    }
 }
 
 extension IssuesViewController: UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        cell.backgroundColor = .white
+        cell.textLabel?.attributedText = NSAttributedString(string: self.headerTitle!, attributes: [.font : UIFont.systemFont(ofSize: 20, weight: .semibold)])
+
+        return cell
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
        return issues.count
@@ -120,6 +140,7 @@ extension IssuesViewController: UITableViewDataSource {
         let issue: OCConnectionIssue = issues[indexPath.row]
 
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+        cell.selectionStyle = .none
         cell.accessoryType = .disclosureIndicator
         cell.accessoryView?.backgroundColor = .blue
 
@@ -154,7 +175,7 @@ extension IssuesViewController: UITableViewDataSource {
             OCCertificateDetailsViewNode .certificateDetailsViewNodes(for: issue.certificate, withValidationCompletionHandler: { (certificateNodes) in
                 let certDetails: NSAttributedString = OCCertificateDetailsViewNode .attributedString(withCertificateDetails: certificateNodes)
                 DispatchQueue.main.async {
-                    let issuesVC = CertificateViewController(certificateDescription: certDetails, nibName: nil, bundle: nil)
+                    let issuesVC = CertificateViewController(certificateDescription: certDetails)
                     issuesVC.modalPresentationStyle = .overCurrentContext
                     self.present(issuesVC, animated: true, completion: nil)
                 }

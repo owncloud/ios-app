@@ -15,9 +15,9 @@ class CertificateViewController: IssuesViewController {
     private let certificateDescription: NSAttributedString?
     private let backButton: UIButton = UIButton(type: .system)
 
-    init(certificateDescription: NSAttributedString, nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    init(certificateDescription: NSAttributedString) {
         self.certificateDescription = certificateDescription
-        super.init(issues: nil)
+        super.init(issues: nil, headerTitle: NSLocalizedString("Certificate Details", comment: ""))
     }
 
     required init?(coder aDecoder: NSCoder) {

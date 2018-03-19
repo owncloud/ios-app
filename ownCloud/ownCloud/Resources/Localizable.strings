@@ -18,3 +18,8 @@
 "Authentication" = "Authentication";
 "Username" = "Username";
 "Password" = "Password";
+"Certificate Details" = "Certificate Details";
+"Cancel" = "Cancel";
+"Approve" = "Approve";
+"Error" = "Error";
+"Review Connection" = "Review Connection";
