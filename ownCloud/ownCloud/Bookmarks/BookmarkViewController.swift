@@ -202,6 +202,12 @@ class BookmarkViewController: StaticTableViewController {
                         DispatchQueue.main.async {
                             self.navigationController?.pushViewController(ServerListTableViewController.init(style: .grouped), animated: true)
                         }
+                    } else {
+                        DispatchQueue.main.async {
+                            let issuesVC = ErrorsViewController(issues: [OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil)])
+                            issuesVC.modalPresentationStyle = .overCurrentContext
+                            self.present(issuesVC, animated: true, completion: nil)
+                        }
                     }
                 })
             }, title: NSLocalizedString("Connect", comment: ""))
