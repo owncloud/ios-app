@@ -128,6 +128,17 @@ extension IssuesViewController: UITableViewDataSource {
         cell.backgroundColor = .white
         cell.textLabel?.attributedText = NSAttributedString(string: self.headerTitle!, attributes: [.font : UIFont.systemFont(ofSize: 20, weight: .semibold)])
 
+        let separatorView: UIView = UIView()
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        separatorView.backgroundColor = UIColor(hex: 0x04040F)
+        cell.addSubview(separatorView)
+        separatorView.heightAnchor.constraint(equalToConstant: 0.25).isActive = true
+        separatorView.leftAnchor.constraint(equalTo: cell.leftAnchor, constant: 0).isActive = true
+        separatorView.rightAnchor.constraint(equalTo: cell.rightAnchor, constant: 0).isActive = true
+        separatorView.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: 0).isActive = true
+
+        cell.layoutSubviews()
+
         return cell
     }
 
