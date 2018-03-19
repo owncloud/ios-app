@@ -101,7 +101,26 @@ class BookmarkViewController: StaticTableViewController {
 
                         if warningIssues != nil && warningIssues!.count > 0 {
                             DispatchQueue.main.async {
-                                let issuesVC = WarningsViewController(issues: warningIssues!)
+                                let issuesVC = WarningsViewController(issues: warningIssues!, action: {
+                                    if let preferedAuthMethod = preferedAuthMethods?.first {
+
+                                        self.authMethodType = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type()
+
+                                        DispatchQueue.main.async {
+                                            self.addServerName()
+                                            if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
+                                                self.addCertificateDetails(certificate: certificateIssue.certificate)
+                                            }
+
+                                            if self.authMethodType == .passphrase {
+                                                self.showBasicAuthCredentials()
+                                            }
+                                            self.removeContinueButton()
+                                            self.addConnectButton()
+                                            self.tableView.reloadData()
+                                        }
+                                    }
+                                } )
                                 issuesVC.modalPresentationStyle = .overCurrentContext
                                 self.present(issuesVC, animated: true, completion: nil)
                             }
@@ -110,28 +129,28 @@ class BookmarkViewController: StaticTableViewController {
 
                         if informalIssues != nil && informalIssues!.count > 0 {
                             DispatchQueue.main.async {
-                                let issuesVC = WarningsViewController(issues: informalIssues!)
+                                let issuesVC = WarningsViewController(issues: informalIssues!, action: {
+                                    if let preferedAuthMethod = preferedAuthMethods?.first {
+
+                                        self.authMethodType = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type()
+
+                                        DispatchQueue.main.async {
+                                            self.addServerName()
+                                            if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
+                                                self.addCertificateDetails(certificate: certificateIssue.certificate)
+                                            }
+
+                                            if self.authMethodType == .passphrase {
+                                                self.showBasicAuthCredentials()
+                                            }
+                                            self.removeContinueButton()
+                                            self.addConnectButton()
+                                            self.tableView.reloadData()
+                                        }
+                                    }
+                                })
                                 issuesVC.modalPresentationStyle = .overCurrentContext
                                 self.present(issuesVC, animated: true, completion: nil)
-                            }
-                        }
-
-                        if let preferedAuthMethod = preferedAuthMethods?.first {
-
-                            self.authMethodType = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type()
-
-                            DispatchQueue.main.async {
-                                self.addServerName()
-                                if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
-                                    self.addCertificateDetails(certificate: certificateIssue.certificate)
-                                }
-
-                                if self.authMethodType == .passphrase {
-                                    self.showBasicAuthCredentials()
-                                }
-                                self.removeContinueButton()
-                                self.addConnectButton()
-                                self.tableView.reloadData()
                             }
                         }
                     })
@@ -175,7 +194,7 @@ class BookmarkViewController: StaticTableViewController {
                 OCCertificateDetailsViewNode .certificateDetailsViewNodes(for: certificate, withValidationCompletionHandler: { (certificateNodes) in
                     let certDetails: NSAttributedString = OCCertificateDetailsViewNode .attributedString(withCertificateDetails: certificateNodes)
                     DispatchQueue.main.async {
-                        let issuesVC = CertificateViewController(certificateDescription: certDetails, nibName: nil, bundle: nil)
+                        let issuesVC = CertificateViewController(certificateDescription: certDetails)
                         issuesVC.modalPresentationStyle = .overCurrentContext
                         self.present(issuesVC, animated: true, completion: nil)
                     }

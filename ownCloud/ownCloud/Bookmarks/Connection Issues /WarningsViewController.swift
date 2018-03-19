@@ -7,11 +7,24 @@
 //
 
 import UIKit
+import ownCloudSDK
 
 class WarningsViewController: IssuesViewController {
 
-    let cancelButton: UIButton = UIButton(type: .system)
-    let approveButton: UIButton = UIButton(type: .system)
+    private let cancelButton: UIButton = UIButton(type: .system)
+    private let approveButton: UIButton = UIButton(type: .system)
+
+    private let action: (() -> Void)?
+
+    init(issues: [OCConnectionIssue]?, action: @escaping () -> Void) {
+        self.action = action
+        super.init(issues: issues, headerTitle: NSLocalizedString("Review Connection", comment: ""))
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        self.action = nil
+        super.init(coder: aDecoder)
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -28,7 +41,10 @@ class WarningsViewController: IssuesViewController {
         cancelButton.addTarget(self, action: #selector(super.dismissView), for: .touchUpInside)
         cancelButton.layer.cornerRadius = 10
 
-        cancelButton.setAttributedTitle(NSAttributedString(string: "Cancel", attributes: [.font : UIFont.systemFont(ofSize: 20, weight: .semibold)]), for: .normal)
+        cancelButton.setAttributedTitle(
+            NSAttributedString(string: NSLocalizedString("Cancel", comment: ""), attributes: [
+                .font : UIFont.systemFont(ofSize: 20, weight: .semibold)
+            ]), for: .normal)
         cancelButton.backgroundColor = UIColor.white
 
         approveButton.bottomAnchor.constraint(equalTo: self.bottomContainer.bottomAnchor).isActive = true
@@ -37,11 +53,24 @@ class WarningsViewController: IssuesViewController {
         approveButton.widthAnchor.constraint(equalTo: self.cancelButton.widthAnchor).isActive = true
         approveButton.layer.cornerRadius = 10
 
-        approveButton.addTarget(self, action: #selector(super.dismissView), for: .touchUpInside)
+        approveButton.addTarget(self, action: #selector(self.doAction), for: .touchUpInside)
 
-        approveButton.setAttributedTitle(NSAttributedString(string: "Aprove", attributes: [.font : UIFont.systemFont(ofSize: 20, weight: .semibold), .foregroundColor : UIColor.white]), for: .normal)
+        approveButton.setAttributedTitle(
+            NSAttributedString(string: NSLocalizedString("Approve", comment: ""), attributes: [
+                .font : UIFont.systemFont(ofSize: 20, weight: .semibold),
+                .foregroundColor : UIColor.white
+            ]), for: .normal)
         approveButton.backgroundColor = UIColor(hex:0x1AC763)
 
         bottomContainer.layoutSubviews()
+    }
+
+    @objc private func doAction() {
+        guard action != nil else {
+            return
+        }
+
+        self.action!()
+        self.dismissView()
     }
 }

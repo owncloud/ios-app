@@ -7,10 +7,19 @@
 //
 
 import UIKit
+import ownCloudSDK
 
 class ErrorsViewController: IssuesViewController {
 
     private let okButton : UIButton = UIButton(type: .system)
+
+    init(issues: [OCConnectionIssue]?) {
+        super.init(issues: issues, headerTitle: NSLocalizedString("Error", comment: ""))
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
