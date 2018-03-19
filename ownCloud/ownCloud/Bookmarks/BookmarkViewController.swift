@@ -102,25 +102,8 @@ class BookmarkViewController: StaticTableViewController {
                         if warningIssues != nil && warningIssues!.count > 0 {
                             DispatchQueue.main.async {
                                 let issuesVC = WarningsViewController(issues: warningIssues!, action: {
-                                    if let preferedAuthMethod = preferedAuthMethods?.first {
-
-                                        self.authMethodType = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type()
-
-                                        DispatchQueue.main.async {
-                                            self.addServerName()
-                                            if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
-                                                self.addCertificateDetails(certificate: certificateIssue.certificate)
-                                            }
-
-                                            if self.authMethodType == .passphrase {
-                                                self.showBasicAuthCredentials()
-                                            }
-                                            self.removeContinueButton()
-                                            self.addConnectButton()
-                                            self.tableView.reloadData()
-                                        }
-                                    }
-                                } )
+                                    self.continueButtonAction(preferedAuthMethods: preferedAuthMethods!, issuesFromSDK: issuesFromSDK)
+                                })
                                 issuesVC.modalPresentationStyle = .overCurrentContext
                                 self.present(issuesVC, animated: true, completion: nil)
                             }
@@ -130,24 +113,7 @@ class BookmarkViewController: StaticTableViewController {
                         if informalIssues != nil && informalIssues!.count > 0 {
                             DispatchQueue.main.async {
                                 let issuesVC = WarningsViewController(issues: informalIssues!, action: {
-                                    if let preferedAuthMethod = preferedAuthMethods?.first {
-
-                                        self.authMethodType = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type()
-
-                                        DispatchQueue.main.async {
-                                            self.addServerName()
-                                            if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
-                                                self.addCertificateDetails(certificate: certificateIssue.certificate)
-                                            }
-
-                                            if self.authMethodType == .passphrase {
-                                                self.showBasicAuthCredentials()
-                                            }
-                                            self.removeContinueButton()
-                                            self.addConnectButton()
-                                            self.tableView.reloadData()
-                                        }
-                                    }
+                                    self.continueButtonAction(preferedAuthMethods: preferedAuthMethods!, issuesFromSDK: issuesFromSDK)
                                 })
                                 issuesVC.modalPresentationStyle = .overCurrentContext
                                 self.present(issuesVC, animated: true, completion: nil)
@@ -265,30 +231,49 @@ class BookmarkViewController: StaticTableViewController {
 
     private func showBasicAuthCredentials() {
         let section = StaticTableViewSection(headerTitle:NSLocalizedString("Authentication", comment: ""), footerTitle: nil, identifier: "passphrase-auth-section", rows:
-            [ StaticTableViewRow(textFieldWithAction: {(_, _) in
+            [ StaticTableViewRow(textFieldWithAction: nil,
+                                 placeholder: NSLocalizedString("Username", comment: ""),
+                                 value: "",
+                                 secureTextEntry: false,
+                                 keyboardType: .emailAddress,
+                                 autocorrectionType: .no,
+                                 autocapitalizationType: UITextAutocapitalizationType.none,
+                                 enablesReturnKeyAutomatically: true,
+                                 returnKeyType: .continue,
+                                 identifier: "passphrase-username-textfield-row"),
 
-            }, placeholder: NSLocalizedString("Username", comment: ""),
-               value: "",
-               secureTextEntry: false,
-               keyboardType: .emailAddress,
-               autocorrectionType: .no,
-               autocapitalizationType: UITextAutocapitalizationType.none,
-               enablesReturnKeyAutomatically: true,
-               returnKeyType: .continue,
-               identifier: "passphrase-username-textfield-row"),
-
-              StaticTableViewRow(textFieldWithAction: {(_, _) in
-
-              }, placeholder: NSLocalizedString("Password", comment: ""),
-                 value: "",
-                 secureTextEntry: true,
-                 keyboardType: .emailAddress,
-                 autocorrectionType: .no,
-                 autocapitalizationType: .none,
-                 enablesReturnKeyAutomatically: true,
-                 returnKeyType: .go,
-                 identifier: "passphrase-password-textfield-row")
+              StaticTableViewRow(textFieldWithAction: nil, placeholder: NSLocalizedString("Password", comment: ""),
+                                 value: "",
+                                 secureTextEntry: true,
+                                 keyboardType: .emailAddress,
+                                 autocorrectionType: .no,
+                                 autocapitalizationType: .none,
+                                 enablesReturnKeyAutomatically: true,
+                                 returnKeyType: .go,
+                                 identifier: "passphrase-password-textfield-row")
             ])
         self.addSection(section, at: self.sections.count-1)
+    }
+
+    private func continueButtonAction(preferedAuthMethods: [String], issuesFromSDK: OCConnectionIssue?) {
+
+        if let preferedAuthMethod = preferedAuthMethods.first as String? {
+
+            self.authMethodType = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type()
+
+            DispatchQueue.main.async {
+                self.addServerName()
+                if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
+                    self.addCertificateDetails(certificate: certificateIssue.certificate)
+                }
+
+                if self.authMethodType == .passphrase {
+                    self.showBasicAuthCredentials()
+                }
+                self.removeContinueButton()
+                self.addConnectButton()
+                self.tableView.reloadData()
+            }
+        }
     }
 }
