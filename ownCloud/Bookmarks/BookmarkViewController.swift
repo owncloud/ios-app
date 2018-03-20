@@ -170,12 +170,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                             issuesVC.modalPresentationStyle = .overCurrentContext
                             self.present(issuesVC, animated: true, completion: nil)
                         }
-                    } else {
-                        DispatchQueue.main.async {
-                            let issuesVC = ErrorsViewController(issues: [OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil)])
-                            issuesVC.modalPresentationStyle = .overCurrentContext
-                            self.present(issuesVC, animated: true, completion: nil)
-                        }
                     }
                 })
             }, title: NSLocalizedString("Connect", comment: ""),
