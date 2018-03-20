@@ -52,12 +52,14 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                  fontColor : UIColor.black,
                  buttonsFontColor : UIColor.white,
                  sectionHeadersFontColor : UIColor.black
-
         ]
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.bounces = false
+
+        self.tableView.backgroundColor = self.classSetting(forOCClassSettingsKey: backgroundColor) as? UIColor
 
         DispatchQueue.main.async {
             switch self.mode {
@@ -145,7 +147,12 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                         }
                     })
                 }
-            }, title: NSLocalizedString("Continue", comment: ""), style: .proceed, identifier: "continue-button-row")
+            }, title: NSLocalizedString("Continue", comment: ""),
+               style: .custom(textColor: self.classSetting(forOCClassSettingsKey: buttonsFontColor) as? UIColor,
+                              selectedTextColor: nil,
+                              backgroundColor: self.classSetting(forOCClassSettingsKey: buttonsBackgroundColor) as? UIColor,
+                              selectedBackgroundColor: nil),
+               identifier: "continue-button-row")
             ])
 
         self.addSection(continueButtonSection, animated: true)
@@ -181,7 +188,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         section?.add(rows: [
             StaticTableViewRow(rowWithAction: {(_, _) in
 
-                OCCertificateDetailsViewNode .certificateDetailsViewNodes(for: certificate, withValidationCompletionHandler: { (certificateNodes) in
+                OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: certificate, withValidationCompletionHandler: { (certificateNodes) in
                     let certDetails: NSAttributedString = OCCertificateDetailsViewNode .attributedString(withCertificateDetails: certificateNodes)
                     DispatchQueue.main.async {
                         let issuesVC = CertificateViewController(certificateDescription: certDetails)
@@ -195,7 +202,9 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
     private func addConnectButton() {
         let connectButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "connect-button-section", rows: [
-            StaticTableViewRow(buttonWithAction: {(_, _) in
+            StaticTableViewRow(buttonWithAction: { (row, _) in
+
+                row.cell?.backgroundColor = self.classSetting(forOCClassSettingsKey: buttonsBackgroundColor) as? UIColor
 
                 var options: [OCAuthenticationMethodKey : Any] = Dictionary()
                 var method: String = OCAuthenticationMethodOAuth2Identifier
@@ -234,8 +243,13 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                         }
                     }
                 })
-            }, title: NSLocalizedString("Connect", comment: ""))
-            ])
+            }, title: NSLocalizedString("Connect", comment: ""),
+               style: .custom(textColor: self.classSetting(forOCClassSettingsKey: buttonsFontColor) as? UIColor,
+                             selectedTextColor: nil,
+                             backgroundColor: self.classSetting(forOCClassSettingsKey: buttonsBackgroundColor) as? UIColor,
+                             selectedBackgroundColor: nil),
+               identifier: nil)])
+
         self.addSection(connectButtonSection)
 
     }
