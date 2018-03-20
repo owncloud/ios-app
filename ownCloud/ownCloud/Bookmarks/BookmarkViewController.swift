@@ -25,12 +25,36 @@ enum BookmarkViewControllerMode {
     case edit
 }
 
-class BookmarkViewController: StaticTableViewController {
+let backgroundColor = "bookmarks-background-color"
+let predefinedURL = "bookmarks-hardcoded-url"
+let showURLTextField = "bookmarks-show-url"
+let buttonsBackgroundColor = "bookmarks-button-color"
+let fontColor = "bookmarks-font-color"
+let buttonsFontColor = "bookmarks-buttons-font-color"
+let sectionHeadersFontColor = "bookmarks-sections-headers-font-color"
+
+class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport {
 
     public var mode : BookmarkViewControllerMode = .add
     private var bookmarkToAdd : OCBookmark?
     private var connection: OCConnection?
     private var authMethodType: OCAuthenticationMethodType?
+
+    static func classSettingsIdentifier() -> String! {
+        return "bookmark-view-controller"
+    }
+
+    static func defaultSettings(forIdentifier identifier: String!) -> [String : Any]! {
+        return [ backgroundColor : UIColor(hex: 0xEFEFF4),
+                 predefinedURL : "",
+                 showURLTextField : true,
+                 buttonsBackgroundColor : UIColor(hex: 0x007AFF),
+                 fontColor : UIColor.black,
+                 buttonsFontColor : UIColor.white,
+                 sectionHeadersFontColor : UIColor.black
+
+        ]
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
