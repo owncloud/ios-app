@@ -64,6 +64,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.textLabel?.text = title
 		self.cell?.accessoryType = accessoryType
 
+		self.cell?.accessibilityIdentifier = identifier
+
 		self.action = rowWithAction
 	}
 
@@ -75,6 +77,10 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
+
+		if let accessibilityIdentifier : String = identifier {
+			self.cell?.accessibilityIdentifier = groupIdentifier + "." + accessibilityIdentifier
+		}
 
 		self.groupIdentifier = groupIdentifier
 		self.value = value
@@ -114,6 +120,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		textField.enablesReturnKeyAutomatically = enablesReturnKeyAutomatically
 		textField.returnKeyType = returnKeyType
 		textField.text = textValue
+		textField.accessibilityIdentifier = identifier
 
 		textField.addTarget(self, action: #selector(textFieldContentChanged(_:)), for: UIControlEvents.editingChanged)
 
@@ -166,6 +173,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.accessoryView = switchView
 
 		switchView.isOn = switchValue
+		switchView.accessibilityIdentifier = identifier
 
 		self.value = switchValue
 
@@ -197,6 +205,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = NSTextAlignment.center
+
+		self.cell?.accessibilityIdentifier = identifier
 
 		switch style {
 			case .plain:
