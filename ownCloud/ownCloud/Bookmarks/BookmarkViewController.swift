@@ -25,8 +25,8 @@ enum BookmarkViewControllerMode {
     case edit
 }
 
-let bookmarkViewControllerDefaultUrl = "bookmarks-default-url"
-let bookmarkViewControllerURLEditable = "bookmarks-url-editable"
+let bookmarkViewControllerDefaultUrl = "default-url"
+let bookmarkViewControllerURLEditable = "url-editable"
 
 class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport {
 
@@ -54,8 +54,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             case .add:
                 print("Add mode")
                 self.navigationController?.navigationBar.topItem?.title = NSLocalizedString("Add Server", comment: "")
-                    self.addServerUrl()
-                    self.addContinueButton(action: self.continueButtonAction)
+                self.addServerUrl()
+                self.addContinueButton(action: self.continueButtonAction)
             case .edit:
                 print("Edit mode")
                 self.navigationController?.navigationBar.topItem?.title = NSLocalizedString("Edit Server", comment: "")
