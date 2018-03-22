@@ -40,7 +40,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
 
     static func defaultSettings(forIdentifier identifier: String!) -> [String : Any]! {
-        return [ bookmarkViewControllerDefaultUrl : "demo:demo@demo.owncloud.org",
+        return [ bookmarkViewControllerDefaultUrl : "",
                  bookmarkViewControllerURLEditable : true
         ]
     }
