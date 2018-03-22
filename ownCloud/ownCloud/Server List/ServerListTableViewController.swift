@@ -23,6 +23,20 @@ class ServerListTableViewController: UITableViewController {
 
 	@IBOutlet var welcomeOverlayView: UIView!
 
+	override init(style: UITableViewStyle) {
+		super.init(style: style)
+
+		NotificationCenter.default.addObserver(self, selector: #selector(serverListChanged), name: Notification.Name.BookmarkManagerListChanged, object: nil)
+	}
+
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self, name: Notification.Name.BookmarkManagerListChanged, object: nil)
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -124,8 +138,6 @@ class ServerListTableViewController: UITableViewController {
 
 		BookmarkManager.sharedBookmarkManager.addBookmark(bookmark!)
 
-		tableView.reloadData()
-
 		updateNoServerMessageVisibility()
 	}
 
@@ -136,6 +148,15 @@ class ServerListTableViewController: UITableViewController {
 		let viewController : GlobalSettingsViewController = GlobalSettingsViewController(style: UITableViewStyle.grouped)
 
 		self.navigationController?.pushViewController(viewController, animated: true)
+	}
+
+	// MARK: - Track external changes
+	var ignoreServerListChanges : Bool = false
+
+	@objc func serverListChanged() {
+		if !ignoreServerListChanges {
+			self.tableView.reloadData()
+		}
 	}
 
 	// MARK: - Table view data source
@@ -152,37 +173,39 @@ class ServerListTableViewController: UITableViewController {
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "bookmark-cell", for: indexPath) as? ServerListBookmarkCell else {
+		guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "bookmark-cell", for: indexPath) as? ServerListBookmarkCell else {
 
-            let cell = ServerListBookmarkCell()
-            return cell
-        }
+		    let cell = ServerListBookmarkCell()
+		    return cell
+		}
 
-		let bookmark : OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row)
-
-		bookmarkCell.titleLabel.text = bookmark.url.host
-		bookmarkCell.detailLabel.text = bookmark.url.absoluteString
-		bookmarkCell.imageView?.image = UIImage(named: "owncloud-primary-small")
+		if let bookmark : OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
+			bookmarkCell.titleLabel.text = bookmark.url.host
+			bookmarkCell.detailLabel.text = bookmark.url.absoluteString
+			bookmarkCell.imageView?.image = UIImage(named: "owncloud-primary-small")
+		}
 
 		return bookmarkCell
 	}
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		return [
-				UITableViewRowAction(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (action, indexPath) in
-					let bookmark : OCBookmark
-
-					bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row)
-
-					BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
-
+				UITableViewRowAction(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (_, indexPath) in
 					// TODO: Add confirmation prompt
 
-					tableView.performBatchUpdates({
-						tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
-					}, completion: nil)
+					if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
+						self.ignoreServerListChanges = true
 
-					self.updateNoServerMessageVisibility()
+						BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
+
+						tableView.performBatchUpdates({
+							tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
+						}, completion: { (_) in
+							self.ignoreServerListChanges = false
+						})
+
+						self.updateNoServerMessageVisibility()
+					}
 				})
 			]
 	}

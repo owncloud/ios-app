@@ -17,14 +17,11 @@ disabled_rules:
     - switch_case_alignment
     - identifier_name
     - colon
-    - todo
     - cyclomatic_complexity
     - file_length
     - for_where
     - operator_whitespace
     - type_body_length
-    - force_cast
-    - unused_closure_parameter
 
 custom_rules:
   empty_line_after_guard_statement:

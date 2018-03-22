@@ -46,7 +46,7 @@ class BookmarkManager: NSObject {
 		var loadedBookmarks : NSMutableArray?
 
 		do {
-			loadedBookmarks = try NSKeyedUnarchiver.unarchiveObject(with: Data(contentsOf: self.bookmarkStoreURL())) as! NSMutableArray?
+			loadedBookmarks = try NSKeyedUnarchiver.unarchiveObject(with: Data(contentsOf: self.bookmarkStoreURL())) as? NSMutableArray
 
 			if loadedBookmarks != nil {
 				bookmarks = loadedBookmarks!
@@ -64,15 +64,24 @@ class BookmarkManager: NSObject {
 		}
 	}
 
+	// MARK: - Change Notifications
+	func postChangeNotification() {
+		NotificationCenter.default.post(Notification(name: Notification.Name.BookmarkManagerListChanged))
+	}
+
 	// MARK: - Administration
 	func addBookmark(_ bookmark: OCBookmark) {
 		bookmarks.add(bookmark)
+
+		postChangeNotification()
 
 		saveBookmarks()
 	}
 
 	func removeBookmark(_ bookmark: OCBookmark) {
 		bookmarks.remove(bookmark)
+
+		postChangeNotification()
 
 		saveBookmarks()
 	}
@@ -83,10 +92,16 @@ class BookmarkManager: NSObject {
 		bookmarks.removeObject(at: from)
 		bookmarks.insert(bookmark, at: to)
 
+		postChangeNotification()
+
 		saveBookmarks()
 	}
 
-	func bookmark(at index: Int) -> OCBookmark {
-		return (bookmarks.object(at: index) as! OCBookmark)
+	func bookmark(at index: Int) -> OCBookmark? {
+		return (bookmarks.object(at: index) as? OCBookmark)
 	}
+}
+
+public extension Notification.Name {
+	static let BookmarkManagerListChanged = Notification.Name("BookmarkManagerListChanged")
 }

@@ -41,7 +41,7 @@ class StaticTableViewController: UITableViewController {
 			tableView.performBatchUpdates({
 				sections.insert(section, at: index)
 				tableView.insertSections(IndexSet(integer: index), with: UITableViewRowAnimation.fade)
-			}, completion: { (completed) in
+			}, completion: { (_) in
 
 			})
 		} else {
@@ -58,7 +58,7 @@ class StaticTableViewController: UITableViewController {
 					sections.remove(at: index)
 					tableView.deleteSections(IndexSet(integer: index), with: UITableViewRowAnimation.fade)
 				}
-			}, completion: { (completed) in
+			}, completion: { (_) in
 				section.viewController = nil
 			})
 		} else {

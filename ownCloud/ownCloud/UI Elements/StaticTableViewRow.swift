@@ -96,6 +96,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Text Field
+	public var textField : UITextField?
+
 	convenience init(textFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil) {
 
 		self.init()
@@ -108,33 +110,36 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.action = action
 		self.value = textValue
 
-		let textField = UITextField()
-		textField.translatesAutoresizingMaskIntoConstraints = false
+		let cellTextField : UITextField = UITextField()
 
-		textField.delegate = self
-		textField.placeholder = placeholderString
-		textField.keyboardType = keyboardType
-		textField.autocorrectionType = autocorrectionType
-		textField.isSecureTextEntry = secureTextEntry
-		textField.autocapitalizationType = autocapitalizationType
-		textField.enablesReturnKeyAutomatically = enablesReturnKeyAutomatically
-		textField.returnKeyType = returnKeyType
-		textField.text = textValue
-		textField.accessibilityIdentifier = identifier
+		cellTextField.translatesAutoresizingMaskIntoConstraints = false
 
-		textField.addTarget(self, action: #selector(textFieldContentChanged(_:)), for: UIControlEvents.editingChanged)
+		cellTextField.delegate = self
+		cellTextField.placeholder = placeholderString
+		cellTextField.keyboardType = keyboardType
+		cellTextField.autocorrectionType = autocorrectionType
+		cellTextField.isSecureTextEntry = secureTextEntry
+		cellTextField.autocapitalizationType = autocapitalizationType
+		cellTextField.enablesReturnKeyAutomatically = enablesReturnKeyAutomatically
+		cellTextField.returnKeyType = returnKeyType
+		cellTextField.text = textValue
+		cellTextField.accessibilityIdentifier = identifier
+
+		cellTextField.addTarget(self, action: #selector(textFieldContentChanged(_:)), for: UIControlEvents.editingChanged)
 
 		if cell != nil {
-			cell?.contentView.addSubview(textField)
-			textField.leftAnchor.constraint(equalTo: (cell?.contentView.leftAnchor)!, constant:18).isActive = true
-			textField.rightAnchor.constraint(equalTo: (cell?.contentView.rightAnchor)!, constant:-18).isActive = true
-			textField.topAnchor.constraint(equalTo: (cell?.contentView.topAnchor)!, constant:14).isActive = true
-			textField.bottomAnchor.constraint(equalTo: (cell?.contentView.bottomAnchor)!, constant:-14).isActive = true
+			cell?.contentView.addSubview(cellTextField)
+			cellTextField.leftAnchor.constraint(equalTo: (cell?.contentView.leftAnchor)!, constant:18).isActive = true
+			cellTextField.rightAnchor.constraint(equalTo: (cell?.contentView.rightAnchor)!, constant:-18).isActive = true
+			cellTextField.topAnchor.constraint(equalTo: (cell?.contentView.topAnchor)!, constant:14).isActive = true
+			cellTextField.bottomAnchor.constraint(equalTo: (cell?.contentView.bottomAnchor)!, constant:-14).isActive = true
 		}
 
 		self.updateViewFromValue = { (row) in
-			textField.text = row.value as! String?
+			cellTextField.text = row.value as? String
 		}
+
+		self.textField = cellTextField
 	}
 
 	convenience init(secureTextFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil) {
@@ -182,8 +187,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		switchView.addTarget(self, action: #selector(switchValueChanged(_:)), for: UIControlEvents.valueChanged)
 
 		self.updateViewFromValue = { (row) in
-			if row.value != nil {
-				switchView.setOn(row.value as! Bool, animated: true)
+			if let value = row.value as? Bool {
+				switchView.setOn(value, animated: true)
 			}
 		}
 	}

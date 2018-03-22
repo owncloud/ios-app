@@ -23,26 +23,28 @@ class GlobalSettingsViewController: StaticTableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		self.navigationItem.title = "Settings"
+
 		// Add dynamic sections demo section
 		var section : StaticTableViewSection = StaticTableViewSection(headerTitle: "Dynamic sections demo", footerTitle: "Tap the items above to add a section - or remove the last section", rows: [
 			// .. with two rows
-			StaticTableViewRow(rowWithAction: { (row, sender) in
+			StaticTableViewRow(rowWithAction: { (row, _) in
 				let sectionCount = row.viewController!.sections.count
 
 				row.viewController?.insertSection(StaticTableViewSection(headerTitle: "Section \(sectionCount)", footerTitle: "Footer of section \(sectionCount)", rows: [
-					StaticTableViewRow(rowWithAction: { (row, sender) in
+					StaticTableViewRow(rowWithAction: { (row, _) in
 						print ("Line 1 tapped in \(row.section!.headerTitle!)")
 					}, title: "Line 1"),
-					StaticTableViewRow(rowWithAction: { (row, sender) in
+					StaticTableViewRow(rowWithAction: { (row, _) in
 						print ("Line 2 tapped in \(row.section!.headerTitle!)")
 					}, title: "Line 2"),
-					StaticTableViewRow(rowWithAction: { (row, sender) in
+					StaticTableViewRow(rowWithAction: { (row, _) in
 						row.viewController?.removeSection(row.section!, animated: true)
 					}, title: "Remove section")
 				]), at: 1, animated:true)
 			}, title:"Insert Section"),
 
-			StaticTableViewRow(rowWithAction: { (row, sender) in
+			StaticTableViewRow(rowWithAction: { (row, _) in
 				if let removeSection = row.viewController?.sections.last {
 					row.viewController?.removeSection(removeSection, animated:true)
 				}
@@ -58,7 +60,7 @@ class GlobalSettingsViewController: StaticTableViewController {
 				["Line 1" : "value-of-line-1"],
 				["Line 2" : "value-of-line-2"],
 				["Line 3" : "value-of-line-3"]
-			    ], radioAction: { (row, sender) in
+			    ], radioAction: { (row, _) in
 				let selectedValueFromSection = row.section?.selectedValue(forGroupIdentifier: "radioExample")
 
 				Log.log("Radio value for \(row.groupIdentifier!) changed to \(row.value!)")
@@ -70,18 +72,22 @@ class GlobalSettingsViewController: StaticTableViewController {
 		// Add text field section
 		section = StaticTableViewSection(headerTitle: "Text fields", footerTitle: nil)
 		section.add(rows: [
-			StaticTableViewRow(textFieldWithAction: { (row, sender) in
+			StaticTableViewRow(textFieldWithAction: { (row, _) in
 				Log.log("New content: \(row.value!)")
 			}, placeholder: "Text Field", keyboardType: UIKeyboardType.emailAddress, identifier: "plainText"),
 
-			StaticTableViewRow(secureTextFieldWithAction: { (row, sender) in
+			StaticTableViewRow(secureTextFieldWithAction: { (row, _) in
 				Log.log("New content: \(row.value!)")
 			}, placeholder: "Secure Text Field", identifier: "secureText"),
 
-			StaticTableViewRow(buttonWithAction: { (row, sender) in
+			StaticTableViewRow(buttonWithAction: { (row, _) in
 				row.section?.row(withIdentifier: "plainText")?.value = "Plain"
 				row.section?.row(withIdentifier: "secureText")?.value = "Secret"
-			}, title: "Set values", style: StaticTableViewRowButtonStyle.plain)
+			}, title: "Set values", style: StaticTableViewRowButtonStyle.plain),
+
+			StaticTableViewRow(buttonWithAction: { (row, _) in
+				row.section?.row(withIdentifier: "plainText")?.textField?.becomeFirstResponder()
+			}, title: "Edit Text Field", style: StaticTableViewRowButtonStyle.plain)
 		])
 
 		self.addSection(section)
@@ -89,17 +95,17 @@ class GlobalSettingsViewController: StaticTableViewController {
 		// Add switch section
 		section = StaticTableViewSection(headerTitle: "Switches", footerTitle: nil)
 		section.add(rows: [
-			StaticTableViewRow(switchWithAction: { (row, sender) in
+			StaticTableViewRow(switchWithAction: { (row, _) in
 				Log.log("Switch 1 value: \(row.value!)")
 			}, title: "Switch 1", value: true, identifier: "switch1"),
 
-			StaticTableViewRow(switchWithAction: { (row, sender) in
+			StaticTableViewRow(switchWithAction: { (row, _) in
 				Log.log("Switch 2 value: \(row.value!)")
 			}, title: "Switch 2", value: false, identifier: "switch2"),
 
-			StaticTableViewRow(buttonWithAction: { (row, sender) in
-				row.section?.row(withIdentifier: "switch1")?.value = !(row.section?.row(withIdentifier: "switch1")?.value as! Bool)
-				row.section?.row(withIdentifier: "switch2")?.value = !(row.section?.row(withIdentifier: "switch2")?.value as! Bool)
+			StaticTableViewRow(buttonWithAction: { (row, _) in
+				row.section?.row(withIdentifier: "switch1")?.value = row.section?.row(withIdentifier: "switch1")?.value as? Bool
+				row.section?.row(withIdentifier: "switch2")?.value = row.section?.row(withIdentifier: "switch2")?.value as? Bool
 			}, title: "Toggle values", style: StaticTableViewRowButtonStyle.plain)
 		])
 
@@ -109,15 +115,15 @@ class GlobalSettingsViewController: StaticTableViewController {
 		section = StaticTableViewSection(headerTitle: "Buttons", footerTitle: nil)
 		section.add(rows: [
 
-			StaticTableViewRow(buttonWithAction: { (row, sender) in
+			StaticTableViewRow(buttonWithAction: { (_, _) in
 				Log.log("Proceed pressed")
 			}, title: "Proceed", style: StaticTableViewRowButtonStyle.proceed),
 
-			StaticTableViewRow(buttonWithAction: { (row, sender) in
+			StaticTableViewRow(buttonWithAction: { (_, _) in
 				Log.log("Destructive pressed")
 			}, title: "Destructive", style: StaticTableViewRowButtonStyle.destructive),
 
-			StaticTableViewRow(buttonWithAction: { (row, sender) in
+			StaticTableViewRow(buttonWithAction: { (_, _) in
 				Log.log("Custom pressed")
 			}, title: "Custom", style:
                 StaticTableViewRowButtonStyle.custom(textColor: UIColor.magenta,
