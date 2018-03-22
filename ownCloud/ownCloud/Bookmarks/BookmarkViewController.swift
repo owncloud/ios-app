@@ -25,19 +25,14 @@ enum BookmarkViewControllerMode {
     case edit
 }
 
-let backgroundColor = "bookmarks-background-color"
-let predefinedURL = "bookmarks-hardcoded-url"
-let showURLTextField = "bookmarks-show-url"
-let buttonsBackgroundColor = "bookmarks-button-color"
-let fontColor = "bookmarks-font-color"
-let buttonsFontColor = "bookmarks-buttons-font-color"
-let sectionHeadersFontColor = "bookmarks-sections-headers-font-color"
+let bookmarkViewControllerDefaultUrl = "bookmarks-default-url"
+let bookmarkViewControllerURLEditable = "bookmarks-url-editable"
 
 class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport {
 
     public var mode : BookmarkViewControllerMode = .add
-    private var bookmarkToAdd : OCBookmark?
-    private var connection: OCConnection?
+    public var bookmarkToAdd : OCBookmark?
+    public var connection: OCConnection?
     private var authMethodType: OCAuthenticationMethodType?
 
     static func classSettingsIdentifier() -> String! {
@@ -45,13 +40,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
 
     static func defaultSettings(forIdentifier identifier: String!) -> [String : Any]! {
-        return [ backgroundColor : UIColor(hex: 0xEFEFF4),
-                 predefinedURL : "",
-                 showURLTextField : true,
-                 buttonsBackgroundColor : UIColor(hex: 0x007AFF),
-                 fontColor : UIColor.black,
-                 buttonsFontColor : UIColor.white,
-                 sectionHeadersFontColor : UIColor.black
+        return [ bookmarkViewControllerDefaultUrl : "demo:demo@demo.owncloud.org",
+                 bookmarkViewControllerURLEditable : true
         ]
     }
 
@@ -59,99 +49,45 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         super.viewDidLoad()
         self.tableView.bounces = false
 
-        self.tableView.backgroundColor = self.classSetting(forOCClassSettingsKey: backgroundColor) as? UIColor
-
         DispatchQueue.main.async {
             switch self.mode {
             case .add:
+                print("Add mode")
                 self.navigationController?.navigationBar.topItem?.title = NSLocalizedString("Add Server", comment: "")
-                self.addServerUrl()
-                self.addContinueButton()
-
+                    self.addServerUrl()
+                    self.addContinueButton(action: self.continueButtonAction)
             case .edit:
+                print("Edit mode")
                 self.navigationController?.navigationBar.topItem?.title = NSLocalizedString("Edit Server", comment: "")
-                self.addServerName()
-                self.addServerUrl()
-                self.addConnectButton()
-                self.addDeleteAuthDataButton()
-                self.tableView.reloadData()
             }
         }
 
     }
 
     private func addServerUrl() {
-        let serverURLSection = StaticTableViewSection(headerTitle:NSLocalizedString("Server Url", comment: ""), footerTitle: nil, identifier: "server-url-section", rows: [
-            StaticTableViewRow(textFieldWithAction: { (_, _) in},
-                               placeholder: NSLocalizedString("https://example.com", comment: ""),
-                               value: "",
-                               keyboardType: .default,
-                               autocorrectionType: .no,
-                               autocapitalizationType: .none,
-                               enablesReturnKeyAutomatically: false,
-                               returnKeyType: .continue,
-                               identifier: "server-url-textfield")
-            ])
-        self.addSection(serverURLSection, animated: true)
+
+        let serverURLSection: StaticTableViewSection = StaticTableViewSection(headerTitle:NSLocalizedString("Server URL", comment: ""), footerTitle: nil, identifier: "server-url-section")
+
+        let serverURLRow: StaticTableViewRow = StaticTableViewRow(textFieldWithAction: nil,
+                                                                  placeholder: NSLocalizedString("https://example.com", comment: ""),
+                                                                  value: self.classSetting(forOCClassSettingsKey: bookmarkViewControllerDefaultUrl) as? String ?? "" ,
+                                                                  keyboardType: .default,
+                                                                  autocorrectionType: .no,
+                                                                  autocapitalizationType: .none,
+                                                                  enablesReturnKeyAutomatically: false,
+                                                                  returnKeyType: .continue,
+                                                                  identifier: "server-url-textfield")
+        serverURLRow.cell?.isUserInteractionEnabled = self.classSetting(forOCClassSettingsKey: bookmarkViewControllerURLEditable) as? Bool ?? true
+
+        serverURLSection.add(rows: [serverURLRow])
+        addSection(serverURLSection, animated: true)
     }
 
-    private func addContinueButton() {
+    private func addContinueButton(action: @escaping StaticTableViewRowAction) {
+
         let continueButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "continue-button-section", rows: [
-            StaticTableViewRow(buttonWithAction: { (row, _) in
-
-                if let serverURL: String = row.section?.viewController?.sectionForIdentifier("server-url-section")?.row(withIdentifier: "server-url-textfield")?.value as? String,
-                    let url: URL = URL(string: serverURL),
-                    let bookmark: OCBookmark = OCBookmark(for: url),
-                    let connection: OCConnection = OCConnection(bookmark: bookmark) {
-
-                    row.selectable = false
-
-                    self.bookmarkToAdd = bookmark
-                    self.connection = connection
-                    connection.prepareForSetup(options: nil, completionHandler: { (issuesFromSDK, _, _, preferedAuthMethods) in
-
-                        let issues: [OCConnectionIssue]? = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.error)
-                        let warningIssues : [OCConnectionIssue]? = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.warning)
-                        let informalIssues: [OCConnectionIssue]? = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to:OCConnectionIssueLevel.informal)
-
-                        row.selectable = true
-
-                        if issues != nil && issues!.count > 0 {
-                            DispatchQueue.main.async {
-                                let issuesVC = ErrorsViewController(issues: issues!)
-                                issuesVC.modalPresentationStyle = .overCurrentContext
-                                self.present(issuesVC, animated: true, completion: nil)
-                            }
-                            return
-                        }
-
-                        if warningIssues != nil && warningIssues!.count > 0 {
-                            DispatchQueue.main.async {
-                                let issuesVC = WarningsViewController(issues: warningIssues!, action: {
-                                    self.continueButtonAction(preferedAuthMethods: preferedAuthMethods!, issuesFromSDK: issuesFromSDK)
-                                })
-                                issuesVC.modalPresentationStyle = .overCurrentContext
-                                self.present(issuesVC, animated: true, completion: nil)
-                            }
-                            return
-                        }
-
-                        if informalIssues != nil && informalIssues!.count > 0 {
-                            DispatchQueue.main.async {
-                                let issuesVC = WarningsViewController(issues: informalIssues!, action: {
-                                    self.continueButtonAction(preferedAuthMethods: preferedAuthMethods!, issuesFromSDK: issuesFromSDK)
-                                })
-                                issuesVC.modalPresentationStyle = .overCurrentContext
-                                self.present(issuesVC, animated: true, completion: nil)
-                            }
-                        }
-                    })
-                }
-            }, title: NSLocalizedString("Continue", comment: ""),
-               style: .custom(textColor: self.classSetting(forOCClassSettingsKey: buttonsFontColor) as? UIColor,
-                              selectedTextColor: nil,
-                              backgroundColor: self.classSetting(forOCClassSettingsKey: buttonsBackgroundColor) as? UIColor,
-                              selectedBackgroundColor: nil),
+            StaticTableViewRow(buttonWithAction: action, title: NSLocalizedString("Continue", comment: ""),
+               style: .proceed,
                identifier: "continue-button-row")
             ])
 
@@ -184,8 +120,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
 
     private func addCertificateDetails(certificate: OCCertificate) {
-        let section =  self.sectionForIdentifier("server-url-section")
-        section?.add(rows: [
+        let section =  StaticTableViewSection(headerTitle: NSLocalizedString("Certificate Details", comment: ""), footerTitle: nil)
+        section.add(rows: [
             StaticTableViewRow(rowWithAction: {(_, _) in
 
                 OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: certificate, withValidationCompletionHandler: { (certificateNodes) in
@@ -198,13 +134,12 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 })
             }, title: NSLocalizedString("Show Certificate Details", comment: ""), accessoryType: .disclosureIndicator, identifier: "certificate-details-button")
             ])
+        self.addSection(section)
     }
 
     private func addConnectButton() {
         let connectButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "connect-button-section", rows: [
             StaticTableViewRow(buttonWithAction: { (row, _) in
-
-                row.cell?.backgroundColor = self.classSetting(forOCClassSettingsKey: buttonsBackgroundColor) as? UIColor
 
                 var options: [OCAuthenticationMethodKey : Any] = Dictionary()
                 var method: String = OCAuthenticationMethodOAuth2Identifier
@@ -233,21 +168,18 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                         BookmarkManager.sharedBookmarkManager.addBookmark(self.bookmarkToAdd!)
 
                         DispatchQueue.main.async {
-                            self.navigationController?.pushViewController(ServerListTableViewController.init(style: .grouped), animated: true)
+                            self.navigationController?.setViewControllers([ServerListTableViewController.init(style: .grouped)], animated: true)
                         }
                     } else {
                         DispatchQueue.main.async {
-                            let issuesVC = ErrorsViewController(issues: [OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil)])
+                            let issuesVC = ErrorsViewController(issues: [OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil)], completionHandler: nil)
                             issuesVC.modalPresentationStyle = .overCurrentContext
                             self.present(issuesVC, animated: true, completion: nil)
                         }
                     }
                 })
             }, title: NSLocalizedString("Connect", comment: ""),
-               style: .custom(textColor: self.classSetting(forOCClassSettingsKey: buttonsFontColor) as? UIColor,
-                             selectedTextColor: nil,
-                             backgroundColor: self.classSetting(forOCClassSettingsKey: buttonsBackgroundColor) as? UIColor,
-                             selectedBackgroundColor: nil),
+               style: .proceed,
                identifier: nil)])
 
         self.addSection(connectButtonSection)
@@ -273,11 +205,11 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         }
     }
 
-    private func showBasicAuthCredentials() {
+    private func showBasicAuthCredentials(username: String?, password: String?) {
         let section = StaticTableViewSection(headerTitle:NSLocalizedString("Authentication", comment: ""), footerTitle: nil, identifier: "passphrase-auth-section", rows:
             [ StaticTableViewRow(textFieldWithAction: nil,
                                  placeholder: NSLocalizedString("Username", comment: ""),
-                                 value: "",
+                                 value: username ?? "",
                                  secureTextEntry: false,
                                  keyboardType: .emailAddress,
                                  autocorrectionType: .no,
@@ -287,7 +219,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                                  identifier: "passphrase-username-textfield-row"),
 
               StaticTableViewRow(textFieldWithAction: nil, placeholder: NSLocalizedString("Password", comment: ""),
-                                 value: "",
+                                 value: password ?? "",
                                  secureTextEntry: true,
                                  keyboardType: .emailAddress,
                                  autocorrectionType: .no,
@@ -299,7 +231,67 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         self.addSection(section, at: self.sections.count-1)
     }
 
-    private func continueButtonAction(preferedAuthMethods: [String], issuesFromSDK: OCConnectionIssue?) {
+    lazy private var continueButtonAction: StaticTableViewRowAction  = { (row, _) in
+
+        var username: NSString?
+        var password: NSString?
+        var afterURL: String = ""
+
+        afterURL = self.sectionForIdentifier("server-url-section")?.row(withIdentifier: "server-url-textfield")?.value as? String ?? ""
+
+        var protocolAppended: ObjCBool = false
+
+        if let bookmark: OCBookmark = OCBookmark(for: OCURL.generateURL(user: &username, password: &password, url: &afterURL, procotolAppended: &protocolAppended) as URL),
+            let connection: OCConnection = OCConnection(bookmark: bookmark) {
+
+            self.bookmarkToAdd = bookmark
+            self.connection = connection
+            connection.prepareForSetup(options: nil, completionHandler: { (issuesFromSDK, _, _, preferedAuthMethods) in
+
+                let issues: [OCConnectionIssue]? = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.error)
+                let warningIssues : [OCConnectionIssue]? = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.warning)
+                let informalIssues: [OCConnectionIssue]? = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to:OCConnectionIssueLevel.informal)
+
+                if issues != nil && issues!.count > 0 {
+                    DispatchQueue.main.async {
+                        let issuesVC = ErrorsViewController(issues: issues!, completionHandler: nil)
+                        issuesVC.modalPresentationStyle = .overCurrentContext
+                        self.present(issuesVC, animated: true, completion: nil)
+                    }
+                    return
+                }
+
+                if warningIssues != nil && warningIssues!.count > 0 {
+                    DispatchQueue.main.async {
+                        let issuesVC = WarningsViewController(issues: warningIssues!, action: {
+                            self.approveButtonAction(preferedAuthMethods: preferedAuthMethods!,
+                                                     issuesFromSDK: issuesFromSDK,
+                                                     username: username as String? ?? nil,
+                                                     password: password as String? ?? nil)
+                        }, completionHandler: nil)
+                        issuesVC.modalPresentationStyle = .overCurrentContext
+                        self.present(issuesVC, animated: true, completion: nil)
+                    }
+                    return
+                }
+
+                if informalIssues != nil && informalIssues!.count > 0 {
+                    DispatchQueue.main.async {
+                        let issuesVC = WarningsViewController(issues: informalIssues!, action: {
+                            self.approveButtonAction(preferedAuthMethods: preferedAuthMethods!,
+                                                     issuesFromSDK: issuesFromSDK, username: username as String? ?? nil, password: password as String? ?? nil)
+                        }, completionHandler: nil)
+                        issuesVC.modalPresentationStyle = .overCurrentContext
+                        self.present(issuesVC, animated: true, completion: nil)
+                    }
+                }
+            })
+        }
+    }
+
+    private func approveButtonAction(preferedAuthMethods: [String], issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
+
+        self.sectionForIdentifier("server-url-section")?.row(withIdentifier: "server-url-textfield")?.value =     self.bookmarkToAdd?.url.absoluteString
 
         if let preferedAuthMethod = preferedAuthMethods.first as String? {
 
@@ -312,7 +304,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 }
 
                 if self.authMethodType == .passphrase {
-                    self.showBasicAuthCredentials()
+                    self.showBasicAuthCredentials(username: username, password:password)
                 }
                 self.removeContinueButton()
                 self.addConnectButton()

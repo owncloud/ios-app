@@ -16,9 +16,9 @@ class WarningsViewController: IssuesViewController {
 
     private let action: (() -> Void)?
 
-    init(issues: [OCConnectionIssue]?, action: @escaping () -> Void) {
+    init(issues: [OCConnectionIssue]?, action: @escaping () -> Void, completionHandler: (() -> Void)?) {
         self.action = action
-        super.init(issues: issues, headerTitle: NSLocalizedString("Review Connection", comment: ""))
+        super.init(issues: issues, headerTitle: NSLocalizedString("Review Connection", comment: ""), completionHandler: completionHandler)
     }
 
     required init?(coder aDecoder: NSCoder) {

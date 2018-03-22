@@ -27,6 +27,7 @@ class CertificateViewController: IssuesViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        self.issuesTableView.allowsSelection = false
 
         backButton.backgroundColor = UIColor(hex: 0xF2F2F2)
         backButton.translatesAutoresizingMaskIntoConstraints = false
@@ -42,7 +43,6 @@ class CertificateViewController: IssuesViewController {
         backButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
         bottomContainer.layoutSubviews()
-
     }
 
 }
