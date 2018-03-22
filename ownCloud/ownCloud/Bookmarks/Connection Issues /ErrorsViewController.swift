@@ -13,8 +13,8 @@ class ErrorsViewController: IssuesViewController {
 
     private let okButton : UIButton = UIButton(type: .system)
 
-    init(issues: [OCConnectionIssue]?) {
-        super.init(issues: issues, headerTitle: NSLocalizedString("Error", comment: ""))
+    init(issues: [OCConnectionIssue]?, completionHandler: (() -> Void)?) {
+        super.init(issues: issues, headerTitle: NSLocalizedString("Error", comment: ""), completionHandler: completionHandler)
     }
 
     required init?(coder aDecoder: NSCoder) {

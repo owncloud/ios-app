@@ -12,11 +12,12 @@ import ownCloudUI
 
 class IssuesViewController: UIViewController {
 
-    private let issuesTableView: UITableView = UITableView()
+    internal let issuesTableView: UITableView = UITableView()
     public let bottomContainer: UIView = UIView()
     private var issues: [OCConnectionIssue] = []
     private var tableHeighConstraint: NSLayoutConstraint?
     private var headerTitle: String?
+    private var completionHandler: (() -> Void)?
 
     private var modalPresentationVC: UIViewControllerTransitioningDelegate?
 
@@ -25,13 +26,22 @@ class IssuesViewController: UIViewController {
         self.setupTransitions()
     }
 
-    init(issues: [OCConnectionIssue]?, headerTitle: String?) {
+    init(issues: [OCConnectionIssue]?, headerTitle: String?, completionHandler: (() -> Void)? = nil) {
         super.init(nibName: nil, bundle: nil)
         self.headerTitle = headerTitle
+        self.completionHandler = completionHandler
         if issues != nil {
             self.issues = issues!
         }
         self.setupTransitions()
+    }
+
+    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        super.dismiss(animated: flag, completion: completion)
+
+        if let completionHandler = completionHandler {
+            completionHandler()
+        }
     }
 
     private func setupTransitions() {
