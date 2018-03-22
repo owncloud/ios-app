@@ -6,7 +6,7 @@ The ownCloud iOS App  provides a flexible mechanism for configuration. While it 
 
 This document provides an overview over the available sections and variables.
 
-## Connection
+## Bookmark View Controller (Login)
 
 - **Section ID**: `bookmark-view-controller`
 
