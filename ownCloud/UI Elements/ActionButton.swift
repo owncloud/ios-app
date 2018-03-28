@@ -18,7 +18,7 @@
 
 import UIKit
 
-@IBDesignable
+//@IBDesignable
 class ActionButton: UIButton {
 	override var intrinsicContentSize: CGSize {
 		var intrinsicContentSize = super.intrinsicContentSize

@@ -115,7 +115,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         addSection(serverURLSection, animated: false)
     }
 
-
     private func addContinueButton(action: @escaping StaticTableViewRowAction) {
 
         let continueButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "continue-button-section", rows: [

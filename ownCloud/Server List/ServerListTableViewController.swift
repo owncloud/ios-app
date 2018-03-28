@@ -206,38 +206,57 @@ class ServerListTableViewController: UITableViewController {
 		return bookmarkCell
 	}
 
-	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		return [
-				UITableViewRowAction(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (_, indexPath) in
-					if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
-						let alertController = UIAlertController.init(title: NSString.init(format: NSLocalizedString("Really delete '%@'?", comment: "") as NSString, bookmark.name as NSString) as String,
-											     message: NSLocalizedString("This will also delete all locally stored file copies.", comment: ""),
-											     preferredStyle: .actionSheet)
+   override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+                        -> UISwipeActionsConfiguration? {
 
-						alertController.addAction(UIAlertAction.init(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
+        let editAction = UIContextualAction(style: .normal, title:  "Edit") { (_, _, completion) in
+            if let bookmark: OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
+                self.editBookmark(bookmark)
+            }
+            completion(true)
+        }
+        editAction.backgroundColor = .blue
 
-						alertController.addAction(UIAlertAction.init(title: NSLocalizedString("Delete", comment: ""), style: .destructive, handler: { (_) in
+        return UISwipeActionsConfiguration(actions: [editAction])
+    }
 
-							self.ignoreServerListChanges = true
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+                        -> UISwipeActionsConfiguration? {
 
-							BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
+        let deleteAction = UIContextualAction(style: .destructive, title:  "Delete") { (_, _, completion) in
 
-							tableView.performBatchUpdates({
-								tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
-							}, completion: { (_) in
-								self.ignoreServerListChanges = false
-							})
+            if let bookmark: OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
+                let alertController = UIAlertController.init(title: NSString.init(format: NSLocalizedString("Really delete '%@'?", comment: "") as NSString, bookmark.name as NSString) as String,
+                                                             message: NSLocalizedString("This will also delete all locally stored file copies.", comment: ""),
+                                                             preferredStyle: .actionSheet)
 
-							// TODO: Delete vault
+                alertController.addAction(UIAlertAction.init(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
 
-							self.updateNoServerMessageVisibility()
-						}))
+                alertController.addAction(UIAlertAction.init(title: NSLocalizedString("Delete", comment: ""), style: .destructive, handler: { (_) in
 
-						self.present(alertController, animated: true, completion: nil)
-					}
-				})
-			]
-	}
+                    self.ignoreServerListChanges = true
+
+                    BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
+
+                    tableView.performBatchUpdates({
+                        tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
+                    }, completion: { (_) in
+                        self.ignoreServerListChanges = false
+                    })
+
+                    // TODO: Delete vault
+
+                    self.updateNoServerMessageVisibility()
+                }))
+
+                self.present(alertController, animated: true, completion: nil)
+            }
+            completion(true)
+        }
+        deleteAction.backgroundColor = .red
+
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
 
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		BookmarkManager.sharedBookmarkManager.moveBookmark(from: fromIndexPath.row, to: to.row)
