@@ -251,16 +251,18 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                         self.present(issuesVC, animated: true, completion: nil)
                     }
                 } else {
-
-                    self.approveButtonAction(preferedAuthMethods: preferredAuthMethods!, issuesFromSDK: issuesFromSDK!, username: username as String?, password: password as String?)
+                    DispatchQueue.main.async {
+                        self.approveButtonAction(preferedAuthMethods: preferredAuthMethods!, issuesFromSDK: issuesFromSDK!, username: username as String?, password: password as String?)
+                    }
                 }
+
             })
         }
     }
 
     private func approveButtonAction(preferedAuthMethods: [String], issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
 
-        self.sectionForIdentifier("server-url-section")?.row(withIdentifier: "server-url-textfield")?.value =     self.bookmarkToAdd?.url.absoluteString
+        self.sectionForIdentifier("server-url-section")?.row(withIdentifier: "server-url-textfield")?.value = self.bookmarkToAdd?.url.absoluteString
 
         if let preferedAuthMethod = preferedAuthMethods.first as String? {
 
@@ -280,9 +282,5 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 self.tableView.reloadData()
             }
         }
-    }
-
-    @objc public func approve() {
-        print("LOG ---> approve")
     }
 }
