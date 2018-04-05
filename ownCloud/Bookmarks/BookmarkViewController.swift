@@ -82,7 +82,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         serverURLRow.cell?.isUserInteractionEnabled = self.classSetting(forOCClassSettingsKey: BookmarkURLEditableKey) as? Bool ?? true
 
         serverURLSection.add(rows: [serverURLRow])
-        addSection(serverURLSection, animated: true)
+        addSection(serverURLSection, animated: false)
     }
 
     private func addContinueButton(action: @escaping StaticTableViewRowAction) {
@@ -93,7 +93,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                identifier: "continue-button-row")
             ])
 
-        self.addSection(continueButtonSection, animated: true)
+        self.addSection(continueButtonSection, animated: false)
     }
 
     private func addServerName() {
@@ -118,7 +118,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
             ])
 
-        self.addSection(section, at: 0)
+        self.addSection(section, at: 0, animated: true)
     }
 
     private func addCertificateDetails(certificate: OCCertificate) {
@@ -136,7 +136,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 //                })
             }, title: NSLocalizedString("Show Certificate Details", comment: ""), accessoryType: .disclosureIndicator, identifier: "certificate-details-button")
             ])
-        self.addSection(section)
+        self.addSection(section, animated: true)
     }
 
     private func addConnectButton() {
@@ -230,7 +230,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                                  returnKeyType: .go,
                                  identifier: "passphrase-password-textfield-row")
             ])
-        self.addSection(section, at: self.sections.count-1)
+        self.addSection(section, at: self.sections.count-1, animated: true)
     }
 
     lazy private var continueButtonAction: StaticTableViewRowAction  = { (row, _) in
