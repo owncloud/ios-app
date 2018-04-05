@@ -136,7 +136,7 @@ class ServerListTableViewController: UITableViewController {
 	@IBAction func addBookmark() {
 
         let viewController : BookmarkViewController = BookmarkViewController(style: UITableViewStyle.grouped)
-
+        self.navigationController?.pushViewController(viewController, animated: true)
 		updateNoServerMessageVisibility()
 	}
 

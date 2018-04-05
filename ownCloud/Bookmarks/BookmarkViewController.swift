@@ -49,7 +49,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         super.viewDidLoad()
         self.tableView.bounces = false
 
-        DispatchQueue.main.async {
             switch self.mode {
             case .add:
                 print("Add mode")
@@ -60,8 +59,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 print("Edit mode")
                 self.navigationController?.navigationBar.topItem?.title = NSLocalizedString("Edit Server", comment: "")
             }
-        }
-
     }
 
     private func addServerUrl() {
@@ -124,14 +121,14 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         section.add(rows: [
             StaticTableViewRow(rowWithAction: {(_, _) in
 
-                OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: certificate, withValidationCompletionHandler: { (certificateNodes) in
-                    let certDetails: NSAttributedString = OCCertificateDetailsViewNode .attributedString(withCertificateDetails: certificateNodes)
-                    DispatchQueue.main.async {
-                        let issuesVC = CertificateViewController(certificateDescription: certDetails)
-                        issuesVC.modalPresentationStyle = .overCurrentContext
-                        self.present(issuesVC, animated: true, completion: nil)
-                    }
-                })
+//                OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: certificate, withValidationCompletionHandler: { (certificateNodes) in
+//                    let certDetails: NSAttributedString = OCCertificateDetailsViewNode .attributedString(withCertificateDetails: certificateNodes)
+//                    DispatchQueue.main.async {
+//                        let issuesVC = CertificateViewController(certificateDescription: certDetails)
+//                        issuesVC.modalPresentationStyle = .overCurrentContext
+//                        self.present(issuesVC, animated: true, completion: nil)
+//                    }
+//                })
             }, title: NSLocalizedString("Show Certificate Details", comment: ""), accessoryType: .disclosureIndicator, identifier: "certificate-details-button")
             ])
         self.addSection(section)
@@ -171,11 +168,11 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                             self.navigationController?.setViewControllers([ServerListTableViewController.init(style: .grouped)], animated: true)
                         }
                     } else {
-                        DispatchQueue.main.async {
-                            let issuesVC = ErrorsViewController(issues: [OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil)], completionHandler: nil)
-                            issuesVC.modalPresentationStyle = .overCurrentContext
-                            self.present(issuesVC, animated: true, completion: nil)
-                        }
+//                        DispatchQueue.main.async {
+//                            let issuesVC = ErrorsViewController(issues: [OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil)], completionHandler: nil)
+//                            issuesVC.modalPresentationStyle = .overCurrentContext
+//                            self.present(issuesVC, animated: true, completion: nil)
+//                        }
                     }
                 })
             }, title: NSLocalizedString("Connect", comment: ""),
@@ -242,48 +239,23 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         var protocolAppended: ObjCBool = false
 
         if let bookmark: OCBookmark = OCBookmark(for: OCURL.generateURL(user: &username, password: &password, url: &afterURL, procotolAppended: &protocolAppended) as URL),
-            let connection: OCConnection = OCConnection(bookmark: bookmark) {
+            let newConnection: OCConnection = OCConnection(bookmark: bookmark) {
 
             self.bookmarkToAdd = bookmark
-            self.connection = connection
-            connection.prepareForSetup(options: nil, completionHandler: { (issuesFromSDK, _, _, preferedAuthMethods) in
+            self.connection = newConnection
 
-                let issues: [OCConnectionIssue]? = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.error)
-                let warningIssues : [OCConnectionIssue]? = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.warning)
-                let informalIssues: [OCConnectionIssue]? = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to:OCConnectionIssueLevel.informal)
+            newConnection.prepareForSetup(options: nil, completionHandler: { (issuesFromSDK, _, _, preferredAuthMethods) in
 
-                if issues != nil && issues!.count > 0 {
+                if let issues = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.warning),
+                    issues.count > 0 {
                     DispatchQueue.main.async {
-                        let issuesVC = ErrorsViewController(issues: issues!, completionHandler: nil)
+                        let issuesVC = ConnectionIssueViewController(issue: issuesFromSDK!)
                         issuesVC.modalPresentationStyle = .overCurrentContext
                         self.present(issuesVC, animated: true, completion: nil)
                     }
-                    return
-                }
+                } else {
 
-                if warningIssues != nil && warningIssues!.count > 0 {
-                    DispatchQueue.main.async {
-                        let issuesVC = WarningsViewController(issues: warningIssues!, action: {
-                            self.approveButtonAction(preferedAuthMethods: preferedAuthMethods!,
-                                                     issuesFromSDK: issuesFromSDK,
-                                                     username: username as String? ?? nil,
-                                                     password: password as String? ?? nil)
-                        }, completionHandler: nil)
-                        issuesVC.modalPresentationStyle = .overCurrentContext
-                        self.present(issuesVC, animated: true, completion: nil)
-                    }
-                    return
-                }
-
-                if informalIssues != nil && informalIssues!.count > 0 {
-                    DispatchQueue.main.async {
-                        let issuesVC = WarningsViewController(issues: informalIssues!, action: {
-                            self.approveButtonAction(preferedAuthMethods: preferedAuthMethods!,
-                                                     issuesFromSDK: issuesFromSDK, username: username as String? ?? nil, password: password as String? ?? nil)
-                        }, completionHandler: nil)
-                        issuesVC.modalPresentationStyle = .overCurrentContext
-                        self.present(issuesVC, animated: true, completion: nil)
-                    }
+                    self.approveButtonAction(preferedAuthMethods: preferredAuthMethods!, issuesFromSDK: issuesFromSDK!, username: username as? String, password: password as? String)
                 }
             })
         }
@@ -311,5 +283,9 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 self.tableView.reloadData()
             }
         }
+    }
+
+    @objc public func approve() {
+        print("LOG ---> approve")
     }
 }
