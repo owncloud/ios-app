@@ -34,10 +34,6 @@ class StaticTableViewController: UITableViewController {
 		self.insertSection(section, at: sections.count, animated: animateThis)
 	}
 
-    func addSection(_ section: StaticTableViewSection, at index: Int, animated animateThis: Bool = false) {
-        self.insertSection(section, at: index, animated: animateThis)
-    }
-
 	func insertSection(_ section: StaticTableViewSection, at index: Int, animated: Bool = false) {
 		section.viewController = self
 

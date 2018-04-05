@@ -118,7 +118,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
             ])
 
-        self.addSection(section, at: 0, animated: true)
+        self.insertSection(section, at: 0, animated: true)
     }
 
     private func addCertificateDetails(certificate: OCCertificate) {
@@ -230,7 +230,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                                  returnKeyType: .go,
                                  identifier: "passphrase-password-textfield-row")
             ])
-        self.addSection(section, at: self.sections.count-1, animated: true)
+        self.insertSection(section, at: self.sections.count-1, animated: true)
     }
 
     lazy private var continueButtonAction: StaticTableViewRowAction  = { (row, _) in
