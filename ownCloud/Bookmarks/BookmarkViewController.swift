@@ -170,14 +170,14 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                         BookmarkManager.sharedBookmarkManager.addBookmark(self.bookmarkToAdd!)
 
                         DispatchQueue.main.async {
-                            self.navigationController?.setViewControllers([ServerListTableViewController.init(style: .grouped)], animated: true)
+                            self.navigationController?.popViewController(animated: true)
                         }
                     } else {
-//                        DispatchQueue.main.async {
-//                            let issuesVC = ErrorsViewController(issues: [OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil)], completionHandler: nil)
-//                            issuesVC.modalPresentationStyle = .overCurrentContext
-//                            self.present(issuesVC, animated: true, completion: nil)
-//                        }
+                        DispatchQueue.main.async {
+                            let issuesVC = ErrorsViewController(issues: [OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil)], completionHandler: nil)
+                            issuesVC.modalPresentationStyle = .overCurrentContext
+                            self.present(issuesVC, animated: true, completion: nil)
+                        }
                     }
                 })
             }, title: NSLocalizedString("Connect", comment: ""),
