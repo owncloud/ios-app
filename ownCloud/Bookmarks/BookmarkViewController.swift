@@ -25,8 +25,8 @@ enum BookmarkViewControllerMode {
     case edit
 }
 
-let bookmarkViewControllerDefaultUrl = "default-url"
-let bookmarkViewControllerURLEditable = "url-editable"
+let BookmarkDefaultURLKey = "default-url"
+let BookmarkURLEditableKey = "url-editable"
 
 class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport {
 
@@ -36,12 +36,12 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     private var authMethodType: OCAuthenticationMethodType?
 
     static func classSettingsIdentifier() -> String! {
-        return "bookmark-view-controller"
+        return "bookmark"
     }
 
     static func defaultSettings(forIdentifier identifier: String!) -> [String : Any]! {
-        return [ bookmarkViewControllerDefaultUrl : "",
-                 bookmarkViewControllerURLEditable : true
+        return [ BookmarkDefaultURLKey : "",
+                 BookmarkURLEditableKey : true
         ]
     }
 
@@ -67,14 +67,14 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
         let serverURLRow: StaticTableViewRow = StaticTableViewRow(textFieldWithAction: nil,
                                                                   placeholder: NSLocalizedString("https://example.com", comment: ""),
-                                                                  value: self.classSetting(forOCClassSettingsKey: bookmarkViewControllerDefaultUrl) as? String ?? "" ,
+                                                                  value: self.classSetting(forOCClassSettingsKey: BookmarkDefaultURLKey) as? String ?? "" ,
                                                                   keyboardType: .default,
                                                                   autocorrectionType: .no,
                                                                   autocapitalizationType: .none,
                                                                   enablesReturnKeyAutomatically: false,
                                                                   returnKeyType: .continue,
                                                                   identifier: "server-url-textfield")
-        serverURLRow.cell?.isUserInteractionEnabled = self.classSetting(forOCClassSettingsKey: bookmarkViewControllerURLEditable) as? Bool ?? true
+        serverURLRow.cell?.isUserInteractionEnabled = self.classSetting(forOCClassSettingsKey: BookmarkURLEditableKey) as? Bool ?? true
 
         serverURLSection.add(rows: [serverURLRow])
         addSection(serverURLSection, animated: true)
@@ -238,7 +238,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
         var protocolAppended: ObjCBool = false
 
-        if let bookmark: OCBookmark = OCBookmark(for: OCURL.generateURL(user: &username, password: &password, url: &afterURL, procotolAppended: &protocolAppended) as URL),
+        if let bookmark: OCBookmark = OCBookmark(for: NSURL(username: &username, password: &password, afterNormalizingURLString: afterURL, protocolWasPrepended: &protocolAppended) as URL),
             let newConnection: OCConnection = OCConnection(bookmark: bookmark) {
 
             self.bookmarkToAdd = bookmark

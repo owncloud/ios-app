@@ -64,7 +64,7 @@ class ConnectionIssueViewController: IssuesViewController {
 
 extension ConnectionIssueViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let issue = connectionIssues?[indexPath], issue.type == OCConnectionIssueType.certificate {
+        if let issue = connectionIssues?[indexPath.row], issue.type == OCConnectionIssueType.certificate {
             //TODO put the certificate in the CertificateViewController.
         }
     }
