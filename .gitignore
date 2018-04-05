@@ -141,7 +141,8 @@ playground.xcworkspace
 *.xcuserdata
 
 ## Cocoapods ##
-ownCloud/Pods/
+Pods/
+Podfile.lock
 
 # End of https://www.gitignore.io/api/xcode,swift,macos,objective-c
 
