@@ -8,6 +8,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudUI
 
 typealias FilteredIssues = (issues: [OCConnectionIssue]?, level: OCConnectionIssueLevel?)
 
@@ -53,6 +54,7 @@ class ConnectionIssueViewController: IssuesViewController {
         if warningIssues != nil, warningIssues!.count > 0 {
             return (issue.issues, OCConnectionIssueLevel.warning)
         }
+
         return (nil, nil)
     }
 
@@ -65,7 +67,14 @@ class ConnectionIssueViewController: IssuesViewController {
 extension ConnectionIssueViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let issue = connectionIssues?[indexPath.row], issue.type == OCConnectionIssueType.certificate {
-            //TODO put the certificate in the CertificateViewController.
+            OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: issue.certificate, withValidationCompletionHandler: { (certificateNodes) in
+                let certDetails: NSAttributedString = OCCertificateDetailsViewNode .attributedString(withCertificateDetails: certificateNodes)
+                DispatchQueue.main.async {
+                    let issuesVC = CertificateViewController(localizedDescription: certDetails)
+                    issuesVC.modalPresentationStyle = .overCurrentContext
+                    self.present(issuesVC, animated: true, completion: nil)
+                }
+            })
         }
     }
 }
@@ -88,9 +97,11 @@ extension ConnectionIssueViewController: UITableViewDataSource {
         cell.textLabel?.numberOfLines = 0
 
         var color: UIColor = .black
+        cell.selectionStyle = .none
 
         if issue.type == OCConnectionIssueType.certificate {
             cell.accessoryType = .disclosureIndicator
+            cell.accessoryView?.backgroundColor = .blue
         }
 
         switch issue.level {

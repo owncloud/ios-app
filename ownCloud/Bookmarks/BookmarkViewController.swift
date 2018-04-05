@@ -125,15 +125,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         let section =  StaticTableViewSection(headerTitle: NSLocalizedString("Certificate Details", comment: ""), footerTitle: nil)
         section.add(rows: [
             StaticTableViewRow(rowWithAction: {(_, _) in
-
-//                OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: certificate, withValidationCompletionHandler: { (certificateNodes) in
-//                    let certDetails: NSAttributedString = OCCertificateDetailsViewNode .attributedString(withCertificateDetails: certificateNodes)
-//                    DispatchQueue.main.async {
-//                        let issuesVC = CertificateViewController(certificateDescription: certDetails)
-//                        issuesVC.modalPresentationStyle = .overCurrentContext
-//                        self.present(issuesVC, animated: true, completion: nil)
-//                    }
-//                })
+                // TODO: Call de owncloudUI certificate screen
             }, title: NSLocalizedString("Show Certificate Details", comment: ""), accessoryType: .disclosureIndicator, identifier: "certificate-details-button")
             ])
         self.addSection(section, animated: true)
@@ -174,7 +166,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                         }
                     } else {
                         DispatchQueue.main.async {
-                            let issuesVC = ErrorsViewController(issues: [OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil)], completionHandler: nil)
+                            let issuesVC = ConnectionIssueViewController(issue: OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil))
                             issuesVC.modalPresentationStyle = .overCurrentContext
                             self.present(issuesVC, animated: true, completion: nil)
                         }
@@ -260,7 +252,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                     }
                 } else {
 
-                    self.approveButtonAction(preferedAuthMethods: preferredAuthMethods!, issuesFromSDK: issuesFromSDK!, username: username as? String, password: password as? String)
+                    self.approveButtonAction(preferedAuthMethods: preferredAuthMethods!, issuesFromSDK: issuesFromSDK!, username: username as String?, password: password as String?)
                 }
             })
         }

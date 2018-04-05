@@ -49,6 +49,7 @@ extension CertificateViewController: UITableViewDataSource {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
         cell.textLabel?.attributedText = localizedDescription
         cell.textLabel?.numberOfLines = 0
+        cell.selectionStyle = .none
         return cell
     }
 }

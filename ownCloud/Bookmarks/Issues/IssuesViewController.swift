@@ -99,7 +99,7 @@ class IssuesViewController: UIViewController {
                 button.backgroundColor = backgroundColor
                 button.setAttributedTitle(NSAttributedString(string: $0.title, attributes: [
                     .foregroundColor : color,
-                    .font : UIFont.systemFont(ofSize: 20, weight: .regular)
+                    .font : UIFont.systemFont(ofSize: 20, weight: .semibold)
                     ]), for: .normal)
                 button.setTitle($0.title, for: UIControlState.normal)
                 button.addTarget(self, action: #selector(buttonPressed(_:)), for: .touchUpInside)
@@ -137,6 +137,7 @@ class IssuesViewController: UIViewController {
         tableView?.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -20).isActive = true
         tableView?.topAnchor.constraint(greaterThanOrEqualTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         tableHeighConstraint = tableView?.heightAnchor.constraint(equalToConstant: 0)
+        tableHeighConstraint?.priority = UILayoutPriority.defaultLow
         tableHeighConstraint?.isActive = true
     }
 
@@ -152,8 +153,17 @@ extension IssuesViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-        cell.textLabel?.text = headerTitle
+        cell.textLabel?.attributedText = NSAttributedString(string: headerTitle ?? "", attributes: [.font : UIFont.systemFont(ofSize: 20, weight: .semibold)])
         cell.backgroundColor = .white
+
+        let separatorView: UIView = UIView()
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        separatorView.backgroundColor = UIColor(hex: 0x04040F)
+        cell.addSubview(separatorView)
+        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separatorView.leftAnchor.constraint(equalTo: cell.leftAnchor, constant: 0).isActive = true
+        separatorView.rightAnchor.constraint(equalTo: cell.rightAnchor, constant: 0).isActive = true
+        separatorView.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: 0).isActive = true
         return cell
     }
 
