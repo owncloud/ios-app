@@ -52,13 +52,18 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             switch self.mode {
             case .add:
                 print("Add mode")
-                self.navigationController?.navigationBar.topItem?.title = NSLocalizedString("Add Server", comment: "")
+                self.navigationItem.title = "Add Server".localized
                 self.addServerUrl()
                 self.addContinueButton(action: self.continueButtonAction)
             case .edit:
                 print("Edit mode")
-                self.navigationController?.navigationBar.topItem?.title = NSLocalizedString("Edit Server", comment: "")
+                self.navigationItem.title = "Edit Server".localized
             }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.sectionForIdentifier("server-url-section")?.row(withIdentifier: "server-url-textfield")?.textField?.becomeFirstResponder()
     }
 
     private func addServerUrl() {

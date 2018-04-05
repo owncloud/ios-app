@@ -10,7 +10,6 @@
 		2303176D205AA21E006C4DAF /* IssuesPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2303176C205AA21E006C4DAF /* IssuesPresentationAnimator.swift */; };
 		2303176F205AA357006C4DAF /* IssuesDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2303176E205AA357006C4DAF /* IssuesDismissalAnimator.swift */; };
 		23039C2C20766CBB0095813A /* CertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23039C2B20766CBB0095813A /* CertificateViewController.swift */; };
-		230E07CB20614E6600ECA473 /* OCURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230E07CA20614E6600ECA473 /* OCURL.swift */; };
 		233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233BDE9F204FEFE500C06732 /* AppDelegate.swift */; };
 		233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA6204FEFE500C06732 /* Assets.xcassets */; };
 		233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA8204FEFE500C06732 /* LaunchScreen.storyboard */; };
@@ -120,7 +119,6 @@
 		2303176C205AA21E006C4DAF /* IssuesPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesPresentationAnimator.swift; sourceTree = "<group>"; };
 		2303176E205AA357006C4DAF /* IssuesDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesDismissalAnimator.swift; sourceTree = "<group>"; };
 		23039C2B20766CBB0095813A /* CertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateViewController.swift; sourceTree = "<group>"; };
-		230E07CA20614E6600ECA473 /* OCURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCURL.swift; sourceTree = "<group>"; };
 		233BDE9C204FEFE500C06732 /* ownCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ownCloud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		233BDE9F204FEFE500C06732 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		233BDEA6204FEFE500C06732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -346,7 +344,6 @@
 			isa = PBXGroup;
 			children = (
 				DCF4F18A2052BA4C00189B9A /* Log.swift */,
-				230E07CA20614E6600ECA473 /* OCURL.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -600,7 +597,6 @@
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
 				DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */,
 				DC7DF17E205141C100189B9A /* BookmarkManager.swift in Sources */,
-				230E07CB20614E6600ECA473 /* OCURL.swift in Sources */,
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
 				2303176F205AA357006C4DAF /* IssuesDismissalAnimator.swift in Sources */,
 				DCF4F165205192AA00189B9A /* BookmarkViewController.swift in Sources */,
