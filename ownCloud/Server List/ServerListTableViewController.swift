@@ -134,10 +134,9 @@ class ServerListTableViewController: UITableViewController {
 
 	// MARK: - Actions
 	@IBAction func addBookmark() {
-		let bookmark = OCBookmark(for: URL(string: "https://demo.owncloud.org"))
 
-		BookmarkManager.sharedBookmarkManager.addBookmark(bookmark!)
-
+        let viewController : BookmarkViewController = BookmarkViewController(style: UITableViewStyle.grouped)
+        self.navigationController?.pushViewController(viewController, animated: true)
 		updateNoServerMessageVisibility()
 	}
 

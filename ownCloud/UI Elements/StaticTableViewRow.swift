@@ -25,7 +25,7 @@ enum StaticTableViewRowButtonStyle {
 	case plain
 	case proceed
 	case destructive
-	case custom(textColor: UIColor, selectedTextColor: UIColor?, backgroundColor: UIColor?, selectedBackgroundColor: UIColor?)
+	case custom(textColor: UIColor?, selectedTextColor: UIColor?, backgroundColor: UIColor?, selectedBackgroundColor: UIColor?)
 }
 
 class StaticTableViewRow : NSObject, UITextFieldDelegate {
