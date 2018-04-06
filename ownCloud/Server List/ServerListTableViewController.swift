@@ -63,7 +63,13 @@ class ServerListTableViewController: UITableViewController {
 		self.navigationController?.setToolbarHidden(false, animated: animated)
 
 		welcomeOverlayView.layoutSubviews()
+
+        reloadBookmarkList()
 	}
+
+    func reloadBookmarkList() {
+        tableView.reloadData()
+    }
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
@@ -262,12 +268,10 @@ class ServerListTableViewController: UITableViewController {
 		BookmarkManager.sharedBookmarkManager.moveBookmark(from: fromIndexPath.row, to: to.row)
 	}
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let bookmark: OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
-
-            self.editBookmark(bookmark)
-        }
-
-    }
+//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        if let bookmark: OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
+//            //TODO: go to file list view
+//        }
+//    }
 
 }
