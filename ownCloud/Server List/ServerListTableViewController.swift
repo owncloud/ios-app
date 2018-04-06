@@ -153,20 +153,26 @@ class ServerListTableViewController: UITableViewController {
 	var ignoreServerListChanges : Bool = false
 
 	@objc func serverListChanged() {
-		if !ignoreServerListChanges {
-			self.tableView.reloadData()
+		DispatchQueue.main.async {
+			if !self.ignoreServerListChanges {
+				self.tableView.reloadData()
+			}
 		}
 	}
 
-	// MARK: - Table view data source
+	// MARK: - Table view delegate
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row)
 
+		Log.log("Bookmark data: \(bookmark?.bookmarkData().description ?? "none")")
+	}
+
+	// MARK: - Table view data source
 	override func numberOfSections(in tableView: UITableView) -> Int {
-		// #warning Incomplete implementation, return the number of sections
 		return 1
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		// #warning Incomplete implementation, return the number of rows
 		return BookmarkManager.sharedBookmarkManager.bookmarks.count
 	}
 
@@ -190,20 +196,31 @@ class ServerListTableViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		return [
 				UITableViewRowAction(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (_, indexPath) in
-					// TODO: Add confirmation prompt
-
 					if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
-						self.ignoreServerListChanges = true
+						let alertController = UIAlertController.init(title: NSString.init(format: NSLocalizedString("Really delete '%@'?", comment: "") as NSString, bookmark.name as NSString) as String,
+											     message: NSLocalizedString("This will also delete all locally stored file copies.", comment: ""),
+											     preferredStyle: .actionSheet)
 
-						BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
+						alertController.addAction(UIAlertAction.init(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
 
-						tableView.performBatchUpdates({
-							tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
-						}, completion: { (_) in
-							self.ignoreServerListChanges = false
-						})
+						alertController.addAction(UIAlertAction.init(title: NSLocalizedString("Delete", comment: ""), style: .destructive, handler: { (_) in
 
-						self.updateNoServerMessageVisibility()
+							self.ignoreServerListChanges = true
+
+							BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
+
+							tableView.performBatchUpdates({
+								tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
+							}, completion: { (_) in
+								self.ignoreServerListChanges = false
+							})
+
+							// TODO: Delete vault
+
+							self.updateNoServerMessageVisibility()
+						}))
+
+						self.present(alertController, animated: true, completion: nil)
 					}
 				})
 			]

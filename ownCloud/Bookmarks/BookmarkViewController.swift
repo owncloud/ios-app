@@ -124,10 +124,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     private func addCertificateDetails(certificate: OCCertificate) {
         let section =  StaticTableViewSection(headerTitle: NSLocalizedString("Certificate Details", comment: ""), footerTitle: nil)
         section.add(rows: [
-            StaticTableViewRow(rowWithAction: {(_, _) in
-                // TODO: Call de owncloudUI certificate screen
+            StaticTableViewRow(rowWithAction: {(staticRow, _) in
+				staticRow.section?.viewController?.navigationController?.pushViewController(OCCertificateViewController.init(certificate: certificate), animated: true)
             }, title: NSLocalizedString("Show Certificate Details", comment: ""), accessoryType: .disclosureIndicator, identifier: "certificate-details-button")
-            ])
+        ])
         self.addSection(section, animated: true)
     }
 
