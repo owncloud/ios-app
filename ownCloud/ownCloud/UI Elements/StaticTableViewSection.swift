@@ -56,7 +56,6 @@ class StaticTableViewSection: NSObject {
 
 	@discardableResult
 	func add(radioGroupWithArrayOfLabelValueDictionaries labelValueDictRows: [[String : Any]], radioAction:StaticTableViewRowAction?, groupIdentifier: String, selectedValue: Any) -> [StaticTableViewRow] {
-
 		var radioGroupRows : [StaticTableViewRow] = Array()
 
 		for labelValueDict in labelValueDictRows {
