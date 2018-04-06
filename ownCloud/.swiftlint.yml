@@ -8,7 +8,6 @@ line_length:
   ignores_function_declarations: true
   ignores_comments: true
 force_cast: warning
-
 identifier_name:
     excluded:
         - x
