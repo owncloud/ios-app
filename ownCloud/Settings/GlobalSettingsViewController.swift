@@ -104,8 +104,8 @@ class GlobalSettingsViewController: StaticTableViewController {
 			}, title: "Switch 2", value: false, identifier: "switch2"),
 
 			StaticTableViewRow(buttonWithAction: { (row, _) in
-				row.section?.row(withIdentifier: "switch1")?.value = row.section?.row(withIdentifier: "switch1")?.value as? Bool
-				row.section?.row(withIdentifier: "switch2")?.value = row.section?.row(withIdentifier: "switch2")?.value as? Bool
+				row.section?.row(withIdentifier: "switch1")?.value = !((row.section?.row(withIdentifier: "switch1")?.value as? Bool)!)
+				row.section?.row(withIdentifier: "switch2")?.value = !((row.section?.row(withIdentifier: "switch2")?.value as? Bool)!)
 			}, title: "Toggle values", style: StaticTableViewRowButtonStyle.plain)
 		])
 
