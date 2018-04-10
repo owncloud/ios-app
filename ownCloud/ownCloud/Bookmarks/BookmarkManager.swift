@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 
 class BookmarkManager: NSObject {
-	public var bookmarks : NSMutableArray
+    public var bookmarks : NSMutableArray
 
 	static var sharedBookmarkManager : BookmarkManager = {
 		let sharedInstance = BookmarkManager()
@@ -72,10 +72,29 @@ class BookmarkManager: NSObject {
 		saveBookmarks()
 	}
 
+    func replaceBookmark(_ bookmark: OCBookmark) {
+
+        if let bookmarkToReplace = self.bookmarks.first(where: { ($0 as AnyObject).uuid == bookmark.uuid }) {
+
+            let index = self.bookmarks.index(of:bookmarkToReplace)
+            if index != NSNotFound {
+                bookmarks.replaceObject(at: index, with: bookmark)
+                saveBookmarks()
+            }
+        }
+    }
+
+    func removeAuthDataOfBookmark(_ bookmark: OCBookmark) {
+        bookmark.authenticationData = nil
+
+        replaceBookmark(bookmark)
+    }
+
 	func removeBookmark(_ bookmark: OCBookmark) {
+        bookmark.authenticationData = nil
 		bookmarks.remove(bookmark)
 
-		saveBookmarks()
+        saveBookmarks()
 	}
 
 	func moveBookmark(from: Int, to: Int) {
