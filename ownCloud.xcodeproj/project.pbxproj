@@ -17,11 +17,9 @@
 		233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */; };
 		237C949C205BDD4C00C336C1 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 237C949B205BDD3700C336C1 /* openssl.framework */; };
 		237C949D205BDD4C00C336C1 /* openssl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 237C949B205BDD3700C336C1 /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		237C94A3205BE0C400C336C1 /* WarningsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237C94A2205BE0C400C336C1 /* WarningsViewController.swift */; };
 		237C99822057EFD800E915DA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 237C99812057EFD700E915DA /* Localizable.strings */; };
 		239E192D205BE64200872270 /* CertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239E192C205BE64200872270 /* CertificateViewController.swift */; };
 		239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239F1318205A693A0029F186 /* UIColor+Extension.swift */; };
-		23D0E09A205BBAD3002D7C80 /* ErrorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D0E099205BBAD3002D7C80 /* ErrorsViewController.swift */; };
 		23D0E09E205BCF8D002D7C80 /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 230B84F020597F6E00C9F828 /* ownCloudUI.framework */; };
 		23D0E09F205BCF8D002D7C80 /* ownCloudUI.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 230B84F020597F6E00C9F828 /* ownCloudUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		401FF7B82073DFCF00DF204F /* ownCloud.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = DC0B37952051541C00189B9A /* ownCloud.entitlements */; };
@@ -30,13 +28,8 @@
 		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */; };
 		DC0B37972051681600189B9A /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B37962051681600189B9A /* ActionButton.swift */; };
-		DC3BE0D72077BC5D002A0AC0 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; };
-		DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
-		DC3BE0D92077BC6B002A0AC0 /* openssl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		DC3BE0DA2077BC6B002A0AC0 /* ownCloudSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC3BE0DE2077CC14002A0AC0 /* ClientQueryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */; };
 		DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0DD2077CC13002A0AC0 /* ClientRootViewController.swift */; };
-		DC3BE0E12077CD4B002A0AC0 /* Synchronized.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0E02077CD4B002A0AC0 /* Synchronized.swift */; };
 		DC3BE0E42077D4E0002A0AC0 /* CoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0E32077D4E0002A0AC0 /* CoreManager.swift */; };
 		DC7DF17E205141C100189B9A /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DF17D205141C100189B9A /* BookmarkManager.swift */; };
 		DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */; };
@@ -79,20 +72,6 @@
 			remoteGlobalIDString = DC30949C205749EA00189B9A;
 			remoteInfo = openssl;
 		};
-		23D0E0A0205BCF8D002D7C80 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = DC3094832057358800189B9A;
-			remoteInfo = ownCloudUI;
-		};
-		DC0B3788205146C900189B9A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DC30949D205749EA00189B9A;
-			remoteInfo = openssl;
-		};
 		239369772076110900BCE21A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
@@ -100,33 +79,40 @@
 			remoteGlobalIDString = DCC8F9AB202852A200EB6701;
 			remoteInfo = ownCloudSDK;
 		};
-		239369792076110900BCE21A /* PBXContainerItemProxy */ = {
+		23D0E0A0205BCF8D002D7C80 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DC3094832057358800189B9A;
+			remoteInfo = ownCloudUI;
+		};
+		40EE99BC207CE27600900E82 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DCC8F9AB202852A200EB6701;
+			remoteInfo = ownCloudSDK;
+		};
+		40EE99BE207CE27600900E82 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DCC8F9B4202852A200EB6701;
 			remoteInfo = ownCloudSDKTests;
 		};
-		2393697B2076110900BCE21A /* PBXContainerItemProxy */ = {
+		40EE99C0207CE27600900E82 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DC3094842057358800189B9A;
 			remoteInfo = ownCloudUI;
 		};
-		2393697D2076110900BCE21A /* PBXContainerItemProxy */ = {
+		40EE99C2207CE27600900E82 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DC7E0A77203732B3006111FA;
 			remoteInfo = Ocean;
-		};
-		DC3BE0CC2077BC52002A0AC0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = DC30949C205749EA00189B9A;
-			remoteInfo = openssl;
 		};
 		DC3BE0CE2077BC52002A0AC0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -134,13 +120,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = DCC8F9AA202852A200EB6701;
 			remoteInfo = ownCloudSDK;
-		};
-		DC3BE0D02077BC52002A0AC0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = DC3094832057358800189B9A;
-			remoteInfo = ownCloudUI;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -163,7 +142,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				237C949D205BDD4C00C336C1 /* openssl.framework in CopyFiles */,
-				DC0B378E205146D900189B9A /* ownCloudSDK.framework in CopyFiles */,
 				23D0E09F205BCF8D002D7C80 /* ownCloudUI.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -186,11 +164,9 @@
 		233BDEB6204FEFE500C06732 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ownCloudSDK.xcodeproj; path = "../ios-sdk/ownCloudSDK.xcodeproj"; sourceTree = "<group>"; };
 		237C9496205BDD3700C336C1 /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "../ios-sdk/ownCloudUI/openssl/framework/openssl.xcodeproj"; sourceTree = "<group>"; };
-		237C94A2205BE0C400C336C1 /* WarningsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningsViewController.swift; sourceTree = "<group>"; };
 		237C99812057EFD700E915DA /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		239E192C205BE64200872270 /* CertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateViewController.swift; sourceTree = "<group>"; };
 		239F1318205A693A0029F186 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
-		23D0E099205BBAD3002D7C80 /* ErrorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorsViewController.swift; sourceTree = "<group>"; };
 		6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.release.xcconfig"; sourceTree = "<group>"; };
 		A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ownCloudTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0D9C062DD1E85A838608B0F /* EarlGrey.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EarlGrey.framework; path = Pods/EarlGrey/EarlGrey/EarlGrey.framework; sourceTree = SOURCE_ROOT; };
@@ -206,7 +182,6 @@
 		DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableViewController.swift; sourceTree = "<group>"; };
 		DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServerListTableViewController.xib; sourceTree = "<group>"; };
 		DCD344A5205BD0C000189B9A /* openssl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = openssl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "ios-sdk/ownCloudUI/openssl/framework/openssl.xcodeproj"; sourceTree = "<group>"; };
 		DCF4F163205192AA00189B9A /* BookmarkViewController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; };
 		DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewController.swift; sourceTree = "<group>"; };
 		DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewSection.swift; sourceTree = "<group>"; };
@@ -221,7 +196,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				237C949C205BDD4C00C336C1 /* openssl.framework in Frameworks */,
-				DC0B378D205146D300189B9A /* ownCloudSDK.framework in Frameworks */,
 				23D0E09E205BCF8D002D7C80 /* ownCloudUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -244,11 +218,10 @@
 				230B84EA20597F6E00C9F828 /* IssuesViewController.swift */,
 				2303176C205AA21E006C4DAF /* IssuesPresentationAnimator.swift */,
 				2303176E205AA357006C4DAF /* IssuesDismissalAnimator.swift */,
-				23D0E099205BBAD3002D7C80 /* ErrorsViewController.swift */,
-				237C94A2205BE0C400C336C1 /* WarningsViewController.swift */,
 				239E192C205BE64200872270 /* CertificateViewController.swift */,
 			);
-			path = "Connection Issues ";
+			name = "Connection Issues ";
+			path = Issues;
 			sourceTree = "<group>";
 		};
 		233BDE93204FEFE500C06732 = {
@@ -261,7 +234,7 @@
 				233BDE9D204FEFE500C06732 /* Products */,
 				DC85573220513CC700189B9A /* Frameworks */,
 				5EE06126BB49344475598790 /* Pods */,
-				2393696F207610F700BCE21A /* Recovered References */,
+				40EE99B9207CE27600900E82 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -318,6 +291,27 @@
 			path = "UIKit Extensions";
 			sourceTree = "<group>";
 		};
+		40EE99B6207CE27600900E82 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				40EE99BD207CE27600900E82 /* ownCloudSDK.framework */,
+				40EE99BF207CE27600900E82 /* ownCloudSDKTests.xctest */,
+				40EE99C1207CE27600900E82 /* ownCloudUI.framework */,
+				40EE99C3207CE27600900E82 /* Ocean.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		40EE99B9207CE27600900E82 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				DC3BE0DD2077CC13002A0AC0 /* ClientRootViewController.swift */,
+				230E07CA20614E6600ECA473 /* OCURL.swift */,
+				DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		5EE06126BB49344475598790 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -331,9 +325,7 @@
 			isa = PBXGroup;
 			children = (
 				DC4AF6E52051466800189B9A /* ownCloudSDK.framework */,
-				DC4AF6E72051466800189B9A /* ownCloudSDKTests.xctest */,
 				230B84F020597F6E00C9F828 /* ownCloudUI.framework */,
-				DC4AF6E92051466800189B9A /* Ocean.app */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -508,7 +500,7 @@
 					ProjectRef = 237C9496205BDD3700C336C1 /* openssl.xcodeproj */;
 				},
 				{
-					ProductGroup = DC4AF6DF2051466800189B9A /* Products */;
+					ProductGroup = 40EE99B6207CE27600900E82 /* Products */;
 					ProjectRef = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
 				},
 			);
@@ -535,32 +527,39 @@
 			remoteRef = 237C949A205BDD3700C336C1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		40EE99BD207CE27600900E82 /* ownCloudSDK.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ownCloudSDK.framework;
+			remoteRef = 40EE99BC207CE27600900E82 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		40EE99BF207CE27600900E82 /* ownCloudSDKTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = ownCloudSDKTests.xctest;
+			remoteRef = 40EE99BE207CE27600900E82 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		40EE99C1207CE27600900E82 /* ownCloudUI.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ownCloudUI.framework;
+			remoteRef = 40EE99C0207CE27600900E82 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		40EE99C3207CE27600900E82 /* Ocean.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Ocean.app;
+			remoteRef = 40EE99C2207CE27600900E82 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		DC4AF6E52051466800189B9A /* ownCloudSDK.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = ownCloudSDK.framework;
 			remoteRef = 239369772076110900BCE21A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2393697A2076110900BCE21A /* ownCloudSDKTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ownCloudSDKTests.xctest;
-			remoteRef = 239369792076110900BCE21A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2393697C2076110900BCE21A /* ownCloudUI.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ownCloudUI.framework;
-			remoteRef = 2393697B2076110900BCE21A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2393697E2076110900BCE21A /* Ocean.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = Ocean.app;
-			remoteRef = 2393697D2076110900BCE21A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -659,8 +658,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				23474466207613AB00859C93 /* ConnectionIssueViewController.swift in Sources */,
-				2347446A20761BB700859C93 /* String+Extension.swift in Sources */,
 				DCF4F17920519F8C00189B9A /* StaticTableViewController.swift in Sources */,
 				DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */,
 				DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */,
@@ -669,9 +666,7 @@
 				DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */,
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
 				DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */,
-				23D0E09A205BBAD3002D7C80 /* ErrorsViewController.swift in Sources */,
 				DC7DF17E205141C100189B9A /* BookmarkManager.swift in Sources */,
-				237C94A3205BE0C400C336C1 /* WarningsViewController.swift in Sources */,
 				230E07CB20614E6600ECA473 /* OCURL.swift in Sources */,
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
 				2303176F205AA357006C4DAF /* IssuesDismissalAnimator.swift in Sources */,
@@ -717,11 +712,6 @@
 			isa = PBXTargetDependency;
 			name = ownCloudSDK;
 			targetProxy = DC3BE0CE2077BC52002A0AC0 /* PBXContainerItemProxy */;
-		};
-		DC3BE0D12077BC52002A0AC0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ownCloudUI;
-			targetProxy = DC3BE0D02077BC52002A0AC0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
