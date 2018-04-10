@@ -57,7 +57,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         super.viewDidLoad()
         self.tableView.bounces = false
 
-        DispatchQueue.main.async {
             if let loginMode = self.mode {
                 switch loginMode {
                 case .add:
