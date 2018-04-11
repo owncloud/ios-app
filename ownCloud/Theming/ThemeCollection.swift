@@ -23,15 +23,27 @@ struct ThemeColorPair {
 	var background: UIColor
 }
 
+struct ThemeColorCollection {
+	var normal : ThemeColorPair
+	var highlighted : ThemeColorPair
+	var disabled : ThemeColorPair
+
+	init(fromPair: ThemeColorPair) {
+		normal = fromPair
+		highlighted = ThemeColorPair(foreground: fromPair.foreground, background: fromPair.background.lighter(0.25))
+		disabled = ThemeColorPair(foreground: fromPair.foreground, background: fromPair.background.lighter(0.25))
+	}
+}
+
 class ThemeCollection {
 	// MARK: - Brand colors
 	public var primaryColor: UIColor
 	public var secondaryColor: UIColor
 
-	// MARK: - Button / Fill colors
-	public var approvalPair : ThemeColorPair
-	public var neutralPair : ThemeColorPair
-	public var destructivePair : ThemeColorPair
+	// MARK: - Button / Fill color collections
+	public var approvalCollection : ThemeColorCollection
+	public var neutralCollection : ThemeColorCollection
+	public var destructiveCollection : ThemeColorCollection
 
 	// MARK: - Label colors
 	public var informativeColor: UIColor
@@ -57,8 +69,8 @@ class ThemeCollection {
 		self.warningColor = UIColor(hex: 0xF2994A)
 		self.errorColor = UIColor(hex: 0xEB5757)
 
-		self.approvalPair = ThemeColorPair(foreground: UIColor.white, background: UIColor(hex: 0x1AC763))
-		self.neutralPair = ThemeColorPair(foreground: UIColor.white, background: UIColor.gray)
-		self.destructivePair = ThemeColorPair(foreground: UIColor.white, background: UIColor.red)
+		self.approvalCollection = ThemeColorCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor(hex: 0x1AC763)))
+		self.neutralCollection = ThemeColorCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor.gray))
+		self.destructiveCollection = ThemeColorCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor.red))
 	}
 }
