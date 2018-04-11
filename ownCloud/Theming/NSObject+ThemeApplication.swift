@@ -33,8 +33,37 @@ enum ThemeItemStyle {
 
 extension NSObject {
 	func applyThemeCollection(_ collection: ThemeCollection, itemStyle: ThemeItemStyle = .defaultForItem) {
-		if self.isKind(of: UIButton.self) {
+		if self.isKind(of: ThemeButton.self) {
+			let themeButton : ThemeButton = (self as? ThemeButton)!
 
+			switch itemStyle {
+				case .approval:
+					themeButton.themeColorCollection = collection.approvalCollection
+
+				case .neutral:
+					themeButton.themeColorCollection = collection.neutralCollection
+
+				case .destructive:
+					themeButton.themeColorCollection = collection.destructiveCollection
+
+				default:
+					themeButton.themeColorCollection = collection.lightBrandCollection
+			}
+		}
+
+		if self.isKind(of: UINavigationController.self) {
+			let navigationController : UINavigationController = (self as? UINavigationController)!
+
+			navigationController.navigationBar.applyThemeCollection(collection, itemStyle: itemStyle)
+		}
+
+		if self.isKind(of: UINavigationBar.self) {
+			let navigationBar : UINavigationBar = (self as? UINavigationBar)!
+
+			navigationBar.barTintColor = collection.darkBrandColor
+			navigationBar.backgroundColor = collection.darkBrandColor
+			navigationBar.tintColor = collection.darkBrandTintColor
+			navigationBar.titleTextAttributes = [ .foregroundColor :  collection.darkBrandLabelColor ]
 		}
 	}
 }

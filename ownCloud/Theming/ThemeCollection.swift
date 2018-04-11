@@ -37,19 +37,34 @@ struct ThemeColorCollection {
 
 class ThemeCollection {
 	// MARK: - Brand colors
-	public var primaryColor: UIColor
-	public var secondaryColor: UIColor
+	public var darkBrandColor: UIColor
+	public var lightBrandColor: UIColor
+
+	// MARK: - Adjacent brand color
+	public var darkBrandLabelColor : UIColor
+	public var lightBrandLabelColor : UIColor
+
+	public var darkBrandTintColor : UIColor
+	public var lightBrandTintColor : UIColor
 
 	// MARK: - Button / Fill color collections
 	public var approvalCollection : ThemeColorCollection
 	public var neutralCollection : ThemeColorCollection
 	public var destructiveCollection : ThemeColorCollection
 
+	public var darkBrandCollection : ThemeColorCollection
+	public var lightBrandCollection : ThemeColorCollection
+
 	// MARK: - Label colors
 	public var informativeColor: UIColor
 	public var successColor: UIColor
 	public var warningColor: UIColor
 	public var errorColor: UIColor
+
+	public var tintColor : UIColor
+
+	// MARK: - Status Bar
+	public var statusBarStyle : UIStatusBarStyle
 
 	// MARK: - Default Collection
 	static var defaultCollection : ThemeCollection = ThemeCollection()
@@ -61,16 +76,29 @@ class ThemeCollection {
 	}()
 
 	init() {
-		self.primaryColor = UIColor(hex: 0x00)
-		self.secondaryColor = UIColor(hex: 0xFF)
+		self.darkBrandColor = UIColor(hex: 0x1D293B)
+		self.lightBrandColor = UIColor(hex: 0x468CC8)
+
+		self.darkBrandLabelColor = UIColor.white
+		self.lightBrandLabelColor = UIColor.white
+
+		self.darkBrandTintColor = UIColor.white
+		self.lightBrandTintColor = UIColor.white
 
 		self.informativeColor = UIColor.darkGray
 		self.successColor = UIColor(hex: 0x27AE60)
 		self.warningColor = UIColor(hex: 0xF2994A)
 		self.errorColor = UIColor(hex: 0xEB5757)
 
+		self.tintColor = self.lightBrandColor
+
 		self.approvalCollection = ThemeColorCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor(hex: 0x1AC763)))
-		self.neutralCollection = ThemeColorCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor.gray))
+		self.neutralCollection = ThemeColorCollection(fromPair: ThemeColorPair(foreground: lightBrandLabelColor, background: lightBrandColor))
 		self.destructiveCollection = ThemeColorCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor.red))
+
+		self.lightBrandCollection = ThemeColorCollection(fromPair: ThemeColorPair(foreground: lightBrandLabelColor, background: lightBrandColor))
+		self.darkBrandCollection = ThemeColorCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: darkBrandColor))
+
+		self.statusBarStyle = .lightContent
 	}
 }

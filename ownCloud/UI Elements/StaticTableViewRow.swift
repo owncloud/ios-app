@@ -55,6 +55,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		return (section?.viewController)
 	}
 
+	private var themeApplierToken : ThemeApplierToken?
+
 	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
 		self.init()
 
@@ -205,56 +207,65 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
-
 		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = NSTextAlignment.center
 
 		self.cell?.accessibilityIdentifier = identifier
 
-		switch style {
-			case .plain:
-				textColor = UIColor.blue
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
 
-			case .proceed:
-				textColor = UIColor.white
-				backgroundColor = UIColor.blue
-				selectedBackgroundColor = UIColor.green
+			switch style {
+				case .plain:
+					textColor = themeCollection.tintColor
 
-			case .destructive:
-				textColor = UIColor.red
-				backgroundColor = UIColor.white
+				case .proceed:
+					textColor = themeCollection.neutralCollection.normal.foreground
+					backgroundColor = themeCollection.neutralCollection.normal.background
+					selectedBackgroundColor = themeCollection.neutralCollection.highlighted.background
 
-			case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
-				textColor = customTextColor
-				selectedTextColor = customSelectedTextColor
-				backgroundColor = customBackgroundColor
-				selectedBackgroundColor = customSelectedBackgroundColor
+				case .destructive:
+					textColor = UIColor.red
+					backgroundColor = UIColor.white
 
-		}
+				case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
+					textColor = customTextColor
+					selectedTextColor = customSelectedTextColor
+					backgroundColor = customBackgroundColor
+					selectedBackgroundColor = customSelectedBackgroundColor
 
-		self.cell?.textLabel?.textColor = textColor
+			}
 
-		if selectedTextColor != nil {
+			self?.cell?.textLabel?.textColor = textColor
 
-			self.cell?.textLabel?.highlightedTextColor = selectedTextColor
-		}
+			if selectedTextColor != nil {
 
-		if backgroundColor != nil {
+				self?.cell?.textLabel?.highlightedTextColor = selectedTextColor
+			}
 
-			self.cell?.backgroundColor = backgroundColor
-		}
+			if backgroundColor != nil {
 
-		if selectedBackgroundColor != nil {
+				self?.cell?.backgroundColor = backgroundColor
+			}
 
-			let selectedBackgroundView = UIView()
+			if selectedBackgroundColor != nil {
 
-			selectedBackgroundView.backgroundColor = selectedBackgroundColor
+				let selectedBackgroundView = UIView()
 
-			self.cell?.selectedBackgroundView? = selectedBackgroundView
-		}
+				selectedBackgroundView.backgroundColor = selectedBackgroundColor
+
+				self?.cell?.selectedBackgroundView? = selectedBackgroundView
+			}
+		}, applyImmediately: true)
 
 		self.action = action
+	}
+
+	// MARK: - Deinit
+	deinit {
+		if themeApplierToken != nil {
+			Theme.shared.remove(applierForToken: themeApplierToken)
+		}
 	}
 }

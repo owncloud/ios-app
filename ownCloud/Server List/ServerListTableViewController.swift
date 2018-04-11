@@ -19,9 +19,13 @@
 import UIKit
 import ownCloudSDK
 
-class ServerListTableViewController: UITableViewController {
+class ServerListTableViewController: UITableViewController, Themeable {
 
 	@IBOutlet var welcomeOverlayView: UIView!
+	@IBOutlet var welcomeTitleLabel : UILabel!
+	@IBOutlet var welcomeMessageLabel : UILabel!
+	@IBOutlet var welcomeAddServerButton : ThemeButton!
+	@IBOutlet var welcomeLogoImageView : UIImageView!
 
 	override init(style: UITableViewStyle) {
 		super.init(style: style)
@@ -44,8 +48,7 @@ class ServerListTableViewController: UITableViewController {
 		self.tableView.rowHeight = UITableViewAutomaticDimension
 		self.tableView.estimatedRowHeight = 80
 
-		self.navigationItem.rightBarButtonItem =
-            UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
 
 		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -61,6 +64,8 @@ class ServerListTableViewController: UITableViewController {
 		super.viewWillAppear(animated)
 
 		self.navigationController?.setToolbarHidden(false, animated: animated)
+
+		Theme.shared.register(client: self)
 
 		welcomeOverlayView.layoutSubviews()
 	}
@@ -81,6 +86,16 @@ class ServerListTableViewController: UITableViewController {
 		super.viewWillDisappear(animated)
 
 		self.navigationController?.setToolbarHidden(true, animated: animated)
+
+		Theme.shared.unregister(client: self)
+	}
+
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		welcomeAddServerButton.themeColorCollection = collection.lightBrandCollection
+	}
+
+	override var preferredStatusBarStyle: UIStatusBarStyle {
+		return Theme.shared.activeCollection.statusBarStyle
 	}
 
 	func updateNoServerMessageVisibility() {
@@ -201,7 +216,7 @@ class ServerListTableViewController: UITableViewController {
 		return [
 				UITableViewRowAction(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (_, indexPath) in
 					if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
-						let alertController = UIAlertController.init(title: NSString.init(format: NSLocalizedString("Really delete '%@'?", comment: "") as NSString, bookmark.name as NSString) as String,
+						let alertController = UIAlertController.init(title: NSString.init(format: NSLocalizedString("Really delete '%@'?", comment: "") as NSString, bookmark.name ?? "" as NSString) as String,
 											     message: NSLocalizedString("This will also delete all locally stored file copies.", comment: ""),
 											     preferredStyle: .actionSheet)
 
