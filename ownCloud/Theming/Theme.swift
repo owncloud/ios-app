@@ -30,8 +30,16 @@ protocol Themeable : class {
 typealias ThemeApplier = (_ theme : Theme, _ ThemeCollection: ThemeCollection, _ event: ThemeEvent) -> Void
 typealias ThemeApplierToken = Int
 
+struct WeakThemeable {
+	weak var weakClient : Themeable?
+
+	init(_ client: Themeable) {
+		weakClient = client
+	}
+}
+
 class Theme: NSObject {
-	private var clients : [Themeable] = []
+	private var weakClients : [WeakThemeable] = []
 
 	private var appliers : [ThemeApplierToken : ThemeApplier] = [:]
 	private var applierSerial : ThemeApplierToken = 0
@@ -61,7 +69,7 @@ class Theme: NSObject {
 	// MARK: - Client register / unregister
 	func register(client: Themeable, applyImmediately: Bool = true) {
 		OCSynchronized(self) {
-			clients.append(client)
+			weakClients.append(WeakThemeable(client))
 		}
 
 		if applyImmediately {
@@ -71,10 +79,13 @@ class Theme: NSObject {
 
 	func unregister(client : Themeable) {
 		OCSynchronized(self) {
-			if let clientIndex = clients.index(where: { (themable) -> Bool in
-				return themable === client
+			if let clientIndex = weakClients.index(where: { (themable) -> Bool in
+				if themable.weakClient != nil {
+					return themable.weakClient === client
+				}
+				return false
 			}) {
-				clients.remove(at: clientIndex)
+				weakClients.remove(at: clientIndex)
 			}
 		}
 	}
@@ -90,7 +101,7 @@ class Theme: NSObject {
 
 	func add(image: ThemeImage) {
 		OCSynchronized(self) {
-			clients.insert(image, at: 0)
+			weakClients.insert(WeakThemeable(image), at: 0)
 
 			if image.identifier != nil {
 				images[image.identifier!] = image
@@ -171,8 +182,10 @@ class Theme: NSObject {
 	func applyThemeCollection(_ collection: ThemeCollection) {
 		OCSynchronized(self) {
 			// Apply theme to clients
-			for client in clients {
-				client.applyThemeCollection(theme: self, collection: collection, event: .update)
+			for client in weakClients {
+				if client.weakClient != nil {
+					client.weakClient?.applyThemeCollection(theme: self, collection: collection, event: .update)
+				}
 			}
 
 			// Apply theme via appliers
