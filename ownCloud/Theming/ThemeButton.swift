@@ -20,8 +20,8 @@ import UIKit
 
 @IBDesignable
 class ThemeButton : UIButton {
-	private var _themeColorCollection : ThemeColorCollection?
-	public var themeColorCollection : ThemeColorCollection? {
+	private var _themeColorCollection : ThemeColorPairCollection?
+	public var themeColorCollection : ThemeColorPairCollection? {
 		set(colorCollection) {
 			_themeColorCollection = colorCollection
 

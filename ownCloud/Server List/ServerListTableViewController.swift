@@ -91,11 +91,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		welcomeAddServerButton.themeColorCollection = collection.lightBrandCollection
-	}
+		welcomeAddServerButton.themeColorCollection = collection.neutralCollection
 
-	override var preferredStatusBarStyle: UIStatusBarStyle {
-		return Theme.shared.activeCollection.statusBarStyle
+		self.tableView.applyThemeCollection(collection)
+
+		if event == .update {
+			self.tableView.reloadData()
+		}
 	}
 
 	func updateNoServerMessageVisibility() {
@@ -155,7 +157,23 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		updateNoServerMessageVisibility()
 	}
 
+	var themeCounter : Int = 0
+
 	@IBAction func help() {
+		var themeStyle : ThemeCollectionStyle?
+
+		themeCounter += 1
+
+		switch themeCounter % 3 {
+			case 0:	themeStyle = .dark
+			case 1:	themeStyle = .light
+			case 2:	themeStyle = .contrast
+			default: themeStyle = .dark
+		}
+
+		UIView.animate(withDuration: 0.25) {
+			Theme.shared.activeCollection = ThemeCollection(darkBrandColor: UIColor(hex: 0x1D293B), lightBrandColor: UIColor(hex: 0x468CC8), style: themeStyle!)
+		}
 	}
 
 	@IBAction func settings() {
@@ -196,7 +214,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
 		guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "bookmark-cell", for: indexPath) as? ServerListBookmarkCell else {
 
 		    let cell = ServerListBookmarkCell()
@@ -206,7 +223,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		if let bookmark : OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
 			bookmarkCell.titleLabel.text = bookmark.url.host
 			bookmarkCell.detailLabel.text = bookmark.url.absoluteString
-			bookmarkCell.imageView?.image = UIImage(named: "owncloud-primary-small")
 		}
 
 		return bookmarkCell

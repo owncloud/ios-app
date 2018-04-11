@@ -47,7 +47,7 @@ extension NSObject {
 					themeButton.themeColorCollection = collection.destructiveCollection
 
 				default:
-					themeButton.themeColorCollection = collection.lightBrandCollection
+					themeButton.themeColorCollection = collection.lightBrandColorCollection.filledColorPairCollection
 			}
 		}
 
@@ -60,10 +60,32 @@ extension NSObject {
 		if self.isKind(of: UINavigationBar.self) {
 			let navigationBar : UINavigationBar = (self as? UINavigationBar)!
 
-			navigationBar.barTintColor = collection.darkBrandColor
-			navigationBar.backgroundColor = collection.darkBrandColor
-			navigationBar.tintColor = collection.darkBrandTintColor
-			navigationBar.titleTextAttributes = [ .foregroundColor :  collection.darkBrandLabelColor ]
+			navigationBar.barTintColor = collection.navigationBarColorCollection.backgroundColor
+			navigationBar.backgroundColor = collection.navigationBarColorCollection.backgroundColor
+			navigationBar.tintColor = collection.navigationBarColorCollection.tintColor
+			navigationBar.titleTextAttributes = [ .foregroundColor :  collection.navigationBarColorCollection.labelColor ]
 		}
+
+		if self.isKind(of: UIToolbar.self) {
+			let toolbar : UIToolbar = (self as? UIToolbar)!
+
+			toolbar.barTintColor = collection.toolBarColorCollection.backgroundColor
+			toolbar.tintColor = collection.toolBarColorCollection.tintColor
+		}
+
+		if self.isKind(of: UITabBar.self) {
+			let tabBar : UITabBar = (self as? UITabBar)!
+
+			tabBar.barTintColor = collection.toolBarColorCollection.backgroundColor
+			tabBar.tintColor = collection.toolBarColorCollection.tintColor
+		}
+
+		if self.isKind(of: UITableView.self) {
+			let tableView : UITableView = (self as? UITableView)!
+
+			tableView.backgroundColor = collection.tableBackgroundColor
+			tableView.separatorColor = collection.tableRowSeparatorColor
+		}
+
 	}
 }

@@ -18,7 +18,7 @@
 
 import UIKit
 
-class ServerListBookmarkCell: UITableViewCell {
+class ServerListBookmarkCell: UITableViewCell, Themeable {
 	public var titleLabel : UILabel = UILabel()
 	public var detailLabel : UILabel = UILabel()
 	public var iconView : UIImageView = UIImageView()
@@ -47,8 +47,8 @@ class ServerListBookmarkCell: UITableViewCell {
 		self.contentView.addSubview(iconView)
 
 		iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 20).isActive = true
-		iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -20).isActive = true
-		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -20).isActive = true
+		iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -25).isActive = true
+		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -25).isActive = true
 
 		titleLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -20).isActive = true
 		detailLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -20).isActive = true
@@ -66,6 +66,26 @@ class ServerListBookmarkCell: UITableViewCell {
 		iconView.setContentHuggingPriority(UILayoutPriority.defaultLow, for: UILayoutConstraintAxis.vertical)
 		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
 		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
+
+		Theme.shared.add(imageFor: "owncloud-primary-small") { () -> ThemeImage in
+			return ThemeImage.init(templateImageNamed: "owncloud-primary-small", identifier: "owncloud-primary-small", { (themeImage, _, themeCollection) -> UIImage? in
+				return themeImage.sourceImage?.tinted(with: themeCollection.tableRowColorBarCollection.symbolColor)
+			})
+		}
+
+		Theme.shared.register(client: self, applyImmediately: true)
+	}
+
+	deinit {
+		Theme.shared.unregister(client: self)
+	}
+
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.imageView?.image = theme.image(for: "owncloud-primary-small")
+
+		self.titleLabel.textColor = collection.tableRowColorBarCollection.labelColor
+		self.detailLabel.textColor = collection.tableRowColorBarCollection.secondaryLabelColor
+		self.backgroundColor = collection.tableRowColorBarCollection.backgroundColor
 	}
 
 	override func setSelected(_ selected: Bool, animated: Bool) {

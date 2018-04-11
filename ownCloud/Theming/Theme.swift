@@ -31,10 +31,14 @@ typealias ThemeApplier = (_ theme : Theme, _ ThemeCollection: ThemeCollection, _
 typealias ThemeApplierToken = Int
 
 class Theme: NSObject {
-	var clients : [Themeable] = []
-	var clientBlocks : [Int : ThemeApplier] = [:]
-	var clientSerial : Int = 0
-	var _activeCollection : ThemeCollection = ThemeCollection.defaultCollection
+	private var clients : [Themeable] = []
+
+	private var appliers : [ThemeApplierToken : ThemeApplier] = [:]
+	private var applierSerial : ThemeApplierToken = 0
+
+	private var images : [String : ThemeImage] = [:]
+
+	private var _activeCollection : ThemeCollection = ThemeCollection.defaultCollection
 
 	// MARK: - Properties
 	public var activeCollection : ThemeCollection {
@@ -75,14 +79,65 @@ class Theme: NSObject {
 		}
 	}
 
+	// MARK: - Images
+	func add(imageFor identifier: String, _ themeImageCreationBlock: (() -> ThemeImage)) {
+		OCSynchronized(self) {
+			if images[identifier] == nil {
+				self.add(image: themeImageCreationBlock())
+			}
+		}
+	}
+
+	func add(image: ThemeImage) {
+		OCSynchronized(self) {
+			clients.insert(image, at: 0)
+
+			if image.identifier != nil {
+				images[image.identifier!] = image
+			}
+		}
+	}
+
+	func themeImage(for identifier: String) -> ThemeImage? {
+		var image : ThemeImage? = nil
+
+		OCSynchronized(self) {
+			image = images[identifier]
+		}
+
+		return image
+	}
+
+	func image(for identifier: String) -> UIImage? {
+		var image : UIImage? = nil
+
+		OCSynchronized(self) {
+			if let themeImage = images[identifier] {
+				image = themeImage.image(for: self)
+			}
+		}
+
+		return image
+	}
+
+	func remove(image: ThemeImage) {
+		OCSynchronized(self) {
+			if image.identifier != nil {
+				images.removeValue(forKey: image.identifier!)
+			}
+
+			self.unregister(client: image)
+		}
+	}
+
 	// MARK: - Applier register / unregister
 	func add(applier: @escaping ThemeApplier, applyImmediately: Bool = true) -> ThemeApplierToken {
 		var token : ThemeApplierToken = -1
 
 		OCSynchronized(self) {
-			token = clientSerial
-			clientBlocks[token] = applier
-			clientSerial += 1
+			token = applierSerial
+			appliers[token] = applier
+			applierSerial += 1
 		}
 
 		if applyImmediately {
@@ -97,7 +152,7 @@ class Theme: NSObject {
 
 		if applierForToken != nil {
 			OCSynchronized(self) {
-				applier = clientBlocks[applierForToken!]
+				applier = appliers[applierForToken!]
 			}
 		}
 
@@ -107,7 +162,7 @@ class Theme: NSObject {
 	func remove(applierForToken: ThemeApplierToken?) {
 		if applierForToken != nil {
 			OCSynchronized(self) {
-				clientBlocks.removeValue(forKey: applierForToken!)
+				appliers.removeValue(forKey: applierForToken!)
 			}
 		}
 	}
@@ -121,7 +176,7 @@ class Theme: NSObject {
 			}
 
 			// Apply theme via appliers
-			for (_, applier) in clientBlocks {
+			for (_, applier) in appliers {
 				applier(self, collection, .update)
 			}
 		}

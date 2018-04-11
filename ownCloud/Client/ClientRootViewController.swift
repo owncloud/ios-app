@@ -22,7 +22,7 @@ import ownCloudSDK
 class ClientRootViewController: UITabBarController {
 	public let bookmark : OCBookmark
 	public var core : OCCore?
-	public var filesNavigationController : UINavigationController?
+	public var filesNavigationController : ThemeNavigationController?
 
 	public init(bookmark inBookmark: OCBookmark) {
 		bookmark = inBookmark
@@ -47,15 +47,13 @@ class ClientRootViewController: UITabBarController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		filesNavigationController = UINavigationController()
+		filesNavigationController = ThemeNavigationController()
 		filesNavigationController?.navigationBar.isTranslucent = false
-		filesNavigationController?.view.backgroundColor = .white
 		filesNavigationController?.tabBarItem.title = "Files"
 
-		self.viewControllers = [filesNavigationController] as? [UIViewController]
-	}
+		self.tabBar.applyThemeCollection(Theme.shared.activeCollection)
 
-	override func viewWillAppear(_ animated: Bool) {
+		self.viewControllers = [filesNavigationController] as? [UIViewController]
 	}
 
 	func logoutBarButtonItem() -> UIBarButtonItem {

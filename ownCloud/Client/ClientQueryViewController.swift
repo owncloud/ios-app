@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class ClientQueryViewController: UITableViewController {
+class ClientQueryViewController: UITableViewController, Themeable {
 	var core : OCCore?
 	var query : OCQuery?
 
@@ -54,6 +54,7 @@ class ClientQueryViewController: UITableViewController {
 
 	deinit {
 		core?.stop(query)
+		Theme.shared.unregister(client: self)
 	}
 
 	// MARK: - Actions
@@ -67,11 +68,23 @@ class ClientQueryViewController: UITableViewController {
 
 		self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "itemCell")
 
+		Theme.shared.register(client: self, applyImmediately: true)
+
 		// Uncomment the following line to preserve selection between presentations
 		// self.clearsSelectionOnViewWillAppear = false
 
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 		// self.navigationItem.rightBarButtonItem = self.editButtonItem
+	}
+
+	// MARK: - Theme support
+
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.tableView.applyThemeCollection(collection)
+
+		if event == .update {
+			self.tableView.reloadData()
+		}
 	}
 
 	// MARK: - Table view data source
@@ -92,6 +105,7 @@ class ClientQueryViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath)
 		let rowItem : OCItem = self.items![indexPath.row]
+		let themeCollection : ThemeCollection = Theme.shared.activeCollection
 
 		// Configure the cell...
 		cell.textLabel?.text = rowItem.name
@@ -100,6 +114,10 @@ class ClientQueryViewController: UITableViewController {
 		} else {
 			cell.accessoryType = .none
 		}
+
+		cell.tintColor = themeCollection.tableRowColorBarCollection.tintColor
+		cell.textLabel?.textColor = themeCollection.tableRowColorBarCollection.labelColor
+		cell.backgroundColor = themeCollection.tableRowColorBarCollection.backgroundColor
 
 		return cell
 	}
