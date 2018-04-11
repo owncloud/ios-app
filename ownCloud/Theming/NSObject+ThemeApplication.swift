@@ -1,8 +1,8 @@
 //
-//  Synchronized.swift
+//  NSObject+ThemeApplication.swift
 //  ownCloud
 //
-//  Created by Felix Schwarz on 06.04.18.
+//  Created by Felix Schwarz on 10.04.18.
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
@@ -16,10 +16,25 @@
  *
  */
 
-import Foundation
+import UIKit
 
-func OCSynchronized(_ obj: Any, block: () -> Void) {
-	objc_sync_enter(obj)
-	block()
-	objc_sync_exit(obj)
+enum ThemeItemStyle {
+	case defaultForItem
+
+	case success
+	case informal
+	case warning
+	case error
+
+	case approval
+	case neutral
+	case destructive
+}
+
+extension NSObject {
+	func applyThemeCollection(_ collection: ThemeCollection, itemStyle: ThemeItemStyle = .defaultForItem) {
+		if self.isKind(of: UIButton.self) {
+
+		}
+	}
 }
