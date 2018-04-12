@@ -90,11 +90,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         self.sectionForIdentifier("server-url-section")?.row(withIdentifier: "server-url-textfield")?.textField?.becomeFirstResponder()
     }
 
-    func updateBookmark(_ bookmark: OCBookmark) {
-        BookmarkManager.sharedBookmarkManager.replaceBookmark(bookmark)
-
-    }
-
     private func addServerUrl() {
 
         var serverURLName = self.classSetting(forOCClassSettingsKey: BookmarkDefaultURLKey) as? String ?? ""
@@ -200,7 +195,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 let serverName = self.sectionForIdentifier("server-name-section")?.row(withIdentifier: "server-name-textfield")?.value as? String
                 self.bookmark?.name = (serverName != nil && serverName != "") ? serverName: self.bookmark!.url.absoluteString
                 //TODO:refactor connection buttons and call update
-                //self.updateBookmark(self.bookmark!)
+                BookmarkManager.sharedBookmarkManager.saveBookmarks()
 
                 self.connection?.generateAuthenticationData(withMethod: method, options: options, completionHandler: { (error, authenticationMethodIdentifier, authenticationData) in
 
@@ -215,7 +210,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                             case .add:
                                 BookmarkManager.sharedBookmarkManager.addBookmark(self.bookmark!)
                             case .edit:
-                                BookmarkManager.sharedBookmarkManager.replaceBookmark(self.bookmark!)
+                                BookmarkManager.sharedBookmarkManager.saveBookmarks()
                             }
                         }
 
@@ -230,7 +225,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                         }
                     }
                 })
-            }, title: NSLocalizedString("Connect", comment: ""),
+            }, title: NSLocalizedString("Connect".localized, comment: ""),
                style: .proceed,
                identifier: nil)])
 
@@ -304,7 +299,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             let newConnection: OCConnection = OCConnection(bookmark: bookmark) {
 
             self.bookmark = bookmark
-            self.connection = connection
+            self.connection = newConnection
 
             newConnection.prepareForSetup(options: nil, completionHandler: { (issuesFromSDK, _, _, preferredAuthMethods) in
 
@@ -324,7 +319,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         }
     }
 
-    private var continueButtonAction: StaticTableViewRowAction  = { (row, _) in
+    lazy private var continueButtonAction: StaticTableViewRowAction  = { (row, _) in
 
         self.continueAction()
 

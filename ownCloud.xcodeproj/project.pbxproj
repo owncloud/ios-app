@@ -27,6 +27,9 @@
 		6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */; };
 		75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */; };
 		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		CB9D4D71207F48E900CEFDCB /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9D4D6E207F48E900CEFDCB /* String+Extension.swift */; };
+		CB9D4D72207F491900CEFDCB /* Synchronized.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0E02077CD4B002A0AC0 /* Synchronized.swift */; };
+		CBCC3845207F517F005A861F /* ConnectionIssueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC3842207F517F005A861F /* ConnectionIssueViewController.swift */; };
 		DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */; };
 		DC0B37972051681600189B9A /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B37962051681600189B9A /* ActionButton.swift */; };
 		DC3BE0E42077D4E0002A0AC0 /* CoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0E32077D4E0002A0AC0 /* CoreManager.swift */; };
@@ -169,6 +172,8 @@
 		40ED10E4207CF735006CFAC9 /* ClientRootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientRootViewController.swift; sourceTree = "<group>"; };
 		6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.release.xcconfig"; sourceTree = "<group>"; };
 		A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ownCloudTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB9D4D6E207F48E900CEFDCB /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		CBCC3842207F517F005A861F /* ConnectionIssueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionIssueViewController.swift; sourceTree = "<group>"; };
 		D0D9C062DD1E85A838608B0F /* EarlGrey.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EarlGrey.framework; path = Pods/EarlGrey/EarlGrey/EarlGrey.framework; sourceTree = SOURCE_ROOT; };
 		D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarlGrey.swift; sourceTree = "<group>"; };
 		DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListBookmarkCell.swift; sourceTree = "<group>"; };
@@ -210,15 +215,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		23031768205AA1DB006C4DAF /* Connection Issues  */ = {
+		23031768205AA1DB006C4DAF /* Issues  */ = {
 			isa = PBXGroup;
 			children = (
 				230B84EA20597F6E00C9F828 /* IssuesViewController.swift */,
+				239E192C205BE64200872270 /* CertificateViewController.swift */,
+				CBCC3842207F517F005A861F /* ConnectionIssueViewController.swift */,
 				2303176C205AA21E006C4DAF /* IssuesPresentationAnimator.swift */,
 				2303176E205AA357006C4DAF /* IssuesDismissalAnimator.swift */,
-				239E192C205BE64200872270 /* CertificateViewController.swift */,
 			);
-			name = "Connection Issues ";
+			name = "Issues ";
 			path = Issues;
 			sourceTree = "<group>";
 		};
@@ -247,7 +253,6 @@
 		233BDE9E204FEFE500C06732 /* ownCloud */ = {
 			isa = PBXGroup;
 			children = (
-				239F1314205A69240029F186 /* UIKit Extensions */,
 				233BDE9F204FEFE500C06732 /* AppDelegate.swift */,
 				DCF4F1612051925A00189B9A /* Bookmarks */,
 				DCE06E3620780A570024BDA2 /* Core */,
@@ -255,6 +260,7 @@
 				DC7DF17C205140F400189B9A /* Server List */,
 				DCF4F1802051A91500189B9A /* Settings */,
 				DCF4F1622051927200189B9A /* UI Elements */,
+				239F1314205A69240029F186 /* UIKit Extensions */,
 				DCF4F1872052BA3500189B9A /* Tools */,
 				DC85573120513C7500189B9A /* Resources */,
 				DC0B37952051541C00189B9A /* ownCloud.entitlements */,
@@ -283,6 +289,7 @@
 		239F1314205A69240029F186 /* UIKit Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				CB9D4D6E207F48E900CEFDCB /* String+Extension.swift */,
 				239F1318205A693A0029F186 /* UIColor+Extension.swift */,
 			);
 			path = "UIKit Extensions";
@@ -361,7 +368,7 @@
 		DCF4F1612051925A00189B9A /* Bookmarks */ = {
 			isa = PBXGroup;
 			children = (
-				23031768205AA1DB006C4DAF /* Connection Issues  */,
+				23031768205AA1DB006C4DAF /* Issues  */,
 				DC7DF17D205141C100189B9A /* BookmarkManager.swift */,
 				DCF4F163205192AA00189B9A /* BookmarkViewController.swift */,
 			);
@@ -655,8 +662,11 @@
 				DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */,
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
 				DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */,
+				CB9D4D71207F48E900CEFDCB /* String+Extension.swift in Sources */,
 				DC7DF17E205141C100189B9A /* BookmarkManager.swift in Sources */,
+				CBCC3845207F517F005A861F /* ConnectionIssueViewController.swift in Sources */,
 				40ED10E6207CF735006CFAC9 /* ClientRootViewController.swift in Sources */,
+				CB9D4D72207F491900CEFDCB /* Synchronized.swift in Sources */,
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
 				2303176F205AA357006C4DAF /* IssuesDismissalAnimator.swift in Sources */,
 				DCF4F165205192AA00189B9A /* BookmarkViewController.swift in Sources */,

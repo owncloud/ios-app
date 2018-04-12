@@ -113,6 +113,11 @@ class BookmarkManager: NSObject {
 
 		return bookmark
 	}
+
+    func removeAuthDataOfBookmark(_ bookmark: OCBookmark) {
+        bookmark.authenticationData = nil
+        saveBookmarks()
+    }
 }
 
 public extension Notification.Name {

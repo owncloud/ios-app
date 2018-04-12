@@ -103,16 +103,6 @@ class StaticTableViewController: UITableViewController {
 	// MARK: - View Controller
 	override func viewDidLoad() {
 		super.viewDidLoad()
-        self.navigationController?.title = "Add Server"
-
-        switch mode {
-        case .add:
-            addServerUrl()
-        case .edit:
-            // TODO: Make this go directly to the edit view with all the things.
-            print("edit")
-        }
-
 	}
 
 	// MARK: - Tools
