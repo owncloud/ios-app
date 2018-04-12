@@ -15,6 +15,7 @@
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="welcomeAddServerButton" destination="Jaa-D8-ghC" id="Iid-HX-Csw"/>
                 <outlet property="welcomeLogoImageView" destination="fP1-O2-lkg" id="7Ih-bz-QkQ"/>
+                <outlet property="welcomeLogoTVGView" destination="x7I-De-RhT" id="l3J-xq-DX8"/>
                 <outlet property="welcomeMessageLabel" destination="IEC-5d-Hb5" id="Fyk-Hb-TSl"/>
                 <outlet property="welcomeOverlayView" destination="PJc-v9-DYn" id="U6Q-QQ-nIk"/>
                 <outlet property="welcomeTitleLabel" destination="c8n-gy-7HF" id="Yqh-Kn-Mgb"/>
@@ -39,7 +40,7 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PJc-v9-DYn" userLabel="Welcome Overlay">
                     <rect key="frame" x="39.5" y="122" width="241.5" height="325"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" image="owncloud-primary-small" translatesAutoresizingMaskIntoConstraints="NO" id="fP1-O2-lkg">
+                        <imageView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" image="owncloud-primary-small" translatesAutoresizingMaskIntoConstraints="NO" id="fP1-O2-lkg">
                             <rect key="frame" x="0.0" y="0.0" width="241.5" height="128"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="128" id="r4R-sD-MMg"/>
@@ -71,6 +72,17 @@ Start by adding your server.</string>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x7I-De-RhT" customClass="VectorImageView" customModule="ownCloud" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="241.5" height="128"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <accessibility key="accessibilityConfiguration">
+                                <accessibilityTraits key="traits" notEnabled="YES"/>
+                            </accessibility>
+                        </view>
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BP2-yC-wec" customClass="SVGImageView">
+                            <rect key="frame" x="0.0" y="0.0" width="241.5" height="128"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
@@ -80,16 +92,24 @@ Start by adding your server.</string>
                         <constraint firstItem="c8n-gy-7HF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="xJw-Td-7h2" secondAttribute="leading" id="9hZ-i6-GgM"/>
                         <constraint firstItem="c8n-gy-7HF" firstAttribute="top" secondItem="fP1-O2-lkg" secondAttribute="bottom" constant="30" id="9vT-H5-xlR"/>
                         <constraint firstItem="IEC-5d-Hb5" firstAttribute="leading" relation="lessThanOrEqual" secondItem="xJw-Td-7h2" secondAttribute="leading" id="AcY-Wr-x1B"/>
+                        <constraint firstItem="BP2-yC-wec" firstAttribute="trailing" secondItem="fP1-O2-lkg" secondAttribute="trailing" id="Aso-Ce-I22"/>
+                        <constraint firstItem="BP2-yC-wec" firstAttribute="bottom" secondItem="fP1-O2-lkg" secondAttribute="bottom" id="C5G-jM-n6p"/>
                         <constraint firstItem="fP1-O2-lkg" firstAttribute="leading" secondItem="xJw-Td-7h2" secondAttribute="leading" id="EUt-hl-KHW"/>
+                        <constraint firstItem="x7I-De-RhT" firstAttribute="trailing" secondItem="fP1-O2-lkg" secondAttribute="trailing" id="IVm-ae-Hzq"/>
                         <constraint firstItem="IEC-5d-Hb5" firstAttribute="top" secondItem="c8n-gy-7HF" secondAttribute="bottom" constant="18" id="JKy-pp-VWR"/>
                         <constraint firstItem="xJw-Td-7h2" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="IEC-5d-Hb5" secondAttribute="trailing" id="M0K-QJ-Qdj"/>
+                        <constraint firstItem="BP2-yC-wec" firstAttribute="top" secondItem="fP1-O2-lkg" secondAttribute="top" id="Z2W-3H-MtU"/>
                         <constraint firstItem="fP1-O2-lkg" firstAttribute="top" secondItem="xJw-Td-7h2" secondAttribute="top" id="c7O-MV-CAw"/>
                         <constraint firstItem="xJw-Td-7h2" firstAttribute="trailing" secondItem="fP1-O2-lkg" secondAttribute="trailing" id="cF9-UI-9xL"/>
                         <constraint firstItem="xJw-Td-7h2" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="c8n-gy-7HF" secondAttribute="trailing" id="fQE-8k-zir"/>
+                        <constraint firstItem="x7I-De-RhT" firstAttribute="bottom" secondItem="fP1-O2-lkg" secondAttribute="bottom" id="hPm-L8-5gB"/>
                         <constraint firstItem="fP1-O2-lkg" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="iBg-us-cdK"/>
                         <constraint firstItem="xJw-Td-7h2" firstAttribute="bottom" secondItem="Jaa-D8-ghC" secondAttribute="bottom" id="jPt-3z-e1W"/>
+                        <constraint firstItem="x7I-De-RhT" firstAttribute="top" secondItem="fP1-O2-lkg" secondAttribute="top" id="oXa-Tt-Kb4"/>
+                        <constraint firstItem="x7I-De-RhT" firstAttribute="leading" secondItem="fP1-O2-lkg" secondAttribute="leading" id="r2P-zD-FI5"/>
                         <constraint firstItem="Jaa-D8-ghC" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="rYy-mZ-wyn"/>
                         <constraint firstItem="c8n-gy-7HF" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="u0i-ca-Uiz"/>
+                        <constraint firstItem="BP2-yC-wec" firstAttribute="leading" secondItem="fP1-O2-lkg" secondAttribute="leading" id="uic-6a-AlO"/>
                         <constraint firstItem="Jaa-D8-ghC" firstAttribute="top" secondItem="IEC-5d-Hb5" secondAttribute="bottom" constant="25" id="wen-iH-60d"/>
                     </constraints>
                     <viewLayoutGuide key="safeArea" id="xJw-Td-7h2"/>

@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import PocketSVG
 
 class ServerListTableViewController: UITableViewController, Themeable {
 
@@ -26,6 +27,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	@IBOutlet var welcomeMessageLabel : UILabel!
 	@IBOutlet var welcomeAddServerButton : ThemeButton!
 	@IBOutlet var welcomeLogoImageView : UIImageView!
+	@IBOutlet var welcomeLogoTVGView : VectorImageView!
+	// @IBOutlet var welcomeLogoSVGView : SVGImageView!
 
 	override init(style: UITableViewStyle) {
 		super.init(style: style)
@@ -51,6 +54,14 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
 
 		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
+
+		welcomeLogoTVGView.vectorImage = TVGImage(named: "owncloud-logo")
+
+		/*
+		var bezierPaths : [SVGBezierPath]
+		(_, bezierPaths) = (TVGImage(named: "owncloud-logo")?.svgBezierPaths())!
+		welcomeLogoSVGView.paths = bezierPaths
+		*/
 
 		// Uncomment the following line to preserve selection between presentations
 		// self.clearsSelectionOnViewWillAppear = false
@@ -80,6 +91,26 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
 			UIBarButtonItem(title: "Settings", style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
 		]
+
+		/*
+		let shapeLayers : [CAShapeLayer]? = (welcomeLogoSVGView.layer as? SVGLayer)!.value(forKey: "_shapeLayers") as? [CAShapeLayer]
+
+		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+			for shapeLayer in shapeLayers! {
+				shapeLayer.strokeColor = UIColor.black.cgColor
+				shapeLayer.lineWidth = 2
+				shapeLayer.fillColor = nil
+
+				let pathAnimation = CABasicAnimation(keyPath: "strokeEnd")
+
+				pathAnimation.duration = 0.5
+				pathAnimation.fromValue = 0
+				pathAnimation.toValue = 1
+
+				shapeLayer.add(pathAnimation, forKey: pathAnimation.keyPath)
+			}
+		}
+		*/
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {

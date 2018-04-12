@@ -48,6 +48,9 @@
 		DC7DF17E205141C100189B9A /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DF17D205141C100189B9A /* BookmarkManager.swift */; };
 		DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */; };
 		DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */; };
+		DCCE54112080177900067D1D /* file.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCCE540E2080177900067D1D /* file.tvg */; };
+		DCCE54122080177900067D1D /* owncloud-logo.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCCE540F2080177900067D1D /* owncloud-logo.tvg */; };
+		DCCE54132080177900067D1D /* folder.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCCE54102080177900067D1D /* folder.tvg */; };
 		DCE974B2207E3AF80069FC2B /* ThemeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */; };
 		DCE974BC207EACA60069FC2B /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */; };
 		DCF4F165205192AA00189B9A /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F163205192AA00189B9A /* BookmarkViewController.swift */; };
@@ -241,6 +244,9 @@
 		DC7DF17D205141C100189B9A /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
 		DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableViewController.swift; sourceTree = "<group>"; };
 		DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServerListTableViewController.xib; sourceTree = "<group>"; };
+		DCCE540E2080177900067D1D /* file.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = file.tvg; path = "img/filetypes-tvg/file.tvg"; sourceTree = SOURCE_ROOT; };
+		DCCE540F2080177900067D1D /* owncloud-logo.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "owncloud-logo.tvg"; path = "img/filetypes-tvg/owncloud-logo.tvg"; sourceTree = SOURCE_ROOT; };
+		DCCE54102080177900067D1D /* folder.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = folder.tvg; path = "img/filetypes-tvg/folder.tvg"; sourceTree = SOURCE_ROOT; };
 		DCD344A5205BD0C000189B9A /* openssl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = openssl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "ios-sdk/ownCloudUI/openssl/framework/openssl.xcodeproj"; sourceTree = "<group>"; };
 		DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeNavigationController.swift; sourceTree = "<group>"; };
@@ -497,6 +503,7 @@
 		DC85573120513C7500189B9A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DCCE54092080175B00067D1D /* TVGs */,
 				233BDEA8204FEFE500C06732 /* LaunchScreen.storyboard */,
 				233BDEA6204FEFE500C06732 /* Assets.xcassets */,
 				233BDEAB204FEFE500C06732 /* Info.plist */,
@@ -513,6 +520,16 @@
 				A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DCCE54092080175B00067D1D /* TVGs */ = {
+			isa = PBXGroup;
+			children = (
+				DCCE540E2080177900067D1D /* file.tvg */,
+				DCCE54102080177900067D1D /* folder.tvg */,
+				DCCE540F2080177900067D1D /* owncloud-logo.tvg */,
+			);
+			name = TVGs;
 			sourceTree = "<group>";
 		};
 		DCE06E3620780A570024BDA2 /* Core */ = {
@@ -763,10 +780,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCCE54112080177900067D1D /* file.tvg in Resources */,
+				DCCE54122080177900067D1D /* owncloud-logo.tvg in Resources */,
 				DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */,
 				237C99822057EFD800E915DA /* Localizable.strings in Resources */,
 				233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */,
 				233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */,
+				DCCE54132080177900067D1D /* folder.tvg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

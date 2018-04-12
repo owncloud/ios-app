@@ -69,7 +69,7 @@ if CommandLine.argc < 3 {
 					svgString = applyReplacementDict(svgString: svgString, replacementDict: globalReplacements!, defaultValues: defaultValuesForVariables)
 				}
 
-				let tvgDict = [ "defaults:" : defaultValuesForVariables, "image" : svgString ] as NSDictionary
+				let tvgDict = [ "defaults" : defaultValuesForVariables, "image" : svgString ] as NSDictionary
 				let tvgData : Data = try JSONSerialization.data(withJSONObject: tvgDict, options: JSONSerialization.WritingOptions.init(rawValue: 0))
 				let tvgFileName = (((sourceURL.lastPathComponent as NSString).deletingPathExtension) as NSString).appendingPathExtension("tvg")
 				let targetURL = targetDirectoryURL.appendingPathComponent(tvgFileName!, isDirectory: false)

@@ -17,15 +17,29 @@
  */
 
 import UIKit
+import PocketSVG
 
 class VectorImageView: UIView {
+	var vectorImage : TVGImage?
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+	override var bounds: CGRect {
+		set(viewBounds) {
+			super.bounds = viewBounds
 
+			self.updateLayerWithRasteredImage(viewBounds: viewBounds)
+		}
+
+		get {
+			return super.bounds
+		}
+	}
+
+	func updateLayerWithRasteredImage(viewBounds: CGRect) {
+		let themeCollection = Theme.shared.activeCollection
+
+		if let rasterImage = vectorImage?.image(fitInSize: viewBounds.size, with: themeCollection.iconColors, cacheFor: themeCollection.identifier) {
+			self.layer.contents = rasterImage.cgImage
+			self.layer.contentsGravity = kCAGravityResizeAspect
+		}
+	}
 }

@@ -226,7 +226,8 @@ class ThemeCollection : NSObject {
 
 		self.iconColors = [
 			"folderFillColor" : self.tableRowColorBarCollection.symbolColor.hexString(),
-			"fileFillColor" : self.tableRowColorBarCollection.symbolColor.hexString()
+			"fileFillColor" : self.tableRowColorBarCollection.symbolColor.hexString(),
+			"logoFillColor" : self.tableRowColorBarCollection.symbolColor.hexString()
 		]
 
 		print (self.iconColors)

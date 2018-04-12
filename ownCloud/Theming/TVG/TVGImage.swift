@@ -22,8 +22,10 @@ import PocketSVG
 class TVGImage: NSObject {
 	var imageString : String?
 	var defaultValues : [String:String]?
+	var bezierPathsByIdentifier : [String:[SVGBezierPath]] = [:]
+	var bezierPathsBoundsByIdentifier : [String:CGRect] = [:]
 
-	init(with data: Data) {
+	init?(with data: Data) {
 		do {
 			let tvgObject : Any = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.init(rawValue: 0))
 
@@ -33,9 +35,24 @@ class TVGImage: NSObject {
 			}
 		} catch {
 			Log.error("Error parsing TVG image: \(error)")
+
+			return nil
 		}
 
 		super.init()
+	}
+
+	convenience init?(named name: String) {
+		guard let resourceURL = Bundle.main.url(forResource: name, withExtension: "tvg") else {
+			return nil
+		}
+
+		guard let data = try? Data(contentsOf: resourceURL) else {
+			Log.error("Error reading TVG image \(name)")
+			return nil
+		}
+
+		self.init(with: data)
 	}
 
 	func svgString(with variables: [String:String]? = nil) -> String? {
@@ -70,18 +87,73 @@ class TVGImage: NSObject {
 		return compiledString
 	}
 
-	func image(fitInSize: CGSize, with variables: [String:String]? = nil) -> UIImage? {
+	func svgBezierPaths(with variables: [String:String]? = nil, cacheFor identifier: String? = nil) -> (CGRect, [SVGBezierPath])? {
+		var svgBezierPaths : [SVGBezierPath]? = nil
+		var pathBoundingRect : CGRect? = nil
+
+		// Generate SVG Bezier Paths
+		if identifier != nil {
+			OCSynchronized(self) {
+				svgBezierPaths = bezierPathsByIdentifier[identifier!]
+			}
+		}
+
+		if svgBezierPaths == nil {
+			guard let svgString : String = self.svgString(with: variables) else {
+				return nil
+			}
+
+			guard let bezierPaths : [SVGBezierPath] = SVGBezierPath.paths(fromSVGString: svgString) as? [SVGBezierPath] else {
+				return nil
+			}
+
+			svgBezierPaths = bezierPaths
+
+			if identifier != nil {
+				OCSynchronized(self) {
+					bezierPathsByIdentifier[identifier!] = bezierPaths
+				}
+			}
+		}
+
+		// Calculate bounding rect
+		if svgBezierPaths != nil {
+			if identifier != nil {
+				OCSynchronized(self) {
+					pathBoundingRect = bezierPathsBoundsByIdentifier[identifier!]
+				}
+			}
+
+			if pathBoundingRect == nil {
+				pathBoundingRect = SVGBoundingRectForPaths(svgBezierPaths!)
+
+				if identifier != nil {
+					OCSynchronized(self) {
+						bezierPathsBoundsByIdentifier[identifier!] = pathBoundingRect
+					}
+				}
+			}
+		}
+
+		if (svgBezierPaths == nil) || (pathBoundingRect == nil) {
+			return nil
+		}
+
+		return (pathBoundingRect!, svgBezierPaths!)
+	}
+
+	func image(fitInSize: CGSize, with variables: [String:String]? = nil, cacheFor identifier: String? = nil) -> UIImage? {
 		var image : UIImage?
 
-		guard let svgString : String = self.svgString(with: variables) else {
+		if (fitInSize.width <= 0) || (fitInSize.height <= 0) {
 			return nil
 		}
 
-		guard let bezierPaths = SVGBezierPath.paths(fromSVGString: svgString) as? [SVGBezierPath] else {
+		guard let (pathBoundingRect, bezierPaths) = svgBezierPaths(with: variables, cacheFor: identifier) else {
 			return nil
 		}
 
-		let fittingSize : CGSize = SVGAdjustCGRectForContentsGravity(SVGBoundingRectForPaths(bezierPaths), fitInSize, kCAGravityResizeAspect).size
+		let fittingSize : CGSize = SVGAdjustCGRectForContentsGravity(CGRect(origin: CGPoint.zero, size: fitInSize), pathBoundingRect.size, kCAGravityResizeAspect).size
 
 		image = UIImage.imageWithSize(size: fittingSize, scale: UIScreen.main.scale) { (rect) in
 			if let graphicsContext = UIGraphicsGetCurrentContext() {
@@ -90,5 +162,16 @@ class TVGImage: NSObject {
 		}
 
 		return image
+	}
+
+	func shapeLayers(fitInSize: CGSize, with variables: [String:String]? = nil, cacheFor identifier: String? = nil) -> CALayer? {
+		return nil
+	}
+
+	func flushCaches() {
+		OCSynchronized(self) {
+			bezierPathsByIdentifier.removeAll()
+			bezierPathsBoundsByIdentifier.removeAll()
+		}
 	}
 }

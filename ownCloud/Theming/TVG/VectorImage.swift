@@ -19,45 +19,45 @@
 import UIKit
 
 class VectorImage: NSObject {
-	var tvgImage : TVGImage
-	private var cachedImages : [String:UIImage] = [:]
+	var image : TVGImage
+	private var rasteredImages : [String:UIImage] = [:]
 	private var lastSeenIdentifier : String?
 
 	init(with tvgImage: TVGImage) {
-		self.tvgImage = tvgImage
+		self.image = tvgImage
 	}
 
-	func image(fittingSize: CGSize, with variables: [String:String], cacheFor identifier: String? = nil) -> UIImage? {
+	func rasteredImage(fittingSize: CGSize, with variables: [String:String], cacheFor identifier: String? = nil) -> UIImage? {
 		var uiImage : UIImage?
 		let sizeString = NSStringFromCGSize(fittingSize)
 
 		if identifier != nil {
 			OCSynchronized(self) {
 				if identifier != lastSeenIdentifier {
-					flushCache()
+					flushRasteredImages()
 					lastSeenIdentifier = identifier
 				}
 
-				uiImage = cachedImages[sizeString]
+				uiImage = rasteredImages[sizeString]
 
 				if uiImage == nil {
-					uiImage = tvgImage.image(fitInSize: fittingSize, with: variables)
+					uiImage = image.image(fitInSize: fittingSize, with: variables)
 
 					if uiImage == nil {
-						cachedImages[sizeString] = uiImage
+						rasteredImages[sizeString] = uiImage
 					}
 				}
 			}
 		} else {
-			uiImage = tvgImage.image(fitInSize: fittingSize, with: variables)
+			uiImage = image.image(fitInSize: fittingSize, with: variables)
 		}
 
 		return uiImage
 	}
 
-	func flushCache() {
+	func flushRasteredImages() {
 		OCSynchronized(self) {
-			cachedImages.removeAll()
+			rasteredImages.removeAll()
 		}
 	}
 }

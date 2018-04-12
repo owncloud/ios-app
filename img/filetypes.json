@@ -12,6 +12,13 @@
 
 			"replace" : "#969696",
 			"variable" : "fileFillColor"
+		},
+
+		"fill=\"#1D293B\"" : {
+			"description" : "Fill color used in logo",
+
+			"replace" : "#1D293B",
+			"variable" : "logoFillColor"
 		}
 	}
 }
