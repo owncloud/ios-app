@@ -18,15 +18,20 @@
 
 import UIKit
 
-struct ThemeColorPair {
-	var foreground: UIColor
-	var background: UIColor
+class ThemeColorPair : NSObject {
+	@objc var foreground: UIColor
+	@objc var background: UIColor
+
+	init(foreground fgColor: UIColor, background bgColor: UIColor) {
+		foreground = fgColor
+		background = bgColor
+	}
 }
 
-struct ThemeColorPairCollection {
-	var normal : ThemeColorPair
-	var highlighted : ThemeColorPair
-	var disabled : ThemeColorPair
+class ThemeColorPairCollection : NSObject {
+	@objc var normal : ThemeColorPair
+	@objc var highlighted : ThemeColorPair
+	@objc var disabled : ThemeColorPair
 
 	init(fromPair: ThemeColorPair) {
 		normal = fromPair
@@ -35,14 +40,23 @@ struct ThemeColorPairCollection {
 	}
 }
 
-struct ThemeColorCollection {
-	var backgroundColor : UIColor?
-	var labelColor : UIColor
-	var symbolColor : UIColor
-	var secondaryLabelColor : UIColor
-	var tintColor : UIColor?
+class ThemeColorCollection : NSObject {
+	@objc var backgroundColor : UIColor?
+	@objc var labelColor : UIColor
+	@objc var secondaryLabelColor : UIColor
+	@objc var symbolColor : UIColor
+	@objc var tintColor : UIColor?
 
-	var filledColorPairCollection : ThemeColorPairCollection
+	@objc var filledColorPairCollection : ThemeColorPairCollection
+
+	init(backgroundColor bgColor : UIColor?, tintColor tntColor: UIColor?, labelColor lblColor : UIColor, secondaryLabelColor secLabelColor: UIColor, symbolColor symColor: UIColor, filledColorPairCollection filColorPairCollection: ThemeColorPairCollection) {
+		backgroundColor = bgColor
+		labelColor = lblColor
+		symbolColor = symColor
+		secondaryLabelColor = secLabelColor
+		tintColor = tntColor
+		filledColorPairCollection = filColorPairCollection
+	}
 }
 
 enum ThemeCollectionStyle {
@@ -51,40 +65,50 @@ enum ThemeCollectionStyle {
 	case contrast
 }
 
-class ThemeCollection {
+class ThemeCollection : NSObject {
 	// MARK: - Brand colors
-	public var darkBrandColor: UIColor
-	public var lightBrandColor: UIColor
+	@objc var darkBrandColor: UIColor
+	@objc var lightBrandColor: UIColor
 
 	// MARK: - Brand color collection
-	public var darkBrandColorCollection : ThemeColorCollection
-	public var lightBrandColorCollection : ThemeColorCollection
+	@objc var darkBrandColorCollection : ThemeColorCollection
+	@objc var lightBrandColorCollection : ThemeColorCollection
 
 	// MARK: - Button / Fill color collections
-	public var approvalCollection : ThemeColorPairCollection
-	public var neutralCollection : ThemeColorPairCollection
-	public var destructiveCollection : ThemeColorPairCollection
+	@objc var approvalCollection : ThemeColorPairCollection
+	@objc var neutralCollection : ThemeColorPairCollection
+	@objc var destructiveCollection : ThemeColorPairCollection
 
 	// MARK: - Label colors
-	public var informativeColor: UIColor
-	public var successColor: UIColor
-	public var warningColor: UIColor
-	public var errorColor: UIColor
+	@objc var informativeColor: UIColor
+	@objc var successColor: UIColor
+	@objc var warningColor: UIColor
+	@objc var errorColor: UIColor
 
-	public var tintColor : UIColor
+	@objc var tintColor : UIColor
 
 	// MARK: - Table views
-	public var tableBackgroundColor : UIColor
-	public var tableRowSeparatorColor : UIColor?
-	public var tableRowColorBarCollection : ThemeColorCollection
+	@objc var tableBackgroundColor : UIColor
+	@objc var tableRowSeparatorColor : UIColor?
+	@objc var tableRowColorBarCollection : ThemeColorCollection
 
 	// MARK: - Bars
-	public var navigationBarColorCollection : ThemeColorCollection
-	public var toolBarColorCollection : ThemeColorCollection
-	public var statusBarStyle : UIStatusBarStyle
+	@objc var navigationBarColorCollection : ThemeColorCollection
+	@objc var toolBarColorCollection : ThemeColorCollection
+	@objc var statusBarStyle : UIStatusBarStyle
 
 	// MARK: - Default Collection
-	static var defaultCollection : ThemeCollection = ThemeCollection()
+	static var defaultCollection : ThemeCollection = {
+		let collection = ThemeCollection()
+
+		/*
+		Log.log("%@", collection.value(forKeyPath: "tintColor") as! CVarArg)
+		Log.log("%@", collection.value(forKeyPath: "toolBarColorCollection.filledColorPairCollection.normal.background") as! CVarArg)
+		Log.log("%@", collection.value(forKeyPath: "toolBarColorCollection.filledColorPairCollection.normal.backgrounds") as! CVarArg)
+		*/
+
+		return (collection)
+	}()
 
 	static var darkCollection : ThemeCollection = {
 		let collection = ThemeCollection()
@@ -98,19 +122,19 @@ class ThemeCollection {
 
 		self.darkBrandColorCollection = ThemeColorCollection(
 			backgroundColor: darkColor,
-			labelColor: UIColor.white,
-			symbolColor: UIColor.white,
-			secondaryLabelColor: UIColor.lightGray,
 			tintColor: lightColor.lighter(0.2),
+			labelColor: UIColor.white,
+			secondaryLabelColor: UIColor.lightGray,
+			symbolColor: UIColor.white,
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: darkColor))
 		)
 
 		self.lightBrandColorCollection = ThemeColorCollection(
 			backgroundColor: lightColor,
-			labelColor: UIColor.white,
-			symbolColor: UIColor.white,
-			secondaryLabelColor: UIColor.lightGray,
 			tintColor: UIColor.white,
+			labelColor: UIColor.white,
+			secondaryLabelColor: UIColor.lightGray,
+			symbolColor: UIColor.white,
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 		)
 
@@ -136,10 +160,10 @@ class ThemeCollection {
 				self.tableRowSeparatorColor = UIColor.black
 				self.tableRowColorBarCollection = ThemeColorCollection(
 					backgroundColor: tableBackgroundColor,
-					labelColor: navigationBarColorCollection.labelColor,
-					symbolColor: lightColor,
-					secondaryLabelColor: navigationBarColorCollection.secondaryLabelColor,
 					tintColor: navigationBarColorCollection.tintColor,
+					labelColor: navigationBarColorCollection.labelColor,
+					secondaryLabelColor: navigationBarColorCollection.secondaryLabelColor,
+					symbolColor: lightColor,
 					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 				)
 
@@ -150,10 +174,10 @@ class ThemeCollection {
 				// Bars
 				self.navigationBarColorCollection = ThemeColorCollection(
 					backgroundColor: nil,
-					labelColor: UIColor.black,
-					symbolColor: darkColor,
-					secondaryLabelColor: UIColor.gray,
 					tintColor: nil,
+					labelColor: UIColor.black,
+					secondaryLabelColor: UIColor.gray,
+					symbolColor: darkColor,
 					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 				)
 
@@ -164,10 +188,10 @@ class ThemeCollection {
 				self.tableRowSeparatorColor = nil
 				self.tableRowColorBarCollection = ThemeColorCollection(
 					backgroundColor: tableBackgroundColor,
-					labelColor: UIColor.black,
-					symbolColor: darkColor,
-					secondaryLabelColor: UIColor.gray,
 					tintColor: nil,
+					labelColor: UIColor.black,
+					secondaryLabelColor: UIColor.gray,
+					symbolColor: darkColor,
 					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 				)
 
@@ -184,10 +208,10 @@ class ThemeCollection {
 				self.tableRowSeparatorColor = nil
 				self.tableRowColorBarCollection = ThemeColorCollection(
 					backgroundColor: tableBackgroundColor,
-					labelColor: UIColor.black,
-					symbolColor: darkBrandColor,
-					secondaryLabelColor: UIColor.gray,
 					tintColor: nil,
+					labelColor: UIColor.black,
+					secondaryLabelColor: UIColor.gray,
+					symbolColor: darkBrandColor,
 					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 				)
 
@@ -197,7 +221,7 @@ class ThemeCollection {
 		}
 	}
 
-	convenience init() {
+	convenience override init() {
 		self.init(darkBrandColor: UIColor(hex: 0x1D293B), lightBrandColor: UIColor(hex: 0x468CC8))
 	}
 }

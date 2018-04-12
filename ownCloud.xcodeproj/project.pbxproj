@@ -40,6 +40,9 @@
 		DC422450207CB2500006A2A6 /* NSObject+ThemeApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */; };
 		DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; };
 		DC7DBA20207F5A0400E7337D /* PocketSVG.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DC7DBA25207F684700E7337D /* ThemeResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA24207F684700E7337D /* ThemeResource.swift */; };
+		DC7DBA29207F71D600E7337D /* VectorImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA28207F71D600E7337D /* VectorImage.swift */; };
+		DC7DBA2B207F71E400E7337D /* VectorImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA2A207F71E400E7337D /* VectorImageView.swift */; };
 		DC7DF17E205141C100189B9A /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DF17D205141C100189B9A /* BookmarkManager.swift */; };
 		DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */; };
 		DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */; };
@@ -217,6 +220,9 @@
 		DC42244B207CAFBB0006A2A6 /* ThemeCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCollection.swift; sourceTree = "<group>"; };
 		DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+ThemeApplication.swift"; sourceTree = "<group>"; };
 		DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PocketSVG.xcodeproj; path = external/PocketSVG/PocketSVG.xcodeproj; sourceTree = SOURCE_ROOT; };
+		DC7DBA24207F684700E7337D /* ThemeResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeResource.swift; sourceTree = "<group>"; };
+		DC7DBA28207F71D600E7337D /* VectorImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorImage.swift; sourceTree = "<group>"; };
+		DC7DBA2A207F71E400E7337D /* VectorImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorImageView.swift; sourceTree = "<group>"; };
 		DC7DF17D205141C100189B9A /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
 		DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableViewController.swift; sourceTree = "<group>"; };
 		DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServerListTableViewController.xib; sourceTree = "<group>"; };
@@ -381,10 +387,10 @@
 			children = (
 				DC422449207CAFAA0006A2A6 /* Theme.swift */,
 				DC42244B207CAFBB0006A2A6 /* ThemeCollection.swift */,
-				DC321260207EB01B00DB171D /* ThemeImage.swift */,
-				DC0B37962051681600189B9A /* ThemeButton.swift */,
-				DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */,
 				DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */,
+				DC7DBA27207F6DFD00E7337D /* UI */,
+				DC7DBA26207F6DEE00E7337D /* Resources */,
+				DC7DBA21207F672700E7337D /* SVG */,
 			);
 			path = Theming;
 			sourceTree = "<group>";
@@ -406,6 +412,33 @@
 				DC7DBA1C207F59D200E7337D /* PocketSVGTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		DC7DBA21207F672700E7337D /* SVG */ = {
+			isa = PBXGroup;
+			children = (
+				DC7DBA28207F71D600E7337D /* VectorImage.swift */,
+				DC7DBA2A207F71E400E7337D /* VectorImageView.swift */,
+			);
+			path = SVG;
+			sourceTree = "<group>";
+		};
+		DC7DBA26207F6DEE00E7337D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DC7DBA24207F684700E7337D /* ThemeResource.swift */,
+				DC321260207EB01B00DB171D /* ThemeImage.swift */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		DC7DBA27207F6DFD00E7337D /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */,
+				DC0B37962051681600189B9A /* ThemeButton.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 		DC7DF17C205140F400189B9A /* Server List */ = {
@@ -756,6 +789,8 @@
 				23474466207613AB00859C93 /* ConnectionIssueViewController.swift in Sources */,
 				2347446A20761BB700859C93 /* String+Extension.swift in Sources */,
 				DCF4F17920519F8C00189B9A /* StaticTableViewController.swift in Sources */,
+				DC7DBA25207F684700E7337D /* ThemeResource.swift in Sources */,
+				DC7DBA29207F71D600E7337D /* VectorImage.swift in Sources */,
 				DC42244A207CAFAA0006A2A6 /* Theme.swift in Sources */,
 				DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */,
 				DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */,
@@ -774,6 +809,7 @@
 				DC3BE0DE2077CC14002A0AC0 /* ClientQueryViewController.swift in Sources */,
 				DC0B37972051681600189B9A /* ThemeButton.swift in Sources */,
 				DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */,
+				DC7DBA2B207F71E400E7337D /* VectorImageView.swift in Sources */,
 				DCE974BC207EACA60069FC2B /* UIImage+Extension.swift in Sources */,
 				23039C2C20766CBB0095813A /* CertificateViewController.swift in Sources */,
 				23BEF1182076667F00DD2E6F /* IssuesViewController.swift in Sources */,
