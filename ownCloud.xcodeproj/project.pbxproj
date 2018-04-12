@@ -38,6 +38,8 @@
 		DC42244A207CAFAA0006A2A6 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC422449207CAFAA0006A2A6 /* Theme.swift */; };
 		DC42244C207CAFBB0006A2A6 /* ThemeCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC42244B207CAFBB0006A2A6 /* ThemeCollection.swift */; };
 		DC422450207CB2500006A2A6 /* NSObject+ThemeApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */; };
+		DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; };
+		DC7DBA20207F5A0400E7337D /* PocketSVG.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC7DF17E205141C100189B9A /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DF17D205141C100189B9A /* BookmarkManager.swift */; };
 		DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */; };
 		DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */; };
@@ -123,6 +125,34 @@
 			remoteGlobalIDString = DC3094832057358800189B9A;
 			remoteInfo = ownCloudUI;
 		};
+		DC7DBA17207F59D200E7337D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C79800BB1A21CB5300380860;
+			remoteInfo = "PocketSVG (iOS)";
+		};
+		DC7DBA19207F59D200E7337D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C79800F51A21CDFD00380860;
+			remoteInfo = "PocketSVG (Mac)";
+		};
+		DC7DBA1B207F59D200E7337D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B0B5922B20752E980009ECA2;
+			remoteInfo = PocketSVGTests;
+		};
+		DC7DBA1D207F59F200E7337D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C79800BA1A21CB5300380860;
+			remoteInfo = "PocketSVG (iOS)";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -143,6 +173,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				DC7DBA20207F5A0400E7337D /* PocketSVG.framework in CopyFiles */,
 				DC3BE0D92077BC6B002A0AC0 /* openssl.framework in CopyFiles */,
 				DC3BE0DA2077BC6B002A0AC0 /* ownCloudSDK.framework in CopyFiles */,
 				23D0E09F205BCF8D002D7C80 /* ownCloudUI.framework in CopyFiles */,
@@ -185,6 +216,7 @@
 		DC422449207CAFAA0006A2A6 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		DC42244B207CAFBB0006A2A6 /* ThemeCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCollection.swift; sourceTree = "<group>"; };
 		DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+ThemeApplication.swift"; sourceTree = "<group>"; };
+		DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PocketSVG.xcodeproj; path = external/PocketSVG/PocketSVG.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DC7DF17D205141C100189B9A /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
 		DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableViewController.swift; sourceTree = "<group>"; };
 		DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServerListTableViewController.xib; sourceTree = "<group>"; };
@@ -205,6 +237,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */,
 				DC3BE0D72077BC5D002A0AC0 /* openssl.framework in Frameworks */,
 				DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */,
 				23D0E09E205BCF8D002D7C80 /* ownCloudUI.framework in Frameworks */,
@@ -241,6 +274,7 @@
 				DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */,
 				233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */,
 				233BDE9E204FEFE500C06732 /* ownCloud */,
+				DC7DBA10207F59C500E7337D /* External */,
 				233BDEB3204FEFE500C06732 /* ownCloudTests */,
 				233BDE9D204FEFE500C06732 /* Products */,
 				DC85573220513CC700189B9A /* Frameworks */,
@@ -355,6 +389,25 @@
 			path = Theming;
 			sourceTree = "<group>";
 		};
+		DC7DBA10207F59C500E7337D /* External */ = {
+			isa = PBXGroup;
+			children = (
+				DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */,
+			);
+			name = External;
+			path = ownCloud;
+			sourceTree = "<group>";
+		};
+		DC7DBA12207F59D200E7337D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DC7DBA18207F59D200E7337D /* PocketSVG.framework */,
+				DC7DBA1A207F59D200E7337D /* PocketSVG.framework */,
+				DC7DBA1C207F59D200E7337D /* PocketSVGTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		DC7DF17C205140F400189B9A /* Server List */ = {
 			isa = PBXGroup;
 			children = (
@@ -447,6 +500,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DC7DBA1E207F59F200E7337D /* PBXTargetDependency */,
 				DC3BE0CD2077BC52002A0AC0 /* PBXTargetDependency */,
 				DC3BE0CF2077BC52002A0AC0 /* PBXTargetDependency */,
 				DC3BE0D12077BC52002A0AC0 /* PBXTargetDependency */,
@@ -527,6 +581,10 @@
 					ProductGroup = 239369712076110900BCE21A /* Products */;
 					ProjectRef = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
 				},
+				{
+					ProductGroup = DC7DBA12207F59D200E7337D /* Products */;
+					ProjectRef = DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -577,6 +635,27 @@
 			fileType = wrapper.application;
 			path = Ocean.app;
 			remoteRef = 2393697D2076110900BCE21A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DC7DBA18207F59D200E7337D /* PocketSVG.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = PocketSVG.framework;
+			remoteRef = DC7DBA17207F59D200E7337D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DC7DBA1A207F59D200E7337D /* PocketSVG.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = PocketSVG.framework;
+			remoteRef = DC7DBA19207F59D200E7337D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DC7DBA1C207F59D200E7337D /* PocketSVGTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = PocketSVGTests.xctest;
+			remoteRef = DC7DBA1B207F59D200E7337D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -736,6 +815,11 @@
 			isa = PBXTargetDependency;
 			name = ownCloudUI;
 			targetProxy = DC3BE0D02077BC52002A0AC0 /* PBXContainerItemProxy */;
+		};
+		DC7DBA1E207F59F200E7337D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "PocketSVG (iOS)";
+			targetProxy = DC7DBA1D207F59F200E7337D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
