@@ -21,25 +21,18 @@ import UIKit
 import ownCloudSDK
 import ownCloudUI
 
-enum BookmarkViewControllerMode {
-    case add
-    case edit
-}
-
 let BookmarkDefaultURLKey = "default-url"
 let BookmarkURLEditableKey = "url-editable"
 
 class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport {
 
-    public var mode : BookmarkViewControllerMode!
     public var bookmark: OCBookmark?
     public var connection: OCConnection?
     private var authMethodType: OCAuthenticationMethodType?
 
-    convenience init( mode: BookmarkViewControllerMode!, bookmark: OCBookmark?) {
+    convenience init(bookmark: OCBookmark?) {
         self.init(style: UITableViewStyle.grouped)
 
-        self.mode = mode
         self.bookmark = bookmark
     }
 
@@ -57,32 +50,28 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         super.viewDidLoad()
         self.tableView.bounces = false
 
-            if let loginMode = self.mode {
-                switch loginMode {
-                case .add:
-                    print("Add mode")
-                    self.navigationItem.title = "Add Server".localized
-                    self.addServerUrl()
-                    self.addContinueButton(action: self.continueButtonAction)
+        if self.bookmark != nil {
+            print("Edit mode")
+            self.navigationItem.title = "Edit Server".localized
+            self.addServerName()
+            self.addServerUrl()
+            // self.continueAction()
+            if let bookmark: OCBookmark = self.bookmark,
+                let authMethodID = bookmark.authenticationMethodIdentifier,
+                authMethodID == OCAuthenticationMethodBasicAuthIdentifier {
 
-                case .edit:
-                    print("Edit mode")
-                    self.navigationItem.title = "Edit Server".localized
-                    self.addServerName()
-                    self.addServerUrl()
-                   // self.continueAction()
-                    if let bookmark: OCBookmark = self.bookmark,
-                        let authMethodID = bookmark.authenticationMethodIdentifier,
-                        authMethodID == OCAuthenticationMethodBasicAuthIdentifier {
-
-                        let username = OCAuthenticationMethodBasicAuth.userName(fromAuthenticationData: bookmark.authenticationData)
-                        self.addBasicAuthCredentialsFields(username: username, password: "")
-                    }
-                    self.addConnectButton()
-                    self.addDeleteAuthDataButton()
-                    self.tableView.reloadData()
-                }
+                let username = OCAuthenticationMethodBasicAuth.userName(fromAuthenticationData: bookmark.authenticationData)
+                self.addBasicAuthCredentialsFields(username: username, password: "")
             }
+            self.addConnectButton()
+            self.addDeleteAuthDataButton()
+            self.tableView.reloadData()
+        } else {
+            print("Add mode")
+            self.navigationItem.title = "Add Server".localized
+            self.addServerUrl()
+            self.addContinueButton(action: self.continueButtonAction)
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -94,14 +83,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
         var serverURLName = self.classSetting(forOCClassSettingsKey: BookmarkDefaultURLKey) as? String ?? ""
 
-        if let loginMode = self.mode {
-            switch loginMode {
-            case .add:
-                break
-            case .edit:
-                if let url = self.bookmark?.url {
-                    serverURLName = url.absoluteString
-                }
+        if self.bookmark != nil {
+            //Edit
+            if let url = self.bookmark?.url {
+                serverURLName = url.absoluteString
             }
         }
 
@@ -136,14 +121,11 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     private func addServerName() {
 
         var serverName = ""
-        if let loginMode = self.mode {
-            switch loginMode {
-            case .add:
-                break
-            case .edit:
-                if let name = self.bookmark?.name {
-                    serverName = name
-                }
+
+        if self.bookmark != nil {
+            //Edit
+            if let name = self.bookmark?.name {
+                serverName = name
             }
         }
 
@@ -205,13 +187,12 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                         self.bookmark?.authenticationMethodIdentifier = authenticationMethodIdentifier
                         self.bookmark?.authenticationData = authenticationData
 
-                        if let loginMode = self.mode {
-                            switch loginMode {
-                            case .add:
-                                BookmarkManager.sharedBookmarkManager.addBookmark(self.bookmark!)
-                            case .edit:
-                                BookmarkManager.sharedBookmarkManager.saveBookmarks()
-                            }
+                        if self.bookmark != nil {
+                            //Edit
+                            BookmarkManager.sharedBookmarkManager.saveBookmarks()
+                        } else {
+                            //Add
+                            BookmarkManager.sharedBookmarkManager.addBookmark(self.bookmark!)
                         }
 
                         DispatchQueue.main.async {

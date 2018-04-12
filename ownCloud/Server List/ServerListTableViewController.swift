@@ -141,7 +141,7 @@ class ServerListTableViewController: UITableViewController {
 	// MARK: - Actions
 	@IBAction func addBookmark() {
 
-        let viewController : BookmarkViewController = BookmarkViewController(mode:.add, bookmark:nil)
+        let viewController : BookmarkViewController = BookmarkViewController()
 
         self.navigationController?.pushViewController(viewController, animated: true)
 		updateNoServerMessageVisibility()
@@ -149,7 +149,7 @@ class ServerListTableViewController: UITableViewController {
 
     func editBookmark(_ bookmark: OCBookmark) {
 
-        let viewController : BookmarkViewController = BookmarkViewController(mode:.edit, bookmark:bookmark)
+        let viewController : BookmarkViewController = BookmarkViewController(bookmark:bookmark)
 
         self.navigationController?.pushViewController(viewController, animated: true)
 
