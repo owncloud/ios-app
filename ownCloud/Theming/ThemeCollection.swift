@@ -66,6 +66,8 @@ enum ThemeCollectionStyle {
 }
 
 class ThemeCollection : NSObject {
+	@objc var identifier : String = UUID().uuidString
+
 	// MARK: - Brand colors
 	@objc var darkBrandColor: UIColor
 	@objc var lightBrandColor: UIColor
@@ -96,6 +98,9 @@ class ThemeCollection : NSObject {
 	@objc var navigationBarColorCollection : ThemeColorCollection
 	@objc var toolBarColorCollection : ThemeColorCollection
 	@objc var statusBarStyle : UIStatusBarStyle
+
+	// MARK: - Icon colors
+	@objc var iconColors : [String:String]
 
 	// MARK: - Default Collection
 	static var defaultCollection : ThemeCollection = {
@@ -217,8 +222,14 @@ class ThemeCollection : NSObject {
 
 				// Status Bar
 				self.statusBarStyle = .lightContent
-
 		}
+
+		self.iconColors = [
+			"folderFillColor" : self.tableRowColorBarCollection.symbolColor.hexString(),
+			"fileFillColor" : self.tableRowColorBarCollection.symbolColor.hexString()
+		]
+
+		print (self.iconColors)
 	}
 
 	convenience override init() {

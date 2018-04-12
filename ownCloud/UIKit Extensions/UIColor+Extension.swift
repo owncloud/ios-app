@@ -33,15 +33,8 @@ extension UIColor {
 	}
 
 	public func blended(withFraction fraction: Double, ofColor blendColor: UIColor) -> UIColor {
-		var selfRed : CGFloat = 0
-		var selfGreen : CGFloat = 0
-		var selfBlue : CGFloat = 0
-		var selfAlpha : CGFloat = 0
-
-		var blendRed : CGFloat = 0
-		var blendGreen : CGFloat = 0
-		var blendBlue : CGFloat = 0
-		var blendAlpha : CGFloat = 0
+		var selfRed : CGFloat = 0, selfGreen : CGFloat  = 0, selfBlue : CGFloat  = 0, selfAlpha : CGFloat = 0
+		var blendRed : CGFloat = 0, blendGreen : CGFloat  = 0, blendBlue : CGFloat  = 0, blendAlpha : CGFloat = 0
 
 		self.getRed(&selfRed, green:&selfGreen, blue:&selfBlue, alpha:&selfAlpha)
 		blendColor.getRed(&blendRed, green:&blendGreen, blue:&blendBlue, alpha:&blendAlpha)
@@ -53,10 +46,7 @@ extension UIColor {
 	}
 
 	public func lighter(_ fraction: Double) -> UIColor {
-		var selfRed : CGFloat = 0
-		var selfGreen : CGFloat = 0
-		var selfBlue : CGFloat = 0
-		var selfAlpha : CGFloat = 0
+		var selfRed : CGFloat = 0, selfGreen : CGFloat  = 0, selfBlue : CGFloat  = 0, selfAlpha : CGFloat = 0
 
 		self.getRed(&selfRed, green:&selfGreen, blue:&selfBlue, alpha:&selfAlpha)
 
@@ -67,10 +57,7 @@ extension UIColor {
 	}
 
 	public func darker(_ fraction: Double) -> UIColor {
-		var selfRed : CGFloat = 0
-		var selfGreen : CGFloat = 0
-		var selfBlue : CGFloat = 0
-		var selfAlpha : CGFloat = 0
+		var selfRed : CGFloat = 0, selfGreen : CGFloat  = 0, selfBlue : CGFloat  = 0, selfAlpha : CGFloat = 0
 
 		self.getRed(&selfRed, green:&selfGreen, blue:&selfBlue, alpha:&selfAlpha)
 
@@ -78,5 +65,13 @@ extension UIColor {
 			       green: CGFloat(Double(selfGreen) * (1.0-fraction)),
 			       blue:  CGFloat(Double(selfBlue)  * (1.0-fraction)),
 			       alpha: CGFloat(Double(selfAlpha) * (1.0-fraction)))
+	}
+
+	public func hexString(leadIn: String = "#") -> String {
+		var selfRed : CGFloat = 0, selfGreen : CGFloat  = 0, selfBlue : CGFloat  = 0, selfAlpha : CGFloat = 0
+
+		self.getRed(&selfRed, green:&selfGreen, blue:&selfBlue, alpha:&selfAlpha)
+
+		return (String(format: "\(leadIn)%02x%02x%02x", Int(selfRed*255.0), Int(selfGreen*255.0), Int(selfBlue*255.0)))
 	}
 }
