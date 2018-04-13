@@ -351,6 +351,9 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                         self.present(issuesVC, animated: true, completion: nil)
                     }
                 } else {
+
+                    self.authMethod = self.bookmark?.authenticationMethodIdentifier
+
                     DispatchQueue.main.async {
                         //self.bookmark?.certificate = issuesFromSDK?.certificate
                         self.approveButtonAction(preferedAuthMethods: preferredAuthMethods!, issuesFromSDK: issuesFromSDK!, username: username as String?, password: password as String?)
@@ -373,7 +376,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 }
 
                 if OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type() == .passphrase {
+                    self.authMethod = OCAuthenticationMethodBasicAuthIdentifier
                     self.addBasicAuthCredentialsFields(username: username, password:password)
+                } else {
+                    self.authMethod = OCAuthenticationMethodOAuth2Identifier
                 }
 
                 self.removeContinueButton()
