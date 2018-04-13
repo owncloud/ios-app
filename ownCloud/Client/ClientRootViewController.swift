@@ -35,7 +35,7 @@ class ClientRootViewController: UITabBarController {
 				self.coreReady()
 			}
 
-			self.progressBar?.update(with: "Connecting…", progress: 1)
+			self.progressBar?.update(with: "Connected.", progress: 1)
 		})
 	}
 
@@ -67,7 +67,7 @@ class ClientRootViewController: UITabBarController {
 
 		self.viewControllers = [filesNavigationController] as? [UIViewController]
 
-		progressBar?.update(with: "Connected.", progress: -1)
+		progressBar?.update(with: "Connecting…", progress: -1)
 	}
 
 	func logoutBarButtonItem() -> UIBarButtonItem {
