@@ -233,7 +233,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                         }
                     } else {
                         DispatchQueue.main.async {
-                            let issuesVC = ConnectionIssueViewController(issue: OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil))
+                            let issuesVC = ConnectionIssueViewController(issue: OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil), completion: {
+                                (result) in
+                                // TODO
+                            })
                             issuesVC.modalPresentationStyle = .overCurrentContext
                             self.present(issuesVC, animated: true, completion: nil)
                         }
@@ -328,7 +331,18 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 if let issues = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.warning),
                     issues.count > 0 {
                     DispatchQueue.main.async {
-                        let issuesVC = ConnectionIssueViewController(issue: issuesFromSDK!)
+                        let issuesVC = ConnectionIssueViewController(issue: issuesFromSDK!, completion: {
+                            (result) in
+
+                            if result == ConnectionResponse.approve {
+                                DispatchQueue.main.async {
+                                    //self.bookmark?.certificate = issuesFromSDK?.certificate
+                                    self.approveButtonAction(preferedAuthMethods: preferredAuthMethods!, issuesFromSDK: issuesFromSDK!, username: username as String?, password: password as String?)
+                                }
+                            }
+
+                        })
+
                         issuesVC.modalPresentationStyle = .overCurrentContext
                         self.present(issuesVC, animated: true, completion: nil)
                     }

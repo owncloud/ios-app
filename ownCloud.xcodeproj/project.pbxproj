@@ -221,10 +221,8 @@
 			isa = PBXGroup;
 			children = (
 				230B84EA20597F6E00C9F828 /* IssuesViewController.swift */,
-				239E192C205BE64200872270 /* CertificateViewController.swift */,
-				CBCC3842207F517F005A861F /* ConnectionIssueViewController.swift */,
-				2303176C205AA21E006C4DAF /* IssuesPresentationAnimator.swift */,
-				2303176E205AA357006C4DAF /* IssuesDismissalAnimator.swift */,
+				CBCC384D2080C87E005A861F /* Issues Subclasses */,
+				CBCC384E2080C8AF005A861F /* Issues Animators */,
 			);
 			name = "Issues ";
 			path = Issues;
@@ -324,6 +322,24 @@
 				CBCC384B208088F4005A861F /* SettingsIdentifiers.swift */,
 			);
 			path = Constants;
+			sourceTree = "<group>";
+		};
+		CBCC384D2080C87E005A861F /* Issues Subclasses */ = {
+			isa = PBXGroup;
+			children = (
+				239E192C205BE64200872270 /* CertificateViewController.swift */,
+				CBCC3842207F517F005A861F /* ConnectionIssueViewController.swift */,
+			);
+			path = "Issues Subclasses";
+			sourceTree = "<group>";
+		};
+		CBCC384E2080C8AF005A861F /* Issues Animators */ = {
+			isa = PBXGroup;
+			children = (
+				2303176C205AA21E006C4DAF /* IssuesPresentationAnimator.swift */,
+				2303176E205AA357006C4DAF /* IssuesDismissalAnimator.swift */,
+			);
+			path = "Issues Animators";
 			sourceTree = "<group>";
 		};
 		DC3BE0DB2077CC13002A0AC0 /* Client */ = {
