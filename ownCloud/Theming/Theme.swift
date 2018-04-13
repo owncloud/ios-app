@@ -44,7 +44,7 @@ class Theme: NSObject {
 	private var appliers : [ThemeApplierToken : ThemeApplier] = [:]
 	private var applierSerial : ThemeApplierToken = 0
 
-	private var images : [String : ThemeImage] = [:]
+	private var resourcesByIdentifier : [String : ThemeResource] = [:]
 
 	private var _activeCollection : ThemeCollection = ThemeCollection.defaultCollection
 
@@ -90,54 +90,67 @@ class Theme: NSObject {
 		}
 	}
 
-	// MARK: - Images
-	func add(imageFor identifier: String, _ themeImageCreationBlock: (() -> ThemeImage)) {
+	// MARK: - Resources
+	func add(resourceFor identifier: String, _ resourceCreationBlock: ((_ identifier: String) -> ThemeResource)) {
 		OCSynchronized(self) {
-			if images[identifier] == nil {
-				self.add(image: themeImageCreationBlock())
+			if resourcesByIdentifier[identifier] == nil {
+				self.add(resource: resourceCreationBlock(identifier))
 			}
 		}
 	}
 
-	func add(image: ThemeImage) {
+	func add(resource: ThemeResource) {
 		OCSynchronized(self) {
-			weakClients.insert(WeakThemeable(image), at: 0)
+			weakClients.insert(WeakThemeable(resource), at: 0)
 
-			if image.identifier != nil {
-				images[image.identifier!] = image
+			if resource.identifier != nil {
+				resourcesByIdentifier[resource.identifier!] = resource
 			}
 		}
 	}
 
-	func themeImage(for identifier: String) -> ThemeImage? {
-		var image : ThemeImage? = nil
+	func resource(for identifier: String) -> ThemeResource? {
+		var resource : ThemeResource? = nil
 
 		OCSynchronized(self) {
-			image = images[identifier]
+			resource = resourcesByIdentifier[identifier]
 		}
 
-		return image
+		return resource
 	}
 
-	func image(for identifier: String) -> UIImage? {
+	func image(for identifier: String, size: CGSize? = nil) -> UIImage? {
 		var image : UIImage? = nil
 
 		OCSynchronized(self) {
-			if let themeImage = images[identifier] {
-				image = themeImage.image(for: self)
+			if let themeResource = resourcesByIdentifier[identifier] {
+				if themeResource.isKind(of: ThemeTVGResource.self) {
+					if size != nil {
+						if let tvgResource : ThemeTVGResource = themeResource as? ThemeTVGResource {
+							image = tvgResource.vectorImage(for: self)?.rasteredImage(fitInSize: size!, with: activeCollection.iconColors, cacheFor: self.activeCollection.identifier)
+						}
+					}
+				}
 			}
 		}
 
 		return image
 	}
 
-	func remove(image: ThemeImage) {
+	func remove(resource: ThemeResource) {
 		OCSynchronized(self) {
-			if image.identifier != nil {
-				images.removeValue(forKey: image.identifier!)
+			if resource.identifier != nil {
+				resourcesByIdentifier.removeValue(forKey: resource.identifier!)
 			}
 
-			self.unregister(client: image)
+			self.unregister(client: resource)
+		}
+	}
+
+	// MARK: - Convenience resource methods
+	func add(tvgResourceFor tvgName: String) {
+		self.add(resourceFor: tvgName) { (identifier) -> ThemeResource in
+			return ThemeTVGResource.init(name: tvgName, identifier: identifier)
 		}
 	}
 

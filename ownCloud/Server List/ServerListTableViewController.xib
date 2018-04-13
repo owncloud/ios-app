@@ -37,7 +37,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PJc-v9-DYn" userLabel="Welcome Overlay">
+                <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PJc-v9-DYn" userLabel="Welcome Overlay">
                     <rect key="frame" x="39.5" y="122" width="241.5" height="325"/>
                     <subviews>
                         <imageView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" image="owncloud-primary-small" translatesAutoresizingMaskIntoConstraints="NO" id="fP1-O2-lkg">
@@ -74,7 +74,6 @@ Start by adding your server.</string>
                         </label>
                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x7I-De-RhT" customClass="VectorImageView" customModule="ownCloud" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="0.0" width="241.5" height="128"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <accessibility key="accessibilityConfiguration">
                                 <accessibilityTraits key="traits" notEnabled="YES"/>
                             </accessibility>
@@ -84,7 +83,6 @@ Start by adding your server.</string>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="Jaa-D8-ghC" firstAttribute="leading" secondItem="IEC-5d-Hb5" secondAttribute="leading" id="52z-ez-wTm"/>
                         <constraint firstItem="IEC-5d-Hb5" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="5VX-tG-MwV"/>

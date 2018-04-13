@@ -66,7 +66,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "itemCell")
+		self.tableView.register(ClientItemCell.self, forCellReuseIdentifier: "itemCell")
 
 		Theme.shared.register(client: self, applyImmediately: true)
 

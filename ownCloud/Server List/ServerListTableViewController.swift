@@ -44,6 +44,22 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		NotificationCenter.default.removeObserver(self, name: Notification.Name.BookmarkManagerListChanged, object: nil)
 	}
 
+	// TODO: Rebuild welcomeOverlayView in code
+	/*
+	override func loadView() {
+		super.loadView()
+
+		welcomeOverlayView = UIView()
+		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
+
+		welcomeTitleLabel = UILabel()
+		welcomeTitleLabel.font = UIFont.boldSystemFont(ofSize: 34)
+		welcomeTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+		welcomeAddServerButton = ThemeButton()
+	}
+	*/
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -126,9 +142,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		self.tableView.applyThemeCollection(collection)
 
-		if event == .update {
-			self.tableView.reloadData()
-		}
+		self.welcomeTitleLabel.applyThemeCollection(collection, itemStyle: .title)
+		self.welcomeMessageLabel.applyThemeCollection(collection, itemStyle: .message)
 	}
 
 	func updateNoServerMessageVisibility() {
@@ -203,7 +218,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 
 		UIView.animate(withDuration: 0.25) {
+			CATransaction.begin()
+			CATransaction.setAnimationDuration(0.25)
 			Theme.shared.activeCollection = ThemeCollection(darkBrandColor: UIColor(hex: 0x1D293B), lightBrandColor: UIColor(hex: 0x468CC8), style: themeStyle!)
+			CATransaction.commit()
 		}
 	}
 

@@ -27,9 +27,9 @@ class VectorImage: NSObject {
 		self.image = tvgImage
 	}
 
-	func rasteredImage(fittingSize: CGSize, with variables: [String:String], cacheFor identifier: String? = nil) -> UIImage? {
+	func rasteredImage(fitInSize: CGSize, with variables: [String:String], cacheFor identifier: String? = nil) -> UIImage? {
 		var uiImage : UIImage?
-		let sizeString = NSStringFromCGSize(fittingSize)
+		let sizeString = NSStringFromCGSize(fitInSize)
 
 		if identifier != nil {
 			OCSynchronized(self) {
@@ -41,7 +41,7 @@ class VectorImage: NSObject {
 				uiImage = rasteredImages[sizeString]
 
 				if uiImage == nil {
-					uiImage = image.image(fitInSize: fittingSize, with: variables)
+					uiImage = image.image(fitInSize: fitInSize, with: variables)
 
 					if uiImage == nil {
 						rasteredImages[sizeString] = uiImage
@@ -49,7 +49,7 @@ class VectorImage: NSObject {
 				}
 			}
 		} else {
-			uiImage = image.image(fitInSize: fittingSize, with: variables)
+			uiImage = image.image(fitInSize: fitInSize, with: variables)
 		}
 
 		return uiImage

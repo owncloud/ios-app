@@ -29,6 +29,10 @@ enum ThemeItemStyle {
 	case approval
 	case neutral
 	case destructive
+
+	case logo
+	case title
+	case message
 }
 
 extension NSObject {
@@ -87,5 +91,23 @@ extension NSObject {
 			tableView.separatorColor = collection.tableRowSeparatorColor
 		}
 
+		if self.isKind(of: UILabel.self) {
+			let label : UILabel = (self as? UILabel)!
+			var labelColor : UIColor = collection.tableRowColorBarCollection.labelColor
+
+			switch itemStyle {
+				case .title:
+					labelColor = collection.tableRowColorBarCollection.labelColor
+
+				case .message:
+					labelColor = collection.tableRowColorBarCollection.secondaryLabelColor
+
+				default:
+					labelColor = collection.tableRowColorBarCollection.labelColor
+
+			}
+
+			label.textColor = labelColor
+		}
 	}
 }

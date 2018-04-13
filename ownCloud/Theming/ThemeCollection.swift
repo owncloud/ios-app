@@ -122,6 +122,8 @@ class ThemeCollection : NSObject {
 	}()
 
 	init(darkBrandColor darkColor: UIColor, lightBrandColor lightColor: UIColor, style: ThemeCollectionStyle = .dark) {
+		var logoFillColor : UIColor?
+
 		self.darkBrandColor = darkColor
 		self.lightBrandColor = lightColor
 
@@ -175,6 +177,9 @@ class ThemeCollection : NSObject {
 				// Status Bar
 				self.statusBarStyle = .lightContent
 
+				// Logo fill color
+				logoFillColor = UIColor.white
+
 			case .light:
 				// Bars
 				self.navigationBarColorCollection = ThemeColorCollection(
@@ -203,6 +208,9 @@ class ThemeCollection : NSObject {
 				// Status Bar
 				self.statusBarStyle = .default
 
+				// Logo fill color
+				logoFillColor = UIColor.lightGray
+
 			case .contrast:
 				// Bars
 				self.navigationBarColorCollection = self.darkBrandColorCollection
@@ -222,12 +230,15 @@ class ThemeCollection : NSObject {
 
 				// Status Bar
 				self.statusBarStyle = .lightContent
+
+				// Logo fill color
+				logoFillColor = UIColor.lightGray
 		}
 
 		self.iconColors = [
 			"folderFillColor" : self.tableRowColorBarCollection.symbolColor.hexString(),
 			"fileFillColor" : self.tableRowColorBarCollection.symbolColor.hexString(),
-			"logoFillColor" : self.tableRowColorBarCollection.symbolColor.hexString()
+			"logoFillColor" : logoFillColor?.hexString() ?? "#ffffff"
 		]
 
 		print (self.iconColors)

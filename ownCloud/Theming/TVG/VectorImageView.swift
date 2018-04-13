@@ -19,7 +19,7 @@
 import UIKit
 import PocketSVG
 
-class VectorImageView: UIView {
+class VectorImageView: UIView, Themeable {
 	var vectorImage : TVGImage?
 
 	override var bounds: CGRect {
@@ -34,12 +34,38 @@ class VectorImageView: UIView {
 		}
 	}
 
-	func updateLayerWithRasteredImage(viewBounds: CGRect) {
-		let themeCollection = Theme.shared.activeCollection
+	init() {
+		super.init(frame: CGRect.zero)
+	}
 
-		if let rasterImage = vectorImage?.image(fitInSize: viewBounds.size, with: themeCollection.iconColors, cacheFor: themeCollection.identifier) {
+	required init?(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+		Theme.shared.register(client: self)
+	}
+
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+		Theme.shared.register(client: self)
+	}
+
+	deinit {
+		Theme.shared.unregister(client: self)
+	}
+
+	func updateLayerWithRasteredImage(viewBounds bounds: CGRect? = nil, themeCollection: ThemeCollection = Theme.shared.activeCollection) {
+		var viewBounds = bounds
+
+		if viewBounds == nil {
+			viewBounds = self.bounds
+		}
+
+		if let rasterImage = vectorImage?.image(fitInSize: viewBounds!.size, with: themeCollection.iconColors, cacheFor: themeCollection.identifier) {
 			self.layer.contents = rasterImage.cgImage
 			self.layer.contentsGravity = kCAGravityResizeAspect
 		}
+	}
+
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		updateLayerWithRasteredImage(viewBounds: self.bounds, themeCollection: collection)
 	}
 }

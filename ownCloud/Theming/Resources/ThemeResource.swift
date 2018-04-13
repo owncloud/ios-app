@@ -43,7 +43,7 @@ class ThemeResource : NSObject {
 	}
 
 	/// Synchronous way to retrieve the resource, with all computations applied
-	private var _resource : Any?
+	var _resource : Any?
 	func resource(for theme: Theme) -> Any? {
 		var result : Any?
 
@@ -88,6 +88,13 @@ class ThemeResource : NSObject {
 		return nil
 	}
 
+	/// Called when the theme changed, in order to flush cached resources (subclass this as needed, releases _resource by default)
+	func flushThemedResources() {
+		OCSynchronized(self) {
+			_resource = nil
+		}
+	}
+
 	/// Called when no themed version of the resource has yet been created (subclass this)
 	func applyThemeToResource(theme: Theme, collection: ThemeCollection, source: Any?) -> Any? {
 		return source
@@ -96,8 +103,6 @@ class ThemeResource : NSObject {
 
 extension ThemeResource : Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		OCSynchronized(self) {
-			_resource = nil
-		}
+		flushThemedResources()
 	}
 }
