@@ -9,9 +9,8 @@
 import Foundation
 
 struct ClassSettingsIdentifiers {
-    static let bookMarkViewController = "BookMarkViewController"
+    static let bookmarks = "bookmarks"
 }
 
 struct CellsSettingsIdentifiers {
-    static let bookMarkViewController = "BookMarkViewController"
 }

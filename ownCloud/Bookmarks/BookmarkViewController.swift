@@ -50,7 +50,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
 
     static func classSettingsIdentifier() -> String! {
-        return ClassSettingsIdentifiers.bookMarkViewController
+        return ClassSettingsIdentifiers.bookmarks
     }
 
     static func defaultSettings(forIdentifier identifier: String!) -> [String : Any]! {
@@ -62,6 +62,15 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.bounces = false
+        self.loadInterface()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.sectionForIdentifier("server-url-section")?.row(withIdentifier: "server-url-textfield")?.textField?.becomeFirstResponder()
+    }
+
+    private func loadInterface() {
 
         switch self.mode {
         case .add?:
@@ -83,12 +92,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             self.tableView.reloadData()
         default: break
         }
+
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.sectionForIdentifier("server-url-section")?.row(withIdentifier: "server-url-textfield")?.textField?.becomeFirstResponder()
-    }
+    // MARK: Interface sections
 
     private func addServerUrl() {
 
@@ -98,10 +105,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             serverURLName = url.absoluteString
         }
 
-        let serverURLSection: StaticTableViewSection = StaticTableViewSection(headerTitle:NSLocalizedString("Server URL", comment: ""), footerTitle: nil, identifier: "server-url-section")
+        let serverURLSection: StaticTableViewSection = StaticTableViewSection(headerTitle:"Server URL".localized, footerTitle: nil, identifier: "server-url-section")
 
         let serverURLRow: StaticTableViewRow = StaticTableViewRow(textFieldWithAction: nil,
-                                                                  placeholder: NSLocalizedString("https://example.com", comment: ""),
+                                                                  placeholder: "https://example.com".localized,
                                                                   value: serverURLName,
                                                                   keyboardType: .default,
                                                                   autocorrectionType: .no,
@@ -118,7 +125,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     private func addContinueButton(action: @escaping StaticTableViewRowAction) {
 
         let continueButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "continue-button-section", rows: [
-            StaticTableViewRow(buttonWithAction: action, title: NSLocalizedString("Continue", comment: ""),
+            StaticTableViewRow(buttonWithAction: action, title: "Continue".localized,
                style: .proceed,
                identifier: "continue-button-row")
             ])
@@ -134,9 +141,9 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             serverName = name
         }
 
-        let section = StaticTableViewSection(headerTitle: NSLocalizedString("Name", comment: ""), footerTitle: nil, identifier: "server-name-section", rows: [
+        let section = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "server-name-section", rows: [
             StaticTableViewRow(textFieldWithAction: nil,
-                               placeholder: NSLocalizedString("Example Server", comment: ""),
+                               placeholder: "Example Server".localized,
                                value: serverName,
                                secureTextEntry: false,
                                keyboardType: .default,
@@ -148,11 +155,11 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
 
     private func addCertificateDetails(certificate: OCCertificate) {
-        let section =  StaticTableViewSection(headerTitle: NSLocalizedString("Certificate Details", comment: ""), footerTitle: nil)
+        let section =  StaticTableViewSection(headerTitle: "Certificate Details".localized, footerTitle: nil)
         section.add(rows: [
             StaticTableViewRow(rowWithAction: {(staticRow, _) in
 				staticRow.section?.viewController?.navigationController?.pushViewController(OCCertificateViewController.init(certificate: certificate), animated: true)
-            }, title: NSLocalizedString("Show Certificate Details", comment: ""), accessoryType: .disclosureIndicator, identifier: "certificate-details-button")
+            }, title: "Show Certificate Details".localized, accessoryType: .disclosureIndicator, identifier: "certificate-details-button")
         ])
         self.addSection(section, animated: true)
     }
@@ -213,7 +220,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                         }
                     }
                 })
-            }, title: NSLocalizedString("Connect".localized, comment: ""),
+            }, title: "Connect".localized,
                style: .proceed,
                identifier: nil)])
 
@@ -235,7 +242,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                         self.tableView.reloadData()
                     }
 
-                }, title: NSLocalizedString("Delete Authentication Data", comment: ""), style: .destructive, identifier: "delete-auth-button")
+                }, title: "Delete Authentication Data".localized, style: .destructive, identifier: "delete-auth-button")
                 ])
         }
     }
@@ -248,9 +255,9 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
     private func addBasicAuthCredentialsFields(username: String?, password: String?) {
 
-        let section = StaticTableViewSection(headerTitle:NSLocalizedString("Authentication", comment: ""), footerTitle: nil, identifier: "passphrase-auth-section", rows:
+        let section = StaticTableViewSection(headerTitle:"Authentication".localized, footerTitle: nil, identifier: "passphrase-auth-section", rows:
             [ StaticTableViewRow(textFieldWithAction: nil,
-                                 placeholder: NSLocalizedString("Username", comment: ""),
+                                 placeholder: "Username".localized,
                                  value: username ?? "",
                                  secureTextEntry: false,
                                  keyboardType: .emailAddress,
@@ -260,7 +267,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                                  returnKeyType: .continue,
                                  identifier: "passphrase-username-textfield-row"),
 
-              StaticTableViewRow(textFieldWithAction: nil, placeholder: NSLocalizedString("Password", comment: ""),
+              StaticTableViewRow(textFieldWithAction: nil, placeholder: "Password".localized,
                                  value: password ?? "",
                                  secureTextEntry: true,
                                  keyboardType: .emailAddress,
@@ -272,6 +279,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             ])
         self.insertSection(section, at: self.sections.count-1, animated: true)
     }
+
+    // MARK: Actions
 
     lazy private var continueButtonAction: StaticTableViewRowAction  = { (row, _) in
 
