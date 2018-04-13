@@ -29,7 +29,6 @@ enum BookmarkViewControllerMode {
     case edit
 }
 
-
 class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport {
 
     public var bookmark: OCBookmark?
@@ -51,7 +50,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
 
     static func classSettingsIdentifier() -> String! {
-        return "bookmark"
+        return ClassSettingsIdentifiers.bookMarkViewController
     }
 
     static func defaultSettings(forIdentifier identifier: String!) -> [String : Any]! {

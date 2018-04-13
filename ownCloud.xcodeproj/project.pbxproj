@@ -30,6 +30,7 @@
 		CB9D4D71207F48E900CEFDCB /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9D4D6E207F48E900CEFDCB /* String+Extension.swift */; };
 		CB9D4D72207F491900CEFDCB /* Synchronized.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0E02077CD4B002A0AC0 /* Synchronized.swift */; };
 		CBCC3845207F517F005A861F /* ConnectionIssueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC3842207F517F005A861F /* ConnectionIssueViewController.swift */; };
+		CBCC384C208088F5005A861F /* SettingsIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC384B208088F4005A861F /* SettingsIdentifiers.swift */; };
 		DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */; };
 		DC0B37972051681600189B9A /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B37962051681600189B9A /* ActionButton.swift */; };
 		DC3BE0E42077D4E0002A0AC0 /* CoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3BE0E32077D4E0002A0AC0 /* CoreManager.swift */; };
@@ -174,6 +175,7 @@
 		A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ownCloudTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB9D4D6E207F48E900CEFDCB /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		CBCC3842207F517F005A861F /* ConnectionIssueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionIssueViewController.swift; sourceTree = "<group>"; };
+		CBCC384B208088F4005A861F /* SettingsIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsIdentifiers.swift; sourceTree = "<group>"; };
 		D0D9C062DD1E85A838608B0F /* EarlGrey.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EarlGrey.framework; path = Pods/EarlGrey/EarlGrey/EarlGrey.framework; sourceTree = SOURCE_ROOT; };
 		D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarlGrey.swift; sourceTree = "<group>"; };
 		DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListBookmarkCell.swift; sourceTree = "<group>"; };
@@ -262,6 +264,7 @@
 				DCF4F1622051927200189B9A /* UI Elements */,
 				239F1314205A69240029F186 /* UIKit Extensions */,
 				DCF4F1872052BA3500189B9A /* Tools */,
+				CBCC384620808882005A861F /* Constants */,
 				DC85573120513C7500189B9A /* Resources */,
 				DC0B37952051541C00189B9A /* ownCloud.entitlements */,
 			);
@@ -313,6 +316,14 @@
 				6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		CBCC384620808882005A861F /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				CBCC384B208088F4005A861F /* SettingsIdentifiers.swift */,
+			);
+			path = Constants;
 			sourceTree = "<group>";
 		};
 		DC3BE0DB2077CC13002A0AC0 /* Client */ = {
@@ -676,6 +687,7 @@
 				DCF4F17F2051A0D000189B9A /* StaticTableViewRow.swift in Sources */,
 				230B84EB20597F6E00C9F828 /* IssuesViewController.swift in Sources */,
 				2303176D205AA21E006C4DAF /* IssuesPresentationAnimator.swift in Sources */,
+				CBCC384C208088F5005A861F /* SettingsIdentifiers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
