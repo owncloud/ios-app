@@ -24,6 +24,27 @@ import ownCloudUI
 let BookmarkDefaultURLKey = "default-url"
 let BookmarkURLEditableKey = "url-editable"
 
+//Sections constants
+let serverURLSectionIdentifier = "server-url-section"
+let serverURLTextFieldIdentifier = "server-url-textfield"
+
+let continueButtonRowIdentifier = "continue-button-row"
+let continueButtonSectionIdentifier = "continue-button-section"
+
+let serverNameSectionIdentifier = "server-name-section"
+let serverNameTextFieldIdentifier = "server-name-textfield"
+
+let passphraseUsernameRowIdentifier = "passphrase-username-textfield-row"
+let passphrasePasswordIdentifier = "passphrase-password-textfield-row"
+let passphraseAuthSectionIdentifier = "passphrase-auth-section"
+
+let deleteAuthButtonIdentifier = "delete-auth-button"
+
+let certificateDetailsButtonIdentifier = "certificate-details-button"
+
+let connectButtonSectionIdentifier = "connect-button-section"
+
+
 enum BookmarkViewControllerMode {
     case add
     case edit
@@ -67,7 +88,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.sectionForIdentifier("server-url-section")?.row(withIdentifier: "server-url-textfield")?.textField?.becomeFirstResponder()
+        self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.textField?.becomeFirstResponder()
     }
 
     private func loadInterface() {
@@ -105,7 +126,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             serverURLName = url.absoluteString
         }
 
-        let serverURLSection: StaticTableViewSection = StaticTableViewSection(headerTitle:"Server URL".localized, footerTitle: nil, identifier: "server-url-section")
+        let serverURLSection: StaticTableViewSection = StaticTableViewSection(headerTitle:"Server URL".localized, footerTitle: nil, identifier: serverURLSectionIdentifier)
 
         let serverURLRow: StaticTableViewRow = StaticTableViewRow(textFieldWithAction: nil,
                                                                   placeholder: "https://example.com".localized,
@@ -115,7 +136,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                                                                   autocapitalizationType: .none,
                                                                   enablesReturnKeyAutomatically: false,
                                                                   returnKeyType: .continue,
-                                                                  identifier: "server-url-textfield")
+                                                                  identifier: serverURLTextFieldIdentifier)
         serverURLRow.cell?.isUserInteractionEnabled = self.classSetting(forOCClassSettingsKey: BookmarkURLEditableKey) as? Bool ?? true
 
         serverURLSection.add(rows: [serverURLRow])
@@ -124,10 +145,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
     private func addContinueButton(action: @escaping StaticTableViewRowAction) {
 
-        let continueButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "continue-button-section", rows: [
+        let continueButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: continueButtonSectionIdentifier, rows: [
             StaticTableViewRow(buttonWithAction: action, title: "Continue".localized,
                style: .proceed,
-               identifier: "continue-button-row")
+               identifier: continueButtonRowIdentifier)
             ])
 
         self.addSection(continueButtonSection, animated: false)
@@ -141,13 +162,13 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             serverName = name
         }
 
-        let section = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "server-name-section", rows: [
+        let section = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: serverNameSectionIdentifier, rows: [
             StaticTableViewRow(textFieldWithAction: nil,
                                placeholder: "Example Server".localized,
                                value: serverName,
                                secureTextEntry: false,
                                keyboardType: .default,
-                               autocorrectionType: .yes, autocapitalizationType: .sentences, enablesReturnKeyAutomatically: true, returnKeyType: .done, identifier: "server-name-textfield")
+                               autocorrectionType: .yes, autocapitalizationType: .sentences, enablesReturnKeyAutomatically: true, returnKeyType: .done, identifier: serverNameTextFieldIdentifier)
 
             ])
 
@@ -159,14 +180,14 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         section.add(rows: [
             StaticTableViewRow(rowWithAction: {(staticRow, _) in
 				staticRow.section?.viewController?.navigationController?.pushViewController(OCCertificateViewController.init(certificate: certificate), animated: true)
-            }, title: "Show Certificate Details".localized, accessoryType: .disclosureIndicator, identifier: "certificate-details-button")
+            }, title: "Show Certificate Details".localized, accessoryType: .disclosureIndicator, identifier: certificateDetailsButtonIdentifier)
         ])
         self.addSection(section, animated: true)
     }
 
     private func addConnectButton() {
 
-        let connectButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "connect-button-section", rows: [
+        let connectButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: connectButtonSectionIdentifier, rows: [
             StaticTableViewRow(buttonWithAction: { (row, _) in
 
                 var options: [OCAuthenticationMethodKey : Any] = Dictionary()
@@ -176,8 +197,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
                     method = OCAuthenticationMethodBasicAuthIdentifier
 
-                    let username: String? = self.sectionForIdentifier("passphrase-auth-section")?.row(withIdentifier: "passphrase-username-textfield-row")?.value as? String
-                    let password: String?  = self.sectionForIdentifier("passphrase-auth-section")?.row(withIdentifier: "passphrase-password-textfield-row")?.value as? String
+                    let username: String? = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphraseUsernameRowIdentifier)?.value as? String
+                    let password: String?  = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value as? String
 
                     options[.usernameKey] = username!
                     options[.passphraseKey] = password!
@@ -186,7 +207,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
                 options[.presentingViewControllerKey] = self
 
-                let serverName = self.sectionForIdentifier("server-name-section")?.row(withIdentifier: "server-name-textfield")?.value as? String
+                let serverName = self.sectionForIdentifier(serverNameSectionIdentifier)?.row(withIdentifier: serverNameTextFieldIdentifier)?.value as? String
                 self.bookmark?.name = (serverName != nil && serverName != "") ? serverName: self.bookmark!.url.absoluteString
                 //TODO:refactor connection buttons and call update
                 BookmarkManager.sharedBookmarkManager.saveBookmarks()
@@ -194,7 +215,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 self.connection?.generateAuthenticationData(withMethod: method, options: options, completionHandler: { (error, authenticationMethodIdentifier, authenticationData) in
 
                     if error == nil {
-                        let serverName = self.sectionForIdentifier("server-name-section")?.row(withIdentifier: "server-name-textfield")?.value as? String
+                        let serverName = self.sectionForIdentifier(serverNameSectionIdentifier)?.row(withIdentifier: serverNameTextFieldIdentifier)?.value as? String
                         self.bookmark?.name = (serverName != nil && serverName != "") ? serverName: self.bookmark!.url.absoluteString
                         self.bookmark?.authenticationMethodIdentifier = authenticationMethodIdentifier
                         self.bookmark?.authenticationData = authenticationData
@@ -229,7 +250,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
 
     private func addDeleteAuthDataButton() {
-        if let section = self.sectionForIdentifier("connect-button-section") {
+        if let section = self.sectionForIdentifier(connectButtonSectionIdentifier) {
             section.add(rows: [
                 StaticTableViewRow(buttonWithAction: { (_, _) in
                     if self.bookmark != nil {
@@ -237,25 +258,25 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                         BookmarkManager.sharedBookmarkManager.removeAuthDataOfBookmark(self.bookmark!)
 
                         //TODO: move to update rows
-                        self.sectionForIdentifier("passphrase-auth-section")?.row(withIdentifier: "passphrase-username-textfield-row")?.value  = ""
-                        self.sectionForIdentifier("passphrase-auth-section")?.row(withIdentifier: "passphrase-password-textfield-row")?.value  = ""
+                        self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphraseUsernameRowIdentifier)?.value  = ""
+                        self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value  = ""
                         self.tableView.reloadData()
                     }
 
-                }, title: "Delete Authentication Data".localized, style: .destructive, identifier: "delete-auth-button")
+                }, title: "Delete Authentication Data".localized, style: .destructive, identifier: deleteAuthButtonIdentifier)
                 ])
         }
     }
 
     private func removeContinueButton() {
-        if let buttonSection = self.sectionForIdentifier("continue-button-section") {
+        if let buttonSection = self.sectionForIdentifier(continueButtonSectionIdentifier) {
             self.removeSection(buttonSection)
         }
     }
 
     private func addBasicAuthCredentialsFields(username: String?, password: String?) {
 
-        let section = StaticTableViewSection(headerTitle:"Authentication".localized, footerTitle: nil, identifier: "passphrase-auth-section", rows:
+        let section = StaticTableViewSection(headerTitle:"Authentication".localized, footerTitle: nil, identifier: passphraseAuthSectionIdentifier, rows:
             [ StaticTableViewRow(textFieldWithAction: nil,
                                  placeholder: "Username".localized,
                                  value: username ?? "",
@@ -265,7 +286,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                                  autocapitalizationType: UITextAutocapitalizationType.none,
                                  enablesReturnKeyAutomatically: true,
                                  returnKeyType: .continue,
-                                 identifier: "passphrase-username-textfield-row"),
+                                 identifier: passphraseUsernameRowIdentifier),
 
               StaticTableViewRow(textFieldWithAction: nil, placeholder: "Password".localized,
                                  value: password ?? "",
@@ -275,7 +296,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                                  autocapitalizationType: .none,
                                  enablesReturnKeyAutomatically: true,
                                  returnKeyType: .go,
-                                 identifier: "passphrase-password-textfield-row")
+                                 identifier: passphrasePasswordIdentifier)
             ])
         self.insertSection(section, at: self.sections.count-1, animated: true)
     }
@@ -294,7 +315,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         var password: NSString?
         var afterURL: String = ""
 
-        afterURL = self.sectionForIdentifier("server-url-section")?.row(withIdentifier: "server-url-textfield")?.value as? String ?? ""
+        afterURL = self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value as? String ?? ""
 
         var protocolAppended: ObjCBool = false
 
@@ -325,7 +346,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
     private func approveButtonAction(preferedAuthMethods: [String], issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
 
-        self.sectionForIdentifier("server-url-section")?.row(withIdentifier: "server-url-textfield")?.value = self.bookmark?.url.absoluteString
+        self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value = self.bookmark?.url.absoluteString
 
         if let preferedAuthMethod = preferedAuthMethods.first as String? {
 
