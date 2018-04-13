@@ -28,7 +28,8 @@ enum StaticTableViewRowButtonStyle {
 	case custom(textColor: UIColor?, selectedTextColor: UIColor?, backgroundColor: UIColor?, selectedBackgroundColor: UIColor?)
 }
 
-class StaticTableViewRow : NSObject, UITextFieldDelegate {
+class StaticTableViewRow : NSObject, UITextFieldDelegate, Themeable {
+
 	public weak var section : StaticTableViewSection?
 
 	public var identifier : String?
@@ -57,6 +58,10 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	private var themeApplierToken : ThemeApplierToken?
 
+	override init() {
+		super.init()
+	}
+
 	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
 		self.init()
 
@@ -69,6 +74,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.accessibilityIdentifier = identifier
 
 		self.action = rowWithAction
+
+		Theme.shared.register(client: self)
 	}
 
 	// MARK: - Radio Item
@@ -95,6 +102,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			row.section?.setSelected(row.value!, groupIdentifier: row.groupIdentifier!)
 			radioItemWithAction?(row, sender)
 		}
+
+		Theme.shared.register(client: self)
 	}
 
 	// MARK: - Text Field
@@ -142,6 +151,13 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 
 		self.textField = cellTextField
+
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			self?.applyStandardThemeing(with: themeCollection)
+
+			cellTextField.textColor = themeCollection.tableRowColorBarCollection.labelColor
+			cellTextField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : themeCollection.tableRowColorBarCollection.secondaryLabelColor])
+		})
 	}
 
 	convenience init(secureTextFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil) {
@@ -193,6 +209,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 				switchView.setOn(value, animated: true)
 			}
 		}
+
+		Theme.shared.register(client: self)
 	}
 
 	@objc func switchValueChanged(_ sender: UISwitch) {
@@ -219,6 +237,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			switch style {
 				case .plain:
 					textColor = themeCollection.tintColor
+					backgroundColor = themeCollection.tableRowColorBarCollection.backgroundColor
 
 				case .proceed:
 					textColor = themeCollection.neutralCollection.normal.foreground
@@ -227,7 +246,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 				case .destructive:
 					textColor = UIColor.red
-					backgroundColor = UIColor.white
+					backgroundColor = themeCollection.tableRowColorBarCollection.backgroundColor
 
 				case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
 					textColor = customTextColor
@@ -267,5 +286,23 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		if themeApplierToken != nil {
 			Theme.shared.remove(applierForToken: themeApplierToken)
 		}
+
+		Theme.shared.unregister(client: self)
+	}
+
+	// MARK: - Themeing
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		if themeApplierToken == nil {
+			applyStandardThemeing(with: collection)
+		}
+	}
+
+	func applyStandardThemeing(with themeCollection: ThemeCollection) {
+		if themeCollection.tableRowColorBarCollection.backgroundColor != nil {
+			self.cell?.backgroundColor = themeCollection.tableRowColorBarCollection.backgroundColor
+		}
+
+		self.cell?.textLabel?.textColor = themeCollection.tableRowColorBarCollection.labelColor
+		self.cell?.detailTextLabel?.textColor = themeCollection.tableRowColorBarCollection.secondaryLabelColor
 	}
 }
