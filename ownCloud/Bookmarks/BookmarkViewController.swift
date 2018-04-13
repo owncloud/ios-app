@@ -36,14 +36,12 @@ let serverNameTextFieldIdentifier = "server-name-textfield"
 
 let passphraseUsernameRowIdentifier = "passphrase-username-textfield-row"
 let passphrasePasswordIdentifier = "passphrase-password-textfield-row"
-let passphraseAuthSectionIdentifier = "passphrase-auth-section"
 
+let passphraseAuthSectionIdentifier = "passphrase-auth-section"
 let deleteAuthButtonIdentifier = "delete-auth-button"
 
 let certificateDetailsButtonIdentifier = "certificate-details-button"
-
 let connectButtonSectionIdentifier = "connect-button-section"
-
 
 enum BookmarkViewControllerMode {
     case add
