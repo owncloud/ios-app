@@ -52,7 +52,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
     public var bookmark: OCBookmark?
     public var connection: OCConnection?
-    private var authMethodType: OCAuthenticationMethodType?
+    private var authMethod: String?
     private var mode: BookmarkViewControllerMode?
 
     convenience init(bookmark: OCBookmark? = nil) {
@@ -109,6 +109,9 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             self.addConnectButton()
             self.addDeleteAuthDataButton()
             self.tableView.reloadData()
+
+            self.connection = OCConnection(bookmark: self.bookmark)
+
         default: break
         }
 
@@ -189,11 +192,12 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             StaticTableViewRow(buttonWithAction: { (row, _) in
 
                 var options: [OCAuthenticationMethodKey : Any] = Dictionary()
-                var method: String = OCAuthenticationMethodOAuth2Identifier
 
-                if self.authMethodType != nil && self.authMethodType == OCAuthenticationMethodType.passphrase {
+                if self.mode == .edit {
+                    self.authMethod = self.bookmark?.authenticationMethodIdentifier
+                }
 
-                    method = OCAuthenticationMethodBasicAuthIdentifier
+                if self.authMethod != nil && self.authMethod == OCAuthenticationMethodBasicAuthIdentifier {
 
                     let username: String? = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphraseUsernameRowIdentifier)?.value as? String
                     let password: String?  = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value as? String
@@ -210,7 +214,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 //TODO:refactor connection buttons and call update
                 BookmarkManager.sharedBookmarkManager.saveBookmarks()
 
-                self.connection?.generateAuthenticationData(withMethod: method, options: options, completionHandler: { (error, authenticationMethodIdentifier, authenticationData) in
+                self.connection?.generateAuthenticationData(withMethod: self.authMethod!, options: options, completionHandler: { (error, authenticationMethodIdentifier, authenticationData) in
 
                     if error == nil {
                         let serverName = self.sectionForIdentifier(serverNameSectionIdentifier)?.row(withIdentifier: serverNameTextFieldIdentifier)?.value as? String
@@ -362,17 +366,16 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
         if let preferedAuthMethod = preferedAuthMethods.first as String? {
 
-            self.authMethodType = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type()
-
             DispatchQueue.main.async {
                 self.addServerName()
                 if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
                     self.addCertificateDetails(certificate: certificateIssue.certificate)
                 }
 
-                if self.authMethodType == .passphrase {
+                if OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type() == .passphrase {
                     self.addBasicAuthCredentialsFields(username: username, password:password)
                 }
+
                 self.removeContinueButton()
                 self.addConnectButton()
                 self.tableView.reloadData()
