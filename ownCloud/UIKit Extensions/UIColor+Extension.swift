@@ -53,7 +53,7 @@ extension UIColor {
 		return UIColor(red:   CGFloat((Double(selfRed)   * (1.0-fraction)) + fraction),
 			       green: CGFloat((Double(selfGreen) * (1.0-fraction)) + fraction),
 			       blue:  CGFloat((Double(selfBlue)  * (1.0-fraction)) + fraction),
-			       alpha: CGFloat((Double(selfAlpha) * (1.0-fraction)) + fraction))
+			       alpha: selfAlpha)
 	}
 
 	public func darker(_ fraction: Double) -> UIColor {
@@ -64,7 +64,7 @@ extension UIColor {
 		return UIColor(red:   CGFloat(Double(selfRed)   * (1.0-fraction)),
 			       green: CGFloat(Double(selfGreen) * (1.0-fraction)),
 			       blue:  CGFloat(Double(selfBlue)  * (1.0-fraction)),
-			       alpha: CGFloat(Double(selfAlpha) * (1.0-fraction)))
+			       alpha: selfAlpha)
 	}
 
 	public func hexString(leadIn: String = "#") -> String {
