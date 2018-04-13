@@ -130,9 +130,9 @@ class StaticTableViewController: UITableViewController, Themeable {
 
 		let staticRow : StaticTableViewRow = staticRowForIndexPath(indexPath)
 
-        if let action = staticRow.action {
-            action(staticRow, self)
-        }
+		if let action = staticRow.action {
+			action(staticRow, self)
+		}
 
 		tableView.deselectRow(at: indexPath, animated: true)
 	}

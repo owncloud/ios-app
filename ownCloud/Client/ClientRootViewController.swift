@@ -20,11 +20,12 @@ import UIKit
 import ownCloudSDK
 
 class ClientRootViewController: UITabBarController {
-	public let bookmark : OCBookmark
-	public var core : OCCore?
-	public var filesNavigationController : ThemeNavigationController?
+	let bookmark : OCBookmark
+	var core : OCCore?
+	var filesNavigationController : ThemeNavigationController?
+	var progressBar : CollapsibleProgressBar?
 
-	public init(bookmark inBookmark: OCBookmark) {
+	init(bookmark inBookmark: OCBookmark) {
 		bookmark = inBookmark
 
 		super.init(nibName: nil, bundle: nil)
@@ -33,6 +34,8 @@ class ClientRootViewController: UITabBarController {
 			if error == nil {
 				self.coreReady()
 			}
+
+			self.progressBar?.update(with: "Connecting…", progress: 1)
 		})
 	}
 
@@ -51,9 +54,20 @@ class ClientRootViewController: UITabBarController {
 		filesNavigationController?.navigationBar.isTranslucent = false
 		filesNavigationController?.tabBarItem.title = "Files"
 
+		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
+		progressBar?.translatesAutoresizingMaskIntoConstraints = false
+
+		self.view.addSubview(progressBar!)
+
+		progressBar?.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+		progressBar?.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+		progressBar?.bottomAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
+
 		self.tabBar.applyThemeCollection(Theme.shared.activeCollection)
 
 		self.viewControllers = [filesNavigationController] as? [UIViewController]
+
+		progressBar?.update(with: "Connected.", progress: -1)
 	}
 
 	func logoutBarButtonItem() -> UIBarButtonItem {

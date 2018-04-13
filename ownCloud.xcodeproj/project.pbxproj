@@ -38,6 +38,7 @@
 		DC42244A207CAFAA0006A2A6 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC422449207CAFAA0006A2A6 /* Theme.swift */; };
 		DC42244C207CAFBB0006A2A6 /* ThemeCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC42244B207CAFBB0006A2A6 /* ThemeCollection.swift */; };
 		DC422450207CB2500006A2A6 /* NSObject+ThemeApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */; };
+		DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */; };
 		DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; };
 		DC7DBA20207F5A0400E7337D /* PocketSVG.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC7DBA25207F684700E7337D /* ThemeResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA24207F684700E7337D /* ThemeResource.swift */; };
@@ -254,6 +255,7 @@
 		DC422449207CAFAA0006A2A6 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		DC42244B207CAFBB0006A2A6 /* ThemeCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCollection.swift; sourceTree = "<group>"; };
 		DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+ThemeApplication.swift"; sourceTree = "<group>"; };
+		DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleProgressBar.swift; sourceTree = "<group>"; };
 		DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PocketSVG.xcodeproj; path = external/PocketSVG/PocketSVG.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DC7DBA24207F684700E7337D /* ThemeResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeResource.swift; sourceTree = "<group>"; };
 		DC7DBA28207F71D600E7337D /* VectorImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorImage.swift; sourceTree = "<group>"; };
@@ -452,6 +454,7 @@
 				DCFED971208095E200A2D984 /* ClientItemCell.swift */,
 				DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */,
 				DC3BE0DD2077CC13002A0AC0 /* ClientRootViewController.swift */,
+				DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -967,6 +970,7 @@
 				DC7DBA29207F71D600E7337D /* VectorImage.swift in Sources */,
 				DC42244A207CAFAA0006A2A6 /* Theme.swift in Sources */,
 				DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */,
+				DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */,
 				DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */,
 				DCF4F18B2052BA4C00189B9A /* Log.swift in Sources */,
 				DC3BE0E42077D4E0002A0AC0 /* CoreManager.swift in Sources */,
