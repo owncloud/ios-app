@@ -26,6 +26,7 @@ class ClientItemCell: UITableViewCell, Themeable {
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
 		iconView.translatesAutoresizingMaskIntoConstraints = false
+		iconView.contentMode = .scaleAspectFit
 
 		titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
 		detailLabel.font = UIFont.systemFont(ofSize: 14)
@@ -43,17 +44,14 @@ class ClientItemCell: UITableViewCell, Themeable {
 		titleLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -20).isActive = true
 		detailLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -20).isActive = true
 
-		iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20).isActive = true
-		iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 20).isActive = true
+		iconView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+		iconView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
 
 		titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20).isActive = true
 		titleLabel.bottomAnchor.constraint(equalTo: detailLabel.topAnchor, constant: -5).isActive = true
 		detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -20).isActive = true
 
-		iconView.widthAnchor.constraint(equalToConstant: 40).isActive = true
-		iconView.heightAnchor.constraint(greaterThanOrEqualToConstant: 40).isActive = true
-
-		iconView.setContentHuggingPriority(UILayoutPriority.defaultLow, for: UILayoutConstraintAxis.vertical)
+		iconView.setContentHuggingPriority(UILayoutPriority.required, for: UILayoutConstraintAxis.vertical)
 		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
 		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
 
@@ -65,8 +63,6 @@ class ClientItemCell: UITableViewCell, Themeable {
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.imageView?.image = theme.image(for: "owncloud-primary-small")
-
 		self.titleLabel.textColor = collection.tableRowColorBarCollection.labelColor
 		self.detailLabel.textColor = collection.tableRowColorBarCollection.secondaryLabelColor
 		self.backgroundColor = collection.tableRowColorBarCollection.backgroundColor

@@ -59,6 +59,7 @@ extension NSObject {
 			let navigationController : UINavigationController = (self as? UINavigationController)!
 
 			navigationController.navigationBar.applyThemeCollection(collection, itemStyle: itemStyle)
+			navigationController.view.backgroundColor = collection.tableBackgroundColor
 		}
 
 		if self.isKind(of: UINavigationBar.self) {

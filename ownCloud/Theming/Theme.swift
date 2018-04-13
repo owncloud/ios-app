@@ -134,6 +134,10 @@ class Theme: NSObject {
 			}
 		}
 
+		if image == nil {
+			Log.warning("Theme received request for image \(identifier), but none such image is registered")
+		}
+
 		return image
 	}
 

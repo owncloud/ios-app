@@ -74,9 +74,7 @@ class ServerListBookmarkCell: UITableViewCell, Themeable {
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		let image : UIImage? = theme.image(for: "owncloud-logo", size: CGSize(width: 40, height: 40))
-
-		self.iconView.image = image
+		self.iconView.image = theme.image(for: "owncloud-logo", size: CGSize(width: 40, height: 40))
 
 		self.titleLabel.textColor = collection.tableRowColorBarCollection.labelColor
 		self.detailLabel.textColor = collection.tableRowColorBarCollection.secondaryLabelColor

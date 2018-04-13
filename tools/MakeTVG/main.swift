@@ -20,11 +20,13 @@ func applyReplacementDict(svgString : String, replacementDict : NSDictionary, de
 			let variableName : String? = replaceOpts!["variable"] as? String
 			let variableString : String = "{{" + variableName! + "}}"
 			var replaceString : String?
+			var searchStringUpper : String?
 			var defaultValue : String?
 			var adaptedString : String?
 
 			if replaceSubString != nil {
 				replaceString = searchString?.replacingOccurrences(of: replaceSubString!, with: variableString)
+				searchStringUpper = searchString?.replacingOccurrences(of: replaceSubString!, with: replaceSubString!.uppercased())
 				defaultValue = replaceSubString
 			} else {
 				replaceString = variableString
@@ -32,6 +34,10 @@ func applyReplacementDict(svgString : String, replacementDict : NSDictionary, de
 			}
 
 			adaptedString = newString.replacingOccurrences(of: searchString!, with: replaceString!)
+
+			if searchStringUpper != nil {
+				adaptedString = adaptedString!.replacingOccurrences(of: searchStringUpper!, with: replaceString!)
+			}
 
 			if adaptedString != newString {
 				defaultValues[variableName!] = defaultValue

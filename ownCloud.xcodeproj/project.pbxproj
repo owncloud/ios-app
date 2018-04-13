@@ -48,9 +48,28 @@
 		DC7DF17E205141C100189B9A /* BookmarkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DF17D205141C100189B9A /* BookmarkManager.swift */; };
 		DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */; };
 		DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */; };
-		DCCE54112080177900067D1D /* file.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCCE540E2080177900067D1D /* file.tvg */; };
-		DCCE54122080177900067D1D /* owncloud-logo.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCCE540F2080177900067D1D /* owncloud-logo.tvg */; };
-		DCCE54132080177900067D1D /* folder.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCCE54102080177900067D1D /* folder.tvg */; };
+		DCE5E8A12080D781005F60CE /* video.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88C2080D77E005F60CE /* video.tvg */; };
+		DCE5E8A22080D781005F60CE /* folder-external.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88D2080D77E005F60CE /* folder-external.tvg */; };
+		DCE5E8A32080D781005F60CE /* file.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88E2080D77E005F60CE /* file.tvg */; };
+		DCE5E8A42080D781005F60CE /* audio.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88F2080D77E005F60CE /* audio.tvg */; };
+		DCE5E8A52080D781005F60CE /* folder.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8902080D77E005F60CE /* folder.tvg */; };
+		DCE5E8A62080D781005F60CE /* application.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8912080D77F005F60CE /* application.tvg */; };
+		DCE5E8A72080D781005F60CE /* x-office-spreadsheet.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8922080D77F005F60CE /* x-office-spreadsheet.tvg */; };
+		DCE5E8A82080D781005F60CE /* folder-public.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8932080D77F005F60CE /* folder-public.tvg */; };
+		DCE5E8A92080D781005F60CE /* image.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8942080D77F005F60CE /* image.tvg */; };
+		DCE5E8AA2080D781005F60CE /* owncloud-logo.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8952080D77F005F60CE /* owncloud-logo.tvg */; };
+		DCE5E8AB2080D781005F60CE /* text.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8962080D77F005F60CE /* text.tvg */; };
+		DCE5E8AC2080D781005F60CE /* x-office-document.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8972080D77F005F60CE /* x-office-document.tvg */; };
+		DCE5E8AD2080D781005F60CE /* folder-starred.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8982080D77F005F60CE /* folder-starred.tvg */; };
+		DCE5E8AE2080D781005F60CE /* text-code.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8992080D780005F60CE /* text-code.tvg */; };
+		DCE5E8AF2080D781005F60CE /* application-pdf.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89A2080D780005F60CE /* application-pdf.tvg */; };
+		DCE5E8B02080D781005F60CE /* folder-drag-accept.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89B2080D780005F60CE /* folder-drag-accept.tvg */; };
+		DCE5E8B12080D781005F60CE /* package-x-generic.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89C2080D780005F60CE /* package-x-generic.tvg */; };
+		DCE5E8B22080D781005F60CE /* text-calendar.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89D2080D780005F60CE /* text-calendar.tvg */; };
+		DCE5E8B32080D781005F60CE /* text-vcard.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89E2080D780005F60CE /* text-vcard.tvg */; };
+		DCE5E8B42080D781005F60CE /* folder-shared.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89F2080D780005F60CE /* folder-shared.tvg */; };
+		DCE5E8B52080D781005F60CE /* x-office-presentation.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */; };
+		DCE5E8B82080D8D9005F60CE /* OCItemExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE5E8B72080D8D9005F60CE /* OCItemExtension.swift */; };
 		DCE974B2207E3AF80069FC2B /* ThemeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */; };
 		DCE974BC207EACA60069FC2B /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */; };
 		DCF4F165205192AA00189B9A /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F163205192AA00189B9A /* BookmarkViewController.swift */; };
@@ -246,11 +265,30 @@
 		DC7DF17D205141C100189B9A /* BookmarkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkManager.swift; sourceTree = "<group>"; };
 		DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableViewController.swift; sourceTree = "<group>"; };
 		DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServerListTableViewController.xib; sourceTree = "<group>"; };
-		DCCE540E2080177900067D1D /* file.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = file.tvg; path = "img/filetypes-tvg/file.tvg"; sourceTree = SOURCE_ROOT; };
-		DCCE540F2080177900067D1D /* owncloud-logo.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "owncloud-logo.tvg"; path = "img/filetypes-tvg/owncloud-logo.tvg"; sourceTree = SOURCE_ROOT; };
-		DCCE54102080177900067D1D /* folder.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = folder.tvg; path = "img/filetypes-tvg/folder.tvg"; sourceTree = SOURCE_ROOT; };
 		DCD344A5205BD0C000189B9A /* openssl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = openssl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "ios-sdk/ownCloudUI/openssl/framework/openssl.xcodeproj"; sourceTree = "<group>"; };
+		DCE5E88C2080D77E005F60CE /* video.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = video.tvg; path = "img/filetypes-tvg/video.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E88D2080D77E005F60CE /* folder-external.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-external.tvg"; path = "img/filetypes-tvg/folder-external.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E88E2080D77E005F60CE /* file.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = file.tvg; path = "img/filetypes-tvg/file.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E88F2080D77E005F60CE /* audio.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = audio.tvg; path = "img/filetypes-tvg/audio.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E8902080D77E005F60CE /* folder.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = folder.tvg; path = "img/filetypes-tvg/folder.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E8912080D77F005F60CE /* application.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = application.tvg; path = "img/filetypes-tvg/application.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E8922080D77F005F60CE /* x-office-spreadsheet.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "x-office-spreadsheet.tvg"; path = "img/filetypes-tvg/x-office-spreadsheet.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E8932080D77F005F60CE /* folder-public.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-public.tvg"; path = "img/filetypes-tvg/folder-public.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E8942080D77F005F60CE /* image.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = image.tvg; path = "img/filetypes-tvg/image.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E8952080D77F005F60CE /* owncloud-logo.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "owncloud-logo.tvg"; path = "img/filetypes-tvg/owncloud-logo.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E8962080D77F005F60CE /* text.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = text.tvg; path = "img/filetypes-tvg/text.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E8972080D77F005F60CE /* x-office-document.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "x-office-document.tvg"; path = "img/filetypes-tvg/x-office-document.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E8982080D77F005F60CE /* folder-starred.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-starred.tvg"; path = "img/filetypes-tvg/folder-starred.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E8992080D780005F60CE /* text-code.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-code.tvg"; path = "img/filetypes-tvg/text-code.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E89A2080D780005F60CE /* application-pdf.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "application-pdf.tvg"; path = "img/filetypes-tvg/application-pdf.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E89B2080D780005F60CE /* folder-drag-accept.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-drag-accept.tvg"; path = "img/filetypes-tvg/folder-drag-accept.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E89C2080D780005F60CE /* package-x-generic.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "package-x-generic.tvg"; path = "img/filetypes-tvg/package-x-generic.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E89D2080D780005F60CE /* text-calendar.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-calendar.tvg"; path = "img/filetypes-tvg/text-calendar.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E89E2080D780005F60CE /* text-vcard.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-vcard.tvg"; path = "img/filetypes-tvg/text-vcard.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E89F2080D780005F60CE /* folder-shared.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-shared.tvg"; path = "img/filetypes-tvg/folder-shared.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "x-office-presentation.tvg"; path = "img/filetypes-tvg/x-office-presentation.tvg"; sourceTree = SOURCE_ROOT; };
+		DCE5E8B72080D8D9005F60CE /* OCItemExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCItemExtension.swift; sourceTree = "<group>"; };
 		DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeNavigationController.swift; sourceTree = "<group>"; };
 		DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		DCF4F163205192AA00189B9A /* BookmarkViewController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; };
@@ -344,6 +382,7 @@
 				DC422448207CAED60006A2A6 /* Theming */,
 				DCF4F1622051927200189B9A /* UI Elements */,
 				239F1314205A69240029F186 /* UIKit Extensions */,
+				DCE5E8B62080D8B8005F60CE /* SDK Extensions */,
 				DCF4F1872052BA3500189B9A /* Tools */,
 				DC85573120513C7500189B9A /* Resources */,
 				DC0B37952051541C00189B9A /* ownCloud.entitlements */,
@@ -531,9 +570,27 @@
 		DCCE54092080175B00067D1D /* TVGs */ = {
 			isa = PBXGroup;
 			children = (
-				DCCE540E2080177900067D1D /* file.tvg */,
-				DCCE54102080177900067D1D /* folder.tvg */,
-				DCCE540F2080177900067D1D /* owncloud-logo.tvg */,
+				DCE5E89A2080D780005F60CE /* application-pdf.tvg */,
+				DCE5E8912080D77F005F60CE /* application.tvg */,
+				DCE5E88F2080D77E005F60CE /* audio.tvg */,
+				DCE5E88E2080D77E005F60CE /* file.tvg */,
+				DCE5E89B2080D780005F60CE /* folder-drag-accept.tvg */,
+				DCE5E88D2080D77E005F60CE /* folder-external.tvg */,
+				DCE5E8932080D77F005F60CE /* folder-public.tvg */,
+				DCE5E89F2080D780005F60CE /* folder-shared.tvg */,
+				DCE5E8982080D77F005F60CE /* folder-starred.tvg */,
+				DCE5E8902080D77E005F60CE /* folder.tvg */,
+				DCE5E8942080D77F005F60CE /* image.tvg */,
+				DCE5E8952080D77F005F60CE /* owncloud-logo.tvg */,
+				DCE5E89C2080D780005F60CE /* package-x-generic.tvg */,
+				DCE5E89D2080D780005F60CE /* text-calendar.tvg */,
+				DCE5E8992080D780005F60CE /* text-code.tvg */,
+				DCE5E89E2080D780005F60CE /* text-vcard.tvg */,
+				DCE5E8962080D77F005F60CE /* text.tvg */,
+				DCE5E88C2080D77E005F60CE /* video.tvg */,
+				DCE5E8972080D77F005F60CE /* x-office-document.tvg */,
+				DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */,
+				DCE5E8922080D77F005F60CE /* x-office-spreadsheet.tvg */,
 			);
 			name = TVGs;
 			sourceTree = "<group>";
@@ -544,6 +601,14 @@
 				DC3BE0E32077D4E0002A0AC0 /* CoreManager.swift */,
 			);
 			path = Core;
+			sourceTree = "<group>";
+		};
+		DCE5E8B62080D8B8005F60CE /* SDK Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				DCE5E8B72080D8D9005F60CE /* OCItemExtension.swift */,
+			);
+			path = "SDK Extensions";
 			sourceTree = "<group>";
 		};
 		DCF4F1612051925A00189B9A /* Bookmarks */ = {
@@ -786,13 +851,31 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCCE54112080177900067D1D /* file.tvg in Resources */,
-				DCCE54122080177900067D1D /* owncloud-logo.tvg in Resources */,
+				DCE5E8AB2080D781005F60CE /* text.tvg in Resources */,
+				DCE5E8AC2080D781005F60CE /* x-office-document.tvg in Resources */,
+				DCE5E8AF2080D781005F60CE /* application-pdf.tvg in Resources */,
+				DCE5E8A82080D781005F60CE /* folder-public.tvg in Resources */,
+				DCE5E8B12080D781005F60CE /* package-x-generic.tvg in Resources */,
+				DCE5E8AD2080D781005F60CE /* folder-starred.tvg in Resources */,
+				DCE5E8A22080D781005F60CE /* folder-external.tvg in Resources */,
 				DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */,
+				DCE5E8B42080D781005F60CE /* folder-shared.tvg in Resources */,
+				DCE5E8A42080D781005F60CE /* audio.tvg in Resources */,
 				237C99822057EFD800E915DA /* Localizable.strings in Resources */,
+				DCE5E8B02080D781005F60CE /* folder-drag-accept.tvg in Resources */,
+				DCE5E8A62080D781005F60CE /* application.tvg in Resources */,
 				233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */,
 				233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */,
-				DCCE54132080177900067D1D /* folder.tvg in Resources */,
+				DCE5E8A72080D781005F60CE /* x-office-spreadsheet.tvg in Resources */,
+				DCE5E8AA2080D781005F60CE /* owncloud-logo.tvg in Resources */,
+				DCE5E8B32080D781005F60CE /* text-vcard.tvg in Resources */,
+				DCE5E8AE2080D781005F60CE /* text-code.tvg in Resources */,
+				DCE5E8A52080D781005F60CE /* folder.tvg in Resources */,
+				DCE5E8A12080D781005F60CE /* video.tvg in Resources */,
+				DCE5E8A32080D781005F60CE /* file.tvg in Resources */,
+				DCE5E8B22080D781005F60CE /* text-calendar.tvg in Resources */,
+				DCE5E8A92080D781005F60CE /* image.tvg in Resources */,
+				DCE5E8B52080D781005F60CE /* x-office-presentation.tvg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -895,6 +978,7 @@
 				DC7DF17E205141C100189B9A /* BookmarkManager.swift in Sources */,
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
 				DC3BE0E12077CD4B002A0AC0 /* Synchronized.swift in Sources */,
+				DCE5E8B82080D8D9005F60CE /* OCItemExtension.swift in Sources */,
 				2303176F205AA357006C4DAF /* IssuesDismissalAnimator.swift in Sources */,
 				DC42244C207CAFBB0006A2A6 /* ThemeCollection.swift in Sources */,
 				DCF4F165205192AA00189B9A /* BookmarkViewController.swift in Sources */,

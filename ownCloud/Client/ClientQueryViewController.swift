@@ -46,6 +46,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.refreshControl = UIRefreshControl()
 
 		self.tableView.refreshControl?.addTarget(self, action: #selector(refreshQuery(_:)), for: .valueChanged)
+
+		OCItem.registerIcons()
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -105,8 +107,25 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath)
 		let rowItem : OCItem = self.items![indexPath.row]
-		let themeCollection : ThemeCollection = Theme.shared.activeCollection
+		// let themeCollection : ThemeCollection = Theme.shared.activeCollection
 
+		if let itemCell = cell as? ClientItemCell {
+			let iconSize : CGSize = CGSize(width: 40, height: 40)
+			var iconImage : UIImage?
+
+			iconImage = rowItem.icon(fitInSize: iconSize)
+
+			if rowItem.type == .collection {
+				itemCell.detailLabel.text = "Folder"
+			} else {
+				itemCell.detailLabel.text = rowItem.mimeType
+			}
+
+			itemCell.iconView.image = iconImage
+			itemCell.titleLabel.text = rowItem.name
+		}
+
+		/*
 		// Configure the cell...
 		cell.textLabel?.text = rowItem.name
 		if rowItem.type == .collection {
@@ -114,10 +133,12 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		} else {
 			cell.accessoryType = .none
 		}
-
-		cell.tintColor = themeCollection.tableRowColorBarCollection.tintColor
-		cell.textLabel?.textColor = themeCollection.tableRowColorBarCollection.labelColor
-		cell.backgroundColor = themeCollection.tableRowColorBarCollection.backgroundColor
+		*/
+		/*
+		cell?.tintColor = themeCollection.tableRowColorBarCollection.tintColor
+		cell?.textLabel?.textColor = themeCollection.tableRowColorBarCollection.labelColor
+		cell?.backgroundColor = themeCollection.tableRowColorBarCollection.backgroundColor
+		*/
 
 		return cell
 	}
