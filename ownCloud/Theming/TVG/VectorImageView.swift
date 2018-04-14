@@ -20,7 +20,17 @@ import UIKit
 import PocketSVG
 
 class VectorImageView: UIView, Themeable {
-	var vectorImage : TVGImage?
+	var _vectorImage : TVGImage?
+	var vectorImage : TVGImage? {
+		get {
+			return _vectorImage
+		}
+
+		set(newVectorImage) {
+			_vectorImage = newVectorImage
+			self.updateLayerWithRasteredImage()
+		}
+	}
 
 	override var bounds: CGRect {
 		set(viewBounds) {
@@ -59,7 +69,7 @@ class VectorImageView: UIView, Themeable {
 			viewBounds = self.bounds
 		}
 
-		if let rasterImage = vectorImage?.image(fitInSize: viewBounds!.size, with: themeCollection.iconColors, cacheFor: themeCollection.identifier) {
+		if let rasterImage = _vectorImage?.image(fitInSize: viewBounds!.size, with: themeCollection.iconColors, cacheFor: themeCollection.identifier) {
 			self.layer.contents = rasterImage.cgImage
 			self.layer.contentsGravity = kCAGravityResizeAspect
 		}

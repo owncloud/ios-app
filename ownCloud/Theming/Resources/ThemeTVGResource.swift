@@ -43,6 +43,14 @@ class ThemeTVGResource: ThemeResource {
 		return nil
 	}
 
+	func tvgImage() -> TVGImage? {
+		if let tvgImage = (self.sourceResource as? TVGImage) {
+			return tvgImage
+		}
+
+		return nil
+	}
+
 	func vectorImage(for theme: Theme) -> VectorImage? {
 		return self.resource(for: theme) as? VectorImage
 	}

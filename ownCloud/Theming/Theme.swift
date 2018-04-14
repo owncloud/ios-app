@@ -141,6 +141,22 @@ class Theme: NSObject {
 		return image
 	}
 
+	func tvgImage(for identifier: String) -> TVGImage? {
+		var image : TVGImage?
+
+		OCSynchronized(self) {
+			if let themeResource = resourcesByIdentifier[identifier] {
+				if themeResource.isKind(of: ThemeTVGResource.self) {
+					if let tvgResource : ThemeTVGResource = themeResource as? ThemeTVGResource {
+						image = tvgResource.tvgImage()
+					}
+				}
+			}
+		}
+
+		return image
+	}
+
 	func remove(resource: ThemeResource) {
 		OCSynchronized(self) {
 			if resource.identifier != nil {

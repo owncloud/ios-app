@@ -46,8 +46,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.refreshControl = UIRefreshControl()
 
 		self.tableView.refreshControl?.addTarget(self, action: #selector(refreshQuery(_:)), for: .valueChanged)
-
-		OCItem.registerIcons()
 	}
 
 	required init?(coder aDecoder: NSCoder) {
