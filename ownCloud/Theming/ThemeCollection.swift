@@ -244,8 +244,6 @@ class ThemeCollection : NSObject {
 			"fileFillColor" : self.tableRowColorBarCollection.symbolColor.hexString(),
 			"logoFillColor" : logoFillColor?.hexString() ?? "#ffffff"
 		]
-
-		print (self.iconColors)
 	}
 
 	convenience override init() {

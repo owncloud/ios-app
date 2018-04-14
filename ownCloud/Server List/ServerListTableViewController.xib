@@ -40,7 +40,7 @@
                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PJc-v9-DYn" userLabel="Welcome Overlay">
                     <rect key="frame" x="39.5" y="122" width="241.5" height="325"/>
                     <subviews>
-                        <imageView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" image="owncloud-primary-small" translatesAutoresizingMaskIntoConstraints="NO" id="fP1-O2-lkg">
+                        <imageView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="fP1-O2-lkg">
                             <rect key="frame" x="0.0" y="0.0" width="241.5" height="128"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="128" id="r4R-sD-MMg"/>
@@ -124,7 +124,4 @@ Start by adding your server.</string>
             <point key="canvasLocation" x="-997" y="370"/>
         </view>
     </objects>
-    <resources>
-        <image name="owncloud-primary-small" width="51" height="28"/>
-    </resources>
 </document>

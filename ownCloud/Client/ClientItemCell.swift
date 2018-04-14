@@ -7,18 +7,19 @@
 //
 
 import UIKit
+import ownCloudSDK
 
 class ClientItemCell: UITableViewCell, Themeable {
-	public var titleLabel : UILabel = UILabel()
-	public var detailLabel : UILabel = UILabel()
-	public var iconView : UIImageView = UIImageView()
+	var titleLabel : UILabel = UILabel()
+	var detailLabel : UILabel = UILabel()
+	var iconView : UIImageView = UIImageView()
 
-	public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		prepareViewAndConstraints()
 	}
 
-	public required init?(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 	}
 
@@ -72,5 +73,42 @@ class ClientItemCell: UITableViewCell, Themeable {
 		super.setSelected(selected, animated: animated)
 
 		// Configure the view for the selected state
+	}
+
+	var _item : OCItem?
+	var item : OCItem? {
+		set(newItem) {
+			_item = newItem
+
+			if let item : OCItem = _item {
+				updateWith(item)
+			}
+		}
+
+		get {
+			return _item
+		}
+	}
+
+	func updateWith(_ item: OCItem) {
+		let iconSize : CGSize = CGSize(width: 40, height: 40)
+		var iconImage : UIImage?
+
+		iconImage = item.icon(fitInSize: iconSize)
+
+		if item.type == .collection {
+			self.detailLabel.text = "Folder"
+		} else {
+			self.detailLabel.text = item.mimeType
+		}
+
+		self.iconView.image = iconImage
+		self.titleLabel.text = item.name
+
+		if item.type == .collection {
+			self.accessoryType = .disclosureIndicator
+		} else {
+			self.accessoryType = .none
+		}
 	}
 }
