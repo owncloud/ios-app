@@ -73,13 +73,13 @@ class ThemeCollection : NSObject {
 	@objc var lightBrandColor: UIColor
 
 	// MARK: - Brand color collection
-	@objc var darkBrandColorCollection : ThemeColorCollection
-	@objc var lightBrandColorCollection : ThemeColorCollection
+	@objc var darkBrandColors : ThemeColorCollection
+	@objc var lightBrandColors : ThemeColorCollection
 
 	// MARK: - Button / Fill color collections
-	@objc var approvalCollection : ThemeColorPairCollection
-	@objc var neutralCollection : ThemeColorPairCollection
-	@objc var destructiveCollection : ThemeColorPairCollection
+	@objc var approvalColors : ThemeColorPairCollection
+	@objc var neutralColors : ThemeColorPairCollection
+	@objc var destructiveColors : ThemeColorPairCollection
 
 	// MARK: - Label colors
 	@objc var informativeColor: UIColor
@@ -92,12 +92,13 @@ class ThemeCollection : NSObject {
 	// MARK: - Table views
 	@objc var tableBackgroundColor : UIColor
 	@objc var tableGroupBackgroundColor : UIColor
-	@objc var tableRowSeparatorColor : UIColor?
-	@objc var tableRowColorBarCollection : ThemeColorCollection
+	@objc var tableSeparatorColor : UIColor?
+	@objc var tableRowColors : ThemeColorCollection
+	@objc var tableRowHighlightColors : ThemeColorCollection
 
 	// MARK: - Bars
-	@objc var navigationBarColorCollection : ThemeColorCollection
-	@objc var toolBarColorCollection : ThemeColorCollection
+	@objc var navigationBarColors : ThemeColorCollection
+	@objc var toolbarColors : ThemeColorCollection
 	@objc var statusBarStyle : UIStatusBarStyle
 
 	// MARK: - Icon colors
@@ -128,7 +129,7 @@ class ThemeCollection : NSObject {
 		self.darkBrandColor = darkColor
 		self.lightBrandColor = lightColor
 
-		self.darkBrandColorCollection = ThemeColorCollection(
+		self.darkBrandColors = ThemeColorCollection(
 			backgroundColor: darkColor,
 			tintColor: lightColor.lighter(0.2),
 			labelColor: UIColor.white,
@@ -137,7 +138,7 @@ class ThemeCollection : NSObject {
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: darkColor))
 		)
 
-		self.lightBrandColorCollection = ThemeColorCollection(
+		self.lightBrandColors = ThemeColorCollection(
 			backgroundColor: lightColor,
 			tintColor: UIColor.white,
 			labelColor: UIColor.white,
@@ -151,28 +152,61 @@ class ThemeCollection : NSObject {
 		self.warningColor = UIColor(hex: 0xF2994A)
 		self.errorColor = UIColor(hex: 0xEB5757)
 
-		self.approvalCollection = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor(hex: 0x1AC763)))
-		self.neutralCollection = lightBrandColorCollection.filledColorPairCollection
-		self.destructiveCollection = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor.red))
+		self.approvalColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor(hex: 0x1AC763)))
+		self.neutralColors = lightBrandColors.filledColorPairCollection
+		self.destructiveColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor.red))
 
 		self.tintColor = self.lightBrandColor
 
+		// Table view
+		self.tableBackgroundColor = UIColor.white
+		self.tableGroupBackgroundColor = UIColor.groupTableViewBackground
+		self.tableSeparatorColor = nil
+
+		self.tableRowColors = ThemeColorCollection(
+			backgroundColor: tableBackgroundColor,
+			tintColor: nil,
+			labelColor: UIColor.black,
+			secondaryLabelColor: UIColor.gray,
+			symbolColor: darkColor,
+			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
+		)
+
+		self.tableRowHighlightColors = ThemeColorCollection(
+			backgroundColor: nil,
+			tintColor: nil,
+			labelColor: UIColor.black,
+			secondaryLabelColor: UIColor.gray,
+			symbolColor: darkColor,
+			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
+		)
+
+		// Styles
 		switch style {
 			case .dark:
 				// Bars
-				self.navigationBarColorCollection = self.darkBrandColorCollection
-				self.toolBarColorCollection = self.darkBrandColorCollection
+				self.navigationBarColors = self.darkBrandColors
+				self.toolbarColors = self.darkBrandColors
 
 				// Table view
-				self.tableBackgroundColor = navigationBarColorCollection.backgroundColor!.darker(0.1)
-				self.tableGroupBackgroundColor = navigationBarColorCollection.backgroundColor!.darker(0.3)
-				self.tableRowSeparatorColor = UIColor.darkGray
-				self.tableRowColorBarCollection = ThemeColorCollection(
+				self.tableBackgroundColor = navigationBarColors.backgroundColor!.darker(0.1)
+				self.tableGroupBackgroundColor = navigationBarColors.backgroundColor!.darker(0.3)
+				self.tableSeparatorColor = UIColor.darkGray
+				self.tableRowColors = ThemeColorCollection(
 					backgroundColor: tableBackgroundColor,
-					tintColor: navigationBarColorCollection.tintColor,
-					labelColor: navigationBarColorCollection.labelColor,
-					secondaryLabelColor: navigationBarColorCollection.secondaryLabelColor,
+					tintColor: navigationBarColors.tintColor,
+					labelColor: navigationBarColors.labelColor,
+					secondaryLabelColor: navigationBarColors.secondaryLabelColor,
 					symbolColor: lightColor,
+					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
+				)
+
+				self.tableRowHighlightColors = ThemeColorCollection(
+					backgroundColor: lightColor.darker(0.2),
+					tintColor: UIColor.white,
+					labelColor: UIColor.white,
+					secondaryLabelColor: UIColor.white,
+					symbolColor: darkColor,
 					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 				)
 
@@ -184,7 +218,7 @@ class ThemeCollection : NSObject {
 
 			case .light:
 				// Bars
-				self.navigationBarColorCollection = ThemeColorCollection(
+				self.navigationBarColors = ThemeColorCollection(
 					backgroundColor: nil,
 					tintColor: nil,
 					labelColor: UIColor.black,
@@ -193,20 +227,7 @@ class ThemeCollection : NSObject {
 					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 				)
 
-				self.toolBarColorCollection = self.navigationBarColorCollection
-
-				// Table view
-				self.tableBackgroundColor = UIColor.white
-				self.tableGroupBackgroundColor = UIColor.groupTableViewBackground
-				self.tableRowSeparatorColor = nil
-				self.tableRowColorBarCollection = ThemeColorCollection(
-					backgroundColor: tableBackgroundColor,
-					tintColor: nil,
-					labelColor: UIColor.black,
-					secondaryLabelColor: UIColor.gray,
-					symbolColor: darkColor,
-					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-				)
+				self.toolbarColors = self.navigationBarColors
 
 				// Status Bar
 				self.statusBarStyle = .default
@@ -216,21 +237,8 @@ class ThemeCollection : NSObject {
 
 			case .contrast:
 				// Bars
-				self.navigationBarColorCollection = self.darkBrandColorCollection
-				self.toolBarColorCollection = self.darkBrandColorCollection
-
-				// Table view
-				self.tableBackgroundColor = UIColor.white
-				self.tableGroupBackgroundColor = UIColor.groupTableViewBackground
-				self.tableRowSeparatorColor = nil
-				self.tableRowColorBarCollection = ThemeColorCollection(
-					backgroundColor: tableBackgroundColor,
-					tintColor: nil,
-					labelColor: UIColor.black,
-					secondaryLabelColor: UIColor.gray,
-					symbolColor: darkBrandColor,
-					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
-				)
+				self.navigationBarColors = self.darkBrandColors
+				self.toolbarColors = self.darkBrandColors
 
 				// Status Bar
 				self.statusBarStyle = .lightContent
@@ -240,8 +248,8 @@ class ThemeCollection : NSObject {
 		}
 
 		self.iconColors = [
-			"folderFillColor" : self.tableRowColorBarCollection.symbolColor.hexString(),
-			"fileFillColor" : self.tableRowColorBarCollection.symbolColor.hexString(),
+			"folderFillColor" : self.tableRowColors.symbolColor.hexString(),
+			"fileFillColor" : self.tableRowColors.symbolColor.hexString(),
 			"logoFillColor" : logoFillColor?.hexString() ?? "#ffffff"
 		]
 	}

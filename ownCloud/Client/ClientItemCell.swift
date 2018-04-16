@@ -9,7 +9,7 @@
 import UIKit
 import ownCloudSDK
 
-class ClientItemCell: UITableViewCell, Themeable {
+class ClientItemCell: ThemeTableViewCell {
 	var titleLabel : UILabel = UILabel()
 	var detailLabel : UILabel = UILabel()
 	var iconView : UIImageView = UIImageView()
@@ -55,26 +55,9 @@ class ClientItemCell: UITableViewCell, Themeable {
 		iconView.setContentHuggingPriority(UILayoutPriority.required, for: UILayoutConstraintAxis.vertical)
 		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
 		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
-
-		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
-	deinit {
-		Theme.shared.unregister(client: self)
-	}
-
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.titleLabel.textColor = collection.tableRowColorBarCollection.labelColor
-		self.detailLabel.textColor = collection.tableRowColorBarCollection.secondaryLabelColor
-		self.backgroundColor = collection.tableRowColorBarCollection.backgroundColor
-	}
-
-	override func setSelected(_ selected: Bool, animated: Bool) {
-		super.setSelected(selected, animated: animated)
-
-		// Configure the view for the selected state
-	}
-
+	// MARK: - Present item
 	var _item : OCItem?
 	var item : OCItem? {
 		set(newItem) {
@@ -110,5 +93,13 @@ class ClientItemCell: UITableViewCell, Themeable {
 		} else {
 			self.accessoryType = .none
 		}
+	}
+
+	// MARK: - Themeing
+	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
+		let itemState = ThemeItemState.init(selected: self.isSelected)
+
+		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
+		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
 	}
 }

@@ -18,7 +18,7 @@
 
 import UIKit
 
-class ServerListBookmarkCell: UITableViewCell, Themeable {
+class ServerListBookmarkCell : ThemeTableViewCell {
 	public var titleLabel : UILabel = UILabel()
 	public var detailLabel : UILabel = UILabel()
 	public var iconView : UIImageView = UIImageView()
@@ -33,6 +33,8 @@ class ServerListBookmarkCell: UITableViewCell, Themeable {
 	}
 
 	func prepareViewAndConstraints() {
+		self.selectionStyle = .default
+
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
 		iconView.translatesAutoresizingMaskIntoConstraints = false
@@ -66,25 +68,24 @@ class ServerListBookmarkCell: UITableViewCell, Themeable {
 		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
 
 		Theme.shared.add(tvgResourceFor: "owncloud-logo")
-		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
-	deinit {
-		Theme.shared.unregister(client: self)
-	}
+	// MARK: - Themeing
+	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
+		let itemState = ThemeItemState.init(selected: self.isSelected)
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
+		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
+
 		self.iconView.image = theme.image(for: "owncloud-logo", size: CGSize(width: 40, height: 40))
-
-		self.titleLabel.textColor = collection.tableRowColorBarCollection.labelColor
-		self.detailLabel.textColor = collection.tableRowColorBarCollection.secondaryLabelColor
-		self.backgroundColor = collection.tableRowColorBarCollection.backgroundColor
 	}
 
-	override func setSelected(_ selected: Bool, animated: Bool) {
-		super.setSelected(selected, animated: animated)
+	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		let itemState = ThemeItemState.init(selected: self.isSelected)
 
-		// Configure the view for the selected state
+		super.applyThemeCollection(theme: theme, collection: collection, event: event)
+
+		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
+		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
 	}
-
 }

@@ -28,6 +28,7 @@
 		DC0B37972051681600189B9A /* ThemeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B37962051681600189B9A /* ThemeButton.swift */; };
 		DC136582208223F000FC0F60 /* OCBookmark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */; };
 		DC321261207EB01B00DB171D /* ThemeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC321260207EB01B00DB171D /* ThemeImage.swift */; };
+		DC3317CE2084966700E36C8F /* ThemeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3317CD2084966700E36C8F /* ThemeTableViewCell.swift */; };
 		DC3BE0D72077BC5D002A0AC0 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; };
 		DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
 		DC3BE0D92077BC6B002A0AC0 /* openssl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -250,6 +251,7 @@
 		DC0B37962051681600189B9A /* ThemeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeButton.swift; sourceTree = "<group>"; };
 		DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCBookmark+Extension.swift"; sourceTree = "<group>"; };
 		DC321260207EB01B00DB171D /* ThemeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeImage.swift; sourceTree = "<group>"; };
+		DC3317CD2084966700E36C8F /* ThemeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewCell.swift; sourceTree = "<group>"; };
 		DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientQueryViewController.swift; sourceTree = "<group>"; };
 		DC3BE0DD2077CC13002A0AC0 /* ClientRootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientRootViewController.swift; sourceTree = "<group>"; };
 		DC3BE0E02077CD4B002A0AC0 /* Synchronized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Synchronized.swift; sourceTree = "<group>"; };
@@ -516,6 +518,7 @@
 		DC7DBA27207F6DFD00E7337D /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				DC3317CD2084966700E36C8F /* ThemeTableViewCell.swift */,
 				DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */,
 				DC0B37962051681600189B9A /* ThemeButton.swift */,
 			);
@@ -1001,6 +1004,7 @@
 				DCF4F17F2051A0D000189B9A /* StaticTableViewRow.swift in Sources */,
 				DC321261207EB01B00DB171D /* ThemeImage.swift in Sources */,
 				DC7DBA54207FA80C00E7337D /* TVGImage.swift in Sources */,
+				DC3317CE2084966700E36C8F /* ThemeTableViewCell.swift in Sources */,
 				DC422450207CB2500006A2A6 /* NSObject+ThemeApplication.swift in Sources */,
 				2303176D205AA21E006C4DAF /* IssuesPresentationAnimator.swift in Sources */,
 			);

@@ -35,23 +35,36 @@ enum ThemeItemStyle {
 	case message
 }
 
+enum ThemeItemState {
+	case normal
+	case highlighted
+
+	init(selected: Bool) {
+		if selected {
+			self = .highlighted
+		} else {
+			self = .normal
+		}
+	}
+}
+
 extension NSObject {
-	func applyThemeCollection(_ collection: ThemeCollection, itemStyle: ThemeItemStyle = .defaultForItem) {
+	func applyThemeCollection(_ collection: ThemeCollection, itemStyle: ThemeItemStyle = .defaultForItem, itemState: ThemeItemState = .normal) {
 		if self.isKind(of: ThemeButton.self) {
 			let themeButton : ThemeButton = (self as? ThemeButton)!
 
 			switch itemStyle {
 				case .approval:
-					themeButton.themeColorCollection = collection.approvalCollection
+					themeButton.themeColorCollection = collection.approvalColors
 
 				case .neutral:
-					themeButton.themeColorCollection = collection.neutralCollection
+					themeButton.themeColorCollection = collection.neutralColors
 
 				case .destructive:
-					themeButton.themeColorCollection = collection.destructiveCollection
+					themeButton.themeColorCollection = collection.destructiveColors
 
 				default:
-					themeButton.themeColorCollection = collection.lightBrandColorCollection.filledColorPairCollection
+					themeButton.themeColorCollection = collection.lightBrandColors.filledColorPairCollection
 			}
 		}
 
@@ -65,50 +78,76 @@ extension NSObject {
 		if self.isKind(of: UINavigationBar.self) {
 			let navigationBar : UINavigationBar = (self as? UINavigationBar)!
 
-			navigationBar.barTintColor = collection.navigationBarColorCollection.backgroundColor
-			navigationBar.backgroundColor = collection.navigationBarColorCollection.backgroundColor
-			navigationBar.tintColor = collection.navigationBarColorCollection.tintColor
-			navigationBar.titleTextAttributes = [ .foregroundColor :  collection.navigationBarColorCollection.labelColor ]
+			navigationBar.barTintColor = collection.navigationBarColors.backgroundColor
+			navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
+			navigationBar.tintColor = collection.navigationBarColors.tintColor
+			navigationBar.titleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
 		}
 
 		if self.isKind(of: UIToolbar.self) {
 			let toolbar : UIToolbar = (self as? UIToolbar)!
 
-			toolbar.barTintColor = collection.toolBarColorCollection.backgroundColor
-			toolbar.tintColor = collection.toolBarColorCollection.tintColor
+			toolbar.barTintColor = collection.toolbarColors.backgroundColor
+			toolbar.tintColor = collection.toolbarColors.tintColor
 		}
 
 		if self.isKind(of: UITabBar.self) {
 			let tabBar : UITabBar = (self as? UITabBar)!
 
-			tabBar.barTintColor = collection.toolBarColorCollection.backgroundColor
-			tabBar.tintColor = collection.toolBarColorCollection.tintColor
+			tabBar.barTintColor = collection.toolbarColors.backgroundColor
+			tabBar.tintColor = collection.toolbarColors.tintColor
 		}
 
 		if self.isKind(of: UITableView.self) {
 			let tableView : UITableView = (self as? UITableView)!
 
 			tableView.backgroundColor = collection.tableBackgroundColor
-			tableView.separatorColor = collection.tableRowSeparatorColor
+			tableView.separatorColor = collection.tableSeparatorColor
 		}
 
 		if self.isKind(of: UILabel.self) {
 			let label : UILabel = (self as? UILabel)!
-			var labelColor : UIColor = collection.tableRowColorBarCollection.labelColor
+			var normalColor : UIColor = collection.tableRowColors.labelColor
+			var highlightColor : UIColor = collection.tableRowHighlightColors.labelColor
 
 			switch itemStyle {
 				case .title:
-					labelColor = collection.tableRowColorBarCollection.labelColor
+					normalColor = collection.tableRowColors.labelColor
+					highlightColor = collection.tableRowHighlightColors.labelColor
 
 				case .message:
-					labelColor = collection.tableRowColorBarCollection.secondaryLabelColor
+					normalColor = collection.tableRowColors.secondaryLabelColor
+					highlightColor = collection.tableRowHighlightColors.secondaryLabelColor
 
 				default:
-					labelColor = collection.tableRowColorBarCollection.labelColor
-
+					normalColor = collection.tableRowColors.labelColor
+					highlightColor = collection.tableRowHighlightColors.labelColor
 			}
 
-			label.textColor = labelColor
+			switch itemState {
+				case .normal:
+					label.textColor = normalColor
+
+				case .highlighted:
+					label.textColor = highlightColor
+			}
+		}
+
+		if self.isKind(of: UITableViewCell.self) {
+			let cell : UITableViewCell = (self as? UITableViewCell)!
+			cell.backgroundColor = collection.tableRowColors.backgroundColor
+
+			if cell.selectionStyle != .none {
+				if collection.tableRowHighlightColors.backgroundColor != nil {
+					let backgroundView = UIView()
+
+					backgroundView.backgroundColor = collection.tableRowHighlightColors.backgroundColor
+
+					cell.selectedBackgroundView = backgroundView
+				} else {
+					cell.selectedBackgroundView = nil
+				}
+			}
 		}
 	}
 }

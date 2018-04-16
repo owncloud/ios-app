@@ -28,7 +28,7 @@ enum StaticTableViewRowButtonStyle {
 	case custom(textColor: UIColor?, selectedTextColor: UIColor?, backgroundColor: UIColor?, selectedBackgroundColor: UIColor?)
 }
 
-class StaticTableViewRow : NSObject, UITextFieldDelegate, Themeable {
+class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	public weak var section : StaticTableViewSection?
 
@@ -67,15 +67,13 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, Themeable {
 
 		self.identifier = identifier
 
-		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.accessoryType = accessoryType
 
 		self.cell?.accessibilityIdentifier = identifier
 
 		self.action = rowWithAction
-
-		Theme.shared.register(client: self)
 	}
 
 	// MARK: - Radio Item
@@ -84,7 +82,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, Themeable {
 
 		self.identifier = identifier
 
-		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 
 		if let accessibilityIdentifier : String = identifier {
@@ -102,8 +100,6 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, Themeable {
 			row.section?.setSelected(row.value!, groupIdentifier: row.groupIdentifier!)
 			radioItemWithAction?(row, sender)
 		}
-
-		Theme.shared.register(client: self)
 	}
 
 	// MARK: - Text Field
@@ -115,7 +111,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, Themeable {
 
 		self.identifier = identifier
 
-		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.selectionStyle = UITableViewCellSelectionStyle.none
 
 		self.action = action
@@ -152,11 +148,9 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, Themeable {
 
 		self.textField = cellTextField
 
-		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
-			self?.applyStandardThemeing(with: themeCollection)
-
-			cellTextField.textColor = themeCollection.tableRowColorBarCollection.labelColor
-			cellTextField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : themeCollection.tableRowColorBarCollection.secondaryLabelColor])
+		themeApplierToken = Theme.shared.add(applier: {(_, themeCollection, _) in
+			cellTextField.textColor = themeCollection.tableRowColors.labelColor
+			cellTextField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : themeCollection.tableRowColors.secondaryLabelColor])
 		})
 	}
 
@@ -191,7 +185,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, Themeable {
 
 		let switchView = UISwitch()
 
-		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell?.selectionStyle = .none
 		self.cell?.textLabel?.text = title
 		self.cell?.accessoryView = switchView
 
@@ -209,8 +204,6 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, Themeable {
 				switchView.setOn(value, animated: true)
 			}
 		}
-
-		Theme.shared.register(client: self)
 	}
 
 	@objc func switchValueChanged(_ sender: UISwitch) {
@@ -237,16 +230,16 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, Themeable {
 			switch style {
 				case .plain:
 					textColor = themeCollection.tintColor
-					backgroundColor = themeCollection.tableRowColorBarCollection.backgroundColor
+					backgroundColor = themeCollection.tableRowColors.backgroundColor
 
 				case .proceed:
-					textColor = themeCollection.neutralCollection.normal.foreground
-					backgroundColor = themeCollection.neutralCollection.normal.background
-					selectedBackgroundColor = themeCollection.neutralCollection.highlighted.background
+					textColor = themeCollection.neutralColors.normal.foreground
+					backgroundColor = themeCollection.neutralColors.normal.background
+					selectedBackgroundColor = themeCollection.neutralColors.highlighted.background
 
 				case .destructive:
 					textColor = UIColor.red
-					backgroundColor = themeCollection.tableRowColorBarCollection.backgroundColor
+					backgroundColor = themeCollection.tableRowColors.backgroundColor
 
 				case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
 					textColor = customTextColor
@@ -269,7 +262,6 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, Themeable {
 			}
 
 			if selectedBackgroundColor != nil {
-
 				let selectedBackgroundView = UIView()
 
 				selectedBackgroundView.backgroundColor = selectedBackgroundColor
@@ -286,23 +278,5 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, Themeable {
 		if themeApplierToken != nil {
 			Theme.shared.remove(applierForToken: themeApplierToken)
 		}
-
-		Theme.shared.unregister(client: self)
-	}
-
-	// MARK: - Themeing
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		if themeApplierToken == nil {
-			applyStandardThemeing(with: collection)
-		}
-	}
-
-	func applyStandardThemeing(with themeCollection: ThemeCollection) {
-		if themeCollection.tableRowColorBarCollection.backgroundColor != nil {
-			self.cell?.backgroundColor = themeCollection.tableRowColorBarCollection.backgroundColor
-		}
-
-		self.cell?.textLabel?.textColor = themeCollection.tableRowColorBarCollection.labelColor
-		self.cell?.detailTextLabel?.textColor = themeCollection.tableRowColorBarCollection.secondaryLabelColor
 	}
 }

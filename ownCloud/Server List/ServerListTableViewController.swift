@@ -132,7 +132,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		welcomeAddServerButton.themeColorCollection = collection.neutralCollection
+		welcomeAddServerButton.themeColorCollection = collection.neutralColors
 
 		self.tableView.applyThemeCollection(collection)
 
@@ -201,20 +201,30 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	@IBAction func help() {
 		var themeStyle : ThemeCollectionStyle?
+		let darkColor = UIColor(hex: 0x1D293B)
+		let lightColor = UIColor(hex: 0x468CC8)
 
 		themeCounter += 1
+
+		/*
+		// RED experiment
+		if themeCounter >= 3 {
+			darkColor = UIColor(hex: 0xf53034).darker(0.75)
+			lightColor = UIColor(hex: 0xf53034)
+		}
+		*/
 
 		switch themeCounter % 3 {
 			case 0:	themeStyle = .dark
 			case 1:	themeStyle = .light
 			case 2:	themeStyle = .contrast
-			default: themeStyle = .dark
+			default: break
 		}
 
 		UIView.animate(withDuration: 0.25) {
 			CATransaction.begin()
 			CATransaction.setAnimationDuration(0.25)
-			Theme.shared.activeCollection = ThemeCollection(darkBrandColor: UIColor(hex: 0x1D293B), lightBrandColor: UIColor(hex: 0x468CC8), style: themeStyle!)
+			Theme.shared.activeCollection = ThemeCollection(darkBrandColor: darkColor, lightBrandColor: lightColor, style: themeStyle!)
 			CATransaction.commit()
 		}
 	}
