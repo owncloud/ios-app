@@ -35,8 +35,16 @@ class ClientRootViewController: UITabBarController {
 
 		progressSummarizer = ProgressSummarizer.shared(forBookmark: inBookmark)
 		if progressSummarizer != nil {
-			progressSummarizer?.addObserver(self) { [weak self] (_, summary) in
-				self?.progressBar?.update(with: summary.message, progress: Float(summary.progress))
+			progressSummarizer?.addObserver(self) { [weak self] (summarizer, summary) in
+				var useSummary : ProgressSummary = summary
+
+				if (summary.progress == 1) && (summarizer.fallbackSummary != nil) {
+					useSummary = summarizer.fallbackSummary ?? summary
+				}
+
+				self?.progressBar?.update(with: useSummary.message, progress: Float(useSummary.progress))
+
+				self?.progressBar?.autoCollapse = (summarizer.fallbackSummary == nil) || (useSummary.progressCount == 0)
 			}
 		}
 

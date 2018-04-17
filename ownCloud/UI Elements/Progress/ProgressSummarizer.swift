@@ -176,8 +176,10 @@ class ProgressSummarizer: NSObject {
 	private var _fallbackSummary : ProgressSummary?
 	public var fallbackSummary : ProgressSummary? {
 		set(newFallbackSummary) {
-			_fallbackSummary = newFallbackSummary
-			self.setNeedsUpdate()
+			if _fallbackSummary != newFallbackSummary {
+				_fallbackSummary = newFallbackSummary
+				self.setNeedsUpdate()
+			}
 		}
 
 		get {
@@ -192,7 +194,7 @@ class ProgressSummarizer: NSObject {
 			fallbackSummaries.append(summary)
 
 			if fallbackSummaries.count == 1 {
-				self.setNeedsUpdate()
+				self.fallbackSummary = summary
 			}
 		}
 	}
@@ -203,7 +205,12 @@ class ProgressSummarizer: NSObject {
 				fallbackSummaries.remove(at: index)
 
 				if index == 0 {
-					self.setNeedsUpdate()
+					if fallbackSummaries.count > 0 {
+						self.fallbackSummary = fallbackSummaries.first
+
+					} else {
+						self.fallbackSummary = nil
+					}
 				}
 			}
 		}
