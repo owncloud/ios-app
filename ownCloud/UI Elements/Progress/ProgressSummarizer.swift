@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-struct ProgressSummary {
+struct ProgressSummary : Equatable {
 	var indeterminate : Bool
 	var progress : Double
 	var message : String?
@@ -167,6 +167,43 @@ class ProgressSummarizer: NSObject {
 			for observer in observers {
 				if observer.observer != nil {
 					observer.notificationBlock(self, summary)
+				}
+			}
+		}
+	}
+
+	// MARK: - Fallback summaries (to be used by the observers at their own descretion)
+	private var _fallbackSummary : ProgressSummary?
+	public var fallbackSummary : ProgressSummary? {
+		set(newFallbackSummary) {
+			_fallbackSummary = newFallbackSummary
+			self.setNeedsUpdate()
+		}
+
+		get {
+			return _fallbackSummary
+		}
+	}
+
+	private var fallbackSummaries : [ProgressSummary] = []
+
+	func pushFallbackSummary(summary : ProgressSummary) {
+		OCSynchronized(self) {
+			fallbackSummaries.append(summary)
+
+			if fallbackSummaries.count == 1 {
+				self.setNeedsUpdate()
+			}
+		}
+	}
+
+	func popFallbackSummary(summary : ProgressSummary) {
+		OCSynchronized(self) {
+			if let index = fallbackSummaries.index(of: summary) {
+				fallbackSummaries.remove(at: index)
+
+				if index == 0 {
+					self.setNeedsUpdate()
 				}
 			}
 		}
