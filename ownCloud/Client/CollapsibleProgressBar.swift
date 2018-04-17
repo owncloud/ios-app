@@ -18,6 +18,11 @@
 
 import UIKit
 
+fileprivate struct CollapsibleProgressBarUpdate {
+	var progress: Float?
+	var message: String?
+}
+
 class CollapsibleProgressBar: UIView, Themeable {
 	var contentView : UIView = UIView()
 	var progressView : UIProgressView = UIProgressView()
@@ -27,6 +32,7 @@ class CollapsibleProgressBar: UIView, Themeable {
 	var isCollapsed : Bool = true
 	var autoCollapse : Bool = true
 
+	// MARK: - Progress property
 	private var _progress : Float = 0
 	var progress : Float {
 		set(newProgress) {
@@ -57,6 +63,7 @@ class CollapsibleProgressBar: UIView, Themeable {
 		}
 	}
 
+	// MARK: - Init
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		setupSubviews()
@@ -72,6 +79,7 @@ class CollapsibleProgressBar: UIView, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
+	// MARK: - Subviews
 	func setupSubviews() {
 		self.clipsToBounds = true
 
@@ -115,6 +123,7 @@ class CollapsibleProgressBar: UIView, Themeable {
 		Theme.shared.register(client: self)
 	}
 
+	// MARK: - Theming
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		contentView.backgroundColor = collection.toolbarColors.backgroundColor
 		progressLabelView.textColor = collection.toolbarColors.labelColor
@@ -123,6 +132,7 @@ class CollapsibleProgressBar: UIView, Themeable {
 		progressView.tintColor = collection.toolbarColors.tintColor
 	}
 
+	// MARK: - Collapsing
 	func collapse(_ collapse: Bool, animate: Bool) {
 		DispatchQueue.main.async {
 			if self.isCollapsed != collapse {
@@ -147,13 +157,6 @@ class CollapsibleProgressBar: UIView, Themeable {
 		}
 	}
 
-	func update(with message: String?, progress: Float) {
-		DispatchQueue.main.async {
-			self.progressLabelView.text = message ?? ""
-			self.progress = progress
-		}
-	}
-
 	private var lastShouldCollapseTime : TimeInterval = 0
 	private func triggerDelayedAutoCollapse() {
 		let shouldCollapse = (self.progress == 1)
@@ -174,5 +177,50 @@ class CollapsibleProgressBar: UIView, Themeable {
 		let doAutoCollapse = (shouldCollapse == shouldCurrentlyCollapse) && shouldCollapse && ((Date.timeIntervalSinceReferenceDate - lastShouldCollapseTime) > 0.4)
 
 		self.collapse(doAutoCollapse, animate: true)
+	}
+
+	// MARK: - Update coalescating
+	private var scheduledUpdate : CollapsibleProgressBarUpdate?
+
+	private func performUpdate() {
+		OCSynchronized(self) {
+			if scheduledUpdate != nil {
+				if let message : String = scheduledUpdate?.message {
+					self.progressLabelView.text = message
+				}
+
+				if let progress : Float = scheduledUpdate?.progress {
+					self.progress = progress
+				}
+
+				scheduledUpdate = nil // This update has been handled => next update will need to be scheduled again
+			}
+		}
+	}
+
+	func update(with message: String?, progress: Float?) {
+		var doDispatch : Bool = false
+
+		OCSynchronized(self) {
+			if scheduledUpdate == nil {
+				doDispatch = true // Only schedule a new update if one isn't underway already
+
+				scheduledUpdate = CollapsibleProgressBarUpdate() // => A new update is now underway
+			}
+
+			if message != nil {
+				scheduledUpdate?.message = message
+			}
+
+			if progress != nil {
+				scheduledUpdate?.progress = progress
+			}
+
+			if doDispatch {
+				DispatchQueue.main.async {
+					self.performUpdate()
+				}
+			}
+		}
 	}
 }
