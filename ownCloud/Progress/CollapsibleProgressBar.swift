@@ -18,7 +18,7 @@
 
 import UIKit
 
-fileprivate struct CollapsibleProgressBarUpdate {
+private struct CollapsibleProgressBarUpdate {
 	var progress: Float?
 	var message: String?
 }
