@@ -6,6 +6,16 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudSDK
 
@@ -61,8 +71,12 @@ class ProgressSummarizer: NSObject {
 		return sharedSummarizer!
 	}
 
+	static func shared(forBookmark bookmark: OCBookmark) -> ProgressSummarizer {
+		return self.shared(for: bookmark.uuid as NSObject)
+	}
+
 	static func shared(forCore core: OCCore) -> ProgressSummarizer {
-		return self.shared(for: core.bookmark.uuid as NSObject)
+		return self.shared(forBookmark: core.bookmark)
 	}
 
 	// MARK: - Start/Stop tracking of progress objects
@@ -75,6 +89,8 @@ class ProgressSummarizer: NSObject {
 				progress.addObserver(self, forKeyPath: "isFinished", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 				progress.addObserver(self, forKeyPath: "isIndeterminate", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 				progress.addObserver(self, forKeyPath: "localizedDescription", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
+
+				self.setNeedsUpdate()
 			}
 		}
 	}
@@ -89,6 +105,8 @@ class ProgressSummarizer: NSObject {
 
 				if remove {
 					trackedProgress.remove(at: trackedProgress.index(of: progress)!)
+
+					self.setNeedsUpdate()
 				}
 			}
 		}
@@ -100,13 +118,7 @@ class ProgressSummarizer: NSObject {
 	// swiftlint:disable block_based_kvo
 	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
 		if context == observerContext {
-			if let progress = object as? Progress {
-				if progress.isFinished {
-					self.stopTracking(progress: progress)
-				}
-
-				self.setNeedsUpdate()
-			}
+			self.setNeedsUpdate()
 		}
 	}
 	// swiftlint:enable block_based_kvo
@@ -183,11 +195,19 @@ class ProgressSummarizer: NSObject {
 		var summary : ProgressSummary = ProgressSummary(indeterminate: false, progress: 0, message: nil, progressCount: 0)
 		var totalUnitCount : Int64 = 0
 		var completedUnitCount : Int64 = 0
+		var completedProgress : [Progress]?
 
 		OCSynchronized(self) {
 			for progress in trackedProgress {
 				if progress.isIndeterminate {
 					summary.indeterminate = true
+				}
+
+				if progress.isFinished {
+					if completedProgress == nil {
+						completedProgress = []
+					}
+					completedProgress?.append(progress)
 				}
 
 				if let message = progress.localizedDescription {
@@ -211,6 +231,12 @@ class ProgressSummarizer: NSObject {
 				}
 			} else {
 				summary.progress = Double(completedUnitCount) / Double(totalUnitCount)
+			}
+
+			if completedProgress != nil {
+				for removeProgress in completedProgress! {
+					self.stopTracking(progress: removeProgress)
+				}
 			}
 		}
 

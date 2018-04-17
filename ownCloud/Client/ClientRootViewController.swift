@@ -24,18 +24,35 @@ class ClientRootViewController: UITabBarController {
 	var core : OCCore?
 	var filesNavigationController : ThemeNavigationController?
 	var progressBar : CollapsibleProgressBar?
+	var progressSummarizer : ProgressSummarizer?
 
 	init(bookmark inBookmark: OCBookmark) {
+		let openProgress = Progress()
+
 		bookmark = inBookmark
 
 		super.init(nibName: nil, bundle: nil)
+
+		progressSummarizer = ProgressSummarizer.shared(forBookmark: inBookmark)
+		if progressSummarizer != nil {
+			progressSummarizer?.addObserver(self) { [weak self] (_, summary) in
+				self?.progressBar?.update(with: summary.message, progress: Float(summary.progress))
+			}
+		}
+
+		openProgress.localizedDescription = "Connecting…"
+		progressSummarizer?.startTracking(progress: openProgress)
 
 		core = CoreManager.shared.requestCoreForBookmark(bookmark, completion: { (_, error) in
 			if error == nil {
 				self.coreReady()
 			}
 
-			self.progressBar?.update(with: "Connected.", progress: 1)
+			openProgress.localizedDescription = "Connected."
+			openProgress.completedUnitCount = 1
+			openProgress.totalUnitCount = 1
+
+			self.progressSummarizer?.stopTracking(progress: openProgress)
 		})
 	}
 
@@ -44,6 +61,8 @@ class ClientRootViewController: UITabBarController {
 	}
 
 	deinit {
+		ProgressSummarizer.shared(forBookmark: bookmark).removeObserver(self)
+
 		CoreManager.shared.returnCoreForBookmark(bookmark, completion: nil)
 	}
 
@@ -66,8 +85,6 @@ class ClientRootViewController: UITabBarController {
 		self.tabBar.applyThemeCollection(Theme.shared.activeCollection)
 
 		self.viewControllers = [filesNavigationController] as? [UIViewController]
-
-		progressBar?.update(with: "Connecting…", progress: -1)
 	}
 
 	func logoutBarButtonItem() -> UIBarButtonItem {
