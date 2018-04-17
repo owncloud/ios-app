@@ -14,8 +14,6 @@
 		233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA6204FEFE500C06732 /* Assets.xcassets */; };
 		233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA8204FEFE500C06732 /* LaunchScreen.storyboard */; };
 		233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */; };
-		237C949C205BDD4C00C336C1 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 237C949B205BDD3700C336C1 /* openssl.framework */; };
-		237C949D205BDD4C00C336C1 /* openssl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 237C949B205BDD3700C336C1 /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		237C99822057EFD800E915DA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 237C99812057EFD700E915DA /* Localizable.strings */; };
 		239E192D205BE64200872270 /* CertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239E192C205BE64200872270 /* CertificateViewController.swift */; };
 		239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239F1318205A693A0029F186 /* UIColor+Extension.swift */; };
@@ -24,6 +22,10 @@
 		401FF7B82073DFCF00DF204F /* ownCloud.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = DC0B37952051541C00189B9A /* ownCloud.entitlements */; };
 		40ED10E5207CF735006CFAC9 /* ClientQueryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40ED10E1207CF735006CFAC9 /* ClientQueryViewController.swift */; };
 		40ED10E6207CF735006CFAC9 /* ClientRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40ED10E4207CF735006CFAC9 /* ClientRootViewController.swift */; };
+		594DFD302085F3C0006ECC13 /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 594DFD292085F3B3006ECC13 /* ownCloudSDK.framework */; };
+		594DFD312085F3C0006ECC13 /* ownCloudSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 594DFD292085F3B3006ECC13 /* ownCloudSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		594DFD342085F3D6006ECC13 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 594DFD202085F3A8006ECC13 /* openssl.framework */; };
+		594DFD352085F3D6006ECC13 /* openssl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 594DFD202085F3A8006ECC13 /* openssl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */; };
 		75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */; };
 		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -61,20 +63,6 @@
 			remoteGlobalIDString = 233BDE9B204FEFE500C06732;
 			remoteInfo = ownCloud;
 		};
-		237C949A205BDD3700C336C1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 237C9496205BDD3700C336C1 /* openssl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DC30949D205749EA00189B9A;
-			remoteInfo = openssl;
-		};
-		237C949E205BDD4C00C336C1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 237C9496205BDD3700C336C1 /* openssl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = DC30949C205749EA00189B9A;
-			remoteInfo = openssl;
-		};
 		239369772076110900BCE21A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
@@ -82,47 +70,54 @@
 			remoteGlobalIDString = DCC8F9AB202852A200EB6701;
 			remoteInfo = ownCloudSDK;
 		};
-		23D0E0A0205BCF8D002D7C80 /* PBXContainerItemProxy */ = {
+		594DFD1F2085F3A8006ECC13 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = DC3094832057358800189B9A;
-			remoteInfo = ownCloudUI;
+			containerPortal = 237C9496205BDD3700C336C1 /* openssl.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DC30949D205749EA00189B9A;
+			remoteInfo = openssl;
 		};
-		40EE99BC207CE27600900E82 /* PBXContainerItemProxy */ = {
+		594DFD282085F3B3006ECC13 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DCC8F9AB202852A200EB6701;
 			remoteInfo = ownCloudSDK;
 		};
-		40EE99BE207CE27600900E82 /* PBXContainerItemProxy */ = {
+		594DFD2A2085F3B3006ECC13 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DCC8F9B4202852A200EB6701;
 			remoteInfo = ownCloudSDKTests;
 		};
-		40EE99C0207CE27600900E82 /* PBXContainerItemProxy */ = {
+		594DFD2C2085F3B3006ECC13 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DC3094842057358800189B9A;
 			remoteInfo = ownCloudUI;
 		};
-		40EE99C2207CE27600900E82 /* PBXContainerItemProxy */ = {
+		594DFD2E2085F3B3006ECC13 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DC7E0A77203732B3006111FA;
 			remoteInfo = Ocean;
 		};
-		DC3BE0CE2077BC52002A0AC0 /* PBXContainerItemProxy */ = {
+		594DFD322085F3C0006ECC13 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = DCC8F9AA202852A200EB6701;
 			remoteInfo = ownCloudSDK;
+		};
+		594DFD362085F3D6006ECC13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 237C9496205BDD3700C336C1 /* openssl.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DC30949C205749EA00189B9A;
+			remoteInfo = openssl;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -144,7 +139,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				237C949D205BDD4C00C336C1 /* openssl.framework in CopyFiles */,
+				594DFD352085F3D6006ECC13 /* openssl.framework in CopyFiles */,
+				594DFD312085F3C0006ECC13 /* ownCloudSDK.framework in CopyFiles */,
 				23D0E09F205BCF8D002D7C80 /* ownCloudUI.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -164,8 +160,8 @@
 		233BDEB0204FEFE500C06732 /* ownCloudTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ownCloudTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwnCloudTests.swift; sourceTree = "<group>"; };
 		233BDEB6204FEFE500C06732 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ownCloudSDK.xcodeproj; path = "../ios-sdk/ownCloudSDK.xcodeproj"; sourceTree = "<group>"; };
-		237C9496205BDD3700C336C1 /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "../ios-sdk/ownCloudUI/openssl/framework/openssl.xcodeproj"; sourceTree = "<group>"; };
+		233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ownCloudSDK.xcodeproj; path = "ios-sdk/ownCloudSDK.xcodeproj"; sourceTree = "<group>"; };
+		237C9496205BDD3700C336C1 /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "ios-sdk/ownCloudUI/openssl/framework/openssl.xcodeproj"; sourceTree = "<group>"; };
 		237C99812057EFD700E915DA /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		239E192C205BE64200872270 /* CertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateViewController.swift; sourceTree = "<group>"; };
 		239F1318205A693A0029F186 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
@@ -200,7 +196,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				237C949C205BDD4C00C336C1 /* openssl.framework in Frameworks */,
+				594DFD342085F3D6006ECC13 /* openssl.framework in Frameworks */,
+				594DFD302085F3C0006ECC13 /* ownCloudSDK.framework in Frameworks */,
 				23D0E09E205BCF8D002D7C80 /* ownCloudUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -279,14 +276,6 @@
 			path = ownCloudTests;
 			sourceTree = "<group>";
 		};
-		237C9497205BDD3700C336C1 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				237C949B205BDD3700C336C1 /* openssl.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		239F1314205A69240029F186 /* UIKit Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -296,13 +285,21 @@
 			path = "UIKit Extensions";
 			sourceTree = "<group>";
 		};
-		40EE99B6207CE27600900E82 /* Products */ = {
+		594DFD1C2085F3A8006ECC13 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				40EE99BD207CE27600900E82 /* ownCloudSDK.framework */,
-				40EE99BF207CE27600900E82 /* ownCloudSDKTests.xctest */,
-				40EE99C1207CE27600900E82 /* ownCloudUI.framework */,
-				40EE99C3207CE27600900E82 /* Ocean.app */,
+				594DFD202085F3A8006ECC13 /* openssl.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		594DFD222085F3B3006ECC13 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				594DFD292085F3B3006ECC13 /* ownCloudSDK.framework */,
+				594DFD2B2085F3B3006ECC13 /* ownCloudSDKTests.xctest */,
+				594DFD2D2085F3B3006ECC13 /* ownCloudUI.framework */,
+				594DFD2F2085F3B3006ECC13 /* Ocean.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -446,9 +443,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				DC0B3789205146C900189B9A /* PBXTargetDependency */,
-				23D0E0A1205BCF8D002D7C80 /* PBXTargetDependency */,
-				237C949F205BDD4C00C336C1 /* PBXTargetDependency */,
+				594DFD332085F3C0006ECC13 /* PBXTargetDependency */,
+				594DFD372085F3D6006ECC13 /* PBXTargetDependency */,
 			);
 			name = ownCloud;
 			productName = ownCloud;
@@ -519,11 +515,11 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 237C9497205BDD3700C336C1 /* Products */;
+					ProductGroup = 594DFD1C2085F3A8006ECC13 /* Products */;
 					ProjectRef = 237C9496205BDD3700C336C1 /* openssl.xcodeproj */;
 				},
 				{
-					ProductGroup = 40EE99B6207CE27600900E82 /* Products */;
+					ProductGroup = 594DFD222085F3B3006ECC13 /* Products */;
 					ProjectRef = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
 				},
 			);
@@ -543,39 +539,39 @@
 			remoteRef = 230B84EF20597F6E00C9F828 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		237C949B205BDD3700C336C1 /* openssl.framework */ = {
+		594DFD202085F3A8006ECC13 /* openssl.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = openssl.framework;
-			remoteRef = 237C949A205BDD3700C336C1 /* PBXContainerItemProxy */;
+			remoteRef = 594DFD1F2085F3A8006ECC13 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		40EE99BD207CE27600900E82 /* ownCloudSDK.framework */ = {
+		594DFD292085F3B3006ECC13 /* ownCloudSDK.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = ownCloudSDK.framework;
-			remoteRef = 40EE99BC207CE27600900E82 /* PBXContainerItemProxy */;
+			remoteRef = 594DFD282085F3B3006ECC13 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		40EE99BF207CE27600900E82 /* ownCloudSDKTests.xctest */ = {
+		594DFD2B2085F3B3006ECC13 /* ownCloudSDKTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = ownCloudSDKTests.xctest;
-			remoteRef = 40EE99BE207CE27600900E82 /* PBXContainerItemProxy */;
+			remoteRef = 594DFD2A2085F3B3006ECC13 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		40EE99C1207CE27600900E82 /* ownCloudUI.framework */ = {
+		594DFD2D2085F3B3006ECC13 /* ownCloudUI.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = ownCloudUI.framework;
-			remoteRef = 40EE99C0207CE27600900E82 /* PBXContainerItemProxy */;
+			remoteRef = 594DFD2C2085F3B3006ECC13 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		40EE99C3207CE27600900E82 /* Ocean.app */ = {
+		594DFD2F2085F3B3006ECC13 /* Ocean.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = Ocean.app;
-			remoteRef = 40EE99C2207CE27600900E82 /* PBXContainerItemProxy */;
+			remoteRef = 594DFD2E2085F3B3006ECC13 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		DC4AF6E52051466800189B9A /* ownCloudSDK.framework */ = {
@@ -724,20 +720,15 @@
 			target = 233BDE9B204FEFE500C06732 /* ownCloud */;
 			targetProxy = 233BDEB1204FEFE500C06732 /* PBXContainerItemProxy */;
 		};
-		237C949F205BDD4C00C336C1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = openssl;
-			targetProxy = 237C949E205BDD4C00C336C1 /* PBXContainerItemProxy */;
-		};
-		23D0E0A1205BCF8D002D7C80 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ownCloudUI;
-			targetProxy = 23D0E0A0205BCF8D002D7C80 /* PBXContainerItemProxy */;
-		};
-		DC0B3789205146C900189B9A /* PBXTargetDependency */ = {
+		594DFD332085F3C0006ECC13 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ownCloudSDK;
-			targetProxy = DC3BE0CE2077BC52002A0AC0 /* PBXContainerItemProxy */;
+			targetProxy = 594DFD322085F3C0006ECC13 /* PBXContainerItemProxy */;
+		};
+		594DFD372085F3D6006ECC13 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = openssl;
+			targetProxy = 594DFD362085F3D6006ECC13 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
