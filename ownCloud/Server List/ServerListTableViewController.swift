@@ -178,10 +178,13 @@ class ServerListTableViewController: UITableViewController {
 	// MARK: - Table view delegate
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row)
-
-		let clientRootViewController = ClientRootViewController(bookmark: bookmark!)
-
-		self.present(clientRootViewController, animated: true, completion: nil)
+        
+        if bookmark?.authenticationData == nil {
+            self.editBookmark((bookmark)!)
+        } else {
+            let clientRootViewController = ClientRootViewController(bookmark: bookmark!)
+            self.present(clientRootViewController, animated: true, completion: nil)
+        }
 
 		Log.log("Bookmark data: \(bookmark?.bookmarkData().description ?? "none")")
 	}
