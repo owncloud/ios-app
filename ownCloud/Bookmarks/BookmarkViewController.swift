@@ -98,6 +98,11 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             self.addContinueButton(action: self.continueButtonAction)
         case .edit?:
             self.navigationItem.title = "Edit Server".localized
+            
+            //Right button
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete".localized, style: .plain, target: self, action: #selector(deleteBookmark))
+            self.navigationItem.rightBarButtonItem?.tintColor = UIColor.red
+
             self.addServerName()
             self.addServerUrl()
             if self.bookmark?.authenticationMethodIdentifier == OCAuthenticationMethodBasicAuthIdentifier {
@@ -254,6 +259,22 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
 
     // MARK: Actions
+    
+    @IBAction func deleteBookmark() {
+        let alertController = UIAlertController.init(title: NSString.init(format: NSLocalizedString("Really delete '%@'?", comment: "") as NSString, self.bookmark?.name as! NSString) as String,
+                                                     message: NSLocalizedString("This will also delete all locally stored file copies.", comment: ""),
+                                                     preferredStyle: .actionSheet)
+        
+        alertController.addAction(UIAlertAction.init(title: "Cancel".localized, style: .cancel, handler: nil))
+        
+        alertController.addAction(UIAlertAction.init(title: "Delete".localized, style: .destructive, handler: { (_) in
+            
+            BookmarkManager.sharedBookmarkManager.removeBookmark(self.bookmark!)
+            self.navigationController?.popViewController(animated: true)
+        }))
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
 
     lazy private var continueButtonAction: StaticTableViewRowAction  = { (row, _) in
 
