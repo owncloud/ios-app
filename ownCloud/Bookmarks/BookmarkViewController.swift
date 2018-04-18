@@ -191,61 +191,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         let connectButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: connectButtonSectionIdentifier, rows: [
             StaticTableViewRow(buttonWithAction: { (row, _) in
 
-                var options: [OCAuthenticationMethodKey : Any] = Dictionary()
-
-                if self.mode == .edit {
-                    self.authMethod = self.bookmark?.authenticationMethodIdentifier
-                }
-
-                if self.authMethod != nil && self.authMethod == OCAuthenticationMethodBasicAuthIdentifier {
-
-                    let username: String? = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphraseUsernameRowIdentifier)?.value as? String
-                    let password: String?  = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value as? String
-
-                    options[.usernameKey] = username!
-                    options[.passphraseKey] = password!
-
-                }
-
-                options[.presentingViewControllerKey] = self
-
-                let serverName = self.sectionForIdentifier(serverNameSectionIdentifier)?.row(withIdentifier: serverNameTextFieldIdentifier)?.value as? String
-                self.bookmark?.name = (serverName != nil && serverName != "") ? serverName: self.bookmark!.url.absoluteString
-                //TODO:refactor connection buttons and call update
-                BookmarkManager.sharedBookmarkManager.saveBookmarks()
-
-                self.connection?.generateAuthenticationData(withMethod: self.authMethod!, options: options, completionHandler: { (error, authenticationMethodIdentifier, authenticationData) in
-
-                    if error == nil {
-                        let serverName = self.sectionForIdentifier(serverNameSectionIdentifier)?.row(withIdentifier: serverNameTextFieldIdentifier)?.value as? String
-                        self.bookmark?.name = (serverName != nil && serverName != "") ? serverName: self.bookmark!.url.absoluteString
-                        self.bookmark?.authenticationMethodIdentifier = authenticationMethodIdentifier
-                        self.bookmark?.authenticationData = authenticationData
-
-                        switch self.mode {
-                        case .add?:
-                            print("Add mode")
-                            BookmarkManager.sharedBookmarkManager.addBookmark(self.bookmark!)
-                        case .edit?:
-                            print("Edit mode")
-                            BookmarkManager.sharedBookmarkManager.saveBookmarks()
-                        default: break
-                        }
-
-                        DispatchQueue.main.async {
-                            self.navigationController?.popViewController(animated: true)
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            let issuesVC = ConnectionIssueViewController(issue: OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil), completion: {
-                                (result) in
-                                // TODO
-                            })
-                            issuesVC.modalPresentationStyle = .overCurrentContext
-                            self.present(issuesVC, animated: true, completion: nil)
-                        }
-                    }
-                })
+                self.connectButtonAction()
+                
             }, title: "Connect".localized,
                style: .proceed,
                identifier: nil)])
@@ -361,6 +308,64 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 }
             })
         }
+    }
+    
+    private func connectButtonAction() {
+        var options: [OCAuthenticationMethodKey : Any] = Dictionary()
+        
+        if self.mode == .edit {
+            self.authMethod = self.bookmark?.authenticationMethodIdentifier
+        }
+        
+        if self.authMethod != nil && self.authMethod == OCAuthenticationMethodBasicAuthIdentifier {
+            
+            let username: String? = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphraseUsernameRowIdentifier)?.value as? String
+            let password: String?  = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value as? String
+            
+            options[.usernameKey] = username!
+            options[.passphraseKey] = password!
+            
+        }
+        
+        options[.presentingViewControllerKey] = self
+        
+        let serverName = self.sectionForIdentifier(serverNameSectionIdentifier)?.row(withIdentifier: serverNameTextFieldIdentifier)?.value as? String
+        self.bookmark?.name = (serverName != nil && serverName != "") ? serverName: self.bookmark!.url.absoluteString
+        //TODO:refactor connection buttons and call update
+        BookmarkManager.sharedBookmarkManager.saveBookmarks()
+        
+        self.connection?.generateAuthenticationData(withMethod: self.authMethod!, options: options, completionHandler: { (error, authenticationMethodIdentifier, authenticationData) in
+            
+            if error == nil {
+                let serverName = self.sectionForIdentifier(serverNameSectionIdentifier)?.row(withIdentifier: serverNameTextFieldIdentifier)?.value as? String
+                self.bookmark?.name = (serverName != nil && serverName != "") ? serverName: self.bookmark!.url.absoluteString
+                self.bookmark?.authenticationMethodIdentifier = authenticationMethodIdentifier
+                self.bookmark?.authenticationData = authenticationData
+                
+                switch self.mode {
+                case .add?:
+                    print("Add mode")
+                    BookmarkManager.sharedBookmarkManager.addBookmark(self.bookmark!)
+                case .edit?:
+                    print("Edit mode")
+                    BookmarkManager.sharedBookmarkManager.saveBookmarks()
+                default: break
+                }
+                
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    let issuesVC = ConnectionIssueViewController(issue: OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil), completion: {
+                        (result) in
+                        // TODO
+                    })
+                    issuesVC.modalPresentationStyle = .overCurrentContext
+                    self.present(issuesVC, animated: true, completion: nil)
+                }
+            }
+        })
     }
 
     private func approveButtonAction(preferedAuthMethods: [String], issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
