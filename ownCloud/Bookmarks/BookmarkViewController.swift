@@ -123,7 +123,12 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             }
             //TODO: not working, the certificate is nil
             //self.addCertificateDetails(certificate: self.bookmark!.certificate)
-            self.addSaveConnectButton(saveConnect: .save)
+            if self.bookmark?.authenticationData == nil {
+                self.addSaveConnectButton(saveConnect: .connect)
+            } else {
+                self.addSaveConnectButton(saveConnect: .save)
+            }
+            
             
             self.tableView.reloadData()
 
@@ -250,25 +255,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         self.addSection(section!, animated: true)
     }
 
-    private func addDeleteAuthDataButton() {
-        if let section = self.sectionForIdentifier(connectButtonSectionIdentifier) {
-            section.add(rows: [
-                StaticTableViewRow(buttonWithAction: { (_, _) in
-                    if self.bookmark != nil {
-
-                        BookmarkManager.sharedBookmarkManager.removeAuthDataOfBookmark(self.bookmark!)
-
-                        //TODO: move to update rows
-                        self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphraseUsernameRowIdentifier)?.value  = ""
-                        self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value  = ""
-                        self.tableView.reloadData()
-                    }
-
-                }, title: "Delete Authentication Data".localized, style: .destructive, identifier: deleteAuthButtonIdentifier)
-                ])
-        }
-    }
-
     private func removeContinueButton() {
         if let buttonSection = self.sectionForIdentifier(continueButtonSectionIdentifier) {
             self.removeSection(buttonSection)
@@ -276,40 +262,52 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
 
     private func addBasicAuthCredentialsFields(username: String?, password: String?) {
-        
-        let isEnableUsernameTextField: Bool = (self.mode == .add) ? true : false
-        
+    
         let section = StaticTableViewSection(headerTitle:"Authentication".localized, footerTitle: nil, identifier: passphraseAuthSectionIdentifier, rows:
-            [ StaticTableViewRow(textFieldWithAction: nil,
-                                 placeholder: "Username".localized,
-                                 value: username ?? "",
-                                 secureTextEntry: false,
-                                 keyboardType: .emailAddress,
-                                 autocorrectionType: .no,
-                                 autocapitalizationType: UITextAutocapitalizationType.none,
-                                 enablesReturnKeyAutomatically: true,
-                                 returnKeyType: .continue,
-                                 identifier: passphraseUsernameRowIdentifier,
-                                 isEnabled:isEnableUsernameTextField),
-
-              StaticTableViewRow(textFieldWithAction: { (row, _) in
-                self.passwordTextFieldDidChange(newPassword: row.value as! String)
-              },
-                                 placeholder: "Password".localized,
-                                 value: password ?? "",
-                                 secureTextEntry: true,
-                                 keyboardType: .emailAddress,
-                                 autocorrectionType: .no,
-                                 autocapitalizationType: .none,
-                                 enablesReturnKeyAutomatically: true,
-                                 returnKeyType: .go,
-                                 identifier: passphrasePasswordIdentifier)
+            [self.getUsernameRow(username: username),
+             self.getPasswordRow(password: password)
             ])
         
         self.insertSection(section, at: self.sections.count-1, animated: true)
     }
 
     // MARK: Rows
+    
+    func getUsernameRow(username: String?) -> StaticTableViewRow {
+        
+        let isEnableUsernameTextField: Bool = (self.mode == .add) ? true : false
+        
+        let row = StaticTableViewRow(textFieldWithAction: nil,
+                                     placeholder: "Username".localized,
+                                     value: username ?? "",
+                                     secureTextEntry: false,
+                                     keyboardType: .emailAddress,
+                                     autocorrectionType: .no,
+                                     autocapitalizationType: UITextAutocapitalizationType.none,
+                                     enablesReturnKeyAutomatically: true,
+                                     returnKeyType: .continue,
+                                     identifier: passphraseUsernameRowIdentifier,
+                                     isEnabled:isEnableUsernameTextField)
+        
+        return row
+    }
+    
+    func getPasswordRow(password: String?) -> StaticTableViewRow {
+        let row = StaticTableViewRow(textFieldWithAction: { (row, _) in
+            self.passwordTextFieldDidChange(newPassword: row.value as! String)
+        },
+                                     placeholder: "Password".localized,
+                                     value: password ?? "",
+                                     secureTextEntry: true,
+                                     keyboardType: .emailAddress,
+                                     autocorrectionType: .no,
+                                     autocapitalizationType: .none,
+                                     enablesReturnKeyAutomatically: true,
+                                     returnKeyType: .go,
+                                     identifier: passphrasePasswordIdentifier)
+        
+        return row
+    }
     
     func getSaveButtonRow() -> StaticTableViewRow {
         let row = StaticTableViewRow(buttonWithAction: { (row, _) in
@@ -337,16 +335,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     
     func getDeleteAuthDataButtonRow() -> StaticTableViewRow {
         let row = StaticTableViewRow(buttonWithAction: { (_, _) in
-            if self.bookmark != nil {
-                
-                BookmarkManager.sharedBookmarkManager.removeAuthDataOfBookmark(self.bookmark!)
-                
-                //TODO: move to update rows
-                self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphraseUsernameRowIdentifier)?.value  = ""
-                self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value  = ""
-                self.tableView.reloadData()
-            }
-            
+            self.deleteAuthDataButtonAction()
         }, title: "Delete Authentication Data".localized, style: .destructive, identifier: deleteAuthButtonIdentifier)
         
         return row
@@ -425,6 +414,14 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         }
     }
     
+    private func saveButtonAction() {
+        let serverName = self.sectionForIdentifier(serverNameSectionIdentifier)?.row(withIdentifier: serverNameTextFieldIdentifier)?.value as? String
+        self.bookmark?.name = (serverName != nil && serverName != "") ? serverName: self.bookmark!.url.absoluteString
+        BookmarkManager.sharedBookmarkManager.saveBookmarks()
+        
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     private func connectButtonAction() {
         var options: [OCAuthenticationMethodKey : Any] = Dictionary()
         
@@ -483,10 +480,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         })
     }
     
-    private func saveButtonAction() {
-        
-    }
-
     private func approveButtonAction(preferedAuthMethods: [String], issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
 
         self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value = self.bookmark?.url.absoluteString
@@ -513,15 +506,22 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         }
     }
     
+    func deleteAuthDataButtonAction() {
+        if self.bookmark != nil {
+            self.bookmark = BookmarkManager.sharedBookmarkManager.removeAuthDataOfBookmark(self.bookmark!)
+            self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value  = ""
+            self.tableView.reloadData()
+        }
+    }
+    
+    //MARK: Utils
     func passwordTextFieldDidChange(newPassword: String) {
         
         let originalPassword = OCAuthenticationMethodBasicAuth.passPhrase(fromAuthenticationData: self.bookmark?.authenticationData)
         
         if newPassword == originalPassword {
-            //self.addSaveConnectButton(saveConnect: .save)
             self.replaceRow(connectButtonSectionIdentifier, rowIdentifier: connectButtonRowIdentifier, newRow: self.getSaveButtonRow())
         } else {
-            //self.addSaveConnectButton(saveConnect: .connect)
             self.replaceRow(connectButtonSectionIdentifier, rowIdentifier: saveButtonRowIdentifier, newRow: self.getConnectButtonRow())
         }
     }

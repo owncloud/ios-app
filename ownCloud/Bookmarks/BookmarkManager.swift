@@ -114,9 +114,24 @@ class BookmarkManager: NSObject {
 		return bookmark
 	}
 
-    func removeAuthDataOfBookmark(_ bookmark: OCBookmark) {
-        bookmark.authenticationData = nil
+    func removeAuthDataOfBookmark(_ bookmark: OCBookmark) -> OCBookmark {
+        
+        if bookmark.authenticationMethodIdentifier == OCAuthenticationMethodBasicAuthIdentifier {
+            let username = OCAuthenticationMethodBasicAuth.userName(fromAuthenticationData: bookmark.authenticationData)
+            let password = ""
+            
+            do {
+                try bookmark.authenticationData = OCAuthenticationMethodBasicAuth.authenticationData(forUsername: username, passphrase: password, authenticationHeaderValue: nil)
+            } catch {
+                
+            }
+        } else {
+            bookmark.authenticationData = nil
+        }
+        
         saveBookmarks()
+        
+        return bookmark
     }
 }
 
