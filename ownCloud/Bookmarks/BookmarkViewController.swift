@@ -227,21 +227,13 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     
     private func addSaveConnectButton(saveConnect: SaveConnectButtonmode) {
      
-        var functionToDo = {}
-        var title = ""
-        var rowIdentifier = ""
+        var saveConnectRow:StaticTableViewRow
         
         switch saveConnect {
         case .save:
-            functionToDo = saveButtonAction
-            title = "Save".localized
-            rowIdentifier = saveButtonRowIdentifier
+            saveConnectRow = self.getSaveButtonRow()
         case .connect:
-            functionToDo = connectButtonAction
-            title = "Connect".localized
-            rowIdentifier = connectButtonRowIdentifier
-        default:
-            break
+            saveConnectRow = self.getConnectButtonRow()
         }
         
         var section = self.sectionForIdentifier(connectButtonSectionIdentifier)
@@ -252,29 +244,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         }
         
         section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: connectButtonSectionIdentifier, rows: [])
-        
-        section!.add(rows: [
-            StaticTableViewRow(buttonWithAction: { (row, _) in
-                
-                functionToDo()
-                
-            }, title: title.localized,
-               style: .proceed,
-               identifier: nil)
+        section!.add(rows: [saveConnectRow, self.getDeleteAuthDataButtonRow()
             ])
-        
-        section!.add(rows: [StaticTableViewRow(buttonWithAction: { (_, _) in
-            if self.bookmark != nil {
-                
-                BookmarkManager.sharedBookmarkManager.removeAuthDataOfBookmark(self.bookmark!)
-                
-                //TODO: move to update rows
-                self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphraseUsernameRowIdentifier)?.value  = ""
-                self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value  = ""
-                self.tableView.reloadData()
-            }
-            
-        }, title: "Delete Authentication Data".localized, style: .destructive, identifier: deleteAuthButtonIdentifier)])
         
         self.addSection(section!, animated: true)
     }
@@ -338,6 +309,49 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         self.insertSection(section, at: self.sections.count-1, animated: true)
     }
 
+    // MARK: Rows
+    
+    func getSaveButtonRow() -> StaticTableViewRow {
+        let row = StaticTableViewRow(buttonWithAction: { (row, _) in
+            
+            self.saveButtonAction()
+            
+        }, title: "Save".localized,
+           style: .proceed,
+           identifier: saveButtonRowIdentifier)
+        
+        return row
+    }
+    
+    func getConnectButtonRow() -> StaticTableViewRow {
+        let row = StaticTableViewRow(buttonWithAction: { (row, _) in
+            
+            self.connectButtonAction()
+            
+        }, title: "Connect".localized,
+           style: .proceed,
+           identifier: connectButtonRowIdentifier)
+        
+        return row
+    }
+    
+    func getDeleteAuthDataButtonRow() -> StaticTableViewRow {
+        let row = StaticTableViewRow(buttonWithAction: { (_, _) in
+            if self.bookmark != nil {
+                
+                BookmarkManager.sharedBookmarkManager.removeAuthDataOfBookmark(self.bookmark!)
+                
+                //TODO: move to update rows
+                self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphraseUsernameRowIdentifier)?.value  = ""
+                self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value  = ""
+                self.tableView.reloadData()
+            }
+            
+        }, title: "Delete Authentication Data".localized, style: .destructive, identifier: deleteAuthButtonIdentifier)
+        
+        return row
+    }
+    
     // MARK: Actions
     
     @IBAction func deleteBookmark() {
@@ -504,9 +518,11 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         let originalPassword = OCAuthenticationMethodBasicAuth.passPhrase(fromAuthenticationData: self.bookmark?.authenticationData)
         
         if newPassword == originalPassword {
-            self.addSaveConnectButton(saveConnect: .save)
+            //self.addSaveConnectButton(saveConnect: .save)
+            self.replaceRow(connectButtonSectionIdentifier, rowIdentifier: connectButtonRowIdentifier, newRow: self.getSaveButtonRow())
         } else {
-            self.addSaveConnectButton(saveConnect: .connect)
+            //self.addSaveConnectButton(saveConnect: .connect)
+            self.replaceRow(connectButtonSectionIdentifier, rowIdentifier: saveButtonRowIdentifier, newRow: self.getConnectButtonRow())
         }
     }
 }
