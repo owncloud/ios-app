@@ -106,7 +106,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         case .add?:
             self.navigationItem.title = "Add Server".localized
             self.addServerUrl()
-            self.addContinueButton(action: self.continueButtonAction)
+            self.addContinueButton()
         case .edit?:
             self.navigationItem.title = "Edit Server".localized
             
@@ -159,12 +159,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         addSection(serverURLSection, animated: false)
     }
 
-    private func addContinueButton(action: @escaping StaticTableViewRowAction) {
+    private func addContinueButton() {
 
         let continueButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: continueButtonSectionIdentifier, rows: [
-            StaticTableViewRow(buttonWithAction: action, title: "Continue".localized,
-               style: .proceed,
-               identifier: continueButtonRowIdentifier)
+            self.getContinueButtonRow()
             ])
 
         self.addSection(continueButtonSection, animated: false)
@@ -261,7 +259,9 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         
         let isEnabledURLTextField = self.classSetting(forOCClassSettingsKey: BookmarkURLEditableKey) as? Bool ?? true
         
-        let row: StaticTableViewRow = StaticTableViewRow(textFieldWithAction: nil,
+        let row: StaticTableViewRow = StaticTableViewRow(textFieldWithAction: { (row, _) in
+            self.urlTextFieldDidChange(newURL: row.value as! String)
+        },
                                                                   placeholder: "https://example.com".localized,
                                                                   value: serverURLName,
                                                                   keyboardType: .default,
@@ -323,6 +323,18 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         return row
     }
     
+    func getContinueButtonRow() -> StaticTableViewRow {
+        let row = StaticTableViewRow(buttonWithAction: { (row, _) in
+            
+            self.continueAction()
+            
+        }, title: "Continue".localized,
+                                     style: .proceed,
+                                     identifier: continueButtonRowIdentifier)
+        
+        return row
+    }
+    
     func getConnectButtonRow() -> StaticTableViewRow {
         let row = StaticTableViewRow(buttonWithAction: { (row, _) in
             
@@ -361,13 +373,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         self.present(alertController, animated: true, completion: nil)
     }
 
-    lazy private var continueButtonAction: StaticTableViewRowAction  = { (row, _) in
-
-        self.continueAction()
-
-    }
-
-    func continueAction() {
+   private func continueAction() {
 
         var username: NSString?
         var password: NSString?
@@ -521,7 +527,21 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         
         let originalPassword = OCAuthenticationMethodBasicAuth.passPhrase(fromAuthenticationData: self.bookmark?.authenticationData)
         
-        if newPassword == originalPassword {
+        let actualURL:String = self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value as! String
+        
+        if newPassword == originalPassword && actualURL == self.bookmark?.url.absoluteString {
+            self.replaceRow(connectButtonSectionIdentifier, rowIdentifier: connectButtonRowIdentifier, newRow: self.getSaveButtonRow())
+        } else {
+            self.replaceRow(connectButtonSectionIdentifier, rowIdentifier: saveButtonRowIdentifier, newRow: self.getConnectButtonRow())
+        }
+    }
+    
+    func urlTextFieldDidChange(newURL: String) {
+        
+        let actualPassword:String = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value as! String
+        let originalPassword:String = OCAuthenticationMethodBasicAuth.passPhrase(fromAuthenticationData: self.bookmark?.authenticationData)
+        
+        if newURL == self.bookmark?.url.absoluteString && actualPassword == originalPassword {
             self.replaceRow(connectButtonSectionIdentifier, rowIdentifier: connectButtonRowIdentifier, newRow: self.getSaveButtonRow())
         } else {
             self.replaceRow(connectButtonSectionIdentifier, rowIdentifier: saveButtonRowIdentifier, newRow: self.getConnectButtonRow())
