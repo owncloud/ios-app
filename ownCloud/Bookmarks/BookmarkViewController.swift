@@ -146,8 +146,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     // MARK: Interface sections
 
     private func addServerUrl() {
-
-        let isEnableServerUrlTextField: Bool = (self.mode == .add) ? true : false
         
         var serverURLName = self.classSetting(forOCClassSettingsKey: BookmarkDefaultURLKey) as? String ?? ""
 
@@ -157,19 +155,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
         let serverURLSection: StaticTableViewSection = StaticTableViewSection(headerTitle:"Server URL".localized, footerTitle: nil, identifier: serverURLSectionIdentifier)
 
-        let serverURLRow: StaticTableViewRow = StaticTableViewRow(textFieldWithAction: nil,
-                                                                  placeholder: "https://example.com".localized,
-                                                                  value: serverURLName,
-                                                                  keyboardType: .default,
-                                                                  autocorrectionType: .no,
-                                                                  autocapitalizationType: .none,
-                                                                  enablesReturnKeyAutomatically: false,
-                                                                  returnKeyType: .continue,
-                                                                  identifier: serverURLTextFieldIdentifier,
-                                                                  isEnabled: isEnableServerUrlTextField)
-        serverURLRow.cell?.isUserInteractionEnabled = self.classSetting(forOCClassSettingsKey: BookmarkURLEditableKey) as? Bool ?? true
-
-        serverURLSection.add(rows: [serverURLRow])
+        serverURLSection.add(rows: [self.getUrlRow(serverURLName: serverURLName)])
         addSection(serverURLSection, animated: false)
     }
 
@@ -248,9 +234,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             self.removeSection(section!, animated: true)
         }
         
-        section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: connectButtonSectionIdentifier, rows: [])
-        section!.add(rows: [saveConnectRow, self.getDeleteAuthDataButtonRow()
-            ])
+        section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: connectButtonSectionIdentifier, rows: [saveConnectRow, self.getDeleteAuthDataButtonRow()])
         
         self.addSection(section!, animated: true)
     }
@@ -272,6 +256,22 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
 
     // MARK: Rows
+    
+    func getUrlRow(serverURLName: String) -> StaticTableViewRow {
+        
+        let row: StaticTableViewRow = StaticTableViewRow(textFieldWithAction: nil,
+                                                                  placeholder: "https://example.com".localized,
+                                                                  value: serverURLName,
+                                                                  keyboardType: .default,
+                                                                  autocorrectionType: .no,
+                                                                  autocapitalizationType: .none,
+                                                                  enablesReturnKeyAutomatically: false,
+                                                                  returnKeyType: .continue,
+                                                                  identifier: serverURLTextFieldIdentifier)
+        row.cell?.isUserInteractionEnabled = self.classSetting(forOCClassSettingsKey: BookmarkURLEditableKey) as? Bool ?? true
+        
+        return row
+    }
     
     func getUsernameRow(username: String?) -> StaticTableViewRow {
         

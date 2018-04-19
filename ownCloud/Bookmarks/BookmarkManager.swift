@@ -123,7 +123,7 @@ class BookmarkManager: NSObject {
             do {
                 try bookmark.authenticationData = OCAuthenticationMethodBasicAuth.authenticationData(forUsername: username, passphrase: password, authenticationHeaderValue: nil)
             } catch {
-                
+                Log.error("Error removing AuthDataOfBookmark on Basic Auth \(error)")
             }
         } else {
             bookmark.authenticationData = nil
