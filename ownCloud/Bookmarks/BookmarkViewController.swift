@@ -259,6 +259,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     
     func getUrlRow(serverURLName: String) -> StaticTableViewRow {
         
+        let isEnabledURLTextField = self.classSetting(forOCClassSettingsKey: BookmarkURLEditableKey) as? Bool ?? true
+        
         let row: StaticTableViewRow = StaticTableViewRow(textFieldWithAction: nil,
                                                                   placeholder: "https://example.com".localized,
                                                                   value: serverURLName,
@@ -267,8 +269,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                                                                   autocapitalizationType: .none,
                                                                   enablesReturnKeyAutomatically: false,
                                                                   returnKeyType: .continue,
-                                                                  identifier: serverURLTextFieldIdentifier)
-        row.cell?.isUserInteractionEnabled = self.classSetting(forOCClassSettingsKey: BookmarkURLEditableKey) as? Bool ?? true
+                                                                  identifier: serverURLTextFieldIdentifier,
+                                                                  isEnabled: isEnabledURLTextField)
         
         return row
     }
