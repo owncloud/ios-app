@@ -260,7 +260,9 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         let isEnabledURLTextField = self.classSetting(forOCClassSettingsKey: BookmarkURLEditableKey) as? Bool ?? true
         
         let row: StaticTableViewRow = StaticTableViewRow(textFieldWithAction: { (row, _) in
-            self.urlTextFieldDidChange(newURL: row.value as! String)
+            if self.mode == .edit {
+                self.urlTextFieldDidChange(newURL: row.value as! String)
+            }
         },
                                                                   placeholder: "https://example.com".localized,
                                                                   value: serverURLName,
@@ -296,7 +298,9 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     
     func getPasswordRow(password: String?) -> StaticTableViewRow {
         let row = StaticTableViewRow(textFieldWithAction: { (row, _) in
-            self.passwordTextFieldDidChange(newPassword: row.value as! String)
+            if self.mode == .edit {
+                self.passwordTextFieldDidChange(newPassword: row.value as! String)
+            }
         },
                                      placeholder: "Password".localized,
                                      value: password ?? "",
