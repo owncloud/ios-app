@@ -50,6 +50,7 @@ let connectButtonRowIdentifier = "connect-button-row-identifier"
 enum BookmarkViewControllerMode {
     case add
     case edit
+    case update //Update Auth type
 }
 
 enum SaveConnectButtonmode {
@@ -69,6 +70,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         self.init(style: UITableViewStyle.grouped)
 
         self.bookmark = bookmark
+        self.connection = OCConnection(bookmark: self.bookmark)
+        self.authMethod = self.bookmark?.authenticationMethodIdentifier
 
         if bookmark == nil {
             self.mode = .add
@@ -129,10 +132,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 self.addSaveConnectButton(saveConnect: .save)
             }
             
-            
             self.tableView.reloadData()
-
-            self.connection = OCConnection(bookmark: self.bookmark)
 
         default: break
         }
@@ -169,24 +169,26 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
 
     private func addServerName() {
-
-        var serverName = ""
-
-        if let name = self.bookmark?.name {
-            serverName = name
+        
+        if self.sectionForIdentifier(serverNameSectionIdentifier) == nil {
+            var serverName = ""
+            
+            if let name = self.bookmark?.name {
+                serverName = name
+            }
+            
+            let section = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: serverNameSectionIdentifier, rows: [
+                StaticTableViewRow(textFieldWithAction: nil,
+                                   placeholder: "Example Server".localized,
+                                   value: serverName,
+                                   secureTextEntry: false,
+                                   keyboardType: .default,
+                                   autocorrectionType: .yes, autocapitalizationType: .sentences, enablesReturnKeyAutomatically: true, returnKeyType: .done, identifier: serverNameTextFieldIdentifier)
+                
+                ])
+            
+            self.insertSection(section, at: 0, animated: true)
         }
-
-        let section = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: serverNameSectionIdentifier, rows: [
-            StaticTableViewRow(textFieldWithAction: nil,
-                               placeholder: "Example Server".localized,
-                               value: serverName,
-                               secureTextEntry: false,
-                               keyboardType: .default,
-                               autocorrectionType: .yes, autocapitalizationType: .sentences, enablesReturnKeyAutomatically: true, returnKeyType: .done, identifier: serverNameTextFieldIdentifier)
-
-            ])
-
-        self.insertSection(section, at: 0, animated: true)
     }
 
     private func addCertificateDetails(certificate: OCCertificate) {
@@ -200,18 +202,20 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
 
     private func addConnectButton() {
-
-        let connectButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: connectButtonSectionIdentifier, rows: [
-            StaticTableViewRow(buttonWithAction: { (row, _) in
-
-                self.connectButtonAction()
-                
-            }, title: "Connect".localized,
-               style: .proceed,
-               identifier: nil)])
         
-        self.addSection(connectButtonSection, animated: true)
+        if self.sectionForIdentifier(connectButtonSectionIdentifier) == nil {
 
+            let connectButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: connectButtonSectionIdentifier, rows: [
+                StaticTableViewRow(buttonWithAction: { (row, _) in
+
+                    self.connectButtonAction()
+                    
+                }, title: "Connect".localized,
+                   style: .proceed,
+                   identifier: nil)])
+            
+            self.addSection(connectButtonSection, animated: true)
+        }
     }
     
     private func addSaveConnectButton(saveConnect: SaveConnectButtonmode) {
@@ -232,7 +236,11 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             self.removeSection(section!, animated: true)
         }
         
-        section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: connectButtonSectionIdentifier, rows: [saveConnectRow, self.getDeleteAuthDataButtonRow()])
+        if self.authMethod == OCAuthenticationMethodOAuth2Identifier {
+            section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: connectButtonSectionIdentifier, rows: [saveConnectRow, self.getDeleteAuthDataButtonRow()])
+        } else {
+            section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: connectButtonSectionIdentifier, rows: [saveConnectRow])
+        }
         
         self.addSection(section!, animated: true)
     }
@@ -279,7 +287,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     
     func getUsernameRow(username: String?) -> StaticTableViewRow {
         
-        let isEnableUsernameTextField: Bool = (self.mode == .add) ? true : false
+        let isEnableUsernameTextField: Bool = (self.mode == .add || self.mode == .update) ? true : false
         
         let row = StaticTableViewRow(textFieldWithAction: nil,
                                      placeholder: "Username".localized,
@@ -330,7 +338,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     func getContinueButtonRow() -> StaticTableViewRow {
         let row = StaticTableViewRow(buttonWithAction: { (row, _) in
             
-            self.continueAction()
+            self.continueButtonAction()
             
         }, title: "Continue".localized,
                                      style: .proceed,
@@ -377,53 +385,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         self.present(alertController, animated: true, completion: nil)
     }
 
-   private func continueAction() {
-
-        var username: NSString?
-        var password: NSString?
-        var afterURL: String = ""
-
-        afterURL = self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value as? String ?? ""
-
-        var protocolAppended: ObjCBool = false
-
-        if let bookmark: OCBookmark = OCBookmark(for: NSURL(username: &username, password: &password, afterNormalizingURLString: afterURL, protocolWasPrepended: &protocolAppended) as URL),
-            let newConnection: OCConnection = OCConnection(bookmark: bookmark) {
-
-            self.bookmark = bookmark
-            self.connection = newConnection
-
-            newConnection.prepareForSetup(options: nil, completionHandler: { (issuesFromSDK, _, _, preferredAuthMethods) in
-
-                if let issues = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.warning),
-                    issues.count > 0 {
-                    DispatchQueue.main.async {
-                        let issuesVC = ConnectionIssueViewController(issue: issuesFromSDK!, completion: {
-                            (result) in
-
-                            if result == ConnectionResponse.approve {
-                                DispatchQueue.main.async {
-                                    //self.bookmark?.certificate = issuesFromSDK?.certificate
-                                    self.approveButtonAction(preferedAuthMethods: preferredAuthMethods!, issuesFromSDK: issuesFromSDK!, username: username as String?, password: password as String?)
-                                }
-                            }
-
-                        })
-
-                        issuesVC.modalPresentationStyle = .overCurrentContext
-                        self.present(issuesVC, animated: true, completion: nil)
-                    }
-                } else {
-
-                    self.authMethod = self.bookmark?.authenticationMethodIdentifier
-
-                    DispatchQueue.main.async {
-                        //self.bookmark?.certificate = issuesFromSDK?.certificate
-                        self.approveButtonAction(preferedAuthMethods: preferredAuthMethods!, issuesFromSDK: issuesFromSDK!, username: username as String?, password: password as String?)
-                    }
-                }
-            })
-        }
+   private func continueButtonAction() {
+        self.checkServerBeforeConnect(usernameConst: nil, passwordConst: nil)
     }
     
     private func saveButtonAction() {
@@ -435,11 +398,112 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
     
     private func connectButtonAction() {
-        var options: [OCAuthenticationMethodKey : Any] = Dictionary()
         
-        if self.mode == .edit {
-            self.authMethod = self.bookmark?.authenticationMethodIdentifier
+        let username: NSString? = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphraseUsernameRowIdentifier)?.value as? NSString
+        let password: NSString?  = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value as? NSString
+
+        self.checkServerBeforeConnect(usernameConst: username, passwordConst: password)
+    }
+    
+    private func approveButtonAction(issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
+
+        self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value = self.bookmark?.url.absoluteString
+        
+        DispatchQueue.main.async {
+            self.addServerName()
+            
+            if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
+                self.addCertificateDetails(certificate: certificateIssue.certificate)
+            }
+            
+            if self.authMethod == OCAuthenticationMethodBasicAuthIdentifier {
+                self.addBasicAuthCredentialsFields(username: username, password:password)
+            }
+            
+            self.removeContinueButton()
+            self.addConnectButton()
+            self.tableView.reloadData()
         }
+    }
+    
+    func deleteAuthDataButtonAction() {
+        if self.bookmark != nil {
+            self.bookmark = BookmarkManager.sharedBookmarkManager.removeAuthDataOfBookmark(self.bookmark!)
+            self.tableView.reloadData()
+        }
+    }
+    
+    func checkServerBeforeConnect(usernameConst: NSString?, passwordConst: NSString?) {
+        var username: NSString? = usernameConst
+        var password: NSString? = passwordConst
+        
+        var afterURL: String = ""
+        
+        afterURL = self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value as? String ?? ""
+        
+        var protocolAppended: ObjCBool = false
+        
+        if let bookmark: OCBookmark = OCBookmark(for: NSURL(username: &username, password: &password, afterNormalizingURLString: afterURL, protocolWasPrepended: &protocolAppended) as URL),
+            let newConnection: OCConnection = OCConnection(bookmark: bookmark) {
+            
+            self.bookmark = bookmark
+            self.connection = newConnection
+            
+            newConnection.prepareForSetup(options: nil, completionHandler: { (issuesFromSDK, _, _, preferredAuthMethods) in
+                
+                //Auth method
+                let preferedAuthMethod = preferredAuthMethods!.first as String?
+                var authMethod: String
+                
+                if OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type() == .passphrase {
+                    authMethod = OCAuthenticationMethodBasicAuthIdentifier
+                } else {
+                    authMethod = OCAuthenticationMethodOAuth2Identifier
+                }
+                
+                if let issues = issuesFromSDK?.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.warning),
+                    issues.count > 0 {
+                    DispatchQueue.main.async {
+                        let issuesVC = ConnectionIssueViewController(issue: issuesFromSDK!, completion: {
+                            (result) in
+                            
+                            if result == ConnectionResponse.approve {
+                                DispatchQueue.main.async {
+                                    //self.bookmark?.certificate = issuesFromSDK?.certificate
+                                    self.approveButtonAction(issuesFromSDK: issuesFromSDK!, username: username as String?, password: password as String?)
+                                }
+                            }
+                            
+                        })
+                        
+                        issuesVC.modalPresentationStyle = .overCurrentContext
+                        self.present(issuesVC, animated: true, completion: nil)
+                    }
+                } else {
+                    
+                    if self.authMethod == nil || self.authMethod != authMethod {
+                        
+                        //Enter in update mode
+                        if (self.authMethod != nil) {
+                            self.mode = .update
+                        }
+                        
+                        self.authMethod = authMethod
+                        
+                        DispatchQueue.main.async {
+                            //self.bookmark?.certificate = issuesFromSDK?.certificate
+                            self.approveButtonAction(issuesFromSDK: issuesFromSDK!, username: username as String?, password: password as String?)
+                        }
+                    } else {
+                        self.connect()
+                    }
+                }
+            })
+        }
+    }
+    
+    func connect() {
+        var options: [OCAuthenticationMethodKey : Any] = Dictionary()
         
         if self.authMethod != nil && self.authMethod == OCAuthenticationMethodBasicAuthIdentifier {
             
@@ -490,40 +554,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 }
             }
         })
-    }
-    
-    private func approveButtonAction(preferedAuthMethods: [String], issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
-
-        self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value = self.bookmark?.url.absoluteString
-
-        if let preferedAuthMethod = preferedAuthMethods.first as String? {
-
-            DispatchQueue.main.async {
-                self.addServerName()
-                if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
-                    self.addCertificateDetails(certificate: certificateIssue.certificate)
-                }
-
-                if OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type() == .passphrase {
-                    self.authMethod = OCAuthenticationMethodBasicAuthIdentifier
-                    self.addBasicAuthCredentialsFields(username: username, password:password)
-                } else {
-                    self.authMethod = OCAuthenticationMethodOAuth2Identifier
-                }
-
-                self.removeContinueButton()
-                self.addConnectButton()
-                self.tableView.reloadData()
-            }
-        }
-    }
-    
-    func deleteAuthDataButtonAction() {
-        if self.bookmark != nil {
-            self.bookmark = BookmarkManager.sharedBookmarkManager.removeAuthDataOfBookmark(self.bookmark!)
-            self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value  = ""
-            self.tableView.reloadData()
-        }
     }
     
     //MARK: Utils
