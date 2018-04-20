@@ -250,6 +250,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             self.removeSection(buttonSection)
         }
     }
+    
+    private func removeDeleteAuthDataButtonRow() {
+        self.removeRow(connectButtonSectionIdentifier, rowIdentifier: deleteAuthButtonIdentifier)
+    }
 
     private func addBasicAuthCredentialsFields(username: String?, password: String?) {
     
@@ -419,6 +423,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             
             if self.authMethod == OCAuthenticationMethodBasicAuthIdentifier {
                 self.addBasicAuthCredentialsFields(username: username, password:password)
+                self.removeDeleteAuthDataButtonRow()
             }
             
             self.removeContinueButton()
@@ -446,7 +451,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         
         if self.connection != nil {
             self.connection?.prepareForSetup(options: nil, completionHandler: { (issuesFromSDK, _, _, preferredAuthMethods) in
-                self.managePrepareForSetupResultConnection(issuesFromSDK: issuesFromSDK!, preferredAuthMethods: preferredAuthMethods! as [OCAuthenticationMethodIdentifier], usernameConst: username, passwordConst: password)
+                self.managePrepareForSetupResultConnection(issuesFromSDK: issuesFromSDK!, preferredAuthMethods: preferredAuthMethods! as [OCAuthenticationMethodIdentifier], username: username, password: password)
             })
         } else {
             if let bookmark: OCBookmark = OCBookmark(for: NSURL(username: &username, password: &password, afterNormalizingURLString: afterURL, protocolWasPrepended: &protocolAppended) as URL),
@@ -456,7 +461,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 self.connection = newConnection
                 
                 newConnection.prepareForSetup(options: nil, completionHandler: { (issuesFromSDK, _, _, preferredAuthMethods) in
-                    self.managePrepareForSetupResultConnection(issuesFromSDK: issuesFromSDK!, preferredAuthMethods: preferredAuthMethods! as [OCAuthenticationMethodIdentifier], usernameConst: username, passwordConst: password)
+                    self.managePrepareForSetupResultConnection(issuesFromSDK: issuesFromSDK!, preferredAuthMethods: preferredAuthMethods! as [OCAuthenticationMethodIdentifier], username: username, password: password)
                 })
             }
         }
@@ -464,10 +469,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     
     //OCConnectionIssue *issue, NSURL *suggestedURL, NSArray <OCAuthenticationMethodIdentifier> *supportedMethods, NSArray <OCAuthenticationMethodIdentifier> *preferredAuthenticationMethods
     
-    func managePrepareForSetupResultConnection(issuesFromSDK: OCConnectionIssue, preferredAuthMethods: [OCAuthenticationMethodIdentifier], usernameConst: NSString?, passwordConst: NSString?) {
-        
-        var username: NSString? = usernameConst
-        var password: NSString? = passwordConst
+    func managePrepareForSetupResultConnection(issuesFromSDK: OCConnectionIssue, preferredAuthMethods: [OCAuthenticationMethodIdentifier], username: NSString?, password: NSString?) {
         
         if let issues = issuesFromSDK.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.warning),
             issues.count > 0 {
@@ -478,7 +480,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                     if result == ConnectionResponse.approve {
                         DispatchQueue.main.async {
                             //self.bookmark?.certificate = issuesFromSDK?.certificate
-                            self.approveButtonAction(issuesFromSDK: issuesFromSDK, username: usernameConst as String?, password: passwordConst as String?)
+                            self.approveButtonAction(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
                         }
                     }
                     
