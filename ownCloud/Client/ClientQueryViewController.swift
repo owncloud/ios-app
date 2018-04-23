@@ -44,6 +44,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 	var progressSummarizer : ProgressSummarizer?
+	var initialAppearance : Bool = true
 	private var observerContextValue = 1
 	private var observerContext : UnsafeMutableRawPointer
 
@@ -66,14 +67,12 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 
 		query?.addObserver(self, forKeyPath: "state", options: .initial, context: observerContext)
+		core?.addObserver(self, forKeyPath: "reachabilityMonitor.available", options: .initial, context: observerContext)
 
 		core?.start(query)
 
 		self.navigationItem.title = (query?.queryPath as NSString?)!.lastPathComponent
 		self.tableView.contentInsetAdjustmentBehavior = .always
-		self.tableView.refreshControl = UIRefreshControl()
-
-		self.tableView.refreshControl?.addTarget(self, action: #selector(refreshQuery(_:)), for: .valueChanged)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -82,6 +81,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	deinit {
 		query?.removeObserver(self, forKeyPath: "state", context: observerContext)
+		core?.removeObserver(self, forKeyPath: "reachabilityMonitor.available", context: observerContext)
 
 		core?.stop(query)
 		Theme.shared.unregister(client: self)
@@ -127,6 +127,15 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
+		// Refresh when navigating back to us
+		if initialAppearance == false {
+			if query?.state == .idle {
+				core?.reload(query)
+			}
+		}
+
+		initialAppearance = false
+
 		updateQueryProgressSummary()
 	}
 
@@ -141,10 +150,14 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				summary.message = "Started…"
 
 			case .contentsFromCache?:
-				summary.message = "Contents from cache."
+				if core?.reachabilityMonitor?.available == true {
+					summary.message = "Contents from cache."
+				} else {
+					summary.message = "Offline. Contents from cache."
+				}
 
 			case .waitingForServerReply?:
-				summary.message = "Waiting for server…"
+				summary.message = "Waiting for server response…"
 
 			case .targetRemoved?:
 				summary.message = "This folder no longer exists."
@@ -155,6 +168,24 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 			case .none:
 				summary.message = "Please wait…"
+		}
+
+		switch query?.state {
+			case .idle?:
+				DispatchQueue.main.async {
+					if self.tableView.refreshControl == nil {
+						self.tableView.refreshControl = UIRefreshControl()
+						self.tableView.refreshControl?.addTarget(self, action: #selector(self.refreshQuery(_:)), for: .valueChanged)
+					}
+				}
+
+			case .contentsFromCache?, .stopped?:
+				DispatchQueue.main.async {
+					self.tableView.refreshControl = nil
+				}
+
+			default:
+			break
 		}
 
 		self.queryProgressSummary = summary
@@ -215,10 +246,13 @@ extension ClientQueryViewController : OCQueryDelegate {
 				self.items = changeSet?.queryResult
 				self.tableView.reloadData()
 
-				if query.state == .idle {
-					if self.refreshControl?.isRefreshing ?? false {
-						self.refreshControl?.endRefreshing()
-					}
+				switch query.state {
+					case .idle, .targetRemoved, .contentsFromCache, .stopped:
+						if self.refreshControl?.isRefreshing ?? false {
+							self.refreshControl?.endRefreshing()
+						}
+
+					default: break
 				}
 			}
 		}

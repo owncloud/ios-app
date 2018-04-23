@@ -156,8 +156,10 @@ extension OCItem {
 					iconName = flatMIMEType
 				} else {
 					if let mimeCategory = mimeType.components(separatedBy: "/").first {
-						if self.validIconNames.contains(mimeCategory) {
-							iconName = mimeCategory
+						if mimeCategory != "application" {
+							if self.validIconNames.contains(mimeCategory) {
+								iconName = mimeCategory
+							}
 						}
 					}
 				}
