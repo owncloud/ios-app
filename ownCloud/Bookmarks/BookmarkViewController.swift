@@ -126,8 +126,9 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 let password = OCAuthenticationMethodBasicAuth.passPhrase(fromAuthenticationData: self.bookmark?.authenticationData)
                 self.addBasicAuthCredentialsFields(username: username, password: password)
             }
-            //TODO: not working, the certificate is nil
-            //self.addCertificateDetails(certificate: self.bookmark!.certificate)
+            if self.bookmark!.certificate != nil {
+                self.addCertificateDetails(certificate: self.bookmark!.certificate)
+            }
             if self.bookmark?.authenticationData == nil {
                 self.addSaveConnectButton(saveConnect: .connect)
             } else {
@@ -421,6 +422,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             
             if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
                 self.addCertificateDetails(certificate: certificateIssue.certificate)
+                self.bookmark?.certificate = certificateIssue.certificate
             }
             
             if self.authMethod == OCAuthenticationMethodBasicAuthIdentifier {
