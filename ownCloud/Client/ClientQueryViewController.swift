@@ -73,7 +73,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		core?.start(query)
 
 		self.navigationItem.title = (query?.queryPath as NSString?)!.lastPathComponent
-		self.tableView.contentInsetAdjustmentBehavior = .always
 	}
 
 	required init?(coder aDecoder: NSCoder) {

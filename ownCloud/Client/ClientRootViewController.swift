@@ -97,7 +97,7 @@ class ClientRootViewController: UITabBarController {
 	}
 
 	func logoutBarButtonItem() -> UIBarButtonItem {
-		return (UIBarButtonItem(title: NSLocalizedString("Logout", comment: ""), style: .plain, target: self, action: #selector(logout(_:))))
+		return UIBarButtonItem(title: NSLocalizedString("Disconnect", comment: ""), style: .plain, target: self, action: #selector(logout(_:)))
 	}
 
 	@objc func logout(_: Any) {

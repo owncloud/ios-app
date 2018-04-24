@@ -103,7 +103,21 @@ extension OCItem {
 			"web": "text/code"
 		]
 
-		mimeTypeToIconMap.keys.forEach { mimeTypeToIconMap[$0] = mimeTypeToIconMap[$0]?.replacingOccurrences(of: "/", with: "-") }
+		mimeTypeToIconMap.keys.forEach {
+			let mimeTypeKey = $0
+			var mimeType : String? = mimeTypeToIconMap[mimeTypeKey]
+			var referenceMIMEType : String? = mimeType
+
+			while referenceMIMEType != nil {
+				referenceMIMEType = mimeTypeToIconMap[referenceMIMEType!]
+
+				if let validMIMEType = referenceMIMEType {
+					mimeType = validMIMEType
+				}
+			}
+
+			mimeTypeToIconMap[mimeTypeKey] = mimeType?.replacingOccurrences(of: "/", with: "-")
+		}
 
 		return mimeTypeToIconMap
 	}()
@@ -148,6 +162,12 @@ extension OCItem {
 
 		if let mimeType = MIMEType {
 			iconName = self.iconNamesByMIMEType[mimeType]
+
+			if iconName != nil {
+				if !(self.validIconNames.contains(iconName!)) {
+					iconName = nil
+				}
+			}
 
 			if iconName == nil {
 				let flatMIMEType = mimeType.replacingOccurrences(of: "/", with: "-")

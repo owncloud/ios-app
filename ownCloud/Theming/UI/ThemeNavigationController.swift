@@ -26,6 +26,8 @@ class ThemeNavigationController: UINavigationController {
 	}
 
 	override func viewDidLoad() {
+		super.viewDidLoad()
+
 		themeToken = Theme.shared.add(applier: { (_, themeCollection, event) in
 			self.applyThemeCollection(themeCollection)
 			self.toolbar.applyThemeCollection(themeCollection)
