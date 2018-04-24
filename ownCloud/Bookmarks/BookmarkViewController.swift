@@ -62,8 +62,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
     public var bookmark: OCBookmark?
     public var connection: OCConnection?
+    
     private var authMethod: String?
     private var mode: BookmarkViewControllerMode?
+    private var isApprovedIssues: Bool = false
 
     convenience init(bookmark: OCBookmark? = nil) {
 
@@ -467,12 +469,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         }
     }
     
-    //OCConnectionIssue *issue, NSURL *suggestedURL, NSArray <OCAuthenticationMethodIdentifier> *supportedMethods, NSArray <OCAuthenticationMethodIdentifier> *preferredAuthenticationMethods
-    
     func managePrepareForSetupResultConnection(issuesFromSDK: OCConnectionIssue, preferredAuthMethods: [OCAuthenticationMethodIdentifier], username: NSString?, password: NSString?) {
         
         if let issues = issuesFromSDK.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.warning),
-            issues.count > 0 {
+            issues.count > 0, !isApprovedIssues {
             DispatchQueue.main.async {
                 let issuesVC = ConnectionIssueViewController(issue: issuesFromSDK, completion: {
                     (result) in
@@ -480,6 +480,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                     if result == ConnectionResponse.approve {
                         DispatchQueue.main.async {
                             //self.bookmark?.certificate = issuesFromSDK?.certificate
+                            self.isApprovedIssues = true
                             self.approveButtonAction(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
                         }
                     }
