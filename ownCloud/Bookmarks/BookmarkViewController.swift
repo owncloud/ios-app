@@ -471,6 +471,16 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     
     func managePrepareForSetupResultConnection(issuesFromSDK: OCConnectionIssue, preferredAuthMethods: [OCAuthenticationMethodIdentifier], username: NSString?, password: NSString?) {
         
+        //Auth method
+        let preferedAuthMethod = preferredAuthMethods.first as String?
+        var authMethod: String
+        
+        if OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type() == .passphrase {
+            authMethod = OCAuthenticationMethodBasicAuthIdentifier
+        } else {
+            authMethod = OCAuthenticationMethodOAuth2Identifier
+        }
+        
         if let issues = issuesFromSDK.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.warning),
             issues.count > 0, !isApprovedIssues {
             DispatchQueue.main.async {
@@ -478,10 +488,13 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                     (result) in
                     
                     if result == ConnectionResponse.approve {
+                        
+                        for issue in issues {
+                            issue.approve()
+                        }
+                        
                         DispatchQueue.main.async {
-                            //self.bookmark?.certificate = issuesFromSDK?.certificate
-                            self.isApprovedIssues = true
-                            self.approveButtonAction(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
+                            self.continueAfterCheckConnection(authMethod: authMethod, issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
                         }
                     }
                     
@@ -491,33 +504,27 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 self.present(issuesVC, animated: true, completion: nil)
             }
         } else {
+            self.continueAfterCheckConnection(authMethod: authMethod, issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
+        }
+    }
+    
+    func continueAfterCheckConnection(authMethod:String, issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
+        
+        if self.authMethod == nil || self.authMethod != authMethod {
             
-            //Auth method
-            let preferedAuthMethod = preferredAuthMethods.first as String?
-            var authMethod: String
-            
-            if OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type() == .passphrase {
-                authMethod = OCAuthenticationMethodBasicAuthIdentifier
-            } else {
-                authMethod = OCAuthenticationMethodOAuth2Identifier
+            //Enter in update mode
+            if (self.authMethod != nil) {
+                self.mode = .update
             }
             
-            if self.authMethod == nil || self.authMethod != authMethod {
-                
-                //Enter in update mode
-                if (self.authMethod != nil) {
-                    self.mode = .update
-                }
-                
-                self.authMethod = authMethod
-                
-                DispatchQueue.main.async {
-                    //self.bookmark?.certificate = issuesFromSDK?.certificate
-                    self.approveButtonAction(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
-                }
-            } else {
-                self.connect()
+            self.authMethod = authMethod
+            
+            DispatchQueue.main.async {
+                //self.bookmark?.certificate = issuesFromSDK?.certificate
+                self.approveButtonAction(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
             }
+        } else {
+            self.connect()
         }
     }
     
@@ -573,7 +580,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         })
     }
     
-    //MARK: Utils
+    //MARK: TextFieldDidChange
     func passwordTextFieldDidChange(newPassword: String) {
         
         let originalPassword = OCAuthenticationMethodBasicAuth.passPhrase(fromAuthenticationData: self.bookmark?.authenticationData)
