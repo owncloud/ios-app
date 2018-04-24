@@ -79,7 +79,8 @@ class ClientRootViewController: UITabBarController {
 
 		filesNavigationController = ThemeNavigationController()
 		filesNavigationController?.navigationBar.isTranslucent = false
-		filesNavigationController?.tabBarItem.title = "Files"
+		filesNavigationController?.tabBarItem.title = "Browse"
+		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: CGSize.init(width: 25, height: 25))
 
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false

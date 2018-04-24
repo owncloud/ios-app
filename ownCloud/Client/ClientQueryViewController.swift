@@ -381,6 +381,9 @@ extension ClientQueryViewController : OCQueryDelegate {
 							self.message(show: false)
 						}
 
+					case .targetRemoved:
+						self.message(show: true, imageName: "folder", title: "Folder removed", message: "This folder no longer exists on the server.")
+
 					default:
 						self.message(show: false)
 				}
