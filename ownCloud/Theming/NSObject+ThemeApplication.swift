@@ -33,6 +33,9 @@ enum ThemeItemStyle {
 	case logo
 	case title
 	case message
+
+	case bigTitle
+	case bigMessage
 }
 
 enum ThemeItemState {
@@ -111,17 +114,27 @@ extension NSObject {
 			var highlightColor : UIColor = collection.tableRowHighlightColors.labelColor
 
 			switch itemStyle {
-				case .title:
+				case .title, .bigTitle:
 					normalColor = collection.tableRowColors.labelColor
 					highlightColor = collection.tableRowHighlightColors.labelColor
 
-				case .message:
+				case .message, .bigMessage:
 					normalColor = collection.tableRowColors.secondaryLabelColor
 					highlightColor = collection.tableRowHighlightColors.secondaryLabelColor
 
 				default:
 					normalColor = collection.tableRowColors.labelColor
 					highlightColor = collection.tableRowHighlightColors.labelColor
+			}
+
+			switch itemStyle {
+				case .bigTitle:
+					label.font = UIFont.boldSystemFont(ofSize: 34)
+
+				case .bigMessage:
+					label.font = UIFont.systemFont(ofSize: 17)
+
+				default: break
 			}
 
 			switch itemState {

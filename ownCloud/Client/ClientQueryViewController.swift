@@ -48,6 +48,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	private var observerContextValue = 1
 	private var observerContext : UnsafeMutableRawPointer
 
+	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 		observerContext = UnsafeMutableRawPointer(&observerContextValue)
 
@@ -85,6 +86,11 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		core?.stop(query)
 		Theme.shared.unregister(client: self)
+
+		if messageThemeApplierToken != nil {
+			Theme.shared.remove(applierForToken: messageThemeApplierToken)
+			messageThemeApplierToken = nil
+		}
 
 		self.queryProgressSummary = nil
 	}
@@ -232,8 +238,129 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			self.navigationController?.pushViewController(ClientQueryViewController.init(core: self.core!, query: OCQuery.init(forPath: rowItem.path)), animated: true)
 		}
 	}
+
+	// MARK: - Message
+	var messageView : UIView?
+	var messageContainerView : UIView?
+	var messageImageView : VectorImageView?
+	var messageTitleLabel : UILabel?
+	var messageMessageLabel : UILabel?
+	var messageThemeApplierToken : ThemeApplierToken?
+
+	func message(show: Bool, imageName : String? = nil, title : String? = nil, message : String? = nil) {
+		if !show {
+			messageView?.removeFromSuperview()
+			return
+		}
+
+		if messageView == nil {
+			var rootView : UIView
+			var containerView : UIView
+			var imageView : VectorImageView
+			var titleLabel : UILabel
+			var messageLabel : UILabel
+
+			rootView = UIView()
+			rootView.translatesAutoresizingMaskIntoConstraints = false
+
+			containerView = UIView()
+			containerView.translatesAutoresizingMaskIntoConstraints = false
+
+			imageView = VectorImageView()
+			imageView.translatesAutoresizingMaskIntoConstraints = false
+
+			titleLabel = UILabel()
+			titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+			messageLabel = UILabel()
+			messageLabel.translatesAutoresizingMaskIntoConstraints = false
+			messageLabel.numberOfLines = 0
+			messageLabel.textAlignment = .center
+
+			containerView.addSubview(imageView)
+			containerView.addSubview(titleLabel)
+			containerView.addSubview(messageLabel)
+
+			containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageView]-(20)-[titleLabel]-[messageLabel]|",
+										   options: NSLayoutFormatOptions(rawValue: 0),
+										   metrics: nil,
+										   views: ["imageView" : imageView, "titleLabel" : titleLabel, "messageLabel" : messageLabel])
+						   )
+
+			imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
+			imageView.widthAnchor.constraint(equalToConstant: 96).isActive = true
+			imageView.heightAnchor.constraint(equalToConstant: 96).isActive = true
+
+			titleLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
+			titleLabel.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor).isActive = true
+			titleLabel.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor).isActive = true
+
+			messageLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
+			messageLabel.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor).isActive = true
+			messageLabel.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor).isActive = true
+
+			rootView.addSubview(containerView)
+
+			containerView.centerXAnchor.constraint(equalTo: rootView.centerXAnchor).isActive = true
+			containerView.centerYAnchor.constraint(equalTo: rootView.centerYAnchor).isActive = true
+
+			containerView.leftAnchor.constraint(greaterThanOrEqualTo: rootView.leftAnchor, constant: 20).isActive = true
+			containerView.rightAnchor.constraint(lessThanOrEqualTo: rootView.rightAnchor, constant: -20).isActive = true
+			containerView.topAnchor.constraint(greaterThanOrEqualTo: rootView.topAnchor, constant: 20).isActive = true
+			containerView.bottomAnchor.constraint(lessThanOrEqualTo: rootView.bottomAnchor, constant: -20).isActive = true
+
+			messageView = rootView
+			messageContainerView = containerView
+			messageImageView = imageView
+			messageTitleLabel = titleLabel
+			messageMessageLabel = messageLabel
+
+			messageThemeApplierToken = Theme.shared.add(applier: { [weak self] (_, collection, _) in
+				self?.messageView?.backgroundColor = collection.tableBackgroundColor
+
+				self?.messageTitleLabel?.applyThemeCollection(collection, itemStyle: .bigTitle)
+				self?.messageMessageLabel?.applyThemeCollection(collection, itemStyle: .bigMessage)
+			})
+		}
+
+		if messageView?.superview == nil {
+			if let rootView = self.messageView, let containerView = self.messageContainerView {
+				containerView.alpha = 0
+				containerView.transform = CGAffineTransform.init(translationX: 0, y: 15)
+
+				rootView.alpha = 0
+
+				self.view.addSubview(rootView)
+
+				rootView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
+				rootView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
+				rootView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+				rootView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+
+				UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
+					rootView.alpha = 1
+				}, completion: { (_) in
+					UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut, animations: {
+						containerView.alpha = 1
+						containerView.transform = CGAffineTransform.identity
+					})
+				})
+			}
+		}
+
+		if imageName != nil {
+			messageImageView?.vectorImage = Theme.shared.tvgImage(for: imageName!)
+		}
+		if title != nil {
+			messageTitleLabel?.text = title!
+		}
+		if message != nil {
+			messageMessageLabel?.text = message!
+		}
+	}
 }
 
+// MARK: - Query Delegate
 extension ClientQueryViewController : OCQueryDelegate {
 
 	func query(_ query: OCQuery!, failedWithError error: Error!) {
@@ -245,6 +372,18 @@ extension ClientQueryViewController : OCQueryDelegate {
 			DispatchQueue.main.async {
 				self.items = changeSet?.queryResult
 				self.tableView.reloadData()
+
+				switch query.state {
+					case .contentsFromCache, .idle:
+						if self.items?.count == 0 {
+							self.message(show: true, imageName: "folder", title: "Empty folder", message: "This folder contains no files or folders.")
+						} else {
+							self.message(show: false)
+						}
+
+					default:
+						self.message(show: false)
+				}
 
 				switch query.state {
 					case .idle, .targetRemoved, .contentsFromCache, .stopped:
