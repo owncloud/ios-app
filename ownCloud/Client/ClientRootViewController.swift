@@ -48,7 +48,7 @@ class ClientRootViewController: UITabBarController {
 			}
 		}
 
-		openProgress.localizedDescription = "Connecting…"
+		openProgress.localizedDescription = "Connecting…".localized
 		progressSummarizer?.startTracking(progress: openProgress)
 
 		core = CoreManager.shared.requestCoreForBookmark(bookmark, completion: { (_, error) in
@@ -56,7 +56,7 @@ class ClientRootViewController: UITabBarController {
 				self.coreReady()
 			}
 
-			openProgress.localizedDescription = "Connected."
+			openProgress.localizedDescription = "Connected.".localized
 			openProgress.completedUnitCount = 1
 			openProgress.totalUnitCount = 1
 
@@ -79,7 +79,7 @@ class ClientRootViewController: UITabBarController {
 
 		filesNavigationController = ThemeNavigationController()
 		filesNavigationController?.navigationBar.isTranslucent = false
-		filesNavigationController?.tabBarItem.title = "Browse"
+		filesNavigationController?.tabBarItem.title = "Browse".localized
 		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: CGSize.init(width: 25, height: 25))
 
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
@@ -97,7 +97,7 @@ class ClientRootViewController: UITabBarController {
 	}
 
 	func logoutBarButtonItem() -> UIBarButtonItem {
-		return UIBarButtonItem(title: NSLocalizedString("Disconnect", comment: ""), style: .plain, target: self, action: #selector(logout(_:)))
+		return UIBarButtonItem(title: "Disconnect".localized, style: .plain, target: self, action: #selector(logout(_:)))
 	}
 
 	@objc func logout(_: Any) {

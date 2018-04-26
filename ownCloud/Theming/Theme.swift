@@ -46,9 +46,8 @@ class Theme: NSObject {
 
 	private var resourcesByIdentifier : [String : ThemeResource] = [:]
 
-	private var _activeCollection : ThemeCollection = ThemeCollection.defaultCollection
-
 	// MARK: - Properties
+	internal var _activeCollection : ThemeCollection = ThemeCollection.defaultCollection
 	public var activeCollection : ThemeCollection {
 		set(newCollection) {
 			_activeCollection = newCollection

@@ -173,7 +173,7 @@ class ProgressSummarizer: NSObject {
 	}
 
 	// MARK: - Fallback summaries (to be used by the observers at their own descretion)
-	private var _fallbackSummary : ProgressSummary?
+	internal var _fallbackSummary : ProgressSummary?
 	public var fallbackSummary : ProgressSummary? {
 		set(newFallbackSummary) {
 			if _fallbackSummary != newFallbackSummary {

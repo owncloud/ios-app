@@ -23,7 +23,7 @@ typealias ThemeResourceIdentifier = String
 class ThemeResource : NSObject {
 	var identifier : ThemeResourceIdentifier?
 
-	private var _sourceResource : Any?
+	internal var _sourceResource : Any?
 	var sourceResource : Any? {
 		set(resource) {
 			OCSynchronized(self) {

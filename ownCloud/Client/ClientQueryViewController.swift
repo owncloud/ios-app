@@ -25,22 +25,17 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	var items : [OCItem]?
 
-	private var _queryProgressSummary : ProgressSummary?
 	var queryProgressSummary : ProgressSummary? {
-		set(newProgressSummary) {
-			if newProgressSummary != nil {
-				progressSummarizer?.pushFallbackSummary(summary: newProgressSummary!)
+		willSet {
+			if newValue != nil {
+				progressSummarizer?.pushFallbackSummary(summary: newValue!)
 			}
-
-			if _queryProgressSummary != nil {
-				progressSummarizer?.popFallbackSummary(summary: _queryProgressSummary!)
-			}
-
-			_queryProgressSummary = newProgressSummary
 		}
 
-		get {
-			return _queryProgressSummary
+		didSet {
+			if oldValue != nil {
+				progressSummarizer?.popFallbackSummary(summary: oldValue!)
+			}
 		}
 	}
 	var progressSummarizer : ProgressSummarizer?
@@ -95,7 +90,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	// MARK: - Actions
-	@objc func refreshQuery(_: Any) {
+	@objc func refreshQuery() {
 		core?.reload(query)
 	}
 
@@ -149,30 +144,30 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		switch query?.state {
 			case .stopped?:
-				summary.message = "Stopped"
+				summary.message = "Stopped".localized
 
 			case .started?:
-				summary.message = "Started…"
+				summary.message = "Started…".localized
 
 			case .contentsFromCache?:
 				if core?.reachabilityMonitor?.available == true {
-					summary.message = "Contents from cache."
+					summary.message = "Contents from cache.".localized
 				} else {
-					summary.message = "Offline. Contents from cache."
+					summary.message = "Offline. Contents from cache.".localized
 				}
 
 			case .waitingForServerReply?:
-				summary.message = "Waiting for server response…"
+				summary.message = "Waiting for server response…".localized
 
 			case .targetRemoved?:
-				summary.message = "This folder no longer exists."
+				summary.message = "This folder no longer exists.".localized
 
 			case .idle?:
-				summary.message = "Everything up-to-date."
+				summary.message = "Everything up-to-date.".localized
 				summary.progressCount = 0
 
 			case .none:
-				summary.message = "Please wait…"
+				summary.message = "Please wait…".localized
 		}
 
 		switch query?.state {
@@ -180,7 +175,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				DispatchQueue.main.async {
 					if self.tableView.refreshControl == nil {
 						self.tableView.refreshControl = UIRefreshControl()
-						self.tableView.refreshControl?.addTarget(self, action: #selector(self.refreshQuery(_:)), for: .valueChanged)
+						self.tableView.refreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
 					}
 				}
 
@@ -222,12 +217,11 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath)
-		let rowItem : OCItem = self.items![indexPath.row]
+		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ClientItemCell
 
-		(cell as? ClientItemCell)?.item = rowItem
+		cell?.item = self.items![indexPath.row]
 
-		return cell
+		return cell!
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -375,13 +369,13 @@ extension ClientQueryViewController : OCQueryDelegate {
 				switch query.state {
 					case .contentsFromCache, .idle:
 						if self.items?.count == 0 {
-							self.message(show: true, imageName: "folder", title: "Empty folder", message: "This folder contains no files or folders.")
+							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
 						} else {
 							self.message(show: false)
 						}
 
 					case .targetRemoved:
-						self.message(show: true, imageName: "folder", title: "Folder removed", message: "This folder no longer exists on the server.")
+						self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
 
 					default:
 						self.message(show: false)

@@ -30,7 +30,7 @@ class CollapsibleProgressBar: UIView, Themeable {
 	var contentViewHeight : CGFloat = 0
 	var heightConstraint : NSLayoutConstraint?
 	var isCollapsed : Bool = true
-	private var _autoCollapse : Bool = true
+	internal var _autoCollapse : Bool = true
 	var autoCollapse : Bool {
 		set(newAutoCollapse) {
 			if _autoCollapse != newAutoCollapse {
@@ -52,7 +52,7 @@ class CollapsibleProgressBar: UIView, Themeable {
 	}
 
 	// MARK: - Progress property
-	private var _progress : Float = 0
+	internal var _progress : Float = 0
 	var progress : Float {
 		set(newProgress) {
 			var displayProgress = newProgress

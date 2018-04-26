@@ -250,12 +250,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
 			if lockedBookmarks.contains(bookmark) {
-				let alertController = UIAlertController(title: NSString(format: NSLocalizedString("'%@' is currently locked", comment: "") as NSString, bookmark.shortName() as NSString) as String,
-									message: NSString(format: NSLocalizedString("An operation is currently performed that prevents connecting to '%@'. Please try again later.",
-									                                            comment: "") as NSString, bookmark.shortName() as NSString) as String,
+				let alertController = UIAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName() as NSString) as String,
+									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName() as NSString) as String,
 									preferredStyle: .alert)
 
-				alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: { (_) in
+				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
 					// There was an error erasing the vault => re-add bookmark to give user another chance to delete its contents
 					BookmarkManager.sharedBookmarkManager.addBookmark(bookmark)
 					self.updateNoServerMessageVisibility()
@@ -300,13 +299,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		return [
 				UITableViewRowAction(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (_, indexPath) in
 					if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
-						let alertController = UIAlertController(title: NSString(format: NSLocalizedString("Really delete '%@'?", comment: "") as NSString, bookmark.shortName()) as String,
-											     message: NSLocalizedString("This will also delete all locally stored file copies.", comment: ""),
+						let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName()) as String,
+											     message: "This will also delete all locally stored file copies.".localized,
 											     preferredStyle: .actionSheet)
 
-						alertController.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
+						alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
-						alertController.addAction(UIAlertAction(title: NSLocalizedString("Delete", comment: ""), style: .destructive, handler: { (_) in
+						alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
 
 							self.lockedBookmarks.append(bookmark)
 
@@ -316,11 +315,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 								DispatchQueue.main.async {
 									if error != nil {
 										// Inform user if vault couldn't be erased
-										let alertController = UIAlertController(title: NSString(format: NSLocalizedString("Deletion of '%@' failed", comment: "") as NSString, bookmark.shortName() as NSString) as String,
+										let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName() as NSString) as String,
 															message: error?.localizedDescription,
 															preferredStyle: .alert)
 
-										alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default, handler: nil))
+										alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
 										self.present(alertController, animated: true, completion: nil)
 									} else {

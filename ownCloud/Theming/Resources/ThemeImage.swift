@@ -43,7 +43,7 @@ class ThemeImage : Themeable {
 	// MARK: - Source Image
 	var sourceImageName : String?
 
-	private var _sourceImage : UIImage?
+	internal var _sourceImage : UIImage?
 	var sourceImage : UIImage? {
 		set(image) {
 			_sourceImage = image
@@ -58,7 +58,7 @@ class ThemeImage : Themeable {
 	}
 
 	// MARK: - Image
-	private var _image : UIImage?
+	internal var _image : UIImage?
 	func image(for theme: Theme) -> UIImage? {
 		if _image == nil {
 			switch type {

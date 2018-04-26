@@ -68,18 +68,11 @@ class ClientItemCell: ThemeTableViewCell {
 	}
 
 	// MARK: - Present item
-	var _item : OCItem?
 	var item : OCItem? {
-		set(newItem) {
-			_item = newItem
-
-			if let item : OCItem = _item {
+		willSet {
+			if let item: OCItem = newValue {
 				updateWith(item)
 			}
-		}
-
-		get {
-			return _item
 		}
 	}
 
@@ -90,19 +83,15 @@ class ClientItemCell: ThemeTableViewCell {
 		iconImage = item.icon(fitInSize: iconSize)
 
 		if item.type == .collection {
-			self.detailLabel.text = "Folder"
+			self.detailLabel.text = "Folder".localized
+			self.accessoryType = .disclosureIndicator
 		} else {
 			self.detailLabel.text = item.mimeType
+			self.accessoryType = .none
 		}
 
 		self.iconView.image = iconImage
 		self.titleLabel.text = item.name
-
-		if item.type == .collection {
-			self.accessoryType = .disclosureIndicator
-		} else {
-			self.accessoryType = .none
-		}
 	}
 
 	// MARK: - Themeing
