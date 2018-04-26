@@ -67,7 +67,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     private var authMethod: String?
     private var mode: BookmarkViewControllerMode?
     private var saveConnectButtonMode: SaveConnectButtonMode?
-    private var isApprovedIssues: Bool = false
 
     convenience init(bookmark: OCBookmark? = nil) {
 
@@ -162,11 +161,9 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             
             if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
                 if let certifiateSection = self.sectionForIdentifier(certificateDetailsSectionIdentifier) {
-                    self.replaceRow(certifiateSection.identifier!, rowIdentifier: certificateDetailsRowIdentifier, newRow: self.getCertificateDetailsRow(certificate: certificateIssue.certificate))
-                } else {
-                    self.addCertificateDetailsSection(certificate: certificateIssue.certificate)
+                    self.removeSection(certifiateSection)
                 }
-                
+                self.addCertificateDetailsSection(certificate: certificateIssue.certificate)
                 self.bookmark?.certificate = certificateIssue.certificate
             }
             
@@ -476,38 +473,52 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         
         //Auth method
         let preferedAuthMethod = preferredAuthMethods.first as String?
-        var authMethod: String
+        var authMethod: String?
         
-        if OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type() == .passphrase {
-            authMethod = OCAuthenticationMethodBasicAuthIdentifier
+        if preferredAuthMethods.count > 0 {
+            if OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: preferedAuthMethod).type() == .passphrase {
+                authMethod = OCAuthenticationMethodBasicAuthIdentifier
+            } else {
+                authMethod = OCAuthenticationMethodOAuth2Identifier
+            }
         } else {
-            authMethod = OCAuthenticationMethodOAuth2Identifier
+            
         }
         
         if let issues = issuesFromSDK.issuesWithLevelGreaterThanOrEqual(to: OCConnectionIssueLevel.warning),
-            issues.count > 0, !isApprovedIssues {
-            DispatchQueue.main.async {
-                let issuesVC = ConnectionIssueViewController(issue: issuesFromSDK, completion: {
-                    (result) in
-                    
-                    if result == ConnectionResponse.approve {
+            issues.count > 0 {
+            
+            switch self.saveConnectButtonMode {
+            case .save?:
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                }
+                break
+            case .connect?:
+                DispatchQueue.main.async {
+                    let issuesVC = ConnectionIssueViewController(issue: issuesFromSDK, completion: {
+                        (result) in
                         
-                        for issue in issues {
-                            issue.approve()
+                        if result == ConnectionResponse.approve {
+                            
+                            for issue in issues {
+                                issue.approve()
+                            }
+                            
+                            DispatchQueue.main.async {
+                                self.continueAfterCheckConnection(authMethod: authMethod!, issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
+                            }
                         }
                         
-                        DispatchQueue.main.async {
-                            self.continueAfterCheckConnection(authMethod: authMethod, issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
-                        }
-                    }
+                    })
                     
-                })
-                
-                issuesVC.modalPresentationStyle = .overCurrentContext
-                self.present(issuesVC, animated: true, completion: nil)
+                    issuesVC.modalPresentationStyle = .overCurrentContext
+                    self.present(issuesVC, animated: true, completion: nil)
+                }
+            default: break
             }
         } else {
-            self.continueAfterCheckConnection(authMethod: authMethod, issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
+            self.continueAfterCheckConnection(authMethod: authMethod!, issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
         }
     }
     
