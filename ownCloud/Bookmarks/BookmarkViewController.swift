@@ -24,25 +24,26 @@ import ownCloudUI
 let BookmarkDefaultURLKey = "default-url"
 let BookmarkURLEditableKey = "url-editable"
 
-//Sections constants
+//Sections and rows identifiers
 let serverURLSectionIdentifier = "server-url-section"
 let serverURLTextFieldIdentifier = "server-url-textfield"
 
-let continueButtonRowIdentifier = "continue-button-row"
 let continueButtonSectionIdentifier = "continue-button-section"
+let continueButtonRowIdentifier = "continue-button-row"
 
 let serverNameSectionIdentifier = "server-name-section"
 let serverNameTextFieldIdentifier = "server-name-textfield"
 
+let passphraseAuthSectionIdentifier = "passphrase-auth-section"
 let passphraseUsernameRowIdentifier = "passphrase-username-textfield-row"
 let passphrasePasswordIdentifier = "passphrase-password-textfield-row"
 
-let passphraseAuthSectionIdentifier = "passphrase-auth-section"
 let deleteAuthButtonIdentifier = "delete-auth-button"
 
-let certificateDetailsButtonIdentifier = "certificate-details-button"
-let connectButtonSectionIdentifier = "connect-button-section"
+let certificateDetailsSectionIdentifier = "certificate-details-section"
+let certificateDetailsRowIdentifier = "certificate-details-row"
 
+let connectButtonSectionIdentifier = "connect-button-section"
 let saveButtonRowIdentifier = "save-button-row-identifier"
 let connectButtonRowIdentifier = "connect-button-row-identifier"
 
@@ -50,10 +51,10 @@ let connectButtonRowIdentifier = "connect-button-row-identifier"
 enum BookmarkViewControllerMode {
     case add
     case edit
-    case update //Update Auth type
+    case update //Auth type has change
 }
 
-enum SaveConnectButtonmode {
+enum SaveConnectButtonMode {
     case save
     case connect
 }
@@ -112,22 +113,23 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             self.navigationItem.title = "Add Server".localized
             self.addServerUrl()
             self.addContinueButton()
+            break
         case .edit?:
             self.navigationItem.title = "Edit Server".localized
             
-            //Right button
+            //Delete button
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete".localized, style: .plain, target: self, action: #selector(deleteBookmark))
             self.navigationItem.rightBarButtonItem?.tintColor = UIColor.red
             
-            self.addServerName()
+            self.addServerNameSection()
             self.addServerUrl()
             if self.bookmark?.authenticationMethodIdentifier == OCAuthenticationMethodBasicAuthIdentifier {
                 let username = OCAuthenticationMethodBasicAuth.userName(fromAuthenticationData: self.bookmark?.authenticationData)
                 let password = OCAuthenticationMethodBasicAuth.passPhrase(fromAuthenticationData: self.bookmark?.authenticationData)
-                self.addBasicAuthCredentialsFields(username: username, password: password)
+                self.addBasicAuthCredentialsSection(username: username, password: password)
             }
             if self.bookmark!.certificate != nil {
-                self.addCertificateDetails(certificate: self.bookmark!.certificate)
+                self.addCertificateDetailsSection(certificate: self.bookmark!.certificate)
             }
             if self.bookmark?.authenticationData == nil {
                 self.addSaveConnectButton(saveConnect: .connect)
@@ -136,14 +138,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             }
             
             self.tableView.reloadData()
-
+            break
         default: break
         }
 
-    }
-
-    private func updateConnect() {
-        
     }
     
     // MARK: Interface sections
@@ -171,7 +169,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         self.addSection(continueButtonSection, animated: false)
     }
 
-    private func addServerName() {
+    private func addServerNameSection() {
         
         if self.sectionForIdentifier(serverNameSectionIdentifier) == nil {
             var serverName = ""
@@ -194,12 +192,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         }
     }
 
-    private func addCertificateDetails(certificate: OCCertificate) {
-        let section =  StaticTableViewSection(headerTitle: "Certificate Details".localized, footerTitle: nil)
+    private func addCertificateDetailsSection(certificate: OCCertificate) {
+        let section =  StaticTableViewSection(headerTitle: "Certificate Details".localized, footerTitle: nil, identifier: certificateDetailsSectionIdentifier)
         section.add(rows: [
-            StaticTableViewRow(rowWithAction: {(staticRow, _) in
-				staticRow.section?.viewController?.navigationController?.pushViewController(OCCertificateViewController.init(certificate: certificate), animated: true)
-            }, title: "Show Certificate Details".localized, accessoryType: .disclosureIndicator, identifier: certificateDetailsButtonIdentifier)
+            self.getCertificateDetailsRow(certificate: certificate)
         ])
         self.addSection(section, animated: true)
     }
@@ -221,7 +217,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         }
     }
     
-    private func addSaveConnectButton(saveConnect: SaveConnectButtonmode) {
+    private func addSaveConnectButton(saveConnect: SaveConnectButtonMode) {
      
         var saveConnectRow:StaticTableViewRow
         
@@ -247,25 +243,15 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         
         self.addSection(section!, animated: true)
     }
-
-    private func removeContinueButton() {
-        if let buttonSection = self.sectionForIdentifier(continueButtonSectionIdentifier) {
-            self.removeSection(buttonSection)
-        }
-    }
     
-    private func removeDeleteAuthDataButtonRow() {
-        self.removeRow(connectButtonSectionIdentifier, rowIdentifier: deleteAuthButtonIdentifier)
-    }
-
-    private func addBasicAuthCredentialsFields(username: String?, password: String?) {
+    private func addBasicAuthCredentialsSection(username: String?, password: String?) {
     
         let section = StaticTableViewSection(headerTitle:"Authentication".localized, footerTitle: nil, identifier: passphraseAuthSectionIdentifier, rows:
             [self.getUsernameRow(username: username),
              self.getPasswordRow(password: password)
             ])
         
-        self.insertSection(section, at: self.sections.count-1, animated: true)
+        self.addSection(section, animated: true)
     }
 
     // MARK: Rows
@@ -326,6 +312,16 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                                      enablesReturnKeyAutomatically: true,
                                      returnKeyType: .go,
                                      identifier: passphrasePasswordIdentifier)
+        
+        return row
+    }
+    
+    func getCertificateDetailsRow(certificate: OCCertificate) -> StaticTableViewRow {
+        let row = StaticTableViewRow(rowWithAction: {(staticRow, _) in
+            staticRow.section?.viewController?.navigationController?.pushViewController(OCCertificateViewController.init(certificate: certificate), animated: true)
+        }, title: "Show Certificate Details".localized,
+           accessoryType: .disclosureIndicator,
+           identifier: certificateDetailsRowIdentifier)
         
         return row
     }
@@ -418,27 +414,43 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value = self.bookmark?.url.absoluteString
         
         DispatchQueue.main.async {
-            self.addServerName()
+            self.addServerNameSection()
+            
+            if self.authMethod == OCAuthenticationMethodBasicAuthIdentifier {
+                self.addBasicAuthCredentialsSection(username: username, password:password)
+                self.removeRow(connectButtonSectionIdentifier, rowIdentifier: deleteAuthButtonIdentifier)
+            } else {
+                if let passphraseAuthSection = self.sectionForIdentifier(passphraseAuthSectionIdentifier) {
+                    self.removeSection(passphraseAuthSection)
+                }
+            }
             
             if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
-                self.addCertificateDetails(certificate: certificateIssue.certificate)
+                if let certifiateSection = self.sectionForIdentifier(certificateDetailsSectionIdentifier) {
+                    self.replaceRow(certifiateSection.identifier!, rowIdentifier: certificateDetailsRowIdentifier, newRow: self.getCertificateDetailsRow(certificate: certificateIssue.certificate))
+                } else {
+                    self.addCertificateDetailsSection(certificate: certificateIssue.certificate)
+                }
+                
                 self.bookmark?.certificate = certificateIssue.certificate
             }
             
-            if self.authMethod == OCAuthenticationMethodBasicAuthIdentifier {
-                self.addBasicAuthCredentialsFields(username: username, password:password)
-                self.removeDeleteAuthDataButtonRow()
+            if let continueSection = self.sectionForIdentifier(continueButtonSectionIdentifier) {
+                self.removeSection(continueSection)
+            }
+            if let saveConnectSection = self.sectionForIdentifier(connectButtonSectionIdentifier) {
+                self.removeSection(saveConnectSection)
             }
             
-            self.removeContinueButton()
             self.addConnectButton()
             self.tableView.reloadData()
         }
     }
     
     func deleteAuthDataButtonAction() {
-        if self.bookmark != nil {
-            self.bookmark = BookmarkManager.sharedBookmarkManager.removeAuthDataOfBookmark(self.bookmark!)
+        if let bookmark = self.bookmark {
+            self.bookmark = BookmarkManager.sharedBookmarkManager.removeAuthDataOfBookmark(bookmark)
+            self.replaceRow(connectButtonSectionIdentifier, rowIdentifier: saveButtonRowIdentifier, newRow: self.getConnectButtonRow())
             self.tableView.reloadData()
         }
     }
@@ -514,7 +526,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         
         if self.authMethod == nil || self.authMethod != authMethod {
             
-            //Enter in update mode
+            //Auth method change so enter in .update mode
             if (self.authMethod != nil) {
                 self.mode = .update
             }
