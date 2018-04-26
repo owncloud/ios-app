@@ -111,7 +111,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         switch self.mode {
         case .add?:
             self.navigationItem.title = "Add Server".localized
-            self.addServerUrl()
+            self.addServerUrlSection()
             self.addContinueButton()
             break
         case .edit?:
@@ -122,8 +122,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             self.navigationItem.rightBarButtonItem?.tintColor = UIColor.red
             
             self.addServerNameSection()
-            self.addServerUrl()
-            if self.bookmark?.authenticationMethodIdentifier == OCAuthenticationMethodBasicAuthIdentifier {
+            self.addServerUrlSection()
+            if self.authMethod == OCAuthenticationMethodBasicAuthIdentifier {
                 let username = OCAuthenticationMethodBasicAuth.userName(fromAuthenticationData: self.bookmark?.authenticationData)
                 let password = OCAuthenticationMethodBasicAuth.passPhrase(fromAuthenticationData: self.bookmark?.authenticationData)
                 self.addBasicAuthCredentialsSection(username: username, password: password)
@@ -141,12 +141,49 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             break
         default: break
         }
-
+    }
+    
+    private func updateInterfaceAuthMethodChange(issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
+        
+        self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value = self.bookmark?.url.absoluteString
+        
+        DispatchQueue.main.async {
+            self.addServerNameSection()
+            
+            if self.authMethod == OCAuthenticationMethodBasicAuthIdentifier {
+                self.addBasicAuthCredentialsSection(username: username, password:password)
+                self.removeRow(connectButtonSectionIdentifier, rowIdentifier: deleteAuthButtonIdentifier)
+            } else {
+                if let passphraseAuthSection = self.sectionForIdentifier(passphraseAuthSectionIdentifier) {
+                    self.removeSection(passphraseAuthSection)
+                }
+            }
+            
+            if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
+                if let certifiateSection = self.sectionForIdentifier(certificateDetailsSectionIdentifier) {
+                    self.replaceRow(certifiateSection.identifier!, rowIdentifier: certificateDetailsRowIdentifier, newRow: self.getCertificateDetailsRow(certificate: certificateIssue.certificate))
+                } else {
+                    self.addCertificateDetailsSection(certificate: certificateIssue.certificate)
+                }
+                
+                self.bookmark?.certificate = certificateIssue.certificate
+            }
+            
+            if let continueSection = self.sectionForIdentifier(continueButtonSectionIdentifier) {
+                self.removeSection(continueSection)
+            }
+            if let saveConnectSection = self.sectionForIdentifier(connectButtonSectionIdentifier) {
+                self.removeSection(saveConnectSection)
+            }
+            
+            self.addConnectButton()
+            self.tableView.reloadData()
+        }
     }
     
     // MARK: Interface sections
 
-    private func addServerUrl() {
+    private func addServerUrlSection() {
         
         var serverURLName = self.classSetting(forOCClassSettingsKey: BookmarkDefaultURLKey) as? String ?? ""
 
@@ -409,44 +446,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         self.checkServerBeforeConnect(usernameConst: username, passwordConst: password)
     }
     
-    private func approveButtonAction(issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
-
-        self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value = self.bookmark?.url.absoluteString
-        
-        DispatchQueue.main.async {
-            self.addServerNameSection()
-            
-            if self.authMethod == OCAuthenticationMethodBasicAuthIdentifier {
-                self.addBasicAuthCredentialsSection(username: username, password:password)
-                self.removeRow(connectButtonSectionIdentifier, rowIdentifier: deleteAuthButtonIdentifier)
-            } else {
-                if let passphraseAuthSection = self.sectionForIdentifier(passphraseAuthSectionIdentifier) {
-                    self.removeSection(passphraseAuthSection)
-                }
-            }
-            
-            if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
-                if let certifiateSection = self.sectionForIdentifier(certificateDetailsSectionIdentifier) {
-                    self.replaceRow(certifiateSection.identifier!, rowIdentifier: certificateDetailsRowIdentifier, newRow: self.getCertificateDetailsRow(certificate: certificateIssue.certificate))
-                } else {
-                    self.addCertificateDetailsSection(certificate: certificateIssue.certificate)
-                }
-                
-                self.bookmark?.certificate = certificateIssue.certificate
-            }
-            
-            if let continueSection = self.sectionForIdentifier(continueButtonSectionIdentifier) {
-                self.removeSection(continueSection)
-            }
-            if let saveConnectSection = self.sectionForIdentifier(connectButtonSectionIdentifier) {
-                self.removeSection(saveConnectSection)
-            }
-            
-            self.addConnectButton()
-            self.tableView.reloadData()
-        }
-    }
-    
     func deleteAuthDataButtonAction() {
         if let bookmark = self.bookmark {
             self.bookmark = BookmarkManager.sharedBookmarkManager.removeAuthDataOfBookmark(bookmark)
@@ -534,8 +533,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             self.authMethod = authMethod
             
             DispatchQueue.main.async {
-                //self.bookmark?.certificate = issuesFromSDK?.certificate
-                self.approveButtonAction(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
+                self.updateInterfaceAuthMethodChange(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
             }
         } else {
             self.connect()
