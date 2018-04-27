@@ -27,7 +27,7 @@ enum StaticTableViewEvent {
 	case tableViewDidDisappear
 }
 
-class StaticTableViewController: UITableViewController {
+class StaticTableViewController: UITableViewController, Themeable {
 	public var sections : [StaticTableViewSection] = Array()
 
 	// MARK: - Section administration
@@ -124,6 +124,12 @@ class StaticTableViewController: UITableViewController {
 	// MARK: - View Controller
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		Theme.shared.register(client: self)
+	}
+
+	deinit {
+		Theme.shared.unregister(client: self)
 	}
 
 	// MARK: - Tools
@@ -150,9 +156,9 @@ class StaticTableViewController: UITableViewController {
 
 		let staticRow : StaticTableViewRow = staticRowForIndexPath(indexPath)
 
-        if let action = staticRow.action {
-            action(staticRow, self)
-        }
+		if let action = staticRow.action {
+			action(staticRow, self)
+		}
 
 		tableView.deselectRow(at: indexPath, animated: true)
 	}
@@ -165,14 +171,9 @@ class StaticTableViewController: UITableViewController {
 		return sections[section].footerTitle
 	}
 
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
+	// MARK: Theme support
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.tableView.backgroundColor = collection.tableGroupBackgroundColor
+		self.tableView.separatorColor = collection.tableSeparatorColor
+	}
 }

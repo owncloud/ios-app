@@ -60,18 +60,18 @@ enum SaveConnectButtonMode {
 }
 
 class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport {
-
+    
     public var bookmark: OCBookmark?
     public var connection: OCConnection?
     
     private var authMethod: String?
     private var mode: BookmarkViewControllerMode?
     private var saveConnectButtonMode: SaveConnectButtonMode?
-
+    
     convenience init(bookmark: OCBookmark? = nil) {
-
+        
         self.init(style: UITableViewStyle.grouped)
-
+        
         self.bookmark = bookmark
         
         if bookmark == nil {
@@ -82,32 +82,32 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             self.authMethod = self.bookmark?.authenticationMethodIdentifier
         }
     }
-
+    
     static func classSettingsIdentifier() -> String! {
         return ClassSettingsIdentifiers.bookmarks
     }
-
+    
     static func defaultSettings(forIdentifier identifier: String!) -> [String : Any]! {
         return [ BookmarkDefaultURLKey : "",
                  BookmarkURLEditableKey : true
         ]
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.bounces = false
         self.loadInterface()
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.textField?.becomeFirstResponder()
     }
-
+    
     // MARK: Interface configuration
     
     private func loadInterface() {
-
+        
         switch self.mode {
         case .add?:
             self.navigationItem.title = "Add Server".localized
@@ -180,30 +180,30 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
     
     // MARK: Interface sections
-
+    
     private func addServerUrlSection() {
         
         var serverURLName = self.classSetting(forOCClassSettingsKey: BookmarkDefaultURLKey) as? String ?? ""
-
+        
         if let url = self.bookmark?.url {
             serverURLName = url.absoluteString
         }
-
+        
         let serverURLSection: StaticTableViewSection = StaticTableViewSection(headerTitle:"Server URL".localized, footerTitle: nil, identifier: serverURLSectionIdentifier)
-
+        
         serverURLSection.add(rows: [self.getUrlRow(serverURLName: serverURLName)])
         addSection(serverURLSection, animated: false)
     }
-
+    
     private func addContinueButton() {
-
+        
         let continueButtonSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: continueButtonSectionIdentifier, rows: [
             self.getContinueButtonRow()
             ])
-
+        
         self.addSection(continueButtonSection, animated: false)
     }
-
+    
     private func addServerNameSection() {
         
         if self.sectionForIdentifier(serverNameSectionIdentifier) == nil {
@@ -226,17 +226,17 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             self.insertSection(section, at: 0, animated: true)
         }
     }
-
+    
     private func addCertificateDetailsSection(certificate: OCCertificate) {
         let section =  StaticTableViewSection(headerTitle: "Certificate Details".localized, footerTitle: nil, identifier: certificateDetailsSectionIdentifier)
         section.add(rows: [
             self.getCertificateDetailsRow(certificate: certificate)
-        ])
+            ])
         self.addSection(section, animated: true)
     }
     
     private func addSaveConnectButton(saveConnect: SaveConnectButtonMode) {
-     
+        
         var saveConnectRow:StaticTableViewRow
         
         switch saveConnect {
@@ -263,7 +263,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
     
     private func addBasicAuthCredentialsSection(username: String?, password: String?) {
-    
+        
         let section = StaticTableViewSection(headerTitle:"Authentication".localized, footerTitle: nil, identifier: passphraseAuthSectionIdentifier, rows:
             [self.getUsernameRow(username: username),
              self.getPasswordRow(password: password)
@@ -271,7 +271,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         
         self.addSection(section, animated: true)
     }
-
+    
     // MARK: Rows
     
     func getUrlRow(serverURLName: String) -> StaticTableViewRow {
@@ -283,15 +283,15 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 self.urlTextFieldDidChange(newURL: row.value as! String)
             }
         },
-                                                                  placeholder: "https://example.com".localized,
-                                                                  value: serverURLName,
-                                                                  keyboardType: .default,
-                                                                  autocorrectionType: .no,
-                                                                  autocapitalizationType: .none,
-                                                                  enablesReturnKeyAutomatically: false,
-                                                                  returnKeyType: .continue,
-                                                                  identifier: serverURLTextFieldIdentifier,
-                                                                  isEnabled: isEnabledURLTextField)
+                                                         placeholder: "https://example.com".localized,
+                                                         value: serverURLName,
+                                                         keyboardType: .default,
+                                                         autocorrectionType: .no,
+                                                         autocapitalizationType: .none,
+                                                         enablesReturnKeyAutomatically: false,
+                                                         returnKeyType: .continue,
+                                                         identifier: serverURLTextFieldIdentifier,
+                                                         isEnabled: isEnabledURLTextField)
         
         return row
     }
@@ -365,8 +365,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             self.continueButtonAction()
             
         }, title: "Continue".localized,
-                                     style: .proceed,
-                                     identifier: continueButtonRowIdentifier)
+           style: .proceed,
+           identifier: continueButtonRowIdentifier)
         
         return row
     }
@@ -411,8 +411,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         
         self.present(alertController, animated: true, completion: nil)
     }
-
-   private func continueButtonAction() {
+    
+    private func continueButtonAction() {
         self.checkServerBeforeConnect(usernameConst: nil, passwordConst: nil)
     }
     
@@ -429,7 +429,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         
         let username: NSString? = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphraseUsernameRowIdentifier)?.value as? NSString
         let password: NSString?  = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value as? NSString
-
+        
         self.checkServerBeforeConnect(usernameConst: username, passwordConst: password)
     }
     

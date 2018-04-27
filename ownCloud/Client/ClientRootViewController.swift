@@ -6,23 +6,61 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudSDK
 
 class ClientRootViewController: UITabBarController {
-	public let bookmark : OCBookmark
-	public var core : OCCore?
-	public var filesNavigationController : UINavigationController?
+	let bookmark : OCBookmark
+	var core : OCCore?
+	var filesNavigationController : ThemeNavigationController?
+	var progressBar : CollapsibleProgressBar?
+	var progressSummarizer : ProgressSummarizer?
 
-	public init(bookmark inBookmark: OCBookmark) {
+	init(bookmark inBookmark: OCBookmark) {
+		let openProgress = Progress()
+
 		bookmark = inBookmark
 
 		super.init(nibName: nil, bundle: nil)
+
+		progressSummarizer = ProgressSummarizer.shared(forBookmark: inBookmark)
+		if progressSummarizer != nil {
+			progressSummarizer?.addObserver(self) { [weak self] (summarizer, summary) in
+				var useSummary : ProgressSummary = summary
+
+				if (summary.progress == 1) && (summarizer.fallbackSummary != nil) {
+					useSummary = summarizer.fallbackSummary ?? summary
+				}
+
+				self?.progressBar?.update(with: useSummary.message, progress: Float(useSummary.progress))
+
+				self?.progressBar?.autoCollapse = (summarizer.fallbackSummary == nil) || (useSummary.progressCount == 0)
+			}
+		}
+
+		openProgress.localizedDescription = "Connecting…".localized
+		progressSummarizer?.startTracking(progress: openProgress)
 
 		core = CoreManager.shared.requestCoreForBookmark(bookmark, completion: { (_, error) in
 			if error == nil {
 				self.coreReady()
 			}
+
+			openProgress.localizedDescription = "Connected.".localized
+			openProgress.completedUnitCount = 1
+			openProgress.totalUnitCount = 1
+
+			self.progressSummarizer?.stopTracking(progress: openProgress)
 		})
 	}
 
@@ -31,25 +69,35 @@ class ClientRootViewController: UITabBarController {
 	}
 
 	deinit {
+		ProgressSummarizer.shared(forBookmark: bookmark).removeObserver(self)
+
 		CoreManager.shared.returnCoreForBookmark(bookmark, completion: nil)
 	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		filesNavigationController = UINavigationController()
+		filesNavigationController = ThemeNavigationController()
 		filesNavigationController?.navigationBar.isTranslucent = false
-		filesNavigationController?.view.backgroundColor = .white
-		filesNavigationController?.tabBarItem.title = "Files"
+		filesNavigationController?.tabBarItem.title = "Browse".localized
+		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: CGSize(width: 25, height: 25))
+
+		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
+		progressBar?.translatesAutoresizingMaskIntoConstraints = false
+
+		self.view.addSubview(progressBar!)
+
+		progressBar?.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+		progressBar?.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+		progressBar?.bottomAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
+
+		self.tabBar.applyThemeCollection(Theme.shared.activeCollection)
 
 		self.viewControllers = [filesNavigationController] as? [UIViewController]
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
-	}
-
 	func logoutBarButtonItem() -> UIBarButtonItem {
-		return (UIBarButtonItem(title: NSLocalizedString("Logout", comment: ""), style: .plain, target: self, action: #selector(logout(_:))))
+		return UIBarButtonItem(title: "Disconnect".localized, style: .plain, target: self, action: #selector(logout(_:)))
 	}
 
 	@objc func logout(_: Any) {
@@ -58,7 +106,7 @@ class ClientRootViewController: UITabBarController {
 
 	func coreReady() {
 		DispatchQueue.main.async {
-			var queryViewController = ClientQueryViewController.init(core: self.core!, query: OCQuery.init(forPath: "/"))
+			let queryViewController = ClientQueryViewController(core: self.core!, query: OCQuery(forPath: "/"))
 
 			queryViewController.navigationItem.leftBarButtonItem = self.logoutBarButtonItem()
 

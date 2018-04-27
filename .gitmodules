@@ -1,3 +1,10 @@
 [submodule "ios-sdk"]
 	path = ios-sdk
 	url = https://github.com/owncloud/ios-sdk.git
+
+[submodule "PocketSVG"]
+	path = external/PocketSVG
+	url = https://github.com/pocketsvg/PocketSVG.git
+[submodule "external/PocketSVG"]
+	path = external/PocketSVG
+	url = https://github.com/pocketsvg/PocketSVG

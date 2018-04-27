@@ -29,6 +29,7 @@ enum StaticTableViewRowButtonStyle {
 }
 
 class StaticTableViewRow : NSObject, UITextFieldDelegate {
+
 	public weak var section : StaticTableViewSection?
 
 	public var identifier : String?
@@ -55,12 +56,18 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		return (section?.viewController)
 	}
 
+	private var themeApplierToken : ThemeApplierToken?
+
+	override init() {
+		super.init()
+	}
+
 	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
 		self.init()
 
 		self.identifier = identifier
 
-		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.accessoryType = accessoryType
 
@@ -75,7 +82,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 
 		if let accessibilityIdentifier : String = identifier {
@@ -104,7 +111,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.selectionStyle = UITableViewCellSelectionStyle.none
 
 		self.action = action
@@ -145,6 +152,11 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 
 		self.textField = cellTextField
+
+		themeApplierToken = Theme.shared.add(applier: {(_, themeCollection, _) in
+			cellTextField.textColor = themeCollection.tableRowColors.labelColor
+			cellTextField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : themeCollection.tableRowColors.secondaryLabelColor])
+		})
 	}
 
 	convenience init(secureTextFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil) {
@@ -178,7 +190,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		let switchView = UISwitch()
 
-		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell?.selectionStyle = .none
 		self.cell?.textLabel?.text = title
 		self.cell?.accessoryView = switchView
 
@@ -210,56 +223,65 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
-
 		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = NSTextAlignment.center
 
 		self.cell?.accessibilityIdentifier = identifier
 
-		switch style {
-			case .plain:
-				textColor = UIColor.blue
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
 
-			case .proceed:
-				textColor = UIColor.white
-				backgroundColor = UIColor.blue
-				selectedBackgroundColor = UIColor.green
+			switch style {
+				case .plain:
+					textColor = themeCollection.tintColor
+					backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-			case .destructive:
-				textColor = UIColor.red
-				backgroundColor = UIColor.white
+				case .proceed:
+					textColor = themeCollection.neutralColors.normal.foreground
+					backgroundColor = themeCollection.neutralColors.normal.background
+					selectedBackgroundColor = themeCollection.neutralColors.highlighted.background
 
-			case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
-				textColor = customTextColor
-				selectedTextColor = customSelectedTextColor
-				backgroundColor = customBackgroundColor
-				selectedBackgroundColor = customSelectedBackgroundColor
+				case .destructive:
+					textColor = UIColor.red
+					backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-		}
+				case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
+					textColor = customTextColor
+					selectedTextColor = customSelectedTextColor
+					backgroundColor = customBackgroundColor
+					selectedBackgroundColor = customSelectedBackgroundColor
 
-		self.cell?.textLabel?.textColor = textColor
+			}
 
-		if selectedTextColor != nil {
+			self?.cell?.textLabel?.textColor = textColor
 
-			self.cell?.textLabel?.highlightedTextColor = selectedTextColor
-		}
+			if selectedTextColor != nil {
 
-		if backgroundColor != nil {
+				self?.cell?.textLabel?.highlightedTextColor = selectedTextColor
+			}
 
-			self.cell?.backgroundColor = backgroundColor
-		}
+			if backgroundColor != nil {
 
-		if selectedBackgroundColor != nil {
+				self?.cell?.backgroundColor = backgroundColor
+			}
 
-			let selectedBackgroundView = UIView()
+			if selectedBackgroundColor != nil {
+				let selectedBackgroundView = UIView()
 
-			selectedBackgroundView.backgroundColor = selectedBackgroundColor
+				selectedBackgroundView.backgroundColor = selectedBackgroundColor
 
-			self.cell?.selectedBackgroundView? = selectedBackgroundView
-		}
+				self?.cell?.selectedBackgroundView? = selectedBackgroundView
+			}
+		}, applyImmediately: true)
 
 		self.action = action
+	}
+
+	// MARK: - Deinit
+	deinit {
+		if themeApplierToken != nil {
+			Theme.shared.remove(applierForToken: themeApplierToken)
+		}
 	}
 }

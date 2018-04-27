@@ -1,0 +1,24 @@
+{
+	"*" : {
+		"fill=\"#55739a\"" : {
+			"description" : "Fill color used in folders",
+
+			"replace" : "#55739a",
+			"variable" : "folderFillColor"
+		},
+
+		"fill=\"#969696\"" : {
+			"description" : "Fill color used in files",
+
+			"replace" : "#969696",
+			"variable" : "fileFillColor"
+		},
+
+		"fill=\"#1D293B\"" : {
+			"description" : "Fill color used in logo",
+
+			"replace" : "#1D293B",
+			"variable" : "logoFillColor"
+		}
+	}
+}
