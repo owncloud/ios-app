@@ -27,7 +27,7 @@ class TVGImage: NSObject {
 
 	init?(with data: Data) {
 		do {
-			let tvgObject : Any = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.init(rawValue: 0))
+			let tvgObject : Any = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
 
 			if let tvgDict : Dictionary = tvgObject as? [String: Any] {
 				imageString = tvgDict["image"] as? String

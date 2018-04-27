@@ -96,7 +96,7 @@ class ClientItemCell: ThemeTableViewCell {
 
 	// MARK: - Themeing
 	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
-		let itemState = ThemeItemState.init(selected: self.isSelected)
+		let itemState = ThemeItemState(selected: self.isSelected)
 
 		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)

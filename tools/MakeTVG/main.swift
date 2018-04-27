@@ -53,11 +53,11 @@ func applyReplacementDict(svgString : String, replacementDict : NSDictionary, de
 if CommandLine.argc < 3 {
 	print("MakeTVG [make.json] [input directory] [output directory]")
 } else {
-	let jsonFileURL = URL.init(fileURLWithPath: CommandLine.arguments[1])
-	let sourceDirectoryURL = URL.init(fileURLWithPath: CommandLine.arguments[2])
-	let targetDirectoryURL = URL.init(fileURLWithPath: CommandLine.arguments[3])
+	let jsonFileURL = URL(fileURLWithPath: CommandLine.arguments[1])
+	let sourceDirectoryURL = URL(fileURLWithPath: CommandLine.arguments[2])
+	let targetDirectoryURL = URL(fileURLWithPath: CommandLine.arguments[3])
 
-	if let makeDict = (try JSONSerialization.jsonObject(with: Data.init(contentsOf: jsonFileURL), options: JSONSerialization.ReadingOptions(rawValue: 0))) as? NSDictionary {
+	if let makeDict = (try JSONSerialization.jsonObject(with: Data(contentsOf: jsonFileURL), options: JSONSerialization.ReadingOptions(rawValue: 0))) as? NSDictionary {
 		let sourceURLs : [URL] = (try FileManager.default.contentsOfDirectory(at: sourceDirectoryURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles))
 		let globalReplacements : NSDictionary? = makeDict["*"] as? NSDictionary
 
@@ -76,7 +76,7 @@ if CommandLine.argc < 3 {
 				}
 
 				let tvgDict = [ "defaults" : defaultValuesForVariables, "image" : svgString ] as NSDictionary
-				let tvgData : Data = try JSONSerialization.data(withJSONObject: tvgDict, options: JSONSerialization.WritingOptions.init(rawValue: 0))
+				let tvgData : Data = try JSONSerialization.data(withJSONObject: tvgDict, options: JSONSerialization.WritingOptions(rawValue: 0))
 				let tvgFileName = (((sourceURL.lastPathComponent as NSString).deletingPathExtension) as NSString).appendingPathExtension("tvg")
 				let targetURL = targetDirectoryURL.appendingPathComponent(tvgFileName!, isDirectory: false)
 

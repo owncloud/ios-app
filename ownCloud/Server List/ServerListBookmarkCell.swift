@@ -72,7 +72,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 
 	// MARK: - Themeing
 	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
-		let itemState = ThemeItemState.init(selected: self.isSelected)
+		let itemState = ThemeItemState(selected: self.isSelected)
 
 		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
@@ -81,7 +81,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 	}
 
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		let itemState = ThemeItemState.init(selected: self.isSelected)
+		let itemState = ThemeItemState(selected: self.isSelected)
 
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 

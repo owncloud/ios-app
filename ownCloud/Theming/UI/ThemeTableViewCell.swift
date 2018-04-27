@@ -46,7 +46,7 @@ class ThemeTableViewCell: UITableViewCell, Themeable {
 	}
 
 	func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
-		let state = ThemeItemState.init(selected: self.isSelected)
+		let state = ThemeItemState(selected: self.isSelected)
 
 		self.textLabel?.applyThemeCollection(collection, itemStyle: .defaultForItem, itemState: state)
 		self.detailTextLabel?.applyThemeCollection(collection, itemStyle: .message, itemState: state)

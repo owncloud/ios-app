@@ -50,7 +50,7 @@ class ThemeImage : Themeable {
 		}
 		get {
 			if (_sourceImage == nil) && (sourceImageName != nil) {
-				_sourceImage = UIImage.init(named: sourceImageName!)
+				_sourceImage = UIImage(named: sourceImageName!)
 			}
 
 			return _sourceImage

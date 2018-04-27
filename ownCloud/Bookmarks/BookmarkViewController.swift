@@ -125,7 +125,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         let section =  StaticTableViewSection(headerTitle: "Certificate Details".localized, footerTitle: nil)
         section.add(rows: [
             StaticTableViewRow(rowWithAction: {(staticRow, _) in
-				staticRow.section?.viewController?.navigationController?.pushViewController(OCCertificateViewController.init(certificate: certificate), animated: true)
+				staticRow.section?.viewController?.navigationController?.pushViewController(OCCertificateViewController(certificate: certificate), animated: true)
             }, title: "Show Certificate Details".localized, accessoryType: .disclosureIndicator, identifier: "certificate-details-button")
         ])
         self.addSection(section, animated: true)

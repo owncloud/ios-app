@@ -80,7 +80,7 @@ class ClientRootViewController: UITabBarController {
 		filesNavigationController = ThemeNavigationController()
 		filesNavigationController?.navigationBar.isTranslucent = false
 		filesNavigationController?.tabBarItem.title = "Browse".localized
-		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: CGSize.init(width: 25, height: 25))
+		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: CGSize(width: 25, height: 25))
 
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false
@@ -106,7 +106,7 @@ class ClientRootViewController: UITabBarController {
 
 	func coreReady() {
 		DispatchQueue.main.async {
-			let queryViewController = ClientQueryViewController.init(core: self.core!, query: OCQuery.init(forPath: "/"))
+			let queryViewController = ClientQueryViewController(core: self.core!, query: OCQuery(forPath: "/"))
 
 			queryViewController.navigationItem.leftBarButtonItem = self.logoutBarButtonItem()
 

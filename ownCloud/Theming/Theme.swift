@@ -169,7 +169,7 @@ class Theme: NSObject {
 	// MARK: - Convenience resource methods
 	func add(tvgResourceFor tvgName: String) {
 		self.add(resourceFor: tvgName) { (identifier) -> ThemeResource in
-			return ThemeTVGResource.init(name: tvgName, identifier: identifier)
+			return ThemeTVGResource(name: tvgName, identifier: identifier)
 		}
 	}
 

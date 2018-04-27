@@ -228,7 +228,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		let rowItem : OCItem = self.items![indexPath.row]
 
 		if rowItem.type == .collection {
-			self.navigationController?.pushViewController(ClientQueryViewController.init(core: self.core!, query: OCQuery.init(forPath: rowItem.path)), animated: true)
+			self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
 		}
 	}
 
@@ -319,7 +319,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		if messageView?.superview == nil {
 			if let rootView = self.messageView, let containerView = self.messageContainerView {
 				containerView.alpha = 0
-				containerView.transform = CGAffineTransform.init(translationX: 0, y: 15)
+				containerView.transform = CGAffineTransform(translationX: 0, y: 15)
 
 				rootView.alpha = 0
 
@@ -361,7 +361,7 @@ extension ClientQueryViewController : OCQueryDelegate {
 	}
 
 	func queryHasChangesAvailable(_ query: OCQuery!) {
-		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag.init(rawValue: 0)) { (_, changeSet) in
+		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (_, changeSet) in
 			DispatchQueue.main.async {
 				self.items = changeSet?.queryResult
 				self.tableView.reloadData()
