@@ -60,5 +60,14 @@ The third party software included and used by this project is:
    	Placed at Pods/EarlGrey
 	Original license document included at Pods/EarlGrey/EarlGrey/LICENSE
 	See https://github.com/google/EarlGrey
+   	
+ * 	PocketSVG
+   	Copyright (c) Ponderwell, Ariel Elkin, Fjšlnir çsgeirsson, and Contributors
+   	Licensed under MIT License.
+   	Placed at external/PocketSVG
+	Original license document included at external/PocketSVG/LICENSE
+	See https://github.com/pocketsvg/PocketSVG
+
+
 
 

@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		serverListTableViewController = ServerListTableViewController(style: UITableViewStyle.plain)
 
-		navigationController = UINavigationController(rootViewController: serverListTableViewController!)
+		navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
 
 		window?.rootViewController = navigationController!
 		window?.addSubview((navigationController?.view)!)

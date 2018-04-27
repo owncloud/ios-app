@@ -1,5 +1,6 @@
 excluded:
     - ownCloudTests/EarlGrey.swift
+    - external
 
 function_body_length: 100
 # warning_threshold: 5

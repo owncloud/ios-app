@@ -39,7 +39,7 @@ class CoreManager: NSObject {
 
 			if requestCount==1 {
 				// Create and start core
-				if let core = OCCore.init(bookmark: bookmark) {
+				if let core = OCCore(bookmark: bookmark) {
 					returnCore = core
 
 					coresByUUID[bookmark.uuid] = core

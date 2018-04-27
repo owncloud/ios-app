@@ -23,3 +23,38 @@
 "Approve" = "Approve";
 "Error" = "Error";
 "Review Connection" = "Review Connection";
+
+/* Client */
+"Browse" = "Browse";
+"Disconnect" = "Disconnect";
+"Connecting…" = "Connecting…";
+"Connected." = "Connected.";
+
+"Folder" = "Folder";
+
+"Stopped" = "Stopped";
+"Started…" = "Started…";
+"Contents from cache." = "Contents from cache.";
+"Offline. Contents from cache." = "Offline. Contents from cache.";
+"Waiting for server response…" = "Waiting for server response…";
+"This folder no longer exists." = "This folder no longer exists.";
+"Everything up-to-date." = "Everything up-to-date.";
+"Please wait…" = "Please wait…";
+
+/* Client Messages */
+"Empty folder" = "Empty folder";
+"This folder contains no files or folders." = "This folder contains no files or folders.";
+
+"Folder removed" = "Folder removed";
+"This folder no longer exists on the server." = "This folder no longer exists on the server.";
+
+/* Server List*/
+"Cancel" = "Cancel";
+"OK" = "OK";
+
+"'%@' is currently locked" = "'%@' is currently locked";
+"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "An operation is currently performed that prevents connecting to '%@'. Please try again later.";
+"Really delete '%@'?" = "Really delete '%@'?";
+"This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
+"Delete" = "Delete";
+"Deletion of '%@' failed" = "Deletion of '%@' failed";

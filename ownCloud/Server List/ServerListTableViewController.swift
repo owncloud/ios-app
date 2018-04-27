@@ -18,10 +18,19 @@
 
 import UIKit
 import ownCloudSDK
+import PocketSVG
 
-class ServerListTableViewController: UITableViewController {
+class ServerListTableViewController: UITableViewController, Themeable {
 
 	@IBOutlet var welcomeOverlayView: UIView!
+	@IBOutlet var welcomeTitleLabel : UILabel!
+	@IBOutlet var welcomeMessageLabel : UILabel!
+	@IBOutlet var welcomeAddServerButton : ThemeButton!
+	@IBOutlet var welcomeLogoImageView : UIImageView!
+	@IBOutlet var welcomeLogoTVGView : VectorImageView!
+	// @IBOutlet var welcomeLogoSVGView : SVGImageView!
+
+	var lockedBookmarks : [OCBookmark] = []
 
 	override init(style: UITableViewStyle) {
 		super.init(style: style)
@@ -37,22 +46,37 @@ class ServerListTableViewController: UITableViewController {
 		NotificationCenter.default.removeObserver(self, name: Notification.Name.BookmarkManagerListChanged, object: nil)
 	}
 
+	// TODO: Rebuild welcomeOverlayView in code
+	/*
+	override func loadView() {
+		super.loadView()
+
+		welcomeOverlayView = UIView()
+		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
+
+		welcomeTitleLabel = UILabel()
+		welcomeTitleLabel.font = UIFont.boldSystemFont(ofSize: 34)
+		welcomeTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+		welcomeAddServerButton = ThemeButton()
+	}
+	*/
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		OCItem.registerIcons()
 
 		self.tableView.register(ServerListBookmarkCell.self, forCellReuseIdentifier: "bookmark-cell")
 		self.tableView.rowHeight = UITableViewAutomaticDimension
 		self.tableView.estimatedRowHeight = 80
 
-		self.navigationItem.rightBarButtonItem =
-            UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
 
 		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
 
-		// Uncomment the following line to preserve selection between presentations
-		// self.clearsSelectionOnViewWillAppear = false
-
-		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+		Theme.shared.add(tvgResourceFor: "owncloud-logo")
+		welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
 
 		self.navigationItem.title = "ownCloud"
 	}
@@ -61,6 +85,8 @@ class ServerListTableViewController: UITableViewController {
 		super.viewWillAppear(animated)
 
 		self.navigationController?.setToolbarHidden(false, animated: animated)
+
+		Theme.shared.register(client: self)
 
 		welcomeOverlayView.layoutSubviews()
 	}
@@ -75,12 +101,43 @@ class ServerListTableViewController: UITableViewController {
 			UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
 			UIBarButtonItem(title: "Settings", style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
 		]
+
+		/*
+		let shapeLayers : [CAShapeLayer]? = (welcomeLogoSVGView.layer as? SVGLayer)!.value(forKey: "_shapeLayers") as? [CAShapeLayer]
+
+		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+			for shapeLayer in shapeLayers! {
+				shapeLayer.strokeColor = UIColor.black.cgColor
+				shapeLayer.lineWidth = 2
+				shapeLayer.fillColor = nil
+
+				let pathAnimation = CABasicAnimation(keyPath: "strokeEnd")
+
+				pathAnimation.duration = 0.5
+				pathAnimation.fromValue = 0
+				pathAnimation.toValue = 1
+
+				shapeLayer.add(pathAnimation, forKey: pathAnimation.keyPath)
+			}
+		}
+		*/
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
 		self.navigationController?.setToolbarHidden(true, animated: animated)
+
+		Theme.shared.unregister(client: self)
+	}
+
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		welcomeAddServerButton.themeColorCollection = collection.neutralColors
+
+		self.tableView.applyThemeCollection(collection)
+
+		self.welcomeTitleLabel.applyThemeCollection(collection, itemStyle: .title)
+		self.welcomeMessageLabel.applyThemeCollection(collection, itemStyle: .message)
 	}
 
 	func updateNoServerMessageVisibility() {
@@ -140,7 +197,36 @@ class ServerListTableViewController: UITableViewController {
 		updateNoServerMessageVisibility()
 	}
 
+	var themeCounter : Int = 0
+
 	@IBAction func help() {
+		var themeStyle : ThemeCollectionStyle?
+		let darkColor = UIColor(hex: 0x1D293B)
+		let lightColor = UIColor(hex: 0x468CC8)
+
+		themeCounter += 1
+
+		/*
+		// RED experiment
+		if themeCounter >= 3 {
+			darkColor = UIColor(hex: 0xf53034).darker(0.75)
+			lightColor = UIColor(hex: 0xf53034)
+		}
+		*/
+
+		switch themeCounter % 3 {
+			case 0:	themeStyle = .dark
+			case 1:	themeStyle = .light
+			case 2:	themeStyle = .contrast
+			default: break
+		}
+
+		UIView.animate(withDuration: 0.25) {
+			CATransaction.begin()
+			CATransaction.setAnimationDuration(0.25)
+			Theme.shared.activeCollection = ThemeCollection(darkBrandColor: darkColor, lightBrandColor: lightColor, style: themeStyle!)
+			CATransaction.commit()
+		}
 	}
 
 	@IBAction func settings() {
@@ -162,13 +248,27 @@ class ServerListTableViewController: UITableViewController {
 
 	// MARK: - Table view delegate
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row)
+		if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
+			if lockedBookmarks.contains(bookmark) {
+				let alertController = UIAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName() as NSString) as String,
+									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName() as NSString) as String,
+									preferredStyle: .alert)
 
-		let clientRootViewController = ClientRootViewController(bookmark: bookmark!)
+				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
+					// There was an error erasing the vault => re-add bookmark to give user another chance to delete its contents
+					BookmarkManager.sharedBookmarkManager.addBookmark(bookmark)
+					self.updateNoServerMessageVisibility()
+				}))
 
-		self.present(clientRootViewController, animated: true, completion: nil)
+				self.present(alertController, animated: true, completion: nil)
 
-		Log.log("Bookmark data: \(bookmark?.bookmarkData().description ?? "none")")
+				return
+			}
+
+			let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+
+			self.present(clientRootViewController, animated: true, completion: nil)
+		}
 	}
 
 	// MARK: - Table view data source
@@ -181,7 +281,6 @@ class ServerListTableViewController: UITableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
 		guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "bookmark-cell", for: indexPath) as? ServerListBookmarkCell else {
 
 		    let cell = ServerListBookmarkCell()
@@ -189,9 +288,8 @@ class ServerListTableViewController: UITableViewController {
 		}
 
 		if let bookmark : OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
-			bookmarkCell.titleLabel.text = bookmark.url.host
+			bookmarkCell.titleLabel.text = bookmark.shortName()
 			bookmarkCell.detailLabel.text = bookmark.url.absoluteString
-			bookmarkCell.imageView?.image = UIImage(named: "owncloud-primary-small")
 		}
 
 		return bookmarkCell
@@ -201,27 +299,49 @@ class ServerListTableViewController: UITableViewController {
 		return [
 				UITableViewRowAction(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (_, indexPath) in
 					if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
-						let alertController = UIAlertController.init(title: NSString.init(format: NSLocalizedString("Really delete '%@'?", comment: "") as NSString, bookmark.name as NSString) as String,
-											     message: NSLocalizedString("This will also delete all locally stored file copies.", comment: ""),
+						let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName()) as String,
+											     message: "This will also delete all locally stored file copies.".localized,
 											     preferredStyle: .actionSheet)
 
-						alertController.addAction(UIAlertAction.init(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
+						alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
-						alertController.addAction(UIAlertAction.init(title: NSLocalizedString("Delete", comment: ""), style: .destructive, handler: { (_) in
+						alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
 
-							self.ignoreServerListChanges = true
+							self.lockedBookmarks.append(bookmark)
 
-							BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
+							let vault : OCVault = OCVault(bookmark: bookmark)
 
-							tableView.performBatchUpdates({
-								tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
-							}, completion: { (_) in
-								self.ignoreServerListChanges = false
+							vault.erase(completionHandler: { (_, error) in
+								DispatchQueue.main.async {
+									if error != nil {
+										// Inform user if vault couldn't be erased
+										let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName() as NSString) as String,
+															message: error?.localizedDescription,
+															preferredStyle: .alert)
+
+										alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+
+										self.present(alertController, animated: true, completion: nil)
+									} else {
+										// Success! We can now remove the bookmark
+										self.ignoreServerListChanges = true
+
+										BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
+
+										tableView.performBatchUpdates({
+											tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
+										}, completion: { (_) in
+											self.ignoreServerListChanges = false
+										})
+
+										self.updateNoServerMessageVisibility()
+									}
+
+									if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
+										self.lockedBookmarks.remove(at: removeIndex)
+									}
+								}
 							})
-
-							// TODO: Delete vault
-
-							self.updateNoServerMessageVisibility()
 						}))
 
 						self.present(alertController, animated: true, completion: nil)
