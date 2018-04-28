@@ -24,6 +24,8 @@ class ClientItemCell: ThemeTableViewCell {
 	var detailLabel : UILabel = UILabel()
 	var iconView : UIImageView = UIImageView()
 
+	weak var core : OCCore?
+
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		prepareViewAndConstraints()
@@ -49,13 +51,13 @@ class ClientItemCell: ThemeTableViewCell {
 		self.contentView.addSubview(iconView)
 
 		iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 20).isActive = true
-		iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -25).isActive = true
-		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -25).isActive = true
+		iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -15).isActive = true
+		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -15).isActive = true
 
 		titleLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -20).isActive = true
 		detailLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -20).isActive = true
 
-		iconView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+		iconView.widthAnchor.constraint(equalToConstant: 60).isActive = true
 		iconView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
 
 		titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20).isActive = true
@@ -78,6 +80,7 @@ class ClientItemCell: ThemeTableViewCell {
 
 	func updateWith(_ item: OCItem) {
 		let iconSize : CGSize = CGSize(width: 40, height: 40)
+		let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
 		var iconImage : UIImage?
 
 		iconImage = item.icon(fitInSize: iconSize)
@@ -88,6 +91,30 @@ class ClientItemCell: ThemeTableViewCell {
 		} else {
 			self.detailLabel.text = item.mimeType
 			self.accessoryType = .none
+		}
+
+		if item.thumbnailAvailability != .none {
+			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
+				thumbnail?.requestImage(for: thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
+					if error == nil {
+						DispatchQueue.main.async {
+							if image != nil {
+								if self.item?.versionIdentifier == thumbnail?.versionIdentifier {
+									self.iconView.image = image
+								}
+							}
+						}
+					}
+				})
+			}
+
+			if let thumbnail = item.thumbnail {
+				_ = displayThumbnail(thumbnail)
+			} else {
+				_ = core?.retrieveThumbnail(for: item, maximumSize: thumbnailSize, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
+					_ = displayThumbnail(thumbnail)
+				})
+			}
 		}
 
 		self.iconView.image = iconImage
