@@ -219,6 +219,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ClientItemCell
 
+		cell?.core = self.core
 		cell?.item = self.items![indexPath.row]
 
 		return cell!
