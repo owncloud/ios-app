@@ -490,7 +490,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 DispatchQueue.main.async {
                     self.navigationController?.popViewController(animated: true)
                 }
-            case .connect?:
+            default:
                 DispatchQueue.main.async {
                     let issuesVC = ConnectionIssueViewController(issue: issuesFromSDK, completion: {(result) in
 
@@ -508,7 +508,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                     issuesVC.modalPresentationStyle = .overCurrentContext
                     self.present(issuesVC, animated: true, completion: nil)
                 }
-            default: break
             }
         } else {
             self.continueAfterCheckConnection(authMethod: authMethod!, issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
