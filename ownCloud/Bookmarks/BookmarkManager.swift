@@ -115,10 +115,10 @@ class BookmarkManager: NSObject {
 	}
 
     func removeAuthDataOfBookmark(_ bookmark: OCBookmark) -> OCBookmark {
-        
+
         bookmark.authenticationData = nil
         saveBookmarks()
-        
+
         return bookmark
     }
 }

@@ -74,7 +74,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 			tableView.reloadData()
 		}
 	}
-    
+
     // MARK: - Rows
     func replaceRow(_ sectionID: String, rowIdentifier: String, newRow: StaticTableViewRow) {
         let section = self.sectionForIdentifier(sectionID)
@@ -85,7 +85,7 @@ class StaticTableViewController: UITableViewController, Themeable {
             }
         }
     }
-    
+
     func removeRow(_ sectionID: String, rowIdentifier: String) {
         let section = self.sectionForIdentifier(sectionID)
         if let row = self.rowInSection(section, rowIdentifier: rowIdentifier) {

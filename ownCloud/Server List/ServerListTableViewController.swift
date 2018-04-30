@@ -211,7 +211,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
         self.navigationController?.pushViewController(viewController, animated: true)
 
     }
-    
+
 	var themeCounter : Int = 0
 
 	@IBAction func help() {
@@ -263,8 +263,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	// MARK: - Table view delegate
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-		if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
+
+        if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
 			if lockedBookmarks.contains(bookmark) {
 				let alertController = UIAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName() as NSString) as String,
 									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName() as NSString) as String,
@@ -280,7 +280,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 				return
 			}
-            
+
             if bookmark.authenticationData == nil {
                 self.editBookmark(bookmark)
             } else {
@@ -311,10 +311,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
             bookmarkCell.detailLabel.text = bookmark.url.absoluteString
             bookmarkCell.imageView?.image = UIImage(named: "owncloud-primary-small")
         }
-        
+
 		return bookmarkCell
 	}
-    
+
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         return [
             UITableViewRowAction(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (_, indexPath) in
@@ -322,15 +322,15 @@ class ServerListTableViewController: UITableViewController, Themeable {
                     let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName()) as String,
                                                             message: "This will also delete all locally stored file copies.".localized,
                                                             preferredStyle: .actionSheet)
-                    
+
                     alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
-                    
+
                     alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
-                        
+
                         self.lockedBookmarks.append(bookmark)
-                        
+
                         let vault : OCVault = OCVault(bookmark: bookmark)
-                        
+
                         vault.erase(completionHandler: { (_, error) in
                             DispatchQueue.main.async {
                                 if error != nil {
@@ -338,41 +338,41 @@ class ServerListTableViewController: UITableViewController, Themeable {
                                     let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName() as NSString) as String,
                                                                             message: error?.localizedDescription,
                                                                             preferredStyle: .alert)
-                                    
+
                                     alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
-                                    
+
                                     self.present(alertController, animated: true, completion: nil)
                                 } else {
                                     // Success! We can now remove the bookmark
                                     self.ignoreServerListChanges = true
-                                    
+
                                     BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
-                                    
+
                                     tableView.performBatchUpdates({
                                         tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
                                     }, completion: { (_) in
                                         self.ignoreServerListChanges = false
                                     })
-                                    
+
                                     self.updateNoServerMessageVisibility()
                                 }
-                                
+
                                 if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
                                     self.lockedBookmarks.remove(at: removeIndex)
                                 }
                             }
                         })
                     }))
-                    
+
                     self.present(alertController, animated: true, completion: nil)
                 }
             })
         ]
     }
-    
+
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
         -> UISwipeActionsConfiguration? {
-            
+
             let editAction = UIContextualAction(style: .normal, title:  "Edit") { (_, _, completion) in
                 if let bookmark: OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
                     self.editBookmark(bookmark)
@@ -380,45 +380,45 @@ class ServerListTableViewController: UITableViewController, Themeable {
                 completion(true)
             }
             editAction.backgroundColor = .blue
-            
+
             return UISwipeActionsConfiguration(actions: [editAction])
     }
-    
+
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
         -> UISwipeActionsConfiguration? {
-            
+
             let deleteAction = UIContextualAction(style: .destructive, title:  "Delete") { (_, _, completion) in
-                
+
                 if let bookmark: OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
                     let alertController = UIAlertController.init(title: NSString.init(format: NSLocalizedString("Really delete '%@'?", comment: "") as NSString, bookmark.name as NSString) as String,
                                                                  message: NSLocalizedString("This will also delete all locally stored file copies.", comment: ""),
                                                                  preferredStyle: .actionSheet)
-                    
+
                     alertController.addAction(UIAlertAction.init(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
-                    
+
                     alertController.addAction(UIAlertAction.init(title: NSLocalizedString("Delete", comment: ""), style: .destructive, handler: { (_) in
-                        
+
                         self.ignoreServerListChanges = true
-                        
+
                         BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
-                        
+
                         tableView.performBatchUpdates({
                             tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
                         }, completion: { (_) in
                             self.ignoreServerListChanges = false
                         })
-                        
+
                         // TODO: Delete vault
-                        
+
                         self.updateNoServerMessageVisibility()
                     }))
-                    
+
                     self.present(alertController, animated: true, completion: nil)
                 }
                 completion(true)
             }
             deleteAction.backgroundColor = .red
-            
+
             return UISwipeActionsConfiguration(actions: [deleteAction])
     }
 

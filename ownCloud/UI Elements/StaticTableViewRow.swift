@@ -132,7 +132,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cellTextField.text = textValue
 		cellTextField.accessibilityIdentifier = identifier
         cellTextField.isEnabled = isEnabled
-        
+
 		cellTextField.addTarget(self, action: #selector(textFieldContentChanged(_:)), for: UIControlEvents.editingChanged)
 
 		if cell != nil {
@@ -141,8 +141,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			cellTextField.rightAnchor.constraint(equalTo: (cell?.contentView.rightAnchor)!, constant:-18).isActive = true
 			cellTextField.topAnchor.constraint(equalTo: (cell?.contentView.topAnchor)!, constant:14).isActive = true
 			cellTextField.bottomAnchor.constraint(equalTo: (cell?.contentView.bottomAnchor)!, constant:-14).isActive = true
-            
-            if (!isEnabled) {
+
+            if !isEnabled {
                 cell?.contentView.backgroundColor = UIColor.lightGray
             }
 		}
