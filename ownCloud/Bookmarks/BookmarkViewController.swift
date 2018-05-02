@@ -103,6 +103,12 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.textField?.becomeFirstResponder()
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super .viewWillDisappear(animated)
+        //Update the Bookmarks with the stored
+        BookmarkManager.sharedBookmarkManager.loadBookmarks()
+    }
+
     // MARK: Interface configuration
 
     private func loadInterface() {
@@ -424,6 +430,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
 
     private func connectButtonAction() {
+
+        let serverName = self.sectionForIdentifier(serverNameSectionIdentifier)?.row(withIdentifier: serverNameTextFieldIdentifier)?.value as? String
+        self.bookmark?.name = (serverName != nil && serverName != "") ? serverName: self.bookmark!.url.absoluteString
+        BookmarkManager.sharedBookmarkManager.saveBookmarks()
 
         let url: NSString? = self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value as? NSString
         let username: NSString? = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphraseUsernameRowIdentifier)?.value as? NSString
