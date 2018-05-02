@@ -408,7 +408,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     }
 
     private func continueButtonAction() {
-        self.checkServerBeforeConnect(usernameConst: nil, passwordConst: nil)
+
+        let url: NSString? = self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value as? NSString
+
+        self.checkServerBeforeConnect(urlConst: url, usernameConst: nil, passwordConst: nil)
     }
 
     private func saveButtonAction() {
@@ -422,10 +425,11 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
     private func connectButtonAction() {
 
+        let url: NSString? = self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value as? NSString
         let username: NSString? = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphraseUsernameRowIdentifier)?.value as? NSString
         let password: NSString?  = self.sectionForIdentifier(passphraseAuthSectionIdentifier)?.row(withIdentifier: passphrasePasswordIdentifier)?.value as? NSString
 
-        self.checkServerBeforeConnect(usernameConst: username, passwordConst: password)
+        self.checkServerBeforeConnect(urlConst: url, usernameConst: username, passwordConst: password)
     }
 
     func deleteAuthDataButtonAction() {
@@ -436,15 +440,17 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         }
     }
 
-    func checkServerBeforeConnect(usernameConst: NSString?, passwordConst: NSString?) {
+    func checkServerBeforeConnect(urlConst: NSString?, usernameConst: NSString?, passwordConst: NSString?) {
+
+        let url: NSString? = urlConst
         var username: NSString? = usernameConst
         var password: NSString? = passwordConst
 
-        var afterURL: String = ""
-
-        afterURL = self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value as? String ?? ""
-
         var protocolAppended: ObjCBool = false
+
+        if self.bookmark != nil {
+            self.bookmark?.url = NSURL(username: &username, password: &password, afterNormalizingURLString: url! as String, protocolWasPrepended: &protocolAppended) as URL?
+        }
 
         if self.connection != nil {
             self.connection?.prepareForSetup(options: nil, completionHandler: { (issuesFromSDK, _, _, preferredAuthMethods) in
@@ -453,7 +459,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                                                            username: username, password: password)
             })
         } else {
-            if let bookmark: OCBookmark = OCBookmark(for: NSURL(username: &username, password: &password, afterNormalizingURLString: afterURL, protocolWasPrepended: &protocolAppended) as URL),
+            if let bookmark: OCBookmark = OCBookmark(for: NSURL(username: &username, password: &password, afterNormalizingURLString: url! as String, protocolWasPrepended: &protocolAppended) as URL),
                 let newConnection: OCConnection = OCConnection(bookmark: bookmark) {
 
                 self.bookmark = bookmark
