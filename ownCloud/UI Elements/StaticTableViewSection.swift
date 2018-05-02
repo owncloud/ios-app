@@ -182,4 +182,11 @@ class StaticTableViewSection: NSObject {
 
 		return nil
 	}
+
+    // MARK: - Reload
+    func reload() {
+        if let id = self.identifier {
+            self.viewController?.reloadSection(id: id)
+        }
+    }
 }

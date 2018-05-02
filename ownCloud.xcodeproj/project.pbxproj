@@ -10,13 +10,14 @@
 		2303176D205AA21E006C4DAF /* IssuesPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2303176C205AA21E006C4DAF /* IssuesPresentationAnimator.swift */; };
 		2303176F205AA357006C4DAF /* IssuesDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2303176E205AA357006C4DAF /* IssuesDismissalAnimator.swift */; };
 		23039C2C20766CBB0095813A /* CertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23039C2B20766CBB0095813A /* CertificateViewController.swift */; };
-		232F7CA920970AA200EE22E4 /* SecuritySettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232F7CA820970AA200EE22E4 /* SecuritySettingsSection.swift */; };
-		232F7CAD2097140300EE22E4 /* UploadsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232F7CAC2097140300EE22E4 /* UploadsSettings.swift */; };
+		232F7CAD2097140300EE22E4 /* UploadsSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232F7CAC2097140300EE22E4 /* UploadsSettingsSection.swift */; };
 		232F7CAF2097260400EE22E4 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232F7CAE2097260400EE22E4 /* SettingsViewController.swift */; };
 		233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233BDE9F204FEFE500C06732 /* AppDelegate.swift */; };
 		233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA6204FEFE500C06732 /* Assets.xcassets */; };
 		233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA8204FEFE500C06732 /* LaunchScreen.storyboard */; };
 		233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */; };
+		233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */; };
+		23474466207613AB00859C93 /* ConnectionIssueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23474465207613AB00859C93 /* ConnectionIssueViewController.swift */; };
 		2347446A20761BB700859C93 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2347446920761BB700859C93 /* String+Extension.swift */; };
 		237C99822057EFD800E915DA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 237C99812057EFD700E915DA /* Localizable.strings */; };
 		239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239F1318205A693A0029F186 /* UIColor+Extension.swift */; };
@@ -243,8 +244,7 @@
 		2303176C205AA21E006C4DAF /* IssuesPresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesPresentationAnimator.swift; sourceTree = "<group>"; };
 		2303176E205AA357006C4DAF /* IssuesDismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesDismissalAnimator.swift; sourceTree = "<group>"; };
 		23039C2B20766CBB0095813A /* CertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateViewController.swift; sourceTree = "<group>"; };
-		232F7CA820970AA200EE22E4 /* SecuritySettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuritySettingsSection.swift; sourceTree = "<group>"; };
-		232F7CAC2097140300EE22E4 /* UploadsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadsSettings.swift; sourceTree = "<group>"; };
+		232F7CAC2097140300EE22E4 /* UploadsSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadsSettingsSection.swift; sourceTree = "<group>"; };
 		232F7CAE2097260400EE22E4 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		233BDE9C204FEFE500C06732 /* ownCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ownCloud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		233BDE9F204FEFE500C06732 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -255,6 +255,8 @@
 		233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwnCloudTests.swift; sourceTree = "<group>"; };
 		233BDEB6204FEFE500C06732 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ownCloudSDK.xcodeproj; path = "ios-sdk/ownCloudSDK.xcodeproj"; sourceTree = "<group>"; };
+		233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuritySettingsSection.swift; sourceTree = "<group>"; };
+		23474465207613AB00859C93 /* ConnectionIssueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionIssueViewController.swift; sourceTree = "<group>"; };
 		2347446920761BB700859C93 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		237C99812057EFD700E915DA /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		239F1318205A693A0029F186 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
@@ -705,9 +707,9 @@
 			isa = PBXGroup;
 			children = (
 				DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */,
-				232F7CA820970AA200EE22E4 /* SecuritySettingsSection.swift */,
-				232F7CAC2097140300EE22E4 /* UploadsSettings.swift */,
+				232F7CAC2097140300EE22E4 /* UploadsSettingsSection.swift */,
 				232F7CAE2097260400EE22E4 /* SettingsViewController.swift */,
+				233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1054,7 +1056,7 @@
 				DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */,
 				DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */,
 				DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */,
-				232F7CA920970AA200EE22E4 /* SecuritySettingsSection.swift in Sources */,
+				233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */,
 				DCF4F18B2052BA4C00189B9A /* Log.swift in Sources */,
 				DC3BE0E42077D4E0002A0AC0 /* CoreManager.swift in Sources */,
 				DCE974B2207E3AF80069FC2B /* ThemeNavigationController.swift in Sources */,
@@ -1068,7 +1070,7 @@
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
 				DC3BE0E12077CD4B002A0AC0 /* Synchronized.swift in Sources */,
 				DCE5E8B82080D8D9005F60CE /* OCItem+Extension.swift in Sources */,
-				232F7CAD2097140300EE22E4 /* UploadsSettings.swift in Sources */,
+				232F7CAD2097140300EE22E4 /* UploadsSettingsSection.swift in Sources */,
 				2303176F205AA357006C4DAF /* IssuesDismissalAnimator.swift in Sources */,
 				DC42244C207CAFBB0006A2A6 /* ThemeCollection.swift in Sources */,
 				DCFED9BA20809B8900A2D984 /* ThemeTVGResource.swift in Sources */,
@@ -1272,7 +1274,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "894b24b2-6b3d-4cbf-9897-50599da703e0";
+				PROVISIONING_PROFILE = "57592e2a-cd5f-4497-97ec-22d75c57ac62";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1294,8 +1296,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e862201a-9677-4f5a-a0e4-0b6c6d4a8e30";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app";
+				PROVISIONING_PROFILE = "57592e2a-cd5f-4497-97ec-22d75c57ac62";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

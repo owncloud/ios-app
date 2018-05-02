@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UploadsSettings: NSObject {
+class UploadsSettings: StaticTableViewSection {
 
     // MARK: Upload settings properties
 

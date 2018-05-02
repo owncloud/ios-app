@@ -17,7 +17,7 @@ class SettingsViewController: StaticTableViewController {
 
         let uploadSettings = UploadsSettings(photoUploads: true, videoUploads: false, backgroundUploads: true, wifiOnly: false)
         let securitySettings = SecuritySettings(userDefaults: UserDefaults.standard)
-        self.addSection(securitySettings.section)
+        self.addSection(securitySettings)
         self.addSection(uploadSettings.section)
     }
 

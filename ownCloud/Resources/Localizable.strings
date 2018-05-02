@@ -69,6 +69,7 @@
 /* Settings Messages */
 
 "Security" = "Security";
+"Passcode Lock" = "Passcode Lock";
 "FaceID" = "FaceID";
 "TouchID" = "TouchID";
 "Uploads" = "Uploads";
@@ -77,4 +78,5 @@
 "Background uploads" = "Background uploads";
 "Wifi only" = "Wifi only";
 "Settings" = "Settings";
-"Frecuency" = "Frecuency";
+"Frequency" = "Frequency";
+"Select the frequency that security should be showed" = "Select the frequency that security should be showed";
