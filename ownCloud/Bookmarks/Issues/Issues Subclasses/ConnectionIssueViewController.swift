@@ -31,21 +31,29 @@ class ConnectionIssueViewController: IssuesViewController {
         let filteredIssues = filter(issue: issue)
         connectionIssues = filteredIssues.issues
 
-        if filteredIssues.level == OCConnectionIssueLevel.error {
+        if issue.type == OCConnectionIssueType.error {
             self.headerTitle = "Error".localized
+            connectionIssues = [issue]
             self.buttons = [IssueButton(title: "OK".localized, type: .plain, action: {
                 completion(.error)
                 self.dismiss(animated: true)})]
         } else {
-            self.headerTitle = "Review Connection".localized
-            self.buttons = [
-                IssueButton(title: "Cancel".localized, type: .cancel, action: {
-                    completion(.cancel)
-                    self.dismiss(animated: true)}),
-                IssueButton(title: "Approve".localized, type: .approve, action: {
-                    completion(.approve)
-                    self.dismiss(animated: true)})
-            ]
+            if filteredIssues.level == OCConnectionIssueLevel.error {
+                self.headerTitle = "Error".localized
+                self.buttons = [IssueButton(title: "OK".localized, type: .plain, action: {
+                    completion(.error)
+                    self.dismiss(animated: true)})]
+            } else {
+                self.headerTitle = "Review Connection".localized
+                self.buttons = [
+                    IssueButton(title: "Cancel".localized, type: .cancel, action: {
+                        completion(.cancel)
+                        self.dismiss(animated: true)}),
+                    IssueButton(title: "Approve".localized, type: .approve, action: {
+                        completion(.approve)
+                        self.dismiss(animated: true)})
+                ]
+            }
         }
     }
 
