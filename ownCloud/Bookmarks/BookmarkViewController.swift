@@ -398,8 +398,8 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
     // MARK: Actions
 
     @IBAction func deleteBookmark() {
-        let alertController = UIAlertController.init(title: NSString.init(format: NSLocalizedString("Really delete '%@'?", comment: "") as NSString, self.bookmark?.name as! NSString) as String,
-                                                     message: NSLocalizedString("This will also delete all locally stored file copies.", comment: ""),
+        let alertController = UIAlertController.init(title: NSString.init(format: "Really delete '%@'?".localized as NSString, self.bookmark?.name as! NSString) as String,
+                                                     message: "This will also delete all locally stored file copies.".localized,
                                                      preferredStyle: .actionSheet)
 
         alertController.addAction(UIAlertAction.init(title: "Cancel".localized, style: .cancel, handler: nil))
