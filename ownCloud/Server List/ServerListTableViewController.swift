@@ -317,7 +317,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         return [
-            UITableViewRowAction(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (_, indexPath) in
+            UITableViewRowAction(style: UITableViewRowActionStyle.destructive, title: "Delete".localized, handler: { (_, indexPath) in
                 self.deleteBookmarkAction(at: indexPath, tableView: tableView)
             })
         ]
@@ -326,7 +326,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
         -> UISwipeActionsConfiguration? {
 
-            let editAction = UIContextualAction(style: .normal, title:  "Edit") { (_, _, completion) in
+            let editAction = UIContextualAction(style: .normal, title:  "Edit".localized) { (_, _, completion) in
                 if let bookmark: OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
                     self.editBookmark(bookmark)
                 }
