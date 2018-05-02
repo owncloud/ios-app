@@ -106,7 +106,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
         self.identifier = identifier
 
-        self.cell = UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: nil)
+        self.cell = ThemeTableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: nil)
         self.cell?.textLabel?.text = title
         self.cell?.detailTextLabel?.text = subtitle
         self.cell?.accessoryType = accessoryType
