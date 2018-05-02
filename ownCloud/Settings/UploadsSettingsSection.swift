@@ -8,53 +8,125 @@
 
 import UIKit
 
+// MARK: - Instant Uploads UserDefaults keys
+private let UploadsPhotosUploadKey: String =  "uploads-settings-photos"
+private let UploadsVideosUploadKey: String = "uploads-settings-videos"
+private let UploadsBackgroundUploadsKey: String = "uploads-settings-background"
+private let UploadsWifiOnlyKey: String = "uploads-settings-wifi"
+
+// MARK: - Section key
+private let UploadsSectionIdentifier: String = "settings-uploads-section"
+
+// MARK: - Row keys
+private let UploadsPhotosRowIdentifier: String = "uploads-photos-row"
+private let UploadsVideosRowIdentifier: String = "uploads-videos-row"
+private let UploadsBackgroundUploadsRowIdentifier: String = "uploads-background-row"
+private let UploadsWifiOnlyRowIdentifier: String = "uploads-wifi-row"
+
 class UploadsSettings: StaticTableViewSection {
 
-    // MARK: Upload settings properties
+    // MARK: Upload settings properties.
 
-    /// Instant Photo Uploads are anabled
+    /// Instant Photo Uploads are anabled.
     private var photoUploadEnabled: Bool
-    /// Instant Video Uploads are anabled
+    /// Instant Video Uploads are anabled.
     private var videoUploadEnabled: Bool
-    /// Instant Background Uploads are anabled
+    /// Instant Background Uploads are anabled.
     private var backgroundUploadsEnabled: Bool
-    /// Instant uploads only trough wifi
+    /// Instant uploads only trough wifi.
     private var wifiOnlyEnabled: Bool
+    /// User defaults to store the settings.
+    private var userDefaults: UserDefaults
 
-    /// Section presenting those settings
-    var section: StaticTableViewSection
+    init(userDefaults: UserDefaults) {
 
-    init(photoUploads: Bool, videoUploads: Bool, backgroundUploads: Bool, wifiOnly: Bool) {
-        self.photoUploadEnabled = photoUploads
-        self.videoUploadEnabled = videoUploads
-        self.backgroundUploadsEnabled = backgroundUploads
-        self.wifiOnlyEnabled = wifiOnly
-        self.section = StaticTableViewSection(headerTitle: "Uploads".localized, footerTitle: nil)
+        self.userDefaults = userDefaults
+
+        self.photoUploadEnabled = userDefaults.bool(forKey: UploadsPhotosUploadKey)
+        self.videoUploadEnabled = userDefaults.bool(forKey: UploadsVideosUploadKey)
+        self.backgroundUploadsEnabled = userDefaults.bool(forKey: UploadsBackgroundUploadsKey)
+        self.wifiOnlyEnabled = userDefaults.bool(forKey: UploadsWifiOnlyKey)
 
         super.init()
+        self.headerTitle = "Instant Uploads".localized
+        self.identifier = UploadsSectionIdentifier
 
         updateUI()
     }
 
+    // MARK: - Creation of the rows.
+    @discardableResult
+    private func photosRow() -> StaticTableViewRow {
+        let photosRow = StaticTableViewRow(switchWithAction: { (row, _) in
+            self.photoUploadEnabled = row.value as! Bool
+            self.userDefaults.set(self.photoUploadEnabled, forKey: UploadsPhotosUploadKey)
+            self.updateUI()
+        }, title: "Photos".localized, value: photoUploadEnabled, identifier: UploadsPhotosRowIdentifier)
+
+        return photosRow
+    }
+
+    @discardableResult
+    private func videosRow() -> StaticTableViewRow {
+        let videosRow = StaticTableViewRow(switchWithAction: { (row, _) in
+            self.videoUploadEnabled = row.value as! Bool
+            self.userDefaults.set(self.videoUploadEnabled, forKey: UploadsVideosUploadKey)
+            self.updateUI()
+        }, title: "Videos".localized, value: videoUploadEnabled, identifier: UploadsVideosRowIdentifier)
+
+        return videosRow
+    }
+
+    @discardableResult
+    private func backgroundUploadsRow() -> StaticTableViewRow {
+        let backgroundUploadsRow = StaticTableViewRow(switchWithAction: { (row, _) in
+            self.backgroundUploadsEnabled = row.value as! Bool
+            self.userDefaults.set(self.backgroundUploadsEnabled, forKey: UploadsBackgroundUploadsKey)
+        }, title: "Background uploads".localized, value: backgroundUploadsEnabled, identifier: UploadsBackgroundUploadsRowIdentifier)
+
+        return backgroundUploadsRow
+    }
+
+    @discardableResult
+    private func wifiOnlyRow() -> StaticTableViewRow {
+        let wifiOnlyRow = StaticTableViewRow(switchWithAction: { (row, _) in
+            self.wifiOnlyEnabled = row.value as! Bool
+            self.userDefaults.set(self.wifiOnlyEnabled, forKey: UploadsWifiOnlyKey)
+        }, title: "Wifi only".localized, value: wifiOnlyEnabled, identifier: UploadsWifiOnlyRowIdentifier)
+
+        return wifiOnlyRow
+    }
+
     /// Create and configure all the rows the Uploads Section has in the settings view.
     func updateUI() {
-        let photosRow = StaticTableViewRow(switchWithAction: { (row, sender) in
-            // TODO: do something
-        }, title: "Photos".localized, value: photoUploadEnabled, identifier: "uploads-photos-row")
 
-        let videosRow = StaticTableViewRow(switchWithAction: { (row, sender) in
-            // TODO: do something
-        }, title: "Videos".localized, value: videoUploadEnabled, identifier: "uploads-videos-row")
+        if row(withIdentifier: UploadsPhotosRowIdentifier) == nil {
+            add(rows: [photosRow()])
+        }
 
-        let backgroundUploadsRow = StaticTableViewRow(switchWithAction: { (row, sender) in
-            // TODO: do something
-        }, title: "Background uploads".localized, value: backgroundUploadsEnabled, identifier: "uploads-background-row")
+        if row(withIdentifier: UploadsVideosRowIdentifier) == nil {
+            add(rows: [videosRow()])
+        }
 
-        let wifiOnlyRow = StaticTableViewRow(switchWithAction: { (row, sender) in
-            // TODO: do something
-        }, title: "Wifi only".localized, value: wifiOnlyEnabled, identifier: "uploads-wifi-row")
+        if photoUploadEnabled || videoUploadEnabled {
+            if row(withIdentifier: UploadsBackgroundUploadsRowIdentifier) == nil {
+                add(rows: [backgroundUploadsRow()])
+            }
 
-        self.section.add(rows: [photosRow, videosRow, backgroundUploadsRow, wifiOnlyRow])
+            if row(withIdentifier: UploadsWifiOnlyRowIdentifier) == nil {
+                add(rows: [wifiOnlyRow()])
+            }
+        } else {
+            if let row = row(withIdentifier: UploadsBackgroundUploadsRowIdentifier) {
+                remove(rows: [row])
+            }
+
+            if let row = row(withIdentifier: UploadsWifiOnlyRowIdentifier) {
+                remove(rows: [row])
+            }
+        }
+
+        reload()
     }
 
 }

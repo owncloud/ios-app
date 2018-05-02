@@ -1,38 +1,38 @@
- //
- //  SecurityGlobalSettings.swift
- //  ownCloud
- //
- //  Created by Pablo Carrascal on 30/04/2018.
- //  Copyright © 2018 ownCloud GmbH. All rights reserved.
- //
+//
+//  SecurityGlobalSettings.swift
+//  ownCloud
+//
+//  Created by Pablo Carrascal on 30/04/2018.
+//  Copyright © 2018 ownCloud GmbH. All rights reserved.
+//
 
- import UIKit
- import LocalAuthentication
+import UIKit
+import LocalAuthentication
 
- // MARK: - Security UserDefaults keys
- private let SecuritySettingsfrequencyKey: String =  "security-settings-frequency"
- private let SecurityPasscodeKey: String = "security-settings-usePasscode"
- private let SecurityBiometricalKey: String = "security-settings-useBiometrical"
+// MARK: - Security UserDefaults keys
+private let SecuritySettingsfrequencyKey: String =  "security-settings-frequency"
+private let SecurityPasscodeKey: String = "security-settings-usePasscode"
+private let SecurityBiometricalKey: String = "security-settings-useBiometrical"
 
- // MARK: - Section key
- private let SecuritySectionIdentifier: String = "settings-security-section"
+// MARK: - Section key
+private let SecuritySectionIdentifier: String = "settings-security-section"
 
- // MARK: - Row keys
- private let SecurityFrequencyRowIdentifier: String = "security-frequency-row"
- private let SecurityPasscodeRowIdentifier: String = "security-passcode-row"
- private let SecurityBiometricsRowIdentifier: String = "security-biometrical-row"
+// MARK: - Row keys
+private let SecurityFrequencyRowIdentifier: String = "security-frequency-row"
+private let SecurityPasscodeRowIdentifier: String = "security-passcode-row"
+private let SecurityBiometricsRowIdentifier: String = "security-biometrical-row"
 
- // MARK: - SecurityAskfrequency
- enum SecurityAskfrequency: String {
+// MARK: - SecurityAskfrequency
+enum SecurityAskfrequency: String {
     case allways = "Allways"
     case oneMinute = "1 minute"
     case fiveMinutes = "5 minutes"
     case thirtyMinutes = "30 minutes"
 
     static let all = [allways, oneMinute, fiveMinutes, thirtyMinutes]
- }
+}
 
- class SecuritySettings: StaticTableViewSection {
+class SecuritySettings: StaticTableViewSection {
 
     // MARK: - Security settings properties
 
@@ -159,4 +159,4 @@
 
         self.reload()
     }
- }
+}

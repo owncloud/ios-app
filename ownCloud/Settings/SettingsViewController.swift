@@ -15,10 +15,11 @@ class SettingsViewController: StaticTableViewController {
 
         self.navigationItem.title = "Settings".localized
 
-        let uploadSettings = UploadsSettings(photoUploads: true, videoUploads: false, backgroundUploads: true, wifiOnly: false)
-        let securitySettings = SecuritySettings(userDefaults: UserDefaults.standard)
+        let standardUserDefaults = UserDefaults.standard
+        let uploadSettings = UploadsSettings(userDefaults: standardUserDefaults)
+        let securitySettings = SecuritySettings(userDefaults: standardUserDefaults)
         self.addSection(securitySettings)
-        self.addSection(uploadSettings.section)
+        self.addSection(uploadSettings)
     }
 
 }
