@@ -115,6 +115,16 @@ class StaticTableViewController: UITableViewController, Themeable {
 		return (sections[indexPath.section].rows[indexPath.row])
 	}
 
+    func reloadSection(id: String) {
+        if let section = sectionForIdentifier(id),
+            let index: Int = sections.index(of: section) {
+
+            self.tableView.performBatchUpdates({
+                self.tableView.reloadSections(IndexSet(integer: index), with: .none)
+            })
+        }
+    }
+
 	// MARK: - Table view data source
 	override func numberOfSections(in tableView: UITableView) -> Int {
 		// #warning Incomplete implementation, return the number of sections
