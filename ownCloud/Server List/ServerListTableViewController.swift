@@ -318,54 +318,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         return [
             UITableViewRowAction(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (_, indexPath) in
-                if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
-                    let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName()) as String,
-                                                            message: "This will also delete all locally stored file copies.".localized,
-                                                            preferredStyle: .actionSheet)
-
-                    alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
-
-                    alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
-
-                        self.lockedBookmarks.append(bookmark)
-
-                        let vault : OCVault = OCVault(bookmark: bookmark)
-
-                        vault.erase(completionHandler: { (_, error) in
-                            DispatchQueue.main.async {
-                                if error != nil {
-                                    // Inform user if vault couldn't be erased
-                                    let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName() as NSString) as String,
-                                                                            message: error?.localizedDescription,
-                                                                            preferredStyle: .alert)
-
-                                    alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
-
-                                    self.present(alertController, animated: true, completion: nil)
-                                } else {
-                                    // Success! We can now remove the bookmark
-                                    self.ignoreServerListChanges = true
-
-                                    BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
-
-                                    tableView.performBatchUpdates({
-                                        tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
-                                    }, completion: { (_) in
-                                        self.ignoreServerListChanges = false
-                                    })
-
-                                    self.updateNoServerMessageVisibility()
-                                }
-
-                                if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
-                                    self.lockedBookmarks.remove(at: removeIndex)
-                                }
-                            }
-                        })
-                    }))
-
-                    self.present(alertController, animated: true, completion: nil)
-                }
+                self.deleteBookmarkAction(at: indexPath, tableView: tableView)
             })
         ]
     }
@@ -387,37 +340,14 @@ class ServerListTableViewController: UITableViewController, Themeable {
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
         -> UISwipeActionsConfiguration? {
 
-            let deleteAction = UIContextualAction(style: .destructive, title:  "Delete") { (_, _, completion) in
-
-                if let bookmark: OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
-                    let alertController = UIAlertController.init(title: NSString.init(format: NSLocalizedString("Really delete '%@'?", comment: "") as NSString, bookmark.name as NSString) as String,
-                                                                 message: NSLocalizedString("This will also delete all locally stored file copies.", comment: ""),
-                                                                 preferredStyle: .actionSheet)
-
-                    alertController.addAction(UIAlertAction.init(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
-
-                    alertController.addAction(UIAlertAction.init(title: NSLocalizedString("Delete", comment: ""), style: .destructive, handler: { (_) in
-
-                        self.ignoreServerListChanges = true
-
-                        BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
-
-                        tableView.performBatchUpdates({
-                            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
-                        }, completion: { (_) in
-                            self.ignoreServerListChanges = false
-                        })
-
-                        // TODO: Delete vault
-
-                        self.updateNoServerMessageVisibility()
-                    }))
-
-                    self.present(alertController, animated: true, completion: nil)
-                }
+            let deleteAction = UIContextualAction(style: .normal, title:  "Delete".localized) { (_, _, completion) in
+                self.deleteBookmarkAction(at: indexPath, tableView: tableView)
                 completion(true)
             }
             deleteAction.backgroundColor = .red
+
+            let swipeConfiguration = UISwipeActionsConfiguration(actions: [deleteAction])
+            swipeConfiguration.performsFirstActionWithFullSwipe = false
 
             return UISwipeActionsConfiguration(actions: [deleteAction])
     }
@@ -426,10 +356,32 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		BookmarkManager.sharedBookmarkManager.moveBookmark(from: fromIndexPath.row, to: to.row)
 	}
 
-//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        if let bookmark: OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
-//            //TODO: go to file list view
-//        }
-//    }
+    // MARK: Actions
 
+    func deleteBookmarkAction(at indexPath: IndexPath, tableView: UITableView) {
+        if let bookmark: OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
+            let alertController = UIAlertController.init(title: NSString.init(format: "Really delete '%@'?".localized as NSString, bookmark.name as NSString) as String,
+                                                         message: "This will also delete all locally stored file copies.".localized,
+                                                         preferredStyle: .actionSheet)
+
+            alertController.addAction(UIAlertAction.init(title: "Cancel".localized, style: .cancel, handler: nil))
+
+            alertController.addAction(UIAlertAction.init(title: "Delete".localized, style: .destructive, handler: { (_) in
+
+                self.ignoreServerListChanges = true
+
+                BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
+
+                tableView.performBatchUpdates({
+                    tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
+                }, completion: { (_) in
+                    self.ignoreServerListChanges = false
+                })
+
+                self.updateNoServerMessageVisibility()
+            }))
+
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
 }
