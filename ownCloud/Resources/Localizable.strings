@@ -65,3 +65,16 @@
 "This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
 "Delete" = "Delete";
 "Deletion of '%@' failed" = "Deletion of '%@' failed";
+
+/* Settings Messages */
+
+"Security" = "Security";
+"FaceID" = "FaceID";
+"TouchID" = "TouchID";
+"Uploads" = "Uploads";
+"Videos" = "Videos";
+"Photos" = "Photos";
+"Background uploads" = "Background uploads";
+"Wifi only" = "Wifi only";
+"Settings" = "Settings";
+"Frecuency" = "Frecuency";
