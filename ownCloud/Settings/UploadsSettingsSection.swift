@@ -28,13 +28,29 @@ class UploadsSettings: StaticTableViewSection {
     // MARK: Upload settings properties.
 
     /// Instant Photo Uploads are anabled.
-    private var photoUploadEnabled: Bool
+    private var photoUploadEnabled: Bool {
+        willSet {
+            self.userDefaults.set(newValue, forKey: UploadsPhotosUploadKey)
+        }
+    }
     /// Instant Video Uploads are anabled.
-    private var videoUploadEnabled: Bool
+    private var videoUploadEnabled: Bool {
+        willSet {
+            self.userDefaults.set(newValue, forKey: UploadsVideosUploadKey)
+        }
+    }
     /// Instant Background Uploads are anabled.
-    private var backgroundUploadsEnabled: Bool
+    private var backgroundUploadsEnabled: Bool {
+        willSet {
+            self.userDefaults.set(newValue, forKey: UploadsBackgroundUploadsKey)
+        }
+    }
     /// Instant uploads only trough wifi.
-    private var wifiOnlyEnabled: Bool
+    private var wifiOnlyEnabled: Bool {
+        willSet {
+            self.userDefaults.set(newValue, forKey: UploadsWifiOnlyKey)
+        }
+    }
     /// User defaults to store the settings.
     private var userDefaults: UserDefaults
 
@@ -59,7 +75,6 @@ class UploadsSettings: StaticTableViewSection {
     private func photosRow() -> StaticTableViewRow {
         let photosRow = StaticTableViewRow(switchWithAction: { (row, _) in
             self.photoUploadEnabled = row.value as! Bool
-            self.userDefaults.set(self.photoUploadEnabled, forKey: UploadsPhotosUploadKey)
             self.updateUI()
         }, title: "Photos".localized, value: photoUploadEnabled, identifier: UploadsPhotosRowIdentifier)
 
@@ -70,7 +85,6 @@ class UploadsSettings: StaticTableViewSection {
     private func videosRow() -> StaticTableViewRow {
         let videosRow = StaticTableViewRow(switchWithAction: { (row, _) in
             self.videoUploadEnabled = row.value as! Bool
-            self.userDefaults.set(self.videoUploadEnabled, forKey: UploadsVideosUploadKey)
             self.updateUI()
         }, title: "Videos".localized, value: videoUploadEnabled, identifier: UploadsVideosRowIdentifier)
 
@@ -81,7 +95,6 @@ class UploadsSettings: StaticTableViewSection {
     private func backgroundUploadsRow() -> StaticTableViewRow {
         let backgroundUploadsRow = StaticTableViewRow(switchWithAction: { (row, _) in
             self.backgroundUploadsEnabled = row.value as! Bool
-            self.userDefaults.set(self.backgroundUploadsEnabled, forKey: UploadsBackgroundUploadsKey)
         }, title: "Background uploads".localized, value: backgroundUploadsEnabled, identifier: UploadsBackgroundUploadsRowIdentifier)
 
         return backgroundUploadsRow
@@ -91,7 +104,6 @@ class UploadsSettings: StaticTableViewSection {
     private func wifiOnlyRow() -> StaticTableViewRow {
         let wifiOnlyRow = StaticTableViewRow(switchWithAction: { (row, _) in
             self.wifiOnlyEnabled = row.value as! Bool
-            self.userDefaults.set(self.wifiOnlyEnabled, forKey: UploadsWifiOnlyKey)
         }, title: "Wifi only".localized, value: wifiOnlyEnabled, identifier: UploadsWifiOnlyRowIdentifier)
 
         return wifiOnlyRow
@@ -118,10 +130,12 @@ class UploadsSettings: StaticTableViewSection {
             }
         } else {
             if let row = row(withIdentifier: UploadsBackgroundUploadsRowIdentifier) {
+                self.backgroundUploadsEnabled = false
                 remove(rows: [row])
             }
 
             if let row = row(withIdentifier: UploadsWifiOnlyRowIdentifier) {
+                self.wifiOnlyEnabled = false
                 remove(rows: [row])
             }
         }
