@@ -526,11 +526,11 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                 }
             }
         } else {
-            self.continueAfterCheckConnection(authMethod: authMethod!, issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
+            self.continueAfterCheckConnection(authMethod: authMethod, issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
         }
     }
 
-    func continueAfterCheckConnection(authMethod:String, issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
+    func continueAfterCheckConnection(authMethod:String?, issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
 
         if self.authMethod == nil || self.authMethod != authMethod {
 
