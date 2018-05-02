@@ -235,7 +235,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	@IBAction func settings() {
-		let viewController : GlobalSettingsViewController = GlobalSettingsViewController(style: UITableViewStyle.grouped)
+//        let viewController : GlobalSettingsViewController = GlobalSettingsViewController(style: UITableViewStyle.grouped)
+
+        let viewController : SettingsViewController = SettingsViewController()
 
 		self.navigationController?.pushViewController(viewController, animated: true)
 	}
