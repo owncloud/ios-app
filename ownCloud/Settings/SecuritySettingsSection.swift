@@ -10,14 +10,14 @@ import UIKit
 import LocalAuthentication
 
 // MARK: - Security UserDefaults keys
-private let SecuritySettingsfrequencyKey: String =  "security-settings-frequency"
-private let SecurityPasscodeKey: String = "security-settings-usePasscode"
-private let SecurityBiometricalKey: String = "security-settings-useBiometrical"
+public let SecuritySettingsfrequencyKey: String =  "security-settings-frequency"
+public let SecuritySettingsPasscodeKey: String = "security-settings-usePasscode"
+public let SecuritySettingsBiometricalKey: String = "security-settings-useBiometrical"
 
-// MARK: - Section key
+// MARK: - Section identifier
 private let SecuritySectionIdentifier: String = "settings-security-section"
 
-// MARK: - Row keys
+// MARK: - Row identifiers
 private let SecurityFrequencyRowIdentifier: String = "security-frequency-row"
 private let SecurityPasscodeRowIdentifier: String = "security-passcode-row"
 private let SecurityBiometricsRowIdentifier: String = "security-biometrical-row"
@@ -53,8 +53,8 @@ class SecuritySettings: StaticTableViewSection {
         } else {
             self.frequency = .allways
         }
-        self.passcodeEnabled = userDefaults.bool(forKey: SecurityPasscodeKey)
-        self.biometricalSecurityEnabled = userDefaults.bool(forKey: SecurityBiometricalKey)
+        self.passcodeEnabled = userDefaults.bool(forKey: SecuritySettingsPasscodeKey)
+        self.biometricalSecurityEnabled = userDefaults.bool(forKey: SecuritySettingsBiometricalKey)
 
         super.init()
         self.headerTitle = "Security".localized
@@ -64,7 +64,6 @@ class SecuritySettings: StaticTableViewSection {
     }
 
     // MARK: - Creation of the rows.
-    @discardableResult
     private func frequencyRow() -> StaticTableViewRow {
         let frequencyRow = StaticTableViewRow(subtitleRowWithAction: { (row, _) in
 
@@ -86,9 +85,7 @@ class SecuritySettings: StaticTableViewSection {
                 let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel".localized, style: UIAlertActionStyle.cancel, handler: nil)
                 alert.addAction(cancelAction)
 
-                alert.view.translatesAutoresizingMaskIntoConstraints = false
                 vc.present(alert, animated: true)
-
             }
 
         }, title: "Frequency".localized, subtitle:frequency.rawValue, accessoryType: .disclosureIndicator, identifier: SecurityFrequencyRowIdentifier)
@@ -96,18 +93,16 @@ class SecuritySettings: StaticTableViewSection {
         return frequencyRow
     }
 
-    @discardableResult
     private func passcodeRow() -> StaticTableViewRow {
         let passcodeRow = StaticTableViewRow(switchWithAction: { (row, _) in
             self.passcodeEnabled = row.value as! Bool
-            self.userDefaults.set(self.passcodeEnabled, forKey: SecurityPasscodeKey)
+            self.userDefaults.set(self.passcodeEnabled, forKey: SecuritySettingsPasscodeKey)
             self.updateUI()
         }, title: "Passcode Lock".localized, value: self.passcodeEnabled, identifier: SecurityPasscodeRowIdentifier)
 
         return passcodeRow
     }
 
-    @discardableResult
     private func biometricalRow() -> StaticTableViewRow? {
         let context = LAContext()
 
@@ -125,7 +120,7 @@ class SecuritySettings: StaticTableViewSection {
 
             let biometricalRow = StaticTableViewRow(switchWithAction: { (row, _) in
                 self.biometricalSecurityEnabled = row.value as! Bool
-                self.userDefaults.set(self.biometricalSecurityEnabled, forKey: SecurityBiometricalKey)
+                self.userDefaults.set(self.biometricalSecurityEnabled, forKey: SecuritySettingsBiometricalKey)
             }, title: biometricalSecurityName, value: self.biometricalSecurityEnabled, identifier: SecurityBiometricsRowIdentifier)
             return biometricalRow
         } else {

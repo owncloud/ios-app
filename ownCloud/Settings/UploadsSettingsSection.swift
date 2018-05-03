@@ -10,22 +10,22 @@ import UIKit
 import ownCloudSDK
 
 // MARK: - Instant Uploads UserDefaults keys
-private let UploadsPhotosUploadKey: String =  "uploads-settings-photos"
-private let UploadsPhotosWifiOnlyKey: String = "uploads-settings-photos-wifi"
-private let UploadsPhotosSelectedPathKey: String = "uploads-settings-photos-path"
+public let UploadsPhotosUploadKey: String =  "uploads-settings-photos"
+public let UploadsPhotosWifiOnlyKey: String = "uploads-settings-photos-wifi"
+public let UploadsPhotosSelectedPathKey: String = "uploads-settings-photos-path"
 
-private let UploadsVideosUploadKey: String = "uploads-settings-videos"
-private let UploadsVideosWifiOnlyKey: String = "uploads-settings-videos-wifi"
-private let UploadsVideosSelectedPathKey: String = "uploads-settings-videos-path"
+public let UploadsVideosUploadKey: String = "uploads-settings-videos"
+public let UploadsVideosWifiOnlyKey: String = "uploads-settings-videos-wifi"
+public let UploadsVideosSelectedPathKey: String = "uploads-settings-videos-path"
 
 private let uploadsSelectedPath: String = "/cameraUpload"
 
 private let UploadsBackgroundUploadsKey: String = "uploads-settings-background"
 
-// MARK: - Section key
+// MARK: - Section identifier
 private let UploadsSectionIdentifier: String = "settings-uploads-section"
 
-// MARK: - Row keys
+// MARK: - Row identifiers
 private let UploadsPhotosRowIdentifier: String = "uploads-photos-row"
 private let UploadsPhotosWifiOnlyRowIdentifier: String = "uploads-photos-wifi-row"
 private let UploadsPhotosSelectedPathRowIdentifier: String = "uploads-photos-path-row"
@@ -121,7 +121,6 @@ class UploadsSettings: StaticTableViewSection {
     private func photosWifiOnlyRow() -> StaticTableViewRow {
         let photosWifiOnlyRow = StaticTableViewRow(switchWithAction: { (row, _) in
             self.photoWifiOnlyUploadsEnabled = row.value as! Bool
-            self.updateUI()
         }, title: "Upload pictures via WiFi only".localized, value: photoWifiOnlyUploadsEnabled, identifier: UploadsPhotosWifiOnlyRowIdentifier)
 
         return photosWifiOnlyRow
@@ -129,8 +128,7 @@ class UploadsSettings: StaticTableViewSection {
 
     private func photosSelectedPathRow() -> StaticTableViewRow {
         let photosSelectedPathRow = StaticTableViewRow(textFieldWithAction: { (row, _) in
-                        self.photoSelectedPath = row.value as! String
-                        self.updateUI()
+                    self.photoSelectedPath = row.value as! String
         }, placeholder: uploadsSelectedPath,
            value: photoSelectedPath,
            secureTextEntry: false,
@@ -156,7 +154,6 @@ class UploadsSettings: StaticTableViewSection {
     private func videosWifiOnlyRow() -> StaticTableViewRow {
         let videosWifiOnlyRow = StaticTableViewRow(switchWithAction: { (row, _) in
             self.videoWifiOnlyUploadsEnabled = row.value as! Bool
-            self.updateUI()
         }, title: "Upload videos via WiFi only".localized, value: videoWifiOnlyUploadsEnabled, identifier: UploadsVideosWifiOnlyRowIdentifier)
 
         return videosWifiOnlyRow
@@ -165,7 +162,6 @@ class UploadsSettings: StaticTableViewSection {
     private func videosSelectedPathRow() -> StaticTableViewRow {
         let videosSelectedPathRow = StaticTableViewRow(textFieldWithAction: { (row, _) in
             self.videoSelectedPath = row.value as! String
-            self.updateUI()
         }, placeholder: uploadsSelectedPath,
            value: videoSelectedPath,
            secureTextEntry: false,
