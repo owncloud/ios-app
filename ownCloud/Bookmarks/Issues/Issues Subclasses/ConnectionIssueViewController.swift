@@ -10,6 +10,12 @@ import UIKit
 import ownCloudSDK
 import ownCloudUI
 
+enum ConnectionResponse {
+    case cancel
+    case approve
+    case error
+}
+
 typealias FilteredIssues = (issues: [OCConnectionIssue]?, level: OCConnectionIssueLevel?)
 
 class ConnectionIssueViewController: IssuesViewController {
@@ -20,24 +26,32 @@ class ConnectionIssueViewController: IssuesViewController {
         super.init(coder: aDecoder)
     }
 
-    init(issue: OCConnectionIssue, buttons: [IssueButton]? = nil, title: String? = nil) {
+    init(issue: OCConnectionIssue, title: String? = nil, completion:@escaping (ConnectionResponse) -> Void) {
         super.init(buttons: nil, title: "")
         let filteredIssues = filter(issue: issue)
         connectionIssues = filteredIssues.issues
 
-        if buttons != nil {
-            self.buttons = buttons
-            self.headerTitle = title
-
+        if issue.type == OCConnectionIssueType.error {
+            self.headerTitle = "Error".localized
+            connectionIssues = [issue]
+            self.buttons = [IssueButton(title: "OK".localized, type: .plain, action: {
+                completion(.error)
+                self.dismiss(animated: true)})]
         } else {
             if filteredIssues.level == OCConnectionIssueLevel.error {
                 self.headerTitle = "Error".localized
-                self.buttons = [IssueButton(title: "OK".localized, type: .plain, action: {self.dismiss(animated: true)})]
+                self.buttons = [IssueButton(title: "OK".localized, type: .plain, action: {
+                    completion(.error)
+                    self.dismiss(animated: true)})]
             } else {
                 self.headerTitle = "Review Connection".localized
                 self.buttons = [
-                    IssueButton(title: "Cancel".localized, type: .cancel, action: {self.dismiss(animated: true)}),
-                    IssueButton(title: "Approve".localized, type: .approve, action: {self.dismiss(animated: true)})
+                    IssueButton(title: "Cancel".localized, type: .cancel, action: {
+                        completion(.cancel)
+                        self.dismiss(animated: true)}),
+                    IssueButton(title: "Approve".localized, type: .approve, action: {
+                        completion(.approve)
+                        self.dismiss(animated: true)})
                 ]
             }
         }
@@ -86,7 +100,7 @@ extension ConnectionIssueViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return connectionIssues?.count ?? 1
+        return connectionIssues?.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

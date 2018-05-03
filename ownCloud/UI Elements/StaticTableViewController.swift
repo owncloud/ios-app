@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 enum StaticTableViewEvent {
 	case initial
@@ -33,6 +34,10 @@ class StaticTableViewController: UITableViewController, Themeable {
 	func addSection(_ section: StaticTableViewSection, animated animateThis: Bool = false) {
 		self.insertSection(section, at: sections.count, animated: animateThis)
 	}
+
+    func addSection(_ section: StaticTableViewSection, at index: Int, animated animateThis: Bool = false) {
+        self.insertSection(section, at: index, animated: animateThis)
+    }
 
 	func insertSection(_ section: StaticTableViewSection, at index: Int, animated: Bool = false) {
 		section.viewController = self
@@ -69,6 +74,27 @@ class StaticTableViewController: UITableViewController, Themeable {
 			tableView.reloadData()
 		}
 	}
+
+    // MARK: - Rows
+    func replaceRow(_ sectionID: String, rowIdentifier: String, newRow: StaticTableViewRow) {
+        let section = self.sectionForIdentifier(sectionID)
+        if let oldRow = self.rowInSection(section, rowIdentifier: rowIdentifier) {
+            if let indexPath = self.tableView.indexPath(for: (oldRow.cell)!) {
+                sections[(indexPath.section)].rows[indexPath.row] = newRow
+                self.tableView.reloadRows(at: [indexPath], with: .fade)
+            }
+        }
+    }
+
+    func removeRow(_ sectionID: String, rowIdentifier: String) {
+        let section = self.sectionForIdentifier(sectionID)
+        if let row = self.rowInSection(section, rowIdentifier: rowIdentifier) {
+            if let indexPath = self.tableView.indexPath(for: (row.cell)!) {
+                sections[(indexPath.section)].rows .remove(at: indexPath.row)
+                self.tableView.reloadData()
+            }
+        }
+    }
 
 	// MARK: - Search
 	func sectionForIdentifier(_ sectionID: String) -> StaticTableViewSection? {
