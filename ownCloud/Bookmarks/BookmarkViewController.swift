@@ -148,9 +148,10 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
     private func updateInterfaceAuthMethodChange(issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
 
-        self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value = self.bookmark?.url.absoluteString
-
         DispatchQueue.main.async {
+
+            self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value = self.bookmark?.url.absoluteString
+
             self.addServerNameSection()
 
             if self.authMethod == OCAuthenticationMethodBasicAuthIdentifier {
