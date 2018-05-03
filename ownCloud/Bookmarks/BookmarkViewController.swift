@@ -146,7 +146,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         }
     }
 
-    private func updateInterfaceAuthMethodChange(issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
+    private func updateInterfaceAfterCheckServer(issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
 
         self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value = self.bookmark?.url.absoluteString
 
@@ -542,7 +542,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             self.authMethod = authMethod
 
             DispatchQueue.main.async {
-                self.updateInterfaceAuthMethodChange(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
+                self.updateInterfaceAfterCheckServer(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
             }
         } else {
             switch self.saveConnectButtonMode {
@@ -551,6 +551,9 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                     self.navigationController?.popViewController(animated: true)
                 }
             case .connect?:
+                DispatchQueue.main.async {
+                    self.updateInterfaceAfterCheckServer(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
+                }
                 self.connect()
             default: break
             }
@@ -599,7 +602,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             } else {
                 DispatchQueue.main.async {
                     let issuesVC = ConnectionIssueViewController(issue: OCConnectionIssue(forError: error, level: OCConnectionIssueLevel.error, issueHandler: nil), completion: { (_) in
-                        // TODO
                     })
                     issuesVC.modalPresentationStyle = .overCurrentContext
                     self.present(issuesVC, animated: true, completion: nil)
