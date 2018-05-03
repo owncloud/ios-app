@@ -542,9 +542,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
             self.authMethod = authMethod
 
-            DispatchQueue.main.async {
-                self.updateInterfaceAuthMethodChange(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
-            }
+            self.updateInterfaceAuthMethodChange(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
         } else {
             switch self.saveConnectButtonMode {
             case .save?:
