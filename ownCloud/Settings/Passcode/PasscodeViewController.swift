@@ -10,7 +10,7 @@ import UIKit
 
 class PasscodeViewController: UIViewController, Themeable {
 
-    @IBOutlet weak var cancelButton: UIButton?
+    @IBOutlet weak var cancelButton: ThemeButton?
     @IBOutlet weak var passcodeValueLabel: UILabel?
 
     @IBOutlet weak var number0Button: ThemeButton?
@@ -40,7 +40,8 @@ class PasscodeViewController: UIViewController, Themeable {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+        
+
     // MARK: - Actions
 
     @IBAction func cancelButton(sender: UIButton) {
@@ -51,28 +52,26 @@ class PasscodeViewController: UIViewController, Themeable {
 
     }
 
-    // MARK: Themeing
-    func applyThemeCollection(theme: Theme, collection: ThemeCollection) {
-
-        self.number1Button?.applyThemeCollection(collection)
-        //self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
-
-        //self.iconView.image = theme.image(for: "owncloud-logo", size: CGSize(width: 40, height: 40))
-    }
+    // MARK: - Themeing
 
     func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-        self.number0Button?.applyThemeCollection(collection)
-        self.number1Button?.applyThemeCollection(collection)
-        self.number2Button?.applyThemeCollection(collection)
-        self.number3Button?.applyThemeCollection(collection)
-        self.number4Button?.applyThemeCollection(collection)
-        self.number5Button?.applyThemeCollection(collection)
-        self.number6Button?.applyThemeCollection(collection)
-        self.number7Button?.applyThemeCollection(collection)
-        self.number8Button?.applyThemeCollection(collection)
-        self.number9Button?.applyThemeCollection(collection)
 
-        //self.view.applyThemeCollection(collection)
+        self.view.backgroundColor = collection.tableBackgroundColor
+        self.cancelButton?.themeColorCollection = collection.neutralColors
+        self.passcodeValueLabel?.applyThemeCollection(collection)
+
+        //self.number0Button?.applyThemeCollection(collection)
+        self.number0Button?.themeColorCollection = collection.neutralColors
+        self.number1Button?.themeColorCollection = collection.neutralColors
+        self.number2Button?.themeColorCollection = collection.neutralColors
+        self.number3Button?.themeColorCollection = collection.neutralColors
+        self.number4Button?.themeColorCollection = collection.neutralColors
+        self.number5Button?.themeColorCollection = collection.neutralColors
+        self.number6Button?.themeColorCollection = collection.neutralColors
+        self.number7Button?.themeColorCollection = collection.neutralColors
+        self.number8Button?.themeColorCollection = collection.neutralColors
+        self.number9Button?.themeColorCollection = collection.neutralColors
+
     }
 
     /*
