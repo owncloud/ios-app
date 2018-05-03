@@ -78,6 +78,15 @@ class StaticTableViewSection: NSObject {
 		}
 	}
 
+    func insert(row rowToAdd: StaticTableViewRow, at index: Int) {
+        if rowToAdd.section == nil {
+            rowToAdd.eventHandler?(rowToAdd, StaticTableViewEvent.initial)
+        }
+
+        rowToAdd.section = self
+        rows.insert(rowToAdd, at: index)
+    }
+
 	@discardableResult
 	func add(radioGroupWithArrayOfLabelValueDictionaries labelValueDictRows: [[String : Any]], radioAction:StaticTableViewRowAction?, groupIdentifier: String, selectedValue: Any, animated : Bool = false) -> [StaticTableViewRow] {
 

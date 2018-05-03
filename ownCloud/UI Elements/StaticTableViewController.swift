@@ -74,6 +74,20 @@ class StaticTableViewController: UITableViewController, Themeable {
 		}
 	}
 
+    func reloadSection(id: String) {
+        // This is not optimal but it's the only solution that seems to work
+        // well with static cells. I've tried reloadSections but the fade animation
+        // that it adds is not working well and if I code no animation It blinks and
+        // does not look fine.
+        // TODO: find better solution to this.
+        if let section = sectionForIdentifier(id),
+            let index: Int = sections.index(of: section) {
+
+            self.removeSection(section, animated: false)
+            self.insertSection(section, at: index, animated: false)
+        }
+    }
+
 	// MARK: - Search
 	func sectionForIdentifier(_ sectionID: String) -> StaticTableViewSection? {
 		for section in sections {
@@ -114,16 +128,6 @@ class StaticTableViewController: UITableViewController, Themeable {
 	func staticRowForIndexPath(_ indexPath: IndexPath) -> StaticTableViewRow {
 		return (sections[indexPath.section].rows[indexPath.row])
 	}
-
-    func reloadSection(id: String) {
-        if let section = sectionForIdentifier(id),
-            let index: Int = sections.index(of: section) {
-
-            self.tableView.performBatchUpdates({
-                self.tableView.reloadSections(IndexSet(integer: index), with: .none)
-            })
-        }
-    }
 
 	// MARK: - Table view data source
 	override func numberOfSections(in tableView: UITableView) -> Int {
