@@ -13,16 +13,16 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PasscodeViewController" customModule="ownCloud" customModuleProvider="target">
             <connections>
                 <outlet property="cancelButton" destination="g0I-oo-iOZ" id="KMF-4T-F9O"/>
-                <outlet property="number0Button" destination="TIO-8z-Ags" id="tiV-V2-EXL"/>
-                <outlet property="number1Button" destination="85k-O3-nSF" id="eKO-RE-OiH"/>
-                <outlet property="number2Button" destination="VzK-5I-Ct8" id="5tA-Dd-MiQ"/>
-                <outlet property="number3Button" destination="gBp-H8-606" id="Evb-i2-EDE"/>
-                <outlet property="number4Button" destination="IVZ-la-esK" id="xPQ-kF-dUN"/>
-                <outlet property="number5Button" destination="9xg-xz-Tph" id="SST-nf-SoY"/>
-                <outlet property="number6Button" destination="hgh-7z-Fto" id="UN0-sW-bxa"/>
-                <outlet property="number7Button" destination="fMx-64-bYq" id="8Wy-sz-zfu"/>
-                <outlet property="number8Button" destination="qMI-IV-KI3" id="vPc-cR-rs4"/>
-                <outlet property="number9Button" destination="48Q-nf-LTg" id="FHH-5M-SvN"/>
+                <outlet property="number0Button" destination="TIO-8z-Ags" id="hV2-D0-uic"/>
+                <outlet property="number1Button" destination="85k-O3-nSF" id="8in-x2-fMh"/>
+                <outlet property="number2Button" destination="VzK-5I-Ct8" id="3Wv-y7-bmT"/>
+                <outlet property="number3Button" destination="gBp-H8-606" id="crl-kv-I0v"/>
+                <outlet property="number4Button" destination="IVZ-la-esK" id="Tza-fp-Zn4"/>
+                <outlet property="number5Button" destination="9xg-xz-Tph" id="aca-WN-Li4"/>
+                <outlet property="number6Button" destination="hgh-7z-Fto" id="bIY-bK-nXr"/>
+                <outlet property="number7Button" destination="fMx-64-bYq" id="hkg-rg-PhR"/>
+                <outlet property="number8Button" destination="qMI-IV-KI3" id="VXd-2L-UgC"/>
+                <outlet property="number9Button" destination="48Q-nf-LTg" id="KGD-3a-CUm"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -47,8 +47,8 @@
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                 </textField>
-                <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85k-O3-nSF">
-                    <rect key="frame" x="32" y="150" width="70" height="70"/>
+                <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85k-O3-nSF" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
+                    <rect key="frame" x="30" y="150" width="70" height="70"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="1"/>
@@ -56,7 +56,7 @@
                         <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="jE8-IL-mF2"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VzK-5I-Ct8">
+                <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VzK-5I-Ct8" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
                     <rect key="frame" x="125" y="150" width="70" height="70"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
@@ -65,8 +65,8 @@
                         <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="dOq-Hy-wZg"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gBp-H8-606">
-                    <rect key="frame" x="234" y="150" width="70" height="70"/>
+                <button opaque="NO" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gBp-H8-606" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
+                    <rect key="frame" x="220" y="150" width="70" height="70"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="3"/>
@@ -74,8 +74,8 @@
                         <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="pKE-ba-K1x"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVZ-la-esK">
-                    <rect key="frame" x="32" y="249" width="70" height="70"/>
+                <button opaque="NO" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVZ-la-esK" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
+                    <rect key="frame" x="30" y="245" width="70" height="70"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="4"/>
@@ -83,8 +83,8 @@
                         <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="M2J-2N-Kgu"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9xg-xz-Tph">
-                    <rect key="frame" x="125" y="249" width="70" height="70"/>
+                <button opaque="NO" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9xg-xz-Tph" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
+                    <rect key="frame" x="125" y="245" width="70" height="70"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="5"/>
@@ -92,8 +92,8 @@
                         <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="pR1-wy-Ogf"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hgh-7z-Fto">
-                    <rect key="frame" x="234" y="249" width="70" height="70"/>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hgh-7z-Fto" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
+                    <rect key="frame" x="220" y="245" width="70" height="70"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="6"/>
@@ -101,8 +101,8 @@
                         <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="gg4-j1-S6x"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="7" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fMx-64-bYq">
-                    <rect key="frame" x="32" y="347" width="70" height="70"/>
+                <button opaque="NO" tag="7" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fMx-64-bYq" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
+                    <rect key="frame" x="30" y="340" width="70" height="70"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="7"/>
@@ -110,8 +110,8 @@
                         <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="Pqi-bK-4Cz"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="8" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qMI-IV-KI3">
-                    <rect key="frame" x="125" y="347" width="70" height="70"/>
+                <button opaque="NO" tag="8" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qMI-IV-KI3" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
+                    <rect key="frame" x="125" y="340" width="70" height="70"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="8"/>
@@ -119,8 +119,8 @@
                         <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="cbj-DY-2Tb"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="9" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="48Q-nf-LTg">
-                    <rect key="frame" x="234" y="347" width="70" height="70"/>
+                <button opaque="NO" tag="9" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="48Q-nf-LTg" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
+                    <rect key="frame" x="220" y="340" width="70" height="70"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="9"/>
@@ -128,8 +128,8 @@
                         <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="Xs7-kq-SyV"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TIO-8z-Ags">
-                    <rect key="frame" x="125" y="450" width="70" height="70"/>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TIO-8z-Ags" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
+                    <rect key="frame" x="125" y="435" width="70" height="70"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="0"/>
