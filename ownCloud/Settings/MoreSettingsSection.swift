@@ -7,6 +7,7 @@
 //
 import UIKit
 import WebKit
+import MessageUI
 
 // MARK: - Section identifier
 private let MoreSectionIdentifier: String = "settings-more-section"
@@ -18,7 +19,7 @@ private let MoreRecommendRowIdentifier: String = "more-recommend-row"
 private let MorePrivacyPolicyRowIdentifier: String = "more-privacy-policy-row"
 private let MoreAppVersionRowIdentifier: String = "more-app-version-row"
 
-class MoreSettingsSection: StaticTableViewSection {
+class MoreSettingsSection: StaticTableViewSection, MFMailComposeViewControllerDelegate {
 
     override init() {
         super.init()
@@ -42,7 +43,7 @@ class MoreSettingsSection: StaticTableViewSection {
 
     private func sendFeedbackRow() -> StaticTableViewRow {
         let sendFeedbackRow = StaticTableViewRow(rowWithAction: { (_, _) in
-            // TODO: Open mail to apps@owncloud.com
+            self.sendMail(to: "apps@owncloud.com", subject: nil, message: nil)
         }, title: "Send feedback".localized, accessoryType: .disclosureIndicator, identifier: MoreSendFeedbackRowIdentifier)
 
         return sendFeedbackRow
@@ -50,7 +51,11 @@ class MoreSettingsSection: StaticTableViewSection {
 
     private func recommendRow() -> StaticTableViewRow {
         let recommendRow = StaticTableViewRow(rowWithAction: { (_, _) in
-            // TODO: decide what to do
+            let message = """
+                <p>I want to invite you to use ownCloud on your smartphone!</p>
+                <a href="https://itunes.apple.com/es/app/owncloud/id543672169?mt=8">Download here</a>
+                """
+            self.sendMail(to: nil, subject: "Try ownCloud on your smartphone!", message: message)
         }, title: "Recommend to a friend".localized, accessoryType: .disclosureIndicator, identifier: MoreRecommendRowIdentifier)
 
         return recommendRow
@@ -96,5 +101,29 @@ class MoreSettingsSection: StaticTableViewSection {
         }
 
         self.reload()
+    }
+
+    private func sendMail(to: String?, subject: String?, message: String?) {
+        if MFMailComposeViewController.canSendMail() {
+            let mail = MFMailComposeViewController()
+            mail.mailComposeDelegate = self
+            if to != nil {
+                mail.setToRecipients([to!])
+            }
+
+            if subject != nil {
+                mail.setSubject(subject!)
+            }
+
+            if message != nil {
+                mail.setMessageBody(message!, isHTML: true)
+            }
+
+            self.viewController?.present(mail, animated: true)
+        }
+    }
+    
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true)
     }
 }
