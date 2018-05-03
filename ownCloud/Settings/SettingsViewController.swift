@@ -18,8 +18,10 @@ class SettingsViewController: StaticTableViewController {
         let standardUserDefaults = UserDefaults.standard
         let uploadSettings = UploadsSettings(userDefaults: standardUserDefaults)
         let securitySettings = SecuritySettings(userDefaults: standardUserDefaults)
+        let moreSettings = MoreSettingsSection()
         self.addSection(securitySettings)
         self.addSection(uploadSettings)
+        self.addSection(moreSettings)
     }
 
 }
