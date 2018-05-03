@@ -146,7 +146,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
         }
     }
 
-    private func updateInterfaceAfterCheckServer(issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
+    private func updateInterfaceAuthMethodChange(issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
 
         self.sectionForIdentifier(serverURLSectionIdentifier)?.row(withIdentifier: serverURLTextFieldIdentifier)?.value = self.bookmark?.url.absoluteString
 
@@ -167,7 +167,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                     self.removeSection(certifiateSection)
                 }
                 self.addCertificateDetailsSection(certificate: certificateIssue.certificate)
-                self.bookmark?.certificate = certificateIssue.certificate
             }
 
             if let continueSection = self.sectionForIdentifier(continueButtonSectionIdentifier) {
@@ -514,10 +513,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                             for issue in issues {
                                 issue.approve()
                             }
-
-                            DispatchQueue.main.async {
-                                self.continueAfterCheckConnection(authMethod: authMethod!, issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
-                            }
+                            self.continueAfterCheckConnection(authMethod: authMethod!, issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
                         }
                     })
 
@@ -532,6 +528,11 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
 
     func continueAfterCheckConnection(authMethod:String?, issuesFromSDK: OCConnectionIssue?, username: String?, password: String?) {
 
+        //Update the certificate
+        if let certificateIssue = issuesFromSDK?.issues.filter({ $0.type == .certificate}).first {
+            self.bookmark?.certificate = certificateIssue.certificate
+        }
+
         if self.authMethod == nil || self.authMethod != authMethod {
 
             //Auth method change so enter in .update mode
@@ -542,7 +543,7 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
             self.authMethod = authMethod
 
             DispatchQueue.main.async {
-                self.updateInterfaceAfterCheckServer(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
+                self.updateInterfaceAuthMethodChange(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
             }
         } else {
             switch self.saveConnectButtonMode {
@@ -551,9 +552,6 @@ class BookmarkViewController: StaticTableViewController, OCClassSettingsSupport 
                     self.navigationController?.popViewController(animated: true)
                 }
             case .connect?:
-                DispatchQueue.main.async {
-                    self.updateInterfaceAfterCheckServer(issuesFromSDK: issuesFromSDK, username: username as String?, password: password as String?)
-                }
                 self.connect()
             default: break
             }
