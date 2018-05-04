@@ -8,11 +8,14 @@
 
 import UIKit
 
+let numberDigitsPasscode = 4
+
 enum PasscodeMode {
     case addPasscodeFirstStep
     case addPasscodeSecondStep
     case unlockPasscode
     case deletePasscode
+    case addPasscodeFirstSetpAfterErrorOnSecond
 }
 
 class PasscodeViewController: UIViewController, Themeable {
@@ -21,6 +24,7 @@ class PasscodeViewController: UIViewController, Themeable {
     var passcodeMode: PasscodeMode?
 
     @IBOutlet weak var messageLabel: UILabel?
+    @IBOutlet weak var errorMessageLabel: UILabel?
     @IBOutlet weak var passcodeValueTextField: UITextField?
 
     @IBOutlet weak var number0Button: ThemeButton?
@@ -81,15 +85,23 @@ class PasscodeViewController: UIViewController, Themeable {
         switch self.passcodeMode {
         case .addPasscodeFirstStep?:
             self.messageLabel?.text = "Insert your code".localized
+            self.errorMessageLabel?.text = ""
 
         case .addPasscodeSecondStep?:
             self.messageLabel?.text = "Reinsert your code".localized
+            self.errorMessageLabel?.text = ""
 
         case .unlockPasscode?:
             self.messageLabel?.text = "Insert your code".localized
+            self.errorMessageLabel?.text = ""
 
         case .deletePasscode?:
             self.messageLabel?.text = "Delete code".localized
+            self.errorMessageLabel?.text = ""
+
+        case .addPasscodeFirstSetpAfterErrorOnSecond?:
+            self.messageLabel?.text = "Insert your code".localized
+            self.errorMessageLabel?.text = "The insterted codes are not the same".localized
 
         default:
             break
@@ -112,14 +124,51 @@ class PasscodeViewController: UIViewController, Themeable {
         self.passcodeValueHasChange(passcodeValue: (self.passcodeValueTextField?.text)!)
     }
 
+    // MARK: - Passcode Flow
+
+    func passcodeValueHasChange(passcodeValue: String) {
+        print(passcodeValue)
+
+        if passcodeValue.count >= numberDigitsPasscode {
+
+            switch self.passcodeMode {
+            case .addPasscodeFirstStep?, .addPasscodeFirstSetpAfterErrorOnSecond?:
+                self.passcodeMode = .addPasscodeSecondStep
+                self.passcodeFromFirstStep = passcodeValue
+                self.passcodeValueTextField?.text = nil
+                self.loadInterface()
+
+            case .addPasscodeSecondStep?:
+                if passcodeFromFirstStep == passcodeValue {
+                    self.dismiss(animated: true, completion: nil)
+                } else {
+                    self.passcodeMode = .addPasscodeFirstSetpAfterErrorOnSecond
+                    self.passcodeFromFirstStep = nil
+                    self.passcodeValueTextField?.text = nil
+                    self.loadInterface()
+                }
+
+            case .unlockPasscode?:
+                self.dismiss(animated: true, completion: nil)
+
+            case .deletePasscode?:
+                self.dismiss(animated: true, completion: nil)
+
+            default:
+                break
+            }
+        }
+    }
+
     // MARK: - Themeing
 
     func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 
         self.view.backgroundColor = collection.tableBackgroundColor
 
-        self.messageLabel?.applyThemeCollection(collection)
-        self.passcodeValueTextField?.applyThemeCollection(collection)
+        self.messageLabel?.applyThemeCollection(collection, itemStyle: .bigTitle, itemState: .normal)
+        self.errorMessageLabel?.applyThemeCollection(collection)
+        self.passcodeValueTextField?.applyThemeCollection(collection, itemStyle: .message, itemState: .normal)
 
         self.number0Button?.themeColorCollection = collection.neutralColors
         self.number1Button?.themeColorCollection = collection.neutralColors
@@ -133,11 +182,5 @@ class PasscodeViewController: UIViewController, Themeable {
         self.number9Button?.themeColorCollection = collection.neutralColors
 
         self.cancelButton?.themeColorCollection = collection.neutralColors
-    }
-
-    // MARK: - Passcode Flow
-
-    func passcodeValueHasChange(passcodeValue: String) {
-        print(passcodeValue)
     }
 }
