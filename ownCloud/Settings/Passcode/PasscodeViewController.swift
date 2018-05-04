@@ -58,6 +58,8 @@ class PasscodeViewController: UIViewController, Themeable {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+
+        Theme.shared.unregister(client: self)
     }
 
     override func viewDidLoad() {
