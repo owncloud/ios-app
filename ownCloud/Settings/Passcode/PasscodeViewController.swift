@@ -61,16 +61,23 @@ class PasscodeViewController: UIViewController, Themeable {
     }
 
     override func viewDidLoad() {
-        self.loadInterface()
-
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        self.loadInterface()
+        UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    override var shouldAutorotate: Bool {
+        return false
+    }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
     }
 
     // MARK: - Interface

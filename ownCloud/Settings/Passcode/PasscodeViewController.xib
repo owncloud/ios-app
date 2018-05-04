@@ -168,7 +168,7 @@
                     <rect key="frame" x="30.5" y="509.5" width="259.5" height="58.5"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g0I-oo-iOZ" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="8.5" width="259.5" height="42"/>
+                            <rect key="frame" x="0.0" y="9" width="259.5" height="42"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <state key="normal" title="Cancel"/>
                             <connections>
