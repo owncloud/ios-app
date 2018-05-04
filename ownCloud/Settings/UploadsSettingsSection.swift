@@ -111,8 +111,10 @@ class UploadsSettings: StaticTableViewSection {
     // MARK: - Creation of the rows.
     private func photosRow() -> StaticTableViewRow {
         let photosRow = StaticTableViewRow(switchWithAction: { (row, _) in
-            self.photoUploadEnabled = row.value as! Bool
-            self.updateUI()
+            if let value = row.value as? Bool {
+                self.photoUploadEnabled = value
+                self.updateUI()
+            }
         }, title: "Photos".localized, value: photoUploadEnabled, identifier: UploadsPhotosRowIdentifier)
 
         return photosRow
@@ -120,7 +122,9 @@ class UploadsSettings: StaticTableViewSection {
 
     private func photosWifiOnlyRow() -> StaticTableViewRow {
         let photosWifiOnlyRow = StaticTableViewRow(switchWithAction: { (row, _) in
-            self.photoWifiOnlyUploadsEnabled = row.value as! Bool
+            if let value = row.value as? Bool {
+                self.photoWifiOnlyUploadsEnabled = value
+            }
         }, title: "Upload pictures via WiFi only".localized, value: photoWifiOnlyUploadsEnabled, identifier: UploadsPhotosWifiOnlyRowIdentifier)
 
         return photosWifiOnlyRow
@@ -128,7 +132,9 @@ class UploadsSettings: StaticTableViewSection {
 
     private func photosSelectedPathRow() -> StaticTableViewRow {
         let photosSelectedPathRow = StaticTableViewRow(textFieldWithAction: { (row, _) in
-                    self.photoSelectedPath = row.value as! String
+            if let value = row.value as? String {
+                self.photoSelectedPath = value
+            }
         }, placeholder: uploadsSelectedPath,
            value: photoSelectedPath,
            secureTextEntry: false,
@@ -144,8 +150,10 @@ class UploadsSettings: StaticTableViewSection {
 
     private func videosRow() -> StaticTableViewRow {
         let videosRow = StaticTableViewRow(switchWithAction: { (row, _) in
-            self.videoUploadEnabled = row.value as! Bool
-            self.updateUI()
+            if let value = row.value as? Bool {
+                self.videoUploadEnabled = value
+                self.updateUI()
+            }
         }, title: "Videos".localized, value: videoUploadEnabled, identifier: UploadsVideosRowIdentifier)
 
         return videosRow
@@ -153,7 +161,9 @@ class UploadsSettings: StaticTableViewSection {
 
     private func videosWifiOnlyRow() -> StaticTableViewRow {
         let videosWifiOnlyRow = StaticTableViewRow(switchWithAction: { (row, _) in
-            self.videoWifiOnlyUploadsEnabled = row.value as! Bool
+            if let value = row.value as? Bool {
+                self.videoWifiOnlyUploadsEnabled = value
+            }
         }, title: "Upload videos via WiFi only".localized, value: videoWifiOnlyUploadsEnabled, identifier: UploadsVideosWifiOnlyRowIdentifier)
 
         return videosWifiOnlyRow
@@ -161,7 +171,9 @@ class UploadsSettings: StaticTableViewSection {
 
     private func videosSelectedPathRow() -> StaticTableViewRow {
         let videosSelectedPathRow = StaticTableViewRow(textFieldWithAction: { (row, _) in
-            self.videoSelectedPath = row.value as! String
+            if let value = row.value as? String {
+                self.videoSelectedPath = value
+            }
         }, placeholder: uploadsSelectedPath,
            value: videoSelectedPath,
            secureTextEntry: false,
@@ -177,7 +189,9 @@ class UploadsSettings: StaticTableViewSection {
 
     private func backgroundUploadsRow() -> StaticTableViewRow {
         let backgroundUploadsRow = StaticTableViewRow(switchWithAction: { (row, _) in
-            self.backgroundUploadsEnabled = row.value as! Bool
+            if let value = row.value as? Bool {
+                self.backgroundUploadsEnabled = value
+            }
         }, title: "Background uploads".localized, value: backgroundUploadsEnabled, identifier: UploadsBackgroundUploadsRowIdentifier)
 
         return backgroundUploadsRow

@@ -22,7 +22,7 @@ import ownCloudSDK
 class BookmarkManager: NSObject {
 	public var bookmarks : NSMutableArray
 
-	static var sharedBookmarkManager : BookmarkManager = {
+	static var shared : BookmarkManager = {
 		let sharedInstance = BookmarkManager()
 
 		sharedInstance.loadBookmarks()

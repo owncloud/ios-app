@@ -8,7 +8,7 @@ line_length:
   warning: 200
   ignores_function_declarations: true
   ignores_comments: true
-#force_cast: warning
+force_cast: warning
 
 identifier_name:
     excluded:
@@ -16,7 +16,6 @@ identifier_name:
         - y
 
 disabled_rules:
-    - force_cast
     - switch_case_alignment
     - identifier_name
     - colon
