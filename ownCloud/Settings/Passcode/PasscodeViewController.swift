@@ -8,9 +8,19 @@
 
 import UIKit
 
+enum PasscodeMode {
+    case addPasscodeFirstStep
+    case addPasscodeSecondStep
+    case unlockPasscode
+    case deletePasscode
+}
+
 class PasscodeViewController: UIViewController, Themeable {
 
-    @IBOutlet weak var cancelButton: ThemeButton?
+    var passcodeFromFirstStep: String?
+    var passcodeMode: PasscodeMode?
+
+    @IBOutlet weak var messageLabel: UILabel?
     @IBOutlet weak var passcodeValueTextField: UITextField?
 
     @IBOutlet weak var number0Button: ThemeButton?
@@ -23,6 +33,18 @@ class PasscodeViewController: UIViewController, Themeable {
     @IBOutlet weak var number7Button: ThemeButton?
     @IBOutlet weak var number8Button: ThemeButton?
     @IBOutlet weak var number9Button: ThemeButton?
+
+    @IBOutlet weak var cancelButton: ThemeButton?
+
+    init(mode: PasscodeMode, passcodeFromFirstStep: String?) {
+        super.init(nibName: "PasscodeViewController", bundle: nil)
+        self.passcodeFromFirstStep = passcodeFromFirstStep
+        self.passcodeMode = mode
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -39,6 +61,8 @@ class PasscodeViewController: UIViewController, Themeable {
 
     override func viewDidLoad() {
         AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
+        self.loadInterface()
+
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
@@ -47,6 +71,27 @@ class PasscodeViewController: UIViewController, Themeable {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    // MARK: - Interface
+
+    func loadInterface() {
+        switch self.passcodeMode {
+        case .addPasscodeFirstStep?:
+            self.messageLabel?.text = "Insert your code".localized
+
+        case .addPasscodeSecondStep?:
+            self.messageLabel?.text = "Reinsert your code".localized
+
+        case .unlockPasscode?:
+            self.messageLabel?.text = "Insert your code".localized
+
+        case .deletePasscode?:
+            self.messageLabel?.text = "Delete code".localized
+
+        default:
+            break
+        }
     }
 
     // MARK: - Actions
@@ -69,7 +114,7 @@ class PasscodeViewController: UIViewController, Themeable {
 
         self.view.backgroundColor = collection.tableBackgroundColor
 
-        self.cancelButton?.themeColorCollection = collection.neutralColors
+        self.messageLabel?.applyThemeCollection(collection)
         self.passcodeValueTextField?.applyThemeCollection(collection)
 
         self.number0Button?.themeColorCollection = collection.neutralColors
@@ -82,5 +127,7 @@ class PasscodeViewController: UIViewController, Themeable {
         self.number7Button?.themeColorCollection = collection.neutralColors
         self.number8Button?.themeColorCollection = collection.neutralColors
         self.number9Button?.themeColorCollection = collection.neutralColors
+
+        self.cancelButton?.themeColorCollection = collection.neutralColors
     }
 }

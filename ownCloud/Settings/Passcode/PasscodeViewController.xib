@@ -13,6 +13,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PasscodeViewController" customModule="ownCloud" customModuleProvider="target">
             <connections>
                 <outlet property="cancelButton" destination="g0I-oo-iOZ" id="vc0-3w-JYu"/>
+                <outlet property="messageLabel" destination="ox7-yY-YRf" id="eAi-i1-wkN"/>
                 <outlet property="number0Button" destination="TIO-8z-Ags" id="hV2-D0-uic"/>
                 <outlet property="number1Button" destination="85k-O3-nSF" id="8in-x2-fMh"/>
                 <outlet property="number2Button" destination="VzK-5I-Ct8" id="3Wv-y7-bmT"/>
@@ -181,6 +182,15 @@
                         <constraint firstItem="g0I-oo-iOZ" firstAttribute="centerX" secondItem="Nj5-Os-n8R" secondAttribute="centerX" id="WYk-uk-29d"/>
                     </constraints>
                 </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ox7-yY-YRf">
+                    <rect key="frame" x="139" y="34" width="42" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="i5b-wY-wBl"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -203,6 +213,8 @@
                 <constraint firstItem="Nj5-Os-n8R" firstAttribute="top" secondItem="TIO-8z-Ags" secondAttribute="bottom" constant="0.5" id="YPp-Bu-aM8"/>
                 <constraint firstItem="hgh-7z-Fto" firstAttribute="top" secondItem="gBp-H8-606" secondAttribute="bottom" constant="25" id="aXD-aW-e3M"/>
                 <constraint firstItem="9xg-xz-Tph" firstAttribute="leading" secondItem="IVZ-la-esK" secondAttribute="trailing" constant="25" id="ell-bh-JGr"/>
+                <constraint firstItem="aVw-W3-TdE" firstAttribute="top" secondItem="ox7-yY-YRf" secondAttribute="bottom" constant="25" id="fnJ-qM-9WK"/>
+                <constraint firstItem="ox7-yY-YRf" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="hA7-Nr-xaH"/>
                 <constraint firstItem="Nj5-Os-n8R" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="hDc-9X-vps"/>
                 <constraint firstItem="9xg-xz-Tph" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="hPm-34-Af1"/>
                 <constraint firstItem="48Q-nf-LTg" firstAttribute="top" secondItem="hgh-7z-Fto" secondAttribute="bottom" constant="25" id="hXN-Dy-Mlb"/>
