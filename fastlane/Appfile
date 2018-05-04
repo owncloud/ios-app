@@ -1,0 +1,8 @@
+app_identifier("com.owncloud.ios-app") # The bundle identifier of your app
+apple_id("fastlane@owncloud.com") # Your Apple email address
+
+itc_team_id("119008347") # iTunes Connect Team ID
+team_id("4AP2STM4H5") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
