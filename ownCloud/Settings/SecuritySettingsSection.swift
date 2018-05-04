@@ -95,9 +95,11 @@ class SecuritySettings: StaticTableViewSection {
 
     private func passcodeRow() -> StaticTableViewRow {
         let passcodeRow = StaticTableViewRow(switchWithAction: { (row, _) in
-            self.passcodeEnabled = row.value as! Bool
-            self.userDefaults.set(self.passcodeEnabled, forKey: SecuritySettingsPasscodeKey)
-            self.updateUI()
+            if let value = row.value as? Bool {
+                self.passcodeEnabled = value
+                self.userDefaults.set(self.passcodeEnabled, forKey: SecuritySettingsPasscodeKey)
+                self.updateUI()
+            }
         }, title: "Passcode Lock".localized, value: self.passcodeEnabled, identifier: SecurityPasscodeRowIdentifier)
 
         return passcodeRow
@@ -119,8 +121,10 @@ class SecuritySettings: StaticTableViewSection {
             }
 
             let biometricalRow = StaticTableViewRow(switchWithAction: { (row, _) in
-                self.biometricalSecurityEnabled = row.value as! Bool
-                self.userDefaults.set(self.biometricalSecurityEnabled, forKey: SecuritySettingsBiometricalKey)
+                if let value = row.value as? Bool {
+                    self.biometricalSecurityEnabled = value
+                    self.userDefaults.set(self.biometricalSecurityEnabled, forKey: SecuritySettingsBiometricalKey)
+                }
             }, title: biometricalSecurityName, value: self.biometricalSecurityEnabled, identifier: SecurityBiometricsRowIdentifier)
             return biometricalRow
         } else {

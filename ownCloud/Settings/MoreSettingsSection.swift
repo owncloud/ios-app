@@ -122,7 +122,7 @@ class MoreSettingsSection: StaticTableViewSection, MFMailComposeViewControllerDe
             self.viewController?.present(mail, animated: true)
         }
     }
-    
+
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true)
     }
