@@ -76,6 +76,8 @@ class PasscodeViewController: UIViewController, Themeable {
     // MARK: - Interface
 
     func loadInterface() {
+
+        //Top message
         switch self.passcodeMode {
         case .addPasscodeFirstStep?:
             self.messageLabel?.text = "Insert your code".localized
@@ -106,6 +108,8 @@ class PasscodeViewController: UIViewController, Themeable {
         } else {
             self.passcodeValueTextField?.text = String(sender.tag)
         }
+
+        self.passcodeValueHasChange(passcodeValue: (self.passcodeValueTextField?.text)!)
     }
 
     // MARK: - Themeing
@@ -129,5 +133,11 @@ class PasscodeViewController: UIViewController, Themeable {
         self.number9Button?.themeColorCollection = collection.neutralColors
 
         self.cancelButton?.themeColorCollection = collection.neutralColors
+    }
+
+    // MARK: - Passcode Flow
+
+    func passcodeValueHasChange(passcodeValue: String) {
+        print(passcodeValue)
     }
 }
