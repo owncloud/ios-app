@@ -23,6 +23,7 @@
                 <outlet property="number7Button" destination="fMx-64-bYq" id="hkg-rg-PhR"/>
                 <outlet property="number8Button" destination="qMI-IV-KI3" id="VXd-2L-UgC"/>
                 <outlet property="number9Button" destination="48Q-nf-LTg" id="KGD-3a-CUm"/>
+                <outlet property="passcodeValueTextField" destination="aVw-W3-TdE" id="VA2-4s-T7G"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>

@@ -11,7 +11,7 @@ import UIKit
 class PasscodeViewController: UIViewController, Themeable {
 
     @IBOutlet weak var cancelButton: ThemeButton?
-    @IBOutlet weak var passcodeValueLabel: UILabel?
+    @IBOutlet weak var passcodeValueTextField: UITextField?
 
     @IBOutlet weak var number0Button: ThemeButton?
     @IBOutlet weak var number1Button: ThemeButton?
@@ -48,7 +48,6 @@ class PasscodeViewController: UIViewController, Themeable {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-        
 
     // MARK: - Actions
 
@@ -57,7 +56,11 @@ class PasscodeViewController: UIViewController, Themeable {
     }
 
     @IBAction func numberButton(sender: UIButton) {
-
+        if let passcodeValue = self.passcodeValueTextField?.text {
+            self.passcodeValueTextField?.text = passcodeValue + String(sender.tag)
+        } else {
+            self.passcodeValueTextField?.text = String(sender.tag)
+        }
     }
 
     // MARK: - Themeing
@@ -65,10 +68,10 @@ class PasscodeViewController: UIViewController, Themeable {
     func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 
         self.view.backgroundColor = collection.tableBackgroundColor
-        self.cancelButton?.themeColorCollection = collection.neutralColors
-        self.passcodeValueLabel?.applyThemeCollection(collection)
 
-        //self.number0Button?.applyThemeCollection(collection)
+        self.cancelButton?.themeColorCollection = collection.neutralColors
+        self.passcodeValueTextField?.applyThemeCollection(collection)
+
         self.number0Button?.themeColorCollection = collection.neutralColors
         self.number1Button?.themeColorCollection = collection.neutralColors
         self.number2Button?.themeColorCollection = collection.neutralColors
@@ -79,17 +82,5 @@ class PasscodeViewController: UIViewController, Themeable {
         self.number7Button?.themeColorCollection = collection.neutralColors
         self.number8Button?.themeColorCollection = collection.neutralColors
         self.number9Button?.themeColorCollection = collection.neutralColors
-
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
