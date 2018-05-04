@@ -175,17 +175,17 @@ class PasscodeViewController: UIViewController, Themeable {
         self.errorMessageLabel?.applyThemeCollection(collection)
         self.passcodeValueTextField?.applyThemeCollection(collection, itemStyle: .message, itemState: .normal)
 
-        self.number0Button?.themeColorCollection = collection.neutralColors
-        self.number1Button?.themeColorCollection = collection.neutralColors
-        self.number2Button?.themeColorCollection = collection.neutralColors
-        self.number3Button?.themeColorCollection = collection.neutralColors
-        self.number4Button?.themeColorCollection = collection.neutralColors
-        self.number5Button?.themeColorCollection = collection.neutralColors
-        self.number6Button?.themeColorCollection = collection.neutralColors
-        self.number7Button?.themeColorCollection = collection.neutralColors
-        self.number8Button?.themeColorCollection = collection.neutralColors
-        self.number9Button?.themeColorCollection = collection.neutralColors
+        self.number0Button?.applyThemeCollection(collection, itemStyle: .neutral)
+        self.number1Button?.applyThemeCollection(collection, itemStyle: .neutral)
+        self.number2Button?.applyThemeCollection(collection, itemStyle: .neutral)
+        self.number3Button?.applyThemeCollection(collection, itemStyle: .neutral)
+        self.number4Button?.applyThemeCollection(collection, itemStyle: .neutral)
+        self.number5Button?.applyThemeCollection(collection, itemStyle: .neutral)
+        self.number6Button?.applyThemeCollection(collection, itemStyle: .neutral)
+        self.number7Button?.applyThemeCollection(collection, itemStyle: .neutral)
+        self.number8Button?.applyThemeCollection(collection, itemStyle: .neutral)
+        self.number9Button?.applyThemeCollection(collection, itemStyle: .neutral)
 
-        self.cancelButton?.themeColorCollection = collection.neutralColors
+        self.cancelButton?.applyThemeCollection(collection, itemStyle: .neutral)
     }
 }
