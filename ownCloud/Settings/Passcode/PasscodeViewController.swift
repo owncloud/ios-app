@@ -13,10 +13,11 @@ let numberDigitsPasscode = 4
 let passcodeKeychainAccount = "PasscodeKeychainAccount"
 let passcodeKeychainPath = "PasscodeKeychainPath"
 
-enum PasscodeMode {
+enum PasscodeInterfaceMode {
     case addPasscodeFirstStep
     case addPasscodeSecondStep
     case unlockPasscode
+    case unlockPasscodeError
     case deletePasscode
     case deletePasscodeError
     case addPasscodeFirstSetpAfterErrorOnSecond
@@ -25,7 +26,7 @@ enum PasscodeMode {
 class PasscodeViewController: UIViewController, Themeable {
 
     var passcodeFromFirstStep: String?
-    var passcodeMode: PasscodeMode?
+    var passcodeMode: PasscodeInterfaceMode?
 
     @IBOutlet weak var messageLabel: UILabel?
     @IBOutlet weak var errorMessageLabel: UILabel?
@@ -44,7 +45,7 @@ class PasscodeViewController: UIViewController, Themeable {
 
     @IBOutlet weak var cancelButton: ThemeButton?
 
-    init(mode: PasscodeMode, passcodeFromFirstStep: String?) {
+    init(mode: PasscodeInterfaceMode, passcodeFromFirstStep: String?) {
         super.init(nibName: "PasscodeViewController", bundle: nil)
         self.passcodeFromFirstStep = passcodeFromFirstStep
         self.passcodeMode = mode
@@ -104,6 +105,10 @@ class PasscodeViewController: UIViewController, Themeable {
             self.messageLabel?.text = "Insert your code".localized
             self.errorMessageLabel?.text = ""
 
+        case .unlockPasscodeError?:
+            self.messageLabel?.text = "Insert your code".localized
+            self.errorMessageLabel?.text = "Incorrect code".localized
+
         case .deletePasscode?:
             self.messageLabel?.text = "Delete code".localized
             self.errorMessageLabel?.text = ""
@@ -115,7 +120,6 @@ class PasscodeViewController: UIViewController, Themeable {
         case .addPasscodeFirstSetpAfterErrorOnSecond?:
             self.messageLabel?.text = "Insert your code".localized
             self.errorMessageLabel?.text = "The insterted codes are not the same".localized
-
 
         default:
             break
@@ -141,7 +145,6 @@ class PasscodeViewController: UIViewController, Themeable {
     // MARK: - Passcode Flow
 
     func passcodeValueHasChange(passcodeValue: String) {
-        print(passcodeValue)
 
         if passcodeValue.count >= numberDigitsPasscode {
 
@@ -164,11 +167,18 @@ class PasscodeViewController: UIViewController, Themeable {
                     self.loadInterface()
                 }
 
-            case .unlockPasscode?:
-                self.dismiss(animated: true, completion: nil)
+            case .unlockPasscode?, .unlockPasscodeError?:
+                let passcodeFromKeychain = String(data: OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath), encoding: .utf8)
+
+                if passcodeValue == passcodeFromKeychain {
+                    self.dismiss(animated: true, completion: nil)
+                } else {
+                    self.passcodeMode = .unlockPasscodeError
+                    self.passcodeValueTextField?.text = nil
+                    self.loadInterface()
+                }
 
             case .deletePasscode?, .deletePasscodeError?:
-
                 let passcodeFromKeychain = String(data: OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath), encoding: .utf8)
 
                 if passcodeValue == passcodeFromKeychain {
