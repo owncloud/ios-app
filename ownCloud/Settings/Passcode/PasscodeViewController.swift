@@ -7,14 +7,18 @@
 //
 
 import UIKit
+import ownCloudSDK
 
 let numberDigitsPasscode = 4
+let passcodeKeychainAccount = "PasscodeKeychainAccount"
+let passcodeKeychainPath = "PasscodeKeychainPath"
 
 enum PasscodeMode {
     case addPasscodeFirstStep
     case addPasscodeSecondStep
     case unlockPasscode
     case deletePasscode
+    case deletePasscodeError
     case addPasscodeFirstSetpAfterErrorOnSecond
 }
 
@@ -104,9 +108,14 @@ class PasscodeViewController: UIViewController, Themeable {
             self.messageLabel?.text = "Delete code".localized
             self.errorMessageLabel?.text = ""
 
+        case .deletePasscodeError?:
+            self.messageLabel?.text = "Delete code".localized
+            self.errorMessageLabel?.text = "Incorrect code".localized
+
         case .addPasscodeFirstSetpAfterErrorOnSecond?:
             self.messageLabel?.text = "Insert your code".localized
             self.errorMessageLabel?.text = "The insterted codes are not the same".localized
+
 
         default:
             break
@@ -145,6 +154,8 @@ class PasscodeViewController: UIViewController, Themeable {
 
             case .addPasscodeSecondStep?:
                 if passcodeFromFirstStep == passcodeValue {
+                    //Save to keychain
+                    OCAppIdentity.shared().keychain.write(passcodeValue.data(using: .utf8), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
                     self.dismiss(animated: true, completion: nil)
                 } else {
                     self.passcodeMode = .addPasscodeFirstSetpAfterErrorOnSecond
@@ -156,8 +167,18 @@ class PasscodeViewController: UIViewController, Themeable {
             case .unlockPasscode?:
                 self.dismiss(animated: true, completion: nil)
 
-            case .deletePasscode?:
-                self.dismiss(animated: true, completion: nil)
+            case .deletePasscode?, .deletePasscodeError?:
+
+                let passcodeFromKeychain = String(data: OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath), encoding: .utf8)
+
+                if passcodeValue == passcodeFromKeychain {
+                    OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
+                    self.dismiss(animated: true, completion: nil)
+                } else {
+                    self.passcodeMode = .deletePasscodeError
+                    self.passcodeValueTextField?.text = nil
+                    self.loadInterface()
+                }
 
             default:
                 break
