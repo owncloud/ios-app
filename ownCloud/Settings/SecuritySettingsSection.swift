@@ -29,13 +29,13 @@ enum SecurityAskfrequency: Int {
     func toString() -> String {
         switch self {
         case .allways:
-            return "Allways"
+            return "Allways".localized
         case .oneMinute:
-            return "1 minute"
+            return "1 minute".localized
         case .fiveMinutes:
-            return "5 minutes"
+            return "5 minutes".localized
         case .thirtyMinutes:
-            return "30 minutes"
+            return "30 minutes".localized
         }
     }
 }
@@ -155,7 +155,7 @@ class SecuritySettings: StaticTableViewSection {
         } else {
             self.biometricalRow?.value = false
             self.biometricalSecurityEnabled = false
-            self.remove(rows: [biometricalRow!])
+            self.remove(biometricalRow!)
         }
 
         self.reload()

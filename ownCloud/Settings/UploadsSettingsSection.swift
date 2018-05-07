@@ -180,11 +180,11 @@ class UploadsSettings: StaticTableViewSection {
         } else {
             photoWifiOnlyUploadsEnabled = false
             photosWifiOnlyRow?.value = false
-            remove(rows: [photosWifiOnlyRow!])
+            remove(photosWifiOnlyRow!)
 
             photosSelectedPathRow?.cell?.detailTextLabel?.text = uploadsSelectedPath
             userDefaults.removeObject(forKey: UploadsPhotosSelectedPathKey)
-            remove(rows: [photosSelectedPathRow!])
+            remove(photosSelectedPathRow!)
         }
 
         if videoUploadEnabled {
@@ -200,23 +200,23 @@ class UploadsSettings: StaticTableViewSection {
 
             videoWifiOnlyUploadsEnabled = false
             videosWifiOnlyRow?.value = false
-            remove(rows: [videosWifiOnlyRow!])
+            remove(videosWifiOnlyRow!)
 
             videosSelectedPathRow?.cell?.detailTextLabel?.text = uploadsSelectedPath
             userDefaults.removeObject(forKey: UploadsVideosSelectedPathKey)
-            remove(rows: [videosSelectedPathRow!])
+            remove(videosSelectedPathRow!)
         }
 
         // Background uploads flow
         if photoUploadEnabled || videoUploadEnabled {
 
             if !rows.contains(backgroundUploadsRow!) {
-                add(rows: [backgroundUploadsRow!])
+                add(row: backgroundUploadsRow!)
             }
 
         } else {
             backgroundUploadsRow?.value = false
-            remove(rows: [backgroundUploadsRow!])
+            remove(backgroundUploadsRow!)
         }
 
         reload()
