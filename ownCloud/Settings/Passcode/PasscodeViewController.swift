@@ -81,7 +81,7 @@ class PasscodeViewController: UIViewController, Themeable {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.loadInterface()
+        self.loadUI()
         UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
     }
 
@@ -98,18 +98,20 @@ class PasscodeViewController: UIViewController, Themeable {
         return .portrait
     }
 
-    // MARK: - Interface
+    // MARK: - User Interface
 
-    func loadInterface() {
+    private func loadUI() {
         Theme.shared.add(tvgResourceFor: "owncloud-logo")
         logoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
 
         self.overlayView.isHidden = self.hiddenOverlay!
 
+        self.setIdentifiersToViewObjects()
+
         self.updateUI()
     }
 
-    func updateUI() {
+    private func updateUI() {
 
         switch self.passcodeMode {
         case .addPasscodeFirstStep?:
@@ -185,7 +187,7 @@ class PasscodeViewController: UIViewController, Themeable {
 
     // MARK: - Passcode Flow
 
-    func passcodeValueHasChange(passcodeValue: String) {
+    private func passcodeValueHasChange(passcodeValue: String) {
 
         if passcodeValue.count >= numberDigitsPasscode {
 
@@ -243,6 +245,30 @@ class PasscodeViewController: UIViewController, Themeable {
                 break
             }
         }
+    }
+
+    // MARK: - Identifiers
+
+    private func setIdentifiersToViewObjects() {
+
+        self.overlayView.accessibilityIdentifier = "overlayView"
+
+        self.messageLabel?.accessibilityIdentifier = "messageLabel"
+        self.errorMessageLabel?.accessibilityIdentifier = "errorMessageLabel"
+        self.passcodeValueTextField?.accessibilityIdentifier = "passcodeValueTextField"
+
+        self.number0Button?.accessibilityIdentifier = "number0Button"
+        self.number1Button?.accessibilityIdentifier = "number1Button"
+        self.number2Button?.accessibilityIdentifier = "number2Button"
+        self.number3Button?.accessibilityIdentifier = "number3Button"
+        self.number4Button?.accessibilityIdentifier = "number4Button"
+        self.number5Button?.accessibilityIdentifier = "number5Button"
+        self.number6Button?.accessibilityIdentifier = "number6Button"
+        self.number7Button?.accessibilityIdentifier = "number7Button"
+        self.number8Button?.accessibilityIdentifier = "number8Button"
+        self.number9Button?.accessibilityIdentifier = "number9Button"
+
+        self.cancelButton?.accessibilityIdentifier = "cancelButton"
     }
 
     // MARK: - Themeing
