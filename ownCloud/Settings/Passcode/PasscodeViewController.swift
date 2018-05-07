@@ -212,7 +212,9 @@ class PasscodeViewController: UIViewController, Themeable {
                 }
 
             case .deletePasscode?, .deletePasscodeError?:
-                let passcodeFromKeychain = String(data: OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath), encoding: .utf8)
+
+                let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
+                let passcodeFromKeychain = NSKeyedUnarchiver.unarchiveObject(with: passcodeData!) as! String
 
                 if passcodeValue == passcodeFromKeychain {
                     OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
