@@ -27,7 +27,7 @@ class PasscodeUtilities: NSObject {
 
     func storeDateHomeButtonPressed() {
         if UserDefaults.standard.data(forKey: DateHomeButtonPressedKey) == nil {
-            //Only store the date if not exist
+            //Only store the date if the PasscodeViewController is not shown
             let archivedTime = NSKeyedArchiver.archivedData(withRootObject: Date())
             UserDefaults.standard.set(archivedTime, forKey: DateHomeButtonPressedKey)
         }
@@ -57,10 +57,10 @@ class PasscodeUtilities: NSObject {
                         self.passcodeViewController = nil
                         UserDefaults.standard.removeObject(forKey: DateHomeButtonPressedKey)
                     }
-                } else {
-                    self.passcodeViewController?.hideOverly()
                 }
             }
         }
+
+        self.passcodeViewController?.hideOverly()
     }
 }

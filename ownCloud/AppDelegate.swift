@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		window?.rootViewController = navigationController!
 		window?.addSubview((navigationController?.view)!)
-        PasscodeUtilities.sharedPasscodeUtilities.askPasscodeIfIsActivated(viewController: (window?.rootViewController)!, hiddenOverlay: false)
+        PasscodeUtilities.sharedPasscodeUtilities.askPasscodeIfIsActivated(viewController: (window?.rootViewController)!, hiddenOverlay: true)
 
         self.window?.makeKeyAndVisible()
 
