@@ -9,7 +9,7 @@
 import UIKit
 import ownCloudSDK
 
-let DateHomeButtonPressed = "DateHomeButtonPressed"
+let DateHomeButtonPressedKey = "date-home-button-pressed"
 
 class PasscodeUtilities: NSObject {
 
@@ -26,10 +26,10 @@ class PasscodeUtilities: NSObject {
     }
 
     func storeDateHomeButtonPressed() {
-        if self.passcodeViewController != nil {
-            //Only store the date if the PasscodeViewController is not shown
+        if UserDefaults.standard.data(forKey: DateHomeButtonPressedKey) == nil {
+            //Only store the date if not exist
             let archivedTime = NSKeyedArchiver.archivedData(withRootObject: Date())
-            UserDefaults.standard.set(archivedTime, forKey: DateHomeButtonPressed)
+            UserDefaults.standard.set(archivedTime, forKey: DateHomeButtonPressedKey)
         }
     }
 
@@ -47,17 +47,19 @@ class PasscodeUtilities: NSObject {
 
         let secondsPassedMinToAsk = UserDefaults.standard.integer(forKey: SecuritySettingsfrequencyKey)
 
-        let dateData = UserDefaults.standard.data(forKey: DateHomeButtonPressed)
-        if let date = NSKeyedUnarchiver.unarchiveObject(with: dateData!) as? Date {
-            let elapsed = Date().timeIntervalSince(date)
+        if let dateData = UserDefaults.standard.data(forKey: DateHomeButtonPressedKey) {
+            if let date = NSKeyedUnarchiver.unarchiveObject(with: dateData) as? Date {
+                let elapsed = Date().timeIntervalSince(date)
 
-            if Int(elapsed) < secondsPassedMinToAsk {
-                if self.passcodeViewController != nil {
-                    self.passcodeViewController?.dismiss(animated: true, completion: nil)
-                    self.passcodeViewController = nil
+                if Int(elapsed) < secondsPassedMinToAsk {
+                    if self.passcodeViewController != nil {
+                        self.passcodeViewController?.dismiss(animated: true, completion: nil)
+                        self.passcodeViewController = nil
+                        UserDefaults.standard.removeObject(forKey: DateHomeButtonPressedKey)
+                    }
+                } else {
+                    self.passcodeViewController?.hideOverly()
                 }
-            } else {
-                self.passcodeViewController?.hideOverly()
             }
         }
     }

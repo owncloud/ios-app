@@ -10,8 +10,8 @@ import UIKit
 import ownCloudSDK
 
 let numberDigitsPasscode = 4
-let passcodeKeychainAccount = "PasscodeKeychainAccount"
-let passcodeKeychainPath = "PasscodeKeychainPath"
+let passcodeKeychainAccount = "passcode-keychain-account"
+let passcodeKeychainPath = "passcode-keychain-path"
 
 enum PasscodeInterfaceMode {
     case addPasscodeFirstStep
@@ -123,10 +123,12 @@ class PasscodeViewController: UIViewController, Themeable {
         case .unlockPasscode?:
             self.messageLabel?.text = "Insert your code".localized
             self.errorMessageLabel?.text = ""
+            self.cancelButton?.isHidden = true
 
         case .unlockPasscodeError?:
             self.messageLabel?.text = "Insert your code".localized
             self.errorMessageLabel?.text = "Incorrect code".localized
+            self.cancelButton?.isHidden = true
 
         case .deletePasscode?:
             self.messageLabel?.text = "Delete code".localized
@@ -146,7 +148,7 @@ class PasscodeViewController: UIViewController, Themeable {
     }
 
     func hideOverly() {
-        UIView.animate(withDuration: 1.0, delay: 1.0, options: [], animations: {
+        UIView.animate(withDuration: 1.0, delay: 0.3, options: [], animations: {
             self.overlayView.alpha = 0
         }, completion: { _ in
             self.overlayView.isHidden = true
@@ -156,6 +158,18 @@ class PasscodeViewController: UIViewController, Themeable {
     // MARK: - Actions
 
     @IBAction func cancelButton(sender: UIButton) {
+
+        switch self.passcodeMode {
+        case .addPasscodeFirstStep?, .addPasscodeSecondStep?:
+            UserDefaults.standard.set(false, forKey: SecuritySettingsPasscodeKey)
+
+        case .deletePasscode?, .deletePasscodeError?:
+            UserDefaults.standard.set(true, forKey: SecuritySettingsPasscodeKey)
+
+        default:
+            break
+        }
+
         self.dismiss(animated: true, completion: nil)
     }
 
@@ -186,6 +200,7 @@ class PasscodeViewController: UIViewController, Themeable {
                 if passcodeFromFirstStep == passcodeValue {
                     //Save to keychain
                     OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcodeValue), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
+                    UserDefaults.standard.set(true, forKey: SecuritySettingsPasscodeKey)
                     self.dismiss(animated: true, completion: nil)
                 } else {
                     self.passcodeMode = .addPasscodeFirstSetpAfterErrorOnSecond
@@ -200,6 +215,7 @@ class PasscodeViewController: UIViewController, Themeable {
                 let passcodeFromKeychain = NSKeyedUnarchiver.unarchiveObject(with: passcodeData!) as? String
 
                 if passcodeValue == passcodeFromKeychain {
+                    UserDefaults.standard.removeObject(forKey: DateHomeButtonPressedKey)
                     self.dismiss(animated: true, completion: nil)
                 } else {
                     self.passcodeMode = .unlockPasscodeError
@@ -214,6 +230,8 @@ class PasscodeViewController: UIViewController, Themeable {
 
                 if passcodeValue == passcodeFromKeychain {
                     OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
+                    UserDefaults.standard.set(false, forKey: SecuritySettingsPasscodeKey)
+                    UserDefaults.standard.removeObject(forKey: DateHomeButtonPressedKey)
                     self.dismiss(animated: true, completion: nil)
                 } else {
                     self.passcodeMode = .deletePasscodeError
