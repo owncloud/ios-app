@@ -64,10 +64,6 @@ class PasscodeViewController: UIViewController, Themeable {
         super.viewWillAppear(animated)
 
         Theme.shared.register(client: self)
-
-        if !self.overlayView.isHidden {
-            self.hideOverly()
-        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -201,7 +197,7 @@ class PasscodeViewController: UIViewController, Themeable {
             case .unlockPasscode?, .unlockPasscodeError?:
 
                 let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                let passcodeFromKeychain = NSKeyedUnarchiver.unarchiveObject(with: passcodeData!) as! String
+                let passcodeFromKeychain = NSKeyedUnarchiver.unarchiveObject(with: passcodeData!) as? String
 
                 if passcodeValue == passcodeFromKeychain {
                     self.dismiss(animated: true, completion: nil)
@@ -214,7 +210,7 @@ class PasscodeViewController: UIViewController, Themeable {
             case .deletePasscode?, .deletePasscodeError?:
 
                 let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                let passcodeFromKeychain = NSKeyedUnarchiver.unarchiveObject(with: passcodeData!) as! String
+                let passcodeFromKeychain = NSKeyedUnarchiver.unarchiveObject(with: passcodeData!) as? String
 
                 if passcodeValue == passcodeFromKeychain {
                     OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)

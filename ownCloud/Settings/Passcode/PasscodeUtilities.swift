@@ -9,16 +9,15 @@
 import UIKit
 import ownCloudSDK
 
-let dateHomeButtonPressed = "DateHomeButtonPressed"
-let dateHomeButtonPressedPath = "DateHomeButtonPressedPath"
+let DateHomeButtonPressed = "DateHomeButtonPressed"
 
 class PasscodeUtilities: NSObject {
 
-    var viewController: UIViewController?
+    private var passcodeViewController: PasscodeViewController?
+    private var userDefaults: UserDefaults?
 
     static var sharedPasscodeUtilities : PasscodeUtilities = {
         let sharedInstance = PasscodeUtilities()
-
         return (sharedInstance)
     }()
 
@@ -27,10 +26,10 @@ class PasscodeUtilities: NSObject {
     }
 
     func storeDateHomeButtonPressed() {
-        if viewController != nil {
+        if self.passcodeViewController != nil {
             //Only store the date if the PasscodeViewController is not shown
             let archivedTime = NSKeyedArchiver.archivedData(withRootObject: Date())
-            UserDefaults.standard.set(archivedTime, forKey: dateHomeButtonPressed)
+            UserDefaults.standard.set(archivedTime, forKey: DateHomeButtonPressed)
         }
     }
 
@@ -39,18 +38,27 @@ class PasscodeUtilities: NSObject {
     func askPasscodeIfIsActivated(viewController: UIViewController, hiddenOverlay:Bool) {
         if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
 
-            self.viewController = viewController
-
-            let passcodeViewController:PasscodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, passcodeFromFirstStep: nil, hiddenOverlay:hiddenOverlay)
-            viewController.present(passcodeViewController, animated: false, completion: nil)
+            self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, passcodeFromFirstStep: nil, hiddenOverlay:hiddenOverlay)
+            viewController.present(self.passcodeViewController!, animated: false, completion: nil)
         }
     }
 
     func dismissAskedPasscodeIfDateToAskIsLower() {
-        
-        /*if self.viewController != nil {
-            self.viewController?.dismiss(animated: false, completion: nil)
-            self.viewController = nil
-        }*/
+
+        let secondsPassedMinToAsk = UserDefaults.standard.integer(forKey: SecuritySettingsfrequencyKey)
+
+        let dateData = UserDefaults.standard.data(forKey: DateHomeButtonPressed)
+        if let date = NSKeyedUnarchiver.unarchiveObject(with: dateData!) as? Date {
+            let elapsed = Date().timeIntervalSince(date)
+
+            if Int(elapsed) < secondsPassedMinToAsk {
+                if self.passcodeViewController != nil {
+                    self.passcodeViewController?.dismiss(animated: true, completion: nil)
+                    self.passcodeViewController = nil
+                }
+            } else {
+                self.passcodeViewController?.hideOverly()
+            }
+        }
     }
 }
