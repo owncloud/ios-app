@@ -78,6 +78,10 @@ class StaticTableViewSection: NSObject {
 		}
 	}
 
+    func add(row: StaticTableViewRow) {
+        rows.append(row)
+    }
+
     func insert(row rowToAdd: StaticTableViewRow, at index: Int) {
         if rowToAdd.section == nil {
             rowToAdd.eventHandler?(rowToAdd, StaticTableViewEvent.initial)
@@ -155,6 +159,10 @@ class StaticTableViewSection: NSObject {
 			self.viewController?.tableView.deleteRows(at: indexPaths, with: animated ? .fade : .none)
 		}
 	}
+
+    func delete(row: StaticTableViewRow, at index: Int) {
+        rows.remove(at: index)
+    }
 
 	// MARK: - Radio group value setter/getter
 	func selectedValue(forGroupIdentifier groupIdentifier: String) -> Any? {
