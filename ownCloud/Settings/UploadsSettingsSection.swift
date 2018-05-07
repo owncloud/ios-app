@@ -25,17 +25,6 @@ private let UploadsBackgroundUploadsKey: String = "uploads-settings-background"
 // MARK: - Section identifier
 private let UploadsSectionIdentifier: String = "settings-uploads-section"
 
-// MARK: - Row identifiers
-private let UploadsPhotosRowIdentifier: String = "uploads-photos-row"
-private let UploadsPhotosWifiOnlyRowIdentifier: String = "uploads-photos-wifi-row"
-private let UploadsPhotosSelectedPathRowIdentifier: String = "uploads-photos-path-row"
-
-private let UploadsVideosRowIdentifier: String = "uploads-videos-row"
-private let UploadsVideosWifiOnlyRowIdentifier: String = "uploads-videos-wifi-row"
-private let UploadsVideosSelectedPathRowIdentifier: String = "uploads-videos-path-row"
-
-private let UploadsBackgroundUploadsRowIdentifier: String = "uploads-background-row"
-
 class UploadsSettings: StaticTableViewSection {
 
     // MARK: Upload settings properties.
@@ -87,6 +76,18 @@ class UploadsSettings: StaticTableViewSection {
     /// User defaults to store the settings.
     private var userDefaults: UserDefaults
 
+    // MARK: - Upload Settings Cells
+
+    private var photosRow: StaticTableViewRow?
+    private var photosWifiOnlyRow: StaticTableViewRow?
+    private var photosSelectedPathRow: StaticTableViewRow?
+
+    private var videosRow: StaticTableViewRow?
+    private var videosWifiOnlyRow: StaticTableViewRow?
+    private var videosSelectedPathRow: StaticTableViewRow?
+
+    private var backgroundUploadsRow: StaticTableViewRow?
+
     init(userDefaults: UserDefaults) {
 
         self.userDefaults = userDefaults
@@ -102,169 +103,120 @@ class UploadsSettings: StaticTableViewSection {
         self.backgroundUploadsEnabled = userDefaults.bool(forKey: UploadsBackgroundUploadsKey)
 
         super.init()
+
+        createPhotoRows()
+        createVideoRows()
+        createCommonRows()
+
         self.headerTitle = "Instant Uploads".localized
         self.identifier = UploadsSectionIdentifier
 
+        self.add(rows: [photosRow!, videosRow!])
         updateUI()
     }
 
     // MARK: - Creation of the rows.
-    private func photosRow() -> StaticTableViewRow {
-        let photosRow = StaticTableViewRow(switchWithAction: { (row, _) in
+
+    private func createPhotoRows() {
+
+        photosRow = StaticTableViewRow(switchWithAction: { (row, _) in
             if let value = row.value as? Bool {
                 self.photoUploadEnabled = value
                 self.updateUI()
             }
-        }, title: "Photos".localized, value: photoUploadEnabled, identifier: UploadsPhotosRowIdentifier)
+        }, title: "Photos".localized, value: photoUploadEnabled)
 
-        return photosRow
-    }
-
-    private func photosWifiOnlyRow() -> StaticTableViewRow {
-        let photosWifiOnlyRow = StaticTableViewRow(switchWithAction: { (row, _) in
+        photosWifiOnlyRow = StaticTableViewRow(switchWithAction: { (row, _) in
             if let value = row.value as? Bool {
                 self.photoWifiOnlyUploadsEnabled = value
             }
-        }, title: "Upload pictures via WiFi only".localized, value: photoWifiOnlyUploadsEnabled, identifier: UploadsPhotosWifiOnlyRowIdentifier)
+        }, title: "Upload pictures via WiFi only".localized, value: photoWifiOnlyUploadsEnabled)
 
-        return photosWifiOnlyRow
+        photosSelectedPathRow = StaticTableViewRow(subtitleRowWithAction: { (_, _) in
+            // TODO: Use a more advanced version of ClientQueryViewController to select the path
+        }, title: "Photo upload path".localized, subtitle: photoSelectedPath, accessoryType: .disclosureIndicator)
     }
 
-    private func photosSelectedPathRow() -> StaticTableViewRow {
-        let photosSelectedPathRow = StaticTableViewRow(textFieldWithAction: { (row, _) in
-            if let value = row.value as? String {
-                self.photoSelectedPath = value
-            }
-        }, placeholder: uploadsSelectedPath,
-           value: photoSelectedPath,
-           secureTextEntry: false,
-           keyboardType: .default,
-           autocorrectionType: .no,
-           autocapitalizationType: .none,
-           enablesReturnKeyAutomatically: true,
-           returnKeyType: .done,
-           identifier: UploadsPhotosSelectedPathRowIdentifier)
+    private func createVideoRows() {
 
-        return photosSelectedPathRow
-    }
-
-    private func videosRow() -> StaticTableViewRow {
-        let videosRow = StaticTableViewRow(switchWithAction: { (row, _) in
+        videosRow = StaticTableViewRow(switchWithAction: { (row, _) in
             if let value = row.value as? Bool {
                 self.videoUploadEnabled = value
                 self.updateUI()
             }
-        }, title: "Videos".localized, value: videoUploadEnabled, identifier: UploadsVideosRowIdentifier)
+        }, title: "Videos".localized, value: videoUploadEnabled)
 
-        return videosRow
-    }
-
-    private func videosWifiOnlyRow() -> StaticTableViewRow {
-        let videosWifiOnlyRow = StaticTableViewRow(switchWithAction: { (row, _) in
+        videosWifiOnlyRow = StaticTableViewRow(switchWithAction: { (row, _) in
             if let value = row.value as? Bool {
                 self.videoWifiOnlyUploadsEnabled = value
             }
-        }, title: "Upload videos via WiFi only".localized, value: videoWifiOnlyUploadsEnabled, identifier: UploadsVideosWifiOnlyRowIdentifier)
+        }, title: "Upload videos via WiFi only".localized, value: videoWifiOnlyUploadsEnabled)
 
-        return videosWifiOnlyRow
+        videosSelectedPathRow = StaticTableViewRow(subtitleRowWithAction: { (_, _) in
+            // TODO: Use a more advanced version of ClientQueryViewController to select the path
+        }, title: "Video upload path".localized, subtitle: videoSelectedPath, accessoryType: .disclosureIndicator)
     }
 
-    private func videosSelectedPathRow() -> StaticTableViewRow {
-        let videosSelectedPathRow = StaticTableViewRow(textFieldWithAction: { (row, _) in
-            if let value = row.value as? String {
-                self.videoSelectedPath = value
-            }
-        }, placeholder: uploadsSelectedPath,
-           value: videoSelectedPath,
-           secureTextEntry: false,
-           keyboardType: .default,
-           autocorrectionType: .no,
-           autocapitalizationType: .none,
-           enablesReturnKeyAutomatically: true,
-           returnKeyType: .done,
-           identifier: UploadsVideosSelectedPathRowIdentifier)
-
-        return videosSelectedPathRow
-    }
-
-    private func backgroundUploadsRow() -> StaticTableViewRow {
-        let backgroundUploadsRow = StaticTableViewRow(switchWithAction: { (row, _) in
+    private func createCommonRows() {
+        backgroundUploadsRow = StaticTableViewRow(switchWithAction: { (row, _) in
             if let value = row.value as? Bool {
                 self.backgroundUploadsEnabled = value
             }
-        }, title: "Background uploads".localized, value: backgroundUploadsEnabled, identifier: UploadsBackgroundUploadsRowIdentifier)
-
-        return backgroundUploadsRow
+        }, title: "Background uploads".localized, value: backgroundUploadsEnabled)
     }
 
     /// Create and configure all the rows the Uploads Section has in the settings view.
     func updateUI() {
 
-        // Photo camera uploads flow
-        if row(withIdentifier: UploadsPhotosRowIdentifier) == nil {
-            add(rows: [photosRow()])
-        }
-
         if photoUploadEnabled {
 
-            let photoUploadIndex = rows.index(of: row(withIdentifier: UploadsPhotosRowIdentifier)!)!
+            let photoUploadIndex = rows.index(of: photosRow!)!
 
-            if row(withIdentifier: UploadsPhotosWifiOnlyRowIdentifier) == nil {
-                insert(row: photosWifiOnlyRow(), at: photoUploadIndex + 1)
+            if !rows.contains(photosWifiOnlyRow!) {
+                insert(row: photosWifiOnlyRow!, at: photoUploadIndex + 1)
+                insert(row: photosSelectedPathRow!, at: photoUploadIndex + 2)
             }
-            if row(withIdentifier: UploadsPhotosSelectedPathRowIdentifier) == nil {
 
-                insert(row: photosSelectedPathRow(), at: photoUploadIndex + 2)
-            }
         } else {
-            if let row = row(withIdentifier: UploadsPhotosWifiOnlyRowIdentifier) {
-                self.photoWifiOnlyUploadsEnabled = false
-                remove(rows: [row])
-            }
+            photoWifiOnlyUploadsEnabled = false
+            photosWifiOnlyRow?.value = false
+            remove(rows: [photosWifiOnlyRow!])
 
-            if let row = row(withIdentifier: UploadsPhotosSelectedPathRowIdentifier) {
-                self.userDefaults.removeObject(forKey: UploadsPhotosSelectedPathKey)
-                remove(rows: [row])
-            }
-        }
-
-        // Video camera uploads flow
-        if row(withIdentifier: UploadsVideosRowIdentifier) == nil {
-            add(rows: [videosRow()])
+            photosSelectedPathRow?.cell?.detailTextLabel?.text = uploadsSelectedPath
+            userDefaults.removeObject(forKey: UploadsPhotosSelectedPathKey)
+            remove(rows: [photosSelectedPathRow!])
         }
 
         if videoUploadEnabled {
-            let videoUploadIndex = rows.index(of: row(withIdentifier: UploadsVideosRowIdentifier)!)!
 
-            if row(withIdentifier: UploadsVideosWifiOnlyRowIdentifier) == nil {
-                insert(row: videosWifiOnlyRow(), at: videoUploadIndex + 1)
+            let videoUploadIndex = rows.index(of: videosRow!)!
+
+            if !rows.contains(videosWifiOnlyRow!) {
+                insert(row: videosWifiOnlyRow!, at: videoUploadIndex + 1)
+                insert(row: videosSelectedPathRow!, at: videoUploadIndex + 2)
             }
-            if row(withIdentifier: UploadsVideosSelectedPathRowIdentifier) == nil {
-                insert(row: videosSelectedPathRow(), at: videoUploadIndex + 2)
-            }
+
         } else {
-            if let row = row(withIdentifier: UploadsVideosWifiOnlyRowIdentifier) {
-                self.videoWifiOnlyUploadsEnabled = false
-                remove(rows: [row])
-            }
 
-            if let row = row(withIdentifier: UploadsVideosSelectedPathRowIdentifier) {
-                self.userDefaults.removeObject(forKey: UploadsVideosSelectedPathKey)
-                remove(rows: [row])
-            }
+            videoWifiOnlyUploadsEnabled = false
+            videosWifiOnlyRow?.value = false
+            remove(rows: [videosWifiOnlyRow!])
+
+            videosSelectedPathRow?.cell?.detailTextLabel?.text = uploadsSelectedPath
+            userDefaults.removeObject(forKey: UploadsVideosSelectedPathKey)
+            remove(rows: [videosSelectedPathRow!])
         }
 
         // Background uploads flow
         if photoUploadEnabled || videoUploadEnabled {
-            if row(withIdentifier: UploadsBackgroundUploadsRowIdentifier) == nil {
-                add(rows: [backgroundUploadsRow()])
+
+            if !rows.contains(backgroundUploadsRow!) {
+                add(rows: [backgroundUploadsRow!])
             }
 
         } else {
-            if let row = row(withIdentifier: UploadsBackgroundUploadsRowIdentifier) {
-                self.backgroundUploadsEnabled = false
-                remove(rows: [row])
-            }
+            backgroundUploadsRow?.value = false
+            remove(rows: [backgroundUploadsRow!])
         }
 
         reload()

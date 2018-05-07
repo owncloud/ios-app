@@ -17,19 +17,27 @@ public let SecuritySettingsBiometricalKey: String = "security-settings-useBiomet
 // MARK: - Section identifier
 private let SecuritySectionIdentifier: String = "settings-security-section"
 
-// MARK: - Row identifiers
-private let SecurityFrequencyRowIdentifier: String = "security-frequency-row"
-private let SecurityPasscodeRowIdentifier: String = "security-passcode-row"
-private let SecurityBiometricsRowIdentifier: String = "security-biometrical-row"
-
 // MARK: - SecurityAskfrequency
-enum SecurityAskfrequency: String {
-    case allways = "Allways"
-    case oneMinute = "1 minute"
-    case fiveMinutes = "5 minutes"
-    case thirtyMinutes = "30 minutes"
+enum SecurityAskfrequency: Int {
+    case allways = 0
+    case oneMinute = 60
+    case fiveMinutes = 300
+    case thirtyMinutes = 1800
 
     static let all = [allways, oneMinute, fiveMinutes, thirtyMinutes]
+
+    func toString() -> String {
+        switch self {
+        case .allways:
+            return "Allways"
+        case .oneMinute:
+            return "1 minute"
+        case .fiveMinutes:
+            return "5 minutes"
+        case .thirtyMinutes:
+            return "30 minutes"
+        }
+    }
 }
 
 class SecuritySettings: StaticTableViewSection {
@@ -45,10 +53,16 @@ class SecuritySettings: StaticTableViewSection {
     /// UserDefaults used to store and retrieve all.
     private var userDefaults: UserDefaults
 
+    // MARK: - Upload Settings Cells
+
+    private var frequencyRow: StaticTableViewRow?
+    private var passcodeRow: StaticTableViewRow?
+    private var biometricalRow: StaticTableViewRow?
+
     init(userDefaults: UserDefaults) {
         self.userDefaults = userDefaults
 
-        if let frequencySetting = userDefaults.string(forKey: SecuritySettingsfrequencyKey), let frequencyValue = SecurityAskfrequency(rawValue: frequencySetting) {
+        if let frequencyValue = SecurityAskfrequency(rawValue: userDefaults.integer(forKey: SecuritySettingsfrequencyKey)) {
             self.frequency = frequencyValue
         } else {
             self.frequency = .allways
@@ -60,12 +74,14 @@ class SecuritySettings: StaticTableViewSection {
         self.headerTitle = "Security".localized
         self.identifier = SecuritySectionIdentifier
 
+        createRows()
+
         updateUI()
     }
 
     // MARK: - Creation of the rows.
-    private func frequencyRow() -> StaticTableViewRow {
-        let frequencyRow = StaticTableViewRow(subtitleRowWithAction: { (row, _) in
+    private func createRows() {
+        frequencyRow = StaticTableViewRow(subtitleRowWithAction: { (row, _) in
 
             if let vc: StaticTableViewController = self.viewController {
                 let alert: UIAlertController =
@@ -74,10 +90,10 @@ class SecuritySettings: StaticTableViewSection {
                                       preferredStyle: UIAlertControllerStyle.actionSheet)
 
                 for frequency in SecurityAskfrequency.all {
-                    let action: UIAlertAction = UIAlertAction(title: frequency.rawValue, style: UIAlertActionStyle.default, handler: { (_) in
+                    let action: UIAlertAction = UIAlertAction(title: frequency.toString(), style: UIAlertActionStyle.default, handler: { (_) in
                         self.frequency = frequency
                         self.userDefaults.set(frequency.rawValue, forKey: SecuritySettingsfrequencyKey)
-                        row.cell?.detailTextLabel?.text = frequency.rawValue
+                        row.cell?.detailTextLabel?.text = frequency.toString()
                     })
                     alert.addAction(action)
                 }
@@ -88,24 +104,16 @@ class SecuritySettings: StaticTableViewSection {
                 vc.present(alert, animated: true)
             }
 
-        }, title: "Frequency".localized, subtitle:frequency.rawValue, accessoryType: .disclosureIndicator, identifier: SecurityFrequencyRowIdentifier)
+        }, title: "Frequency".localized, subtitle:frequency.toString(), accessoryType: .disclosureIndicator)
 
-        return frequencyRow
-    }
-
-    private func passcodeRow() -> StaticTableViewRow {
-        let passcodeRow = StaticTableViewRow(switchWithAction: { (row, _) in
+        passcodeRow = StaticTableViewRow(switchWithAction: { (row, _) in
             if let value = row.value as? Bool {
                 self.passcodeEnabled = value
                 self.userDefaults.set(self.passcodeEnabled, forKey: SecuritySettingsPasscodeKey)
                 self.updateUI()
             }
-        }, title: "Passcode Lock".localized, value: self.passcodeEnabled, identifier: SecurityPasscodeRowIdentifier)
+        }, title: "Passcode Lock".localized, value: self.passcodeEnabled)
 
-        return passcodeRow
-    }
-
-    private func biometricalRow() -> StaticTableViewRow? {
         let context = LAContext()
 
         if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: nil) {
@@ -117,43 +125,37 @@ class SecuritySettings: StaticTableViewSection {
             case .faceID:
                 biometricalSecurityName = "FaceID".localized
             default:
-                return nil
+                break
             }
 
-            let biometricalRow = StaticTableViewRow(switchWithAction: { (row, _) in
+            biometricalRow = StaticTableViewRow(switchWithAction: { (row, _) in
                 if let value = row.value as? Bool {
                     self.biometricalSecurityEnabled = value
                     self.userDefaults.set(self.biometricalSecurityEnabled, forKey: SecuritySettingsBiometricalKey)
                 }
-            }, title: biometricalSecurityName, value: self.biometricalSecurityEnabled, identifier: SecurityBiometricsRowIdentifier)
-            return biometricalRow
-        } else {
-            return nil
+            }, title: biometricalSecurityName, value: self.biometricalSecurityEnabled)
         }
     }
 
     // MARK: - Update UI
     func updateUI() {
 
-        if self.row(withIdentifier: SecurityFrequencyRowIdentifier) == nil {
-            let frequencyRow = self.frequencyRow()
-            self.add(rows: [frequencyRow])
+        if !rows.contains(frequencyRow!) {
+            add(row: frequencyRow!)
         }
 
-        if self.row(withIdentifier: SecurityPasscodeRowIdentifier) == nil {
-            let passcodeRow = self.passcodeRow()
-            self.add(rows: [passcodeRow])
+        if !rows.contains(passcodeRow!) {
+            add(row: passcodeRow!)
         }
 
         if self.passcodeEnabled == true {
-            if self.row(withIdentifier: SecurityBiometricsRowIdentifier) == nil,
-                let biometricalRow = self.biometricalRow() {
-                self.add(rows: [biometricalRow])
+            if !rows.contains(biometricalRow!) {
+                add(row: biometricalRow!)
             }
         } else {
-            if let row = self.row(withIdentifier: SecurityBiometricsRowIdentifier) {
-                self.remove(rows: [row])
-            }
+            self.biometricalRow?.value = false
+            self.biometricalSecurityEnabled = false
+            self.remove(rows: [biometricalRow!])
         }
 
         self.reload()
