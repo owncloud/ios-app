@@ -61,10 +61,7 @@ class MoreSettingsSection: StaticTableViewSection, MFMailComposeViewControllerDe
 
     // MARK: - Update UI
     func updateUI() {
-
         add(rows: [helpRow!, sendFeedbackRow!, recommendRow!, privacyPolicyRow!])
-
-        self.reload()
     }
 
     private func sendMail(to: String?, subject: String?, message: String?) {
