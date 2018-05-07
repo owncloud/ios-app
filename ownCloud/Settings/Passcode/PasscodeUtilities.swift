@@ -36,20 +36,20 @@ class PasscodeUtilities: NSObject {
 
     // MARK: - Unlock device
 
-    func askPasscodeIfIsActivated(viewController: UIViewController) {
+    func askPasscodeIfIsActivated(viewController: UIViewController, hiddenOverlay:Bool) {
         if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
 
             self.viewController = viewController
 
-            let passcodeViewController:PasscodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, passcodeFromFirstStep: nil)
-            viewController.present(passcodeViewController, animated: true, completion: nil)
+            let passcodeViewController:PasscodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, passcodeFromFirstStep: nil, hiddenOverlay:hiddenOverlay)
+            viewController.present(passcodeViewController, animated: false, completion: nil)
         }
     }
 
     func dismissAskedPasscodeIfDateToAskIsLower() {
         
         /*if self.viewController != nil {
-            self.viewController?.dismiss(animated: true, completion: nil)
+            self.viewController?.dismiss(animated: false, completion: nil)
             self.viewController = nil
         }*/
     }

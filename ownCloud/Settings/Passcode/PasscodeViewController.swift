@@ -27,6 +27,7 @@ class PasscodeViewController: UIViewController, Themeable {
 
     var passcodeFromFirstStep: String?
     var passcodeMode: PasscodeInterfaceMode?
+    var hiddenOverlay: Bool?
 
     @IBOutlet var overlayView: UIView!
     @IBOutlet var logoTVGView : VectorImageView!
@@ -48,10 +49,11 @@ class PasscodeViewController: UIViewController, Themeable {
 
     @IBOutlet weak var cancelButton: ThemeButton?
 
-    init(mode: PasscodeInterfaceMode, passcodeFromFirstStep: String?) {
+    init(mode: PasscodeInterfaceMode, passcodeFromFirstStep: String?, hiddenOverlay: Bool?) {
         super.init(nibName: "PasscodeViewController", bundle: nil)
         self.passcodeFromFirstStep = passcodeFromFirstStep
         self.passcodeMode = mode
+        self.hiddenOverlay = hiddenOverlay
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -66,6 +68,12 @@ class PasscodeViewController: UIViewController, Themeable {
         if !self.overlayView.isHidden {
             self.hideOverly()
         }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super .viewDidAppear(animated)
+
+
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -100,6 +108,8 @@ class PasscodeViewController: UIViewController, Themeable {
         Theme.shared.add(tvgResourceFor: "owncloud-logo")
         logoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
 
+        self.overlayView.isHidden = self.hiddenOverlay!
+
         self.updateUI()
     }
 
@@ -109,37 +119,30 @@ class PasscodeViewController: UIViewController, Themeable {
         case .addPasscodeFirstStep?:
             self.messageLabel?.text = "Insert your code".localized
             self.errorMessageLabel?.text = ""
-            self.overlayView.isHidden = true
 
         case .addPasscodeSecondStep?:
             self.messageLabel?.text = "Reinsert your code".localized
             self.errorMessageLabel?.text = ""
-            self.overlayView.isHidden = true
 
         case .unlockPasscode?:
             self.messageLabel?.text = "Insert your code".localized
             self.errorMessageLabel?.text = ""
-            self.overlayView.isHidden = false
 
         case .unlockPasscodeError?:
             self.messageLabel?.text = "Insert your code".localized
             self.errorMessageLabel?.text = "Incorrect code".localized
-            self.overlayView.isHidden = true
 
         case .deletePasscode?:
             self.messageLabel?.text = "Delete code".localized
             self.errorMessageLabel?.text = ""
-            self.overlayView.isHidden = true
 
         case .deletePasscodeError?:
             self.messageLabel?.text = "Delete code".localized
             self.errorMessageLabel?.text = "Incorrect code".localized
-            self.overlayView.isHidden = true
 
         case .addPasscodeFirstSetpAfterErrorOnSecond?:
             self.messageLabel?.text = "Insert your code".localized
             self.errorMessageLabel?.text = "The insterted codes are not the same".localized
-            self.overlayView.isHidden = true
 
         default:
             break
@@ -147,7 +150,7 @@ class PasscodeViewController: UIViewController, Themeable {
     }
 
     func hideOverly() {
-        UIView.animate(withDuration: 1.0, delay: 0, options: [], animations: {
+        UIView.animate(withDuration: 1.0, delay: 1.0, options: [], animations: {
             self.overlayView.alpha = 0
         }, completion: { _ in
             self.overlayView.isHidden = true

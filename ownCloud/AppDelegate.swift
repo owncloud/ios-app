@@ -37,9 +37,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		window?.rootViewController = navigationController!
 		window?.addSubview((navigationController?.view)!)
-		window?.makeKeyAndVisible()
+        PasscodeUtilities.sharedPasscodeUtilities.askPasscodeIfIsActivated(viewController: (window?.rootViewController)!, hiddenOverlay: true)
 
-        PasscodeUtilities.sharedPasscodeUtilities.askPasscodeIfIsActivated(viewController: (window?.rootViewController)!)
+        self.window?.makeKeyAndVisible()
 
 		return true
 	}
@@ -49,7 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
 
         PasscodeUtilities.sharedPasscodeUtilities.storeDateHomeButtonPressed()
-        PasscodeUtilities.sharedPasscodeUtilities.askPasscodeIfIsActivated(viewController: (window?.rootViewController)!)
+        PasscodeUtilities.sharedPasscodeUtilities.askPasscodeIfIsActivated(viewController: (window?.rootViewController)!, hiddenOverlay: false)
 	}
 
 	func applicationDidEnterBackground(_ application: UIApplication) {
