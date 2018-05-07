@@ -160,6 +160,13 @@ class StaticTableViewSection: NSObject {
 		}
 	}
 
+    func remove(_ row: StaticTableViewRow) {
+        if let index = rows.index(of: row) {
+
+            rows.remove(at: index)
+        }
+    }
+
     func delete(row: StaticTableViewRow, at index: Int) {
         rows.remove(at: index)
     }
