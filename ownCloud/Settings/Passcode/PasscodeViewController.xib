@@ -209,7 +209,6 @@
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QBU-JI-eXX" customClass="VectorImageView" customModule="ownCloud" customModuleProvider="target">
                             <rect key="frame" x="16" y="169.5" width="288" height="209"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="QBU-JI-eXX" secondAttribute="height" multiplier="288:209" id="wem-ui-bKS"/>
                             </constraints>
