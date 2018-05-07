@@ -17,7 +17,6 @@
  */
 
 import UIKit
-import ownCloudSDK
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -40,8 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.addSubview((navigationController?.view)!)
 		window?.makeKeyAndVisible()
 
-        //Passcode
-        self.askPasscodeIfIsActivated()
+        PasscodeUtilities.sharedPasscodeUtilities.askPasscodeIfIsActivated(viewController: (window?.rootViewController)!)
 
 		return true
 	}
@@ -50,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
 		// Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
 
-        self.askPasscodeIfIsActivated()
+        PasscodeUtilities.sharedPasscodeUtilities.askPasscodeIfIsActivated(viewController: (window?.rootViewController)!)
 	}
 
 	func applicationDidEnterBackground(_ application: UIApplication) {
@@ -64,6 +62,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func applicationDidBecomeActive(_ application: UIApplication) {
 		// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+
+        PasscodeUtilities.sharedPasscodeUtilities.dismissAskedPasscodeIfDateToAskIsLower()
     }
 
 	func applicationWillTerminate(_ application: UIApplication) {
@@ -72,10 +72,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: - Passcode
 
-    func askPasscodeIfIsActivated() {
-        if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
-            let passcodeViewController:PasscodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, passcodeFromFirstStep: nil)
-            window?.rootViewController?.present(passcodeViewController, animated: true, completion: nil)
-        }
-    }
+    
 }

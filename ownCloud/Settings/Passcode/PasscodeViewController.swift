@@ -158,7 +158,7 @@ class PasscodeViewController: UIViewController, Themeable {
             case .addPasscodeSecondStep?:
                 if passcodeFromFirstStep == passcodeValue {
                     //Save to keychain
-                    OCAppIdentity.shared().keychain.write(passcodeValue.data(using: .utf8), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
+                    OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcodeValue), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
                     self.dismiss(animated: true, completion: nil)
                 } else {
                     self.passcodeMode = .addPasscodeFirstSetpAfterErrorOnSecond
@@ -168,7 +168,9 @@ class PasscodeViewController: UIViewController, Themeable {
                 }
 
             case .unlockPasscode?, .unlockPasscodeError?:
-                let passcodeFromKeychain = String(data: OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath), encoding: .utf8)
+
+                let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
+                let passcodeFromKeychain = NSKeyedUnarchiver.unarchiveObject(with: passcodeData!) as! String
 
                 if passcodeValue == passcodeFromKeychain {
                     self.dismiss(animated: true, completion: nil)
