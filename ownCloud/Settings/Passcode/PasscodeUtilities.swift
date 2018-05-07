@@ -9,6 +9,9 @@
 import UIKit
 import ownCloudSDK
 
+let dateHomeButtonPressed = "DateHomeButtonPressed"
+let dateHomeButtonPressedPath = "DateHomeButtonPressedPath"
+
 class PasscodeUtilities: NSObject {
 
     var viewController: UIViewController?
@@ -21,6 +24,14 @@ class PasscodeUtilities: NSObject {
 
     public override init() {
         super.init()
+    }
+
+    func storeDateHomeButtonPressed() {
+        if viewController != nil {
+            //Only store the date if the PasscodeViewController is not shown
+            let archivedTime = NSKeyedArchiver.archivedData(withRootObject: Date())
+            UserDefaults.standard.set(archivedTime, forKey: dateHomeButtonPressed)
+        }
     }
 
     // MARK: - Unlock device
@@ -36,9 +47,10 @@ class PasscodeUtilities: NSObject {
     }
 
     func dismissAskedPasscodeIfDateToAskIsLower() {
+        
         if self.viewController != nil {
             self.viewController?.dismiss(animated: true, completion: nil)
+            self.viewController = nil
         }
     }
-
 }
