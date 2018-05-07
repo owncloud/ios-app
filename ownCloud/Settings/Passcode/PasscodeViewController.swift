@@ -28,6 +28,9 @@ class PasscodeViewController: UIViewController, Themeable {
     var passcodeFromFirstStep: String?
     var passcodeMode: PasscodeInterfaceMode?
 
+    @IBOutlet var overlayView: UIView!
+    @IBOutlet var logoTVGView : VectorImageView!
+
     @IBOutlet weak var messageLabel: UILabel?
     @IBOutlet weak var errorMessageLabel: UILabel?
     @IBOutlet weak var passcodeValueTextField: UITextField?
@@ -59,6 +62,10 @@ class PasscodeViewController: UIViewController, Themeable {
         super.viewWillAppear(animated)
 
         Theme.shared.register(client: self)
+
+        if !self.overlayView.isHidden {
+            self.hideOverly()
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -90,40 +97,61 @@ class PasscodeViewController: UIViewController, Themeable {
     // MARK: - Interface
 
     func loadInterface() {
+        Theme.shared.add(tvgResourceFor: "owncloud-logo")
+        logoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
 
-        //Top message
+        self.updateUI()
+    }
+
+    func updateUI() {
+
         switch self.passcodeMode {
         case .addPasscodeFirstStep?:
             self.messageLabel?.text = "Insert your code".localized
             self.errorMessageLabel?.text = ""
+            self.overlayView.isHidden = true
 
         case .addPasscodeSecondStep?:
             self.messageLabel?.text = "Reinsert your code".localized
             self.errorMessageLabel?.text = ""
+            self.overlayView.isHidden = true
 
         case .unlockPasscode?:
             self.messageLabel?.text = "Insert your code".localized
             self.errorMessageLabel?.text = ""
+            self.overlayView.isHidden = false
 
         case .unlockPasscodeError?:
             self.messageLabel?.text = "Insert your code".localized
             self.errorMessageLabel?.text = "Incorrect code".localized
+            self.overlayView.isHidden = true
 
         case .deletePasscode?:
             self.messageLabel?.text = "Delete code".localized
             self.errorMessageLabel?.text = ""
+            self.overlayView.isHidden = true
 
         case .deletePasscodeError?:
             self.messageLabel?.text = "Delete code".localized
             self.errorMessageLabel?.text = "Incorrect code".localized
+            self.overlayView.isHidden = true
 
         case .addPasscodeFirstSetpAfterErrorOnSecond?:
             self.messageLabel?.text = "Insert your code".localized
             self.errorMessageLabel?.text = "The insterted codes are not the same".localized
+            self.overlayView.isHidden = true
 
         default:
             break
         }
+    }
+
+    func hideOverly() {
+        UIView.animate(withDuration: 1.0, delay: 0, options: [], animations: {
+            self.overlayView.alpha = 0
+        }, completion: { _ in
+            self.overlayView.isHidden = true
+        })
     }
 
     // MARK: - Actions
@@ -153,7 +181,7 @@ class PasscodeViewController: UIViewController, Themeable {
                 self.passcodeMode = .addPasscodeSecondStep
                 self.passcodeFromFirstStep = passcodeValue
                 self.passcodeValueTextField?.text = nil
-                self.loadInterface()
+                self.updateUI()
 
             case .addPasscodeSecondStep?:
                 if passcodeFromFirstStep == passcodeValue {
@@ -164,7 +192,7 @@ class PasscodeViewController: UIViewController, Themeable {
                     self.passcodeMode = .addPasscodeFirstSetpAfterErrorOnSecond
                     self.passcodeFromFirstStep = nil
                     self.passcodeValueTextField?.text = nil
-                    self.loadInterface()
+                    self.updateUI()
                 }
 
             case .unlockPasscode?, .unlockPasscodeError?:
@@ -177,7 +205,7 @@ class PasscodeViewController: UIViewController, Themeable {
                 } else {
                     self.passcodeMode = .unlockPasscodeError
                     self.passcodeValueTextField?.text = nil
-                    self.loadInterface()
+                    self.updateUI()
                 }
 
             case .deletePasscode?, .deletePasscodeError?:
@@ -189,7 +217,7 @@ class PasscodeViewController: UIViewController, Themeable {
                 } else {
                     self.passcodeMode = .deletePasscodeError
                     self.passcodeValueTextField?.text = nil
-                    self.loadInterface()
+                    self.updateUI()
                 }
 
             default:
@@ -203,6 +231,7 @@ class PasscodeViewController: UIViewController, Themeable {
     func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 
         self.view.backgroundColor = collection.tableBackgroundColor
+        self.overlayView.backgroundColor = collection.tableBackgroundColor
 
         self.messageLabel?.applyThemeCollection(collection, itemStyle: .bigTitle, itemState: .normal)
         self.errorMessageLabel?.applyThemeCollection(collection)

@@ -48,9 +48,9 @@ class PasscodeUtilities: NSObject {
 
     func dismissAskedPasscodeIfDateToAskIsLower() {
         
-        if self.viewController != nil {
+        /*if self.viewController != nil {
             self.viewController?.dismiss(animated: true, completion: nil)
             self.viewController = nil
-        }
+        }*/
     }
 }
