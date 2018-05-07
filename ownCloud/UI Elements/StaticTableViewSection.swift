@@ -78,17 +78,30 @@ class StaticTableViewSection: NSObject {
 		}
 	}
 
-    func add(row: StaticTableViewRow) {
+    func add(row: StaticTableViewRow, animated: Bool = false) {
         rows.append(row)
+        if let vc = viewController, let sectionIndex = vc.sections.index(of: self) {
+
+            vc.tableView.beginUpdates()
+            let rowIndex = rows.count - 1
+            vc.tableView.insertRows(at: [IndexPath(row: rowIndex, section: sectionIndex)], with: selectAnimation(animated))
+            vc.tableView.endUpdates()
+        }
+
     }
 
-    func insert(row rowToAdd: StaticTableViewRow, at index: Int) {
+    func insert(row rowToAdd: StaticTableViewRow, at index: Int, animated: Bool = false) {
         if rowToAdd.section == nil {
             rowToAdd.eventHandler?(rowToAdd, StaticTableViewEvent.initial)
         }
 
         rowToAdd.section = self
         rows.insert(rowToAdd, at: index)
+        if let vc = viewController, let sectionIndex = vc.sections.index(of: self) {
+            vc.tableView.beginUpdates()
+            vc.tableView.insertRows(at: [IndexPath(row: index, section: sectionIndex)], with: selectAnimation(animated))
+            vc.tableView.endUpdates()
+        }
     }
 
 	@discardableResult
@@ -160,10 +173,16 @@ class StaticTableViewSection: NSObject {
 		}
 	}
 
-    func remove(_ row: StaticTableViewRow) {
+    func remove(_ row: StaticTableViewRow, animated: Bool = false) {
         if let index = rows.index(of: row) {
 
             rows.remove(at: index)
+
+            if let vc = viewController, let sectionIndex = vc.sections.index(of: self) {
+                vc.tableView.beginUpdates()
+                vc.tableView.deleteRows(at: [IndexPath(row: index, section: sectionIndex)], with: selectAnimation(animated))
+                vc.tableView.endUpdates()
+            }
         }
     }
 
@@ -207,10 +226,11 @@ class StaticTableViewSection: NSObject {
 		return nil
 	}
 
-    // MARK: - Reload
-    func reload() {
-        if let id = self.identifier {
-            self.viewController?.reloadSection(id: id)
+    private func selectAnimation(_ animated: Bool) -> UITableViewRowAnimation {
+        if animated {
+            return UITableViewRowAnimation.automatic
         }
+
+        return UITableViewRowAnimation.none
     }
 }

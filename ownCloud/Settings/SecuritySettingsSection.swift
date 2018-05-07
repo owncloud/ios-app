@@ -157,7 +157,5 @@ class SecuritySettings: StaticTableViewSection {
             self.biometricalSecurityEnabled = false
             self.remove(biometricalRow!)
         }
-
-        self.reload()
     }
 }

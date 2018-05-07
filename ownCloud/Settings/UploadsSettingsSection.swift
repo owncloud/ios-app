@@ -173,18 +173,18 @@ class UploadsSettings: StaticTableViewSection {
             let photoUploadIndex = rows.index(of: photosRow!)!
 
             if !rows.contains(photosWifiOnlyRow!) {
-                insert(row: photosWifiOnlyRow!, at: photoUploadIndex + 1)
-                insert(row: photosSelectedPathRow!, at: photoUploadIndex + 2)
+                insert(row: photosWifiOnlyRow!, at: photoUploadIndex + 1, animated: true)
+                insert(row: photosSelectedPathRow!, at: photoUploadIndex + 2, animated: true)
             }
 
         } else {
             photoWifiOnlyUploadsEnabled = false
             photosWifiOnlyRow?.value = false
-            remove(photosWifiOnlyRow!)
+            remove(photosWifiOnlyRow!, animated: true)
 
             photosSelectedPathRow?.cell?.detailTextLabel?.text = uploadsSelectedPath
             userDefaults.removeObject(forKey: UploadsPhotosSelectedPathKey)
-            remove(photosSelectedPathRow!)
+            remove(photosSelectedPathRow!, animated: true)
         }
 
         if videoUploadEnabled {
@@ -192,33 +192,31 @@ class UploadsSettings: StaticTableViewSection {
             let videoUploadIndex = rows.index(of: videosRow!)!
 
             if !rows.contains(videosWifiOnlyRow!) {
-                insert(row: videosWifiOnlyRow!, at: videoUploadIndex + 1)
-                insert(row: videosSelectedPathRow!, at: videoUploadIndex + 2)
+                insert(row: videosWifiOnlyRow!, at: videoUploadIndex + 1, animated: true)
+                insert(row: videosSelectedPathRow!, at: videoUploadIndex + 2, animated: true)
             }
 
         } else {
 
             videoWifiOnlyUploadsEnabled = false
             videosWifiOnlyRow?.value = false
-            remove(videosWifiOnlyRow!)
+            remove(videosWifiOnlyRow!, animated: true)
 
             videosSelectedPathRow?.cell?.detailTextLabel?.text = uploadsSelectedPath
             userDefaults.removeObject(forKey: UploadsVideosSelectedPathKey)
-            remove(videosSelectedPathRow!)
+            remove(videosSelectedPathRow!, animated: true)
         }
 
         // Background uploads flow
         if photoUploadEnabled || videoUploadEnabled {
 
             if !rows.contains(backgroundUploadsRow!) {
-                add(row: backgroundUploadsRow!)
+                add(row: backgroundUploadsRow!, animated: true)
             }
 
         } else {
             backgroundUploadsRow?.value = false
-            remove(backgroundUploadsRow!)
+            remove(backgroundUploadsRow!, animated: true)
         }
-
-        reload()
     }
 }
