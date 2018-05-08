@@ -69,6 +69,29 @@ class PasscodeViewController: UIViewController, Themeable {
         super.viewWillAppear(animated)
 
         Theme.shared.register(client: self)
+
+        switch self.passcodeMode {
+        case .unlockPasscode?, .unlockPasscodeError?:
+
+            if let dateData = UserDefaults.standard.data(forKey: DateHomeButtonPressedKey) {
+                if let date = NSKeyedUnarchiver.unarchiveObject(with: dateData) as? Date {
+
+                    let elapsed = Date().timeIntervalSince(date)
+                    let secondsPassedMinToAsk = UserDefaults.standard.integer(forKey: SecuritySettingsfrequencyKey)
+
+                    if Int(elapsed) < secondsPassedMinToAsk {
+                        UserDefaults.standard.removeObject(forKey: DateHomeButtonPressedKey)
+                        self.handler!()
+                    }
+                }
+            } else {
+                PasscodeUtilities.sharedPasscodeUtilities.storeDateHomeButtonPressed()
+            }
+
+            self.hideOverly()
+        default:
+            break
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -214,9 +237,8 @@ class PasscodeViewController: UIViewController, Themeable {
                 let passcodeFromKeychain = NSKeyedUnarchiver.unarchiveObject(with: passcodeData!) as? String
 
                 if passcodeValue == passcodeFromKeychain {
-                    //self.handler!()
+                    self.handler!()
                     UserDefaults.standard.removeObject(forKey: DateHomeButtonPressedKey)
-                    self.dismiss(animated: true, completion: nil)
                 } else {
                     self.passcodeMode = .unlockPasscodeError
                     self.passcodeValueTextField?.text = nil

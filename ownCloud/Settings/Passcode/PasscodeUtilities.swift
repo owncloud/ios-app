@@ -35,10 +35,10 @@ class PasscodeUtilities: NSObject {
 
     // MARK: - Unlock device
 
-    func askPasscodeIfIsActivated(viewController: UIViewController, hiddenOverlay:Bool) {
+    func showPasscodeIfNeeded(viewController: UIViewController, hiddenOverlay:Bool) {
         if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
 
-            self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:hiddenOverlay, handler: nil)
+            self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:hiddenOverlay, handler: {})
             viewController.present(self.passcodeViewController!, animated: false, completion: nil)
         }
     }

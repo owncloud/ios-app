@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -35,9 +36,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
 
-		window?.rootViewController = navigationController!
+		/*window?.rootViewController = navigationController!
 		window?.addSubview((navigationController?.view)!)
-        PasscodeUtilities.sharedPasscodeUtilities.askPasscodeIfIsActivated(viewController: (window?.rootViewController)!, hiddenOverlay: true)
+        PasscodeUtilities.sharedPasscodeUtilities.showPasscodeIfNeeded(viewController: (window?.rootViewController)!, hiddenOverlay: true)*/
+
+
+
+        if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
+
+            let passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:false, handler: {
+                print("Show app")
+                DispatchQueue.main.async {    
+                    self.window?.rootViewController = navigationController!
+                    self.window?.addSubview((navigationController?.view)!)
+                }
+            })
+            window?.rootViewController = passcodeViewController
+        } else {
+            window?.rootViewController = navigationController!
+            window?.addSubview((navigationController?.view)!)
+        }
+
+
+
+
+        
 
         self.window?.makeKeyAndVisible()
 
@@ -48,8 +71,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
 		// Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
 
-        PasscodeUtilities.sharedPasscodeUtilities.askPasscodeIfIsActivated(viewController: (window?.rootViewController)!, hiddenOverlay: false)
-        PasscodeUtilities.sharedPasscodeUtilities.storeDateHomeButtonPressed()
+        PasscodeUtilities.sharedPasscodeUtilities.showPasscodeIfNeeded(viewController: (window?.rootViewController)!, hiddenOverlay: false)
+
+        /*if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
+
+            self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:hiddenOverlay, handler: {
+
+            })
+            viewController.present(self.passcodeViewController!, animated: false, completion: nil)
+        }*/
 	}
 
 	func applicationDidEnterBackground(_ application: UIApplication) {
@@ -64,14 +94,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func applicationDidBecomeActive(_ application: UIApplication) {
 		// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 
-        PasscodeUtilities.sharedPasscodeUtilities.dismissAskedPasscodeIfDateToAskIsLower()
+        //PasscodeUtilities.sharedPasscodeUtilities.dismissAskedPasscodeIfDateToAskIsLower()
     }
 
 	func applicationWillTerminate(_ application: UIApplication) {
 		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+
+        if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
+            PasscodeUtilities.sharedPasscodeUtilities.storeDateHomeButtonPressed()
+        }
 	}
-
-    // MARK: - Passcode
-
-    
 }
