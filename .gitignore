@@ -74,6 +74,9 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
+fastlane/Appfile
+fastlane/Matchfile
+fastlane/Match/
 
 # Code Injection
 #

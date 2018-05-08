@@ -1,4 +1,4 @@
-git_url("ssh://git@gitea.int.owncloud.com:2222/ownbrander/fastlane-match.git")
+git_url("ssh://git@mydomain/folder/fastlane-match.git")
 
 type("development") # The default type, can be: appstore, adhoc, enterprise or development
 
@@ -7,4 +7,4 @@ for_lane :beta do
 end
 
 # app_identifier(["tools.fastlane.app", "tools.fastlane.app2"])
-username("fastlane@owncloud.com") # Your Apple Developer Portal username
+username("fastlane@mydomain.com") # Your Apple Developer Portal username
