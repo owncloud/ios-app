@@ -134,14 +134,16 @@ class BookmarkViewController: StaticTableViewController {
 				self?.bookmark?.authenticationData = nil
 				self?.composeSectionsAndRows(animated: true)
 			}
-		}, placeholder: "Username".localized, identifier: "row-credentials-username")
+		}, placeholder: "Username".localized, autocorrectionType: .no, identifier: "row-credentials-username")
 
 		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (_, sender) in
 			if (sender as? UITextField) != nil, self?.bookmark?.authenticationData != nil {
 				self?.bookmark?.authenticationData = nil
 				self?.composeSectionsAndRows(animated: true)
 			}
-		}, placeholder: "Password".localized, identifier: "row-credentials-password")
+		}, placeholder: "Password".localized, autocorrectionType: .no, identifier: "row-credentials-password")
+
+		addPasswordManagerButton()
 
 		tokenInfoRow = StaticTableViewRow(label: "", identifier: "row-credentials-token-info")
 
@@ -179,6 +181,15 @@ class BookmarkViewController: StaticTableViewController {
 			case .create:
 				self.navigationItem.title = "Add bookmark".localized
 
+				// Support for bookmark default URL
+				if let defaultURLString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultURL) as? String {
+					self.bookmark?.url = URL(string: defaultURLString)
+
+					if bookmark != nil {
+						updateUI(from: bookmark!) { (_) -> Bool in return(true) }
+					}
+				}
+
 			case .edit:
 				// Fill UI
 				if bookmark != nil {
@@ -188,6 +199,18 @@ class BookmarkViewController: StaticTableViewController {
 				self.navigationItem.title = "Edit bookmark".localized
 
 				self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
+		}
+
+		// Support for bookmark URL editable
+		if let bookmarkURLEditable = self.classSetting(forOCClassSettingsKey: .bookmarkURLEditable) as? Bool {
+			self.urlRow?.enabled = bookmarkURLEditable
+
+			let vectorImageView = VectorImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+
+			Theme.shared.add(tvgResourceFor: "icon-locked")
+			vectorImageView.vectorImage = Theme.shared.tvgImage(for: "icon-locked")
+
+			self.urlRow?.cell?.accessoryView = vectorImageView
 		}
 
 		// Update contents
@@ -285,8 +308,6 @@ class BookmarkViewController: StaticTableViewController {
 											}
 										})
 
-										issuesViewController.modalPresentationStyle = .overCurrentContext
-
 										self.present(issuesViewController, animated: true, completion: nil)
 									} else {
 										// Do not present issues
@@ -353,8 +374,6 @@ class BookmarkViewController: StaticTableViewController {
 								}
 							})
 
-							issuesViewController.modalPresentationStyle = .overCurrentContext
-
 							self.present(issuesViewController, animated: true, completion: nil)
 						}
 					}
@@ -386,6 +405,8 @@ class BookmarkViewController: StaticTableViewController {
 			}
 
 			self.presentingViewController?.dismiss(animated: true, completion: nil)
+		} else {
+			handleContinue()
 		}
 	}
 
@@ -642,6 +663,33 @@ class BookmarkViewController: StaticTableViewController {
 	}
 }
 
+// MARK: - OCClassSettings support
+extension OCClassSettingsIdentifier {
+	static let bookmark = OCClassSettingsIdentifier("bookmark")
+}
+
+extension OCClassSettingsKey {
+	static let bookmarkDefaultURL = OCClassSettingsKey("default-url")
+	static let bookmarkURLEditable = OCClassSettingsKey("url-editable")
+}
+
+extension BookmarkViewController : OCClassSettingsSupport {
+	static func classSettingsIdentifier() -> OCClassSettingsIdentifier! {
+		return .bookmark
+	}
+
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier!) -> [OCClassSettingsKey : Any]! {
+		return [ : ]
+		/*
+		return [
+			.bookmarkDefaultURL : "http://demo.owncloud.org/",
+			.bookmarkURLEditable : false
+		]
+		*/
+	}
+}
+
+// MARK: - Keyboard / return key tracking
 extension BookmarkViewController : UITextFieldDelegate {
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		if continueButtonRow?.attached == true {
@@ -653,5 +701,43 @@ extension BookmarkViewController : UITextFieldDelegate {
 		}
 
 		return true
+	}
+}
+
+// MARK: - Password manager support
+extension BookmarkViewController {
+	func addPasswordManagerButton() {
+		if PasswordManagerAccess.installed {
+			let vectorImageView = VectorImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+
+			Theme.shared.add(tvgResourceFor: "icon-password-manager")
+			vectorImageView.vectorImage = Theme.shared.tvgImage(for: "icon-password-manager")
+
+			vectorImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(BookmarkViewController.openPasswordManagerSheet)))
+
+			self.passwordRow?.cell?.accessoryView = vectorImageView
+		}
+	}
+
+	@objc func openPasswordManagerSheet() {
+		if let bookmarkURL = self.bookmark?.url {
+			PasswordManagerAccess.findCredentials(url: bookmarkURL, viewController: self) { (error, inUsername, inPassword) in
+				if error == nil {
+					OnMainThread {
+						if let username = inUsername {
+							self.usernameRow?.value = username
+						}
+
+						if let password = inPassword {
+							self.passwordRow?.value = password
+						}
+
+						self.updateInputFocus()
+					}
+				} else {
+					Log.debug("Error retrieving \(Log.mask(bookmarkURL)) credentials from password manager: \(Log.mask(error))")
+				}
+			}
+		}
 	}
 }

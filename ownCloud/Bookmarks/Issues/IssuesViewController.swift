@@ -165,7 +165,7 @@ class IssuesViewController: UIViewController {
     }
 
     private func setupTransitions() {
-        self.modalPresentationStyle = .custom
+        self.modalPresentationStyle = .overCurrentContext
         let transitioningDLG = IssuesTransitioningDelegate()
         self.modalPresentationVC = transitioningDLG
         self.transitioningDelegate = transitioningDLG

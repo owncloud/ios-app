@@ -173,12 +173,13 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.updateViewAppearance = { [weak cellTextField] (row) in
 			cellTextField?.isEnabled = row.enabled
+			cellTextField?.textColor = row.enabled ? Theme.shared.activeCollection.tableRowColors.labelColor : Theme.shared.activeCollection.tableRowColors.secondaryLabelColor
 		}
 
 		self.textField = cellTextField
 
-		themeApplierToken = Theme.shared.add(applier: {(_, themeCollection, _) in
-			cellTextField.textColor = themeCollection.tableRowColors.labelColor
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			cellTextField.textColor = (self?.enabled == true) ? themeCollection.tableRowColors.labelColor : themeCollection.tableRowColors.secondaryLabelColor
 			cellTextField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : themeCollection.tableRowColors.secondaryLabelColor])
 		})
 	}
