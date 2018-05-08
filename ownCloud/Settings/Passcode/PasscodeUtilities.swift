@@ -38,7 +38,7 @@ class PasscodeUtilities: NSObject {
     func askPasscodeIfIsActivated(viewController: UIViewController, hiddenOverlay:Bool) {
         if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
 
-            self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, passcodeFromFirstStep: nil, hiddenOverlay:hiddenOverlay)
+            self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:hiddenOverlay, handler: nil)
             viewController.present(self.passcodeViewController!, animated: false, completion: nil)
         }
     }

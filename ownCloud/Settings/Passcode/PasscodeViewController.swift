@@ -9,6 +9,8 @@
 import UIKit
 import ownCloudSDK
 
+typealias PasscodeHandler = (() -> Void)
+
 let numberDigitsPasscode = 4
 let passcodeKeychainAccount = "passcode-keychain-account"
 let passcodeKeychainPath = "passcode-keychain-path"
@@ -24,6 +26,8 @@ enum PasscodeInterfaceMode {
 }
 
 class PasscodeViewController: UIViewController, Themeable {
+
+    var handler: PasscodeHandler?
 
     var passcodeFromFirstStep: String?
     var passcodeMode: PasscodeInterfaceMode?
@@ -49,11 +53,12 @@ class PasscodeViewController: UIViewController, Themeable {
 
     @IBOutlet weak var cancelButton: ThemeButton?
 
-    init(mode: PasscodeInterfaceMode, passcodeFromFirstStep: String?, hiddenOverlay: Bool?) {
+    init(mode: PasscodeInterfaceMode, hiddenOverlay: Bool?, handler: PasscodeHandler?) {
         super.init(nibName: "PasscodeViewController", bundle: nil)
-        self.passcodeFromFirstStep = passcodeFromFirstStep
+        self.passcodeFromFirstStep = nil
         self.passcodeMode = mode
         self.hiddenOverlay = hiddenOverlay
+        self.handler = handler
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -68,8 +73,6 @@ class PasscodeViewController: UIViewController, Themeable {
 
     override func viewDidAppear(_ animated: Bool) {
         super .viewDidAppear(animated)
-
-
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -165,18 +168,7 @@ class PasscodeViewController: UIViewController, Themeable {
     // MARK: - Actions
 
     @IBAction func cancelButton(sender: UIButton) {
-
-        switch self.passcodeMode {
-        case .addPasscodeFirstStep?, .addPasscodeSecondStep?:
-            UserDefaults.standard.set(false, forKey: SecuritySettingsPasscodeKey)
-
-        case .deletePasscode?, .deletePasscodeError?:
-            UserDefaults.standard.set(true, forKey: SecuritySettingsPasscodeKey)
-
-        default:
-            break
-        }
-
+        self.handler!()
         self.dismiss(animated: true, completion: nil)
     }
 
@@ -222,6 +214,7 @@ class PasscodeViewController: UIViewController, Themeable {
                 let passcodeFromKeychain = NSKeyedUnarchiver.unarchiveObject(with: passcodeData!) as? String
 
                 if passcodeValue == passcodeFromKeychain {
+                    //self.handler!()
                     UserDefaults.standard.removeObject(forKey: DateHomeButtonPressedKey)
                     self.dismiss(animated: true, completion: nil)
                 } else {

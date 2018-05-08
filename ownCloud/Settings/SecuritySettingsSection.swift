@@ -18,6 +18,7 @@
 
 import UIKit
 import LocalAuthentication
+import ownCloudSDK
 
 // MARK: - Security UserDefaults keys
 public let SecuritySettingsKey: String = "security-settings"
@@ -124,11 +125,35 @@ class SecuritySettingsSection: SettingsSection {
             if let passcodeSwitch = sender as? UISwitch {
                 self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
 
-                if passcodeSwitch.isOn {
-                    let passcodeViewController:PasscodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.addPasscodeFirstStep, passcodeFromFirstStep: nil, hiddenOverlay:true)
+                if self.isPasscodeSecurityEnabled {
+                    //Activate passcode
+                    let passcodeViewController:PasscodeViewController = PasscodeViewController(
+                        mode: PasscodeInterfaceMode.addPasscodeFirstStep,
+                        hiddenOverlay:true,
+                        handler: {
+                            if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
+                                self.userDefaults.set(self.isPasscodeSecurityEnabled, forKey: SecuritySettingsPasscodeKey)
+                            } else {
+                                //Cancelled
+                                self.isPasscodeSecurityEnabled = false
+                                self.updateUI()
+                            }
+                    })
                     self.viewController?.present(passcodeViewController, animated: true, completion: nil)
                 } else {
-                    let passcodeViewController:PasscodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.deletePasscode, passcodeFromFirstStep: nil, hiddenOverlay:true)
+                    //Delete passcode
+                    let passcodeViewController:PasscodeViewController = PasscodeViewController(
+                        mode: PasscodeInterfaceMode.deletePasscode,
+                        hiddenOverlay:true,
+                        handler: {
+                            if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
+                                self.userDefaults.set(self.isPasscodeSecurityEnabled, forKey: SecuritySettingsPasscodeKey)
+                            } else {
+                                //Cancelled
+                                self.isPasscodeSecurityEnabled = true
+                                self.updateUI()
+                            }
+                    })
                     self.viewController?.present(passcodeViewController, animated: true, completion: nil)
                 }
 
