@@ -76,9 +76,13 @@ class CoreManager: NSObject {
 			if requestCount==0 {
 				// Stop and release core
 				if let core = coresByUUID[bookmark.uuid] {
+					coresByUUID.removeValue(forKey: bookmark.uuid)
+
 					core.stop(completionHandler: { (_, _) in
+						core.unregisterEventHandler()
 						completion?()
 					})
+
 					return
 				}
 			}

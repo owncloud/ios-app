@@ -5,8 +5,10 @@
   Created by Pablo Carrascal on 13/03/2018.
   Copyright © 2018 ownCloud GmbH. All rights reserved.
 */
-"Edit Server" = "Edit Server";
-"Add Server" = "Add Server";
+
+/* Add / Edit Bookmark */
+"Edit bookmark" = "Edit bookmark";
+"Add bookmark" = "Add bookmark";
 "Server URL" = "Server URL";
 "https://example.com" = "https://example.com";
 "Continue" = "Continue";
@@ -23,6 +25,10 @@
 "Approve" = "Approve";
 "Error" = "Error";
 "Review Connection" = "Review Connection";
+"Authenticated via" = "Authenticated via";
+
+"Contacting server…" = "Contacting server…";
+"Authenticating…" = "Authenticating…";
 
 /* Client */
 "Browse" = "Browse";

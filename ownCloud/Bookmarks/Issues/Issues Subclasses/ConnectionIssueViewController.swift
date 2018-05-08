@@ -6,6 +6,16 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudSDK
 import ownCloudUI
@@ -13,63 +23,73 @@ import ownCloudUI
 enum ConnectionResponse {
     case cancel
     case approve
-    case error
+    case dismiss
 }
-
-typealias FilteredIssues = (issues: [OCConnectionIssue]?, level: OCConnectionIssueLevel?)
 
 class ConnectionIssueViewController: IssuesViewController {
 
-    private var connectionIssues: [OCConnectionIssue]?
+    private var displayIssues : DisplayIssues?
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
-    init(issue: OCConnectionIssue, title: String? = nil, completion:@escaping (ConnectionResponse) -> Void) {
-        super.init(buttons: nil, title: "")
-        let filteredIssues = filter(issue: issue)
-        connectionIssues = filteredIssues.issues
+    init(displayIssues issues: DisplayIssues?, buttons: [IssueButton]? = nil, title: String? = nil) {
+        super.init(buttons: buttons, title: title)
 
-        if issue.type == OCConnectionIssueType.error {
-            self.headerTitle = "Error".localized
-            connectionIssues = [issue]
-            self.buttons = [IssueButton(title: "OK".localized, type: .plain, action: {
-                completion(.error)
-                self.dismiss(animated: true)})]
-        } else {
-            if filteredIssues.level == OCConnectionIssueLevel.error {
-                self.headerTitle = "Error".localized
-                self.buttons = [IssueButton(title: "OK".localized, type: .plain, action: {
-                    completion(.error)
-                    self.dismiss(animated: true)})]
-            } else {
-                self.headerTitle = "Review Connection".localized
-                self.buttons = [
-                    IssueButton(title: "Cancel".localized, type: .cancel, action: {
-                        completion(.cancel)
-                        self.dismiss(animated: true)}),
-                    IssueButton(title: "Approve".localized, type: .approve, action: {
-                        completion(.approve)
-                        self.dismiss(animated: true)})
-                ]
-            }
-        }
+	displayIssues = issues
     }
 
-    func filter(issue: OCConnectionIssue) -> FilteredIssues {
+    convenience init(displayIssues issues: DisplayIssues?, title: String? = nil, completion:@escaping (ConnectionResponse) -> Void) {
+    	var useButtons : [IssueButton]? = nil
+    	var useTitle = title
 
-        let errorIssues = issue.issuesWithLevelGreaterThanOrEqual(to: .error)
-        if errorIssues != nil, errorIssues!.count > 0 {
-            return (errorIssues, OCConnectionIssueLevel.error)
-        }
+        self.init(displayIssues: issues, buttons: nil, title: useTitle)
 
-        let warningIssues = issue.issuesWithLevelGreaterThanOrEqual(to: .warning)
-        if warningIssues != nil, warningIssues!.count > 0 {
-            return (issue.issues, OCConnectionIssueLevel.warning)
-        }
+    	if let displayLevel = issues?.displayLevel {
+    		switch displayLevel {
+			case .informal:
+				if title == nil {
+					useTitle =  "Review Connection".localized
+				}
 
-        return (nil, nil)
+				useButtons = [
+					IssueButton(title: "OK".localized, type: .approve, action: { [weak self] in
+						completion(.approve)
+						self?.dismiss(animated: true)
+					})
+				]
+
+			case .warning:
+				if title == nil {
+					useTitle =  "Review Connection".localized
+				}
+
+				useButtons = [
+					IssueButton(title: "Cancel".localized, type: .cancel, action: { [weak self] in
+						completion(.cancel)
+						self?.dismiss(animated: true)}),
+
+					IssueButton(title: "Approve".localized, type: .approve, action: { [weak self] in
+						completion(.approve)
+						self?.dismiss(animated: true)})
+				]
+
+			case .error:
+				if title == nil {
+					useTitle =  "Error".localized
+				}
+
+				useButtons = [
+					IssueButton(title: "OK".localized, type: .approve, action: { [weak self] in
+						completion(.dismiss)
+						self?.dismiss(animated: true)})
+				]
+		}
+
+		self.headerTitle = useTitle
+		self.buttons = useButtons
+	}
     }
 
     override func viewDidLoad() {
@@ -80,7 +100,7 @@ class ConnectionIssueViewController: IssuesViewController {
 
 extension ConnectionIssueViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let issue = connectionIssues?[indexPath.row], issue.type == OCConnectionIssueType.certificate {
+        if let issue = displayIssues?.displayIssues[indexPath.row], issue.type == OCConnectionIssueType.certificate {
             OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: issue.certificate, withValidationCompletionHandler: { (certificateNodes) in
                 let certDetails: NSAttributedString = OCCertificateDetailsViewNode .attributedString(withCertificateDetails: certificateNodes)
                 DispatchQueue.main.async {
@@ -100,12 +120,12 @@ extension ConnectionIssueViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return connectionIssues?.count ?? 0
+        return displayIssues?.displayIssues.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
-        let issue = connectionIssues![indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: IssuesViewControllerCellIdentifier, for: indexPath)
+        let issue = (displayIssues?.displayIssues[indexPath.row])!
         cell.detailTextLabel?.text = issue.localizedDescription
         cell.textLabel?.text = issue.localizedTitle
         cell.textLabel?.numberOfLines = 0
@@ -116,15 +136,17 @@ extension ConnectionIssueViewController: UITableViewDataSource {
         if issue.type == OCConnectionIssueType.certificate {
             cell.accessoryType = .disclosureIndicator
             cell.accessoryView?.backgroundColor = .blue
-        }
+        } else {
+		cell.accessoryType = .none
+	}
 
         switch issue.level {
         case .warning:
-            color = UIColor(hex: 0xF2994A)
+            color = Theme.shared.activeCollection.warningColor
         case .informal:
-            color = UIColor(hex: 0x27AE60)
+            color = Theme.shared.activeCollection.informativeColor
         case .error:
-            color = UIColor(hex: 0xEB5757)
+            color = Theme.shared.activeCollection.errorColor
         }
 
         cell.textLabel?.attributedText = NSAttributedString(string: issue.localizedTitle, attributes: [

@@ -44,19 +44,44 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	private var updateViewFromValue : ((_ row: StaticTableViewRow) -> Void)?
+	private var updateViewAppearance : ((_ row: StaticTableViewRow) -> Void)?
 
 	public var cell : UITableViewCell?
 
 	public var selectable : Bool = true
 
+	public var enabled : Bool = true {
+		didSet {
+			if updateViewAppearance != nil {
+				updateViewAppearance!(self)
+			}
+		}
+	}
+
 	public var action : StaticTableViewRowAction?
 	public var eventHandler : StaticTableViewRowEventHandler?
 
 	public var viewController: StaticTableViewController? {
-		return (section?.viewController)
+		return section?.viewController
 	}
 
 	private var themeApplierToken : ThemeApplierToken?
+
+	public var index : Int? {
+		return section?.rows.index(of: self)
+	}
+
+	public var indexPath : IndexPath? {
+		if let rowIndex = self.index, let sectionIndex = section?.index {
+			return IndexPath(row: rowIndex, section: sectionIndex)
+		}
+
+		return nil
+	}
+
+	public var attached : Bool {
+		return self.index != nil
+	}
 
 	override init() {
 		super.init()
@@ -105,7 +130,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	// MARK: - Text Field
 	public var textField : UITextField?
 
-    convenience init(textFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil, isEnabled:Bool = true) {
+	convenience init(textFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil) {
 
 		self.init()
 
@@ -131,7 +156,6 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cellTextField.returnKeyType = returnKeyType
 		cellTextField.text = textValue
 		cellTextField.accessibilityIdentifier = identifier
-        cellTextField.isEnabled = isEnabled
 
 		cellTextField.addTarget(self, action: #selector(textFieldContentChanged(_:)), for: UIControlEvents.editingChanged)
 
@@ -141,14 +165,14 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			cellTextField.rightAnchor.constraint(equalTo: (cell?.contentView.rightAnchor)!, constant:-18).isActive = true
 			cellTextField.topAnchor.constraint(equalTo: (cell?.contentView.topAnchor)!, constant:14).isActive = true
 			cellTextField.bottomAnchor.constraint(equalTo: (cell?.contentView.bottomAnchor)!, constant:-14).isActive = true
-
-            if !isEnabled {
-                cell?.contentView.backgroundColor = UIColor.lightGray
-            }
 		}
 
-		self.updateViewFromValue = { (row) in
-			cellTextField.text = row.value as? String
+		self.updateViewFromValue = { [weak cellTextField] (row) in
+			cellTextField?.text = row.value as? String
+		}
+
+		self.updateViewAppearance = { [weak cellTextField] (row) in
+			cellTextField?.isEnabled = row.enabled
 		}
 
 		self.textField = cellTextField
@@ -182,8 +206,28 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		return true
 	}
 
+	// MARK: - Labels
+	convenience init(label: String, identifier: String? = nil) {
+		self.init()
+
+		self.identifier = identifier
+
+		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell?.textLabel?.text = label
+		self.cell?.isUserInteractionEnabled = false
+
+		self.value = label
+		self.selectable = false
+
+		self.updateViewFromValue = { (row) in
+			if let value = row.value as? String {
+				row.cell?.textLabel?.text = value
+			}
+		}
+	}
+
 	// MARK: - Switches
-	convenience init(switchWithAction action:  StaticTableViewRowAction?, title: String, value switchValue: Bool = false, identifier : String? = nil) {
+	convenience init(switchWithAction action: StaticTableViewRowAction?, title: String, value switchValue: Bool = false, identifier: String? = nil) {
 		self.init()
 
 		self.identifier = identifier
@@ -204,9 +248,13 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		switchView.addTarget(self, action: #selector(switchValueChanged(_:)), for: UIControlEvents.valueChanged)
 
-		self.updateViewFromValue = { (row) in
+		self.updateViewAppearance = { [weak switchView] (row) in
+			switchView?.isEnabled = row.enabled
+		}
+
+		self.updateViewFromValue = { [weak switchView] (row) in
 			if let value = row.value as? Bool {
-				switchView.setOn(value, animated: true)
+				switchView?.setOn(value, animated: true)
 			}
 		}
 	}
