@@ -70,6 +70,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.tableView.register(ServerListBookmarkCell.self, forCellReuseIdentifier: "bookmark-cell")
 		self.tableView.rowHeight = UITableViewAutomaticDimension
 		self.tableView.estimatedRowHeight = 80
+		self.tableView.allowsSelectionDuringEditing = true
 
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
 
@@ -269,9 +270,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				return
 			}
 
-			let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+			if tableView.isEditing {
+				self.showBookmarkUI(edit: bookmark)
+			} else {
+				let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 
-			self.present(clientRootViewController, animated: true, completion: nil)
+				self.present(clientRootViewController, animated: true, completion: nil)
+			}
 		}
 	}
 

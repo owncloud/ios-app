@@ -37,9 +37,11 @@ internal let PasswordManagerAccessPasswordKey = "password"
 
 internal let PasswordManagerAccessItemProviderTypeIdentifier = "org.appextension.find-login-action"
 
+internal let PasswordManagerAccessURLScheme = "org-appextension-feature-password-management://"
+
 class PasswordManagerAccess {
 	static var installed : Bool {
-		return UIApplication.shared.canOpenURL(URL(string: "org-appextension-feature-password-management://")!)
+		return UIApplication.shared.canOpenURL(URL(string: PasswordManagerAccessURLScheme)!)
 	}
 
 	static func findCredentials(url: URL, viewController: UIViewController, completion: @escaping ((_ error: Error?, _ username: String?, _ password: String?) -> Void)) {
