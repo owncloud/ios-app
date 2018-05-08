@@ -7,7 +7,7 @@ default_platform(:ios)
 platform :ios do
   desc "Push a new beta build to TestFlight"
    lane :beta do
-     register_devices(devices_file: "./Match/devices.txt") # Sync test devices from file to itunesconnect
+     register_devices(devices_file: "fastlane/Match/devices.txt") # Sync test devices from file to itunesconnect
      match(force_for_new_devices: true) # Creates all required certificates & provisioning profiles
      ensure_git_status_clean # Ensure that your git status is not dirty
      increment_build_number xcodeproj: "ownCloud.xcodeproj" # Automatically increase the build number
