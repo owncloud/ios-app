@@ -69,29 +69,6 @@ class PasscodeViewController: UIViewController, Themeable {
         super.viewWillAppear(animated)
 
         Theme.shared.register(client: self)
-
-        switch self.passcodeMode {
-        case .unlockPasscode?, .unlockPasscodeError?:
-
-            if let dateData = UserDefaults.standard.data(forKey: DateHomeButtonPressedKey) {
-                if let date = NSKeyedUnarchiver.unarchiveObject(with: dateData) as? Date {
-
-                    let elapsed = Date().timeIntervalSince(date)
-                    let secondsPassedMinToAsk = UserDefaults.standard.integer(forKey: SecuritySettingsfrequencyKey)
-
-                    if Int(elapsed) < secondsPassedMinToAsk {
-                        UserDefaults.standard.removeObject(forKey: DateHomeButtonPressedKey)
-                        self.handler!()
-                    }
-                }
-            } else {
-                PasscodeUtilities.sharedPasscodeUtilities.storeDateHomeButtonPressed()
-            }
-
-            self.hideOverly()
-        default:
-            break
-        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -180,11 +157,20 @@ class PasscodeViewController: UIViewController, Themeable {
         }
     }
 
-    func hideOverly() {
-        UIView.animate(withDuration: 1.0, delay: 0.3, options: [], animations: {
+    func hideOverlay() {
+        UIView.animate(withDuration: 0.6, delay: 0.0, options: [], animations: {
             self.overlayView.alpha = 0
         }, completion: { _ in
             self.overlayView.isHidden = true
+        })
+    }
+
+    func showOverlay() {
+        self.overlayView.isHidden = false
+        UIView.animate(withDuration: 0.6, delay: 0.0, options: [], animations: {
+            self.overlayView.alpha = 1
+        }, completion: { _ in
+            self.overlayView.isHidden = false
         })
     }
 
