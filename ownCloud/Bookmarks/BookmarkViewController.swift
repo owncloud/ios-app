@@ -521,7 +521,11 @@ class BookmarkViewController: StaticTableViewController {
 						}
 
 					case .token:
-						tokenInfoRow?.value = "Authenticated via".localized + " " + authenticationMethodClass.name()
+						if let authData = self.bookmark?.authenticationData, let userName = authenticationMethodClass.userName(fromAuthenticationData: authData) {
+							tokenInfoRow?.value = NSString(format:"Authenticated as %@ via %@".localized as NSString, userName, authenticationMethodClass.name())
+						} else {
+							tokenInfoRow?.value = "Authenticated via".localized + " " + authenticationMethodClass.name()
+						}
 
 						if self.bookmark?.authenticationData != nil {
 							if tokenInfoRow?.attached == false {

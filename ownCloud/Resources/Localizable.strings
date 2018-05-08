@@ -26,6 +26,7 @@
 "Error" = "Error";
 "Review Connection" = "Review Connection";
 "Authenticated via" = "Authenticated via";
+"Authenticated as %@ via %@" = "Authenticated as %@ via %@";
 
 "Contacting server…" = "Contacting server…";
 "Authenticating…" = "Authenticating…";
