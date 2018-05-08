@@ -123,6 +123,15 @@ class SecuritySettingsSection: SettingsSection {
         passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
             if let passcodeSwitch = sender as? UISwitch {
                 self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
+
+                if passcodeSwitch.isOn {
+                    let passcodeViewController:PasscodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.addPasscodeFirstStep, passcodeFromFirstStep: nil, hiddenOverlay:true)
+                    self.viewController?.present(passcodeViewController, animated: true, completion: nil)
+                } else {
+                    let passcodeViewController:PasscodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.deletePasscode, passcodeFromFirstStep: nil, hiddenOverlay:true)
+                    self.viewController?.present(passcodeViewController, animated: true, completion: nil)
+                }
+
                 self.updateUI()
             }
         }, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled)
