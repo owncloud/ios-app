@@ -132,6 +132,7 @@ class SecuritySettingsSection: SettingsSection {
                         hiddenOverlay:true,
                         handler: {
                             if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
+                                //Activated
                                 self.userDefaults.set(self.isPasscodeSecurityEnabled, forKey: SecuritySettingsPasscodeKey)
                             } else {
                                 //Cancelled
@@ -147,6 +148,7 @@ class SecuritySettingsSection: SettingsSection {
                         hiddenOverlay:true,
                         handler: {
                             if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
+                                //Deleted
                                 self.userDefaults.set(self.isPasscodeSecurityEnabled, forKey: SecuritySettingsPasscodeKey)
                             } else {
                                 //Cancelled
@@ -205,5 +207,6 @@ class SecuritySettingsSection: SettingsSection {
 
             remove(rows: rowsToRemove, animated: true)
         }
+        self.passcodeRow?.value = self.passcodeEnabled
     }
 }
