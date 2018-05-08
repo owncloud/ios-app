@@ -121,7 +121,9 @@ class BookmarkViewController: StaticTableViewController {
 		certificateRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let certificate = self?.bookmark?.certificate {
 				if let certificateViewController : OCCertificateViewController = OCCertificateViewController(certificate: certificate) {
-					self?.navigationController?.pushViewController(certificateViewController, animated: true)
+					let navigationController = UINavigationController(rootViewController: certificateViewController)
+
+					self?.present(navigationController, animated: true, completion: nil)
 				}
 			}
 		}, title: "Certificate Details".localized, accessoryType: .disclosureIndicator, identifier: "row-url-certificate")
@@ -149,6 +151,7 @@ class BookmarkViewController: StaticTableViewController {
 
 		deleteAuthDataButtonRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
 			if self?.bookmark?.authenticationData != nil {
+				self?.bookmark?.authenticationMethodIdentifier = nil
 				self?.bookmark?.authenticationData = nil
 				self?.updateUI(from: (self?.bookmark)!, fieldSelector: { (row) -> Bool in
 					return (row == self?.usernameRow!) || (row == self?.passwordRow!)
@@ -275,16 +278,24 @@ class BookmarkViewController: StaticTableViewController {
 				if let connection = OCConnection(bookmark: bookmark) {
 					hud?.present(on: self, label: "Contacting server…".localized)
 
+					let previousCertificate = bookmark?.certificate
+
 					connection.prepareForSetup(options: nil) { (issue, _, _, preferredAuthenticationMethods) in
 						hudCompletion({
 							// Update URL
 							self.urlRow?.textField?.text = serverURL.absoluteString
 
 							let continueToNextStep : () -> Void = { [weak self] in
-								issue?.approve()
 								self?.bookmark?.authenticationMethodIdentifier = preferredAuthenticationMethods?.first
 								self?.composeSectionsAndRows(animated: true) {
 									self?.updateInputFocus()
+								}
+
+								if self?.bookmark?.certificate == previousCertificate,
+								   let authMethodIdentifier = self?.bookmark?.authenticationMethodIdentifier,
+								   self?.isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) == true {
+
+									self?.handleContinue()
 								}
 							}
 
@@ -330,7 +341,7 @@ class BookmarkViewController: StaticTableViewController {
 			var options : [OCAuthenticationMethodKey : Any] = [:]
 
 			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {
-				if isAuthenticationMethodPassPhraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
+				if isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
 					options[.usernameKey] = usernameRow?.value ?? ""
 					options[.passphraseKey] = passwordRow?.value ?? ""
 				}
@@ -630,7 +641,7 @@ class BookmarkViewController: StaticTableViewController {
 		var password : String? = nil
 
 		if let authMethodIdentifier = bookmark.authenticationMethodIdentifier {
-			if isAuthenticationMethodPassPhraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
+			if isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
 				if let authData = bookmark.authenticationData {
 					if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authMethodIdentifier) {
 						userName = authenticationMethodClass.userName(fromAuthenticationData: authData)
@@ -654,12 +665,20 @@ class BookmarkViewController: StaticTableViewController {
 		return (bookmark?.url != nil) && (bookmark?.authenticationMethodIdentifier != nil) && (bookmark?.authenticationData != nil)
 	}
 
-	func isAuthenticationMethodPassPhraseBased(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> Bool {
+	func authenticationMethodTypeForIdentifier(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> OCAuthenticationMethodType? {
 		if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier as String?) {
-			return (authenticationMethodClass.type() == .passphrase)
+			return authenticationMethodClass.type()
 		}
 
-		return false
+		return nil
+	}
+
+	func isAuthenticationMethodPassphraseBased(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> Bool {
+		return authenticationMethodTypeForIdentifier(authenticationMethodIdentifier) == OCAuthenticationMethodType.passphrase
+	}
+
+	func isAuthenticationMethodTokenBased(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> Bool {
+		return authenticationMethodTypeForIdentifier(authenticationMethodIdentifier) == OCAuthenticationMethodType.token
 	}
 }
 
