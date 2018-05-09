@@ -1,5 +1,5 @@
 //
-//  PasscodeUtilities.swift
+//  UnlockPasscodeManager.swift
 //  ownCloud
 //
 //  Created by Javier Gonzalez on 06/05/2018.
@@ -11,24 +11,26 @@ import ownCloudSDK
 
 let DateHomeButtonPressedKey = "date-home-button-pressed"
 
-class PasscodeManager: NSObject {
+class UnlockPasscodeManager: NSObject {
 
     private var passcodeViewController: PasscodeViewController?
     private var userDefaults: UserDefaults?
 
-    static var sharedPasscodeManager : PasscodeManager = {
-        let sharedInstance = PasscodeManager()
+    static var sharedUnlockPasscodeManager : UnlockPasscodeManager = {
+        let sharedInstance = UnlockPasscodeManager()
         return (sharedInstance)
     }()
 
     public override init() {
+        self.userDefaults = UserDefaults.standard
+
         super.init()
     }
 
     func storeDateHomeButtonPressed() {
         if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil,
-            UserDefaults.standard.data(forKey: DateHomeButtonPressedKey) == nil {
-            UserDefaults.standard.set(NSKeyedArchiver.archivedData(withRootObject: Date()), forKey: DateHomeButtonPressedKey)
+            self.userDefaults?.data(forKey: DateHomeButtonPressedKey) == nil {
+            self.userDefaults?.set(NSKeyedArchiver.archivedData(withRootObject: Date()), forKey: DateHomeButtonPressedKey)
         }
     }
 
@@ -41,10 +43,10 @@ class PasscodeManager: NSObject {
     // MARK: - Unlock device
 
     func showPasscodeIfNeededOpenApp(viewController: UIViewController, window: UIWindow?, hiddenOverlay:Bool) {
-        if self.isNeccesaryShowPasscode() {
+        if isNeccesaryShowPasscode() {
             self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:hiddenOverlay, handler: {
                 DispatchQueue.main.async {
-                    UserDefaults.standard.removeObject(forKey: DateHomeButtonPressedKey)
+                    self.userDefaults?.removeObject(forKey: DateHomeButtonPressedKey)
                     window?.rootViewController = viewController
                     window?.addSubview((viewController.view)!)
                     self.passcodeViewController = nil
@@ -58,15 +60,16 @@ class PasscodeManager: NSObject {
         }
     }
 
-    func showPasscodeIfNeededComeFromBackground(viewController: UIViewController, hiddenOverlay:Bool) {
+    func showPasscodeIfNeededAfterHomeButtonPressed(viewController: UIViewController, hiddenOverlay:Bool) {
 
-        PasscodeManager.sharedPasscodeManager.storeDateHomeButtonPressed()
+        if isPasscodeActivated() {
 
-        if self.isNeccesaryShowPasscode() {
+            storeDateHomeButtonPressed()
+
             if self.passcodeViewController == nil {
                 self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:false, handler: {
                     DispatchQueue.main.async {
-                        UserDefaults.standard.removeObject(forKey: DateHomeButtonPressedKey)
+                        self.userDefaults?.removeObject(forKey: DateHomeButtonPressedKey)
                         viewController.dismiss(animated: true, completion: nil)
                         self.passcodeViewController = nil
                     }
@@ -79,19 +82,31 @@ class PasscodeManager: NSObject {
         }
     }
 
+    func isPasscodeActivated() -> Bool {
+
+        var output: Bool = true
+
+        if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) == nil {
+
+            output = false
+        }
+
+        return output
+    }
+
     func isNeccesaryShowPasscode() -> Bool {
 
         var output: Bool = true
 
-        if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
-            if let dateData = UserDefaults.standard.data(forKey: DateHomeButtonPressedKey) {
+        if isPasscodeActivated() {
+            if let dateData = self.userDefaults?.data(forKey: DateHomeButtonPressedKey) {
                 if let date = NSKeyedUnarchiver.unarchiveObject(with: dateData) as? Date {
 
                     let elapsedSeconds = Date().timeIntervalSince(date)
-                    let secondsPassedMinToAsk = UserDefaults.standard.integer(forKey: SecuritySettingsfrequencyKey)
+                    let minSecondsToAsk = self.userDefaults?.integer(forKey: SecuritySettingsfrequencyKey)
 
-                    if Int(elapsedSeconds) < secondsPassedMinToAsk {
-                        output = true
+                    if Int(elapsedSeconds) < minSecondsToAsk! {
+                        output = false
                     }
                 }
             }
@@ -104,22 +119,14 @@ class PasscodeManager: NSObject {
 
     func dismissAskedPasscodeIfDateToAskIsLower() {
 
-        let secondsPassedMinToAsk = UserDefaults.standard.integer(forKey: SecuritySettingsfrequencyKey)
-
-        if let dateData = UserDefaults.standard.data(forKey: DateHomeButtonPressedKey) {
-            if let date = NSKeyedUnarchiver.unarchiveObject(with: dateData) as? Date {
-                let elapsed = Date().timeIntervalSince(date)
-
-                if Int(elapsed) < secondsPassedMinToAsk {
-                    if self.passcodeViewController != nil {
-                        self.passcodeViewController?.dismiss(animated: true, completion: nil)
-                        self.passcodeViewController = nil
-                        UserDefaults.standard.removeObject(forKey: DateHomeButtonPressedKey)
-                    }
-                }
+        if !isNeccesaryShowPasscode() {
+            if self.passcodeViewController != nil {
+                self.passcodeViewController?.dismiss(animated: true, completion: nil)
+                self.passcodeViewController = nil
+                self.userDefaults?.removeObject(forKey: DateHomeButtonPressedKey)
             }
+        } else {
+            hideOverlay()
         }
-
-        self.passcodeViewController?.hideOverlay()
     }
 }

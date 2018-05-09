@@ -208,7 +208,7 @@ class PasscodeViewController: UIViewController, Themeable {
                 if passcodeFromFirstStep == passcodeValue {
                     //Save to keychain
                     OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcodeValue), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                    UserDefaults.standard.set(true, forKey: SecuritySettingsPasscodeKey)
+                    self.handler!()
                     self.dismiss(animated: true, completion: nil)
                 } else {
                     self.passcodeMode = .addPasscodeFirstSetpAfterErrorOnSecond
@@ -224,7 +224,6 @@ class PasscodeViewController: UIViewController, Themeable {
 
                 if passcodeValue == passcodeFromKeychain {
                     self.handler!()
-                    UserDefaults.standard.removeObject(forKey: DateHomeButtonPressedKey)
                 } else {
                     self.passcodeMode = .unlockPasscodeError
                     self.passcodeValueTextField?.text = nil
@@ -238,8 +237,7 @@ class PasscodeViewController: UIViewController, Themeable {
 
                 if passcodeValue == passcodeFromKeychain {
                     OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                    UserDefaults.standard.set(false, forKey: SecuritySettingsPasscodeKey)
-                    UserDefaults.standard.removeObject(forKey: DateHomeButtonPressedKey)
+                    self.handler!()
                     self.dismiss(animated: true, completion: nil)
                 } else {
                     self.passcodeMode = .deletePasscodeError
