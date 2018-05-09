@@ -644,15 +644,12 @@ class BookmarkViewController: StaticTableViewController {
 		var userName : String? = nil
 		var password : String? = nil
 
-		if let authMethodIdentifier = bookmark.authenticationMethodIdentifier {
-			if isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
-				if let authData = bookmark.authenticationData {
-					if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authMethodIdentifier) {
-						userName = authenticationMethodClass.userName(fromAuthenticationData: authData)
-						password = authenticationMethodClass.passPhrase(fromAuthenticationData: authData)
-					}
-				}
-			}
+		if let authMethodIdentifier = bookmark.authenticationMethodIdentifier,
+		   isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier),
+		   let authData = bookmark.authenticationData,
+		   let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authMethodIdentifier) {
+			userName = authenticationMethodClass.userName(fromAuthenticationData: authData)
+			password = authenticationMethodClass.passPhrase(fromAuthenticationData: authData)
 		}
 
 		if usernameRow != nil, fieldSelector(usernameRow!) {
