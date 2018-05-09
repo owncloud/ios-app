@@ -309,7 +309,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		return [
 				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, indexPath) in
-					if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
+					if let bookmark = BookmarkManager.shared.bookmark(at: indexPath.row) {
 						let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName()) as String,
 											     message: "This will also delete all locally stored file copies.".localized,
 											     preferredStyle: .actionSheet)
@@ -360,7 +360,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				}),
 
 				UITableViewRowAction(style: .normal, title: "Edit".localized, handler: { [weak self] (_, indexPath) in
-					if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
+					if let bookmark = BookmarkManager.shared.bookmark(at: indexPath.row) {
 						self?.showBookmarkUI(edit: bookmark)
 					}
 				})

@@ -5,6 +5,17 @@
 //  Created by Pablo Carrascal on 03/05/2018.
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
+
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import WebKit
 import MessageUI
@@ -12,7 +23,7 @@ import MessageUI
 // MARK: - Section identifier
 private let MoreSectionIdentifier: String = "settings-more-section"
 
-class MoreSettingsSection: StaticTableViewSection, MFMailComposeViewControllerDelegate {
+class MoreSettingsSection: SettingsSection {
 
     // MARK: - More Settings Cells
 
@@ -21,8 +32,8 @@ class MoreSettingsSection: StaticTableViewSection, MFMailComposeViewControllerDe
     private var recommendRow: StaticTableViewRow?
     private var privacyPolicyRow: StaticTableViewRow?
 
-    override init() {
-        super.init()
+    override init(userDefaults: UserDefaults) {
+        super.init(userDefaults: userDefaults)
         self.headerTitle = "More".localized
         self.footerTitle = "owncloud 2018 iOS beta"
         self.identifier = MoreSectionIdentifier
@@ -34,6 +45,7 @@ class MoreSettingsSection: StaticTableViewSection, MFMailComposeViewControllerDe
     // MARK: - Creation of the rows.
 
     private func createRows() {
+
         helpRow = StaticTableViewRow(rowWithAction: { (_, _) in
             let url = URL(string: "https://www.owncloud.com/help")
             let title = "Help".localized
@@ -57,6 +69,7 @@ class MoreSettingsSection: StaticTableViewSection, MFMailComposeViewControllerDe
             let title = "Privacy Policy".localized
             self.viewController?.navigationController?.pushViewController(WebViewController(url:url!, title: title), animated: true)
         }, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator)
+
     }
 
     // MARK: - Update UI
@@ -81,9 +94,21 @@ class MoreSettingsSection: StaticTableViewSection, MFMailComposeViewControllerDe
             }
 
             self.viewController?.present(mail, animated: true)
+        } else {
+            if let vc = self.viewController {
+                let alert = UIAlertController(title: "Please configure an email account".localized,
+                                              message: "You need to configure an email account first to be able to send emails".localized,
+                                              preferredStyle: .alert)
+
+                let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+                alert.addAction(okAction)
+                vc.present(alert, animated: true)
+            }
         }
     }
+}
 
+extension MoreSettingsSection: MFMailComposeViewControllerDelegate {
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true)
     }

@@ -90,20 +90,6 @@ class StaticTableViewSection: NSObject {
 
     }
 
-    func insert(row rowToAdd: StaticTableViewRow, at index: Int, animated: Bool = false) {
-        if rowToAdd.section == nil {
-            rowToAdd.eventHandler?(rowToAdd, StaticTableViewEvent.initial)
-        }
-
-        rowToAdd.section = self
-        rows.insert(rowToAdd, at: index)
-        if let vc = viewController, let sectionIndex = vc.sections.index(of: self) {
-            vc.tableView.beginUpdates()
-            vc.tableView.insertRows(at: [IndexPath(row: index, section: sectionIndex)], with: selectAnimation(animated))
-            vc.tableView.endUpdates()
-        }
-    }
-
 	@discardableResult
 	func add(radioGroupWithArrayOfLabelValueDictionaries labelValueDictRows: [[String : Any]], radioAction:StaticTableViewRowAction?, groupIdentifier: String, selectedValue: Any, animated : Bool = false) -> [StaticTableViewRow] {
 
@@ -122,10 +108,6 @@ class StaticTableViewSection: NSObject {
 		self.add(rows: radioGroupRows, animated: animated)
 
 		return radioGroupRows
-	}
-
-	func add(row rowToAdd: StaticTableViewRow, animated: Bool = false) {
-		self.insert(row: rowToAdd, at: rows.count, animated: animated)
 	}
 
 	func insert(row rowToAdd: StaticTableViewRow, at index: Int, animated: Bool = false) {

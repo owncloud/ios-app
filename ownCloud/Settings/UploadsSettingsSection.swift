@@ -6,75 +6,99 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudSDK
 
-// MARK: - Instant Uploads UserDefaults keys
-public let UploadsPhotosUploadKey: String =  "uploads-settings-photos"
-public let UploadsPhotosWifiOnlyKey: String = "uploads-settings-photos-wifi"
-public let UploadsPhotosSelectedPathKey: String = "uploads-settings-photos-path"
+// MARK: Photo uploads user defaults key.
+public let UploadsPhotoUploadKey: String =  "uploads-settings-photos"
+public let UploadsPhotoWifiOnlyKey: String = "uploads-settings-photos-wifi"
+public let UploadsPhotoSelectedPathKey: String = "uploads-settings-photos-path"
 
-public let UploadsVideosUploadKey: String = "uploads-settings-videos"
-public let UploadsVideosWifiOnlyKey: String = "uploads-settings-videos-wifi"
-public let UploadsVideosSelectedPathKey: String = "uploads-settings-videos-path"
-
-private let uploadsSelectedPath: String = "/cameraUpload"
+// MARK: Video uploads user defaults key.
+public let UploadsVideoUploadKey: String = "uploads-settings-videos"
+public let UploadsVideoWifiOnlyKey: String = "uploads-settings-videos-wifi"
+public let UploadsVideoSelectedPathKey: String = "uploads-settings-videos-path"
 
 private let UploadsBackgroundUploadsKey: String = "uploads-settings-background"
+
+private let uploadsSelectedPath: String = "/cameraUpload"
 
 // MARK: - Section identifier
 private let UploadsSectionIdentifier: String = "settings-uploads-section"
 
-class UploadsSettings: StaticTableViewSection {
+class UploadsSettingsSection: SettingsSection {
 
     // MARK: Upload settings properties.
 
     /// Instant Photo Uploads are anabled.
-    private var photoUploadEnabled: Bool {
+    private var isPhotoUploadEnabled: Bool {
         willSet {
-            self.userDefaults.set(newValue, forKey: UploadsPhotosUploadKey)
+            userDefaults.set(newValue, forKey: UploadsPhotoUploadKey)
+            photosRow?.value = newValue
+        }
+
+        didSet {
+            updateUI()
         }
     }
     /// Instant Photo Uploads only with WiFi connection.
-    private var photoWifiOnlyUploadsEnabled: Bool {
+    private var isPhotoWifiOnlyUploadsEnabled: Bool {
         willSet {
-            self.userDefaults.set(newValue, forKey: UploadsPhotosWifiOnlyKey)
+            userDefaults.set(newValue, forKey: UploadsPhotoWifiOnlyKey)
+            photosWifiOnlyRow?.value = newValue
         }
     }
     /// Path in which the photos are going to be instant uploaded
     private var photoSelectedPath: String {
         willSet {
-            self.userDefaults.set(newValue, forKey: UploadsPhotosSelectedPathKey)
+            userDefaults.set(newValue, forKey: UploadsPhotoSelectedPathKey)
+            photosWifiOnlyRow?.value = newValue
         }
     }
 
     /// Instant Video Uploads are anabled.
-    private var videoUploadEnabled: Bool {
+    private var isVideoUploadEnabled: Bool {
         willSet {
-            self.userDefaults.set(newValue, forKey: UploadsVideosUploadKey)
+            userDefaults.set(newValue, forKey: UploadsVideoUploadKey)
+            videosRow?.value = newValue
+        }
+
+        didSet {
+            updateUI()
         }
     }
     /// Instant Video Uploads only with WiFi connection.
-    private var videoWifiOnlyUploadsEnabled: Bool {
+    private var isVideoWifiOnlyUploadsEnabled: Bool {
         willSet {
-            self.userDefaults.set(newValue, forKey: UploadsVideosWifiOnlyKey)
+            userDefaults.set(newValue, forKey: UploadsVideoWifiOnlyKey)
+            videosWifiOnlyRow?.value = newValue
         }
     }
     /// Path in which the video are going to be instant uploaded
     private var videoSelectedPath: String {
         willSet {
-            self.userDefaults.set(newValue, forKey: UploadsVideosSelectedPathKey)
+            userDefaults.set(newValue, forKey: UploadsVideoSelectedPathKey)
+            videosSelectedPathRow?.value = newValue
         }
     }
 
     /// Instant Background Uploads are anabled.
     private var backgroundUploadsEnabled: Bool {
         willSet {
-            self.userDefaults.set(newValue, forKey: UploadsBackgroundUploadsKey)
+            userDefaults.set(newValue, forKey: UploadsBackgroundUploadsKey)
+            backgroundUploadsRow?.value = newValue
         }
     }
-    /// User defaults to store the settings.
-    private var userDefaults: UserDefaults
 
     // MARK: - Upload Settings Cells
 
@@ -88,21 +112,19 @@ class UploadsSettings: StaticTableViewSection {
 
     private var backgroundUploadsRow: StaticTableViewRow?
 
-    init(userDefaults: UserDefaults) {
+    override init(userDefaults: UserDefaults) {
 
-        self.userDefaults = userDefaults
+        self.isPhotoUploadEnabled = userDefaults.bool(forKey: UploadsPhotoUploadKey)
+        self.isPhotoWifiOnlyUploadsEnabled = userDefaults.bool(forKey: UploadsPhotoWifiOnlyKey)
+        self.photoSelectedPath = userDefaults.string(forKey: UploadsPhotoSelectedPathKey) ?? uploadsSelectedPath
 
-        self.photoUploadEnabled = userDefaults.bool(forKey: UploadsPhotosUploadKey)
-        self.photoWifiOnlyUploadsEnabled = userDefaults.bool(forKey: UploadsPhotosWifiOnlyKey)
-        self.photoSelectedPath = userDefaults.string(forKey: UploadsPhotosSelectedPathKey) ?? uploadsSelectedPath
-
-        self.videoUploadEnabled = userDefaults.bool(forKey: UploadsVideosUploadKey)
-        self.videoWifiOnlyUploadsEnabled = userDefaults.bool(forKey: UploadsVideosWifiOnlyKey)
-        self.videoSelectedPath = userDefaults.string(forKey: UploadsVideosSelectedPathKey) ?? uploadsSelectedPath
+        self.isVideoUploadEnabled = userDefaults.bool(forKey: UploadsVideoUploadKey)
+        self.isVideoWifiOnlyUploadsEnabled = userDefaults.bool(forKey: UploadsVideoWifiOnlyKey)
+        self.videoSelectedPath = userDefaults.string(forKey: UploadsVideoSelectedPathKey) ?? uploadsSelectedPath
 
         self.backgroundUploadsEnabled = userDefaults.bool(forKey: UploadsBackgroundUploadsKey)
 
-        super.init()
+        super.init(userDefaults: userDefaults)
 
         createPhotoRows()
         createVideoRows()
@@ -112,25 +134,23 @@ class UploadsSettings: StaticTableViewSection {
         self.identifier = UploadsSectionIdentifier
 
         self.add(rows: [photosRow!, videosRow!])
-        updateUI()
     }
 
     // MARK: - Creation of the rows.
 
     private func createPhotoRows() {
 
-        photosRow = StaticTableViewRow(switchWithAction: { (row, _) in
-            if let value = row.value as? Bool {
-                self.photoUploadEnabled = value
-                self.updateUI()
+        photosRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+            if let photosSwitch = sender as? UISwitch {
+                self.isPhotoUploadEnabled = photosSwitch.isOn
             }
-        }, title: "Photos".localized, value: photoUploadEnabled)
+        }, title: "Photos".localized, value: isPhotoUploadEnabled)
 
-        photosWifiOnlyRow = StaticTableViewRow(switchWithAction: { (row, _) in
-            if let value = row.value as? Bool {
-                self.photoWifiOnlyUploadsEnabled = value
+        photosWifiOnlyRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+            if let photosWifiOnlySwitch = sender as? UISwitch {
+                self.isPhotoWifiOnlyUploadsEnabled = photosWifiOnlySwitch.isOn
             }
-        }, title: "Upload pictures via WiFi only".localized, value: photoWifiOnlyUploadsEnabled)
+        }, title: "Upload pictures via WiFi only".localized, value: isPhotoWifiOnlyUploadsEnabled)
 
         photosSelectedPathRow = StaticTableViewRow(subtitleRowWithAction: { (_, _) in
             // TODO: Use a more advanced version of ClientQueryViewController to select the path
@@ -139,18 +159,17 @@ class UploadsSettings: StaticTableViewSection {
 
     private func createVideoRows() {
 
-        videosRow = StaticTableViewRow(switchWithAction: { (row, _) in
-            if let value = row.value as? Bool {
-                self.videoUploadEnabled = value
-                self.updateUI()
+        videosRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+            if let videosSwitch = sender as? UISwitch {
+                self.isVideoUploadEnabled = videosSwitch.isOn
             }
-        }, title: "Videos".localized, value: videoUploadEnabled)
+        }, title: "Videos".localized, value: isVideoUploadEnabled)
 
-        videosWifiOnlyRow = StaticTableViewRow(switchWithAction: { (row, _) in
-            if let value = row.value as? Bool {
-                self.videoWifiOnlyUploadsEnabled = value
+        videosWifiOnlyRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+            if let videosWifiOnlySwitch = sender as? UISwitch {
+                self.isVideoWifiOnlyUploadsEnabled = videosWifiOnlySwitch.isOn
             }
-        }, title: "Upload videos via WiFi only".localized, value: videoWifiOnlyUploadsEnabled)
+        }, title: "Upload videos via WiFi only".localized, value: isVideoWifiOnlyUploadsEnabled)
 
         videosSelectedPathRow = StaticTableViewRow(subtitleRowWithAction: { (_, _) in
             // TODO: Use a more advanced version of ClientQueryViewController to select the path
@@ -158,9 +177,9 @@ class UploadsSettings: StaticTableViewSection {
     }
 
     private func createCommonRows() {
-        backgroundUploadsRow = StaticTableViewRow(switchWithAction: { (row, _) in
-            if let value = row.value as? Bool {
-                self.backgroundUploadsEnabled = value
+        backgroundUploadsRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+            if let backgroundsSwitch = sender as? UISwitch {
+                self.backgroundUploadsEnabled = backgroundsSwitch.isOn
             }
         }, title: "Background uploads".localized, value: backgroundUploadsEnabled)
     }
@@ -168,26 +187,23 @@ class UploadsSettings: StaticTableViewSection {
     /// Create and configure all the rows the Uploads Section has in the settings view.
     func updateUI() {
 
-        if photoUploadEnabled {
+        if isPhotoUploadEnabled {
 
             let photoUploadIndex = rows.index(of: photosRow!)!
 
             if !rows.contains(photosWifiOnlyRow!) {
+
                 insert(row: photosWifiOnlyRow!, at: photoUploadIndex + 1, animated: true)
                 insert(row: photosSelectedPathRow!, at: photoUploadIndex + 2, animated: true)
             }
 
         } else {
-            photoWifiOnlyUploadsEnabled = false
-            photosWifiOnlyRow?.value = false
-            remove(photosWifiOnlyRow!, animated: true)
-
-            photosSelectedPathRow?.cell?.detailTextLabel?.text = uploadsSelectedPath
-            userDefaults.removeObject(forKey: UploadsPhotosSelectedPathKey)
-            remove(photosSelectedPathRow!, animated: true)
+            isPhotoWifiOnlyUploadsEnabled = false
+            remove(rows: [photosWifiOnlyRow!, photosSelectedPathRow!], animated: true)
+            userDefaults.removeObject(forKey: UploadsPhotoSelectedPathKey)
         }
 
-        if videoUploadEnabled {
+        if isVideoUploadEnabled {
 
             let videoUploadIndex = rows.index(of: videosRow!)!
 
@@ -197,25 +213,20 @@ class UploadsSettings: StaticTableViewSection {
             }
 
         } else {
-
-            videoWifiOnlyUploadsEnabled = false
-            videosWifiOnlyRow?.value = false
-            remove(videosWifiOnlyRow!, animated: true)
-
-            videosSelectedPathRow?.cell?.detailTextLabel?.text = uploadsSelectedPath
-            userDefaults.removeObject(forKey: UploadsVideosSelectedPathKey)
-            remove(videosSelectedPathRow!, animated: true)
+            isVideoWifiOnlyUploadsEnabled = false
+            userDefaults.removeObject(forKey: UploadsVideoSelectedPathKey)
+            remove(rows: [videosWifiOnlyRow!, videosSelectedPathRow!], animated: true)
         }
 
         // Background uploads flow
-        if photoUploadEnabled || videoUploadEnabled {
+        if isPhotoUploadEnabled || isVideoUploadEnabled {
 
             if !rows.contains(backgroundUploadsRow!) {
                 add(row: backgroundUploadsRow!, animated: true)
             }
 
         } else {
-            backgroundUploadsRow?.value = false
+            backgroundUploadsEnabled = false
             remove(backgroundUploadsRow!, animated: true)
         }
     }
