@@ -71,7 +71,7 @@ class UnlockPasscodeManager: NSObject {
 
     // MARK: - Interface updates
 
-    func hideOverlay() {
+    private func hideOverlay() {
         if self.passcodeViewController != nil {
             self.passcodeViewController?.hideOverlay()
         }
@@ -92,7 +92,7 @@ class UnlockPasscodeManager: NSObject {
 
     // MARK: - Utils
 
-    func isPasscodeActivated() -> Bool {
+    private func isPasscodeActivated() -> Bool {
 
         var output: Bool = true
 
@@ -104,7 +104,7 @@ class UnlockPasscodeManager: NSObject {
         return output
     }
 
-    func isNeccesaryShowPasscode() -> Bool {
+    private func isNeccesaryShowPasscode() -> Bool {
 
         var output: Bool = true
 
