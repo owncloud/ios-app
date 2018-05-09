@@ -6,11 +6,22 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import LocalAuthentication
 
 // MARK: - Security UserDefaults keys
-public let SecuritySettingsfrequencyKey: String =  "security-settings-frequency"
+public let SecuritySettingsKey: String = "security-settings"
+public let SecuritySettingsFrequencyKey: String =  "security-settings-frequency"
 public let SecuritySettingsPasscodeKey: String = "security-settings-usePasscode"
 public let SecuritySettingsBiometricalKey: String = "security-settings-useBiometrical"
 
@@ -18,7 +29,7 @@ public let SecuritySettingsBiometricalKey: String = "security-settings-useBiomet
 private let SecuritySectionIdentifier: String = "settings-security-section"
 
 // MARK: - SecurityAskfrequency
-enum SecurityAskfrequency: Int {
+enum SecurityAskFrequency: Int {
     case allways = 0
     case oneMinute = 60
     case fiveMinutes = 300
@@ -40,18 +51,24 @@ enum SecurityAskfrequency: Int {
     }
 }
 
-class SecuritySettings: StaticTableViewSection {
+class SecuritySettingsSection: SettingsSection {
 
-    // MARK: - Security settings properties
+    var frequency: SecurityAskFrequency {
+        willSet {
+            self.userDefaults.set(newValue.rawValue, forKey: SecuritySettingsFrequencyKey)
+        }
+    }
 
-    /// Time between avery ask for security
-    private var frequency: SecurityAskfrequency
-    /// Passcode protection enabled
-    private var passcodeEnabled: Bool
-    /// Biometrical protection enabled
-    private var biometricalSecurityEnabled: Bool
-    /// UserDefaults used to store and retrieve all.
-    private var userDefaults: UserDefaults
+    var isPasscodeSecurityEnabled: Bool {
+        willSet {
+            self.userDefaults.set(newValue, forKey: SecuritySettingsPasscodeKey)
+        }
+    }
+    var isBiometricalSecurityEnabled: Bool {
+        willSet {
+            self.userDefaults.set(newValue, forKey: SecuritySettingsBiometricalKey)
+        }
+    }
 
     // MARK: - Upload Settings Cells
 
@@ -59,103 +76,99 @@ class SecuritySettings: StaticTableViewSection {
     private var passcodeRow: StaticTableViewRow?
     private var biometricalRow: StaticTableViewRow?
 
-    init(userDefaults: UserDefaults) {
-        self.userDefaults = userDefaults
+    override init(userDefaults: UserDefaults) {
 
-        if let frequencyValue = SecurityAskfrequency(rawValue: userDefaults.integer(forKey: SecuritySettingsfrequencyKey)) {
-            self.frequency = frequencyValue
-        } else {
-            self.frequency = .allways
-        }
-        self.passcodeEnabled = userDefaults.bool(forKey: SecuritySettingsPasscodeKey)
-        self.biometricalSecurityEnabled = userDefaults.bool(forKey: SecuritySettingsBiometricalKey)
+        frequency = SecurityAskFrequency.init(rawValue: userDefaults.integer(forKey: SecuritySettingsFrequencyKey))!
+        isPasscodeSecurityEnabled = userDefaults.bool(forKey: SecuritySettingsPasscodeKey)
+        isBiometricalSecurityEnabled = userDefaults.bool(forKey: SecuritySettingsBiometricalKey)
 
-        super.init()
+        super.init(userDefaults: userDefaults)
+
         self.headerTitle = "Security".localized
         self.identifier = SecuritySectionIdentifier
 
         createRows()
-
         updateUI()
     }
 
     // MARK: - Creation of the rows.
-    private func createRows() {
+    func createRows() {
+
+        // Creation of the frequency row.
         frequencyRow = StaticTableViewRow(subtitleRowWithAction: { (row, _) in
+            if let vc = self.viewController {
 
-            if let vc: StaticTableViewController = self.viewController {
-                let alert: UIAlertController =
-                    UIAlertController(title: "Select the frequency that security should be showed".localized,
-                                      message: nil,
-                                      preferredStyle: UIAlertControllerStyle.actionSheet)
+                // Creation of the frequency picker.
+                let alert = UIAlertController(title: "Select the frequency that security should be showed".localized, message: nil, preferredStyle: .actionSheet)
 
-                for frequency in SecurityAskfrequency.all {
-                    let action: UIAlertAction = UIAlertAction(title: frequency.toString(), style: UIAlertActionStyle.default, handler: { (_) in
+                for frequency in SecurityAskFrequency.all {
+                    let action = UIAlertAction(title: frequency.toString(), style: .default, handler: { (_) in
                         self.frequency = frequency
-                        self.userDefaults.set(frequency.rawValue, forKey: SecuritySettingsfrequencyKey)
                         row.cell?.detailTextLabel?.text = frequency.toString()
                     })
+
                     alert.addAction(action)
                 }
 
-                let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel".localized, style: UIAlertActionStyle.cancel, handler: nil)
+                let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
                 alert.addAction(cancelAction)
 
                 vc.present(alert, animated: true)
             }
 
-        }, title: "Frequency".localized, subtitle:frequency.toString(), accessoryType: .disclosureIndicator)
+        }, title: "Frequency".localized, subtitle: frequency.toString(), accessoryType: .disclosureIndicator)
 
-        passcodeRow = StaticTableViewRow(switchWithAction: { (row, _) in
-            if let value = row.value as? Bool {
-                self.passcodeEnabled = value
-                self.userDefaults.set(self.passcodeEnabled, forKey: SecuritySettingsPasscodeKey)
+        // Creation of the passcode row.
+        passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+            if let passcodeSwitch = sender as? UISwitch {
+                self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
                 self.updateUI()
             }
-        }, title: "Passcode Lock".localized, value: self.passcodeEnabled)
+        }, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled)
 
-        let context = LAContext()
-
-        if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: nil) {
-
-            var biometricalSecurityName = ""
-            switch context.biometryType {
-            case .touchID:
-                biometricalSecurityName = "TouchID".localized
-            case .faceID:
-                biometricalSecurityName = "FaceID".localized
-            default:
-                break
-            }
-
-            biometricalRow = StaticTableViewRow(switchWithAction: { (row, _) in
-                if let value = row.value as? Bool {
-                    self.biometricalSecurityEnabled = value
-                    self.userDefaults.set(self.biometricalSecurityEnabled, forKey: SecuritySettingsBiometricalKey)
+        // Creation of the biometrical row.
+        if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationNAme() {
+            // Creation of the biometrical row.
+            biometricalRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+                if let biometricalSwitch = sender as? UISwitch {
+                    self.isBiometricalSecurityEnabled = biometricalSwitch.isOn
                 }
-            }, title: biometricalSecurityName, value: self.biometricalSecurityEnabled)
+            }, title: biometricalSecurityName, value: isBiometricalSecurityEnabled)
         }
     }
 
     // MARK: - Update UI
     func updateUI() {
 
-        if !rows.contains(frequencyRow!) {
-            add(row: frequencyRow!)
-        }
-
         if !rows.contains(passcodeRow!) {
             add(row: passcodeRow!)
         }
 
-        if self.passcodeEnabled == true {
-            if !rows.contains(biometricalRow!) {
-                add(row: biometricalRow!)
+        if isPasscodeSecurityEnabled {
+
+            var rowsToAdd: [StaticTableViewRow] = []
+
+            if !rows.contains(frequencyRow!) {
+                rowsToAdd.append(frequencyRow!)
             }
+
+            if biometricalRow != nil, !rows.contains(biometricalRow!) {
+                rowsToAdd.append(biometricalRow!)
+            }
+
+            add(rows: rowsToAdd, animated: true)
         } else {
-            self.biometricalRow?.value = false
-            self.biometricalSecurityEnabled = false
-            self.remove(biometricalRow!)
+
+            var rowsToRemove: [StaticTableViewRow] = []
+            frequencyRow?.cell?.detailTextLabel?.text = SecurityAskFrequency.allways.toString()
+            rowsToRemove.append(frequencyRow!)
+
+            if biometricalRow != nil {
+                biometricalRow?.value = false
+                rowsToRemove.append(biometricalRow!)
+            }
+
+            remove(rows: rowsToRemove, animated: true)
         }
     }
 }
