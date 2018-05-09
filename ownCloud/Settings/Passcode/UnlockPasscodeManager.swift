@@ -27,19 +27,6 @@ class UnlockPasscodeManager: NSObject {
         super.init()
     }
 
-    func storeDateHomeButtonPressed() {
-        if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil,
-            self.userDefaults?.data(forKey: DateHomeButtonPressedKey) == nil {
-            self.userDefaults?.set(NSKeyedArchiver.archivedData(withRootObject: Date()), forKey: DateHomeButtonPressedKey)
-        }
-    }
-
-    func hideOverlay() {
-        if self.passcodeViewController != nil {
-            self.passcodeViewController?.hideOverlay()
-        }
-    }
-
     // MARK: - Unlock device
 
     func showPasscodeIfNeededOpenApp(viewController: UIViewController, window: UIWindow?, hiddenOverlay:Bool) {
@@ -82,6 +69,29 @@ class UnlockPasscodeManager: NSObject {
         }
     }
 
+    // MARK: - Interface updates
+
+    func hideOverlay() {
+        if self.passcodeViewController != nil {
+            self.passcodeViewController?.hideOverlay()
+        }
+    }
+
+    func dismissAskedPasscodeIfDateToAskIsLower() {
+
+        if !isNeccesaryShowPasscode() {
+            if self.passcodeViewController != nil {
+                self.passcodeViewController?.dismiss(animated: true, completion: nil)
+                self.passcodeViewController = nil
+                self.userDefaults?.removeObject(forKey: DateHomeButtonPressedKey)
+            }
+        } else {
+            hideOverlay()
+        }
+    }
+
+    // MARK: - Utils
+
     func isPasscodeActivated() -> Bool {
 
         var output: Bool = true
@@ -116,17 +126,11 @@ class UnlockPasscodeManager: NSObject {
 
         return output
     }
-
-    func dismissAskedPasscodeIfDateToAskIsLower() {
-
-        if !isNeccesaryShowPasscode() {
-            if self.passcodeViewController != nil {
-                self.passcodeViewController?.dismiss(animated: true, completion: nil)
-                self.passcodeViewController = nil
-                self.userDefaults?.removeObject(forKey: DateHomeButtonPressedKey)
-            }
-        } else {
-            hideOverlay()
+    
+    func storeDateHomeButtonPressed() {
+        if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil,
+            self.userDefaults?.data(forKey: DateHomeButtonPressedKey) == nil {
+            self.userDefaults?.set(NSKeyedArchiver.archivedData(withRootObject: Date()), forKey: DateHomeButtonPressedKey)
         }
     }
 }

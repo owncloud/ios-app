@@ -15,6 +15,7 @@ let numberDigitsPasscode = 4
 let passcodeKeychainAccount = "passcode-keychain-account"
 let passcodeKeychainPath = "passcode-keychain-path"
 
+// MARK: - Interface view mode
 enum PasscodeInterfaceMode {
     case addPasscodeFirstStep
     case addPasscodeSecondStep
@@ -27,19 +28,24 @@ enum PasscodeInterfaceMode {
 
 class PasscodeViewController: UIViewController, Themeable {
 
+    // MARK: - Handler
     var handler: PasscodeHandler?
 
+    // MARK: - Overlay
     var passcodeFromFirstStep: String?
     var passcodeMode: PasscodeInterfaceMode?
     var hiddenOverlay: Bool?
 
+    // MARK: - Overlay view
     @IBOutlet var overlayView: UIView!
     @IBOutlet var logoTVGView : VectorImageView!
 
+    // MARK: - Messages and input text
     @IBOutlet weak var messageLabel: UILabel?
     @IBOutlet weak var errorMessageLabel: UILabel?
     @IBOutlet weak var passcodeValueTextField: UITextField?
 
+    // MARK: - Buttons
     @IBOutlet weak var number0Button: ThemeButton?
     @IBOutlet weak var number1Button: ThemeButton?
     @IBOutlet weak var number2Button: ThemeButton?
@@ -53,6 +59,7 @@ class PasscodeViewController: UIViewController, Themeable {
 
     @IBOutlet weak var cancelButton: ThemeButton?
 
+    // MARK: - Initalization view
     init(mode: PasscodeInterfaceMode, hiddenOverlay: Bool?, handler: PasscodeHandler?) {
         super.init(nibName: "PasscodeViewController", bundle: nil)
         self.passcodeFromFirstStep = nil
