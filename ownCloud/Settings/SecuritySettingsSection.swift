@@ -127,37 +127,30 @@ class SecuritySettingsSection: SettingsSection {
         passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
             if let passcodeSwitch = sender as? UISwitch {
 
-                if passcodeSwitch.isOn {
-                    //Activate passcode
-                    let passcodeViewController:PasscodeViewController = PasscodeViewController(
-                        mode: PasscodeInterfaceMode.addPasscodeFirstStep,
-                        hiddenOverlay:true,
-                        handler: {
-                            if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
-                                //Activated
-                                self.isPasscodeSecurityEnabled = true
-                            } else {
-                                //Cancelled
-                                self.isPasscodeSecurityEnabled = false
-                            }
-                    })
-                    self.viewController?.navigationController?.visibleViewController?.present(passcodeViewController, animated: true, completion: nil)
-                } else {
-                    //Delete passcode
-                    let passcodeViewController:PasscodeViewController = PasscodeViewController(
-                        mode: PasscodeInterfaceMode.deletePasscode,
-                        hiddenOverlay:true,
-                        handler: {
-                            if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) == nil {
-                                //Deleted
-                                self.isPasscodeSecurityEnabled = false
-                            } else {
-                                //Cancelled
-                                self.isPasscodeSecurityEnabled = true
-                            }
-                    })
-                    self.viewController?.navigationController?.visibleViewController?.present(passcodeViewController, animated: true, completion: nil)
+                let handler:PasscodeHandler = {
+                    if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
+                        //Activated
+                        self.isPasscodeSecurityEnabled = true
+                    } else {
+                        //Cancelled
+                        self.isPasscodeSecurityEnabled = false
+                    }
                 }
+
+                var mode:PasscodeInterfaceMode?
+
+                if passcodeSwitch.isOn {
+                    mode = PasscodeInterfaceMode.addPasscodeFirstStep
+                } else {
+                    mode = PasscodeInterfaceMode.deletePasscode
+                }
+
+                let passcodeViewController:PasscodeViewController = PasscodeViewController(
+                    mode: mode!,
+                    hiddenOverlay:true,
+                    handler: handler)
+
+                self.viewController?.navigationController?.visibleViewController?.present(passcodeViewController, animated: true, completion: nil)
             }
         }, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled)
 
