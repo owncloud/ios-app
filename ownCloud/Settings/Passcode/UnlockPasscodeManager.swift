@@ -113,7 +113,7 @@ class UnlockPasscodeManager: NSObject {
                 if let date = NSKeyedUnarchiver.unarchiveObject(with: dateData) as? Date {
 
                     let elapsedSeconds = Date().timeIntervalSince(date)
-                    let minSecondsToAsk = self.userDefaults?.integer(forKey: SecuritySettingsfrequencyKey)
+                    let minSecondsToAsk = self.userDefaults?.integer(forKey: SecuritySettingsFrequencyKey)
 
                     if Int(elapsedSeconds) < minSecondsToAsk! {
                         output = false

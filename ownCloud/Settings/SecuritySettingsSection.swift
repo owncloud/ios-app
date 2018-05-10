@@ -123,9 +123,8 @@ class SecuritySettingsSection: SettingsSection {
         // Creation of the passcode row.
         passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
             if let passcodeSwitch = sender as? UISwitch {
-                self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
 
-                if self.isPasscodeSecurityEnabled {
+                if passcodeSwitch.isOn {
                     //Activate passcode
                     let passcodeViewController:PasscodeViewController = PasscodeViewController(
                         mode: PasscodeInterfaceMode.addPasscodeFirstStep,
@@ -133,11 +132,10 @@ class SecuritySettingsSection: SettingsSection {
                         handler: {
                             if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
                                 //Activated
-                                self.userDefaults.set(self.isPasscodeSecurityEnabled, forKey: SecuritySettingsPasscodeKey)
+                                self.isPasscodeSecurityEnabled = true
                             } else {
                                 //Cancelled
                                 self.isPasscodeSecurityEnabled = false
-                                self.updateUI()
                             }
                     })
                     self.viewController?.present(passcodeViewController, animated: true, completion: nil)
@@ -149,11 +147,10 @@ class SecuritySettingsSection: SettingsSection {
                         handler: {
                             if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
                                 //Deleted
-                                self.userDefaults.set(self.isPasscodeSecurityEnabled, forKey: SecuritySettingsPasscodeKey)
+                                self.isPasscodeSecurityEnabled = false
                             } else {
                                 //Cancelled
                                 self.isPasscodeSecurityEnabled = true
-                                self.updateUI()
                             }
                     })
                     self.viewController?.present(passcodeViewController, animated: true, completion: nil)
@@ -207,6 +204,6 @@ class SecuritySettingsSection: SettingsSection {
 
             remove(rows: rowsToRemove, animated: true)
         }
-        self.passcodeRow?.value = self.passcodeEnabled
+        self.passcodeRow?.value = self.isPasscodeSecurityEnabled
     }
 }
