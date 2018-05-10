@@ -29,25 +29,7 @@ class UnlockPasscodeManager: NSObject {
 
     // MARK: - Unlock device
 
-    func showPasscodeIfNeededOpenApp(viewController: UIViewController, window: UIWindow?, hiddenOverlay:Bool) {
-        if isNeccesaryShowPasscode() {
-            self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:hiddenOverlay, handler: {
-                DispatchQueue.main.async {
-                    self.userDefaults?.removeObject(forKey: DateHomeButtonPressedKey)
-                    window?.rootViewController = viewController
-                    window?.addSubview((viewController.view)!)
-                    self.passcodeViewController = nil
-                }
-            })
-            window?.rootViewController = self.passcodeViewController
-
-        } else {
-            window?.rootViewController = viewController
-            window?.addSubview((viewController.view)!)
-        }
-    }
-
-    func showPasscodeIfNeededAfterHomeButtonPressed(viewController: UIViewController, hiddenOverlay:Bool) {
+    func showPasscodeIfNeeded(viewController: UIViewController, hiddenOverlay:Bool) {
 
         if isPasscodeActivated() {
 
@@ -62,7 +44,7 @@ class UnlockPasscodeManager: NSObject {
                     }
                 })
 
-                viewController.present(self.passcodeViewController!, animated: true, completion: nil)
+                viewController.present(self.passcodeViewController!, animated: false, completion: nil)
             } else {
                 self.passcodeViewController?.showOverlay()
             }
