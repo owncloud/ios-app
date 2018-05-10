@@ -65,6 +65,9 @@ class SecuritySettingsSection: SettingsSection {
             self.userDefaults.set(newValue, forKey: SecuritySettingsPasscodeKey)
         }
 
+        didSet {
+            updateUI()
+        }
     }
     var isBiometricalSecurityEnabled: Bool {
         willSet {
@@ -145,7 +148,7 @@ class SecuritySettingsSection: SettingsSection {
                         mode: PasscodeInterfaceMode.deletePasscode,
                         hiddenOverlay:true,
                         handler: {
-                            if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
+                            if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) == nil {
                                 //Deleted
                                 self.isPasscodeSecurityEnabled = false
                             } else {
@@ -204,6 +207,7 @@ class SecuritySettingsSection: SettingsSection {
 
             remove(rows: rowsToRemove, animated: true)
         }
-        self.passcodeRow?.value = self.isPasscodeSecurityEnabled
+
+        passcodeRow?.value = isPasscodeSecurityEnabled
     }
 }
