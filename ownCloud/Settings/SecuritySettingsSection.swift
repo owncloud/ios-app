@@ -142,7 +142,24 @@ class SecuritySettingsSection: SettingsSection {
                 if passcodeSwitch.isOn {
                     mode = PasscodeInterfaceMode.addPasscodeFirstStep
                 } else {
+<<<<<<< HEAD
                     mode = PasscodeInterfaceMode.deletePasscode
+=======
+                    //Delete passcode
+                    let passcodeViewController:PasscodeViewController = PasscodeViewController(
+                        mode: PasscodeInterfaceMode.deletePasscode,
+                        hiddenOverlay:true,
+                        handler: {
+                            if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) == nil {
+                                //Deleted
+                                self.isPasscodeSecurityEnabled = false
+                            } else {
+                                //Cancelled
+                                self.isPasscodeSecurityEnabled = true
+                            }
+                    })
+                    self.viewController?.present(passcodeViewController, animated: true, completion: nil)
+>>>>>>> Added an update of the switch on the updateUI
                 }
 
                 let passcodeViewController:PasscodeViewController = PasscodeViewController(
