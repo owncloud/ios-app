@@ -63,6 +63,7 @@ class SecuritySettingsSection: SettingsSection {
         willSet {
             self.userDefaults.set(newValue, forKey: SecuritySettingsPasscodeKey)
         }
+
     }
     var isBiometricalSecurityEnabled: Bool {
         willSet {
