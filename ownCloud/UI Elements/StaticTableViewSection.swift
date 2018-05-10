@@ -78,18 +78,6 @@ class StaticTableViewSection: NSObject {
 		}
 	}
 
-    func add(row: StaticTableViewRow, animated: Bool = false) {
-        rows.append(row)
-        if let vc = viewController, let sectionIndex = vc.sections.index(of: self) {
-
-            vc.tableView.beginUpdates()
-            let rowIndex = rows.count - 1
-            vc.tableView.insertRows(at: [IndexPath(row: rowIndex, section: sectionIndex)], with: selectAnimation(animated))
-            vc.tableView.endUpdates()
-        }
-
-    }
-
 	@discardableResult
 	func add(radioGroupWithArrayOfLabelValueDictionaries labelValueDictRows: [[String : Any]], radioAction:StaticTableViewRowAction?, groupIdentifier: String, selectedValue: Any, animated : Bool = false) -> [StaticTableViewRow] {
 
@@ -109,6 +97,10 @@ class StaticTableViewSection: NSObject {
 
 		return radioGroupRows
 	}
+
+    func add(row rowToAdd: StaticTableViewRow, animated: Bool = false) {
+        self.insert(row: rowToAdd, at: rows.count, animated: animated)
+    }
 
 	func insert(row rowToAdd: StaticTableViewRow, at index: Int, animated: Bool = false) {
 		// Add reference to section to row
@@ -154,23 +146,6 @@ class StaticTableViewSection: NSObject {
 			self.viewController?.tableView.deleteRows(at: indexPaths, with: animated ? .fade : .none)
 		}
 	}
-
-    func remove(_ row: StaticTableViewRow, animated: Bool = false) {
-        if let index = rows.index(of: row) {
-
-            rows.remove(at: index)
-
-            if let vc = viewController, let sectionIndex = vc.sections.index(of: self) {
-                vc.tableView.beginUpdates()
-                vc.tableView.deleteRows(at: [IndexPath(row: index, section: sectionIndex)], with: selectAnimation(animated))
-                vc.tableView.endUpdates()
-            }
-        }
-    }
-
-    func delete(row: StaticTableViewRow, at index: Int) {
-        rows.remove(at: index)
-    }
 
 	// MARK: - Radio group value setter/getter
 	func selectedValue(forGroupIdentifier groupIdentifier: String) -> Any? {

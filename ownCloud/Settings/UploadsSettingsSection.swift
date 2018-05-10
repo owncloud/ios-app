@@ -134,6 +134,7 @@ class UploadsSettingsSection: SettingsSection {
         self.identifier = UploadsSectionIdentifier
 
         self.add(rows: [photosRow!, videosRow!])
+        updateUI()
     }
 
     // MARK: - Creation of the rows.
@@ -227,7 +228,7 @@ class UploadsSettingsSection: SettingsSection {
 
         } else {
             backgroundUploadsEnabled = false
-            remove(backgroundUploadsRow!, animated: true)
+            remove(rows: [backgroundUploadsRow!], animated: true)
         }
     }
 }
