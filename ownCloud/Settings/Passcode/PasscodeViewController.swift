@@ -184,8 +184,7 @@ class PasscodeViewController: UIViewController, Themeable {
     // MARK: - Actions
 
     @IBAction func cancelButton(sender: UIButton) {
-        self.handler!()
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: self.handler!)
     }
 
     @IBAction func numberButton(sender: UIButton) {
@@ -215,8 +214,7 @@ class PasscodeViewController: UIViewController, Themeable {
                 if passcodeFromFirstStep == passcodeValue {
                     //Save to keychain
                     OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcodeValue), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                    self.handler!()
-                    self.dismiss(animated: true, completion: nil)
+                    self.dismiss(animated: true, completion: self.handler!)
                 } else {
                     self.passcodeMode = .addPasscodeFirstSetpAfterErrorOnSecond
                     self.passcodeFromFirstStep = nil
@@ -244,8 +242,7 @@ class PasscodeViewController: UIViewController, Themeable {
 
                 if passcodeValue == passcodeFromKeychain {
                     OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                    self.handler!()
-                    self.dismiss(animated: true, completion: nil)
+                    self.dismiss(animated: true, completion: self.handler!)
                 } else {
                     self.passcodeMode = .deletePasscodeError
                     self.passcodeValueTextField?.text = nil

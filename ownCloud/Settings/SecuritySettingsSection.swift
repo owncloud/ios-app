@@ -141,7 +141,7 @@ class SecuritySettingsSection: SettingsSection {
                                 self.isPasscodeSecurityEnabled = false
                             }
                     })
-                    self.viewController?.present(passcodeViewController, animated: true, completion: nil)
+                    self.viewController?.navigationController?.visibleViewController?.present(passcodeViewController, animated: true, completion: nil)
                 } else {
                     //Delete passcode
                     let passcodeViewController:PasscodeViewController = PasscodeViewController(
@@ -156,10 +156,8 @@ class SecuritySettingsSection: SettingsSection {
                                 self.isPasscodeSecurityEnabled = true
                             }
                     })
-                    self.viewController?.present(passcodeViewController, animated: true, completion: nil)
+                    self.viewController?.navigationController?.visibleViewController?.present(passcodeViewController, animated: true, completion: nil)
                 }
-
-                self.updateUI()
             }
         }, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled)
 
