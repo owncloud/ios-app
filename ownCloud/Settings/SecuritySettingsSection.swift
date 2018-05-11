@@ -30,17 +30,17 @@ private let SecuritySectionIdentifier: String = "settings-security-section"
 
 // MARK: - SecurityAskfrequency
 enum SecurityAskFrequency: Int {
-    case allways = 0
+    case always = 0
     case oneMinute = 60
     case fiveMinutes = 300
     case thirtyMinutes = 1800
 
-    static let all = [allways, oneMinute, fiveMinutes, thirtyMinutes]
+    static let all = [always, oneMinute, fiveMinutes, thirtyMinutes]
 
     func toString() -> String {
         switch self {
-        case .allways:
-            return "Allways".localized
+        case .always:
+            return "Always".localized
         case .oneMinute:
             return "1 minute".localized
         case .fiveMinutes:
@@ -161,7 +161,7 @@ class SecuritySettingsSection: SettingsSection {
         } else {
 
             var rowsToRemove: [StaticTableViewRow] = []
-            frequencyRow?.cell?.detailTextLabel?.text = SecurityAskFrequency.allways.toString()
+            frequencyRow?.cell?.detailTextLabel?.text = SecurityAskFrequency.always.toString()
             rowsToRemove.append(frequencyRow!)
 
             if biometricalRow != nil {
