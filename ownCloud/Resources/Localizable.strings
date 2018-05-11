@@ -31,6 +31,9 @@
 "Contacting server…" = "Contacting server…";
 "Authenticating…" = "Authenticating…";
 
+"Missing hostname" = "Missing hostname";
+"The entered URL does not include a hostname." = "The entered URL does not include a hostname.";
+
 /* Client */
 "Browse" = "Browse";
 "Disconnect" = "Disconnect";

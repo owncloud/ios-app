@@ -154,7 +154,7 @@ class BookmarkViewController: StaticTableViewController {
 				self?.bookmark?.authenticationMethodIdentifier = nil
 				self?.bookmark?.authenticationData = nil
 				self?.updateUI(from: (self?.bookmark)!, fieldSelector: { (row) -> Bool in
-					return (row == self?.usernameRow!) || (row == self?.passwordRow!)
+					return ((row == self?.usernameRow!) && self?.mode != .edit) || (row == self?.passwordRow!)
 				})
 				self?.composeSectionsAndRows(animated: true)
 				self?.updateInputFocus()
@@ -199,13 +199,15 @@ class BookmarkViewController: StaticTableViewController {
 					updateUI(from: bookmark!) { (_) -> Bool in return(true) }
 				}
 
+				self.usernameRow?.enabled = false
+
 				self.navigationItem.title = "Edit bookmark".localized
 
 				self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
 		}
 
 		// Support for bookmark URL editable
-		if let bookmarkURLEditable = self.classSetting(forOCClassSettingsKey: .bookmarkURLEditable) as? Bool {
+		if let bookmarkURLEditable = self.classSetting(forOCClassSettingsKey: .bookmarkURLEditable) as? Bool, bookmarkURLEditable == false {
 			self.urlRow?.enabled = bookmarkURLEditable
 
 			let vectorImageView = VectorImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
@@ -235,10 +237,10 @@ class BookmarkViewController: StaticTableViewController {
 		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
 
 		let hudCompletion: (((() -> Void)?) -> Void) = { (completion) in
-			if hud?.presenting == true {
-				hud?.dismiss(completion: completion)
-			} else {
-				OnMainThread {
+			OnMainThread {
+				if hud?.presenting == true {
+					hud?.dismiss(completion: completion)
+				} else {
 					completion?()
 				}
 			}
@@ -262,6 +264,19 @@ class BookmarkViewController: StaticTableViewController {
 
 			// Normalize URL
 			if let serverURL = NSURL(username: &username, password: &password, afterNormalizingURLString: urlString, protocolWasPrepended: &protocolWasPrepended) as URL? {
+				// Check for zero-length host name
+				if (serverURL.host == nil) || ((serverURL.host != nil) && (serverURL.host?.count==0)) {
+					// Missing hostname
+					let alertController = UIAlertController(title: "Missing hostname".localized, message: "The entered URL does not include a hostname.", preferredStyle: .alert)
+
+					alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+
+					self.present(alertController, animated: true, completion: nil)
+
+					self.urlRow?.cell?.shakeHorizontally()
+
+					return
+				}
 
 				// Save username and password for possible later use if they were part of the URL
 				if username != nil {
