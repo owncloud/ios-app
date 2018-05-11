@@ -20,5 +20,23 @@
 			"replace" : "#1D293B",
 			"variable" : "logoFillColor"
 		}
+	},
+	
+	"icon-locked.svg" : {
+		"fill=\"#000000\"" : {
+			"description" : "Fill color used in icon",
+			
+			"replace" : "#000000",
+			"variable" : "symbolFillColor"
+		}
+	},
+
+	"icon-password-manager.svg" : {
+		"fill=\"#000000\"" : {
+			"description" : "Fill color used in icon",
+			
+			"replace" : "#000000",
+			"variable" : "iconFillColor"
+		}
 	}
 }

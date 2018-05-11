@@ -247,10 +247,14 @@ class ThemeCollection : NSObject {
 				logoFillColor = UIColor.lightGray
 		}
 
+		let iconSymbolColor = self.tableRowColors.symbolColor.hexString()
+
 		self.iconColors = [
-			"folderFillColor" : self.tableRowColors.symbolColor.hexString(),
-			"fileFillColor" : self.tableRowColors.symbolColor.hexString(),
-			"logoFillColor" : logoFillColor?.hexString() ?? "#ffffff"
+			"folderFillColor" : iconSymbolColor,
+			"fileFillColor" : iconSymbolColor,
+			"logoFillColor" : logoFillColor?.hexString() ?? "#ffffff",
+			"iconFillColor" : tableRowColors.tintColor?.hexString() ?? iconSymbolColor,
+			"symbolFillColor" : iconSymbolColor
 		]
 	}
 

@@ -70,6 +70,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.tableView.register(ServerListBookmarkCell.self, forCellReuseIdentifier: "bookmark-cell")
 		self.tableView.rowHeight = UITableViewAutomaticDimension
 		self.tableView.estimatedRowHeight = 80
+		self.tableView.allowsSelectionDuringEditing = true
 
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
 
@@ -191,10 +192,14 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	// MARK: - Actions
 	@IBAction func addBookmark() {
+		showBookmarkUI()
+	}
 
-        let viewController : BookmarkViewController = BookmarkViewController(style: UITableViewStyle.grouped)
-        self.navigationController?.pushViewController(viewController, animated: true)
-		updateNoServerMessageVisibility()
+	func showBookmarkUI(edit bookmark: OCBookmark? = nil) {
+		let viewController : BookmarkViewController = BookmarkViewController(bookmark)
+		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
+
+		self.present(navigationController, animated: true, completion: nil)
 	}
 
 	var themeCounter : Int = 0
@@ -265,9 +270,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				return
 			}
 
-			let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+			if tableView.isEditing {
+				self.showBookmarkUI(edit: bookmark)
+			} else {
+				let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 
-			self.present(clientRootViewController, animated: true, completion: nil)
+				self.present(clientRootViewController, animated: true, completion: nil)
+			}
 		}
 	}
 
@@ -289,7 +298,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		if let bookmark : OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
 			bookmarkCell.titleLabel.text = bookmark.shortName()
-			bookmarkCell.detailLabel.text = bookmark.url.absoluteString
+			bookmarkCell.detailLabel.text = (bookmark.originURL != nil) ? bookmark.originURL.absoluteString : bookmark.url.absoluteString
 		}
 
 		return bookmarkCell
@@ -297,7 +306,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		return [
-				UITableViewRowAction(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (_, indexPath) in
+				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, indexPath) in
 					if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
 						let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName()) as String,
 											     message: "This will also delete all locally stored file copies.".localized,
@@ -345,6 +354,12 @@ class ServerListTableViewController: UITableViewController, Themeable {
 						}))
 
 						self.present(alertController, animated: true, completion: nil)
+					}
+				}),
+
+				UITableViewRowAction(style: .normal, title: "Edit".localized, handler: { [weak self] (_, indexPath) in
+					if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
+						self?.showBookmarkUI(edit: bookmark)
 					}
 				})
 			]
