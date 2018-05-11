@@ -1,0 +1,8 @@
+app_identifier("com.mydomain.ios-app") # The bundle identifier of your app
+apple_id("fastlane@mydomain.com") # Your Apple email address
+
+itc_team_id("123456789") # iTunes Connect Team ID
+team_id("1234567810") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
