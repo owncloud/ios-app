@@ -18,24 +18,24 @@ class UnlockPasscodeManager: NSObject {
     enum BiometricalStatus {
         case notShown
         case shown
+        case success
         case error
     }
 
     private var passcodeViewController: PasscodeViewController?
-    private var userDefaults: UserDefaults?
-    private var biometricalStatus:BiometricalStatus?
+    private var userDefaults: UserDefaults
+    private var biometricalStatus:BiometricalStatus
 
     var hanlder:PasscodeHandler?
 
     static var sharedUnlockPasscodeManager : UnlockPasscodeManager = {
         let sharedInstance = UnlockPasscodeManager()
-        let biometricalStatus = BiometricalStatus.notShown
         return (sharedInstance)
     }()
 
     public override init() {
         self.userDefaults = UserDefaults.standard
-
+        self.biometricalStatus = BiometricalStatus.notShown
         super.init()
     }
 
@@ -50,16 +50,20 @@ class UnlockPasscodeManager: NSObject {
 
                 hanlder = {
                     DispatchQueue.main.async {
-                        self.userDefaults?.removeObject(forKey: DateHomeButtonPressedKey)
+                        self.userDefaults.removeObject(forKey: DateHomeButtonPressedKey)
                         self.passcodeViewController?.dismiss(animated: true, completion: nil)
                         self.passcodeViewController = nil
                     }
                 }
 
+                self.biometricalStatus = BiometricalStatus.notShown
                 self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:false, handler: hanlder)
                 viewController.present(self.passcodeViewController!, animated: true, completion: nil)
             } else {
-                self.passcodeViewController?.showOverlay()
+                if self.biometricalStatus != BiometricalStatus.shown,
+                    self.biometricalStatus != BiometricalStatus.success {
+                    self.passcodeViewController?.showOverlay()
+                }
             }
         }
     }
@@ -78,11 +82,14 @@ class UnlockPasscodeManager: NSObject {
             if self.passcodeViewController != nil {
                 self.passcodeViewController?.dismiss(animated: true, completion: nil)
                 self.passcodeViewController = nil
-                self.userDefaults?.removeObject(forKey: DateHomeButtonPressedKey)
+                self.userDefaults.removeObject(forKey: DateHomeButtonPressedKey)
             }
         } else {
             hideOverlay()
-            self.authenticateUser(hanlder: self.hanlder!)
+            if self.biometricalStatus == BiometricalStatus.notShown,
+                isBiometricalActivated() {
+                self.authenticateUserWithBiometrical()
+            }
         }
     }
 
@@ -100,18 +107,22 @@ class UnlockPasscodeManager: NSObject {
         return output
     }
 
+    private func isBiometricalActivated() -> Bool {
+        return userDefaults.bool(forKey: SecuritySettingsBiometricalKey)
+    }
+
     private func isNeccesaryShowPasscode() -> Bool {
 
         var output: Bool = true
 
         if isPasscodeActivated() {
-            if let dateData = self.userDefaults?.data(forKey: DateHomeButtonPressedKey) {
+            if let dateData = self.userDefaults.data(forKey: DateHomeButtonPressedKey) {
                 if let date = NSKeyedUnarchiver.unarchiveObject(with: dateData) as? Date {
 
                     let elapsedSeconds = Date().timeIntervalSince(date)
-                    let minSecondsToAsk = self.userDefaults?.integer(forKey: SecuritySettingsFrequencyKey)
+                    let minSecondsToAsk = self.userDefaults.integer(forKey: SecuritySettingsFrequencyKey)
 
-                    if Int(elapsedSeconds) < minSecondsToAsk! {
+                    if Int(elapsedSeconds) < minSecondsToAsk {
                         output = false
                     }
                 }
@@ -122,17 +133,17 @@ class UnlockPasscodeManager: NSObject {
 
         return output
     }
-    
+
     func storeDateHomeButtonPressed() {
         if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil,
-            self.userDefaults?.data(forKey: DateHomeButtonPressedKey) == nil {
-            self.userDefaults?.set(NSKeyedArchiver.archivedData(withRootObject: Date()), forKey: DateHomeButtonPressedKey)
+            self.userDefaults.data(forKey: DateHomeButtonPressedKey) == nil {
+            self.userDefaults.set(NSKeyedArchiver.archivedData(withRootObject: Date()), forKey: DateHomeButtonPressedKey)
         }
     }
 
     // MARK: - Biometrical
 
-    public func authenticateUser(hanlder: @escaping PasscodeHandler) {
+    private func authenticateUserWithBiometrical() {
         // Get the local authentication context.
         let context = LAContext()
 
@@ -144,30 +155,15 @@ class UnlockPasscodeManager: NSObject {
 
         // Check if the device can evaluate the policy.
         if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            self.biometricalStatus = BiometricalStatus.shown
             context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: reasonString) { (success, error) in
                 if success {
-                    hanlder()
+                    self.biometricalStatus = BiometricalStatus.success
+                    self.hanlder!()
                 } else {
-                    
+                    self.biometricalStatus = BiometricalStatus.error
                     if let error = error {
-                        switch error {
-                        case LAError.authenticationFailed:  // iOS 8.0+
-                            print("Authentication failed")
-                        case LAError.passcodeNotSet:        // iOS 8.0+
-                            print("Passcode not set")
-                        case LAError.systemCancel:          // iOS 8.0+
-                            print("Authentication was canceled by system")
-                        case LAError.userCancel:            // iOS 9.0+
-                            print("Authentication was canceled by the user")
-                        case LAError.biometryNotEnrolled:   // iOS 11.0+
-                            print("Authentication could not start because you haven't enrolled either Touch ID or Face ID on your device.")
-                        case LAError.biometryNotAvailable:  // iOS 11.0+
-                            print("Authentication could not start because Touch ID / Face ID is not available.")
-                        case LAError.userFallback:          // iOS 8.0+
-                            print("User tapped the fallback button (Enter Password).")
-                        default:
-                            print(error.localizedDescription)
-                        }
+                        Log.log("Biometrical login error: \(String(error.localizedDescription))")
                     }
                 }
             }
