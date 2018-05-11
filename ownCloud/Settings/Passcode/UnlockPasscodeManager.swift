@@ -147,6 +147,28 @@ class UnlockPasscodeManager: NSObject {
             context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: reasonString) { (success, error) in
                 if success {
                     hanlder()
+                } else {
+                    
+                    if let error = error {
+                        switch error {
+                        case LAError.authenticationFailed:  // iOS 8.0+
+                            print("Authentication failed")
+                        case LAError.passcodeNotSet:        // iOS 8.0+
+                            print("Passcode not set")
+                        case LAError.systemCancel:          // iOS 8.0+
+                            print("Authentication was canceled by system")
+                        case LAError.userCancel:            // iOS 9.0+
+                            print("Authentication was canceled by the user")
+                        case LAError.biometryNotEnrolled:   // iOS 11.0+
+                            print("Authentication could not start because you haven't enrolled either Touch ID or Face ID on your device.")
+                        case LAError.biometryNotAvailable:  // iOS 11.0+
+                            print("Authentication could not start because Touch ID / Face ID is not available.")
+                        case LAError.userFallback:          // iOS 8.0+
+                            print("User tapped the fallback button (Enter Password).")
+                        default:
+                            print(error.localizedDescription)
+                        }
+                    }
                 }
             }
         }
