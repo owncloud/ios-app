@@ -14,13 +14,22 @@ let DateHomeButtonPressedKey = "date-home-button-pressed"
 
 class UnlockPasscodeManager: NSObject {
 
+    // MARK: - Biometrical status
+    enum BiometricalStatus {
+        case notShown
+        case shown
+        case error
+    }
+
     private var passcodeViewController: PasscodeViewController?
     private var userDefaults: UserDefaults?
+    private var biometricalStatus:BiometricalStatus?
 
     var hanlder:PasscodeHandler?
 
     static var sharedUnlockPasscodeManager : UnlockPasscodeManager = {
         let sharedInstance = UnlockPasscodeManager()
+        let biometricalStatus = BiometricalStatus.notShown
         return (sharedInstance)
     }()
 
