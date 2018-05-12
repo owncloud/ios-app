@@ -11,6 +11,7 @@ platform :ios do
      build_app(scheme: "ownCloud") # Build scheme
      changelog_from_git_commits # Generate the changelog based on last commits
   end
+end
 
 platform :ios do
   desc "Push a new beta build to TestFlight"
