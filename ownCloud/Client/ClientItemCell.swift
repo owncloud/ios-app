@@ -24,6 +24,8 @@ class ClientItemCell: ThemeTableViewCell {
 	var detailLabel : UILabel = UILabel()
 	var iconView : UIImageView = UIImageView()
 
+	var activeThumbnailRequestProgress : Progress?
+
 	weak var core : OCCore?
 
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -83,6 +85,12 @@ class ClientItemCell: ThemeTableViewCell {
 		let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
 		var iconImage : UIImage?
 
+		// Cancel any already active request
+		if activeThumbnailRequestProgress != nil {
+			NSLog("Cancelled \(self.item?.name) for \(item.name)")
+			activeThumbnailRequestProgress?.cancel()
+		}
+
 		iconImage = item.icon(fitInSize: iconSize)
 
 		if item.type == .collection {
@@ -111,8 +119,12 @@ class ClientItemCell: ThemeTableViewCell {
 			if let thumbnail = item.thumbnail {
 				_ = displayThumbnail(thumbnail)
 			} else {
-				_ = core?.retrieveThumbnail(for: item, maximumSize: thumbnailSize, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
+				activeThumbnailRequestProgress = core?.retrieveThumbnail(for: item, maximumSize: thumbnailSize, scale: 0, retrieveHandler: { [weak self] (_, _, _, thumbnail, _, progress) in
 					_ = displayThumbnail(thumbnail)
+
+					if self?.activeThumbnailRequestProgress === progress {
+						self?.activeThumbnailRequestProgress = nil
+					}
 				})
 			}
 		}
