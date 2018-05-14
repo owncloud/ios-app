@@ -218,9 +218,15 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ClientItemCell
+		let newItem = self.items![indexPath.row]
 
 		cell?.core = self.core
-		cell?.item = self.items![indexPath.row]
+
+		// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
+		// Make sure we don't request the thumbnail multiple times in that case.
+		if cell?.item?.versionIdentifier != newItem.versionIdentifier {
+			cell?.item = newItem
+		}
 
 		return cell!
 	}
