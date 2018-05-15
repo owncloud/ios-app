@@ -98,7 +98,7 @@
 /* Passcode Messages */
 
 "Enter your code" = "Enter your code";
-"Re-enter your code" = "Re-enter your code";
+"Repeat code" = "Repeat code";
 "Delete code" = "Delete code";
 "The entered codes are not the same" = "The entered codes are not the same";
 "Incorrect code" = "Incorrect code";

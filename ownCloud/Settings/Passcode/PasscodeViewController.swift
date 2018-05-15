@@ -127,7 +127,7 @@ class PasscodeViewController: UIViewController, Themeable {
             messageText = "Enter your code".localized
 
         case .addPasscodeSecondStep?:
-            messageText = "Re-enter your code".localized
+            messageText = "Repeat code".localized
 
         case .unlockPasscode?:
             messageText = "Enter your code".localized
