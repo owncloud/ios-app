@@ -89,7 +89,6 @@ class PasscodeViewController: UIViewController, Themeable {
         super.viewDidLoad()
 
         self.loadUI()
-        UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
     }
 
     // MARK: - Rotation Control
