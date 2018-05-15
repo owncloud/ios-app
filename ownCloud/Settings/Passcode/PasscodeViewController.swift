@@ -23,7 +23,7 @@ enum PasscodeInterfaceMode {
     case unlockPasscodeError
     case deletePasscode
     case deletePasscodeError
-    case addPasscodeFirstSetpAfterErrorOnSecond
+    case addPasscodeFirstStepAfterErrorOnSecond
 }
 
 class PasscodeViewController: UIViewController, Themeable {
@@ -78,10 +78,6 @@ class PasscodeViewController: UIViewController, Themeable {
         Theme.shared.register(client: self)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super .viewDidAppear(animated)
-    }
-
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
@@ -93,11 +89,6 @@ class PasscodeViewController: UIViewController, Themeable {
 
         self.loadUI()
         UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     // MARK: - Rotation Control
@@ -155,7 +146,7 @@ class PasscodeViewController: UIViewController, Themeable {
             self.messageLabel?.text = "Delete code".localized
             self.errorMessageLabel?.text = "Incorrect code".localized
 
-        case .addPasscodeFirstSetpAfterErrorOnSecond?:
+        case .addPasscodeFirstStepAfterErrorOnSecond?:
             self.messageLabel?.text = "Insert your code".localized
             self.errorMessageLabel?.text = "The insterted codes are not the same".localized
 
@@ -204,7 +195,7 @@ class PasscodeViewController: UIViewController, Themeable {
         if passcodeValue.count >= numberDigitsPasscode {
 
             switch self.passcodeMode {
-            case .addPasscodeFirstStep?, .addPasscodeFirstSetpAfterErrorOnSecond?:
+            case .addPasscodeFirstStep?, .addPasscodeFirstStepAfterErrorOnSecond?:
                 self.passcodeMode = .addPasscodeSecondStep
                 self.passcodeFromFirstStep = passcodeValue
                 self.passcodeValueTextField?.text = nil
@@ -216,7 +207,7 @@ class PasscodeViewController: UIViewController, Themeable {
                     OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcodeValue), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
                     self.dismiss(animated: true, completion: self.handler!)
                 } else {
-                    self.passcodeMode = .addPasscodeFirstSetpAfterErrorOnSecond
+                    self.passcodeMode = .addPasscodeFirstStepAfterErrorOnSecond
                     self.passcodeFromFirstStep = nil
                     self.passcodeValueTextField?.text = nil
                     self.updateUI()
