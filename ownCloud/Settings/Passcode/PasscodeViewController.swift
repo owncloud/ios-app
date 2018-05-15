@@ -147,7 +147,7 @@ class PasscodeViewController: UIViewController, Themeable {
 
         case .addPasscodeFirstStepAfterErrorOnSecond?:
             messageText = "Enter code".localized
-            errorText = "The entered codes are not the same".localized
+            errorText = "The entered codes are different".localized
 
         default:
             break
