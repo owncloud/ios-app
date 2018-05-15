@@ -119,40 +119,42 @@ class PasscodeViewController: UIViewController, Themeable {
 
     private func updateUI() {
 
+        var messageText : String?
+        var errorText : String? = ""
+
         switch self.passcodeMode {
         case .addPasscodeFirstStep?:
-            self.messageLabel?.text = "Insert your code".localized
-            self.errorMessageLabel?.text = ""
+            messageText = "Insert your code".localized
 
         case .addPasscodeSecondStep?:
-            self.messageLabel?.text = "Reinsert your code".localized
-            self.errorMessageLabel?.text = ""
+            messageText = "Reinsert your code".localized
 
         case .unlockPasscode?:
-            self.messageLabel?.text = "Insert your code".localized
-            self.errorMessageLabel?.text = ""
+            messageText = "Insert your code".localized
             self.cancelButton?.isHidden = true
 
         case .unlockPasscodeError?:
-            self.messageLabel?.text = "Insert your code".localized
-            self.errorMessageLabel?.text = "Incorrect code".localized
+            messageText = "Insert your code".localized
+            errorText = "Incorrect code".localized
             self.cancelButton?.isHidden = true
 
         case .deletePasscode?:
-            self.messageLabel?.text = "Delete code".localized
-            self.errorMessageLabel?.text = ""
+            messageText = "Delete code".localized
 
         case .deletePasscodeError?:
-            self.messageLabel?.text = "Delete code".localized
-            self.errorMessageLabel?.text = "Incorrect code".localized
+            messageText = "Delete code".localized
+            errorText = "Incorrect code".localized
 
         case .addPasscodeFirstStepAfterErrorOnSecond?:
-            self.messageLabel?.text = "Insert your code".localized
-            self.errorMessageLabel?.text = "The insterted codes are not the same".localized
+            messageText = "Insert your code".localized
+            errorText = "The insterted codes are not the same".localized
 
         default:
             break
         }
+
+        self.messageLabel?.text = messageText
+        self.errorMessageLabel?.text = errorText
     }
 
     func hideOverlay() {
