@@ -23,6 +23,7 @@ let DateHomeButtonPressedKey = "date-home-button-pressed"
 
 class UnlockPasscodeManager: NSObject {
 
+    // MARK: - Utils
     private func isPasscodeActivated() -> Bool {
         return (OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil)
     }
@@ -49,13 +50,14 @@ class UnlockPasscodeManager: NSObject {
         return output
     }
 
+    // MARK: Global vars
+    
     private var passcodeViewController: PasscodeViewController?
     private var userDefaults: UserDefaults?
 
-    static var sharedUnlockPasscodeManager : UnlockPasscodeManager = {
-        let sharedInstance = UnlockPasscodeManager()
-        return (sharedInstance)
-    }()
+    // MARK: - Init
+
+    static var sharedUnlockPasscodeManager = UnlockPasscodeManager()
 
     public override init() {
         self.userDefaults = UserDefaults.standard
@@ -70,7 +72,7 @@ class UnlockPasscodeManager: NSObject {
         if isPasscodeActivated() {
 
             storeDateHomeButtonPressed()
-            
+
             if self.passcodeViewController == nil {
                 self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:false, completionHandler: {
                     self.userDefaults?.removeObject(forKey: DateHomeButtonPressedKey)
