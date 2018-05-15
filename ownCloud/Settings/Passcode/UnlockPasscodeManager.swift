@@ -53,12 +53,6 @@ class UnlockPasscodeManager: NSObject {
 
     // MARK: - Interface updates
 
-    private func hideOverlay() {
-        if self.passcodeViewController != nil {
-            self.passcodeViewController?.hideOverlay()
-        }
-    }
-
     func dismissAskedPasscodeIfDateToAskIsLower() {
 
         if !isNeccesaryShowPasscode() {
@@ -68,7 +62,7 @@ class UnlockPasscodeManager: NSObject {
                 self.userDefaults?.removeObject(forKey: DateHomeButtonPressedKey)
             }
         } else {
-            hideOverlay()
+            self.passcodeViewController?.hideOverlay()
         }
     }
 
