@@ -17,6 +17,28 @@ class UnlockPasscodeManager: NSObject {
         return (OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil)
     }
 
+    private func shouldBeLocked() -> Bool {
+        var output: Bool = true
+
+        if isPasscodeActivated() {
+            if let dateData = self.userDefaults?.data(forKey: DateHomeButtonPressedKey) {
+                if let date = NSKeyedUnarchiver.unarchiveObject(with: dateData) as? Date {
+
+                    let elapsedSeconds = Date().timeIntervalSince(date)
+                    let minSecondsToAsk = self.userDefaults?.integer(forKey: SecuritySettingsFrequencyKey)
+
+                    if Int(elapsedSeconds) < minSecondsToAsk! {
+                        output = false
+                    }
+                }
+            }
+        } else {
+            output = false
+        }
+
+        return output
+    }
+
     private var passcodeViewController: PasscodeViewController?
     private var userDefaults: UserDefaults?
 
@@ -59,42 +81,19 @@ class UnlockPasscodeManager: NSObject {
 
     func dismissAskedPasscodeIfDateToAskIsLower() {
 
-        if !isNeccesaryShowPasscode() {
+        if shouldBeLocked() {
+            self.passcodeViewController?.hideOverlay()
+        } else {
             if self.passcodeViewController != nil {
                 self.passcodeViewController?.dismiss(animated: true, completion: nil)
                 self.passcodeViewController = nil
                 self.userDefaults?.removeObject(forKey: DateHomeButtonPressedKey)
             }
-        } else {
-            self.passcodeViewController?.hideOverlay()
         }
     }
 
     // MARK: - Utils
 
-    private func isNeccesaryShowPasscode() -> Bool {
-
-        var output: Bool = true
-
-        if isPasscodeActivated() {
-            if let dateData = self.userDefaults?.data(forKey: DateHomeButtonPressedKey) {
-                if let date = NSKeyedUnarchiver.unarchiveObject(with: dateData) as? Date {
-
-                    let elapsedSeconds = Date().timeIntervalSince(date)
-                    let minSecondsToAsk = self.userDefaults?.integer(forKey: SecuritySettingsFrequencyKey)
-
-                    if Int(elapsedSeconds) < minSecondsToAsk! {
-                        output = false
-                    }
-                }
-            }
-        } else {
-            output = false
-        }
-
-        return output
-    }
-    
     func storeDateHomeButtonPressed() {
         if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil,
             self.userDefaults?.data(forKey: DateHomeButtonPressedKey) == nil {
