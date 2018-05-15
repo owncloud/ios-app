@@ -127,7 +127,7 @@ class SecuritySettingsSection: SettingsSection {
         passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
             if let passcodeSwitch = sender as? UISwitch {
 
-                let handler:PasscodeHandler = {
+                let handler:CompletionHandler = {
                     if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
                         //Activated
                         self.isPasscodeSecurityEnabled = true
@@ -148,7 +148,7 @@ class SecuritySettingsSection: SettingsSection {
                 let passcodeViewController:PasscodeViewController = PasscodeViewController(
                     mode: mode!,
                     hiddenOverlay:true,
-                    handler: handler)
+                    completionHandler: handler)
 
                 self.viewController?.navigationController?.visibleViewController?.present(passcodeViewController, animated: true, completion: nil)
             }

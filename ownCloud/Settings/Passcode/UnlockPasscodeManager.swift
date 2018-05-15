@@ -36,7 +36,7 @@ class UnlockPasscodeManager: NSObject {
             storeDateHomeButtonPressed()
 
             if self.passcodeViewController == nil {
-                self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:false, handler: {
+                self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:false, completionHandler: {
                     DispatchQueue.main.async {
                         self.userDefaults?.removeObject(forKey: DateHomeButtonPressedKey)
                         viewController.dismiss(animated: true, completion: nil)

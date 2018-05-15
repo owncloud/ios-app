@@ -9,7 +9,7 @@
 import UIKit
 import ownCloudSDK
 
-typealias PasscodeHandler = (() -> Void)
+typealias CompletionHandler = (() -> Void)
 
 let passcodeKeychainAccount = "passcode-keychain-account"
 let passcodeKeychainPath = "passcode-keychain-path"
@@ -30,7 +30,7 @@ class PasscodeViewController: UIViewController, Themeable {
     let passcodeLength = 4
 
     // MARK: - Handler
-    var handler: PasscodeHandler?
+    var completionHandler: CompletionHandler?
 
     // MARK: - Overlay
     var passcodeFromFirstStep: String?
@@ -61,12 +61,12 @@ class PasscodeViewController: UIViewController, Themeable {
     @IBOutlet weak var cancelButton: ThemeButton?
 
     // MARK: - Initalization view
-    init(mode: PasscodeInterfaceMode, hiddenOverlay: Bool?, handler: PasscodeHandler?) {
+    init(mode: PasscodeInterfaceMode, hiddenOverlay: Bool, completionHandler: CompletionHandler?) {
         super.init(nibName: "PasscodeViewController", bundle: nil)
         self.passcodeFromFirstStep = nil
         self.passcodeMode = mode
         self.hiddenOverlay = hiddenOverlay
-        self.handler = handler
+        self.completionHandler = completionHandler
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -178,7 +178,7 @@ class PasscodeViewController: UIViewController, Themeable {
     // MARK: - Actions
 
     @IBAction func cancelButton(sender: UIButton) {
-        self.dismiss(animated: true, completion: self.handler!)
+        self.dismiss(animated: true, completion: self.completionHandler!)
     }
 
     @IBAction func numberButton(sender: UIButton) {
@@ -208,7 +208,7 @@ class PasscodeViewController: UIViewController, Themeable {
                 if passcodeFromFirstStep == passcodeValue {
                     //Save to keychain
                     OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcodeValue), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                    self.dismiss(animated: true, completion: self.handler!)
+                    self.dismiss(animated: true, completion: self.completionHandler!)
                 } else {
                     self.passcodeMode = .addPasscodeFirstStepAfterErrorOnSecond
                     self.passcodeFromFirstStep = nil
@@ -222,7 +222,7 @@ class PasscodeViewController: UIViewController, Themeable {
                 let passcodeFromKeychain = NSKeyedUnarchiver.unarchiveObject(with: passcodeData!) as? String
 
                 if passcodeValue == passcodeFromKeychain {
-                    self.handler!()
+                    self.completionHandler!()
                 } else {
                     self.passcodeMode = .unlockPasscodeError
                     self.passcodeValueTextField?.text = nil
@@ -236,7 +236,7 @@ class PasscodeViewController: UIViewController, Themeable {
 
                 if passcodeValue == passcodeFromKeychain {
                     OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                    self.dismiss(animated: true, completion: self.handler!)
+                    self.dismiss(animated: true, completion: self.completionHandler!)
                 } else {
                     self.passcodeMode = .deletePasscodeError
                     self.passcodeValueTextField?.text = nil
