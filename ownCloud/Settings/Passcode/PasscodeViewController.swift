@@ -98,7 +98,16 @@ class PasscodeViewController: UIViewController, Themeable {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.loadUI()
+        //Overlay
+        Theme.shared.add(tvgResourceFor: "owncloud-logo")
+        logoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
+        self.overlayView.isHidden = self.hiddenOverlay!
+
+        self.cancelButton?.titleLabel?.text = "Cancel".localized
+
+        self.setIdentifiers()
+
+        self.updateUI()
     }
 
     // MARK: - Rotation Control
@@ -112,20 +121,6 @@ class PasscodeViewController: UIViewController, Themeable {
     }
 
     // MARK: - User Interface
-
-    private func loadUI() {
-
-        //Overlay
-        Theme.shared.add(tvgResourceFor: "owncloud-logo")
-        logoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
-        self.overlayView.isHidden = self.hiddenOverlay!
-
-        self.cancelButton?.titleLabel?.text = "Cancel".localized
-
-        self.setIdentifiers()
-
-        self.updateUI()
-    }
 
     private func updateUI() {
 
