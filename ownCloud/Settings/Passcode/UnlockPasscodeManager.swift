@@ -14,11 +14,7 @@ let DateHomeButtonPressedKey = "date-home-button-pressed"
 class UnlockPasscodeManager: NSObject {
 
     private func isPasscodeActivated() -> Bool {
-        if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
-            return true
-        } else {
-            return false
-        }
+        return (OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil)
     }
 
     private var passcodeViewController: PasscodeViewController?
