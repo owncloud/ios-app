@@ -87,7 +87,6 @@ class ClientItemCell: ThemeTableViewCell {
 
 		// Cancel any already active request
 		if activeThumbnailRequestProgress != nil {
-			NSLog("Cancelled \(self.item?.name) for \(item.name)")
 			activeThumbnailRequestProgress?.cancel()
 		}
 
@@ -103,24 +102,22 @@ class ClientItemCell: ThemeTableViewCell {
 
 		if item.thumbnailAvailability != .none {
 			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				thumbnail?.requestImage(for: thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
-					if error == nil {
-						DispatchQueue.main.async {
-							if image != nil {
-								if self.item?.versionIdentifier == thumbnail?.versionIdentifier {
-									self.iconView.image = image
-								}
-							}
+				_ = thumbnail?.requestImage(for: thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
+					if error == nil,
+					   image != nil,
+					   self.item?.versionIdentifier == thumbnail?.versionIdentifier {
+						OnMainThread {
+							self.iconView.image = image
 						}
 					}
 				})
 			}
 
 			if let thumbnail = item.thumbnail {
-				_ = displayThumbnail(thumbnail)
+				displayThumbnail(thumbnail)
 			} else {
 				activeThumbnailRequestProgress = core?.retrieveThumbnail(for: item, maximumSize: thumbnailSize, scale: 0, retrieveHandler: { [weak self] (_, _, _, thumbnail, _, progress) in
-					_ = displayThumbnail(thumbnail)
+					displayThumbnail(thumbnail)
 
 					if self?.activeThumbnailRequestProgress === progress {
 						self?.activeThumbnailRequestProgress = nil
