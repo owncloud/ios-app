@@ -11,10 +11,6 @@ import ownCloudSDK
 
 typealias PasscodeHandler = (() -> Void)
 
-let numberDigitsPasscode = 4
-let passcodeKeychainAccount = "passcode-keychain-account"
-let passcodeKeychainPath = "passcode-keychain-path"
-
 // MARK: - Interface view mode
 enum PasscodeInterfaceMode {
     case addPasscodeFirstStep
@@ -27,6 +23,10 @@ enum PasscodeInterfaceMode {
 }
 
 class PasscodeViewController: UIViewController, Themeable {
+
+    let passcodeLength = 4
+    let passcodeKeychainAccount = "passcode-keychain-account"
+    let passcodeKeychainPath = "passcode-keychain-path"
 
     // MARK: - Handler
     var handler: PasscodeHandler?
@@ -187,14 +187,14 @@ class PasscodeViewController: UIViewController, Themeable {
             self.passcodeValueTextField?.text = String(sender.tag)
         }
 
-        self.passcodeValueHasChange(passcodeValue: (self.passcodeValueTextField?.text)!)
+        self.passcodeValueChanged(passcodeValue: (self.passcodeValueTextField?.text)!)
     }
 
     // MARK: - Passcode Flow
 
-    private func passcodeValueHasChange(passcodeValue: String) {
+    private func passcodeValueChanged(passcodeValue: String) {
 
-        if passcodeValue.count >= numberDigitsPasscode {
+        if passcodeValue.count >= passcodeLength {
 
             switch self.passcodeMode {
             case .addPasscodeFirstStep?, .addPasscodeFirstStepAfterErrorOnSecond?:
