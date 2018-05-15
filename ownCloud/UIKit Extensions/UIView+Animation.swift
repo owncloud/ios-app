@@ -24,7 +24,6 @@ extension UIView {
 
 		animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
 		animation.duration = duration
-		// animation.values = [ -amplitude, amplitude, -(amplitude*2/3), (amplitude*2/3), -(amplitude*1/3), (amplitude*1/3), 0 ]
 		animation.values = [ 0, -amplitude, amplitude, -amplitude, amplitude, -amplitude, amplitude, 0 ]
 
 		self.layer.add(animation, forKey: "shakeHorizontally")

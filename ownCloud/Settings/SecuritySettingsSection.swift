@@ -30,18 +30,18 @@ public let SecuritySettingsBiometricalKey: String = "security-settings-useBiomet
 private let SecuritySectionIdentifier: String = "settings-security-section"
 
 // MARK: - SecurityAskfrequency
-enum SecurityAskFrequency: Int {
-    case allways = 0
+@objc enum SecurityAskFrequency: Int {
+    case always = 0
     case oneMinute = 60
     case fiveMinutes = 300
     case thirtyMinutes = 1800
 
-    static let all = [allways, oneMinute, fiveMinutes, thirtyMinutes]
+    static let all = [always, oneMinute, fiveMinutes, thirtyMinutes]
 
     func toString() -> String {
         switch self {
-        case .allways:
-            return "Allways".localized
+        case .always:
+            return "Always".localized
         case .oneMinute:
             return "1 minute".localized
         case .fiveMinutes:
@@ -103,22 +103,24 @@ class SecuritySettingsSection: SettingsSection {
         frequencyRow = StaticTableViewRow(subtitleRowWithAction: { (row, _) in
             if let vc = self.viewController {
 
-                // Creation of the frequency picker.
-                let alert = UIAlertController(title: "Select the frequency that security should be showed".localized, message: nil, preferredStyle: .actionSheet)
+                let newVC = StaticTableViewController(style: .grouped)
+                let frequencySection = StaticTableViewSection(headerTitle: "Select the frequency that security should be showed".localized, footerTitle: nil)
+
+                var radioButtons: [[String : Any]] = []
 
                 for frequency in SecurityAskFrequency.all {
-                    let action = UIAlertAction(title: frequency.toString(), style: .default, handler: { (_) in
-                        self.frequency = frequency
-                        row.cell?.detailTextLabel?.text = frequency.toString()
-                    })
-
-                    alert.addAction(action)
+                    radioButtons.append([frequency.toString() : frequency.rawValue])
                 }
 
-                let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
-                alert.addAction(cancelAction)
+                frequencySection.add(radioGroupWithArrayOfLabelValueDictionaries: radioButtons, radioAction: { (row, _) in
+                    if let rawFrequency = row.value! as? Int, let frequency = SecurityAskFrequency.init(rawValue: rawFrequency) {
+                        self.frequency = frequency
+                        self.frequencyRow?.cell?.detailTextLabel?.text = frequency.toString()
+                    }
+                }, groupIdentifier: "frequency-group-identifier", selectedValue: SecurityAskFrequency.always.rawValue, animated: true)
 
-                vc.present(alert, animated: true)
+                newVC.addSection(frequencySection)
+                vc.navigationController?.pushViewController(newVC, animated: true)
             }
 
         }, title: "Frequency".localized, subtitle: frequency.toString(), accessoryType: .disclosureIndicator)
@@ -151,6 +153,8 @@ class SecuritySettingsSection: SettingsSection {
                     completionHandler: handler)
 
                 self.viewController?.navigationController?.visibleViewController?.present(passcodeViewController, animated: true, completion: nil)
+                self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
+                self.updateUI()
             }
         }, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled)
 
@@ -188,7 +192,7 @@ class SecuritySettingsSection: SettingsSection {
         } else {
 
             var rowsToRemove: [StaticTableViewRow] = []
-            frequencyRow?.cell?.detailTextLabel?.text = SecurityAskFrequency.allways.toString()
+            frequencyRow?.cell?.detailTextLabel?.text = SecurityAskFrequency.always.toString()
             rowsToRemove.append(frequencyRow!)
 
             if biometricalRow != nil {

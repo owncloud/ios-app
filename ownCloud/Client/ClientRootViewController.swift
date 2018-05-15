@@ -143,12 +143,10 @@ extension ClientRootViewController : OCCoreDelegate {
 							let editBookmark = self.bookmark
 
 							self.closeClient(completion: {
-								if presentingViewController != nil {
-									if let serverListNavigationController = presentingViewController as? UINavigationController {
-										if let serverListTableViewController = serverListNavigationController.topViewController as? ServerListTableViewController {
-											serverListTableViewController.showBookmarkUI(edit: editBookmark)
-										}
-									}
+								if presentingViewController != nil,
+								   let serverListNavigationController = presentingViewController as? UINavigationController,
+								   let serverListTableViewController = serverListNavigationController.topViewController as? ServerListTableViewController {
+									serverListTableViewController.showBookmarkUI(edit: editBookmark)
 								}
 							})
 						}))

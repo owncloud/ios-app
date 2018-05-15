@@ -31,6 +31,9 @@
 "Contacting server…" = "Contacting server…";
 "Authenticating…" = "Authenticating…";
 
+"Missing hostname" = "Missing hostname";
+"The entered URL does not include a hostname." = "The entered URL does not include a hostname.";
+
 /* Client */
 "Browse" = "Browse";
 "Disconnect" = "Disconnect";
@@ -88,7 +91,7 @@
 "Privacy Policy" = "Privacy Policy";
 "Video upload path" = "Video upload path";
 "Photo upload path" = "Photo upload path";
-"Allways" = "Allways";
+"Always" = "Always";
 "1 minute" = "1 minute";
 "5 minutes" = "5 minutes";
 "30 minutes" = "30 minutes";

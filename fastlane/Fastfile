@@ -1,6 +1,6 @@
 # This file contains the fastlane.tools configuration
 
-update_fastlane # fastlane automatically update itself
+# update_fastlane # fastlane automatically update itself
 
 default_platform(:ios)
 
