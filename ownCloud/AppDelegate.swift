@@ -24,7 +24,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
 	var serverListTableViewController: ServerListTableViewController?
-    var orientationLock = UIInterfaceOrientationMask.all
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
@@ -41,8 +40,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
 
         UnlockPasscodeManager.sharedUnlockPasscodeManager.showPasscodeIfNeeded(viewController: (window?.rootViewController)!, hiddenOverlay: false)
-
-        self.window?.makeKeyAndVisible()
 
 		return true
 	}
