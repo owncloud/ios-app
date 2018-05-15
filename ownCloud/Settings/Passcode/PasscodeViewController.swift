@@ -11,6 +11,9 @@ import ownCloudSDK
 
 typealias PasscodeHandler = (() -> Void)
 
+let passcodeKeychainAccount = "passcode-keychain-account"
+let passcodeKeychainPath = "passcode-keychain-path"
+
 // MARK: - Interface view mode
 enum PasscodeInterfaceMode {
     case addPasscodeFirstStep
@@ -25,8 +28,6 @@ enum PasscodeInterfaceMode {
 class PasscodeViewController: UIViewController, Themeable {
 
     let passcodeLength = 4
-    let passcodeKeychainAccount = "passcode-keychain-account"
-    let passcodeKeychainPath = "passcode-keychain-path"
 
     // MARK: - Handler
     var handler: PasscodeHandler?
