@@ -124,17 +124,17 @@ class PasscodeViewController: UIViewController, Themeable {
 
         switch self.passcodeMode {
         case .addPasscodeFirstStep?:
-            messageText = "Enter your code".localized
+            messageText = "Enter code".localized
 
         case .addPasscodeSecondStep?:
             messageText = "Repeat code".localized
 
         case .unlockPasscode?:
-            messageText = "Enter your code".localized
+            messageText = "Enter code".localized
             self.cancelButton?.isHidden = true
 
         case .unlockPasscodeError?:
-            messageText = "Enter your code".localized
+            messageText = "Enter code".localized
             errorText = "Incorrect code".localized
             self.cancelButton?.isHidden = true
 
@@ -146,7 +146,7 @@ class PasscodeViewController: UIViewController, Themeable {
             errorText = "Incorrect code".localized
 
         case .addPasscodeFirstStepAfterErrorOnSecond?:
-            messageText = "Enter your code".localized
+            messageText = "Enter code".localized
             errorText = "The entered codes are not the same".localized
 
         default:
