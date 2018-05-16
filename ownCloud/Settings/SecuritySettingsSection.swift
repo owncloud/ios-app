@@ -129,30 +129,19 @@ class SecuritySettingsSection: SettingsSection {
         passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
             if let passcodeSwitch = sender as? UISwitch {
 
-                let handler:CompletionHandler = {
-                    if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil {
-                        //Activated
-                        self.isPasscodeSecurityEnabled = true
-                    } else {
-                        //Cancelled
-                        self.isPasscodeSecurityEnabled = false
-                    }
-                }
+                //Show the passcode UI
+                UnlockPasscodeManager.sharedUnlockPasscodeManager.showAddOrEditPasscode(
+                    viewController: self.viewController?.navigationController?.visibleViewController,
+                    completionHandler: {
+                        if UnlockPasscodeManager.sharedUnlockPasscodeManager.isPasscodeActivated {
+                            //Activated
+                            self.isPasscodeSecurityEnabled = true
+                        } else {
+                            //Cancelled
+                            self.isPasscodeSecurityEnabled = false
+                        }
+                })
 
-                var mode:PasscodeInterfaceMode?
-
-                if passcodeSwitch.isOn {
-                    mode = PasscodeInterfaceMode.addPasscodeFirstStep
-                } else {
-                    mode = PasscodeInterfaceMode.deletePasscode
-                }
-
-                let passcodeViewController:PasscodeViewController = PasscodeViewController(
-                    mode: mode!,
-                    hiddenOverlay:true,
-                    completionHandler: handler)
-
-                self.viewController?.navigationController?.visibleViewController?.present(passcodeViewController, animated: true, completion: nil)
                 self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
                 self.updateUI()
             }

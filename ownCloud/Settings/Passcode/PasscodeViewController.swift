@@ -17,34 +17,12 @@
  */
 
 import UIKit
-import ownCloudSDK
 
 typealias CompletionHandler = (() -> Void)
 
-let passcodeKeychainAccount = "passcode-keychain-account"
-let passcodeKeychainPath = "passcode-keychain-path"
-
-// MARK: - Interface view mode
-enum PasscodeInterfaceMode {
-    case addPasscodeFirstStep
-    case addPasscodeSecondStep
-    case unlockPasscode
-    case unlockPasscodeError
-    case deletePasscode
-    case deletePasscodeError
-    case addPasscodeFirstStepAfterErrorOnSecond
-}
-
 class PasscodeViewController: UIViewController, Themeable {
 
-    let passcodeLength = 4
-
-    // MARK: - Handler
-    var completionHandler: CompletionHandler?
-
     // MARK: - Overlay
-    var passcodeFromFirstStep: String?
-    var passcodeMode: PasscodeInterfaceMode?
     var hiddenOverlay: Bool?
 
     // MARK: - Overlay view
@@ -71,12 +49,9 @@ class PasscodeViewController: UIViewController, Themeable {
     @IBOutlet weak var cancelButton: ThemeButton?
 
     // MARK: - Initalization view
-    init(mode: PasscodeInterfaceMode, hiddenOverlay: Bool, completionHandler: CompletionHandler?) {
+    init(hiddenOverlay: Bool) {
         super.init(nibName: "PasscodeViewController", bundle: nil)
-        self.passcodeFromFirstStep = nil
-        self.passcodeMode = mode
         self.hiddenOverlay = hiddenOverlay
-        self.completionHandler = completionHandler
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -106,8 +81,6 @@ class PasscodeViewController: UIViewController, Themeable {
         self.cancelButton?.titleLabel?.text = "Cancel".localized
 
         self.setIdentifiers()
-
-        self.updateUI()
     }
 
     // MARK: - Rotation Control
@@ -121,46 +94,6 @@ class PasscodeViewController: UIViewController, Themeable {
     }
 
     // MARK: - User Interface
-
-    private func updateUI() {
-
-        var messageText : String?
-        var errorText : String? = ""
-
-        switch self.passcodeMode {
-        case .addPasscodeFirstStep?:
-            messageText = "Enter code".localized
-
-        case .addPasscodeSecondStep?:
-            messageText = "Repeat code".localized
-
-        case .unlockPasscode?:
-            messageText = "Enter code".localized
-            self.cancelButton?.isHidden = true
-
-        case .unlockPasscodeError?:
-            messageText = "Enter code".localized
-            errorText = "Incorrect code".localized
-            self.cancelButton?.isHidden = true
-
-        case .deletePasscode?:
-            messageText = "Delete code".localized
-
-        case .deletePasscodeError?:
-            messageText = "Delete code".localized
-            errorText = "Incorrect code".localized
-
-        case .addPasscodeFirstStepAfterErrorOnSecond?:
-            messageText = "Enter code".localized
-            errorText = "The entered codes are different".localized
-
-        default:
-            break
-        }
-
-        self.messageLabel?.text = messageText
-        self.errorMessageLabel?.text = errorText
-    }
 
     func hideOverlay() {
         UIView.animate(withDuration: 0.6, delay: 0.0, options: [], animations: {
@@ -182,7 +115,7 @@ class PasscodeViewController: UIViewController, Themeable {
     // MARK: - Actions
 
     @IBAction func cancelButton(sender: UIButton) {
-        self.dismiss(animated: true, completion: self.completionHandler!)
+        UnlockPasscodeManager.sharedUnlockPasscodeManager.cancelButtonTaped()
     }
 
     @IBAction func numberButton(sender: UIButton) {
@@ -198,59 +131,7 @@ class PasscodeViewController: UIViewController, Themeable {
     // MARK: - Passcode Flow
 
     private func passcodeValueChanged(passcodeValue: String) {
-
-        if passcodeValue.count >= passcodeLength {
-
-            switch self.passcodeMode {
-            case .addPasscodeFirstStep?, .addPasscodeFirstStepAfterErrorOnSecond?:
-                self.passcodeMode = .addPasscodeSecondStep
-                self.passcodeFromFirstStep = passcodeValue
-                self.passcodeValueTextField?.text = nil
-                self.updateUI()
-
-            case .addPasscodeSecondStep?:
-                if passcodeFromFirstStep == passcodeValue {
-                    //Save to keychain
-                    OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcodeValue), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                    self.dismiss(animated: true, completion: self.completionHandler!)
-                } else {
-                    self.passcodeMode = .addPasscodeFirstStepAfterErrorOnSecond
-                    self.passcodeFromFirstStep = nil
-                    self.passcodeValueTextField?.text = nil
-                    self.updateUI()
-                }
-
-            case .unlockPasscode?, .unlockPasscodeError?:
-
-                let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                let passcodeFromKeychain = NSKeyedUnarchiver.unarchiveObject(with: passcodeData!) as? String
-
-                if passcodeValue == passcodeFromKeychain {
-                    self.completionHandler!()
-                } else {
-                    self.passcodeMode = .unlockPasscodeError
-                    self.passcodeValueTextField?.text = nil
-                    self.updateUI()
-                }
-
-            case .deletePasscode?, .deletePasscodeError?:
-
-                let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                let passcodeFromKeychain = NSKeyedUnarchiver.unarchiveObject(with: passcodeData!) as? String
-
-                if passcodeValue == passcodeFromKeychain {
-                    OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                    self.dismiss(animated: true, completion: self.completionHandler!)
-                } else {
-                    self.passcodeMode = .deletePasscodeError
-                    self.passcodeValueTextField?.text = nil
-                    self.updateUI()
-                }
-
-            default:
-                break
-            }
-        }
+        UnlockPasscodeManager.sharedUnlockPasscodeManager.passcodeValueHasChange(passcodeValue: passcodeValue)
     }
 
     // MARK: - Identifiers
