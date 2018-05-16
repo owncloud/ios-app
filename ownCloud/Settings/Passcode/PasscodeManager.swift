@@ -207,6 +207,8 @@ class PasscodeManager: NSObject {
                     self.passcodeViewController?.dismiss(animated: true, completion: self.completionHandler!)
                     self.passcodeViewController = nil
                 } else {
+                    // Shake
+                    self.passcodeViewController?.view.shakeHorizontally()
                     self.passcodeMode = .addPasscodeFirstStepAfterErrorOnSecond
                     self.passcodeFromFirstStep = nil
                     self.updateUI()
@@ -220,6 +222,8 @@ class PasscodeManager: NSObject {
                 if passcodeValue == passcodeFromKeychain {
                     self.completionHandler!()
                 } else {
+                    // Shake
+                    self.passcodeViewController?.view.shakeHorizontally()
                     self.passcodeMode = .unlockPasscodeError
                     self.updateUI()
                 }
@@ -234,6 +238,8 @@ class PasscodeManager: NSObject {
                     self.passcodeViewController?.dismiss(animated: true, completion: self.completionHandler!)
                     self.passcodeViewController = nil
                 } else {
+                    // Shake
+                    self.passcodeViewController?.view.shakeHorizontally()
                     self.passcodeMode = .deletePasscodeError
                     self.updateUI()
                 }
