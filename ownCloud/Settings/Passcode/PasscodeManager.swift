@@ -34,20 +34,27 @@ class PasscodeManager: NSObject {
 
     // MARK: Global vars
 
-    //Common vars
+    //Common
     private let passcodeLength = 4
     private let passcodeKeychainAccount = "passcode-keychain-account"
     private let passcodeKeychainPath = "passcode-keychain-path"
     private var passcodeMode: PasscodeInterfaceMode?
     private var passcodeViewController: PasscodeViewController?
 
-    //Add/Delete vars
+    //Add/Delete
     private var passcodeFromFirstStep: String?
     private var completionHandler: CompletionHandler?
 
-    //Unlock vars
+    //Unlock
     private var datePressedHomeButton: Date?
     private var userDefaults: UserDefaults?
+
+    //Brute force protection
+    private let timesAllowPasscodeFail: Int = 3
+    private let multiplierBruteForce: Int = 10
+    private var timesPasscodeFailed: Int = 0
+    private var dateTryAgain: Date?
+    private var timer: Timer?
 
     var isPasscodeActivated: Bool {
         return (self.userDefaults!.bool(forKey: SecuritySettingsPasscodeKey) && isPasscodeStoredOnKeychain)
@@ -98,6 +105,7 @@ class PasscodeManager: NSObject {
                     self.passcodeViewController?.dismiss(animated: true, completion: nil)
                     self.passcodeViewController = nil
                     self.datePressedHomeButton = nil
+                    self.timesPasscodeFailed = 0
                 }
 
                 self.passcodeMode = .unlockPasscode
@@ -165,9 +173,10 @@ class PasscodeManager: NSObject {
             break
         }
 
-        self.passcodeViewController?.passcodeValueTextField?.text = nil
+        self.passcodeViewController?.passcodeValueTextField?.text = ""
         self.passcodeViewController?.messageLabel?.text = messageText
         self.passcodeViewController?.errorMessageLabel?.text = errorText
+        self.passcodeViewController?.timeTryAgainMessageLabel?.text = ""
     }
 
     func dismissAskedPasscodeIfDateToAskIsLower() {
@@ -186,6 +195,49 @@ class PasscodeManager: NSObject {
     func cancelButtonTaped() {
         self.passcodeViewController?.dismiss(animated: true, completion: self.completionHandler)
         self.passcodeViewController = nil
+    }
+
+    // MARK: - Brute force protection
+
+    func scheduledTimerWithTimeInterval() {
+
+        self.dateTryAgain = Date().addingTimeInterval(TimeInterval(self.getSecondsToTryAgain()))
+        DispatchQueue.main.async {
+            self.updatePasscodeInterfaceTime()
+        }
+
+        self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updatePasscodeInterfaceTime), userInfo: nil, repeats: true)
+    }
+
+    @objc func updatePasscodeInterfaceTime() {
+
+        let interval = Int((self.dateTryAgain?.timeIntervalSinceNow)!)
+        let seconds = interval % 60
+        let minutes = (interval / 60) % 60
+        let hours = (interval / 3600)
+
+        let dateFormated:String?
+        if hours > 0 {
+            dateFormated = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            dateFormated = String(format: "%02d:%02d", minutes, seconds)
+        }
+
+        let text:String = NSString(format: "Please try again within %@".localized as NSString, dateFormated!) as String
+        self.passcodeViewController?.timeTryAgainMessageLabel?.text = text
+
+        if self.dateTryAgain! <= Date() {
+            //Time elapsed, allow enter passcode again
+            self.timer?.invalidate()
+            self.dateTryAgain = nil
+            self.passcodeViewController?.setEnableNumberButtons(isEnable: true)
+            self.updateUI()
+        }
+    }
+
+    func getSecondsToTryAgain() -> Int {
+        let powValue = pow(Decimal(multiplierBruteForce), ((timesPasscodeFailed+1) - timesAllowPasscodeFail))
+        return Int(truncating: NSDecimalNumber(decimal: powValue))
     }
 
     // MARK: - Logic
@@ -226,6 +278,12 @@ class PasscodeManager: NSObject {
                     self.passcodeViewController?.view.shakeHorizontally()
                     self.passcodeMode = .unlockPasscodeError
                     self.updateUI()
+                    // Control to prevent force brute unlock
+                    self.timesPasscodeFailed += 1
+                    if self.timesPasscodeFailed >= self.timesAllowPasscodeFail {
+                        self.passcodeViewController?.setEnableNumberButtons(isEnable: false)
+                        self.scheduledTimerWithTimeInterval()
+                    }
                 }
 
             case .deletePasscode?, .deletePasscodeError?:

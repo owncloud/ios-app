@@ -33,6 +33,7 @@ class PasscodeViewController: UIViewController, Themeable {
     @IBOutlet weak var messageLabel: UILabel?
     @IBOutlet weak var errorMessageLabel: UILabel?
     @IBOutlet weak var passcodeValueTextField: UITextField?
+    @IBOutlet weak var timeTryAgainMessageLabel: UILabel?
 
     // MARK: - Buttons
     @IBOutlet weak var number0Button: ThemeButton?
@@ -112,6 +113,36 @@ class PasscodeViewController: UIViewController, Themeable {
         })
     }
 
+    func setEnableNumberButtons(isEnable: Bool) {
+        self.number0Button?.isEnabled = isEnable
+        self.number1Button?.isEnabled = isEnable
+        self.number2Button?.isEnabled = isEnable
+        self.number3Button?.isEnabled = isEnable
+        self.number4Button?.isEnabled = isEnable
+        self.number5Button?.isEnabled = isEnable
+        self.number6Button?.isEnabled = isEnable
+        self.number7Button?.isEnabled = isEnable
+        self.number8Button?.isEnabled = isEnable
+        self.number9Button?.isEnabled = isEnable
+
+        var alpha: CGFloat = 0.5
+
+        if isEnable {
+            alpha = 1.0
+        }
+
+        self.number0Button?.alpha = alpha
+        self.number1Button?.alpha = alpha
+        self.number2Button?.alpha = alpha
+        self.number3Button?.alpha = alpha
+        self.number4Button?.alpha = alpha
+        self.number5Button?.alpha = alpha
+        self.number6Button?.alpha = alpha
+        self.number7Button?.alpha = alpha
+        self.number8Button?.alpha = alpha
+        self.number9Button?.alpha = alpha
+    }
+
     // MARK: - Actions
 
     @IBAction func cancelButton(sender: UIButton) {
@@ -143,6 +174,7 @@ class PasscodeViewController: UIViewController, Themeable {
         self.messageLabel?.accessibilityIdentifier = "messageLabel"
         self.errorMessageLabel?.accessibilityIdentifier = "errorMessageLabel"
         self.passcodeValueTextField?.accessibilityIdentifier = "passcodeValueTextField"
+        self.timeTryAgainMessageLabel?.accessibilityIdentifier = "timeTryAgainMessageLabel"
 
         self.number0Button?.accessibilityIdentifier = "number0Button"
         self.number1Button?.accessibilityIdentifier = "number1Button"
@@ -168,6 +200,7 @@ class PasscodeViewController: UIViewController, Themeable {
         self.messageLabel?.applyThemeCollection(collection, itemStyle: .bigTitle, itemState: .normal)
         self.errorMessageLabel?.applyThemeCollection(collection)
         self.passcodeValueTextField?.applyThemeCollection(collection, itemStyle: .message, itemState: .normal)
+        self.timeTryAgainMessageLabel?.applyThemeCollection(collection)
 
         self.number0Button?.applyThemeCollection(collection, itemStyle: .neutral)
         self.number1Button?.applyThemeCollection(collection, itemStyle: .neutral)
