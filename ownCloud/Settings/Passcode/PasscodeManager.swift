@@ -60,9 +60,13 @@ class PasscodeManager: NSObject {
             self.userDefaults!.set(newValue, forKey: TimesPasscodeFailedKey)
         }
     }
-    private var dateTryAgain: Date? {
+    private var dateAllowTryAgain: Date? {
         get {
-            return NSKeyedUnarchiver.unarchiveObject(with: self.userDefaults!.data(forKey: DateAllowTryPasscodeAgainKey)!) as? Date
+            if let data = self.userDefaults!.data(forKey: DateAllowTryPasscodeAgainKey) {
+                return NSKeyedUnarchiver.unarchiveObject(with: data) as? Date
+            } else {
+                return nil
+            }
         }
         set {
             self.userDefaults!.set(NSKeyedArchiver.archivedData(withRootObject: newValue as Any), forKey: DateAllowTryPasscodeAgainKey)
@@ -129,7 +133,7 @@ class PasscodeManager: NSObject {
                 viewController.present(self.passcodeViewController!, animated: false, completion: nil)
 
                 // Brute force protection
-                if let date = self.dateTryAgain, date > Date() {
+                if let date = self.dateAllowTryAgain, date > Date() {
                     //User killed the app
                     self.passcodeMode = .unlockPasscodeError
                     self.passcodeViewController?.setEnableNumberButtons(isEnable: false)
@@ -236,7 +240,7 @@ class PasscodeManager: NSObject {
 
     @objc func updatePasscodeInterfaceTime() {
 
-        let interval = Int((self.dateTryAgain?.timeIntervalSinceNow)!)
+        let interval = Int((self.dateAllowTryAgain?.timeIntervalSinceNow)!)
         let seconds = interval % 60
         let minutes = (interval / 60) % 60
         let hours = (interval / 3600)
@@ -251,10 +255,9 @@ class PasscodeManager: NSObject {
         let text:String = NSString(format: "Please try again within %@".localized as NSString, dateFormated!) as String
         self.passcodeViewController?.timeTryAgainMessageLabel?.text = text
 
-        if self.dateTryAgain! <= Date() {
+        if self.dateAllowTryAgain! <= Date() {
             //Time elapsed, allow enter passcode again
             self.timer?.invalidate()
-            self.dateTryAgain = nil
             self.passcodeViewController?.setEnableNumberButtons(isEnable: true)
             self.updateUI()
         }
@@ -308,7 +311,7 @@ class PasscodeManager: NSObject {
                     self.timesPasscodeFailed += 1
                     if self.timesPasscodeFailed >= self.timesAllowPasscodeFail {
                         self.passcodeViewController?.setEnableNumberButtons(isEnable: false)
-                        self.dateTryAgain = Date().addingTimeInterval(TimeInterval(self.getSecondsToTryAgain()))
+                        self.dateAllowTryAgain = Date().addingTimeInterval(TimeInterval(self.getSecondsToTryAgain()))
                         self.scheduledTimerToUpdateInterfaceTime()
                     }
                 }
