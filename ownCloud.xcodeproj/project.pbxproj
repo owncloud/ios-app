@@ -449,7 +449,6 @@
 			isa = PBXGroup;
 			children = (
 				230B84F020597F6E00C9F828 /* ownCloudUI.framework */,
-				2303176E205AA357006C4DAF /* IssuesDismissalAnimator.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1279,6 +1278,8 @@
 				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}";
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
 				INFOPLIST_FILE = ownCloud/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
@@ -1303,6 +1304,8 @@
 				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}";
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
 				INFOPLIST_FILE = ownCloud/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";

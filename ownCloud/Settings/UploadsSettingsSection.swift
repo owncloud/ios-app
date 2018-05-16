@@ -59,10 +59,14 @@ class UploadsSettingsSection: SettingsSection {
         }
     }
     /// Path in which the photos are going to be instant uploaded
-    private var photoSelectedPath: String {
+    private var photoSelectedPath: String? {
         willSet {
-            userDefaults.set(newValue, forKey: UploadsPhotoSelectedPathKey)
-            photosWifiOnlyRow?.value = newValue
+            if newValue == nil {
+                userDefaults.removeObject(forKey: UploadsPhotoSelectedPathKey)
+            } else {
+                userDefaults.set(newValue, forKey: UploadsPhotoSelectedPathKey)
+                videosSelectedPathRow?.value = newValue
+            }
         }
     }
 
@@ -85,10 +89,14 @@ class UploadsSettingsSection: SettingsSection {
         }
     }
     /// Path in which the video are going to be instant uploaded
-    private var videoSelectedPath: String {
+    private var videoSelectedPath: String? {
         willSet {
-            userDefaults.set(newValue, forKey: UploadsVideoSelectedPathKey)
-            videosSelectedPathRow?.value = newValue
+            if newValue == nil {
+                 userDefaults.removeObject(forKey: UploadsVideoSelectedPathKey)
+            } else {
+                userDefaults.set(newValue, forKey: UploadsVideoSelectedPathKey)
+                videosSelectedPathRow?.value = newValue
+            }
         }
     }
 
@@ -193,7 +201,6 @@ class UploadsSettingsSection: SettingsSection {
             let photoUploadIndex = rows.index(of: photosRow!)!
 
             if !rows.contains(photosWifiOnlyRow!) {
-
                 insert(row: photosWifiOnlyRow!, at: photoUploadIndex + 1, animated: true)
                 insert(row: photosSelectedPathRow!, at: photoUploadIndex + 2, animated: true)
             }
@@ -201,7 +208,7 @@ class UploadsSettingsSection: SettingsSection {
         } else {
             isPhotoWifiOnlyUploadsEnabled = false
             remove(rows: [photosWifiOnlyRow!, photosSelectedPathRow!], animated: true)
-            userDefaults.removeObject(forKey: UploadsPhotoSelectedPathKey)
+            videoSelectedPath = nil
         }
 
         if isVideoUploadEnabled {
@@ -215,8 +222,8 @@ class UploadsSettingsSection: SettingsSection {
 
         } else {
             isVideoWifiOnlyUploadsEnabled = false
-            userDefaults.removeObject(forKey: UploadsVideoSelectedPathKey)
             remove(rows: [videosWifiOnlyRow!, videosSelectedPathRow!], animated: true)
+            videoSelectedPath = nil
         }
 
         // Background uploads flow
@@ -231,4 +238,5 @@ class UploadsSettingsSection: SettingsSection {
             remove(rows: [backgroundUploadsRow!], animated: true)
         }
     }
+
 }

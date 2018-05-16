@@ -20,12 +20,12 @@ import LocalAuthentication
 
 extension LAContext {
 
-    func supportedBiometricsAuthenticationNAme() -> String? {
+    func supportedBiometricsAuthenticationName() -> String? {
 
         if  canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {
             switch self.biometryType {
-            case .faceID : return "Face ID"
-            case .touchID: return "Touch ID"
+            case .faceID : return "Face ID".localized
+            case .touchID: return "Touch ID".localized
             case .none: return nil
             }
         }

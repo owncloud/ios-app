@@ -16,14 +16,28 @@
  *
  */
 
+import CoreFoundation
 import UIKit
 import WebKit
 import MessageUI
 
-// MARK: - Section identifier
-private let MoreSectionIdentifier: String = "settings-more-section"
-
 class MoreSettingsSection: SettingsSection {
+
+    var appVersion: String {
+        if let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
+            return version
+        }
+
+        return ""
+    }
+
+    var appBuildNumber: String {
+        if let buildNumber = Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String {
+            return buildNumber
+        }
+
+        return ""
+    }
 
     // MARK: - More Settings Cells
 
@@ -35,8 +49,9 @@ class MoreSettingsSection: SettingsSection {
     override init(userDefaults: UserDefaults) {
         super.init(userDefaults: userDefaults)
         self.headerTitle = "More".localized
-        self.footerTitle = "owncloud 2018 iOS beta"
-        self.identifier = MoreSectionIdentifier
+        self.footerTitle = "Owncloud beta version \(appVersion) build \(appBuildNumber)"
+
+        self.identifier = "settings-more-section"
 
         createRows()
         updateUI()
@@ -53,13 +68,13 @@ class MoreSettingsSection: SettingsSection {
         }, title: "Help".localized, accessoryType: .disclosureIndicator)
 
         sendFeedbackRow = StaticTableViewRow(rowWithAction: { (_, _) in
-            self.sendMail(to: "apps@owncloud.com", subject: nil, message: nil)
+            self.sendMail(to: "apps@owncloud.com", subject: "ownCloud iOS app (\(self.appVersion) (\(self.appBuildNumber))", message: nil)
         }, title: "Send feedback".localized, accessoryType: .disclosureIndicator)
 
         recommendRow = StaticTableViewRow(rowWithAction: { (_, _) in
             let message = """
                 <p>I want to invite you to use ownCloud on your smartphone!</p>
-                <a href="https://itunes.apple.com/es/app/owncloud/id543672169?mt=8">Download here</a>
+                <a href="https://itunes.apple.com/app/owncloud/id543672169?mt=8">Download here</a>
                 """
             self.sendMail(to: nil, subject: "Try ownCloud on your smartphone!", message: message)
         }, title: "Recommend to a friend".localized, accessoryType: .disclosureIndicator)
@@ -97,10 +112,10 @@ class MoreSettingsSection: SettingsSection {
         } else {
             if let vc = self.viewController {
                 let alert = UIAlertController(title: "Please configure an email account".localized,
-                                              message: "You need to configure an email account first to be able to send emails".localized,
+                                              message: "You need to configure an email account first to be able to send emails.".localized,
                                               preferredStyle: .alert)
 
-                let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+                let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
                 alert.addAction(okAction)
                 vc.present(alert, animated: true)
             }
