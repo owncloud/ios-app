@@ -34,28 +34,45 @@ class PasscodeManager: NSObject {
 
     // MARK: Global vars
 
-    //Common
+    // Common
     private let passcodeLength = 4
     private let passcodeKeychainAccount = "passcode-keychain-account"
     private let passcodeKeychainPath = "passcode-keychain-path"
     private var passcodeMode: PasscodeInterfaceMode?
     private var passcodeViewController: PasscodeViewController?
 
-    //Add/Delete
+    // Add/Delete
     private var passcodeFromFirstStep: String?
     private var completionHandler: CompletionHandler?
 
-    //Unlock
+    // Unlock
     private var datePressedHomeButton: Date?
     private var userDefaults: UserDefaults?
 
-    //Brute force protection
+    // Brute force protection
+    public let TimesPasscodeFailedKey: String =  "times-passcode-failed"
+    public let DateAllowTryPasscodeAgainKey: String =  "date-allow-try-passcode-again"
+    private var timesPasscodeFailed: Int {
+        get {
+            return self.userDefaults!.integer(forKey: TimesPasscodeFailedKey)
+        }
+        set {
+            self.userDefaults!.set(newValue, forKey: TimesPasscodeFailedKey)
+        }
+    }
+    private var dateTryAgain: Date? {
+        get {
+            return NSKeyedUnarchiver.unarchiveObject(with: self.userDefaults!.data(forKey: DateAllowTryPasscodeAgainKey)!) as? Date
+        }
+        set {
+            self.userDefaults!.set(NSKeyedArchiver.archivedData(withRootObject: newValue as Any), forKey: DateAllowTryPasscodeAgainKey)
+        }
+    }
     private let timesAllowPasscodeFail: Int = 3
     private let multiplierBruteForce: Int = 10
-    private var timesPasscodeFailed: Int = 0
-    private var dateTryAgain: Date?
     private var timer: Timer?
 
+    // Utils
     var isPasscodeActivated: Bool {
         return (self.userDefaults!.bool(forKey: SecuritySettingsPasscodeKey) && isPasscodeStoredOnKeychain)
     }
@@ -108,10 +125,19 @@ class PasscodeManager: NSObject {
                     self.timesPasscodeFailed = 0
                 }
 
-                self.passcodeMode = .unlockPasscode
-
                 self.passcodeViewController = PasscodeViewController(hiddenOverlay:hiddenOverlay)
                 viewController.present(self.passcodeViewController!, animated: false, completion: nil)
+
+                // Brute force protection
+                if let date = self.dateTryAgain, date > Date() {
+                    //User killed the app
+                    self.passcodeMode = .unlockPasscodeError
+                    self.passcodeViewController?.setEnableNumberButtons(isEnable: false)
+                    self.scheduledTimerToUpdateInterfaceTime()
+                } else {
+                    self.passcodeMode = .unlockPasscode
+                }
+
                 self.updateUI()
 
             } else {
@@ -199,9 +225,8 @@ class PasscodeManager: NSObject {
 
     // MARK: - Brute force protection
 
-    func scheduledTimerWithTimeInterval() {
+    func scheduledTimerToUpdateInterfaceTime() {
 
-        self.dateTryAgain = Date().addingTimeInterval(TimeInterval(self.getSecondsToTryAgain()))
         DispatchQueue.main.async {
             self.updatePasscodeInterfaceTime()
         }
@@ -278,11 +303,13 @@ class PasscodeManager: NSObject {
                     self.passcodeViewController?.view.shakeHorizontally()
                     self.passcodeMode = .unlockPasscodeError
                     self.updateUI()
-                    // Control to prevent force brute unlock
+
+                    // Brute force protection
                     self.timesPasscodeFailed += 1
                     if self.timesPasscodeFailed >= self.timesAllowPasscodeFail {
                         self.passcodeViewController?.setEnableNumberButtons(isEnable: false)
-                        self.scheduledTimerWithTimeInterval()
+                        self.dateTryAgain = Date().addingTimeInterval(TimeInterval(self.getSecondsToTryAgain()))
+                        self.scheduledTimerToUpdateInterfaceTime()
                     }
                 }
 
