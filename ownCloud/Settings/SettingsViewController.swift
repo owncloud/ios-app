@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 class SettingsViewController: StaticTableViewController {
 
@@ -25,10 +26,12 @@ class SettingsViewController: StaticTableViewController {
 
         self.navigationItem.title = "Settings".localized
 
-        let standardUserDefaults = UserDefaults.standard
-        let uploadSettings = UploadsSettingsSection(userDefaults: standardUserDefaults)
-        let securitySettings = SecuritySettingsSection(userDefaults: standardUserDefaults)
-        let moreSettings = MoreSettingsSection(userDefaults: standardUserDefaults)
+        // TODO: Use OCAppIdentity-provided user defaults in the future
+        let userDefaults = UserDefaults(suiteName: OCAppIdentity.shared().appGroupIdentifier) ?? UserDefaults.standard
+
+        let uploadSettings = UploadsSettingsSection(userDefaults: userDefaults)
+        let securitySettings = SecuritySettingsSection(userDefaults: userDefaults)
+        let moreSettings = MoreSettingsSection(userDefaults: userDefaults)
         self.addSection(securitySettings)
         self.addSection(uploadSettings)
         self.addSection(moreSettings)

@@ -73,8 +73,8 @@
 
 "Security" = "Security";
 "Passcode Lock" = "Passcode Lock";
-"FaceID" = "FaceID";
-"TouchID" = "TouchID";
+"Face ID" = "Face ID";
+"Touch ID" = "Touch ID";
 "Instant Uploads" = "Instant Uploads";
 "Videos" = "Videos";
 "Photos" = "Photos";
@@ -96,7 +96,7 @@
 "5 minutes" = "5 minutes";
 "30 minutes" = "30 minutes";
 "Please configure an email account" = "Please configure an email account";
-"You need to configure an email account first to be able to send emails" = "You need to configure an email account first to be able to send emails";
+"You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
 
 /* Passcode Messages */
 

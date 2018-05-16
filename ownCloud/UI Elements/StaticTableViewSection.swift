@@ -182,12 +182,4 @@ class StaticTableViewSection: NSObject {
 
 		return nil
 	}
-
-    private func selectAnimation(_ animated: Bool) -> UITableViewRowAnimation {
-        if animated {
-            return UITableViewRowAnimation.automatic
-        }
-
-        return UITableViewRowAnimation.none
-    }
 }

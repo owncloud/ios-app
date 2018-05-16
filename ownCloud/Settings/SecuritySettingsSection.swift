@@ -26,9 +26,6 @@ public let SecuritySettingsFrequencyKey: String =  "security-settings-frequency"
 public let SecuritySettingsPasscodeKey: String = "security-settings-usePasscode"
 public let SecuritySettingsBiometricalKey: String = "security-settings-useBiometrical"
 
-// MARK: - Section identifier
-private let SecuritySectionIdentifier: String = "settings-security-section"
-
 // MARK: - SecurityAskfrequency
 @objc enum SecurityAskFrequency: Int {
     case always = 0
@@ -90,7 +87,7 @@ class SecuritySettingsSection: SettingsSection {
         super.init(userDefaults: userDefaults)
 
         self.headerTitle = "Security".localized
-        self.identifier = SecuritySectionIdentifier
+        self.identifier = "settings-security-section"
 
         createRows()
         updateUI()
@@ -117,7 +114,7 @@ class SecuritySettingsSection: SettingsSection {
                         self.frequency = frequency
                         self.frequencyRow?.cell?.detailTextLabel?.text = frequency.toString()
                     }
-                }, groupIdentifier: "frequency-group-identifier", selectedValue: SecurityAskFrequency.always.rawValue, animated: true)
+                }, groupIdentifier: "frequency-group-identifier", selectedValue: self.frequency.rawValue, animated: true)
 
                 newVC.addSection(frequencySection)
                 vc.navigationController?.pushViewController(newVC, animated: true)
@@ -148,7 +145,7 @@ class SecuritySettingsSection: SettingsSection {
         }, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled)
 
         // Creation of the biometrical row.
-        if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationNAme() {
+        if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
             // Creation of the biometrical row.
             biometricalRow = StaticTableViewRow(switchWithAction: { (_, sender) in
                 if let biometricalSwitch = sender as? UISwitch {
@@ -182,6 +179,8 @@ class SecuritySettingsSection: SettingsSection {
 
             var rowsToRemove: [StaticTableViewRow] = []
             frequencyRow?.cell?.detailTextLabel?.text = SecurityAskFrequency.always.toString()
+            frequency = .always
+
             rowsToRemove.append(frequencyRow!)
 
             if biometricalRow != nil {
