@@ -1,5 +1,5 @@
 //
-//  UnlockPasscodeManager.swift
+//  PasscodeManager.swift
 //  ownCloud
 //
 //  Created by Javier Gonzalez on 06/05/2018.
@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class UnlockPasscodeManager: NSObject {
+class PasscodeManager: NSObject {
 
     // MARK: - Interface view mode
     enum PasscodeInterfaceMode {
@@ -75,7 +75,7 @@ class UnlockPasscodeManager: NSObject {
 
     // MARK: - Init
 
-    static var sharedUnlockPasscodeManager = UnlockPasscodeManager()
+    static var sharedPasscodeManager = PasscodeManager()
 
     public override init() {
         self.userDefaults = UserDefaults.standard

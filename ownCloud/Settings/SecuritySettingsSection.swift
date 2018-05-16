@@ -130,10 +130,10 @@ class SecuritySettingsSection: SettingsSection {
             if let passcodeSwitch = sender as? UISwitch {
 
                 //Show the passcode UI
-                UnlockPasscodeManager.sharedUnlockPasscodeManager.showAddOrEditPasscode(
+                PasscodeManager.sharedPasscodeManager.showAddOrEditPasscode(
                     viewController: self.viewController?.navigationController?.visibleViewController,
                     completionHandler: {
-                        if UnlockPasscodeManager.sharedUnlockPasscodeManager.isPasscodeActivated {
+                        if PasscodeManager.sharedPasscodeManager.isPasscodeActivated {
                             //Activated
                             self.isPasscodeSecurityEnabled = true
                         } else {

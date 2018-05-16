@@ -115,7 +115,7 @@ class PasscodeViewController: UIViewController, Themeable {
     // MARK: - Actions
 
     @IBAction func cancelButton(sender: UIButton) {
-        UnlockPasscodeManager.sharedUnlockPasscodeManager.cancelButtonTaped()
+        PasscodeManager.sharedPasscodeManager.cancelButtonTaped()
     }
 
     @IBAction func numberButton(sender: UIButton) {
@@ -131,7 +131,7 @@ class PasscodeViewController: UIViewController, Themeable {
     // MARK: - Passcode Flow
 
     private func passcodeValueChanged(passcodeValue: String) {
-        UnlockPasscodeManager.sharedUnlockPasscodeManager.passcodeValueHasChange(passcodeValue: passcodeValue)
+        PasscodeManager.sharedPasscodeManager.passcodeValueHasChange(passcodeValue: passcodeValue)
     }
 
     // MARK: - Identifiers
