@@ -21,13 +21,17 @@ import ownCloudSDK
 
 class UnlockPasscodeManager: NSObject {
 
-    // MARK: - Utils
+    // MARK: Global vars
+
+    private var passcodeViewController: PasscodeViewController?
+    private var datePressedHomeButton: Date?
+    private var userDefaults: UserDefaults?
 
     private var isPasscodeActivated: Bool {
         return (OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil)
     }
 
-    private var shouldBeLocke: Bool {
+    private var shouldBeLocked: Bool {
         var output: Bool = true
 
         if isPasscodeActivated {
@@ -47,12 +51,6 @@ class UnlockPasscodeManager: NSObject {
         return output
     }
 
-    // MARK: Global vars
-
-    private var passcodeViewController: PasscodeViewController?
-    private var datePressedHomeButton: Date?
-    private var userDefaults: UserDefaults?
-
     // MARK: - Init
 
     static var sharedUnlockPasscodeManager = UnlockPasscodeManager()
@@ -67,7 +65,7 @@ class UnlockPasscodeManager: NSObject {
 
     func showPasscodeIfNeeded(viewController: UIViewController, hiddenOverlay:Bool) {
 
-        if isPasscodeActivated() {
+        if isPasscodeActivated {
             if self.passcodeViewController == nil {
                 self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:hiddenOverlay, completionHandler: {
                     self.passcodeViewController?.dismiss(animated: true, completion: nil)
@@ -86,7 +84,7 @@ class UnlockPasscodeManager: NSObject {
 
     func dismissAskedPasscodeIfDateToAskIsLower() {
 
-        if shouldBeLocked() {
+        if shouldBeLocked {
             self.passcodeViewController?.hideOverlay()
         } else {
             if self.passcodeViewController != nil {
@@ -100,7 +98,7 @@ class UnlockPasscodeManager: NSObject {
     // MARK: - Utils
 
     func storeDateHomeButtonPressed() {
-        if self.isPasscodeActivated(), self.datePressedHomeButton == nil {
+        if self.isPasscodeActivated, self.datePressedHomeButton == nil {
             self.datePressedHomeButton = Date()
         }
     }
