@@ -50,6 +50,10 @@ class PasscodeManager: NSObject {
     private var userDefaults: UserDefaults?
 
     var isPasscodeActivated: Bool {
+        return (self.userDefaults!.bool(forKey: SecuritySettingsPasscodeKey) && isPasscodeStoredOnKeychain)
+    }
+
+    var isPasscodeStoredOnKeychain: Bool {
         return (OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil)
     }
 
@@ -181,6 +185,7 @@ class PasscodeManager: NSObject {
 
     func cancelButtonTaped() {
         self.passcodeViewController?.dismiss(animated: true, completion: self.completionHandler)
+        self.passcodeViewController = nil
     }
 
     // MARK: - Logic
@@ -200,6 +205,7 @@ class PasscodeManager: NSObject {
                     //Save to keychain
                     OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcodeValue), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
                     self.passcodeViewController?.dismiss(animated: true, completion: self.completionHandler!)
+                    self.passcodeViewController = nil
                 } else {
                     self.passcodeMode = .addPasscodeFirstStepAfterErrorOnSecond
                     self.passcodeFromFirstStep = nil
@@ -226,6 +232,7 @@ class PasscodeManager: NSObject {
                 if passcodeValue == passcodeFromKeychain {
                     OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
                     self.passcodeViewController?.dismiss(animated: true, completion: self.completionHandler!)
+                    self.passcodeViewController = nil
                 } else {
                     self.passcodeMode = .deletePasscodeError
                     self.updateUI()

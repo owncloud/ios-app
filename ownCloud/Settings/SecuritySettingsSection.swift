@@ -133,7 +133,7 @@ class SecuritySettingsSection: SettingsSection {
                 PasscodeManager.sharedPasscodeManager.showAddOrEditPasscode(
                     viewController: self.viewController?.navigationController?.visibleViewController,
                     completionHandler: {
-                        if PasscodeManager.sharedPasscodeManager.isPasscodeActivated {
+                        if PasscodeManager.sharedPasscodeManager.isPasscodeStoredOnKeychain {
                             //Activated
                             self.isPasscodeSecurityEnabled = true
                         } else {
