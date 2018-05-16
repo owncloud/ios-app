@@ -19,28 +19,25 @@
 import UIKit
 import ownCloudSDK
 
-let DateHomeButtonPressedKey = "date-home-button-pressed"
-
 class UnlockPasscodeManager: NSObject {
 
     // MARK: - Utils
-    private func isPasscodeActivated() -> Bool {
+
+    private var isPasscodeActivated: Bool {
         return (OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil)
     }
 
-    private func shouldBeLocked() -> Bool {
+    private var shouldBeLocke: Bool {
         var output: Bool = true
 
-        if isPasscodeActivated() {
-            if let dateData = self.userDefaults?.data(forKey: DateHomeButtonPressedKey) {
-                if let date = NSKeyedUnarchiver.unarchiveObject(with: dateData) as? Date {
+        if isPasscodeActivated {
+            if let date = self.datePressedHomeButton {
 
-                    let elapsedSeconds = Date().timeIntervalSince(date)
-                    let minSecondsToAsk = self.userDefaults?.integer(forKey: SecuritySettingsFrequencyKey)
+                let elapsedSeconds = Date().timeIntervalSince(date)
+                let minSecondsToAsk = self.userDefaults?.integer(forKey: SecuritySettingsFrequencyKey)
 
-                    if Int(elapsedSeconds) < minSecondsToAsk! {
-                        output = false
-                    }
+                if Int(elapsedSeconds) < minSecondsToAsk! {
+                    output = false
                 }
             }
         } else {
@@ -51,8 +48,9 @@ class UnlockPasscodeManager: NSObject {
     }
 
     // MARK: Global vars
-    
+
     private var passcodeViewController: PasscodeViewController?
+    private var datePressedHomeButton: Date?
     private var userDefaults: UserDefaults?
 
     // MARK: - Init
@@ -70,14 +68,11 @@ class UnlockPasscodeManager: NSObject {
     func showPasscodeIfNeeded(viewController: UIViewController, hiddenOverlay:Bool) {
 
         if isPasscodeActivated() {
-
-            storeDateHomeButtonPressed()
-
             if self.passcodeViewController == nil {
-                self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:false, completionHandler: {
-                    self.userDefaults?.removeObject(forKey: DateHomeButtonPressedKey)
-                    viewController.dismiss(animated: true, completion: nil)
+                self.passcodeViewController = PasscodeViewController(mode: PasscodeInterfaceMode.unlockPasscode, hiddenOverlay:hiddenOverlay, completionHandler: {
+                    self.passcodeViewController?.dismiss(animated: true, completion: nil)
                     self.passcodeViewController = nil
+                    self.datePressedHomeButton = nil
                 })
 
                 viewController.present(self.passcodeViewController!, animated: false, completion: nil)
@@ -97,7 +92,7 @@ class UnlockPasscodeManager: NSObject {
             if self.passcodeViewController != nil {
                 self.passcodeViewController?.dismiss(animated: true, completion: nil)
                 self.passcodeViewController = nil
-                self.userDefaults?.removeObject(forKey: DateHomeButtonPressedKey)
+                self.datePressedHomeButton = nil
             }
         }
     }
@@ -105,9 +100,8 @@ class UnlockPasscodeManager: NSObject {
     // MARK: - Utils
 
     func storeDateHomeButtonPressed() {
-        if OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil,
-            self.userDefaults?.data(forKey: DateHomeButtonPressedKey) == nil {
-            self.userDefaults?.set(NSKeyedArchiver.archivedData(withRootObject: Date()), forKey: DateHomeButtonPressedKey)
+        if self.isPasscodeActivated(), self.datePressedHomeButton == nil {
+            self.datePressedHomeButton = Date()
         }
     }
 }
