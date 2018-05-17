@@ -128,7 +128,7 @@ class PasscodeManager: NSObject {
 
                 self.passcodeViewController = PasscodeViewController(hiddenOverlay:hiddenOverlay)
 
-                self.window = LockWindow(frame: UIScreen.main.bounds)
+                self.window = LockWindow(frame: UIScreen.main.nativeBounds)
                 self.window?.rootViewController = self.passcodeViewController!
                 self.window?.addSubview((self.passcodeViewController?.view)!)
                 self.window?.makeKeyAndVisible()
@@ -163,7 +163,7 @@ class PasscodeManager: NSObject {
 
         self.passcodeViewController = PasscodeViewController(hiddenOverlay:true)
 
-        self.window = LockWindow(frame: UIScreen.main.bounds)
+        self.window = LockWindow(frame: UIScreen.main.nativeBounds)
         self.window?.rootViewController = self.passcodeViewController!
         self.window?.addSubview((self.passcodeViewController?.view)!)
         self.window?.makeKeyAndVisible()
