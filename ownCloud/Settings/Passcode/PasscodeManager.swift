@@ -221,8 +221,7 @@ class PasscodeManager: NSObject {
             self.passcodeViewController?.hideOverlay()
         } else {
             if self.passcodeViewController != nil {
-                self.passcodeViewController?.dismiss(animated: true, completion: nil)
-                self.passcodeViewController = nil
+                self.dismissLockWindow()
                 self.datePressedHomeButton = nil
             }
         }
