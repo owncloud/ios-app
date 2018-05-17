@@ -129,6 +129,7 @@ class PasscodeManager: NSObject {
                 self.passcodeViewController = PasscodeViewController(hiddenOverlay:hiddenOverlay)
 
                 self.window = LockWindow(frame: UIScreen.main.nativeBounds)
+                self.window?.windowLevel = UIWindowLevelStatusBar
                 self.window?.rootViewController = self.passcodeViewController!
                 self.window?.addSubview((self.passcodeViewController?.view)!)
                 self.window?.makeKeyAndVisible()
@@ -162,9 +163,9 @@ class PasscodeManager: NSObject {
         self.completionHandler = completionHandler
 
         self.passcodeViewController = PasscodeViewController(hiddenOverlay:true)
-        self.window = LockWindow(frame: UIScreen.main.nativeBounds)
+        self.window = LockWindow(frame: UIScreen.main.bounds)
+        self.window?.windowLevel = UIWindowLevelStatusBar
         self.window?.rootViewController = self.passcodeViewController!
-        self.window?.addSubview((self.passcodeViewController?.view)!)
         self.window?.makeKeyAndVisible()
 
         self.updateUI()
@@ -317,8 +318,7 @@ class PasscodeManager: NSObject {
                     self.completionHandler!()
                     self.dismissWindowAnimated()
                 } else {
-                    // Shake
-                    self.passcodeViewController?.view.shakeHorizontally()
+                    self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
                     self.passcodeMode = .addPasscodeFirstStepAfterErrorOnSecond
                     self.passcodeFromFirstStep = nil
                     self.updateUI()
@@ -332,8 +332,7 @@ class PasscodeManager: NSObject {
                 if passcodeValue == passcodeFromKeychain {
                     self.completionHandler!()
                 } else {
-                    // Shake
-                    self.passcodeViewController?.view.shakeHorizontally()
+                    self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
                     self.passcodeMode = .unlockPasscodeError
                     self.updateUI()
 
@@ -356,8 +355,7 @@ class PasscodeManager: NSObject {
                     self.completionHandler!()
                     self.dismissWindowAnimated()
                 } else {
-                    // Shake
-                    self.passcodeViewController?.view.shakeHorizontally()
+                    self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
                     self.passcodeMode = .deletePasscodeError
                     self.updateUI()
                 }
