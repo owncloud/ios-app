@@ -127,9 +127,7 @@ class SecuritySettingsSection: SettingsSection {
             if let passcodeSwitch = sender as? UISwitch {
 
                 //Show the passcode UI
-                PasscodeManager.sharedPasscodeManager.showAddOrEditPasscode(
-                    viewController: self.viewController?.navigationController?.visibleViewController,
-                    completionHandler: {
+                PasscodeManager.sharedPasscodeManager.showAddOrEditPasscode(completionHandler: {
                         if PasscodeManager.sharedPasscodeManager.isPasscodeStoredOnKeychain {
                             //Activated
                             self.isPasscodeSecurityEnabled = true
