@@ -35,6 +35,7 @@ class PasscodeManager: NSObject {
     // MARK: Global vars
 
     // Common
+    private var window: LockWindow?
     private let passcodeLength = 4
     private let passcodeKeychainAccount = "passcode-keychain-account"
     private let passcodeKeychainPath = "passcode-keychain-path"
@@ -100,7 +101,8 @@ class PasscodeManager: NSObject {
     static var sharedPasscodeManager = PasscodeManager()
 
     public override init() {
-        self.userDefaults = UserDefaults.standard
+        // TODO: Use OCAppIdentity-provided user defaults in the future
+        self.userDefaults = UserDefaults(suiteName: OCAppIdentity.shared().appGroupIdentifier) ?? UserDefaults.standard
 
         // Brute Force protection
         self.timesPasscodeFailed = self.userDefaults!.integer(forKey: TimesPasscodeFailedKey)
@@ -119,14 +121,17 @@ class PasscodeManager: NSObject {
             if self.passcodeViewController == nil {
 
                 self.completionHandler = {
-                    self.passcodeViewController?.dismiss(animated: true, completion: nil)
-                    self.passcodeViewController = nil
                     self.datePressedHomeButton = nil
                     self.timesPasscodeFailed = 0
+                    self.dismissLockWindow()
                 }
 
                 self.passcodeViewController = PasscodeViewController(hiddenOverlay:hiddenOverlay)
-                viewController.present(self.passcodeViewController!, animated: false, completion: nil)
+
+                self.window = LockWindow(frame: UIScreen.main.bounds)
+                self.window?.rootViewController = self.passcodeViewController!
+                self.window?.addSubview((self.passcodeViewController?.view)!)
+                self.window?.makeKeyAndVisible()
 
                 // Brute force protection
                 if let date = self.dateAllowTryAgain, date > Date() {
@@ -157,7 +162,12 @@ class PasscodeManager: NSObject {
         self.completionHandler = completionHandler
 
         self.passcodeViewController = PasscodeViewController(hiddenOverlay:true)
-        viewController?.present(self.passcodeViewController!, animated: true, completion: nil)
+
+        self.window = LockWindow(frame: UIScreen.main.bounds)
+        self.window?.rootViewController = self.passcodeViewController!
+        self.window?.addSubview((self.passcodeViewController?.view)!)
+        self.window?.makeKeyAndVisible()
+
         self.updateUI()
     }
 
@@ -219,7 +229,12 @@ class PasscodeManager: NSObject {
     }
 
     func cancelButtonTaped() {
-        self.passcodeViewController?.dismiss(animated: true, completion: self.completionHandler)
+        self.completionHandler!()
+        self.dismissLockWindow()
+    }
+
+    func dismissLockWindow() {
+        self.window?.isHidden = true
         self.passcodeViewController = nil
     }
 
@@ -253,7 +268,7 @@ class PasscodeManager: NSObject {
 
         if self.dateAllowTryAgain! <= Date() {
             //Time elapsed, allow enter passcode again
-            self.timer?.invalidate()
+            self.timerBruteForce?.invalidate()
             self.passcodeViewController?.setEnableNumberButtons(isEnable: true)
             self.updateUI()
         }
@@ -280,8 +295,8 @@ class PasscodeManager: NSObject {
                 if passcodeFromFirstStep == passcodeValue {
                     //Save to keychain
                     OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcodeValue), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                    self.passcodeViewController?.dismiss(animated: true, completion: self.completionHandler!)
-                    self.passcodeViewController = nil
+                    self.completionHandler!()
+                    self.dismissLockWindow()
                 } else {
                     // Shake
                     self.passcodeViewController?.view.shakeHorizontally()
@@ -319,8 +334,8 @@ class PasscodeManager: NSObject {
 
                 if passcodeValue == passcodeFromKeychain {
                     OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                    self.passcodeViewController?.dismiss(animated: true, completion: self.completionHandler!)
-                    self.passcodeViewController = nil
+                    self.completionHandler!()
+                    self.dismissLockWindow()
                 } else {
                     // Shake
                     self.passcodeViewController?.view.shakeHorizontally()

@@ -84,16 +84,6 @@ class PasscodeViewController: UIViewController, Themeable {
         self.setIdentifiers()
     }
 
-    // MARK: - Rotation Control
-
-    override var shouldAutorotate: Bool {
-        return false
-    }
-
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
-    }
-
     // MARK: - User Interface
 
     func hideOverlay() {
