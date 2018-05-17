@@ -53,28 +53,18 @@ class PasscodeManager: NSObject {
     public let TimesPasscodeFailedKey: String =  "times-passcode-failed"
     public let DateAllowTryPasscodeAgainKey: String =  "date-allow-try-passcode-again"
     private var timesPasscodeFailed: Int {
-        get {
-            return self.userDefaults!.integer(forKey: TimesPasscodeFailedKey)
-        }
-        set {
-            self.userDefaults!.set(newValue, forKey: TimesPasscodeFailedKey)
+        didSet {
+            self.userDefaults!.set(timesPasscodeFailed, forKey: TimesPasscodeFailedKey)
         }
     }
     private var dateAllowTryAgain: Date? {
-        get {
-            if let data = self.userDefaults!.data(forKey: DateAllowTryPasscodeAgainKey) {
-                return NSKeyedUnarchiver.unarchiveObject(with: data) as? Date
-            } else {
-                return nil
-            }
-        }
-        set {
-            self.userDefaults!.set(NSKeyedArchiver.archivedData(withRootObject: newValue as Any), forKey: DateAllowTryPasscodeAgainKey)
+        didSet {
+            self.userDefaults!.set(NSKeyedArchiver.archivedData(withRootObject: dateAllowTryAgain as Any), forKey: DateAllowTryPasscodeAgainKey)
         }
     }
     private let timesAllowPasscodeFail: Int = 3
     private let multiplierBruteForce: Int = 10
-    private var timer: Timer?
+    private var timerBruteForce: Timer?
 
     // Utils
     var isPasscodeActivated: Bool {
@@ -111,6 +101,12 @@ class PasscodeManager: NSObject {
 
     public override init() {
         self.userDefaults = UserDefaults.standard
+
+        // Brute Force protection
+        self.timesPasscodeFailed = self.userDefaults!.integer(forKey: TimesPasscodeFailedKey)
+        if let data = self.userDefaults!.data(forKey: DateAllowTryPasscodeAgainKey) {
+            self.dateAllowTryAgain = NSKeyedUnarchiver.unarchiveObject(with: data) as? Date
+        }
 
         super.init()
     }
@@ -235,7 +231,7 @@ class PasscodeManager: NSObject {
             self.updatePasscodeInterfaceTime()
         }
 
-        self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updatePasscodeInterfaceTime), userInfo: nil, repeats: true)
+        self.timerBruteForce = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updatePasscodeInterfaceTime), userInfo: nil, repeats: true)
     }
 
     @objc func updatePasscodeInterfaceTime() {
