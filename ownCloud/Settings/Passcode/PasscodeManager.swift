@@ -41,14 +41,6 @@ class PasscodeManager: NSObject {
     private let passcodeKeychainPath = "passcode-keychain-path"
     private var passcodeMode: PasscodeInterfaceMode?
     private var passcodeViewController: PasscodeViewController?
-    private var passcodeFromKeychain: String? {
-        if let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(
-            forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) {
-            return NSKeyedUnarchiver.unarchiveObject(with: passcodeData) as? String
-        } else {
-            return nil
-        }
-    }
 
     // Add/Delete
     private var passcodeFromFirstStep: String?
@@ -82,6 +74,15 @@ class PasscodeManager: NSObject {
 
     var isPasscodeStoredOnKeychain: Bool {
         return (OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil)
+    }
+
+    private var passcodeFromKeychain: String? {
+        if let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(
+            forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) {
+            return NSKeyedUnarchiver.unarchiveObject(with: passcodeData) as? String
+        } else {
+            return nil
+        }
     }
 
     private var shouldBeLocked: Bool {
@@ -180,6 +181,27 @@ class PasscodeManager: NSObject {
         self.showWindowAnimated()
     }
 
+    func homeButtonPressed() {
+
+        //Protection to hide the PasscodeViewController if is on Delete modes to show the Unlock
+        if self.passcodeViewController != nil {
+            if self.passcodeMode == .deletePasscode ||
+                self.passcodeMode == .deletePasscodeError {
+                self.completionHandler!()
+                self.window?.isHidden = true
+                self.passcodeViewController = nil
+            }
+        }
+
+        //Store the date when the user pressed home button
+        if self.isPasscodeActivated, self.datePressedHomeButton == nil {
+            self.datePressedHomeButton = Date()
+        }
+
+        //Show the passcode
+        self.showPasscodeIfNeeded(hiddenOverlay: false)
+    }
+
     // MARK: - Interface updates
 
     private func updateUI() {
@@ -245,7 +267,7 @@ class PasscodeManager: NSObject {
         self.dismissWindowAnimated()
     }
 
-    func showWindowAnimated() {
+    private func showWindowAnimated() {
         let heigh = self.window?.bounds.height
         self.window?.frame = CGRect(x: 0, y: heigh!, width: (self.window?.frame.size.width)!, height: (self.window?.frame.size.height)!)
 
@@ -254,7 +276,7 @@ class PasscodeManager: NSObject {
         }, completion: nil)
     }
 
-    func dismissWindowAnimated() {
+    private func dismissWindowAnimated() {
         let heigh = self.window?.bounds.height
 
         UIView.transition(with: self.window!, duration: 0.6, options: [], animations: {() -> Void in
@@ -267,7 +289,7 @@ class PasscodeManager: NSObject {
 
     // MARK: - Brute force protection
 
-    func scheduledTimerToUpdateInterfaceTime() {
+    private func scheduledTimerToUpdateInterfaceTime() {
 
         DispatchQueue.main.async {
             self.updatePasscodeInterfaceTime()
@@ -276,7 +298,7 @@ class PasscodeManager: NSObject {
         self.timerBruteForce = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updatePasscodeInterfaceTime), userInfo: nil, repeats: true)
     }
 
-    @objc func updatePasscodeInterfaceTime() {
+    @objc private func updatePasscodeInterfaceTime() {
 
         let interval = Int((self.dateAllowTryAgain?.timeIntervalSinceNow)!)
         let seconds = interval % 60
@@ -301,7 +323,7 @@ class PasscodeManager: NSObject {
         }
     }
 
-    func getSecondsToTryAgain() -> Int {
+    private func getSecondsToTryAgain() -> Int {
         let powValue = pow(Decimal(multiplierBruteForce), ((timesPasscodeFailed+1) - timesAllowPasscodeFail))
         return Int(truncating: NSDecimalNumber(decimal: powValue))
     }
@@ -362,28 +384,5 @@ class PasscodeManager: NSObject {
                 break
             }
         }
-    }
-
-    // MARK: - Utils
-
-    func homeButtonPressed() {
-
-        //Protection to hide the PasscodeViewController if is on Delete modes to show the Unlock
-        if self.passcodeViewController != nil {
-            if self.passcodeMode == .deletePasscode ||
-                self.passcodeMode == .deletePasscodeError {
-                self.completionHandler!()
-                self.window?.isHidden = true
-                self.passcodeViewController = nil
-            }
-        }
-
-        //Store the date when the user pressed home button
-        if self.isPasscodeActivated, self.datePressedHomeButton == nil {
-            self.datePressedHomeButton = Date()
-        }
-
-        //Show the passcode
-        self.showPasscodeIfNeeded(hiddenOverlay: false)
     }
 }
