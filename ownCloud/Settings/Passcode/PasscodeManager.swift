@@ -128,10 +128,9 @@ class PasscodeManager: NSObject {
 
                 self.passcodeViewController = PasscodeViewController(hiddenOverlay:hiddenOverlay)
 
-                self.window = LockWindow(frame: UIScreen.main.nativeBounds)
+                self.window = LockWindow(frame: UIScreen.main.bounds)
                 self.window?.windowLevel = UIWindowLevelStatusBar
                 self.window?.rootViewController = self.passcodeViewController!
-                self.window?.addSubview((self.passcodeViewController?.view)!)
                 self.window?.makeKeyAndVisible()
 
                 // Brute force protection
@@ -224,7 +223,7 @@ class PasscodeManager: NSObject {
         } else {
             if self.passcodeViewController != nil {
                 //Protection to hide the PasscodeViewController only if is in unlock mode
-                if self.passcodeMode == .unlockPasscode,
+                if self.passcodeMode == .unlockPasscode ||
                     self.passcodeMode == .unlockPasscodeError {
                     self.dismissWindowAnimated()
                     self.datePressedHomeButton = nil

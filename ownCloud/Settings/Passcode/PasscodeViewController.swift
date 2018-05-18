@@ -59,6 +59,10 @@ class PasscodeViewController: UIViewController, Themeable {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return Theme.shared.activeCollection.statusBarStyle
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
