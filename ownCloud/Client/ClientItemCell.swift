@@ -73,9 +73,9 @@ class ClientItemCell: ThemeTableViewCell {
 
 	// MARK: - Present item
 	var item : OCItem? {
-		willSet {
-			if let item: OCItem = newValue {
-				updateWith(item)
+		didSet {
+			if let newItem: OCItem = item {
+				updateWith(newItem)
 			}
 		}
 	}
