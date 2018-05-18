@@ -41,6 +41,14 @@ class PasscodeManager: NSObject {
     private let passcodeKeychainPath = "passcode-keychain-path"
     private var passcodeMode: PasscodeInterfaceMode?
     private var passcodeViewController: PasscodeViewController?
+    private var passcodeFromKeychain: String? {
+        if let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(
+            forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) {
+            return NSKeyedUnarchiver.unarchiveObject(with: passcodeData) as? String
+        } else {
+            return nil
+        }
+    }
 
     // Add/Delete
     private var passcodeFromFirstStep: String?
@@ -324,11 +332,7 @@ class PasscodeManager: NSObject {
                 }
 
             case .unlockPasscode?, .unlockPasscodeError?:
-
-                let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                let passcodeFromKeychain = NSKeyedUnarchiver.unarchiveObject(with: passcodeData!) as? String
-
-                if passcodeValue == passcodeFromKeychain {
+                if passcodeValue == self.passcodeFromKeychain {
                     self.completionHandler!()
                 } else {
                     self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
@@ -345,11 +349,7 @@ class PasscodeManager: NSObject {
                 }
 
             case .deletePasscode?, .deletePasscodeError?:
-
-                let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                let passcodeFromKeychain = NSKeyedUnarchiver.unarchiveObject(with: passcodeData!) as? String
-
-                if passcodeValue == passcodeFromKeychain {
+                if passcodeValue == self.passcodeFromKeychain {
                     OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
                     self.completionHandler!()
                     self.dismissWindowAnimated()
