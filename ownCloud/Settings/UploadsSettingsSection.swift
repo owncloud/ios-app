@@ -88,6 +88,7 @@ class UploadsSettingsSection: SettingsSection {
             videosWifiOnlyRow?.value = newValue
         }
     }
+
     /// Path in which the video are going to be instant uploaded
     private var videoSelectedPath: String? {
         willSet {
@@ -138,7 +139,7 @@ class UploadsSettingsSection: SettingsSection {
         createVideoRows()
         createCommonRows()
 
-        self.headerTitle = "Instant Uploads".localized
+        self.headerTitle = "Instant Uploads".localized + " -- Work in progress"
         self.identifier = UploadsSectionIdentifier
 
         self.add(rows: [photosRow!, videosRow!])
