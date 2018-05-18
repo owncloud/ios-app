@@ -136,11 +136,7 @@ class PasscodeManager: NSObject {
                 }
 
                 self.passcodeViewController = PasscodeViewController(hiddenOverlay:hiddenOverlay)
-
-                self.window = LockWindow(frame: UIScreen.main.bounds)
-                self.window?.windowLevel = UIWindowLevelStatusBar
-                self.window?.rootViewController = self.passcodeViewController!
-                self.window?.makeKeyAndVisible()
+                self.createLockWindow()
 
                 // Brute force protection
                 if let date = self.dateAllowTryAgain, date > Date() {
@@ -171,14 +167,18 @@ class PasscodeManager: NSObject {
         self.completionHandler = completionHandler
 
         self.passcodeViewController = PasscodeViewController(hiddenOverlay:true)
-        self.window = LockWindow(frame: UIScreen.main.bounds)
-        self.window?.windowLevel = UIWindowLevelStatusBar
-        self.window?.rootViewController = self.passcodeViewController!
-        self.window?.makeKeyAndVisible()
+        self.createLockWindow()
 
         self.updateUI()
 
         self.showWindowAnimated()
+    }
+
+    func createLockWindow() {
+        self.window = LockWindow(frame: UIScreen.main.bounds)
+        self.window?.windowLevel = UIWindowLevelStatusBar
+        self.window?.rootViewController = self.passcodeViewController!
+        self.window?.makeKeyAndVisible()
     }
 
     func homeButtonPressed() {
