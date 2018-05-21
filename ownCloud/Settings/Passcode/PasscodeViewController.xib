@@ -27,10 +27,10 @@
                 <outlet property="number7Button" destination="fMx-64-bYq" id="hkg-rg-PhR"/>
                 <outlet property="number8Button" destination="qMI-IV-KI3" id="VXd-2L-UgC"/>
                 <outlet property="number9Button" destination="48Q-nf-LTg" id="KGD-3a-CUm"/>
-                <outlet property="overlayView" destination="j0o-EV-CLt" id="ioZ-St-Ekb"/>
+                <outlet property="overlayView" destination="uKf-M5-iJy" id="vF9-5v-oZW"/>
                 <outlet property="passcodeValueTextField" destination="aVw-W3-TdE" id="VA2-4s-T7G"/>
                 <outlet property="timeTryAgainMessageLabel" destination="vti-jb-9pW" id="lhh-6o-Laf"/>
-                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="993-TN-cUB"/>
                 <outletCollection property="numberButtons" destination="85k-O3-nSF" collectionClass="NSMutableArray" id="BSh-av-QrB"/>
                 <outletCollection property="numberButtons" destination="VzK-5I-Ct8" collectionClass="NSMutableArray" id="IRL-9T-0vZ"/>
                 <outletCollection property="numberButtons" destination="gBp-H8-606" collectionClass="NSMutableArray" id="ByX-Xp-Zqj"/>
@@ -200,7 +200,7 @@
                     <rect key="frame" x="58" y="559" width="259.5" height="108"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g0I-oo-iOZ" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="37.5" width="259.5" height="33"/>
+                            <rect key="frame" x="0.0" y="33" width="259.5" height="42"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <state key="normal" title="Cancel"/>
                             <connections>
@@ -222,25 +222,6 @@
                         <constraint firstItem="g0I-oo-iOZ" firstAttribute="centerX" secondItem="Nj5-Os-n8R" secondAttribute="centerX" id="WYk-uk-29d"/>
                         <constraint firstItem="vti-jb-9pW" firstAttribute="centerY" secondItem="Nj5-Os-n8R" secondAttribute="centerY" id="txx-IZ-xIF"/>
                     </constraints>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j0o-EV-CLt">
-                    <rect key="frame" x="0.0" y="20" width="375" height="647"/>
-                    <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QBU-JI-eXX" customClass="VectorImageView" customModule="ownCloud" customModuleProvider="target">
-                            <rect key="frame" x="16" y="199" width="343" height="249"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="QBU-JI-eXX" secondAttribute="height" multiplier="288:209" id="wem-ui-bKS"/>
-                            </constraints>
-                            <viewLayoutGuide key="safeArea" id="bPu-gf-4Ie"/>
-                        </view>
-                    </subviews>
-                    <constraints>
-                        <constraint firstItem="UcC-ep-zSQ" firstAttribute="trailing" secondItem="QBU-JI-eXX" secondAttribute="trailing" constant="16" id="BgT-UO-foV"/>
-                        <constraint firstItem="QBU-JI-eXX" firstAttribute="leading" secondItem="UcC-ep-zSQ" secondAttribute="leading" constant="16" id="E3G-Ks-jxW"/>
-                        <constraint firstItem="QBU-JI-eXX" firstAttribute="centerX" secondItem="j0o-EV-CLt" secondAttribute="centerX" id="bYl-yk-jDo"/>
-                        <constraint firstItem="QBU-JI-eXX" firstAttribute="centerY" secondItem="j0o-EV-CLt" secondAttribute="centerY" id="c7H-CF-2xU"/>
-                    </constraints>
-                    <viewLayoutGuide key="safeArea" id="UcC-ep-zSQ"/>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mT7-pc-IHc">
                     <rect key="frame" x="166.5" y="167.5" width="42" height="21"/>
@@ -264,9 +245,7 @@
                 <constraint firstItem="VzK-5I-Ct8" firstAttribute="leading" secondItem="85k-O3-nSF" secondAttribute="trailing" constant="25" id="EuE-GD-SY3"/>
                 <constraint firstItem="hgh-7z-Fto" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="KK7-QY-RvL"/>
                 <constraint firstItem="aVw-W3-TdE" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Lzc-pa-JS8"/>
-                <constraint firstItem="j0o-EV-CLt" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="MBC-mM-euK"/>
                 <constraint firstItem="qMI-IV-KI3" firstAttribute="top" secondItem="9xg-xz-Tph" secondAttribute="bottom" constant="25" id="O2s-gL-qH4"/>
-                <constraint firstItem="j0o-EV-CLt" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="OWj-yB-nIB"/>
                 <constraint firstItem="VzK-5I-Ct8" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="P6S-vO-P9J"/>
                 <constraint firstItem="fMx-64-bYq" firstAttribute="top" secondItem="IVZ-la-esK" secondAttribute="bottom" constant="25" id="Q9W-bu-dy2"/>
                 <constraint firstItem="9xg-xz-Tph" firstAttribute="top" secondItem="VzK-5I-Ct8" secondAttribute="bottom" constant="25" id="Sot-ps-Inc"/>
@@ -277,13 +256,11 @@
                 <constraint firstItem="Nj5-Os-n8R" firstAttribute="top" secondItem="TIO-8z-Ags" secondAttribute="bottom" constant="0.5" id="YPp-Bu-aM8"/>
                 <constraint firstItem="mT7-pc-IHc" firstAttribute="top" secondItem="aVw-W3-TdE" secondAttribute="bottom" constant="8" id="Yft-Ub-bYf"/>
                 <constraint firstItem="hgh-7z-Fto" firstAttribute="top" secondItem="gBp-H8-606" secondAttribute="bottom" constant="25" id="aXD-aW-e3M"/>
-                <constraint firstItem="j0o-EV-CLt" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="cJt-6X-I1F"/>
                 <constraint firstItem="9xg-xz-Tph" firstAttribute="leading" secondItem="IVZ-la-esK" secondAttribute="trailing" constant="25" id="ell-bh-JGr"/>
                 <constraint firstItem="Nj5-Os-n8R" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="hDc-9X-vps"/>
                 <constraint firstItem="9xg-xz-Tph" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="hPm-34-Af1"/>
                 <constraint firstItem="48Q-nf-LTg" firstAttribute="top" secondItem="hgh-7z-Fto" secondAttribute="bottom" constant="25" id="hXN-Dy-Mlb"/>
                 <constraint firstItem="qMI-IV-KI3" firstAttribute="leading" secondItem="fMx-64-bYq" secondAttribute="trailing" constant="25" id="n8n-7C-k46"/>
-                <constraint firstItem="j0o-EV-CLt" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="nCG-17-RFC"/>
                 <constraint firstItem="9xg-xz-Tph" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="ndv-9E-5cq"/>
                 <constraint firstItem="mT7-pc-IHc" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="ouC-YY-Hld"/>
                 <constraint firstItem="aVw-W3-TdE" firstAttribute="top" secondItem="eM3-MQ-PRk" secondAttribute="bottom" id="sMo-YS-hKJ"/>
@@ -293,6 +270,40 @@
             </constraints>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <point key="canvasLocation" x="33" y="53"/>
+        </view>
+        <view contentMode="scaleToFill" id="uKf-M5-iJy">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j0o-EV-CLt">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QBU-JI-eXX" customClass="VectorImageView" customModule="ownCloud" customModuleProvider="target">
+                            <rect key="frame" x="16" y="209" width="343" height="249"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="QBU-JI-eXX" secondAttribute="height" multiplier="288:209" id="wem-ui-bKS"/>
+                            </constraints>
+                            <viewLayoutGuide key="safeArea" id="bPu-gf-4Ie"/>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="UcC-ep-zSQ" firstAttribute="trailing" secondItem="QBU-JI-eXX" secondAttribute="trailing" constant="16" id="BgT-UO-foV"/>
+                        <constraint firstItem="QBU-JI-eXX" firstAttribute="leading" secondItem="UcC-ep-zSQ" secondAttribute="leading" constant="16" id="E3G-Ks-jxW"/>
+                        <constraint firstItem="QBU-JI-eXX" firstAttribute="centerX" secondItem="j0o-EV-CLt" secondAttribute="centerX" id="bYl-yk-jDo"/>
+                        <constraint firstItem="QBU-JI-eXX" firstAttribute="centerY" secondItem="j0o-EV-CLt" secondAttribute="centerY" id="c7H-CF-2xU"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="UcC-ep-zSQ"/>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="j0o-EV-CLt" firstAttribute="leading" secondItem="sWJ-px-SZT" secondAttribute="leading" id="M0g-Qn-0uu"/>
+                <constraint firstItem="j0o-EV-CLt" firstAttribute="top" secondItem="uKf-M5-iJy" secondAttribute="top" id="S8e-GB-Dfg"/>
+                <constraint firstItem="j0o-EV-CLt" firstAttribute="trailing" secondItem="sWJ-px-SZT" secondAttribute="trailing" id="m3G-ns-Lbt"/>
+                <constraint firstItem="sWJ-px-SZT" firstAttribute="bottom" secondItem="j0o-EV-CLt" secondAttribute="bottom" id="ngX-dT-IKO"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="sWJ-px-SZT"/>
+            <point key="canvasLocation" x="-499" y="53"/>
         </view>
     </objects>
 </document>

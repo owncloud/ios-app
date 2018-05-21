@@ -83,7 +83,14 @@ class PasscodeViewController: UIViewController, Themeable {
         //Overlay
         Theme.shared.add(tvgResourceFor: "owncloud-logo")
         logoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
+        
+        self.view.addSubview(self.overlayView)
         self.overlayView.isHidden = self.hiddenOverlay!
+        self.overlayView.translatesAutoresizingMaskIntoConstraints = false
+        self.overlayView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        self.overlayView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        self.overlayView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        self.overlayView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
 
         self.cancelButton?.titleLabel?.text = "Cancel".localized
 
@@ -101,11 +108,12 @@ class PasscodeViewController: UIViewController, Themeable {
     }
 
     func showOverlay() {
+
         self.overlayView.isHidden = false
+
         UIView.animate(withDuration: 0.6, delay: 0.0, options: [], animations: {
             self.overlayView.alpha = 1
         }, completion: { _ in
-            self.overlayView.isHidden = false
         })
     }
 
