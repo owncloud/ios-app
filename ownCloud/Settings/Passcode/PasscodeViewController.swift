@@ -119,10 +119,6 @@ class PasscodeViewController: UIViewController, Themeable {
 
     func setEnableNumberButtons(isEnable: Bool) {
 
-        for button in self.numberButtons! {
-            button.isEnabled = isEnable
-        }
-
         var alpha: CGFloat = 0.5
 
         if isEnable {
@@ -130,6 +126,7 @@ class PasscodeViewController: UIViewController, Themeable {
         }
 
         for button in self.numberButtons! {
+            button.isEnabled = isEnable
             button.alpha = alpha
         }
     }
