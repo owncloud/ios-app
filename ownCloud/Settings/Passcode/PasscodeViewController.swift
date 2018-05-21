@@ -36,6 +36,8 @@ class PasscodeViewController: UIViewController, Themeable {
     @IBOutlet weak var timeTryAgainMessageLabel: UILabel?
 
     // MARK: - Buttons
+    @IBOutlet var numberButtons: [ThemeButton]?
+
     @IBOutlet weak var number0Button: ThemeButton?
     @IBOutlet weak var number1Button: ThemeButton?
     @IBOutlet weak var number2Button: ThemeButton?
@@ -108,16 +110,10 @@ class PasscodeViewController: UIViewController, Themeable {
     }
 
     func setEnableNumberButtons(isEnable: Bool) {
-        self.number0Button?.isEnabled = isEnable
-        self.number1Button?.isEnabled = isEnable
-        self.number2Button?.isEnabled = isEnable
-        self.number3Button?.isEnabled = isEnable
-        self.number4Button?.isEnabled = isEnable
-        self.number5Button?.isEnabled = isEnable
-        self.number6Button?.isEnabled = isEnable
-        self.number7Button?.isEnabled = isEnable
-        self.number8Button?.isEnabled = isEnable
-        self.number9Button?.isEnabled = isEnable
+
+        for button in self.numberButtons! {
+            button.isEnabled = isEnable
+        }
 
         var alpha: CGFloat = 0.5
 
@@ -125,16 +121,9 @@ class PasscodeViewController: UIViewController, Themeable {
             alpha = 1.0
         }
 
-        self.number0Button?.alpha = alpha
-        self.number1Button?.alpha = alpha
-        self.number2Button?.alpha = alpha
-        self.number3Button?.alpha = alpha
-        self.number4Button?.alpha = alpha
-        self.number5Button?.alpha = alpha
-        self.number6Button?.alpha = alpha
-        self.number7Button?.alpha = alpha
-        self.number8Button?.alpha = alpha
-        self.number9Button?.alpha = alpha
+        for button in self.numberButtons! {
+            button.alpha = alpha
+        }
     }
 
     // MARK: - Actions
@@ -170,16 +159,9 @@ class PasscodeViewController: UIViewController, Themeable {
         self.passcodeValueTextField?.accessibilityIdentifier = "passcodeValueTextField"
         self.timeTryAgainMessageLabel?.accessibilityIdentifier = "timeTryAgainMessageLabel"
 
-        self.number0Button?.accessibilityIdentifier = "number0Button"
-        self.number1Button?.accessibilityIdentifier = "number1Button"
-        self.number2Button?.accessibilityIdentifier = "number2Button"
-        self.number3Button?.accessibilityIdentifier = "number3Button"
-        self.number4Button?.accessibilityIdentifier = "number4Button"
-        self.number5Button?.accessibilityIdentifier = "number5Button"
-        self.number6Button?.accessibilityIdentifier = "number6Button"
-        self.number7Button?.accessibilityIdentifier = "number7Button"
-        self.number8Button?.accessibilityIdentifier = "number8Button"
-        self.number9Button?.accessibilityIdentifier = "number9Button"
+        for button in self.numberButtons! {
+            button.accessibilityIdentifier = "number" + String(button.tag) + "Button"
+        }
 
         self.cancelButton?.accessibilityIdentifier = "cancelButton"
     }
@@ -196,16 +178,9 @@ class PasscodeViewController: UIViewController, Themeable {
         self.passcodeValueTextField?.applyThemeCollection(collection, itemStyle: .message, itemState: .normal)
         self.timeTryAgainMessageLabel?.applyThemeCollection(collection)
 
-        self.number0Button?.applyThemeCollection(collection, itemStyle: .neutral)
-        self.number1Button?.applyThemeCollection(collection, itemStyle: .neutral)
-        self.number2Button?.applyThemeCollection(collection, itemStyle: .neutral)
-        self.number3Button?.applyThemeCollection(collection, itemStyle: .neutral)
-        self.number4Button?.applyThemeCollection(collection, itemStyle: .neutral)
-        self.number5Button?.applyThemeCollection(collection, itemStyle: .neutral)
-        self.number6Button?.applyThemeCollection(collection, itemStyle: .neutral)
-        self.number7Button?.applyThemeCollection(collection, itemStyle: .neutral)
-        self.number8Button?.applyThemeCollection(collection, itemStyle: .neutral)
-        self.number9Button?.applyThemeCollection(collection, itemStyle: .neutral)
+        for button in self.numberButtons! {
+            button.applyThemeCollection(collection, itemStyle: .neutral)
+        }
 
         self.cancelButton?.applyThemeCollection(collection, itemStyle: .neutral)
     }

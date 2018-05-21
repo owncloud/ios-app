@@ -31,6 +31,16 @@
                 <outlet property="passcodeValueTextField" destination="aVw-W3-TdE" id="VA2-4s-T7G"/>
                 <outlet property="timeTryAgainMessageLabel" destination="vti-jb-9pW" id="lhh-6o-Laf"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outletCollection property="numberButtons" destination="85k-O3-nSF" collectionClass="NSMutableArray" id="BSh-av-QrB"/>
+                <outletCollection property="numberButtons" destination="VzK-5I-Ct8" collectionClass="NSMutableArray" id="IRL-9T-0vZ"/>
+                <outletCollection property="numberButtons" destination="gBp-H8-606" collectionClass="NSMutableArray" id="ByX-Xp-Zqj"/>
+                <outletCollection property="numberButtons" destination="IVZ-la-esK" collectionClass="NSMutableArray" id="MBx-cU-Zq0"/>
+                <outletCollection property="numberButtons" destination="9xg-xz-Tph" collectionClass="NSMutableArray" id="8bH-iw-hSD"/>
+                <outletCollection property="numberButtons" destination="hgh-7z-Fto" collectionClass="NSMutableArray" id="gbY-PB-Lus"/>
+                <outletCollection property="numberButtons" destination="fMx-64-bYq" collectionClass="NSMutableArray" id="blN-6w-Ych"/>
+                <outletCollection property="numberButtons" destination="qMI-IV-KI3" collectionClass="NSMutableArray" id="qlH-rQ-wpA"/>
+                <outletCollection property="numberButtons" destination="48Q-nf-LTg" collectionClass="NSMutableArray" id="dhQ-kt-vQr"/>
+                <outletCollection property="numberButtons" destination="TIO-8z-Ags" collectionClass="NSMutableArray" id="lov-ze-vFy"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -190,7 +200,7 @@
                     <rect key="frame" x="58" y="559" width="259.5" height="108"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g0I-oo-iOZ" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="33" width="259.5" height="42"/>
+                            <rect key="frame" x="0.0" y="37.5" width="259.5" height="33"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <state key="normal" title="Cancel"/>
                             <connections>
