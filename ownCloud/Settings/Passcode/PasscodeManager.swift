@@ -107,7 +107,7 @@ class PasscodeManager: NSObject {
 
     // MARK: - Init
 
-    static var sharedPasscodeManager = PasscodeManager()
+    static var shared = PasscodeManager()
 
     public override init() {
         // TODO: Use OCAppIdentity-provided user defaults in the future

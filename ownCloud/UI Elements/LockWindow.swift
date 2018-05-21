@@ -21,18 +21,10 @@ import UIKit
 //Subclass that only allows the protrait mode
 class LockWindow: UIWindow {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-
     // MARK: - Show and hide animations
     func showWindowAnimation(completion: (() -> Void)? = nil) {
-        let heigh = self.bounds.height
-        self.frame = CGRect(x: 0, y: heigh, width: self.frame.size.width, height: self.frame.size.height)
+        let height = self.bounds.height
+        self.frame = CGRect(x: 0, y: height, width: self.frame.size.width, height: self.frame.size.height)
 
         UIView.transition(with: self, duration: 0.6, options: [], animations: {() -> Void in
             self.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height)
@@ -42,10 +34,10 @@ class LockWindow: UIWindow {
     }
 
     func hideWindowAnimation(completion: (() -> Void)? = nil) {
-        let heigh = self.bounds.height
+        let height = self.bounds.height
 
         UIView.transition(with: self, duration: 0.6, options: [], animations: {() -> Void in
-            self.frame = CGRect(x: 0, y: heigh, width: self.frame.size.width, height: self.frame.size.height)
+            self.frame = CGRect(x: 0, y: height, width: self.frame.size.width, height: self.frame.size.height)
         }, completion: {(_) in
             completion?()
         })
