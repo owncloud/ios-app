@@ -132,7 +132,7 @@ class PasscodeManager: NSObject {
                 self.completionHandler = {
                     self.datePressedHomeButton = nil
                     self.timesPasscodeFailed = 0
-                    self.dismissWindowAnimated()
+                    self.dismissPasscode()
                 }
 
                 self.passcodeViewController = PasscodeViewController(hiddenOverlay:hiddenOverlay)
@@ -171,7 +171,7 @@ class PasscodeManager: NSObject {
 
         self.updateUI()
 
-        self.showWindowAnimated()
+        self.window?.showWindowAnimation()
     }
 
     func createLockWindow() {
@@ -255,7 +255,7 @@ class PasscodeManager: NSObject {
                 //Protection to hide the PasscodeViewController only if is in unlock mode
                 if self.passcodeMode == .unlockPasscode ||
                     self.passcodeMode == .unlockPasscodeError {
-                    self.dismissWindowAnimated()
+                    self.dismissPasscode()
                     self.datePressedHomeButton = nil
                 }
             }
@@ -264,27 +264,14 @@ class PasscodeManager: NSObject {
 
     func cancelButtonTaped() {
         self.completionHandler!()
-        self.dismissWindowAnimated()
+        self.dismissPasscode()
     }
 
-    private func showWindowAnimated() {
-        let heigh = self.window?.bounds.height
-        self.window?.frame = CGRect(x: 0, y: heigh!, width: (self.window?.frame.size.width)!, height: (self.window?.frame.size.height)!)
-
-        UIView.transition(with: self.window!, duration: 0.6, options: [], animations: {() -> Void in
-            self.window?.frame = CGRect(x: 0, y: 0, width: (self.window?.frame.size.width)!, height: (self.window?.frame.size.height)!)
-        }, completion: nil)
-    }
-
-    private func dismissWindowAnimated() {
-        let heigh = self.window?.bounds.height
-
-        UIView.transition(with: self.window!, duration: 0.6, options: [], animations: {() -> Void in
-            self.window?.frame = CGRect(x: 0, y: heigh!, width: (self.window?.frame.size.width)!, height: (self.window?.frame.size.height)!)
-        }, completion: {(_) in
+    private func dismissPasscode() {
+        self.window?.hideWindowAnimation {
             self.window?.isHidden = true
             self.passcodeViewController = nil
-        })
+        }
     }
 
     // MARK: - Brute force protection
@@ -345,7 +332,7 @@ class PasscodeManager: NSObject {
                     //Save to keychain
                     OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcodeValue), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
                     self.completionHandler!()
-                    self.dismissWindowAnimated()
+                    self.dismissPasscode()
                 } else {
                     self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
                     self.passcodeMode = .addPasscodeFirstStepAfterErrorOnSecond
@@ -374,7 +361,7 @@ class PasscodeManager: NSObject {
                 if passcodeValue == self.passcodeFromKeychain {
                     OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
                     self.completionHandler!()
-                    self.dismissWindowAnimated()
+                    self.dismissPasscode()
                 } else {
                     self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
                     self.passcodeMode = .deletePasscodeError

@@ -29,4 +29,25 @@ class LockWindow: UIWindow {
     }
     */
 
+    // MARK: - Show and hide animations
+    func showWindowAnimation(completion: (() -> Void)? = nil) {
+        let heigh = self.bounds.height
+        self.frame = CGRect(x: 0, y: heigh, width: self.frame.size.width, height: self.frame.size.height)
+
+        UIView.transition(with: self, duration: 0.6, options: [], animations: {() -> Void in
+            self.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height)
+        }, completion: {(_) in
+            completion?()
+        })
+    }
+
+    func hideWindowAnimation(completion: (() -> Void)? = nil) {
+        let heigh = self.bounds.height
+
+        UIView.transition(with: self, duration: 0.6, options: [], animations: {() -> Void in
+            self.frame = CGRect(x: 0, y: heigh, width: self.frame.size.width, height: self.frame.size.height)
+        }, completion: {(_) in
+            completion?()
+        })
+    }
 }
