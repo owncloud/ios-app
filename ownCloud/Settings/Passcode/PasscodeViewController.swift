@@ -20,14 +20,49 @@ import UIKit
 
 typealias CompletionHandler = (() -> Void)
 
+class OverlayPasscodeView: UIView {
+
+    // MARK: - Overlay view
+    @IBOutlet var logoTVGView : VectorImageView!
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+    func loadOverlay(isHidden: Bool, viewToShow: UIView) {
+        Theme.shared.add(tvgResourceFor: "owncloud-logo")
+        logoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
+        self.isHidden = isHidden
+    }
+
+    func hide() {
+        UIView.animate(withDuration: 0.6, delay: 0.0, options: [], animations: {
+            self.alpha = 0
+        }, completion: { _ in
+            self.isHidden = true
+        })
+    }
+
+    func show() {
+
+        self.isHidden = false
+
+        UIView.animate(withDuration: 0.6, delay: 0.0, options: [], animations: {
+            self.alpha = 1
+        }, completion: { _ in
+        })
+    }
+}
+
 class PasscodeViewController: UIViewController, Themeable {
 
     // MARK: - Overlay
     var hiddenOverlay: Bool?
-
-    // MARK: - Overlay view
-    @IBOutlet var overlayView: UIView!
-    @IBOutlet var logoTVGView : VectorImageView!
+    @IBOutlet var overlayPasscodeView: OverlayPasscodeView!
 
     // MARK: - Messages and input text
     @IBOutlet weak var messageLabel: UILabel?
@@ -68,41 +103,13 @@ class PasscodeViewController: UIViewController, Themeable {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //Overlay
-        Theme.shared.add(tvgResourceFor: "owncloud-logo")
-        logoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
-        
-        self.view.addSubview(self.overlayView)
-        self.overlayView.isHidden = self.hiddenOverlay!
-        self.overlayView.translatesAutoresizingMaskIntoConstraints = false
-        self.overlayView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
-        self.overlayView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        self.overlayView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
-        self.overlayView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        self.view.addSubview(self.overlayPasscodeView)
+        self.overlayPasscodeView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        self.overlayPasscodeView.loadOverlay(isHidden: self.hiddenOverlay!, viewToShow: self.view)
 
         self.cancelButton?.titleLabel?.text = "Cancel".localized
 
         self.setIdentifiers()
-    }
-
-    // MARK: - User Interface
-
-    func hideOverlay() {
-        UIView.animate(withDuration: 0.6, delay: 0.0, options: [], animations: {
-            self.overlayView.alpha = 0
-        }, completion: { _ in
-            self.overlayView.isHidden = true
-        })
-    }
-
-    func showOverlay() {
-
-        self.overlayView.isHidden = false
-
-        UIView.animate(withDuration: 0.6, delay: 0.0, options: [], animations: {
-            self.overlayView.alpha = 1
-        }, completion: { _ in
-        })
     }
 
     func setEnableNumberButtons(isEnable: Bool) {
@@ -145,7 +152,7 @@ class PasscodeViewController: UIViewController, Themeable {
 
     private func setIdentifiers() {
 
-        self.overlayView.accessibilityIdentifier = "overlayView"
+        self.overlayPasscodeView.accessibilityIdentifier = "overlayView"
 
         self.messageLabel?.accessibilityIdentifier = "messageLabel"
         self.errorMessageLabel?.accessibilityIdentifier = "errorMessageLabel"
@@ -164,7 +171,7 @@ class PasscodeViewController: UIViewController, Themeable {
     func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 
         self.view.backgroundColor = collection.tableBackgroundColor
-        self.overlayView.backgroundColor = collection.tableBackgroundColor
+        self.overlayPasscodeView.backgroundColor = collection.tableBackgroundColor
 
         self.messageLabel?.applyThemeCollection(collection, itemStyle: .bigTitle, itemState: .normal)
         self.errorMessageLabel?.applyThemeCollection(collection)

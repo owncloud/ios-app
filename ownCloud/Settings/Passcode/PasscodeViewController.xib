@@ -15,12 +15,11 @@
             <connections>
                 <outlet property="cancelButton" destination="g0I-oo-iOZ" id="vc0-3w-JYu"/>
                 <outlet property="errorMessageLabel" destination="mT7-pc-IHc" id="GXQ-1O-GTr"/>
-                <outlet property="logoTVGView" destination="QBU-JI-eXX" id="8BS-IM-tlB"/>
                 <outlet property="messageLabel" destination="ox7-yY-YRf" id="eAi-i1-wkN"/>
-                <outlet property="overlayView" destination="uKf-M5-iJy" id="vF9-5v-oZW"/>
+                <outlet property="overlayPasscodeView" destination="uKf-M5-iJy" id="k3H-D7-npa"/>
                 <outlet property="passcodeValueTextField" destination="aVw-W3-TdE" id="VA2-4s-T7G"/>
                 <outlet property="timeTryAgainMessageLabel" destination="vti-jb-9pW" id="lhh-6o-Laf"/>
-                <outlet property="view" destination="i5M-Pr-FkT" id="993-TN-cUB"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="Olu-Zt-Enh"/>
                 <outletCollection property="numberButtons" destination="85k-O3-nSF" collectionClass="NSMutableArray" id="BSh-av-QrB"/>
                 <outletCollection property="numberButtons" destination="VzK-5I-Ct8" collectionClass="NSMutableArray" id="IRL-9T-0vZ"/>
                 <outletCollection property="numberButtons" destination="gBp-H8-606" collectionClass="NSMutableArray" id="ByX-Xp-Zqj"/>
@@ -261,38 +260,29 @@
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <point key="canvasLocation" x="33" y="53"/>
         </view>
-        <view contentMode="scaleToFill" id="uKf-M5-iJy">
+        <view contentMode="scaleToFill" id="uKf-M5-iJy" customClass="OverlayPasscodeView" customModule="ownCloud" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j0o-EV-CLt">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                    <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QBU-JI-eXX" customClass="VectorImageView" customModule="ownCloud" customModuleProvider="target">
-                            <rect key="frame" x="16" y="209" width="343" height="249"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="QBU-JI-eXX" secondAttribute="height" multiplier="288:209" id="wem-ui-bKS"/>
-                            </constraints>
-                            <viewLayoutGuide key="safeArea" id="bPu-gf-4Ie"/>
-                        </view>
-                    </subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QBU-JI-eXX" customClass="VectorImageView" customModule="ownCloud" customModuleProvider="target">
+                    <rect key="frame" x="16" y="209" width="343" height="249"/>
                     <constraints>
-                        <constraint firstItem="UcC-ep-zSQ" firstAttribute="trailing" secondItem="QBU-JI-eXX" secondAttribute="trailing" constant="16" id="BgT-UO-foV"/>
-                        <constraint firstItem="QBU-JI-eXX" firstAttribute="leading" secondItem="UcC-ep-zSQ" secondAttribute="leading" constant="16" id="E3G-Ks-jxW"/>
-                        <constraint firstItem="QBU-JI-eXX" firstAttribute="centerX" secondItem="j0o-EV-CLt" secondAttribute="centerX" id="bYl-yk-jDo"/>
-                        <constraint firstItem="QBU-JI-eXX" firstAttribute="centerY" secondItem="j0o-EV-CLt" secondAttribute="centerY" id="c7H-CF-2xU"/>
+                        <constraint firstAttribute="width" secondItem="QBU-JI-eXX" secondAttribute="height" multiplier="288:209" id="wem-ui-bKS"/>
                     </constraints>
-                    <viewLayoutGuide key="safeArea" id="UcC-ep-zSQ"/>
+                    <viewLayoutGuide key="safeArea" id="bPu-gf-4Ie"/>
                 </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="j0o-EV-CLt" firstAttribute="leading" secondItem="sWJ-px-SZT" secondAttribute="leading" id="M0g-Qn-0uu"/>
-                <constraint firstItem="j0o-EV-CLt" firstAttribute="top" secondItem="uKf-M5-iJy" secondAttribute="top" id="S8e-GB-Dfg"/>
-                <constraint firstItem="j0o-EV-CLt" firstAttribute="trailing" secondItem="sWJ-px-SZT" secondAttribute="trailing" id="m3G-ns-Lbt"/>
-                <constraint firstItem="sWJ-px-SZT" firstAttribute="bottom" secondItem="j0o-EV-CLt" secondAttribute="bottom" id="ngX-dT-IKO"/>
+                <constraint firstItem="sWJ-px-SZT" firstAttribute="trailing" secondItem="QBU-JI-eXX" secondAttribute="trailing" constant="16" id="Ls7-FP-Qz4"/>
+                <constraint firstItem="QBU-JI-eXX" firstAttribute="centerX" secondItem="uKf-M5-iJy" secondAttribute="centerX" id="RXZ-ff-cl7"/>
+                <constraint firstItem="QBU-JI-eXX" firstAttribute="leading" secondItem="sWJ-px-SZT" secondAttribute="leading" constant="16" id="dVa-T1-0Dl"/>
+                <constraint firstItem="QBU-JI-eXX" firstAttribute="centerY" secondItem="uKf-M5-iJy" secondAttribute="centerY" id="y0Z-3L-3Yx"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="sWJ-px-SZT"/>
+            <connections>
+                <outlet property="logoTVGView" destination="QBU-JI-eXX" id="0CK-e1-2Nd"/>
+            </connections>
             <point key="canvasLocation" x="-499" y="53"/>
         </view>
     </objects>
