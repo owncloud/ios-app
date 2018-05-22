@@ -126,10 +126,15 @@ class SecuritySettingsSection: SettingsSection {
         passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
             if let passcodeSwitch = sender as? UISwitch {
 
+                //Store the setted frequency to recovery it in cancel delete
+                let originalFrequency = self.frequency
+
                 //Show the passcode UI
                 PasscodeManager.shared.showAddOrDeletePasscode(completionHandler: {
                         if PasscodeManager.shared.isPasscodeStoredOnKeychain {
                             //Activated
+                            self.frequencyRow?.cell?.detailTextLabel?.text = originalFrequency.toString()
+                            self.frequency = originalFrequency
                             self.isPasscodeSecurityEnabled = true
                         } else {
                             //Cancelled

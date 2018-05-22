@@ -191,7 +191,10 @@ class PasscodeManager: NSObject {
         }
 
         //Store the date when the user pressed home button
-        if self.isPasscodeActivated, self.dateApplicationWillResignActive == nil {
+        if self.isPasscodeActivated,
+            self.dateApplicationWillResignActive == nil,
+            self.passcodeViewController == nil || self.passcodeMode != .unlockPasscode,
+            self.passcodeViewController == nil || self.passcodeMode != .unlockPasscodeError {
             self.dateApplicationWillResignActive = Date()
         }
 
