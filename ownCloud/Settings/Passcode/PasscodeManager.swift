@@ -300,7 +300,8 @@ class PasscodeManager: NSObject {
     // MARK: - Brute force protection
 
     func showBiometricalIfNeeded() {
-        if  self.biometricalStatus == BiometricalStatus.notShown,,
+        if  self.biometricalStatus == BiometricalStatus.notShown,
+            self.dateAllowTryAgain! <= Date(),
             (self.userDefaults?.bool(forKey: SecuritySettingsBiometricalKey))! {
             self.authenticateUserWithBiometrical()
         }
@@ -337,6 +338,7 @@ class PasscodeManager: NSObject {
             self.timerBruteForce?.invalidate()
             self.passcodeViewController?.setEnableNumberButtons(isEnable: true)
             self.updateUI()
+            self.showBiometricalIfNeeded()
         }
     }
 
@@ -420,7 +422,7 @@ class PasscodeManager: NSObject {
                 if success {
                     self.biometricalStatus = BiometricalStatus.success
                     DispatchQueue.main.async {
-                        self.completionHandler!()
+                        self.dismissPasscode(animated: true)
                     }
                 } else {
                     self.biometricalStatus = BiometricalStatus.error
