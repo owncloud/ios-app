@@ -155,7 +155,7 @@ class PasscodeManager: NSObject {
         }
     }
 
-    func showAddOrEditPasscode(completionHandler: @escaping CompletionHandler) {
+    func showAddOrDeletePasscode(completionHandler: @escaping CompletionHandler) {
 
         if isPasscodeActivated {
             self.passcodeMode = PasscodeInterfaceMode.deletePasscode
@@ -180,7 +180,7 @@ class PasscodeManager: NSObject {
         self.window?.makeKeyAndVisible()
     }
 
-    func homeButtonPressed() {
+    func applicationWillResignActive() {
 
         //Protection to hide the PasscodeViewController if is on Delete modes to show the Unlock
         if self.passcodeViewController != nil {
