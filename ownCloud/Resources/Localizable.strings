@@ -68,3 +68,33 @@
 "This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
 "Delete" = "Delete";
 "Deletion of '%@' failed" = "Deletion of '%@' failed";
+
+/* Settings Messages */
+
+"Security" = "Security";
+"Passcode Lock" = "Passcode Lock";
+"Face ID" = "Face ID";
+"Touch ID" = "Touch ID";
+"Instant Uploads" = "Instant Uploads";
+"Videos" = "Videos";
+"Photos" = "Photos";
+"Background uploads" = "Background uploads";
+"Wifi only" = "Wifi only";
+"Settings" = "Settings";
+"Frequency" = "Frequency";
+"Select the frequency that security should be showed" = "Select the frequency that security should be showed";
+"Upload videos via WiFi only" = "Upload videos via WiFi only";
+"Upload pictures via WiFi only" = "Upload pictures via WiFi only";
+"More" = "More";
+"Send feedback" = "Send feedback";
+"Recommend to a friend" = "Recommend to a friend";
+"Privacy Policy" = "Privacy Policy";
+"Video upload path" = "Video upload path";
+"Photo upload path" = "Photo upload path";
+"Always" = "Always";
+"1 minute" = "1 minute";
+"5 minutes" = "5 minutes";
+"30 minutes" = "30 minutes";
+"Please configure an email account" = "Please configure an email account";
+"You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
+"Do you want to open the next url?" = "Do you want to open the next url?";

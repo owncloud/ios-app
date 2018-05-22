@@ -420,14 +420,14 @@ class BookmarkViewController: StaticTableViewController {
 			switch mode {
 				case .create:
 					// Add bookmark
-					BookmarkManager.sharedBookmarkManager.addBookmark(bookmark!)
-					BookmarkManager.sharedBookmarkManager.saveBookmarks()
+					BookmarkManager.shared.addBookmark(bookmark!)
+					BookmarkManager.shared.saveBookmarks()
 
 				case .edit:
 					// Update original bookmark
 					originalBookmark?.setValuesFrom(bookmark)
-					BookmarkManager.sharedBookmarkManager.saveBookmarks()
-					BookmarkManager.sharedBookmarkManager.postChangeNotification()
+					BookmarkManager.shared.saveBookmarks()
+					BookmarkManager.shared.postChangeNotification()
 			}
 
 			self.presentingViewController?.dismiss(animated: true, completion: nil)
