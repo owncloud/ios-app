@@ -134,7 +134,7 @@ class PasscodeViewController: UIViewController, Themeable {
     // MARK: - Actions
 
     @IBAction func cancelButton(sender: UIButton) {
-        PasscodeManager.shared.cancelButtonTaped()
+        PasscodeManager.shared.dismissPasscode(animated: true)
     }
 
     @IBAction func numberButton(sender: UIButton) {

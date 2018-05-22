@@ -44,23 +44,23 @@ class PasscodeManager: NSObject {
 
     // Add/Delete
     private var passcodeFromFirstStep: String?
-    private var completionHandler: CompletionHandler?
+    private var completionHandler: CompletionHandler!
 
     // Unlock
     private var datePressedHomeButton: Date?
-    private var userDefaults: UserDefaults?
+    private var userDefaults: UserDefaults!
 
     // Brute force protection
     public let TimesPasscodeFailedKey: String =  "times-passcode-failed"
     public let DateAllowTryPasscodeAgainKey: String =  "date-allow-try-passcode-again"
     private var timesPasscodeFailed: Int {
         didSet {
-            self.userDefaults!.set(timesPasscodeFailed, forKey: TimesPasscodeFailedKey)
+            self.userDefaults.set(timesPasscodeFailed, forKey: TimesPasscodeFailedKey)
         }
     }
     private var dateAllowTryAgain: Date? {
         didSet {
-            self.userDefaults!.set(NSKeyedArchiver.archivedData(withRootObject: dateAllowTryAgain as Any), forKey: DateAllowTryPasscodeAgainKey)
+            self.userDefaults.set(NSKeyedArchiver.archivedData(withRootObject: dateAllowTryAgain as Any), forKey: DateAllowTryPasscodeAgainKey)
         }
     }
     private let timesAllowPasscodeFail: Int = 3
@@ -69,7 +69,7 @@ class PasscodeManager: NSObject {
 
     // Utils
     var isPasscodeActivated: Bool {
-        return (self.userDefaults!.bool(forKey: SecuritySettingsPasscodeKey) && isPasscodeStoredOnKeychain)
+        return (self.userDefaults.bool(forKey: SecuritySettingsPasscodeKey) && isPasscodeStoredOnKeychain)
     }
 
     var isPasscodeStoredOnKeychain: Bool {
@@ -114,8 +114,8 @@ class PasscodeManager: NSObject {
         self.userDefaults = UserDefaults(suiteName: OCAppIdentity.shared().appGroupIdentifier) ?? UserDefaults.standard
 
         // Brute Force protection
-        self.timesPasscodeFailed = self.userDefaults!.integer(forKey: TimesPasscodeFailedKey)
-        if let data = self.userDefaults!.data(forKey: DateAllowTryPasscodeAgainKey) {
+        self.timesPasscodeFailed = self.userDefaults.integer(forKey: TimesPasscodeFailedKey)
+        if let data = self.userDefaults.data(forKey: DateAllowTryPasscodeAgainKey) {
             self.dateAllowTryAgain = NSKeyedUnarchiver.unarchiveObject(with: data) as? Date
         }
 
@@ -132,7 +132,6 @@ class PasscodeManager: NSObject {
                 self.completionHandler = {
                     self.datePressedHomeButton = nil
                     self.timesPasscodeFailed = 0
-                    self.dismissPasscode()
                 }
 
                 self.passcodeViewController = PasscodeViewController(hiddenOverlay:hiddenOverlay)
@@ -187,9 +186,7 @@ class PasscodeManager: NSObject {
         if self.passcodeViewController != nil {
             if self.passcodeMode == .deletePasscode ||
                 self.passcodeMode == .deletePasscodeError {
-                self.completionHandler!()
-                self.window?.isHidden = true
-                self.passcodeViewController = nil
+                self.dismissPasscode(animated: false)
             }
         }
 
@@ -207,7 +204,7 @@ class PasscodeManager: NSObject {
     private func updateUI() {
 
         var messageText : String?
-        var errorText : String? = ""
+        var errorText : String! = ""
 
         switch self.passcodeMode {
         case .addPasscodeFirstStep?:
@@ -255,22 +252,27 @@ class PasscodeManager: NSObject {
                 //Protection to hide the PasscodeViewController only if is in unlock mode
                 if self.passcodeMode == .unlockPasscode ||
                     self.passcodeMode == .unlockPasscodeError {
-                    self.dismissPasscode()
+                    self.dismissPasscode(animated: true)
                     self.datePressedHomeButton = nil
                 }
             }
         }
     }
 
-    func cancelButtonTaped() {
-        self.completionHandler!()
-        self.dismissPasscode()
-    }
+    func dismissPasscode(animated:Bool) {
 
-    private func dismissPasscode() {
-        self.window?.hideWindowAnimation {
+        let hideWindow = {
             self.window?.isHidden = true
             self.passcodeViewController = nil
+        }
+
+        self.completionHandler()
+        if animated {
+            self.window?.hideWindowAnimation {
+                hideWindow()
+            }
+        } else {
+            hideWindow()
         }
     }
 
@@ -331,8 +333,7 @@ class PasscodeManager: NSObject {
                 if passcodeFromFirstStep == passcodeValue {
                     //Save to keychain
                     OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcodeValue), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                    self.completionHandler!()
-                    self.dismissPasscode()
+                    self.dismissPasscode(animated: true)
                 } else {
                     self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
                     self.passcodeMode = .addPasscodeFirstStepAfterErrorOnSecond
@@ -342,7 +343,7 @@ class PasscodeManager: NSObject {
 
             case .unlockPasscode?, .unlockPasscodeError?:
                 if passcodeValue == self.passcodeFromKeychain {
-                    self.completionHandler!()
+                    self.dismissPasscode(animated: true)
                 } else {
                     self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
                     self.passcodeMode = .unlockPasscodeError
@@ -360,8 +361,7 @@ class PasscodeManager: NSObject {
             case .deletePasscode?, .deletePasscodeError?:
                 if passcodeValue == self.passcodeFromKeychain {
                     OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                    self.completionHandler!()
-                    self.dismissPasscode()
+                    self.dismissPasscode(animated: true)
                 } else {
                     self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
                     self.passcodeMode = .deletePasscodeError
