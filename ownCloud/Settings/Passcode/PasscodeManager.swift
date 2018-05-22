@@ -47,7 +47,7 @@ class PasscodeManager: NSObject {
     private var completionHandler: CompletionHandler!
 
     // Unlock
-    private var datePressedHomeButton: Date?
+    private var dateApplicationWillResignActive: Date?
     private var userDefaults: UserDefaults!
 
     // Brute force protection
@@ -89,7 +89,7 @@ class PasscodeManager: NSObject {
         var output: Bool = true
 
         if isPasscodeActivated {
-            if let date = self.datePressedHomeButton {
+            if let date = self.dateApplicationWillResignActive {
 
                 let elapsedSeconds = Date().timeIntervalSince(date)
                 let minSecondsToAsk = self.userDefaults?.integer(forKey: SecuritySettingsFrequencyKey)
@@ -130,7 +130,7 @@ class PasscodeManager: NSObject {
             if self.passcodeViewController == nil {
 
                 self.completionHandler = {
-                    self.datePressedHomeButton = nil
+                    self.dateApplicationWillResignActive = nil
                     self.timesPasscodeFailed = 0
                 }
 
@@ -191,8 +191,8 @@ class PasscodeManager: NSObject {
         }
 
         //Store the date when the user pressed home button
-        if self.isPasscodeActivated, self.datePressedHomeButton == nil {
-            self.datePressedHomeButton = Date()
+        if self.isPasscodeActivated, self.dateApplicationWillResignActive == nil {
+            self.dateApplicationWillResignActive = Date()
         }
 
         //Show the passcode
@@ -253,7 +253,7 @@ class PasscodeManager: NSObject {
                 if self.passcodeMode == .unlockPasscode ||
                     self.passcodeMode == .unlockPasscodeError {
                     self.dismissPasscode(animated: true)
-                    self.datePressedHomeButton = nil
+                    self.dateApplicationWillResignActive = nil
                 }
             }
         }
