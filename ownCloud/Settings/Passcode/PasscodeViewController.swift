@@ -37,18 +37,6 @@ class PasscodeViewController: UIViewController, Themeable {
 
     // MARK: - Buttons
     @IBOutlet var numberButtons: [ThemeButton]?
-
-    @IBOutlet weak var number0Button: ThemeButton?
-    @IBOutlet weak var number1Button: ThemeButton?
-    @IBOutlet weak var number2Button: ThemeButton?
-    @IBOutlet weak var number3Button: ThemeButton?
-    @IBOutlet weak var number4Button: ThemeButton?
-    @IBOutlet weak var number5Button: ThemeButton?
-    @IBOutlet weak var number6Button: ThemeButton?
-    @IBOutlet weak var number7Button: ThemeButton?
-    @IBOutlet weak var number8Button: ThemeButton?
-    @IBOutlet weak var number9Button: ThemeButton?
-
     @IBOutlet weak var cancelButton: ThemeButton?
 
     // MARK: - Initalization view

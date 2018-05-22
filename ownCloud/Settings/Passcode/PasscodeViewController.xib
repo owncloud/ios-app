@@ -17,16 +17,6 @@
                 <outlet property="errorMessageLabel" destination="mT7-pc-IHc" id="GXQ-1O-GTr"/>
                 <outlet property="logoTVGView" destination="QBU-JI-eXX" id="8BS-IM-tlB"/>
                 <outlet property="messageLabel" destination="ox7-yY-YRf" id="eAi-i1-wkN"/>
-                <outlet property="number0Button" destination="TIO-8z-Ags" id="hV2-D0-uic"/>
-                <outlet property="number1Button" destination="85k-O3-nSF" id="8in-x2-fMh"/>
-                <outlet property="number2Button" destination="VzK-5I-Ct8" id="3Wv-y7-bmT"/>
-                <outlet property="number3Button" destination="gBp-H8-606" id="crl-kv-I0v"/>
-                <outlet property="number4Button" destination="IVZ-la-esK" id="Tza-fp-Zn4"/>
-                <outlet property="number5Button" destination="9xg-xz-Tph" id="aca-WN-Li4"/>
-                <outlet property="number6Button" destination="hgh-7z-Fto" id="bIY-bK-nXr"/>
-                <outlet property="number7Button" destination="fMx-64-bYq" id="hkg-rg-PhR"/>
-                <outlet property="number8Button" destination="qMI-IV-KI3" id="VXd-2L-UgC"/>
-                <outlet property="number9Button" destination="48Q-nf-LTg" id="KGD-3a-CUm"/>
                 <outlet property="overlayView" destination="uKf-M5-iJy" id="vF9-5v-oZW"/>
                 <outlet property="passcodeValueTextField" destination="aVw-W3-TdE" id="VA2-4s-T7G"/>
                 <outlet property="timeTryAgainMessageLabel" destination="vti-jb-9pW" id="lhh-6o-Laf"/>
