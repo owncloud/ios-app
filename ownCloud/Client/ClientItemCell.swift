@@ -24,6 +24,10 @@ class ClientItemCell: ThemeTableViewCell {
 	var detailLabel : UILabel = UILabel()
 	var iconView : UIImageView = UIImageView()
 
+	var activeThumbnailRequestProgress : Progress?
+
+	weak var core : OCCore?
+
 	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		prepareViewAndConstraints()
@@ -49,13 +53,13 @@ class ClientItemCell: ThemeTableViewCell {
 		self.contentView.addSubview(iconView)
 
 		iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 20).isActive = true
-		iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -25).isActive = true
-		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -25).isActive = true
+		iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -15).isActive = true
+		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -15).isActive = true
 
 		titleLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -20).isActive = true
 		detailLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -20).isActive = true
 
-		iconView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+		iconView.widthAnchor.constraint(equalToConstant: 60).isActive = true
 		iconView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
 
 		titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20).isActive = true
@@ -69,16 +73,22 @@ class ClientItemCell: ThemeTableViewCell {
 
 	// MARK: - Present item
 	var item : OCItem? {
-		willSet {
-			if let item: OCItem = newValue {
-				updateWith(item)
+		didSet {
+			if let newItem: OCItem = item {
+				updateWith(newItem)
 			}
 		}
 	}
 
 	func updateWith(_ item: OCItem) {
 		let iconSize : CGSize = CGSize(width: 40, height: 40)
+		let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
 		var iconImage : UIImage?
+
+		// Cancel any already active request
+		if activeThumbnailRequestProgress != nil {
+			activeThumbnailRequestProgress?.cancel()
+		}
 
 		iconImage = item.icon(fitInSize: iconSize)
 
@@ -88,6 +98,32 @@ class ClientItemCell: ThemeTableViewCell {
 		} else {
 			self.detailLabel.text = item.mimeType
 			self.accessoryType = .none
+		}
+
+		if item.thumbnailAvailability != .none {
+			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
+				_ = thumbnail?.requestImage(for: thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
+					if error == nil,
+					   image != nil,
+					   self.item?.versionIdentifier == thumbnail?.versionIdentifier {
+						OnMainThread {
+							self.iconView.image = image
+						}
+					}
+				})
+			}
+
+			if let thumbnail = item.thumbnail {
+				displayThumbnail(thumbnail)
+			} else {
+				activeThumbnailRequestProgress = core?.retrieveThumbnail(for: item, maximumSize: thumbnailSize, scale: 0, retrieveHandler: { [weak self] (_, _, _, thumbnail, _, progress) in
+					displayThumbnail(thumbnail)
+
+					if self?.activeThumbnailRequestProgress === progress {
+						self?.activeThumbnailRequestProgress = nil
+					}
+				})
+			}
 		}
 
 		self.iconView.image = iconImage

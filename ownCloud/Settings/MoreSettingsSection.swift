@@ -20,6 +20,7 @@ import CoreFoundation
 import UIKit
 import WebKit
 import MessageUI
+import SafariServices
 
 class MoreSettingsSection: SettingsSection {
 
@@ -39,6 +40,14 @@ class MoreSettingsSection: SettingsSection {
         return ""
     }
 
+    var lastGitCommit: String {
+        if let gitCommit = Bundle.main.object(forInfoDictionaryKey: "LastGitCommit") as? String {
+            return gitCommit
+        }
+
+        return ""
+    }
+
     // MARK: - More Settings Cells
 
     private var helpRow: StaticTableViewRow?
@@ -49,7 +58,7 @@ class MoreSettingsSection: SettingsSection {
     override init(userDefaults: UserDefaults) {
         super.init(userDefaults: userDefaults)
         self.headerTitle = "More".localized
-        self.footerTitle = "Owncloud beta version \(appVersion) build \(appBuildNumber)"
+        self.footerTitle = "ownCloud beta version \(appVersion) build \(appBuildNumber) (\(lastGitCommit))"
 
         self.identifier = "settings-more-section"
 
@@ -63,12 +72,11 @@ class MoreSettingsSection: SettingsSection {
 
         helpRow = StaticTableViewRow(rowWithAction: { (_, _) in
             let url = URL(string: "https://www.owncloud.com/help")
-            let title = "Help".localized
-            self.viewController?.navigationController?.pushViewController(WebViewController(url:url!, title: title), animated: true)
+            self.openSFWebViewWithConfirmation(for: url!)
         }, title: "Help".localized, accessoryType: .disclosureIndicator)
 
         sendFeedbackRow = StaticTableViewRow(rowWithAction: { (_, _) in
-            self.sendMail(to: "apps@owncloud.com", subject: "ownCloud iOS app (\(self.appVersion) (\(self.appBuildNumber))", message: nil)
+            self.sendMail(to: "apps@owncloud.com", subject: "ownCloud iOS app (\(self.appVersion) (\(self.appBuildNumber)))", message: nil)
         }, title: "Send feedback".localized, accessoryType: .disclosureIndicator)
 
         recommendRow = StaticTableViewRow(rowWithAction: { (_, _) in
@@ -81,8 +89,7 @@ class MoreSettingsSection: SettingsSection {
 
         privacyPolicyRow = StaticTableViewRow(rowWithAction: { (_, _) in
             let url = URL(string: "https://owncloud.org/privacy-policy/")
-            let title = "Privacy Policy".localized
-            self.viewController?.navigationController?.pushViewController(WebViewController(url:url!, title: title), animated: true)
+            self.openSFWebViewWithConfirmation(for: url!)
         }, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator)
 
     }
@@ -120,6 +127,20 @@ class MoreSettingsSection: SettingsSection {
                 vc.present(alert, animated: true)
             }
         }
+    }
+
+    private func openSFWebViewWithConfirmation(for url: URL) {
+        let alert = UIAlertController(title: "Do you want to open the next url?".localized,
+                                      message: url.absoluteString,
+                                      preferredStyle: .alert)
+
+        let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+            self.viewController?.present(SFSafariViewController(url: url), animated: true)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel)
+        alert.addAction(okAction)
+        alert.addAction(cancelAction)
+        self.viewController?.present(alert, animated: true)
     }
 }
 

@@ -86,7 +86,7 @@ class SecuritySettingsSection: SettingsSection {
 
         super.init(userDefaults: userDefaults)
 
-        self.headerTitle = "Security".localized
+        self.headerTitle = "Security".localized + " -- Work in progress"
         self.identifier = "settings-security-section"
 
         createRows()
