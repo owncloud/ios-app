@@ -267,6 +267,7 @@ class PasscodeManager: NSObject {
 
         if shouldBeLocked {
             self.passcodeViewController?.overlayPasscodeView.hide()
+            PasscodeManager.shared.showBiometricalIfNeeded()
         } else {
             if self.passcodeViewController != nil {
                 //Protection to hide the PasscodeViewController only if is in unlock mode
@@ -299,8 +300,7 @@ class PasscodeManager: NSObject {
     // MARK: - Brute force protection
 
     func showBiometricalIfNeeded() {
-        if self.passcodeViewController != nil,
-            self.biometricalStatus == BiometricalStatus.notShown,
+        if  self.biometricalStatus == BiometricalStatus.notShown,,
             (self.userDefaults?.bool(forKey: SecuritySettingsBiometricalKey))! {
             self.authenticateUserWithBiometrical()
         }
