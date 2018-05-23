@@ -299,14 +299,6 @@ class PasscodeManager: NSObject {
 
     // MARK: - Brute force protection
 
-    func showBiometricalIfNeeded() {
-        if  self.biometricalStatus == BiometricalStatus.notShown,
-            self.dateAllowTryAgain! <= Date(),
-            (self.userDefaults?.bool(forKey: SecuritySettingsBiometricalKey))! {
-            self.authenticateUserWithBiometrical()
-        }
-    }
-
     private func scheduledTimerToUpdateInterfaceTime() {
 
         DispatchQueue.main.async {
@@ -404,6 +396,17 @@ class PasscodeManager: NSObject {
     }
 
     // MARK: - Biometrical
+
+    func showBiometricalIfNeeded() {
+
+        print(self.userDefaults.bool(forKey: SecuritySettingsBiometricalKey))
+
+        if  self.biometricalStatus == BiometricalStatus.notShown,
+            self.dateAllowTryAgain! <= Date(),
+            self.userDefaults.bool(forKey: SecuritySettingsBiometricalKey) {
+            self.authenticateUserWithBiometrical()
+        }
+    }
 
     private func authenticateUserWithBiometrical() {
         // Get the local authentication context.
