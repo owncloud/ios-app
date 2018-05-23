@@ -55,12 +55,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 
 		query?.delegate = self
-		query?.sortComparator = { (left, right) in
-			let leftItem = left as? OCItem
-			let rightItem = right as? OCItem
-
-			return (leftItem?.name.compare(rightItem!.name))!
-		}
+        query?.sortComparator = SortMethod.alphabeticallyAscendant.comparator()
 
 		query?.addObserver(self, forKeyPath: "state", options: .initial, context: observerContext)
 		core?.addObserver(self, forKeyPath: "reachabilityMonitor.available", options: .initial, context: observerContext)
