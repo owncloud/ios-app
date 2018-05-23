@@ -44,11 +44,11 @@ class PasscodeManager: NSObject {
 
     // Add/Delete
     private var passcodeFromFirstStep: String?
-    private var completionHandler: CompletionHandler!
+    private var completionHandler: CompletionHandler?
 
     // Unlock
     private var dateApplicationWillResignActive: Date?
-    private var userDefaults: UserDefaults!
+    private var userDefaults: UserDefaults
 
     // Brute force protection
     public let TimesPasscodeFailedKey: String =  "times-passcode-failed"
@@ -92,9 +92,9 @@ class PasscodeManager: NSObject {
             if let date = self.dateApplicationWillResignActive {
 
                 let elapsedSeconds = Date().timeIntervalSince(date)
-                let minSecondsToAsk = self.userDefaults?.integer(forKey: SecuritySettingsFrequencyKey)
+                let minSecondsToAsk = self.userDefaults.integer(forKey: SecuritySettingsFrequencyKey)
 
-                if Int(elapsedSeconds) < minSecondsToAsk! {
+                if Int(elapsedSeconds) < minSecondsToAsk {
                     output = false
                 }
             }
@@ -269,7 +269,7 @@ class PasscodeManager: NSObject {
             self.passcodeViewController = nil
         }
 
-        self.completionHandler()
+        self.completionHandler?()
         if animated {
             self.window?.hideWindowAnimation {
                 hideWindow()
