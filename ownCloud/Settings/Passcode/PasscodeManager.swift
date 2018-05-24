@@ -409,19 +409,14 @@ class PasscodeManager: NSObject {
     }
 
     private func authenticateUserWithBiometrical() {
-        // Get the local authentication context.
+
         let context = LAContext()
-
-        // Set the reason string that will appear on the authentication alert.
-        let reasonString = "Unlock".localized
-
-        // Declare a NSError variable.
         var error: NSError?
 
         // Check if the device can evaluate the policy.
         if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &error) {
             self.biometricalStatus = BiometricalStatus.shown
-            context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: reasonString) { (success, error) in
+            context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Unlock".localized) { (success, error) in
                 if success {
                     self.biometricalStatus = BiometricalStatus.success
                     DispatchQueue.main.async {
