@@ -24,6 +24,12 @@ struct ProgressSummary : Equatable {
 	var progress : Double
 	var message : String?
 	var progressCount : Int
+
+    static func ==(lhs: ProgressSummary, rhs: ProgressSummary) -> Bool {
+        let areEqual = lhs.message == rhs.message
+
+        return areEqual
+    }
 }
 
 typealias ProgressSummarizerNotificationBlock =  (_ summarizer : ProgressSummarizer, _ summary : ProgressSummary) -> Void
