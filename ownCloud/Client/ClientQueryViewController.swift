@@ -19,6 +19,52 @@
 import UIKit
 import ownCloudSDK
 
+class SortBar: UIView, Themeable {
+
+    var sortButton: ThemeButton
+    var sortMethod: SortMethod {
+
+        set {
+            UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
+            sortButton.setTitle("sort by \(sortMethod.localizedName()) ▼", for: .normal)
+        }
+
+        get {
+            let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabeticallyDescendant
+            sortButton.setTitle("sort by \(sort.localizedName()) ▼", for: .normal)
+            return sort
+        }
+    }
+
+    override init(frame: CGRect) {
+        sortButton = ThemeButton(frame: .zero)
+        super.init(frame: frame)
+        sortButton.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(sortButton)
+
+        sortButton.setTitle("sort by \(sortMethod.localizedName()) ▼", for: .normal)
+
+        sortButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
+        sortButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10).isActive = true
+        sortButton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        Theme.shared.register(client: self)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        Theme.shared.unregister(client: self)
+    }
+
+    func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+        self.sortButton.applyThemeCollection(collection)
+        self.applyThemeCollection(collection)
+    }
+
+}
+
 class ClientQueryViewController: UITableViewController, Themeable {
 	var core : OCCore?
 	var query : OCQuery?
@@ -55,7 +101,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 
 		query?.delegate = self
-        query?.sortComparator = SortMethod.alphabeticallyAscendant.comparator()
 
 		query?.addObserver(self, forKeyPath: "state", options: .initial, context: observerContext)
 		core?.addObserver(self, forKeyPath: "reachabilityMonitor.available", options: .initial, context: observerContext)
@@ -111,7 +156,12 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 		// self.navigationItem.rightBarButtonItem = self.editButtonItem
-	}
+
+        sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40))
+        sortBar?.sortButton.addTarget(self, action: #selector(presentSortOptions), for: .touchUpInside)
+
+        tableView.tableHeaderView = sortBar
+    }
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
@@ -132,6 +182,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		initialAppearance = false
 
 		updateQueryProgressSummary()
+
+        query?.sortComparator = self.sortBar?.sortMethod.comparator()
 	}
 
 	func updateQueryProgressSummary() {
@@ -353,6 +405,31 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			messageMessageLabel?.text = message!
 		}
 	}
+
+    // MARK: - Sorting
+
+    private var sortBar: SortBar?
+
+    @objc private func presentSortOptions() {
+
+        let controller = UIAlertController(title: "Select sorting method".localized, message: nil, preferredStyle: .actionSheet)
+
+        for method in SortMethod.all {
+            let action = UIAlertAction(title: method.localizedName(), style: .default, handler: { (_) in
+                self.changeSortMethod(to: method)
+            })
+            controller.addAction(action)
+        }
+
+        let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
+        controller.addAction(cancel)
+        present(controller, animated: true)
+    }
+
+    private func changeSortMethod(to sortMethod: SortMethod) {
+        sortBar?.sortMethod = sortMethod
+        query?.sortComparator = sortMethod.comparator()
+    }
 }
 
 // MARK: - Query Delegate

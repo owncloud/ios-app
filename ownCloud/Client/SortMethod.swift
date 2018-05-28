@@ -11,12 +11,31 @@ import ownCloudSDK
 
 typealias OCSort = Comparator
 
-public enum SortMethod {
+public enum SortMethod: Int {
 
-    case alphabeticallyAscendant
-    case alphabeticallyDescendant
-    case kindOfFiles
-    case size
+    case alphabeticallyAscendant = 0
+    case alphabeticallyDescendant = 1
+    case kindOfFiles = 2
+    case size = 3
+
+    static var all: [SortMethod] = [alphabeticallyAscendant, alphabeticallyDescendant, kindOfFiles, size]
+
+    func localizedName() -> String {
+        var name = ""
+
+        switch self {
+        case .alphabeticallyAscendant:
+            name = "A-Z".localized
+        case .alphabeticallyDescendant:
+            name = "Z-A".localized
+        case .kindOfFiles:
+            name = "Kind".localized
+        case .size:
+            name = "Size".localized
+        }
+
+        return name
+    }
 
     func comparator() -> OCSort? {
         var comparator: OCSort? = nil
@@ -60,19 +79,24 @@ public enum SortMethod {
                 var leftMimeType = leftItem?.mimeType
                 var rightMimeType = rightItem?.mimeType
 
+                if leftItem?.type == OCItemType.collection {
+                    leftMimeType = "folder"
+                }
+
+                if rightItem?.type == OCItemType.collection {
+                    rightMimeType = "folder"
+                }
+
                 if leftItem?.mimeType == nil {
-                    leftMimeType = "00folder"
+                    leftMimeType = "various"
                 }
 
                 if rightItem?.mimeType == nil {
-                    rightMimeType = "00folder"
+                    rightMimeType = "various"
                 }
 
                 return leftMimeType!.compare(rightMimeType!)
             }
-
-        default:
-            comparator = nil
         }
         return comparator
     }
