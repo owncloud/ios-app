@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import LocalAuthentication
 
 class AppLockManager: NSObject {
 
@@ -31,12 +32,21 @@ class AppLockManager: NSObject {
     let passcodeKeychainAccount = "passcode-keychain-account"
     let passcodeKeychainPath = "passcode-keychain-path"
 
+    // MARK: - Biometrical status
+    enum BiometricalStatus {
+        case notShown
+        case shown
+        case success
+        case error
+    }
+
     // MARK: Global vars
 
     // Common
     private var window: LockWindow?
     private var passcodeMode: PasscodeInterfaceMode?
     private var passcodeViewController: PasscodeViewController?
+    private var biometricalStatus:BiometricalStatus
 
     // Unlock
     private var dateApplicationWillResignActive: Date?
@@ -112,6 +122,9 @@ class AppLockManager: NSObject {
             self.dateAllowTryAgain = NSKeyedUnarchiver.unarchiveObject(with: data) as? Date
         }
 
+        // Biometrical
+        self.biometricalStatus = BiometricalStatus.notShown
+
         super.init()
     }
 
@@ -122,6 +135,7 @@ class AppLockManager: NSObject {
         if isPasscodeActivated {
             if self.passcodeViewController == nil {
 
+                self.biometricalStatus = BiometricalStatus.notShown
                 self.prepareLockScreen()
 
                 // Brute force protection
@@ -296,6 +310,41 @@ class AppLockManager: NSObject {
                 self.passcodeViewController?.enableKeyboardButtons(enabled: false)
                 self.dateAllowTryAgain = Date().addingTimeInterval(TimeInterval(self.secondsToTryAgain()))
                 self.scheduledTimerToUpdateInterfaceTime()
+            }
+        }
+    }
+
+    // MARK: - Biometrical
+
+    func showBiometricalIfNeeded() {
+        self.dateAllowTryAgain = nil
+        if  self.biometricalStatus == BiometricalStatus.notShown,
+            self.dateAllowTryAgain == nil || self.dateAllowTryAgain! < Date(),
+            self.userDefaults.bool(forKey: SecuritySettingsBiometricalKey) {
+            self.authenticateUserWithBiometrical()
+        }
+    }
+
+    private func authenticateUserWithBiometrical() {
+
+        let context = LAContext()
+        var error: NSError?
+
+        // Check if the device can evaluate the policy.
+        if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            self.biometricalStatus = BiometricalStatus.shown
+            context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Unlock".localized) { (success, error) in
+                if success {
+                    self.biometricalStatus = BiometricalStatus.success
+                    DispatchQueue.main.async {
+                        self.dismissPasscode(animated: true)
+                    }
+                } else {
+                    self.biometricalStatus = BiometricalStatus.error
+                    if let error = error {
+                        Log.log("Biometrical login error: \(String(error.localizedDescription))")
+                    }
+                }
             }
         }
     }
