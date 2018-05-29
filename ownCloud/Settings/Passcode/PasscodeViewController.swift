@@ -18,12 +18,12 @@
 
 import UIKit
 
-typealias CompletionHandler = (() -> Void)
+typealias CancelHandler = (() -> Void)
+typealias PasscodeCompleteHandler = ((_ passcode: String) -> Void)
 
 class PasscodeViewController: UIViewController, Themeable {
 
-    // MARK: - Overlay
-    var hiddenOverlay: Bool?
+    private let passcodeLength = 4
 
     // MARK: - Messages and input text
     @IBOutlet weak var messageLabel: UILabel?
@@ -35,10 +35,15 @@ class PasscodeViewController: UIViewController, Themeable {
     @IBOutlet var numberButtons: [ThemeButton]?
     @IBOutlet weak var cancelButton: ThemeButton?
 
+    // MARK: - Handlers
+    var cancelHandler:CancelHandler
+    var passcodeCompleteHandler:PasscodeCompleteHandler
+
     // MARK: - Initalization view
-    init(hiddenOverlay: Bool) {
+    init(cancelHandler: @escaping CancelHandler, passcodeCompleteHandler: @escaping PasscodeCompleteHandler) {
+        self.cancelHandler = cancelHandler
+        self.passcodeCompleteHandler = passcodeCompleteHandler
         super.init(nibName: "PasscodeViewController", bundle: nil)
-        self.hiddenOverlay = hiddenOverlay
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -84,24 +89,21 @@ class PasscodeViewController: UIViewController, Themeable {
 
     // MARK: - Actions
 
-    @IBAction func cancelButton(sender: UIButton) {
-        PasscodeManager.shared.dismissPasscode(animated: true)
+    @IBAction func cancel(sender: UIButton) {
+        self.cancelHandler()
     }
 
-    @IBAction func numberButton(sender: UIButton) {
+    @IBAction func numberPressed(sender: UIButton) {
         if let passcodeValue = self.passcodeValueTextField?.text {
             self.passcodeValueTextField?.text = passcodeValue + String(sender.tag)
         } else {
             self.passcodeValueTextField?.text = String(sender.tag)
         }
 
-        self.passcodeValueChanged(passcodeValue: (self.passcodeValueTextField?.text)!)
-    }
-
-    // MARK: - Passcode Flow
-
-    private func passcodeValueChanged(passcodeValue: String) {
-        PasscodeManager.shared.passcodeValueHasChange(passcodeValue: passcodeValue)
+        //Once passcode is complete
+        if self.passcodeValueTextField?.text!.count == passcodeLength {
+            self.passcodeCompleteHandler((self.passcodeValueTextField?.text)!)
+        }
     }
 
     // MARK: - Identifiers

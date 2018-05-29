@@ -54,7 +54,7 @@
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="1"/>
                     <connections>
-                        <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="jE8-IL-mF2"/>
+                        <action selector="numberPressedWithSender:" destination="-1" eventType="touchUpInside" id="vL8-Xw-Q7c"/>
                     </connections>
                 </button>
                 <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VzK-5I-Ct8" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
@@ -66,7 +66,7 @@
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="2"/>
                     <connections>
-                        <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="dOq-Hy-wZg"/>
+                        <action selector="numberPressedWithSender:" destination="-1" eventType="touchUpInside" id="zEy-xF-rfL"/>
                     </connections>
                 </button>
                 <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gBp-H8-606" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
@@ -78,7 +78,7 @@
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="3"/>
                     <connections>
-                        <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="pKE-ba-K1x"/>
+                        <action selector="numberPressedWithSender:" destination="-1" eventType="touchUpInside" id="3yq-cM-ME1"/>
                     </connections>
                 </button>
                 <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVZ-la-esK" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
@@ -90,7 +90,7 @@
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="4"/>
                     <connections>
-                        <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="M2J-2N-Kgu"/>
+                        <action selector="numberPressedWithSender:" destination="-1" eventType="touchUpInside" id="EE2-ZJ-IKe"/>
                     </connections>
                 </button>
                 <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9xg-xz-Tph" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
@@ -102,7 +102,7 @@
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="5"/>
                     <connections>
-                        <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="pR1-wy-Ogf"/>
+                        <action selector="numberPressedWithSender:" destination="-1" eventType="touchUpInside" id="But-ns-IRh"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hgh-7z-Fto" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
@@ -114,7 +114,7 @@
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="6"/>
                     <connections>
-                        <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="gg4-j1-S6x"/>
+                        <action selector="numberPressedWithSender:" destination="-1" eventType="touchUpInside" id="RTV-5f-QoK"/>
                     </connections>
                 </button>
                 <button opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fMx-64-bYq" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
@@ -126,7 +126,7 @@
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="7"/>
                     <connections>
-                        <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="Pqi-bK-4Cz"/>
+                        <action selector="numberPressedWithSender:" destination="-1" eventType="touchUpInside" id="5pr-ab-eOz"/>
                     </connections>
                 </button>
                 <button opaque="NO" tag="8" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qMI-IV-KI3" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
@@ -138,7 +138,7 @@
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="8"/>
                     <connections>
-                        <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="cbj-DY-2Tb"/>
+                        <action selector="numberPressedWithSender:" destination="-1" eventType="touchUpInside" id="bwW-CX-aLY"/>
                     </connections>
                 </button>
                 <button opaque="NO" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="48Q-nf-LTg" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
@@ -150,7 +150,7 @@
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="9"/>
                     <connections>
-                        <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="Xs7-kq-SyV"/>
+                        <action selector="numberPressedWithSender:" destination="-1" eventType="touchUpInside" id="Gw9-Gc-MOm"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TIO-8z-Ags" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
@@ -162,7 +162,7 @@
                     <fontDescription key="fontDescription" type="system" pointSize="45"/>
                     <state key="normal" title="0"/>
                     <connections>
-                        <action selector="numberButtonWithSender:" destination="-1" eventType="touchUpInside" id="vCH-bY-o36"/>
+                        <action selector="numberPressedWithSender:" destination="-1" eventType="touchUpInside" id="fxw-0Q-s08"/>
                     </connections>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eM3-MQ-PRk">
@@ -191,7 +191,7 @@
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <state key="normal" title="Cancel"/>
                             <connections>
-                                <action selector="cancelButtonWithSender:" destination="-1" eventType="touchUpInside" id="NSm-c8-SsZ"/>
+                                <action selector="cancelWithSender:" destination="-1" eventType="touchUpInside" id="zbk-aE-dpX"/>
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vti-jb-9pW">
