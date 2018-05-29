@@ -29,7 +29,7 @@ class PasscodeViewController: UIViewController, Themeable {
     @IBOutlet weak var messageLabel: UILabel?
     @IBOutlet weak var errorMessageLabel: UILabel?
     @IBOutlet weak var passcodeValueTextField: UITextField?
-    @IBOutlet weak var timeTryAgainMessageLabel: UILabel?
+    @IBOutlet weak var timeoutMessageLabel: UILabel?
 
     // MARK: - Buttons
     @IBOutlet var numberButtons: [ThemeButton]?
@@ -70,19 +70,18 @@ class PasscodeViewController: UIViewController, Themeable {
         super.viewDidLoad()
 
         self.cancelButton?.titleLabel?.text = "Cancel".localized
-        self.setIdentifiers()
     }
 
-    func setEnableNumberButtons(isEnable: Bool) {
+    func enableNumberButtons(enabled: Bool) {
 
         var alpha: CGFloat = 0.5
 
-        if isEnable {
+        if enabled {
             alpha = 1.0
         }
 
         for button in self.numberButtons! {
-            button.isEnabled = isEnable
+            button.isEnabled = enabled
             button.alpha = alpha
         }
     }
@@ -106,22 +105,6 @@ class PasscodeViewController: UIViewController, Themeable {
         }
     }
 
-    // MARK: - Identifiers
-
-    private func setIdentifiers() {
-
-        self.messageLabel?.accessibilityIdentifier = "messageLabel"
-        self.errorMessageLabel?.accessibilityIdentifier = "errorMessageLabel"
-        self.passcodeValueTextField?.accessibilityIdentifier = "passcodeValueTextField"
-        self.timeTryAgainMessageLabel?.accessibilityIdentifier = "timeTryAgainMessageLabel"
-
-        for button in self.numberButtons! {
-            button.accessibilityIdentifier = "number" + String(button.tag) + "Button"
-        }
-
-        self.cancelButton?.accessibilityIdentifier = "cancelButton"
-    }
-
     // MARK: - Themeing
 
     func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
@@ -131,7 +114,7 @@ class PasscodeViewController: UIViewController, Themeable {
         self.messageLabel?.applyThemeCollection(collection, itemStyle: .bigTitle, itemState: .normal)
         self.errorMessageLabel?.applyThemeCollection(collection)
         self.passcodeValueTextField?.applyThemeCollection(collection, itemStyle: .message, itemState: .normal)
-        self.timeTryAgainMessageLabel?.applyThemeCollection(collection)
+        self.timeoutMessageLabel?.applyThemeCollection(collection)
 
         for button in self.numberButtons! {
             button.applyThemeCollection(collection, itemStyle: .neutral)

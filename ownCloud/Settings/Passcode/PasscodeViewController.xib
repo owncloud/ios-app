@@ -16,7 +16,7 @@
                 <outlet property="errorMessageLabel" destination="mT7-pc-IHc" id="GXQ-1O-GTr"/>
                 <outlet property="messageLabel" destination="ox7-yY-YRf" id="eAi-i1-wkN"/>
                 <outlet property="passcodeValueTextField" destination="aVw-W3-TdE" id="VA2-4s-T7G"/>
-                <outlet property="timeTryAgainMessageLabel" destination="vti-jb-9pW" id="lhh-6o-Laf"/>
+                <outlet property="timeoutMessageLabel" destination="vti-jb-9pW" id="lhh-6o-Laf"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="Olu-Zt-Enh"/>
                 <outletCollection property="numberButtons" destination="85k-O3-nSF" collectionClass="NSMutableArray" id="BSh-av-QrB"/>
                 <outletCollection property="numberButtons" destination="VzK-5I-Ct8" collectionClass="NSMutableArray" id="IRL-9T-0vZ"/>
@@ -37,6 +37,7 @@
             <subviews>
                 <textField opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aVw-W3-TdE">
                     <rect key="frame" x="127.5" y="129.5" width="120" height="30"/>
+                    <accessibility key="accessibilityConfiguration" identifier="passcodeValueTextField"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="OFn-Cb-w62"/>
                         <constraint firstAttribute="width" constant="120" id="TeA-nJ-IqH"/>
@@ -47,6 +48,7 @@
                 </textField>
                 <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85k-O3-nSF" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
                     <rect key="frame" x="57.5" y="203.5" width="70" height="70"/>
+                    <accessibility key="accessibilityConfiguration" identifier="number1Button"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="70" id="eia-AT-jAc"/>
                         <constraint firstAttribute="width" constant="70" id="zuA-Uu-jG1"/>
@@ -59,6 +61,7 @@
                 </button>
                 <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VzK-5I-Ct8" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
                     <rect key="frame" x="152.5" y="203.5" width="70" height="70"/>
+                    <accessibility key="accessibilityConfiguration" identifier="number2Button"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="70" id="2Jp-SW-8nV"/>
                         <constraint firstAttribute="height" constant="70" id="esv-xX-2ed"/>
@@ -71,6 +74,7 @@
                 </button>
                 <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gBp-H8-606" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
                     <rect key="frame" x="247.5" y="203.5" width="70" height="70"/>
+                    <accessibility key="accessibilityConfiguration" identifier="number3Button"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="70" id="90V-lO-EAt"/>
                         <constraint firstAttribute="height" constant="70" id="RuB-tn-22s"/>
@@ -83,6 +87,7 @@
                 </button>
                 <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVZ-la-esK" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
                     <rect key="frame" x="57.5" y="298.5" width="70" height="70"/>
+                    <accessibility key="accessibilityConfiguration" identifier="number4Button"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="70" id="hUb-vr-VMe"/>
                         <constraint firstAttribute="height" constant="70" id="wtu-8B-yFJ"/>
@@ -95,6 +100,7 @@
                 </button>
                 <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9xg-xz-Tph" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
                     <rect key="frame" x="152.5" y="298.5" width="70" height="70"/>
+                    <accessibility key="accessibilityConfiguration" identifier="number5Button"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="70" id="GEd-Ft-3Gb"/>
                         <constraint firstAttribute="height" constant="70" id="Oq1-Hm-cLy"/>
@@ -107,6 +113,7 @@
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hgh-7z-Fto" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
                     <rect key="frame" x="247.5" y="298.5" width="70" height="70"/>
+                    <accessibility key="accessibilityConfiguration" identifier="number6Button"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="70" id="4Up-dH-UDB"/>
                         <constraint firstAttribute="width" constant="70" id="tWx-T7-sKh"/>
@@ -119,6 +126,7 @@
                 </button>
                 <button opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fMx-64-bYq" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
                     <rect key="frame" x="57.5" y="393.5" width="70" height="70"/>
+                    <accessibility key="accessibilityConfiguration" identifier="number7Button"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="70" id="cRr-u5-lQw"/>
                         <constraint firstAttribute="height" constant="70" id="um1-9z-Fld"/>
@@ -131,6 +139,7 @@
                 </button>
                 <button opaque="NO" tag="8" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qMI-IV-KI3" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
                     <rect key="frame" x="152.5" y="393.5" width="70" height="70"/>
+                    <accessibility key="accessibilityConfiguration" identifier="number8Button"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="70" id="16p-uS-Way"/>
                         <constraint firstAttribute="height" constant="70" id="4AQ-IU-kLz"/>
@@ -143,6 +152,7 @@
                 </button>
                 <button opaque="NO" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="48Q-nf-LTg" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
                     <rect key="frame" x="247.5" y="393.5" width="70" height="70"/>
+                    <accessibility key="accessibilityConfiguration" identifier="number9Button"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="70" id="l9b-r6-Rvh"/>
                         <constraint firstAttribute="height" constant="70" id="v3f-Wd-fta"/>
@@ -155,6 +165,7 @@
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TIO-8z-Ags" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
                     <rect key="frame" x="152.5" y="488.5" width="70" height="70"/>
+                    <accessibility key="accessibilityConfiguration" identifier="number0Button"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="70" id="Pq5-Dx-0EG"/>
                         <constraint firstAttribute="width" constant="70" id="fao-vC-quL"/>
@@ -170,6 +181,7 @@
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ox7-yY-YRf">
                             <rect key="frame" x="150.5" y="35" width="42" height="40"/>
+                            <accessibility key="accessibilityConfiguration" identifier="messageLabel"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="K63-i2-BDz"/>
                             </constraints>
@@ -188,6 +200,7 @@
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g0I-oo-iOZ" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="37.5" width="259.5" height="33"/>
+                            <accessibility key="accessibilityConfiguration" identifier="cancelButton"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <state key="normal" title="Cancel"/>
                             <connections>
@@ -196,6 +209,7 @@
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vti-jb-9pW">
                             <rect key="frame" x="108" y="44" width="42" height="21"/>
+                            <accessibility key="accessibilityConfiguration" identifier="timeoutMessageLabel"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -212,6 +226,7 @@
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mT7-pc-IHc">
                     <rect key="frame" x="166.5" y="167.5" width="42" height="21"/>
+                    <accessibility key="accessibilityConfiguration" identifier="errorMessageLabel"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="g02-Nd-duF"/>
                     </constraints>

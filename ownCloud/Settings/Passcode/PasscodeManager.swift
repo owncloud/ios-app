@@ -75,7 +75,7 @@ class PasscodeManager: NSObject {
         }
     }
     private let timesAllowPasscodeFail: Int = 3
-    private let multiplierBruteForce: Int = 10
+    private let powBaseBruteForce: Decimal = 1.5
     private var timerBruteForce: Timer?
 
     // Utils
@@ -145,14 +145,13 @@ class PasscodeManager: NSObject {
                     self.timesPasscodeFailed = 0
                 }
 
-                self.passcodeViewController = PasscodeViewController(cancelHandler: self.cancelHandler, passcodeCompleteHandler: self.passcodeCompleteHandler)
-                self.createLockWindow()
+                self.prepareLockScreen()
 
                 // Brute force protection
                 if let date = self.dateAllowTryAgain, date > Date() {
                     //User killed the app
                     self.passcodeMode = .unlockPasscodeError
-                    self.passcodeViewController?.setEnableNumberButtons(isEnable: false)
+                    self.passcodeViewController?.enableNumberButtons(enabled: false)
                     self.scheduledTimerToUpdateInterfaceTime()
                 } else {
                     self.passcodeMode = .unlockPasscode
@@ -173,16 +172,16 @@ class PasscodeManager: NSObject {
         }
 
         self.completionHandler = completionHandler
-
-        self.passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, passcodeCompleteHandler: passcodeCompleteHandler)
-        self.createLockWindow()
-
+        self.prepareLockScreen()
         self.updateUI()
 
         self.window?.showWindowAnimation()
     }
 
-    func createLockWindow() {
+    func prepareLockScreen() {
+
+        self.passcodeViewController = PasscodeViewController(cancelHandler: self.cancelHandler, passcodeCompleteHandler: self.passcodeCompleteHandler)
+
         self.window = LockWindow(frame: UIScreen.main.bounds)
         self.window?.windowLevel = UIWindowLevelStatusBar
         self.window?.rootViewController = self.passcodeViewController!
@@ -199,7 +198,7 @@ class PasscodeManager: NSObject {
             }
         }
 
-        //Store the date when the user pressed home button
+        //Store the date when the app will be resign
         if self.isPasscodeActivated,
             self.dateApplicationWillResignActive == nil,
             self.passcodeViewController == nil || self.passcodeMode != .unlockPasscode,
@@ -252,7 +251,7 @@ class PasscodeManager: NSObject {
         self.passcodeViewController?.passcodeValueTextField?.text = ""
         self.passcodeViewController?.messageLabel?.text = messageText
         self.passcodeViewController?.errorMessageLabel?.text = errorText
-        self.passcodeViewController?.timeTryAgainMessageLabel?.text = ""
+        self.passcodeViewController?.timeoutMessageLabel?.text = ""
     }
 
     func dismissAskedPasscodeIfDateToAskIsLower() {
@@ -290,40 +289,39 @@ class PasscodeManager: NSObject {
 
     private func scheduledTimerToUpdateInterfaceTime() {
 
-        DispatchQueue.main.async {
-            self.updatePasscodeInterfaceTime()
-        }
-
+        self.updatePasscodeInterfaceTime()
         self.timerBruteForce = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updatePasscodeInterfaceTime), userInfo: nil, repeats: true)
     }
 
     @objc private func updatePasscodeInterfaceTime() {
 
-        let interval = Int((self.dateAllowTryAgain?.timeIntervalSinceNow)!)
-        let seconds = interval % 60
-        let minutes = (interval / 60) % 60
-        let hours = (interval / 3600)
+        if let date = self.dateAllowTryAgain {
+            let interval = Int(date.timeIntervalSinceNow)
+            let seconds = interval % 60
+            let minutes = (interval / 60) % 60
+            let hours = (interval / 3600)
 
-        let dateFormated:String?
-        if hours > 0 {
-            dateFormated = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-        } else {
-            dateFormated = String(format: "%02d:%02d", minutes, seconds)
-        }
+            let dateFormatted:String?
+            if hours > 0 {
+                dateFormatted = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+            } else {
+                dateFormatted = String(format: "%02d:%02d", minutes, seconds)
+            }
 
-        let text:String = NSString(format: "Please try again within %@".localized as NSString, dateFormated!) as String
-        self.passcodeViewController?.timeTryAgainMessageLabel?.text = text
+            let text:String = NSString(format: "Please try again within %@".localized as NSString, dateFormatted!) as String
+            self.passcodeViewController?.timeoutMessageLabel?.text = text
 
-        if self.dateAllowTryAgain! <= Date() {
-            //Time elapsed, allow enter passcode again
-            self.timerBruteForce?.invalidate()
-            self.passcodeViewController?.setEnableNumberButtons(isEnable: true)
-            self.updateUI()
+            if date <= Date() {
+                //Time elapsed, allow enter passcode again
+                self.timerBruteForce?.invalidate()
+                self.passcodeViewController?.enableNumberButtons(enabled: true)
+                self.updateUI()
+            }
         }
     }
 
-    private func getSecondsToTryAgain() -> Int {
-        let powValue = pow(Decimal(multiplierBruteForce), ((timesPasscodeFailed+1) - timesAllowPasscodeFail))
+    private func secondsToTryAgain() -> Int {
+        let powValue = pow(powBaseBruteForce, ((timesPasscodeFailed+1) - timesAllowPasscodeFail))
         return Int(truncating: NSDecimalNumber(decimal: powValue))
     }
 
@@ -360,8 +358,8 @@ class PasscodeManager: NSObject {
                 // Brute force protection
                 self.timesPasscodeFailed += 1
                 if self.timesPasscodeFailed >= self.timesAllowPasscodeFail {
-                    self.passcodeViewController?.setEnableNumberButtons(isEnable: false)
-                    self.dateAllowTryAgain = Date().addingTimeInterval(TimeInterval(self.getSecondsToTryAgain()))
+                    self.passcodeViewController?.enableNumberButtons(enabled: false)
+                    self.dateAllowTryAgain = Date().addingTimeInterval(TimeInterval(self.secondsToTryAgain()))
                     self.scheduledTimerToUpdateInterfaceTime()
                 }
             }
