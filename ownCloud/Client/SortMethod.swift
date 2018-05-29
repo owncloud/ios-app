@@ -15,10 +15,10 @@ public enum SortMethod: Int {
 
     case alphabeticallyAscendant = 0
     case alphabeticallyDescendant = 1
-    case kindOfFiles = 2
+    case type = 2
     case size = 3
 
-    static var all: [SortMethod] = [alphabeticallyAscendant, alphabeticallyDescendant, kindOfFiles, size]
+    static var all: [SortMethod] = [alphabeticallyAscendant, alphabeticallyDescendant, type, size]
 
     func localizedName() -> String {
         var name = ""
@@ -28,8 +28,8 @@ public enum SortMethod: Int {
             name = "A-Z".localized
         case .alphabeticallyDescendant:
             name = "Z-A".localized
-        case .kindOfFiles:
-            name = "Kind".localized
+        case .type:
+            name = "Type".localized
         case .size:
             name = "Size".localized
         }
@@ -70,7 +70,7 @@ public enum SortMethod: Int {
                 return (rightItem?.name.compare(leftItem!.name))!
             }
 
-        case .kindOfFiles:
+        case .type:
             comparator = {
                 (left, right) in
                 let leftItem = left as? OCItem

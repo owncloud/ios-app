@@ -50,10 +50,10 @@
 "This folder no longer exists." = "This folder no longer exists.";
 "Everything up-to-date." = "Everything up-to-date.";
 "Please wait…" = "Please wait…";
-"Select sorting method" = "Select sorting method";
+"Sort by" = "Sort by";
 "A-Z" = "A-Z";
 "Z-A" = "Z-A";
-"Kind" = "Kind";
+"Type" = "Type";
 "Size" = "Size";
 }
 

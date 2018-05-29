@@ -412,7 +412,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
     @objc private func presentSortOptions() {
 
-        let controller = UIAlertController(title: "Select sorting method".localized, message: nil, preferredStyle: .actionSheet)
+        let controller = UIAlertController(title: "Sort by".localized, message: nil, preferredStyle: .actionSheet)
 
         for method in SortMethod.all {
             let action = UIAlertAction(title: method.localizedName(), style: .default, handler: { (_) in
