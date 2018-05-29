@@ -19,8 +19,6 @@
 import UIKit
 import ownCloudSDK
 
-typealias CompletionHandler = (() -> Void)
-
 class AppLockManager: NSObject {
 
     // MARK: - Interface view mode
@@ -35,10 +33,6 @@ class AppLockManager: NSObject {
     private var window: LockWindow?
     private var passcodeMode: PasscodeInterfaceMode?
     private var passcodeViewController: PasscodeViewController?
-
-    // Add/Delete
-    private var passcodeFromFirstStep: String?
-    private var completionHandler: CompletionHandler?
 
     // Unlock
     private var dateApplicationWillResignActive: Date?
@@ -109,11 +103,6 @@ class AppLockManager: NSObject {
 
         if isPasscodeActivated {
             if self.passcodeViewController == nil {
-
-                self.completionHandler = {
-                    self.dateApplicationWillResignActive = nil
-                    self.timesPasscodeFailed = 0
-                }
 
                 self.prepareLockScreen()
 
@@ -211,7 +200,6 @@ class AppLockManager: NSObject {
             self.window = nil
         }
 
-        self.completionHandler?()
         if animated {
             self.window?.hideWindowAnimation {
                 hideWindow()
@@ -265,6 +253,8 @@ class AppLockManager: NSObject {
 
     func passcodeComplete(passcode: String) {
         if passcode == PasscodeStorage.passcodeFromKeychain {
+            self.dateApplicationWillResignActive = nil
+            self.timesPasscodeFailed = 0
             self.dismissPasscode(animated: true)
         } else {
             self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()

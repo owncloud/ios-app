@@ -26,7 +26,7 @@ class LockWindow: UIWindow {
         let height = self.bounds.height
         self.frame = CGRect(x: 0, y: height, width: self.frame.size.width, height: self.frame.size.height)
 
-        UIView.transition(with: self, duration: 0.6, options: [], animations: {() -> Void in
+        UIView.transition(with: self, duration: 0.3, options: [], animations: {() -> Void in
             self.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: self.frame.size.height)
         }, completion: {(_) in
             completion?()
@@ -36,7 +36,7 @@ class LockWindow: UIWindow {
     func hideWindowAnimation(completion: (() -> Void)? = nil) {
         let height = self.bounds.height
 
-        UIView.transition(with: self, duration: 0.6, options: [], animations: {() -> Void in
+        UIView.transition(with: self, duration: 0.3, options: [], animations: {() -> Void in
             self.frame = CGRect(x: 0, y: height, width: self.frame.size.width, height: self.frame.size.height)
         }, completion: {(_) in
             completion?()
