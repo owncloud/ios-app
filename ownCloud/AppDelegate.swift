@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.addSubview((navigationController?.view)!)
         window?.makeKeyAndVisible()
 
-        AppLockManager.shared.showPasscodeIfNeeded(hiddenOverlay: true)
+        AppLockManager.shared.showPasscodeIfNeeded()
 
 		return true
 	}

@@ -105,7 +105,7 @@ class AppLockManager: NSObject {
 
     // MARK: - Show Passcode View
 
-    func showPasscodeIfNeeded(hiddenOverlay:Bool) {
+    func showPasscodeIfNeeded() {
 
         if isPasscodeActivated {
             if self.passcodeViewController == nil {
@@ -159,7 +159,7 @@ class AppLockManager: NSObject {
         }
 
         //Show the passcode
-        self.showPasscodeIfNeeded(hiddenOverlay: false)
+        self.showPasscodeIfNeeded()
     }
 
     // MARK: - Interface updates
