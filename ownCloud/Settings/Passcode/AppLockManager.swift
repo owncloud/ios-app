@@ -1,5 +1,5 @@
 //
-//  PasscodeManager.swift
+//  AppLockManager.swift
 //  ownCloud
 //
 //  Created by Javier Gonzalez on 06/05/2018.
@@ -21,37 +21,20 @@ import ownCloudSDK
 
 typealias CompletionHandler = (() -> Void)
 
-class PasscodeManager: NSObject {
+class AppLockManager: NSObject {
 
     // MARK: - Interface view mode
     enum PasscodeInterfaceMode {
-        case addPasscodeFirstStep
-        case addPasscodeSecondStep
         case unlockPasscode
         case unlockPasscodeError
-        case deletePasscode
-        case deletePasscodeError
-        case addPasscodeFirstStepAfterErrorOnSecond
     }
 
     // MARK: Global vars
 
     // Common
     private var window: LockWindow?
-    private let passcodeKeychainAccount = "passcode-keychain-account"
-    private let passcodeKeychainPath = "passcode-keychain-path"
     private var passcodeMode: PasscodeInterfaceMode?
     private var passcodeViewController: PasscodeViewController?
-
-    //Handlers
-    let cancelHandler:CancelHandler = {
-        PasscodeManager.shared.dismissPasscode(animated: true)
-    }
-
-    let passcodeCompleteHandler:PasscodeCompleteHandler = {
-        (result: String) in
-        PasscodeManager.shared.passcodeComplete(passcodeValue: result)
-    }
 
     // Add/Delete
     private var passcodeFromFirstStep: String?
@@ -79,21 +62,8 @@ class PasscodeManager: NSObject {
     private var timerBruteForce: Timer?
 
     // Utils
-    var isPasscodeActivated: Bool {
-        return (self.userDefaults.bool(forKey: SecuritySettingsPasscodeKey) && isPasscodeStoredOnKeychain)
-    }
-
-    var isPasscodeStoredOnKeychain: Bool {
-        return (OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil)
-    }
-
-    private var passcodeFromKeychain: String? {
-        if let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(
-            forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) {
-            return NSKeyedUnarchiver.unarchiveObject(with: passcodeData) as? String
-        } else {
-            return nil
-        }
+    private var isPasscodeActivated: Bool {
+        return (self.userDefaults.bool(forKey: SecuritySettingsPasscodeKey) && PasscodeStorage.isPasscodeStoredOnKeychain)
     }
 
     private var shouldBeLocked: Bool {
@@ -118,7 +88,7 @@ class PasscodeManager: NSObject {
 
     // MARK: - Init
 
-    static var shared = PasscodeManager()
+    static var shared = AppLockManager()
 
     public override init() {
         // TODO: Use OCAppIdentity-provided user defaults in the future
@@ -163,24 +133,18 @@ class PasscodeManager: NSObject {
         }
     }
 
-    func showAddOrDeletePasscode(completionHandler: @escaping CompletionHandler) {
-
-        if isPasscodeActivated {
-            self.passcodeMode = PasscodeInterfaceMode.deletePasscode
-        } else {
-            self.passcodeMode = PasscodeInterfaceMode.addPasscodeFirstStep
-        }
-
-        self.completionHandler = completionHandler
-        self.prepareLockScreen()
-        self.updateUI()
-
-        self.window?.showWindowAnimation()
-    }
-
     func prepareLockScreen() {
 
-        self.passcodeViewController = PasscodeViewController(cancelHandler: self.cancelHandler, passcodeCompleteHandler: self.passcodeCompleteHandler)
+        let cancelHandler:CancelHandler = {
+            self.dismissPasscode(animated: true)
+        }
+
+        let passcodeCompleteHandler:PasscodeCompleteHandler = {
+            (passcode: String) in
+            self.passcodeComplete(passcode: passcode)
+        }
+
+        self.passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, passcodeCompleteHandler: passcodeCompleteHandler)
 
         self.window = LockWindow(frame: UIScreen.main.bounds)
         self.window?.windowLevel = UIWindowLevelStatusBar
@@ -189,14 +153,6 @@ class PasscodeManager: NSObject {
     }
 
     func applicationWillResignActive() {
-
-        //Protection to hide the PasscodeViewController if is on Delete modes to show the Unlock
-        if self.passcodeViewController != nil {
-            if self.passcodeMode == .deletePasscode ||
-                self.passcodeMode == .deletePasscodeError {
-                self.dismissPasscode(animated: false)
-            }
-        }
 
         //Store the date when the app will be resign
         if self.isPasscodeActivated,
@@ -218,11 +174,6 @@ class PasscodeManager: NSObject {
         var errorText : String! = ""
 
         switch self.passcodeMode {
-        case .addPasscodeFirstStep?:
-            messageText = "Enter code".localized
-
-        case .addPasscodeSecondStep?:
-            messageText = "Repeat code".localized
 
         case .unlockPasscode?:
             messageText = "Enter code".localized
@@ -232,17 +183,6 @@ class PasscodeManager: NSObject {
             messageText = "Enter code".localized
             errorText = "Incorrect code".localized
             self.passcodeViewController?.cancelButton?.isHidden = true
-
-        case .deletePasscode?:
-            messageText = "Delete code".localized
-
-        case .deletePasscodeError?:
-            messageText = "Delete code".localized
-            errorText = "Incorrect code".localized
-
-        case .addPasscodeFirstStepAfterErrorOnSecond?:
-            messageText = "Enter code".localized
-            errorText = "The entered codes are different".localized
 
         default:
             break
@@ -327,54 +267,21 @@ class PasscodeManager: NSObject {
 
     // MARK: - Logic
 
-    func passcodeComplete(passcodeValue: String) {
-
-        switch self.passcodeMode {
-        case .addPasscodeFirstStep?, .addPasscodeFirstStepAfterErrorOnSecond?:
-            self.passcodeMode = .addPasscodeSecondStep
-            self.passcodeFromFirstStep = passcodeValue
+    func passcodeComplete(passcode: String) {
+        if passcode == PasscodeStorage.passcodeFromKeychain {
+            self.dismissPasscode(animated: true)
+        } else {
+            self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
+            self.passcodeMode = .unlockPasscodeError
             self.updateUI()
 
-        case .addPasscodeSecondStep?:
-            if passcodeFromFirstStep == passcodeValue {
-                //Save to keychain
-                OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcodeValue), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                self.dismissPasscode(animated: true)
-            } else {
-                self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
-                self.passcodeMode = .addPasscodeFirstStepAfterErrorOnSecond
-                self.passcodeFromFirstStep = nil
-                self.updateUI()
+            // Brute force protection
+            self.timesPasscodeFailed += 1
+            if self.timesPasscodeFailed >= self.timesAllowPasscodeFail {
+                self.passcodeViewController?.enableNumberButtons(enabled: false)
+                self.dateAllowTryAgain = Date().addingTimeInterval(TimeInterval(self.secondsToTryAgain()))
+                self.scheduledTimerToUpdateInterfaceTime()
             }
-
-        case .unlockPasscode?, .unlockPasscodeError?:
-            if passcodeValue == self.passcodeFromKeychain {
-                self.dismissPasscode(animated: true)
-            } else {
-                self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
-                self.passcodeMode = .unlockPasscodeError
-                self.updateUI()
-
-                // Brute force protection
-                self.timesPasscodeFailed += 1
-                if self.timesPasscodeFailed >= self.timesAllowPasscodeFail {
-                    self.passcodeViewController?.enableNumberButtons(enabled: false)
-                    self.dateAllowTryAgain = Date().addingTimeInterval(TimeInterval(self.secondsToTryAgain()))
-                    self.scheduledTimerToUpdateInterfaceTime()
-                }
-            }
-
-        case .deletePasscode?, .deletePasscodeError?:
-            if passcodeValue == self.passcodeFromKeychain {
-                OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-                self.dismissPasscode(animated: true)
-            } else {
-                self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
-                self.passcodeMode = .deletePasscodeError
-                self.updateUI()
-            }
-        default:
-            break
         }
     }
 }

@@ -21,9 +21,10 @@
 		23BEF1182076667F00DD2E6F /* IssuesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BEF1172076667F00DD2E6F /* IssuesViewController.swift */; };
 		23D0E09E205BCF8D002D7C80 /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 230B84F020597F6E00C9F828 /* ownCloudUI.framework */; };
 		23D0E09F205BCF8D002D7C80 /* ownCloudUI.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 230B84F020597F6E00C9F828 /* ownCloudUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5913B9A520BD971400F3D401 /* PasscodeStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5913B9A420BD971400F3D401 /* PasscodeStorage.swift */; };
 		593BAB46209AE1BC00023634 /* PasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593BAB44209AE1BC00023634 /* PasscodeViewController.swift */; };
 		593BAB47209AE1BC00023634 /* PasscodeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 593BAB45209AE1BC00023634 /* PasscodeViewController.xib */; };
-		593BAB97209F8A0500023634 /* PasscodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593BAB96209F8A0500023634 /* PasscodeManager.swift */; };
+		593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593BAB96209F8A0500023634 /* AppLockManager.swift */; };
 		597A404920AD59EF00B028B2 /* LockWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597A404820AD59EF00B028B2 /* LockWindow.swift */; };
 		6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */; };
 		6E83C77E20A32C1B0066EC23 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */; };
@@ -261,9 +262,10 @@
 		23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSettingsSection.swift; sourceTree = "<group>"; };
 		239F1318205A693A0029F186 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		23BEF1172076667F00DD2E6F /* IssuesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesViewController.swift; sourceTree = "<group>"; };
+		5913B9A420BD971400F3D401 /* PasscodeStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeStorage.swift; sourceTree = "<group>"; };
 		593BAB44209AE1BC00023634 /* PasscodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeViewController.swift; sourceTree = "<group>"; };
 		593BAB45209AE1BC00023634 /* PasscodeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PasscodeViewController.xib; sourceTree = "<group>"; };
-		593BAB96209F8A0500023634 /* PasscodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeManager.swift; sourceTree = "<group>"; };
+		593BAB96209F8A0500023634 /* AppLockManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockManager.swift; sourceTree = "<group>"; };
 		597A404820AD59EF00B028B2 /* LockWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockWindow.swift; sourceTree = "<group>"; };
 		6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.release.xcconfig"; sourceTree = "<group>"; };
 		6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
@@ -485,9 +487,10 @@
 		593BAB3F209ADFB900023634 /* Passcode */ = {
 			isa = PBXGroup;
 			children = (
-				593BAB96209F8A0500023634 /* PasscodeManager.swift */,
+				593BAB96209F8A0500023634 /* AppLockManager.swift */,
 				593BAB44209AE1BC00023634 /* PasscodeViewController.swift */,
 				593BAB45209AE1BC00023634 /* PasscodeViewController.xib */,
+				5913B9A420BD971400F3D401 /* PasscodeStorage.swift */,
 			);
 			path = Passcode;
 			sourceTree = "<group>";
@@ -1104,7 +1107,7 @@
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
 				23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */,
 				DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */,
-				593BAB97209F8A0500023634 /* PasscodeManager.swift in Sources */,
+				593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */,
 				DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */,
 				DC7DF17E205141C100189B9A /* BookmarkManager.swift in Sources */,
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
@@ -1113,6 +1116,7 @@
 				232F7CAD2097140300EE22E4 /* UploadsSettingsSection.swift in Sources */,
 				597A404920AD59EF00B028B2 /* LockWindow.swift in Sources */,
 				DC42244C207CAFBB0006A2A6 /* ThemeCollection.swift in Sources */,
+				5913B9A520BD971400F3D401 /* PasscodeStorage.swift in Sources */,
 				DCFED9BA20809B8900A2D984 /* ThemeTVGResource.swift in Sources */,
 				DC3BE0DE2077CC14002A0AC0 /* ClientQueryViewController.swift in Sources */,
 				DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */,

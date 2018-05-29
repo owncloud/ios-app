@@ -179,8 +179,8 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eM3-MQ-PRk">
                     <rect key="frame" x="16" y="20" width="343" height="109.5"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ox7-yY-YRf">
-                            <rect key="frame" x="150.5" y="35" width="42" height="40"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ox7-yY-YRf">
+                            <rect key="frame" x="171.5" y="35" width="0.0" height="40"/>
                             <accessibility key="accessibilityConfiguration" identifier="messageLabel"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="K63-i2-BDz"/>
@@ -202,13 +202,12 @@
                             <rect key="frame" x="0.0" y="37.5" width="259.5" height="33"/>
                             <accessibility key="accessibilityConfiguration" identifier="cancelButton"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <state key="normal" title="Cancel"/>
                             <connections>
                                 <action selector="cancelWithSender:" destination="-1" eventType="touchUpInside" id="zbk-aE-dpX"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vti-jb-9pW">
-                            <rect key="frame" x="108" y="44" width="42" height="21"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vti-jb-9pW">
+                            <rect key="frame" x="129" y="54.5" width="0.0" height="0.0"/>
                             <accessibility key="accessibilityConfiguration" identifier="timeoutMessageLabel"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
@@ -224,8 +223,8 @@
                         <constraint firstItem="vti-jb-9pW" firstAttribute="centerY" secondItem="Nj5-Os-n8R" secondAttribute="centerY" id="txx-IZ-xIF"/>
                     </constraints>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mT7-pc-IHc">
-                    <rect key="frame" x="166.5" y="167.5" width="42" height="21"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mT7-pc-IHc">
+                    <rect key="frame" x="187.5" y="167.5" width="0.0" height="21"/>
                     <accessibility key="accessibilityConfiguration" identifier="errorMessageLabel"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="g02-Nd-duF"/>

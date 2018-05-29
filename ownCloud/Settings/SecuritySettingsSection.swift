@@ -72,6 +72,8 @@ class SecuritySettingsSection: SettingsSection {
         }
     }
 
+    private var passcodeFromFirstStep: String?
+
     // MARK: - Upload Settings Cells
 
     private var frequencyRow: StaticTableViewRow?
@@ -125,23 +127,82 @@ class SecuritySettingsSection: SettingsSection {
         // Creation of the passcode row.
         passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
             if let passcodeSwitch = sender as? UISwitch {
+                if let vc = self.viewController {
+                    //Store the setted frequency to recovery it in cancel delete
+                    let originalFrequency = self.frequency
 
-                //Store the setted frequency to recovery it in cancel delete
-                let originalFrequency = self.frequency
+                    var passcodeViewController: PasscodeViewController?
 
-                //Show the passcode UI
-                PasscodeManager.shared.showAddOrDeletePasscode(completionHandler: {
-                        if PasscodeManager.shared.isPasscodeStoredOnKeychain {
-                            //Activated
+                    //Handlers
+                    let cancelHandler:CancelHandler = {
+                        passcodeViewController!.dismiss(animated: true, completion: {
+                            self.isPasscodeSecurityEnabled = !passcodeSwitch.isOn
                             self.frequencyRow?.cell?.detailTextLabel?.text = originalFrequency.toString()
                             self.frequency = originalFrequency
-                            self.isPasscodeSecurityEnabled = true
-                        } else {
-                            //Cancelled
-                            self.isPasscodeSecurityEnabled = false
-                        }
-                })
+                        })
+                        self.passcodeFromFirstStep = nil
+                    }
 
+                    let passcodeCompleteHandler:PasscodeCompleteHandler = {
+                        (passcode: String) in
+
+                        if !passcodeSwitch.isOn {
+                            //Delete
+                            if passcode == PasscodeStorage.passcodeFromKeychain {
+                                //Success
+                                PasscodeStorage.removePasscodeFromKeychain()
+                                passcodeViewController!.dismiss(animated: true, completion: nil)
+                            } else {
+                                //Error
+                                passcodeViewController?.passcodeValueTextField?.text = nil
+                                passcodeViewController?.errorMessageLabel?.text = "Incorrect code".localized
+                                passcodeViewController?.errorMessageLabel?.shakeHorizontally()
+                            }
+                        } else {
+                            //Add
+                            if self.passcodeFromFirstStep == nil {
+                                //First step
+                                self.passcodeFromFirstStep = passcode
+                                passcodeViewController?.passcodeValueTextField?.text = nil
+                                passcodeViewController?.messageLabel?.text = "Repeat code".localized
+                                passcodeViewController?.errorMessageLabel?.text = ""
+                            } else {
+                                //Second step
+                                if self.passcodeFromFirstStep == passcode {
+                                    //Passcode righ
+                                    //Save to keychain
+                                    PasscodeStorage.writePasscodeInKeychain(passcode: passcode)
+                                    passcodeViewController!.dismiss(animated: true, completion: nil)
+                                    self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
+                                } else {
+                                    //Passcode is not the same
+                                    passcodeViewController?.passcodeValueTextField?.text = nil
+                                    passcodeViewController?.messageLabel?.text = "Enter code".localized
+                                    passcodeViewController?.errorMessageLabel?.text = "The entered codes are different".localized
+                                }
+                                self.passcodeFromFirstStep = nil
+                            }
+                        }
+                    }
+
+                    passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, passcodeCompleteHandler: passcodeCompleteHandler)
+
+                    //Configure the view
+                    var messageText : String?
+
+                    if passcodeSwitch.isOn {
+                        messageText = "Enter code".localized
+                    } else {
+                        messageText = "Delete code".localized
+                    }
+
+                    DispatchQueue.main.async {
+                        passcodeViewController?.messageLabel?.text = messageText
+                        passcodeViewController?.cancelButton?.setTitle("Cancel".localized, for: .normal)
+                    }
+
+                    vc.present(passcodeViewController!, animated: true, completion: nil)
+                }
                 self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
                 self.updateUI()
             }
