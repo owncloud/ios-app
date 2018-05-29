@@ -135,16 +135,12 @@ class AppLockManager: NSObject {
 
     func prepareLockScreen() {
 
-        let cancelHandler:CancelHandler = {
-            self.dismissPasscode(animated: true)
-        }
-
         let passcodeCompleteHandler:PasscodeCompleteHandler = {
             (passcode: String) in
             self.passcodeComplete(passcode: passcode)
         }
 
-        self.passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, passcodeCompleteHandler: passcodeCompleteHandler)
+        self.passcodeViewController = PasscodeViewController(cancelHandler: {}, passcodeCompleteHandler: passcodeCompleteHandler)
 
         self.window = LockWindow(frame: UIScreen.main.bounds)
         self.window?.windowLevel = UIWindowLevelStatusBar
