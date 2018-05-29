@@ -20,49 +20,10 @@ import UIKit
 
 typealias CompletionHandler = (() -> Void)
 
-class OverlayPasscodeView: UIView {
-
-    // MARK: - Overlay view
-    @IBOutlet var logoTVGView : VectorImageView!
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-
-    func loadOverlay(isHidden: Bool, viewToShow: UIView) {
-        Theme.shared.add(tvgResourceFor: "owncloud-logo")
-        logoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
-        self.isHidden = isHidden
-    }
-
-    func hide() {
-        UIView.animate(withDuration: 0.6, delay: 0.0, options: [], animations: {
-            self.alpha = 0
-        }, completion: { _ in
-            self.isHidden = true
-        })
-    }
-
-    func show() {
-
-        self.isHidden = false
-
-        UIView.animate(withDuration: 0.6, delay: 0.0, options: [], animations: {
-            self.alpha = 1
-        }, completion: { _ in
-        })
-    }
-}
-
 class PasscodeViewController: UIViewController, Themeable {
 
     // MARK: - Overlay
     var hiddenOverlay: Bool?
-    @IBOutlet var overlayPasscodeView: OverlayPasscodeView!
 
     // MARK: - Messages and input text
     @IBOutlet weak var messageLabel: UILabel?
@@ -103,12 +64,7 @@ class PasscodeViewController: UIViewController, Themeable {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.addSubview(self.overlayPasscodeView)
-        self.overlayPasscodeView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-        self.overlayPasscodeView.loadOverlay(isHidden: self.hiddenOverlay!, viewToShow: self.view)
-
         self.cancelButton?.titleLabel?.text = "Cancel".localized
-
         self.setIdentifiers()
     }
 
@@ -152,8 +108,6 @@ class PasscodeViewController: UIViewController, Themeable {
 
     private func setIdentifiers() {
 
-        self.overlayPasscodeView.accessibilityIdentifier = "overlayView"
-
         self.messageLabel?.accessibilityIdentifier = "messageLabel"
         self.errorMessageLabel?.accessibilityIdentifier = "errorMessageLabel"
         self.passcodeValueTextField?.accessibilityIdentifier = "passcodeValueTextField"
@@ -171,7 +125,6 @@ class PasscodeViewController: UIViewController, Themeable {
     func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 
         self.view.backgroundColor = collection.tableBackgroundColor
-        self.overlayPasscodeView.backgroundColor = collection.tableBackgroundColor
 
         self.messageLabel?.applyThemeCollection(collection, itemStyle: .bigTitle, itemState: .normal)
         self.errorMessageLabel?.applyThemeCollection(collection)

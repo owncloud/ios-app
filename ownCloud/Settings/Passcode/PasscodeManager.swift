@@ -149,8 +149,6 @@ class PasscodeManager: NSObject {
 
                 self.updateUI()
 
-            } else {
-                self.passcodeViewController?.overlayPasscodeView.show()
             }
         }
     }
@@ -247,10 +245,7 @@ class PasscodeManager: NSObject {
     }
 
     func dismissAskedPasscodeIfDateToAskIsLower() {
-
-        if shouldBeLocked {
-            self.passcodeViewController?.overlayPasscodeView.hide()
-        } else {
+        if !shouldBeLocked {
             if self.passcodeViewController != nil {
                 //Protection to hide the PasscodeViewController only if is in unlock mode
                 if self.passcodeMode == .unlockPasscode ||
