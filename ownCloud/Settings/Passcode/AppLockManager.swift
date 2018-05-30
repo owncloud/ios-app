@@ -316,7 +316,7 @@ class AppLockManager: NSObject {
 
     // MARK: - Biometrical
 
-    func showBiometricalIfNeeded() {
+    func showBiometricalUnlockIfNeeded() {
         self.dateAllowTryAgain = nil
         if  self.biometricalStatus == BiometricalStatus.notShown,
             self.dateAllowTryAgain == nil || self.dateAllowTryAgain! < Date(),

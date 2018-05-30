@@ -40,7 +40,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
 
         AppLockManager.shared.showPasscodeIfNeeded()
-        AppLockManager.shared.showBiometricalIfNeeded()
 
 		return true
 	}
@@ -64,7 +63,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 
         AppLockManager.shared.dismissAskedPasscodeIfDateToAskIsLower()
-        AppLockManager.shared.showBiometricalIfNeeded()
+        AppLockManager.shared.showBiometricalUnlockIfNeeded()
     }
 
 	func applicationWillTerminate(_ application: UIApplication) {
