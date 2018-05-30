@@ -28,7 +28,7 @@ class PasscodeViewController: UIViewController, Themeable {
     // MARK: - Messages and input text
     @IBOutlet weak var messageLabel: UILabel?
     @IBOutlet weak var errorMessageLabel: UILabel?
-    @IBOutlet weak var passcodeTextField: UITextField?
+    @IBOutlet weak var passcodeLabel: UILabel?
     @IBOutlet weak var timeoutMessageLabel: UILabel?
 
     var message: String?
@@ -96,7 +96,7 @@ class PasscodeViewController: UIViewController, Themeable {
             }
         }
 
-        self.passcodeTextField?.text = passcodeText
+        self.passcodeLabel?.text = passcodeText
     }
 
     func enableKeyboardButtons(enabled: Bool) {
@@ -149,7 +149,7 @@ class PasscodeViewController: UIViewController, Themeable {
 
         self.messageLabel?.applyThemeCollection(collection, itemStyle: .title, itemState: .normal)
         self.errorMessageLabel?.applyThemeCollection(collection)
-        self.passcodeTextField?.applyThemeCollection(collection, itemStyle: .title, itemState: .normal)
+        self.passcodeLabel?.applyThemeCollection(collection, itemStyle: .title, itemState: .normal)
         self.timeoutMessageLabel?.applyThemeCollection(collection)
 
         for button in self.keyboardButtons! {
