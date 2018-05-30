@@ -214,7 +214,9 @@ class AppLockManager: NSObject {
     }
 
     func dismissAskedPasscodeIfDateToAskIsLower() {
-        if !shouldBeLocked {
+        if shouldBeLocked {
+            AppLockManager.shared.showBiometricalUnlockIfNeeded()
+        } else {
             if self.passcodeViewController != nil {
                 //Protection to hide the PasscodeViewController only if is in unlock mode
                 if self.passcodeMode == .unlockPasscode ||
@@ -317,7 +319,7 @@ class AppLockManager: NSObject {
     // MARK: - Biometrical
 
     func showBiometricalUnlockIfNeeded() {
-        self.dateAllowTryAgain = nil
+        
         if  self.biometricalStatus == BiometricalStatus.notShown,
             self.dateAllowTryAgain == nil || self.dateAllowTryAgain! < Date(),
             self.userDefaults.bool(forKey: SecuritySettingsBiometricalKey) {
