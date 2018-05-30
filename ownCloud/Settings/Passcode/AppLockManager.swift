@@ -173,10 +173,12 @@ class AppLockManager: NSObject {
             break
         }
 
-        self.passcodeViewController?.passcodeValueTextField?.text = ""
-        self.passcodeViewController?.messageLabel?.text = messageText
-        self.passcodeViewController?.errorMessageLabel?.text = errorText
-        self.passcodeViewController?.timeoutMessageLabel?.text = ""
+        self.passcodeViewController?.passcode = ""
+        self.passcodeViewController?.message = messageText
+        self.passcodeViewController?.errorMessage = errorText
+        self.passcodeViewController?.timeoutMessage = ""
+
+        self.passcodeViewController?.updateUI()
     }
 
     func dismissAskedPasscodeIfDateToAskIsLower() {

@@ -28,8 +28,13 @@ class PasscodeViewController: UIViewController, Themeable {
     // MARK: - Messages and input text
     @IBOutlet weak var messageLabel: UILabel?
     @IBOutlet weak var errorMessageLabel: UILabel?
-    @IBOutlet weak var passcodeValueTextField: UITextField?
+    @IBOutlet weak var passcodeTextField: UITextField?
     @IBOutlet weak var timeoutMessageLabel: UILabel?
+
+    var message: String?
+    var errorMessage: String?
+    var passcode: String?
+    var timeoutMessage: String?
 
     // MARK: - Buttons
     @IBOutlet var numberButtons: [ThemeButton]?
@@ -70,6 +75,14 @@ class PasscodeViewController: UIViewController, Themeable {
         super.viewDidLoad()
 
         self.cancelButton?.titleLabel?.text = "Cancel".localized
+        self.updateUI()
+    }
+
+    func updateUI() {
+        self.messageLabel?.text = message
+        self.errorMessageLabel?.text = errorMessage
+        self.passcodeTextField?.text = passcode
+        self.timeoutMessageLabel?.text = timeoutMessage
     }
 
     func enableNumberButtons(enabled: Bool) {
@@ -93,15 +106,15 @@ class PasscodeViewController: UIViewController, Themeable {
     }
 
     @IBAction func numberPressed(sender: UIButton) {
-        if let passcodeValue = self.passcodeValueTextField?.text {
-            self.passcodeValueTextField?.text = passcodeValue + String(sender.tag)
+        if let passcodeValue = self.passcodeTextField?.text {
+            self.passcodeTextField?.text = passcodeValue + String(sender.tag)
         } else {
-            self.passcodeValueTextField?.text = String(sender.tag)
+            self.passcodeTextField?.text = String(sender.tag)
         }
 
         //Once passcode is complete
-        if self.passcodeValueTextField?.text!.count == passcodeLength {
-            self.passcodeCompleteHandler((self.passcodeValueTextField?.text)!)
+        if self.passcodeTextField?.text!.count == passcodeLength {
+            self.passcodeCompleteHandler((self.passcodeTextField?.text)!)
         }
     }
 
@@ -111,9 +124,9 @@ class PasscodeViewController: UIViewController, Themeable {
 
         self.view.backgroundColor = collection.tableBackgroundColor
 
-        self.messageLabel?.applyThemeCollection(collection, itemStyle: .bigTitle, itemState: .normal)
+        self.messageLabel?.applyThemeCollection(collection, itemStyle: .title, itemState: .normal)
         self.errorMessageLabel?.applyThemeCollection(collection)
-        self.passcodeValueTextField?.applyThemeCollection(collection, itemStyle: .message, itemState: .normal)
+        self.passcodeTextField?.applyThemeCollection(collection, itemStyle: .message, itemState: .normal)
         self.timeoutMessageLabel?.applyThemeCollection(collection)
 
         for button in self.numberButtons! {
