@@ -138,7 +138,7 @@ class PasscodeViewController: UIViewController, Themeable {
                 }
             }
         }
-        
+
         if let passcode = self.passcode {
             //Protection to not add more during the delay
             if passcode.count < passcodeLength {
