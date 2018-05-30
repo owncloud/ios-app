@@ -37,7 +37,7 @@ class PasscodeViewController: UIViewController, Themeable {
     var timeoutMessage: String?
 
     // MARK: - Buttons
-    @IBOutlet var numberButtons: [ThemeButton]?
+    @IBOutlet var keyboardButtons: [ThemeButton]?
     @IBOutlet weak var cancelButton: ThemeButton?
 
     // MARK: - Handlers
@@ -99,7 +99,7 @@ class PasscodeViewController: UIViewController, Themeable {
         self.passcodeTextField?.text = passcodeText
     }
 
-    func enableNumberButtons(enabled: Bool) {
+    func enableKeyboardButtons(enabled: Bool) {
 
         var alpha: CGFloat = 0.5
 
@@ -107,13 +107,20 @@ class PasscodeViewController: UIViewController, Themeable {
             alpha = 1.0
         }
 
-        for button in self.numberButtons! {
+        for button in self.keyboardButtons! {
             button.isEnabled = enabled
             button.alpha = alpha
         }
     }
 
     // MARK: - Actions
+
+    @IBAction func delete(sender: UIButton) {
+        if self.passcode != nil, self.passcode!.count > 0 {
+            self.passcode?.removeLast()
+            self.updateUI()
+        }
+    }
 
     @IBAction func cancel(sender: UIButton) {
         self.cancelHandler()
@@ -145,7 +152,7 @@ class PasscodeViewController: UIViewController, Themeable {
         self.passcodeTextField?.applyThemeCollection(collection, itemStyle: .title, itemState: .normal)
         self.timeoutMessageLabel?.applyThemeCollection(collection)
 
-        for button in self.numberButtons! {
+        for button in self.keyboardButtons! {
             button.applyThemeCollection(collection, itemStyle: .neutral)
         }
 

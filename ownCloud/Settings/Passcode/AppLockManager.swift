@@ -110,7 +110,7 @@ class AppLockManager: NSObject {
                 if let date = self.dateAllowTryAgain, date > Date() {
                     //User killed the app
                     self.passcodeMode = .unlockPasscodeError
-                    self.passcodeViewController?.enableNumberButtons(enabled: false)
+                    self.passcodeViewController?.enableKeyboardButtons(enabled: false)
                     self.scheduledTimerToUpdateInterfaceTime()
                 } else {
                     self.passcodeMode = .unlockPasscode
@@ -240,7 +240,7 @@ class AppLockManager: NSObject {
             if date <= Date() {
                 //Time elapsed, allow enter passcode again
                 self.timerBruteForce?.invalidate()
-                self.passcodeViewController?.enableNumberButtons(enabled: true)
+                self.passcodeViewController?.enableKeyboardButtons(enabled: true)
                 self.updateUI()
             }
         }
@@ -266,7 +266,7 @@ class AppLockManager: NSObject {
             // Brute force protection
             self.timesPasscodeFailed += 1
             if self.timesPasscodeFailed >= self.timesAllowPasscodeFail {
-                self.passcodeViewController?.enableNumberButtons(enabled: false)
+                self.passcodeViewController?.enableKeyboardButtons(enabled: false)
                 self.dateAllowTryAgain = Date().addingTimeInterval(TimeInterval(self.secondsToTryAgain()))
                 self.scheduledTimerToUpdateInterfaceTime()
             }
