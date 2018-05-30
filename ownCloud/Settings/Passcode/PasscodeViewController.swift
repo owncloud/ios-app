@@ -74,15 +74,29 @@ class PasscodeViewController: UIViewController, Themeable {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.cancelButton?.titleLabel?.text = "Cancel".localized
         self.updateUI()
     }
 
     func updateUI() {
         self.messageLabel?.text = message
         self.errorMessageLabel?.text = errorMessage
-        self.passcodeTextField?.text = passcode
         self.timeoutMessageLabel?.text = timeoutMessage
+        self.cancelButton?.setTitle("Cancel".localized, for: .normal)
+
+        let whiteDot = "\u{25E6}"
+        let blackDot = "\u{2022}"
+
+        var passcodeText = ""
+
+        for index in 1...passcodeLength {
+            if let passcode = self.passcode, passcode.count >= index {
+                passcodeText += blackDot
+            } else {
+                passcodeText += whiteDot
+            }
+        }
+
+        self.passcodeTextField?.text = passcodeText
     }
 
     func enableNumberButtons(enabled: Bool) {
@@ -106,15 +120,17 @@ class PasscodeViewController: UIViewController, Themeable {
     }
 
     @IBAction func numberPressed(sender: UIButton) {
-        if let passcodeValue = self.passcodeTextField?.text {
-            self.passcodeTextField?.text = passcodeValue + String(sender.tag)
+        if let passcode = self.passcode {
+            self.passcode = passcode + String(sender.tag)
         } else {
-            self.passcodeTextField?.text = String(sender.tag)
+            self.passcode = String(sender.tag)
         }
 
+        self.updateUI()
+
         //Once passcode is complete
-        if self.passcodeTextField?.text!.count == passcodeLength {
-            self.passcodeCompleteHandler((self.passcodeTextField?.text)!)
+        if self.passcode!.count == passcodeLength {
+            self.passcodeCompleteHandler(self.passcode!)
         }
     }
 
@@ -126,7 +142,7 @@ class PasscodeViewController: UIViewController, Themeable {
 
         self.messageLabel?.applyThemeCollection(collection, itemStyle: .title, itemState: .normal)
         self.errorMessageLabel?.applyThemeCollection(collection)
-        self.passcodeTextField?.applyThemeCollection(collection, itemStyle: .message, itemState: .normal)
+        self.passcodeTextField?.applyThemeCollection(collection, itemStyle: .title, itemState: .normal)
         self.timeoutMessageLabel?.applyThemeCollection(collection)
 
         for button in self.numberButtons! {

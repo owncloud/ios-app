@@ -179,7 +179,7 @@ class SecuritySettingsSection: SettingsSection {
                                     })
                                 } else {
                                     //Passcode is not the same
-                                    passcodeViewController?.passcodeTextField?.text = nil
+                                    passcodeViewController?.passcode = nil
                                     passcodeViewController?.message = "Enter code".localized
                                     passcodeViewController?.errorMessage = "The entered codes are different".localized
                                     passcodeViewController?.updateUI()
@@ -190,7 +190,7 @@ class SecuritySettingsSection: SettingsSection {
                     }
 
                     passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, passcodeCompleteHandler: passcodeCompleteHandler)
-                    
+
                     //Configure the view
                     var messageText : String?
 
@@ -201,7 +201,6 @@ class SecuritySettingsSection: SettingsSection {
                     }
 
                     passcodeViewController?.message = messageText
-
                     vc.present(passcodeViewController!, animated: true, completion: nil)
                 }
             }

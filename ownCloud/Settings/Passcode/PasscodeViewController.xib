@@ -35,7 +35,7 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <textField opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="aaaa" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aVw-W3-TdE">
+                <textField opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aVw-W3-TdE">
                     <rect key="frame" x="127.5" y="129.5" width="120" height="30"/>
                     <accessibility key="accessibilityConfiguration" identifier="passcodeValueTextField"/>
                     <constraints>
@@ -44,7 +44,7 @@
                     </constraints>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                    <textInputTraits key="textInputTraits"/>
                 </textField>
                 <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85k-O3-nSF" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
                     <rect key="frame" x="57.5" y="203.5" width="70" height="70"/>
