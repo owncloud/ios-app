@@ -128,8 +128,6 @@ class SecuritySettingsSection: SettingsSection {
         passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
             if let passcodeSwitch = sender as? UISwitch {
                 if let vc = self.viewController {
-                    //Store the setted frequency to recovery it in cancel delete
-                    let originalFrequency = self.frequency
 
                     var passcodeViewController: PasscodeViewController?
 
@@ -137,8 +135,6 @@ class SecuritySettingsSection: SettingsSection {
                     let cancelHandler:CancelHandler = {
                         passcodeViewController!.dismiss(animated: true, completion: {
                             self.isPasscodeSecurityEnabled = !passcodeSwitch.isOn
-                            self.frequencyRow?.cell?.detailTextLabel?.text = originalFrequency.toString()
-                            self.frequency = originalFrequency
                         })
                         self.passcodeFromFirstStep = nil
                     }
@@ -151,7 +147,10 @@ class SecuritySettingsSection: SettingsSection {
                             if passcode == PasscodeStorage.passcodeFromKeychain {
                                 //Success
                                 PasscodeStorage.removePasscodeFromKeychain()
-                                passcodeViewController!.dismiss(animated: true, completion: nil)
+                                passcodeViewController!.dismiss(animated: true, completion: {
+                                    self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
+                                    self.updateUI()
+                                })
                             } else {
                                 //Error
                                 passcodeViewController?.passcodeValueTextField?.text = nil
@@ -172,8 +171,10 @@ class SecuritySettingsSection: SettingsSection {
                                     //Passcode righ
                                     //Save to keychain
                                     PasscodeStorage.writePasscodeInKeychain(passcode: passcode)
-                                    passcodeViewController!.dismiss(animated: true, completion: nil)
-                                    self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
+                                    passcodeViewController!.dismiss(animated: true, completion: {
+                                        self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
+                                        self.updateUI()
+                                    })
                                 } else {
                                     //Passcode is not the same
                                     passcodeViewController?.passcodeValueTextField?.text = nil
@@ -187,6 +188,8 @@ class SecuritySettingsSection: SettingsSection {
 
                     passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, passcodeCompleteHandler: passcodeCompleteHandler)
 
+                    vc.present(passcodeViewController!, animated: true, completion: nil)
+
                     //Configure the view
                     var messageText : String?
 
@@ -196,15 +199,9 @@ class SecuritySettingsSection: SettingsSection {
                         messageText = "Delete code".localized
                     }
 
-                    DispatchQueue.main.async {
-                        passcodeViewController?.messageLabel?.text = messageText
-                        passcodeViewController?.cancelButton?.setTitle("Cancel".localized, for: .normal)
-                    }
-
-                    vc.present(passcodeViewController!, animated: true, completion: nil)
+                    passcodeViewController?.messageLabel?.text = messageText
+                    passcodeViewController?.cancelButton?.setTitle("Cancel".localized, for: .normal)
                 }
-                self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
-                self.updateUI()
             }
         }, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled)
 
