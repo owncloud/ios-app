@@ -27,6 +27,10 @@ class AppLockManager: NSObject {
         case unlockPasscodeError
     }
 
+    // MARK: Keychain Keys
+    let passcodeKeychainAccount = "passcode-keychain-account"
+    let passcodeKeychainPath = "passcode-keychain-path"
+
     // MARK: Global vars
 
     // Common
@@ -56,8 +60,22 @@ class AppLockManager: NSObject {
     private var timerBruteForce: Timer?
 
     // Utils
+
+    var isPasscodeStoredOnKeychain: Bool {
+        return (OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil)
+    }
+
+    var passcodeFromKeychain: String? {
+        if let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(
+            forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) {
+            return NSKeyedUnarchiver.unarchiveObject(with: passcodeData) as? String
+        } else {
+            return nil
+        }
+    }
+
     private var isPasscodeActivated: Bool {
-        return (self.userDefaults.bool(forKey: SecuritySettingsPasscodeKey) && PasscodeStorage.isPasscodeStoredOnKeychain)
+        return (self.userDefaults.bool(forKey: SecuritySettingsPasscodeKey) && self.isPasscodeStoredOnKeychain)
     }
 
     private var shouldBeLocked: Bool {
@@ -211,6 +229,15 @@ class AppLockManager: NSObject {
         }
     }
 
+    // MARK: - Passcode Write/Remove
+    func writePasscodeInKeychain(passcode: String) {
+        OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcode), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
+    }
+
+    func removePasscodeFromKeychain() {
+        OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
+    }
+
     // MARK: - Brute force protection
 
     private func scheduledTimerToUpdateInterfaceTime() {
@@ -254,7 +281,7 @@ class AppLockManager: NSObject {
     // MARK: - Logic
 
     func passcodeComplete(passcode: String) {
-        if passcode == PasscodeStorage.passcodeFromKeychain {
+        if passcode == self.passcodeFromKeychain {
             self.dateApplicationWillResignActive = nil
             self.timesPasscodeFailed = 0
             self.dismissPasscode(animated: true)

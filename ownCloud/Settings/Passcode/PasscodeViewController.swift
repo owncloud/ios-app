@@ -127,17 +127,27 @@ class PasscodeViewController: UIViewController, Themeable {
     }
 
     @IBAction func numberPressed(sender: UIButton) {
+
+        let checkPasscode = {
+            self.updateUI()
+            //Once passcode is complete
+            if self.passcode!.count == self.passcodeLength {
+                //Added a small delay to give feedback to the user when press the last number
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    self.passcodeCompleteHandler(self.passcode!)
+                }
+            }
+        }
+        
         if let passcode = self.passcode {
-            self.passcode = passcode + String(sender.tag)
+            //Protection to not add more during the delay
+            if passcode.count < passcodeLength {
+                self.passcode = passcode + String(sender.tag)
+                checkPasscode()
+            }
         } else {
             self.passcode = String(sender.tag)
-        }
-
-        self.updateUI()
-
-        //Once passcode is complete
-        if self.passcode!.count == passcodeLength {
-            self.passcodeCompleteHandler(self.passcode!)
+            checkPasscode()
         }
     }
 
@@ -149,7 +159,7 @@ class PasscodeViewController: UIViewController, Themeable {
 
         self.messageLabel?.applyThemeCollection(collection, itemStyle: .title, itemState: .normal)
         self.errorMessageLabel?.applyThemeCollection(collection)
-        self.passcodeLabel?.applyThemeCollection(collection, itemStyle: .title, itemState: .normal)
+        self.passcodeLabel?.applyThemeCollection(collection, itemStyle: .bigTitle, itemState: .normal)
         self.timeoutMessageLabel?.applyThemeCollection(collection)
 
         for button in self.keyboardButtons! {

@@ -144,9 +144,9 @@ class SecuritySettingsSection: SettingsSection {
 
                         if !passcodeSwitch.isOn {
                             //Delete
-                            if passcode == PasscodeStorage.passcodeFromKeychain {
+                            if passcode == AppLockManager.shared.passcodeFromKeychain {
                                 //Success
-                                PasscodeStorage.removePasscodeFromKeychain()
+                                AppLockManager.shared.removePasscodeFromKeychain()
                                 passcodeViewController!.dismiss(animated: true, completion: {
                                     self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
                                     self.updateUI()
@@ -172,7 +172,7 @@ class SecuritySettingsSection: SettingsSection {
                                 if self.passcodeFromFirstStep == passcode {
                                     //Passcode righ
                                     //Save to keychain
-                                    PasscodeStorage.writePasscodeInKeychain(passcode: passcode)
+                                    AppLockManager.shared.writePasscodeInKeychain(passcode: passcode)
                                     passcodeViewController!.dismiss(animated: true, completion: {
                                         self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
                                         self.updateUI()
