@@ -51,11 +51,11 @@
 "Everything up-to-date." = "Everything up-to-date.";
 "Please wait…" = "Please wait…";
 "Sort by" = "Sort by";
-"A-Z" = "A-Z";
-"Z-A" = "Z-A";
-"Type" = "Type";
-"Size" = "Size";
-}
+"name (A-Z)" = "name (A-Z)";
+"name (Z-A)" = "name (Z-A)";
+"type" = "type";
+"size" = "size";
+"date" = "date";
 
 /* Client Messages */
 "Empty folder" = "Empty folder";

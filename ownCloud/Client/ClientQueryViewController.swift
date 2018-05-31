@@ -19,52 +19,6 @@
 import UIKit
 import ownCloudSDK
 
-class SortBar: UIView, Themeable {
-
-    var sortButton: ThemeButton
-    var sortMethod: SortMethod {
-
-        set {
-            UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
-            sortButton.setTitle("sort by \(sortMethod.localizedName()) ▼", for: .normal)
-        }
-
-        get {
-            let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabeticallyDescendant
-            sortButton.setTitle("sort by \(sort.localizedName()) ▼", for: .normal)
-            return sort
-        }
-    }
-
-    override init(frame: CGRect) {
-        sortButton = ThemeButton(frame: .zero)
-        super.init(frame: frame)
-        sortButton.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(sortButton)
-
-        sortButton.setTitle("sort by \(sortMethod.localizedName()) ▼", for: .normal)
-
-        sortButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
-        sortButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10).isActive = true
-        sortButton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        Theme.shared.register(client: self)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        Theme.shared.unregister(client: self)
-    }
-
-    func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-        self.sortButton.applyThemeCollection(collection)
-        self.applyThemeCollection(collection)
-    }
-
-}
-
 class ClientQueryViewController: UITableViewController, Themeable {
 	var core : OCCore?
 	var query : OCQuery?
@@ -159,6 +113,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
         sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40))
         sortBar?.sortButton.addTarget(self, action: #selector(presentSortOptions), for: .touchUpInside)
+		sortBar?.sortButton.setTitle("sort by \(sortMethod.localizedName()) ▼", for: .normal)
 
         tableView.tableHeaderView = sortBar
     }
@@ -183,7 +138,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		updateQueryProgressSummary()
 
-        query?.sortComparator = self.sortBar?.sortMethod.comparator()
+        query?.sortComparator = self.sortMethod.comparator()
 	}
 
 	func updateQueryProgressSummary() {
@@ -273,6 +228,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		// Make sure we don't request the thumbnail multiple times in that case.
 		if cell?.item?.versionIdentifier != newItem.versionIdentifier {
 			cell?.item = newItem
+		} else {
+			cell?.updateWith(newItem)
 		}
 
 		return cell!
@@ -409,6 +366,19 @@ class ClientQueryViewController: UITableViewController, Themeable {
     // MARK: - Sorting
 
     private var sortBar: SortBar?
+	private var sortMethod: SortMethod {
+
+		set {
+			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
+			sortBar?.sortButton.setTitle("sort by \(sortMethod.localizedName()) ▼", for: .normal)
+		}
+
+		get {
+			let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabeticallyDescendant
+			sortBar?.sortButton.setTitle("sort by \(sort.localizedName()) ▼", for: .normal)
+			return sort
+		}
+	}
 
     @objc private func presentSortOptions() {
 
@@ -426,8 +396,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
         present(controller, animated: true)
     }
 
-    private func changeSortMethod(to sortMethod: SortMethod) {
-        sortBar?.sortMethod = sortMethod
+    private func changeSortMethod(to newSortMethod: SortMethod) {
+        sortMethod = newSortMethod
         query?.sortComparator = sortMethod.comparator()
     }
 }
