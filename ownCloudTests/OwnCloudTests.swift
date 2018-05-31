@@ -33,6 +33,7 @@ class OwnCloudTests: XCTestCase {
 
     func testClickOnTheButtonAndNothingHappens() {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
     func testPerformanceExample() {
@@ -44,7 +45,7 @@ class OwnCloudTests: XCTestCase {
 
     // MARK: - Passcode
 
-    func testUnlockPasscodeCorrect() {
+    func testUnlockRightPasccode() {
 
         //Prepare the simulator show the passcode
         AppLockManager.shared.writePasscodeInKeychain(passcode: "1111")
@@ -68,7 +69,7 @@ class OwnCloudTests: XCTestCase {
         AppLockManager.shared.removePasscodeFromKeychain()
     }
 
-    func testUnlockPasscodeWrong() {
+    func testUnlockWrongPasscode() {
 
         //Prepare the simulator show the passcode
         AppLockManager.shared.writePasscodeInKeychain(passcode: "2222")
