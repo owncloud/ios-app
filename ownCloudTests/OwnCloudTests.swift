@@ -42,6 +42,8 @@ class OwnCloudTests: XCTestCase {
         }
     }
 
+    // MARK: - Passcode
+
     func testUnlockPasscodeCorrect() {
 
         //Prepare the simulator show the passcode
