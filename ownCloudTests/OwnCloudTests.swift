@@ -8,7 +8,6 @@
 
 import XCTest
 import EarlGrey
-import ownCloudSDK
 
 @testable import ownCloud
 
@@ -41,55 +40,5 @@ class OwnCloudTests: XCTestCase {
         self.measure {
             // Put the code you want to measure the time of here.
         }
-    }
-
-    // MARK: - Passcode
-
-    func testUnlockRightPasccode() {
-
-        //Prepare the simulator show the passcode
-        AppLockManager.shared.writePasscodeInKeychain(passcode: "1111")
-        let userDefaults = UserDefaults(suiteName: OCAppIdentity.shared().appGroupIdentifier) ?? UserDefaults.standard
-        userDefaults.set(true, forKey: SecuritySettingsPasscodeKey)
-
-        //Show the passcode
-        AppLockManager.shared.showPasscodeIfNeeded()
-
-        //Tap the number buttons
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-
-        //Asserts
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible())
-
-        //Set the simulator on the initial state
-        userDefaults.set(false, forKey: SecuritySettingsPasscodeKey)
-        AppLockManager.shared.removePasscodeFromKeychain()
-    }
-
-    func testUnlockWrongPasscode() {
-
-        //Prepare the simulator show the passcode
-        AppLockManager.shared.writePasscodeInKeychain(passcode: "2222")
-        let userDefaults = UserDefaults(suiteName: OCAppIdentity.shared().appGroupIdentifier) ?? UserDefaults.standard
-        userDefaults.set(true, forKey: SecuritySettingsPasscodeKey)
-
-        //Show the passcode
-        AppLockManager.shared.showPasscodeIfNeeded()
-
-        //Tap the number buttons
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-
-        //Asserts
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("messageLabel")).assert(grey_sufficientlyVisible())
-
-        //Set the simulator on the initial state
-        userDefaults.set(false, forKey: SecuritySettingsPasscodeKey)
-        AppLockManager.shared.removePasscodeFromKeychain()
     }
 }
