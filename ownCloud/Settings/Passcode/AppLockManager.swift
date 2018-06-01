@@ -267,7 +267,7 @@ class AppLockManager: NSObject {
                 //Time elapsed, allow enter passcode again
                 self.timerBruteForce?.invalidate()
                 self.passcodeViewController?.enableKeyboardButtons(enabled: true)
-                self.updateUI()
+                self.passcodeViewController?.updateTimeoutMessage(timeoutMessage: nil)
             }
         }
     }
