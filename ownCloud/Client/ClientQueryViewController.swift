@@ -46,6 +46,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 		observerContext = UnsafeMutableRawPointer(&observerContextValue)
+		searchController = UISearchController(searchResultsController: nil)
 
 		super.init(style: .plain)
 
@@ -116,6 +117,16 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		sortBar?.updateSortMethod()
 
         tableView.tableHeaderView = sortBar
+
+		searchController.searchResultsUpdater = self
+		searchController.obscuresBackgroundDuringPresentation = false
+		searchController.hidesNavigationBarDuringPresentation = true
+		searchController.searchBar.placeholder = "Search".localized
+		navigationItem.searchController = searchController
+		navigationItem.hidesSearchBarWhenScrolling = false
+		self.extendedLayoutIncludesOpaqueBars = true
+		self.searchController.extendedLayoutIncludesOpaqueBars = true
+		definesPresentationContext = true
     }
 
 	override func viewWillDisappear(_ animated: Bool) {
@@ -376,6 +387,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			return sort
 		}
 	}
+
+	// MARK: - Search
+	var searchController: UISearchController
+
 }
 
 // MARK: - Query Delegate
@@ -389,30 +404,36 @@ extension ClientQueryViewController : OCQueryDelegate {
 		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (_, changeSet) in
 			DispatchQueue.main.async {
 				self.items = changeSet?.queryResult
-				self.tableView.reloadData()
 
 				switch query.state {
-					case .contentsFromCache, .idle:
-						if self.items?.count == 0 {
-							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
+				case .contentsFromCache, .idle:
+					if self.items?.count == 0 {
+						if self.searchController.searchBar.text != "" {
+							self.message(show: true, imageName: "folder", title: "No matches".localized, message: "There is no results for this search".localized)
 						} else {
-							self.message(show: false)
+							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
 						}
-
-					case .targetRemoved:
-						self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
-
-					default:
+					} else {
 						self.message(show: false)
+						self.tableView.reloadData()
+					}
+
+				case .targetRemoved:
+					self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
+					self.tableView.reloadData()
+
+				default:
+					self.message(show: false)
+					self.tableView.reloadData()
 				}
 
 				switch query.state {
-					case .idle, .targetRemoved, .contentsFromCache, .stopped:
-						if self.refreshControl?.isRefreshing ?? false {
-							self.refreshControl?.endRefreshing()
-						}
+				case .idle, .targetRemoved, .contentsFromCache, .stopped:
+					if self.tableView.refreshControl?.isRefreshing ?? false {
+						self.tableView.refreshControl?.endRefreshing()
+					}
 
-					default: break
+				default: break
 				}
 			}
 		}
@@ -425,6 +446,36 @@ extension ClientQueryViewController : SortBarDelegate {
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
 		query?.sortComparator = sortMethod.comparator()
+
+	}
+}
+
+// MARK: - UISearchResultsUpdating Delegate
+extension ClientQueryViewController: UISearchResultsUpdating {
+	func updateSearchResults(for searchController: UISearchController) {
+		let searchText = searchController.searchBar.text!
+
+		let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
+			if let item = item {
+				if item.name.lowercased().contains(searchText.lowercased()) {return true}
+				return false
+			}
+			return false
+		}
+
+		if searchText == "" {
+			if let filter = query?.filter(withIdentifier: "text-search") {
+				query?.removeFilter(filter)
+			}
+		} else {
+			if let filter = query?.filter(withIdentifier: "text-search") {
+				query?.updateFilter(filter, applyChanges: { filterToChange in
+					(filterToChange as? OCQueryFilter)?.filterHandler = filterHandler
+				})
+			} else {
+				query?.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
+			}
+		}
 	}
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
