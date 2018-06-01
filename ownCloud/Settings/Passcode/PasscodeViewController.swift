@@ -78,6 +78,8 @@ class PasscodeViewController: UIViewController, Themeable {
         self.cancelButton?.setTitle("Cancel".localized, for: .normal)
     }
 
+    // MARK: Updates UI
+
     func updateUI(message: String?, errorMessage: String?, timeoutMessage: String?, passcode: String?) {
         self.messageLabel?.text = message
         self.errorMessageLabel?.text = errorMessage
