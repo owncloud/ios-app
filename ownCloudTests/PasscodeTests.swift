@@ -28,49 +28,47 @@ class PasscodeTests: XCTestCase {
 
     func testUnlockRightPasccode() {
 
-        //Prepare the simulator show the passcode
-        AppLockManager.shared.writePasscodeInKeychain(passcode: "1111")
-        let userDefaults = OCAppIdentity.shared().userDefaults
-        userDefaults.set(true, forKey: SecuritySettingsPasscodeKey)
+        // Prepare the simulator show the passcode
+        AppLockManager.shared.passcode = "1111"
+        AppLockManager.shared.lockEnabled = true
 
-        //Show the passcode
+        // Show the passcode
         AppLockManager.shared.showLockscreenIfNeeded()
 
-        //Tap the number buttons
+        // Tap the number buttons
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
 
-        //Asserts
+        // Asserts
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible())
 
-        //Set the simulator on the initial state
-        userDefaults.set(false, forKey: SecuritySettingsPasscodeKey)
-        AppLockManager.shared.removePasscodeFromKeychain()
+        // Set the simulator on the initial state
+        AppLockManager.shared.passcode = nil
+        AppLockManager.shared.lockEnabled = false
     }
 
     func testUnlockWrongPasscode() {
 
-        //Prepare the simulator show the passcode
-        AppLockManager.shared.writePasscodeInKeychain(passcode: "2222")
-        let userDefaults = OCAppIdentity.shared().userDefaults
-        userDefaults.set(true, forKey: SecuritySettingsPasscodeKey)
+        // Prepare the simulator show the passcode
+        AppLockManager.shared.passcode = "2222"
+        AppLockManager.shared.lockEnabled = true
 
-        //Show the passcode
+        // Show the passcode
         AppLockManager.shared.showLockscreenIfNeeded()
 
-        //Tap the number buttons
+        // Tap the number buttons
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
 
-        //Asserts
+        // Asserts
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("messageLabel")).assert(grey_sufficientlyVisible())
 
-        //Set the simulator on the initial state
-        userDefaults.set(false, forKey: SecuritySettingsPasscodeKey)
-        AppLockManager.shared.removePasscodeFromKeychain()
+        // Set the simulator on the initial state
+        AppLockManager.shared.passcode = nil
+        AppLockManager.shared.lockEnabled = false
     }
 }
