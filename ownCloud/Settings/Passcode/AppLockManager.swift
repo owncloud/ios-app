@@ -21,281 +21,236 @@ import ownCloudSDK
 
 class AppLockManager: NSObject {
 
-    // MARK: - Interface view mode
-    enum PasscodeInterfaceMode {
-        case unlockPasscode
-        case unlockPasscodeError
-    }
+	// MARK: - UI
+	private var window: AppLockWindow?
+	private var passcodeViewController: PasscodeViewController?
 
-    // MARK: Keychain Keys
-    let passcodeKeychainAccount = "passcode-keychain-account"
-    let passcodeKeychainPath = "passcode-keychain-path"
+	private var userDefaults: UserDefaults
 
-    // MARK: Global vars
+	// MARK: - State
+	var lastApplicationBackgroundedDate : Date?
 
-    // Common
-    private var window: LockWindow?
-    private var passcodeMode: PasscodeInterfaceMode?
-    private var passcodeViewController: PasscodeViewController?
+	private var failedPasscodeAttempts: Int {
+		get {
+			return userDefaults.integer(forKey: "applock-failed-passcode-attempts")
+		}
+		set(newValue) {
+			self.userDefaults.set(newValue, forKey: "applock-failed-passcode-attempts")
+		}
+	}
+	private var lockedUntilDate: Date? {
+		get {
+			return userDefaults.object(forKey: "applock-locked-until-date") as? Date
+		}
+		set(newValue) {
+			self.userDefaults.set(newValue, forKey: "applock-locked-until-date")
+		}
+	}
 
-    // Unlock
-    private var dateApplicationWillResignActive: Date?
-    private var userDefaults: UserDefaults
+	private let maximumPasscodeAttempts: Int = 3
+	private let powBaseDelay: Double = 1.5
+	private var lockTimer: Timer?
 
-    // Brute force protection
-    public let TimesPasscodeFailedKey: String =  "times-passcode-failed"
-    public let DateAllowTryPasscodeAgainKey: String =  "date-allow-try-passcode-again"
-    private var timesPasscodeFailed: Int {
-        didSet {
-            self.userDefaults.set(timesPasscodeFailed, forKey: TimesPasscodeFailedKey)
-        }
-    }
-    private var dateAllowTryAgain: Date? {
-        didSet {
-            self.userDefaults.set(NSKeyedArchiver.archivedData(withRootObject: dateAllowTryAgain as Any), forKey: DateAllowTryPasscodeAgainKey)
-        }
-    }
-    private let timesAllowPasscodeFail: Int = 3
-    private let powBaseBruteForce: Decimal = 1.5
-    private var timerBruteForce: Timer?
+	// MARK: - Passcode
+	private let keychainAccount = "app.passcode"
+	private let keychainPasscodePath = "passcode"
+	private let keychainLockEnabledPath = "lockEnabled"
 
-    // Utils
+	private var keychain : OCKeychain? {
+		return OCAppIdentity.shared().keychain
+	}
 
-    var isPasscodeStoredOnKeychain: Bool {
-        return (OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil)
-    }
+	var passcode: String? {
+		get {
+			if let passcodeData = self.keychain?.readDataFromKeychainItem(forAccount: keychainAccount, path: keychainPasscodePath) {
+				return String(data: passcodeData, encoding: .utf8)
+			}
 
-    var passcodeFromKeychain: String? {
-        if let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(
-            forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) {
-            return NSKeyedUnarchiver.unarchiveObject(with: passcodeData) as? String
-        } else {
-            return nil
-        }
-    }
+			return nil
+		}
 
-    private var isPasscodeActivated: Bool {
-        return (self.userDefaults.bool(forKey: SecuritySettingsPasscodeKey) && self.isPasscodeStoredOnKeychain)
-    }
+		set(newPasscode) {
+			if let passcode = newPasscode {
+				_ = self.keychain?.write(passcode.data(using: .utf8), toKeychainItemForAccount: keychainAccount, path: keychainPasscodePath)
+			} else {
+				_ = self.keychain?.removeItem(forAccount: keychainAccount, path: keychainPasscodePath)
+			}
+		}
+	}
 
-    private var shouldBeLocked: Bool {
-        var output: Bool = true
+	// MARK: - Settings
+	var lockEnabled: Bool {
+		get {
+			return userDefaults.bool(forKey: "applock-lock-enabled")
+		}
+		set(newValue) {
+			self.userDefaults.set(newValue, forKey: "applock-lock-enabled")
+		}
+	}
 
-        if isPasscodeActivated {
-            if let date = self.dateApplicationWillResignActive {
+	var lockDelay: Int {
+		get {
+			return userDefaults.integer(forKey: "applock-lock-delay")
+		}
 
-                let elapsedSeconds = Date().timeIntervalSince(date)
-                let minSecondsToAsk = self.userDefaults.integer(forKey: SecuritySettingsFrequencyKey)
+		set(newValue) {
+			self.userDefaults.set(newValue, forKey: "applock-lock-delay")
+		}
+	}
 
-                if Int(elapsedSeconds) < minSecondsToAsk {
-                    output = false
-                }
-            }
-        } else {
-            output = false
-        }
+	// MARK: - Init
+	static var shared = AppLockManager()
 
-        return output
-    }
+	public override init() {
+		userDefaults = OCAppIdentity.shared().userDefaults
 
-    // MARK: - Init
+		super.init()
 
-    static var shared = AppLockManager()
+		NotificationCenter.default.addObserver(self, selector: #selector(self.appDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(self.appWillEnterForeground), name: .UIApplicationWillEnterForeground, object: nil)
+	}
 
-    public override init() {
-        // TODO: Use OCAppIdentity-provided user defaults in the future
-        self.userDefaults = UserDefaults(suiteName: OCAppIdentity.shared().appGroupIdentifier) ?? UserDefaults.standard
+	deinit {
+		NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
+		NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
+	}
 
-        // Brute Force protection
-        self.timesPasscodeFailed = self.userDefaults.integer(forKey: TimesPasscodeFailedKey)
-        if let data = self.userDefaults.data(forKey: DateAllowTryPasscodeAgainKey) {
-            self.dateAllowTryAgain = NSKeyedUnarchiver.unarchiveObject(with: data) as? Date
-        }
+	// MARK: - Show / Dismiss Passcode View
+	func showLockscreenIfNeeded(forceShow: Bool = false) {
+		if self.shouldDisplayLockscreen || forceShow {
+			if passcodeViewController == nil {
+				passcodeViewController = PasscodeViewController(cancelHandler: {}, passcodeCompleteHandler: { (passcode: String) in
+					self.attemptUnlock(with: passcode)
+				})
 
-        super.init()
-    }
+				passcodeViewController?.message = "Enter code".localized
+				passcodeViewController?.cancelButtonHidden = false
 
-    // MARK: - Show Passcode View
+				passcodeViewController?.screenBlurringEnabled = forceShow && !self.shouldDisplayLockscreen
 
-    func showPasscodeIfNeeded() {
+				window = AppLockWindow(frame: UIScreen.main.bounds)
+				window?.rootViewController = passcodeViewController!
+				window?.makeKeyAndVisible()
 
-        if isPasscodeActivated {
-            if self.passcodeViewController == nil {
+				self.startLockCountdown()
+			} else {
+				passcodeViewController?.screenBlurringEnabled = forceShow
+			}
+		}
+	}
 
-                self.prepareLockScreen()
+	func dismissLockscreen(animated:Bool) {
+		let hideWindow = {
+			self.window?.isHidden = true
+			self.passcodeViewController = nil
+			self.window = nil
+		}
 
-                // Brute force protection
-                if let date = self.dateAllowTryAgain, date > Date() {
-                    //User killed the app
-                    self.passcodeMode = .unlockPasscodeError
-                    self.passcodeViewController?.enableKeyboardButtons(enabled: false)
-                    self.scheduledTimerToUpdateInterfaceTime()
-                } else {
-                    self.passcodeMode = .unlockPasscode
-                }
+		if animated {
+			self.window?.hideWindowAnimation {
+				hideWindow()
+			}
+		} else {
+			hideWindow()
+		}
+	}
 
-                self.updateUI()
+	// MARK: - App Events
+	@objc func appDidEnterBackground() {
+		lastApplicationBackgroundedDate = Date()
 
-            }
-        }
-    }
+		showLockscreenIfNeeded(forceShow: true)
+	}
 
-    func prepareLockScreen() {
+	@objc func appWillEnterForeground() {
+		if self.shouldDisplayLockscreen {
+			showLockscreenIfNeeded()
+		} else {
+			dismissLockscreen(animated: false)
+		}
+	}
 
-        let passcodeCompleteHandler:PasscodeCompleteHandler = {
-            (passcode: String) in
-            self.passcodeComplete(passcode: passcode)
-        }
+	// MARK: - Unlock
+	func attemptUnlock(with testPasscode: String) {
+		if testPasscode == self.passcode {
+			lastApplicationBackgroundedDate = nil
+			failedPasscodeAttempts = 0
+			dismissLockscreen(animated: true)
+		} else {
+			passcodeViewController?.errorMessage = "Incorrect code".localized
 
-        self.passcodeViewController = PasscodeViewController(cancelHandler: {}, passcodeCompleteHandler: passcodeCompleteHandler)
+			failedPasscodeAttempts += 1
 
-        self.window = LockWindow(frame: UIScreen.main.bounds)
-        self.window?.windowLevel = UIWindowLevelStatusBar
-        self.window?.rootViewController = self.passcodeViewController!
-        self.window?.makeKeyAndVisible()
-    }
+			if self.failedPasscodeAttempts >= self.maximumPasscodeAttempts {
+				let delayUntilNextAttempt = pow(powBaseDelay, Double(failedPasscodeAttempts))
 
-    func applicationWillResignActive() {
+				lockedUntilDate = Date().addingTimeInterval(delayUntilNextAttempt)
+				startLockCountdown()
+			}
 
-        //Store the date when the app will be resign
-        if self.isPasscodeActivated,
-            self.dateApplicationWillResignActive == nil,
-            self.passcodeViewController == nil || self.passcodeMode != .unlockPasscode,
-            self.passcodeViewController == nil || self.passcodeMode != .unlockPasscodeError {
-            self.dateApplicationWillResignActive = Date()
-        }
+			passcodeViewController?.passcode = nil
+		}
+	}
 
-        //Show the passcode
-        self.showPasscodeIfNeeded()
-    }
+	// MARK: - Status
+	private var shouldDisplayLockscreen: Bool {
+		if !self.lockEnabled {
+			return false
+		}
 
-    // MARK: - Interface updates
+		if !self.shouldDisplayCountdown {
+			if let date = self.lastApplicationBackgroundedDate {
+				if Int(-date.timeIntervalSinceNow) < self.lockDelay {
+					return false
+				}
+			}
+		}
 
-    private func updateUI() {
+		return true
+	}
 
-        var messageText : String?
-        var errorText : String? = nil
+	private var shouldDisplayCountdown : Bool {
+		if let startLockBeforeDate = self.lockedUntilDate {
+			return startLockBeforeDate > Date()
+		}
 
-        switch self.passcodeMode {
+		return false
+	}
 
-        case .unlockPasscode?:
-            messageText = "Enter code".localized
-            self.passcodeViewController?.cancelButton?.isHidden = true
+	// MARK: - Countdown display
+	private func startLockCountdown() {
+		if self.shouldDisplayCountdown {
+			passcodeViewController?.keypadButtonsHidden = true
+			updateLockCountdown()
 
-        case .unlockPasscodeError?:
-            messageText = "Enter code".localized
-            errorText = "Incorrect code".localized
-            self.passcodeViewController?.cancelButton?.isHidden = true
+			lockTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateLockCountdown), userInfo: nil, repeats: true)
+		}
+	}
 
-        default:
-            break
-        }
+	@objc private func updateLockCountdown() {
+		if let date = self.lockedUntilDate {
+			let interval = Int(date.timeIntervalSinceNow)
+			let seconds = interval % 60
+			let minutes = (interval / 60) % 60
+			let hours = (interval / 3600)
 
-        self.passcodeViewController?.updateUI(
-            message: messageText,
-            errorMessage: errorText,
-            timeoutMessage: nil,
-            passcode: nil)
-    }
+			let dateFormatted:String?
+			if hours > 0 {
+				dateFormatted = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+			} else {
+				dateFormatted = String(format: "%02d:%02d", minutes, seconds)
+			}
 
-    func dismissAskedPasscodeIfDateToAskIsLower() {
-        if !shouldBeLocked {
-            if self.passcodeViewController != nil {
-                //Protection to hide the PasscodeViewController only if is in unlock mode
-                if self.passcodeMode == .unlockPasscode ||
-                    self.passcodeMode == .unlockPasscodeError {
-                    self.dismissPasscode(animated: true)
-                    self.dateApplicationWillResignActive = nil
-                }
-            }
-        }
-    }
+			let timeoutMessage:String = NSString(format: "Please try again in %@".localized as NSString, dateFormatted!) as String
+			self.passcodeViewController?.timeoutMessage = timeoutMessage
 
-    func dismissPasscode(animated:Bool) {
-
-        let hideWindow = {
-            self.window?.isHidden = true
-            self.passcodeViewController = nil
-            self.window = nil
-        }
-
-        if animated {
-            self.window?.hideWindowAnimation {
-                hideWindow()
-            }
-        } else {
-            hideWindow()
-        }
-    }
-
-    // MARK: - Passcode Write/Remove
-    func writePasscodeInKeychain(passcode: String) {
-        OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcode), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-    }
-
-    func removePasscodeFromKeychain() {
-        OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
-    }
-
-    // MARK: - Brute force protection
-
-    private func scheduledTimerToUpdateInterfaceTime() {
-
-        self.updatePasscodeInterfaceTime()
-        self.timerBruteForce = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updatePasscodeInterfaceTime), userInfo: nil, repeats: true)
-    }
-
-    @objc private func updatePasscodeInterfaceTime() {
-
-        if let date = self.dateAllowTryAgain {
-            let interval = Int(date.timeIntervalSinceNow)
-            let seconds = interval % 60
-            let minutes = (interval / 60) % 60
-            let hours = (interval / 3600)
-
-            let dateFormatted:String?
-            if hours > 0 {
-                dateFormatted = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
-            } else {
-                dateFormatted = String(format: "%02d:%02d", minutes, seconds)
-            }
-
-            let timeoutMessage:String = NSString(format: "Please try again within %@".localized as NSString, dateFormatted!) as String
-            self.passcodeViewController?.updateTimeoutMessage(timeoutMessage: timeoutMessage)
-
-            if date <= Date() {
-                //Time elapsed, allow enter passcode again
-                self.timerBruteForce?.invalidate()
-                self.passcodeViewController?.enableKeyboardButtons(enabled: true)
-                self.passcodeViewController?.updateTimeoutMessage(timeoutMessage: nil)
-            }
-        }
-    }
-
-    private func secondsToTryAgain() -> Int {
-        let powValue = pow(powBaseBruteForce, timesPasscodeFailed)
-        return Int(truncating: NSDecimalNumber(decimal: powValue))
-    }
-
-    // MARK: - Logic
-
-    func passcodeComplete(passcode: String) {
-        if passcode == self.passcodeFromKeychain {
-            self.dateApplicationWillResignActive = nil
-            self.timesPasscodeFailed = 0
-            self.dismissPasscode(animated: true)
-        } else {
-            self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
-            self.passcodeMode = .unlockPasscodeError
-            self.updateUI()
-
-            // Brute force protection
-            self.timesPasscodeFailed += 1
-            if self.timesPasscodeFailed >= self.timesAllowPasscodeFail {
-                self.passcodeViewController?.enableKeyboardButtons(enabled: false)
-                self.dateAllowTryAgain = Date().addingTimeInterval(TimeInterval(self.secondsToTryAgain()))
-                self.scheduledTimerToUpdateInterfaceTime()
-            }
-        }
-    }
+			if date <= Date() {
+				// Time elapsed, allow entering passcode again
+				self.lockTimer?.invalidate()
+				self.passcodeViewController?.keypadButtonsHidden = false
+				self.passcodeViewController?.timeoutMessage = nil
+				self.passcodeViewController?.errorMessage = nil
+			}
+		}
+	}
 }

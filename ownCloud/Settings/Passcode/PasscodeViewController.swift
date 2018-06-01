@@ -18,169 +18,234 @@
 
 import UIKit
 
-typealias CancelHandler = (() -> Void)
-typealias PasscodeCompleteHandler = ((_ passcode: String) -> Void)
+typealias PasscodeViewControllerCancelHandler = (() -> Void)
+typealias PasscodeViewControllerCompletionHandler = ((_ passcode: String) -> Void)
 
 class PasscodeViewController: UIViewController, Themeable {
 
-    // MARK: - Passcode
-    private let passcodeLength = 4
-    var passcode: String?
+	// MARK: - Views
+	@IBOutlet private var messageLabel: UILabel?
+	@IBOutlet private var errorMessageLabel: UILabel?
+	@IBOutlet private var passcodeLabel: UILabel?
+	@IBOutlet private var timeoutMessageLabel: UILabel?
 
-    // MARK: - Messages and input text
-    @IBOutlet weak var messageLabel: UILabel?
-    @IBOutlet weak var errorMessageLabel: UILabel?
-    @IBOutlet weak var passcodeLabel: UILabel?
-    @IBOutlet weak var timeoutMessageLabel: UILabel?
+	@IBOutlet private var lockscreenContainerView : UIView?
+	@IBOutlet private var backgroundBlurView : UIVisualEffectView?
 
-    /*var message: String?
-    var errorMessage: String?
-    var timeoutMessage: String?*/
+	@IBOutlet private var keypadContainerView : UIView?
+	@IBOutlet private var keypadButtons: [ThemeButton]?
+	@IBOutlet private var deleteButton: ThemeButton?
+	@IBOutlet private var cancelButton: ThemeButton?
 
-    // MARK: - Buttons
-    @IBOutlet var keyboardButtons: [ThemeButton]?
-    @IBOutlet weak var cancelButton: ThemeButton?
+	// MARK: - Properties
+	var passcodeLength: Int = 4
 
-    // MARK: - Handlers
-    var cancelHandler:CancelHandler
-    var passcodeCompleteHandler:PasscodeCompleteHandler
+	var passcode: String? {
+		didSet {
+			self.updatePasscodeDots()
+		}
+	}
 
-    // MARK: - Initalization view
-    init(cancelHandler: @escaping CancelHandler, passcodeCompleteHandler: @escaping PasscodeCompleteHandler) {
-        self.cancelHandler = cancelHandler
-        self.passcodeCompleteHandler = passcodeCompleteHandler
-        super.init(nibName: "PasscodeViewController", bundle: nil)
-    }
+	var message: String? {
+		didSet {
+			self.messageLabel?.text = message ?? " "
+		}
+	}
 
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+	var errorMessage: String? {
+		didSet {
+			self.errorMessageLabel?.text = errorMessage ?? " "
 
-    override var preferredStatusBarStyle : UIStatusBarStyle {
-        return Theme.shared.activeCollection.statusBarStyle
-    }
+			if errorMessage != nil {
+				self.passcodeLabel?.shakeHorizontally()
+			}
+		}
+	}
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+	var timeoutMessage: String? {
+		didSet {
+			self.timeoutMessageLabel?.text = timeoutMessage ?? ""
+		}
+	}
 
-        Theme.shared.register(client: self)
-    }
+	var screenBlurringEnabled : Bool {
+		didSet {
+			self.backgroundBlurView?.isHidden = !screenBlurringEnabled
+			self.lockscreenContainerView?.isHidden = screenBlurringEnabled
+		}
+	}
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+	var keypadButtonsEnabled: Bool {
+		didSet {
+			if let buttons = self.keypadButtons {
+				for button in buttons {
+					button.isEnabled = keypadButtonsEnabled
+					button.alpha = keypadButtonsEnabled ? 1.0 : (keypadButtonsHidden ? 1.0 : 0.5)
+				}
+			}
 
-        Theme.shared.unregister(client: self)
-    }
+			self.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .update)
+		}
+	}
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	var keypadButtonsHidden : Bool {
+		didSet {
+			keypadContainerView?.isUserInteractionEnabled = !keypadButtonsHidden
 
-        self.cancelButton?.setTitle("Cancel".localized, for: .normal)
-    }
+			if oldValue != keypadButtonsHidden {
+				if keypadButtonsHidden {
+					UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+						self.keypadContainerView?.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+						self.keypadContainerView?.alpha = 0
+					}, completion: { (_) in
+						self.keypadContainerView?.isHidden = self.keypadButtonsHidden
+					})
+				} else {
+					self.keypadContainerView?.isHidden = self.keypadButtonsHidden
 
-    // MARK: Updates UI
+					UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+						self.keypadContainerView?.transform = .identity
+						self.keypadContainerView?.alpha = 1
+					}, completion: nil)
+				}
+			}
+		}
+	}
 
-    func updateUI(message: String?, errorMessage: String?, timeoutMessage: String?, passcode: String?) {
-        self.messageLabel?.text = message
-        self.errorMessageLabel?.text = errorMessage
-        self.timeoutMessageLabel?.text = timeoutMessage
-        self.passcode = passcode
+	var cancelButtonHidden: Bool {
+		didSet {
+			cancelButton?.isEnabled = cancelButtonHidden
+			cancelButton?.isHidden = !cancelButtonHidden
+		}
+	}
 
-        if errorMessage != nil {
-            self.errorMessageLabel?.shakeHorizontally()
-        }
+	// MARK: - Handlers
+	var cancelHandler: PasscodeViewControllerCancelHandler?
+	var completionHandler: PasscodeViewControllerCompletionHandler?
 
-        self.updatePasscodeDots()
-    }
+	// MARK: - Init
+	init(cancelHandler: @escaping PasscodeViewControllerCancelHandler, passcodeCompleteHandler: @escaping PasscodeViewControllerCompletionHandler, hasCancelButton: Bool = true, keypadButtonsEnabled: Bool = true) {
+		self.cancelHandler = cancelHandler
+		self.completionHandler = passcodeCompleteHandler
+		self.keypadButtonsEnabled = keypadButtonsEnabled
+		self.cancelButtonHidden = hasCancelButton
+		self.keypadButtonsHidden = false
+		self.screenBlurringEnabled = false
 
-    private func updatePasscodeDots() {
-        let whiteDot = "\u{25E6}"
-        let blackDot = "\u{2022}"
+		super.init(nibName: "PasscodeViewController", bundle: nil)
+	}
 
-        var passcodeText = ""
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
-        for index in 1...passcodeLength {
-            if let passcode = self.passcode, passcode.count >= index {
-                passcodeText += blackDot
-            } else {
-                passcodeText += whiteDot
-            }
-        }
+	// MARK: - View Controller Events
+	override func viewDidLoad() {
+		super.viewDidLoad()
 
-        self.passcodeLabel?.text = passcodeText
-    }
+		self.cancelButton?.setTitle("Cancel".localized, for: .normal)
 
-    func updateTimeoutMessage(timeoutMessage: String!) {
-        self.timeoutMessageLabel?.text = timeoutMessage
-    }
+		self.message = { self.message }()
+		self.errorMessage = { self.errorMessage }()
+		self.timeoutMessage = { self.timeoutMessage }()
 
-    func enableKeyboardButtons(enabled: Bool) {
+		self.cancelButtonHidden = { self.cancelButtonHidden }()
+		self.keypadButtonsEnabled = { self.keypadButtonsEnabled }()
+		self.keypadButtonsHidden = { self.keypadButtonsHidden }()
+		self.screenBlurringEnabled = { self.screenBlurringEnabled }()
+	}
 
-        var alpha: CGFloat = 0.5
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
 
-        if enabled {
-            alpha = 1.0
-        }
+		Theme.shared.register(client: self)
 
-        for button in self.keyboardButtons! {
-            button.isEnabled = enabled
-            button.alpha = alpha
-        }
-    }
+		self.updatePasscodeDots()
+	}
 
-    // MARK: - Actions
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
 
-    @IBAction func delete(sender: UIButton) {
-        if self.passcode != nil, self.passcode!.count > 0 {
-            self.passcode?.removeLast()
-            self.updatePasscodeDots()
-        }
-    }
+		Theme.shared.unregister(client: self)
+	}
 
-    @IBAction func cancel(sender: UIButton) {
-        self.cancelHandler()
-    }
+	// MARK: Updates UI
+	private func updatePasscodeDots() {
+		var placeholders = ""
+		let enteredDigits = passcode?.count ?? 0
 
-    @IBAction func numberPressed(sender: UIButton) {
+		for index in 1...passcodeLength {
+			if index > 1 {
+				placeholders += "  "
+			}
+			if index <= enteredDigits {
+				placeholders += "●"
+			} else {
+				placeholders += "○"
+			}
+		}
 
-        let checkPasscode = {
-            self.updatePasscodeDots()
-            //Once passcode is complete
-            if self.passcode!.count == self.passcodeLength {
-                //Added a small delay to give feedback to the user when press the last number
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    self.passcodeCompleteHandler(self.passcode!)
-                }
-            }
-        }
+		self.passcodeLabel?.text = placeholders
+	}
 
-        if let passcode = self.passcode {
-            //Protection to not add more during the delay
-            if passcode.count < passcodeLength {
-                self.passcode = passcode + String(sender.tag)
-                checkPasscode()
-            }
-        } else {
-            self.passcode = String(sender.tag)
-            checkPasscode()
-        }
-    }
+	// MARK: - Actions
+	@IBAction func appendDigit(_ sender: UIButton) {
+		if !keypadButtonsEnabled || keypadButtonsHidden {
+			return
+		}
 
-    // MARK: - Themeing
+		if let currentPasscode = passcode {
+			// Enforce length limit
+			if currentPasscode.count < passcodeLength {
+				self.passcode = currentPasscode + String(sender.tag)
+			}
+		} else {
+			self.passcode = String(sender.tag)
+		}
 
-    func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		// Check if passcode is complete
+		if let passcode = passcode {
+			if passcode.count == passcodeLength {
+				// Delay to give feedback to user after the last digit was added
+				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+					self.completionHandler?(passcode)
+				}
+			}
+		}
+	}
 
-        self.view.backgroundColor = collection.tableBackgroundColor
+	@IBAction func deleteLastDigit(_ sender: UIButton) {
+		if passcode != nil, passcode!.count > 0 {
+			passcode?.removeLast()
+			updatePasscodeDots()
+		}
+	}
 
-        self.messageLabel?.applyThemeCollection(collection, itemStyle: .title, itemState: .normal)
-        self.errorMessageLabel?.applyThemeCollection(collection)
-        self.passcodeLabel?.applyThemeCollection(collection, itemStyle: .bigTitle, itemState: .normal)
-        self.timeoutMessageLabel?.applyThemeCollection(collection)
+	@IBAction func cancel(_ sender: UIButton) {
+		cancelHandler?()
+	}
 
-        for button in self.keyboardButtons! {
-            button.applyThemeCollection(collection, itemStyle: .neutral)
-        }
+	// MARK: - Themeing
+	override var preferredStatusBarStyle : UIStatusBarStyle {
+		return Theme.shared.activeCollection.statusBarStyle
+	}
 
-        self.cancelButton?.applyThemeCollection(collection, itemStyle: .neutral)
-    }
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+
+		lockscreenContainerView?.backgroundColor = collection.tableBackgroundColor
+
+		messageLabel?.applyThemeCollection(collection, itemStyle: .title, itemState: keypadButtonsEnabled ? .normal : .disabled)
+		errorMessageLabel?.applyThemeCollection(collection, itemStyle: .message, itemState: keypadButtonsEnabled ? .normal : .disabled)
+		passcodeLabel?.applyThemeCollection(collection, itemStyle: .title, itemState: keypadButtonsEnabled ? .normal : .disabled)
+		timeoutMessageLabel?.applyThemeCollection(collection, itemStyle: .message, itemState: keypadButtonsEnabled ? .normal : .disabled)
+
+		for button in keypadButtons! {
+			button.applyThemeCollection(collection, itemStyle: .bigTitle)
+		}
+
+		deleteButton?.themeColorCollection = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: collection.tintColor, background: collection.tableBackgroundColor))
+
+		cancelButton?.applyThemeCollection(collection, itemStyle: .defaultForItem)
+		cancelButton?.layer.cornerRadius = 0
+	}
 }

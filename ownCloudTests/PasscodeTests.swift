@@ -30,12 +30,11 @@ class PasscodeTests: XCTestCase {
 
         //Prepare the simulator show the passcode
         AppLockManager.shared.writePasscodeInKeychain(passcode: "1111")
-        // TODO: Use OCAppIdentity-provided user defaults in the future
-        let userDefaults = UserDefaults(suiteName: OCAppIdentity.shared().appGroupIdentifier) ?? UserDefaults.standard
+        let userDefaults = OCAppIdentity.shared().userDefaults
         userDefaults.set(true, forKey: SecuritySettingsPasscodeKey)
 
         //Show the passcode
-        AppLockManager.shared.showPasscodeIfNeeded()
+        AppLockManager.shared.showLockscreenIfNeeded()
 
         //Tap the number buttons
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
@@ -55,12 +54,11 @@ class PasscodeTests: XCTestCase {
 
         //Prepare the simulator show the passcode
         AppLockManager.shared.writePasscodeInKeychain(passcode: "2222")
-        // TODO: Use OCAppIdentity-provided user defaults in the future
-        let userDefaults = UserDefaults(suiteName: OCAppIdentity.shared().appGroupIdentifier) ?? UserDefaults.standard
+        let userDefaults = OCAppIdentity.shared().userDefaults
         userDefaults.set(true, forKey: SecuritySettingsPasscodeKey)
 
         //Show the passcode
-        AppLockManager.shared.showPasscodeIfNeeded()
+        AppLockManager.shared.showLockscreenIfNeeded()
 
         //Tap the number buttons
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())

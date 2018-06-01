@@ -41,6 +41,7 @@ enum ThemeItemStyle {
 enum ThemeItemState {
 	case normal
 	case highlighted
+	case disabled
 
 	init(selected: Bool) {
 		if selected {
@@ -65,6 +66,10 @@ extension NSObject {
 
 				case .destructive:
 					themeButton.themeColorCollection = collection.destructiveColors
+
+				case .bigTitle:
+					themeButton.themeColorCollection = collection.neutralColors
+					themeButton.titleLabel?.font = UIFont.systemFont(ofSize: 22)
 
 				default:
 					themeButton.themeColorCollection = collection.lightBrandColors.filledColorPairCollection
@@ -112,6 +117,7 @@ extension NSObject {
 			let label : UILabel = (self as? UILabel)!
 			var normalColor : UIColor = collection.tableRowColors.labelColor
 			var highlightColor : UIColor = collection.tableRowHighlightColors.labelColor
+			let disabledColor : UIColor = collection.tableRowColors.secondaryLabelColor
 
 			switch itemStyle {
 				case .title, .bigTitle:
@@ -143,6 +149,9 @@ extension NSObject {
 
 				case .highlighted:
 					label.textColor = highlightColor
+
+				case .disabled:
+					label.textColor = disabledColor
 			}
 		}
 
