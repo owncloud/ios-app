@@ -23,7 +23,9 @@ typealias PasscodeCompleteHandler = ((_ passcode: String) -> Void)
 
 class PasscodeViewController: UIViewController, Themeable {
 
+    // MARK: - Passcode
     private let passcodeLength = 4
+    var passcode: String?
 
     // MARK: - Messages and input text
     @IBOutlet weak var messageLabel: UILabel?
@@ -31,10 +33,9 @@ class PasscodeViewController: UIViewController, Themeable {
     @IBOutlet weak var passcodeLabel: UILabel?
     @IBOutlet weak var timeoutMessageLabel: UILabel?
 
-    var message: String?
+    /*var message: String?
     var errorMessage: String?
-    var passcode: String?
-    var timeoutMessage: String?
+    var timeoutMessage: String?*/
 
     // MARK: - Buttons
     @IBOutlet var keyboardButtons: [ThemeButton]?
@@ -74,15 +75,23 @@ class PasscodeViewController: UIViewController, Themeable {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.updateUI()
+        self.cancelButton?.setTitle("Cancel".localized, for: .normal)
     }
 
-    func updateUI() {
+    func updateUI(message: String?, errorMessage: String?, timeoutMessage: String?, passcode: String?) {
         self.messageLabel?.text = message
         self.errorMessageLabel?.text = errorMessage
         self.timeoutMessageLabel?.text = timeoutMessage
-        self.cancelButton?.setTitle("Cancel".localized, for: .normal)
+        self.passcode = passcode
 
+        if errorMessage != nil {
+            self.errorMessageLabel?.shakeHorizontally()
+        }
+
+        self.updatePasscodeDots()
+    }
+
+    private func updatePasscodeDots() {
         let whiteDot = "\u{25E6}"
         let blackDot = "\u{2022}"
 
@@ -97,6 +106,10 @@ class PasscodeViewController: UIViewController, Themeable {
         }
 
         self.passcodeLabel?.text = passcodeText
+    }
+
+    func updateTimeoutMessage(timeoutMessage: String!) {
+        self.timeoutMessageLabel?.text = timeoutMessage
     }
 
     func enableKeyboardButtons(enabled: Bool) {
@@ -118,7 +131,7 @@ class PasscodeViewController: UIViewController, Themeable {
     @IBAction func delete(sender: UIButton) {
         if self.passcode != nil, self.passcode!.count > 0 {
             self.passcode?.removeLast()
-            self.updateUI()
+            self.updatePasscodeDots()
         }
     }
 
@@ -129,7 +142,7 @@ class PasscodeViewController: UIViewController, Themeable {
     @IBAction func numberPressed(sender: UIButton) {
 
         let checkPasscode = {
-            self.updateUI()
+            self.updatePasscodeDots()
             //Once passcode is complete
             if self.passcode!.count == self.passcodeLength {
                 //Added a small delay to give feedback to the user when press the last number

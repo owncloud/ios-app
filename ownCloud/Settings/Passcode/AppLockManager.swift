@@ -174,7 +174,7 @@ class AppLockManager: NSObject {
     private func updateUI() {
 
         var messageText : String?
-        var errorText : String! = ""
+        var errorText : String? = nil
 
         switch self.passcodeMode {
 
@@ -191,12 +191,11 @@ class AppLockManager: NSObject {
             break
         }
 
-        self.passcodeViewController?.passcode = ""
-        self.passcodeViewController?.message = messageText
-        self.passcodeViewController?.errorMessage = errorText
-        self.passcodeViewController?.timeoutMessage = ""
-
-        self.passcodeViewController?.updateUI()
+        self.passcodeViewController?.updateUI(
+            message: messageText,
+            errorMessage: errorText,
+            timeoutMessage: nil,
+            passcode: nil)
     }
 
     func dismissAskedPasscodeIfDateToAskIsLower() {
@@ -261,8 +260,8 @@ class AppLockManager: NSObject {
                 dateFormatted = String(format: "%02d:%02d", minutes, seconds)
             }
 
-            let text:String = NSString(format: "Please try again within %@".localized as NSString, dateFormatted!) as String
-            self.passcodeViewController?.timeoutMessageLabel?.text = text
+            let timeoutMessage:String = NSString(format: "Please try again within %@".localized as NSString, dateFormatted!) as String
+            self.passcodeViewController?.updateTimeoutMessage(timeoutMessage: timeoutMessage)
 
             if date <= Date() {
                 //Time elapsed, allow enter passcode again
@@ -274,7 +273,7 @@ class AppLockManager: NSObject {
     }
 
     private func secondsToTryAgain() -> Int {
-        let powValue = pow(powBaseBruteForce, ((timesPasscodeFailed+1) - timesAllowPasscodeFail))
+        let powValue = pow(powBaseBruteForce, timesPasscodeFailed)
         return Int(truncating: NSDecimalNumber(decimal: powValue))
     }
 

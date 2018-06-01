@@ -153,20 +153,22 @@ class SecuritySettingsSection: SettingsSection {
                                 })
                             } else {
                                 //Error
-                                passcodeViewController?.passcode = nil
-                                passcodeViewController?.errorMessage = "Incorrect code".localized
-                                passcodeViewController?.updateUI()
-                                passcodeViewController?.errorMessageLabel?.shakeHorizontally()
+                                passcodeViewController?.updateUI(
+                                    message: "Enter code".localized,
+                                    errorMessage: "Incorrect code".localized,
+                                    timeoutMessage: nil,
+                                    passcode: nil)
                             }
                         } else {
                             //Add
                             if self.passcodeFromFirstStep == nil {
                                 //First step
                                 self.passcodeFromFirstStep = passcode
-                                passcodeViewController?.passcode = nil
-                                passcodeViewController?.message = "Repeat code".localized
-                                passcodeViewController?.errorMessage = ""
-                                passcodeViewController?.updateUI()
+                                passcodeViewController?.updateUI(
+                                    message: "Repeat code".localized,
+                                    errorMessage: nil,
+                                    timeoutMessage: nil,
+                                    passcode: nil)
                             } else {
                                 //Second step
                                 if self.passcodeFromFirstStep == passcode {
@@ -179,10 +181,11 @@ class SecuritySettingsSection: SettingsSection {
                                     })
                                 } else {
                                     //Passcode is not the same
-                                    passcodeViewController?.passcode = nil
-                                    passcodeViewController?.message = "Enter code".localized
-                                    passcodeViewController?.errorMessage = "The entered codes are different".localized
-                                    passcodeViewController?.updateUI()
+                                    passcodeViewController?.updateUI(
+                                        message: "Enter code".localized,
+                                        errorMessage: "The entered codes are different".localized,
+                                        timeoutMessage: nil,
+                                        passcode: nil)
                                 }
                                 self.passcodeFromFirstStep = nil
                             }
@@ -199,9 +202,14 @@ class SecuritySettingsSection: SettingsSection {
                     } else {
                         messageText = "Delete code".localized
                     }
-
-                    passcodeViewController?.message = messageText
                     vc.present(passcodeViewController!, animated: true, completion: nil)
+
+                    //Passcode is not the same
+                    passcodeViewController?.updateUI(
+                        message: messageText,
+                        errorMessage: nil,
+                        timeoutMessage: nil,
+                        passcode: nil)
                 }
             }
         }, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled)
