@@ -124,7 +124,7 @@ class PasscodeViewController: UIViewController, Themeable {
 	var completionHandler: PasscodeViewControllerCompletionHandler?
 
 	// MARK: - Init
-	init(cancelHandler: @escaping PasscodeViewControllerCancelHandler, passcodeCompleteHandler: @escaping PasscodeViewControllerCompletionHandler, hasCancelButton: Bool = true, keypadButtonsEnabled: Bool = true) {
+	init(cancelHandler: PasscodeViewControllerCancelHandler?, passcodeCompleteHandler: @escaping PasscodeViewControllerCompletionHandler, hasCancelButton: Bool = true, keypadButtonsEnabled: Bool = true) {
 		self.cancelHandler = cancelHandler
 		self.completionHandler = passcodeCompleteHandler
 		self.keypadButtonsEnabled = keypadButtonsEnabled

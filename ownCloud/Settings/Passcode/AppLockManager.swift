@@ -119,7 +119,7 @@ class AppLockManager: NSObject {
 	func showLockscreenIfNeeded(forceShow: Bool = false) {
 		if self.shouldDisplayLockscreen || forceShow {
 			if passcodeViewController == nil {
-				passcodeViewController = PasscodeViewController(cancelHandler: {}, passcodeCompleteHandler: { (passcode: String) in
+				passcodeViewController = PasscodeViewController(cancelHandler: nil, passcodeCompleteHandler: { (passcode: String) in
 					self.attemptUnlock(with: passcode)
 				})
 
