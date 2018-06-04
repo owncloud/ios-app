@@ -111,8 +111,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 		// self.navigationItem.rightBarButtonItem = self.editButtonItem
 
-        sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40))
-        sortBar?.sortButton.addTarget(self, action: #selector(presentSortOptions), for: .touchUpInside)
+		sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
+		sortBar?.delegate = self
 		sortBar?.sortButton.setTitle("sort by \(sortMethod.localizedName()) ▼", for: .normal)
 
         tableView.tableHeaderView = sortBar
@@ -138,6 +138,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		updateQueryProgressSummary()
 
+		sortBar?.sortMethod = self.sortMethod
         query?.sortComparator = self.sortMethod.comparator()
 	}
 
@@ -370,36 +371,13 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		set {
 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
-			sortBar?.sortButton.setTitle("sort by \(sortMethod.localizedName()) ▼", for: .normal)
 		}
 
 		get {
 			let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabeticallyDescendant
-			sortBar?.sortButton.setTitle("sort by \(sort.localizedName()) ▼", for: .normal)
 			return sort
 		}
 	}
-
-    @objc private func presentSortOptions() {
-
-        let controller = UIAlertController(title: "Sort by".localized, message: nil, preferredStyle: .actionSheet)
-
-        for method in SortMethod.all {
-            let action = UIAlertAction(title: method.localizedName(), style: .default, handler: { (_) in
-                self.changeSortMethod(to: method)
-            })
-            controller.addAction(action)
-        }
-
-        let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
-        controller.addAction(cancel)
-        present(controller, animated: true)
-    }
-
-    private func changeSortMethod(to newSortMethod: SortMethod) {
-        sortMethod = newSortMethod
-        query?.sortComparator = sortMethod.comparator()
-    }
 }
 
 // MARK: - Query Delegate
@@ -440,5 +418,14 @@ extension ClientQueryViewController : OCQueryDelegate {
 				}
 			}
 		}
+	}
+}
+
+// MARK: - SortBar Delegate
+extension ClientQueryViewController : SortBarDelegate {
+
+	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
+		sortMethod = didUpdateSortMethod
+		query?.sortComparator = sortMethod.comparator()
 	}
 }
