@@ -1,6 +1,6 @@
 # [ownCloud](https://owncloud.org) iOS app
 
-Not yet available for production neither in the store, use previous iOS app:
+Not available in store yet. Current iOS app:
 [![](https://owncloud.org/wp-content/themes/owncloudorgnew/assets/img/clients/buttons/appstore.png)](https://itunes.apple.com/app/owncloud/id543672169)
 
 
