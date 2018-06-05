@@ -22,15 +22,35 @@ import LocalAuthentication
 
 class AppLockManager: NSObject {
 
-    // MARK: - Interface view mode
-    enum PasscodeInterfaceMode {
-        case unlockPasscode
-        case unlockPasscodeError
+    // MARK: - UI
+    private var window: AppLockWindow?
+    private var passcodeViewController: PasscodeViewController?
+
+    private var userDefaults: UserDefaults
+
+    // MARK: - State
+    var lastApplicationBackgroundedDate : Date?
+
+    private var failedPasscodeAttempts: Int {
+        get {
+            return userDefaults.integer(forKey: "applock-failed-passcode-attempts")
+        }
+        set(newValue) {
+            self.userDefaults.set(newValue, forKey: "applock-failed-passcode-attempts")
+        }
+    }
+    private var lockedUntilDate: Date? {
+        get {
+            return userDefaults.object(forKey: "applock-locked-until-date") as? Date
+        }
+        set(newValue) {
+            self.userDefaults.set(newValue, forKey: "applock-locked-until-date")
+        }
     }
 
-    // MARK: Keychain Keys
-    let passcodeKeychainAccount = "passcode-keychain-account"
-    let passcodeKeychainPath = "passcode-keychain-path"
+    private let maximumPasscodeAttempts: Int = 3
+    private let powBaseDelay: Double = 1.5
+    private var lockTimer: Timer?
 
     // MARK: - Biometrical status
     enum BiometricalStatus {
@@ -40,196 +60,105 @@ class AppLockManager: NSObject {
         case error
     }
 
-    // MARK: Global vars
+    // MARK: - Passcode
+    private let keychainAccount = "app.passcode"
+    private let keychainPasscodePath = "passcode"
+    private let keychainLockEnabledPath = "lockEnabled"
 
-    // Common
-    private var window: LockWindow?
-    private var passcodeMode: PasscodeInterfaceMode?
-    private var passcodeViewController: PasscodeViewController?
-    private var biometricalStatus:BiometricalStatus
-
-    // Unlock
-    private var dateApplicationWillResignActive: Date?
-    private var userDefaults: UserDefaults
-
-    // Brute force protection
-    public let TimesPasscodeFailedKey: String =  "times-passcode-failed"
-    public let DateAllowTryPasscodeAgainKey: String =  "date-allow-try-passcode-again"
-    private var timesPasscodeFailed: Int {
-        didSet {
-            self.userDefaults.set(timesPasscodeFailed, forKey: TimesPasscodeFailedKey)
-        }
-    }
-    private var dateAllowTryAgain: Date? {
-        didSet {
-            self.userDefaults.set(NSKeyedArchiver.archivedData(withRootObject: dateAllowTryAgain as Any), forKey: DateAllowTryPasscodeAgainKey)
-        }
-    }
-    private let timesAllowPasscodeFail: Int = 3
-    private let powBaseBruteForce: Decimal = 1.5
-    private var timerBruteForce: Timer?
-
-    // Utils
-
-    var isPasscodeStoredOnKeychain: Bool {
-        return (OCAppIdentity.shared().keychain.readDataFromKeychainItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) != nil)
+    private var keychain : OCKeychain? {
+        return OCAppIdentity.shared().keychain
     }
 
-    var passcodeFromKeychain: String? {
-        if let passcodeData = OCAppIdentity.shared().keychain.readDataFromKeychainItem(
-            forAccount: passcodeKeychainAccount, path: passcodeKeychainPath) {
-            return NSKeyedUnarchiver.unarchiveObject(with: passcodeData) as? String
-        } else {
+    var passcode: String? {
+        get {
+            if let passcodeData = self.keychain?.readDataFromKeychainItem(forAccount: keychainAccount, path: keychainPasscodePath) {
+                return String(data: passcodeData, encoding: .utf8)
+            }
+
             return nil
         }
-    }
 
-    private var isPasscodeActivated: Bool {
-        return (self.userDefaults.bool(forKey: SecuritySettingsPasscodeKey) && self.isPasscodeStoredOnKeychain)
-    }
-
-    private var shouldBeLocked: Bool {
-        var output: Bool = true
-
-        if isPasscodeActivated {
-            if let date = self.dateApplicationWillResignActive {
-
-                let elapsedSeconds = Date().timeIntervalSince(date)
-                let minSecondsToAsk = self.userDefaults.integer(forKey: SecuritySettingsFrequencyKey)
-
-                if Int(elapsedSeconds) < minSecondsToAsk {
-                    output = false
-                }
+        set(newPasscode) {
+            if let passcode = newPasscode {
+                _ = self.keychain?.write(passcode.data(using: .utf8), toKeychainItemForAccount: keychainAccount, path: keychainPasscodePath)
+            } else {
+                _ = self.keychain?.removeItem(forAccount: keychainAccount, path: keychainPasscodePath)
             }
-        } else {
-            output = false
+        }
+    }
+
+    // MARK: - Settings
+    var lockEnabled: Bool {
+        get {
+            return userDefaults.bool(forKey: "applock-lock-enabled")
+        }
+        set(newValue) {
+            self.userDefaults.set(newValue, forKey: "applock-lock-enabled")
+        }
+    }
+
+    var lockDelay: Int {
+        get {
+            return userDefaults.integer(forKey: "applock-lock-delay")
         }
 
-        return output
+        set(newValue) {
+            self.userDefaults.set(newValue, forKey: "applock-lock-delay")
+        }
     }
 
     // MARK: - Init
-
     static var shared = AppLockManager()
 
     public override init() {
-        // TODO: Use OCAppIdentity-provided user defaults in the future
-        self.userDefaults = UserDefaults(suiteName: OCAppIdentity.shared().appGroupIdentifier) ?? UserDefaults.standard
-
-        // Brute Force protection
-        self.timesPasscodeFailed = self.userDefaults.integer(forKey: TimesPasscodeFailedKey)
-        if let data = self.userDefaults.data(forKey: DateAllowTryPasscodeAgainKey) {
-            self.dateAllowTryAgain = NSKeyedUnarchiver.unarchiveObject(with: data) as? Date
-        }
-
-        // Biometrical
-        self.biometricalStatus = BiometricalStatus.notShown
+        userDefaults = OCAppIdentity.shared().userDefaults
 
         super.init()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(self.appDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.appWillEnterForeground), name: .UIApplicationWillEnterForeground, object: nil)
     }
 
-    // MARK: - Show Passcode View
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
+    }
 
-    func showPasscodeIfNeeded() {
+    // MARK: - Show / Dismiss Passcode View
+    func showLockscreenIfNeeded(forceShow: Bool = false) {
+        if self.shouldDisplayLockscreen || forceShow {
+            if passcodeViewController == nil {
+                passcodeViewController = PasscodeViewController(completionHandler: { (passcode: String) in
+                    self.attemptUnlock(with: passcode)
+                })
 
-        if isPasscodeActivated {
-            if self.passcodeViewController == nil {
+                passcodeViewController?.message = "Enter code".localized
+                passcodeViewController?.cancelButtonHidden = false
 
-                self.biometricalStatus = BiometricalStatus.notShown
-                self.prepareLockScreen()
+                passcodeViewController?.screenBlurringEnabled = forceShow && !self.shouldDisplayLockscreen
 
-                // Brute force protection
-                if let date = self.dateAllowTryAgain, date > Date() {
-                    //User killed the app
-                    self.passcodeMode = .unlockPasscodeError
-                    self.passcodeViewController?.enableKeyboardButtons(enabled: false)
-                    self.scheduledTimerToUpdateInterfaceTime()
-                } else {
-                    self.passcodeMode = .unlockPasscode
-                }
+                window = AppLockWindow(frame: UIScreen.main.bounds)
+                /*
+                 Workaround to the lack of status bar animation when returning true for prefersStatusBarHidden in
+                 PasscodeViewController.
 
-                self.updateUI()
+                 The documentation notes that "The ordering of windows within a given window level is not guaranteed.",
+                 so that with a future iOS update this might break and the status bar be displayed regardless. In that
+                 case, implement prefersStatusBarHidden in PasscodeViewController to return true and remove the dismiss
+                 animation (the re-appearance of the status bar will lead to a jump in the UI otherwise).
+                 */
+                window?.windowLevel = UIWindowLevelStatusBar
+                window?.rootViewController = passcodeViewController!
+                window?.makeKeyAndVisible()
 
+                self.startLockCountdown()
+            } else {
+                passcodeViewController?.screenBlurringEnabled = forceShow
             }
         }
     }
 
-    func prepareLockScreen() {
-
-        let passcodeCompleteHandler:PasscodeCompleteHandler = {
-            (passcode: String) in
-            self.passcodeComplete(passcode: passcode)
-        }
-
-        self.passcodeViewController = PasscodeViewController(cancelHandler: {}, passcodeCompleteHandler: passcodeCompleteHandler)
-
-        self.window = LockWindow(frame: UIScreen.main.bounds)
-        self.window?.windowLevel = UIWindowLevelStatusBar
-        self.window?.rootViewController = self.passcodeViewController!
-        self.window?.makeKeyAndVisible()
-    }
-
-    func applicationWillResignActive() {
-
-        //Store the date when the app will be resign
-        if self.isPasscodeActivated,
-            self.dateApplicationWillResignActive == nil,
-            self.passcodeViewController == nil || self.passcodeMode != .unlockPasscode,
-            self.passcodeViewController == nil || self.passcodeMode != .unlockPasscodeError {
-            self.dateApplicationWillResignActive = Date()
-        }
-
-        //Show the passcode
-        self.showPasscodeIfNeeded()
-    }
-
-    // MARK: - Interface updates
-
-    private func updateUI() {
-
-        var messageText : String?
-        var errorText : String! = ""
-
-        switch self.passcodeMode {
-
-        case .unlockPasscode?:
-            messageText = "Enter code".localized
-            self.passcodeViewController?.cancelButton?.isHidden = true
-
-        case .unlockPasscodeError?:
-            messageText = "Enter code".localized
-            errorText = "Incorrect code".localized
-            self.passcodeViewController?.cancelButton?.isHidden = true
-
-        default:
-            break
-        }
-
-        self.passcodeViewController?.passcode = ""
-        self.passcodeViewController?.message = messageText
-        self.passcodeViewController?.errorMessage = errorText
-        self.passcodeViewController?.timeoutMessage = ""
-
-        self.passcodeViewController?.updateUI()
-    }
-
-    func dismissAskedPasscodeIfDateToAskIsLower() {
-        if shouldBeLocked {
-            AppLockManager.shared.showBiometricalUnlockIfNeeded()
-        } else {
-            if self.passcodeViewController != nil {
-                //Protection to hide the PasscodeViewController only if is in unlock mode
-                if self.passcodeMode == .unlockPasscode ||
-                    self.passcodeMode == .unlockPasscodeError {
-                    self.dismissPasscode(animated: true)
-                    self.dateApplicationWillResignActive = nil
-                }
-            }
-        }
-    }
-
-    func dismissPasscode(animated:Bool) {
-
+    func dismissLockscreen(animated:Bool) {
         let hideWindow = {
             self.window?.isHidden = true
             self.passcodeViewController = nil
@@ -245,26 +174,80 @@ class AppLockManager: NSObject {
         }
     }
 
-    // MARK: - Passcode Write/Remove
-    func writePasscodeInKeychain(passcode: String) {
-        OCAppIdentity.shared().keychain.write(NSKeyedArchiver.archivedData(withRootObject: passcode), toKeychainItemForAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
+    // MARK: - App Events
+    @objc func appDidEnterBackground() {
+        lastApplicationBackgroundedDate = Date()
+
+        showLockscreenIfNeeded(forceShow: true)
     }
 
-    func removePasscodeFromKeychain() {
-        OCAppIdentity.shared().keychain.removeItem(forAccount: passcodeKeychainAccount, path: passcodeKeychainPath)
+    @objc func appWillEnterForeground() {
+        if self.shouldDisplayLockscreen {
+            showLockscreenIfNeeded()
+        } else {
+            dismissLockscreen(animated: false)
+        }
     }
 
-    // MARK: - Brute force protection
+    // MARK: - Unlock
+    func attemptUnlock(with testPasscode: String) {
+        if testPasscode == self.passcode {
+            lastApplicationBackgroundedDate = nil
+            failedPasscodeAttempts = 0
+            dismissLockscreen(animated: true)
+        } else {
+            passcodeViewController?.errorMessage = "Incorrect code".localized
 
-    private func scheduledTimerToUpdateInterfaceTime() {
+            failedPasscodeAttempts += 1
 
-        self.updatePasscodeInterfaceTime()
-        self.timerBruteForce = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updatePasscodeInterfaceTime), userInfo: nil, repeats: true)
+            if self.failedPasscodeAttempts >= self.maximumPasscodeAttempts {
+                let delayUntilNextAttempt = pow(powBaseDelay, Double(failedPasscodeAttempts))
+
+                lockedUntilDate = Date().addingTimeInterval(delayUntilNextAttempt)
+                startLockCountdown()
+            }
+
+            passcodeViewController?.passcode = nil
+        }
     }
 
-    @objc private func updatePasscodeInterfaceTime() {
+    // MARK: - Status
+    private var shouldDisplayLockscreen: Bool {
+        if !self.lockEnabled {
+            return false
+        }
 
-        if let date = self.dateAllowTryAgain {
+        if !self.shouldDisplayCountdown {
+            if let date = self.lastApplicationBackgroundedDate {
+                if Int(-date.timeIntervalSinceNow) < self.lockDelay {
+                    return false
+                }
+            }
+        }
+
+        return true
+    }
+
+    private var shouldDisplayCountdown : Bool {
+        if let startLockBeforeDate = self.lockedUntilDate {
+            return startLockBeforeDate > Date()
+        }
+
+        return false
+    }
+
+    // MARK: - Countdown display
+    private func startLockCountdown() {
+        if self.shouldDisplayCountdown {
+            passcodeViewController?.keypadButtonsHidden = true
+            updateLockCountdown()
+
+            lockTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateLockCountdown), userInfo: nil, repeats: true)
+        }
+    }
+
+    @objc private func updateLockCountdown() {
+        if let date = self.lockedUntilDate {
             let interval = Int(date.timeIntervalSinceNow)
             let seconds = interval % 60
             let minutes = (interval / 60) % 60
@@ -277,41 +260,15 @@ class AppLockManager: NSObject {
                 dateFormatted = String(format: "%02d:%02d", minutes, seconds)
             }
 
-            let text:String = NSString(format: "Please try again within %@".localized as NSString, dateFormatted!) as String
-            self.passcodeViewController?.timeoutMessageLabel?.text = text
+            let timeoutMessage:String = NSString(format: "Please try again in %@".localized as NSString, dateFormatted!) as String
+            self.passcodeViewController?.timeoutMessage = timeoutMessage
 
             if date <= Date() {
-                //Time elapsed, allow enter passcode again
-                self.timerBruteForce?.invalidate()
-                self.passcodeViewController?.enableKeyboardButtons(enabled: true)
-                self.updateUI()
-            }
-        }
-    }
-
-    private func secondsToTryAgain() -> Int {
-        let powValue = pow(powBaseBruteForce, ((timesPasscodeFailed+1) - timesAllowPasscodeFail))
-        return Int(truncating: NSDecimalNumber(decimal: powValue))
-    }
-
-    // MARK: - Logic
-
-    func passcodeComplete(passcode: String) {
-        if passcode == self.passcodeFromKeychain {
-            self.dateApplicationWillResignActive = nil
-            self.timesPasscodeFailed = 0
-            self.dismissPasscode(animated: true)
-        } else {
-            self.passcodeViewController?.errorMessageLabel?.shakeHorizontally()
-            self.passcodeMode = .unlockPasscodeError
-            self.updateUI()
-
-            // Brute force protection
-            self.timesPasscodeFailed += 1
-            if self.timesPasscodeFailed >= self.timesAllowPasscodeFail {
-                self.passcodeViewController?.enableKeyboardButtons(enabled: false)
-                self.dateAllowTryAgain = Date().addingTimeInterval(TimeInterval(self.secondsToTryAgain()))
-                self.scheduledTimerToUpdateInterfaceTime()
+                // Time elapsed, allow entering passcode again
+                self.lockTimer?.invalidate()
+                self.passcodeViewController?.keypadButtonsHidden = false
+                self.passcodeViewController?.timeoutMessage = nil
+                self.passcodeViewController?.errorMessage = nil
             }
         }
     }
@@ -319,9 +276,8 @@ class AppLockManager: NSObject {
     // MARK: - Biometrical
 
     func showBiometricalUnlockIfNeeded() {
-        
-        if  self.biometricalStatus == BiometricalStatus.notShown,
-            self.dateAllowTryAgain == nil || self.dateAllowTryAgain! < Date(),
+
+        if  self.lockedUntilDate == nil || self.lockedUntilDate! < Date(),
             self.userDefaults.bool(forKey: SecuritySettingsBiometricalKey) {
             self.authenticateUserWithBiometrical()
         }
@@ -334,15 +290,12 @@ class AppLockManager: NSObject {
 
         // Check if the device can evaluate the policy.
         if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            self.biometricalStatus = BiometricalStatus.shown
             context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Unlock".localized) { (success, error) in
                 if success {
-                    self.biometricalStatus = BiometricalStatus.success
                     DispatchQueue.main.async {
-                        self.dismissPasscode(animated: true)
+                        self.dismissLockscreen(animated: true)
                     }
                 } else {
-                    self.biometricalStatus = BiometricalStatus.error
                     if let error = error {
                         Log.log("Biometrical login error: \(String(error.localizedDescription))")
                     }

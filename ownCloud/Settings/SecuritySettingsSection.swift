@@ -1,5 +1,5 @@
 //
-//  SecurityGlobalSettings.swift
+//  SecuritySettingsSection.swift
 //  ownCloud
 //
 //  Created by Pablo Carrascal on 30/04/2018.
@@ -22,8 +22,6 @@ import ownCloudSDK
 
 // MARK: - Security UserDefaults keys
 public let SecuritySettingsKey: String = "security-settings"
-public let SecuritySettingsFrequencyKey: String =  "security-settings-frequency"
-public let SecuritySettingsPasscodeKey: String = "security-settings-usePasscode"
 public let SecuritySettingsBiometricalKey: String = "security-settings-useBiometrical"
 
 // MARK: - SecurityAskfrequency
@@ -40,11 +38,11 @@ public let SecuritySettingsBiometricalKey: String = "security-settings-useBiomet
         case .always:
             return "Always".localized
         case .oneMinute:
-            return "1 minute".localized
+            return "After 1 minute".localized
         case .fiveMinutes:
-            return "5 minutes".localized
+            return "After 5 minutes".localized
         case .thirtyMinutes:
-            return "30 minutes".localized
+            return "After 30 minutes".localized
         }
     }
 }
@@ -52,17 +50,20 @@ public let SecuritySettingsBiometricalKey: String = "security-settings-useBiomet
 class SecuritySettingsSection: SettingsSection {
 
     var frequency: SecurityAskFrequency {
-        willSet {
-            self.userDefaults.set(newValue.rawValue, forKey: SecuritySettingsFrequencyKey)
+        get {
+            return SecurityAskFrequency.init(rawValue: AppLockManager.shared.lockDelay) ?? .always
+	}
+        set(newValue) {
+            AppLockManager.shared.lockDelay = newValue.rawValue
         }
     }
 
     var isPasscodeSecurityEnabled: Bool {
-        willSet {
-            self.userDefaults.set(newValue, forKey: SecuritySettingsPasscodeKey)
+        get {
+            return AppLockManager.shared.lockEnabled
         }
-
-        didSet {
+        set(newValue) {
+            AppLockManager.shared.lockEnabled = newValue
             updateUI()
         }
     }
@@ -81,14 +82,11 @@ class SecuritySettingsSection: SettingsSection {
     private var biometricalRow: StaticTableViewRow?
 
     override init(userDefaults: UserDefaults) {
-
-        frequency = SecurityAskFrequency.init(rawValue: userDefaults.integer(forKey: SecuritySettingsFrequencyKey))!
-        isPasscodeSecurityEnabled = userDefaults.bool(forKey: SecuritySettingsPasscodeKey)
         isBiometricalSecurityEnabled = userDefaults.bool(forKey: SecuritySettingsBiometricalKey)
 
         super.init(userDefaults: userDefaults)
 
-        self.headerTitle = "Security".localized + " -- Work in progress"
+        self.headerTitle = "Security".localized
         self.identifier = "settings-security-section"
 
         createRows()
@@ -103,7 +101,7 @@ class SecuritySettingsSection: SettingsSection {
             if let vc = self.viewController {
 
                 let newVC = StaticTableViewController(style: .grouped)
-                let frequencySection = StaticTableViewSection(headerTitle: "Select the frequency that security should be showed".localized, footerTitle: nil)
+                let frequencySection = StaticTableViewSection(headerTitle: "Lock application".localized, footerTitle: nil)
 
                 var radioButtons: [[String : Any]] = []
 
@@ -122,86 +120,76 @@ class SecuritySettingsSection: SettingsSection {
                 vc.navigationController?.pushViewController(newVC, animated: true)
             }
 
-        }, title: "Frequency".localized, subtitle: frequency.toString(), accessoryType: .disclosureIndicator)
+        }, title: "Lock application".localized, subtitle: frequency.toString(), accessoryType: .disclosureIndicator)
 
         // Creation of the passcode row.
         passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
             if let passcodeSwitch = sender as? UISwitch {
-                if let vc = self.viewController {
+                if let viewController = self.viewController {
 
                     var passcodeViewController: PasscodeViewController?
+                    var defaultMessage : String?
 
-                    //Handlers
-                    let cancelHandler:CancelHandler = {
+                    // Handlers
+                    let cancelHandler:PasscodeViewControllerCancelHandler = {
                         passcodeViewController!.dismiss(animated: true, completion: {
                             self.isPasscodeSecurityEnabled = !passcodeSwitch.isOn
                         })
                         self.passcodeFromFirstStep = nil
                     }
 
-                    let passcodeCompleteHandler:PasscodeCompleteHandler = {
-                        (passcode: String) in
+                    if passcodeSwitch.isOn {
+                        defaultMessage = "Enter code".localized
+                    } else {
+                        defaultMessage = "Delete code".localized
+                    }
 
+                    passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, completionHandler: { (passcode: String) in
                         if !passcodeSwitch.isOn {
-                            //Delete
-                            if passcode == AppLockManager.shared.passcodeFromKeychain {
-                                //Success
-                                AppLockManager.shared.removePasscodeFromKeychain()
+                            // Delete
+                            if passcode == AppLockManager.shared.passcode {
+                                // Success
+                                AppLockManager.shared.passcode = nil
                                 passcodeViewController!.dismiss(animated: true, completion: {
                                     self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
                                     self.updateUI()
                                 })
                             } else {
-                                //Error
-                                passcodeViewController?.passcode = nil
+                                // Error
+                                passcodeViewController?.message = defaultMessage
                                 passcodeViewController?.errorMessage = "Incorrect code".localized
-                                passcodeViewController?.updateUI()
-                                passcodeViewController?.errorMessageLabel?.shakeHorizontally()
+                                passcodeViewController?.passcode = nil
                             }
                         } else {
-                            //Add
+                            // Add
                             if self.passcodeFromFirstStep == nil {
-                                //First step
+                                // First step
                                 self.passcodeFromFirstStep = passcode
-                                passcodeViewController?.passcode = nil
                                 passcodeViewController?.message = "Repeat code".localized
-                                passcodeViewController?.errorMessage = ""
-                                passcodeViewController?.updateUI()
+                                passcodeViewController?.passcode = nil
                             } else {
-                                //Second step
+                                // Second step
                                 if self.passcodeFromFirstStep == passcode {
-                                    //Passcode righ
-                                    //Save to keychain
-                                    AppLockManager.shared.writePasscodeInKeychain(passcode: passcode)
+                                    // Passcode right
+                                    // Save to keychain
+                                    AppLockManager.shared.passcode = passcode
                                     passcodeViewController!.dismiss(animated: true, completion: {
                                         self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
                                         self.updateUI()
                                     })
                                 } else {
                                     //Passcode is not the same
-                                    passcodeViewController?.passcode = nil
-                                    passcodeViewController?.message = "Enter code".localized
+				    passcodeViewController?.message = defaultMessage
                                     passcodeViewController?.errorMessage = "The entered codes are different".localized
-                                    passcodeViewController?.updateUI()
+			            passcodeViewController?.passcode = nil
                                 }
                                 self.passcodeFromFirstStep = nil
                             }
                         }
-                    }
+                    })
 
-                    passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, passcodeCompleteHandler: passcodeCompleteHandler)
-
-                    //Configure the view
-                    var messageText : String?
-
-                    if passcodeSwitch.isOn {
-                        messageText = "Enter code".localized
-                    } else {
-                        messageText = "Delete code".localized
-                    }
-
-                    passcodeViewController?.message = messageText
-                    vc.present(passcodeViewController!, animated: true, completion: nil)
+		    passcodeViewController?.message = defaultMessage
+                    viewController.present(passcodeViewController!, animated: true, completion: nil)
                 }
             }
         }, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled)

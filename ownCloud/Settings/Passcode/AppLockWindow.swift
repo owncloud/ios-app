@@ -1,5 +1,5 @@
 //
-//  LockWindow.swift
+//  AppLockWindow.swift
 //  ownCloud
 //
 //  Created by Javier Gonzalez on 17/05/2018.
@@ -19,7 +19,7 @@
 import UIKit
 
 //Subclass that only allows the protrait mode
-class LockWindow: UIWindow {
+class AppLockWindow: UIWindow {
 
     // MARK: - Show and hide animations
     func showWindowAnimation(completion: (() -> Void)? = nil) {
