@@ -113,7 +113,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
 		sortBar?.delegate = self
-		sortBar?.sortButton.setTitle("sort by \(sortMethod.localizedName()) ▼", for: .normal)
+		sortBar?.updateSortMethod()
 
         tableView.tableHeaderView = sortBar
     }
@@ -428,6 +428,7 @@ extension ClientQueryViewController : SortBarDelegate {
 	}
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
+
 		self.present(presentViewController, animated: animated, completion: completionHandler)
 	}
 }

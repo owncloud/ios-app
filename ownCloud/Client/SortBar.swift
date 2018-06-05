@@ -28,27 +28,39 @@ class SortBar: UIView, Themeable {
 
 	weak var delegate: SortBarDelegate?
 
-	var sortButton: ThemeButton
+	// MARK: - Instance variables.
+
+	var sortButton: ThemeButton?
+	var sortSegmentedControl: UISegmentedControl?
 	var sortMethod: SortMethod {
 		didSet {
-			let title = NSString(format: "Sorted by %@ ▼".localized as NSString, sortMethod.localizedName()) as String
-			sortButton.setTitle(title, for: .normal)
+
+			if self.sortButton != nil {
+				let title = NSString(format: "Sorted by %@ ▼".localized as NSString, sortMethod.localizedName()) as String
+				sortButton?.setTitle(title, for: .normal)
+			}
+
+			if self.sortSegmentedControl != nil {
+				sortSegmentedControl?.selectedSegmentIndex = SortMethod.all.index(of: sortMethod)!
+			}
+
 			delegate?.sortBar(self, didUpdateSortMethod: sortMethod)
 		}
 	}
 
+	// MARK: - Init & Deinit
+
 	init(frame: CGRect, sortMethod: SortMethod) {
-		sortButton = ThemeButton(frame: .zero)
+
 		self.sortMethod = sortMethod
 		super.init(frame: frame)
-		sortButton.translatesAutoresizingMaskIntoConstraints = false
-		self.addSubview(sortButton)
 
-		sortButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
-		sortButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10).isActive = true
-		sortButton.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-		sortButton.addTarget(self, action: #selector(presentSortOptions), for: .touchUpInside)
-		sortButton.accessibilityIdentifier = "sort-button"
+		if UIDevice.current.isIpad() {
+			createSortSegmentedController()
+		} else {
+			createSortButton()
+		}
+
 		self.accessibilityIdentifier = "sort-bar"
 
 		Theme.shared.register(client: self)
@@ -62,12 +74,28 @@ class SortBar: UIView, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
+	// MARK: - Theme support
+
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.sortButton.applyThemeCollection(collection)
+		self.sortButton?.applyThemeCollection(collection)
+		self.sortSegmentedControl?.applyThemeCollection(collection)
 		self.applyThemeCollection(collection)
 	}
 
-	@objc private func presentSortOptions() {
+	// MARK: - Sort UI
+
+	private func createSortButton() {
+		sortButton = ThemeButton(frame: .zero)
+		sortButton?.translatesAutoresizingMaskIntoConstraints = false
+		self.addSubview(sortButton!)
+		sortButton?.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
+		sortButton?.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10).isActive = true
+		sortButton?.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+		sortButton?.addTarget(self, action: #selector(presentSortButtonOptions), for: .touchUpInside)
+		sortButton?.accessibilityIdentifier = "sort-button"
+	}
+
+	@objc private func presentSortButtonOptions() {
 
 		let controller = UIAlertController(title: "Sort by".localized, message: nil, preferredStyle: .actionSheet)
 
@@ -82,4 +110,33 @@ class SortBar: UIView, Themeable {
 		controller.addAction(cancel)
 		delegate?.sortBar(self, presentViewController: controller, animated: true, completionHandler: nil)
 	}
+
+	private func createSortSegmentedController() {
+		sortSegmentedControl = UISegmentedControl(frame: .zero)
+		sortSegmentedControl?.translatesAutoresizingMaskIntoConstraints = false
+		self.addSubview(sortSegmentedControl!)
+		sortSegmentedControl?.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
+		sortSegmentedControl?.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10).isActive = true
+		sortSegmentedControl?.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+		sortSegmentedControl?.accessibilityIdentifier = "sort-segmented-control"
+
+		for method in SortMethod.all {
+			sortSegmentedControl?.insertSegment(withTitle: method.localizedName(), at: SortMethod.all.index(of: method)!, animated: false)
+		}
+
+		sortSegmentedControl?.selectedSegmentIndex = SortMethod.all.index(of: sortMethod)!
+		sortSegmentedControl?.addTarget(self, action: #selector(sortSegmentedControllerValueChanged), for: .valueChanged)
+	}
+
+	@objc private func sortSegmentedControllerValueChanged() {
+
+		self.sortMethod = SortMethod.all[sortSegmentedControl!.selectedSegmentIndex]
+		delegate?.sortBar(self, didUpdateSortMethod: self.sortMethod)
+
+	}
+
+	func updateSortMethod() {
+		_ = self.sortMethod
+	}
+
 }
