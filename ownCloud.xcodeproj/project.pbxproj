@@ -1313,7 +1313,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 29;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}";
 				GCC_WARN_UNUSED_LABEL = YES;
@@ -1340,7 +1340,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 29;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}";
 				GCC_WARN_UNUSED_LABEL = YES;
@@ -1350,8 +1350,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1982de66-7f72-48d9-bfcd-8dd2aec5d741";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app";
+				PROVISIONING_PROFILE = "73869bed-48b0-423a-940e-438fc0b07be0";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
