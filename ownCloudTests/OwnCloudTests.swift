@@ -32,6 +32,7 @@ class OwnCloudTests: XCTestCase {
 
     func testClickOnTheButtonAndNothingHappens() {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
     func testPerformanceExample() {
