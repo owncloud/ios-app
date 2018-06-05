@@ -288,18 +288,13 @@ class AppLockManager: NSObject {
         if  shouldDisplayLockscreen, biometricalSecurityEnabled {
 
             let context = LAContext()
-            var error: NSError?
 
             // Check if the device can evaluate the policy.
-            if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-                context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Unlock".localized) { (success, error) in
+            if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil) {
+                context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Unlock".localized) { (success, _) in
                     if success {
                         DispatchQueue.main.async {
                             self.dismissLockscreen(animated: true)
-                        }
-                    } else {
-                        if let error = error {
-                            Log.log("Biometrical login error: \(String(error.localizedDescription))")
                         }
                     }
                 }
