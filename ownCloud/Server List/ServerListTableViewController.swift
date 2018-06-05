@@ -97,10 +97,16 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		updateNoServerMessageVisibility()
 
+        let helpBarButtonItem = UIBarButtonItem(title: "Help".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(help))
+        helpBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
+
+        let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
+        settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
+
 		self.toolbarItems = [
-			UIBarButtonItem(title: "Help", style: UIBarButtonItemStyle.plain, target: self, action: #selector(help)),
+			helpBarButtonItem,
 			UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
-			UIBarButtonItem(title: "Settings", style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
+            settingsBarButtonItem
 		]
 
 		/*
