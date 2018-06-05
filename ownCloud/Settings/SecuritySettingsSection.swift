@@ -1,5 +1,5 @@
 //
-//  SecurityGlobalSettings.swift
+//  SecuritySettingsSection.swift
 //  ownCloud
 //
 //  Created by Pablo Carrascal on 30/04/2018.
@@ -144,7 +144,7 @@ class SecuritySettingsSection: SettingsSection {
                         defaultMessage = "Delete code".localized
                     }
 
-                    passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, passcodeCompleteHandler: { (passcode: String) in
+                    passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, completionHandler: { (passcode: String) in
                         if !passcodeSwitch.isOn {
                             // Delete
                             if passcode == AppLockManager.shared.passcode {
