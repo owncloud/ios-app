@@ -8,9 +8,9 @@ Not yet available for production neither in the store, use previous iOS app:
 
 **Build status:**
 
-master ![](https://www.bitrise.io/app/c48bddff715d0664/status.svg?token=7Tmh463L-GLGS9MN5yZ0jA&branch=bitrase/integration)
+master ![](https://www.bitrise.io/app/c48bddff715d0664/status.svg?token=7Tmh463L-GLGS9MN5yZ0jA&branch=master)
 
-stable ![](https://www.bitrise.io/app/c48bddff715d0664/status.svg?token=7Tmh463L-GLGS9MN5yZ0jA&branch=bitrase/integration)
+stable ![](https://www.bitrise.io/app/c48bddff715d0664/status.svg?token=7Tmh463L-GLGS9MN5yZ0jA&branch=stable)
 
 
 **Start contributing:** Make sure you read [SETUP.md](https://github.com/owncloud/ios-app/SETUP.md) when you start working on this project. Basically: Fork this repository and contribute back using pull requests to the master branch.
