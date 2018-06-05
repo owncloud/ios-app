@@ -52,18 +52,9 @@ class AppLockManager: NSObject {
     private let powBaseDelay: Double = 1.5
     private var lockTimer: Timer?
 
-    // MARK: - Biometrical status
-    enum BiometricalStatus {
-        case notShown
-        case shown
-        case success
-        case error
-    }
-
     // MARK: - Passcode
     private let keychainAccount = "app.passcode"
     private let keychainPasscodePath = "passcode"
-    private let keychainLockEnabledPath = "lockEnabled"
 
     private var keychain : OCKeychain? {
         return OCAppIdentity.shared().keychain
@@ -161,7 +152,7 @@ class AppLockManager: NSObject {
             }
 
             if !forceShow {
-                authenticateUserWithBiometrical()
+                authenticateWithBiometrical()
             }
         }
     }
@@ -283,7 +274,7 @@ class AppLockManager: NSObject {
 
     // MARK: - Biometrical Unlock
 
-    func authenticateUserWithBiometrical() {
+    func authenticateWithBiometrical() {
 
         if  shouldDisplayLockscreen, biometricalSecurityEnabled {
 
