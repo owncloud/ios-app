@@ -107,6 +107,10 @@ class AppLockManager: NSObject {
         }
     }
 
+    var biometricalSecurityEnabled: Bool {
+        return self.userDefaults.bool(forKey: SecuritySettingsBiometricalKey)
+    }
+
     // MARK: - Init
     static var shared = AppLockManager()
 
@@ -151,9 +155,13 @@ class AppLockManager: NSObject {
                 window?.rootViewController = passcodeViewController!
                 window?.makeKeyAndVisible()
 
-                self.startLockCountdown()
+                startLockCountdown()
             } else {
                 passcodeViewController?.screenBlurringEnabled = forceShow
+            }
+
+            if !forceShow {
+                authenticateUserWithBiometrical()
             }
         }
     }
@@ -273,31 +281,26 @@ class AppLockManager: NSObject {
         }
     }
 
-    // MARK: - Biometrical
+    // MARK: - Biometrical Unlock
 
-    func showBiometricalUnlockIfNeeded() {
+    func authenticateUserWithBiometrical() {
 
-        if  self.lockedUntilDate == nil || self.lockedUntilDate! < Date(),
-            self.userDefaults.bool(forKey: SecuritySettingsBiometricalKey) {
-            self.authenticateUserWithBiometrical()
-        }
-    }
+        if  shouldDisplayLockscreen, biometricalSecurityEnabled {
 
-    private func authenticateUserWithBiometrical() {
+            let context = LAContext()
+            var error: NSError?
 
-        let context = LAContext()
-        var error: NSError?
-
-        // Check if the device can evaluate the policy.
-        if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Unlock".localized) { (success, error) in
-                if success {
-                    DispatchQueue.main.async {
-                        self.dismissLockscreen(animated: true)
-                    }
-                } else {
-                    if let error = error {
-                        Log.log("Biometrical login error: \(String(error.localizedDescription))")
+            // Check if the device can evaluate the policy.
+            if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+                context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Unlock".localized) { (success, error) in
+                    if success {
+                        DispatchQueue.main.async {
+                            self.dismissLockscreen(animated: true)
+                        }
+                    } else {
+                        if let error = error {
+                            Log.log("Biometrical login error: \(String(error.localizedDescription))")
+                        }
                     }
                 }
             }
