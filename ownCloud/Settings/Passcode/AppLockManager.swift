@@ -119,7 +119,7 @@ class AppLockManager: NSObject {
 	func showLockscreenIfNeeded(forceShow: Bool = false) {
 		if self.shouldDisplayLockscreen || forceShow {
 			if passcodeViewController == nil {
-				passcodeViewController = PasscodeViewController(cancelHandler: nil, passcodeCompleteHandler: { (passcode: String) in
+				passcodeViewController = PasscodeViewController(passcodeCompleteHandler: { (passcode: String) in
 					self.attemptUnlock(with: passcode)
 				})
 
@@ -129,6 +129,16 @@ class AppLockManager: NSObject {
 				passcodeViewController?.screenBlurringEnabled = forceShow && !self.shouldDisplayLockscreen
 
 				window = AppLockWindow(frame: UIScreen.main.bounds)
+				/*
+					Workaround to the lack of status bar animation when returning true for prefersStatusBarHidden in
+					PasscodeViewController.
+
+					The documentation notes that "The ordering of windows within a given window level is not guaranteed.",
+					so that with a future iOS update this might break and the status bar be displayed regardless. In that
+					case, implement prefersStatusBarHidden in PasscodeViewController to return true and remove the dismiss
+					animation (the re-appearance of the status bar will lead to a jump in the UI otherwise).
+				*/
+				window?.windowLevel = UIWindowLevelStatusBar
 				window?.rootViewController = passcodeViewController!
 				window?.makeKeyAndVisible()
 

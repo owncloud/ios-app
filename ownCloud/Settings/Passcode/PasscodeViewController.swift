@@ -124,7 +124,7 @@ class PasscodeViewController: UIViewController, Themeable {
 	var completionHandler: PasscodeViewControllerCompletionHandler?
 
 	// MARK: - Init
-	init(cancelHandler: PasscodeViewControllerCancelHandler?, passcodeCompleteHandler: @escaping PasscodeViewControllerCompletionHandler, hasCancelButton: Bool = true, keypadButtonsEnabled: Bool = true) {
+	init(cancelHandler: PasscodeViewControllerCancelHandler? = nil, passcodeCompleteHandler: @escaping PasscodeViewControllerCompletionHandler, hasCancelButton: Bool = true, keypadButtonsEnabled: Bool = true) {
 		self.cancelHandler = cancelHandler
 		self.completionHandler = passcodeCompleteHandler
 		self.keypadButtonsEnabled = keypadButtonsEnabled
@@ -169,7 +169,16 @@ class PasscodeViewController: UIViewController, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
-	// MARK: Updates UI
+	// MARK: - Orientation
+	override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+		return .portrait
+	}
+
+	override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+		return .portrait
+	}
+
+	// MARK: - UI updates
 	private func updatePasscodeDots() {
 		var placeholders = ""
 		let enteredDigits = passcode?.count ?? 0
