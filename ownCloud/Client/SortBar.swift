@@ -20,6 +20,8 @@ import UIKit
 
 protocol SortBarDelegate: class {
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod)
+
+	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?)
 }
 
 class SortBar: UIView, Themeable {
@@ -78,6 +80,6 @@ class SortBar: UIView, Themeable {
 
 		let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel)
 		controller.addAction(cancel)
-		UIApplication.shared.keyWindow?.rootViewController?.presentedViewController?.present(controller, animated: true, completion: nil)
+		delegate?.sortBar(self, presentViewController: controller, animated: true, completionHandler: nil)
 	}
 }

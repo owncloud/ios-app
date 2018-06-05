@@ -227,10 +227,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
 		// Make sure we don't request the thumbnail multiple times in that case.
-		if cell?.item?.versionIdentifier != newItem.versionIdentifier {
+		if (cell?.item?.versionIdentifier != newItem.versionIdentifier) || (cell?.item?.name != newItem.name) {
 			cell?.item = newItem
-		} else {
-			cell?.updateWith(newItem)
 		}
 
 		return cell!
@@ -427,5 +425,9 @@ extension ClientQueryViewController : SortBarDelegate {
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
 		query?.sortComparator = sortMethod.comparator()
+	}
+
+	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
+		self.present(presentViewController, animated: animated, completion: completionHandler)
 	}
 }
