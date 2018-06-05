@@ -179,6 +179,7 @@ class BookmarkViewController: StaticTableViewController {
 		// Mode setup
 		self.navigationController?.navigationBar.isHidden = false
 		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(BookmarkViewController.userActionCancel))
+        self.navigationItem.leftBarButtonItem?.accessibilityIdentifier = "cancel"
 
 		switch mode {
 			case .create:
