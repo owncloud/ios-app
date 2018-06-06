@@ -55,12 +55,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 
 		query?.delegate = self
-		query?.sortComparator = { (left, right) in
-			let leftItem = left as? OCItem
-			let rightItem = right as? OCItem
-
-			return (leftItem?.name.compare(rightItem!.name))!
-		}
 
 		query?.addObserver(self, forKeyPath: "state", options: .initial, context: observerContext)
 		core?.addObserver(self, forKeyPath: "reachabilityMonitor.available", options: .initial, context: observerContext)
@@ -116,7 +110,13 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 		// self.navigationItem.rightBarButtonItem = self.editButtonItem
-	}
+
+		sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
+		sortBar?.delegate = self
+		sortBar?.updateSortMethod()
+
+        tableView.tableHeaderView = sortBar
+    }
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
@@ -137,6 +137,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		initialAppearance = false
 
 		updateQueryProgressSummary()
+
+		sortBar?.sortMethod = self.sortMethod
+        query?.sortComparator = self.sortMethod.comparator()
 	}
 
 	func updateQueryProgressSummary() {
@@ -224,7 +227,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
 		// Make sure we don't request the thumbnail multiple times in that case.
-		if cell?.item?.versionIdentifier != newItem.versionIdentifier {
+		if (cell?.item?.versionIdentifier != newItem.versionIdentifier) || (cell?.item?.name != newItem.name) {
 			cell?.item = newItem
 		}
 
@@ -358,6 +361,21 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			messageMessageLabel?.text = message!
 		}
 	}
+
+    // MARK: - Sorting
+
+    private var sortBar: SortBar?
+	private var sortMethod: SortMethod {
+
+		set {
+			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
+		}
+
+		get {
+			let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabeticallyDescendant
+			return sort
+		}
+	}
 }
 
 // MARK: - Query Delegate
@@ -398,5 +416,19 @@ extension ClientQueryViewController : OCQueryDelegate {
 				}
 			}
 		}
+	}
+}
+
+// MARK: - SortBar Delegate
+extension ClientQueryViewController : SortBarDelegate {
+
+	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
+		sortMethod = didUpdateSortMethod
+		query?.sortComparator = sortMethod.comparator()
+	}
+
+	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
+
+		self.present(presentViewController, animated: animated, completion: completionHandler)
 	}
 }
