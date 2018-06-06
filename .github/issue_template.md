@@ -17,6 +17,13 @@ Tell us what should happen
 ### Actual behaviour
 Tell us what happens instead
 
+### Client
+**iOS version:**
+
+**ownCloud app version:**
+
+**Device model:**
+
 ### Server configuration
 **Web server:**
 
@@ -27,13 +34,6 @@ Tell us what happens instead
 **ownCloud version:**
 
 **Storage backend (external storage):**
-
-### Client
-**iOS version:**
-
-**ownCloud app version:**
-
-**Device model:**
 
 ### Logs
 #### Web server error log
