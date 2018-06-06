@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[owncloud.mobile-ios]
+[owncloud.mobile-ios-app]
 file_filter = ownCloud/Resources/<lang>.lproj/Localizable.strings
 source_file = ownCloud/Resources/en.lproj/Localizable.strings
 source_lang = en
