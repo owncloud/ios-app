@@ -29,25 +29,22 @@ class AppLockManager: NSObject {
     private var userDefaults: UserDefaults
 
     // MARK: - State
-    private var lastApplicationBackgroundedDate : Date?
-
-    private let appLockFailedPasscodeAttemptsKey = "applock-failed-passcode-attempts"
-    private let applockLockedUntilDateKey = "applock-locked-until-date"
+    var lastApplicationBackgroundedDate : Date?
 
     private var failedPasscodeAttempts: Int {
         get {
-            return userDefaults.integer(forKey: self.appLockFailedPasscodeAttemptsKey)
+            return userDefaults.integer(forKey: "applock-failed-passcode-attempts")
         }
         set(newValue) {
-            self.userDefaults.set(newValue, forKey: self.appLockFailedPasscodeAttemptsKey)
+            self.userDefaults.set(newValue, forKey: "applock-failed-passcode-attempts")
         }
     }
     private var lockedUntilDate: Date? {
         get {
-            return userDefaults.object(forKey: self.applockLockedUntilDateKey) as? Date
+            return userDefaults.object(forKey: "applock-locked-until-date") as? Date
         }
         set(newValue) {
-            self.userDefaults.set(newValue, forKey: self.applockLockedUntilDateKey)
+            self.userDefaults.set(newValue, forKey: "applock-locked-until-date")
         }
     }
 
@@ -56,7 +53,6 @@ class AppLockManager: NSObject {
     private var lockTimer: Timer?
 
     // MARK: - Passcode
-
     private let keychainAccount = "app.passcode"
     private let keychainPasscodePath = "passcode"
 
@@ -83,26 +79,22 @@ class AppLockManager: NSObject {
     }
 
     // MARK: - Settings
-
-    private let applockLockEnabledKey = "applock-lock-enabled"
-    private let applockLockDelayKey = "applock-lock-delay"
-
     var lockEnabled: Bool {
         get {
-            return userDefaults.bool(forKey: applockLockEnabledKey)
+            return userDefaults.bool(forKey: "applock-lock-enabled")
         }
         set(newValue) {
-            self.userDefaults.set(newValue, forKey: applockLockEnabledKey)
+            self.userDefaults.set(newValue, forKey: "applock-lock-enabled")
         }
     }
 
     var lockDelay: Int {
         get {
-            return userDefaults.integer(forKey: applockLockDelayKey)
+            return userDefaults.integer(forKey: "applock-lock-delay")
         }
 
         set(newValue) {
-            self.userDefaults.set(newValue, forKey: applockLockDelayKey)
+            self.userDefaults.set(newValue, forKey: "applock-lock-delay")
         }
     }
 
