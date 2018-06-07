@@ -283,7 +283,7 @@ class AppLockManager: NSObject {
 
             // Check if the device can evaluate the policy.
             if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil) {
-                context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Unlock".localized) { (success, _) in
+                context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Unlock passcode".localized) { (success, _) in
                     if success {
                         //Fill the passcode dots
                         DispatchQueue.main.async {
