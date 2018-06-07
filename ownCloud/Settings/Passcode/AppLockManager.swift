@@ -151,6 +151,7 @@ class AppLockManager: NSObject {
                 passcodeViewController?.screenBlurringEnabled = forceShow
             }
 
+            // Show biometrical
             if !forceShow {
                 authenticateWithBiometrical()
             }
@@ -284,7 +285,12 @@ class AppLockManager: NSObject {
             if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil) {
                 context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Unlock".localized) { (success, _) in
                     if success {
+                        //Fill the passcode dots
                         DispatchQueue.main.async {
+                            self.passcodeViewController?.passcode = self.passcode
+                        }
+                        //Remove the passcode after small delay to give user feedback after use the biometrical unlock
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                             self.dismissLockscreen(animated: true)
                         }
                     }
