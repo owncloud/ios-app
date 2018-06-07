@@ -188,7 +188,7 @@ class SecuritySettingsSection: SettingsSection {
                         }
                     })
 
-		    passcodeViewController?.message = defaultMessage
+                    passcodeViewController?.message = defaultMessage
                     viewController.present(passcodeViewController!, animated: true, completion: nil)
                 }
             }
