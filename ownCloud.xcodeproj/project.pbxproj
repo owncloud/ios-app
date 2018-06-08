@@ -15,7 +15,6 @@
 		233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */; };
 		233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */; };
 		2347446A20761BB700859C93 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2347446920761BB700859C93 /* String+Extension.swift */; };
-		237C99822057EFD800E915DA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 237C99812057EFD700E915DA /* Localizable.strings */; };
 		23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */; };
 		239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239F1318205A693A0029F186 /* UIColor+Extension.swift */; };
 		23BEF1182076667F00DD2E6F /* IssuesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BEF1172076667F00DD2E6F /* IssuesViewController.swift */; };
@@ -24,6 +23,7 @@
 		23E22BB720C6A5C40024D11E /* UIDevide+UIUserInterfaceIdiom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E22BB220C6A5C40024D11E /* UIDevide+UIUserInterfaceIdiom.swift */; };
 		23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F6238020B587EF004FDE8B /* SortMethod.swift */; };
 		23FA23E620BFD3D8009A6D73 /* SortBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23FA23E520BFD3D8009A6D73 /* SortBar.swift */; };
+		593A821120C7D4C5000E2A90 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
 		593BAB46209AE1BC00023634 /* PasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593BAB44209AE1BC00023634 /* PasscodeViewController.swift */; };
 		593BAB47209AE1BC00023634 /* PasscodeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 593BAB45209AE1BC00023634 /* PasscodeViewController.xib */; };
 		593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593BAB96209F8A0500023634 /* AppLockManager.swift */; };
@@ -261,13 +261,14 @@
 		233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ownCloudSDK.xcodeproj; path = "ios-sdk/ownCloudSDK.xcodeproj"; sourceTree = "<group>"; };
 		233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuritySettingsSection.swift; sourceTree = "<group>"; };
 		2347446920761BB700859C93 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
-		237C99812057EFD700E915DA /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSettingsSection.swift; sourceTree = "<group>"; };
 		239F1318205A693A0029F186 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		23BEF1172076667F00DD2E6F /* IssuesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesViewController.swift; sourceTree = "<group>"; };
 		23E22BB220C6A5C40024D11E /* UIDevide+UIUserInterfaceIdiom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIDevide+UIUserInterfaceIdiom.swift"; sourceTree = "<group>"; };
 		23F6238020B587EF004FDE8B /* SortMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortMethod.swift; sourceTree = "<group>"; };
 		23FA23E520BFD3D8009A6D73 /* SortBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortBar.swift; sourceTree = "<group>"; };
+		593A821220C7D4C5000E2A90 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		593A821820C7D4DC000E2A90 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		593BAB44209AE1BC00023634 /* PasscodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeViewController.swift; sourceTree = "<group>"; };
 		593BAB45209AE1BC00023634 /* PasscodeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PasscodeViewController.xib; sourceTree = "<group>"; };
 		593BAB96209F8A0500023634 /* AppLockManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockManager.swift; sourceTree = "<group>"; };
@@ -638,7 +639,7 @@
 				233BDEA8204FEFE500C06732 /* LaunchScreen.storyboard */,
 				233BDEA6204FEFE500C06732 /* Assets.xcassets */,
 				233BDEAB204FEFE500C06732 /* Info.plist */,
-				237C99812057EFD700E915DA /* Localizable.strings */,
+				593A821320C7D4C5000E2A90 /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -864,6 +865,7 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
 			);
 			mainGroup = 233BDE93204FEFE500C06732;
 			productRefGroup = 233BDE9D204FEFE500C06732 /* Products */;
@@ -973,7 +975,7 @@
 				DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */,
 				DCE5E8B42080D781005F60CE /* folder-shared.tvg in Resources */,
 				DCE5E8A42080D781005F60CE /* audio.tvg in Resources */,
-				237C99822057EFD800E915DA /* Localizable.strings in Resources */,
+				593A821120C7D4C5000E2A90 /* Localizable.strings in Resources */,
 				DCE5E8B02080D781005F60CE /* folder-drag-accept.tvg in Resources */,
 				DCE5E8A62080D781005F60CE /* application.tvg in Resources */,
 				DC9BFBB320A19AF4007064B5 /* doc in Resources */,
@@ -1204,6 +1206,15 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
+		593A821320C7D4C5000E2A90 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				593A821220C7D4C5000E2A90 /* en */,
+				593A821820C7D4DC000E2A90 /* es */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1211,6 +1222,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1269,6 +1281,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
