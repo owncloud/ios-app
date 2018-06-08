@@ -276,6 +276,7 @@
 		5958C9BD20C000A700E0E567 /* PasscodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeTests.swift; sourceTree = "<group>"; };
 		597A404820AD59EF00B028B2 /* AppLockWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockWindow.swift; sourceTree = "<group>"; };
 		59D4895320C83F2E00369C2E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		59EACA8020CAA37F00F082EE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.release.xcconfig"; sourceTree = "<group>"; };
 		6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
 		6E83C78320A33C180066EC23 /* LAContext+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LAContext+Extension.swift"; sourceTree = "<group>"; };
@@ -1210,14 +1211,6 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		59D4895420C83F2E00369C2E /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				59D4895320C83F2E00369C2E /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 		593A821320C7D4C5000E2A90 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1225,6 +1218,15 @@
 				593A821820C7D4DC000E2A90 /* es */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		59D4895420C83F2E00369C2E /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				59D4895320C83F2E00369C2E /* en */,
+				59EACA8020CAA37F00F082EE /* es */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
