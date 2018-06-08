@@ -57,7 +57,7 @@ class AppLockManager: NSObject {
 	private let keychainLockEnabledPath = "lockEnabled"
 
 	private var keychain : OCKeychain? {
-		return OCAppIdentity.shared().keychain
+		return OCAppIdentity.shared.keychain
 	}
 
 	var passcode: String? {
@@ -102,7 +102,7 @@ class AppLockManager: NSObject {
 	static var shared = AppLockManager()
 
 	public override init() {
-		userDefaults = OCAppIdentity.shared().userDefaults
+		userDefaults = OCAppIdentity.shared.userDefaults
 
 		super.init()
 

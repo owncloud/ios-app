@@ -26,7 +26,7 @@ class SettingsViewController: StaticTableViewController {
 
         self.navigationItem.title = "Settings".localized
 
-        let userDefaults = OCAppIdentity.shared().userDefaults
+        let userDefaults = OCAppIdentity.shared.userDefaults
 
         let uploadSettings = UploadsSettingsSection(userDefaults: userDefaults!)
         let securitySettings = SecuritySettingsSection(userDefaults: userDefaults!)

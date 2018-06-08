@@ -51,7 +51,7 @@ class ClientRootViewController: UITabBarController {
 		openProgress.localizedDescription = "Connecting…".localized
 		progressSummarizer?.startTracking(progress: openProgress)
 
-		core = CoreManager.shared.requestCoreForBookmark(bookmark, completion: { (_, error) in
+		core = OCCoreManager.shared.requestCore(for: bookmark, completionHandler: { (_, error) in
 			if error == nil {
 				self.coreReady()
 			}
@@ -76,7 +76,7 @@ class ClientRootViewController: UITabBarController {
 			core?.delegate = nil
 		}
 
-		CoreManager.shared.returnCoreForBookmark(bookmark, completion: nil)
+		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 	}
 
 	override func viewDidLoad() {
