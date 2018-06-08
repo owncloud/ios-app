@@ -7,3 +7,4 @@ source_file = ownCloud/Resources/en.lproj/Localizable.strings
 source_lang = en
 type = STRINGS
 lang_map = es_ES: es
+
