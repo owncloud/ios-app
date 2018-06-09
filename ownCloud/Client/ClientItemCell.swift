@@ -105,7 +105,7 @@ class ClientItemCell: ThemeTableViewCell {
 				_ = thumbnail?.requestImage(for: thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
 					if error == nil,
 					   image != nil,
-					   self.item?.versionIdentifier == thumbnail?.versionIdentifier {
+					   self.item?.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
 						OnMainThread {
 							self.iconView.image = image
 						}

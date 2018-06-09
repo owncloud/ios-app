@@ -7,11 +7,19 @@
 //
 
 #import <FileProvider/FileProvider.h>
+#import <ownCloudSDK/ownCloudSDK.h>
 
 @interface FileProviderEnumerator : NSObject <NSFileProviderEnumerator>
+{
+	OCCore *_core;
+	OCBookmark *_bookmark;
+	NSFileProviderItemIdentifier _enumeratedItemIdentifier;
+
+	OCQuery *_query;
+}
 
 - (instancetype)init NS_UNAVAILABLE;
-- (instancetype)initWithEnumeratedItemIdentifier:(NSFileProviderItemIdentifier)enumeratedItemIdentifier;
+- (instancetype)initWithBookmark:(OCBookmark *)bookmark enumeratedItemIdentifier:(NSFileProviderItemIdentifier)enumeratedItemIdentifier;
 
 @property (nonatomic, readonly, strong) NSFileProviderItemIdentifier enumeratedItemIdentifier;
 

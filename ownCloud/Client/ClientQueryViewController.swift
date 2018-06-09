@@ -227,7 +227,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
 		// Make sure we don't request the thumbnail multiple times in that case.
-		if (cell?.item?.versionIdentifier != newItem.versionIdentifier) || (cell?.item?.name != newItem.name) {
+		if (cell?.item?.itemVersionIdentifier != newItem.itemVersionIdentifier) || (cell?.item?.name != newItem.name) {
 			cell?.item = newItem
 		}
 

@@ -639,7 +639,7 @@ class BookmarkViewController: StaticTableViewController {
 			var placeholderString = "Name".localized
 
 			if (bookmark.url != nil) || (bookmark.originURL != nil) {
-				placeholderString = bookmark.shortName()
+				placeholderString = bookmark.shortName
 			}
 
 			self.nameRow?.textField?.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : Theme.shared.activeCollection.tableRowColors.secondaryLabelColor])

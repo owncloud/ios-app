@@ -24,7 +24,29 @@
 
 - (NSFileProviderItemIdentifier)parentItemIdentifier
 {
+	if ([[self.path stringByDeletingLastPathComponent] isEqualToString:@"/"])
+	{
+		return (NSFileProviderRootContainerItemIdentifier);
+	}
+
 	return (self.parentFileID);
+}
+
+- (NSString *)filename
+{
+	return (self.name);
+}
+
+- (NSString *)typeIdentifier
+{
+	// Return special UTI type for folders
+	if (self.type == OCItemTypeCollection)
+	{
+		return ((__bridge NSString *)kUTTypeFolder);
+	}
+
+	// Convert MIME type to UTI type identifier
+	return ((NSString *)CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)self.mimeType, NULL)));
 }
 
 - (NSFileProviderItemCapabilities)capabilities
@@ -32,7 +54,7 @@
 	switch (self.type)
 	{
 		case OCItemTypeFile:
-			return (0);
+			return (NSFileProviderItemCapabilitiesAllowsAll);
 		break;
 
 		case OCItemTypeCollection:
@@ -43,10 +65,9 @@
 	return (NSFileProviderItemCapabilitiesAllowsAll);
 }
 
-- (NSString *)typeIdentifier
+- (NSData *)versionIdentifier
 {
-	// Convert MIME type to UTI type identifier
-	return ((NSString *)CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)self.mimeType, NULL)));
+	return ([[NSString stringWithFormat:@"%@_:_%@", self.eTag, self.fileID] dataUsingEncoding:NSUTF8StringEncoding]);
 }
 
 @end

@@ -263,8 +263,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 			if lockedBookmarks.contains(bookmark) {
-				let alertController = UIAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName() as NSString) as String,
-									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName() as NSString) as String,
+				let alertController = UIAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName as NSString) as String,
+									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
 									preferredStyle: .alert)
 
 				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
@@ -305,7 +305,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 
 		if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-			bookmarkCell.titleLabel.text = bookmark.shortName()
+			bookmarkCell.titleLabel.text = bookmark.shortName
 			bookmarkCell.detailLabel.text = (bookmark.originURL != nil) ? bookmark.originURL.absoluteString : bookmark.url.absoluteString
 		}
 
@@ -316,7 +316,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		return [
 				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, indexPath) in
 					if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-						let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName()) as String,
+						let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
 											     message: "This will also delete all locally stored file copies.".localized,
 											     preferredStyle: .actionSheet)
 
@@ -334,7 +334,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 										DispatchQueue.main.async {
 											if error != nil {
 												// Inform user if vault couldn't be erased
-												let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName() as NSString) as String,
+												let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
 																	message: error?.localizedDescription,
 																	preferredStyle: .alert)
 
