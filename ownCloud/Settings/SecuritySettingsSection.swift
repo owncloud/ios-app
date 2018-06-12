@@ -20,10 +20,6 @@ import UIKit
 import LocalAuthentication
 import ownCloudSDK
 
-// MARK: - Security UserDefaults keys
-public let SecuritySettingsKey: String = "security-settings"
-public let SecuritySettingsBiometricalKey: String = "security-settings-useBiometrical"
-
 // MARK: - SecurityAskfrequency
 @objc enum SecurityAskFrequency: Int {
     case always = 0
@@ -69,7 +65,7 @@ class SecuritySettingsSection: SettingsSection {
     }
     var isBiometricalSecurityEnabled: Bool {
         willSet {
-            self.userDefaults.set(newValue, forKey: SecuritySettingsBiometricalKey)
+            AppLockManager.shared.biometricalSecurityEnabled = newValue
         }
     }
 
@@ -82,7 +78,7 @@ class SecuritySettingsSection: SettingsSection {
     private var biometricalRow: StaticTableViewRow?
 
     override init(userDefaults: UserDefaults) {
-        isBiometricalSecurityEnabled = userDefaults.bool(forKey: SecuritySettingsBiometricalKey)
+        isBiometricalSecurityEnabled = AppLockManager.shared.biometricalSecurityEnabled
 
         super.init(userDefaults: userDefaults)
 
@@ -179,9 +175,9 @@ class SecuritySettingsSection: SettingsSection {
                                     })
                                 } else {
                                     //Passcode is not the same
-				    passcodeViewController?.message = defaultMessage
+                                    passcodeViewController?.message = defaultMessage
                                     passcodeViewController?.errorMessage = "The entered codes are different".localized
-			            passcodeViewController?.passcode = nil
+                                    passcodeViewController?.passcode = nil
                                 }
                                 self.passcodeFromFirstStep = nil
                             }
