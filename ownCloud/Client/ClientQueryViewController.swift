@@ -103,8 +103,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		self.tableView.register(ClientItemCell.self, forCellReuseIdentifier: "itemCell")
 
-		Theme.shared.register(client: self, applyImmediately: true)
-
 		// Uncomment the following line to preserve selection between presentations
 		// self.clearsSelectionOnViewWillAppear = false
 
@@ -127,6 +125,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.definesPresentationContext = true
 
 		self.navigationItem.searchController = self.searchController
+
+		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
