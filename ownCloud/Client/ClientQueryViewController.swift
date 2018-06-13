@@ -116,7 +116,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		sortBar?.delegate = self
 		sortBar?.updateSortMethod()
 
-        tableView.tableHeaderView = sortBar
+		tableView.tableHeaderView = sortBar
 
 		searchController.searchResultsUpdater = self
 		searchController.obscuresBackgroundDuringPresentation = false
@@ -127,7 +127,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.extendedLayoutIncludesOpaqueBars = true
 		self.searchController.extendedLayoutIncludesOpaqueBars = true
 		definesPresentationContext = true
-    }
+	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
@@ -150,7 +150,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		updateQueryProgressSummary()
 
 		sortBar?.sortMethod = self.sortMethod
-        query?.sortComparator = self.sortMethod.comparator()
+		query?.sortComparator = self.sortMethod.comparator()
 	}
 
 	func updateQueryProgressSummary() {
@@ -209,6 +209,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
+		self.searchController.searchBar.applyThemeCollection(collection)
 
 		if event == .update {
 			self.tableView.reloadData()
@@ -373,9 +374,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 
-    // MARK: - Sorting
-
-    private var sortBar: SortBar?
+	// MARK: - Sorting
+	private var sortBar: SortBar?
 	private var sortMethod: SortMethod {
 
 		set {
