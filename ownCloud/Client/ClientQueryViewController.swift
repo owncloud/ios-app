@@ -121,7 +121,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		searchController.searchResultsUpdater = self
 		searchController.obscuresBackgroundDuringPresentation = false
 		searchController.hidesNavigationBarDuringPresentation = true
-		searchController.searchBar.placeholder = "Search".localized
+		searchController.searchBar.placeholder = "Search this folder".localized
 		navigationItem.searchController = searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
 		self.extendedLayoutIncludesOpaqueBars = true
@@ -409,7 +409,7 @@ extension ClientQueryViewController : OCQueryDelegate {
 				case .contentsFromCache, .idle:
 					if self.items?.count == 0 {
 						if self.searchController.searchBar.text != "" {
-							self.message(show: true, imageName: "folder", title: "No matches".localized, message: "There is no results for this search".localized)
+							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
 						} else {
 							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
 						}
@@ -457,8 +457,8 @@ extension ClientQueryViewController: UISearchResultsUpdating {
 
 		let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
 			if let item = item {
-				if item.name.lowercased().contains(searchText.lowercased()) {return true}
-				return false
+				if item.name.localizedCaseInsensitiveContains(searchText) {return true}
+
 			}
 			return false
 		}
