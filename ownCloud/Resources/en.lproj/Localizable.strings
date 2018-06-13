@@ -124,4 +124,5 @@
 "The entered codes are different" = "The entered codes are different";
 "Incorrect code" = "Incorrect code";
 "Please try again in %@" = "Please try again in %@";
-"Unlock passcode" = "Unlock passcode";
+"Unlock %@" = "Unlock %@";
+"Biometric authentication failed" = "Biometric authentication failed";
