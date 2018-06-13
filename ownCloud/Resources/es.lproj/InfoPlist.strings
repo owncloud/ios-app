@@ -16,4 +16,4 @@
  *
  */
 
-"NSFaceIDUsageDescription" = "Open the app without entering the passcode.";
+"NSFaceIDUsageDescription" = "Unlock the app without entering the passcode.";

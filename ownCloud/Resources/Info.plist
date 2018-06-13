@@ -55,6 +55,6 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Open the app without entering the passcode.</string>
+	<string>Unlock the app without entering the passcode.</string>
 </dict>
 </plist>
