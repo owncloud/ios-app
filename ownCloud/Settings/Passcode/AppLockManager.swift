@@ -99,15 +99,15 @@ class AppLockManager: NSObject {
 		}
 	}
 
-    var biometricalSecurityEnabled: Bool {
-        get {
-            return self.userDefaults.bool(forKey: "security-settings-useBiometrical")
-        }
+	var biometricalSecurityEnabled: Bool {
+		get {
+			return self.userDefaults.bool(forKey: "security-settings-use-biometrical")
+		}
 
-        set(newValue) {
-            self.userDefaults.set(newValue, forKey: "security-settings-useBiometrical")
-        }
-    }
+		set(newValue) {
+			self.userDefaults.set(newValue, forKey: "security-settings-use-biometrical")
+		}
+	}
 
 	// MARK: - Init
 	static var shared = AppLockManager()
