@@ -46,7 +46,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 		observerContext = UnsafeMutableRawPointer(&observerContextValue)
-		searchController = UISearchController(searchResultsController: nil)
 
 		super.init(style: .plain)
 
@@ -118,15 +117,16 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		tableView.tableHeaderView = sortBar
 
-		searchController.searchResultsUpdater = self
-		searchController.obscuresBackgroundDuringPresentation = false
-		searchController.hidesNavigationBarDuringPresentation = true
-		searchController.searchBar.placeholder = "Search this folder".localized
-		navigationItem.searchController = searchController
-		navigationItem.hidesSearchBarWhenScrolling = false
+		searchController = UISearchController(searchResultsController: nil)
+		searchController?.searchResultsUpdater = self
+		searchController?.obscuresBackgroundDuringPresentation = false
+		searchController?.hidesNavigationBarDuringPresentation = true
+		searchController?.searchBar.placeholder = "Search this folder".localized
+
 		self.extendedLayoutIncludesOpaqueBars = true
-		self.searchController.extendedLayoutIncludesOpaqueBars = true
-		definesPresentationContext = true
+		self.definesPresentationContext = true
+
+		self.navigationItem.searchController = self.searchController
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
@@ -209,7 +209,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
-		self.searchController.searchBar.applyThemeCollection(collection)
+		self.searchController?.searchBar.applyThemeCollection(collection)
 
 		if event == .update {
 			self.tableView.reloadData()
@@ -264,7 +264,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	func message(show: Bool, imageName : String? = nil, title : String? = nil, message : String? = nil) {
 		if !show {
-			messageView?.removeFromSuperview()
+			if messageView?.superview != nil {
+				messageView?.removeFromSuperview()
+			}
 			return
 		}
 
@@ -389,7 +391,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	// MARK: - Search
-	var searchController: UISearchController
+	var searchController: UISearchController?
 
 }
 
@@ -408,15 +410,16 @@ extension ClientQueryViewController : OCQueryDelegate {
 				switch query.state {
 				case .contentsFromCache, .idle:
 					if self.items?.count == 0 {
-						if self.searchController.searchBar.text != "" {
+						if self.searchController?.searchBar.text != "" {
 							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
 						} else {
 							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
 						}
 					} else {
 						self.message(show: false)
-						self.tableView.reloadData()
 					}
+
+					self.tableView.reloadData()
 
 				case .targetRemoved:
 					self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
@@ -424,17 +427,18 @@ extension ClientQueryViewController : OCQueryDelegate {
 
 				default:
 					self.message(show: false)
-					self.tableView.reloadData()
 				}
 
-				switch query.state {
-				case .idle, .targetRemoved, .contentsFromCache, .stopped:
-					if self.tableView.refreshControl?.isRefreshing ?? false {
-						self.tableView.refreshControl?.endRefreshing()
+				DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+					switch query.state {
+					case .idle, .targetRemoved, .contentsFromCache, .stopped:
+						if self.tableView.refreshControl?.isRefreshing ?? false {
+							self.tableView.refreshControl?.endRefreshing()
+						}
+
+					default: break
 					}
-
-				default: break
-				}
+				})
 			}
 		}
 	}
