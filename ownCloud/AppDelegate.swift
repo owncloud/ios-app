@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.addSubview((navigationController?.view)!)
 		window?.makeKeyAndVisible()
 
-        AppLockManager.shared.showLockscreenIfNeeded()
+		AppLockManager.shared.showLockscreenIfNeeded()
 
 		return true
 	}
