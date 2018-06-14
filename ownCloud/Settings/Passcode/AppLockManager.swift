@@ -294,6 +294,9 @@ class AppLockManager: NSObject {
 
 				self.passcodeViewController?.errorMessage = nil
 
+				context.localizedCancelTitle = "Enter code".localized
+				context.localizedFallbackTitle = ""
+
 				context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { (success, error) in
 					if success {
 						//Fill the passcode dots
