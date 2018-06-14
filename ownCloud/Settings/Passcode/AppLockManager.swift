@@ -286,10 +286,10 @@ class AppLockManager: NSObject {
 		if  shouldDisplayLockscreen, biometricalSecurityEnabled {
 
 			let context = LAContext()
-			var error: NSError?
+			var evaluationError: NSError?
 
 			// Check if the device can evaluate the policy.
-			if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+			if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &evaluationError) {
 				let reason = NSString.init(format: "Unlock %@".localized as NSString, OCAppIdentity.shared().appName) as String
 
 				self.passcodeViewController?.errorMessage = nil
@@ -326,7 +326,8 @@ class AppLockManager: NSObject {
 					}
 				}
 			} else {
-				if let error = error {
+				if let error = evaluationError,
+				   self.biometricalSecurityEnabled {
 					self.passcodeViewController?.errorMessage = error.localizedDescription
 				}
 			}
