@@ -127,7 +127,7 @@ class AppLockManager: NSObject {
 	}
 
 	// MARK: - Show / Dismiss Passcode View
-	func showLockscreenIfNeeded(forceShow: Bool = false) {
+	func showLockscreenIfNeeded(forceShow: Bool = false, context: LAContext = LAContext()) {
 		if self.shouldDisplayLockscreen || forceShow {
 			if passcodeViewController == nil {
 				passcodeViewController = PasscodeViewController(completionHandler: { (_, passcode: String) in
@@ -160,7 +160,7 @@ class AppLockManager: NSObject {
 
             // Show biometrical
             if !forceShow, !self.shouldDisplayCountdown {
-                showBiometricalAuthenticationInterface()
+                showBiometricalAuthenticationInterface(context: context)
             }
 		}
 	}
@@ -281,11 +281,10 @@ class AppLockManager: NSObject {
 	}
 
 	// MARK: - Biometrical Unlock
-	func showBiometricalAuthenticationInterface() {
+	func showBiometricalAuthenticationInterface(context: LAContext) {
 
 		if  shouldDisplayLockscreen, biometricalSecurityEnabled {
 
-			let context = LAContext()
 			var evaluationError: NSError?
 
 			// Check if the device can evaluate the policy.
