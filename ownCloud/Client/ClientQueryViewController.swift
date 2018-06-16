@@ -242,6 +242,23 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 
+	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		return UISwipeActionsConfiguration.init(actions:
+			[UIContextualAction.init(style: .destructive, title: "Delete".localized, handler: { (_, _, actionPerformed) in
+
+				if let item = self.items?[indexPath.row] {
+					_ = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, item, _) in
+						if error != nil {
+							Log.log("Error \(String(describing: error)) deleting \(String(describing: item?.path))")
+						}
+					})
+				}
+
+				actionPerformed(false)
+			})]
+		)
+	}
+
 	// MARK: - Message
 	var messageView : UIView?
 	var messageContainerView : UIView?
