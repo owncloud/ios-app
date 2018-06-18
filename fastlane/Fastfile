@@ -5,14 +5,7 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Standalone action for register new devices"
-   lane :register_devices do
-     register_devices(devices_file: "fastlane/Match/devices.txt")
-     match(force_for_new_devices: true) # Creates all required certificates & provisioning profile
-   end
-end
 
-platform :ios do
   desc "Push a new beta build to TestFlight"
    lane :beta do
      register_devices(devices_file: "fastlane/Match/devices.txt") # Sync test devices from file to itunesconnect
@@ -25,4 +18,11 @@ platform :ios do
      changelog_from_git_commits # Generate the changelog based on last commits
      upload_to_testflight # Upload build to itunesconnnect
   end
+
+  desc "Register new devices to Apple portal"
+   lane :register_new_devices do
+     register_devices(devices_file: "fastlane/Match/devices.txt") # Sync test devices from file to itunesconnect
+     match(force_for_new_devices: true) # Creates all required certificates & provisioning profile
+  end
+
 end
