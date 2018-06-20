@@ -18,8 +18,8 @@
 
 import UIKit
 
-typealias PasscodeViewControllerCancelHandler = (() -> Void)
-typealias PasscodeViewControllerCompletionHandler = ((_ passcode: String) -> Void)
+typealias PasscodeViewControllerCancelHandler = ((_ passcodeViewController: PasscodeViewController) -> Void)
+typealias PasscodeViewControllerCompletionHandler = ((_ passcodeViewController: PasscodeViewController, _ passcode: String) -> Void)
 
 class PasscodeViewController: UIViewController, Themeable {
 
@@ -217,7 +217,7 @@ class PasscodeViewController: UIViewController, Themeable {
 			if passcode.count == passcodeLength {
 				// Delay to give feedback to user after the last digit was added
 				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-					self.completionHandler?(passcode)
+					self.completionHandler?(self, passcode)
 				}
 			}
 		}
@@ -231,7 +231,7 @@ class PasscodeViewController: UIViewController, Themeable {
 	}
 
 	@IBAction func cancel(_ sender: UIButton) {
-		cancelHandler?()
+		cancelHandler?(self)
 	}
 
 	// MARK: - Themeing

@@ -7,3 +7,10 @@ source_file = ownCloud/Resources/en.lproj/Localizable.strings
 source_lang = en
 type = STRINGS
 lang_map = es_ES: es
+
+[owncloud.mobile-ios-app-infoplist]
+file_filter = ownCloud/Resources/<lang>.lproj/InfoPlist.strings
+source_file = ownCloud/Resources/en.lproj/InfoPlist.strings
+source_lang = en
+type = STRINGS
+lang_map = es_ES: es
