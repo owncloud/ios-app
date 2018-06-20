@@ -20,10 +20,6 @@ import UIKit
 import LocalAuthentication
 import ownCloudSDK
 
-// MARK: - Security UserDefaults keys
-public let SecuritySettingsKey: String = "security-settings"
-public let SecuritySettingsBiometricalKey: String = "security-settings-useBiometrical"
-
 // MARK: - SecurityAskfrequency
 @objc enum SecurityAskFrequency: Int {
     case always = 0
@@ -52,7 +48,7 @@ class SecuritySettingsSection: SettingsSection {
     var frequency: SecurityAskFrequency {
         get {
             return SecurityAskFrequency.init(rawValue: AppLockManager.shared.lockDelay) ?? .always
-	}
+        }
         set(newValue) {
             AppLockManager.shared.lockDelay = newValue.rawValue
         }
@@ -68,8 +64,11 @@ class SecuritySettingsSection: SettingsSection {
         }
     }
     var isBiometricalSecurityEnabled: Bool {
-        willSet {
-            self.userDefaults.set(newValue, forKey: SecuritySettingsBiometricalKey)
+        get {
+            return AppLockManager.shared.biometricalSecurityEnabled
+        }
+        set(newValue) {
+            AppLockManager.shared.biometricalSecurityEnabled = newValue
         }
     }
 
@@ -82,8 +81,6 @@ class SecuritySettingsSection: SettingsSection {
     private var biometricalRow: StaticTableViewRow?
 
     override init(userDefaults: UserDefaults) {
-        isBiometricalSecurityEnabled = userDefaults.bool(forKey: SecuritySettingsBiometricalKey)
-
         super.init(userDefaults: userDefaults)
 
         self.headerTitle = "Security".localized
@@ -131,8 +128,8 @@ class SecuritySettingsSection: SettingsSection {
                     var defaultMessage : String?
 
                     // Handlers
-                    let cancelHandler:PasscodeViewControllerCancelHandler = {
-                        passcodeViewController!.dismiss(animated: true, completion: {
+                    let cancelHandler:PasscodeViewControllerCancelHandler = { (passcodeViewController: PasscodeViewController) in
+                        passcodeViewController.dismiss(animated: true, completion: {
                             self.isPasscodeSecurityEnabled = !passcodeSwitch.isOn
                         })
                         self.passcodeFromFirstStep = nil
@@ -144,51 +141,51 @@ class SecuritySettingsSection: SettingsSection {
                         defaultMessage = "Delete code".localized
                     }
 
-                    passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, completionHandler: { (passcode: String) in
+                    passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, completionHandler: { (passcodeViewController: PasscodeViewController, passcode: String) in
                         if !passcodeSwitch.isOn {
                             // Delete
                             if passcode == AppLockManager.shared.passcode {
                                 // Success
                                 AppLockManager.shared.passcode = nil
-                                passcodeViewController!.dismiss(animated: true, completion: {
+                                passcodeViewController.dismiss(animated: true, completion: {
                                     self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
                                     self.updateUI()
                                 })
                             } else {
                                 // Error
-                                passcodeViewController?.message = defaultMessage
-                                passcodeViewController?.errorMessage = "Incorrect code".localized
-                                passcodeViewController?.passcode = nil
+                                passcodeViewController.message = defaultMessage
+                                passcodeViewController.errorMessage = "Incorrect code".localized
+                                passcodeViewController.passcode = nil
                             }
                         } else {
                             // Add
                             if self.passcodeFromFirstStep == nil {
                                 // First step
                                 self.passcodeFromFirstStep = passcode
-                                passcodeViewController?.message = "Repeat code".localized
-                                passcodeViewController?.passcode = nil
+                                passcodeViewController.message = "Repeat code".localized
+                                passcodeViewController.passcode = nil
                             } else {
                                 // Second step
                                 if self.passcodeFromFirstStep == passcode {
                                     // Passcode right
                                     // Save to keychain
                                     AppLockManager.shared.passcode = passcode
-                                    passcodeViewController!.dismiss(animated: true, completion: {
+                                    passcodeViewController.dismiss(animated: true, completion: {
                                         self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
                                         self.updateUI()
                                     })
                                 } else {
                                     //Passcode is not the same
-				    passcodeViewController?.message = defaultMessage
-                                    passcodeViewController?.errorMessage = "The entered codes are different".localized
-			            passcodeViewController?.passcode = nil
+                                    passcodeViewController.message = defaultMessage
+                                    passcodeViewController.errorMessage = "The entered codes are different".localized
+                                    passcodeViewController.passcode = nil
                                 }
                                 self.passcodeFromFirstStep = nil
                             }
                         }
                     })
 
-		    passcodeViewController?.message = defaultMessage
+                    passcodeViewController?.message = defaultMessage
                     viewController.present(passcodeViewController!, animated: true, completion: nil)
                 }
             }
@@ -199,7 +196,29 @@ class SecuritySettingsSection: SettingsSection {
             // Creation of the biometrical row.
             biometricalRow = StaticTableViewRow(switchWithAction: { (_, sender) in
                 if let biometricalSwitch = sender as? UISwitch {
-                    self.isBiometricalSecurityEnabled = biometricalSwitch.isOn
+                    if let viewController = self.viewController {
+                        var passcodeViewController: PasscodeViewController?
+
+                        passcodeViewController = PasscodeViewController(cancelHandler: { (passcodeViewController: PasscodeViewController) in
+                            passcodeViewController.dismiss(animated: true, completion: {
+                                biometricalSwitch.setOn(self.isBiometricalSecurityEnabled, animated: true)
+                            })
+                        }, completionHandler: { (passcodeViewController: PasscodeViewController, passcode: String) in
+                            if passcode == AppLockManager.shared.passcode {
+                                // Success
+                                passcodeViewController.dismiss(animated: true, completion: {
+                                    self.isBiometricalSecurityEnabled = biometricalSwitch.isOn
+                                })
+                            } else {
+                                // Error
+                                passcodeViewController.errorMessage = "Incorrect code".localized
+                                passcodeViewController.passcode = nil
+                            }
+                        })
+
+                        passcodeViewController?.message = "Enter code".localized
+                        viewController.present(passcodeViewController!, animated: true, completion: nil)
+                    }
                 }
             }, title: biometricalSecurityName, value: isBiometricalSecurityEnabled)
         }
