@@ -110,7 +110,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 		// self.navigationItem.rightBarButtonItem = self.editButtonItem
 
-		self.navigationController?.navigationBar.prefersLargeTitles = true
+		navigationController?.navigationBar.prefersLargeTitles = true
 
 		searchController = UISearchController(searchResultsController: nil)
 		searchController?.searchResultsUpdater = self
@@ -122,6 +122,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		navigationItem.hidesSearchBarWhenScrolling = false
 
 		self.extendedLayoutIncludesOpaqueBars = true
+		self.definesPresentationContext = true
 
 		sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
 		sortBar?.delegate = self
@@ -136,6 +137,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		super.viewWillDisappear(animated)
 
 		self.queryProgressSummary = nil
+		searchController?.searchBar.text = ""
+		searchController?.dismiss(animated: true, completion: nil)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
