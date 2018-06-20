@@ -193,6 +193,93 @@
  - call the completion block with the modified item in its post-modification state
  */
 
+- (void)createDirectoryWithName:(NSString *)directoryName inParentItemIdentifier:(NSFileProviderItemIdentifier)parentItemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
+{
+	NSError *error = nil;
+	OCItem *parentItem;
+
+	if ((parentItem = (OCItem *)[self itemForIdentifier:parentItemIdentifier error:&error]) != nil)
+	{
+		[self.core createFolder:directoryName inside:parentItem options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+			completionHandler(item, error);
+		}];
+	}
+	else
+	{
+		completionHandler(nil, error);
+	}
+}
+
+- (void)reparentItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier toParentItemWithIdentifier:(NSFileProviderItemIdentifier)parentItemIdentifier newName:(NSString *)newName completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
+{
+	NSError *error = nil;
+	OCItem *item, *parentItem;
+
+	if (((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil) &&
+	    ((parentItem = (OCItem *)[self itemForIdentifier:parentItemIdentifier error:&error]) != nil))
+	{
+		[self.core moveItem:item to:parentItem withName:((newName != nil) ? newName : item.name) options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+			completionHandler(item, error);
+		}];
+	}
+	else
+	{
+		completionHandler(nil, error);
+	}
+}
+
+- (void)renameItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier toName:(NSString *)itemName completionHandler:(void (^)(NSFileProviderItem renamedItem, NSError *error))completionHandler
+{
+	NSError *error = nil;
+	OCItem *item, *parentItem;
+
+	if (((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil) &&
+	    ((parentItem = (OCItem *)[self itemForIdentifier:item.parentFileID error:&error]) != nil))
+	{
+		[self.core moveItem:item to:parentItem withName:itemName options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+			completionHandler(item, error);
+		}];
+	}
+	else
+	{
+		completionHandler(nil, error);
+	}
+}
+
+- (void)trashItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
+{
+	NSError *error = nil;
+	OCItem *item;
+
+	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
+	{
+		[self.core deleteItem:item requireMatch:YES resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+			completionHandler(nil, error);
+		}];
+	}
+	else
+	{
+		completionHandler(nil, error);
+	}
+}
+
+- (void)deleteItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier completionHandler:(void (^)(NSError * _Nullable))completionHandler
+{
+	NSError *error = nil;
+	OCItem *item;
+
+	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
+	{
+		[self.core deleteItem:item requireMatch:YES resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+			completionHandler(error);
+		}];
+	}
+	else
+	{
+		completionHandler(error);
+	}
+}
+
 #pragma mark - Enumeration
 
 - (nullable id<NSFileProviderEnumerator>)enumeratorForContainerItemIdentifier:(NSFileProviderItemIdentifier)containerItemIdentifier error:(NSError **)error
@@ -291,6 +378,8 @@
 					dispatch_group_leave(waitForCoreGroup);
 				}];
 
+				_core.delegate = self;
+
 				dispatch_group_wait(waitForCoreGroup, DISPATCH_TIME_FOREVER);
 			}
 		}
@@ -302,6 +391,16 @@
 	}
 
 	return (_core);
+}
+
+- (void)core:(OCCore *)core handleError:(NSError *)error issue:(OCConnectionIssue *)issue
+{
+	NSLog(@"CORE ERROR: error=%@, issue=%@", error, issue);
+
+	if (issue.type == OCConnectionIssueTypeMultipleChoice)
+	{
+		[issue cancel];
+	}
 }
 
 @end

@@ -25,6 +25,8 @@
 
 - (void)invalidate
 {
+	NSLog(@"##### INVALIDATE %@", _query.queryPath);
+
 	if (_core != nil)
 	{
 		[_core stopQuery:_query];
@@ -102,6 +104,7 @@
 						if (_query.state == OCQueryStateIdle)
 						{
 							dispatch_async(dispatch_get_main_queue(), ^{
+								NSLog(@"##### DELIVER RESULTS TO %@", query.queryPath);
 								if (query.queryResults != nil)
 								{
 									[observer didEnumerateItems:query.queryResults];
@@ -111,6 +114,8 @@
 							});
 						}
 					};
+
+					NSLog(@"##### START QUERY FOR %@", _query.queryPath);
 
 					[core startQuery:_query];
 				}

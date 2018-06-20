@@ -55,10 +55,18 @@
 	{
 		case OCItemTypeFile:
 			return (NSFileProviderItemCapabilitiesAllowsAll);
+//			return (NSFileProviderItemCapabilitiesAllowsReparenting |
+//				NSFileProviderItemCapabilitiesAllowsRenaming |
+//				NSFileProviderItemCapabilitiesAllowsTrashing |
+//				NSFileProviderItemCapabilitiesAllowsDeleting);
 		break;
 
 		case OCItemTypeCollection:
-			return (NSFileProviderItemCapabilitiesAllowsContentEnumerating);
+			return (NSFileProviderItemCapabilitiesAllowsContentEnumerating |
+				NSFileProviderItemCapabilitiesAllowsReparenting |
+				NSFileProviderItemCapabilitiesAllowsRenaming |
+				NSFileProviderItemCapabilitiesAllowsDeleting |
+				NSFileProviderItemCapabilitiesAllowsAddingSubItems);
 		break;
 	}
 
@@ -68,6 +76,16 @@
 - (NSData *)versionIdentifier
 {
 	return ([[NSString stringWithFormat:@"%@_:_%@", self.eTag, self.fileID] dataUsingEncoding:NSUTF8StringEncoding]);
+}
+
+- (NSNumber *)documentSize
+{
+	if (self.type == OCItemTypeFile)
+	{
+		return (@(self.size));
+	}
+
+	return (nil);
 }
 
 @end

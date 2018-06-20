@@ -9,7 +9,7 @@
 #import <FileProvider/FileProvider.h>
 #import <ownCloudSDK/ownCloudSDK.h>
 
-@interface FileProviderExtension : NSFileProviderExtension
+@interface FileProviderExtension : NSFileProviderExtension <OCCoreDelegate>
 {
 	OCCore *_core;
 	OCBookmark *_bookmark;
