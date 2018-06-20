@@ -42,6 +42,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var initialAppearance : Bool = true
 	private var observerContextValue = 1
 	private var observerContext : UnsafeMutableRawPointer
+	var refreshController: UIRefreshControl?
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -110,8 +111,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 		// self.navigationItem.rightBarButtonItem = self.editButtonItem
 
-		navigationController?.navigationBar.prefersLargeTitles = true
-
 		searchController = UISearchController(searchResultsController: nil)
 		searchController?.searchResultsUpdater = self
 		searchController?.obscuresBackgroundDuringPresentation = false
@@ -129,6 +128,11 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		sortBar?.updateSortMethod()
 
 		tableView.tableHeaderView = sortBar
+
+		refreshController = UIRefreshControl()
+		refreshController?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
+		self.tableView.insertSubview(refreshController!, at: 0)
+		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
 
 		Theme.shared.register(client: self, applyImmediately: true)
 	}
@@ -193,9 +197,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		switch query?.state {
 			case .idle?:
 				DispatchQueue.main.async {
-					if self.tableView.refreshControl == nil {
-						self.tableView.refreshControl = UIRefreshControl()
-						self.tableView.refreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
+					if !self.refreshController!.isRefreshing {
+						self.refreshController?.beginRefreshing()
 					}
 				}
 
@@ -411,44 +414,37 @@ extension ClientQueryViewController : OCQueryDelegate {
 		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (_, changeSet) in
 			DispatchQueue.main.async {
 
-				var delay = 0.0 // this is used only to hack the UIRefreshControll animation.
-
 				switch query.state {
 				case .idle, .targetRemoved, .contentsFromCache, .stopped:
-					if self.tableView.refreshControl?.isRefreshing ?? false {
-						self.tableView.refreshControl?.endRefreshing()
-						delay = 0.6
+					if self.refreshController!.isRefreshing {
+						self.refreshController?.endRefreshing()
 					}
-
 				default: break
 				}
 
-				DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: {
-					self.items = changeSet?.queryResult
+				self.items = changeSet?.queryResult
 
-					switch query.state {
-					case .contentsFromCache, .idle:
-						if self.items?.count == 0 {
-							if self.searchController?.searchBar.text != "" {
-								self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
-							} else {
-								self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
-							}
+				switch query.state {
+				case .contentsFromCache, .idle:
+					if self.items?.count == 0 {
+						if self.searchController?.searchBar.text != "" {
+							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
 						} else {
-							self.message(show: false)
+							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
 						}
-
-						self.tableView.reloadData()
-
-					case .targetRemoved:
-						self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
-						self.tableView.reloadData()
-
-					default:
+					} else {
 						self.message(show: false)
 					}
 
-				})
+					self.tableView.reloadData()
+
+				case .targetRemoved:
+					self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
+					self.tableView.reloadData()
+
+				default:
+					self.message(show: false)
+				}
 			}
 		}
 	}
