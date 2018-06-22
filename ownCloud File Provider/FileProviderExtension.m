@@ -47,7 +47,7 @@
 }
 
 #pragma mark - ItemIdentifier & URL lookup
-- (nullable NSFileProviderItem)itemForIdentifier:(NSFileProviderItemIdentifier)identifier error:(NSError * _Nullable *)error
+- (NSFileProviderItem)itemForIdentifier:(NSFileProviderItemIdentifier)identifier error:(NSError *__autoreleasing  _Nullable *)outError
 {
 	__block NSFileProviderItem item = nil;
 	dispatch_group_t waitForDatabaseGroup = dispatch_group_create();
@@ -58,24 +58,34 @@
 	[self.core retrieveItemFromDatabaseForFileID:(OCFileID)identifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
 		item = itemFromDatabase;
 
+		if (outError != NULL)
+		{
+			*outError = error;
+		}
+
 		dispatch_group_leave(waitForDatabaseGroup);
 	}];
 
 	dispatch_group_wait(waitForDatabaseGroup, DISPATCH_TIME_FOREVER);
 
+	NSLog(@"-itemForIdentifier:error: %@ => %@", identifier, item);
+
 	return item;
 }
 
-- (nullable NSURL *)URLForItemWithPersistentIdentifier:(NSFileProviderItemIdentifier)identifier
+- (NSURL *)URLForItemWithPersistentIdentifier:(NSFileProviderItemIdentifier)identifier
 {
 	OCItem *item;
+	NSURL *url = nil;
 
 	if ((item = (OCItem *)[self itemForIdentifier:identifier error:NULL]) != nil)
 	{
-		return ([self.core localURLForItem:item]);
+		url = [self.core localURLForItem:item];
 	}
 
-	return (nil);
+	NSLog(@"-URLForItemWithPersistentIdentifier: %@ => %@", identifier, url);
+
+	return (url);
 
 	/*
 	// resolve the given identifier to a file on disk
@@ -88,7 +98,7 @@
 	*/
 }
 
-- (nullable NSFileProviderItemIdentifier)persistentIdentifierForItemAtURL:(NSURL *)url
+- (NSFileProviderItemIdentifier)persistentIdentifierForItemAtURL:(NSURL *)url
 {
 	// resolve the given URL to a persistent identifier using a database
 	NSArray <NSString *> *pathComponents = [url pathComponents];
@@ -97,10 +107,12 @@
 	// <base storage directory>/<item identifier>/<item file name> above
 	NSParameterAssert(pathComponents.count > 2);
 
+	NSLog(@"-persistentIdentifierForItemAtURL: %@", (pathComponents[pathComponents.count - 2]));
+
 	return pathComponents[pathComponents.count - 2];
 }
 
-- (void)providePlaceholderAtURL:(NSURL *)url completionHandler:(void (^)(NSError * _Nullable error))completionHandler
+- (void)providePlaceholderAtURL:(NSURL *)url completionHandler:(void (^)(NSError * _Nullable))completionHandler
 {
 	NSFileProviderItemIdentifier identifier = [self persistentIdentifierForItemAtURL:url];
 	if (!identifier) {
@@ -115,6 +127,9 @@
 		return;
 	}
 	NSURL *placeholderURL = [NSFileProviderManager placeholderURLForURL:url];
+
+	[[NSFileManager defaultManager] createDirectoryAtURL:url.URLByDeletingLastPathComponent withIntermediateDirectories:YES attributes:nil error:NULL];
+
 	if (![NSFileProviderManager writePlaceholderAtURL:placeholderURL withMetadata:fileProviderItem error:&error]) {
 		completionHandler(error);
 		return;
@@ -122,8 +137,32 @@
 	completionHandler(nil);
 }
 
-- (void)startProvidingItemAtURL:(NSURL *)url completionHandler:(void (^)(NSError *))completionHandler
+- (void)startProvidingItemAtURL:(NSURL *)provideAtURL completionHandler:(void (^)(NSError * _Nullable))completionHandler
 {
+	NSError *error = nil;
+	NSFileProviderItemIdentifier itemIdentifier = nil;
+	NSFileProviderItem item = nil;
+
+	if ((itemIdentifier = [self persistentIdentifierForItemAtURL:provideAtURL]) != nil)
+	{
+		 if ((item = [self itemForIdentifier:itemIdentifier error:&error]) != nil)
+		 {
+			[self.core downloadItem:(OCItem *)item options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, OCFile *file) {
+				NSError *provideError = error;
+
+				if (provideError == nil)
+				{
+					[[NSFileManager defaultManager] createDirectoryAtURL:provideAtURL.URLByDeletingLastPathComponent withIntermediateDirectories:YES attributes:nil error:NULL];
+					[[NSFileManager defaultManager] moveItemAtURL:file.url toURL:provideAtURL error:&provideError];
+				}
+
+				completionHandler(provideError);
+			}];
+
+			return;
+		 }
+	}
+
 	// Should ensure that the actual file is in the position returned by URLForItemWithIdentifier:, then call the completion handler
 
 	/* TODO:

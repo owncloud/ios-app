@@ -88,4 +88,36 @@
 	return (nil);
 }
 
+//- (BOOL)respondsToSelector:(SEL)aSelector
+//{
+//	NSLog(@"Probing for %@", NSStringFromSelector(aSelector));
+//
+//	return ([super respondsToSelector:aSelector]);
+//}
+//
+//- (NSDate *)contentModificationDate
+//{
+//	return (self.lastModified);
+//}
+//
+//- (BOOL)isDownloaded
+//{
+//	return(NO);
+//}
+//
+//- (BOOL)isDownloading
+//{
+//	return (NO);
+//}
+//
+//- (NSNumber *)childItemCount
+//{
+//	if (self.type == OCItemTypeFile)
+//	{
+//		return (@(0));
+//	}
+//
+//	return (nil);
+//}
+
 @end

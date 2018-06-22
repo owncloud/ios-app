@@ -70,6 +70,15 @@
 						{
 							queryPath = item.path;
 						}
+//
+//						if (item.type == OCItemTypeFile)
+//						{
+//							NSLog(@"Observe item: %@", item);
+//
+//							[observer didEnumerateItems:@[ item ]];
+//							[observer finishEnumeratingUpToPage:nil];
+//							return;
+//						}
 					}
 				}
 

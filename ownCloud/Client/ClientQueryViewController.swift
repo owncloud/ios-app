@@ -115,8 +115,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		sortBar?.delegate = self
 		sortBar?.updateSortMethod()
 
-        tableView.tableHeaderView = sortBar
-    }
+		tableView.tableHeaderView = sortBar
+	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
@@ -139,7 +139,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		updateQueryProgressSummary()
 
 		sortBar?.sortMethod = self.sortMethod
-        query?.sortComparator = self.sortMethod.comparator()
+		query?.sortComparator = self.sortMethod.comparator()
 	}
 
 	func updateQueryProgressSummary() {
@@ -237,8 +237,33 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let rowItem : OCItem = self.items![indexPath.row]
 
-		if rowItem.type == .collection {
-			self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
+		switch rowItem.type {
+			case .collection:
+				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
+
+			case .file:
+				let fallbackSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: "Downloading \(rowItem.name)", progressCount: 1)
+
+				if let downloadProgress = self.core?.downloadItem(rowItem, options: nil, resultHandler: { (error, _, item, file) in
+					OnMainThread {
+						if error != nil {
+							// TODO: Handle error
+						} else {
+							let itemViewController : ClientItemViewController = ClientItemViewController()
+
+							itemViewController.file = file
+							itemViewController.item = item
+
+							self.navigationController?.pushViewController(itemViewController, animated: true)
+						}
+
+						self.progressSummarizer?.popFallbackSummary(summary: fallbackSummary)
+					}
+				}) {
+					progressSummarizer?.pushFallbackSummary(summary: fallbackSummary)
+					// TODO: Use progress as soon as it works SDK-wise
+					// progressSummarizer?.startTracking(progress: downloadProgress)
+				}
 		}
 	}
 
