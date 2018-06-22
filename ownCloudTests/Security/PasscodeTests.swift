@@ -9,6 +9,7 @@
 import XCTest
 import EarlGrey
 import ownCloudSDK
+import LocalAuthentication
 
 @testable import ownCloud
 
@@ -20,7 +21,8 @@ class PasscodeTests: XCTestCase {
     }
 
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        AppLockManager.shared.passcode = nil
+        AppLockManager.shared.lockEnabled = false
         super.tearDown()
     }
 
@@ -43,10 +45,6 @@ class PasscodeTests: XCTestCase {
 
         // Asserts
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible())
-
-        // Set the simulator on the initial state
-        AppLockManager.shared.passcode = nil
-        AppLockManager.shared.lockEnabled = false
     }
 
     func testUnlockWrongPasscode() {
@@ -66,9 +64,5 @@ class PasscodeTests: XCTestCase {
 
         // Asserts
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("messageLabel")).assert(grey_sufficientlyVisible())
-
-        // Set the simulator on the initial state
-        AppLockManager.shared.passcode = nil
-        AppLockManager.shared.lockEnabled = false
     }
 }
