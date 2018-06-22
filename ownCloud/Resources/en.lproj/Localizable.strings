@@ -68,6 +68,7 @@
 "type" = "type";
 "size" = "size";
 "date" = "date";
+"Search this folder" = "Search this folder";
 
 /* Client Messages */
 "Empty folder" = "Empty folder";

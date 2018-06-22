@@ -100,6 +100,7 @@ class ThemeCollection : NSObject {
 	@objc var navigationBarColors : ThemeColorCollection
 	@objc var toolbarColors : ThemeColorCollection
 	@objc var statusBarStyle : UIStatusBarStyle
+	@objc var barStyle : UIBarStyle
 
 	// MARK: - Icon colors
 	@objc var iconColors : [String:String]
@@ -210,8 +211,9 @@ class ThemeCollection : NSObject {
 					filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 				)
 
-				// Status Bar
+				// Bar styles
 				self.statusBarStyle = .lightContent
+				self.barStyle = .black
 
 				// Logo fill color
 				logoFillColor = UIColor.white
@@ -229,8 +231,9 @@ class ThemeCollection : NSObject {
 
 				self.toolbarColors = self.navigationBarColors
 
-				// Status Bar
+				// Bar styles
 				self.statusBarStyle = .default
+				self.barStyle = .default
 
 				// Logo fill color
 				logoFillColor = UIColor.lightGray
@@ -240,8 +243,9 @@ class ThemeCollection : NSObject {
 				self.navigationBarColors = self.darkBrandColors
 				self.toolbarColors = self.darkBrandColors
 
-				// Status Bar
+				// Bar styles
 				self.statusBarStyle = .lightContent
+				self.barStyle = .black
 
 				// Logo fill color
 				logoFillColor = UIColor.lightGray
