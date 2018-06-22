@@ -113,6 +113,13 @@ extension NSObject {
 			tableView.separatorColor = collection.tableSeparatorColor
 		}
 
+		if self.isKind(of: UISearchBar.self) {
+			let searchBar : UISearchBar = (self as? UISearchBar)!
+
+			searchBar.tintColor = collection.tintColor
+			searchBar.barStyle = collection.barStyle
+		}
+
 		if self.isKind(of: UILabel.self) {
 			let label : UILabel = (self as? UILabel)!
 			var normalColor : UIColor = collection.tableRowColors.labelColor

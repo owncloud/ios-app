@@ -143,7 +143,8 @@ extension OCItem {
 		"video",
 		"x-office-document",
 		"x-office-presentation",
-		"x-office-spreadsheet"
+		"x-office-spreadsheet",
+		"icon-search"
 	]
 
 	private static var _iconsRegistered : Bool = false
