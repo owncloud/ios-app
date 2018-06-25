@@ -16,14 +16,14 @@ Git & Code
 
 App Store
 
-- [ ] [DIS] iTunes Connect: Create a new version following the `[major].[minor].[patch]`
-- [ ] [DIS] iTunes Connect: Update screenshots if needed
+- [ ] [DIS] App Store Connect: Create a new version following the `[major].[minor].[patch]`
+- [ ] [DIS] App Store Connect: Update screenshots if needed
 - [ ] [DIS] Upload the binary to the App Store
-- [ ] [DIS] iTunes Connect: When release (manually, automatically, automatically not early than date)
-- [ ] [DIS] iTunes Connect: How to releae (immediately to all the users o 7-day period phased release)
-- [ ] [DIS] iTunes Connect: Reset iOS Summary Rating (Keep existing or reset the rating)
-- [ ] [DIS] iTunes Connect: Update changelogs
-- [ ] [DIS] iTunes Connect: Submit for review
+- [ ] [DIS] App Store Connect: When release (manually, automatically, automatically not early than date)
+- [ ] [DIS] App Store Connect: How to releae (immediately to all the users o 7-day period phased release)
+- [ ] [DIS] App Store Connect: Reset iOS Summary Rating (Keep existing or reset the rating)
+- [ ] [DIS] App Store Connect: Update changelogs
+- [ ] [DIS] App Store Connect: Submit for review
 
 Git
 
