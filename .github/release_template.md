@@ -47,4 +47,3 @@ If it is required to update the iOS-SDK version:
 
 
 ## BUGS & IMPROVEMENTS:
-
