@@ -66,6 +66,8 @@
 		DC434D1320D7A8F100740056 /* UIAlertController+OCConnectionIssue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC434D1220D7A8F100740056 /* UIAlertController+OCConnectionIssue.swift */; };
 		DC4FEAE7209E3A7700D4476B /* OCConnectionIssue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE6209E3A7700D4476B /* OCConnectionIssue+Extension.swift */; };
 		DC4FEAEA209E48E800D4476B /* DispatchQueueTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */; };
+		DC5A056220EFA52E00B085DA /* MockingAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A056120EFA52E00B085DA /* MockingAliases.swift */; };
+		DC5A056320EFA56300B085DA /* MockingAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A056120EFA52E00B085DA /* MockingAliases.swift */; };
 		DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */; };
 		DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; };
 		DC7DBA20207F5A0400E7337D /* PocketSVG.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -358,6 +360,7 @@
 		DC434D1220D7A8F100740056 /* UIAlertController+OCConnectionIssue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+OCConnectionIssue.swift"; sourceTree = "<group>"; };
 		DC4FEAE6209E3A7700D4476B /* OCConnectionIssue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCConnectionIssue+Extension.swift"; sourceTree = "<group>"; };
 		DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueTools.swift; sourceTree = "<group>"; };
+		DC5A056120EFA52E00B085DA /* MockingAliases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockingAliases.swift; sourceTree = "<group>"; };
 		DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleProgressBar.swift; sourceTree = "<group>"; };
 		DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PocketSVG.xcodeproj; path = external/PocketSVG/PocketSVG.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DC7DBA24207F684700E7337D /* ThemeResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeResource.swift; sourceTree = "<group>"; };
@@ -534,6 +537,7 @@
 		233BDEB3204FEFE500C06732 /* ownCloudTests */ = {
 			isa = PBXGroup;
 			children = (
+				DC5A056120EFA52E00B085DA /* MockingAliases.swift */,
 				233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */,
 				5958C9BD20C000A700E0E567 /* PasscodeTests.swift */,
 				D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */,
@@ -1281,6 +1285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC5A056320EFA56300B085DA /* MockingAliases.swift in Sources */,
 				DC97BCBC20DCD8F6007217D6 /* ClientItemViewController.swift in Sources */,
 				2347446A20761BB700859C93 /* String+Extension.swift in Sources */,
 				DCF4F17920519F8C00189B9A /* StaticTableViewController.swift in Sources */,
@@ -1347,6 +1352,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */,
+				DC5A056220EFA52E00B085DA /* MockingAliases.swift in Sources */,
 				6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */,
 				5958C9BE20C000A700E0E567 /* PasscodeTests.swift in Sources */,
 			);
@@ -1646,6 +1652,166 @@
 			};
 			name = Release;
 		};
+		DC5A055620EFA48D00B085DA /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"APP_IDENTIFIER_PREFIX=\"\\\"$(AppIdentifierPrefix)\\\"\"",
+					"OCMOCK=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG OCMOCK";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Mock;
+		};
+		DC5A055720EFA48D00B085DA /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 39;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"${TARGET_BUILD_DIR}",
+					"$(BUILD_DIR)/Debug-$(PLATFORM_NAME)",
+					"$(BUILD_DIR)/Release-$(PLATFORM_NAME)",
+				);
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				INFOPLIST_FILE = ownCloud/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "dcf544f9-b9dc-4e36-908f-9aeacd954ea2";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Mock;
+		};
+		DC5A055820EFA48D00B085DA /* Mock */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 05D694726A3BC5C5FE8AECB9 /* Pods-ownCloudTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9B5WD74GWJ;
+				INFOPLIST_FILE = ownCloudTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ownCloud.app/ownCloud";
+			};
+			name = Mock;
+		};
+		DC5A055920EFA48D00B085DA /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Mock;
+		};
+		DC5A055A20EFA48D00B085DA /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "ownCloud File Provider/ownCloud_File_Provider.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				INFOPLIST_FILE = "ownCloud File Provider/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-Provider";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
+		DC5A055B20EFA48D00B085DA /* Mock */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				INFOPLIST_FILE = "ownCloud File ProviderUI/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-ProviderUI";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Mock;
+		};
 		DC7DBA39207F84BF00E7337D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1755,6 +1921,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				233BDEB7204FEFE500C06732 /* Debug */,
+				DC5A055620EFA48D00B085DA /* Mock */,
 				233BDEB8204FEFE500C06732 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1764,6 +1931,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				233BDEBA204FEFE500C06732 /* Debug */,
+				DC5A055720EFA48D00B085DA /* Mock */,
 				233BDEBB204FEFE500C06732 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1773,6 +1941,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				233BDEBD204FEFE600C06732 /* Debug */,
+				DC5A055820EFA48D00B085DA /* Mock */,
 				233BDEBE204FEFE600C06732 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1782,6 +1951,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DC7DBA39207F84BF00E7337D /* Debug */,
+				DC5A055920EFA48D00B085DA /* Mock */,
 				DC7DBA3A207F84BF00E7337D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1791,6 +1961,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DCC6566820C9B7E400110A97 /* Debug */,
+				DC5A055B20EFA48D00B085DA /* Mock */,
 				DCC6566920C9B7E400110A97 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -1800,6 +1971,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DCC6566620C9B7E400110A97 /* Debug */,
+				DC5A055A20EFA48D00B085DA /* Mock */,
 				DCC6566720C9B7E400110A97 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;

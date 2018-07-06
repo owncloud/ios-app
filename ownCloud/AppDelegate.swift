@@ -53,4 +53,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			return .all
 		}
 	}
+
+	func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
+	}
 }
