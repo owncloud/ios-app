@@ -8,9 +8,14 @@ Not available in store yet. Current iOS app:
 
 **Build status:**
 
-master ![](https://www.bitrise.io/app/c48bddff715d0664/status.svg?token=7Tmh463L-GLGS9MN5yZ0jA&branch=master)
+master ![](https://app.bitrise.io/app/c48bddff715d0664/status.svg?token=7Tmh463L-GLGS9MN5yZ0jA&branch=master)
 
-stable ![](https://www.bitrise.io/app/c48bddff715d0664/status.svg?token=7Tmh463L-GLGS9MN5yZ0jA&branch=stable)
+master ![codecov](https://codecov.io/gh/owncloud/ios-app/branch/master/graph/badge.svg)
+
+stable ![](https://app.bitrise.io/app/c48bddff715d0664/status.svg?token=7Tmh463L-GLGS9MN5yZ0jA&branch=stable)
+
+stable ![codecov](https://codecov.io/gh/owncloud/ios-app/branch/stable/graph/badge.svg)
+
 
 
 **Start contributing:** Make sure you read [SETUP.md](https://github.com/owncloud/ios-app/SETUP.md) when you start working on this project. Basically: Fork this repository and contribute back using pull requests to the master branch.
