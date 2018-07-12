@@ -70,8 +70,6 @@
 		DC434D1320D7A8F100740056 /* UIAlertController+OCConnectionIssue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC434D1220D7A8F100740056 /* UIAlertController+OCConnectionIssue.swift */; };
 		DC4FEAE7209E3A7700D4476B /* OCConnectionIssue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE6209E3A7700D4476B /* OCConnectionIssue+Extension.swift */; };
 		DC4FEAEA209E48E800D4476B /* DispatchQueueTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */; };
-		DC5A056220EFA52E00B085DA /* MockingAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A056120EFA52E00B085DA /* MockingAliases.swift */; };
-		DC5A056320EFA56300B085DA /* MockingAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A056120EFA52E00B085DA /* MockingAliases.swift */; };
 		DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */; };
 		DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; };
 		DC7DBA20207F5A0400E7337D /* PocketSVG.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -383,7 +381,6 @@
 		DC434D1220D7A8F100740056 /* UIAlertController+OCConnectionIssue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+OCConnectionIssue.swift"; sourceTree = "<group>"; };
 		DC4FEAE6209E3A7700D4476B /* OCConnectionIssue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCConnectionIssue+Extension.swift"; sourceTree = "<group>"; };
 		DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueTools.swift; sourceTree = "<group>"; };
-		DC5A056120EFA52E00B085DA /* MockingAliases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockingAliases.swift; sourceTree = "<group>"; };
 		DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleProgressBar.swift; sourceTree = "<group>"; };
 		DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PocketSVG.xcodeproj; path = external/PocketSVG/PocketSVG.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DC7DBA24207F684700E7337D /* ThemeResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeResource.swift; sourceTree = "<group>"; };
@@ -560,7 +557,6 @@
 		233BDEB3204FEFE500C06732 /* ownCloudTests */ = {
 			isa = PBXGroup;
 			children = (
-				DC5A056120EFA52E00B085DA /* MockingAliases.swift */,
 				233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */,
 				D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */,
 				233BDEB6204FEFE500C06732 /* Info.plist */,
@@ -1338,7 +1334,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DC5A056320EFA56300B085DA /* MockingAliases.swift in Sources */,
 				DC97BCBC20DCD8F6007217D6 /* ClientItemViewController.swift in Sources */,
 				2347446A20761BB700859C93 /* String+Extension.swift in Sources */,
 				DCF4F17920519F8C00189B9A /* StaticTableViewController.swift in Sources */,
@@ -1406,7 +1401,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */,
-				DC5A056220EFA52E00B085DA /* MockingAliases.swift in Sources */,
 				6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */,
 				5958C9BE20C000A700E0E567 /* PasscodeTests.swift in Sources */,
 				5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */,
@@ -1496,14 +1490,6 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		DCC6565C20C9B7E400110A97 /* MainInterface.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DCC6565D20C9B7E400110A97 /* Base */,
-			);
-			name = MainInterface.storyboard;
-			sourceTree = "<group>";
-		};
 		593A821320C7D4C5000E2A90 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1520,6 +1506,14 @@
 				59EACA8020CAA37F00F082EE /* es */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		DCC6565C20C9B7E400110A97 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DCC6565D20C9B7E400110A97 /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
