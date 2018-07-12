@@ -58,6 +58,7 @@
 "type" = "type";
 "size" = "size";
 "date" = "date";
+"Search this folder" = "Search this folder";
 
 /* Client Messages */
 "Empty folder" = "Empty folder";
@@ -114,3 +115,5 @@
 "The entered codes are different" = "The entered codes are different";
 "Incorrect code" = "Incorrect code";
 "Please try again in %@" = "Please try again in %@";
+"Unlock %@" = "Unlock %@";
+"Biometric authentication failed" = "Biometric authentication failed";

@@ -42,6 +42,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var initialAppearance : Bool = true
 	private var observerContextValue = 1
 	private var observerContext : UnsafeMutableRawPointer
+	var refreshController: UIRefreshControl?
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -85,6 +86,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	// MARK: - Actions
 	@objc func refreshQuery() {
+		UIImpactFeedbackGenerator().impactOccurred()
 		core?.reload(query)
 	}
 
@@ -103,25 +105,44 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		self.tableView.register(ClientItemCell.self, forCellReuseIdentifier: "itemCell")
 
-		Theme.shared.register(client: self, applyImmediately: true)
-
 		// Uncomment the following line to preserve selection between presentations
 		// self.clearsSelectionOnViewWillAppear = false
 
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 		// self.navigationItem.rightBarButtonItem = self.editButtonItem
 
+		searchController = UISearchController(searchResultsController: nil)
+		searchController?.searchResultsUpdater = self
+		searchController?.obscuresBackgroundDuringPresentation = false
+		searchController?.hidesNavigationBarDuringPresentation = true
+		searchController?.searchBar.placeholder = "Search this folder".localized
+
+		navigationItem.searchController =  searchController
+		navigationItem.hidesSearchBarWhenScrolling = false
+
+		self.extendedLayoutIncludesOpaqueBars = true
+		self.definesPresentationContext = true
+
 		sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
 		sortBar?.delegate = self
 		sortBar?.updateSortMethod()
 
 		tableView.tableHeaderView = sortBar
+
+    refreshController = UIRefreshControl()
+		refreshController?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
+		self.tableView.insertSubview(refreshController!, at: 0)
+		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
+
+		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
 		self.queryProgressSummary = nil
+		searchController?.searchBar.text = ""
+		searchController?.dismiss(animated: true, completion: nil)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -176,9 +197,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		switch query?.state {
 			case .idle?:
 				DispatchQueue.main.async {
-					if self.tableView.refreshControl == nil {
-						self.tableView.refreshControl = UIRefreshControl()
-						self.tableView.refreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
+					if !self.refreshController!.isRefreshing {
+						self.refreshController?.beginRefreshing()
 					}
 				}
 
@@ -198,6 +218,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
+		self.searchController?.searchBar.applyThemeCollection(collection)
 
 		if event == .update {
 			self.tableView.reloadData()
@@ -339,7 +360,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	func message(show: Bool, imageName : String? = nil, title : String? = nil, message : String? = nil) {
 		if !show {
-			messageView?.removeFromSuperview()
+			if messageView?.superview != nil {
+				messageView?.removeFromSuperview()
+			}
 			return
 		}
 
@@ -449,9 +472,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 
-    // MARK: - Sorting
-
-    private var sortBar: SortBar?
+	// MARK: - Sorting
+	private var sortBar: SortBar?
 	private var sortMethod: SortMethod {
 
 		set {
@@ -463,6 +485,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			return sort
 		}
 	}
+
+	// MARK: - Search
+	var searchController: UISearchController?
 }
 
 // MARK: - Query Delegate
@@ -475,31 +500,37 @@ extension ClientQueryViewController : OCQueryDelegate {
 	func queryHasChangesAvailable(_ query: OCQuery!) {
 		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (_, changeSet) in
 			DispatchQueue.main.async {
-				self.items = changeSet?.queryResult
-				self.tableView.reloadData()
 
 				switch query.state {
-					case .contentsFromCache, .idle:
-						if self.items?.count == 0 {
-							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
-						} else {
-							self.message(show: false)
-						}
-
-					case .targetRemoved:
-						self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
-
-					default:
-						self.message(show: false)
+				case .idle, .targetRemoved, .contentsFromCache, .stopped:
+					if self.refreshController!.isRefreshing {
+						self.refreshController?.endRefreshing()
+					}
+				default: break
 				}
 
-				switch query.state {
-					case .idle, .targetRemoved, .contentsFromCache, .stopped:
-						if self.refreshControl?.isRefreshing ?? false {
-							self.refreshControl?.endRefreshing()
-						}
+				self.items = changeSet?.queryResult
 
-					default: break
+				switch query.state {
+				case .contentsFromCache, .idle:
+					if self.items?.count == 0 {
+						if self.searchController?.searchBar.text != "" {
+							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
+						} else {
+							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
+						}
+					} else {
+						self.message(show: false)
+					}
+
+					self.tableView.reloadData()
+
+				case .targetRemoved:
+					self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
+					self.tableView.reloadData()
+
+				default:
+					self.message(show: false)
 				}
 			}
 		}
@@ -512,6 +543,36 @@ extension ClientQueryViewController : SortBarDelegate {
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
 		query?.sortComparator = sortMethod.comparator()
+
+	}
+}
+
+// MARK: - UISearchResultsUpdating Delegate
+extension ClientQueryViewController: UISearchResultsUpdating {
+	func updateSearchResults(for searchController: UISearchController) {
+		let searchText = searchController.searchBar.text!
+
+		let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
+			if let item = item {
+				if item.name.localizedCaseInsensitiveContains(searchText) {return true}
+
+			}
+			return false
+		}
+
+		if searchText == "" {
+			if let filter = query?.filter(withIdentifier: "text-search") {
+				query?.removeFilter(filter)
+			}
+		} else {
+			if let filter = query?.filter(withIdentifier: "text-search") {
+				query?.updateFilter(filter, applyChanges: { filterToChange in
+					(filterToChange as? OCQueryFilter)?.filterHandler = filterHandler
+				})
+			} else {
+				query?.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
+			}
+		}
 	}
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {

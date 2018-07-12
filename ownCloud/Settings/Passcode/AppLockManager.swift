@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import LocalAuthentication
 
 class AppLockManager: NSObject {
 
@@ -98,6 +99,16 @@ class AppLockManager: NSObject {
 		}
 	}
 
+	var biometricalSecurityEnabled: Bool {
+		get {
+			return self.userDefaults.bool(forKey: "security-settings-use-biometrical")
+		}
+
+		set(newValue) {
+			self.userDefaults.set(newValue, forKey: "security-settings-use-biometrical")
+		}
+	}
+
 	// MARK: - Init
 	static var shared = AppLockManager()
 
@@ -116,10 +127,10 @@ class AppLockManager: NSObject {
 	}
 
 	// MARK: - Show / Dismiss Passcode View
-	func showLockscreenIfNeeded(forceShow: Bool = false) {
+	func showLockscreenIfNeeded(forceShow: Bool = false, context: LAContext = LAContext()) {
 		if self.shouldDisplayLockscreen || forceShow {
 			if passcodeViewController == nil {
-				passcodeViewController = PasscodeViewController(completionHandler: { (passcode: String) in
+				passcodeViewController = PasscodeViewController(completionHandler: { (_, passcode: String) in
 					self.attemptUnlock(with: passcode)
 				})
 
@@ -146,6 +157,11 @@ class AppLockManager: NSObject {
 			} else {
 				passcodeViewController?.screenBlurringEnabled = forceShow
 			}
+
+            // Show biometrical
+            if !forceShow, !self.shouldDisplayCountdown {
+                showBiometricalAuthenticationInterface(context: context)
+            }
 		}
 	}
 
@@ -181,13 +197,13 @@ class AppLockManager: NSObject {
 	}
 
 	// MARK: - Unlock
-	func attemptUnlock(with testPasscode: String) {
+	func attemptUnlock(with testPasscode: String?, customErrorMessage: String? = nil) {
 		if testPasscode == self.passcode {
 			lastApplicationBackgroundedDate = nil
 			failedPasscodeAttempts = 0
 			dismissLockscreen(animated: true)
 		} else {
-			passcodeViewController?.errorMessage = "Incorrect code".localized
+			passcodeViewController?.errorMessage = (customErrorMessage != nil) ? customErrorMessage! : "Incorrect code".localized
 
 			failedPasscodeAttempts += 1
 
@@ -260,6 +276,59 @@ class AppLockManager: NSObject {
 				self.passcodeViewController?.keypadButtonsHidden = false
 				self.passcodeViewController?.timeoutMessage = nil
 				self.passcodeViewController?.errorMessage = nil
+			}
+		}
+	}
+
+	// MARK: - Biometrical Unlock
+	func showBiometricalAuthenticationInterface(context: LAContext) {
+
+		if  shouldDisplayLockscreen, biometricalSecurityEnabled {
+
+			var evaluationError: NSError?
+
+			// Check if the device can evaluate the policy.
+			if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &evaluationError) {
+				let reason = NSString.init(format: "Unlock %@".localized as NSString, OCAppIdentity.shared().appName) as String
+
+				self.passcodeViewController?.errorMessage = nil
+
+				context.localizedCancelTitle = "Enter code".localized
+				context.localizedFallbackTitle = ""
+
+				context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { (success, error) in
+					if success {
+						//Fill the passcode dots
+						DispatchQueue.main.async {
+							self.passcodeViewController?.passcode = self.passcode
+						}
+						//Remove the passcode after small delay to give user feedback after use the biometrical unlock
+						DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+							self.attemptUnlock(with: self.passcode)
+						}
+					} else {
+						if let error = error {
+							switch error {
+								case LAError.biometryLockout:
+									DispatchQueue.main.async {
+										self.passcodeViewController?.errorMessage = error.localizedDescription
+									}
+
+								case LAError.authenticationFailed:
+									DispatchQueue.main.async {
+										self.attemptUnlock(with: nil, customErrorMessage: "Biometric authentication failed".localized)
+									}
+
+								default: break
+							}
+						}
+					}
+				}
+			} else {
+				if let error = evaluationError,
+				   self.biometricalSecurityEnabled {
+					self.passcodeViewController?.errorMessage = error.localizedDescription
+				}
 			}
 		}
 	}

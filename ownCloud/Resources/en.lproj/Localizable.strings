@@ -1,0 +1,129 @@
+/* 
+  Localizable.strings
+  ownCloud
+
+  Created by Pablo Carrascal on 13/03/2018.
+  Copyright © 2018 ownCloud GmbH. All rights reserved.
+*/
+
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
+/* Add / Edit Bookmark */
+"Edit bookmark" = "Edit bookmark";
+"Add bookmark" = "Add bookmark";
+"Server URL" = "Server URL";
+"https://example.com" = "https://example.com";
+"Continue" = "Continue";
+"Name" = "Name";
+"Example Server" = "Example Server";
+"Show Certificate Details" = "Show Certificate Details";
+"Connect" = "Connect";
+"Delete Authentication Data" = "Delete Authentication Data";
+"Authentication" = "Authentication";
+"Username" = "Username";
+"Password" = "Password";
+"Certificate Details" = "Certificate Details";
+"Cancel" = "Cancel";
+"Approve" = "Approve";
+"Error" = "Error";
+"Review Connection" = "Review Connection";
+"Authenticated via" = "Authenticated via";
+"Authenticated as %@ via %@" = "Authenticated as %@ via %@";
+
+"Contacting server…" = "Contacting server…";
+"Authenticating…" = "Authenticating…";
+
+"Missing hostname" = "Missing hostname";
+"The entered URL does not include a hostname." = "The entered URL does not include a hostname.";
+
+/* Client */
+"Browse" = "Browse";
+"Disconnect" = "Disconnect";
+"Connecting…" = "Connecting…";
+"Connected." = "Connected.";
+
+"Folder" = "Folder";
+
+"Stopped" = "Stopped";
+"Started…" = "Started…";
+"Contents from cache." = "Contents from cache.";
+"Offline. Contents from cache." = "Offline. Contents from cache.";
+"Waiting for server response…" = "Waiting for server response…";
+"This folder no longer exists." = "This folder no longer exists.";
+"Everything up-to-date." = "Everything up-to-date.";
+"Please wait…" = "Please wait…";
+"Sorted by %@ ▼" = "Sorted by %@ ▼";
+"Sort by" = "Sort by";
+
+"name (A-Z)" = "name (A-Z)";
+"name (Z-A)" = "name (Z-A)";
+"type" = "type";
+"size" = "size";
+"date" = "date";
+"Search this folder" = "Search this folder";
+
+/* Client Messages */
+"Empty folder" = "Empty folder";
+"This folder contains no files or folders." = "This folder contains no files or folders.";
+
+"Folder removed" = "Folder removed";
+"This folder no longer exists on the server." = "This folder no longer exists on the server.";
+
+/* Server List*/
+"Cancel" = "Cancel";
+"OK" = "OK";
+
+"'%@' is currently locked" = "'%@' is currently locked";
+"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "An operation is currently performed that prevents connecting to '%@'. Please try again later.";
+"Really delete '%@'?" = "Really delete '%@'?";
+"This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
+"Delete" = "Delete";
+"Deletion of '%@' failed" = "Deletion of '%@' failed";
+
+/* Settings Messages */
+
+"Security" = "Security";
+"Passcode Lock" = "Passcode Lock";
+"Face ID" = "Face ID";
+"Touch ID" = "Touch ID";
+"Instant Uploads" = "Instant Uploads";
+"Videos" = "Videos";
+"Photos" = "Photos";
+"Background uploads" = "Background uploads";
+"Wifi only" = "Wifi only";
+"Settings" = "Settings";
+"Lock application" = "Lock application";
+"Upload videos via WiFi only" = "Upload videos via WiFi only";
+"Upload pictures via WiFi only" = "Upload pictures via WiFi only";
+"More" = "More";
+"Send feedback" = "Send feedback";
+"Recommend to a friend" = "Recommend to a friend";
+"Privacy Policy" = "Privacy Policy";
+"Video upload path" = "Video upload path";
+"Photo upload path" = "Photo upload path";
+"Always" = "Always";
+"After 1 minute" = "After 1 minute";
+"After 5 minutes" = "After 5 minutes";
+"After 30 minutes" = "After 30 minutes";
+"Please configure an email account" = "Please configure an email account";
+"You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
+"Do you want to open the next url?" = "Do you want to open the next url?";
+
+/* Passcode Messages */
+
+"Enter code" = "Enter code";
+"Repeat code" = "Repeat code";
+"Delete code" = "Delete code";
+"The entered codes are different" = "The entered codes are different";
+"Incorrect code" = "Incorrect code";
+"Please try again in %@" = "Please try again in %@";
+"Unlock %@" = "Unlock %@";
+"Biometric authentication failed" = "Biometric authentication failed";
