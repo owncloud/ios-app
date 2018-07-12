@@ -153,8 +153,14 @@
 				if (provideError == nil)
 				{
 					[[NSFileManager defaultManager] createDirectoryAtURL:provideAtURL.URLByDeletingLastPathComponent withIntermediateDirectories:YES attributes:nil error:NULL];
+					if ([[NSFileManager defaultManager] fileExistsAtPath:provideAtURL.path])
+					{
+						[[NSFileManager defaultManager] removeItemAtURL:provideAtURL error:&provideError];
+					}
 					[[NSFileManager defaultManager] moveItemAtURL:file.url toURL:provideAtURL error:&provideError];
 				}
+
+				NSLog(@"Starting to provide file:\nPAU: %@\nURL: %@\nErr: %@", provideAtURL, [self URLForItemWithPersistentIdentifier:item.itemIdentifier], provideError);
 
 				completionHandler(provideError);
 			}];

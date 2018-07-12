@@ -12,7 +12,7 @@
 
 - (NSString *)pathRelativeToDocumentStorage
 {
-	return ([OCVault filesRootPathRelativeToGroupContainerForVaultUUID:self.uuid]);
+	return (self.uuid.UUIDString);
 }
 
 @end

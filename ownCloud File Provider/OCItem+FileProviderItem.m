@@ -110,14 +110,14 @@
 //	return (NO);
 //}
 //
-//- (NSNumber *)childItemCount
-//{
-//	if (self.type == OCItemTypeFile)
-//	{
-//		return (@(0));
-//	}
-//
-//	return (nil);
-//}
+- (NSNumber *)childItemCount
+{
+	if (self.type == OCItemTypeFile)
+	{
+		return (@(0));
+	}
+
+	return (nil);
+}
 
 @end

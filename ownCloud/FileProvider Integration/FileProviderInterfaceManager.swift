@@ -96,7 +96,7 @@ class FileProviderInterfaceManager: NSObject {
 					if let bookmark = bookmarksByUUIDString[bookmarkUUIDToAdd] {
 						let newDomain = NSFileProviderDomain(identifier: NSFileProviderDomainIdentifier(rawValue: bookmark.uuid.uuidString),
 										     displayName: bookmark.shortName,
-										     pathRelativeToDocumentStorage: OCVault.filesRootPathRelativeToGroupContainer(forVaultUUID: bookmark.uuid))
+										     pathRelativeToDocumentStorage: bookmark.uuid.uuidString)
 
 						waitForManagerGroup.enter()
 
