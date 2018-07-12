@@ -129,7 +129,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		tableView.tableHeaderView = sortBar
 
-    refreshController = UIRefreshControl()
+		refreshController = UIRefreshControl()
 		refreshController?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
 		self.tableView.insertSubview(refreshController!, at: 0)
 		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)

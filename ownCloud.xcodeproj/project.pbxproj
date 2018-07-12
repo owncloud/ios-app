@@ -1502,6 +1502,8 @@
 				DCC6565D20C9B7E400110A97 /* Base */,
 			);
 			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
 		593A821320C7D4C5000E2A90 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

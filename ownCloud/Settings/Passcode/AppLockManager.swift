@@ -289,7 +289,7 @@ class AppLockManager: NSObject {
 
 			// Check if the device can evaluate the policy.
 			if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &evaluationError) {
-				let reason = NSString.init(format: "Unlock %@".localized as NSString, OCAppIdentity.shared().appName) as String
+				let reason = NSString.init(format: "Unlock %@".localized as NSString, OCAppIdentity.shared.appName) as String
 
 				self.passcodeViewController?.errorMessage = nil
 
