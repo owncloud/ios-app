@@ -41,8 +41,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		AppLockManager.shared.showLockscreenIfNeeded()
 
-		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
-
 		return true
 	}
 

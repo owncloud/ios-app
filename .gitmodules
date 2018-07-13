@@ -1,7 +1,6 @@
 [submodule "ios-sdk"]
 	path = ios-sdk
 	url = https://github.com/owncloud/ios-sdk.git
-	branch = feature/sync
 [submodule "PocketSVG"]
 	path = external/PocketSVG
 	url = https://github.com/pocketsvg/PocketSVG.git
