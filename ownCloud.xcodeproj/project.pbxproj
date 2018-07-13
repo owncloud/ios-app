@@ -852,7 +852,6 @@
 				233BDEAE204FEFE500C06732 /* Resources */,
 				D9876310DCEA650662AA6AF7 /* EarlGrey Copy Files */,
 				FF929A2C3849C01CA20C4475 /* [CP] Embed Pods Frameworks */,
-				0FE837304B0D01190D24E459 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1079,21 +1078,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0FE837304B0D01190D24E459 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		23813A32205286E100DB9488 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
