@@ -106,10 +106,6 @@ class StaticTableViewController: UITableViewController, Themeable {
 		Theme.shared.register(client: self)
 	}
 
-	@objc func dismissAnimated() {
-		self.dismiss(animated: true, completion: nil)
-	}
-
 	deinit {
 		Theme.shared.unregister(client: self)
 	}
