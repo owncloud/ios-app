@@ -281,73 +281,14 @@ class ClientQueryViewController: UITableViewController, Themeable {
 						self.progressSummarizer?.popFallbackSummary(summary: fallbackSummary)
 					}
 				}) {
+					Log.log("Downloading \(rowItem.name): \(downloadProgress)")
+
 					progressSummarizer?.pushFallbackSummary(summary: fallbackSummary)
+
 					// TODO: Use progress as soon as it works SDK-wise
 					// progressSummarizer?.startTracking(progress: downloadProgress)
 				}
 		}
-	}
-
-	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		return UISwipeActionsConfiguration.init(actions:
-			[
-				UIContextualAction.init(style: .destructive, title: "Delete".localized, handler: { (_, _, actionPerformed) in
-
-					if let item = self.items?[indexPath.row] {
-						_ = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, item, _) in
-							if error != nil {
-								Log.log("Error \(String(describing: error)) deleting \(String(describing: item?.path))")
-							}
-						})
-					}
-
-					actionPerformed(false)
-				}),
-
-				UIContextualAction.init(style: .normal, title: "Duplicate".localized, handler: { (_, _, actionPerformed) in
-
-					if let item = self.items?[indexPath.row] {
-						_ = self.core?.copy(item, to: self.query?.rootItem, withName: item.name + " copy", options: nil, resultHandler: { (error, _, item, _) in
-							if error != nil {
-								Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
-							}
-						})
-					}
-
-					actionPerformed(false)
-				}),
-
-				UIContextualAction.init(style: .normal, title: "Rename".localized, handler: { (_, _, actionPerformed) in
-					if let item = self.items?[indexPath.row] {
-						let promptNameViewController : StaticTableViewController = StaticTableViewController(style: .grouped)
-						let navigationController = ThemeNavigationController(rootViewController: promptNameViewController)
-
-						promptNameViewController.addSection(StaticTableViewSection(headerTitle: "New name", footerTitle: nil, identifier: nil, rows: [
-							StaticTableViewRow(textFieldWithAction: nil, value: item.name, identifier: "newName"),
-							StaticTableViewRow(buttonWithAction: { (row, _) in
-								if let newName = row.section?.row(withIdentifier: "newName")?.value as? String {
-									_ = self.core?.move(item, to: self.query?.rootItem, withName: newName, options: nil, resultHandler: {  (error, _, item, _) in
-										if error != nil {
-											Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
-										}
-									})
-								}
-
-								navigationController.dismiss(animated: true, completion: nil)
-							}, title: "Rename")
-						]))
-
-						promptNameViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(	barButtonSystemItem: .cancel,
-																target: promptNameViewController,
-																action: #selector(promptNameViewController.dismissAnimated))
-
-						self.present(navigationController, animated: true, completion: nil)
-					}
-
-					actionPerformed(false)
-				})
-			]
-		)
 	}
 
 	// MARK: - Message
