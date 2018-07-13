@@ -28,6 +28,9 @@ class PasscodeTests: XCTestCase {
 
     // MARK: - Passcode
 
+    /*
+     * PASSED if: Passcode correct. "Add Server" view displayed
+     */
     func testUnlockRightPasccode() {
 
         // Prepare the simulator show the passcode
@@ -45,9 +48,11 @@ class PasscodeTests: XCTestCase {
 
         // Asserts
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible())
-
     }
 
+    /*
+     * PASSED if: Passcode incorrect. Passcode view displays with error
+     */
     func testUnlockWrongPasscode() {
 
         // Prepare the simulator show the passcode
@@ -67,6 +72,9 @@ class PasscodeTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("messageLabel")).assert(grey_sufficientlyVisible())
     }
 
+    /*
+     * PASSED if: Passcode Lock disabled in Settings view after cancelling
+     */
     func testCancelPasscode() {
 
         // Assure that the passcode is disabled
@@ -86,6 +94,9 @@ class PasscodeTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
     }
 
+    /*
+     * PASSED if: Passcode Lock disabled in Settings view after cancelling in the second typing
+     */
     func testCancelSecondTryPasscode() {
 
         // Assure that the passcode is disabled
@@ -111,6 +122,9 @@ class PasscodeTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
     }
 
+    /*
+     * PASSED if: Correct error when second typing is different than the first one
+     */
     func testEnterDifferentPasscodes() {
 
         // Assure that the passcode is disabled
@@ -139,6 +153,9 @@ class PasscodeTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
     }
 
+    /*
+     * PASSED if: Passcode lock is correctly disabled in Settings view
+     */
     func testDisablePasscode() {
 
         // Prepare the simulator show the passcode
@@ -162,6 +179,9 @@ class PasscodeTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
     }
 
+    /*
+     * PASSED if: Passcode lock keeps enabled in Settings view after cancelling
+     */
     func testCancelDisablePasscode() {
 
         // Prepare the simulator show the passcode
@@ -184,6 +204,9 @@ class PasscodeTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
     }
 
+    /*
+     * PASSED if: 1 minute frequency covered
+     */
     func testChangeFrequency() {
 
         // Prepare the simulator show the passcode
