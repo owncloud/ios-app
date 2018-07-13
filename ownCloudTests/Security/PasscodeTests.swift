@@ -69,6 +69,8 @@ class PasscodeTests: XCTestCase {
 
     func testCancelPasscode() {
 
+        // Assure that the passcode is disabled
+        AppLockManager.shared.lockEnabled = false
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
 
@@ -86,6 +88,8 @@ class PasscodeTests: XCTestCase {
 
     func testCancelSecondTryPasscode() {
 
+        // Assure that the passcode is disabled
+        AppLockManager.shared.lockEnabled = false
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
 
@@ -109,6 +113,8 @@ class PasscodeTests: XCTestCase {
 
     func testEnterDifferentPasscodes() {
 
+        // Assure that the passcode is disabled
+        AppLockManager.shared.lockEnabled = false
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
 
@@ -150,7 +156,7 @@ class PasscodeTests: XCTestCase {
 
         // Asserts
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("LockFrequency")).assert(grey_notVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("lockFrequency")).assert(grey_notVisible())
 
         //Reset status
         EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
@@ -172,7 +178,7 @@ class PasscodeTests: XCTestCase {
 
         // Asserts
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(true))
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("LockFrequency")).assert(grey_sufficientlyVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("lockFrequency")).assert(grey_sufficientlyVisible())
 
         //Reset status
         EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
@@ -187,7 +193,7 @@ class PasscodeTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
 
         // Tap the number buttons first time
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("LockFrequency")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("lockFrequency")).perform(grey_tap())
         EarlGrey.select(elementWithMatcher: grey_text("After 1 minute")).perform(grey_tap())
         EarlGrey.select(elementWithMatcher: grey_text("Settings")).perform(grey_tap())
 
@@ -199,4 +205,3 @@ class PasscodeTests: XCTestCase {
         AppLockManager.shared.lockEnabled = false
     }
 }
-
