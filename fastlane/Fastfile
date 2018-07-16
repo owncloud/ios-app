@@ -25,4 +25,18 @@ platform :ios do
      match(force_for_new_devices: true) # Creates all required certificates & provisioning profile
   end
 
+  desc "Ad-Hoc Distribution IPA geneation"
+   lane :build_ipa_ad_hoc do
+     disable_automatic_code_signing(path: "ownCloud.xcodeproj") # Disable the "Automatic manage signing" on the Xcode Project
+
+    #Create the build
+    gym(
+      workspace: "ownCloud.xcworkspace", 
+      scheme: "ownCloud",
+      codesigning_identity: "iPhone Distribution: ownCloud GmbH (4AP2STM4H5)",
+      export_method: "ad-hoc",
+      xcargs: "PROVISIONING_PROFILE_SPECIFIER='match AdHoc com.owncloud.ios-app'"
+    )
+  end
+
 end
