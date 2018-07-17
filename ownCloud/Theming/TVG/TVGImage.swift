@@ -103,9 +103,7 @@ class TVGImage: NSObject {
 				return nil
 			}
 
-			guard let bezierPaths : [SVGBezierPath] = SVGBezierPath.paths(fromSVGString: svgString) as? [SVGBezierPath] else {
-				return nil
-			}
+			let bezierPaths : [SVGBezierPath] = SVGBezierPath.paths(fromSVGString: svgString)
 
 			svgBezierPaths = bezierPaths
 

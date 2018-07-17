@@ -263,8 +263,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
 
 			case .file:
-				let fallbackSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: "Downloading \(rowItem.name)", progressCount: 1)
-
 				if let downloadProgress = self.core?.downloadItem(rowItem, options: nil, resultHandler: { (error, _, item, file) in
 					OnMainThread {
 						if error != nil {
@@ -277,13 +275,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 							self.navigationController?.pushViewController(itemViewController, animated: true)
 						}
-
-						self.progressSummarizer?.popFallbackSummary(summary: fallbackSummary)
 					}
 				}) {
-					progressSummarizer?.pushFallbackSummary(summary: fallbackSummary)
-					// TODO: Use progress as soon as it works SDK-wise
-					// progressSummarizer?.startTracking(progress: downloadProgress)
+					progressSummarizer?.startTracking(progress: downloadProgress)
 				}
 		}
 	}

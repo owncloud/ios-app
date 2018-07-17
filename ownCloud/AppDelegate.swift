@@ -29,6 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Override point for customization after application launch.
 		var navigationController: UINavigationController?
 
+		OCCoreManager.shared.postFileProviderNotifications = true
+
 		window = UIWindow(frame: UIScreen.main.bounds)
 
 		serverListTableViewController = ServerListTableViewController(style: UITableViewStyle.plain)
@@ -55,6 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+		OCCoreManager.shared.postFileProviderNotifications = true
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
 	}
 }

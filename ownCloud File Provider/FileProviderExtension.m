@@ -35,6 +35,9 @@
 	if (self = [super init]) {
 		_fileManager = [[NSFileManager alloc] init];
 	}
+
+	[OCCoreManager sharedCoreManager].postFileProviderNotifications = YES;
+
 	return self;
 }
 

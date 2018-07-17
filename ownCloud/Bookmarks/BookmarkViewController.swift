@@ -497,7 +497,7 @@ class BookmarkViewController: StaticTableViewController {
 							removeRows.append(tokenInfoRow!)
 						}
 
-						if !authenticationMethodClass.usesUserName() {
+						if !authenticationMethodClass.usesUserName {
 							removeRows.append(usernameRow!)
 						}
 
@@ -530,7 +530,7 @@ class BookmarkViewController: StaticTableViewController {
 							credentialsSection?.insert(row: passwordRow!, at: 0, animated: animated)
 						}
 
-						if authenticationMethodClass.usesUserName() {
+						if authenticationMethodClass.usesUserName {
 							if usernameRow?.attached == false {
 								credentialsSection?.insert(row: usernameRow!, at: 0, animated: animated)
 							}
