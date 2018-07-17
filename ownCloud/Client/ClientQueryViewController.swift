@@ -248,7 +248,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
 		// Make sure we don't request the thumbnail multiple times in that case.
-		if (cell?.item?.versionIdentifier != newItem.versionIdentifier) || (cell?.item?.name != newItem.name) {
+		if (cell?.item?.itemVersionIdentifier != newItem.itemVersionIdentifier) || (cell?.item?.name != newItem.name) {
 			cell?.item = newItem
 		}
 
@@ -258,8 +258,36 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let rowItem : OCItem = self.items![indexPath.row]
 
-		if rowItem.type == .collection {
-			self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
+		switch rowItem.type {
+			case .collection:
+				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
+
+			case .file:
+				let fallbackSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: "Downloading \(rowItem.name)", progressCount: 1)
+
+				if let downloadProgress = self.core?.downloadItem(rowItem, options: nil, resultHandler: { (error, _, item, file) in
+					OnMainThread {
+						if error != nil {
+							// TODO: Handle error
+						} else {
+							let itemViewController : ClientItemViewController = ClientItemViewController()
+
+							itemViewController.file = file
+							itemViewController.item = item
+
+							self.navigationController?.pushViewController(itemViewController, animated: true)
+						}
+
+						self.progressSummarizer?.popFallbackSummary(summary: fallbackSummary)
+					}
+				}) {
+					Log.log("Downloading \(rowItem.name): \(downloadProgress)")
+
+					progressSummarizer?.pushFallbackSummary(summary: fallbackSummary)
+
+					// TODO: Use progress as soon as it works SDK-wise
+					// progressSummarizer?.startTracking(progress: downloadProgress)
+				}
 		}
 	}
 

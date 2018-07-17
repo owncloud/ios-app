@@ -51,7 +51,7 @@ class ClientRootViewController: UITabBarController {
 		openProgress.localizedDescription = "Connecting…".localized
 		progressSummarizer?.startTracking(progress: openProgress)
 
-		core = CoreManager.shared.requestCoreForBookmark(bookmark, completion: { (_, error) in
+		core = OCCoreManager.shared.requestCore(for: bookmark, completionHandler: { (_, error) in
 			if error == nil {
 				self.coreReady()
 			}
@@ -76,7 +76,7 @@ class ClientRootViewController: UITabBarController {
 			core?.delegate = nil
 		}
 
-		CoreManager.shared.returnCoreForBookmark(bookmark, completion: nil)
+		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 	}
 
 	override func viewDidLoad() {
@@ -163,19 +163,25 @@ extension ClientRootViewController : OCCoreDelegate {
 			}
 
 			if presentIssue != nil {
-				let issuesViewController = ConnectionIssueViewController(displayIssues: presentIssue?.prepareForDisplay(), completion: { (response) in
-					switch response {
-						case .cancel:
-							presentIssue?.reject()
+				if presentIssue?.type == .multipleChoice {
+					let alertViewController = UIAlertController(with: presentIssue!)
 
-						case .approve:
-							presentIssue?.approve()
+					self.present(alertViewController, animated: true, completion: nil)
+				} else {
+					let issuesViewController = ConnectionIssueViewController(displayIssues: presentIssue?.prepareForDisplay(), completion: { (response) in
+						switch response {
+							case .cancel:
+								presentIssue?.reject()
 
-						case .dismiss: break
-					}
-				})
+							case .approve:
+								presentIssue?.approve()
 
-				self.present(issuesViewController, animated: true, completion: nil)
+							case .dismiss: break
+						}
+					})
+
+					self.present(issuesViewController, animated: true, completion: nil)
+				}
 			}
 		}
 	}

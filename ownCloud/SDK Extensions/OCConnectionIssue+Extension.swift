@@ -42,7 +42,7 @@ extension OCConnectionIssue {
 					}
 				}
 
-			case .urlRedirection, .certificate, .error:
+			case .urlRedirection, .certificate, .error, .multipleChoice:
 				displayIssues = [self]
 		}
 

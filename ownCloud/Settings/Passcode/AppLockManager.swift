@@ -58,7 +58,7 @@ class AppLockManager: NSObject {
 	private let keychainLockEnabledPath = "lockEnabled"
 
 	private var keychain : OCKeychain? {
-		return OCAppIdentity.shared().keychain
+		return OCAppIdentity.shared.keychain
 	}
 
 	var passcode: String? {
@@ -113,7 +113,7 @@ class AppLockManager: NSObject {
 	static var shared = AppLockManager()
 
 	public override init() {
-		userDefaults = OCAppIdentity.shared().userDefaults
+		userDefaults = OCAppIdentity.shared.userDefaults
 
 		super.init()
 
@@ -289,7 +289,7 @@ class AppLockManager: NSObject {
 
 			// Check if the device can evaluate the policy.
 			if context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: &evaluationError) {
-				let reason = NSString.init(format: "Unlock %@".localized as NSString, OCAppIdentity.shared().appName) as String
+				let reason = NSString.init(format: "Unlock %@".localized as NSString, OCAppIdentity.shared.appName) as String
 
 				self.passcodeViewController?.errorMessage = nil
 
