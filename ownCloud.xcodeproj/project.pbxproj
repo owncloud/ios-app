@@ -83,6 +83,8 @@
 		DC85980620D85EE600A433C6 /* AsyncSequentialQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85980120D85EE500A433C6 /* AsyncSequentialQueue.swift */; };
 		DC89C45D20860B5D0044BCAE /* ProgressSummarizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89C45C20860B5D0044BCAE /* ProgressSummarizer.swift */; };
 		DC97BCBC20DCD8F6007217D6 /* ClientItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC97BCBB20DCD8F6007217D6 /* ClientItemViewController.swift */; };
+		DC98BBCB20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */; };
+		DC98BBD420FF824600F4ED3E /* FileProviderEnumeratorObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */; };
 		DC9BFBB320A19AF4007064B5 /* doc in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB220A19AF3007064B5 /* doc */; };
 		DC9BFBB920A1AF2C007064B5 /* icon-locked.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB820A1AF2B007064B5 /* icon-locked.tvg */; };
 		DC9BFBBB20A1B3CA007064B5 /* icon-password-manager.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */; };
@@ -395,6 +397,10 @@
 		DC85980120D85EE500A433C6 /* AsyncSequentialQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncSequentialQueue.swift; sourceTree = "<group>"; };
 		DC89C45C20860B5D0044BCAE /* ProgressSummarizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSummarizer.swift; sourceTree = "<group>"; };
 		DC97BCBB20DCD8F6007217D6 /* ClientItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientItemViewController.swift; sourceTree = "<group>"; };
+		DC98BBC920FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNumber+OCSyncAnchorData.h"; sourceTree = "<group>"; };
+		DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+OCSyncAnchorData.m"; sourceTree = "<group>"; };
+		DC98BBD220FF824600F4ED3E /* FileProviderEnumeratorObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderEnumeratorObserver.h; sourceTree = "<group>"; };
+		DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderEnumeratorObserver.m; sourceTree = "<group>"; };
 		DC9BFBB220A19AF3007064B5 /* doc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = doc; sourceTree = "<group>"; };
 		DC9BFBB820A1AF2B007064B5 /* icon-locked.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-locked.tvg"; path = "img/filetypes-tvg/icon-locked.tvg"; sourceTree = SOURCE_ROOT; };
 		DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-password-manager.tvg"; path = "img/filetypes-tvg/icon-password-manager.tvg"; sourceTree = SOURCE_ROOT; };
@@ -813,6 +819,10 @@
 				DC27A1A620CC095C008ACB6C /* OCCore+FileProviderTools.h */,
 				DCC6564F20C9B7E400110A97 /* FileProviderEnumerator.m */,
 				DCC6564E20C9B7E400110A97 /* FileProviderEnumerator.h */,
+				DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */,
+				DC98BBD220FF824600F4ED3E /* FileProviderEnumeratorObserver.h */,
+				DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */,
+				DC98BBC920FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.h */,
 				DCC6565120C9B7E400110A97 /* Info.plist */,
 				DCC6565220C9B7E400110A97 /* ownCloud_File_Provider.entitlements */,
 			);
@@ -1419,12 +1429,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC98BBD420FF824600F4ED3E /* FileProviderEnumeratorObserver.m in Sources */,
 				DCC6565020C9B7E400110A97 /* FileProviderEnumerator.m in Sources */,
 				DC27A1E920CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m in Sources */,
 				DC27A1A820CC095C008ACB6C /* OCCore+FileProviderTools.m in Sources */,
 				DCC6564A20C9B7E400110A97 /* FileProviderExtension.m in Sources */,
 				DC27A1A520CBEF85008ACB6C /* OCBookmark+FileProvider.m in Sources */,
 				DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */,
+				DC98BBCB20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

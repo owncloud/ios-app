@@ -1,8 +1,8 @@
 //
-//  FileProviderExtension.h
+//  FileProviderEnumeratorObserver.h
 //  ownCloud File Provider
 //
-//  Created by Felix Schwarz on 07.06.18.
+//  Created by Felix Schwarz on 18.07.18.
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
@@ -16,17 +16,17 @@
  *
  */
 
+#import <Foundation/Foundation.h>
 #import <FileProvider/FileProvider.h>
 #import <ownCloudSDK/ownCloudSDK.h>
 
-@interface FileProviderExtension : NSFileProviderExtension <OCCoreDelegate>
-{
-	OCCore *_core;
-	OCBookmark *_bookmark;
-}
+@interface FileProviderEnumeratorObserver : NSObject
 
-@property(strong,nonatomic,readonly) OCCore *core;
-@property(strong,nonatomic,readonly) OCBookmark *bookmark;
+@property(strong) id<NSFileProviderEnumerationObserver> enumerationObserver;
+@property(strong) NSFileProviderPage enumerationStartPage;
+@property(assign) BOOL didProvideInitialItems;
+
+@property(strong) id<NSFileProviderChangeObserver> changeObserver;
+@property(strong) NSFileProviderSyncAnchor changesFromSyncAnchor;
 
 @end
-

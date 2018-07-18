@@ -1,8 +1,8 @@
 //
-//  OCBookmark+FileProvider.h
+//  NSNumber+OCSyncAnchorData.m
 //  ownCloud File Provider
 //
-//  Created by Felix Schwarz on 09.06.18.
+//  Created by Felix Schwarz on 18.07.18.
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
@@ -16,10 +16,18 @@
  *
  */
 
-#import <ownCloudSDK/ownCloudSDK.h>
+#import "NSNumber+OCSyncAnchorData.h"
 
-@interface OCBookmark (FileProvider)
+@implementation NSNumber (OCSyncAnchorData)
 
-- (NSString *)pathRelativeToDocumentStorage; //!< "The path of the domain's subdirectory relative to the file provider's shared container."
++ (instancetype)numberFromSyncAnchorData:(NSFileProviderSyncAnchor)syncAnchor
+{
+	return ([NSKeyedUnarchiver unarchiveObjectWithData:syncAnchor]);
+}
+
+- (NSFileProviderSyncAnchor)syncAnchorData
+{
+	return ([NSKeyedArchiver archivedDataWithRootObject:self]);
+}
 
 @end
