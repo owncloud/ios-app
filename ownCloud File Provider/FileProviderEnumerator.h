@@ -18,6 +18,7 @@
 
 #import <FileProvider/FileProvider.h>
 #import <ownCloudSDK/ownCloudSDK.h>
+#import "FileProviderEnumeratorObserver.h"
 
 @class FileProviderExtension;
 
@@ -31,12 +32,8 @@
 
 	OCQuery *_query;
 
-	id<NSFileProviderEnumerationObserver> _enumerationObserver;
-	NSFileProviderPage _enumerationStartPage;
-	BOOL _didProvideInitialItems;
-
-	id<NSFileProviderChangeObserver> _changeObserver;
-	NSFileProviderSyncAnchor _changesFromSyncAnchor;
+	NSMutableArray <FileProviderEnumeratorObserver *> *_enumerationObservers;
+	NSMutableArray <FileProviderEnumeratorObserver *> *_changeObservers;
 
 	BOOL _invalidated;
 }

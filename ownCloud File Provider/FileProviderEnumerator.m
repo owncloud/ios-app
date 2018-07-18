@@ -32,6 +32,9 @@
 	{
 		_bookmark = bookmark;
 		_enumeratedItemIdentifier = enumeratedItemIdentifier;
+
+		_enumerationObservers = [NSMutableArray new];
+		_changeObservers = [NSMutableArray new];
 	}
 
 	return (self);
@@ -56,13 +59,38 @@
 
 - (void)enumerateItemsForObserver:(id<NSFileProviderEnumerationObserver>)observer startingAtPage:(NSFileProviderPage)page
 {
-	OCLogDebug(@"##### Enumerate ITEMS for observer: %@ fromPage: %@ %d", observer, page, _didProvideInitialItems);
+	FileProviderEnumeratorObserver *enumerationObserver = [FileProviderEnumeratorObserver new];
 
-	_enumerationObserver = observer;
-	_enumerationStartPage = page;
-	_didProvideInitialItems = NO;
+	OCLogDebug(@"##### Enumerate ITEMS for observer: %@ fromPage: %@", observer, page);
+
+	enumerationObserver.enumerationObserver = observer;
+	enumerationObserver.enumerationStartPage = page;
+	enumerationObserver.didProvideInitialItems = NO;
+
+	@synchronized(self)
+	{
+		[_enumerationObservers addObject:enumerationObserver];
+	}
 
 	[self _startQuery];
+}
+
+- (void)_finishAllEnumeratorsWithError:(NSError *)error
+{
+	@synchronized(self)
+	{
+		for (FileProviderEnumeratorObserver *observer in _enumerationObservers)
+		{
+			[observer.enumerationObserver finishEnumeratingWithError:error];
+		}
+		[_enumerationObservers removeAllObjects];
+
+		for (FileProviderEnumeratorObserver *observer in _changeObservers)
+		{
+			[observer.changeObserver finishEnumeratingWithError:error];
+		}
+		[_changeObservers removeAllObjects];
+	}
 }
 
 - (void)_startQuery
@@ -77,8 +105,7 @@
 			if (error != nil)
 			{
 				// TODO: Report error as NSFileProviderErrorServerUnreachable or NSFileProviderErrorNotAuthenticated, depending on what the underlying error is
-				[_enumerationObserver finishEnumeratingWithError:error];
-				[_changeObserver finishEnumeratingWithError:error];
+				[self _finishAllEnumeratorsWithError:error];
 			}
 			else
 			{
@@ -117,8 +144,7 @@
 					// Item not found or not a directory
 					NSError *enumerationError = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNoSuchItem userInfo:nil];
 
-					[_enumerationObserver finishEnumeratingWithError:enumerationError];
-					[_changeObserver finishEnumeratingWithError:enumerationError];
+					[self _finishAllEnumeratorsWithError:enumerationError];
 					return;
 				}
 				else
@@ -127,18 +153,21 @@
 					_query = [OCQuery queryForPath:queryPath];
 					_query.delegate = self;
 
-					if ([_enumerationStartPage isEqual:NSFileProviderInitialPageSortedByDate])
+					@synchronized(self)
 					{
-						_query.sortComparator = ^NSComparisonResult(OCItem *item1, OCItem *item2) {
-							return ([item1.lastModified compare:item2.lastModified]);
-						};
-					}
+						if ([_enumerationObservers.lastObject.enumerationStartPage isEqual:NSFileProviderInitialPageSortedByDate])
+						{
+							_query.sortComparator = ^NSComparisonResult(OCItem *item1, OCItem *item2) {
+								return ([item1.lastModified compare:item2.lastModified]);
+							};
+						}
 
-					if ([_enumerationStartPage isEqual:NSFileProviderInitialPageSortedByName])
-					{
-						_query.sortComparator = ^NSComparisonResult(OCItem *item1, OCItem *item2) {
-							return ([item1.name compare:item2.name]);
-						};
+						if ([_enumerationObservers.lastObject.enumerationStartPage isEqual:NSFileProviderInitialPageSortedByName])
+						{
+							_query.sortComparator = ^NSComparisonResult(OCItem *item1, OCItem *item2) {
+								return ([item1.name compare:item2.name]);
+							};
+						}
 					}
 
 					OCLogDebug(@"##### START QUERY FOR %@", _query.queryPath);
@@ -152,7 +181,7 @@
 	{
 		NSLog(@"Query already running..");
 
-		if ((_query != nil) && (_enumerationObserver!=nil))
+		if ((_query != nil) && (_enumerationObservers.count!=0))
 		{
 			dispatch_async(dispatch_get_main_queue(), ^{
 				[self provideItemsForEnumerationObserverFromQuery:_query];
@@ -178,21 +207,33 @@
 {
 	if ((query.state == OCQueryStateContentsFromCache) || ((query.state == OCQueryStateWaitingForServerReply) && (query.queryResults.count > 0)) || (query.state == OCQueryStateIdle))
 	{
-		if (_enumerationObserver != nil)
+		@synchronized(self)
 		{
-			if (!_didProvideInitialItems)
+			NSMutableArray <FileProviderEnumeratorObserver *> *removeObservers = [NSMutableArray new];
+
+			for (FileProviderEnumeratorObserver *observer in _enumerationObservers)
 			{
-				OCLogDebug(@"##### PROVIDE ITEMS TO --ENUMERATION-- OBSERVER FOR %@", query.queryPath);
-
-				_didProvideInitialItems = YES;
-
-				if (query.queryResults != nil)
+				if (observer.enumerationObserver != nil)
 				{
-					[_enumerationObserver didEnumerateItems:query.queryResults];
-				}
+					if (!observer.didProvideInitialItems)
+					{
+						OCLogDebug(@"##### PROVIDE ITEMS TO --ENUMERATION-- OBSERVER FOR %@", query.queryPath);
 
-				[_enumerationObserver finishEnumeratingUpToPage:nil];
+						observer.didProvideInitialItems = YES;
+
+						if (query.queryResults != nil)
+						{
+							[observer.enumerationObserver didEnumerateItems:query.queryResults];
+						}
+
+						[observer.enumerationObserver finishEnumeratingUpToPage:nil];
+
+						[removeObservers addObject:observer];
+					}
+				}
 			}
+
+			[_enumerationObservers removeObjectsInArray:removeObservers];
 		}
 	}
 }
@@ -204,30 +245,37 @@
 	if ((query.state == OCQueryStateContentsFromCache) || ((query.state == OCQueryStateWaitingForServerReply) && (query.queryResults.count > 0)) || (query.state == OCQueryStateIdle))
 	{
 		dispatch_async(dispatch_get_main_queue(), ^{
-			if (_enumerationObserver != nil)
+			@synchronized(self)
 			{
-				[self provideItemsForEnumerationObserverFromQuery:query];
-			}
-
-			if (_changeObserver != nil)
-			{
-				OCLogDebug(@"##### PROVIDE ITEMS TO --CHANGE-- OBSERVER FOR %@", query.queryPath);
-
-				[_changeObserver didUpdateItems:query.queryResults];
-				[_changeObserver finishEnumeratingChangesUpToSyncAnchor:[_core.latestSyncAnchor syncAnchorData] moreComing:NO];
-
-				_changeObserver = nil;
-			}
-			else
-			{
-				// NSFileProviderItemIdentifier containerItemIdentifier = (query.rootItem.parentFileID != nil) ? query.rootItem.itemIdentifier : NSFileProviderRootContainerItemIdentifier;
-				if (query.state == OCQueryStateIdle)
+				if (_enumerationObservers.count > 0)
 				{
-					dispatch_async(dispatch_get_main_queue(), ^{
-						[[NSFileProviderManager managerForDomain:_fileProviderExtension.domain] signalEnumeratorForContainerItemIdentifier:_enumeratedItemIdentifier completionHandler:^(NSError * _Nullable error) {
-							OCLogDebug(@"## Change notification returned with error: %@", error);
-						}];
-					});
+					[self provideItemsForEnumerationObserverFromQuery:query];
+				}
+
+				if (_changeObservers.count > 0)
+				{
+					OCLogDebug(@"##### PROVIDE ITEMS TO --CHANGE-- OBSERVER FOR %@", query.queryPath);
+
+					for (FileProviderEnumeratorObserver *observer in _changeObservers)
+					{
+						[observer.changeObserver didUpdateItems:query.queryResults];
+						[observer.changeObserver finishEnumeratingChangesUpToSyncAnchor:[_core.latestSyncAnchor syncAnchorData] moreComing:NO];
+					}
+
+					[_changeObservers removeAllObjects];
+				}
+
+				{
+					if (query.state == OCQueryStateIdle)
+					{
+						dispatch_async(dispatch_get_main_queue(), ^{
+							OCLogDebug(@"## Change notification posted: %@", _enumeratedItemIdentifier);
+
+							[[NSFileProviderManager managerForDomain:_fileProviderExtension.domain] signalEnumeratorForContainerItemIdentifier:_enumeratedItemIdentifier completionHandler:^(NSError * _Nullable error) {
+								OCLogDebug(@"## Change notification returned with error: %@", error);
+							}];
+						});
+					}
 				}
 			}
 		});
@@ -262,8 +310,16 @@
 	}
 	else
 	{
-		_changeObserver = observer;
-		_changesFromSyncAnchor = syncAnchor;
+
+		FileProviderEnumeratorObserver *enumerationObserver = [FileProviderEnumeratorObserver new];
+
+		enumerationObserver.changeObserver = observer;
+		enumerationObserver.changesFromSyncAnchor = syncAnchor;
+
+		@synchronized(self)
+		{
+			[_enumerationObservers addObject:enumerationObserver];
+		}
 
 		[self _startQuery];
 	}
