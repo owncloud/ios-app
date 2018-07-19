@@ -268,13 +268,16 @@
 				{
 					if (query.state == OCQueryStateIdle)
 					{
-						dispatch_async(dispatch_get_main_queue(), ^{
-							OCLogDebug(@"## Change notification posted: %@", _enumeratedItemIdentifier);
+						NSLog(@"### SIGNALING with %@ %@", _enumerationObservers, _changeObservers);
 
-							[[NSFileProviderManager managerForDomain:_fileProviderExtension.domain] signalEnumeratorForContainerItemIdentifier:_enumeratedItemIdentifier completionHandler:^(NSError * _Nullable error) {
-								OCLogDebug(@"## Change notification returned with error: %@", error);
-							}];
-						});
+						[_core signalEnumeratorForContainerItemIdentifier:_enumeratedItemIdentifier];
+//						dispatch_async(dispatch_get_main_queue(), ^{
+//							OCLogDebug(@"## Change notification posted: %@", _enumeratedItemIdentifier);
+//
+//							[[NSFileProviderManager managerForDomain:_fileProviderExtension.domain] signalEnumeratorForContainerItemIdentifier:_enumeratedItemIdentifier completionHandler:^(NSError * _Nullable error) {
+//								OCLogDebug(@"## Change notification returned with error: %@", error);
+//							}];
+//						});
 					}
 				}
 			}
@@ -286,7 +289,6 @@
 {
 	OCLogDebug(@"### Query failed with error: %@", error);
 }
-
 
 - (void)enumerateChangesForObserver:(id<NSFileProviderChangeObserver>)observer fromSyncAnchor:(NSFileProviderSyncAnchor)syncAnchor
 {
@@ -301,16 +303,17 @@
 		*/
 		if ([syncAnchor isEqual:[_core.latestSyncAnchor syncAnchorData]])
 		{
+			OCLogDebug(@"##### END(LATEST) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
 			[observer finishEnumeratingChangesUpToSyncAnchor:syncAnchor moreComing:NO];
 		}
 		else
 		{
+			OCLogDebug(@"##### END(EXPIRED) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
 			[observer finishEnumeratingWithError:[NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorSyncAnchorExpired userInfo:nil]];
 		}
 	}
 	else
 	{
-
 		FileProviderEnumeratorObserver *enumerationObserver = [FileProviderEnumeratorObserver new];
 
 		enumerationObserver.changeObserver = observer;
