@@ -291,7 +291,7 @@ class BookmarkViewController: StaticTableViewController {
 				// Probe URL
 				bookmark?.url = serverURL
 
-				if let connection = OCConnection(bookmark: bookmark) {
+				if let connection = OCConnection(bookmark: bookmark, persistentStoreBaseURL: nil) {
 					hud?.present(on: self, label: "Contacting server…".localized)
 
 					let previousCertificate = bookmark?.certificate
@@ -353,7 +353,7 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	func handleContinueAuthentication(hud: ProgressHUDViewController?, hudCompletion: @escaping (((() -> Void)?) -> Void)) {
-		if let connection = OCConnection(bookmark: bookmark) {
+		if let connection = OCConnection(bookmark: bookmark, persistentStoreBaseURL: nil) {
 			var options : [OCAuthenticationMethodKey : Any] = [:]
 
 			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {
@@ -421,14 +421,14 @@ class BookmarkViewController: StaticTableViewController {
 			switch mode {
 				case .create:
 					// Add bookmark
-					BookmarkManager.shared.addBookmark(bookmark!)
-					BookmarkManager.shared.saveBookmarks()
+					OCBookmarkManager.shared.addBookmark(bookmark!)
+					OCBookmarkManager.shared.saveBookmarks()
 
 				case .edit:
 					// Update original bookmark
 					originalBookmark?.setValuesFrom(bookmark)
-					BookmarkManager.shared.saveBookmarks()
-					BookmarkManager.shared.postChangeNotification()
+					OCBookmarkManager.shared.saveBookmarks()
+					OCBookmarkManager.shared.postChangeNotification()
 			}
 
 			self.presentingViewController?.dismiss(animated: true, completion: nil)
@@ -639,7 +639,7 @@ class BookmarkViewController: StaticTableViewController {
 			var placeholderString = "Name".localized
 
 			if (bookmark.url != nil) || (bookmark.originURL != nil) {
-				placeholderString = bookmark.shortName()
+				placeholderString = bookmark.shortName
 			}
 
 			self.nameRow?.textField?.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : Theme.shared.activeCollection.tableRowColors.secondaryLabelColor])

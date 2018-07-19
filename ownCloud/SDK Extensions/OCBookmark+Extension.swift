@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 
 extension OCBookmark {
-	func shortName() -> String {
+	var shortName: String {
 		if self.name != nil {
 			return self.name
 		} else if self.originURL?.host != nil {
