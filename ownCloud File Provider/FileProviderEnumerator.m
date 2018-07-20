@@ -81,13 +81,17 @@
 	{
 		for (FileProviderEnumeratorObserver *observer in _enumerationObservers)
 		{
-			[observer.enumerationObserver finishEnumeratingWithError:error];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[observer.enumerationObserver finishEnumeratingWithError:error];
+			});
 		}
 		[_enumerationObservers removeAllObjects];
 
 		for (FileProviderEnumeratorObserver *observer in _changeObservers)
 		{
-			[observer.changeObserver finishEnumeratingWithError:error];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[observer.changeObserver finishEnumeratingWithError:error];
+			});
 		}
 		[_changeObservers removeAllObjects];
 	}
@@ -181,11 +185,24 @@
 	{
 		NSLog(@"Query already running..");
 
-		if ((_query != nil) && (_enumerationObservers.count!=0))
+		if (_query != nil)
 		{
-			dispatch_async(dispatch_get_main_queue(), ^{
-				[self provideItemsForEnumerationObserverFromQuery:_query];
-			});
+			@synchronized(self)
+			{
+				if (_enumerationObservers.count!=0)
+				{
+					dispatch_async(dispatch_get_main_queue(), ^{
+						[self provideItemsForEnumerationObserverFromQuery:_query];
+					});
+				}
+
+				if (_changeObservers.count!=0)
+				{
+					dispatch_async(dispatch_get_main_queue(), ^{
+						[self provideItemsForChangeObserverFromQuery:_query];
+					});
+				}
+			}
 		}
 	}
 
@@ -217,7 +234,7 @@
 				{
 					if (!observer.didProvideInitialItems)
 					{
-						OCLogDebug(@"##### PROVIDE ITEMS TO --ENUMERATION-- OBSERVER FOR %@", query.queryPath);
+						OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER FOR %@: %@", _enumerationObservers.count, query.queryPath, query.queryResults);
 
 						observer.didProvideInitialItems = YES;
 
@@ -238,6 +255,25 @@
 	}
 }
 
+- (void)provideItemsForChangeObserverFromQuery:(OCQuery *)query
+{
+	@synchronized(self)
+	{
+		if (_changeObservers.count > 0)
+		{
+			OCLogDebug(@"##### PROVIDE ITEMS TO %d --CHANGE-- OBSERVER FOR %@: %@", _changeObservers.count, query.queryPath, query.queryResults);
+
+			for (FileProviderEnumeratorObserver *observer in _changeObservers)
+			{
+				[observer.changeObserver didUpdateItems:query.queryResults];
+				[observer.changeObserver finishEnumeratingChangesUpToSyncAnchor:[_core.latestSyncAnchor syncAnchorData] moreComing:NO];
+			}
+
+			[_changeObservers removeAllObjects];
+		}
+	}
+}
+
 - (void)queryHasChangesAvailable:(OCQuery *)query
 {
 	OCLogDebug(@"##### Query for %@ has changes. Query state: %lu", query.queryPath, (unsigned long)query.state);
@@ -254,31 +290,12 @@
 
 				if (_changeObservers.count > 0)
 				{
-					OCLogDebug(@"##### PROVIDE ITEMS TO --CHANGE-- OBSERVER FOR %@", query.queryPath);
-
-					for (FileProviderEnumeratorObserver *observer in _changeObservers)
-					{
-						[observer.changeObserver didUpdateItems:query.queryResults];
-						[observer.changeObserver finishEnumeratingChangesUpToSyncAnchor:[_core.latestSyncAnchor syncAnchorData] moreComing:NO];
-					}
-
-					[_changeObservers removeAllObjects];
+					[self provideItemsForChangeObserverFromQuery:query];
 				}
 
+				if (query.state == OCQueryStateIdle)
 				{
-					if (query.state == OCQueryStateIdle)
-					{
-						NSLog(@"### SIGNALING with %@ %@", _enumerationObservers, _changeObservers);
-
-						[_core signalEnumeratorForContainerItemIdentifier:_enumeratedItemIdentifier];
-//						dispatch_async(dispatch_get_main_queue(), ^{
-//							OCLogDebug(@"## Change notification posted: %@", _enumeratedItemIdentifier);
-//
-//							[[NSFileProviderManager managerForDomain:_fileProviderExtension.domain] signalEnumeratorForContainerItemIdentifier:_enumeratedItemIdentifier completionHandler:^(NSError * _Nullable error) {
-//								OCLogDebug(@"## Change notification returned with error: %@", error);
-//							}];
-//						});
-					}
+					[_core signalEnumeratorForContainerItemIdentifier:_enumeratedItemIdentifier];
 				}
 			}
 		});
@@ -296,24 +313,32 @@
 
 	if (syncAnchor != nil)
 	{
-		/**
-		If the enumeration fails with NSFileProviderErrorSyncAnchorExpired, we will
-		drop all cached data and start the enumeration over starting with sync anchor
-		nil.
+		/** Apple:
+			If the enumeration fails with NSFileProviderErrorSyncAnchorExpired, we will
+			drop all cached data and start the enumeration over starting with sync anchor
+			nil.
 		*/
-		if ([syncAnchor isEqual:[_core.latestSyncAnchor syncAnchorData]])
-		{
-			OCLogDebug(@"##### END(LATEST) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
-			[observer finishEnumeratingChangesUpToSyncAnchor:syncAnchor moreComing:NO];
-		}
-		else
-		{
-			OCLogDebug(@"##### END(EXPIRED) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
-			[observer finishEnumeratingWithError:[NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorSyncAnchorExpired userInfo:nil]];
-		}
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if ([syncAnchor isEqual:[_core.latestSyncAnchor syncAnchorData]])
+			{
+				OCLogDebug(@"##### END(LATEST) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
+				[observer finishEnumeratingChangesUpToSyncAnchor:syncAnchor moreComing:NO];
+			}
+			else
+			{
+				OCLogDebug(@"##### END(EXPIRED) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
+				[observer finishEnumeratingWithError:[NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorSyncAnchorExpired userInfo:nil]];
+			}
+		});
 	}
 	else
 	{
+		/** Apple:
+			"If anchor is nil, then the system is enumerating from scratch: the system wants
+			to receives changes to reconstruct the list of items in this enumeration as if
+			starting from an empty list."
+		*/
+
 		FileProviderEnumeratorObserver *enumerationObserver = [FileProviderEnumeratorObserver new];
 
 		enumerationObserver.changeObserver = observer;
@@ -332,7 +357,9 @@
 {
 	OCLogDebug(@"#### Request current sync anchor");
 
-	completionHandler([_core.latestSyncAnchor syncAnchorData]);
+	dispatch_async(dispatch_get_main_queue(), ^{
+		completionHandler([_core.latestSyncAnchor syncAnchorData]);
+	});
 }
 
 // - (void)enumerateChangesForObserver:(id<NSFileProviderChangeObserver>)observer fromSyncAnchor:(NSFileProviderSyncAnchor)anchor

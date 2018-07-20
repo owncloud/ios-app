@@ -70,16 +70,34 @@
 	dispatch_group_enter(waitForDatabaseGroup);
 
 	// Resolve the given identifier to a record in the model
-	[self.core retrieveItemFromDatabaseForFileID:(OCFileID)identifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
-		item = itemFromDatabase;
+	if ([identifier isEqual:NSFileProviderRootContainerItemIdentifier])
+	{
+		// Root item
+		[self.core.vault.database retrieveCacheItemsAtPath:@"/" itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
+			item = items.firstObject;
 
-		if (outError != NULL)
-		{
-			*outError = error;
-		}
+			if (outError != NULL)
+			{
+				*outError = error;
+			}
 
-		dispatch_group_leave(waitForDatabaseGroup);
-	}];
+			dispatch_group_leave(waitForDatabaseGroup);
+		}];
+	}
+	else
+	{
+		// Other item
+		[self.core retrieveItemFromDatabaseForFileID:(OCFileID)identifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
+			item = itemFromDatabase;
+
+			if (outError != NULL)
+			{
+				*outError = error;
+			}
+
+			dispatch_group_leave(waitForDatabaseGroup);
+		}];
+	}
 
 	dispatch_group_wait(waitForDatabaseGroup, DISPATCH_TIME_FOREVER);
 

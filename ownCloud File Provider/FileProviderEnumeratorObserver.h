@@ -28,5 +28,6 @@
 
 @property(strong) id<NSFileProviderChangeObserver> changeObserver;
 @property(strong) NSFileProviderSyncAnchor changesFromSyncAnchor;
+@property(strong) OCQuery *changeQuery;
 
 @end
