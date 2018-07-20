@@ -431,11 +431,22 @@
 
 			if ((domainIdentifier = self.domain.identifier) != nil)
 			{
-				_bookmark = [[OCBookmarkManager sharedBookmarkManager] bookmarkForUUID:[[NSUUID alloc] initWithUUIDString:domainIdentifier]];
+				NSUUID *bookmarkUUID = [[NSUUID alloc] initWithUUIDString:domainIdentifier];
+
+				_bookmark = [[OCBookmarkManager sharedBookmarkManager] bookmarkForUUID:bookmarkUUID];
 
 				if (_bookmark == nil)
 				{
-					OCLogError(@"Error retrieving bookmark for domain %@ (UUID %@)", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+					OCLogError(@"Error retrieving bookmark for domain %@ (UUID %@) - reloading", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+
+					[[OCBookmarkManager sharedBookmarkManager] loadBookmarks];
+
+					_bookmark = [[OCBookmarkManager sharedBookmarkManager] bookmarkForUUID:bookmarkUUID];
+
+					if (_bookmark == nil)
+					{
+						OCLogError(@"Error retrieving bookmark for domain %@ (UUID %@) - final", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+					}
 				}
 			}
 		}
