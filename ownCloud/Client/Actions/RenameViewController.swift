@@ -213,7 +213,17 @@ class RenameViewController: UIViewController {
 extension RenameViewController: UITextFieldDelegate {
 
 	func textFieldDidBeginEditing(_ textField: UITextField) {
-		textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to: nameTextField.endOfDocument)
+		if let name = nameTextField.text,
+			let fileExtension = name.fileExtension(),
+			let range = name.range(of: fileExtension),
+			let position: UITextPosition = nameTextField.position(from: nameTextField.beginningOfDocument, offset: range.lowerBound.encodedOffset - 1) {
+
+				textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to:position)
+
+		} else {
+			textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to: nameTextField.endOfDocument)
+		}
+
 	}
 
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
