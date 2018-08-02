@@ -200,6 +200,7 @@ class RenameViewController: UIViewController {
 	}
 
 	@objc private func cancelButtonPressed() {
+		nameTextField.resignFirstResponder()
 		self.dismiss(animated: true)
 	}
 
