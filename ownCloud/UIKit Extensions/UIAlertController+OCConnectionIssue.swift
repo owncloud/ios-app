@@ -12,14 +12,12 @@ import ownCloudSDK
 extension OCConnectionIssueChoice {
 	var alertActionStyle : UIAlertActionStyle {
 		switch type {
-			case .cancel:
-				return .cancel
-
-			case .regular, .default:
-				return .default
-
-			case .destructive:
-				return .destructive
+		case .cancel:
+			return .cancel
+		case .regular, .default:
+			return .default
+		case .destructive:
+			return .destructive
 		}
 	}
 }
@@ -34,5 +32,18 @@ extension UIAlertController {
 				issue.selectChoice(choice)
 			}))
 		}
+	}
+
+	convenience init(with title: String, message: String, preferredStyle: UIAlertControllerStyle, destructiveAction action: @escaping () -> Void) {
+
+		self.init(title: title, message: message, preferredStyle: preferredStyle)
+
+		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
+		let destructiveAction = UIAlertAction(title: "Delete".localized, style: .destructive) { (_) in
+			action()
+		}
+
+		self.addAction(destructiveAction)
+		self.addAction(cancelAction)
 	}
 }

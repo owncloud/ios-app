@@ -7,14 +7,14 @@
 //
 
 /*
- * Copyright (C) 2018, ownCloud GmbH.
- *
- * This code is covered by the GNU Public License Version 3.
- *
- * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
- * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
- *
- */
+* Copyright (C) 2018, ownCloud GmbH.
+*
+* This code is covered by the GNU Public License Version 3.
+*
+* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+*
+*/
 
 import UIKit
 import ownCloudSDK
@@ -167,47 +167,47 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		var summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
 
 		switch query?.state {
-			case .stopped?:
-				summary.message = "Stopped".localized
+		case .stopped?:
+			summary.message = "Stopped".localized
 
-			case .started?:
-				summary.message = "Started…".localized
+		case .started?:
+			summary.message = "Started…".localized
 
-			case .contentsFromCache?:
-				if core?.reachabilityMonitor?.available == true {
-					summary.message = "Contents from cache.".localized
-				} else {
-					summary.message = "Offline. Contents from cache.".localized
-				}
+		case .contentsFromCache?:
+			if core?.reachabilityMonitor?.available == true {
+				summary.message = "Contents from cache.".localized
+			} else {
+				summary.message = "Offline. Contents from cache.".localized
+			}
 
-			case .waitingForServerReply?:
-				summary.message = "Waiting for server response…".localized
+		case .waitingForServerReply?:
+			summary.message = "Waiting for server response…".localized
 
-			case .targetRemoved?:
-				summary.message = "This folder no longer exists.".localized
+		case .targetRemoved?:
+			summary.message = "This folder no longer exists.".localized
 
-			case .idle?:
-				summary.message = "Everything up-to-date.".localized
-				summary.progressCount = 0
+		case .idle?:
+			summary.message = "Everything up-to-date.".localized
+			summary.progressCount = 0
 
-			case .none:
-				summary.message = "Please wait…".localized
+		case .none:
+			summary.message = "Please wait…".localized
 		}
 
 		switch query?.state {
-			case .idle?:
-				DispatchQueue.main.async {
-					if !self.refreshController!.isRefreshing {
-						self.refreshController?.beginRefreshing()
-					}
+		case .idle?:
+			DispatchQueue.main.async {
+				if !self.refreshController!.isRefreshing {
+					self.refreshController?.beginRefreshing()
 				}
+			}
 
-			case .contentsFromCache?, .stopped?:
-				DispatchQueue.main.async {
-					self.tableView.refreshControl = nil
-				}
+		case .contentsFromCache?, .stopped?:
+			DispatchQueue.main.async {
+				self.tableView.refreshControl = nil
+			}
 
-			default:
+		default:
 			break
 		}
 
@@ -256,39 +256,79 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let rowItem : OCItem = self.items![indexPath.row]
+
+		guard let rowItem : OCItem = self.items?[indexPath.row] else {
+			return
+		}
 
 		switch rowItem.type {
-			case .collection:
-				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
+		case .collection:
+			self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
 
-			case .file:
-				let fallbackSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: "Downloading \(rowItem.name)", progressCount: 1)
+		case .file:
+			let fallbackSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: "Downloading \(rowItem.name!)", progressCount: 1)
 
-				if let downloadProgress = self.core?.downloadItem(rowItem, options: nil, resultHandler: { (error, _, item, file) in
-					OnMainThread {
-						if error != nil {
-							// TODO: Handle error
-						} else {
-							let itemViewController : ClientItemViewController = ClientItemViewController()
+			if let downloadProgress = self.core?.downloadItem(rowItem, options: nil, resultHandler: { (error, _, item, file) in
+				OnMainThread {
+					if error != nil {
+						// TODO: Handle error
+					} else {
+						let itemViewController : ClientItemViewController = ClientItemViewController()
 
-							itemViewController.file = file
-							itemViewController.item = item
+						itemViewController.file = file
+						itemViewController.item = item
 
-							self.navigationController?.pushViewController(itemViewController, animated: true)
-						}
-
-						self.progressSummarizer?.popFallbackSummary(summary: fallbackSummary)
+						self.navigationController?.pushViewController(itemViewController, animated: true)
 					}
-				}) {
-					Log.log("Downloading \(rowItem.name): \(downloadProgress)")
 
-					progressSummarizer?.pushFallbackSummary(summary: fallbackSummary)
-
-					// TODO: Use progress as soon as it works SDK-wise
-					// progressSummarizer?.startTracking(progress: downloadProgress)
+					self.progressSummarizer?.popFallbackSummary(summary: fallbackSummary)
 				}
+			}) {
+				Log.log("Downloading \(rowItem.name!): \(downloadProgress)")
+
+				progressSummarizer?.pushFallbackSummary(summary: fallbackSummary)
+
+				// TODO: Use progress as soon as it works SDK-wise
+				// progressSummarizer?.startTracking(progress: downloadProgress)
+			}
 		}
+	}
+
+	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+		guard let item: OCItem = items?[indexPath.row], core != nil else {
+			return nil
+		}
+
+		var summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
+
+		let presentationStyle: UIAlertControllerStyle = UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet
+
+		let deleteContextualAction: UIContextualAction = UIContextualAction(style: .destructive, title: "Delete".localized) { (_, _, actionPerformed) in
+
+			let alertController =
+				UIAlertController(with: item.name!, message: "Are you sure you want to delete this file from the server?".localized, preferredStyle: presentationStyle, destructiveAction: {
+					summary.message = NSString(format: "Deleting '%@'".localized as NSString, item.name as NSString) as String
+
+					self.queryProgressSummary = summary
+
+					self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
+						summary.progressCount = 0
+						self.queryProgressSummary = summary
+						if error != nil {
+							Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
+						}
+					})
+				})
+
+			self.present(alertController, animated: true, completion: {
+				actionPerformed(false)
+			})
+		}
+		let actions: [UIContextualAction] = [deleteContextualAction]
+		let actionsConfigurator: UISwipeActionsConfiguration = UISwipeActionsConfiguration(actions: actions)
+
+		return actionsConfigurator
 	}
 
 	// MARK: - Message
@@ -336,10 +376,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			containerView.addSubview(messageLabel)
 
 			containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageView]-(20)-[titleLabel]-[messageLabel]|",
-										   options: NSLayoutFormatOptions(rawValue: 0),
-										   metrics: nil,
-										   views: ["imageView" : imageView, "titleLabel" : titleLabel, "messageLabel" : messageLabel])
-						   )
+																		options: NSLayoutFormatOptions(rawValue: 0),
+																		metrics: nil,
+																		views: ["imageView" : imageView, "titleLabel" : titleLabel, "messageLabel" : messageLabel])
+			)
 
 			imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
 			imageView.widthAnchor.constraint(equalToConstant: 96).isActive = true
