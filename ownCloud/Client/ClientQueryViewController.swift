@@ -330,6 +330,37 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		return actionsConfigurator
 	}
 
+	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+		guard let item: OCItem = items?[indexPath.row] else {
+			return nil
+		}
+
+		let renameAction = UIContextualAction(style: .normal, title: "Rename") { (_, _, actionPerformed) in
+			let renamevc = RenameViewController(with: item, core: self.core, completion: { newName in
+				var summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
+				summary.message = NSString(format: "Renaming to %@".localized as NSString, newName) as String
+				self.queryProgressSummary = summary
+
+				self.core?.move(item, to: self.query?.rootItem, withName: newName, options: nil, resultHandler: { (error, _, _, _) in
+					if error != nil {
+						Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
+					}
+					summary.progressCount = 0
+					self.queryProgressSummary = summary
+				})
+			})
+
+			let renameNavigationVC = ThemeNavigationController(rootViewController: renamevc)
+			renameNavigationVC.modalPresentationStyle = .overFullScreen
+			self.navigationController?.present(renameNavigationVC, animated: true)
+
+			actionPerformed(false)
+		}
+		let actionsConfiguration = UISwipeActionsConfiguration(actions: [renameAction])
+		return actionsConfiguration
+	}
+
 	// MARK: - Message
 	var messageView : UIView?
 	var messageContainerView : UIView?
