@@ -177,7 +177,7 @@ class RenameViewController: UIViewController {
 			stackView.axis = .vertical
 			stackView.distribution = .fillEqually
 
-		case (.compact, .compact), (.regular, .regular):
+		default:
 
 			NSLayoutConstraint.deactivate([
 				textfieldTopAnchorConstraint
@@ -189,9 +189,6 @@ class RenameViewController: UIViewController {
 				])
 			stackView.axis = .horizontal
 			stackView.distribution = .fill
-
-		default:
-			break
 		}
 
 		switch (newTraitCollection.horizontalSizeClass, newTraitCollection.verticalSizeClass) {
