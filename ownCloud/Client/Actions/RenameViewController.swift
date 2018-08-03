@@ -28,6 +28,7 @@ class RenameViewController: UIViewController {
 	private var textfieldTopAnchorConstraint: NSLayoutConstraint
 	private var textfieldCenterYAnchorConstraint: NSLayoutConstraint
 	private var thumbnailContainerWidthAnchorConstraint: NSLayoutConstraint
+	private var thumbnailHeightAnchorConstraint: NSLayoutConstraint
 
 	private var stackViewLeftAnchorConstraint: NSLayoutConstraint?
 	private var stackviewRightAnchorConstraint: NSLayoutConstraint?
@@ -53,6 +54,7 @@ class RenameViewController: UIViewController {
 		textfieldTopAnchorConstraint = nameTextField.topAnchor.constraint(equalTo: nameContainer.topAnchor, constant: 15)
 		thumbnailContainerWidthAnchorConstraint = thumbnailContainer.widthAnchor.constraint(equalToConstant: 200)
 		thumbnailContainerWidthAnchorConstraint.priority = .init(999)
+		thumbnailHeightAnchorConstraint = thumbnailImageView.heightAnchor.constraint(equalToConstant: 150)
 
 		super.init(nibName: nil, bundle: nil)
 	}
@@ -115,8 +117,8 @@ class RenameViewController: UIViewController {
 		thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
 		thumbnailContainer.addSubview(thumbnailImageView)
 		NSLayoutConstraint.activate([
-			thumbnailImageView.heightAnchor.constraint(equalToConstant: 150),
-			thumbnailImageView.widthAnchor.constraint(equalToConstant: 150),
+			thumbnailHeightAnchorConstraint,
+			thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor),
 			thumbnailImageView.centerXAnchor.constraint(equalTo: thumbnailContainer.centerXAnchor),
 			thumbnailImageView.centerYAnchor.constraint(equalTo: thumbnailContainer.centerYAnchor)
 		])
@@ -176,8 +178,6 @@ class RenameViewController: UIViewController {
 			stackView.distribution = .fillEqually
 
 		case (.compact, .compact), (.regular, .regular):
-			stackViewLeftAnchorConstraint?.constant = 100
-			stackviewRightAnchorConstraint?.constant = -100
 
 			NSLayoutConstraint.deactivate([
 				textfieldTopAnchorConstraint
@@ -192,6 +192,28 @@ class RenameViewController: UIViewController {
 
 		default:
 			break
+		}
+
+		switch (newTraitCollection.horizontalSizeClass, newTraitCollection.verticalSizeClass) {
+		case (.regular, .regular):
+			stackViewLeftAnchorConstraint?.constant = 100
+			stackviewRightAnchorConstraint?.constant = -100
+			thumbnailHeightAnchorConstraint.constant = 150
+
+		case (.compact, .compact):
+			thumbnailHeightAnchorConstraint.constant = 100
+			stackViewLeftAnchorConstraint?.constant = 0
+			stackviewRightAnchorConstraint?.constant = 0
+
+		default:
+			stackViewLeftAnchorConstraint?.constant = 0
+			stackviewRightAnchorConstraint?.constant = 0
+			thumbnailHeightAnchorConstraint.constant = 150
+		}
+
+		// Non 3.0 scale displays
+		if UIScreen.main.scale < 3.0 {
+			thumbnailHeightAnchorConstraint.constant = 100
 		}
 	}
 
