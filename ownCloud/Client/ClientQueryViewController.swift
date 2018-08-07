@@ -300,26 +300,25 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			return nil
 		}
 
-		var summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
-
 		let presentationStyle: UIAlertControllerStyle = UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet
 
 		let deleteContextualAction: UIContextualAction = UIContextualAction(style: .destructive, title: "Delete".localized) { (_, _, actionPerformed) in
 
 			let alertController =
-				UIAlertController(with: item.name!, message: "Are you sure you want to delete this file from the server?".localized, preferredStyle: presentationStyle, destructiveAction: {
-					summary.message = NSString(format: "Deleting '%@'".localized as NSString, item.name as NSString) as String
-
-					self.queryProgressSummary = summary
-
-					self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
-						summary.progressCount = 0
-						self.queryProgressSummary = summary
-						if error != nil {
-							Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
+				UIAlertController(with: item.name!,
+					message: "Are you sure you want to delete this file from the server?".localized,
+					destructiveLabel: "Delete".localized,
+					preferredStyle: presentationStyle,
+					destructiveAction: {
+						if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
+							if error != nil {
+								Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
+							}
+						}) {
+							self.progressSummarizer?.startTracking(progress: progress)
 						}
-					})
-				})
+					}
+				)
 
 			self.present(alertController, animated: true, completion: {
 				actionPerformed(false)

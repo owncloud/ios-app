@@ -34,12 +34,12 @@ extension UIAlertController {
 		}
 	}
 
-	convenience init(with title: String, message: String, preferredStyle: UIAlertControllerStyle, destructiveAction action: @escaping () -> Void) {
+	convenience init(with title: String, message: String, cancelLabel: String = "Cancel".localized, destructiveLabel: String, preferredStyle: UIAlertControllerStyle, destructiveAction action: @escaping () -> Void) {
 
 		self.init(title: title, message: message, preferredStyle: preferredStyle)
 
-		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
-		let destructiveAction = UIAlertAction(title: "Delete".localized, style: .destructive) { (_) in
+		let cancelAction = UIAlertAction(title: cancelLabel, style: .cancel, handler: nil)
+		let destructiveAction = UIAlertAction(title: destructiveLabel, style: .destructive) { (_) in
 			action()
 		}
 
