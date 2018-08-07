@@ -45,7 +45,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
+		application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum + 10)
+
+		Log.debug("Minimum fetch refresh time: \(UIApplicationBackgroundFetchIntervalMinimum)")
+
 		return true
+	}
+
+	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+			completionHandler(.newData)
+		}
 	}
 
 	func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
@@ -57,6 +67,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+		Log.debug("AppDelegate: handle events for background URL session with identifier \(identifier)")
+
 		OCCoreManager.shared.postFileProviderNotifications = true
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
 	}
