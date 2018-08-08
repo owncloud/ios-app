@@ -33,6 +33,9 @@ class RenameViewController: UIViewController {
 	private var stackViewLeftAnchorConstraint: NSLayoutConstraint?
 	private var stackviewRightAnchorConstraint: NSLayoutConstraint?
 
+	private var cancelButton: UIBarButtonItem?
+	private var doneButton: UIBarButtonItem?
+
 	private let thumbnailSize = CGSize(width: 150.0, height: 150.0)
 
 	init(with item: OCItem? = nil, core: OCCore? = nil, completion: @escaping (String) -> Void) {
@@ -97,10 +100,10 @@ class RenameViewController: UIViewController {
 		}
 
 		// Navigation buttons
-		let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonPressed))
+		cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonPressed))
 		navigationItem.leftBarButtonItem = cancelButton
 
-		let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
+		doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
 		navigationItem.rightBarButtonItem = doneButton
 
 		//Blur View
@@ -140,6 +143,8 @@ class RenameViewController: UIViewController {
 		nameTextField.delegate = self
 		nameTextField.textAlignment = .center
 		nameTextField.becomeFirstResponder()
+		nameTextField.addTarget(self, action: #selector(textfieldDidChange(_:)), for: .editingChanged)
+		nameTextField.enablesReturnKeyAutomatically = true
 
 		// Name container view
 		nameContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -223,6 +228,14 @@ class RenameViewController: UIViewController {
 		self.dismiss(animated: true)
 	}
 
+	@objc func textfieldDidChange(_ sender: UITextField) {
+		if sender.text != "" {
+			doneButton?.isEnabled = true
+		} else {
+			doneButton?.isEnabled = false
+		}
+	}
+
 	@objc private func doneButtonPressed() {
 		self.dismiss(animated: true) {
 			self.completion(self.nameTextField.text!)
@@ -247,6 +260,9 @@ extension RenameViewController: UITextFieldDelegate {
 	}
 
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+		if textField.text == "" {
+			return false
+		}
 		doneButtonPressed()
 		return true
 	}
