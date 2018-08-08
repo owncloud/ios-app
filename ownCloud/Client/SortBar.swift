@@ -48,14 +48,10 @@ class SortBar: UIView, Themeable {
 	var sortMethod: SortMethod {
 		didSet {
 
-			if !self.sortButton.isHidden {
-				let title = NSString(format: "Sorted by %@ ▼".localized as NSString, sortMethod.localizedName()) as String
-				sortButton.setTitle(title, for: .normal)
-			}
+			let title = NSString(format: "Sorted by %@ ▼".localized as NSString, sortMethod.localizedName()) as String
+			sortButton.setTitle(title, for: .normal)
 
-			if !self.sortSegmentedControl.isHidden {
-				sortSegmentedControl.selectedSegmentIndex = SortMethod.all.index(of: sortMethod)!
-			}
+			sortSegmentedControl.selectedSegmentIndex = SortMethod.all.index(of: sortMethod)!
 
 			delegate?.sortBar(self, didUpdateSortMethod: sortMethod)
 		}
