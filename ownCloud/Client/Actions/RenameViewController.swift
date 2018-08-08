@@ -237,8 +237,15 @@ class RenameViewController: UIViewController {
 	}
 
 	@objc private func doneButtonPressed() {
-		self.dismiss(animated: true) {
-			self.completion(self.nameTextField.text!)
+		if nameTextField.text!.contains("/") || nameTextField.text!.contains("\\") {
+			let controller = UIAlertController(title: "Forbiden Characters".localized, message: "File name cannot contain / or \\".localized, preferredStyle: .alert)
+			let okAction = UIAlertAction(title: "Ok", style: .default)
+			controller.addAction(okAction)
+			self.present(controller, animated: true)
+		} else {
+			self.dismiss(animated: true) {
+				self.completion(self.nameTextField.text!)
+			}
 		}
 	}
 }

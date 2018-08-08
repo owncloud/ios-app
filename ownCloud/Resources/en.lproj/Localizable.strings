@@ -130,3 +130,8 @@
 "Please try again in %@" = "Please try again in %@";
 "Unlock %@" = "Unlock %@";
 "Biometric authentication failed" = "Biometric authentication failed";
+
+/* Rename Messages */
+
+"Forbiden Characters" = "Forbiden Characters";
+"File name cannot contain / or \\" = "File name cannot contain / or \\";
