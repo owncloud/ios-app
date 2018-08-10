@@ -25,4 +25,23 @@ platform :ios do
      match(force_for_new_devices: true) # Creates all required certificates & provisioning profile
   end
 
+  desc "Ad-Hoc Distribution IPA geneation"
+   lane :build_ipa_ad_hoc do
+
+    #Create the build
+    gym(
+      workspace: "ownCloud.xcworkspace", 
+      scheme: "ownCloud",
+      codesigning_identity: "iPhone Distribution: ownCloud GmbH (4AP2STM4H5)",
+      export_method: "ad-hoc",
+      export_options: {
+        method: "ad-hoc",
+        provisioningProfiles: { 
+          "com.owncloud.ios-app" => "match AdHoc com.owncloud.ios-app"
+          #Add more Provisioning Profiles when extensions are added
+        }
+      }
+    )
+  end
+
 end

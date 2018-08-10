@@ -283,65 +283,81 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		return UISwipeActionsConfiguration.init(actions:
-			[
-				UIContextualAction.init(style: .destructive, title: "Delete".localized, handler: { (_, _, actionPerformed) in
+		guard let item: OCItem = items?[indexPath.row], core != nil else {
+			return nil
+		}
 
-					if let item = self.items?[indexPath.row] {
-						_ = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, item, _) in
+		let presentationStyle: UIAlertControllerStyle = UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet
+
+		let deleteContextualAction: UIContextualAction = UIContextualAction(style: .destructive, title: "Delete".localized) { (_, _, actionPerformed) in
+
+			let alertController =
+				UIAlertController(with: item.name!,
+					message: "Are you sure you want to delete this file from the server?".localized,
+					destructiveLabel: "Delete".localized,
+					preferredStyle: presentationStyle,
+					destructiveAction: {
+						if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
 							if error != nil {
-								Log.log("Error \(String(describing: error)) deleting \(String(describing: item?.path))")
+								Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
 							}
-						})
+						}) {
+							self.progressSummarizer?.startTracking(progress: progress)
+						}
 					}
+				)
 
-					actionPerformed(false)
-				}),
+			self.present(alertController, animated: true, completion: {
+				actionPerformed(false)
+			})
+		}
 
-				UIContextualAction.init(style: .normal, title: "Duplicate".localized, handler: { (_, _, actionPerformed) in
-
-					if let item = self.items?[indexPath.row] {
-						_ = self.core?.copy(item, to: self.query?.rootItem, withName: item.name + " copy", options: nil, resultHandler: { (error, _, item, _) in
-							if error != nil {
-								Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
-							}
-						})
+		let duplicateTestContextualAction = UIContextualAction.init(style: .normal, title: "Duplicate".localized, handler: { (_, _, actionPerformed) in
+			if let item = self.items?[indexPath.row] {
+				_ = self.core?.copy(item, to: self.query?.rootItem, withName: item.name + " copy", options: nil, resultHandler: { (error, _, item, _) in
+					if error != nil {
+						Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
 					}
-
-					actionPerformed(false)
-				}),
-
-				UIContextualAction.init(style: .normal, title: "Rename".localized, handler: { (_, _, actionPerformed) in
-					if let item = self.items?[indexPath.row] {
-						let promptNameViewController : StaticTableViewController = StaticTableViewController(style: .grouped)
-						let navigationController = ThemeNavigationController(rootViewController: promptNameViewController)
-
-						promptNameViewController.addSection(StaticTableViewSection(headerTitle: "New name", footerTitle: nil, identifier: nil, rows: [
-							StaticTableViewRow(textFieldWithAction: nil, value: item.name, identifier: "newName"),
-							StaticTableViewRow(buttonWithAction: { (row, _) in
-								if let newName = row.section?.row(withIdentifier: "newName")?.value as? String {
-									_ = self.core?.move(item, to: self.query?.rootItem, withName: newName, options: nil, resultHandler: {  (error, _, item, _) in
-										if error != nil {
-											Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
-										}
-									})
-								}
-
-								navigationController.dismiss(animated: true, completion: nil)
-							}, title: "Rename")
-						]))
-
-						promptNameViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(	barButtonSystemItem: .cancel,
-																target: promptNameViewController,
-																action: #selector(promptNameViewController.dismissAnimated))
-
-						self.present(navigationController, animated: true, completion: nil)
-					}
-
-					actionPerformed(false)
 				})
-			]
-		)
+			}
+
+			actionPerformed(false)
+		})
+
+		let renameTestContextualAction = UIContextualAction.init(style: .normal, title: "Rename".localized, handler: { (_, _, actionPerformed) in
+			if let item = self.items?[indexPath.row] {
+				let promptNameViewController : StaticTableViewController = StaticTableViewController(style: .grouped)
+				let navigationController = ThemeNavigationController(rootViewController: promptNameViewController)
+
+				promptNameViewController.addSection(StaticTableViewSection(headerTitle: "New name", footerTitle: nil, identifier: nil, rows: [
+					StaticTableViewRow(textFieldWithAction: nil, value: item.name, identifier: "newName"),
+					StaticTableViewRow(buttonWithAction: { (row, _) in
+						if let newName = row.section?.row(withIdentifier: "newName")?.value as? String {
+							_ = self.core?.move(item, to: self.query?.rootItem, withName: newName, options: nil, resultHandler: {  (error, _, item, _) in
+								if error != nil {
+									Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
+								}
+							})
+						}
+
+						navigationController.dismiss(animated: true, completion: nil)
+					}, title: "Rename")
+				]))
+
+				promptNameViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(	barButtonSystemItem: .cancel,
+														target: promptNameViewController,
+														action: #selector(promptNameViewController.dismissAnimated))
+
+				self.present(navigationController, animated: true, completion: nil)
+			}
+
+			actionPerformed(false)
+		})
+
+		let actions: [UIContextualAction] = [duplicateTestContextualAction, renameTestContextualAction, deleteContextualAction]
+		let actionsConfigurator: UISwipeActionsConfiguration = UISwipeActionsConfiguration(actions: actions)
+
+		return actionsConfigurator
 	}
 
 	// MARK: - Message

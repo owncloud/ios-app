@@ -21,6 +21,16 @@ or alternatively using `brew cask install fastlane`
 fastlane ios beta
 ```
 Push a new beta build to TestFlight
+### ios register_new_devices
+```
+fastlane ios register_new_devices
+```
+Register new devices to Apple portal
+### ios build_ipa_ad_hoc
+```
+fastlane ios build_ipa_ad_hoc
+```
+Ad-Hoc Distribution IPA geneation
 
 ----
 
