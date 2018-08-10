@@ -23,8 +23,4 @@ extension String {
     var localized: String {
         return NSLocalizedString(self, comment: "")
     }
-
-	func fileExtension() -> String? {
-		return NSURL(fileURLWithPath: self).pathExtension
-	}
 }
