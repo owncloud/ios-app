@@ -324,19 +324,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				actionPerformed(false)
 			})
 		}
-		let actions: [UIContextualAction] = [deleteContextualAction]
-		let actionsConfigurator: UISwipeActionsConfiguration = UISwipeActionsConfiguration(actions: actions)
 
-		return actionsConfigurator
-	}
-
-	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-
-		guard let item: OCItem = items?[indexPath.row] else {
-			return nil
-		}
-
-		let renameAction = UIContextualAction(style: .normal, title: "Rename") { (_, _, actionPerformed) in
+		let renameContextualAction = UIContextualAction(style: .normal, title: "Rename") { (_, _, actionPerformed) in
 			let renamevc = NamingViewController(with: item, core: self.core, stringValidator: { name in
 				if name.contains("/") || name.contains("\\") {
 					return (false, "File name cannot contain / or \\")
@@ -360,8 +349,11 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 			actionPerformed(false)
 		}
-		let actionsConfiguration = UISwipeActionsConfiguration(actions: [renameAction])
-		return actionsConfiguration
+
+		let actions: [UIContextualAction] = [deleteContextualAction, renameContextualAction]
+		let actionsConfigurator: UISwipeActionsConfiguration = UISwipeActionsConfiguration(actions: actions)
+
+		return actionsConfigurator
 	}
 
 	// MARK: - Message
