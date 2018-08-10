@@ -179,6 +179,7 @@ class NamingViewController: UIViewController {
 		nameTextField.becomeFirstResponder()
 		nameTextField.addTarget(self, action: #selector(textfieldDidChange(_:)), for: .editingChanged)
 		nameTextField.enablesReturnKeyAutomatically = true
+		nameTextField.autocorrectionType = .no
 
 		// Name container view
 		nameContainer.translatesAutoresizingMaskIntoConstraints = false
