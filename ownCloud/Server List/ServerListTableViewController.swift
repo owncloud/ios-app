@@ -35,7 +35,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	override init(style: UITableViewStyle) {
 		super.init(style: style)
 
-		NotificationCenter.default.addObserver(self, selector: #selector(serverListChanged), name: Notification.Name.BookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(serverListChanged), name: Notification.Name.OCBookmarkManagerListChanged, object: nil)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -43,7 +43,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	deinit {
-		NotificationCenter.default.removeObserver(self, name: Notification.Name.BookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.removeObserver(self, name: Notification.Name.OCBookmarkManagerListChanged, object: nil)
 	}
 
 	// TODO: Rebuild welcomeOverlayView in code
@@ -70,6 +70,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.tableView.register(ServerListBookmarkCell.self, forCellReuseIdentifier: "bookmark-cell")
 		self.tableView.rowHeight = UITableViewAutomaticDimension
 		self.tableView.estimatedRowHeight = 80
+		self.tableView.allowsSelectionDuringEditing = true
 
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
 
@@ -96,10 +97,16 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		updateNoServerMessageVisibility()
 
+        let helpBarButtonItem = UIBarButtonItem(title: "Help".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(help))
+        helpBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
+
+        let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
+        settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
+
 		self.toolbarItems = [
-			UIBarButtonItem(title: "Help", style: UIBarButtonItemStyle.plain, target: self, action: #selector(help)),
+			helpBarButtonItem,
 			UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
-			UIBarButtonItem(title: "Settings", style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
+            settingsBarButtonItem
 		]
 
 		/*
@@ -141,7 +148,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	func updateNoServerMessageVisibility() {
-		if BookmarkManager.sharedBookmarkManager.bookmarks.count == 0 {
+		if OCBookmarkManager.shared.bookmarks.count == 0 {
 			let safeAreaLayoutGuide : UILayoutGuide = self.tableView.safeAreaLayoutGuide
 			var constraint : NSLayoutConstraint
 
@@ -191,10 +198,14 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	// MARK: - Actions
 	@IBAction func addBookmark() {
+		showBookmarkUI()
+	}
 
-        let viewController : BookmarkViewController = BookmarkViewController(style: UITableViewStyle.grouped)
-        self.navigationController?.pushViewController(viewController, animated: true)
-		updateNoServerMessageVisibility()
+	func showBookmarkUI(edit bookmark: OCBookmark? = nil) {
+		let viewController : BookmarkViewController = BookmarkViewController(bookmark)
+		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
+
+		self.present(navigationController, animated: true, completion: nil)
 	}
 
 	var themeCounter : Int = 0
@@ -230,7 +241,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	@IBAction func settings() {
-		let viewController : GlobalSettingsViewController = GlobalSettingsViewController(style: UITableViewStyle.grouped)
+//        let viewController : GlobalSettingsViewController = GlobalSettingsViewController(style: UITableViewStyle.grouped)
+
+        let viewController : SettingsViewController = SettingsViewController(style: .grouped)
 
 		self.navigationController?.pushViewController(viewController, animated: true)
 	}
@@ -248,15 +261,15 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	// MARK: - Table view delegate
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
+		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 			if lockedBookmarks.contains(bookmark) {
-				let alertController = UIAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName() as NSString) as String,
-									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName() as NSString) as String,
+				let alertController = UIAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName as NSString) as String,
+									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
 									preferredStyle: .alert)
 
 				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
 					// There was an error erasing the vault => re-add bookmark to give user another chance to delete its contents
-					BookmarkManager.sharedBookmarkManager.addBookmark(bookmark)
+					OCBookmarkManager.shared.addBookmark(bookmark)
 					self.updateNoServerMessageVisibility()
 				}))
 
@@ -265,9 +278,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				return
 			}
 
-			let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+			if tableView.isEditing {
+				self.showBookmarkUI(edit: bookmark)
+			} else {
+				let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 
-			self.present(clientRootViewController, animated: true, completion: nil)
+				self.present(clientRootViewController, animated: true, completion: nil)
+			}
 		}
 	}
 
@@ -277,7 +294,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return BookmarkManager.sharedBookmarkManager.bookmarks.count
+		return OCBookmarkManager.shared.bookmarks.count
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -287,9 +304,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		    return cell
 		}
 
-		if let bookmark : OCBookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
-			bookmarkCell.titleLabel.text = bookmark.shortName()
-			bookmarkCell.detailLabel.text = bookmark.url.absoluteString
+		if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+			bookmarkCell.titleLabel.text = bookmark.shortName
+			bookmarkCell.detailLabel.text = (bookmark.originURL != nil) ? bookmark.originURL.absoluteString : bookmark.url.absoluteString
 		}
 
 		return bookmarkCell
@@ -297,9 +314,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		return [
-				UITableViewRowAction(style: UITableViewRowActionStyle.destructive, title: "Delete", handler: { (_, indexPath) in
-					if let bookmark = BookmarkManager.sharedBookmarkManager.bookmark(at: indexPath.row) {
-						let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName()) as String,
+				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, indexPath) in
+					if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+						let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
 											     message: "This will also delete all locally stored file copies.".localized,
 											     preferredStyle: .actionSheet)
 
@@ -309,48 +326,60 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 							self.lockedBookmarks.append(bookmark)
 
-							let vault : OCVault = OCVault(bookmark: bookmark)
+							OCCoreManager.shared.scheduleOfflineOperation({ (inBookmark, completionHandler) in
+								if let bookmark = inBookmark {
+									let vault : OCVault = OCVault(bookmark: bookmark)
 
-							vault.erase(completionHandler: { (_, error) in
-								DispatchQueue.main.async {
-									if error != nil {
-										// Inform user if vault couldn't be erased
-										let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName() as NSString) as String,
-															message: error?.localizedDescription,
-															preferredStyle: .alert)
+									vault.erase(completionHandler: { (_, error) in
+										DispatchQueue.main.async {
+											if error != nil {
+												// Inform user if vault couldn't be erased
+												let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+																	message: error?.localizedDescription,
+																	preferredStyle: .alert)
 
-										alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+												alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
-										self.present(alertController, animated: true, completion: nil)
-									} else {
-										// Success! We can now remove the bookmark
-										self.ignoreServerListChanges = true
+												self.present(alertController, animated: true, completion: nil)
+											} else {
+												// Success! We can now remove the bookmark
+												self.ignoreServerListChanges = true
 
-										BookmarkManager.sharedBookmarkManager.removeBookmark(bookmark)
+												OCBookmarkManager.shared.removeBookmark(bookmark)
 
-										tableView.performBatchUpdates({
-											tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
-										}, completion: { (_) in
-											self.ignoreServerListChanges = false
-										})
+												tableView.performBatchUpdates({
+													tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
+												}, completion: { (_) in
+													self.ignoreServerListChanges = false
+												})
 
-										self.updateNoServerMessageVisibility()
-									}
+												self.updateNoServerMessageVisibility()
+											}
 
-									if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
-										self.lockedBookmarks.remove(at: removeIndex)
-									}
+											if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
+												self.lockedBookmarks.remove(at: removeIndex)
+											}
+
+											completionHandler?()
+										}
+									})
 								}
-							})
+							}, for: bookmark)
 						}))
 
 						self.present(alertController, animated: true, completion: nil)
+					}
+				}),
+
+				UITableViewRowAction(style: .normal, title: "Edit".localized, handler: { [weak self] (_, indexPath) in
+					if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+						self?.showBookmarkUI(edit: bookmark)
 					}
 				})
 			]
 	}
 
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-		BookmarkManager.sharedBookmarkManager.moveBookmark(from: fromIndexPath.row, to: to.row)
+		OCBookmarkManager.shared.moveBookmark(from: UInt(fromIndexPath.row), to: UInt(to.row))
 	}
 }

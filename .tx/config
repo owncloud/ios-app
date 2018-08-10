@@ -1,0 +1,17 @@
+[main]
+host = https://www.transifex.com
+
+[owncloud.mobile-ios-app]
+file_filter = ownCloud/Resources/<lang>.lproj/Localizable.strings
+lang_map = es_ES: es
+source_file = ownCloud/Resources/en.lproj/Localizable.strings
+source_lang = en
+type = STRINGS
+
+[owncloud.mobile-ios-app-infoplist]
+file_filter = ownCloud/Resources/<lang>.lproj/InfoPlist.strings
+lang_map = es_ES: es
+source_file = ownCloud/Resources/en.lproj/InfoPlist.strings
+source_lang = en
+type = STRINGS
+

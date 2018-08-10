@@ -7,14 +7,14 @@
 //
 
 /*
- * Copyright (C) 2018, ownCloud GmbH.
- *
- * This code is covered by the GNU Public License Version 3.
- *
- * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
- * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
- *
- */
+* Copyright (C) 2018, ownCloud GmbH.
+*
+* This code is covered by the GNU Public License Version 3.
+*
+* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+*
+*/
 
 import UIKit
 import ownCloudSDK
@@ -42,6 +42,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var initialAppearance : Bool = true
 	private var observerContextValue = 1
 	private var observerContext : UnsafeMutableRawPointer
+	var refreshController: UIRefreshControl?
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -55,12 +56,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 
 		query?.delegate = self
-		query?.sortComparator = { (left, right) in
-			let leftItem = left as? OCItem
-			let rightItem = right as? OCItem
-
-			return (leftItem?.name.compare(rightItem!.name))!
-		}
 
 		query?.addObserver(self, forKeyPath: "state", options: .initial, context: observerContext)
 		core?.addObserver(self, forKeyPath: "reachabilityMonitor.available", options: .initial, context: observerContext)
@@ -91,6 +86,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	// MARK: - Actions
 	@objc func refreshQuery() {
+		UIImpactFeedbackGenerator().impactOccurred()
 		core?.reload(query)
 	}
 
@@ -109,19 +105,44 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		self.tableView.register(ClientItemCell.self, forCellReuseIdentifier: "itemCell")
 
-		Theme.shared.register(client: self, applyImmediately: true)
-
 		// Uncomment the following line to preserve selection between presentations
 		// self.clearsSelectionOnViewWillAppear = false
 
 		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 		// self.navigationItem.rightBarButtonItem = self.editButtonItem
+
+		searchController = UISearchController(searchResultsController: nil)
+		searchController?.searchResultsUpdater = self
+		searchController?.obscuresBackgroundDuringPresentation = false
+		searchController?.hidesNavigationBarDuringPresentation = true
+		searchController?.searchBar.placeholder = "Search this folder".localized
+
+		navigationItem.searchController =  searchController
+		navigationItem.hidesSearchBarWhenScrolling = false
+
+		self.extendedLayoutIncludesOpaqueBars = true
+		self.definesPresentationContext = true
+
+		sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
+		sortBar?.delegate = self
+		sortBar?.updateSortMethod()
+
+		tableView.tableHeaderView = sortBar
+
+		refreshController = UIRefreshControl()
+		refreshController?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
+		self.tableView.insertSubview(refreshController!, at: 0)
+		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
+
+		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
 		self.queryProgressSummary = nil
+		searchController?.searchBar.text = ""
+		searchController?.dismiss(animated: true, completion: nil)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -137,54 +158,56 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		initialAppearance = false
 
 		updateQueryProgressSummary()
+
+		sortBar?.sortMethod = self.sortMethod
+		query?.sortComparator = self.sortMethod.comparator()
 	}
 
 	func updateQueryProgressSummary() {
 		var summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
 
 		switch query?.state {
-			case .stopped?:
-				summary.message = "Stopped".localized
+		case .stopped?:
+			summary.message = "Stopped".localized
 
-			case .started?:
-				summary.message = "Started…".localized
+		case .started?:
+			summary.message = "Started…".localized
 
-			case .contentsFromCache?:
-				if core?.reachabilityMonitor?.available == true {
-					summary.message = "Contents from cache.".localized
-				} else {
-					summary.message = "Offline. Contents from cache.".localized
-				}
+		case .contentsFromCache?:
+			if core?.reachabilityMonitor?.available == true {
+				summary.message = "Contents from cache.".localized
+			} else {
+				summary.message = "Offline. Contents from cache.".localized
+			}
 
-			case .waitingForServerReply?:
-				summary.message = "Waiting for server response…".localized
+		case .waitingForServerReply?:
+			summary.message = "Waiting for server response…".localized
 
-			case .targetRemoved?:
-				summary.message = "This folder no longer exists.".localized
+		case .targetRemoved?:
+			summary.message = "This folder no longer exists.".localized
 
-			case .idle?:
-				summary.message = "Everything up-to-date.".localized
-				summary.progressCount = 0
+		case .idle?:
+			summary.message = "Everything up-to-date.".localized
+			summary.progressCount = 0
 
-			case .none:
-				summary.message = "Please wait…".localized
+		case .none:
+			summary.message = "Please wait…".localized
 		}
 
 		switch query?.state {
-			case .idle?:
-				DispatchQueue.main.async {
-					if self.tableView.refreshControl == nil {
-						self.tableView.refreshControl = UIRefreshControl()
-						self.tableView.refreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
-					}
+		case .idle?:
+			DispatchQueue.main.async {
+				if !self.refreshController!.isRefreshing {
+					self.refreshController?.beginRefreshing()
 				}
+			}
 
-			case .contentsFromCache?, .stopped?:
-				DispatchQueue.main.async {
-					self.tableView.refreshControl = nil
-				}
+		case .contentsFromCache?, .stopped?:
+			DispatchQueue.main.async {
+				self.tableView.refreshControl = nil
+			}
 
-			default:
+		default:
 			break
 		}
 
@@ -195,6 +218,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
+		self.searchController?.searchBar.applyThemeCollection(collection)
 
 		if event == .update {
 			self.tableView.reloadData()
@@ -218,18 +242,92 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ClientItemCell
+		let newItem = self.items![indexPath.row]
 
-		cell?.item = self.items![indexPath.row]
+		cell?.core = self.core
+
+		// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
+		// Make sure we don't request the thumbnail multiple times in that case.
+		if (cell?.item?.itemVersionIdentifier != newItem.itemVersionIdentifier) || (cell?.item?.name != newItem.name) {
+			cell?.item = newItem
+		}
 
 		return cell!
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let rowItem : OCItem = self.items![indexPath.row]
 
-		if rowItem.type == .collection {
-			self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
+		guard let rowItem : OCItem = self.items?[indexPath.row] else {
+			return
 		}
+
+		switch rowItem.type {
+		case .collection:
+			self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
+
+		case .file:
+			let fallbackSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: "Downloading \(rowItem.name!)", progressCount: 1)
+
+			if let downloadProgress = self.core?.downloadItem(rowItem, options: nil, resultHandler: { (error, _, item, file) in
+				OnMainThread {
+					if error != nil {
+						// TODO: Handle error
+					} else {
+						let itemViewController : ClientItemViewController = ClientItemViewController()
+
+						itemViewController.file = file
+						itemViewController.item = item
+
+						self.navigationController?.pushViewController(itemViewController, animated: true)
+					}
+
+					self.progressSummarizer?.popFallbackSummary(summary: fallbackSummary)
+				}
+			}) {
+				Log.log("Downloading \(rowItem.name!): \(downloadProgress)")
+
+				progressSummarizer?.pushFallbackSummary(summary: fallbackSummary)
+
+				// TODO: Use progress as soon as it works SDK-wise
+				// progressSummarizer?.startTracking(progress: downloadProgress)
+			}
+		}
+	}
+
+	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+		guard let item: OCItem = items?[indexPath.row], core != nil else {
+			return nil
+		}
+
+		let presentationStyle: UIAlertControllerStyle = UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet
+
+		let deleteContextualAction: UIContextualAction = UIContextualAction(style: .destructive, title: "Delete".localized) { (_, _, actionPerformed) in
+
+			let alertController =
+				UIAlertController(with: item.name!,
+					message: "Are you sure you want to delete this file from the server?".localized,
+					destructiveLabel: "Delete".localized,
+					preferredStyle: presentationStyle,
+					destructiveAction: {
+						if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
+							if error != nil {
+								Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
+							}
+						}) {
+							self.progressSummarizer?.startTracking(progress: progress)
+						}
+					}
+				)
+
+			self.present(alertController, animated: true, completion: {
+				actionPerformed(false)
+			})
+		}
+		let actions: [UIContextualAction] = [deleteContextualAction]
+		let actionsConfigurator: UISwipeActionsConfiguration = UISwipeActionsConfiguration(actions: actions)
+
+		return actionsConfigurator
 	}
 
 	// MARK: - Message
@@ -242,7 +340,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	func message(show: Bool, imageName : String? = nil, title : String? = nil, message : String? = nil) {
 		if !show {
-			messageView?.removeFromSuperview()
+			if messageView?.superview != nil {
+				messageView?.removeFromSuperview()
+			}
 			return
 		}
 
@@ -275,10 +375,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			containerView.addSubview(messageLabel)
 
 			containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageView]-(20)-[titleLabel]-[messageLabel]|",
-										   options: NSLayoutFormatOptions(rawValue: 0),
-										   metrics: nil,
-										   views: ["imageView" : imageView, "titleLabel" : titleLabel, "messageLabel" : messageLabel])
-						   )
+																		options: NSLayoutFormatOptions(rawValue: 0),
+																		metrics: nil,
+																		views: ["imageView" : imageView, "titleLabel" : titleLabel, "messageLabel" : messageLabel])
+			)
 
 			imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
 			imageView.widthAnchor.constraint(equalToConstant: 96).isActive = true
@@ -351,6 +451,23 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			messageMessageLabel?.text = message!
 		}
 	}
+
+	// MARK: - Sorting
+	private var sortBar: SortBar?
+	private var sortMethod: SortMethod {
+
+		set {
+			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
+		}
+
+		get {
+			let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabeticallyDescendant
+			return sort
+		}
+	}
+
+	// MARK: - Search
+	var searchController: UISearchController?
 }
 
 // MARK: - Query Delegate
@@ -363,33 +480,83 @@ extension ClientQueryViewController : OCQueryDelegate {
 	func queryHasChangesAvailable(_ query: OCQuery!) {
 		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (_, changeSet) in
 			DispatchQueue.main.async {
-				self.items = changeSet?.queryResult
-				self.tableView.reloadData()
 
 				switch query.state {
-					case .contentsFromCache, .idle:
-						if self.items?.count == 0 {
-							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
-						} else {
-							self.message(show: false)
-						}
-
-					case .targetRemoved:
-						self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
-
-					default:
-						self.message(show: false)
+				case .idle, .targetRemoved, .contentsFromCache, .stopped:
+					if self.refreshController!.isRefreshing {
+						self.refreshController?.endRefreshing()
+					}
+				default: break
 				}
 
-				switch query.state {
-					case .idle, .targetRemoved, .contentsFromCache, .stopped:
-						if self.refreshControl?.isRefreshing ?? false {
-							self.refreshControl?.endRefreshing()
-						}
+				self.items = changeSet?.queryResult
 
-					default: break
+				switch query.state {
+				case .contentsFromCache, .idle:
+					if self.items?.count == 0 {
+						if self.searchController?.searchBar.text != "" {
+							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
+						} else {
+							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
+						}
+					} else {
+						self.message(show: false)
+					}
+
+					self.tableView.reloadData()
+
+				case .targetRemoved:
+					self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
+					self.tableView.reloadData()
+
+				default:
+					self.message(show: false)
 				}
 			}
 		}
+	}
+}
+
+// MARK: - SortBar Delegate
+extension ClientQueryViewController : SortBarDelegate {
+
+	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
+		sortMethod = didUpdateSortMethod
+		query?.sortComparator = sortMethod.comparator()
+
+	}
+}
+
+// MARK: - UISearchResultsUpdating Delegate
+extension ClientQueryViewController: UISearchResultsUpdating {
+	func updateSearchResults(for searchController: UISearchController) {
+		let searchText = searchController.searchBar.text!
+
+		let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
+			if let item = item {
+				if item.name.localizedCaseInsensitiveContains(searchText) {return true}
+
+			}
+			return false
+		}
+
+		if searchText == "" {
+			if let filter = query?.filter(withIdentifier: "text-search") {
+				query?.removeFilter(filter)
+			}
+		} else {
+			if let filter = query?.filter(withIdentifier: "text-search") {
+				query?.updateFilter(filter, applyChanges: { filterToChange in
+					(filterToChange as? OCQueryFilter)?.filterHandler = filterHandler
+				})
+			} else {
+				query?.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
+			}
+		}
+	}
+
+	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
+
+		self.present(presentViewController, animated: animated, completion: completionHandler)
 	}
 }

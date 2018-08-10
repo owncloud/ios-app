@@ -29,6 +29,10 @@ enum StaticTableViewEvent {
 class StaticTableViewController: UITableViewController, Themeable {
 	public var sections : [StaticTableViewSection] = Array()
 
+	public var needsLiveUpdates : Bool {
+		return self.view.window != nil
+	}
+
 	// MARK: - Section administration
 	func addSection(_ section: StaticTableViewSection, animated animateThis: Bool = false) {
 		self.insertSection(section, at: sections.count, animated: animateThis)

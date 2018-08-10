@@ -51,7 +51,7 @@ class ClientRootViewController: UITabBarController {
 		openProgress.localizedDescription = "Connecting…".localized
 		progressSummarizer?.startTracking(progress: openProgress)
 
-		core = CoreManager.shared.requestCoreForBookmark(bookmark, completion: { (_, error) in
+		core = OCCoreManager.shared.requestCore(for: bookmark, completionHandler: { (_, error) in
 			if error == nil {
 				self.coreReady()
 			}
@@ -62,6 +62,7 @@ class ClientRootViewController: UITabBarController {
 
 			self.progressSummarizer?.stopTracking(progress: openProgress)
 		})
+		core?.delegate = self
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -71,7 +72,11 @@ class ClientRootViewController: UITabBarController {
 	deinit {
 		ProgressSummarizer.shared(forBookmark: bookmark).removeObserver(self)
 
-		CoreManager.shared.returnCoreForBookmark(bookmark, completion: nil)
+		if core?.delegate === self {
+			core?.delegate = nil
+		}
+
+		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 	}
 
 	override func viewDidLoad() {
@@ -101,7 +106,11 @@ class ClientRootViewController: UITabBarController {
 	}
 
 	@objc func logout(_: Any) {
-		self.presentingViewController?.dismiss(animated: true, completion: nil)
+		self.closeClient()
+	}
+
+	func closeClient(completion: (() -> Void)? = nil) {
+		self.presentingViewController?.dismiss(animated: true, completion: completion)
 	}
 
 	func coreReady() {
@@ -111,6 +120,69 @@ class ClientRootViewController: UITabBarController {
 			queryViewController.navigationItem.leftBarButtonItem = self.logoutBarButtonItem()
 
 			self.filesNavigationController?.pushViewController(queryViewController, animated: false)
+		}
+	}
+}
+
+extension ClientRootViewController : OCCoreDelegate {
+	func core(_ core: OCCore!, handleError error: Error!, issue: OCConnectionIssue!) {
+		OnMainThread {
+			var presentIssue : OCConnectionIssue? = issue
+
+			if error != nil {
+				if let nsError : NSError = error as NSError? {
+					if nsError.isOCError(withCode: .errorAuthorizationFailed) {
+						let alertController = UIAlertController(title: "Authorization failed".localized,
+											message: "The server declined access with the credentials stored for this connection.".localized,
+											preferredStyle: .alert)
+
+						alertController.addAction(UIAlertAction(title: "Ignore".localized, style: .destructive, handler: nil))
+
+						alertController.addAction(UIAlertAction(title: "Edit".localized, style: .default, handler: { (_) in
+							let presentingViewController = self.presentingViewController
+							let editBookmark = self.bookmark
+
+							self.closeClient(completion: {
+								if presentingViewController != nil,
+								   let serverListNavigationController = presentingViewController as? UINavigationController,
+								   let serverListTableViewController = serverListNavigationController.topViewController as? ServerListTableViewController {
+									serverListTableViewController.showBookmarkUI(edit: editBookmark)
+								}
+							})
+						}))
+
+						self.present(alertController, animated: true, completion: nil)
+
+						return
+					}
+				}
+			}
+
+			if issue == nil && error != nil {
+				presentIssue = OCConnectionIssue(forError: error, level: .error, issueHandler: nil)
+			}
+
+			if presentIssue != nil {
+				if presentIssue?.type == .multipleChoice {
+					let alertViewController = UIAlertController(with: presentIssue!)
+
+					self.present(alertViewController, animated: true, completion: nil)
+				} else {
+					let issuesViewController = ConnectionIssueViewController(displayIssues: presentIssue?.prepareForDisplay(), completion: { (response) in
+						switch response {
+							case .cancel:
+								presentIssue?.reject()
+
+							case .approve:
+								presentIssue?.approve()
+
+							case .dismiss: break
+						}
+					})
+
+					self.present(issuesViewController, animated: true, completion: nil)
+				}
+			}
 		}
 	}
 }

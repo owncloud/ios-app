@@ -6,6 +6,16 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 
 enum IssueButtonStyle {
@@ -21,6 +31,18 @@ struct IssueButton {
     let action: () -> Void
 }
 
+class IssuesTableViewCell : UITableViewCell {
+	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+		super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+	}
+
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+}
+
+let IssuesViewControllerCellIdentifier = "issue-cell"
+
 class IssuesViewController: UIViewController {
 
     var tableView: UITableView?
@@ -30,7 +52,7 @@ class IssuesViewController: UIViewController {
     private var tableHeighConstraint: NSLayoutConstraint?
     private var modalPresentationVC: UIViewControllerTransitioningDelegate?
 
-    init(buttons: [IssueButton]? = nil, title: String) {
+    init(buttons: [IssueButton]? = nil, title: String?) {
         super.init(nibName: nil, bundle: nil)
         self.headerTitle = title
         self.buttons = buttons
@@ -38,11 +60,12 @@ class IssuesViewController: UIViewController {
     }
 
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         setupTableView()
         setupBottomContainer()
@@ -65,8 +88,8 @@ class IssuesViewController: UIViewController {
         tableView?.layer.cornerRadius = 10
         tableView?.separatorInset = .zero
         tableView?.bounces = false
-        tableView?.backgroundColor = .green
         tableView?.rowHeight = UITableViewAutomaticDimension
+	tableView?.register(IssuesTableViewCell.self, forCellReuseIdentifier: IssuesViewControllerCellIdentifier)
     }
 
     private func setupBottomContainer() {
@@ -142,7 +165,7 @@ class IssuesViewController: UIViewController {
     }
 
     private func setupTransitions() {
-        self.modalPresentationStyle = .custom
+        self.modalPresentationStyle = .overCurrentContext
         let transitioningDLG = IssuesTransitioningDelegate()
         self.modalPresentationVC = transitioningDLG
         self.transitioningDelegate = transitioningDLG

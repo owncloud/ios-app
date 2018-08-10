@@ -17,9 +17,18 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>15</string>
+	<string>49</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>org-appextension-feature-password-management</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>OCAppGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>OCAppIdentifierPrefix</key>
@@ -51,6 +60,8 @@
 		<true/>
 	</dict>
 	<key>ITSAppUsesNonExemptEncryption</key>
-		<false/>
+	<false/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Unlock the app without entering the passcode.</string>
 </dict>
 </plist>
