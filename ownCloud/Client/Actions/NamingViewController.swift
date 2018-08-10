@@ -12,13 +12,13 @@ import ownCloudSDK
 typealias StringValidatorResult = (Bool, String?)
 typealias StringValidatorHandler = (String) -> StringValidatorResult
 
-class RenameViewController: UIViewController {
+class NamingViewController: UIViewController {
 
 	//TODO This view controller ideally should have Theme support.
 
 	weak var item: OCItem?
 	weak var core: OCCore?
-	var completion: (String, RenameViewController) -> Void
+	var completion: (String, NamingViewController) -> Void
 	var stringValidator: StringValidatorHandler?
 	var defaultName: String?
 
@@ -45,7 +45,7 @@ class RenameViewController: UIViewController {
 
 	private let thumbnailSize = CGSize(width: 150.0, height: 150.0)
 
-	init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String, RenameViewController) -> Void) {
+	init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String, NamingViewController) -> Void) {
 		self.item = item
 		self.core = core
 		self.completion = completion
@@ -71,7 +71,7 @@ class RenameViewController: UIViewController {
 		super.init(nibName: nil, bundle: nil)
 	}
 
-	init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String, RenameViewController) -> Void) {
+	init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String, NamingViewController) -> Void) {
 		self.item = nil
 		self.core = core
 		self.completion = completion
@@ -331,7 +331,7 @@ class RenameViewController: UIViewController {
 
 }
 
-extension RenameViewController: UITextFieldDelegate {
+extension NamingViewController: UITextFieldDelegate {
 
 	func textFieldDidBeginEditing(_ textField: UITextField) {
 

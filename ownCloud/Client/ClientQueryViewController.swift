@@ -337,7 +337,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 
 		let renameAction = UIContextualAction(style: .normal, title: "Rename") { (_, _, actionPerformed) in
-			let renamevc = RenameViewController(with: item, core: self.core, stringValidator: { name in
+			let renamevc = NamingViewController(with: item, core: self.core, stringValidator: { name in
 				if name.contains("/") || name.contains("\\") {
 					return (false, "File name cannot contain / or \\")
 				} else {
