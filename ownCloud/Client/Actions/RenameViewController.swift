@@ -9,11 +9,18 @@
 import UIKit
 import ownCloudSDK
 
+typealias StringValidatorResult = (Bool, String?)
+typealias StringValidatorHandler = (String) -> StringValidatorResult
+
 class RenameViewController: UIViewController {
 
-	weak var itemToRename: OCItem?
+	//TODO This view controller ideally should have Theme support.
+
+	weak var item: OCItem?
 	weak var core: OCCore?
-	var completion: (String) -> Void
+	var completion: (String, RenameViewController) -> Void
+	var stringValidator: StringValidatorHandler?
+	var defaultName: String?
 
 	private var blurView: UIVisualEffectView
 
@@ -31,17 +38,45 @@ class RenameViewController: UIViewController {
 	private var thumbnailHeightAnchorConstraint: NSLayoutConstraint
 
 	private var stackViewLeftAnchorConstraint: NSLayoutConstraint?
-	private var stackviewRightAnchorConstraint: NSLayoutConstraint?
+	private var stackViewRightAnchorConstraint: NSLayoutConstraint?
 
 	private var cancelButton: UIBarButtonItem?
 	private var doneButton: UIBarButtonItem?
 
 	private let thumbnailSize = CGSize(width: 150.0, height: 150.0)
 
-	init(with item: OCItem? = nil, core: OCCore? = nil, completion: @escaping (String) -> Void) {
-		self.itemToRename = item
+	init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String, RenameViewController) -> Void) {
+		self.item = item
 		self.core = core
 		self.completion = completion
+		self.stringValidator = stringValidator
+		self.defaultName = nil
+
+		blurView = UIVisualEffectView.init(effect: UIBlurEffect(style: .regular))
+
+		stackView = UIStackView(frame: .zero)
+
+		thumbnailContainer = UIView(frame: .zero)
+		thumbnailImageView = UIImageView(frame: .zero)
+
+		nameContainer = UIView(frame: .zero)
+		nameTextField = UITextField(frame: .zero)
+
+		textfieldCenterYAnchorConstraint = nameTextField.centerYAnchor.constraint(equalTo: nameContainer.centerYAnchor)
+		textfieldTopAnchorConstraint = nameTextField.topAnchor.constraint(equalTo: nameContainer.topAnchor, constant: 15)
+		thumbnailContainerWidthAnchorConstraint = thumbnailContainer.widthAnchor.constraint(equalToConstant: 200)
+		thumbnailContainerWidthAnchorConstraint.priority = .init(999)
+		thumbnailHeightAnchorConstraint = thumbnailImageView.heightAnchor.constraint(equalToConstant: 150)
+
+		super.init(nibName: nil, bundle: nil)
+	}
+
+	init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String, RenameViewController) -> Void) {
+		self.item = nil
+		self.core = core
+		self.completion = completion
+		self.stringValidator = stringValidator
+		self.defaultName = defaultName
 
 		blurView = UIVisualEffectView.init(effect: UIBlurEffect(style: .regular))
 
@@ -66,37 +101,36 @@ class RenameViewController: UIViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	deinit {
+		NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+	}
+
 	override func viewDidLoad() {
         super.viewDidLoad()
 
 		stackViewLeftAnchorConstraint = stackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0)
-		stackviewRightAnchorConstraint = stackView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0)
+		stackViewRightAnchorConstraint = stackView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0)
 
-		if let item = itemToRename {
+		if let item = item {
 			nameTextField.text = item.name
 			thumbnailImageView.image = item.icon(fitInSize: thumbnailSize)
 
 			if item.thumbnailAvailability != .none {
-				let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-					_ = thumbnail?.requestImage(for: self.thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
+				_ = core!.retrieveThumbnail(for: item, maximumSize: self.thumbnailSize, scale: 0, retrieveHandler: { (error, _, _, thumbnail, _, _) in
+					_ = thumbnail?.requestImage(for: self.thumbnailSize, scale: 0, withCompletionHandler: { [weak self] (thumbnail, error, _, image) in
 						if error == nil,
 							image != nil,
 							item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
 							OnMainThread {
-								self.thumbnailImageView.image = image
+								self?.thumbnailImageView.image = image
 							}
 						}
 					})
-				}
-
-				_ = core!.retrieveThumbnail(for: item, maximumSize: self.thumbnailSize, scale: 0, retrieveHandler: { (error, _, _, thumbnail, _, progress) in
-					displayThumbnail(thumbnail)
 				})
+			} else {
+				nameTextField.text = defaultName
+				thumbnailImageView.image = Theme.shared.image(for: "folder", size: thumbnailSize)
 			}
-
-		} else {
-			nameTextField.text = "Unknown folder".localized
-			thumbnailImageView.image = Theme.shared.image(for: "folder", size: thumbnailSize)
 		}
 
 		// Navigation buttons
@@ -157,7 +191,7 @@ class RenameViewController: UIViewController {
 			stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
 			stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
 			stackViewLeftAnchorConstraint!,
-			stackviewRightAnchorConstraint!
+			stackViewRightAnchorConstraint!
 		])
 		render(newTraitCollection: traitCollection)
 		stackView.alignment = .fill
@@ -168,7 +202,7 @@ class RenameViewController: UIViewController {
 		switch (newTraitCollection.horizontalSizeClass, newTraitCollection.verticalSizeClass) {
 		case (.compact, .regular):
 			stackViewLeftAnchorConstraint?.constant = 0
-			stackviewRightAnchorConstraint?.constant = 0
+			stackViewRightAnchorConstraint?.constant = 0
 
 			NSLayoutConstraint.deactivate([
 				textfieldCenterYAnchorConstraint,
@@ -181,6 +215,7 @@ class RenameViewController: UIViewController {
 
 			stackView.axis = .vertical
 			stackView.distribution = .fillEqually
+			self.stackView.transform = CGAffineTransform.identity
 
 		default:
 
@@ -199,23 +234,33 @@ class RenameViewController: UIViewController {
 		switch (newTraitCollection.horizontalSizeClass, newTraitCollection.verticalSizeClass) {
 		case (.regular, .regular):
 			stackViewLeftAnchorConstraint?.constant = 100
-			stackviewRightAnchorConstraint?.constant = -100
+			stackViewRightAnchorConstraint?.constant = -100
 			thumbnailHeightAnchorConstraint.constant = 150
+
+			// Tweak for small PPI devices
+			if UIDevice.current.userInterfaceIdiom == .phone && UIScreen.main.nativeBounds.height == 1136 {
+				thumbnailHeightAnchorConstraint.constant = 100
+			}
 
 		case (.compact, .compact):
 			thumbnailHeightAnchorConstraint.constant = 100
 			stackViewLeftAnchorConstraint?.constant = 0
-			stackviewRightAnchorConstraint?.constant = 0
+			stackViewRightAnchorConstraint?.constant = 0
+
+			// Tweak for small PPI devices
+			if UIDevice.current.userInterfaceIdiom == .phone && UIScreen.main.nativeBounds.height == 1136 {
+				thumbnailHeightAnchorConstraint.constant = 80
+			}
 
 		default:
 			stackViewLeftAnchorConstraint?.constant = 0
-			stackviewRightAnchorConstraint?.constant = 0
+			stackViewRightAnchorConstraint?.constant = 0
 			thumbnailHeightAnchorConstraint.constant = 150
-		}
 
-		// Non 3.0 scale displays
-		if UIScreen.main.scale < 3.0 {
-			thumbnailHeightAnchorConstraint.constant = 100
+			// Tweak for small PPI devices
+			if UIDevice.current.userInterfaceIdiom == .phone && UIScreen.main.nativeBounds.height == 1136 {
+				thumbnailHeightAnchorConstraint.constant = 100
+			}
 		}
 	}
 
@@ -237,24 +282,61 @@ class RenameViewController: UIViewController {
 	}
 
 	@objc private func doneButtonPressed() {
-		if nameTextField.text!.contains("/") || nameTextField.text!.contains("\\") {
-			let controller = UIAlertController(title: "Forbiden Characters".localized, message: "File name cannot contain / or \\".localized, preferredStyle: .alert)
-			let okAction = UIAlertAction(title: "Ok", style: .default)
-			controller.addAction(okAction)
-			self.present(controller, animated: true)
+
+		if let stringValidator = self.stringValidator {
+
+			let validatorResult = stringValidator(nameTextField.text!)
+			if validatorResult.0 {
+				self.dismiss(animated: true) {
+					self.completion(self.nameTextField.text!, self)
+				}
+			} else {
+				let controller = UIAlertController(title: "Forbiden Characters".localized, message: validatorResult.1, preferredStyle: .alert)
+				let okAction = UIAlertAction(title: "Ok", style: .default)
+				controller.addAction(okAction)
+				self.present(controller, animated: true)
+			}
 		} else {
 			self.dismiss(animated: true) {
-				self.completion(self.nameTextField.text!)
+				self.completion(self.nameTextField.text!, self)
 			}
 		}
 	}
+
+	@objc func keyboardWillShow(notification: NSNotification) {
+		if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+			if self.view.frame.origin.y == 0 {
+				// TODO: Improve this for center the stackview with the keyboard not only when the keyboard partialy cover the thumbnailImage
+				let thumbnailImageMaxY = self.view.convert(self.thumbnailImageView.frame, from:stackView).maxY
+				let thumbnailTopSpace = self.view.convert(self.thumbnailImageView.frame, from:stackView).minY - self.navigationController!.navigationBar.frame.maxY
+				let keyboardY = self.view.frame.height - keyboardSize.height
+				let firstYTranslation = thumbnailImageMaxY  - (keyboardY)
+				let finalYTranslation = firstYTranslation + ((thumbnailTopSpace - firstYTranslation) / 2)
+
+				// if the keyboard is above the thumbnailView
+				if thumbnailImageMaxY >= keyboardY {
+					let animation = UIViewPropertyAnimator(duration: 0.7, dampingRatio: 1.0) {
+						self.stackView.transform = CGAffineTransform.init(translationX: 0, y: -(finalYTranslation))
+					}
+					animation.startAnimation()
+				}
+			}
+		}
+	}
+
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+	}
+
 }
 
 extension RenameViewController: UITextFieldDelegate {
 
 	func textFieldDidBeginEditing(_ textField: UITextField) {
+
 		if let name = nameTextField.text,
-			let fileExtension = name.fileExtension(),
+			let fileExtension = item?.fileSuffix(),
 			let range = name.range(of: fileExtension),
 			let position: UITextPosition = nameTextField.position(from: nameTextField.beginningOfDocument, offset: range.lowerBound.encodedOffset - 1) {
 

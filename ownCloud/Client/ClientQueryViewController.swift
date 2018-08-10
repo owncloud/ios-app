@@ -337,18 +337,21 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 
 		let renameAction = UIContextualAction(style: .normal, title: "Rename") { (_, _, actionPerformed) in
-			let renamevc = RenameViewController(with: item, core: self.core, completion: { newName in
-				var summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
-				summary.message = NSString(format: "Renaming to %@".localized as NSString, newName) as String
-				self.queryProgressSummary = summary
+			let renamevc = RenameViewController(with: item, core: self.core, stringValidator: { name in
+				if name.contains("/") || name.contains("\\") {
+					return (false, "File name cannot contain / or \\")
+				} else {
+					return (true, nil)
+				}
+			}, completion: { newName, _ in
 
-				self.core?.move(item, to: self.query?.rootItem, withName: newName, options: nil, resultHandler: { (error, _, _, _) in
+				if let progress = self.core?.move(item, to: self.query?.rootItem, withName: newName, options: nil, resultHandler: { (error, _, _, _) in
 					if error != nil {
 						Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
 					}
-					summary.progressCount = 0
-					self.queryProgressSummary = summary
-				})
+				}) {
+					self.progressSummarizer?.startTracking(progress: progress)
+				}
 			})
 
 			let renameNavigationVC = ThemeNavigationController(rootViewController: renamevc)
