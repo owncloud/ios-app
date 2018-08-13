@@ -519,6 +519,14 @@ extension ClientQueryViewController : OCQueryDelegate {
 
 // MARK: - SortBar Delegate
 extension ClientQueryViewController : SortBarDelegate {
+	func sortBar(_ sortBar: SortBar, leftButtonPressed: UIButton) {
+		print("LOG ---> left button pressed")
+	}
+
+	func sortBar(_ sortBar: SortBar, rightButtonPressed: UIButton) {
+		print("LOG ---> right button pressed")
+	}
+
 
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
