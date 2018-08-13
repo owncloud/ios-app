@@ -129,6 +129,7 @@ extension OCItem {
 		"audio",
 		"file",
 		"folder",
+		"folder-create",
 		"folder-drag-accept",
 		"folder-external",
 		"folder-public",
