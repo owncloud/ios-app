@@ -129,6 +129,7 @@ class NamingViewController: UIViewController {
 				})
 			}
 		} else {
+			nameTextField.text = defaultName
 			thumbnailImageView.image = Theme.shared.image(for: "folder", size: thumbnailSize)
 		}
 
