@@ -285,6 +285,7 @@ class NamingViewController: UIViewController {
 	@objc private func doneButtonPressed() {
 
 		if let item = item, self.nameTextField.text == item.name {
+			nameTextField.resignFirstResponder()
 			self.dismiss(animated: true) {
 				self.completion(nil, self)
 			}
@@ -293,6 +294,7 @@ class NamingViewController: UIViewController {
 
 				let validatorResult = stringValidator(nameTextField.text!)
 				if validatorResult.0 {
+					nameTextField.resignFirstResponder()
 					self.dismiss(animated: true) {
 						self.completion(self.nameTextField.text!, self)
 					}
@@ -303,6 +305,7 @@ class NamingViewController: UIViewController {
 					self.present(controller, animated: true)
 				}
 			} else {
+				nameTextField.resignFirstResponder()
 				self.dismiss(animated: true) {
 					self.completion(self.nameTextField.text!, self)
 				}
