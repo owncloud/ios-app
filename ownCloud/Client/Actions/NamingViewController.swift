@@ -127,10 +127,9 @@ class NamingViewController: UIViewController {
 						}
 					})
 				})
-			} else {
-				nameTextField.text = defaultName
-				thumbnailImageView.image = Theme.shared.image(for: "folder", size: thumbnailSize)
 			}
+		} else {
+			thumbnailImageView.image = Theme.shared.image(for: "folder", size: thumbnailSize)
 		}
 
 		// Navigation buttons
@@ -292,7 +291,7 @@ class NamingViewController: UIViewController {
 					self.completion(self.nameTextField.text!, self)
 				}
 			} else {
-				let controller = UIAlertController(title: "Forbiden Characters".localized, message: validatorResult.1, preferredStyle: .alert)
+				let controller = UIAlertController(title: "Forbidden Characters".localized, message: validatorResult.1, preferredStyle: .alert)
 				let okAction = UIAlertAction(title: "Ok", style: .default)
 				controller.addAction(okAction)
 				self.present(controller, animated: true)
