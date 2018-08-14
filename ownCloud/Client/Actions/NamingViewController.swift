@@ -18,7 +18,7 @@ class NamingViewController: UIViewController {
 
 	weak var item: OCItem?
 	weak var core: OCCore?
-	var completion: (String, NamingViewController) -> Void
+	var completion: (String?, NamingViewController) -> Void
 	var stringValidator: StringValidatorHandler?
 	var defaultName: String?
 
@@ -45,7 +45,7 @@ class NamingViewController: UIViewController {
 
 	private let thumbnailSize = CGSize(width: 150.0, height: 150.0)
 
-	init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String, NamingViewController) -> Void) {
+	init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
 		self.item = item
 		self.core = core
 		self.completion = completion
@@ -71,7 +71,7 @@ class NamingViewController: UIViewController {
 		super.init(nibName: nil, bundle: nil)
 	}
 
-	init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String, NamingViewController) -> Void) {
+	init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
 		self.item = nil
 		self.core = core
 		self.completion = completion
@@ -284,22 +284,28 @@ class NamingViewController: UIViewController {
 
 	@objc private func doneButtonPressed() {
 
-		if let stringValidator = self.stringValidator {
+		if let item = item, self.nameTextField.text == item.name {
+			self.dismiss(animated: true) {
+				self.completion(nil, self)
+			}
+		} else {
+			if let stringValidator = self.stringValidator {
 
-			let validatorResult = stringValidator(nameTextField.text!)
-			if validatorResult.0 {
+				let validatorResult = stringValidator(nameTextField.text!)
+				if validatorResult.0 {
+					self.dismiss(animated: true) {
+						self.completion(self.nameTextField.text!, self)
+					}
+				} else {
+					let controller = UIAlertController(title: "Forbidden Characters".localized, message: validatorResult.1, preferredStyle: .alert)
+					let okAction = UIAlertAction(title: "Ok", style: .default)
+					controller.addAction(okAction)
+					self.present(controller, animated: true)
+				}
+			} else {
 				self.dismiss(animated: true) {
 					self.completion(self.nameTextField.text!, self)
 				}
-			} else {
-				let controller = UIAlertController(title: "Forbidden Characters".localized, message: validatorResult.1, preferredStyle: .alert)
-				let okAction = UIAlertAction(title: "Ok", style: .default)
-				controller.addAction(okAction)
-				self.present(controller, animated: true)
-			}
-		} else {
-			self.dismiss(animated: true) {
-				self.completion(self.nameTextField.text!, self)
 			}
 		}
 	}

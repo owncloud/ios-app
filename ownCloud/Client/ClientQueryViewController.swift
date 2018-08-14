@@ -334,6 +334,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				}
 			}, completion: { newName, _ in
 
+				guard newName != nil else {
+					return
+				}
+
 				if let progress = self.core?.move(item, to: self.query?.rootItem, withName: newName, options: nil, resultHandler: { (error, _, _, _) in
 					if error != nil {
 						Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
