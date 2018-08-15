@@ -181,21 +181,21 @@
 		 if ((item = [self itemForIdentifier:itemIdentifier error:&error]) != nil)
 		 {
 			[self.core downloadItem:(OCItem *)item options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, OCFile *file) {
-				NSError *provideError = error;
+//				NSError *provideError = error;
+//
+//				if (provideError == nil)
+//				{
+//					[[NSFileManager defaultManager] createDirectoryAtURL:provideAtURL.URLByDeletingLastPathComponent withIntermediateDirectories:YES attributes:nil error:NULL];
+//					if ([[NSFileManager defaultManager] fileExistsAtPath:provideAtURL.path])
+//					{
+//						[[NSFileManager defaultManager] removeItemAtURL:provideAtURL error:&provideError];
+//					}
+//					[[NSFileManager defaultManager] moveItemAtURL:file.url toURL:provideAtURL error:&provideError];
+//				}
+//
+				NSLog(@"Starting to provide file:\nPAU: %@\nFURL: %@\nID: %@\nErr: %@\nlocalRelativePath: %@", provideAtURL, file.url, item.itemIdentifier, error, item.localRelativePath);
 
-				if (provideError == nil)
-				{
-					[[NSFileManager defaultManager] createDirectoryAtURL:provideAtURL.URLByDeletingLastPathComponent withIntermediateDirectories:YES attributes:nil error:NULL];
-					if ([[NSFileManager defaultManager] fileExistsAtPath:provideAtURL.path])
-					{
-						[[NSFileManager defaultManager] removeItemAtURL:provideAtURL error:&provideError];
-					}
-					[[NSFileManager defaultManager] moveItemAtURL:file.url toURL:provideAtURL error:&provideError];
-				}
-
-				NSLog(@"Starting to provide file:\nPAU: %@\nURL: %@\nErr: %@", provideAtURL, [self URLForItemWithPersistentIdentifier:item.itemIdentifier], provideError);
-
-				completionHandler(provideError);
+				completionHandler(error);
 			}];
 
 			return;

@@ -83,7 +83,9 @@ class FileProviderInterfaceManager: NSObject {
 							waitForManagerGroup.enter()
 
 							NSFileProviderManager.remove(domain, completionHandler: { (error) in
-								Log.error("Error removing domain: \(domain) error: \(String(describing: error))")
+								if error != nil {
+									Log.error("Error removing domain: \(domain) error: \(String(describing: error))")
+								}
 								waitForManagerGroup.leave()
 							})
 						}
@@ -102,7 +104,9 @@ class FileProviderInterfaceManager: NSObject {
 							waitForManagerGroup.enter()
 
 							NSFileProviderManager.add(newDomain, completionHandler: { (error) in
-								Log.error("Error adding domain: \(newDomain) error: \(String(describing: error))")
+								if error != nil {
+									Log.error("Error adding domain: \(newDomain) error: \(String(describing: error))")
+								}
 								waitForManagerGroup.leave()
 							})
 						}

@@ -98,6 +98,22 @@
 	return (nil);
 }
 
+- (BOOL)isDownloading
+{
+	return ((self.syncActivity & OCItemSyncActivityDownloading) == OCItemSyncActivityDownloading);
+}
+
+- (BOOL)isDownloaded
+{
+	if (self.localRelativePath != nil)
+	{
+		// Further checks!?
+		return (YES);
+	}
+
+	return (NO);
+}
+
 //- (BOOL)respondsToSelector:(SEL)aSelector
 //{
 //	NSLog(@"Probing for %@", NSStringFromSelector(aSelector));
@@ -105,21 +121,12 @@
 //	return ([super respondsToSelector:aSelector]);
 //}
 //
-//- (NSDate *)contentModificationDate
-//{
-//	return (self.lastModified);
-//}
-//
-//- (BOOL)isDownloaded
-//{
-//	return(NO);
-//}
-//
-//- (BOOL)isDownloading
-//{
-//	return (NO);
-//}
-//
+
+- (NSDate *)contentModificationDate
+{
+	return (self.lastModified);
+}
+
 - (NSNumber *)childItemCount
 {
 	if (self.type == OCItemTypeFile)
