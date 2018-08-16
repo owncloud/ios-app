@@ -28,6 +28,9 @@ class StaticTableViewSection: NSObject {
 	public var headerTitle : String?
 	public var footerTitle : String?
 
+	public var headerAttributedTitle : NSAttributedString?
+	public var footerAttributedTitle : NSAttributedString?
+
 	public var index : Int? {
 		return self.viewController?.sections.index(of: self)
 	}
@@ -41,6 +44,17 @@ class StaticTableViewSection: NSObject {
 
 		self.headerTitle = theHeaderTitle
 		self.footerTitle = theFooterTitle
+
+		self.identifier  = identifier
+
+		self.add(rows: rowsToAdd)
+	}
+
+	convenience init(headerAttributedTitle theHeaderTitle: NSAttributedString, footerAttributedTitle theFooterTitle: NSAttributedString? = nil, identifier : String? = nil, rows rowsToAdd: [StaticTableViewRow] = Array()) {
+		self.init()
+
+		self.headerAttributedTitle = theHeaderTitle
+		self.footerAttributedTitle = theFooterTitle
 
 		self.identifier  = identifier
 

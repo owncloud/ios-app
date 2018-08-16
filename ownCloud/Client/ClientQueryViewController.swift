@@ -246,6 +246,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		cell?.core = self.core
 
+		if cell?.delegate == nil {
+			cell?.delegate = self
+		}
+
 		// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
 		// Make sure we don't request the thumbnail multiple times in that case.
 		if (cell?.item?.itemVersionIdentifier != newItem.itemVersionIdentifier) || (cell?.item?.name != newItem.name) {
@@ -264,7 +268,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		switch rowItem.type {
 		case .collection:
 			self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
-
 		case .file:
 			let fallbackSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: "Downloading \(rowItem.name!)", progressCount: 1)
 
@@ -596,5 +599,61 @@ extension ClientQueryViewController: UISearchResultsUpdating {
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
 
 		self.present(presentViewController, animated: animated, completion: completionHandler)
+	}
+}
+
+// MARK: - ClientItemCell Delegate
+extension ClientQueryViewController: ClientItemCellDelegate {
+	func moreButtonTapped(cell: ClientItemCell) {
+		if let item = cell.item {
+
+			let tableViewController = MoreStaticTableViewController(style: .grouped)
+			tableViewController.tableView.isScrollEnabled = false
+			let header = MoreViewHeader(for: item, with: core!)
+			let moreVC = MoreViewController(item: item, core: core!, header: header, viewController: tableViewController)
+
+			let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
+			let delete = NSAttributedString(string: "Delete", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .regular), NSAttributedStringKey.foregroundColor : UIColor.red])
+			let rename = NSAttributedString(string: "Rename", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .regular)])
+
+			let deleteRow: StaticTableViewRow = StaticTableViewRow(rowWithAction: { (_, _) in
+				let presentationStyle: UIAlertControllerStyle = UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet
+
+					let alertController =
+						UIAlertController(with: item.name!,
+										  message: "Are you sure you want to delete this file from the server?".localized,
+										  destructiveLabel: "Delete".localized,
+										  preferredStyle: presentationStyle,
+										  destructiveAction: {
+											if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
+												if error != nil {
+													Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
+												}
+											}) {
+												self.progressSummarizer?.startTracking(progress: progress)
+											}
+											OnMainThread {
+												moreVC.dismiss(animated:true)
+											}
+						}
+					)
+
+				OnMainThread {
+					moreVC.present(alertController, animated: true)
+				}
+
+			}, attributedTitle: delete, alignment: .center)
+
+			let renameRow: StaticTableViewRow = StaticTableViewRow(rowWithAction: nil, attributedTitle: rename, alignment: .center)
+			tableViewController.addSection(StaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [
+				renameRow,
+				deleteRow
+				]))
+
+			let animator = CardTransitionDelegate(viewControllerToPresent: moreVC, presentingViewController: self)
+			moreVC.transitioningDelegate = animator
+			moreVC.modalPresentationStyle = .custom
+			present(moreVC, animated: true)
+		}
 	}
 }

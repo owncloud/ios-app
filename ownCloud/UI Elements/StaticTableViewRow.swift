@@ -101,6 +101,21 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.action = rowWithAction
 	}
 
+	convenience init(rowWithAction: StaticTableViewRowAction?, attributedTitle: NSAttributedString, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil, alignment: NSTextAlignment = .left) {
+		self.init()
+
+		self.identifier = identifier
+
+		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell?.textLabel?.attributedText = attributedTitle
+		self.cell?.textLabel?.textAlignment = alignment
+		self.cell?.accessoryType = accessoryType
+
+		self.cell?.accessibilityIdentifier = identifier
+
+		self.action = rowWithAction
+	}
+
     convenience init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
         self.init()
 
