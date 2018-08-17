@@ -271,7 +271,9 @@ class NamingViewController: UIViewController {
 
 	@objc private func cancelButtonPressed() {
 		nameTextField.resignFirstResponder()
-		self.dismiss(animated: true)
+		self.dismiss(animated: true) {
+			self.completion(nil, self)
+		}
 	}
 
 	@objc func textfieldDidChange(_ sender: UITextField) {
@@ -291,15 +293,15 @@ class NamingViewController: UIViewController {
 			}
 		} else {
 			if let stringValidator = self.stringValidator {
+				let (validationPassed, validationErrorMessage) = stringValidator(nameTextField.text!)
 
-				let validatorResult = stringValidator(nameTextField.text!)
-				if validatorResult.0 {
+				if validationPassed {
 					nameTextField.resignFirstResponder()
 					self.dismiss(animated: true) {
 						self.completion(self.nameTextField.text!, self)
 					}
 				} else {
-					let controller = UIAlertController(title: "Forbidden Characters".localized, message: validatorResult.1, preferredStyle: .alert)
+					let controller = UIAlertController(title: "Forbidden Characters".localized, message: validationErrorMessage, preferredStyle: .alert)
 					let okAction = UIAlertAction(title: "Ok", style: .default)
 					controller.addAction(okAction)
 					self.present(controller, animated: true)
