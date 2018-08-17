@@ -78,6 +78,7 @@
 "This folder no longer exists on the server." = "This folder no longer exists on the server.";
 "Are you sure you want to delete this file from the server?" = "Are you sure you want to delete this file from the server?";
 "Deleting '%@'" = "Deleting '%@'";
+"Renaming to %@" = "Renaming to %@";
 
 /* Server List*/
 "Cancel" = "Cancel";
@@ -129,3 +130,8 @@
 "Please try again in %@" = "Please try again in %@";
 "Unlock %@" = "Unlock %@";
 "Biometric authentication failed" = "Biometric authentication failed";
+
+/* Rename Messages */
+
+"Forbidden Characters" = "Forbidden Characters";
+"File name cannot contain / or \\" = "File name cannot contain / or \\";

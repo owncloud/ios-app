@@ -212,4 +212,8 @@ extension OCItem {
 
 		return nil
 	}
+
+	func fileSuffix() -> String {
+		return (self.name as NSString).pathExtension
+	}
 }

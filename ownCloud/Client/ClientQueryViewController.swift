@@ -324,7 +324,37 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				actionPerformed(false)
 			})
 		}
-		let actions: [UIContextualAction] = [deleteContextualAction]
+
+		let renameContextualAction = UIContextualAction(style: .normal, title: "Rename") { (_, _, actionPerformed) in
+			let renamevc = NamingViewController(with: item, core: self.core, stringValidator: { name in
+				if name.contains("/") || name.contains("\\") {
+					return (false, "File name cannot contain / or \\")
+				} else {
+					return (true, nil)
+				}
+			}, completion: { newName, _ in
+
+				guard newName != nil else {
+					return
+				}
+
+				if let progress = self.core?.move(item, to: self.query?.rootItem, withName: newName, options: nil, resultHandler: { (error, _, _, _) in
+					if error != nil {
+						Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
+					}
+				}) {
+					self.progressSummarizer?.startTracking(progress: progress)
+				}
+			})
+
+			let renameNavigationVC = ThemeNavigationController(rootViewController: renamevc)
+			renameNavigationVC.modalPresentationStyle = .overFullScreen
+			self.navigationController?.present(renameNavigationVC, animated: true)
+
+			actionPerformed(false)
+		}
+
+		let actions: [UIContextualAction] = [deleteContextualAction, renameContextualAction]
 		let actionsConfigurator: UISwipeActionsConfiguration = UISwipeActionsConfiguration(actions: actions)
 
 		return actionsConfigurator
