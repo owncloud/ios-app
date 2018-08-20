@@ -499,7 +499,6 @@ extension ClientQueryViewController: UITableViewDelegate {
 extension ClientQueryViewController: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
-		self.sortBar.backgroundColor = Theme.shared.activeCollection.navigationBarColors.backgroundColor
 		self.navigationController?.view.backgroundColor = Theme.shared.activeCollection.navigationBarColors.backgroundColor
 		self.searchController?.searchBar.applyThemeCollection(collection)
 
@@ -591,7 +590,30 @@ extension ClientQueryViewController : OCQueryDelegate {
 // MARK: - SortBar Delegate
 extension ClientQueryViewController : SortBarDelegate {
 	func sortBar(_ sortBar: SortBar, leftButtonPressed: UIButton) {
-		print("LOG ---> left button pressed")
+		let createFolderVC = NamingViewController(with: core, defaultName: "Unknown Folder".localized, stringValidator: { name in
+			if name.contains("/") || name.contains("\\") {
+				return (false, "File name cannot contain / or \\")
+			} else {
+				return (true, nil)
+			}
+		}, completion: { newName, _ in
+
+			guard newName != nil else {
+				return
+			}
+
+			if let progress = self.core.createFolder(newName, inside: self.query.rootItem, options: nil, resultHandler: { (error, _, _, _) in
+				if error != nil {
+					Log.log("Error \(String(describing: error)) creating folder \(String(describing: newName))")
+				}
+			}) {
+				self.progressSummarizer?.startTracking(progress: progress)
+			}
+		})
+
+		let createFolderNavigationVC = ThemeNavigationController(rootViewController: createFolderVC)
+		createFolderNavigationVC.modalPresentationStyle = .overFullScreen
+		self.navigationController?.present(createFolderNavigationVC, animated: true)
 	}
 
 	func sortBar(_ sortBar: SortBar, rightButtonPressed: UIButton) {
@@ -601,7 +623,10 @@ extension ClientQueryViewController : SortBarDelegate {
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
 		query.sortComparator = sortMethod.comparator()
+	}
 
+	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
+		self.present(presentViewController, animated: animated, completion: completionHandler)
 	}
 }
 
@@ -631,10 +656,5 @@ extension ClientQueryViewController: UISearchResultsUpdating {
 				query.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
 			}
 		}
-	}
-
-	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
-
-		self.present(presentViewController, animated: animated, completion: completionHandler)
 	}
 }
