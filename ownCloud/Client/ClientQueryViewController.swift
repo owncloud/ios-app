@@ -160,8 +160,8 @@ class ClientQueryViewController: UIViewController {
 		view.addSubview(tableView)
 		NSLayoutConstraint.activate([
 			tableView.topAnchor.constraint(equalTo: sortBar.bottomAnchor),
-			tableView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
-			tableView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
+			tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
+			tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
 			tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
 			])
 
@@ -341,8 +341,8 @@ class ClientQueryViewController: UIViewController {
 
 				self.tableView.addSubview(rootView)
 
-				rootView.leftAnchor.constraint(equalTo: self.tableView.safeAreaLayoutGuide.leftAnchor).isActive = true
-				rootView.rightAnchor.constraint(equalTo: self.tableView.safeAreaLayoutGuide.rightAnchor).isActive = true
+				rootView.leftAnchor.constraint(equalTo: self.tableView.leftAnchor).isActive = true
+				rootView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
 				rootView.topAnchor.constraint(equalTo: self.tableView.safeAreaLayoutGuide.topAnchor).isActive = true
 				rootView.bottomAnchor.constraint(equalTo: self.tableView.safeAreaLayoutGuide.bottomAnchor).isActive = true
 
@@ -500,6 +500,7 @@ extension ClientQueryViewController: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
 		self.sortBar.backgroundColor = Theme.shared.activeCollection.navigationBarColors.backgroundColor
+		self.navigationController?.view.backgroundColor = Theme.shared.activeCollection.navigationBarColors.backgroundColor
 		self.searchController?.searchBar.applyThemeCollection(collection)
 
 		if event == .update {
