@@ -560,11 +560,14 @@ extension ClientQueryViewController : SortBarDelegate {
 		print("LOG ---> right button pressed")
 	}
 
-
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
 		query?.sortComparator = sortMethod.comparator()
 
+	}
+
+	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
+		self.present(presentViewController, animated: animated, completion: completionHandler)
 	}
 }
 
@@ -594,11 +597,6 @@ extension ClientQueryViewController: UISearchResultsUpdating {
 				query?.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
 			}
 		}
-	}
-
-	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
-
-		self.present(presentViewController, animated: animated, completion: completionHandler)
 	}
 }
 
@@ -644,7 +642,36 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 
 			}, attributedTitle: delete, alignment: .center)
 
-			let renameRow: StaticTableViewRow = StaticTableViewRow(rowWithAction: nil, attributedTitle: rename, alignment: .center)
+			let renameRow: StaticTableViewRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+
+				moreVC.dismiss(animated: true, completion: {
+					let renamevc = NamingViewController(with: item, core: self?.core, stringValidator: { name in
+						if name.contains("/") || name.contains("\\") {
+							return (false, "File name cannot contain / or \\")
+						} else {
+							return (true, nil)
+						}
+					}, completion: { newName, _ in
+
+						guard newName != nil else {
+							return
+						}
+
+						if let progress = self?.core?.renameItem(item, to: newName, options: nil, resultHandler: { (error, _, _, _) in
+							if error != nil {
+								Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
+							}
+						}) {
+							self?.progressSummarizer?.startTracking(progress: progress)
+						}
+					})
+
+					let renameNavigationVC = ThemeNavigationController(rootViewController: renamevc)
+					renameNavigationVC.modalPresentationStyle = .overFullScreen
+					self?.navigationController?.present(renameNavigationVC, animated: true)
+				})
+			}, attributedTitle: rename, alignment: .center)
+
 			tableViewController.addSection(StaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [
 				renameRow,
 				deleteRow

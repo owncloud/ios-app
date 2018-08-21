@@ -1208,7 +1208,6 @@
 				593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */,
 				DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */,
 				23E22BB720C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
-				6E216A642112F58700ED21BD /* NamingViewController.swift in Sources */,
 				23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */,
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
 				DC3BE0E12077CD4B002A0AC0 /* Synchronized.swift in Sources */,

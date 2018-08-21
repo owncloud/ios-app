@@ -66,7 +66,7 @@ final class CardPresentationController: UIPresentationController {
 		let presentedFrame = CGRect(origin: presentedOrigin, size: presentedSize)
 		return presentedFrame
 	}
-	
+
 	// MARK: - Presentation
 	override func presentationTransitionWillBegin() {
 		if let containerView = containerView {
