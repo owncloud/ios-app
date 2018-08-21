@@ -117,7 +117,7 @@ class SecuritySettingsSection: SettingsSection {
                 vc.navigationController?.pushViewController(newVC, animated: true)
             }
 
-        }, title: "Lock application".localized, subtitle: frequency.toString(), accessoryType: .disclosureIndicator)
+        }, title: "Lock application".localized, subtitle: frequency.toString(), accessoryType: .disclosureIndicator, identifier: "lockFrequency")
 
         // Creation of the passcode row.
         passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
@@ -189,7 +189,7 @@ class SecuritySettingsSection: SettingsSection {
                     viewController.present(passcodeViewController!, animated: true, completion: nil)
                 }
             }
-        }, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled)
+        }, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled, identifier: "passcodeSwitchIdentifier")
 
         // Creation of the biometrical row.
         if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
