@@ -52,12 +52,21 @@ final class CardPresentationController: UIPresentationController {
 	}
 
 	override var frameOfPresentedViewInContainerView: CGRect {
-		let presentedOrigin = CGPoint(x: 0, y: cardPosition.origin())
-		let presentedSize = CGSize(width: windowFrame.width, height: windowFrame.height + 40)
+
+		var originX: CGFloat = 0
+		var width: CGFloat = windowFrame.width
+
+		if traitCollection.horizontalSizeClass == .compact && traitCollection.verticalSizeClass == .compact {
+			originX = 50
+			width = windowFrame.width - 100
+		}
+
+		let presentedOrigin = CGPoint(x: originX, y: cardPosition.origin())
+		let presentedSize = CGSize(width: width, height: windowFrame.height + 40)
 		let presentedFrame = CGRect(origin: presentedOrigin, size: presentedSize)
 		return presentedFrame
 	}
-
+	
 	// MARK: - Presentation
 	override func presentationTransitionWillBegin() {
 		if let containerView = containerView {

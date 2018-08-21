@@ -44,12 +44,12 @@ class MoreViewHeader: UIView {
 		self.addSubview(detailLabel)
 		self.addSubview(iconView)
 
-		iconView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 32).isActive = true
+		iconView.leftAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leftAnchor, constant: 32).isActive = true
 		iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -15).isActive = true
 		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -15).isActive = true
 
-		titleLabel.rightAnchor.constraint(equalTo:  self.rightAnchor, constant: -20).isActive = true
-		detailLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20).isActive = true
+		titleLabel.rightAnchor.constraint(equalTo:  self.safeAreaLayoutGuide.rightAnchor, constant: -20).isActive = true
+		detailLabel.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -20).isActive = true
 
 		iconView.widthAnchor.constraint(equalToConstant: 60).isActive = true
 		iconView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
@@ -63,7 +63,11 @@ class MoreViewHeader: UIView {
 		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
 
 		titleLabel.attributedText = NSAttributedString(string: item.name, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
-		detailLabel.attributedText =  NSAttributedString(string: item.name, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
+
+		let bcf = ByteCountFormatter()
+		bcf.countStyle = .file
+		let size = bcf.string(fromByteCount: Int64(item.size))
+		detailLabel.attributedText =  NSAttributedString(string: size, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
 
 		self.iconView.image = item.icon(fitInSize: CGSize(width: 40, height: 40))
 

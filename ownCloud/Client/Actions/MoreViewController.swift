@@ -55,8 +55,8 @@ class MoreViewController: UIViewController {
 
 		view.addSubview(headerView)
 		NSLayoutConstraint.activate([
-			headerView.leftAnchor.constraint(equalTo: view.leftAnchor),
-			headerView.rightAnchor.constraint(equalTo: view.rightAnchor),
+			headerView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
+			headerView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
 			headerView.topAnchor.constraint(equalTo: view.topAnchor),
 			headerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80)
 			])
@@ -65,8 +65,8 @@ class MoreViewController: UIViewController {
 		viewController.view.translatesAutoresizingMaskIntoConstraints = false
 		NSLayoutConstraint.activate([
 			viewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-			viewController.view.leftAnchor.constraint(equalTo: view.leftAnchor),
-			viewController.view.rightAnchor.constraint(equalTo: view.rightAnchor),
+			viewController.view.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
+			viewController.view.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
 			viewController.view.topAnchor.constraint(equalTo: headerView.bottomAnchor),
 			viewController.view.centerXAnchor.constraint(equalTo: view.centerXAnchor)
 			])
