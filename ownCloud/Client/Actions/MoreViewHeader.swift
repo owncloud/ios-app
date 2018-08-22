@@ -67,7 +67,18 @@ class MoreViewHeader: UIView {
 		let bcf = ByteCountFormatter()
 		bcf.countStyle = .file
 		let size = bcf.string(fromByteCount: Int64(item.size))
-		detailLabel.attributedText =  NSAttributedString(string: size, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
+
+		let dateFormatter = DateFormatter()
+		dateFormatter.timeStyle = .none
+		dateFormatter.dateStyle = .medium
+		dateFormatter.locale = Locale.current
+		dateFormatter.doesRelativeDateFormatting = true
+
+		let dateString = dateFormatter.string(from: item.lastModified)
+
+		let detail = size + " - " + dateString
+
+		detailLabel.attributedText =  NSAttributedString(string: detail, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14, weight: .regular)])
 
 		self.iconView.image = item.icon(fitInSize: CGSize(width: 40, height: 40))
 
