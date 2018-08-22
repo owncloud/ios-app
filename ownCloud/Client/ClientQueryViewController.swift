@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import MobileCoreServices
 
 typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
@@ -138,6 +139,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
 
 		Theme.shared.register(client: self, applyImmediately: true)
+
+		self.tableView.dragDelegate = self
+		self.tableView.dropDelegate = self
+		self.tableView.dragInteractionEnabled = true
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
@@ -318,10 +323,51 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			})
 		}
 
-		let actions: [UIContextualAction] = [deleteContextualAction, renameContextualAction]
+		let moveContextualAction = UIContextualAction(style: .normal, title: "Move") { (_, _, actionPerformed) in
+
+			let directoryPickerVC = ClientDirectoryPickerViewController(core: self.core!, query: OCQuery(forPath: "/"), completion: { (selectedDirectory) in
+				if let progress = self.core?.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
+					if error != nil {
+						Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
+					}
+				}) {
+					self.progressSummarizer?.startTracking(progress: progress)
+				}
+			})
+
+			let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerVC)
+			self.navigationController?.present(pickerNavigationController, animated: true)
+
+			actionPerformed(false)
+		}
+
+		let actions: [UIContextualAction] = [deleteContextualAction, renameContextualAction, moveContextualAction]
 		let actionsConfigurator: UISwipeActionsConfiguration = UISwipeActionsConfiguration(actions: actions)
 
 		return actionsConfigurator
+	}
+
+	func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
+		return true
+	}
+
+	func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+		guard let item = items?[indexPath.row] else {
+			return []
+		}
+
+		guard item.type != .collection else {
+			return []
+		}
+
+		guard let data = item.serializedData() else {
+			return []
+		}
+
+		let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
+		let dragItem = UIDragItem(itemProvider: itemProvider)
+		dragItem.localObject = item
+		return [dragItem]
 	}
 
 	// MARK: - Message
@@ -740,4 +786,42 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 			self.present(asCard: moreViewController, animated: true)
 		}
 	}
+}
+
+extension ClientQueryViewController: UITableViewDropDelegate {
+	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+		for item in coordinator.items {
+				guard let item = item.dragItem.localObject as? OCItem else {
+					return
+				}
+
+				if let progress = self.core?.move(item, to: self.query?.rootItem, withName:  item.name, options: nil, resultHandler: { (error, _, _, _) in
+					if error != nil {
+						Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
+					}
+				}) {
+					self.progressSummarizer?.startTracking(progress: progress)
+				}
+
+		}
+	}
+}
+
+extension ClientQueryViewController: UITableViewDragDelegate {
+
+	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+		guard let item = items?[indexPath.row] else {
+			return []
+		}
+
+		guard let data = item.serializedData() else {
+			return []
+		}
+
+		let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
+		let dragItem = UIDragItem(itemProvider: itemProvider)
+		dragItem.localObject = item
+		return [dragItem]
+	}
+
 }
