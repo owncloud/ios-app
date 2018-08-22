@@ -557,7 +557,6 @@ extension ClientQueryViewController : SortBarDelegate {
 		print("LOG ---> right button pressed")
 	}
 
-
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
 		query?.sortComparator = sortMethod.comparator()
