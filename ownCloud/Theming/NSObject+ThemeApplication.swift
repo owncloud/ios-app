@@ -162,10 +162,10 @@ extension NSObject {
 			}
 		}
 
-        if self.isKind(of: UITextField.self) {
-            let textField : UITextField = (self as? UITextField)!
-            textField.textColor = collection.tableRowColors.labelColor
-        }
+		if self.isKind(of: UITextField.self) {
+			let textField : UITextField = (self as? UITextField)!
+			textField.textColor = collection.tableRowColors.labelColor
+		}
 
 		if self.isKind(of: UITableViewCell.self) {
 			let cell : UITableViewCell = (self as? UITableViewCell)!

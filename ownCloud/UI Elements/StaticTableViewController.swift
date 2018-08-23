@@ -30,8 +30,10 @@ class StaticTableViewController: UITableViewController, Themeable {
 	public var sections : [StaticTableViewSection] = Array()
 
 	public var needsLiveUpdates : Bool {
-		return self.view.window != nil
+		return (self.view.window != nil) || hasBeenPresentedAtLeastOnce
 	}
+
+	private var hasBeenPresentedAtLeastOnce : Bool = false
 
 	// MARK: - Section administration
 	func addSection(_ section: StaticTableViewSection, animated animateThis: Bool = false) {
@@ -110,6 +112,12 @@ class StaticTableViewController: UITableViewController, Themeable {
 		self.dismiss(animated: true, completion: nil)
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		hasBeenPresentedAtLeastOnce = true
+
+		super.viewWillAppear(animated)
+	}
+
 	deinit {
 		Theme.shared.unregister(client: self)
 	}
@@ -121,12 +129,10 @@ class StaticTableViewController: UITableViewController, Themeable {
 
 	// MARK: - Table view data source
 	override func numberOfSections(in tableView: UITableView) -> Int {
-		// #warning Incomplete implementation, return the number of sections
 		return sections.count
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		// #warning Incomplete implementation, return the number of rows
 		return sections[section].rows.count
 	}
 
@@ -153,7 +159,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 		return sections[section].footerTitle
 	}
 
-	// MARK: Theme support
+	// MARK: - Theme support
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.backgroundColor = collection.tableGroupBackgroundColor
 		self.tableView.separatorColor = collection.tableSeparatorColor

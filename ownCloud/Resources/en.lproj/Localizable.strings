@@ -129,3 +129,11 @@
 "Please try again in %@" = "Please try again in %@";
 "Unlock %@" = "Unlock %@";
 "Biometric authentication failed" = "Biometric authentication failed";
+
+/* Certificate management */
+
+"Certificates" = "Certificates";
+"User-approved certificates" = "User-approved certificates";
+
+"Approved" = "Approved";
+"Revoke approval" =  "Revoke approval";

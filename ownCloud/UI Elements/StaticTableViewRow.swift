@@ -101,20 +101,20 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.action = rowWithAction
 	}
 
-    convenience init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
-        self.init()
+	convenience init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
+		self.init()
 
-        self.identifier = identifier
+		self.identifier = identifier
 
-        self.cell = ThemeTableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: nil)
-        self.cell?.textLabel?.text = title
-        self.cell?.detailTextLabel?.text = subtitle
-        self.cell?.accessoryType = accessoryType
+		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: nil)
+		self.cell?.textLabel?.text = title
+		self.cell?.detailTextLabel?.text = subtitle
+		self.cell?.accessoryType = accessoryType
 
-        self.cell?.accessibilityIdentifier = identifier
+		self.cell?.accessibilityIdentifier = identifier
 
-        self.action = subtitleRowWithAction
-    }
+		self.action = subtitleRowWithAction
+	}
 
 	// MARK: - Radio Item
 	convenience init(radioItemWithAction: StaticTableViewRowAction?, groupIdentifier: String, value: Any, title: String, selected: Bool, identifier : String? = nil) {
