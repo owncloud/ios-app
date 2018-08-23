@@ -18,7 +18,7 @@
 import Foundation
 import UIKit
 
-private enum Position {
+private enum CardPosition {
 	case half
 	case open
 
@@ -38,10 +38,10 @@ private enum Position {
 final class CardPresentationController: UIPresentationController {
 
 	// MARK: - Instance Variables.
-	private var cardPosition: Position = .half
+	private var cardPosition: CardPosition = .half
 
 	private var cardAnimator: UIViewPropertyAnimator?
-	private var cardGR = UIGestureRecognizer()
+	private var cardPanGestureRecognizer = UIGestureRecognizer()
 
 	private var dimmingView = UIView()
 	private var dimmingViewGR = UIGestureRecognizer()
@@ -50,6 +50,8 @@ final class CardPresentationController: UIPresentationController {
 		let window = UIApplication.shared.delegate!.window!!
 		return window.bounds
 	}
+
+	private var disabledScrollingInViews : [UIScrollView] = []
 
 	override var frameOfPresentedViewInContainerView: CGRect {
 
@@ -86,9 +88,10 @@ final class CardPresentationController: UIPresentationController {
 	override func presentationTransitionDidEnd(_ completed: Bool) {
 		cardAnimator = UIViewPropertyAnimator(duration: 0.6, dampingRatio: 0.8)
 		cardAnimator?.isInterruptible = true
-		cardGR = UIPanGestureRecognizer(target: self, action: #selector(userDragged))
-		cardGR.delegate = self
-		presentedView?.addGestureRecognizer(cardGR)
+		cardPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDragged))
+		cardPanGestureRecognizer.delegate = self
+		cardPanGestureRecognizer.cancelsTouchesInView = true
+		containerView?.addGestureRecognizer(cardPanGestureRecognizer)
 
 		dimmingViewGR = UITapGestureRecognizer(target: self, action: #selector(dismissView))
 		dimmingView.addGestureRecognizer(dimmingViewGR)
@@ -97,7 +100,7 @@ final class CardPresentationController: UIPresentationController {
 	// MARK: - Dismissal
 	override func dismissalTransitionWillBegin() {
 		dimmingView.removeGestureRecognizer(dimmingViewGR)
-		presentedView?.removeGestureRecognizer(cardGR)
+		presentedView?.removeGestureRecognizer(cardPanGestureRecognizer)
 
 		if let transitionCoordinator = self.presentingViewController.transitionCoordinator {
 			transitionCoordinator.animate(alongsideTransition: { (_) in
@@ -135,24 +138,24 @@ final class CardPresentationController: UIPresentationController {
 
 	private func animate(to offset: CGFloat, with velocity: CGFloat) {
 		let distanceFromBottom = windowFrame.height - offset
-		var nextPosition: Position = .open
+		var nextPosition: CardPosition = .open
 
 		switch velocity {
 		case _ where velocity >= 2000:
 			self.presentedViewController.dismiss(animated: true)
 		case _ where velocity < 0:
-			if distanceFromBottom > windowFrame.height * (Position.open.heightMultiplier - 0.3) {
+			if distanceFromBottom > windowFrame.height * (CardPosition.open.heightMultiplier - 0.3) {
 				nextPosition = .open
-			} else if distanceFromBottom > windowFrame.height * (Position.half.heightMultiplier - 0.1) {
+			} else if distanceFromBottom > windowFrame.height * (CardPosition.half.heightMultiplier - 0.1) {
 				nextPosition = .half
 			} else {
 				self.presentedViewController.dismiss(animated: true)
 			}
 
 		case _ where velocity >= 0:
-			if distanceFromBottom > windowFrame.height * (Position.open.heightMultiplier - 0.1) {
+			if distanceFromBottom > windowFrame.height * (CardPosition.open.heightMultiplier - 0.1) {
 				nextPosition = .open
-			} else if distanceFromBottom > windowFrame.height * (Position.half.heightMultiplier - 0.1) {
+			} else if distanceFromBottom > windowFrame.height * (CardPosition.half.heightMultiplier - 0.1) {
 				nextPosition = .half
 			} else {
 				self.presentedViewController.dismiss(animated: true)
@@ -177,7 +180,47 @@ final class CardPresentationController: UIPresentationController {
 
 // MARK: - GestureRecognizer delegate.
 extension CardPresentationController: UIGestureRecognizerDelegate {
-	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+
+	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+		if gestureRecognizer == cardPanGestureRecognizer {
+			if let otherScrollView = otherGestureRecognizer.view as? UIScrollView,
+			   otherScrollView.isScrollEnabled {
+				return true
+			}
+		}
+
 		return false
+	}
+
+	func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+		let velocity = (cardPanGestureRecognizer as? UIPanGestureRecognizer)?.velocity(in: gestureRecognizer.view)
+
+		var targetView = presentedView?.hitTest(gestureRecognizer.location(in: presentedView), with: nil)
+
+		var scrollView : UIScrollView?
+
+		while targetView != nil, targetView != containerView, scrollView == nil {
+			if let foundScrollView = targetView as? UIScrollView {
+				scrollView = foundScrollView
+				break
+			} else {
+				targetView = targetView?.superview
+			}
+		}
+
+		if scrollView != nil,
+		   let contentOffsetY = scrollView?.contentOffset.y,
+		   let hasVelocity = velocity,
+		   cardPosition == .open {
+		   	if contentOffsetY > 0, hasVelocity.y > 0 {
+				return false
+			}
+
+		   	if hasVelocity.y < 0 {
+				return false
+			}
+		}
+
+		return true
 	}
 }

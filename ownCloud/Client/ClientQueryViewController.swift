@@ -606,7 +606,6 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 		if let item = cell.item {
 
 			let tableViewController = MoreStaticTableViewController(style: .grouped)
-			tableViewController.tableView.isScrollEnabled = false
 			let header = MoreViewHeader(for: item, with: core!)
 			let moreVC = MoreViewController(item: item, core: core!, header: header, viewController: tableViewController)
 
@@ -675,6 +674,16 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 			tableViewController.addSection(StaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [
 				renameRow,
 				deleteRow
+//				StaticTableViewRow(label: "1"),
+//				StaticTableViewRow(label: "2"),
+//				StaticTableViewRow(label: "3"),
+//				StaticTableViewRow(label: "4"),
+//				StaticTableViewRow(label: "5"),
+//				StaticTableViewRow(label: "6"),
+//				StaticTableViewRow(label: "7"),
+//				StaticTableViewRow(label: "8"),
+//				StaticTableViewRow(label: "9"),
+//				StaticTableViewRow(label: "10")
 				]))
 
 			let animator = CardTransitionDelegate(viewControllerToPresent: moreVC, presentingViewController: self)
