@@ -50,7 +50,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 		selectButton.setTitle("Move Here", for: .normal)
 		selectButton.addTarget(self, action: #selector(selectButtonPressed), for: .touchUpInside)
-
+ 		tableView.tableFooterView = UIView()
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
