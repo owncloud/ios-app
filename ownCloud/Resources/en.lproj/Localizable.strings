@@ -136,8 +136,10 @@
 
 "Forbidden Characters" = "Forbidden Characters";
 "File name cannot contain / or \\" = "File name cannot contain / or \\";
-
 "New Folder" = "New Folder";
 "Rename" =" Rename";
 "Create folder" =" Create folder";
 "Duplicate" = "Duplicate";
+
+/* Directory Picker Messages */
+"Move Here" = "Move Here";

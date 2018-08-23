@@ -48,7 +48,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
 		navigationItem.rightBarButtonItem = cancelBarButton
 
-		selectButton.setTitle("Move Here", for: .normal)
+		selectButton.setTitle("Move Here".localized, for: .normal)
 		selectButton.addTarget(self, action: #selector(selectButtonPressed), for: .touchUpInside)
  		tableView.tableFooterView = UIView()
 	}
