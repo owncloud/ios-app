@@ -370,6 +370,32 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		return [dragItem]
 	}
 
+	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+
+		if session.localDragSession != nil {
+			if tableView.hasActiveDrag {
+
+				guard let items = items else {
+					return UITableViewDropProposal(operation: .move)
+				}
+
+				if let indexPath = destinationIndexPath, items.count - 1 < indexPath.row {
+					return UITableViewDropProposal(operation: .forbidden)
+				}
+
+				if let indexPath = destinationIndexPath, items[indexPath.row].type == .file {
+					return UITableViewDropProposal(operation: .forbidden)
+				} else {
+					return UITableViewDropProposal(operation: .move, intent: .insertIntoDestinationIndexPath)
+				}
+			} else {
+				return UITableViewDropProposal(operation: .move, intent: .automatic)
+			}
+		} else {
+			return UITableViewDropProposal(operation: .forbidden)
+		}
+	}
+
 	// MARK: - Message
 	var messageView : UIView?
 	var messageContainerView : UIView?
@@ -790,19 +816,46 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 
 extension ClientQueryViewController: UITableViewDropDelegate {
 	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+
 		for item in coordinator.items {
-				guard let item = item.dragItem.localObject as? OCItem else {
+
+			var destinationItem: OCItem?
+
+			guard let item = item.dragItem.localObject as? OCItem else {
+				return
+			}
+
+			if coordinator.proposal.intent == .insertIntoDestinationIndexPath {
+
+				guard let destinationIP = coordinator.destinationIndexPath else {
 					return
 				}
 
-				if let progress = self.core?.move(item, to: self.query?.rootItem, withName:  item.name, options: nil, resultHandler: { (error, _, _, _) in
-					if error != nil {
-						Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
-					}
-				}) {
-					self.progressSummarizer?.startTracking(progress: progress)
+				guard let items = items, items.count >= destinationIP.row else {
+					return
 				}
 
+				let rootItem = items[destinationIP.row]
+
+				destinationItem = rootItem
+
+			} else {
+
+				guard item.parentFileID != self.query?.rootItem.fileID else {
+					return
+				}
+
+				destinationItem =  self.query?.rootItem
+
+			}
+
+			if let progress = self.core?.move(item, to: destinationItem, withName:  item.name, options: nil, resultHandler: { (error, _, _, _) in
+				if error != nil {
+					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
+				}
+			}) {
+				self.progressSummarizer?.startTracking(progress: progress)
+			}
 		}
 	}
 }
