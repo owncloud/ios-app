@@ -109,6 +109,7 @@
 "Send feedback" = "Send feedback";
 "Recommend to a friend" = "Recommend to a friend";
 "Privacy Policy" = "Privacy Policy";
+"Acknowledgements" = "Acknowledgements";
 "Video upload path" = "Video upload path";
 "Photo upload path" = "Photo upload path";
 "Always" = "Always";
@@ -117,7 +118,7 @@
 "After 30 minutes" = "After 30 minutes";
 "Please configure an email account" = "Please configure an email account";
 "You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
-"Do you want to open the next url?" = "Do you want to open the next url?";
+"Do you want to open the following URL?" = "Do you want to open the following URL?";
 
 /* Passcode Messages */
 
