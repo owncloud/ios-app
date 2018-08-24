@@ -590,7 +590,7 @@ extension ClientQueryViewController : OCQueryDelegate {
 // MARK: - SortBar Delegate
 extension ClientQueryViewController : SortBarDelegate {
 	func sortBar(_ sortBar: SortBar, leftButtonPressed: UIButton) {
-		let createFolderVC = NamingViewController(with: core, defaultName: "Unknown Folder".localized, stringValidator: { name in
+		let createFolderVC = NamingViewController(with: core, defaultName: "New Folder".localized, stringValidator: { name in
 			if name.contains("/") || name.contains("\\") {
 				return (false, "File name cannot contain / or \\")
 			} else {

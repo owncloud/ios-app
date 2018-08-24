@@ -97,7 +97,7 @@ class SortBar: UIView, Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.sortButton.applyThemeCollection(collection)
 		self.sortSegmentedControl.applyThemeCollection(collection)
-		self.backgroundColor = Theme.shared.activeCollection.navigationBarColors.backgroundColor
+		self.backgroundColor = collection.navigationBarColors.backgroundColor
 		self.leftButton.tintColor = collection.navigationBarColors.tintColor
 		self.rightButton.tintColor = collection.navigationBarColors.tintColor
 	}
