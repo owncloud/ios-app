@@ -10,6 +10,23 @@ import UIKit
 
 class MoreStaticTableViewController: StaticTableViewController {
 
+	private var themeApplierTokens: [ThemeApplierToken]
+
+	override init(style: UITableViewStyle) {
+		themeApplierTokens = []
+		super.init(style: style)
+	}
+
+	deinit {
+		themeApplierTokens.forEach({
+			Theme.shared.remove(applierForToken: $0)
+		})
+	}
+
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		if let title = sections[section].headerAttributedTitle {
 			let containerView = UIView()
@@ -24,6 +41,13 @@ class MoreStaticTableViewController: StaticTableViewController {
 				])
 
 			label.attributedText = title
+
+			let messageApplierToken = Theme.shared.add(applier: { (_, collection, _) in
+				label.applyThemeCollection(collection)
+			})
+
+			themeApplierTokens.append(messageApplierToken)
+
 			return containerView
 		}
 

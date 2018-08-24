@@ -48,11 +48,20 @@ class ThemeTableViewCell: UITableViewCell, Themeable {
 	func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
 		let state = ThemeItemState(selected: self.isSelected)
 
-		if self.textLabel?.attributedText == nil {
+		if let attributes = self.textLabel?.attributedText?.attributes(at: 0, effectiveRange: nil),
+			let itemStyle = attributes[.themeItemStyle] as? ThemeItemStyle {
+
+			if itemStyle == .destructive {
+				// TODO Destructive seems to not have any effect.
+				self.textLabel?.applyThemeCollection(collection, itemStyle: .destructive, itemState: state)
+			}
+		} else {
 			self.textLabel?.applyThemeCollection(collection, itemStyle: .defaultForItem, itemState: state)
 		}
+		
 		self.detailTextLabel?.applyThemeCollection(collection, itemStyle: .message, itemState: state)
 	}
+
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.applyThemeCollection(Theme.shared.activeCollection)

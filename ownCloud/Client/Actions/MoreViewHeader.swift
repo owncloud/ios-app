@@ -24,9 +24,16 @@ class MoreViewHeader: UIView {
 		iconView = UIImageView()
 		titleLabel = UILabel()
 		detailLabel = UILabel()
+
 		super.init(frame: .zero)
 
+		Theme.shared.register(client: self)
+
 		render()
+	}
+
+	deinit {
+		Theme.shared.unregister(client: self)
 	}
 
 	private func render() {
@@ -104,5 +111,12 @@ class MoreViewHeader: UIView {
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+}
+
+extension MoreViewHeader: Themeable {
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.titleLabel.applyThemeCollection(collection)
+		self.detailLabel.applyThemeCollection(collection)
 	}
 }

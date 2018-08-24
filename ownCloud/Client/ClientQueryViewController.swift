@@ -610,7 +610,10 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 			let moreVC = MoreViewController(item: item, core: core!, header: header, viewController: tableViewController)
 
 			let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
-			let delete = NSAttributedString(string: "Delete", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .regular), NSAttributedStringKey.foregroundColor : UIColor.red])
+			let delete = NSAttributedString(string: "Delete", attributes:
+				[NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .regular),
+				 NSAttributedStringKey.foregroundColor : UIColor.red,
+				 .themeItemStyle : ThemeItemStyle.destructive])
 			let rename = NSAttributedString(string: "Rename", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .regular)])
 
 			let deleteRow: StaticTableViewRow = StaticTableViewRow(rowWithAction: { (_, _) in
