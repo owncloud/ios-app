@@ -7,14 +7,14 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
 import UIKit
 import ownCloudSDK
@@ -58,7 +58,7 @@ class MoreViewController: UIViewController {
 			headerView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
 			headerView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
 			headerView.topAnchor.constraint(equalTo: view.topAnchor),
-			headerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 80)
+			headerView.heightAnchor.constraint(equalToConstant: 80)
 			])
 
 		view.addSubview(viewController.view)
@@ -90,6 +90,28 @@ class MoreViewController: UIViewController {
 			dragView.heightAnchor.constraint(equalToConstant: 5)
 			])
 		dragView.backgroundColor = .lightGray
+	}
+
+	func moreLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
+		var size : CGSize = CGSize(width: 0, height: 0)
+
+		if self.view != nil {
+			let headerSize = headerView.systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: horizontalFittingPriority, verticalFittingPriority: verticalFittingPriority)
+
+			size.width = targetSize.width
+			size.height = headerSize.height
+
+			if let scrollView = viewController.view as? UIScrollView {
+				size.height += scrollView.contentSize.height
+			} else {
+				let bodySize = viewController.view.systemLayoutSizeFitting(CGSize(width: targetSize.width, height: targetSize.height-headerSize.height),
+										   withHorizontalFittingPriority: horizontalFittingPriority,
+										   verticalFittingPriority: verticalFittingPriority)
+				size.height += bodySize.height
+			}
+		}
+
+		return size
 	}
 }
 

@@ -7,14 +7,15 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import Foundation
 import UIKit
 
@@ -28,11 +29,6 @@ private enum CardPosition {
 		case .open: return 0.9
 		}
 	}
-
-	func origin() -> CGFloat {
-		let window = UIApplication.shared.delegate!.window!!.bounds
-			return window.height - (window.height * heightMultiplier)
-	}
 }
 
 final class CardPresentationController: UIPresentationController {
@@ -44,29 +40,67 @@ final class CardPresentationController: UIPresentationController {
 	private var cardPanGestureRecognizer = UIGestureRecognizer()
 
 	private var dimmingView = UIView()
-	private var dimmingViewGR = UIGestureRecognizer()
+	private var dimmingViewGestureRecognizer = UIGestureRecognizer()
+
+	private var cachedFittingSize : CGSize?
+	private var presentedViewFittingSize : CGSize? {
+		if cachedFittingSize == nil {
+			if let moreViewController = presentedViewController as? MoreViewController {
+				cachedFittingSize = moreViewController.moreLayoutSizeFitting(UILayoutFittingExpandedSize, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
+			} else {
+				cachedFittingSize = presentedView?.systemLayoutSizeFitting(self.windowFrame.size, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
+			}
+		}
+
+		return cachedFittingSize
+	}
 
 	private var windowFrame: CGRect {
 		let window = UIApplication.shared.delegate!.window!!
 		return window.bounds
 	}
 
-	private var disabledScrollingInViews : [UIScrollView] = []
-
 	override var frameOfPresentedViewInContainerView: CGRect {
 
 		var originX: CGFloat = 0
-		var width: CGFloat = windowFrame.width
+		var presentedWidth: CGFloat = windowFrame.width
+		var presentedHeight: CGFloat = windowFrame.height * CardPosition.open.heightMultiplier
+		let fittingSize = self.presentedViewFittingSize
 
 		if traitCollection.horizontalSizeClass == .compact && traitCollection.verticalSizeClass == .compact {
 			originX = 50
-			width = windowFrame.width - 100
+			presentedWidth = windowFrame.width - 100
 		}
 
-		let presentedOrigin = CGPoint(x: originX, y: cardPosition.origin())
-		let presentedSize = CGSize(width: width, height: windowFrame.height + 40)
-		let presentedFrame = CGRect(origin: presentedOrigin, size: presentedSize)
+		// NSLog("FITS IN \(fittingSize?.width) \(fittingSize?.height)")
+
+		if let fittingHeight = fittingSize?.height, presentedHeight > fittingHeight {
+			presentedHeight = fittingHeight
+		}
+
+		let presentedFrame = CGRect(origin: CGPoint(x: originX, y: self.offset(for: cardPosition)), size: CGSize(width: presentedWidth, height: presentedHeight))
+
 		return presentedFrame
+	}
+
+	private func offset(for position: CardPosition, translatedBy: CGFloat = 0, allowOverStretch: Bool = false) -> CGFloat {
+		let windowFrame = self.windowFrame
+		var visibleCardHeight = windowFrame.height * position.heightMultiplier
+		let fittingSize = self.presentedViewFittingSize
+
+		if !allowOverStretch {
+			visibleCardHeight -= translatedBy
+		}
+
+		if let fittingHeight = fittingSize?.height, visibleCardHeight > fittingHeight {
+			visibleCardHeight = fittingHeight
+		}
+
+		if allowOverStretch {
+			visibleCardHeight -= translatedBy
+		}
+
+		return windowFrame.height - visibleCardHeight
 	}
 
 	// MARK: - Presentation
@@ -93,13 +127,13 @@ final class CardPresentationController: UIPresentationController {
 		cardPanGestureRecognizer.cancelsTouchesInView = true
 		containerView?.addGestureRecognizer(cardPanGestureRecognizer)
 
-		dimmingViewGR = UITapGestureRecognizer(target: self, action: #selector(dismissView))
-		dimmingView.addGestureRecognizer(dimmingViewGR)
+		dimmingViewGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissView))
+		dimmingView.addGestureRecognizer(dimmingViewGestureRecognizer)
 	}
 
 	// MARK: - Dismissal
 	override func dismissalTransitionWillBegin() {
-		dimmingView.removeGestureRecognizer(dimmingViewGR)
+		dimmingView.removeGestureRecognizer(dimmingViewGestureRecognizer)
 		presentedView?.removeGestureRecognizer(cardPanGestureRecognizer)
 
 		if let transitionCoordinator = self.presentingViewController.transitionCoordinator {
@@ -116,9 +150,8 @@ final class CardPresentationController: UIPresentationController {
 
 	// MARK: - Card Gesture managers.
 	@objc private func userDragged(_ gestureRecognizer: UIPanGestureRecognizer) {
-		let originY = cardPosition.origin()
-		let newOffset = originY + gestureRecognizer.translation(in: presentedView).y
 		let velocity = gestureRecognizer.velocity(in: presentedView).y
+		let newOffset = self.offset(for: cardPosition, translatedBy: gestureRecognizer.translation(in: presentedView).y, allowOverStretch: (gestureRecognizer.state != .ended))
 
 		if newOffset >= 0 {
 			switch gestureRecognizer.state {
@@ -148,8 +181,6 @@ final class CardPresentationController: UIPresentationController {
 				nextPosition = .open
 			} else if distanceFromBottom > windowFrame.height * (CardPosition.half.heightMultiplier - 0.1) {
 				nextPosition = .half
-			} else {
-				self.presentedViewController.dismiss(animated: true)
 			}
 
 		case _ where velocity >= 0:
@@ -167,7 +198,7 @@ final class CardPresentationController: UIPresentationController {
 
 		cardAnimator?.stopAnimation(true)
 		cardAnimator?.addAnimations {
-			self.presentedView?.frame.origin.y = nextPosition.origin()
+			self.presentedView?.frame.origin.y = self.offset(for: nextPosition)
 		}
 		self.cardPosition = nextPosition
 		cardAnimator?.startAnimation()

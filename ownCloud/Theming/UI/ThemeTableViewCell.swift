@@ -58,10 +58,9 @@ class ThemeTableViewCell: UITableViewCell, Themeable {
 		} else {
 			self.textLabel?.applyThemeCollection(collection, itemStyle: .defaultForItem, itemState: state)
 		}
-		
+
 		self.detailTextLabel?.applyThemeCollection(collection, itemStyle: .message, itemState: state)
 	}
-
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.applyThemeCollection(Theme.shared.activeCollection)

@@ -6,6 +6,16 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 
 class MoreStaticTableViewController: StaticTableViewController {
@@ -35,8 +45,8 @@ class MoreStaticTableViewController: StaticTableViewController {
 			containerView.addSubview(label)
 			NSLayoutConstraint.activate([
 				label.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 32),
-				label.topAnchor.constraint(equalTo: containerView.topAnchor),
-				label.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+				label.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
+				label.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10),
 				label.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -32)
 				])
 
@@ -52,30 +62,6 @@ class MoreStaticTableViewController: StaticTableViewController {
 		}
 
 		return nil
-	}
-
-	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		if indexPath.section != 0 {
-			return 56
-		}
-
-		return UITableViewAutomaticDimension
-	}
-
-	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		if sections[section].headerAttributedTitle != nil || sections[section].headerTitle != nil {
-			return 56
-		}
-
-		return 0
-	}
-
-	override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-		if sections[section].footerAttributedTitle != nil || sections[section].footerTitle != nil {
-			return 56
-		}
-
-		return 0
 	}
 
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
