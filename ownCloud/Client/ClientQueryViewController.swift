@@ -367,13 +367,16 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var messageTitleLabel : UILabel?
 	var messageMessageLabel : UILabel?
 	var messageThemeApplierToken : ThemeApplierToken?
+	var messageShowsSortBar : Bool = false
 
-	func message(show: Bool, imageName : String? = nil, title : String? = nil, message : String? = nil) {
-		if !show {
+	func message(show: Bool, imageName : String? = nil, title : String? = nil, message : String? = nil, showSortBar : Bool = false) {
+		if !show || (show && (messageShowsSortBar != showSortBar)) {
 			if messageView?.superview != nil {
 				messageView?.removeFromSuperview()
 			}
-			return
+			if !show {
+				return
+			}
 		}
 
 		if messageView == nil {
@@ -457,8 +460,14 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 				rootView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
 				rootView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
-				rootView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+				if showSortBar {
+					rootView.topAnchor.constraint(equalTo: (sortBar?.bottomAnchor)!).isActive = true
+				} else {
+					rootView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+				}
 				rootView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+
+				messageShowsSortBar = showSortBar
 
 				UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
 					rootView.alpha = 1
@@ -527,7 +536,7 @@ extension ClientQueryViewController : OCQueryDelegate {
 						if self.searchController?.searchBar.text != "" {
 							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
 						} else {
-							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
+							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized, showSortBar : true)
 						}
 					} else {
 						self.message(show: false)
@@ -550,7 +559,30 @@ extension ClientQueryViewController : OCQueryDelegate {
 // MARK: - SortBar Delegate
 extension ClientQueryViewController : SortBarDelegate {
 	func sortBar(_ sortBar: SortBar, leftButtonPressed: UIButton) {
-		print("LOG ---> left button pressed")
+		let createFolderVC = NamingViewController(with: core, defaultName: "New Folder".localized, stringValidator: { name in
+			if name.contains("/") || name.contains("\\") {
+				return (false, "File name cannot contain / or \\")
+			} else {
+				return (true, nil)
+			}
+		}, completion: { newName, _ in
+
+			guard newName != nil else {
+				return
+			}
+
+			if let progress = self.core?.createFolder(newName, inside: self.query?.rootItem, options: nil, resultHandler: { (error, _, _, _) in
+				if error != nil {
+					Log.error("Error \(String(describing: error)) creating folder \(String(describing: newName))")
+				}
+			}) {
+				self.progressSummarizer?.startTracking(progress: progress)
+			}
+		})
+
+		let createFolderNavigationVC = ThemeNavigationController(rootViewController: createFolderVC)
+		createFolderNavigationVC.modalPresentationStyle = .overFullScreen
+		self.navigationController?.present(createFolderNavigationVC, animated: true)
 	}
 
 	func sortBar(_ sortBar: SortBar, rightButtonPressed: UIButton) {
@@ -560,7 +592,6 @@ extension ClientQueryViewController : SortBarDelegate {
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
 		query?.sortComparator = sortMethod.comparator()
-
 	}
 }
 
