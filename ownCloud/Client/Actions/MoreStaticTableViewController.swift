@@ -44,10 +44,10 @@ class MoreStaticTableViewController: StaticTableViewController {
 			label.translatesAutoresizingMaskIntoConstraints = false
 			containerView.addSubview(label)
 			NSLayoutConstraint.activate([
-				label.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 32),
+				label.leftAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leftAnchor, constant: 20),
 				label.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
 				label.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10),
-				label.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -32)
+				label.rightAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.rightAnchor, constant: -20)
 				])
 
 			label.attributedText = title

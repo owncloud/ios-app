@@ -112,9 +112,9 @@ class StaticTableViewSection: NSObject {
 		return radioGroupRows
 	}
 
-    func add(row rowToAdd: StaticTableViewRow, animated: Bool = false) {
-        self.insert(row: rowToAdd, at: rows.count, animated: animated)
-    }
+	func add(row rowToAdd: StaticTableViewRow, animated: Bool = false) {
+		self.insert(row: rowToAdd, at: rows.count, animated: animated)
+	}
 
 	func insert(row rowToAdd: StaticTableViewRow, at index: Int, animated: Bool = false) {
 		// Add reference to section to row

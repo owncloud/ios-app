@@ -329,7 +329,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 
 		let renameContextualAction = UIContextualAction(style: .normal, title: "Rename") { (_, _, actionPerformed) in
-			let renamevc = NamingViewController(with: item, core: self.core, stringValidator: { name in
+			let renameViewController = NamingViewController(with: item, core: self.core, stringValidator: { name in
 				if name.contains("/") || name.contains("\\") {
 					return (false, "File name cannot contain / or \\")
 				} else {
@@ -350,7 +350,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				}
 			})
 
-			let renameNavigationVC = ThemeNavigationController(rootViewController: renamevc)
+			let renameNavigationVC = ThemeNavigationController(rootViewController: renameViewController)
 			renameNavigationVC.modalPresentationStyle = .overFullScreen
 			self.navigationController?.present(renameNavigationVC, animated: true)
 
@@ -607,16 +607,11 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 
 			let tableViewController = MoreStaticTableViewController(style: .grouped)
 			let header = MoreViewHeader(for: item, with: core!)
-			let moreVC = MoreViewController(item: item, core: core!, header: header, viewController: tableViewController)
+			let moreViewController = MoreViewController(item: item, core: core!, header: header, viewController: tableViewController)
 
 			let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
-			let delete = NSAttributedString(string: "Delete", attributes:
-				[NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .regular),
-				 NSAttributedStringKey.foregroundColor : UIColor.red,
-				 .themeItemStyle : ThemeItemStyle.destructive])
-			let rename = NSAttributedString(string: "Rename", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .regular)])
 
-			let deleteRow: StaticTableViewRow = StaticTableViewRow(rowWithAction: { (_, _) in
+			let deleteRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { (_, _) in
 				let presentationStyle: UIAlertControllerStyle = UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet
 
 					let alertController =
@@ -633,21 +628,21 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 												self.progressSummarizer?.startTracking(progress: progress)
 											}
 											OnMainThread {
-												moreVC.dismiss(animated:true)
+												moreViewController.dismiss(animated:true)
 											}
 						}
 					)
 
 				OnMainThread {
-					moreVC.present(alertController, animated: true)
+					moreViewController.present(alertController, animated: true)
 				}
 
-			}, attributedTitle: delete, alignment: .center)
+			}, title: "Delete".localized, style: .destructive)
 
-			let renameRow: StaticTableViewRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+			let renameRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
 
-				moreVC.dismiss(animated: true, completion: {
-					let renamevc = NamingViewController(with: item, core: self?.core, stringValidator: { name in
+				moreViewController.dismiss(animated: true, completion: {
+					let renameViewController = NamingViewController(with: item, core: self?.core, stringValidator: { name in
 						if name.contains("/") || name.contains("\\") {
 							return (false, "File name cannot contain / or \\")
 						} else {
@@ -668,11 +663,11 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 						}
 					})
 
-					let renameNavigationVC = ThemeNavigationController(rootViewController: renamevc)
+					let renameNavigationVC = ThemeNavigationController(rootViewController: renameViewController)
 					renameNavigationVC.modalPresentationStyle = .overFullScreen
 					self?.navigationController?.present(renameNavigationVC, animated: true)
 				})
-			}, attributedTitle: rename, alignment: .center)
+			}, title: "Rename".localized, style: .plainNonOpaque)
 
 			tableViewController.addSection(StaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [
 				renameRow,
@@ -692,10 +687,7 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 //				StaticTableViewRow(label: "13")
 				]))
 
-			let animator = CardTransitionDelegate(viewControllerToPresent: moreVC, presentingViewController: self)
-			moreVC.transitioningDelegate = animator
-			moreVC.modalPresentationStyle = .custom
-			present(moreVC, animated: true)
+			self.present(asCard: moreViewController, animated: true)
 		}
 	}
 }

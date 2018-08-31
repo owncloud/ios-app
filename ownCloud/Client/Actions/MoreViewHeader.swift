@@ -21,8 +21,11 @@ import ownCloudSDK
 
 class MoreViewHeader: UIView {
 	private var iconView: UIImageView
+	private var labelContainerView : UIView
 	private var titleLabel: UILabel
 	private var detailLabel: UILabel
+
+	var thumbnailSize = CGSize(width: 60, height: 60)
 
 	var item: OCItem
 	weak var core: OCCore?
@@ -34,6 +37,7 @@ class MoreViewHeader: UIView {
 		iconView = UIImageView()
 		titleLabel = UILabel()
 		detailLabel = UILabel()
+		labelContainerView = UIView()
 
 		super.init(frame: .zero)
 
@@ -52,6 +56,7 @@ class MoreViewHeader: UIView {
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
 		iconView.translatesAutoresizingMaskIntoConstraints = false
+		labelContainerView.translatesAutoresizingMaskIntoConstraints = false
 		iconView.contentMode = .scaleAspectFit
 
 		titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
@@ -59,33 +64,41 @@ class MoreViewHeader: UIView {
 
 		detailLabel.textColor = UIColor.gray
 
-		self.addSubview(titleLabel)
-		self.addSubview(detailLabel)
+		labelContainerView.addSubview(titleLabel)
+		labelContainerView.addSubview(detailLabel)
+
+		NSLayoutConstraint.activate([
+			titleLabel.leftAnchor.constraint(equalTo: labelContainerView.leftAnchor),
+			titleLabel.rightAnchor.constraint(equalTo: labelContainerView.rightAnchor),
+			titleLabel.topAnchor.constraint(equalTo: labelContainerView.topAnchor),
+
+			detailLabel.leftAnchor.constraint(equalTo: labelContainerView.leftAnchor),
+			detailLabel.rightAnchor.constraint(equalTo: labelContainerView.rightAnchor),
+			detailLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
+			detailLabel.bottomAnchor.constraint(equalTo: labelContainerView.bottomAnchor)
+		])
+
 		self.addSubview(iconView)
+		self.addSubview(labelContainerView)
 
-		iconView.leftAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leftAnchor, constant: 32).isActive = true
-		iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -15).isActive = true
-		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -15).isActive = true
+		NSLayoutConstraint.activate([
+			iconView.widthAnchor.constraint(equalToConstant: thumbnailSize.width),
+			iconView.heightAnchor.constraint(equalToConstant: thumbnailSize.height),
 
-		titleLabel.rightAnchor.constraint(equalTo:  self.safeAreaLayoutGuide.rightAnchor, constant: -20).isActive = true
-		detailLabel.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -20).isActive = true
+			iconView.leftAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leftAnchor, constant: 20),
+			iconView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
+			iconView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20),
 
-		iconView.widthAnchor.constraint(equalToConstant: 60).isActive = true
-		iconView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-
-		titleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true
-		titleLabel.bottomAnchor.constraint(equalTo: detailLabel.topAnchor, constant: -5).isActive = true
-		detailLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20).isActive = true
-
-		iconView.setContentHuggingPriority(UILayoutPriority.required, for: UILayoutConstraintAxis.vertical)
-		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
-		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
+			labelContainerView.leftAnchor.constraint(equalTo: iconView.rightAnchor, constant: 15),
+			labelContainerView.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -20),
+			labelContainerView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+		])
 
 		titleLabel.attributedText = NSAttributedString(string: item.name, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
 
-		let bcf = ByteCountFormatter()
-		bcf.countStyle = .file
-		let size = bcf.string(fromByteCount: Int64(item.size))
+		let byteCountFormatter = ByteCountFormatter()
+		byteCountFormatter.countStyle = .file
+		let size = byteCountFormatter.string(fromByteCount: Int64(item.size))
 
 		let dateFormatter = DateFormatter()
 		dateFormatter.timeStyle = .none
@@ -99,11 +112,11 @@ class MoreViewHeader: UIView {
 
 		detailLabel.attributedText =  NSAttributedString(string: detail, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14, weight: .regular)])
 
-		self.iconView.image = item.icon(fitInSize: CGSize(width: 40, height: 40))
+		self.iconView.image = item.icon(fitInSize: CGSize(width: thumbnailSize.width, height: thumbnailSize.height))
 
 		if item.thumbnailAvailability != .none {
 			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				_ = thumbnail?.requestImage(for: CGSize(width: 60, height: 60), scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
+				_ = thumbnail?.requestImage(for: CGSize(width: self.thumbnailSize.width, height: self.thumbnailSize.height), scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
 					if error == nil,
 						image != nil,
 						self.item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
@@ -114,7 +127,7 @@ class MoreViewHeader: UIView {
 				})
 			}
 
-			_ = core?.retrieveThumbnail(for: item, maximumSize: CGSize(width: 150, height: 150), scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
+			_ = core?.retrieveThumbnail(for: item, maximumSize: CGSize(width: self.thumbnailSize.width, height: self.thumbnailSize.height), scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
 				displayThumbnail(thumbnail)
 			})
 		}

@@ -23,6 +23,7 @@ typealias StaticTableViewRowEventHandler = (_ staticRow : StaticTableViewRow, _ 
 
 enum StaticTableViewRowButtonStyle {
 	case plain
+	case plainNonOpaque
 	case proceed
 	case destructive
 	case custom(textColor: UIColor?, selectedTextColor: UIColor?, backgroundColor: UIColor?, selectedBackgroundColor: UIColor?)
@@ -87,27 +88,13 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		super.init()
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
 		self.init()
 
 		self.identifier = identifier
 
 		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
-		self.cell?.accessoryType = accessoryType
-
-		self.cell?.accessibilityIdentifier = identifier
-
-		self.action = rowWithAction
-	}
-
-	convenience init(rowWithAction: StaticTableViewRowAction?, attributedTitle: NSAttributedString, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil, alignment: NSTextAlignment = .left) {
-		self.init()
-
-		self.identifier = identifier
-
-		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
-		self.cell?.textLabel?.attributedText = attributedTitle
 		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.accessoryType = accessoryType
 
@@ -116,20 +103,20 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.action = rowWithAction
 	}
 
-    convenience init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
-        self.init()
+	convenience init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
+		self.init()
 
-        self.identifier = identifier
+		self.identifier = identifier
 
-        self.cell = ThemeTableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: nil)
-        self.cell?.textLabel?.text = title
-        self.cell?.detailTextLabel?.text = subtitle
-        self.cell?.accessoryType = accessoryType
+		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: nil)
+		self.cell?.textLabel?.text = title
+		self.cell?.detailTextLabel?.text = subtitle
+		self.cell?.accessoryType = accessoryType
 
-        self.cell?.accessibilityIdentifier = identifier
+		self.cell?.accessibilityIdentifier = identifier
 
-        self.action = subtitleRowWithAction
-    }
+		self.action = subtitleRowWithAction
+	}
 
 	// MARK: - Radio Item
 	convenience init(radioItemWithAction: StaticTableViewRowAction?, groupIdentifier: String, value: Any, title: String, selected: Bool, identifier : String? = nil) {
@@ -314,6 +301,10 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			switch style {
 				case .plain:
 					textColor = themeCollection.tintColor
+					backgroundColor = themeCollection.tableRowColors.backgroundColor
+
+				case .plainNonOpaque:
+					textColor = themeCollection.tableRowColors.tintColor
 					backgroundColor = themeCollection.tableRowColors.backgroundColor
 
 				case .proceed:

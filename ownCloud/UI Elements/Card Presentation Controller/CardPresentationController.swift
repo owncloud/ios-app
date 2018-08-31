@@ -25,8 +25,8 @@ private enum CardPosition {
 
 	var heightMultiplier: CGFloat {
 		switch self {
-		case .half: return 0.48
-		case .open: return 0.9
+			case .half: return 0.48
+			case .open: return 0.9
 		}
 	}
 }
@@ -40,8 +40,9 @@ final class CardPresentationController: UIPresentationController {
 	private var cardPanGestureRecognizer : UIPanGestureRecognizer?
 
 	private var dimmingView = UIView()
-	private var dimmingViewGestureRecognizer : UIGestureRecognizer?
+	private var dimmingViewGestureRecognizer : UITapGestureRecognizer?
 	private var overStretchView = UIView()
+	private var dragHandleView = UIView()
 
 	private var cachedFittingSize : CGSize?
 	private var presentedViewFittingSize : CGSize? {
@@ -51,6 +52,12 @@ final class CardPresentationController: UIPresentationController {
 			} else {
 				cachedFittingSize = presentedView?.systemLayoutSizeFitting(self.windowFrame.size, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
 			}
+
+			let safeBottom = presentingViewController.view?.window?.safeAreaInsets.bottom ?? 0
+
+			cachedFittingSize?.height += safeBottom
+
+			NSLog("SAFE: \(safeBottom) \(cachedFittingSize!.height)")
 		}
 
 		return cachedFittingSize
@@ -115,6 +122,26 @@ final class CardPresentationController: UIPresentationController {
 					self.dimmingView.alpha = 0.7
 				})
 			}
+
+			// Add drag view to presentedView as presentedView is not yet part of the view hierarchy, so we can't yet attach to it via Auto Layout
+			if let hostView = presentedView, dragHandleView.superview == nil {
+				dragHandleView.translatesAutoresizingMaskIntoConstraints = false
+				hostView.addSubview(dragHandleView)
+
+				// Tapping the handle should dismiss the view
+				dragHandleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissView)))
+
+				dragHandleView.layer.cornerRadius = 2.5
+
+				NSLayoutConstraint.activate([
+					dragHandleView.topAnchor.constraint(equalTo: hostView.topAnchor, constant: 10),
+					dragHandleView.centerXAnchor.constraint(equalTo: hostView.centerXAnchor),
+					dragHandleView.widthAnchor.constraint(equalToConstant: 50),
+					dragHandleView.heightAnchor.constraint(equalToConstant: 5)
+				])
+
+				dragHandleView.backgroundColor = .lightGray
+			}
 		}
 	}
 
@@ -134,7 +161,7 @@ final class CardPresentationController: UIPresentationController {
 		if let presentedView = presentedView,
 		   let containerView = containerView {
 			overStretchView.translatesAutoresizingMaskIntoConstraints = false
-			overStretchView.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+			overStretchView.backgroundColor = Theme.shared.activeCollection.tableGroupBackgroundColor
 			overStretchView.isUserInteractionEnabled = false
 
 			containerView.insertSubview(overStretchView, aboveSubview: dimmingView)
@@ -146,7 +173,6 @@ final class CardPresentationController: UIPresentationController {
 				overStretchView.heightAnchor.constraint(equalTo: containerView.heightAnchor)
 			])
 		}
-
 	}
 
 	// MARK: - Dismissal
@@ -165,6 +191,7 @@ final class CardPresentationController: UIPresentationController {
 		}
 	}
 
+	// MARK: - Layout
 	private var animationOnGoing = false
 
 	override func containerViewWillLayoutSubviews() {
@@ -173,10 +200,19 @@ final class CardPresentationController: UIPresentationController {
 
 			presentedView?.frame = presentedViewFrame
 			dimmingView.frame = windowFrame
+
+			if let moreViewController = presentedViewController as? MoreViewController,
+			   let fittingSize = presentedViewFittingSize {
+				var fitsOnScreen : Bool = false
+
+				fitsOnScreen = fittingSize.height < (windowFrame.size.height * CardPosition.open.heightMultiplier)
+
+			   	moreViewController.fitsOnScreen = fitsOnScreen
+			}
 		}
 	}
 
-	// MARK: - Card Gesture managers.
+	// MARK: - Card gesture handling
 	@objc private func userDragged(_ gestureRecognizer: UIPanGestureRecognizer) {
 		let velocity = gestureRecognizer.velocity(in: presentedView).y
 		let newOffset = self.offset(for: cardPosition, translatedBy: gestureRecognizer.translation(in: presentedView).y, allowOverStretch: (gestureRecognizer.state != .ended))
@@ -197,31 +233,33 @@ final class CardPresentationController: UIPresentationController {
 		}
 	}
 
+	// MARK: - Animation
 	private func animate(to offset: CGFloat, with velocity: CGFloat) {
 		let distanceFromBottom = windowFrame.height - offset
 		var nextPosition: CardPosition = .open
 
 		switch velocity {
-		case _ where velocity >= 2000:
-			self.presentedViewController.dismiss(animated: true)
-		case _ where velocity < 0:
-			if distanceFromBottom > windowFrame.height * (CardPosition.open.heightMultiplier - 0.3) {
-				nextPosition = .open
-			} else if distanceFromBottom > windowFrame.height * (CardPosition.half.heightMultiplier - 0.1) {
-				nextPosition = .half
-			}
+			case _ where velocity >= 2000:
+				dismissView()
 
-		case _ where velocity >= 0:
-			if distanceFromBottom > windowFrame.height * (CardPosition.open.heightMultiplier - 0.1) {
-				nextPosition = .open
-			} else if distanceFromBottom > windowFrame.height * (CardPosition.half.heightMultiplier - 0.1) {
-				nextPosition = .half
-			} else {
-				self.presentedViewController.dismiss(animated: true)
-			}
-		default:
-			()
+			case _ where velocity < 0:
+				if distanceFromBottom > windowFrame.height * (CardPosition.open.heightMultiplier - 0.3) {
+					nextPosition = .open
+				} else if distanceFromBottom > windowFrame.height * (CardPosition.half.heightMultiplier - 0.1) {
+					nextPosition = .half
+				}
 
+			case _ where velocity >= 0:
+				if distanceFromBottom > windowFrame.height * (CardPosition.open.heightMultiplier - 0.1) {
+					nextPosition = .open
+				} else if distanceFromBottom > windowFrame.height * (CardPosition.half.heightMultiplier - 0.1) {
+					nextPosition = .half
+				} else {
+					dismissView()
+				}
+
+				default:
+				()
 		}
 
 		cardAnimator?.stopAnimation(true)
@@ -240,12 +278,13 @@ final class CardPresentationController: UIPresentationController {
 		cardAnimator?.startAnimation()
 	}
 
+	// MARK: - Dismissal
 	@objc func dismissView() {
 		self.presentedViewController.dismiss(animated: true)
 	}
 }
 
-// MARK: - GestureRecognizer delegate.
+// MARK: - GestureRecognizer delegate
 extension CardPresentationController: UIGestureRecognizerDelegate {
 
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -289,5 +328,17 @@ extension CardPresentationController: UIGestureRecognizerDelegate {
 		}
 
 		return true
+	}
+}
+
+// MARK: - Convenience addition to UIViewController
+extension UIViewController {
+	func present(asCard viewController: UIViewController, animated: Bool) {
+		let animator = CardTransitionDelegate(viewControllerToPresent: viewController, presentingViewController: self)
+
+		viewController.transitioningDelegate = animator
+		viewController.modalPresentationStyle = .custom
+
+		present(viewController, animated: animated)
 	}
 }
