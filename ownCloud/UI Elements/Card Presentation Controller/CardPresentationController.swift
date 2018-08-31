@@ -34,13 +34,14 @@ private enum CardPosition {
 final class CardPresentationController: UIPresentationController {
 
 	// MARK: - Instance Variables.
-	private var cardPosition: CardPosition = .half
+	private var cardPosition: CardPosition = .open
 
 	private var cardAnimator: UIViewPropertyAnimator?
-	private var cardPanGestureRecognizer = UIGestureRecognizer()
+	private var cardPanGestureRecognizer : UIPanGestureRecognizer?
 
 	private var dimmingView = UIView()
-	private var dimmingViewGestureRecognizer = UIGestureRecognizer()
+	private var dimmingViewGestureRecognizer : UIGestureRecognizer?
+	private var overStretchView = UIView()
 
 	private var cachedFittingSize : CGSize?
 	private var presentedViewFittingSize : CGSize? {
@@ -61,7 +62,6 @@ final class CardPresentationController: UIPresentationController {
 	}
 
 	override var frameOfPresentedViewInContainerView: CGRect {
-
 		var originX: CGFloat = 0
 		var presentedWidth: CGFloat = windowFrame.width
 		var presentedHeight: CGFloat = windowFrame.height * CardPosition.open.heightMultiplier
@@ -71,8 +71,6 @@ final class CardPresentationController: UIPresentationController {
 			originX = 50
 			presentedWidth = windowFrame.width - 100
 		}
-
-		// NSLog("FITS IN \(fittingSize?.width) \(fittingSize?.height)")
 
 		if let fittingHeight = fittingSize?.height, presentedHeight > fittingHeight {
 			presentedHeight = fittingHeight
@@ -106,14 +104,15 @@ final class CardPresentationController: UIPresentationController {
 	// MARK: - Presentation
 	override func presentationTransitionWillBegin() {
 		if let containerView = containerView {
-			containerView.insertSubview(dimmingView, at: 1)
+
 			dimmingView.alpha = 0
 			dimmingView.backgroundColor = .black
-			dimmingView.frame = containerView.frame
+
+			containerView.addSubview(dimmingView)
 
 			if let transitionCoordinator = self.presentingViewController.transitionCoordinator {
 				transitionCoordinator.animate(alongsideTransition: { (_) in
-					self.dimmingView.alpha = 0.5
+					self.dimmingView.alpha = 0.7
 				})
 			}
 		}
@@ -122,19 +121,42 @@ final class CardPresentationController: UIPresentationController {
 	override func presentationTransitionDidEnd(_ completed: Bool) {
 		cardAnimator = UIViewPropertyAnimator(duration: 0.6, dampingRatio: 0.8)
 		cardAnimator?.isInterruptible = true
+
 		cardPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(userDragged))
-		cardPanGestureRecognizer.delegate = self
-		cardPanGestureRecognizer.cancelsTouchesInView = true
-		containerView?.addGestureRecognizer(cardPanGestureRecognizer)
+		cardPanGestureRecognizer?.delegate = self
+		cardPanGestureRecognizer?.cancelsTouchesInView = true
+
+		containerView?.addGestureRecognizer(cardPanGestureRecognizer!)
 
 		dimmingViewGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissView))
-		dimmingView.addGestureRecognizer(dimmingViewGestureRecognizer)
+		dimmingView.addGestureRecognizer(dimmingViewGestureRecognizer!)
+
+		if let presentedView = presentedView,
+		   let containerView = containerView {
+			overStretchView.translatesAutoresizingMaskIntoConstraints = false
+			overStretchView.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+			overStretchView.isUserInteractionEnabled = false
+
+			containerView.insertSubview(overStretchView, aboveSubview: dimmingView)
+
+			NSLayoutConstraint.activate([
+				overStretchView.leftAnchor.constraint(equalTo: presentedView.leftAnchor),
+				overStretchView.rightAnchor.constraint(equalTo: presentedView.rightAnchor),
+				overStretchView.topAnchor.constraint(equalTo: presentedView.bottomAnchor),
+				overStretchView.heightAnchor.constraint(equalTo: containerView.heightAnchor)
+			])
+		}
+
 	}
 
 	// MARK: - Dismissal
 	override func dismissalTransitionWillBegin() {
-		dimmingView.removeGestureRecognizer(dimmingViewGestureRecognizer)
-		presentedView?.removeGestureRecognizer(cardPanGestureRecognizer)
+		if let gestureRecognizer = dimmingViewGestureRecognizer {
+			dimmingView.removeGestureRecognizer(gestureRecognizer)
+		}
+		if let gestureRecognizer = cardPanGestureRecognizer {
+			presentedView?.removeGestureRecognizer(gestureRecognizer)
+		}
 
 		if let transitionCoordinator = self.presentingViewController.transitionCoordinator {
 			transitionCoordinator.animate(alongsideTransition: { (_) in
@@ -143,9 +165,15 @@ final class CardPresentationController: UIPresentationController {
 		}
 	}
 
+	private var animationOnGoing = false
+
 	override func containerViewWillLayoutSubviews() {
-		presentedView?.frame = frameOfPresentedViewInContainerView
-		dimmingView.frame = windowFrame
+		if cardPanGestureRecognizer?.state != .began, cardPanGestureRecognizer?.state != .changed, !animationOnGoing {
+			let presentedViewFrame = frameOfPresentedViewInContainerView
+
+			presentedView?.frame = presentedViewFrame
+			dimmingView.frame = windowFrame
+		}
 	}
 
 	// MARK: - Card Gesture managers.
@@ -197,9 +225,17 @@ final class CardPresentationController: UIPresentationController {
 		}
 
 		cardAnimator?.stopAnimation(true)
+		animationOnGoing = false
+
 		cardAnimator?.addAnimations {
 			self.presentedView?.frame.origin.y = self.offset(for: nextPosition)
+			self.containerView?.layoutIfNeeded()
 		}
+		cardAnimator?.addCompletion({ (_) in
+			self.animationOnGoing = false
+		})
+
+		animationOnGoing = true
 		self.cardPosition = nextPosition
 		cardAnimator?.startAnimation()
 	}
@@ -224,7 +260,7 @@ extension CardPresentationController: UIGestureRecognizerDelegate {
 	}
 
 	func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-		let velocity = (cardPanGestureRecognizer as? UIPanGestureRecognizer)?.velocity(in: gestureRecognizer.view)
+		let velocity = cardPanGestureRecognizer?.velocity(in: gestureRecognizer.view)
 
 		var targetView = presentedView?.hitTest(gestureRecognizer.location(in: presentedView), with: nil)
 
