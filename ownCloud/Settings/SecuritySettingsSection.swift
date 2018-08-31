@@ -220,7 +220,7 @@ class SecuritySettingsSection: SettingsSection {
                         viewController.present(passcodeViewController!, animated: true, completion: nil)
                     }
                 }
-            }, title: biometricalSecurityName, value: isBiometricalSecurityEnabled)
+	     }, title: biometricalSecurityName, value: isBiometricalSecurityEnabled, identifier: "BiometricalSwitch")
         }
     }
 

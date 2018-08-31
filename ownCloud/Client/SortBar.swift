@@ -97,7 +97,7 @@ class SortBar: UIView, Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.sortButton.applyThemeCollection(collection)
 		self.sortSegmentedControl.applyThemeCollection(collection)
-		self.applyThemeCollection(collection)
+		self.backgroundColor = collection.navigationBarColors.backgroundColor
 		self.leftButton.tintColor = collection.navigationBarColors.tintColor
 		self.rightButton.tintColor = collection.navigationBarColors.tintColor
 	}
@@ -119,6 +119,8 @@ class SortBar: UIView, Themeable {
 
 		leftButton.setImage(leftButtonImage, for: .normal)
 		rightButton.setImage(rightButtonImage, for: .normal)
+
+		leftButton.addTarget(self, action: #selector(leftButtonPressed), for: .touchUpInside)
 
 		// Sort segmented control
 		containerView.addSubview(sortSegmentedControl)
@@ -208,6 +210,10 @@ class SortBar: UIView, Themeable {
 
 	func updateSortMethod() {
 		_ = self.sortMethod
+	}
+
+	@objc private func leftButtonPressed() {
+		delegate?.sortBar(self, leftButtonPressed: leftButton)
 	}
 
 }

@@ -316,9 +316,14 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		return [
 				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, indexPath) in
 					if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+						var presentationStyle: UIAlertControllerStyle = .actionSheet
+						if UIDevice.current.isIpad() {
+							presentationStyle = .alert
+						}
+
 						let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
 											     message: "This will also delete all locally stored file copies.".localized,
-											     preferredStyle: .actionSheet)
+											     preferredStyle: presentationStyle)
 
 						alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 

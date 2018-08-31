@@ -50,6 +50,27 @@ class BiometricalTests: XCTestCase {
 		GREYAssertTrue(isPasscodeUnlocked, reason: "Failed to unlock the passcode with biometrical")
 	}
 
+    func testBiometricalFailedAuthentication() {
+
+        // Prepare the simulator show the passcode
+        AppLockManager.shared.passcode = "1111"
+        AppLockManager.shared.lockEnabled = true
+        AppLockManager.shared.biometricalSecurityEnabled = true
+
+        AppLockManager.shared.showLockscreenIfNeeded(context: TestLAContext(success: false, error: nil))
+
+        let isPasscodeLocked = GREYCondition(name: "Wait for passcode is unlocked by biometrical", block: {
+            var error: NSError?
+
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible(), error: &error)
+
+            return error?.code == 3
+        }).wait(withTimeout: 2.0, pollInterval: 0.5)
+
+        //Assert
+        GREYAssertTrue(isPasscodeLocked, reason: "Biometrical did not remain")
+    }
+
 	// MARK: - Mocks
 
 	//Class to mock the LAContext to test the biometrical unlock
