@@ -19,6 +19,9 @@
 import UIKit
 import ownCloudSDK
 
+typealias ClientActionVieDidAppearHandler = () -> Void
+typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
+
 class ClientQueryViewController: UITableViewController, Themeable {
 	var core : OCCore?
 	var query : OCQuery?
@@ -303,58 +306,16 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			return nil
 		}
 
-		let presentationStyle: UIAlertControllerStyle = UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet
-
 		let deleteContextualAction: UIContextualAction = UIContextualAction(style: .destructive, title: "Delete".localized) { (_, _, actionPerformed) in
-
-			let alertController =
-				UIAlertController(with: item.name!,
-					message: "Are you sure you want to delete this file from the server?".localized,
-					destructiveLabel: "Delete".localized,
-					preferredStyle: presentationStyle,
-					destructiveAction: {
-						if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
-							if error != nil {
-								Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
-							}
-						}) {
-							self.progressSummarizer?.startTracking(progress: progress)
-						}
-					}
-				)
-
-			self.present(alertController, animated: true, completion: {
+			self.delete(item, viewDidAppearHandler: {
 				actionPerformed(false)
 			})
 		}
 
-		let renameContextualAction = UIContextualAction(style: .normal, title: "Rename") { (_, _, actionPerformed) in
-			let renameViewController = NamingViewController(with: item, core: self.core, stringValidator: { name in
-				if name.contains("/") || name.contains("\\") {
-					return (false, "File name cannot contain / or \\")
-				} else {
-					return (true, nil)
-				}
-			}, completion: { newName, _ in
-
-				guard newName != nil else {
-					return
-				}
-
-				if let progress = self.core?.move(item, to: self.query?.rootItem, withName: newName, options: nil, resultHandler: { (error, _, _, _) in
-					if error != nil {
-						Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
-					}
-				}) {
-					self.progressSummarizer?.startTracking(progress: progress)
-				}
+		let renameContextualAction = UIContextualAction(style: .normal, title: "Rename") { [weak self] (_, _, actionPerformed) in
+			self?.rename(item, viewDidAppearHandler: {
+				actionPerformed(false)
 			})
-
-			let renameNavigationVC = ThemeNavigationController(rootViewController: renameViewController)
-			renameNavigationVC.modalPresentationStyle = .overFullScreen
-			self.navigationController?.present(renameNavigationVC, animated: true)
-
-			actionPerformed(false)
 		}
 
 		let actions: [UIContextualAction] = [deleteContextualAction, renameContextualAction]
@@ -510,6 +471,98 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	// MARK: - Search
 	var searchController: UISearchController?
+
+	// MARK: - Actions
+	func rename(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
+		let renameViewController = NamingViewController(with: item, core: self.core, stringValidator: { name in
+			if name.contains("/") || name.contains("\\") {
+				return (false, "File name cannot contain / or \\")
+			} else {
+				return (true, nil)
+			}
+		}, completion: { newName, _ in
+
+			guard newName != nil else {
+				return
+			}
+
+			if let progress = self.core?.move(item, to: self.query?.rootItem, withName: newName, options: nil, resultHandler: { (error, _, _, _) in
+				if error != nil {
+					Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
+
+					completionHandler?(false)
+				} else {
+					completionHandler?(true)
+				}
+			}) {
+				self.progressSummarizer?.startTracking(progress: progress)
+			}
+		})
+
+		renameViewController.navigationItem.title = "Rename".localized
+
+		let navigationController = ThemeNavigationController(rootViewController: renameViewController)
+		navigationController.modalPresentationStyle = .overFullScreen
+
+		self.present(navigationController, animated: true, completion: viewDidAppearHandler)
+	}
+
+	func delete(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
+		let alertController = UIAlertController(
+			with: item.name!,
+			message: "Are you sure you want to delete this item from the server?".localized,
+			destructiveLabel: "Delete".localized,
+			preferredStyle: UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet,
+			destructiveAction: {
+				if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
+					if error != nil {
+						Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
+
+						completionHandler?(false)
+					} else {
+						completionHandler?(true)
+					}
+				}) {
+					self.progressSummarizer?.startTracking(progress: progress)
+				}
+			}
+		)
+
+		self.present(alertController, animated: true, completion: viewDidAppearHandler)
+	}
+
+	func createFolder(viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
+		let createFolderVC = NamingViewController(with: core, defaultName: "New Folder".localized, stringValidator: { name in
+			if name.contains("/") || name.contains("\\") {
+				return (false, "File name cannot contain / or \\")
+			} else {
+				return (true, nil)
+			}
+		}, completion: { newName, _ in
+
+			guard newName != nil else {
+				return
+			}
+
+			if let progress = self.core?.createFolder(newName, inside: self.query?.rootItem, options: nil, resultHandler: { (error, _, _, _) in
+				if error != nil {
+					Log.error("Error \(String(describing: error)) creating folder \(String(describing: newName))")
+					completionHandler?(false)
+				} else {
+					completionHandler?(true)
+				}
+			}) {
+				self.progressSummarizer?.startTracking(progress: progress)
+			}
+		})
+
+		createFolderVC.navigationItem.title = "Create folder".localized
+
+		let createFolderNavigationVC = ThemeNavigationController(rootViewController: createFolderVC)
+		createFolderNavigationVC.modalPresentationStyle = .overFullScreen
+
+		self.present(createFolderNavigationVC, animated: true, completion: viewDidAppearHandler)
+	}
 }
 
 // MARK: - Query Delegate
@@ -562,30 +615,7 @@ extension ClientQueryViewController : OCQueryDelegate {
 // MARK: - SortBar Delegate
 extension ClientQueryViewController : SortBarDelegate {
 	func sortBar(_ sortBar: SortBar, leftButtonPressed: UIButton) {
-		let createFolderVC = NamingViewController(with: core, defaultName: "New Folder".localized, stringValidator: { name in
-			if name.contains("/") || name.contains("\\") {
-				return (false, "File name cannot contain / or \\")
-			} else {
-				return (true, nil)
-			}
-		}, completion: { newName, _ in
-
-			guard newName != nil else {
-				return
-			}
-
-			if let progress = self.core?.createFolder(newName, inside: self.query?.rootItem, options: nil, resultHandler: { (error, _, _, _) in
-				if error != nil {
-					Log.error("Error \(String(describing: error)) creating folder \(String(describing: newName))")
-				}
-			}) {
-				self.progressSummarizer?.startTracking(progress: progress)
-			}
-		})
-
-		let createFolderNavigationVC = ThemeNavigationController(rootViewController: createFolderVC)
-		createFolderNavigationVC.modalPresentationStyle = .overFullScreen
-		self.navigationController?.present(createFolderNavigationVC, animated: true)
+		self.createFolder()
 	}
 
 	func sortBar(_ sortBar: SortBar, rightButtonPressed: UIButton) {
@@ -643,60 +673,14 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 			let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
 			let deleteRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { (_, _) in
-				let presentationStyle: UIAlertControllerStyle = UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet
-
-					let alertController =
-						UIAlertController(with: item.name!,
-										  message: "Are you sure you want to delete this file from the server?".localized,
-										  destructiveLabel: "Delete".localized,
-										  preferredStyle: presentationStyle,
-										  destructiveAction: {
-											if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
-												if error != nil {
-													Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
-												}
-											}) {
-												self.progressSummarizer?.startTracking(progress: progress)
-											}
-											OnMainThread {
-												moreViewController.dismiss(animated:true)
-											}
-						}
-					)
-
-				OnMainThread {
-					moreViewController.present(alertController, animated: true)
-				}
-
+				moreViewController.dismiss(animated: true, completion: {
+					self.delete(item)
+				})
 			}, title: "Delete".localized, style: .destructive)
 
 			let renameRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
-
 				moreViewController.dismiss(animated: true, completion: {
-					let renameViewController = NamingViewController(with: item, core: self?.core, stringValidator: { name in
-						if name.contains("/") || name.contains("\\") {
-							return (false, "File name cannot contain / or \\")
-						} else {
-							return (true, nil)
-						}
-					}, completion: { newName, _ in
-
-						guard newName != nil else {
-							return
-						}
-
-						if let progress = self?.core?.renameItem(item, to: newName, options: nil, resultHandler: { (error, _, _, _) in
-							if error != nil {
-								Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
-							}
-						}) {
-							self?.progressSummarizer?.startTracking(progress: progress)
-						}
-					})
-
-					let renameNavigationVC = ThemeNavigationController(rootViewController: renameViewController)
-					renameNavigationVC.modalPresentationStyle = .overFullScreen
-					self?.navigationController?.present(renameNavigationVC, animated: true)
+					self?.rename(item)
 				})
 			}, title: "Rename".localized, style: .plainNonOpaque)
 
