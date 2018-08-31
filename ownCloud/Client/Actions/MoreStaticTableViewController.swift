@@ -38,7 +38,7 @@ class MoreStaticTableViewController: StaticTableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-		if let title = sections[section].headerAttributedTitle {
+		if let title = (sections[section] as? MoreStaticTableViewSection)?.headerAttributedTitle {
 			let containerView = UIView()
 			let label = UILabel()
 			label.translatesAutoresizingMaskIntoConstraints = false
@@ -67,5 +67,21 @@ class MoreStaticTableViewController: StaticTableViewController {
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 		self.tableView.separatorColor = self.tableView.backgroundColor
+	}
+}
+
+class MoreStaticTableViewSection : StaticTableViewSection {
+	public var headerAttributedTitle : NSAttributedString?
+	public var footerAttributedTitle : NSAttributedString?
+
+	convenience init(headerAttributedTitle theHeaderTitle: NSAttributedString, footerAttributedTitle theFooterTitle: NSAttributedString? = nil, identifier : String? = nil, rows rowsToAdd: [StaticTableViewRow] = Array()) {
+		self.init()
+
+		self.headerAttributedTitle = theHeaderTitle
+		self.footerAttributedTitle = theFooterTitle
+
+		self.identifier  = identifier
+
+		self.add(rows: rowsToAdd)
 	}
 }

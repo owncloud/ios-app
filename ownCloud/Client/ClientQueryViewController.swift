@@ -684,7 +684,7 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 				})
 			}, title: "Rename".localized, style: .plainNonOpaque)
 
-			tableViewController.addSection(StaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [
+			tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [
 				renameRow,
 				deleteRow
 //				StaticTableViewRow(label: "1"),
