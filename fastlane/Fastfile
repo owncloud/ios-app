@@ -16,8 +16,8 @@ platform :ios do
      push_to_git_remote # Push the new commit and tag back to git remote
      build_app(scheme: "ownCloud") # Build scheme
      changelog_from_git_commits # Generate the changelog based on last commits
+     skip_waiting_for_build_processing: true
      upload_to_testflight # Upload build to itunesconnnect
-     skip_waiting_for_build_processing
   end
 
   desc "Register new devices to Apple portal"
