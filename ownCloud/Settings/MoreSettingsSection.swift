@@ -130,7 +130,7 @@ class MoreSettingsSection: SettingsSection {
     }
 
     private func openSFWebViewWithConfirmation(for url: URL) {
-        let alert = UIAlertController(title: "Do you want to open the next url?".localized,
+        let alert = UIAlertController(title: "Do you want to open the following URL?".localized,
                                       message: url.absoluteString,
                                       preferredStyle: .alert)
 

@@ -157,8 +157,8 @@ class SortBar: UIView, Themeable {
 		NSLayoutConstraint.activate([
 			stackView.topAnchor.constraint(equalTo: topAnchor),
 			stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-			stackView.leftAnchor.constraint(equalTo: leftAnchor, constant: 20),
-			stackView.rightAnchor.constraint(equalTo: rightAnchor, constant: -20)
+			stackView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 20),
+			stackView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -20)
 		])
 
 		stackView.addArrangedSubview(leftButton)
