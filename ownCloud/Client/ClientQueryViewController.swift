@@ -274,34 +274,12 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 
 		switch rowItem.type {
-		case .collection:
-			self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
-		case .file:
-			let fallbackSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: "Downloading \(rowItem.name!)", progressCount: 1)
+			case .collection:
+				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
 
-			if let downloadProgress = self.core?.downloadItem(rowItem, options: nil, resultHandler: { (error, _, item, file) in
-				OnMainThread {
-					if error != nil {
-						// TODO: Handle error
-					} else {
-						let itemViewController : ClientItemViewController = ClientItemViewController()
-
-						itemViewController.file = file
-						itemViewController.item = item
-
-						self.navigationController?.pushViewController(itemViewController, animated: true)
-					}
-
-					self.progressSummarizer?.popFallbackSummary(summary: fallbackSummary)
-				}
-			}) {
-				Log.log("Downloading \(rowItem.name!): \(downloadProgress)")
-
-				progressSummarizer?.pushFallbackSummary(summary: fallbackSummary)
-
-				// TODO: Use progress as soon as it works SDK-wise
-				// progressSummarizer?.startTracking(progress: downloadProgress)
-			}
+			case .file:
+				let itemViewController = DisplayHostViewController(for: rowItem, with: core!)
+				self.navigationController?.pushViewController(itemViewController, animated: true)
 		}
 	}
 
