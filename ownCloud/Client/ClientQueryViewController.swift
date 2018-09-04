@@ -263,22 +263,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
 
 			case .file:
-				if let downloadProgress = self.core?.downloadItem(rowItem, options: nil, resultHandler: { (error, _, item, file) in
-					OnMainThread {
-						if error != nil {
-							// TODO: Handle error
-						} else {
-							let itemViewController : ClientItemViewController = ClientItemViewController()
-
-							itemViewController.file = file
-							itemViewController.item = item
-
-							self.navigationController?.pushViewController(itemViewController, animated: true)
-						}
-					}
-				}) {
-					progressSummarizer?.startTracking(progress: downloadProgress)
-				}
+				let itemViewController = DisplayHostViewController(for: rowItem, with: core!)
+				self.navigationController?.pushViewController(itemViewController, animated: true)
 		}
 	}
 
