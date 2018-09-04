@@ -4,10 +4,10 @@ excluded:
 
 function_body_length: 100
 # warning_threshold: 5
-line_length:
-  warning: 200
-  ignores_function_declarations: true
-  ignores_comments: true
+# line_length:
+#  warning: 300
+#  ignores_function_declarations: true
+#  ignores_comments: true
 force_cast: warning
 
 identifier_name:
@@ -24,6 +24,7 @@ disabled_rules:
     - for_where
     - operator_whitespace
     - type_body_length
+    - line_length
 
 custom_rules:
   empty_line_after_guard_statement:
