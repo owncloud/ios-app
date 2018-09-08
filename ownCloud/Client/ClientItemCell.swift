@@ -158,6 +158,8 @@ class ClientItemCell: ThemeTableViewCell {
 
 		self.iconView.image = iconImage
 		self.titleLabel.text = item.name
+
+		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
 	}
 
 	// MARK: - Themeing
