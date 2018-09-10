@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import QuickLook
 
 extension OCItem {
 	static private let iconNamesByMIMEType : [String:String] = {
@@ -245,4 +246,15 @@ extension OCItem {
 		dateFormatter.doesRelativeDateFormatting = true
 		return dateFormatter
 	}()
+}
+
+extension OCItem: QLPreviewItem {
+	public var previewItemURL: URL? {
+		let url = objc_getAssociatedObject(self, &ClientQueryViewController.kSomeKey) as! URL
+		return url
+	}
+
+	public var previewItemTitle: String? {
+		return self.name
+	}
 }

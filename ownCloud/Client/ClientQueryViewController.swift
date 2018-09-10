@@ -18,16 +18,25 @@
 
 import UIKit
 import ownCloudSDK
+<<<<<<< HEAD
 import MobileCoreServices
+=======
+import QuickLook
+import ObjectiveC
+>>>>>>> 0ea0131... - SDK Updated.
 
 typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
 class ClientQueryViewController: UITableViewController, Themeable {
+
+	static var kSomeKey = "s"
 	var core : OCCore?
 	var query : OCQuery?
 
 	var items : [OCItem]?
+
+	var selectedItem: OCItem?
 
 	var queryProgressSummary : ProgressSummary? {
 		willSet {
@@ -280,6 +289,19 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			case .file:
 				let itemViewController = DisplayHostViewController(for: rowItem, with: core!)
 				self.navigationController?.pushViewController(itemViewController, animated: true)
+
+//				_ = self.core?.downloadItem(rowItem, options: nil, resultHandler: {(error, _, item, _) in
+//					print("LOG ---> finish downloading")
+//					if error != nil {
+//						print("LOG ---> download preview fail")
+//					} else {
+//						self.selectedItem = item
+//						let viewController = QLPreviewController()
+//
+//						viewController.dataSource = self
+//						self.present(viewController, animated: true)
+//					}
+//				})
 		}
 	}
 
