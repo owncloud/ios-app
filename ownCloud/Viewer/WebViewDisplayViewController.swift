@@ -11,7 +11,10 @@ import ownCloudSDK
 import WebKit
 
 class WebViewDisplayViewController: UIViewController, DisplayViewProtocol {
-	static var supportedMimeTypes: [String] = ["image/jpeg"]
+	static var supportedMimeTypes: [String] =
+		["image/jpeg",
+		 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+		 "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
 
 	var extensionIdentifier: String!
 
@@ -36,29 +39,31 @@ class WebViewDisplayViewController: UIViewController, DisplayViewProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		webView = WKWebView()
-		webView?.translatesAutoresizingMaskIntoConstraints = false
-		view.addSubview(webView!)
-
-		NSLayoutConstraint.activate([
-			webView!.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-			webView!.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-			webView!.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
-			webView!.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor)
-		])
-
-		let configuration: WKWebViewConfiguration = WKWebViewConfiguration()
-
 		WebViewDisplayViewController.externalContentBlockingRuleList { (blockList, error) in
 			guard error == nil else {
 				print(error)
 				return
 			}
 
+			let configuration: WKWebViewConfiguration = WKWebViewConfiguration()
+
 			configuration.preferences.javaScriptEnabled = true
 
 			if blockList != nil {
+
 				configuration.userContentController.add(blockList!)
+
+				self.webView = WKWebView(frame: .zero, configuration: configuration)
+				self.webView?.translatesAutoresizingMaskIntoConstraints = false
+				self.view.addSubview(self.webView!)
+
+				NSLayoutConstraint.activate([
+					self.webView!.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+					self.webView!.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+					self.webView!.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
+					self.webView!.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor)
+					])
+
 				self.webView?.loadFileURL(self.source, allowingReadAccessTo: self.source)
 			}
 
