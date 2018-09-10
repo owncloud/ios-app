@@ -8,6 +8,7 @@
 
 import UIKit
 import ownCloudSDK
+import QuickLook
 
 class DisplayHostViewController: UIViewController {
 
@@ -35,32 +36,39 @@ class DisplayHostViewController: UIViewController {
 
     override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .black
-		_ = self.core.downloadItem(itemsToDisplay[0], options: nil, resultHandler: { (error, _, item, file) in
+		view.backgroundColor = .green
 
-				if error != nil {
-					print("LOG ---> error downloading")
-					OnMainThread {
-						self.view.backgroundColor = .purple
-					}
-				} else {
-					guard let viewController = self.selectDisplayViewControllerBasedOn(mimeType: item!.mimeType, file: file!) as? UIViewController else {
-						print("LOG ---> selectDisplayViewControllerBasedOn mimetype error")
-						return
-					}
+		let item = itemsToDisplay[0]
+		guard var viewController = self.selectDisplayViewControllerBasedOn(mimeType: item.mimeType) as? (UIViewController & DisplayViewProtocol) else {
+			print("LOG ---> error no controller for this mime type: \(item.mimeType)")
+			OnMainThread {
+				self.view.backgroundColor = .yellow
+			}
+			return
+		}
 
+
+		_ = self.core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
+
+			guard error == nil else {
+				print("LOG ---> error downloading")
 				OnMainThread {
-					self.view.addSubview(viewController.view)
-					self.addChildViewController(viewController)
+					self.view.backgroundColor = .purple
 				}
+				return
+			}
+
+			viewController.source = file!.url
+
+			OnMainThread {
+				self.view.addSubview(viewController.view)
+				self.addChildViewController(viewController)
 			}
 		})
-    }
+	}
 
-	private func selectDisplayViewControllerBasedOn(mimeType: String, file: OCFile) -> DisplayViewProtocol? {
+	private func selectDisplayViewControllerBasedOn(mimeType: String) -> DisplayViewProtocol? {
 
-		// TODO: Make the requeriments to match the mime type property.
-		var requeriments: [String : Any] = [FeatureKeys.canEdit : true]
 		let locationIdentifier = OCExtensionLocationIdentifier(rawValue: "viewer")
 		let location: OCDisplayExtensionLocation = OCDisplayExtensionLocation(type: .viewer, identifier: locationIdentifier, supportedMimeTypes: [mimeType])
 		let context = OCExtensionContext(location: location, requirements: nil, preferences: nil)
@@ -86,13 +94,10 @@ class DisplayHostViewController: UIViewController {
 		}
 
 		let item = itemsToDisplay[0]
-		let url = file.url
 		let type = item.mimeType
 
-		controllerType.source = url!
 		controllerType.extensionIdentifier = type!
 
 		return controllerType
 	}
-
 }
