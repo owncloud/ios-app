@@ -603,8 +603,38 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.present(alertController, animated: true, completion: viewDidAppearHandler)
 	}
 
+	func move(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
+		let directoryPickerVC = ClientDirectoryPickerViewController(core: self.core!, query: OCQuery(forPath: "/"), completion: { (selectedDirectory) in
+
+			if let progress = self.core?.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
+				if error != nil {
+					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
+					completionHandler?(false)
+				} else {
+					completionHandler?(true)
+				}
+			}) {
+				self.progressSummarizer?.startTracking(progress: progress)
+			}
+		})
+
+		let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerVC)
+		self.navigationController?.present(pickerNavigationController, animated: true)
+	}
+
+	func duplicate(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
+
+		if let progress = self.core?.copy(item, to: self.query?.rootItem, withName: item.name + " copy", options: nil, resultHandler: { (error, _, item, _) in
+			if error != nil {
+				Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
+			}
+		}) {
+			self.progressSummarizer?.startTracking(progress: progress)
+		}
+	}
+
 	func createFolder(viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
-		let createFolderVC = NamingViewController(with: core, defaultName: "New Folder".localized, stringValidator: { name in
+		let createFolderVC = NamingViewController( with: core, defaultName: "New Folder".localized, stringValidator: { name in
 			if name.contains("/") || name.contains("\\") {
 				return (false, "File name cannot contain / or \\")
 			} else {
@@ -784,14 +814,21 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 				})
 			}, title: "Rename".localized, style: .plainNonOpaque)
 
+			let moveRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+				moreViewController.dismiss(animated: true, completion: {
+					self?.move(item)
+				})
+				}, title: "Move".localized, style: .plainNonOpaque)
+
 			let duplicateRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
 				moreViewController.dismiss(animated: true, completion: {
 					self?.duplicate(item)
 				})
-			}, title: "Duplicate".localized, style: .plainNonOpaque)
+				}, title: "Duplicate".localized, style: .plainNonOpaque)
 
 			tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [
 				renameRow,
+				moveRow,
 				duplicateRow,
 				deleteRow
 //				StaticTableViewRow(label: "1"),

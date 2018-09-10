@@ -136,10 +136,18 @@
 
 "Forbidden Characters" = "Forbidden Characters";
 "File name cannot contain / or \\" = "File name cannot contain / or \\";
+<<<<<<< HEAD
+=======
+
+>>>>>>> a53b2c1... - Move feature now it's part of the More view.
 "New Folder" = "New Folder";
 "Rename" =" Rename";
 "Create folder" =" Create folder";
 "Duplicate" = "Duplicate";
+<<<<<<< HEAD
+=======
+"Move" = "Move";
+>>>>>>> a53b2c1... - Move feature now it's part of the More view.
 
 /* Directory Picker Messages */
 "Move Here" = "Move Here";
