@@ -29,6 +29,7 @@ platform :ios do
   desc "Ad-Hoc Distribution IPA geneation"
    lane :build_ipa_ad_hoc do
 
+    disable_automatic_code_signing
     #Create the build
     gym(
       workspace: "ownCloud.xcworkspace",
