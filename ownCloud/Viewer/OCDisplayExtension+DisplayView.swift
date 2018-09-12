@@ -23,17 +23,17 @@ extension OCDisplayExtension {
 		return normalPDFExtension
 	}
 
-	static func imageExtension(identifier: String) -> OCDisplayExtension {
+	static func webViewExtension(identifier: String) -> OCDisplayExtension {
 		let rawIdentifier: OCExtensionIdentifier =  OCExtensionIdentifier(rawValue: identifier)
 		let locationIdentifier: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier(rawValue: "viewer")
 		let location: OCDisplayExtensionLocation = OCDisplayExtensionLocation(type: .viewer, identifier: locationIdentifier, supportedMimeTypes: WebViewDisplayViewController.supportedMimeTypes)
 		let features: [String : Any] = WebViewDisplayViewController.features!
 
-		let imageExtension = OCDisplayExtension(identifier: rawIdentifier, type: .viewer, location: location, features: features) { (_ rawExtension, _ context, _ error) -> Any? in
+		let webViewExtension = OCDisplayExtension(identifier: rawIdentifier, type: .viewer, location: location, features: features) { (_ rawExtension, _ context, _ error) -> Any? in
 			return WebViewDisplayViewController()
 		}
 
-		return imageExtension
+		return webViewExtension
 	}
 }
 
