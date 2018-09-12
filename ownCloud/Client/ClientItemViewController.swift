@@ -28,8 +28,6 @@ class ClientItemViewController: UIViewController {
 	override func loadView() {
 		let rootView = UIView()
 
-		// TODO: Properly "sandbox" webView (disable Javascript, network requests, etc.)
-
 		webView = WKWebView()
 		webView?.translatesAutoresizingMaskIntoConstraints = false
 

@@ -21,6 +21,8 @@ class DisplayHostViewController: UIViewController {
 		self.core = core
 
 		super.init(nibName: nil, bundle: nil)
+
+		Theme.shared.register(client: self)
 	}
 
 	init(for items: [OCItem], with core: OCCore) {
@@ -34,18 +36,35 @@ class DisplayHostViewController: UIViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	deinit {
+		Theme.shared.unregister(client: self)
+	}
+
     override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .green
 
 		let item = itemsToDisplay[0]
 
-		guard var viewController = self.selectDisplayViewControllerBasedOn(mimeType: item.mimeType) as? (UIViewController & DisplayViewProtocol) else {
-			print("LOG ---> error no controller for this mime type: \(item.mimeType)")
+		guard let viewController = self.selectDisplayViewControllerBasedOn(mimeType: item.mimeType) else {
+			print("LOG ---> error no controller for this mime type: \(item.mimeType!)")
 			OnMainThread {
-				self.view.backgroundColor = .yellow
+				OnMainThread {
+					let controller = DisplayViewController()
+					controller.item = item
+					controller.core = self.core
+					self.view.addSubview(controller.view)
+					self.addChildViewController(controller)
+				}
 			}
 			return
+		}
+
+		viewController.item = item
+		viewController.core = core
+
+		OnMainThread {
+			self.view.addSubview(viewController.view)
+			self.addChildViewController(viewController)
 		}
 
 		_ = self.core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
@@ -60,14 +79,10 @@ class DisplayHostViewController: UIViewController {
 
 			viewController.source = file!.url
 
-			OnMainThread {
-				self.view.addSubview(viewController.view)
-				self.addChildViewController(viewController)
-			}
 		})
 	}
 
-	private func selectDisplayViewControllerBasedOn(mimeType: String) -> DisplayViewProtocol? {
+	private func selectDisplayViewControllerBasedOn(mimeType: String) -> (DisplayViewController & DisplayViewProtocol)? {
 
 		let locationIdentifier = OCExtensionLocationIdentifier(rawValue: "viewer")
 		let location: OCDisplayExtensionLocation = OCDisplayExtensionLocation(type: .viewer, identifier: locationIdentifier, supportedMimeTypes: [mimeType])
@@ -89,15 +104,17 @@ class DisplayHostViewController: UIViewController {
 
 		let extensionObject = preferedExtension.provideObject(for: context!)
 
-		guard var controllerType = extensionObject as? (UIViewController & DisplayViewProtocol) else {
+		guard let controllerType = extensionObject as? (DisplayViewController & DisplayViewProtocol) else {
 			return nil
 		}
 
-		let item = itemsToDisplay[0]
-		let type = item.mimeType
-
-		controllerType.extensionIdentifier = type!
-
 		return controllerType
+	}
+}
+
+extension DisplayHostViewController: Themeable {
+
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.view.backgroundColor = collection.tableBackgroundColor
 	}
 }

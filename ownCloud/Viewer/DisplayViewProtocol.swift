@@ -9,18 +9,10 @@
 import UIKit
 import ownCloudSDK
 
-protocol DisplayViewEditingDelegate: class {
-	func save(item: OCItem, fileURL newVersion: URL)
-}
-
-protocol DisplayViewProtocol where Self: UIViewController {
+protocol DisplayViewProtocol where Self: DisplayViewController {
 
 	static var features: [String : Any]? {get}
 	static var supportedMimeTypes: [String] {get}
-
-	var extensionIdentifier: String! {get set} //?
-	var source: URL! {get set}
-	var editingDelegate: DisplayViewEditingDelegate? {get set}
 }
 
 struct FeatureKeys {

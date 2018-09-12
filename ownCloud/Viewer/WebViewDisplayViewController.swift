@@ -10,38 +10,20 @@ import UIKit
 import ownCloudSDK
 import WebKit
 
-class WebViewDisplayViewController: UIViewController, DisplayViewProtocol {
+class WebViewDisplayViewController: DisplayViewController, DisplayViewProtocol {
 	static var supportedMimeTypes: [String] =
 		["image/jpeg",
 		 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 		 "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
 
-	var extensionIdentifier: String!
-
-	var imageView: UIImageView!
-
 	static var features: [String : Any]? = [FeatureKeys.canEdit : true, FeatureKeys.showImages : true]
-
-	var source: URL!
-
-	weak var editingDelegate: DisplayViewEditingDelegate?
 
 	var webView: WKWebView?
 
-	required init() {
-		super.init(nibName: nil, bundle: nil)
-	}
-
-	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
+	override func renderSpecificView() {
 		WebViewDisplayViewController.externalContentBlockingRuleList { (blockList, error) in
 			guard error == nil else {
-				print(error)
+				print(error!)
 				return
 			}
 
@@ -66,9 +48,8 @@ class WebViewDisplayViewController: UIViewController, DisplayViewProtocol {
 
 				self.webView?.loadFileURL(self.source, allowingReadAccessTo: self.source)
 			}
-
 		}
-    }
+	}
 
 	static func externalContentBlockingRuleList(completionHandler: @escaping (WKContentRuleList?, Error?) -> Void ) {
 		let blockRules = """
