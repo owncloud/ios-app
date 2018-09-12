@@ -39,6 +39,7 @@ class DisplayHostViewController: UIViewController {
 		view.backgroundColor = .green
 
 		let item = itemsToDisplay[0]
+
 		guard var viewController = self.selectDisplayViewControllerBasedOn(mimeType: item.mimeType) as? (UIViewController & DisplayViewProtocol) else {
 			print("LOG ---> error no controller for this mime type: \(item.mimeType)")
 			OnMainThread {
@@ -46,7 +47,6 @@ class DisplayHostViewController: UIViewController {
 			}
 			return
 		}
-
 
 		_ = self.core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
 
