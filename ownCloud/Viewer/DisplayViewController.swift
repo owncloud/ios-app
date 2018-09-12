@@ -73,9 +73,13 @@ class DisplayViewController: UIViewController {
 				})
 			}
 
-			_ = core?.retrieveThumbnail(for: item, maximumSize: CGSize(width: 200, height: 200), scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
+			if let thumbnail = item.thumbnail {
 				displayThumbnail(thumbnail)
-			})
+			} else {
+				_ = core?.retrieveThumbnail(for: item, maximumSize: CGSize(width: 200, height: 200), scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
+					displayThumbnail(thumbnail)
+				})
+			}
 		}
     }
 
