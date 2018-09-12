@@ -30,6 +30,7 @@
 		23D0E09E205BCF8D002D7C80 /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 230B84F020597F6E00C9F828 /* ownCloudUI.framework */; };
 		23D0E09F205BCF8D002D7C80 /* ownCloudUI.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 230B84F020597F6E00C9F828 /* ownCloudUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		23D77FCD212BFBD100DE76F1 /* NamingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */; };
+		23D5241521491C670002C566 /* DisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D5241421491C670002C566 /* DisplayViewController.swift */; };
 		23E22BB720C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E22BB220C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift */; };
 		23EC77582137F3DD0032D4E6 /* PDFViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */; };
 		23EC77592137F3DD0032D4E6 /* DisplayViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77552137F3DC0032D4E6 /* DisplayViewProtocol.swift */; };
@@ -318,6 +319,7 @@
 		23C5652F212167BD00BD4B47 /* CardPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardPresentationController.swift; sourceTree = "<group>"; };
 		23C56536212167BE00BD4B47 /* CardTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardTransitionDelegate.swift; sourceTree = "<group>"; };
 		23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NamingViewController.swift; sourceTree = "<group>"; };
+		23D5241421491C670002C566 /* DisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DisplayViewController.swift; path = ownCloud/Viewer/DisplayViewController.swift; sourceTree = SOURCE_ROOT; };
 		23E22BB220C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIDevice+UIUserInterfaceIdiom.swift"; sourceTree = "<group>"; };
 		23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFViewerViewController.swift; sourceTree = "<group>"; };
 		23EC77552137F3DC0032D4E6 /* DisplayViewProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayViewProtocol.swift; sourceTree = "<group>"; };
@@ -591,8 +593,8 @@
 			children = (
 				23F62238214111BE00A0778E /* OCExtension Subclasses */,
 				23EC77552137F3DC0032D4E6 /* DisplayViewProtocol.swift */,
+				23D5241421491C670002C566 /* DisplayViewController.swift */,
 				23EC77562137F3DC0032D4E6 /* DisplayHostViewController.swift */,
-				23EC77572137F3DD0032D4E6 /* OCDisplayExtension+DisplayView.swift */,
 				23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */,
 				23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */,
 			);
@@ -602,6 +604,7 @@
 		23F62238214111BE00A0778E /* OCExtension Subclasses */ = {
 			isa = PBXGroup;
 			children = (
+				23EC77572137F3DD0032D4E6 /* OCDisplayExtension+DisplayView.swift */,
 				234BC399213D56D60043D908 /* OCDisplayExtension.swift */,
 				23ADF40D213E60F4005CDEB6 /* OCDisplayExtensionLocation.swift */,
 			);
@@ -1243,6 +1246,7 @@
 				593BAB46209AE1BC00023634 /* PasscodeViewController.swift in Sources */,
 				DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */,
 				DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */,
+				23D5241521491C670002C566 /* DisplayViewController.swift in Sources */,
 				DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */,
 				233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */,
 				DCF4F18B2052BA4C00189B9A /* Log.swift in Sources */,

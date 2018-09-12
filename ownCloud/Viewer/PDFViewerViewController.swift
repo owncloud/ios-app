@@ -10,29 +10,12 @@ import UIKit
 import ownCloudSDK
 import PDFKit
 
-class PDFViewerViewController: UIViewController, DisplayViewProtocol {
+class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
+
 	static var supportedMimeTypes: [String] = ["application/pdf"]
-
-	var extensionIdentifier: String!
-
-	var source: URL!
-
 	static var features: [String : Any]? = [FeatureKeys.canEdit : true, FeatureKeys.showPDF : true]
 
-	weak var editingDelegate: DisplayViewEditingDelegate?
-
-	required init() {
-		super.init(nibName: nil, bundle: nil)
-	}
-
-	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		view.backgroundColor = .black
-
+	override func renderSpecificView() {
 		if let document = PDFDocument(url: source) {
 			let thumbnailsView = PDFThumbnailView(frame: .zero)
 			thumbnailsView.translatesAutoresizingMaskIntoConstraints = false
@@ -64,10 +47,6 @@ class PDFViewerViewController: UIViewController, DisplayViewProtocol {
 		} else {
 			view.backgroundColor = .red
 		}
-	}
-
-	func canEdit() -> Bool {
-		return true
 	}
 
 	func save(item: OCItem) {
