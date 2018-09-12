@@ -373,8 +373,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
 
 		if session.localDragSession != nil {
-			if tableView.hasActiveDrag {
-
 				guard let items = items else {
 					return UITableViewDropProposal(operation: .move)
 				}
@@ -388,9 +386,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				} else {
 					return UITableViewDropProposal(operation: .move, intent: .insertIntoDestinationIndexPath)
 				}
-			} else {
-				return UITableViewDropProposal(operation: .move, intent: .automatic)
-			}
 		} else {
 			return UITableViewDropProposal(operation: .forbidden)
 		}
@@ -873,6 +868,10 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 				}
 
 				let rootItem = items[destinationIP.row]
+
+				guard rootItem.type == .collection else {
+					return
+				}
 
 				destinationItem = rootItem
 
