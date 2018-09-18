@@ -76,8 +76,10 @@ class DisplayHostViewController: UIViewController {
 				}
 				return
 			}
-
-			viewController.source = file!.url
+            
+            OnMainThread {
+                viewController.source = file!.url
+            }
 
 		})
 	}
