@@ -22,6 +22,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         case single = 0, continuous = 1, multipage = 2
     }
 
+    fileprivate let SEARCH_ANNOTATION_DELAY  = 3.0
     fileprivate let ANIMATION_DUR = 0.25
     fileprivate let THUMBNAIL_VIEW_WIDTH_MULTIPLIER: CGFloat = 0.15
     fileprivate let THUMBNAIL_VIEW_HEIGHT_MULTIPLIER: CGFloat = 0.05
@@ -167,7 +168,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         guard let pdf = pdfView.document else { return }
 
         let pdfSearchController = PDFSearchViewController()
-        let searchNC = UINavigationController(rootViewController: pdfSearchController)
+        let searchNC = ThemeNavigationController(rootViewController: pdfSearchController)
         pdfSearchController.pdfDocument = pdf
         pdfSearchController.userSelectedMatchCallback = { (selection) in
             DispatchQueue.main.async {
@@ -175,7 +176,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
                 self.pdfView.setCurrentSelection(selection, animate: true)
                 self.pdfView.scrollSelectionToVisible(nil)
 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + self.SEARCH_ANNOTATION_DELAY, execute: {
                     self.pdfView.clearSelection()
                 })
             }

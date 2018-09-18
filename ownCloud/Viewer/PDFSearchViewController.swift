@@ -9,7 +9,7 @@
 import UIKit
 import PDFKit
 
-class PDFSearchViewController: UITableViewController, PDFDocumentDelegate {
+class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Themeable {
 
     typealias PDFSearchMatchSelectedCallback = (PDFSelection) -> Void
 
@@ -23,12 +23,14 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate {
     fileprivate var searchText = ""
     fileprivate var typeDelayTimer : Timer?
     fileprivate let TYPE_DELAY = 0.2
-    fileprivate let MATCH_TABLE_CELL_ID = "searchMatchCell"
 
     fileprivate let activityView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.tableView.register(PDFSearchTableViewCell.self, forCellReuseIdentifier: PDFSearchTableViewCell.identifier)
+        self.tableView.rowHeight = 40.0
 
         searchController = UISearchController(searchResultsController: nil)
         searchController?.searchResultsUpdater = self
@@ -56,9 +58,12 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate {
 
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissSearch))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: activityView)
+        
+        Theme.shared.register(client: self, applyImmediately: true)
     }
 
     deinit {
+        Theme.shared.unregister(client: self)
         NotificationCenter.default.removeObserver(self)
     }
 
@@ -70,6 +75,17 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate {
     @objc func dismissSearch() {
         typeDelayTimer?.invalidate()
         self.presentingViewController?.dismiss(animated: true, completion: nil)
+    }
+    
+    // MARK: - Theme support
+    
+    func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+        self.tableView.applyThemeCollection(collection)
+        self.searchController?.searchBar.applyThemeCollection(collection)
+        
+        if event == .update {
+            self.tableView.reloadData()
+        }
     }
 
     // MARK: - Table view data source / delegate
@@ -83,15 +99,11 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: MATCH_TABLE_CELL_ID)
-
-        if cell == nil {
-            cell = UITableViewCell(style: .subtitle, reuseIdentifier: MATCH_TABLE_CELL_ID)
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: PDFSearchTableViewCell.identifier, for: indexPath) as? PDFSearchTableViewCell
 
         let pdfSelection = matches[indexPath.row]
-        cell!.textLabel?.text = pdfSelection.string
-        cell!.detailTextLabel?.text = "Page \(pdfSelection.pages.first?.label ?? "")"
+        cell!.titleLabel.text = pdfSelection.string
+        cell!.pageLabel.text = "\(pdfSelection.pages.first?.label ?? "")"
 
         return cell!
     }
