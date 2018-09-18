@@ -586,8 +586,8 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	@discardableResult func updateInputFocus(fallbackRow: StaticTableViewRow? = nil ) -> Bool {
-		var firstResponder : UIView? = nil
-		var firstResponderRow : StaticTableViewRow? = nil
+		var firstResponder : UIView?
+		var firstResponderRow : StaticTableViewRow?
 
 		if self.bookmark?.url == nil {
 			firstResponderRow = urlRow
@@ -657,8 +657,8 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		// Username and password
-		var userName : String? = nil
-		var password : String? = nil
+		var userName : String?
+		var password : String?
 
 		if let authMethodIdentifier = bookmark.authenticationMethodIdentifier,
 		   isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier),

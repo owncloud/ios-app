@@ -52,8 +52,11 @@ class DisplayHostViewController: UIViewController {
 					let controller = DisplayViewController()
 					controller.item = item
 					controller.core = self.core
-					self.view.addSubview(controller.view)
-					self.addChildViewController(controller)
+
+                    self.addChildViewController(controller)
+                    controller.view.frame = self.view.frame
+                    self.view.addSubview(controller.view)
+                    controller.didMove(toParentViewController: self)
 				}
 			}
 			return
@@ -76,7 +79,7 @@ class DisplayHostViewController: UIViewController {
 				}
 				return
 			}
-            
+
             OnMainThread {
                 viewController.source = file!.url
             }
