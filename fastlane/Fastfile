@@ -38,7 +38,9 @@ platform :ios do
       export_options: {
         method: "ad-hoc",
         provisioningProfiles: {
-          "com.owncloud.ios-app" => "match AdHoc com.owncloud.ios-app"
+          "com.owncloud.ios-app" => "match AdHoc com.owncloud.ios-app",
+	        "com.owncloud.ios-app.ownCloud-File-Provider" => "match AdHoc com.owncloud.ios-app.ownCloud-File-Provider",
+	        "com.owncloud.ios-app.ownCloud-File-ProviderUI" => "match AdHoc com.owncloud.ios-app.ownCloud-File-ProviderUI"
           #Add more Provisioning Profiles when extensions are added
         }
       }
