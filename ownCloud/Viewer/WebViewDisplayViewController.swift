@@ -47,6 +47,10 @@ class WebViewDisplayViewController: DisplayViewController, DisplayViewProtocol {
 					])
 
 				self.webView?.loadFileURL(self.source, allowingReadAccessTo: self.source)
+
+				let fullScreenGesture = UITapGestureRecognizer(target: self, action: #selector(self.tapToFullScreen))
+				fullScreenGesture.delegate = self
+				self.webView?.addGestureRecognizer(fullScreenGesture)
 			}
 		}
 	}
@@ -85,5 +89,21 @@ class WebViewDisplayViewController: DisplayViewController, DisplayViewProtocol {
 			encodedContentRuleList: blockRules) { (contentRuleList, error) in
 				completionHandler(contentRuleList, error)
 		}
+	}
+
+	@objc func tapToFullScreen() {
+		if let navigationController = self.parent?.navigationController {
+			let animator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.9) {
+				navigationController.isNavigationBarHidden.toggle()
+				navigationController.tabBarController?.tabBar.isHidden.toggle()
+			}
+			animator.startAnimation()
+		}
+	}
+}
+
+extension WebViewDisplayViewController: UIGestureRecognizerDelegate {
+	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+		return true
 	}
 }
