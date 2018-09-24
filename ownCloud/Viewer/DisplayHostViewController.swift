@@ -40,34 +40,21 @@ class DisplayHostViewController: UIViewController {
 		Theme.shared.unregister(client: self)
 	}
 
-    override func viewDidLoad() {
+	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		let item = itemsToDisplay[0]
+		let itemToDisplay = itemsToDisplay[0]
 
-		guard let viewController = self.selectDisplayViewControllerBasedOn(mimeType: item.mimeType) else {
-			print("LOG ---> error no controller for this mime type: \(item.mimeType!)")
-			OnMainThread {
-				OnMainThread {
-					let controller = DisplayViewController()
-					controller.item = item
-					controller.core = self.core
-					self.view.addSubview(controller.view)
-					self.addChildViewController(controller)
-				}
-			}
-			return
-		}
-
-		viewController.item = item
+		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: itemToDisplay.mimeType)
+		viewController.item = itemToDisplay
 		viewController.core = core
 
-		OnMainThread {
-			self.view.addSubview(viewController.view)
-			self.addChildViewController(viewController)
-		}
+		self.addChildViewController(viewController)
+		viewController.view.frame = self.view.frame
+		self.view.addSubview(viewController.view)
+		viewController.didMove(toParentViewController: self)
 
-		_ = self.core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
+		_ = self.core.downloadItem(itemToDisplay, options: nil, resultHandler: { (error, _, _, file) in
 
 			guard error == nil else {
 				print("LOG ---> error downloading")
@@ -77,12 +64,15 @@ class DisplayHostViewController: UIViewController {
 				return
 			}
 
-			viewController.source = file!.url
-
+			if viewController is (DisplayViewController & DisplayViewProtocol) {
+				OnMainThread {
+					viewController.source = file!.url
+				}
+			}
 		})
 	}
 
-	private func selectDisplayViewControllerBasedOn(mimeType: String) -> (DisplayViewController & DisplayViewProtocol)? {
+	private func selectDisplayViewControllerBasedOn(mimeType: String) -> (DisplayViewController) {
 
 		let locationIdentifier = OCExtensionLocationIdentifier(rawValue: "viewer")
 		let location: OCDisplayExtensionLocation = OCDisplayExtensionLocation(type: .viewer, identifier: locationIdentifier, supportedMimeTypes: [mimeType])
@@ -93,11 +83,11 @@ class DisplayHostViewController: UIViewController {
 		do {
 			try extensions = OCExtensionManager.shared.provideExtensions(for: context)
 		} catch {
-			return nil
+			return DisplayViewController()
 		}
 
 		guard let matchedExtensions = extensions else {
-			return nil
+			return DisplayViewController()
 		}
 
 		let preferedExtension: OCExtension = matchedExtensions[0].extension
@@ -105,7 +95,7 @@ class DisplayHostViewController: UIViewController {
 		let extensionObject = preferedExtension.provideObject(for: context!)
 
 		guard let controllerType = extensionObject as? (DisplayViewController & DisplayViewProtocol) else {
-			return nil
+			return DisplayViewController()
 		}
 
 		return controllerType
