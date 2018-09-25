@@ -15,7 +15,6 @@ protocol DisplayViewEditingDelegate: class {
 
 class DisplayViewController: UIViewController {
 
-	private let IconImageViewHeight: CGFloat = 200.0
 	private let IconImageViewSize: CGSize = CGSize(width: 200.0, height: 200.0)
 
 	// MARK: - Instance variables
@@ -52,7 +51,7 @@ class DisplayViewController: UIViewController {
 		NSLayoutConstraint.activate([
 			iconImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
 			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
-			iconImageView.heightAnchor.constraint(equalToConstant: IconImageViewHeight),
+			iconImageView.heightAnchor.constraint(equalToConstant: IconImageViewSize.height),
 			iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor)
 			])
 	}
