@@ -130,6 +130,7 @@ extension OCItem {
 		"audio",
 		"file",
 		"folder",
+		"folder-create",
 		"folder-drag-accept",
 		"folder-external",
 		"folder-public",
@@ -211,6 +212,10 @@ extension OCItem {
 		}
 
 		return nil
+	}
+
+	func fileSuffix() -> String {
+		return (self.name as NSString).pathExtension
 	}
 }
 

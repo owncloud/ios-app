@@ -19,10 +19,20 @@
 import UIKit
 import ownCloudSDK
 
+protocol ClientItemCellDelegate: class {
+
+	func moreButtonTapped(cell: ClientItemCell)
+
+}
+
 class ClientItemCell: ThemeTableViewCell {
+
+	weak var delegate: ClientItemCellDelegate?
+
 	var titleLabel : UILabel = UILabel()
 	var detailLabel : UILabel = UILabel()
 	var iconView : UIImageView = UIImageView()
+	var moreButton: UIButton = UIButton()
 
 	var activeThumbnailRequestProgress : Progress?
 
@@ -42,6 +52,7 @@ class ClientItemCell: ThemeTableViewCell {
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
 		iconView.translatesAutoresizingMaskIntoConstraints = false
 		iconView.contentMode = .scaleAspectFit
+		moreButton.translatesAutoresizingMaskIntoConstraints = false
 
 		titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
 		detailLabel.font = UIFont.systemFont(ofSize: 14)
@@ -51,13 +62,31 @@ class ClientItemCell: ThemeTableViewCell {
 		self.contentView.addSubview(titleLabel)
 		self.contentView.addSubview(detailLabel)
 		self.contentView.addSubview(iconView)
+		self.contentView.addSubview(moreButton)
 
 		iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 20).isActive = true
 		iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -15).isActive = true
 		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -15).isActive = true
 
-		titleLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -20).isActive = true
-		detailLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -20).isActive = true
+		moreButton.setAttributedTitle(NSAttributedString(string: "● ● ●", attributes:
+			[NSAttributedStringKey.font: UIFont.systemFont(ofSize: 10)]), for: .normal)
+
+		moreButton.contentMode = .scaleToFill
+
+		moreButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
+		moreButton.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
+		moreButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
+		moreButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
+		moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
+		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
+
+		moreButton.contentEdgeInsets.left = -20
+		moreButton.titleEdgeInsets.right = 10
+		moreButton.titleEdgeInsets.left = 15
+		moreButton.contentEdgeInsets.right = -15
+
+		titleLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -20).isActive = true
+		detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -20).isActive = true
 
 		iconView.widthAnchor.constraint(equalToConstant: 60).isActive = true
 		iconView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
@@ -69,6 +98,7 @@ class ClientItemCell: ThemeTableViewCell {
 		iconView.setContentHuggingPriority(UILayoutPriority.required, for: UILayoutConstraintAxis.vertical)
 		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
 		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
+		moreButton.setContentHuggingPriority(UILayoutPriority.required, for: UILayoutConstraintAxis.horizontal)
 	}
 
 	// MARK: - Present item
@@ -94,11 +124,11 @@ class ClientItemCell: ThemeTableViewCell {
 
 		if item.type == .collection {
 			self.detailLabel.text = "Folder".localized
-			self.accessoryType = .disclosureIndicator
 		} else {
 			self.detailLabel.text = item.mimeType
-			self.accessoryType = .none
 		}
+
+		self.accessoryType = .none
 
 		if item.thumbnailAvailability != .none {
 			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
@@ -128,6 +158,8 @@ class ClientItemCell: ThemeTableViewCell {
 
 		self.iconView.image = iconImage
 		self.titleLabel.text = item.name
+
+		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
 	}
 
 	// MARK: - Themeing
@@ -136,5 +168,14 @@ class ClientItemCell: ThemeTableViewCell {
 
 		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
+
+		let moreTitle: NSMutableAttributedString = NSMutableAttributedString(attributedString: self.moreButton.attributedTitle(for: .normal)!)
+		moreTitle.addAttribute(NSAttributedStringKey.foregroundColor, value: collection.tableRowColors.labelColor, range: NSRange(location:0, length:moreTitle.length))
+		self.moreButton.setAttributedTitle(moreTitle, for: .normal)
+	}
+
+	// MARK: - Actions
+	@objc func moreButtonTapped() {
+		self.delegate?.moreButtonTapped(cell: self)
 	}
 }

@@ -65,41 +65,38 @@
 - (NSFileProviderItem)itemForIdentifier:(NSFileProviderItemIdentifier)identifier error:(NSError *__autoreleasing  _Nullable *)outError
 {
 	__block NSFileProviderItem item = nil;
-	dispatch_group_t waitForDatabaseGroup = dispatch_group_create();
 
-	dispatch_group_enter(waitForDatabaseGroup);
+	OCSyncExec(itemRetrieval, {
+		// Resolve the given identifier to a record in the model
+		if ([identifier isEqual:NSFileProviderRootContainerItemIdentifier])
+		{
+			// Root item
+			[self.core.vault.database retrieveCacheItemsAtPath:@"/" itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
+				item = items.firstObject;
 
-	// Resolve the given identifier to a record in the model
-	if ([identifier isEqual:NSFileProviderRootContainerItemIdentifier])
-	{
-		// Root item
-		[self.core.vault.database retrieveCacheItemsAtPath:@"/" itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
-			item = items.firstObject;
+				if (outError != NULL)
+				{
+					*outError = error;
+				}
 
-			if (outError != NULL)
-			{
-				*outError = error;
-			}
+				OCSyncExecDone(itemRetrieval);
+			}];
+		}
+		else
+		{
+			// Other item
+			[self.core retrieveItemFromDatabaseForFileID:(OCFileID)identifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
+				item = itemFromDatabase;
 
-			dispatch_group_leave(waitForDatabaseGroup);
-		}];
-	}
-	else
-	{
-		// Other item
-		[self.core retrieveItemFromDatabaseForFileID:(OCFileID)identifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
-			item = itemFromDatabase;
+				if (outError != NULL)
+				{
+					*outError = error;
+				}
 
-			if (outError != NULL)
-			{
-				*outError = error;
-			}
-
-			dispatch_group_leave(waitForDatabaseGroup);
-		}];
-	}
-
-	dispatch_group_wait(waitForDatabaseGroup, DISPATCH_TIME_FOREVER);
+				OCSyncExecDone(itemRetrieval);
+			}];
+		}
+	});
 
 	NSLog(@"-itemForIdentifier:error: %@ => %@", identifier, item);
 
@@ -181,18 +178,6 @@
 		 if ((item = [self itemForIdentifier:itemIdentifier error:&error]) != nil)
 		 {
 			[self.core downloadItem:(OCItem *)item options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, OCFile *file) {
-//				NSError *provideError = error;
-//
-//				if (provideError == nil)
-//				{
-//					[[NSFileManager defaultManager] createDirectoryAtURL:provideAtURL.URLByDeletingLastPathComponent withIntermediateDirectories:YES attributes:nil error:NULL];
-//					if ([[NSFileManager defaultManager] fileExistsAtPath:provideAtURL.path])
-//					{
-//						[[NSFileManager defaultManager] removeItemAtURL:provideAtURL error:&provideError];
-//					}
-//					[[NSFileManager defaultManager] moveItemAtURL:file.url toURL:provideAtURL error:&provideError];
-//				}
-//
 				NSLog(@"Starting to provide file:\nPAU: %@\nFURL: %@\nID: %@\nErr: %@\nlocalRelativePath: %@", provideAtURL, file.url, item.itemIdentifier, error, item.localRelativePath);
 
 				completionHandler(error);
@@ -249,17 +234,17 @@
 	// Called after the last claim to the file has been released. At this point, it is safe for the file provider to remove the content file.
 
 	// TODO: look up whether the file has local changes
-	BOOL fileHasLocalChanges = NO;
-
-	if (!fileHasLocalChanges) {
-		// remove the existing file to free up space
-		[[NSFileManager defaultManager] removeItemAtURL:url error:NULL];
-
-		// write out a placeholder to facilitate future property lookups
-		[self providePlaceholderAtURL:url completionHandler:^(NSError * __nullable error) {
-			// TODO: handle any error, do any necessary cleanup
-		}];
-	}
+//	BOOL fileHasLocalChanges = NO;
+//
+//	if (!fileHasLocalChanges) {
+//		// remove the existing file to free up space
+//		[[NSFileManager defaultManager] removeItemAtURL:url error:NULL];
+//
+//		// write out a placeholder to facilitate future property lookups
+//		[self providePlaceholderAtURL:url completionHandler:^(NSError * __nullable error) {
+//			// TODO: handle any error, do any necessary cleanup
+//		}];
+//	}
 }
 
 #pragma mark - Actions
@@ -355,6 +340,23 @@
 	else
 	{
 		completionHandler(error);
+	}
+}
+
+- (void)importDocumentAtURL:(NSURL *)fileURL toParentItemIdentifier:(NSFileProviderItemIdentifier)parentItemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
+{
+	NSError *error = nil;
+	OCItem *parentItem;
+
+	if ((parentItem = (OCItem *)[self itemForIdentifier:parentItemIdentifier error:&error]) != nil)
+	{
+		[self.core importFileNamed:nil at:parentItem fromURL:fileURL isSecurityScoped:YES options:nil placeholderCompletionHandler:^(NSError *error, OCItem *item) {
+			completionHandler(item, error);
+		} resultHandler:nil];
+	}
+	else
+	{
+		completionHandler(nil, error);
 	}
 }
 
@@ -463,17 +465,13 @@
 		{
 			if (self.bookmark != nil)
 			{
-				dispatch_group_t waitForCoreGroup = dispatch_group_create();
-
-				dispatch_group_enter(waitForCoreGroup);
-
-				_core = [[OCCoreManager sharedCoreManager] requestCoreForBookmark:self.bookmark completionHandler:^(OCCore *core, NSError *error) {
-					dispatch_group_leave(waitForCoreGroup);
-				}];
+				OCSyncExec(waitForCore, {
+					_core = [[OCCoreManager sharedCoreManager] requestCoreForBookmark:self.bookmark completionHandler:^(OCCore *core, NSError *error) {
+						OCSyncExecDone(waitForCore);
+					}];
+				});
 
 				_core.delegate = self;
-
-				dispatch_group_wait(waitForCoreGroup, DISPATCH_TIME_FOREVER);
 			}
 		}
 

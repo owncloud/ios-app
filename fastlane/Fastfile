@@ -8,15 +8,14 @@ platform :ios do
 
   desc "Push a new beta build to TestFlight"
    lane :beta do
-     register_devices(devices_file: "fastlane/Match/devices.txt") # Sync test devices from file to itunesconnect
-     match(force_for_new_devices: true) # Creates all required certificates & provisioning profiles
      ensure_git_status_clean # Ensure that your git status is not dirty
      increment_build_number xcodeproj: "ownCloud.xcodeproj" # Automatically increase the build number
      commit_version_bump(xcodeproj: "ownCloud.xcodeproj") # Commit the version bump
      push_to_git_remote # Push the new commit and tag back to git remote
      build_app(scheme: "ownCloud") # Build scheme
      changelog_from_git_commits # Generate the changelog based on last commits
-     upload_to_testflight # Upload build to itunesconnnect
+     upload_to_testflight(skip_waiting_for_build_processing: true) # Upload build to itunesconnnect
+
   end
 
   desc "Register new devices to Apple portal"
@@ -30,14 +29,16 @@ platform :ios do
 
     #Create the build
     gym(
-      workspace: "ownCloud.xcworkspace", 
+      workspace: "ownCloud.xcworkspace",
       scheme: "ownCloud",
       codesigning_identity: "iPhone Distribution: ownCloud GmbH (4AP2STM4H5)",
       export_method: "ad-hoc",
       export_options: {
         method: "ad-hoc",
-        provisioningProfiles: { 
-          "com.owncloud.ios-app" => "match AdHoc com.owncloud.ios-app"
+        provisioningProfiles: {
+          "com.owncloud.ios-app" => "match AdHoc com.owncloud.ios-app",
+	        "com.owncloud.ios-app.ownCloud-File-Provider" => "match AdHoc com.owncloud.ios-app.ownCloud-File-Provider",
+	        "com.owncloud.ios-app.ownCloud-File-ProviderUI" => "match AdHoc com.owncloud.ios-app.ownCloud-File-ProviderUI"
           #Add more Provisioning Profiles when extensions are added
         }
       }

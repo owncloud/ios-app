@@ -17,6 +17,7 @@
  */
 
 #import <ownCloudSDK/ownCloudSDK.h>
+#import <ownCloudSDK/OCMacros.h>
 
 @interface OCCore (FileProviderTools)
 

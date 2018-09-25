@@ -21,6 +21,9 @@ import ownCloudSDK
 import QuickLook
 import ObjectiveC
 
+typealias ClientActionVieDidAppearHandler = () -> Void
+typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
+
 class ClientQueryViewController: UITableViewController, Themeable {
 
 	static var kSomeKey = "s"
@@ -252,6 +255,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		cell?.core = self.core
 
+		if cell?.delegate == nil {
+			cell?.delegate = self
+		}
+
 		// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
 		// Make sure we don't request the thumbnail multiple times in that case.
 		if (cell?.item?.itemVersionIdentifier != newItem.itemVersionIdentifier) || (cell?.item?.name != newItem.name) {
@@ -292,27 +299,14 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			return nil
 		}
 
-		let presentationStyle: UIAlertControllerStyle = UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet
-
 		let deleteContextualAction: UIContextualAction = UIContextualAction(style: .destructive, title: "Delete".localized) { (_, _, actionPerformed) in
+			self.delete(item, viewDidAppearHandler: {
+				actionPerformed(false)
+			})
+		}
 
-			let alertController =
-				UIAlertController(with: item.name!,
-					message: "Are you sure you want to delete this file from the server?".localized,
-					destructiveLabel: "Delete".localized,
-					preferredStyle: presentationStyle,
-					destructiveAction: {
-						if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
-							if error != nil {
-								Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
-							}
-						}) {
-							self.progressSummarizer?.startTracking(progress: progress)
-						}
-					}
-				)
-
-			self.present(alertController, animated: true, completion: {
+		let renameContextualAction = UIContextualAction(style: .normal, title: "Rename") { [weak self] (_, _, actionPerformed) in
+			self?.rename(item, viewDidAppearHandler: {
 				actionPerformed(false)
 			})
 		}
@@ -329,37 +323,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			actionPerformed(false)
 		})
 
-		let renameTestContextualAction = UIContextualAction.init(style: .normal, title: "Rename".localized, handler: { (_, _, actionPerformed) in
-			if let item = self.items?[indexPath.row] {
-				let promptNameViewController : StaticTableViewController = StaticTableViewController(style: .grouped)
-				let navigationController = ThemeNavigationController(rootViewController: promptNameViewController)
-
-				promptNameViewController.addSection(StaticTableViewSection(headerTitle: "New name", footerTitle: nil, identifier: nil, rows: [
-					StaticTableViewRow(textFieldWithAction: nil, value: item.name, identifier: "newName"),
-					StaticTableViewRow(buttonWithAction: { (row, _) in
-						if let newName = row.section?.row(withIdentifier: "newName")?.value as? String {
-							_ = self.core?.move(item, to: self.query?.rootItem, withName: newName, options: nil, resultHandler: {  (error, _, item, _) in
-								if error != nil {
-									Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
-								}
-							})
-						}
-
-						navigationController.dismiss(animated: true, completion: nil)
-					}, title: "Rename")
-				]))
-
-				promptNameViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(	barButtonSystemItem: .cancel,
-														target: promptNameViewController,
-														action: #selector(promptNameViewController.dismissAnimated))
-
-				self.present(navigationController, animated: true, completion: nil)
-			}
-
-			actionPerformed(false)
-		})
-
-		let actions: [UIContextualAction] = [duplicateTestContextualAction, renameTestContextualAction, deleteContextualAction]
+		let actions: [UIContextualAction] = [duplicateTestContextualAction, renameContextualAction, deleteContextualAction]
 		let actionsConfigurator: UISwipeActionsConfiguration = UISwipeActionsConfiguration(actions: actions)
 
 		return actionsConfigurator
@@ -372,13 +336,16 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var messageTitleLabel : UILabel?
 	var messageMessageLabel : UILabel?
 	var messageThemeApplierToken : ThemeApplierToken?
+	var messageShowsSortBar : Bool = false
 
-	func message(show: Bool, imageName : String? = nil, title : String? = nil, message : String? = nil) {
-		if !show {
+	func message(show: Bool, imageName : String? = nil, title : String? = nil, message : String? = nil, showSortBar : Bool = false) {
+		if !show || (show && (messageShowsSortBar != showSortBar)) {
 			if messageView?.superview != nil {
 				messageView?.removeFromSuperview()
 			}
-			return
+			if !show {
+				return
+			}
 		}
 
 		if messageView == nil {
@@ -462,8 +429,14 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 				rootView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
 				rootView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
-				rootView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+				if showSortBar {
+					rootView.topAnchor.constraint(equalTo: (sortBar?.bottomAnchor)!).isActive = true
+				} else {
+					rootView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+				}
 				rootView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+
+				messageShowsSortBar = showSortBar
 
 				UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
 					rootView.alpha = 1
@@ -503,6 +476,98 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	// MARK: - Search
 	var searchController: UISearchController?
+
+	// MARK: - Actions
+	func rename(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
+		let renameViewController = NamingViewController(with: item, core: self.core, stringValidator: { name in
+			if name.contains("/") || name.contains("\\") {
+				return (false, "File name cannot contain / or \\")
+			} else {
+				return (true, nil)
+			}
+		}, completion: { newName, _ in
+
+			guard newName != nil else {
+				return
+			}
+
+			if let progress = self.core?.move(item, to: self.query?.rootItem, withName: newName, options: nil, resultHandler: { (error, _, _, _) in
+				if error != nil {
+					Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
+
+					completionHandler?(false)
+				} else {
+					completionHandler?(true)
+				}
+			}) {
+				self.progressSummarizer?.startTracking(progress: progress)
+			}
+		})
+
+		renameViewController.navigationItem.title = "Rename".localized
+
+		let navigationController = ThemeNavigationController(rootViewController: renameViewController)
+		navigationController.modalPresentationStyle = .overFullScreen
+
+		self.present(navigationController, animated: true, completion: viewDidAppearHandler)
+	}
+
+	func delete(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
+		let alertController = UIAlertController(
+			with: item.name!,
+			message: "Are you sure you want to delete this item from the server?".localized,
+			destructiveLabel: "Delete".localized,
+			preferredStyle: UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet,
+			destructiveAction: {
+				if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
+					if error != nil {
+						Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
+
+						completionHandler?(false)
+					} else {
+						completionHandler?(true)
+					}
+				}) {
+					self.progressSummarizer?.startTracking(progress: progress)
+				}
+			}
+		)
+
+		self.present(alertController, animated: true, completion: viewDidAppearHandler)
+	}
+
+	func createFolder(viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
+		let createFolderVC = NamingViewController(with: core, defaultName: "New Folder".localized, stringValidator: { name in
+			if name.contains("/") || name.contains("\\") {
+				return (false, "File name cannot contain / or \\")
+			} else {
+				return (true, nil)
+			}
+		}, completion: { newName, _ in
+
+			guard newName != nil else {
+				return
+			}
+
+			if let progress = self.core?.createFolder(newName, inside: self.query?.rootItem, options: nil, resultHandler: { (error, _, _, _) in
+				if error != nil {
+					Log.error("Error \(String(describing: error)) creating folder \(String(describing: newName))")
+					completionHandler?(false)
+				} else {
+					completionHandler?(true)
+				}
+			}) {
+				self.progressSummarizer?.startTracking(progress: progress)
+			}
+		})
+
+		createFolderVC.navigationItem.title = "Create folder".localized
+
+		let createFolderNavigationVC = ThemeNavigationController(rootViewController: createFolderVC)
+		createFolderNavigationVC.modalPresentationStyle = .overFullScreen
+
+		self.present(createFolderNavigationVC, animated: true, completion: viewDidAppearHandler)
+	}
 }
 
 // MARK: - Query Delegate
@@ -532,7 +597,7 @@ extension ClientQueryViewController : OCQueryDelegate {
 						if self.searchController?.searchBar.text != "" {
 							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
 						} else {
-							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
+							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized, showSortBar : true)
 						}
 					} else {
 						self.message(show: false)
@@ -554,11 +619,21 @@ extension ClientQueryViewController : OCQueryDelegate {
 
 // MARK: - SortBar Delegate
 extension ClientQueryViewController : SortBarDelegate {
+	func sortBar(_ sortBar: SortBar, leftButtonPressed: UIButton) {
+		self.createFolder()
+	}
+
+	func sortBar(_ sortBar: SortBar, rightButtonPressed: UIButton) {
+		print("LOG ---> right button pressed")
+	}
 
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
 		query?.sortComparator = sortMethod.comparator()
+	}
 
+	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
+		self.present(presentViewController, animated: animated, completion: completionHandler)
 	}
 }
 
@@ -589,10 +664,51 @@ extension ClientQueryViewController: UISearchResultsUpdating {
 			}
 		}
 	}
+}
 
-	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
+// MARK: - ClientItemCell Delegate
+extension ClientQueryViewController: ClientItemCellDelegate {
+	func moreButtonTapped(cell: ClientItemCell) {
+		if let item = cell.item {
 
-		self.present(presentViewController, animated: animated, completion: completionHandler)
+			let tableViewController = MoreStaticTableViewController(style: .grouped)
+			let header = MoreViewHeader(for: item, with: core!)
+			let moreViewController = MoreViewController(item: item, core: core!, header: header, viewController: tableViewController)
+
+			let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
+
+			let deleteRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { (_, _) in
+				moreViewController.dismiss(animated: true, completion: {
+					self.delete(item)
+				})
+			}, title: "Delete".localized, style: .destructive)
+
+			let renameRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+				moreViewController.dismiss(animated: true, completion: {
+					self?.rename(item)
+				})
+			}, title: "Rename".localized, style: .plainNonOpaque)
+
+			tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [
+				renameRow,
+				deleteRow
+//				StaticTableViewRow(label: "1"),
+//				StaticTableViewRow(label: "2"),
+//				StaticTableViewRow(label: "3"),
+//				StaticTableViewRow(label: "4"),
+//				StaticTableViewRow(label: "5"),
+//				StaticTableViewRow(label: "6"),
+//				StaticTableViewRow(label: "7"),
+//				StaticTableViewRow(label: "8"),
+//				StaticTableViewRow(label: "9"),
+//				StaticTableViewRow(label: "10"),
+//				StaticTableViewRow(label: "11"),
+//				StaticTableViewRow(label: "12"),
+//				StaticTableViewRow(label: "13")
+				]))
+
+			self.present(asCard: moreViewController, animated: true)
+		}
 	}
 }
 

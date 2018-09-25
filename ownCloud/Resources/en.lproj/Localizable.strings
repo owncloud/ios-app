@@ -76,8 +76,9 @@
 
 "Folder removed" = "Folder removed";
 "This folder no longer exists on the server." = "This folder no longer exists on the server.";
-"Are you sure you want to delete this file from the server?" = "Are you sure you want to delete this file from the server?";
+"Are you sure you want to delete this item from the server?" = "Are you sure you want to delete this item from the server?";
 "Deleting '%@'" = "Deleting '%@'";
+"Renaming to %@" = "Renaming to %@";
 
 /* Server List*/
 "Cancel" = "Cancel";
@@ -138,3 +139,12 @@
 
 "Approved" = "Approved";
 "Revoke approval" =  "Revoke approval";
+
+/* Actions */
+
+"Forbidden Characters" = "Forbidden Characters";
+"File name cannot contain / or \\" = "File name cannot contain / or \\";
+
+"New Folder" = "New Folder";
+"Rename" =" Rename";
+"Create folder" =" Create folder";
