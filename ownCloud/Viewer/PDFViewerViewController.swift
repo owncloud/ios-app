@@ -12,14 +12,10 @@ import PDFKit
 
 class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
     enum ThumbnailViewPosition {
-        case left, right, bottom
+        case left, right, bottom, none
         func isVertical() -> Bool {
             return self == .bottom ? false : true
         }
-    }
-
-    enum PageLayout : Int {
-        case single = 0, continuous = 1, multipage = 2
     }
 
     fileprivate let SEARCH_ANNOTATION_DELAY  = 3.0
@@ -28,12 +24,6 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
     fileprivate let THUMBNAIL_VIEW_HEIGHT_MULTIPLIER: CGFloat = 0.05
     fileprivate let pdfView = PDFView()
     fileprivate let thumbnailView = PDFThumbnailView()
-    fileprivate let pageLayoutControl = UISegmentedControl(items: [#imageLiteral(resourceName: "ic_pdf_view_single_page"), #imageLiteral(resourceName: "ic_pdf_view_continuous"), #imageLiteral(resourceName: "ic_pdf_view_multipage")])
-    fileprivate var isThumbnailViewVisible = true {
-        didSet {
-            relayoutAnimated()
-        }
-    }
 
     fileprivate var thumbnailViewPosition : ThumbnailViewPosition = .bottom {
         didSet {
@@ -42,33 +32,13 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
                 thumbnailView.layoutMode = .vertical
             case .bottom:
                 thumbnailView.layoutMode = .horizontal
+            default:
+                break
             }
-            relayoutAnimated()
+            setupConstraints()
         }
     }
-
-    fileprivate var pageLayout : PageLayout = .single {
-        didSet {
-            switch pageLayout {
-            case .single:
-                pdfView.displayDirection = .horizontal
-                pdfView.displayDirection = .vertical
-                pdfView.displayMode = .singlePage
-                //pdfView.usePageViewController(true, withViewOptions: nil)
-            case .continuous:
-                pdfView.usePageViewController(false, withViewOptions: nil)
-                pdfView.displayDirection = .vertical
-                pdfView.displayMode = .singlePageContinuous
-            case .multipage:
-                pdfView.usePageViewController(false, withViewOptions: nil)
-                pdfView.displayDirection = .vertical
-                pdfView.displayMode = .twoUpContinuous
-            }
-            self.pdfView.layoutDocumentView()
-            self.pdfView.scaleFactor = self.pdfView.scaleFactorForSizeToFit
-        }
-    }
-
+    
     fileprivate var activeViewConstraints: [NSLayoutConstraint] = [] {
         willSet {
             NSLayoutConstraint.deactivate(activeViewConstraints)
@@ -87,8 +57,6 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         if let document = PDFDocument(url: source) {
             pdfView.document = document
             self.title = document.documentURL?.lastPathComponent
-
-            setupConstraints()
         }
     }
 
@@ -96,28 +64,33 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.thumbnailViewPosition = .bottom
+        self.thumbnailViewPosition = .none
 
         // Configure thumbnail view
         thumbnailView.translatesAutoresizingMaskIntoConstraints = false
         thumbnailView.backgroundColor = UIColor.gray
         thumbnailView.pdfView = pdfView
+        thumbnailView.isExclusiveTouch = true
+        // Adding dummy tap recognizer to prevent navigation bar from hiding if user just taps it
+        let tapRecognizer = UITapGestureRecognizer(target: nil, action: nil)
+        thumbnailView.addGestureRecognizer(tapRecognizer)
         self.view.addSubview(thumbnailView)
 
         // Configure PDFView instance
+        pdfView.displayDirection = .horizontal
         pdfView.translatesAutoresizingMaskIntoConstraints = false
         pdfView.backgroundColor = UIColor.gray
+        pdfView.usePageViewController(true, withViewOptions: nil)
+
         self.view.addSubview(pdfView)
-
-        self.pageLayout = .single
-        pageLayoutControl.selectedSegmentIndex = 0
-
+        setupConstraints()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         parent?.navigationController?.hidesBarsOnTap = true
+
+        setupToolbar()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -127,14 +100,19 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
-        setupConstraints()
-        setupToolbar()
         pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
     }
 
     override func viewDidLayoutSubviews() {
-        self.thumbnailView.isHidden = self.navigationController!.isNavigationBarHidden
+        super.viewDidLayoutSubviews()
+        let hideThumbnails = self.navigationController!.isNavigationBarHidden
+        if hideThumbnails {
+            self.thumbnailViewPosition = .none
+        } else {
+            self.thumbnailViewPosition = .bottom
+        }
+
+        //self.adjustThumbnailsSize()
     }
 
     func save(item: OCItem) {
@@ -185,36 +163,27 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         self.present(searchNC, animated: true)
     }
 
-    @objc func changeDisplayMode() {
-        let selected = pageLayoutControl.selectedSegmentIndex
-        self.pageLayout = PageLayout(rawValue: selected)!
-    }
-
     // MARK: - Private helpers
 
     fileprivate func adjustThumbnailsSize() {
-        let thumbnailSize = min(thumbnailView.frame.size.width, thumbnailView.frame.size.height) - 8.0
+        let thumbnailSize = floor(min(thumbnailView.frame.size.height, thumbnailView.frame.size.width)) - 8.0
         if thumbnailSize > 0 {
             thumbnailView.thumbnailSize = CGSize(width: thumbnailSize, height: thumbnailSize)
         }
     }
 
-    fileprivate func relayoutAnimated() {
-        if pdfView.superview == nil {
+    fileprivate func setupConstraints() {
+
+        if thumbnailView.superview == nil || pdfView.superview == nil {
             return
         }
-        setupConstraints()
-        UIView.animate(withDuration: ANIMATION_DUR) {
-            self.view.layoutIfNeeded()
-        }
-    }
-
-    fileprivate func setupConstraints() {
 
         let guide = view.safeAreaLayoutGuide
 
         var constraints = [NSLayoutConstraint]()
         constraints.append(pdfView.topAnchor.constraint(equalTo: guide.topAnchor))
+
+        thumbnailView.isHidden = false
 
         switch thumbnailViewPosition {
         case .left:
@@ -222,12 +191,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
             constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
             //constraints.append(thumbnailView.trailingAnchor.constraint(equalTo: pdfView.leadingAnchor))
             constraints.append(thumbnailView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
-
-            if isThumbnailViewVisible {
-                constraints.append(thumbnailView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: THUMBNAIL_VIEW_WIDTH_MULTIPLIER))
-            } else {
-                constraints.append(thumbnailView.widthAnchor.constraint(equalToConstant: 0.0))
-            }
+            constraints.append(thumbnailView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: THUMBNAIL_VIEW_WIDTH_MULTIPLIER))
 
             constraints.append(pdfView.leadingAnchor.constraint(equalTo: thumbnailView.trailingAnchor))
             constraints.append(pdfView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
@@ -238,12 +202,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
             constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: pdfView.trailingAnchor))
             constraints.append(thumbnailView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
             constraints.append(thumbnailView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
-
-            if isThumbnailViewVisible {
-                constraints.append(thumbnailView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: THUMBNAIL_VIEW_WIDTH_MULTIPLIER))
-            } else {
-                constraints.append(thumbnailView.widthAnchor.constraint(equalToConstant: 0.0))
-            }
+            constraints.append(thumbnailView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: THUMBNAIL_VIEW_WIDTH_MULTIPLIER))
 
             constraints.append(pdfView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
             constraints.append(pdfView.trailingAnchor.constraint(equalTo: thumbnailView.leadingAnchor))
@@ -254,16 +213,17 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
             constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
             constraints.append(thumbnailView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
             constraints.append(thumbnailView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
-
-            if isThumbnailViewVisible {
-                constraints.append(thumbnailView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: THUMBNAIL_VIEW_HEIGHT_MULTIPLIER))
-            } else {
-                constraints.append(thumbnailView.heightAnchor.constraint(equalToConstant: 0.0))
-            }
+            constraints.append(thumbnailView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: THUMBNAIL_VIEW_HEIGHT_MULTIPLIER))
 
             constraints.append(pdfView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
             constraints.append(pdfView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
             constraints.append(pdfView.bottomAnchor.constraint(equalTo: thumbnailView.topAnchor))
+            
+        case .none:
+            constraints.append(pdfView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
+            constraints.append(pdfView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
+            constraints.append(pdfView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
+            thumbnailView.isHidden = true
         }
 
         self.activeViewConstraints = constraints
@@ -274,11 +234,8 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
 
         let searchButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search))
         let gotoButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "ic_pdf_go_to_page"), style: .plain, target: self, action: #selector(goToPage))
-        pageLayoutControl.addTarget(self, action: #selector(changeDisplayMode), for: .valueChanged)
-        let pageLayoutButtonItem = UIBarButtonItem(customView: pageLayoutControl)
 
         self.parent?.navigationItem.rightBarButtonItems = [
-                             pageLayoutButtonItem,
                              gotoButtonItem,
                              searchButtonItem]
     }
