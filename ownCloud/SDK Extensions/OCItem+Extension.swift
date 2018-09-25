@@ -216,4 +216,21 @@ extension OCItem {
 	func fileSuffix() -> String {
 		return (self.name as NSString).pathExtension
 	}
+
+	var sizeInReadableFormat: String {
+		let byteCountFormatter = ByteCountFormatter()
+		byteCountFormatter.countStyle = .file
+		let size = byteCountFormatter.string(fromByteCount: Int64(self.size))
+		return size
+	}
+
+	var lastModifiedInReadableFormat: String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.timeStyle = .none
+		dateFormatter.dateStyle = .medium
+		dateFormatter.locale = Locale.current
+		dateFormatter.doesRelativeDateFormatting = true
+		let dateString = dateFormatter.string(from: self.lastModified)
+		return dateString
+	}
 }
