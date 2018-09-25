@@ -15,6 +15,9 @@ protocol DisplayViewEditingDelegate: class {
 
 class DisplayViewController: UIViewController {
 
+	private let IconImageViewHeight: CGFloat = 200.0
+	private let IconImageViewSize: CGSize = CGSize(width: 200.0, height: 200.0)
+
 	// MARK: - Instance variables
 	var source: URL! {
 		didSet {
@@ -49,18 +52,18 @@ class DisplayViewController: UIViewController {
 		NSLayoutConstraint.activate([
 			iconImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
 			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
-			iconImageView.heightAnchor.constraint(equalToConstant: 200),
+			iconImageView.heightAnchor.constraint(equalToConstant: IconImageViewHeight),
 			iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor)
 			])
 	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
-		iconImageView.image = item.icon(fitInSize:CGSize(width: 200.0, height: 200.0))
+		iconImageView.image = item.icon(fitInSize:IconImageViewSize)
 
 		if item.thumbnailAvailability != .none {
 			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				_ = thumbnail?.requestImage(for: CGSize(width: 200, height: 200), scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
+				_ = thumbnail?.requestImage(for: self.IconImageViewSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
 					if error == nil,
 						image != nil,
 						self.item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
@@ -76,7 +79,7 @@ class DisplayViewController: UIViewController {
 			if let thumbnail = item.thumbnail {
 				displayThumbnail(thumbnail)
 			} else {
-				_ = core?.retrieveThumbnail(for: item, maximumSize: CGSize(width: 200, height: 200), scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
+				_ = core?.retrieveThumbnail(for: item, maximumSize: IconImageViewSize, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
 					displayThumbnail(thumbnail)
 				})
 			}
