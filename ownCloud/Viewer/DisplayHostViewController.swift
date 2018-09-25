@@ -45,30 +45,27 @@ class DisplayHostViewController: UIViewController {
 
 		let item = itemsToDisplay[0]
 
+        func setupChild(viewController:UIViewController) {
+            OnMainThread {
+                self.addChildViewController(viewController)
+                viewController.view.frame = self.view.frame
+                self.view.addSubview(viewController.view)
+                viewController.didMove(toParentViewController: self)
+            }
+        }
+
 		guard let viewController = self.selectDisplayViewControllerBasedOn(mimeType: item.mimeType) else {
 			print("LOG ---> error no controller for this mime type: \(item.mimeType!)")
-			OnMainThread {
-				OnMainThread {
-					let controller = DisplayViewController()
-					controller.item = item
-					controller.core = self.core
-
-                    self.addChildViewController(controller)
-                    controller.view.frame = self.view.frame
-                    self.view.addSubview(controller.view)
-                    controller.didMove(toParentViewController: self)
-				}
-			}
+            let controller = DisplayViewController()
+            controller.item = item
+            controller.core = self.core
+            setupChild(viewController: controller)
 			return
 		}
 
 		viewController.item = item
 		viewController.core = core
-
-		OnMainThread {
-			self.view.addSubview(viewController.view)
-			self.addChildViewController(viewController)
-		}
+        setupChild(viewController: viewController)
 
 		_ = self.core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
 
