@@ -382,7 +382,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				}
 
 				if let indexPath = destinationIndexPath, items[indexPath.row].type == .file {
-					return UITableViewDropProposal(operation: .forbidden)
+					return UITableViewDropProposal(operation: .move)
 				} else {
 					return UITableViewDropProposal(operation: .move, intent: .insertIntoDestinationIndexPath)
 				}
