@@ -31,6 +31,11 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		Theme.shared.unregister(client: self)
 	}
 
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		tableView.bringSubview(toFront: selectButton)
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
