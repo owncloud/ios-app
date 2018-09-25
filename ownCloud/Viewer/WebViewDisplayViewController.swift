@@ -96,6 +96,7 @@ class WebViewDisplayViewController: DisplayViewController, DisplayViewProtocol {
 			let animator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.9) {
 				navigationController.isNavigationBarHidden.toggle()
 				navigationController.tabBarController?.tabBar.isHidden.toggle()
+				self.webView?.isOpaque.toggle()
 			}
 			animator.startAnimation()
 		}
