@@ -565,10 +565,17 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	func duplicate(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
-		let name = "\(item.fileSuffix()) copy.\(item.path.components(separatedBy: ".").last!)"
-		if let progress = self.core?.copy(item, to: query?.rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
+		var name: String = "\(item.name!) copy"
+
+		if item.type != .collection {
+			let suffix = item.fileSuffix()
+			let itemNameWithouExtension = item.name.dropLast(suffix.count + 1) // The extra one is for the '.' in the extension.
+			name = "\(itemNameWithouExtension) copy.\(suffix)"
+		}
+
+		if let progress = self.core?.copy(item, to: self.query?.rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in
 			if error != nil {
-				Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
+				Log.log("Error \(String(describing: error)) deleting \(String(describing: item?.path))")
 
 				completionHandler?(false)
 			} else {
@@ -577,6 +584,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}) {
 			self.progressSummarizer?.startTracking(progress: progress)
 		}
+
 	}
 }
 
