@@ -41,7 +41,7 @@ class ConnectionIssueViewController: IssuesViewController {
     }
 
     convenience init(displayIssues issues: DisplayIssues?, title: String? = nil, completion:@escaping (ConnectionResponse) -> Void) {
-    	var useButtons : [IssueButton]? = nil
+    	var useButtons : [IssueButton]?
     	var useTitle = title
 
         self.init(displayIssues: issues, buttons: nil, title: useTitle)

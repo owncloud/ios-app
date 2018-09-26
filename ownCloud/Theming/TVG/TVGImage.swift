@@ -88,8 +88,8 @@ class TVGImage: NSObject {
 	}
 
 	func svgBezierPaths(with variables: [String:String]? = nil, cacheFor identifier: String? = nil) -> (CGRect, [SVGBezierPath])? {
-		var svgBezierPaths : [SVGBezierPath]? = nil
-		var pathBoundingRect : CGRect? = nil
+		var svgBezierPaths : [SVGBezierPath]?
+		var pathBoundingRect : CGRect?
 
 		// Generate SVG Bezier Paths
 		if identifier != nil {
