@@ -563,6 +563,21 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		self.present(createFolderNavigationVC, animated: true, completion: viewDidAppearHandler)
 	}
+
+	func duplicate(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
+		let name = "\(item.fileSuffix()) copy.\(item.path.components(separatedBy: ".").last!)"
+		if let progress = self.core?.copy(item, to: query?.rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
+			if error != nil {
+				Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
+
+				completionHandler?(false)
+			} else {
+				completionHandler?(true)
+			}
+		}) {
+			self.progressSummarizer?.startTracking(progress: progress)
+		}
+	}
 }
 
 // MARK: - Query Delegate
@@ -684,8 +699,15 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 				})
 			}, title: "Rename".localized, style: .plainNonOpaque)
 
+			let duplicateRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+				moreViewController.dismiss(animated: true, completion: {
+					self?.duplicate(item)
+				})
+			}, title: "Duplicate".localized, style: .plainNonOpaque)
+
 			tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [
 				renameRow,
+				duplicateRow,
 				deleteRow
 //				StaticTableViewRow(label: "1"),
 //				StaticTableViewRow(label: "2"),
