@@ -218,19 +218,27 @@ extension OCItem {
 	}
 
 	var sizeInReadableFormat: String {
-		let byteCountFormatter = ByteCountFormatter()
-		byteCountFormatter.countStyle = .file
-		let size = byteCountFormatter.string(fromByteCount: Int64(self.size))
+		let size = OCItem.byteCounterFormatter.string(fromByteCount: Int64(self.size))
 		return size
 	}
 
 	var lastModifiedInReadableFormat: String {
-		let dateFormatter = DateFormatter()
+		let dateString = OCItem.dateFormatter.string(from: self.lastModified)
+		return dateString
+	}
+
+	static private let byteCounterFormatter: ByteCountFormatter = {
+		let byteCounterFormatter = ByteCountFormatter()
+		byteCounterFormatter.countStyle = .file
+		return byteCounterFormatter
+	}()
+
+	static private let dateFormatter: DateFormatter = {
+		let dateFormatter: DateFormatter =  DateFormatter()
 		dateFormatter.timeStyle = .none
 		dateFormatter.dateStyle = .medium
 		dateFormatter.locale = Locale.current
 		dateFormatter.doesRelativeDateFormatting = true
-		let dateString = dateFormatter.string(from: self.lastModified)
-		return dateString
-	}
+		return dateFormatter
+	}()
 }
