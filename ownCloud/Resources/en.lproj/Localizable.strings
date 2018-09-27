@@ -69,6 +69,7 @@
 "size" = "size";
 "date" = "date";
 "Search this folder" = "Search this folder";
+"Pending" = "Pending";
 
 /* Client Messages */
 "Empty folder" = "Empty folder";
