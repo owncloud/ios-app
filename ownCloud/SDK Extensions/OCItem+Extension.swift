@@ -213,8 +213,17 @@ extension OCItem {
 		return nil
 	}
 
-	func fileSuffix() -> String {
-		return (self.name as NSString).pathExtension
+	func fileExtension() -> String {
+		var fileExtension = (self.name as NSString).pathExtension
+		if fileExtension != "" {
+			fileExtension = ".\(fileExtension)"
+		}
+
+		return fileExtension
+	}
+
+	func nameWithoutExtension() -> String {
+		return (self.name as NSString).deletingPathExtension
 	}
 
 	var sizeInReadableFormat: String {
