@@ -568,7 +568,14 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		var name: String = "\(item.name!) copy"
 
 		if item.type != .collection {
-			name = "\(item.nameWithoutExtension()) copy\(item.fileExtension())"
+			let itemName = item.nameWithoutExtension()
+			var fileExtension = item.fileExtension()
+
+			if fileExtension != "" {
+				fileExtension = ".\(fileExtension)"
+			}
+
+			name = "\(itemName) copy\(fileExtension)"
 		}
 
 		if let progress = self.core?.copy(item, to: self.query?.rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in

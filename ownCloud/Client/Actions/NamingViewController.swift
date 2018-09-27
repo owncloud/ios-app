@@ -349,7 +349,7 @@ extension NamingViewController: UITextFieldDelegate {
 
 		if let name = nameTextField.text,
 			let fileExtension = item?.fileExtension(),
-			let range = name.range(of: fileExtension),
+			let range = name.range(of: ".\(fileExtension)"),
 			let position: UITextPosition = nameTextField.position(from: nameTextField.beginningOfDocument, offset: range.lowerBound.encodedOffset) {
 
 				textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to:position)

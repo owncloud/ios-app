@@ -214,12 +214,7 @@ extension OCItem {
 	}
 
 	func fileExtension() -> String {
-		var fileExtension = (self.name as NSString).pathExtension
-		if fileExtension != "" {
-			fileExtension = ".\(fileExtension)"
-		}
-
-		return fileExtension
+		return (self.name as NSString).pathExtension
 	}
 
 	func nameWithoutExtension() -> String {
