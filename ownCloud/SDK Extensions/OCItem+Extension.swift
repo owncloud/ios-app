@@ -229,7 +229,7 @@ extension OCItem {
 
 	static private let byteCounterFormatter: ByteCountFormatter = {
 		let byteCounterFormatter = ByteCountFormatter()
-		byteCounterFormatter.countStyle = .file
+		byteCounterFormatter.allowsNonnumericFormatting = false
 		return byteCounterFormatter
 	}()
 
