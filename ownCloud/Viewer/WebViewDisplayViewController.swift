@@ -16,7 +16,24 @@ class WebViewDisplayViewController: DisplayViewController, DisplayViewProtocol {
 		 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 		 "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
 
-	static var features: [String : Any]? = [FeatureKeys.canEdit : true, FeatureKeys.showImages : true]
+	static var features: [String : Any]? = [FeatureKeys.canEdit : true]
+
+	static func webViewExtension(identifier: String) -> OCExtension {
+		let rawIdentifier: OCExtensionIdentifier =  OCExtensionIdentifier(rawValue: identifier)
+		var locationIdentifiers: [OCExtensionLocationIdentifier] = []
+		for mimeType in supportedMimeTypes {
+			let locationIdentifier: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier(rawValue: mimeType)
+			locationIdentifiers.append(locationIdentifier)
+		}
+
+		let features: [String : Any] = WebViewDisplayViewController.features!
+
+		let webViewExtension = OCExtension(identifier: rawIdentifier, type: .viewer, locations: locationIdentifiers, features: features) { (_ rawExtension, _ context, _ error) -> Any? in
+			return WebViewDisplayViewController()
+		}
+
+		return webViewExtension!
+	}
 
 	var webView: WKWebView?
 

@@ -74,8 +74,8 @@ class DisplayHostViewController: UIViewController {
 
 	private func selectDisplayViewControllerBasedOn(mimeType: String) -> (DisplayViewController) {
 
-		let locationIdentifier = OCExtensionLocationIdentifier(rawValue: "viewer")
-		let location: OCDisplayExtensionLocation = OCDisplayExtensionLocation(type: .viewer, identifier: locationIdentifier, supportedMimeTypes: [mimeType])
+		let locationIdentifier = OCExtensionLocationIdentifier(rawValue: mimeType)
+		let location: OCExtensionLocation = OCExtensionLocation(ofType: .viewer, identifier: locationIdentifier)
 		let context = OCExtensionContext(location: location, requirements: nil, preferences: nil)
 
 		var extensions: [OCExtensionMatch]?

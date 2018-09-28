@@ -18,6 +18,4 @@ protocol DisplayViewProtocol where Self: DisplayViewController {
 struct FeatureKeys {
 	static let canEdit: String = "featureKeyCanEdit"
 	static let canSave: String = "featureKeyCanSave"
-	static let showPDF: String = "featureKeyShowPDF"
-	static let showImages: String = "featureKeyShowImages"
 }
