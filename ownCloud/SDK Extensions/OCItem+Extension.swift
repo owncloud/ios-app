@@ -246,7 +246,7 @@ extension OCItem {
 		dateFormatter.doesRelativeDateFormatting = true
 		return dateFormatter
 	}()
-	
+
 	func canHandle(_ session: UIDropSession) -> Bool {
 		return true
 	}
