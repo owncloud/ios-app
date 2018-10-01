@@ -12,12 +12,9 @@ import WebKit
 
 class WebViewDisplayViewController: DisplayViewController, DisplayExtension {
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
-		guard defaultPriority != OCExtensionPriority.noMatch else {
-			return defaultPriority
-		}
 		do {
 			let location = context!.location.identifier.rawValue
-			let imageMatcher = try NSRegularExpression(pattern: "\\A(image/)*", options: .caseInsensitive)
+			let imageMatcher = try NSRegularExpression(pattern: "\\A((image/)|(text/)|(application/(vnd.|ms))(ms|openxmlformats)?)", options: .caseInsensitive)
 			let matches = imageMatcher.numberOfMatches(in: location, options: .reportCompletion, range: NSRange(location: 0, length: location.count))
 
 			if matches > 0 {
@@ -31,10 +28,7 @@ class WebViewDisplayViewController: DisplayViewController, DisplayExtension {
 	}
 
 	static var displayExtensionIdentifier: String = "org.owncloud.webview"
-	static var supportedMimeTypes: [String] =
-		["image/jpeg",
-		 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-		 "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
+	static var supportedMimeTypes: [String]?
 
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 
@@ -116,7 +110,6 @@ class WebViewDisplayViewController: DisplayViewController, DisplayExtension {
 			let animator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.9) {
 				navigationController.isNavigationBarHidden.toggle()
 				navigationController.tabBarController?.tabBar.isHidden.toggle()
-				self.webView?.isOpaque.toggle()
 			}
 			animator.startAnimation()
 		}
