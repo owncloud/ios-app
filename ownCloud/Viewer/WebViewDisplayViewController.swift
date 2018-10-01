@@ -11,14 +11,32 @@ import ownCloudSDK
 import WebKit
 
 class WebViewDisplayViewController: DisplayViewController, DisplayExtension {
-	
-	static var displayExtensionIdentifier: String = "imageViewer"
+	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
+		guard defaultPriority != OCExtensionPriority.noMatch else {
+			return defaultPriority
+		}
+		do {
+			let location = context!.location.identifier.rawValue
+			let imageMatcher = try NSRegularExpression(pattern: "\\A(image/)*", options: .caseInsensitive)
+			let matches = imageMatcher.numberOfMatches(in: location, options: .reportCompletion, range: NSRange(location: 0, length: location.count))
+
+			if matches > 0 {
+				return OCExtensionPriority.locationMatch
+			} else {
+				return OCExtensionPriority.noMatch
+			}
+		} catch {
+			return OCExtensionPriority.noMatch
+		}
+	}
+
+	static var displayExtensionIdentifier: String = "org.owncloud.webview"
 	static var supportedMimeTypes: [String] =
 		["image/jpeg",
 		 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 		 "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
 
-	static var features: [String : Any]? = [FeatureKeys.canEdit : true]
+	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 
 	var webView: WKWebView?
 

@@ -12,9 +12,10 @@ import PDFKit
 
 class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
-	static var displayExtensionIdentifier: String = "normalPDFViewer"
+	static var customMatcher: OCExtensionCustomContextMatcher?
+	static var displayExtensionIdentifier: String = "org.owncloud.pdfViewer.default"
 	static var supportedMimeTypes: [String] = ["application/pdf"]
-	static var features: [String : Any]? = [FeatureKeys.canEdit : true]
+	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 
 	override func renderSpecificView() {
 		if let document = PDFDocument(url: source) {

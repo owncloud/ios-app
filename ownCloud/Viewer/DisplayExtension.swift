@@ -16,6 +16,8 @@ protocol DisplayExtension where Self: DisplayViewController {
 	static var displayExtensionIdentifier: String {get}
 
 	static var displayExtension: OCExtension {get}
+
+	static var customMatcher: OCExtensionCustomContextMatcher? {get}
 }
 
 extension DisplayExtension where Self: DisplayViewController {
@@ -27,9 +29,9 @@ extension DisplayExtension where Self: DisplayViewController {
 			locationIdentifiers.append(locationIdentifier)
 		}
 
-		let displayExtension = OCExtension(identifier: rawIdentifier, type: .viewer, locations: locationIdentifiers, features: features) { (_ rawExtension, _ context, _ error) -> Any? in
+		let displayExtension = OCExtension(identifier: rawIdentifier, type: .viewer, locations: locationIdentifiers, features: features, objectProvider: { (_ rawExtension, _ context, _ error) -> Any? in
 			return Self()
-		}
+		}, customMatcher:customMatcher)
 
 		return displayExtension!
 	}
