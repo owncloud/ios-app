@@ -31,7 +31,7 @@
 		23D77FCD212BFBD100DE76F1 /* NamingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */; };
 		23E22BB720C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E22BB220C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift */; };
 		23EC77582137F3DD0032D4E6 /* PDFViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */; };
-		23EC77592137F3DD0032D4E6 /* DisplayViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77552137F3DC0032D4E6 /* DisplayViewProtocol.swift */; };
+		23EC77592137F3DD0032D4E6 /* DisplayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77552137F3DC0032D4E6 /* DisplayExtension.swift */; };
 		23EC775A2137F3DD0032D4E6 /* DisplayHostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77562137F3DC0032D4E6 /* DisplayHostViewController.swift */; };
 		23EC775B2137F3DD0032D4E6 /* OCExtensionType+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77572137F3DD0032D4E6 /* OCExtensionType+Extension.swift */; };
 		23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */; };
@@ -318,7 +318,7 @@
 		23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NamingViewController.swift; sourceTree = "<group>"; };
 		23E22BB220C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIDevice+UIUserInterfaceIdiom.swift"; sourceTree = "<group>"; };
 		23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFViewerViewController.swift; sourceTree = "<group>"; };
-		23EC77552137F3DC0032D4E6 /* DisplayViewProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayViewProtocol.swift; sourceTree = "<group>"; };
+		23EC77552137F3DC0032D4E6 /* DisplayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayExtension.swift; sourceTree = "<group>"; };
 		23EC77562137F3DC0032D4E6 /* DisplayHostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayHostViewController.swift; sourceTree = "<group>"; };
 		23EC77572137F3DD0032D4E6 /* OCExtensionType+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCExtensionType+Extension.swift"; sourceTree = "<group>"; };
 		23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDisplayViewController.swift; sourceTree = "<group>"; };
@@ -587,7 +587,7 @@
 		23EC774D2137F3CD0032D4E6 /* Viewer */ = {
 			isa = PBXGroup;
 			children = (
-				23EC77552137F3DC0032D4E6 /* DisplayViewProtocol.swift */,
+				23EC77552137F3DC0032D4E6 /* DisplayExtension.swift */,
 				23D5241421491C670002C566 /* DisplayViewController.swift */,
 				23EC77562137F3DC0032D4E6 /* DisplayHostViewController.swift */,
 				23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */,
@@ -1269,7 +1269,7 @@
 				DC85980620D85EE600A433C6 /* AsyncSequentialQueue.swift in Sources */,
 				232B01F42126B0CE00366FA0 /* MoreViewHeader.swift in Sources */,
 				DCF4F17F2051A0D000189B9A /* StaticTableViewRow.swift in Sources */,
-				23EC77592137F3DD0032D4E6 /* DisplayViewProtocol.swift in Sources */,
+				23EC77592137F3DD0032D4E6 /* DisplayExtension.swift in Sources */,
 				DC321261207EB01B00DB171D /* ThemeImage.swift in Sources */,
 				DC7DBA54207FA80C00E7337D /* TVGImage.swift in Sources */,
 				DC4FEAE7209E3A7700D4476B /* OCConnectionIssue+Extension.swift in Sources */,

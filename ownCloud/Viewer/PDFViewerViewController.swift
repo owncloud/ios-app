@@ -10,22 +10,11 @@ import UIKit
 import ownCloudSDK
 import PDFKit
 
-class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
+class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
+	static var displayExtensionIdentifier: String = "normalPDFViewer"
 	static var supportedMimeTypes: [String] = ["application/pdf"]
 	static var features: [String : Any]? = [FeatureKeys.canEdit : true]
-
-	static func normalPDFExtension(identifier: String) -> OCExtension {
-		let rawIdentifier: OCExtensionIdentifier =  OCExtensionIdentifier(rawValue: identifier)
-		let locationIdentifier = OCExtensionLocationIdentifier(rawValue: supportedMimeTypes[0])
-		let features: [String : Any] = PDFViewerViewController.features!
-
-		let normalPDFExtension = OCExtension(identifier: rawIdentifier, type: .viewer, location: locationIdentifier, features: features) { (_ rawExtension, _ context, _ error) -> Any? in
-			return PDFViewerViewController()
-		}
-
-		return normalPDFExtension!
-	}
 
 	override func renderSpecificView() {
 		if let document = PDFDocument(url: source) {

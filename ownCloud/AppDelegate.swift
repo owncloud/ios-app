@@ -45,11 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		Log.debug("Minimum fetch refresh time: \(UIApplicationBackgroundFetchIntervalMinimum)")
 
-		let pdfExtension = PDFViewerViewController.normalPDFExtension(identifier: "normalPDFViewer")
-		let imageExtension = WebViewDisplayViewController.webViewExtension(identifier: "imageViewer")
-
-		OCExtensionManager.shared.addExtension(pdfExtension)
-		OCExtensionManager.shared.addExtension(imageExtension)
+		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
 
 		return true
 	}

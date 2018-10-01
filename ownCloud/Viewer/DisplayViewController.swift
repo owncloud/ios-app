@@ -27,7 +27,7 @@ class DisplayViewController: UIViewController {
 		}
 	}
 
-	init() {
+	required init() {
 		super.init(nibName: nil, bundle: nil)
 	}
 

@@ -64,7 +64,7 @@ class DisplayHostViewController: UIViewController {
 				return
 			}
 
-			if viewController is (DisplayViewController & DisplayViewProtocol) {
+			if viewController is (DisplayViewController & DisplayExtension) {
 				OnMainThread {
 					viewController.source = file!.url
 				}
@@ -94,7 +94,7 @@ class DisplayHostViewController: UIViewController {
 
 		let extensionObject = preferedExtension.provideObject(for: context!)
 
-		guard let controllerType = extensionObject as? (DisplayViewController & DisplayViewProtocol) else {
+		guard let controllerType = extensionObject as? (DisplayViewController & DisplayExtension) else {
 			return DisplayViewController()
 		}
 
