@@ -109,7 +109,7 @@ class Theme: NSObject {
 	}
 
 	func resource(for identifier: String) -> ThemeResource? {
-		var resource : ThemeResource? = nil
+		var resource : ThemeResource?
 
 		OCSynchronized(self) {
 			resource = resourcesByIdentifier[identifier]
@@ -119,7 +119,7 @@ class Theme: NSObject {
 	}
 
 	func image(for identifier: String, size: CGSize? = nil) -> UIImage? {
-		var image : UIImage? = nil
+		var image : UIImage?
 
 		OCSynchronized(self) {
 			if let themeResource = resourcesByIdentifier[identifier] {
