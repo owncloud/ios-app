@@ -69,6 +69,7 @@
 "size" = "size";
 "date" = "date";
 "Search this folder" = "Search this folder";
+"Pending" = "Pending";
 
 /* Client Messages */
 "Empty folder" = "Empty folder";
@@ -148,3 +149,4 @@
 "New Folder" = "New Folder";
 "Rename" =" Rename";
 "Create folder" =" Create folder";
+"Duplicate" = "Duplicate";

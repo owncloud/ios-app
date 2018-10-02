@@ -122,11 +122,13 @@ class ClientItemCell: ThemeTableViewCell {
 
 		iconImage = item.icon(fitInSize: iconSize)
 
-		if item.type == .collection {
-			self.detailLabel.text = "Folder".localized
-		} else {
-			self.detailLabel.text = item.mimeType
+		var size: String = item.sizeInReadableFormat
+
+		if item.size < 0 {
+			size = "Pending".localized
 		}
+
+		self.detailLabel.text = size + " - " + item.lastModifiedInReadableFormat
 
 		self.accessoryType = .none
 
