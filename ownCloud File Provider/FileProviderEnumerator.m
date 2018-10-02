@@ -104,7 +104,7 @@
 	if ((_core == nil) && (_query == nil))
 	{
 		_core = [[OCCoreManager sharedCoreManager] requestCoreForBookmark:_bookmark completionHandler:^(OCCore *core, NSError *error) {
-			_core = core;
+			self->_core = core;
 
 			if (error != nil)
 			{
@@ -116,7 +116,7 @@
 				// Create and add query
 				__block OCPath queryPath = nil;
 
-				if ([_enumeratedItemIdentifier isEqualToString:NSFileProviderRootContainerItemIdentifier])
+				if ([self->_enumeratedItemIdentifier isEqualToString:NSFileProviderRootContainerItemIdentifier])
 				{
 					queryPath = @"/";
 				}
@@ -125,7 +125,7 @@
 					NSError *error = nil;
 					OCItem *item;
 
-					if ((item = [core synchronousRetrieveItemFromDatabaseForFileID:_enumeratedItemIdentifier syncAnchor:NULL error:&error]) != nil)
+					if ((item = [core synchronousRetrieveItemFromDatabaseForFileID:self->_enumeratedItemIdentifier syncAnchor:NULL error:&error]) != nil)
 					{
 						if (item.type == OCItemTypeCollection)
 						{
@@ -154,29 +154,29 @@
 				else
 				{
 					// Start query
-					_query = [OCQuery queryForPath:queryPath];
-					_query.delegate = self;
+					self->_query = [OCQuery queryForPath:queryPath];
+					self->_query.delegate = self;
 
 					@synchronized(self)
 					{
-						if ([_enumerationObservers.lastObject.enumerationStartPage isEqual:NSFileProviderInitialPageSortedByDate])
+						if ([self->_enumerationObservers.lastObject.enumerationStartPage isEqual:NSFileProviderInitialPageSortedByDate])
 						{
-							_query.sortComparator = ^NSComparisonResult(OCItem *item1, OCItem *item2) {
+							self->_query.sortComparator = ^NSComparisonResult(OCItem *item1, OCItem *item2) {
 								return ([item1.lastModified compare:item2.lastModified]);
 							};
 						}
 
-						if ([_enumerationObservers.lastObject.enumerationStartPage isEqual:NSFileProviderInitialPageSortedByName])
+						if ([self->_enumerationObservers.lastObject.enumerationStartPage isEqual:NSFileProviderInitialPageSortedByName])
 						{
-							_query.sortComparator = ^NSComparisonResult(OCItem *item1, OCItem *item2) {
+							self->_query.sortComparator = ^NSComparisonResult(OCItem *item1, OCItem *item2) {
 								return ([item1.name compare:item2.name]);
 							};
 						}
 					}
 
-					OCLogDebug(@"##### START QUERY FOR %@", _query.queryPath);
+					OCLogDebug(@"##### START QUERY FOR %@", self->_query.queryPath);
 
-					[core startQuery:_query];
+					[core startQuery:self->_query];
 				}
 			}
 		}];
@@ -192,14 +192,14 @@
 				if (_enumerationObservers.count!=0)
 				{
 					dispatch_async(dispatch_get_main_queue(), ^{
-						[self provideItemsForEnumerationObserverFromQuery:_query];
+						[self provideItemsForEnumerationObserverFromQuery:self->_query];
 					});
 				}
 
 				if (_changeObservers.count!=0)
 				{
 					dispatch_async(dispatch_get_main_queue(), ^{
-						[self provideItemsForChangeObserverFromQuery:_query];
+						[self provideItemsForChangeObserverFromQuery:self->_query];
 					});
 				}
 			}
@@ -283,19 +283,19 @@
 		dispatch_async(dispatch_get_main_queue(), ^{
 			@synchronized(self)
 			{
-				if (_enumerationObservers.count > 0)
+				if (self->_enumerationObservers.count > 0)
 				{
 					[self provideItemsForEnumerationObserverFromQuery:query];
 				}
 
-				if (_changeObservers.count > 0)
+				if (self->_changeObservers.count > 0)
 				{
 					[self provideItemsForChangeObserverFromQuery:query];
 				}
 
 				if (query.state == OCQueryStateIdle)
 				{
-					[_core signalEnumeratorForContainerItemIdentifier:_enumeratedItemIdentifier];
+					[self->_core signalEnumeratorForContainerItemIdentifier:self->_enumeratedItemIdentifier];
 				}
 			}
 		});
@@ -319,7 +319,7 @@
 			nil.
 		*/
 		dispatch_async(dispatch_get_main_queue(), ^{
-			if ([syncAnchor isEqual:[_core.latestSyncAnchor syncAnchorData]])
+			if ([syncAnchor isEqual:[self->_core.latestSyncAnchor syncAnchorData]])
 			{
 				OCLogDebug(@"##### END(LATEST) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
 				[observer finishEnumeratingChangesUpToSyncAnchor:syncAnchor moreComing:NO];
@@ -358,7 +358,7 @@
 	OCLogDebug(@"#### Request current sync anchor");
 
 	dispatch_async(dispatch_get_main_queue(), ^{
-		completionHandler([_core.latestSyncAnchor syncAnchorData]);
+		completionHandler([self->_core.latestSyncAnchor syncAnchorData]);
 	});
 }
 
