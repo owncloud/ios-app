@@ -48,8 +48,6 @@
 		_fileManager = [[NSFileManager alloc] init];
 	}
 
-	[OCCoreManager sharedCoreManager].postFileProviderNotifications = YES;
-
 	return self;
 }
 
