@@ -6,6 +6,16 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudSDK
 import PDFKit
@@ -31,27 +41,23 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 			thumbnailsView.thumbnailSize = CGSize(width: 70, height: 50)
 
-			let ocPDFView = PDFView(frame: .zero)
-			ocPDFView.translatesAutoresizingMaskIntoConstraints = false
-			view.addSubview(ocPDFView)
+			let pdfView = PDFView(frame: .zero)
+			pdfView.translatesAutoresizingMaskIntoConstraints = false
+			view.addSubview(pdfView)
 			NSLayoutConstraint.activate([
-				ocPDFView.topAnchor.constraint(equalTo: view.topAnchor),
-				ocPDFView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-				ocPDFView.leftAnchor.constraint(equalTo: thumbnailsView.rightAnchor),
-				ocPDFView.rightAnchor.constraint(equalTo: view.rightAnchor)
+				pdfView.topAnchor.constraint(equalTo: view.topAnchor),
+				pdfView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+				pdfView.leftAnchor.constraint(equalTo: thumbnailsView.rightAnchor),
+				pdfView.rightAnchor.constraint(equalTo: view.rightAnchor)
 				])
 
-			ocPDFView.document = document
-			ocPDFView.autoScales = true
-			ocPDFView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-			ocPDFView.displayMode = .singlePageContinuous
-			thumbnailsView.pdfView = ocPDFView
+			pdfView.document = document
+			pdfView.autoScales = true
+			pdfView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+			pdfView.displayMode = .singlePageContinuous
+			thumbnailsView.pdfView = pdfView
 		} else {
 			view.backgroundColor = .red
 		}
-	}
-
-	func save(item: OCItem) {
-		editingDelegate?.save(item: item, fileURL: source)
 	}
 }

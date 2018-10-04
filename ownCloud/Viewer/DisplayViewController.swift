@@ -6,6 +6,16 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudSDK
 
@@ -40,24 +50,61 @@ class DisplayViewController: UIViewController {
 	weak var editingDelegate: DisplayViewEditingDelegate?
 
 	private var iconImageView: UIImageView!
+	private var progressView : UIProgressView?
+	private var cancelButton : UIButton?
+
+	public var downloadProgress : Progress? {
+		didSet {
+			progressView?.observedProgress = downloadProgress
+
+			progressView?.isHidden = false
+			cancelButton?.isHidden = false
+		}
+	}
 
 	// MARK: - Load view
 	override func loadView() {
 		super.loadView()
+
 		iconImageView = UIImageView()
 		iconImageView.translatesAutoresizingMaskIntoConstraints = false
 		iconImageView.contentMode = .scaleAspectFit
+
 		view.addSubview(iconImageView)
+
+		progressView = UIProgressView(progressViewStyle: .bar)
+		progressView?.translatesAutoresizingMaskIntoConstraints = false
+		progressView?.progress = 0
+		progressView?.observedProgress = downloadProgress
+		progressView?.isHidden = (downloadProgress != nil)
+
+		view.addSubview(progressView!)
+
+		cancelButton = UIButton(type: .system)
+		cancelButton?.translatesAutoresizingMaskIntoConstraints = false
+		cancelButton?.setTitle("Cancel".localized, for: .normal)
+		cancelButton?.isHidden = (downloadProgress != nil)
+		cancelButton?.addTarget(self, action: #selector(cancelDownload(sender:)), for: UIControlEvents.touchUpInside)
+
+		view.addSubview(cancelButton!)
+
 		NSLayoutConstraint.activate([
 			iconImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
 			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
 			iconImageView.heightAnchor.constraint(equalToConstant: IconImageViewSize.height),
-			iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor)
-			])
+			iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
+
+			progressView!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
+			progressView!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
+			progressView!.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 20),
+
+			cancelButton!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
+			cancelButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: 10)
+		])
 	}
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	override func viewDidLoad() {
+		super.viewDidLoad()
 		iconImageView.image = item.icon(fitInSize:IconImageViewSize)
 
 		if item.thumbnailAvailability != .none {
@@ -83,9 +130,27 @@ class DisplayViewController: UIViewController {
 				})
 			}
 		}
-    }
+
+		Theme.shared.register(client: self)
+	}
+
+	deinit {
+		Theme.shared.unregister(client: self)
+	}
+
+	@objc func cancelDownload(sender: Any?) {
+		downloadProgress?.cancel()
+	}
 
 	func renderSpecificView() {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the source property.s
+	}
+
+}
+
+extension DisplayViewController : Themeable {
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		progressView?.applyThemeCollection(collection)
+		cancelButton?.applyThemeCollection(collection)
 	}
 }

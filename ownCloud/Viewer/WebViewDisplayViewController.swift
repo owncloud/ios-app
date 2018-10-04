@@ -6,6 +6,16 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudSDK
 import WebKit
@@ -14,8 +24,8 @@ class WebViewDisplayViewController: DisplayViewController, DisplayExtension {
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		do {
 			let location = context!.location.identifier.rawValue
-			let imageMatcher = try NSRegularExpression(pattern: "\\A((image/)|(text/)|(application/(vnd.|ms))(ms|openxmlformats)?)", options: .caseInsensitive)
-			let matches = imageMatcher.numberOfMatches(in: location, options: .reportCompletion, range: NSRange(location: 0, length: location.count))
+			let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((image/)|(text/)|(video/)|(audio/)|(application/(vnd.|ms))(ms|openxmlformats)?)", options: .caseInsensitive)
+			let matches = supportedFormatsRegex.numberOfMatches(in: location, options: .reportCompletion, range: NSRange(location: 0, length: location.count))
 
 			if matches > 0 {
 				return OCExtensionPriority.locationMatch
