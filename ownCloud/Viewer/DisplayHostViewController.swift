@@ -64,11 +64,11 @@ class DisplayHostViewController: UIViewController {
 		self.view.addSubview(viewController.view)
 		viewController.didMove(toParentViewController: self)
 
-		if let downloadProgress = self.core.downloadItem(itemToDisplay, options: nil, resultHandler: { (error, _, _, file) in
+		if let downloadProgress = self.core.downloadItem(itemToDisplay, options: nil, resultHandler: { [weak self] (error, _, _, file) in
 			guard error == nil else {
 				print("LOG ---> error downloading")
 				OnMainThread {
-					self.navigationController?.popViewController(animated: true)
+					self?.navigationController?.popViewController(animated: true)
 				}
 				return
 			}
@@ -114,7 +114,6 @@ class DisplayHostViewController: UIViewController {
 }
 
 extension DisplayHostViewController: Themeable {
-
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.view.backgroundColor = collection.tableBackgroundColor
 	}
