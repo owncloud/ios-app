@@ -38,6 +38,10 @@
 		23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */; };
 		23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F6238020B587EF004FDE8B /* SortMethod.swift */; };
 		23FA23E620BFD3D8009A6D73 /* SortBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23FA23E520BFD3D8009A6D73 /* SortBar.swift */; };
+		4C06689F21665ED900666188 /* PDFOutlineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C06689E21665ED900666188 /* PDFOutlineViewController.swift */; };
+		4C0668A721665F3400666188 /* PDFTocTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0668A621665F3400666188 /* PDFTocTableViewController.swift */; };
+		4C0668A921665F9500666188 /* PDFThumbnailsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0668A821665F9500666188 /* PDFThumbnailsCollectionViewController.swift */; };
+		4C0668AB21667C2500666188 /* PDFThumbnailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0668AA21667C2500666188 /* PDFThumbnailCollectionViewCell.swift */; };
 		4C8F1B3C2150DF8D00F86E2D /* PDFSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8F1B352150DF8C00F86E2D /* PDFSearchViewController.swift */; };
 		4C8F1B3F2150FE6E00F86E2D /* PDFSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8F1B3E2150FE6E00F86E2D /* PDFSearchTableViewCell.swift */; };
 		5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5917244D20D3DC2100809B38 /* BiometricalTests.swift */; };
@@ -370,6 +374,10 @@
 		23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDisplayViewController.swift; sourceTree = "<group>"; };
 		23F6238020B587EF004FDE8B /* SortMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortMethod.swift; sourceTree = "<group>"; };
 		23FA23E520BFD3D8009A6D73 /* SortBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortBar.swift; sourceTree = "<group>"; };
+		4C06689E21665ED900666188 /* PDFOutlineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFOutlineViewController.swift; sourceTree = "<group>"; };
+		4C0668A621665F3400666188 /* PDFTocTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFTocTableViewController.swift; sourceTree = "<group>"; };
+		4C0668A821665F9500666188 /* PDFThumbnailsCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFThumbnailsCollectionViewController.swift; sourceTree = "<group>"; };
+		4C0668AA21667C2500666188 /* PDFThumbnailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFThumbnailCollectionViewCell.swift; sourceTree = "<group>"; };
 		4C8F1B352150DF8C00F86E2D /* PDFSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFSearchViewController.swift; sourceTree = "<group>"; };
 		4C8F1B3E2150FE6E00F86E2D /* PDFSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFSearchTableViewCell.swift; sourceTree = "<group>"; };
 		5917244D20D3DC2100809B38 /* BiometricalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricalTests.swift; sourceTree = "<group>"; };
@@ -689,6 +697,10 @@
 				23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */,
 				4C8F1B352150DF8C00F86E2D /* PDFSearchViewController.swift */,
 				4C8F1B3E2150FE6E00F86E2D /* PDFSearchTableViewCell.swift */,
+				4C06689E21665ED900666188 /* PDFOutlineViewController.swift */,
+				4C0668A621665F3400666188 /* PDFTocTableViewController.swift */,
+				4C0668AA21667C2500666188 /* PDFThumbnailCollectionViewCell.swift */,
+				4C0668A821665F9500666188 /* PDFThumbnailsCollectionViewController.swift */,
 				23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */,
 			);
 			path = Viewer;
@@ -1458,6 +1470,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC97BCBC20DCD8F6007217D6 /* ClientItemViewController.swift in Sources */,
+				4C0668A721665F3400666188 /* PDFTocTableViewController.swift in Sources */,
 				2347446A20761BB700859C93 /* String+Extension.swift in Sources */,
 				DCF4F17920519F8C00189B9A /* StaticTableViewController.swift in Sources */,
 				DC680576212DF548006C3B1F /* CertificateManagementViewController.swift in Sources */,
@@ -1512,10 +1525,12 @@
 				597A404920AD59EF00B028B2 /* AppLockWindow.swift in Sources */,
 				DC42244C207CAFBB0006A2A6 /* ThemeCollection.swift in Sources */,
 				DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */,
+				4C0668AB21667C2500666188 /* PDFThumbnailCollectionViewCell.swift in Sources */,
 				DCFED9BA20809B8900A2D984 /* ThemeTVGResource.swift in Sources */,
 				DC3BE0DE2077CC14002A0AC0 /* ClientQueryViewController.swift in Sources */,
 				23C56538212167BE00BD4B47 /* CardTransitionDelegate.swift in Sources */,
 				DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */,
+				4C0668A921665F9500666188 /* PDFThumbnailsCollectionViewController.swift in Sources */,
 				DC0B37972051681600189B9A /* ThemeButton.swift in Sources */,
 				DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */,
 				23C56537212167BE00BD4B47 /* CardPresentationController.swift in Sources */,
@@ -1531,6 +1546,7 @@
 				DC7DBA54207FA80C00E7337D /* TVGImage.swift in Sources */,
 				DC4FEAE7209E3A7700D4476B /* OCConnectionIssue+Extension.swift in Sources */,
 				DC434D1320D7A8F100740056 /* UIAlertController+OCConnectionIssue.swift in Sources */,
+				4C06689F21665ED900666188 /* PDFOutlineViewController.swift in Sources */,
 				DC3317CE2084966700E36C8F /* ThemeTableViewCell.swift in Sources */,
 				6E83C77E20A32C1B0066EC23 /* SettingsSection.swift in Sources */,
 				DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */,

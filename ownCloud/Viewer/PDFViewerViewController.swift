@@ -31,6 +31,8 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         }
     }
 
+    static let PDFGoToPageNotification = Notification(name: Notification.Name(rawValue: "PDFGoToPageNotification"))
+
     fileprivate let SEARCH_ANNOTATION_DELAY  = 3.0
     fileprivate let ANIMATION_DUR = 0.25
     fileprivate let THUMBNAIL_VIEW_WIDTH_MULTIPLIER: CGFloat = 0.15
@@ -153,6 +155,12 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         setupConstraints()
 
         NotificationCenter.default.addObserver(self, selector: #selector(handlePageChanged), name: .PDFViewPageChanged, object: nil)
+
+        NotificationCenter.default.addObserver(forName: PDFViewerViewController.PDFGoToPageNotification.name, object: nil, queue: OperationQueue.main) { (notification) in
+            if let page = notification.object as? PDFPage {
+                self.pdfView.go(to: page)
+            }
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -242,6 +250,21 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         self.present(searchNC, animated: true)
     }
 
+    @objc func showOutline() {
+        guard let pdf = pdfView.document else { return }
+
+        let outlineVC = PDFOutlineViewController()
+        let searchNC = ThemeNavigationController(rootViewController: outlineVC)
+        outlineVC.pdfDocument = pdf
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            searchNC.modalPresentationStyle = .popover
+            searchNC.popoverPresentationController?.barButtonItem = searchButtonItem
+        }
+
+        self.present(searchNC, animated: true)
+    }
+
     // MARK: - Private helpers
 
     fileprivate func adjustThumbnailsSize() {
@@ -311,11 +334,13 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
 
     fileprivate func setupToolbar() {
         searchButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search))
-        gotoButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "ic_pdf_go_to_page"), style: .plain, target: self, action: #selector(goToPage))
+        gotoButtonItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_go_to_page"), style: .plain, target: self, action: #selector(goToPage))
+        let outlineItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_outline"), style: .plain, target: self, action: #selector(showOutline))
 
         self.parent?.navigationItem.rightBarButtonItems = [
-                             gotoButtonItem!,
-                             searchButtonItem!]
+            gotoButtonItem!,
+            searchButtonItem!,
+            outlineItem]
     }
 
     fileprivate func selectPage(with label:String) {
