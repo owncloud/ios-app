@@ -35,12 +35,16 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
     fileprivate let ANIMATION_DUR = 0.25
     fileprivate let THUMBNAIL_VIEW_WIDTH_MULTIPLIER: CGFloat = 0.15
     fileprivate let THUMBNAIL_VIEW_HEIGHT_MULTIPLIER: CGFloat = 0.05
+    fileprivate let FILENAME_CONTAINER_TOP_MARGIN: CGFloat = 10.0
     fileprivate let pdfView = PDFView()
     fileprivate let thumbnailView = PDFThumbnailView()
 
     fileprivate let containerView = UIStackView()
     fileprivate let pageCountLabel = UILabel()
     fileprivate let fileNameLabel = UILabel()
+
+    fileprivate var searchButtonItem: UIBarButtonItem?
+    fileprivate var gotoButtonItem: UIBarButtonItem?
 
     fileprivate var thumbnailViewPosition : ThumbnailViewPosition = .bottom {
         didSet {
@@ -59,7 +63,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
             setupConstraints()
         }
     }
-    
+
     fileprivate var activeViewConstraints: [NSLayoutConstraint] = [] {
         willSet {
             NSLayoutConstraint.deactivate(activeViewConstraints)
@@ -89,6 +93,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.gray
         self.thumbnailViewPosition = .none
 
         // Configure thumbnail view
@@ -101,6 +106,12 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         thumbnailView.addGestureRecognizer(tapRecognizer)
         self.view.addSubview(thumbnailView)
 
+        containerView.spacing = UIStackView.spacingUseSystem
+        containerView.isLayoutMarginsRelativeArrangement = true
+        containerView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: FILENAME_CONTAINER_TOP_MARGIN,
+                                                                         leading: 0,
+                                                                         bottom: 0,
+                                                                         trailing: 0)
         containerView.backgroundColor = UIColor.lightGray
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.axis = .vertical
@@ -223,6 +234,11 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
             }
         }
 
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            searchNC.modalPresentationStyle = .popover
+            searchNC.popoverPresentationController?.barButtonItem = searchButtonItem
+        }
+
         self.present(searchNC, animated: true)
     }
 
@@ -281,7 +297,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
             constraints.append(containerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
             constraints.append(containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
             constraints.append(containerView.bottomAnchor.constraint(equalTo: thumbnailView.topAnchor))
-            
+
         case .none:
             constraints.append(containerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
             constraints.append(containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
@@ -294,13 +310,12 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
     }
 
     fileprivate func setupToolbar() {
-
-        let searchButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search))
-        let gotoButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "ic_pdf_go_to_page"), style: .plain, target: self, action: #selector(goToPage))
+        searchButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search))
+        gotoButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "ic_pdf_go_to_page"), style: .plain, target: self, action: #selector(goToPage))
 
         self.parent?.navigationItem.rightBarButtonItems = [
-                             gotoButtonItem,
-                             searchButtonItem]
+                             gotoButtonItem!,
+                             searchButtonItem!]
     }
 
     fileprivate func selectPage(with label:String) {
@@ -320,4 +335,3 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         pageCountLabel.text = "\(currentPageLabel) of \(pdf.pageCount)"
     }
 }
-

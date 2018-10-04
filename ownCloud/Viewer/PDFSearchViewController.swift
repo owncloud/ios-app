@@ -28,7 +28,7 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.tableView.register(PDFSearchTableViewCell.self, forCellReuseIdentifier: PDFSearchTableViewCell.identifier)
         self.tableView.rowHeight = 40.0
 
@@ -58,7 +58,7 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
 
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissSearch))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: activityView)
-        
+
         Theme.shared.register(client: self, applyImmediately: true)
     }
 
@@ -76,13 +76,13 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
         typeDelayTimer?.invalidate()
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
-    
+
     // MARK: - Theme support
-    
+
     func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
         self.tableView.applyThemeCollection(collection)
         self.searchController?.searchBar.applyThemeCollection(collection)
-        
+
         if event == .update {
             self.tableView.reloadData()
         }
