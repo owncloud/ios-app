@@ -56,8 +56,6 @@ final class CardPresentationController: UIPresentationController {
 			let safeBottom = presentingViewController.view?.window?.safeAreaInsets.bottom ?? 0
 
 			cachedFittingSize?.height += safeBottom
-
-			NSLog("SAFE: \(safeBottom) \(cachedFittingSize!.height)")
 		}
 
 		return cachedFittingSize
@@ -210,6 +208,12 @@ final class CardPresentationController: UIPresentationController {
 			   	moreViewController.fitsOnScreen = fitsOnScreen
 			}
 		}
+	}
+
+	override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.willTransition(to: newCollection, with: coordinator)
+
+		cachedFittingSize = nil
 	}
 
 	// MARK: - Card gesture handling

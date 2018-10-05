@@ -92,7 +92,7 @@ class MoreViewController: UIViewController {
 		var size : CGSize = CGSize(width: 0, height: 0)
 
 		if self.view != nil {
-			let headerSize = headerView.systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: .defaultHigh, verticalFittingPriority: .defaultHigh)
+			let headerSize = headerView.systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: .defaultHigh, verticalFittingPriority: .defaultLow)
 
 			size.width = targetSize.width
 			size.height = headerSize.height
