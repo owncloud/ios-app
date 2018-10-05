@@ -580,7 +580,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		if let progress = self.core?.copy(item, to: self.query?.rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in
 			if error != nil {
-				Log.log("Error \(String(describing: error)) deleting \(String(describing: item?.path))")
+				Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
 
 				completionHandler?(false)
 			} else {
