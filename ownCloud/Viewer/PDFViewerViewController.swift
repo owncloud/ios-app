@@ -47,6 +47,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
 
     fileprivate var searchButtonItem: UIBarButtonItem?
     fileprivate var gotoButtonItem: UIBarButtonItem?
+    fileprivate var outlineItem: UIBarButtonItem?
 
     fileprivate var thumbnailViewPosition : ThumbnailViewPosition = .bottom {
         didSet {
@@ -103,6 +104,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         thumbnailView.backgroundColor = UIColor.gray
         thumbnailView.pdfView = pdfView
         thumbnailView.isExclusiveTouch = true
+
         // Adding dummy tap recognizer to prevent navigation bar from hiding if user just taps it
         let tapRecognizer = UITapGestureRecognizer(target: nil, action: nil)
         thumbnailView.addGestureRecognizer(tapRecognizer)
@@ -207,15 +209,16 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
 
         guard let pdf = pdfView.document else { return }
 
-        let ac = UIAlertController(title: "Go to page", message: "This document has \(pdf.pageCount) pages", preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        let msg = NSString(format: "This document has %@ pages".localized as NSString, pdf.pageCount) as String
+        let ac = UIAlertController(title: "Go to page".localized, message: msg, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
         ac.addTextField(configurationHandler: { textField in
-            textField.placeholder = "Page"
+            textField.placeholder = "Page".localized
             textField.keyboardType = .decimalPad
         })
 
-        ac.addAction(UIAlertAction(title: "OK", style: .default, handler: { [unowned self] _ in
+        ac.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { [unowned self] _ in
             if let pageLabel = ac.textFields?.first?.text {
                 self.selectPage(with: pageLabel)
             }
@@ -259,7 +262,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
 
         if UIDevice.current.userInterfaceIdiom == .pad {
             searchNC.modalPresentationStyle = .popover
-            searchNC.popoverPresentationController?.barButtonItem = searchButtonItem
+            searchNC.popoverPresentationController?.barButtonItem = outlineItem
         }
 
         self.present(searchNC, animated: true)
@@ -291,7 +294,6 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         case .left:
             constraints.append(thumbnailView.topAnchor.constraint(equalTo: guide.topAnchor))
             constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
-            //constraints.append(thumbnailView.trailingAnchor.constraint(equalTo: pdfView.leadingAnchor))
             constraints.append(thumbnailView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
             constraints.append(thumbnailView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: THUMBNAIL_VIEW_WIDTH_MULTIPLIER))
 
@@ -335,16 +337,17 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
     fileprivate func setupToolbar() {
         searchButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search))
         gotoButtonItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_go_to_page"), style: .plain, target: self, action: #selector(goToPage))
-        let outlineItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_outline"), style: .plain, target: self, action: #selector(showOutline))
+        outlineItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_outline"), style: .plain, target: self, action: #selector(showOutline))
 
         self.parent?.navigationItem.rightBarButtonItems = [
             gotoButtonItem!,
             searchButtonItem!,
-            outlineItem]
+            outlineItem!]
     }
 
     fileprivate func selectPage(with label:String) {
         guard let pdf = pdfView.document else { return }
+
         if let pageNr = Int(label) {
             if pageNr > 0 && pageNr < pdf.pageCount {
                 if let page = pdf.page(at: pageNr - 1) {
@@ -356,7 +359,9 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
 
     fileprivate func updatePageLabel() {
         guard let pdf = pdfView.document else { return }
+
         guard let currentPageLabel = pdfView.currentPage?.label else { return }
+
         pageCountLabel.text = "\(currentPageLabel) of \(pdf.pageCount)"
     }
 }

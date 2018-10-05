@@ -11,14 +11,14 @@ import PDFKit
 
 class PDFTocTableViewController: UITableViewController {
 
+    fileprivate let tocTableViewCellHeight: CGFloat = 40.0
+
     class OutlineStackItem {
         var outline:PDFOutline
         var processedChildren:Int = 0
 
         var childrenCount:Int {
-            get {
-                return outline.numberOfChildren
-            }
+            return outline.numberOfChildren
         }
 
         init(outline:PDFOutline) {
@@ -37,7 +37,7 @@ class PDFTocTableViewController: UITableViewController {
     var outlineRoot: PDFOutline? {
         didSet {
             if outlineRoot != nil {
-                setupTocList(fromRoot: outlineRoot!)
+                buildTocList(fromRoot: outlineRoot!)
             }
         }
     }
@@ -49,7 +49,7 @@ class PDFTocTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.register(PDFTocTableViewCell.self, forCellReuseIdentifier: PDFTocTableViewCell.identifier)
-        self.tableView.rowHeight = 40.0
+        self.tableView.rowHeight = tocTableViewCellHeight
         self.tableView.separatorStyle = .none
     }
 
@@ -94,8 +94,7 @@ class PDFTocTableViewController: UITableViewController {
 
     // MARK: - Private helper methods
 
-    fileprivate func setupTocList(fromRoot:PDFOutline) {
-        // TODO: traverse a complete tree
+    fileprivate func buildTocList(fromRoot:PDFOutline) {
 
         var currentOutline = fromRoot
         var stack: [OutlineStackItem] = []
@@ -128,6 +127,7 @@ class PDFTocTableViewController: UITableViewController {
             }
         }
 
+        // Traverse a tree of PDFOutline objects
         repeat {
             let stackTop: OutlineStackItem? = stack.last
 

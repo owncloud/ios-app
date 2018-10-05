@@ -11,6 +11,10 @@ import PDFKit
 
 class PDFThumbnailCollectionViewCell: UICollectionViewCell {
     static let identifier = "PDFThumbnailCollectionViewCell"
+
+    fileprivate let pageLabelBottomMargin: CGFloat = 5
+    fileprivate let pageLabelHeightMultiplier: CGFloat = 0.1
+
     var imageView: UIImageView?
     var pageLabel: UILabel?
 
@@ -43,10 +47,10 @@ class PDFThumbnailCollectionViewCell: UICollectionViewCell {
         imageView!.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
         imageView!.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
 
-        pageLabel!.bottomAnchor.constraint(equalTo: imageView!.bottomAnchor, constant: -5).isActive = true
+        pageLabel!.bottomAnchor.constraint(equalTo: imageView!.bottomAnchor, constant: -pageLabelBottomMargin).isActive = true
         pageLabel!.rightAnchor.constraint(equalTo: imageView!.rightAnchor).isActive = true
         pageLabel!.leftAnchor.constraint(equalTo: imageView!.leftAnchor).isActive = true
-        pageLabel!.heightAnchor.constraint(equalTo: imageView!.heightAnchor, multiplier:0.1).isActive = true
+        pageLabel!.heightAnchor.constraint(equalTo: imageView!.heightAnchor, multiplier:pageLabelHeightMultiplier).isActive = true
     }
 
     func setup(with page:PDFPage) {

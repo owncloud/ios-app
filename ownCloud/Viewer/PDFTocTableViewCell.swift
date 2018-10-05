@@ -19,6 +19,7 @@ class PDFTocTableViewCell: ThemeTableViewCell {
     fileprivate let layoutMargin: CGFloat = 15.0
     fileprivate let pageFontSize: CGFloat = 15
 
+    // Array of fonts to be used at different chapter nesting levels
     fileprivate static let titleFonts = [
         UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.bold),
         UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.bold),
@@ -77,7 +78,11 @@ class PDFTocTableViewCell: ThemeTableViewCell {
         if let page = tocItem.page {
             self.pageLabel.text = page.label
         }
+
+        // Indent the title according to the nesting level
         titleLeftConstraint?.constant = layoutMargin * CGFloat(tocItem.level)
+
+        // Use smaller fonts for the sub-chapters
         let fontIndex = min(tocItem.level, (PDFTocTableViewCell.titleFonts.count - 1))
         titleLabel.font = PDFTocTableViewCell.titleFonts[fontIndex]
     }

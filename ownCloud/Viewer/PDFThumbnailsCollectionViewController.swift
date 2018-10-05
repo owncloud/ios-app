@@ -11,6 +11,8 @@ import PDFKit
 
 class PDFThumbnailsCollectionViewController: UICollectionViewController {
 
+    fileprivate let thumbnailSizeMultiplier: CGFloat = 0.3
+
     var pdfDocument: PDFDocument?
     var themeCollection: ThemeCollection?
 
@@ -37,7 +39,7 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        let thumbnailSize = floor(self.view.bounds.size.width * 0.3)
+        let thumbnailSize = floor(self.view.bounds.size.width * thumbnailSizeMultiplier)
         let flowLayout = self.collectionViewLayout as? UICollectionViewFlowLayout
         flowLayout?.itemSize = CGSize(width: thumbnailSize, height: thumbnailSize)
         super.viewWillAppear(animated)

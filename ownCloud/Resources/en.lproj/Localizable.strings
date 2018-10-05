@@ -148,3 +148,9 @@
 "New Folder" = "New Folder";
 "Rename" =" Rename";
 "Create folder" =" Create folder";
+
+/* PDF Viewer */
+"Resume" = "Resume";
+"Go to page" = "Go to page";
+"Page" = "Page";
+"This document has %@ pages" = "This document has %@ pages";

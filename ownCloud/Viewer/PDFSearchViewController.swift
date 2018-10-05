@@ -22,7 +22,8 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
     fileprivate var matches = [PDFSelection]()
     fileprivate var searchText = ""
     fileprivate var typeDelayTimer : Timer?
-    fileprivate let TYPE_DELAY = 0.2
+    fileprivate let typingDelay = 0.2
+    fileprivate let searchTableViewCellHeight: CGFloat = 40.0
 
     fileprivate let activityView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
 
@@ -30,7 +31,7 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
         super.viewDidLoad()
 
         self.tableView.register(PDFSearchTableViewCell.self, forCellReuseIdentifier: PDFSearchTableViewCell.identifier)
-        self.tableView.rowHeight = 40.0
+        self.tableView.rowHeight = searchTableViewCellHeight
 
         searchController = UISearchController(searchResultsController: nil)
         searchController?.searchResultsUpdater = self
@@ -130,6 +131,7 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
 
     @objc func handleDidFindMatch(notification: NSNotification) {
         if let selection = notification.userInfo?["PDFDocumentFoundSelection"] as? PDFSelection {
+            // Add new match to the list and update table view
             self.matches.append(selection)
             let indexPath = IndexPath(row: (self.matches.count - 1), section: 0)
             self.tableView.insertRows(at: [indexPath], with: .bottom)
@@ -149,9 +151,12 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
     fileprivate func beginSearch() {
         guard let pdf = pdfDocument else { return }
 
+        // Remove data from previous search
         self.matches.removeAll()
         self.tableView.reloadData()
+        // Cancel eventually pending search
         cancelSearch()
+        // Begin a new search
         pdf.beginFindString(self.searchText,
                             withOptions: [.caseInsensitive, .diacriticInsensitive])
     }
@@ -163,8 +168,9 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
 extension PDFSearchViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         searchText = searchController.searchBar.text!
+        // Don't start the search immediately but rather wait for a short time since user might continue typing
         typeDelayTimer?.invalidate()
-        typeDelayTimer = Timer.scheduledTimer(withTimeInterval: TYPE_DELAY, repeats: false, block: {  [unowned self] _ in
+        typeDelayTimer = Timer.scheduledTimer(withTimeInterval: typingDelay, repeats: false, block: {  [unowned self] _ in
             self.beginSearch()
         })
     }

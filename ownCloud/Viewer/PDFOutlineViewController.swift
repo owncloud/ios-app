@@ -35,8 +35,12 @@ class PDFOutlineViewController: UIViewController, Themeable {
                                                           UIImage(named: "ic_pdf_view_multipage")!])
         modeSegmentedControl?.addTarget(self, action: #selector(modeChanged), for: .valueChanged)
         self.navigationItem.titleView = modeSegmentedControl
-        let resumeItem = UIBarButtonItem(title: "Resume", style: .plain, target: self, action: #selector(resume))
-        self.navigationItem.rightBarButtonItem = resumeItem
+
+        if UIDevice.current.userInterfaceIdiom != .pad {
+            let resumeItem = UIBarButtonItem(title: "Resume".localized, style: .plain, target: self, action: #selector(resume))
+            self.navigationItem.rightBarButtonItem = resumeItem
+        }
+        
         Theme.shared.register(client: self, applyImmediately: true)
 
         self.mode = .ToC
