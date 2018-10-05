@@ -31,7 +31,8 @@ class PDFOutlineViewController: UIViewController, Themeable {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        modeSegmentedControl = UISegmentedControl(items: ["ToC", "Thumbnails"])
+        modeSegmentedControl = UISegmentedControl(items: [UIImage(named: "ic_pdf_outline")!,
+                                                          UIImage(named: "ic_pdf_view_multipage")!])
         modeSegmentedControl?.addTarget(self, action: #selector(modeChanged), for: .valueChanged)
         self.navigationItem.titleView = modeSegmentedControl
         let resumeItem = UIBarButtonItem(title: "Resume", style: .plain, target: self, action: #selector(resume))

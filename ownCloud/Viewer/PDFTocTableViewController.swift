@@ -9,30 +9,30 @@
 import UIKit
 import PDFKit
 
-class PDFTocItem {
-    var label: String?
-    var level: Int
-    var page: PDFPage?
-
-    init(level:Int, outline:PDFOutline) {
-        self.level = level
-        self.label = outline.label
-        self.page = outline.destination?.page
-    }
-}
-
-extension PDFSearchTableViewCell {
-    func setup(with tocItem:PDFTocItem) {
-        self.titleLabel.text = tocItem.label
-        if let page = tocItem.page {
-            self.pageLabel.text = page.label
-        }
-        self.indentationLevel = tocItem.level
-        // TODO: Use different fonts for different levels
-    }
-}
-
 class PDFTocTableViewController: UITableViewController {
+
+    class OutlineStackItem {
+        var outline:PDFOutline
+        var processedChildren:Int = 0
+
+        var childrenCount:Int {
+            get {
+                return outline.numberOfChildren
+            }
+        }
+
+        init(outline:PDFOutline) {
+            self.outline = outline
+        }
+
+        func nextChild() -> PDFOutline? {
+            self.processedChildren += 1
+            if self.processedChildren < self.childrenCount {
+                return self.outline.child(at: self.processedChildren)
+            }
+            return nil
+        }
+    }
 
     var outlineRoot: PDFOutline? {
         didSet {
@@ -48,7 +48,7 @@ class PDFTocTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.register(PDFSearchTableViewCell.self, forCellReuseIdentifier: PDFSearchTableViewCell.identifier)
+        self.tableView.register(PDFTocTableViewCell.self, forCellReuseIdentifier: PDFTocTableViewCell.identifier)
         self.tableView.rowHeight = 40.0
         self.tableView.separatorStyle = .none
     }
@@ -75,7 +75,7 @@ class PDFTocTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: PDFSearchTableViewCell.identifier, for: indexPath) as? PDFSearchTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: PDFTocTableViewCell.identifier, for: indexPath) as? PDFTocTableViewCell
         cell!.setup(with: items[indexPath.row])
         return cell!
     }
@@ -96,12 +96,66 @@ class PDFTocTableViewController: UITableViewController {
 
     fileprivate func setupTocList(fromRoot:PDFOutline) {
         // TODO: traverse a complete tree
-        for index in 0..<fromRoot.numberOfChildren {
-            let child = fromRoot.child(at: index)
-            if child?.destination?.page != nil {
-                let item = PDFTocItem(level: 0, outline: child!)
+
+        var currentOutline = fromRoot
+        var stack: [OutlineStackItem] = []
+
+        func addTocItemForCurrnetOutline() {
+            guard let outlineLabel = currentOutline.label else { return }
+            guard !outlineLabel.isEmpty else { return }
+            
+            let item = PDFTocItem(level: stack.count, outline: currentOutline)
+            if let lastItem = items.last {
+                if lastItem != item {
+                    items.append(item)
+                }
+            } else {
                 items.append(item)
             }
         }
+
+        func pushCurrent() {
+            addTocItemForCurrnetOutline()
+            stack.append(OutlineStackItem(outline: currentOutline))
+            if currentOutline.numberOfChildren > 0 {
+                currentOutline = currentOutline.child(at: 0)!
+            }
+        }
+
+        func popLast() {
+            if stack.count > 0 {
+                stack.removeLast()
+            }
+        }
+
+        repeat {
+            let stackTop: OutlineStackItem? = stack.last
+
+            if currentOutline.numberOfChildren > 0 {
+                if let topOutline = stackTop?.outline {
+                    if topOutline != currentOutline {
+                        pushCurrent()
+                    }
+                } else {
+                    pushCurrent()
+                }
+            } else {
+                // No children -> just add to ToC
+                addTocItemForCurrnetOutline()
+                if stack.count > 0 {
+                    // Get the next child at the same level
+                    let stackTop = stack.last!
+                    let nextChildOutline = stackTop.nextChild()
+                    // Nothing to process at current level, go back in the stack
+                    if nextChildOutline == nil {
+                        popLast()
+                    } else {
+                        // Switch over to the next sibling
+                        currentOutline = nextChildOutline!
+                    }
+                }
+            }
+
+        } while stack.count > 0
     }
 }

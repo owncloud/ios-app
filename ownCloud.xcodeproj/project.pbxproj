@@ -42,6 +42,8 @@
 		4C0668A721665F3400666188 /* PDFTocTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0668A621665F3400666188 /* PDFTocTableViewController.swift */; };
 		4C0668A921665F9500666188 /* PDFThumbnailsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0668A821665F9500666188 /* PDFThumbnailsCollectionViewController.swift */; };
 		4C0668AB21667C2500666188 /* PDFThumbnailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0668AA21667C2500666188 /* PDFThumbnailCollectionViewCell.swift */; };
+		4C1762902167817900E344AA /* PDFTocTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C17628F2167817800E344AA /* PDFTocTableViewCell.swift */; };
+		4C1762982167842600E344AA /* PDFTocItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1762972167842600E344AA /* PDFTocItem.swift */; };
 		4C8F1B3C2150DF8D00F86E2D /* PDFSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8F1B352150DF8C00F86E2D /* PDFSearchViewController.swift */; };
 		4C8F1B3F2150FE6E00F86E2D /* PDFSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8F1B3E2150FE6E00F86E2D /* PDFSearchTableViewCell.swift */; };
 		5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5917244D20D3DC2100809B38 /* BiometricalTests.swift */; };
@@ -378,6 +380,8 @@
 		4C0668A621665F3400666188 /* PDFTocTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFTocTableViewController.swift; sourceTree = "<group>"; };
 		4C0668A821665F9500666188 /* PDFThumbnailsCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFThumbnailsCollectionViewController.swift; sourceTree = "<group>"; };
 		4C0668AA21667C2500666188 /* PDFThumbnailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFThumbnailCollectionViewCell.swift; sourceTree = "<group>"; };
+		4C17628F2167817800E344AA /* PDFTocTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFTocTableViewCell.swift; sourceTree = "<group>"; };
+		4C1762972167842600E344AA /* PDFTocItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFTocItem.swift; sourceTree = "<group>"; };
 		4C8F1B352150DF8C00F86E2D /* PDFSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFSearchViewController.swift; sourceTree = "<group>"; };
 		4C8F1B3E2150FE6E00F86E2D /* PDFSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFSearchTableViewCell.swift; sourceTree = "<group>"; };
 		5917244D20D3DC2100809B38 /* BiometricalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricalTests.swift; sourceTree = "<group>"; };
@@ -698,7 +702,9 @@
 				4C8F1B352150DF8C00F86E2D /* PDFSearchViewController.swift */,
 				4C8F1B3E2150FE6E00F86E2D /* PDFSearchTableViewCell.swift */,
 				4C06689E21665ED900666188 /* PDFOutlineViewController.swift */,
+				4C1762972167842600E344AA /* PDFTocItem.swift */,
 				4C0668A621665F3400666188 /* PDFTocTableViewController.swift */,
+				4C17628F2167817800E344AA /* PDFTocTableViewCell.swift */,
 				4C0668AA21667C2500666188 /* PDFThumbnailCollectionViewCell.swift */,
 				4C0668A821665F9500666188 /* PDFThumbnailsCollectionViewController.swift */,
 				23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */,
@@ -1515,9 +1521,11 @@
 				4C8F1B3C2150DF8D00F86E2D /* PDFSearchViewController.swift in Sources */,
 				23E22BB720C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
 				23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */,
+				4C1762982167842600E344AA /* PDFTocItem.swift in Sources */,
 				DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */,
 				23EC77582137F3DD0032D4E6 /* PDFViewerViewController.swift in Sources */,
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
+				4C1762902167817900E344AA /* PDFTocTableViewCell.swift in Sources */,
 				23EC775B2137F3DD0032D4E6 /* OCDisplayExtension+DisplayView.swift in Sources */,
 				DC3BE0E12077CD4B002A0AC0 /* Synchronized.swift in Sources */,
 				DCE5E8B82080D8D9005F60CE /* OCItem+Extension.swift in Sources */,
