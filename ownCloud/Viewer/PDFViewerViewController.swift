@@ -209,7 +209,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
 
         guard let pdf = pdfView.document else { return }
 
-        let msg = NSString(format: "This document has %@ pages".localized as NSString, pdf.pageCount) as String
+        let msg = NSString(format: "This document has %@ pages".localized as NSString, "\(pdf.pageCount)") as String
         let ac = UIAlertController(title: "Go to page".localized, message: msg, preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
