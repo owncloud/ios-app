@@ -140,7 +140,7 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
 
     fileprivate func cancelSearch() {
         guard let pdf = pdfDocument else { return }
-        
+
         if pdf.isFinding {
             pdf.cancelFindString()
         }

@@ -103,7 +103,7 @@ class PDFTocTableViewController: UITableViewController {
         func addTocItemForCurrnetOutline() {
             guard let outlineLabel = currentOutline.label else { return }
             guard !outlineLabel.isEmpty else { return }
-            
+
             let item = PDFTocItem(level: stack.count, outline: currentOutline)
             if let lastItem = items.last {
                 if lastItem != item {
