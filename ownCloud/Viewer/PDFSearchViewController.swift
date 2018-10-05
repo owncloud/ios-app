@@ -102,8 +102,7 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
         let cell = tableView.dequeueReusableCell(withIdentifier: PDFSearchTableViewCell.identifier, for: indexPath) as? PDFSearchTableViewCell
 
         let pdfSelection = matches[indexPath.row]
-        cell!.titleLabel.text = pdfSelection.string
-        cell!.pageLabel.text = "\(pdfSelection.pages.first?.label ?? "")"
+        cell?.setup(with: pdfSelection)
 
         return cell!
     }
