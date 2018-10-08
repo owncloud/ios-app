@@ -132,6 +132,12 @@ class DisplayViewController: UIViewController {
 		}
 
 		Theme.shared.register(client: self)
+
+		guard let parent = parent else {
+			return
+		}
+
+		parent.navigationItem.title = item.name
 	}
 
 	deinit {
