@@ -67,23 +67,7 @@ class DisplayHostViewController: UIViewController {
 		viewController.didMove(toParentViewController: self)
 
 		if shouldDownload {
-			if let downloadProgress = self.core.downloadItem(itemToDisplay, options: nil, resultHandler: { [weak self] (error, _, _, file) in
-				guard error == nil else {
-					OnMainThread {
-						let alertController: UIAlertController = UIAlertController(with: "Download error".localized, message: "\(itemToDisplay.name!) could not be downloaded", action: {
-							viewController.downloadProgress = nil
-						})
-						self?.present(alertController, animated: true)
-
-					}
-					return
-				}
-				OnMainThread {
-					viewController.source = file!.url
-				}
-			}) {
-				viewController.downloadProgress = downloadProgress
-			}
+			viewController.downloadItem(sender: nil)
 		} else {
 			viewController.downloadProgress = nil
 		}

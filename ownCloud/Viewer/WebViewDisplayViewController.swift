@@ -20,27 +20,7 @@ import UIKit
 import ownCloudSDK
 import WebKit
 
-class WebViewDisplayViewController: DisplayViewController, DisplayExtension {
-	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
-		do {
-			let location = context!.location.identifier.rawValue
-			let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((image/)|(text/)|(video/)|(audio/)|(application/(vnd.|ms))(ms|openxmlformats)?)", options: .caseInsensitive)
-			let matches = supportedFormatsRegex.numberOfMatches(in: location, options: .reportCompletion, range: NSRange(location: 0, length: location.count))
-
-			if matches > 0 {
-				return OCExtensionPriority.locationMatch
-			} else {
-				return OCExtensionPriority.noMatch
-			}
-		} catch {
-			return OCExtensionPriority.noMatch
-		}
-	}
-
-	static var displayExtensionIdentifier: String = "org.owncloud.webview"
-	static var supportedMimeTypes: [String]?
-
-	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
+class WebViewDisplayViewController: DisplayViewController {
 
 	var webView: WKWebView?
 
@@ -123,6 +103,27 @@ class WebViewDisplayViewController: DisplayViewController, DisplayExtension {
 			animator.startAnimation()
 		}
 	}
+}
+
+extension WebViewDisplayViewController: DisplayExtension {
+	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
+		do {
+			let location = context!.location.identifier.rawValue
+			let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((image/)|(text/)|(video/)|(audio/)|(application/(vnd.|ms))(ms|openxmlformats)?)", options: .caseInsensitive)
+			let matches = supportedFormatsRegex.numberOfMatches(in: location, options: .reportCompletion, range: NSRange(location: 0, length: location.count))
+
+			if matches > 0 {
+				return OCExtensionPriority.locationMatch
+			} else {
+				return OCExtensionPriority.noMatch
+			}
+		} catch {
+			return OCExtensionPriority.noMatch
+		}
+	}
+	static var displayExtensionIdentifier: String = "org.owncloud.webview"
+	static var supportedMimeTypes: [String]?
+	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 }
 
 extension WebViewDisplayViewController: UIGestureRecognizerDelegate {

@@ -53,6 +53,7 @@ class DisplayViewController: UIViewController {
 	private var progressView : UIProgressView?
 	private var cancelButton : UIButton?
 	private var metadataInfoLabel: UILabel?
+	private var showPreviewButton: UIButton?
 
 	public var downloadProgress : Progress? {
 		didSet {
@@ -101,6 +102,13 @@ class DisplayViewController: UIViewController {
 
 		view.addSubview(cancelButton!)
 
+		showPreviewButton = ThemeButton(type: .system)
+		showPreviewButton?.translatesAutoresizingMaskIntoConstraints = false
+		showPreviewButton?.setTitle("Show Preview".localized, for: .normal)
+		showPreviewButton?.isHidden = true
+		showPreviewButton?.addTarget(self, action: #selector(downloadItem), for: UIControlEvents.touchUpInside)
+		view.addSubview(showPreviewButton!)
+
 		NSLayoutConstraint.activate([
 			iconImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
 			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -60),
@@ -116,7 +124,10 @@ class DisplayViewController: UIViewController {
 			progressView!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: 20),
 
 			cancelButton!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			cancelButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: 10)
+			cancelButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: 10),
+
+			showPreviewButton!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
+			showPreviewButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: 10)
 		])
 	}
 
@@ -166,6 +177,27 @@ class DisplayViewController: UIViewController {
 		downloadProgress?.cancel()
 	}
 
+	@objc func downloadItem(sender: Any?) {
+		self.showPreviewButton?.isHidden = true
+		if let downloadProgress = self.core.downloadItem(item, options: nil, resultHandler: { [weak self] (error, _, _, file) in
+			guard error == nil else {
+				OnMainThread {
+					let alertController: UIAlertController = UIAlertController(with: "Download error".localized, message: "\(String(describing: self?.item.name!)) could not be downloaded", action: {
+						self?.downloadProgress = nil
+						self?.showPreviewButton?.isHidden = false
+					})
+					self?.present(alertController, animated: true)
+				}
+				return
+			}
+			OnMainThread {
+				self?.source = file!.url
+			}
+		}) {
+			self.downloadProgress = downloadProgress
+		}
+	}
+
 	func renderSpecificView() {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the source property.s
 	}
@@ -177,5 +209,6 @@ extension DisplayViewController : Themeable {
 		progressView?.applyThemeCollection(collection)
 		cancelButton?.applyThemeCollection(collection)
 		metadataInfoLabel?.applyThemeCollection(collection)
+		showPreviewButton?.applyThemeCollection(collection)
 	}
 }
