@@ -22,6 +22,7 @@ import PocketSVG
 class TVGImage: NSObject {
 	var imageString : String?
 	var defaultValues : [String:String]?
+	var viewBox : CGRect?
 	var bezierPathsByIdentifier : [String:[SVGBezierPath]] = [:]
 	var bezierPathsBoundsByIdentifier : [String:CGRect] = [:]
 
@@ -32,6 +33,10 @@ class TVGImage: NSObject {
 			if let tvgDict : Dictionary = tvgObject as? [String: Any] {
 				imageString = tvgDict["image"] as? String
 				defaultValues = tvgDict["defaults"] as? [String:String]
+
+				if (tvgDict["viewBox"] as? String) != nil {
+					viewBox = CGRectFromString((tvgDict["viewBox"] as? String)!)
+				}
 			}
 		} catch {
 			Log.error("Error parsing TVG image: \(error)")
@@ -152,11 +157,22 @@ class TVGImage: NSObject {
 			return nil
 		}
 
-		let fittingSize : CGSize = SVGAdjustCGRectForContentsGravity(CGRect(origin: CGPoint.zero, size: fitInSize), pathBoundingRect.size, kCAGravityResizeAspect).size
+		let fittingSize : CGSize = SVGAdjustCGRectForContentsGravity(CGRect(origin: CGPoint.zero, size: fitInSize), (viewBox != nil) ? viewBox!.size : pathBoundingRect.size, kCAGravityResizeAspect).size
+
+		if viewBox != nil {
+			NSLog("====> \(NSStringFromCGRect(pathBoundingRect)) VS \(NSStringFromCGRect(viewBox!))")
+		}
 
 		image = UIImage.imageWithSize(size: fittingSize, scale: UIScreen.main.scale) { (rect) in
 			if let graphicsContext = UIGraphicsGetCurrentContext() {
-				SVGDrawPaths(bezierPaths, graphicsContext, rect, nil, nil)
+				var actualRect = rect
+
+				if let viewBox = self.viewBox {
+					actualRect.size.width  = pathBoundingRect.size.width * (fittingSize.width / viewBox.size.width)
+					actualRect.size.height = pathBoundingRect.size.height * (fittingSize.height / viewBox.size.height)
+				}
+
+				SVGDrawPaths(bezierPaths, graphicsContext, actualRect, nil, nil)
 			}
 		}
 
