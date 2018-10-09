@@ -159,10 +159,6 @@ class TVGImage: NSObject {
 
 		let fittingSize : CGSize = SVGAdjustCGRectForContentsGravity(CGRect(origin: CGPoint.zero, size: fitInSize), (viewBox != nil) ? viewBox!.size : pathBoundingRect.size, kCAGravityResizeAspect).size
 
-		if viewBox != nil {
-			NSLog("====> \(NSStringFromCGRect(pathBoundingRect)) VS \(NSStringFromCGRect(viewBox!))")
-		}
-
 		image = UIImage.imageWithSize(size: fittingSize, scale: UIScreen.main.scale) { (rect) in
 			if let graphicsContext = UIGraphicsGetCurrentContext() {
 				var actualRect = rect
