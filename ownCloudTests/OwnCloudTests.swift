@@ -8,6 +8,8 @@
 
 import XCTest
 import EarlGrey
+import ownCloudSDK
+import ownCloudMocking
 
 @testable import ownCloud
 
@@ -41,4 +43,24 @@ class OwnCloudTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
+
+	public typealias OCMockMockTestClassReturnsBool = @convention(block) () -> Bool
+
+	func testMocking () {
+
+		let mockTest = OCMockTestClass()
+
+		XCTAssert(OCMockTestClass.returnsTrue()==true)
+		XCTAssert(mockTest.returnsFalse()==false)
+
+		let returnTrueBlock : OCMockMockTestClassReturnsBool = {return false}
+		let returnFalseBlock : OCMockMockTestClassReturnsBool = {return true}
+
+		OCMockManager.shared.addMocking(blocks:
+			[OCMockLocation.mockTestClassReturnsTrue: returnTrueBlock,
+			 OCMockLocation.mockTestClassReturnsFalse: returnFalseBlock])
+
+		XCTAssert(OCMockTestClass.returnsTrue()==false)
+		XCTAssert(mockTest.returnsFalse()==true)
+	}
 }

@@ -6,7 +6,6 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
-import Cocoa
 import ownCloudMocking
 
 extension OCMockManager {
