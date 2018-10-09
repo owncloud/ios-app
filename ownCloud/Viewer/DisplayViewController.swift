@@ -52,6 +52,7 @@ class DisplayViewController: UIViewController {
 	private var iconImageView: UIImageView!
 	private var progressView : UIProgressView?
 	private var cancelButton : UIButton?
+	private var metadataInfoLabel: UILabel?
 
 	public var downloadProgress : Progress? {
 		didSet {
@@ -76,6 +77,14 @@ class DisplayViewController: UIViewController {
 
 		view.addSubview(iconImageView)
 
+		metadataInfoLabel = UILabel()
+		metadataInfoLabel?.translatesAutoresizingMaskIntoConstraints = false
+		metadataInfoLabel?.isHidden = false
+		metadataInfoLabel?.text = item.sizeInReadableFormat + " - " + item.lastModifiedInReadableFormat
+		metadataInfoLabel?.textAlignment = .center
+
+		view.addSubview(metadataInfoLabel!)
+
 		progressView = UIProgressView(progressViewStyle: .bar)
 		progressView?.translatesAutoresizingMaskIntoConstraints = false
 		progressView?.progress = 0
@@ -84,7 +93,7 @@ class DisplayViewController: UIViewController {
 
 		view.addSubview(progressView!)
 
-		cancelButton = UIButton(type: .system)
+		cancelButton = ThemeButton(type: .system)
 		cancelButton?.translatesAutoresizingMaskIntoConstraints = false
 		cancelButton?.setTitle("Cancel".localized, for: .normal)
 		cancelButton?.isHidden = (downloadProgress != nil)
@@ -94,13 +103,17 @@ class DisplayViewController: UIViewController {
 
 		NSLayoutConstraint.activate([
 			iconImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -60),
 			iconImageView.heightAnchor.constraint(equalToConstant: IconImageViewSize.height),
 			iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
 
+			metadataInfoLabel!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
+			metadataInfoLabel!.topAnchor.constraint(equalTo: iconImageView!.bottomAnchor, constant: 10),
+			metadataInfoLabel!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
+
 			progressView!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
 			progressView!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
-			progressView!.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 20),
+			progressView!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: 20),
 
 			cancelButton!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
 			cancelButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: 10)
@@ -163,5 +176,6 @@ extension DisplayViewController : Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		progressView?.applyThemeCollection(collection)
 		cancelButton?.applyThemeCollection(collection)
+		metadataInfoLabel?.applyThemeCollection(collection)
 	}
 }

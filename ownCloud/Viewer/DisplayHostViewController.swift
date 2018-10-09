@@ -89,6 +89,14 @@ class DisplayHostViewController: UIViewController {
 		}
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		navigationController?.tabBarController?.tabBar.isHidden = true
+	}
+
+	override func viewWillDisappear(_ animated: Bool) {
+		navigationController?.tabBarController?.tabBar.isHidden = false
+	}
+
 	// MARK: - Host Actions
 	private func selectDisplayViewControllerBasedOn(mimeType: String) -> (DisplayViewController) {
 
