@@ -46,4 +46,12 @@ extension UIAlertController {
 		self.addAction(destructiveAction)
 		self.addAction(cancelAction)
 	}
+
+	convenience init(with title: String, message: String, okLabel: String = "Ok".localized, action: (() -> Void)? = nil) {
+		self.init(title: title, message: message, preferredStyle: .alert)
+		let okAction: UIAlertAction = UIAlertAction(title: "Ok", style: .default, handler: { (_) in
+			action?()
+		})
+		self.addAction(okAction)
+	}
 }

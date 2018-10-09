@@ -22,16 +22,16 @@ import QuickLook
 
 class DisplayHostViewController: UIViewController {
 
-	var itemsToDisplay: [OCItem]
-	var core: OCCore
+	// MARK: - Instance Properties
+	private var itemsToDisplay: [OCItem] = []
+	private var core: OCCore
 
+	// MARK: - Init & deinit
 	init(for item: OCItem, with core: OCCore) {
-		itemsToDisplay = []
 		itemsToDisplay.append(item)
 		self.core = core
 
 		super.init(nibName: nil, bundle: nil)
-
 		Theme.shared.register(client: self)
 	}
 
@@ -50,39 +50,46 @@ class DisplayHostViewController: UIViewController {
 		Theme.shared.unregister(client: self)
 	}
 
+	// MARK: - Controller lifcycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
 		let itemToDisplay = itemsToDisplay[0]
 
 		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: itemToDisplay.mimeType)
+		let shouldDownload = viewController is (DisplayViewController & DisplayExtension) ? true : false
+
 		viewController.item = itemToDisplay
 		viewController.core = core
 
 		self.addChildViewController(viewController)
-		viewController.view.frame = self.view.frame
 		self.view.addSubview(viewController.view)
 		viewController.didMove(toParentViewController: self)
 
-		if let downloadProgress = self.core.downloadItem(itemToDisplay, options: nil, resultHandler: { [weak self] (error, _, _, file) in
-			guard error == nil else {
-				print("LOG ---> error downloading")
-				OnMainThread {
-					self?.navigationController?.popViewController(animated: true)
-				}
-				return
-			}
+		if shouldDownload {
+			if let downloadProgress = self.core.downloadItem(itemToDisplay, options: nil, resultHandler: { [weak self] (error, _, _, file) in
+				guard error == nil else {
+					OnMainThread {
+						let alertController: UIAlertController = UIAlertController(with: "Download error".localized, message: "\(itemToDisplay.name!) could not be downloaded", action: {
+							viewController.downloadProgress = nil
+						})
+						self?.present(alertController, animated: true)
 
-			if viewController is (DisplayViewController & DisplayExtension) {
+					}
+					return
+				}
 				OnMainThread {
 					viewController.source = file!.url
 				}
+			}) {
+				viewController.downloadProgress = downloadProgress
 			}
-		}) {
-			viewController.downloadProgress = downloadProgress
+		} else {
+			viewController.downloadProgress = nil
 		}
 	}
 
+	// MARK: - Host Actions
 	private func selectDisplayViewControllerBasedOn(mimeType: String) -> (DisplayViewController) {
 
 		let locationIdentifier = OCExtensionLocationIdentifier(rawValue: mimeType)
@@ -113,6 +120,7 @@ class DisplayHostViewController: UIViewController {
 	}
 }
 
+// MARK: - Themeable support
 extension DisplayHostViewController: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.view.backgroundColor = collection.tableBackgroundColor

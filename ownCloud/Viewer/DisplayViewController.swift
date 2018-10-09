@@ -56,9 +56,13 @@ class DisplayViewController: UIViewController {
 	public var downloadProgress : Progress? {
 		didSet {
 			progressView?.observedProgress = downloadProgress
-
-			progressView?.isHidden = false
-			cancelButton?.isHidden = false
+			if downloadProgress != nil {
+				progressView?.isHidden = false
+				cancelButton?.isHidden = false
+			} else {
+				progressView?.isHidden = true
+				cancelButton?.isHidden = true
+			}
 		}
 	}
 
@@ -105,6 +109,7 @@ class DisplayViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
 		iconImageView.image = item.icon(fitInSize:IconImageViewSize)
 
 		if item.thumbnailAvailability != .none {
