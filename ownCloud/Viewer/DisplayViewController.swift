@@ -45,8 +45,8 @@ class DisplayViewController: UIViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	var item: OCItem!
-	var core: OCCore!
+	weak var item: OCItem!
+	weak var core: OCCore!
 	weak var editingDelegate: DisplayViewEditingDelegate?
 
 	private var iconImageView: UIImageView!
