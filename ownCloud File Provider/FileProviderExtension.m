@@ -40,6 +40,8 @@
 
 	OCLogger.logLevel = OCLogLevelDebug;
 
+	OCCore.hostHasFileProvider = YES;
+
 	OCAppIdentity.sharedAppIdentity.appIdentifierPrefix = bundleInfoDict[@"OCAppIdentifierPrefix"];
 	OCAppIdentity.sharedAppIdentity.keychainAccessGroupIdentifier = bundleInfoDict[@"OCKeychainAccessGroupIdentifier"];
 	OCAppIdentity.sharedAppIdentity.appGroupIdentifier = bundleInfoDict[@"OCAppGroupIdentifier"];
@@ -215,8 +217,25 @@
 }
 
 
-- (void)itemChangedAtURL:(NSURL *)url
+- (void)itemChangedAtURL:(NSURL *)changedItemURL
 {
+	NSError *error = nil;
+	NSFileProviderItemIdentifier itemIdentifier = nil;
+	NSFileProviderItem item = nil, parentItem = nil;
+
+	if ((itemIdentifier = [self persistentIdentifierForItemAtURL:changedItemURL]) != nil)
+	{
+		 if ((item = [self itemForIdentifier:itemIdentifier error:&error]) != nil)
+		 {
+			if ((parentItem = [self itemForIdentifier:item.parentItemIdentifier error:&error]) != nil)
+			{
+				[self.core reportLocalModificationOfItem:(OCItem *)item parentItem:(OCItem *)parentItem withContentsOfFileAtURL:changedItemURL isSecurityScoped:NO options:nil placeholderCompletionHandler:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+					NSLog(@"Upload of update finished with error=%@ item=%@", error, item);
+				}];
+			}
+		 }
+	}
+
 	// Called at some point after the file has changed; the provider may then trigger an upload
 
 	/* TODO:
