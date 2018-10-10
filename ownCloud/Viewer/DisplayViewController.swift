@@ -62,6 +62,7 @@ class DisplayViewController: UIViewController {
 				progressView?.isHidden = false
 				cancelButton?.isHidden = false
 			} else {
+				progressView?.setProgress(0, animated: false)
 				progressView?.isHidden = true
 				cancelButton?.isHidden = true
 			}
@@ -104,7 +105,7 @@ class DisplayViewController: UIViewController {
 
 		showPreviewButton = ThemeButton(type: .system)
 		showPreviewButton?.translatesAutoresizingMaskIntoConstraints = false
-		showPreviewButton?.setTitle("Show Preview".localized, for: .normal)
+		showPreviewButton?.setTitle("Open file".localized, for: .normal)
 		showPreviewButton?.isHidden = true
 		showPreviewButton?.addTarget(self, action: #selector(downloadItem), for: UIControlEvents.touchUpInside)
 		view.addSubview(showPreviewButton!)
@@ -182,11 +183,8 @@ class DisplayViewController: UIViewController {
 		if let downloadProgress = self.core.downloadItem(item, options: nil, resultHandler: { [weak self] (error, _, _, file) in
 			guard error == nil else {
 				OnMainThread {
-					let alertController: UIAlertController = UIAlertController(with: "Download error".localized, message: "\(String(describing: self?.item.name!)) could not be downloaded", action: {
-						self?.downloadProgress = nil
-						self?.showPreviewButton?.isHidden = false
-					})
-					self?.present(alertController, animated: true)
+					self?.downloadProgress = nil
+					self?.showPreviewButton?.isHidden = false
 				}
 				return
 			}
