@@ -11,6 +11,8 @@ import PDFKit
 
 class PDFTocTableViewController: UITableViewController {
 
+    let activityIndicatorView: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+
     fileprivate let tocTableViewCellHeight: CGFloat = 40.0
 
     class OutlineStackItem {
@@ -50,6 +52,7 @@ class PDFTocTableViewController: UITableViewController {
         super.viewDidLoad()
         self.tableView.register(PDFTocTableViewCell.self, forCellReuseIdentifier: PDFTocTableViewCell.identifier)
         self.tableView.rowHeight = tocTableViewCellHeight
+        tableView.backgroundView = activityIndicatorView
         self.tableView.separatorStyle = .none
     }
 
@@ -127,35 +130,43 @@ class PDFTocTableViewController: UITableViewController {
             }
         }
 
-        // Traverse a tree of PDFOutline objects
-        repeat {
-            let stackTop: OutlineStackItem? = stack.last
+        activityIndicatorView.startAnimating()
+        DispatchQueue.global(qos: .background).async {
+            // Traverse a tree of PDFOutline objects
+            repeat {
+                let stackTop: OutlineStackItem? = stack.last
 
-            if currentOutline.numberOfChildren > 0 {
-                if let topOutline = stackTop?.outline {
-                    if topOutline != currentOutline {
+                if currentOutline.numberOfChildren > 0 {
+                    if let topOutline = stackTop?.outline {
+                        if topOutline != currentOutline {
+                            pushCurrent()
+                        }
+                    } else {
                         pushCurrent()
                     }
                 } else {
-                    pushCurrent()
-                }
-            } else {
-                // No children -> just add to ToC
-                addTocItemForCurrnetOutline()
-                if stack.count > 0 {
-                    // Get the next child at the same level
-                    let stackTop = stack.last!
-                    let nextChildOutline = stackTop.nextChild()
-                    // Nothing to process at current level, go back in the stack
-                    if nextChildOutline == nil {
-                        popLast()
-                    } else {
-                        // Switch over to the next sibling
-                        currentOutline = nextChildOutline!
+                    // No children -> just add to ToC
+                    addTocItemForCurrnetOutline()
+                    if stack.count > 0 {
+                        // Get the next child at the same level
+                        let stackTop = stack.last!
+                        let nextChildOutline = stackTop.nextChild()
+                        // Nothing to process at current level, go back in the stack
+                        if nextChildOutline == nil {
+                            popLast()
+                        } else {
+                            // Switch over to the next sibling
+                            currentOutline = nextChildOutline!
+                        }
                     }
                 }
-            }
 
-        } while stack.count > 0
+            } while stack.count > 0
+
+            DispatchQueue.main.async {
+                self.activityIndicatorView.stopAnimating()
+                self.tableView.reloadData()
+            }
+        }
     }
 }
