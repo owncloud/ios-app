@@ -63,6 +63,11 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
         Theme.shared.register(client: self, applyImmediately: true)
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        cancelSearch()
+    }
+
     deinit {
         Theme.shared.unregister(client: self)
         NotificationCenter.default.removeObserver(self)
@@ -142,7 +147,7 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
 
     fileprivate func cancelSearch() {
         guard let pdf = pdfDocument else { return }
-
+        
         if pdf.isFinding {
             pdf.cancelFindString()
         }
