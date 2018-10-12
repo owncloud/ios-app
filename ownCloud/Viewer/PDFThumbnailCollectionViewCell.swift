@@ -29,6 +29,7 @@ class PDFThumbnailCollectionViewCell: UICollectionViewCell {
     }
 
     fileprivate func setupSubviews() {
+
         imageView = UIImageView()
         imageView?.translatesAutoresizingMaskIntoConstraints = false
         imageView?.contentMode = .scaleAspectFit
@@ -53,8 +54,8 @@ class PDFThumbnailCollectionViewCell: UICollectionViewCell {
         pageLabel!.heightAnchor.constraint(equalTo: imageView!.heightAnchor, multiplier:pageLabelHeightMultiplier).isActive = true
     }
 
-    func setup(with page:PDFPage) {
-        imageView?.image = page.thumbnail(of: self.bounds.size, for: .cropBox)
-        pageLabel?.text = page.label
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.imageView?.image = nil
     }
 }
