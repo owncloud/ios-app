@@ -46,9 +46,19 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        let thumbnailSize = floor(self.view.bounds.size.width * thumbnailSizeMultiplier)
+        let thumbnailWidth = floor(self.view.bounds.size.width * thumbnailSizeMultiplier)
+        var thumbnailSize = CGSize(width: thumbnailWidth, height: thumbnailWidth)
+
+        // Try to correct cell size to match size of the actual generated thumbnails
+        if let pdf = self.pdfDocument {
+            if let pdfPage = pdf.page(at: 0) {
+                let thumbnail = pdfPage.thumbnail(of: thumbnailSize, for: .cropBox)
+                thumbnailSize = thumbnail.size
+            }
+        }
+
         let flowLayout = self.collectionViewLayout as? UICollectionViewFlowLayout
-        flowLayout?.itemSize = CGSize(width: thumbnailSize, height: thumbnailSize)
+        flowLayout?.itemSize = thumbnailSize
         super.viewWillAppear(animated)
     }
 
@@ -167,5 +177,4 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
             }
         }
     }
-    
 }

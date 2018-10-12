@@ -29,6 +29,7 @@ class PDFThumbnailCollectionViewCell: UICollectionViewCell {
     }
 
     fileprivate func setupSubviews() {
+        self.backgroundColor = UIColor.lightGray
 
         imageView = UIImageView()
         imageView?.translatesAutoresizingMaskIntoConstraints = false
@@ -57,5 +58,6 @@ class PDFThumbnailCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         self.imageView?.image = nil
+        self.pageLabel?.text = ""
     }
 }
