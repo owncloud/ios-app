@@ -14,6 +14,7 @@ class PDFTocTableViewController: UITableViewController {
     let activityIndicatorView: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
 
     fileprivate let tocTableViewCellHeight: CGFloat = 40.0
+    fileprivate var enableTocBuilding = true
 
     class OutlineStackItem {
         var outline:PDFOutline
@@ -36,13 +37,7 @@ class PDFTocTableViewController: UITableViewController {
         }
     }
 
-    var outlineRoot: PDFOutline? {
-        didSet {
-            if outlineRoot != nil {
-                buildTocList(fromRoot: outlineRoot!)
-            }
-        }
-    }
+    var outlineRoot: PDFOutline?
 
     var themeCollection: ThemeCollection?
 
@@ -61,6 +56,15 @@ class PDFTocTableViewController: UITableViewController {
         if self.themeCollection != nil {
             self.tableView.applyThemeCollection(self.themeCollection!)
         }
+        enableTocBuilding = true
+        if outlineRoot != nil {
+            buildTocList(fromRoot: outlineRoot!)
+        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        enableTocBuilding = false
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -159,6 +163,11 @@ class PDFTocTableViewController: UITableViewController {
                             currentOutline = nextChildOutline!
                         }
                     }
+                }
+
+                if !self.enableTocBuilding {
+                    self.items.removeAll()
+                    break
                 }
 
             } while stack.count > 0
