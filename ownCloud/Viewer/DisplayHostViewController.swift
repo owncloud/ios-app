@@ -59,8 +59,14 @@ class DisplayHostViewController: UIViewController {
 		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: itemToDisplay.mimeType)
 		let shouldDownload = viewController is (DisplayViewController & DisplayExtension) ? true : false
 
-		viewController.item = itemToDisplay
-		viewController.core = core
+		var configuration: DisplayViewConfiguration
+		if !shouldDownload {
+			configuration = DisplayViewConfiguration(item: itemToDisplay, core: core, state: .notSupportedMimeType)
+		} else {
+			configuration = DisplayViewConfiguration(item: itemToDisplay, core: core, state: .hasNetworkConnection)
+		}
+
+		viewController.configure(configuration)
 
 		self.addChildViewController(viewController)
 		self.view.addSubview(viewController.view)
