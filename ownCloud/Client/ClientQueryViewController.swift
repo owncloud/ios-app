@@ -65,7 +65,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		query?.delegate = self
 
 		query?.addObserver(self, forKeyPath: "state", options: .initial, context: observerContext)
-		core?.addObserver(self, forKeyPath: "reachabilityMonitor.available", options: .initial, context: observerContext)
 
 		core?.start(query)
 
@@ -78,7 +77,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	deinit {
 		query?.removeObserver(self, forKeyPath: "state", context: observerContext)
-		core?.removeObserver(self, forKeyPath: "reachabilityMonitor.available", context: observerContext)
 
 		core?.stop(query)
 		Theme.shared.unregister(client: self)
