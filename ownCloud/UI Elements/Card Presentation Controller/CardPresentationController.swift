@@ -48,7 +48,7 @@ final class CardPresentationController: UIPresentationController {
 	private var presentedViewFittingSize : CGSize? {
 		if cachedFittingSize == nil {
 			if let moreViewController = presentedViewController as? MoreViewController {
-				cachedFittingSize = moreViewController.moreLayoutSizeFitting(UILayoutFittingExpandedSize, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
+				cachedFittingSize = moreViewController.moreLayoutSizeFitting(CGSize(width: self.windowFrame.size.width, height: UILayoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
 			} else {
 				cachedFittingSize = presentedView?.systemLayoutSizeFitting(self.windowFrame.size, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
 			}
@@ -56,8 +56,6 @@ final class CardPresentationController: UIPresentationController {
 			let safeBottom = presentingViewController.view?.window?.safeAreaInsets.bottom ?? 0
 
 			cachedFittingSize?.height += safeBottom
-
-			NSLog("SAFE: \(safeBottom) \(cachedFittingSize!.height)")
 		}
 
 		return cachedFittingSize
@@ -210,6 +208,12 @@ final class CardPresentationController: UIPresentationController {
 			   	moreViewController.fitsOnScreen = fitsOnScreen
 			}
 		}
+	}
+
+	override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.willTransition(to: newCollection, with: coordinator)
+
+		cachedFittingSize = nil
 	}
 
 	// MARK: - Card gesture handling

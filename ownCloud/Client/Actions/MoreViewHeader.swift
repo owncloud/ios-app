@@ -67,6 +67,10 @@ class MoreViewHeader: UIView {
 		labelContainerView.addSubview(titleLabel)
 		labelContainerView.addSubview(detailLabel)
 
+		titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+		detailLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+		labelContainerView.setContentCompressionResistancePriority(.required, for: .vertical)
+
 		NSLayoutConstraint.activate([
 			titleLabel.leftAnchor.constraint(equalTo: labelContainerView.leftAnchor),
 			titleLabel.rightAnchor.constraint(equalTo: labelContainerView.rightAnchor),
@@ -87,11 +91,13 @@ class MoreViewHeader: UIView {
 
 			iconView.leftAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leftAnchor, constant: 20),
 			iconView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
-			iconView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20),
+			iconView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20).with(priority: .defaultHigh),
 
 			labelContainerView.leftAnchor.constraint(equalTo: iconView.rightAnchor, constant: 15),
 			labelContainerView.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -20),
-			labelContainerView.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+			labelContainerView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+			labelContainerView.topAnchor.constraint(greaterThanOrEqualTo: self.safeAreaLayoutGuide.topAnchor, constant: 20),
+			labelContainerView.bottomAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -20)
 		])
 
 		titleLabel.attributedText = NSAttributedString(string: item.name, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
