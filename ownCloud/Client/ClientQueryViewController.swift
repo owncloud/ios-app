@@ -23,8 +23,8 @@ typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
 class ClientQueryViewController: UITableViewController, Themeable {
-	var core : OCCore?
-	var query : OCQuery?
+	var core : OCCore
+	var query : OCQuery
 
 	var items : [OCItem]?
 
@@ -51,21 +51,21 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 		observerContext = UnsafeMutableRawPointer(&observerContextValue)
 
-		super.init(style: .plain)
-
 		core = inCore
 		query = inQuery
 
+		super.init(style: .plain)
+
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 
-		query?.delegate = self
+		query.delegate = self
 
-		query?.addObserver(self, forKeyPath: "state", options: .initial, context: observerContext)
-		core?.addObserver(self, forKeyPath: "reachabilityMonitor.available", options: .initial, context: observerContext)
+		query.addObserver(self, forKeyPath: "state", options: .initial, context: observerContext)
+		core.addObserver(self, forKeyPath: "reachabilityMonitor.available", options: .initial, context: observerContext)
 
-		core?.start(query)
+		core.start(query)
 
-		self.navigationItem.title = (query?.queryPath as NSString?)!.lastPathComponent
+		self.navigationItem.title = (query.queryPath as NSString?)!.lastPathComponent
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -73,10 +73,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	deinit {
-		query?.removeObserver(self, forKeyPath: "state", context: observerContext)
-		core?.removeObserver(self, forKeyPath: "reachabilityMonitor.available", context: observerContext)
+		query.removeObserver(self, forKeyPath: "state", context: observerContext)
+		core.removeObserver(self, forKeyPath: "reachabilityMonitor.available", context: observerContext)
 
-		core?.stop(query)
+		core.stop(query)
 		Theme.shared.unregister(client: self)
 
 		if messageThemeApplierToken != nil {
@@ -90,7 +90,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	// MARK: - Actions
 	@objc func refreshQuery() {
 		UIImpactFeedbackGenerator().impactOccurred()
-		core?.reload(query)
+		core.reload(query)
 	}
 
 	// swiftlint:disable block_based_kvo
@@ -153,8 +153,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		// Refresh when navigating back to us
 		if initialAppearance == false {
-			if query?.state == .idle {
-				core?.reload(query)
+			if query.state == .idle {
+				core.reload(query)
 			}
 		}
 
@@ -163,49 +163,49 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		updateQueryProgressSummary()
 
 		sortBar?.sortMethod = self.sortMethod
-		query?.sortComparator = self.sortMethod.comparator()
+		query.sortComparator = self.sortMethod.comparator()
 	}
 
 	func updateQueryProgressSummary() {
 		var summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
 
-		switch query?.state {
-			case .stopped?:
+		switch query.state {
+			case .stopped:
 				summary.message = "Stopped".localized
 
-			case .started?:
+			case .started:
 				summary.message = "Started…".localized
 
-			case .contentsFromCache?:
-				if core?.reachabilityMonitor?.available == true {
+			case .contentsFromCache:
+				if core.reachabilityMonitor.available == true {
 					summary.message = "Contents from cache.".localized
 				} else {
 					summary.message = "Offline. Contents from cache.".localized
 				}
 
-			case .waitingForServerReply?:
+			case .waitingForServerReply:
 				summary.message = "Waiting for server response…".localized
 
-			case .targetRemoved?:
+			case .targetRemoved:
 				summary.message = "This folder no longer exists.".localized
 
-			case .idle?:
+			case .idle:
 				summary.message = "Everything up-to-date.".localized
 				summary.progressCount = 0
 
-			case .none:
+			default:
 				summary.message = "Please wait…".localized
 		}
 
-		switch query?.state {
-			case .idle?:
+		switch query.state {
+			case .idle:
 				DispatchQueue.main.async {
 					if !self.refreshController!.isRefreshing {
 						self.refreshController?.beginRefreshing()
 					}
 				}
 
-			case .contentsFromCache?, .stopped?:
+			case .contentsFromCache, .stopped:
 				DispatchQueue.main.async {
 					self.tableView.refreshControl = nil
 				}
@@ -267,10 +267,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		switch rowItem.type {
 			case .collection:
-				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
+				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core, query: OCQuery(forPath: rowItem.path)), animated: true)
 
 			case .file:
-				if let downloadProgress = self.core?.downloadItem(rowItem, options: nil, resultHandler: { (error, _, item, file) in
+				if let downloadProgress = self.core.downloadItem(rowItem, options: nil, resultHandler: { (error, _, item, file) in
 					OnMainThread {
 						if error != nil {
 							// TODO: Handle error
@@ -308,7 +308,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		let duplicateTestContextualAction = UIContextualAction.init(style: .normal, title: "Duplicate".localized, handler: { (_, _, actionPerformed) in
 			if let item = self.items?[indexPath.row] {
-				_ = self.core?.copy(item, to: self.query?.rootItem, withName: item.name + " copy", options: nil, resultHandler: { (error, _, item, _) in
+				_ = self.core.copy(item, to: self.query.rootItem, withName: item.name + " copy", options: nil, resultHandler: { (error, _, item, _) in
 					if error != nil {
 						Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
 					}
@@ -486,7 +486,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				return
 			}
 
-			if let progress = self.core?.move(item, to: self.query?.rootItem, withName: newName, options: nil, resultHandler: { (error, _, _, _) in
+			if let progress = self.core.move(item, to: self.query.rootItem, withName: newName!, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
 
@@ -514,7 +514,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			destructiveLabel: "Delete".localized,
 			preferredStyle: UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet,
 			destructiveAction: {
-				if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
+				if let progress = self.core.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
 					if error != nil {
 						Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
 
@@ -544,7 +544,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				return
 			}
 
-			if let progress = self.core?.createFolder(newName, inside: self.query?.rootItem, options: nil, resultHandler: { (error, _, _, _) in
+			if let progress = self.core.createFolder(newName!, inside: self.query.rootItem, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.error("Error \(String(describing: error)) creating folder \(String(describing: newName))")
 					completionHandler?(false)
@@ -578,7 +578,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			name = "\(itemName) copy\(fileExtension)"
 		}
 
-		if let progress = self.core?.copy(item, to: self.query?.rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in
+		if let progress = self.core.copy(item, to: self.query.rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in
 			if error != nil {
 				Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
 
@@ -652,7 +652,7 @@ extension ClientQueryViewController : SortBarDelegate {
 
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
-		query?.sortComparator = sortMethod.comparator()
+		query.sortComparator = sortMethod.comparator()
 	}
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
@@ -674,16 +674,16 @@ extension ClientQueryViewController: UISearchResultsUpdating {
 		}
 
 		if searchText == "" {
-			if let filter = query?.filter(withIdentifier: "text-search") {
-				query?.removeFilter(filter)
+			if let filter = query.filter(withIdentifier: "text-search") {
+				query.removeFilter(filter)
 			}
 		} else {
-			if let filter = query?.filter(withIdentifier: "text-search") {
-				query?.updateFilter(filter, applyChanges: { filterToChange in
+			if let filter = query.filter(withIdentifier: "text-search") {
+				query.updateFilter(filter, applyChanges: { filterToChange in
 					(filterToChange as? OCQueryFilter)?.filterHandler = filterHandler
 				})
 			} else {
-				query?.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
+				query.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
 			}
 		}
 	}
@@ -695,8 +695,8 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 		if let item = cell.item {
 
 			let tableViewController = MoreStaticTableViewController(style: .grouped)
-			let header = MoreViewHeader(for: item, with: core!)
-			let moreViewController = MoreViewController(item: item, core: core!, header: header, viewController: tableViewController)
+			let header = MoreViewHeader(for: item, with: core)
+			let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
 
 			let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
@@ -722,19 +722,6 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 				renameRow,
 				duplicateRow,
 				deleteRow
-//				StaticTableViewRow(label: "1"),
-//				StaticTableViewRow(label: "2"),
-//				StaticTableViewRow(label: "3"),
-//				StaticTableViewRow(label: "4"),
-//				StaticTableViewRow(label: "5"),
-//				StaticTableViewRow(label: "6"),
-//				StaticTableViewRow(label: "7"),
-//				StaticTableViewRow(label: "8"),
-//				StaticTableViewRow(label: "9"),
-//				StaticTableViewRow(label: "10"),
-//				StaticTableViewRow(label: "11"),
-//				StaticTableViewRow(label: "12"),
-//				StaticTableViewRow(label: "13")
 				]))
 
 			self.present(asCard: moreViewController, animated: true)
