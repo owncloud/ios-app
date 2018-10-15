@@ -18,7 +18,6 @@
 
 import UIKit
 import ownCloudSDK
-import MobileCoreServices
 
 extension OCItem {
 	static private let iconNamesByMIMEType : [String:String] = {
@@ -246,19 +245,4 @@ extension OCItem {
 		dateFormatter.doesRelativeDateFormatting = true
 		return dateFormatter
 	}()
-
-	func canHandle(_ session: UIDropSession) -> Bool {
-		return true
-	}
-}
-
-extension OCItem: NSItemProviderReading {
-	public static var readableTypeIdentifiersForItemProvider: [String] {
-		return [kUTTypeData as String]
-	}
-
-	public static func object(withItemProviderData data: Data, typeIdentifier: String) throws -> Self {
-		let object = self.init(fromSerializedData: data)
-		return object!
-	}
 }
