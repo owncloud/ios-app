@@ -49,6 +49,13 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
     fileprivate var gotoButtonItem: UIBarButtonItem?
     fileprivate var outlineItem: UIBarButtonItem?
 
+    fileprivate var brushItem: UIBarButtonItem?
+    var annotationModeActive = false
+    var signingPath = UIBezierPath()
+    var annotationAdded : Bool = false
+    var lastPoint : CGPoint?
+    var currentAnnotation : PDFAnnotation?
+
     fileprivate var thumbnailViewPosition : ThumbnailViewPosition = .bottom {
         didSet {
             switch thumbnailViewPosition {
@@ -268,6 +275,17 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         self.present(searchNC, animated: true)
     }
 
+    @objc func toggleBrush() {
+        annotationModeActive = !annotationModeActive
+        if annotationModeActive {
+            brushItem?.tintColor = UIColor.red
+        } else {
+            brushItem?.tintColor = nil
+        }
+        pdfView.isUserInteractionEnabled = !annotationModeActive
+        parent?.navigationController?.hidesBarsOnTap = !annotationModeActive
+    }
+
     // MARK: - Private helpers
 
     fileprivate func adjustThumbnailsSize() {
@@ -335,6 +353,8 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
     }
 
     fileprivate func setupToolbar() {
+        brushItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_brush"), style: .plain, target: self, action: #selector(toggleBrush))
+
         searchButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search))
         gotoButtonItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_go_to_page"), style: .plain, target: self, action: #selector(goToPage))
         outlineItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_outline"), style: .plain, target: self, action: #selector(showOutline))
@@ -342,7 +362,8 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         self.parent?.navigationItem.rightBarButtonItems = [
             gotoButtonItem!,
             searchButtonItem!,
-            outlineItem!]
+            outlineItem!,
+            brushItem!]
     }
 
     fileprivate func selectPage(with label:String) {
@@ -363,5 +384,80 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         guard let currentPageLabel = pdfView.currentPage?.label else { return }
 
         pageCountLabel.text = "\(currentPageLabel) of \(pdf.pageCount)"
+    }
+
+    // MARK: - Annotations
+
+    fileprivate func createInkAnnotation() -> PDFAnnotation {
+
+        let lineThickness: CGFloat = 4
+        let rect = CGRect(x:signingPath.bounds.minX - (lineThickness / 2),
+                          y:signingPath.bounds.minY - (lineThickness / 2),
+                          width:signingPath.bounds.maxX - signingPath.bounds.minX + lineThickness,
+                          height:signingPath.bounds.maxY - signingPath.bounds.minY + lineThickness)
+
+        let annotation = PDFAnnotation(bounds: rect, forType: .ink, withProperties: nil)
+        let border = PDFBorder()
+        border.lineWidth = lineThickness
+        annotation.border = border
+        annotation.color = UIColor.red
+
+        return annotation
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            let position = touch.location(in: pdfView)
+            signingPath = UIBezierPath()
+            signingPath.move(to: pdfView.convert(position, to: pdfView.page(for: position, nearest: true)!))
+            annotationAdded = false
+            lastPoint = pdfView.convert(position, to: pdfView.page(for: position, nearest: true)!)
+        }
+    }
+
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            let position = touch.location(in: pdfView)
+            let convertedPoint = pdfView.convert(position, to: pdfView.page(for: position, nearest: true)!)
+            signingPath.addLine(to: convertedPoint)
+            let rect = signingPath.bounds
+
+            if annotationAdded {
+                if currentAnnotation != nil {
+                    pdfView.currentPage?.removeAnnotation(currentAnnotation!)
+                }
+                currentAnnotation = createInkAnnotation()
+
+                var signingPathCentered = UIBezierPath()
+                signingPathCentered.cgPath = signingPath.cgPath
+                signingPathCentered.moveCenter(to: rect.center)
+                currentAnnotation!.add(signingPathCentered)
+                pdfView.document?.page(at: 0)?.addAnnotation(currentAnnotation!)
+
+            } else {
+                lastPoint = pdfView.convert(position, to: pdfView.page(for: position, nearest: true)!)
+                annotationAdded = true
+                currentAnnotation = createInkAnnotation()
+                currentAnnotation!.add(signingPath)
+                pdfView.document?.page(at: 0)?.addAnnotation(currentAnnotation!)
+            }
+        }
+    }
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            let position = touch.location(in: pdfView)
+            signingPath.addLine(to: pdfView.convert(position, to: pdfView.page(for: position, nearest: true)!))
+
+            if currentAnnotation != nil {
+                pdfView.currentPage?.removeAnnotation(currentAnnotation!)
+            }
+
+            let rect = signingPath.bounds
+            let annotation = createInkAnnotation()
+            signingPath.moveCenter(to: rect.center)
+            annotation.add(signingPath)
+            pdfView.currentPage?.addAnnotation(annotation)
+        }
     }
 }
