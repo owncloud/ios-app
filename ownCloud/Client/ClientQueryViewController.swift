@@ -325,7 +325,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		let moveContextualAction = UIContextualAction(style: .normal, title: "Move") { (_, _, actionPerformed) in
 
-			let directoryPickerVC = ClientDirectoryPickerViewController(core: self.core!, query: OCQuery(forPath: "/"), completion: { (selectedDirectory) in
+			let directoryPickerVC = ClientDirectoryPickerViewController(core: self.core!, path: "/", completion: { (selectedDirectory) in
 				if let progress = self.core?.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
 					if error != nil {
 						Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
@@ -599,7 +599,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	func move(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
-		let directoryPickerVC = ClientDirectoryPickerViewController(core: self.core!, query: OCQuery(forPath: "/"), completion: { (selectedDirectory) in
+		let directoryPickerVC = ClientDirectoryPickerViewController(core: self.core!, path: "/", completion: { (selectedDirectory) in
 
 			if let progress = self.core?.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {

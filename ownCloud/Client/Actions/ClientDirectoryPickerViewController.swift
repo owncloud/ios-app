@@ -15,10 +15,20 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	private var completion: (OCItem) -> Void
 	private var cancelBarButton: UIBarButtonItem!
 
-	init(core inCore: OCCore, query inQuery: OCQuery, completion: @escaping (OCItem) -> Void) {
+	private static var directoryFilterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
+		if let item = item {
+			if item.type == .collection {return true}
+		}
+		return false
+	}
+
+	init(core inCore: OCCore, path: String, completion: @escaping (OCItem) -> Void) {
 		selectButton = ThemeButton()
 		self.completion = completion
-		super.init(core: inCore, query: inQuery)
+		let query = OCQuery.init(forPath: path)
+		super.init(core: inCore, query: query!)
+
+		self.query?.addFilter(OCQueryFilter.init(handler: ClientDirectoryPickerViewController.directoryFilterHandler), withIdentifier: "directory-filter")
 
 		Theme.shared.register(client: self)
 	}
@@ -69,7 +79,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 			return
 		}
 
-		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core!, query: OCQuery(forPath: item.path), completion: completion), animated: true)
+		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core!, path: item.path, completion: completion), animated: true)
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
