@@ -44,6 +44,7 @@
 		4C0668AB21667C2500666188 /* PDFThumbnailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0668AA21667C2500666188 /* PDFThumbnailCollectionViewCell.swift */; };
 		4C1762902167817900E344AA /* PDFTocTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C17628F2167817800E344AA /* PDFTocTableViewCell.swift */; };
 		4C1762982167842600E344AA /* PDFTocItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1762972167842600E344AA /* PDFTocItem.swift */; };
+		4C87A0B12175196C006D200C /* UIBezierPathExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C87A0B02175196C006D200C /* UIBezierPathExtension.swift */; };
 		4C8F1B3C2150DF8D00F86E2D /* PDFSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8F1B352150DF8C00F86E2D /* PDFSearchViewController.swift */; };
 		4C8F1B3F2150FE6E00F86E2D /* PDFSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8F1B3E2150FE6E00F86E2D /* PDFSearchTableViewCell.swift */; };
 		5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5917244D20D3DC2100809B38 /* BiometricalTests.swift */; };
@@ -382,6 +383,7 @@
 		4C0668AA21667C2500666188 /* PDFThumbnailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFThumbnailCollectionViewCell.swift; sourceTree = "<group>"; };
 		4C17628F2167817800E344AA /* PDFTocTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFTocTableViewCell.swift; sourceTree = "<group>"; };
 		4C1762972167842600E344AA /* PDFTocItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFTocItem.swift; sourceTree = "<group>"; };
+		4C87A0B02175196C006D200C /* UIBezierPathExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBezierPathExtension.swift; sourceTree = "<group>"; };
 		4C8F1B352150DF8C00F86E2D /* PDFSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFSearchViewController.swift; sourceTree = "<group>"; };
 		4C8F1B3E2150FE6E00F86E2D /* PDFSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFSearchTableViewCell.swift; sourceTree = "<group>"; };
 		5917244D20D3DC2100809B38 /* BiometricalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricalTests.swift; sourceTree = "<group>"; };
@@ -708,6 +710,7 @@
 				4C0668AA21667C2500666188 /* PDFThumbnailCollectionViewCell.swift */,
 				4C0668A821665F9500666188 /* PDFThumbnailsCollectionViewController.swift */,
 				23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */,
+				4C87A0B02175196C006D200C /* UIBezierPathExtension.swift */,
 			);
 			path = Viewer;
 			sourceTree = "<group>";
@@ -1532,6 +1535,7 @@
 				232F7CAD2097140300EE22E4 /* UploadsSettingsSection.swift in Sources */,
 				597A404920AD59EF00B028B2 /* AppLockWindow.swift in Sources */,
 				DC42244C207CAFBB0006A2A6 /* ThemeCollection.swift in Sources */,
+				4C87A0B12175196C006D200C /* UIBezierPathExtension.swift in Sources */,
 				DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */,
 				4C0668AB21667C2500666188 /* PDFThumbnailCollectionViewCell.swift in Sources */,
 				DCFED9BA20809B8900A2D984 /* ThemeTVGResource.swift in Sources */,
