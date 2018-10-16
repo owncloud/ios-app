@@ -11,6 +11,8 @@ import ownCloudSDK
 
 class ClientDirectoryPickerViewController: ClientQueryViewController {
 
+	private let SELECT_BUTTON_HEIGHT: CGFloat = 44.0
+
 	private var selectButton: ThemeButton
 	private var completion: (OCItem) -> Void
 	private var cancelBarButton: UIBarButtonItem!
@@ -22,8 +24,9 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		return false
 	}
 
-	init(core inCore: OCCore, path: String, completion: @escaping (OCItem) -> Void) {
+	init(core inCore: OCCore, path: String, selectButtonTitle: String = "Move here".localized, completion: @escaping (OCItem) -> Void) {
 		selectButton = ThemeButton()
+		selectButton.setTitle(selectButtonTitle, for: .normal)
 		self.completion = completion
 		let query = OCQuery.init(forPath: path)
 		super.init(core: inCore, query: query!)
@@ -57,15 +60,15 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 			selectButton.leftAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.leftAnchor),
 			selectButton.rightAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.rightAnchor),
 			selectButton.bottomAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.bottomAnchor),
-			selectButton.heightAnchor.constraint(equalToConstant: 44)
+			selectButton.heightAnchor.constraint(equalToConstant: SELECT_BUTTON_HEIGHT)
 		])
 
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
 		navigationItem.rightBarButtonItem = cancelBarButton
 
-		selectButton.setTitle("Move Here".localized, for: .normal)
 		selectButton.addTarget(self, action: #selector(selectButtonPressed), for: .touchUpInside)
  		tableView.tableFooterView = UIView()
+		tableView.contentInset.bottom = SELECT_BUTTON_HEIGHT
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
