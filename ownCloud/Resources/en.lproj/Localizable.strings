@@ -148,3 +148,5 @@
 /* Preview */
 "Open file" = "Open file";
 "There is no network" = "There is no network";
+"Error" = "Error";
+"Could not get the picture" = "Could not get the picture";

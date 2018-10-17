@@ -40,6 +40,7 @@ class WebViewDisplayViewController: DisplayViewController {
 				configuration.userContentController.add(blockList!)
 
 				self.webView = WKWebView(frame: .zero, configuration: configuration)
+				self.webView?.scrollView.bouncesZoom = false
 				self.webView?.translatesAutoresizingMaskIntoConstraints = false
 				self.view.addSubview(self.webView!)
 
@@ -109,7 +110,7 @@ extension WebViewDisplayViewController: DisplayExtension {
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		do {
 			let location = context!.location.identifier.rawValue
-			let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((image/)|(text/)|(video/)|(audio/)|(application/(vnd.|ms))(ms|openxmlformats)?)", options: .caseInsensitive)
+			let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/)|(video/)|(audio/)|(application/(vnd.|ms))(ms|openxmlformats)?)", options: .caseInsensitive)
 			let matches = supportedFormatsRegex.numberOfMatches(in: location, options: .reportCompletion, range: NSRange(location: 0, length: location.count))
 
 			if matches > 0 {
