@@ -13,25 +13,32 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	private let SELECT_BUTTON_HEIGHT: CGFloat = 44.0
 
-	private var selectButton: ThemeButton
-	private var completion: (OCItem) -> Void
-	private var cancelBarButton: UIBarButtonItem!
-
+	// MARK: - Query directory filter
+	private static let DIRECTORY_FILTER_IDENTIFIER: String = "directory-filter"
 	private static var directoryFilterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
 		if let item = item {
 			if item.type == .collection {return true}
 		}
 		return false
 	}
+	private static var directoryFilter: OCQueryFilter {
+		return OCQueryFilter(handler: ClientDirectoryPickerViewController.directoryFilterHandler)
+	}
 
+	// MARK: - Instance Properties
+	private var selectButton: UIBarButtonItem!
+	private var selectButtonTitle: String
+	private var cancelBarButton: UIBarButtonItem!
+	private var completion: (OCItem) -> Void
+
+	// MARK: - Init & deinit
 	init(core inCore: OCCore, path: String, selectButtonTitle: String = "Move here".localized, completion: @escaping (OCItem) -> Void) {
-		selectButton = ThemeButton()
-		selectButton.setTitle(selectButtonTitle, for: .normal)
+		self.selectButtonTitle = selectButtonTitle
 		self.completion = completion
-		let query = OCQuery.init(forPath: path)
-		super.init(core: inCore, query: query!)
 
-		self.query?.addFilter(OCQueryFilter.init(handler: ClientDirectoryPickerViewController.directoryFilterHandler), withIdentifier: "directory-filter")
+		super.init(core: inCore, query: OCQuery(forPath: path)!)
+
+		self.query?.addFilter(ClientDirectoryPickerViewController.directoryFilter, withIdentifier: ClientDirectoryPickerViewController.DIRECTORY_FILTER_IDENTIFIER)
 
 		Theme.shared.register(client: self)
 	}
@@ -44,31 +51,27 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		Theme.shared.unregister(client: self)
 	}
 
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-		tableView.bringSubview(toFront: selectButton)
-	}
-
+	// MARK: - ViewController lifecycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		// Select Button setup
-		selectButton.translatesAutoresizingMaskIntoConstraints = false
-		tableView.addSubview(selectButton)
+		// Select button creation
+		selectButton = UIBarButtonItem(title: selectButtonTitle, style: .plain, target: self, action: #selector(selectButtonPressed))
+		selectButton.title = selectButtonTitle
 
-		NSLayoutConstraint.activate([
-			selectButton.leftAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.leftAnchor),
-			selectButton.rightAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.rightAnchor),
-			selectButton.bottomAnchor.constraint(equalTo: tableView.safeAreaLayoutGuide.bottomAnchor),
-			selectButton.heightAnchor.constraint(equalToConstant: SELECT_BUTTON_HEIGHT)
-		])
-
+		// Cancel button creation
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
 		navigationItem.rightBarButtonItem = cancelBarButton
+	}
 
-		selectButton.addTarget(self, action: #selector(selectButtonPressed), for: .touchUpInside)
- 		tableView.tableFooterView = UIView()
-		tableView.contentInset.bottom = SELECT_BUTTON_HEIGHT
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(true)
+
+		if let navController = self.navigationController {
+			navController.isToolbarHidden = false
+			let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+			self.setToolbarItems([flexibleSpaceBarButton, selectButton, flexibleSpaceBarButton], animated: false)
+		}
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -89,6 +92,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		return nil
 	}
 
+	// MARK: - Actions
 	@objc private func cancelBarButtonPressed() {
 		self.dismiss(animated: true)
 	}
@@ -101,10 +105,5 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		self.dismiss(animated: true, completion: {
 			self.completion(query.rootItem)
 		})
-	}
-
-	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		super.applyThemeCollection(theme: theme, collection: collection, event: event)
-		self.selectButton.applyThemeCollection(collection)
 	}
 }
