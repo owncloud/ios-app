@@ -153,6 +153,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
             fileNameLabel.text = document.documentURL?.lastPathComponent
 
             pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
+            pdfView.autoScales = true
             updatePageLabel()
         }
     }
@@ -190,6 +191,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
             self.thumbnailViewPosition = .bottom
         }
         pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
+        pdfView.autoScales = true
     }
 
     func save(item: OCItem) {
