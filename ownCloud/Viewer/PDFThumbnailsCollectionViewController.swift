@@ -74,7 +74,9 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PDFThumbnailCollectionViewCell.identifier, for: indexPath) as? PDFThumbnailCollectionViewCell
-        cell?.imageView?.image = getCachedThumbnailOrFetchAsync(at: indexPath)
+        let (image, label) =  getCachedThumbnailOrFetchAsync(at: indexPath)
+        cell?.imageView?.image = image
+        cell?.pageLabel?.text = label
         return cell!
     }
 
@@ -153,18 +155,18 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
         }
     }
 
-    fileprivate func getCachedThumbnailOrFetchAsync(at:IndexPath) -> UIImage? {
+    fileprivate func getCachedThumbnailOrFetchAsync(at:IndexPath) -> (UIImage?, String?) {
         if let pdfPage = self.pdfDocument?.page(at: at.item) {
             let thumbnailImage = thumbnailCache.object(forKey: pdfPage.label! as NSString)
             if thumbnailImage != nil {
-                return thumbnailImage
+                return (thumbnailImage, pdfPage.label)
             } else {
                 if let layout = self.collectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
                     fetchThumbnail(for: pdfPage, indexPath: at, size: layout.itemSize)
                 }
             }
         }
-        return nil
+        return (nil, nil)
     }
 
     fileprivate func updateVisibleCells() {
@@ -172,7 +174,9 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
             let cell = self.collectionView!.cellForItem(at: indexPath)
             if let pdfThumbnailCell = cell as? PDFThumbnailCollectionViewCell {
                 if pdfThumbnailCell.imageView?.image == nil {
-                    pdfThumbnailCell.imageView?.image = getCachedThumbnailOrFetchAsync(at: indexPath)
+                    let (image, label) = getCachedThumbnailOrFetchAsync(at: indexPath)
+                    pdfThumbnailCell.imageView?.image = image
+                    pdfThumbnailCell.pageLabel?.text = label
                 }
             }
         }
