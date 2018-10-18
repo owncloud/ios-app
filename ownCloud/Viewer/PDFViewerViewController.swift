@@ -36,7 +36,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
     fileprivate let SEARCH_ANNOTATION_DELAY  = 3.0
     fileprivate let ANIMATION_DUR = 0.25
     fileprivate let THUMBNAIL_VIEW_WIDTH_MULTIPLIER: CGFloat = 0.15
-    fileprivate let THUMBNAIL_VIEW_HEIGHT_MULTIPLIER: CGFloat = 0.05
+    fileprivate let THUMBNAIL_VIEW_HEIGHT_MULTIPLIER: CGFloat = 0.1
     fileprivate let FILENAME_CONTAINER_TOP_MARGIN: CGFloat = 10.0
     fileprivate let pdfView = PDFView()
     fileprivate let thumbnailView = PDFThumbnailView()
@@ -146,7 +146,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
             containerView.addArrangedSubview(pageCountContainerView)
 
             self.view.addSubview(containerView)
-
+            
             setupConstraints()
 
             pdfView.document = document
