@@ -31,9 +31,19 @@ class PDFOutlineViewController: UIViewController, Themeable {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        modeSegmentedControl = UISegmentedControl(items: [UIImage(named: "ic_pdf_outline")!,
-                                                          UIImage(named: "ic_pdf_view_multipage")!])
-        modeSegmentedControl?.addTarget(self, action: #selector(modeChanged), for: .valueChanged)
+        var iconArray: [UIImage] = [UIImage]()
+        if self.pdfDocument?.outlineRoot != nil {
+            iconArray.append( UIImage(named: "ic_pdf_outline")!)
+        }
+        iconArray.append(UIImage(named: "ic_pdf_view_multipage")!)
+
+        modeSegmentedControl = UISegmentedControl(items: iconArray)
+        if self.pdfDocument?.outlineRoot != nil {
+            modeSegmentedControl?.addTarget(self, action: #selector(modeChanged), for: .valueChanged)
+            self.mode = .ToC
+        } else {
+            self.mode = .Thumbnails
+        }
         self.navigationItem.titleView = modeSegmentedControl
 
         if UIDevice.current.userInterfaceIdiom != .pad {
@@ -43,7 +53,6 @@ class PDFOutlineViewController: UIViewController, Themeable {
         
         Theme.shared.register(client: self, applyImmediately: true)
 
-        self.mode = .ToC
     }
 
     deinit {
