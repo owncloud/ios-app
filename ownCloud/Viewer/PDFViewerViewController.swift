@@ -87,8 +87,73 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
 
     override func renderSpecificView() {
         if let document = PDFDocument(url: source) {
+            setupToolbar()
+
+            self.view.backgroundColor = UIColor.gray
+            self.thumbnailViewPosition = .none
+
+            // Configure thumbnail view
+            thumbnailView.translatesAutoresizingMaskIntoConstraints = false
+            thumbnailView.backgroundColor = UIColor.gray
+            thumbnailView.pdfView = pdfView
+            thumbnailView.isExclusiveTouch = true
+
+            // Adding dummy tap recognizer to prevent navigation bar from hiding if user just taps it
+            let tapRecognizer = UITapGestureRecognizer(target: nil, action: nil)
+            thumbnailView.addGestureRecognizer(tapRecognizer)
+            self.view.addSubview(thumbnailView)
+
+            containerView.spacing = UIStackView.spacingUseSystem
+            containerView.isLayoutMarginsRelativeArrangement = true
+            containerView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: FILENAME_CONTAINER_TOP_MARGIN,
+                                                                             leading: 0,
+                                                                             bottom: 0,
+                                                                             trailing: 0)
+            containerView.backgroundColor = UIColor.lightGray
+            containerView.translatesAutoresizingMaskIntoConstraints = false
+            containerView.axis = .vertical
+            containerView.distribution = .fill
+
+            let fileNameContainerView = UIView()
+            fileNameContainerView.backgroundColor = UIColor.gray
+            fileNameContainerView.translatesAutoresizingMaskIntoConstraints = false
+            fileNameContainerView.addSubview(fileNameLabel)
+
+            fileNameLabel._setupPdfInfoLabel()
+            fileNameLabel.centerXAnchor.constraint(equalTo: fileNameContainerView.centerXAnchor).isActive = true
+            fileNameLabel.centerYAnchor.constraint(equalTo: fileNameContainerView.centerYAnchor).isActive = true
+            fileNameLabel.widthAnchor.constraint(equalTo: fileNameContainerView.widthAnchor, multiplier: 0.9).isActive = true
+            fileNameLabel.heightAnchor.constraint(equalTo: fileNameContainerView.heightAnchor, multiplier: 0.9).isActive = true
+
+            containerView.addArrangedSubview(fileNameContainerView)
+
+            // Configure PDFView instance
+            pdfView.displayDirection = .horizontal
+            pdfView.translatesAutoresizingMaskIntoConstraints = false
+            pdfView.usePageViewController(true, withViewOptions: nil)
+            containerView.addArrangedSubview(pdfView)
+
+            let pageCountContainerView = UIView()
+            pageCountContainerView.backgroundColor = UIColor.gray
+            pageCountContainerView.translatesAutoresizingMaskIntoConstraints = false
+            pageCountContainerView.addSubview(pageCountLabel)
+
+            pageCountLabel._setupPdfInfoLabel()
+            pageCountLabel.centerXAnchor.constraint(equalTo: pageCountContainerView.centerXAnchor).isActive = true
+            pageCountLabel.widthAnchor.constraint(equalTo: pageCountContainerView.widthAnchor, multiplier: 0.25).isActive = true
+            pageCountLabel.heightAnchor.constraint(equalTo: pageCountContainerView.heightAnchor, multiplier: 0.9).isActive = true
+
+            containerView.addArrangedSubview(pageCountContainerView)
+
+            self.view.addSubview(containerView)
+
+            setupConstraints()
+
             pdfView.document = document
             fileNameLabel.text = document.documentURL?.lastPathComponent
+
+            pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
+            updatePageLabel()
         }
     }
 
@@ -96,65 +161,6 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.gray
-        self.thumbnailViewPosition = .none
-
-        // Configure thumbnail view
-        thumbnailView.translatesAutoresizingMaskIntoConstraints = false
-        thumbnailView.backgroundColor = UIColor.gray
-        thumbnailView.pdfView = pdfView
-        thumbnailView.isExclusiveTouch = true
-
-        // Adding dummy tap recognizer to prevent navigation bar from hiding if user just taps it
-        let tapRecognizer = UITapGestureRecognizer(target: nil, action: nil)
-        thumbnailView.addGestureRecognizer(tapRecognizer)
-        self.view.addSubview(thumbnailView)
-
-        containerView.spacing = UIStackView.spacingUseSystem
-        containerView.isLayoutMarginsRelativeArrangement = true
-        containerView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: FILENAME_CONTAINER_TOP_MARGIN,
-                                                                         leading: 0,
-                                                                         bottom: 0,
-                                                                         trailing: 0)
-        containerView.backgroundColor = UIColor.lightGray
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.axis = .vertical
-        containerView.distribution = .fill
-
-        let fileNameContainerView = UIView()
-        fileNameContainerView.backgroundColor = UIColor.gray
-        fileNameContainerView.translatesAutoresizingMaskIntoConstraints = false
-        fileNameContainerView.addSubview(fileNameLabel)
-
-        fileNameLabel._setupPdfInfoLabel()
-        fileNameLabel.centerXAnchor.constraint(equalTo: fileNameContainerView.centerXAnchor).isActive = true
-        fileNameLabel.centerYAnchor.constraint(equalTo: fileNameContainerView.centerYAnchor).isActive = true
-        fileNameLabel.widthAnchor.constraint(equalTo: fileNameContainerView.widthAnchor, multiplier: 0.9).isActive = true
-        fileNameLabel.heightAnchor.constraint(equalTo: fileNameContainerView.heightAnchor, multiplier: 0.9).isActive = true
-
-        containerView.addArrangedSubview(fileNameContainerView)
-
-        // Configure PDFView instance
-        pdfView.displayDirection = .horizontal
-        pdfView.translatesAutoresizingMaskIntoConstraints = false
-        pdfView.usePageViewController(true, withViewOptions: nil)
-        containerView.addArrangedSubview(pdfView)
-
-        let pageCountContainerView = UIView()
-        pageCountContainerView.backgroundColor = UIColor.gray
-        pageCountContainerView.translatesAutoresizingMaskIntoConstraints = false
-        pageCountContainerView.addSubview(pageCountLabel)
-
-        pageCountLabel._setupPdfInfoLabel()
-        pageCountLabel.centerXAnchor.constraint(equalTo: pageCountContainerView.centerXAnchor).isActive = true
-        pageCountLabel.widthAnchor.constraint(equalTo: pageCountContainerView.widthAnchor, multiplier: 0.25).isActive = true
-        pageCountLabel.heightAnchor.constraint(equalTo: pageCountContainerView.heightAnchor, multiplier: 0.9).isActive = true
-
-        containerView.addArrangedSubview(pageCountContainerView)
-
-        self.view.addSubview(containerView)
-
-        setupConstraints()
 
         NotificationCenter.default.addObserver(self, selector: #selector(handlePageChanged), name: .PDFViewPageChanged, object: nil)
 
@@ -168,18 +174,11 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         parent?.navigationController?.hidesBarsOnTap = true
-        setupToolbar()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         parent?.navigationController?.hidesBarsOnTap = false
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
-        updatePageLabel()
     }
 
     override func viewDidLayoutSubviews() {
