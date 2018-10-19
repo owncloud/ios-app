@@ -290,7 +290,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		guard let item: OCItem = items?[indexPath.row], core != nil else {
+		guard let item: OCItem = items?[indexPath.row] else {
 			return nil
 		}
 

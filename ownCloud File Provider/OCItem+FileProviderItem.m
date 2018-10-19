@@ -107,7 +107,21 @@
 {
 	if (self.localRelativePath != nil)
 	{
-		// Further checks!?
+		return (YES);
+	}
+
+	return (NO);
+}
+
+- (BOOL)isUploading
+{
+	return ((self.syncActivity & OCItemSyncActivityUploading) == OCItemSyncActivityUploading);
+}
+
+- (BOOL)isMostRecentVersionDownloaded
+{
+	if ((self.localRelativePath != nil) && (self.remoteItem == nil))
+	{
 		return (YES);
 	}
 
