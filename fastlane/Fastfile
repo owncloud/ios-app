@@ -2,6 +2,8 @@
 
 # update_fastlane # fastlane automatically update itself
 
+fastlane_require 'dotenv'
+
 default_platform(:ios)
 
 platform :ios do
