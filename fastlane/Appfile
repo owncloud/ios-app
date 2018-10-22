@@ -1,0 +1,8 @@
+app_identifier(ENV['OWNCLOUD_APP_IDENTIFIER']) # The bundle identifier of your app
+apple_id(ENV['OWNCLOUD_APPLE_ID']) # Your Apple email address
+
+itc_team_id(ENV['OWNCLOUD_ITC_TEAM']) # iTunes Connect Team ID
+team_id(ENV['OWNCLOUD_TEAM_ID']) # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
