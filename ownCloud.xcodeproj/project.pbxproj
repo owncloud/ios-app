@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2308F94321467F6200CF0B91 /* ClientDirectoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */; };
 		232B01F42126B0CE00366FA0 /* MoreViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */; };
 		232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */; };
 		232F7CAD2097140300EE22E4 /* UploadsSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232F7CAC2097140300EE22E4 /* UploadsSettingsSection.swift */; };
@@ -284,6 +285,7 @@
 
 /* Begin PBXFileReference section */
 		05D694726A3BC5C5FE8AECB9 /* Pods-ownCloudTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.debug.xcconfig"; sourceTree = "<group>"; };
+		2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientDirectoryPickerViewController.swift; sourceTree = "<group>"; };
 		232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreViewHeader.swift; sourceTree = "<group>"; };
 		232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreStaticTableViewController.swift; sourceTree = "<group>"; };
 		232F7CAC2097140300EE22E4 /* UploadsSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadsSettingsSection.swift; sourceTree = "<group>"; };
@@ -523,6 +525,7 @@
 		236735A421217C2300E5834A /* Actions */ = {
 			isa = PBXGroup;
 			children = (
+				2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */,
 				236735A521217C3500E5834A /* MoreViewController.swift */,
 				232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */,
 				232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */,
@@ -536,6 +539,7 @@
 			children = (
 				230B84F020597F6E00C9F828 /* ownCloudUI.framework */,
 				6E216A632112F58700ED21BD /* NamingViewController.swift */,
+				2370BC87212D4EE200A7A0E5 /* ClientDirectoryPickerViewController.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1211,6 +1215,7 @@
 				593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */,
 				DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */,
 				23E22BB720C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
+				2370BC88212D4EE200A7A0E5 /* ClientDirectoryPickerViewController.swift in Sources */,
 				23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */,
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
 				DC3BE0E12077CD4B002A0AC0 /* Synchronized.swift in Sources */,
@@ -1229,6 +1234,7 @@
 				DCE974BC207EACA60069FC2B /* UIImage+Extension.swift in Sources */,
 				DC1B2707209CF0D3004715E1 /* IssuesDismissalAnimator.swift in Sources */,
 				23BEF1182076667F00DD2E6F /* IssuesViewController.swift in Sources */,
+				2308F94321467F6200CF0B91 /* ClientDirectoryPickerViewController.swift in Sources */,
 				DC85980620D85EE600A433C6 /* AsyncSequentialQueue.swift in Sources */,
 				232B01F42126B0CE00366FA0 /* MoreViewHeader.swift in Sources */,
 				DCF4F17F2051A0D000189B9A /* StaticTableViewRow.swift in Sources */,
