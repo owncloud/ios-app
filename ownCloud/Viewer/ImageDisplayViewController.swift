@@ -11,44 +11,24 @@ import ownCloudSDK
 
 class ImageDisplayViewController : DisplayViewController {
 
-	var scrollView: UIScrollView?
+	var scrollView: ImageScrollView?
 	var imageView: UIImageView?
 
 	override func renderSpecificView() {
-		scrollView = UIScrollView()
-
+		scrollView = ImageScrollView(frame: self.view.bounds)
 		scrollView?.translatesAutoresizingMaskIntoConstraints = false
-		scrollView?.maximumZoomScale = 6.0
-		scrollView?.bounces = false
-		scrollView?.bouncesZoom = false
-		scrollView?.delegate = self
 		self.view.addSubview(scrollView!)
-
 		NSLayoutConstraint.activate([
-			scrollView!.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
-			scrollView!.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
-			scrollView!.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-			scrollView!.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
-
+			scrollView!.leftAnchor.constraint(equalTo: view.leftAnchor),
+			scrollView!.rightAnchor.constraint(equalTo: view.rightAnchor),
+			scrollView!.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+			scrollView!.topAnchor.constraint(equalTo: view.topAnchor)
 		])
 
-		imageView = UIImageView()
 		do {
 			let data = try Data(contentsOf: source)
 			let image = UIImage(data: data)
-			imageView?.image = image
-			imageView?.contentMode = .scaleAspectFit
-			imageView?.translatesAutoresizingMaskIntoConstraints = false
-			imageView?.backgroundColor = .black
-			scrollView!.addSubview(imageView!)
-			NSLayoutConstraint.activate([
-				imageView!.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
-				imageView!.centerYAnchor.constraint(equalTo: scrollView!.centerYAnchor),
-				imageView!.leftAnchor.constraint(equalTo: scrollView!.leftAnchor),
-				imageView!.rightAnchor.constraint(equalTo: scrollView!.rightAnchor),
-				imageView!.bottomAnchor.constraint(equalTo: scrollView!.bottomAnchor),
-				imageView!.topAnchor.constraint(equalTo: scrollView!.topAnchor)
-				])
+			scrollView?.display(image: image!)
 
 		} catch {
 			let alert = UIAlertController(with: "Error".localized, message: "Could not get the picture".localized, okLabel: "OK")
@@ -57,11 +37,10 @@ class ImageDisplayViewController : DisplayViewController {
 			}
 		}
 	}
-}
 
-extension ImageDisplayViewController: UIScrollViewDelegate {
-	func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-		return imageView
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		self.scrollView?.updateScaleForRotation(size: size)
 	}
 }
 
