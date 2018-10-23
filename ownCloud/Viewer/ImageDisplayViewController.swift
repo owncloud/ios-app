@@ -48,7 +48,7 @@ extension ImageDisplayViewController: DisplayExtension {
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		do {
 			let location = context!.location.identifier.rawValue
-			let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((image/))", options: .caseInsensitive)
+			let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((image/(?!(gif|svg*))))", options: .caseInsensitive)
 			let matches = supportedFormatsRegex.numberOfMatches(in: location, options: .reportCompletion, range: NSRange(location: 0, length: location.count))
 
 			if matches > 0 {

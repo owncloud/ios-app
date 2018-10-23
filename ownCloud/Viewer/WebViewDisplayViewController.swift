@@ -110,7 +110,7 @@ extension WebViewDisplayViewController: DisplayExtension {
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		do {
 			let location = context!.location.identifier.rawValue
-			let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/)|(video/)|(audio/)|(application/(vnd.|ms))(ms|openxmlformats)?)", options: .caseInsensitive)
+			let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/)|(video/(?!(x-flv|ogg|x-ms-wmv|x-msvideo)))|(audio/)|(image/(gif|svg))|(application/(vnd.|ms))(?!oasis)(ms|openxmlformats)?)", options: .caseInsensitive)
 			let matches = supportedFormatsRegex.numberOfMatches(in: location, options: .reportCompletion, range: NSRange(location: 0, length: location.count))
 
 			if matches > 0 {
