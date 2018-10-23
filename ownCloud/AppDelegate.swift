@@ -41,6 +41,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		AppLockManager.shared.showLockscreenIfNeeded()
 
+		application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum + 10)
+
+		Log.debug("Minimum fetch refresh time: \(UIApplicationBackgroundFetchIntervalMinimum)")
+
+		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
+
 		return true
 	}
 

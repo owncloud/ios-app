@@ -24,10 +24,13 @@ typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
 class ClientQueryViewController: UITableViewController, Themeable {
+
 	var core : OCCore?
 	var query : OCQuery?
 
 	var items : [OCItem]?
+
+	var selectedItem: OCItem?
 
 	var queryProgressSummary : ProgressSummary? {
 		willSet {
@@ -62,7 +65,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		query?.delegate = self
 
 		query?.addObserver(self, forKeyPath: "state", options: .initial, context: observerContext)
-		core?.addObserver(self, forKeyPath: "reachabilityMonitor.available", options: .initial, context: observerContext)
 
 		core?.start(query)
 
@@ -75,7 +77,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	deinit {
 		query?.removeObserver(self, forKeyPath: "state", context: observerContext)
-		core?.removeObserver(self, forKeyPath: "reachabilityMonitor.available", context: observerContext)
 
 		core?.stop(query)
 		Theme.shared.unregister(client: self)
@@ -274,35 +275,15 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 
 		switch rowItem.type {
-		case .collection:
-			self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
-		case .file:
-			let fallbackSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: "Downloading \(rowItem.name!)", progressCount: 1)
+			case .collection:
+				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
 
-			if let downloadProgress = self.core?.downloadItem(rowItem, options: nil, resultHandler: { (error, _, item, file) in
-				OnMainThread {
-					if error != nil {
-						// TODO: Handle error
-					} else {
-						let itemViewController : ClientItemViewController = ClientItemViewController()
-
-						itemViewController.file = file
-						itemViewController.item = item
-
-						self.navigationController?.pushViewController(itemViewController, animated: true)
-					}
-
-					self.progressSummarizer?.popFallbackSummary(summary: fallbackSummary)
-				}
-			}) {
-				Log.log("Downloading \(rowItem.name!): \(downloadProgress)")
-
-				progressSummarizer?.pushFallbackSummary(summary: fallbackSummary)
-
-				// TODO: Use progress as soon as it works SDK-wise
-				// progressSummarizer?.startTracking(progress: downloadProgress)
-			}
+			case .file:
+				let itemViewController = DisplayHostViewController(for: rowItem, with: core!)
+				self.navigationController?.pushViewController(itemViewController, animated: true)
 		}
+
+		tableView.deselectRow(at: indexPath, animated: true)
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -808,19 +789,6 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 				renameRow,
 				moveRow,
 				deleteRow
-//				StaticTableViewRow(label: "1"),
-//				StaticTableViewRow(label: "2"),
-//				StaticTableViewRow(label: "3"),
-//				StaticTableViewRow(label: "4"),
-//				StaticTableViewRow(label: "5"),
-//				StaticTableViewRow(label: "6"),
-//				StaticTableViewRow(label: "7"),
-//				StaticTableViewRow(label: "8"),
-//				StaticTableViewRow(label: "9"),
-//				StaticTableViewRow(label: "10"),
-//				StaticTableViewRow(label: "11"),
-//				StaticTableViewRow(label: "12"),
-//				StaticTableViewRow(label: "13")
 				]))
 
 			self.present(asCard: moreViewController, animated: true)
