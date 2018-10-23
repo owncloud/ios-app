@@ -33,6 +33,7 @@
 		5912E090216B8CBF00FA4A58 /* ownCloudMocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
 		5912E091216B8CBF00FA4A58 /* ownCloudMocking.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5917244D20D3DC2100809B38 /* BiometricalTests.swift */; };
+		5928A6D4217EF810005B2294 /* CreateBookmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5928A6D3217EF810005B2294 /* CreateBookmarkTests.swift */; };
 		593A821120C7D4C5000E2A90 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
 		593BAB46209AE1BC00023634 /* PasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593BAB44209AE1BC00023634 /* PasscodeViewController.swift */; };
 		593BAB47209AE1BC00023634 /* PasscodeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 593BAB45209AE1BC00023634 /* PasscodeViewController.xib */; };
@@ -363,6 +364,7 @@
 		23F6238020B587EF004FDE8B /* SortMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortMethod.swift; sourceTree = "<group>"; };
 		23FA23E520BFD3D8009A6D73 /* SortBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortBar.swift; sourceTree = "<group>"; };
 		5917244D20D3DC2100809B38 /* BiometricalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricalTests.swift; sourceTree = "<group>"; };
+		5928A6D3217EF810005B2294 /* CreateBookmarkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBookmarkTests.swift; sourceTree = "<group>"; };
 		593A821220C7D4C5000E2A90 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		593A821820C7D4DC000E2A90 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		593BAB44209AE1BC00023634 /* PasscodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeViewController.swift; sourceTree = "<group>"; };
@@ -601,6 +603,7 @@
 				D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */,
 				DC869A582153B1F60088977E /* OCMockingManagerSwiftExtension.swift */,
 				233BDEB6204FEFE500C06732 /* Info.plist */,
+				5928A6D2217EF7E5005B2294 /* Login */,
 				5917244820D3DB1F00809B38 /* Security */,
 			);
 			path = ownCloudTests;
@@ -676,6 +679,14 @@
 				5917244D20D3DC2100809B38 /* BiometricalTests.swift */,
 			);
 			path = Security;
+			sourceTree = "<group>";
+		};
+		5928A6D2217EF7E5005B2294 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				5928A6D3217EF810005B2294 /* CreateBookmarkTests.swift */,
+			);
+			path = Login;
 			sourceTree = "<group>";
 		};
 		593BAB3F209ADFB900023634 /* Passcode */ = {
@@ -1503,6 +1514,7 @@
 				6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */,
 				5958C9BE20C000A700E0E567 /* PasscodeTests.swift in Sources */,
 				5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */,
+				5928A6D4217EF810005B2294 /* CreateBookmarkTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
