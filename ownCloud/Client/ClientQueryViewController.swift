@@ -51,6 +51,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	private var observerContext : UnsafeMutableRawPointer
 	var refreshController: UIRefreshControl?
 
+	var interactionController: UIDocumentInteractionController?
+
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 		observerContext = UnsafeMutableRawPointer(&observerContextValue)

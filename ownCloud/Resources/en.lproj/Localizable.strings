@@ -192,6 +192,7 @@
 "Create folder" =" Create folder";
 "Duplicate" = "Duplicate";
 "Move" = "Move";
+"Open in" = "Open in";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";
