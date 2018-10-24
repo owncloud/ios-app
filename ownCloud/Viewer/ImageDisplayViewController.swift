@@ -11,6 +11,8 @@ import ownCloudSDK
 
 class ImageDisplayViewController : DisplayViewController {
 
+	private let MAX_ZOOM_DIVIDER: CGFloat = 3.0
+
 	// MARK: - Instance variables
 	var scrollView: ImageScrollView?
 	var imageView: UIImageView?
@@ -62,14 +64,10 @@ class ImageDisplayViewController : DisplayViewController {
 
 	// MARK: - Gesture recognizers actions.
 	@objc func tapToZoom() {
-		guard let scrollView = scrollView else {
-			return
-		}
-
-		if scrollView.zoomScale != scrollView.minimumZoomScale {
-			scrollView.setZoomScale(scrollView.minimumZoomScale, animated: true)
+		if scrollView!.zoomScale != scrollView!.minimumZoomScale {
+			scrollView!.setZoomScale(scrollView!.minimumZoomScale, animated: true)
 		} else {
-			scrollView.setZoomScale(scrollView.maximumZoomScale / 3, animated: true)
+			scrollView!.setZoomScale(scrollView!.maximumZoomScale / MAX_ZOOM_DIVIDER, animated: true)
 		}
 
 		setNeedsUpdateOfHomeIndicatorAutoHidden()
