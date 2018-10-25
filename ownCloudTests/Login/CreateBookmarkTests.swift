@@ -26,43 +26,42 @@ class CreateBookmarkTests: XCTestCase {
 		super.tearDown()
 	}
 
-	public typealias OCMPrepareForSetupCompletionHandler = @convention(block) () ->
-		(_ issue: OCConnectionIssue?, _ suggestedURL: NSURL?, _ supportedMethods: [OCAuthenticationMethodIdentifier]?, _ preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?) -> Void
+	public typealias OCMPrepareForSetupCompletionHandler = @convention(block)
+		(_ issue: OCConnectionIssue, _ suggestedURL: NSURL, _ supportedMethods: [OCAuthenticationMethodIdentifier], _ preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]) -> Void
 
-	public typealias OCMPrepareForSetup = @convention(block) () ->
+	public typealias OCMPrepareForSetup = @convention(block)
 		(_ options: NSDictionary, _ completionHandler: OCMPrepareForSetupCompletionHandler) -> Void
 
 	func testCheckURLServer () {
 
 		let mockUrlServer = "http://mocked.owncloud.server.com"
 
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-
-		let mockedBlock: OCMPrepareForSetupCompletionHandler = { return { (nil, _, _, _) in } }
-		let completionHandlerBlock : OCMPrepareForSetup = { return {(dict, mockedBlock) in }  }
+		let completionHandlerBlock : OCMPrepareForSetup = {
+			(dict, mockedBlock) in
+			let issue: OCConnectionIssue = OCConnectionIssue(forError: nil, level: .informal, issueHandler: nil)
+			let url: NSURL = NSURL(fileURLWithPath: mockUrlServer)
+			let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
+															 OCAuthenticationMethodOAuth2Identifier as NSString]
+			mockedBlock(issue, url, authMethods, authMethods)
+		}
 
 		OCMockManager.shared.addMocking(blocks:
 			[OCMockLocation.ocConnectionPrepareForSetupWithOptions: completionHandlerBlock])
 
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
 
+		let isPasscodeUnlocked = GREYCondition(name: "Wait for server is checked", block: {
+			var error: NSError?
 
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
 
+			return error == nil
+		}).wait(withTimeout: 5.0, pollInterval: 0.5)
 
-		/*let mockTest = OCMockTestClass()
+		//Assert
+		GREYAssertTrue(isPasscodeUnlocked, reason: "Failed check the server")
 
-		XCTAssert(OCMockTestClass.returnsTrue()==true)
-		XCTAssert(mockTest.returnsFalse()==false)
-
-		let returnTrueBlock : OCMockMockTestClassReturnsBool = {return false}
-		let returnFalseBlock : OCMockMockTestClassReturnsBool = {return true}
-
-		OCMockManager.shared.addMocking(blocks:
-			[OCMockLocation.mockTestClassReturnsTrue: returnTrueBlock,
-			 OCMockLocation.mockTestClassReturnsFalse: returnFalseBlock])
-
-		XCTAssert(OCMockTestClass.returnsTrue()==false)
-		XCTAssert(mockTest.returnsFalse()==true)*/
 	}
 }
