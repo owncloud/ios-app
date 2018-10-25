@@ -187,6 +187,10 @@
 		 }
 	}
 
+	completionHandler([NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{}]);
+
+	// ### Apple template comments: ###
+
 	// Should ensure that the actual file is in the position returned by URLForItemWithIdentifier:, then call the completion handler
 
 	/* TODO:
@@ -212,8 +216,6 @@
 	 }
 	 }
 	 */
-
-	completionHandler([NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{}]);
 }
 
 
@@ -236,6 +238,8 @@
 		 }
 	}
 
+	// ### Apple template comments: ###
+
 	// Called at some point after the file has changed; the provider may then trigger an upload
 
 	/* TODO:
@@ -248,23 +252,27 @@
 
 - (void)stopProvidingItemAtURL:(NSURL *)url
 {
+	// ### Apple template comments: ###
+
 	// Called after the last claim to the file has been released. At this point, it is safe for the file provider to remove the content file.
 
 	// TODO: look up whether the file has local changes
-//	BOOL fileHasLocalChanges = NO;
-//
-//	if (!fileHasLocalChanges) {
-//		// remove the existing file to free up space
-//		[[NSFileManager defaultManager] removeItemAtURL:url error:NULL];
-//
-//		// write out a placeholder to facilitate future property lookups
-//		[self providePlaceholderAtURL:url completionHandler:^(NSError * __nullable error) {
-//			// TODO: handle any error, do any necessary cleanup
-//		}];
-//	}
+	//	BOOL fileHasLocalChanges = NO;
+	//
+	//	if (!fileHasLocalChanges) {
+	//		// remove the existing file to free up space
+	//		[[NSFileManager defaultManager] removeItemAtURL:url error:NULL];
+	//
+	//		// write out a placeholder to facilitate future property lookups
+	//		[self providePlaceholderAtURL:url completionHandler:^(NSError * __nullable error) {
+	//			// TODO: handle any error, do any necessary cleanup
+	//		}];
+	//	}
 }
 
 #pragma mark - Actions
+
+// ### Apple template comments: ###
 
 /* TODO: implement the actions for items here
  each of the actions follows the same pattern:
@@ -391,6 +399,8 @@
 	}
 
 	return (nil);
+
+	// ### Apple template comments: ###
 
 	/*
 	FileProviderEnumerator *enumerator = nil;
