@@ -42,6 +42,8 @@ class DisplayViewController: UIViewController {
 
 	private let ICON_IMAGE_SIZE: CGSize = CGSize(width: 200.0, height: 200.0)
 
+	private var interactionController: UIDocumentInteractionController?
+
 	// MARK: - Configuration
 	weak var item: OCItem!
 	weak var core: OCCore! {
@@ -213,6 +215,7 @@ class DisplayViewController: UIViewController {
 		}
 
 		parent.navigationItem.title = item.name
+		parent.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
 	}
 
 	// MARK: - Download actions
@@ -306,6 +309,52 @@ class DisplayViewController: UIViewController {
 		self.cancelButton?.isHidden = true
 		self.noNetworkLabel?.isHidden = true
 		self.showPreviewButton?.isHidden = false
+	}
+
+	@objc func optionsBarButtonPressed() {
+		let tableViewController = MoreStaticTableViewController(style: .grouped)
+		let header = MoreViewHeader(for: item, with: core!)
+		let moreViewController = MoreViewController(item: item, core: core!, header: header, viewController: tableViewController)
+
+		let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
+
+		let openInRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+			if UIDevice.current.isIpad() {
+				self?.openInRow(self!.item, button: self!.parent!.navigationItem.rightBarButtonItem!)
+			} else {
+				self?.openInRow(self!.item)
+			}
+			moreViewController.dismiss(animated: true)
+			}, title: "Open in".localized, style: .plainNonOpaque)
+
+		tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [openInRow]))
+
+		self.present(asCard: moreViewController, animated: true)
+	}
+
+	// MARK: - Actions
+	func openInRow(_ item: OCItem, button: UIBarButtonItem? = nil) {
+
+		guard source != nil else {
+			return
+		}
+
+		OnMainThread {
+			self.interactionController = UIDocumentInteractionController(url: self.source)
+			self.interactionController?.delegate = self
+			if button != nil {
+				self.interactionController?.presentOptionsMenu(from: button!, animated: true)
+			} else {
+				self.interactionController?.presentOptionsMenu(from: .zero, in: self.view, animated: true)
+			}
+		}
+	}
+}
+
+// MARK: - UIDocumentInteractionControllerDelegate
+extension DisplayViewController: UIDocumentInteractionControllerDelegate {
+	func documentInteractionControllerDidDismissOpenInMenu(_ controller: UIDocumentInteractionController) {
+		self.interactionController = nil
 	}
 }
 
