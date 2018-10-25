@@ -47,15 +47,13 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 	var progressSummarizer : ProgressSummarizer?
 	var initialAppearance : Bool = true
-	private var observerContextValue = 1
-	private var observerContext : UnsafeMutableRawPointer
 	var refreshController: UIRefreshControl?
 
 	var interactionController: UIDocumentInteractionController?
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
-		observerContext = UnsafeMutableRawPointer(&observerContextValue)
+		super.init(style: .plain)
 
 		core = inCore
 		query = inQuery
@@ -66,9 +64,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		query.delegate = self
 
-		query.addObserver(self, forKeyPath: "state", options: .initial, context: observerContext)
-		core.addObserver(self, forKeyPath: "reachabilityMonitor.available", options: .initial, context: observerContext)
-
+		query.addObserver(self, forKeyPath: "state", options: .initial, context: nil)
 		core.start(query)
 
 		self.navigationItem.title = (query.queryPath as NSString?)!.lastPathComponent
@@ -79,8 +75,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	deinit {
-		query.removeObserver(self, forKeyPath: "state", context: observerContext)
-		core.removeObserver(self, forKeyPath: "reachabilityMonitor.available", context: observerContext)
+		query.removeObserver(self, forKeyPath: "state", context: nil)
 
 		core.stop(query)
 		Theme.shared.unregister(client: self)
