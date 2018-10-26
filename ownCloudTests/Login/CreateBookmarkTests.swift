@@ -15,6 +15,12 @@ import ownCloudMocking
 
 class CreateBookmarkTests: XCTestCase {
 
+	public typealias OCMPrepareForSetupCompletionHandler = @convention(block)
+		(_ issue: OCConnectionIssue, _ suggestedURL: NSURL, _ supportedMethods: [OCAuthenticationMethodIdentifier], _ preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]) -> Void
+
+	public typealias OCMPrepareForSetup = @convention(block)
+		(_ options: NSDictionary, _ completionHandler: OCMPrepareForSetupCompletionHandler) -> Void
+
 	override func setUp() {
 		super.setUp()
 		// Put setup code here. This method is called before the invocation of each test method in the class.
@@ -26,16 +32,11 @@ class CreateBookmarkTests: XCTestCase {
 		super.tearDown()
 	}
 
-	public typealias OCMPrepareForSetupCompletionHandler = @convention(block)
-		(_ issue: OCConnectionIssue, _ suggestedURL: NSURL, _ supportedMethods: [OCAuthenticationMethodIdentifier], _ preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]) -> Void
-
-	public typealias OCMPrepareForSetup = @convention(block)
-		(_ options: NSDictionary, _ completionHandler: OCMPrepareForSetupCompletionHandler) -> Void
-
 	func testCheckURLServer () {
 
 		let mockUrlServer = "http://mocked.owncloud.server.com"
 
+		//Mock
 		let completionHandlerBlock : OCMPrepareForSetup = {
 			(dict, mockedBlock) in
 			let issue: OCConnectionIssue = OCConnectionIssue(forError: nil, level: .informal, issueHandler: nil)
@@ -48,20 +49,23 @@ class CreateBookmarkTests: XCTestCase {
 		OCMockManager.shared.addMocking(blocks:
 			[OCMockLocation.ocConnectionPrepareForSetupWithOptions: completionHandlerBlock])
 
+		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
 
-		let isPasscodeUnlocked = GREYCondition(name: "Wait for server is checked", block: {
+		//Assert
+		let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
 			var error: NSError?
 
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible(), error: &error)
 
 			return error == nil
 		}).wait(withTimeout: 5.0, pollInterval: 0.5)
 
-		//Assert
-		GREYAssertTrue(isPasscodeUnlocked, reason: "Failed check the server")
+		GREYAssertTrue(isServerChecked, reason: "Failed check the server")
 
 	}
 }
