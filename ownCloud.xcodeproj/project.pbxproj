@@ -98,6 +98,7 @@
 		DC7DBA2B207F71E400E7337D /* VectorImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA2A207F71E400E7337D /* VectorImageView.swift */; };
 		DC7DBA37207F84BF00E7337D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA36207F84BF00E7337D /* main.swift */; };
 		DC7DBA54207FA80C00E7337D /* TVGImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA53207FA80C00E7337D /* TVGImage.swift */; };
+		DC85493421831B0B00782BA8 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85493321831B0B00782BA8 /* Tools.swift */; };
 		DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */; };
 		DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */; };
 		DC85980620D85EE600A433C6 /* AsyncSequentialQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85980120D85EE500A433C6 /* AsyncSequentialQueue.swift */; };
@@ -433,6 +434,7 @@
 		DC7DBA36207F84BF00E7337D /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		DC7DBA52207F8BD600E7337D /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; path = img; sourceTree = SOURCE_ROOT; };
 		DC7DBA53207FA80C00E7337D /* TVGImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVGImage.swift; sourceTree = "<group>"; };
+		DC85493321831B0B00782BA8 /* Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
 		DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableViewController.swift; sourceTree = "<group>"; };
 		DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServerListTableViewController.xib; sourceTree = "<group>"; };
 		DC85980120D85EE500A433C6 /* AsyncSequentialQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncSequentialQueue.swift; sourceTree = "<group>"; };
@@ -1019,6 +1021,7 @@
 				DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */,
 				23E22BB220C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift */,
 				DC85980120D85EE500A433C6 /* AsyncSequentialQueue.swift */,
+				DC85493321831B0B00782BA8 /* Tools.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -1486,6 +1489,7 @@
 				DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */,
 				232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */,
 				593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */,
+				DC85493421831B0B00782BA8 /* Tools.swift in Sources */,
 				DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */,
 				23E22BB720C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
 				23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */,
