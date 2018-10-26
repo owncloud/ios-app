@@ -176,6 +176,7 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         parent?.navigationController?.hidesBarsOnTap = true
+        adjustThumbnailsSize()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
