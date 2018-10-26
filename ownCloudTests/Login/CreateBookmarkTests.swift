@@ -67,5 +67,7 @@ class CreateBookmarkTests: XCTestCase {
 
 		GREYAssertTrue(isServerChecked, reason: "Failed check the server")
 
+		//Reset status
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
 	}
 }
