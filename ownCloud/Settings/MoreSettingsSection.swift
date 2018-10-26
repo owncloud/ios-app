@@ -42,7 +42,7 @@ class MoreSettingsSection: SettingsSection {
 	}
 
 	var lastGitCommit: String {
-		if let gitCommit = Bundle.main.object(forInfoDictionaryKey: "LastGitCommit") as? String {
+		if let gitCommit = LastGitCommit() {
 			return gitCommit
 		}
 
@@ -60,7 +60,7 @@ class MoreSettingsSection: SettingsSection {
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
 		self.headerTitle = "More".localized
-		self.footerTitle = "ownCloud beta version \(appVersion) build \(appBuildNumber) (\(lastGitCommit))"
+		self.footerTitle = "\(OCAppIdentity.shared.appName!) beta version \(appVersion) build \(appBuildNumber) (\(lastGitCommit))"
 
 		self.identifier = "settings-more-section"
 
@@ -104,7 +104,7 @@ class MoreSettingsSection: SettingsSection {
 
 					textViewController.title = "Acknowledgements".localized
 
-					if licenses != nil, context != nil {
+					if licenses != nil {
 						for licenseExtensionMatch in licenses! {
 							let extensionObject = licenseExtensionMatch.extension.provideObject(for: context)
 

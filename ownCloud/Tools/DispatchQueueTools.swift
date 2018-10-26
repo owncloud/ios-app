@@ -25,3 +25,7 @@ func OnMainThread(async: Bool = true, _ block: @escaping () -> Void) {
 		DispatchQueue.main.sync(execute: block)
 	}
 }
+
+func LastGitCommit() -> String? {
+	return Bundle.main.object(forInfoDictionaryKey: "LastGitCommit") as? String
+}
