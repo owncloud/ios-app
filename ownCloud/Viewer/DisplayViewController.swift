@@ -335,12 +335,20 @@ class DisplayViewController: UIViewController {
 	// MARK: - Actions
 	func openInRow(_ item: OCItem, button: UIBarButtonItem? = nil) {
 
-		guard source != nil else {
-			return
+		if source == nil {
+			core.downloadItem(item, options: nil) { (error, _, _, file) in
+				if error == nil {
+					self.openDocumentInteractionController(with: file!.url, button: button)
+				}
+			}
+		} else {
+			openDocumentInteractionController(with: source, button: button)
 		}
+	}
 
+	private func openDocumentInteractionController(with source: URL, button: UIBarButtonItem?) {
 		OnMainThread {
-			self.interactionController = UIDocumentInteractionController(url: self.source)
+			self.interactionController = UIDocumentInteractionController(url: source)
 			self.interactionController?.delegate = self
 			if button != nil {
 				self.interactionController?.presentOptionsMenu(from: button!, animated: true)
