@@ -99,6 +99,7 @@
 		DC7DBA37207F84BF00E7337D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA36207F84BF00E7337D /* main.swift */; };
 		DC7DBA54207FA80C00E7337D /* TVGImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA53207FA80C00E7337D /* TVGImage.swift */; };
 		DC85493421831B0B00782BA8 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85493321831B0B00782BA8 /* Tools.swift */; };
+		DC854936218331CF00782BA8 /* ThemeSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC854935218331CF00782BA8 /* ThemeSettingsSection.swift */; };
 		DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */; };
 		DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */; };
 		DC85980620D85EE600A433C6 /* AsyncSequentialQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85980120D85EE500A433C6 /* AsyncSequentialQueue.swift */; };
@@ -143,7 +144,6 @@
 		DCF4F17920519F8C00189B9A /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */; };
 		DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */; };
 		DCF4F17F2051A0D000189B9A /* StaticTableViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */; };
-		DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */; };
 		DCF4F18B2052BA4C00189B9A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F18A2052BA4C00189B9A /* Log.swift */; };
 		DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFED971208095E200A2D984 /* ClientItemCell.swift */; };
 		DCFED9BA20809B8900A2D984 /* ThemeTVGResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */; };
@@ -435,6 +435,7 @@
 		DC7DBA52207F8BD600E7337D /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; path = img; sourceTree = SOURCE_ROOT; };
 		DC7DBA53207FA80C00E7337D /* TVGImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVGImage.swift; sourceTree = "<group>"; };
 		DC85493321831B0B00782BA8 /* Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
+		DC854935218331CF00782BA8 /* ThemeSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeSettingsSection.swift; sourceTree = "<group>"; };
 		DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableViewController.swift; sourceTree = "<group>"; };
 		DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServerListTableViewController.xib; sourceTree = "<group>"; };
 		DC85980120D85EE500A433C6 /* AsyncSequentialQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncSequentialQueue.swift; sourceTree = "<group>"; };
@@ -1002,6 +1003,7 @@
 			children = (
 				6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */,
 				233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */,
+				DC854935218331CF00782BA8 /* ThemeSettingsSection.swift */,
 				232F7CAC2097140300EE22E4 /* UploadsSettingsSection.swift */,
 				23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */,
 				DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */,
@@ -1466,6 +1468,7 @@
 				DC4FEAEA209E48E800D4476B /* DispatchQueueTools.swift in Sources */,
 				DC1B2708209CF0D3004715E1 /* IssuesPresentationAnimator.swift in Sources */,
 				DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */,
+				DC854936218331CF00782BA8 /* ThemeSettingsSection.swift in Sources */,
 				DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */,
 				DC248C67213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift in Sources */,
 				DC136582208223F000FC0F60 /* OCBookmark+Extension.swift in Sources */,
@@ -1486,7 +1489,6 @@
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
 				236735A621217C3500E5834A /* MoreViewController.swift in Sources */,
 				23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */,
-				DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */,
 				232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */,
 				593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */,
 				DC85493421831B0B00782BA8 /* Tools.swift in Sources */,

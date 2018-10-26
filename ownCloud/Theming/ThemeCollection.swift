@@ -59,10 +59,18 @@ class ThemeColorCollection : NSObject {
 	}
 }
 
-enum ThemeCollectionStyle {
+enum ThemeCollectionStyle : String {
 	case dark
 	case light
 	case contrast
+
+	var name : String {
+		switch self {
+			case .dark:	return "Dark".localized
+			case .light:	return "Light".localized
+			case .contrast:	return "Contrast".localized
+		}
+	}
 }
 
 class ThemeCollection : NSObject {

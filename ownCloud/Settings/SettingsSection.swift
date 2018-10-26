@@ -20,9 +20,9 @@ import Foundation
 
 class SettingsSection: StaticTableViewSection {
 
-    internal var userDefaults: UserDefaults
-
-    init(userDefaults: UserDefaults) {
-        self.userDefaults = userDefaults
-    }
+	internal var userDefaults: UserDefaults
+	
+	init(userDefaults: UserDefaults) {
+		self.userDefaults = userDefaults
+	}
 }

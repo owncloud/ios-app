@@ -211,6 +211,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		var themeStyle : ThemeCollectionStyle?
 		let darkColor = UIColor(hex: 0x1D293B)
 		let lightColor = UIColor(hex: 0x468CC8)
+		let themeStyles : [ThemeCollectionStyle] = [ .dark, .light, .contrast ]
 
 		themeCounter += 1
 
@@ -222,12 +223,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 		*/
 
-		switch themeCounter % 3 {
-			case 0:	themeStyle = .dark
-			case 1:	themeStyle = .light
-			case 2:	themeStyle = .contrast
-			default: break
-		}
+		themeStyle = themeStyles[themeCounter % 3]
 
 		UIView.animate(withDuration: 0.25) {
 			CATransaction.begin()
@@ -238,9 +234,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	@IBAction func settings() {
-//        let viewController : GlobalSettingsViewController = GlobalSettingsViewController(style: UITableViewStyle.grouped)
-
-        let viewController : SettingsViewController = SettingsViewController(style: .grouped)
+        	let viewController : SettingsViewController = SettingsViewController(style: .grouped)
 
 		self.navigationController?.pushViewController(viewController, animated: true)
 	}
