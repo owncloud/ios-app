@@ -118,6 +118,16 @@
 	return ((self.syncActivity & OCItemSyncActivityUploading) == OCItemSyncActivityUploading);
 }
 
+- (BOOL)isUploaded
+{
+	if (![self isUploading])
+	{
+		return (!self.locallyModified);
+	}
+
+	return (NO);
+}
+
 - (BOOL)isMostRecentVersionDownloaded
 {
 	if ((self.localRelativePath != nil) && (self.remoteItem == nil))
