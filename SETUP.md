@@ -95,11 +95,11 @@ docker run --rm -d \
   -e ADMIN_PASSWORD=admin \
   owncloud/server:latest
 ```
-3. Access from local browser:  
+3. Access from local Mac browser or Simulator:  
  http://localhost/  
  user: admin  
  password: admin
-4. In the mobile app you can use the IP of your machine as the Server URL
+4. To test the  app on a iOs device in your local network, you can use the IP of your machine as the Server URL
 5. To remove the ownCloud Docker, just run `docker kill owncloud`
 
 Here you can find more information about running ownCloud with Docker:
