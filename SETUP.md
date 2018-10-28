@@ -79,3 +79,28 @@ Please submit translations via [Transifex][transifex].
 [1]: https://owncloud.org/about/contributor-agreement/
 [2]: http://opensource.org/licenses/MIT
 [3]: https://owncloud.org/contribute/iOS-license-exception/
+
+## Local ownCloud server for testing
+
+You can easily fire up an ownCloud server on your Ma using Docker.
+
+1. [Install Docker](https://docs.docker.com/docker-for-mac/)
+2. Run this in Terminal.app to start ownCloud with Docker
+```
+docker run --rm -d \
+  --name owncloud \
+  -p 80:8080 \
+  -e OWNCLOUD_APPS_INSTALL=oauth2 \
+  -e ADMIN_USERNAME=admin \
+  -e ADMIN_PASSWORD=admin \
+  owncloud/server:latest
+```
+3. Access from local browser:  
+ http://localhost/  
+ user: admin  
+ password: admin
+4. In the mobile app you can use the IP of your machine as the Server URL
+5. To remove the ownCloud Docker, just run `docker kill owncloud`
+
+Here you can find more information about running ownCloud with Docker:
+https://github.com/owncloud-docker/server
