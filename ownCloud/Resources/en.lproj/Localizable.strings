@@ -150,3 +150,9 @@
 "There is no network" = "There is no network";
 "Error" = "Error";
 "Could not get the picture" = "Could not get the picture";
+
+/* PDF Viewer */
+"Resume" = "Resume";
+"Go to page" = "Go to page";
+"Page" = "Page";
+"This document has %@ pages" = "This document has %@ pages";
