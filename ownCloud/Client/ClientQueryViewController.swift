@@ -663,7 +663,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				completionHandler?(true)
 			}
 		}) {
-			self.progressSummarizer?.startTracking(progress: progress)
+			OnMainThread {
+				controller.present(on: self)
+				controller.attach(progress: progress)
+			}
 		}
 	}
 

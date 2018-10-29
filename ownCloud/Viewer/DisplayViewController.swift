@@ -336,9 +336,19 @@ class DisplayViewController: UIViewController {
 	func openInRow(_ item: OCItem, button: UIBarButtonItem? = nil) {
 
 		if source == nil {
-			core.downloadItem(item, options: nil) { (error, _, _, file) in
+			let controller = DownloadFileProgressHUDViewController(with: nil)
+
+			if let progress = core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
 				if error == nil {
-					self.openDocumentInteractionController(with: file!.url, button: button)
+					self.source = file!.url
+					controller.dismiss(animated: true, completion: {
+						self.openDocumentInteractionController(with: file!.url, button: button)
+					})
+				}
+			}) {
+				OnMainThread {
+					controller.present(on: self)
+					controller.attach(progress: progress)
 				}
 			}
 		} else {
