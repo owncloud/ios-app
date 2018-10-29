@@ -34,8 +34,6 @@ class ImageScrollView: UIScrollView {
 		showsHorizontalScrollIndicator = false
 		decelerationRate = UIScrollViewDecelerationRateFast
 		delegate = self
-		bounces = false
-		bouncesZoom = false
 		backgroundColor = .black
 		maximumZoomScale = MAXIMUM_ZOOM_SCALE
 	}

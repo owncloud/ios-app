@@ -87,6 +87,13 @@ class DisplayHostViewController: UIViewController {
 		navigationController?.tabBarController?.tabBar.isHidden = false
 	}
 
+	override func childViewControllerForHomeIndicatorAutoHidden() -> UIViewController? {
+		if let childViewController = self.childViewControllers.first {
+			return childViewController
+		}
+		return nil
+	}
+
 	// MARK: - Host Actions
 	private func selectDisplayViewControllerBasedOn(mimeType: String) -> (DisplayViewController) {
 
