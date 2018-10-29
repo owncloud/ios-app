@@ -17,7 +17,6 @@
  */
 
 import UIKit
-import ownCloudSDK
 
 enum ThemeEvent {
 	case initial
@@ -62,8 +61,6 @@ class Theme: NSObject {
 	// MARK: - Shared instance
 	static var shared : Theme = {
 		let sharedInstance = Theme()
-
-		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.PocketSVG", bundleOf: Theme.self, title: "PocketSVG", resourceName: "PocketSVG", fileExtension: "LICENSE"))
 
 		return (sharedInstance)
 	}()

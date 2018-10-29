@@ -7,14 +7,14 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
 import UIKit
 import LocalAuthentication
@@ -22,278 +22,244 @@ import ownCloudSDK
 
 // MARK: - SecurityAskfrequency
 @objc enum SecurityAskFrequency: Int {
-	case always = 0
-	case oneMinute = 60
-	case fiveMinutes = 300
-	case thirtyMinutes = 1800
+    case always = 0
+    case oneMinute = 60
+    case fiveMinutes = 300
+    case thirtyMinutes = 1800
 
-	static let all = [always, oneMinute, fiveMinutes, thirtyMinutes]
+    static let all = [always, oneMinute, fiveMinutes, thirtyMinutes]
 
-	func toString() -> String {
-		switch self {
-		case .always:
-			return "Always".localized
-		case .oneMinute:
-			return "After 1 minute".localized
-		case .fiveMinutes:
-			return "After 5 minutes".localized
-		case .thirtyMinutes:
-			return "After 30 minutes".localized
-		}
-	}
+    func toString() -> String {
+        switch self {
+        case .always:
+            return "Always".localized
+        case .oneMinute:
+            return "After 1 minute".localized
+        case .fiveMinutes:
+            return "After 5 minutes".localized
+        case .thirtyMinutes:
+            return "After 30 minutes".localized
+        }
+    }
 }
 
 class SecuritySettingsSection: SettingsSection {
 
-	var frequency: SecurityAskFrequency {
-		get {
-			return SecurityAskFrequency.init(rawValue: AppLockManager.shared.lockDelay) ?? .always
-		}
-		set(newValue) {
-			AppLockManager.shared.lockDelay = newValue.rawValue
-		}
-	}
+    var frequency: SecurityAskFrequency {
+        get {
+            return SecurityAskFrequency.init(rawValue: AppLockManager.shared.lockDelay) ?? .always
+        }
+        set(newValue) {
+            AppLockManager.shared.lockDelay = newValue.rawValue
+        }
+    }
 
-	var isPasscodeSecurityEnabled: Bool {
-		get {
-			return AppLockManager.shared.lockEnabled
-		}
-		set(newValue) {
-			AppLockManager.shared.lockEnabled = newValue
-			updateUI()
-		}
-	}
-	var isBiometricalSecurityEnabled: Bool {
-		get {
-			return AppLockManager.shared.biometricalSecurityEnabled
-		}
-		set(newValue) {
-			AppLockManager.shared.biometricalSecurityEnabled = newValue
-		}
-	}
+    var isPasscodeSecurityEnabled: Bool {
+        get {
+            return AppLockManager.shared.lockEnabled
+        }
+        set(newValue) {
+            AppLockManager.shared.lockEnabled = newValue
+            updateUI()
+        }
+    }
+    var isBiometricalSecurityEnabled: Bool {
+        get {
+            return AppLockManager.shared.biometricalSecurityEnabled
+        }
+        set(newValue) {
+            AppLockManager.shared.biometricalSecurityEnabled = newValue
+        }
+    }
 
-	private var passcodeFromFirstStep: String?
+    private var passcodeFromFirstStep: String?
 
-	// MARK: - Passcode Settings Cells
+    // MARK: - Upload Settings Cells
 
-	private var frequencyRow: StaticTableViewRow?
-	private var passcodeRow: StaticTableViewRow?
-	private var biometricalRow: StaticTableViewRow?
-	private var certificateManagementRow: StaticTableViewRow?
+    private var frequencyRow: StaticTableViewRow?
+    private var passcodeRow: StaticTableViewRow?
+    private var biometricalRow: StaticTableViewRow?
 
-	override init(userDefaults: UserDefaults) {
-		super.init(userDefaults: userDefaults)
+    override init(userDefaults: UserDefaults) {
+        super.init(userDefaults: userDefaults)
 
-		self.headerTitle = "Security".localized
-		self.identifier = "settings-security-section"
+        self.headerTitle = "Security".localized
+        self.identifier = "settings-security-section"
 
-		createRows()
-		updateUI()
+        createRows()
+        updateUI()
+    }
 
-		NotificationCenter.default.addObserver(self, selector: #selector(_updateUI), name: NSNotification.Name.OCCertificateUserAcceptanceDidChange, object: nil)
-	}
+    // MARK: - Creation of the rows.
+    func createRows() {
 
-	deinit {
-    		NotificationCenter.default.removeObserver(self, name: NSNotification.Name.OCCertificateUserAcceptanceDidChange, object: nil)
-	}
+        // Creation of the frequency row.
+        frequencyRow = StaticTableViewRow(subtitleRowWithAction: { (row, _) in
+            if let vc = self.viewController {
 
-	// MARK: - Creation of the rows.
-	func createRows() {
+                let newVC = StaticTableViewController(style: .grouped)
+                let frequencySection = StaticTableViewSection(headerTitle: "Lock application".localized, footerTitle: nil)
 
-		// Creation of the frequency row.
-		frequencyRow = StaticTableViewRow(subtitleRowWithAction: { (row, _) in
-			if let vc = self.viewController {
+                var radioButtons: [[String : Any]] = []
 
-				let newVC = StaticTableViewController(style: .grouped)
-				let frequencySection = StaticTableViewSection(headerTitle: "Lock application".localized, footerTitle: nil)
+                for frequency in SecurityAskFrequency.all {
+                    radioButtons.append([frequency.toString() : frequency.rawValue])
+                }
 
-				var radioButtons: [[String : Any]] = []
+                frequencySection.add(radioGroupWithArrayOfLabelValueDictionaries: radioButtons, radioAction: { (row, _) in
+                    if let rawFrequency = row.value! as? Int, let frequency = SecurityAskFrequency.init(rawValue: rawFrequency) {
+                        self.frequency = frequency
+                        self.frequencyRow?.cell?.detailTextLabel?.text = frequency.toString()
+                    }
+                }, groupIdentifier: "frequency-group-identifier", selectedValue: self.frequency.rawValue, animated: true)
 
-				for frequency in SecurityAskFrequency.all {
-					radioButtons.append([frequency.toString() : frequency.rawValue])
-				}
+                newVC.addSection(frequencySection)
+                vc.navigationController?.pushViewController(newVC, animated: true)
+            }
 
-				frequencySection.add(radioGroupWithArrayOfLabelValueDictionaries: radioButtons, radioAction: { (row, _) in
-					if let rawFrequency = row.value! as? Int, let frequency = SecurityAskFrequency.init(rawValue: rawFrequency) {
-						self.frequency = frequency
-						self.frequencyRow?.cell?.detailTextLabel?.text = frequency.toString()
-					}
-				}, groupIdentifier: "frequency-group-identifier", selectedValue: self.frequency.rawValue, animated: true)
+        }, title: "Lock application".localized, subtitle: frequency.toString(), accessoryType: .disclosureIndicator, identifier: "lockFrequency")
 
-				newVC.addSection(frequencySection)
-				vc.navigationController?.pushViewController(newVC, animated: true)
-			}
+        // Creation of the passcode row.
+        passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+            if let passcodeSwitch = sender as? UISwitch {
+                if let viewController = self.viewController {
 
-		}, title: "Lock application".localized, subtitle: frequency.toString(), accessoryType: .disclosureIndicator)
+                    var passcodeViewController: PasscodeViewController?
+                    var defaultMessage : String?
 
-		// Creation of the passcode row.
-		passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
-			if let passcodeSwitch = sender as? UISwitch {
-				if let viewController = self.viewController {
+                    // Handlers
+                    let cancelHandler:PasscodeViewControllerCancelHandler = { (passcodeViewController: PasscodeViewController) in
+                        passcodeViewController.dismiss(animated: true, completion: {
+                            self.isPasscodeSecurityEnabled = !passcodeSwitch.isOn
+                        })
+                        self.passcodeFromFirstStep = nil
+                    }
 
-					var passcodeViewController: PasscodeViewController?
-					var defaultMessage : String?
+                    if passcodeSwitch.isOn {
+                        defaultMessage = "Enter code".localized
+                    } else {
+                        defaultMessage = "Delete code".localized
+                    }
 
-					// Handlers
-					let cancelHandler:PasscodeViewControllerCancelHandler = { (passcodeViewController: PasscodeViewController) in
-						passcodeViewController.dismiss(animated: true, completion: {
-							self.isPasscodeSecurityEnabled = !passcodeSwitch.isOn
-						})
-						self.passcodeFromFirstStep = nil
-					}
+                    passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, completionHandler: { (passcodeViewController: PasscodeViewController, passcode: String) in
+                        if !passcodeSwitch.isOn {
+                            // Delete
+                            if passcode == AppLockManager.shared.passcode {
+                                // Success
+                                AppLockManager.shared.passcode = nil
+                                passcodeViewController.dismiss(animated: true, completion: {
+                                    self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
+                                    self.updateUI()
+                                })
+                            } else {
+                                // Error
+                                passcodeViewController.message = defaultMessage
+                                passcodeViewController.errorMessage = "Incorrect code".localized
+                                passcodeViewController.passcode = nil
+                            }
+                        } else {
+                            // Add
+                            if self.passcodeFromFirstStep == nil {
+                                // First step
+                                self.passcodeFromFirstStep = passcode
+                                passcodeViewController.message = "Repeat code".localized
+                                passcodeViewController.passcode = nil
+                            } else {
+                                // Second step
+                                if self.passcodeFromFirstStep == passcode {
+                                    // Passcode right
+                                    // Save to keychain
+                                    AppLockManager.shared.passcode = passcode
+                                    passcodeViewController.dismiss(animated: true, completion: {
+                                        self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
+                                        self.updateUI()
+                                    })
+                                } else {
+                                    //Passcode is not the same
+                                    passcodeViewController.message = defaultMessage
+                                    passcodeViewController.errorMessage = "The entered codes are different".localized
+                                    passcodeViewController.passcode = nil
+                                }
+                                self.passcodeFromFirstStep = nil
+                            }
+                        }
+                    })
 
-					if passcodeSwitch.isOn {
-						defaultMessage = "Enter code".localized
-					} else {
-						defaultMessage = "Delete code".localized
-					}
+                    passcodeViewController?.message = defaultMessage
+                    viewController.present(passcodeViewController!, animated: true, completion: nil)
+                }
+            }
+        }, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled, identifier: "passcodeSwitchIdentifier")
 
-					passcodeViewController = PasscodeViewController(cancelHandler: cancelHandler, completionHandler: { (passcodeViewController: PasscodeViewController, passcode: String) in
-						if !passcodeSwitch.isOn {
-							// Delete
-							if passcode == AppLockManager.shared.passcode {
-								// Success
-								AppLockManager.shared.passcode = nil
-								passcodeViewController.dismiss(animated: true, completion: {
-									self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
-									self.updateUI()
-								})
-							} else {
-								// Error
-								passcodeViewController.message = defaultMessage
-								passcodeViewController.errorMessage = "Incorrect code".localized
-								passcodeViewController.passcode = nil
-							}
-						} else {
-							// Add
-							if self.passcodeFromFirstStep == nil {
-								// First step
-								self.passcodeFromFirstStep = passcode
-								passcodeViewController.message = "Repeat code".localized
-								passcodeViewController.passcode = nil
-							} else {
-								// Second step
-								if self.passcodeFromFirstStep == passcode {
-									// Passcode right
-									// Save to keychain
-									AppLockManager.shared.passcode = passcode
-									passcodeViewController.dismiss(animated: true, completion: {
-										self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
-										self.updateUI()
-									})
-								} else {
-									//Passcode is not the same
-									passcodeViewController.message = defaultMessage
-									passcodeViewController.errorMessage = "The entered codes are different".localized
-									passcodeViewController.passcode = nil
-								}
-								self.passcodeFromFirstStep = nil
-							}
-						}
-					})
+        // Creation of the biometrical row.
+        if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
+            // Creation of the biometrical row.
+            biometricalRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+                if let biometricalSwitch = sender as? UISwitch {
+                    if let viewController = self.viewController {
+                        var passcodeViewController: PasscodeViewController?
 
-					passcodeViewController?.message = defaultMessage
-					viewController.present(passcodeViewController!, animated: true, completion: nil)
-				}
-			}
-		}, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled)
+                        passcodeViewController = PasscodeViewController(cancelHandler: { (passcodeViewController: PasscodeViewController) in
+                            passcodeViewController.dismiss(animated: true, completion: {
+                                biometricalSwitch.setOn(self.isBiometricalSecurityEnabled, animated: true)
+                            })
+                        }, completionHandler: { (passcodeViewController: PasscodeViewController, passcode: String) in
+                            if passcode == AppLockManager.shared.passcode {
+                                // Success
+                                passcodeViewController.dismiss(animated: true, completion: {
+                                    self.isBiometricalSecurityEnabled = biometricalSwitch.isOn
+                                })
+                            } else {
+                                // Error
+                                passcodeViewController.errorMessage = "Incorrect code".localized
+                                passcodeViewController.passcode = nil
+                            }
+                        })
 
-		// Creation of the biometrical row.
-		if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
-			// Creation of the biometrical row.
-			biometricalRow = StaticTableViewRow(switchWithAction: { (_, sender) in
-				if let biometricalSwitch = sender as? UISwitch {
-					if let viewController = self.viewController {
-						var passcodeViewController: PasscodeViewController?
+                        passcodeViewController?.message = "Enter code".localized
+                        viewController.present(passcodeViewController!, animated: true, completion: nil)
+                    }
+                }
+	     }, title: biometricalSecurityName, value: isBiometricalSecurityEnabled, identifier: "BiometricalSwitch")
+        }
+    }
 
-						passcodeViewController = PasscodeViewController(cancelHandler: { (passcodeViewController: PasscodeViewController) in
-							passcodeViewController.dismiss(animated: true, completion: {
-								biometricalSwitch.setOn(self.isBiometricalSecurityEnabled, animated: true)
-							})
-						}, completionHandler: { (passcodeViewController: PasscodeViewController, passcode: String) in
-							if passcode == AppLockManager.shared.passcode {
-								// Success
-								passcodeViewController.dismiss(animated: true, completion: {
-									self.isBiometricalSecurityEnabled = biometricalSwitch.isOn
-								})
-							} else {
-								// Error
-								passcodeViewController.errorMessage = "Incorrect code".localized
-								passcodeViewController.passcode = nil
-							}
-						})
+    // MARK: - Update UI
+    func updateUI() {
 
-						passcodeViewController?.message = "Enter code".localized
-						viewController.present(passcodeViewController!, animated: true, completion: nil)
-					}
-				}
-			}, title: biometricalSecurityName, value: isBiometricalSecurityEnabled)
-		}
+        if !rows.contains(passcodeRow!) {
+            add(row: passcodeRow!)
+        }
 
-		// Creation of certificate management row
-		certificateManagementRow = StaticTableViewRow(rowWithAction: { (row, _) in
-			let certificateManagementViewController = CertificateManagementViewController(style: UITableViewStyle.grouped)
+        if isPasscodeSecurityEnabled {
 
-			row.viewController?.navigationController?.pushViewController(certificateManagementViewController, animated: true)
-		}, title: "Certificates".localized, accessoryType: .disclosureIndicator)
-	}
+            var rowsToAdd: [StaticTableViewRow] = []
 
-	// MARK: - Update UI
-	@objc func _updateUI() {
-		OnMainThread {
-			self.updateUI()
-		}
-	}
+            if !rows.contains(frequencyRow!) {
+                rowsToAdd.append(frequencyRow!)
+            }
 
-	@objc func updateUI() {
-		var rowsToAdd: [StaticTableViewRow] = []
-		var rowsToRemove: [StaticTableViewRow] = []
+            if biometricalRow != nil, !rows.contains(biometricalRow!) {
+                rowsToAdd.append(biometricalRow!)
+            }
 
-		if !rows.contains(passcodeRow!) {
-			rowsToAdd.append(passcodeRow!)
-		}
+            add(rows: rowsToAdd, animated: true)
+        } else {
 
-		if isPasscodeSecurityEnabled {
-			if !rows.contains(frequencyRow!) {
-				rowsToAdd.append(frequencyRow!)
-			}
+            var rowsToRemove: [StaticTableViewRow] = []
+            frequencyRow?.cell?.detailTextLabel?.text = SecurityAskFrequency.always.toString()
+            frequency = .always
 
-			if biometricalRow != nil, !rows.contains(biometricalRow!) {
-				rowsToAdd.append(biometricalRow!)
-			}
-		} else {
+            rowsToRemove.append(frequencyRow!)
 
-			frequencyRow?.cell?.detailTextLabel?.text = SecurityAskFrequency.always.toString()
-			frequency = .always
+            if biometricalRow != nil {
+                biometricalRow?.value = false
+                rowsToRemove.append(biometricalRow!)
+            }
 
-			rowsToRemove.append(frequencyRow!)
+            remove(rows: rowsToRemove, animated: true)
+        }
 
-			if biometricalRow != nil {
-				biometricalRow?.value = false
-				rowsToRemove.append(biometricalRow!)
-			}
-		}
-
-		if OCCertificate.userAcceptedCertificates.count > 0 {
-			if !rows.contains(certificateManagementRow!) {
-				rowsToAdd.append(certificateManagementRow!)
-			}
-		} else {
-			if rows.contains(certificateManagementRow!) {
-				rowsToRemove.append(certificateManagementRow!)
-			}
-		}
-
-		if (rowsToAdd.count > 0) || (rowsToRemove.count > 0) {
-			if rowsToRemove.count > 0 {
-				self.remove(rows: rowsToRemove, animated: true)
-			}
-
-			if rowsToAdd.count > 0 {
-				self.add(rows: rowsToAdd, animated: true)
-			}
-		}
-
-		passcodeRow?.value = isPasscodeSecurityEnabled
-	}
+        passcodeRow?.value = isPasscodeSecurityEnabled
+    }
 }

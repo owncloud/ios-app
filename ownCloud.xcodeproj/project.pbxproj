@@ -45,9 +45,6 @@
 		4C464BB42183581600D30602 /* PDFSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BAC2183581600D30602 /* PDFSearchTableViewCell.swift */; };
 		4C464BB52183581600D30602 /* PDFThumbnailsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BAD2183581600D30602 /* PDFThumbnailsCollectionViewController.swift */; };
 		4C464BB62183581600D30602 /* PDFTocItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BAE2183581600D30602 /* PDFTocItem.swift */; };
-		4C464BC22186D9CE00D30602 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BBB2186D9CE00D30602 /* TextViewController.swift */; };
-		4C464BC42186D9FC00D30602 /* CertificateManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BC32186D9FC00D30602 /* CertificateManagementViewController.swift */; };
-		4C464BC62186DA2900D30602 /* ThemeCertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BC52186DA2900D30602 /* ThemeCertificateViewController.swift */; };
 		5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5917244D20D3DC2100809B38 /* BiometricalTests.swift */; };
 		593A821120C7D4C5000E2A90 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
 		593BAB46209AE1BC00023634 /* PasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593BAB44209AE1BC00023634 /* PasscodeViewController.swift */; };
@@ -344,9 +341,6 @@
 		4C464BAC2183581600D30602 /* PDFSearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFSearchTableViewCell.swift; sourceTree = "<group>"; };
 		4C464BAD2183581600D30602 /* PDFThumbnailsCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFThumbnailsCollectionViewController.swift; sourceTree = "<group>"; };
 		4C464BAE2183581600D30602 /* PDFTocItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFTocItem.swift; sourceTree = "<group>"; };
-		4C464BBB2186D9CE00D30602 /* TextViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
-		4C464BC32186D9FC00D30602 /* CertificateManagementViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CertificateManagementViewController.swift; path = "Certificate Management/CertificateManagementViewController.swift"; sourceTree = "<group>"; };
-		4C464BC52186DA2900D30602 /* ThemeCertificateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeCertificateViewController.swift; sourceTree = "<group>"; };
 		5917244D20D3DC2100809B38 /* BiometricalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricalTests.swift; sourceTree = "<group>"; };
 		593A821220C7D4C5000E2A90 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		593A821820C7D4DC000E2A90 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -743,7 +737,6 @@
 		DC7DBA27207F6DFD00E7337D /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				4C464BC52186DA2900D30602 /* ThemeCertificateViewController.swift */,
 				DC3317CD2084966700E36C8F /* ThemeTableViewCell.swift */,
 				DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */,
 				DC0B37962051681600189B9A /* ThemeButton.swift */,
@@ -867,7 +860,6 @@
 		DCF4F1622051927200189B9A /* UI Elements */ = {
 			isa = PBXGroup;
 			children = (
-				4C464BBB2186D9CE00D30602 /* TextViewController.swift */,
 				2366821521144DCD0045EF72 /* Card Presentation Controller */,
 				DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */,
 				DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */,
@@ -882,7 +874,6 @@
 		DCF4F1802051A91500189B9A /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				4C464BC32186D9FC00D30602 /* CertificateManagementViewController.swift */,
 				6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */,
 				233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */,
 				232F7CAC2097140300EE22E4 /* UploadsSettingsSection.swift */,
@@ -1257,7 +1248,6 @@
 				4C464BB02183581600D30602 /* PDFTocTableViewController.swift in Sources */,
 				DC4FEAEA209E48E800D4476B /* DispatchQueueTools.swift in Sources */,
 				DC1B2708209CF0D3004715E1 /* IssuesPresentationAnimator.swift in Sources */,
-				4C464BC42186D9FC00D30602 /* CertificateManagementViewController.swift in Sources */,
 				DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */,
 				4C464BB42183581600D30602 /* PDFSearchTableViewCell.swift in Sources */,
 				DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */,
@@ -1300,7 +1290,6 @@
 				DCFED9BA20809B8900A2D984 /* ThemeTVGResource.swift in Sources */,
 				DC3BE0DE2077CC14002A0AC0 /* ClientQueryViewController.swift in Sources */,
 				23C56538212167BE00BD4B47 /* CardTransitionDelegate.swift in Sources */,
-				4C464BC22186D9CE00D30602 /* TextViewController.swift in Sources */,
 				DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */,
 				DC0B37972051681600189B9A /* ThemeButton.swift in Sources */,
 				DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */,
@@ -1310,7 +1299,6 @@
 				DCE974BC207EACA60069FC2B /* UIImage+Extension.swift in Sources */,
 				DC1B2707209CF0D3004715E1 /* IssuesDismissalAnimator.swift in Sources */,
 				23BEF1182076667F00DD2E6F /* IssuesViewController.swift in Sources */,
-				4C464BC62186DA2900D30602 /* ThemeCertificateViewController.swift in Sources */,
 				2308F94321467F6200CF0B91 /* ClientDirectoryPickerViewController.swift in Sources */,
 				DC85980620D85EE600A433C6 /* AsyncSequentialQueue.swift in Sources */,
 				232B01F42126B0CE00366FA0 /* MoreViewHeader.swift in Sources */,

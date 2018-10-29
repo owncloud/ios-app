@@ -111,7 +111,7 @@
 "Send feedback" = "Send feedback";
 "Recommend to a friend" = "Recommend to a friend";
 "Privacy Policy" = "Privacy Policy";
-"Acknowledgements" = "Acknowledgements";
+
 "Video upload path" = "Video upload path";
 "Photo upload path" = "Photo upload path";
 "Always" = "Always";
@@ -132,14 +132,6 @@
 "Please try again in %@" = "Please try again in %@";
 "Unlock %@" = "Unlock %@";
 "Biometric authentication failed" = "Biometric authentication failed";
-
-/* Certificate management */
-
-"Certificates" = "Certificates";
-"User-approved certificates" = "User-approved certificates";
-
-"Approved" = "Approved";
-"Revoke approval" =  "Revoke approval";
 
 /* Actions */
 

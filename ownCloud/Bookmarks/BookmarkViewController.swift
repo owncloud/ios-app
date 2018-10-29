@@ -120,8 +120,8 @@ class BookmarkViewController: StaticTableViewController {
 
 		certificateRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let certificate = self?.bookmark?.certificate {
-				if let certificateViewController : ThemeCertificateViewController = ThemeCertificateViewController(certificate: certificate) {
-					let navigationController = ThemeNavigationController(rootViewController: certificateViewController)
+				if let certificateViewController : OCCertificateViewController = OCCertificateViewController(certificate: certificate) {
+					let navigationController = UINavigationController(rootViewController: certificateViewController)
 
 					self?.present(navigationController, animated: true, completion: nil)
 				}

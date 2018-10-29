@@ -97,7 +97,7 @@ class ProgressSummarizer: NSObject {
 
 	func stopTracking(progress: Progress, remove: Bool = true) {
 		OCSynchronized(self) {
-			if trackedProgress.contains(progress) {
+			if !trackedProgress.contains(progress) {
 				progress.removeObserver(self, forKeyPath: "fractionCompleted", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "isFinished", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "isIndeterminate", context: observerContext)
@@ -239,8 +239,6 @@ class ProgressSummarizer: NSObject {
 		var summary : ProgressSummary = ProgressSummary(indeterminate: false, progress: 0, message: nil, progressCount: 0)
 		var totalUnitCount : Int64 = 0
 		var completedUnitCount : Int64 = 0
-		var completedFraction : Double = 0
-		var totalFraction : Double = 0
 		var completedProgress : [Progress]?
 
 		OCSynchronized(self) {
@@ -265,11 +263,6 @@ class ProgressSummarizer: NSObject {
 
 				totalUnitCount += progress.totalUnitCount
 				completedUnitCount += progress.completedUnitCount
-
-				if progress.totalUnitCount > 0 {
-					totalFraction += 1
-					completedFraction += progress.fractionCompleted
-				}
 			}
 
 			summary.progressCount = trackedProgress.count
@@ -281,11 +274,7 @@ class ProgressSummarizer: NSObject {
 					summary.indeterminate = true
 				}
 			} else {
-				if totalFraction != 0 {
-					summary.progress = completedFraction / totalFraction
-				} else {
-					summary.progress = Double(completedUnitCount) / Double(totalUnitCount)
-				}
+				summary.progress = Double(completedUnitCount) / Double(totalUnitCount)
 			}
 
 			if completedProgress != nil {

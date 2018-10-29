@@ -18,7 +18,6 @@
 
 import UIKit
 import ownCloudSDK
-import QuickLook
 
 extension OCItem {
 	static private let iconNamesByMIMEType : [String:String] = {

@@ -113,11 +113,6 @@ extension NSObject {
 			tableView.separatorColor = collection.tableSeparatorColor
 		}
 
-        if self.isKind(of: UICollectionView.self) {
-            let collectionView : UICollectionView = (self as? UICollectionView)!
-            collectionView.backgroundColor = collection.tableBackgroundColor
-        }
-
 		if self.isKind(of: UISearchBar.self) {
 			let searchBar : UISearchBar = (self as? UISearchBar)!
 
