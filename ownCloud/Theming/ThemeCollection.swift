@@ -59,7 +59,7 @@ class ThemeColorCollection : NSObject {
 	}
 }
 
-enum ThemeCollectionStyle : String {
+enum ThemeCollectionStyle : String, CaseIterable {
 	case dark
 	case light
 	case contrast

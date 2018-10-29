@@ -28,8 +28,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
 		var navigationController: UINavigationController?
+		var activeThemeCollection : ThemeCollection?
 
 		window = UIWindow(frame: UIScreen.main.bounds)
+
+		ThemeStyle.registerDefaultStyles()
 
 		serverListTableViewController = ServerListTableViewController(style: UITableViewStyle.plain)
 
@@ -48,6 +51,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
+
+		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
 		return true
 	}

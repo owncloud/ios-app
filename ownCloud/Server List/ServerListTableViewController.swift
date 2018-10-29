@@ -208,29 +208,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	var themeCounter : Int = 0
 
 	@IBAction func help() {
-		var themeStyle : ThemeCollectionStyle?
-		let darkColor = UIColor(hex: 0x1D293B)
-		let lightColor = UIColor(hex: 0x468CC8)
-		let themeStyles : [ThemeCollectionStyle] = [ .dark, .light, .contrast ]
-
-		themeCounter += 1
-
-		/*
-		// RED experiment
-		if themeCounter >= 3 {
-			darkColor = UIColor(hex: 0xf53034).darker(0.75)
-			lightColor = UIColor(hex: 0xf53034)
-		}
-		*/
-
-		themeStyle = themeStyles[themeCounter % 3]
-
-		UIView.animate(withDuration: 0.25) {
-			CATransaction.begin()
-			CATransaction.setAnimationDuration(0.25)
-			Theme.shared.activeCollection = ThemeCollection(darkBrandColor: darkColor, lightBrandColor: lightColor, style: themeStyle!)
-			CATransaction.commit()
-		}
+		VendorServices.shared.sendFeedback(from: self)
 	}
 
 	@IBAction func settings() {

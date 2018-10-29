@@ -229,4 +229,14 @@ class Theme: NSObject {
 			}
 		}
 	}
+
+	// MARK: - Theme switching
+	func switchThemeCollection(_ collection: ThemeCollection) {
+		UIView.animate(withDuration: 0.25) {
+			CATransaction.begin()
+			CATransaction.setAnimationDuration(0.25)
+			self.activeCollection = collection
+			CATransaction.commit()
+		}
+	}
 }
