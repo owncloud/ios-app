@@ -183,5 +183,12 @@ extension NSObject {
 				}
 			}
 		}
+
+		if self.isKind(of: UIProgressView.self) {
+			let progressView = (self as? UIProgressView)!
+
+			progressView.tintColor = collection.tintColor
+			progressView.trackTintColor = collection.tableSeparatorColor
+		}
 	}
 }

@@ -18,15 +18,19 @@
 
 import UIKit
 import ownCloudSDK
+import MobileCoreServices
 
 typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
 class ClientQueryViewController: UITableViewController, Themeable {
+
 	var core : OCCore?
 	var query : OCQuery?
 
 	var items : [OCItem]?
+
+	var selectedItem: OCItem?
 
 	var queryProgressSummary : ProgressSummary? {
 		willSet {
@@ -61,7 +65,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		query?.delegate = self
 
 		query?.addObserver(self, forKeyPath: "state", options: .initial, context: observerContext)
-		core?.addObserver(self, forKeyPath: "reachabilityMonitor.available", options: .initial, context: observerContext)
 
 		core?.start(query)
 
@@ -74,7 +77,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	deinit {
 		query?.removeObserver(self, forKeyPath: "state", context: observerContext)
-		core?.removeObserver(self, forKeyPath: "reachabilityMonitor.available", context: observerContext)
 
 		core?.stop(query)
 		Theme.shared.unregister(client: self)
@@ -138,6 +140,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
 
 		Theme.shared.register(client: self, applyImmediately: true)
+
+		self.tableView.dragDelegate = self
+		self.tableView.dropDelegate = self
+		self.tableView.dragInteractionEnabled = true
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
@@ -269,35 +275,15 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 
 		switch rowItem.type {
-		case .collection:
-			self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
-		case .file:
-			let fallbackSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: "Downloading \(rowItem.name!)", progressCount: 1)
+			case .collection:
+				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
 
-			if let downloadProgress = self.core?.downloadItem(rowItem, options: nil, resultHandler: { (error, _, item, file) in
-				OnMainThread {
-					if error != nil {
-						// TODO: Handle error
-					} else {
-						let itemViewController : ClientItemViewController = ClientItemViewController()
-
-						itemViewController.file = file
-						itemViewController.item = item
-
-						self.navigationController?.pushViewController(itemViewController, animated: true)
-					}
-
-					self.progressSummarizer?.popFallbackSummary(summary: fallbackSummary)
-				}
-			}) {
-				Log.log("Downloading \(rowItem.name!): \(downloadProgress)")
-
-				progressSummarizer?.pushFallbackSummary(summary: fallbackSummary)
-
-				// TODO: Use progress as soon as it works SDK-wise
-				// progressSummarizer?.startTracking(progress: downloadProgress)
-			}
+			case .file:
+				let itemViewController = DisplayHostViewController(for: rowItem, with: core!)
+				self.navigationController?.pushViewController(itemViewController, animated: true)
 		}
+
+		tableView.deselectRow(at: indexPath, animated: true)
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -318,10 +304,72 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			})
 		}
 
-		let actions: [UIContextualAction] = [deleteContextualAction, renameContextualAction]
+		let moveContextualAction = UIContextualAction(style: .normal, title: "Move") { (_, _, actionPerformed) in
+
+			let directoryPickerVC = ClientDirectoryPickerViewController(core: self.core!, path: "/", completion: { (selectedDirectory) in
+				if let progress = self.core?.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
+					if error != nil {
+						Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
+					}
+				}) {
+					self.progressSummarizer?.startTracking(progress: progress)
+				}
+			})
+
+			let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerVC)
+			self.navigationController?.present(pickerNavigationController, animated: true)
+
+			actionPerformed(false)
+		}
+
+		let actions: [UIContextualAction] = [deleteContextualAction, renameContextualAction, moveContextualAction]
 		let actionsConfigurator: UISwipeActionsConfiguration = UISwipeActionsConfiguration(actions: actions)
 
 		return actionsConfigurator
+	}
+
+	func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
+		return true
+	}
+
+	func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+		guard let item = items?[indexPath.row] else {
+			return []
+		}
+
+		guard item.type != .collection else {
+			return []
+		}
+
+		guard let data = item.serializedData() else {
+			return []
+		}
+
+		let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
+		let dragItem = UIDragItem(itemProvider: itemProvider)
+		dragItem.localObject = item
+		return [dragItem]
+	}
+
+	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+
+		if session.localDragSession != nil {
+				guard let items = items else {
+					return UITableViewDropProposal(operation: .move)
+				}
+
+				if let indexPath = destinationIndexPath, items.count - 1 < indexPath.row {
+					return UITableViewDropProposal(operation: .forbidden)
+				}
+
+				if let indexPath = destinationIndexPath, items[indexPath.row].type == .file {
+					return UITableViewDropProposal(operation: .move)
+				} else {
+					return UITableViewDropProposal(operation: .move, intent: .insertIntoDestinationIndexPath)
+				}
+		} else {
+			return UITableViewDropProposal(operation: .forbidden)
+		}
 	}
 
 	// MARK: - Message
@@ -531,8 +579,27 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.present(alertController, animated: true, completion: viewDidAppearHandler)
 	}
 
+	func move(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
+		let directoryPickerVC = ClientDirectoryPickerViewController(core: self.core!, path: "/", completion: { (selectedDirectory) in
+
+			if let progress = self.core?.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
+				if error != nil {
+					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
+					completionHandler?(false)
+				} else {
+					completionHandler?(true)
+				}
+			}) {
+				self.progressSummarizer?.startTracking(progress: progress)
+			}
+		})
+
+		let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerVC)
+		self.navigationController?.present(pickerNavigationController, animated: true)
+	}
+
 	func createFolder(viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
-		let createFolderVC = NamingViewController(with: core, defaultName: "New Folder".localized, stringValidator: { name in
+		let createFolderVC = NamingViewController( with: core, defaultName: "New Folder".localized, stringValidator: { name in
 			if name.contains("/") || name.contains("\\") {
 				return (false, "File name cannot contain / or \\")
 			} else {
@@ -712,32 +779,88 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 				})
 			}, title: "Rename".localized, style: .plainNonOpaque)
 
-			let duplicateRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+			let moveRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
 				moreViewController.dismiss(animated: true, completion: {
-					self?.duplicate(item)
+					self?.move(item)
 				})
-			}, title: "Duplicate".localized, style: .plainNonOpaque)
+				}, title: "Move".localized, style: .plainNonOpaque)
 
 			tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [
 				renameRow,
-				duplicateRow,
+				moveRow,
 				deleteRow
-//				StaticTableViewRow(label: "1"),
-//				StaticTableViewRow(label: "2"),
-//				StaticTableViewRow(label: "3"),
-//				StaticTableViewRow(label: "4"),
-//				StaticTableViewRow(label: "5"),
-//				StaticTableViewRow(label: "6"),
-//				StaticTableViewRow(label: "7"),
-//				StaticTableViewRow(label: "8"),
-//				StaticTableViewRow(label: "9"),
-//				StaticTableViewRow(label: "10"),
-//				StaticTableViewRow(label: "11"),
-//				StaticTableViewRow(label: "12"),
-//				StaticTableViewRow(label: "13")
 				]))
 
 			self.present(asCard: moreViewController, animated: true)
 		}
 	}
+}
+
+extension ClientQueryViewController: UITableViewDropDelegate {
+	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+
+		for item in coordinator.items {
+
+			var destinationItem: OCItem?
+
+			guard let item = item.dragItem.localObject as? OCItem else {
+				return
+			}
+
+			if coordinator.proposal.intent == .insertIntoDestinationIndexPath {
+
+				guard let destinationIP = coordinator.destinationIndexPath else {
+					return
+				}
+
+				guard let items = items, items.count >= destinationIP.row else {
+					return
+				}
+
+				let rootItem = items[destinationIP.row]
+
+				guard rootItem.type == .collection else {
+					return
+				}
+
+				destinationItem = rootItem
+
+			} else {
+
+				guard item.parentFileID != self.query?.rootItem.fileID else {
+					return
+				}
+
+				destinationItem =  self.query?.rootItem
+
+			}
+
+			if let progress = self.core?.move(item, to: destinationItem, withName:  item.name, options: nil, resultHandler: { (error, _, _, _) in
+				if error != nil {
+					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
+				}
+			}) {
+				self.progressSummarizer?.startTracking(progress: progress)
+			}
+		}
+	}
+}
+
+extension ClientQueryViewController: UITableViewDragDelegate {
+
+	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+		guard let item = items?[indexPath.row] else {
+			return []
+		}
+
+		guard let data = item.serializedData() else {
+			return []
+		}
+
+		let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
+		let dragItem = UIDragItem(itemProvider: itemProvider)
+		dragItem.localObject = item
+		return [dragItem]
+	}
+
 }

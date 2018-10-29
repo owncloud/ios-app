@@ -136,8 +136,17 @@
 
 "Forbidden Characters" = "Forbidden Characters";
 "File name cannot contain / or \\" = "File name cannot contain / or \\";
-
 "New Folder" = "New Folder";
 "Rename" =" Rename";
 "Create folder" =" Create folder";
 "Duplicate" = "Duplicate";
+"Move" = "Move";
+
+/* Directory Picker Messages */
+"Move here" = "Move here";
+
+/* Preview */
+"Open file" = "Open file";
+"There is no network" = "There is no network";
+"Error" = "Error";
+"Could not get the picture" = "Could not get the picture";

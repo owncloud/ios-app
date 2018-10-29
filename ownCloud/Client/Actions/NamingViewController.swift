@@ -302,7 +302,7 @@ class NamingViewController: UIViewController {
 					}
 				} else {
 					let controller = UIAlertController(title: "Forbidden Characters".localized, message: validationErrorMessage, preferredStyle: .alert)
-					let okAction = UIAlertAction(title: "Ok", style: .default)
+					let okAction = UIAlertAction(title: "OK", style: .default)
 					controller.addAction(okAction)
 					self.present(controller, animated: true)
 				}
