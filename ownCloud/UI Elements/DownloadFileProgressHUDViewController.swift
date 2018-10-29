@@ -101,7 +101,7 @@ class DownloadFileProgressHUDViewController: UIViewController {
 			infoLabel.heightAnchor.constraint(equalToConstant: INFOLABEL_HEIGHT_CONSTRAINT_CONSTANT)
 		])
 
-		infoLabel.text = "Downloading"
+		infoLabel.text = "Downloading".localized
 		infoLabel.textColor = .white
 		infoLabel.textAlignment = .center
 
