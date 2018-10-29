@@ -92,6 +92,9 @@
 "Delete" = "Delete";
 "Deletion of '%@' failed" = "Deletion of '%@' failed";
 
+"Help" = "Help";
+"Feedback" = "Feedback";
+
 /* Settings Messages */
 
 "Security" = "Security";
@@ -121,6 +124,13 @@
 "Please configure an email account" = "Please configure an email account";
 "You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
 "Do you want to open the following URL?" = "Do you want to open the following URL?";
+
+/* User Interface Settings */
+"Theme" = "Theme";
+"User Interface" = "User Interface";
+"ownCloud Dark" = "ownCloud Dark";
+"ownCloud Light" = "ownCloud Light";
+"ownCloud Classic" = "ownCloud Classic";
 
 /* Passcode Messages */
 

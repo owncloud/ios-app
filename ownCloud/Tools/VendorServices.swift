@@ -59,7 +59,7 @@ class VendorServices : NSObject {
 	}
 
 	func sendFeedback(from viewController: UIViewController) {
-		self.sendMail(to: "apps@owncloud.com", subject: "ownCloud iOS app (\(self.appVersion) (\(self.appBuildNumber)))", message: nil, from: viewController)
+		self.sendMail(to: "ios-beta@owncloud.com", subject: "ownCloud iOS app beta (\(self.appVersion) (\(self.appBuildNumber)))", message: nil, from: viewController)
 	}
 
 	func sendMail(to: String?, subject: String?, message: String?, from viewController: UIViewController) {
