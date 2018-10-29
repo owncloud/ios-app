@@ -17,7 +17,7 @@ extension OCConnectionIssueChoice {
 
 			case .regular, .default:
 				return .default
-
+            
 			case .destructive:
 				return .destructive
 		}
