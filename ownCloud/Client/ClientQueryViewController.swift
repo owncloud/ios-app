@@ -662,10 +662,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				Log.debug("Success uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
 				completionHandler?(true)
 			}
-		}) {
+		} else {
 			OnMainThread {
-				controller.present(on: self)
-				controller.attach(progress: progress)
+				let alert = UIAlertController(with: "No Network connection", message: "No network connection")
+				self.present(alert, animated: true)
 			}
 		}
 	}

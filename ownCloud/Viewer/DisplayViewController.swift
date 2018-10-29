@@ -336,19 +336,28 @@ class DisplayViewController: UIViewController {
 	func openInRow(_ item: OCItem, button: UIBarButtonItem? = nil) {
 
 		if source == nil {
-			let controller = DownloadFileProgressHUDViewController()
-
-			if let progress = core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
-				if error == nil {
-					self.source = file!.url
-					controller.dismiss(animated: true, completion: {
-						self.openDocumentInteractionController(with: file!.url, button: button)
-					})
-				}
-			}) {
+			if !core.reachabilityMonitor.available {
 				OnMainThread {
-					controller.present(on: self)
-					controller.attach(progress: progress)
+					let alert = UIAlertController(with: "No Network connection", message: "No network connection")
+					self.present(alert, animated: true)
+				}
+			} else {
+				let controller = DownloadFileProgressHUDViewController()
+
+				if let progress = core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
+					if error == nil {
+						self.source = file!.url
+						controller.dismiss(animated: true, completion: {
+							self.openDocumentInteractionController(with: file!.url, button: button)
+						})
+					} else {
+						controller.dismiss(animated: true)
+					}
+				}) {
+					OnMainThread {
+						controller.present(on: self)
+						controller.attach(progress: progress)
+					}
 				}
 			}
 		} else {

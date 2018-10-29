@@ -11,7 +11,6 @@ import UIKit
 class DownloadFileProgressHUDViewController: UIViewController {
 
 	private let PROGRESSVIEW_SIDES_CONSTRAINT_CONSTANT: CGFloat = 20
-	private let PROGRESSVIEW_HEIGHT_CONSTRAINT_CONSTANT: CGFloat = 10
 	private let CANCELBUTTON_TOP_ANCHOR_CONSTANT: CGFloat = 10
 	private let CANCELBUTTON_HEIGHT_CONSTRAINT_CONSTANT: CGFloat = 40
 	private let INFOLABEL_BOTTOM_ANCHOR_CONSTANT: CGFloat = 10
@@ -74,8 +73,7 @@ class DownloadFileProgressHUDViewController: UIViewController {
 			progressView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
 			progressView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
 			progressView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: PROGRESSVIEW_SIDES_CONSTRAINT_CONSTANT),
-			progressView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -PROGRESSVIEW_SIDES_CONSTRAINT_CONSTANT),
-			progressView.heightAnchor.constraint(equalToConstant: PROGRESSVIEW_HEIGHT_CONSTRAINT_CONSTANT)
+			progressView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -PROGRESSVIEW_SIDES_CONSTRAINT_CONSTANT)
 		])
 
 		// Cancel button
@@ -106,6 +104,7 @@ class DownloadFileProgressHUDViewController: UIViewController {
 		infoLabel.textAlignment = .center
 
 		progressView.progressTintColor = .white
+		progressView.trackTintColor = .lightGray
 	}
 
     override func viewDidLoad() {
