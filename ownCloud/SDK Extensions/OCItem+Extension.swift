@@ -214,18 +214,36 @@ extension OCItem {
 		return nil
 	}
 
-	func fileSuffix() -> String {
+	func fileExtension() -> String {
 		return (self.name as NSString).pathExtension
 	}
-}
 
-extension OCItem: QLPreviewItem {
-	public var previewItemURL: URL? {
-		let url = objc_getAssociatedObject(self, &ClientQueryViewController.kSomeKey) as! URL
-		return url
+	func nameWithoutExtension() -> String {
+		return (self.name as NSString).deletingPathExtension
 	}
 
-	public var previewItemTitle: String? {
-		return self.name
+	var sizeInReadableFormat: String {
+		let size = OCItem.byteCounterFormatter.string(fromByteCount: Int64(self.size))
+		return size
 	}
+
+	var lastModifiedInReadableFormat: String {
+		let dateString = OCItem.dateFormatter.string(from: self.lastModified)
+		return dateString
+	}
+
+	static private let byteCounterFormatter: ByteCountFormatter = {
+		let byteCounterFormatter = ByteCountFormatter()
+		byteCounterFormatter.allowsNonnumericFormatting = false
+		return byteCounterFormatter
+	}()
+
+	static private let dateFormatter: DateFormatter = {
+		let dateFormatter: DateFormatter =  DateFormatter()
+		dateFormatter.timeStyle = .none
+		dateFormatter.dateStyle = .medium
+		dateFormatter.locale = Locale.current
+		dateFormatter.doesRelativeDateFormatting = true
+		return dateFormatter
+	}()
 }

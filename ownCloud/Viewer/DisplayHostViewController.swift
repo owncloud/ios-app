@@ -6,22 +6,32 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudSDK
 import QuickLook
 
 class DisplayHostViewController: UIViewController {
 
-	var itemsToDisplay: [OCItem]
-	var core: OCCore
+	// MARK: - Instance Properties
+	private var itemsToDisplay: [OCItem] = []
+	private var core: OCCore
 
+	// MARK: - Init & deinit
 	init(for item: OCItem, with core: OCCore) {
-		itemsToDisplay = []
 		itemsToDisplay.append(item)
 		self.core = core
 
 		super.init(nibName: nil, bundle: nil)
-
 		Theme.shared.register(client: self)
 	}
 
@@ -40,54 +50,48 @@ class DisplayHostViewController: UIViewController {
 		Theme.shared.unregister(client: self)
 	}
 
-    override func viewDidLoad() {
+	// MARK: - Controller lifcycle
+	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		let item = itemsToDisplay[0]
+		let itemToDisplay = itemsToDisplay[0]
 
-        func setupChild(viewController:UIViewController) {
-            OnMainThread {
-                self.addChildViewController(viewController)
-                viewController.view.frame = self.view.frame
-                self.view.addSubview(viewController.view)
-                viewController.didMove(toParentViewController: self)
-            }
-        }
+		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: itemToDisplay.mimeType)
+		let shouldDownload = viewController is (DisplayViewController & DisplayExtension) ? true : false
 
-		guard let viewController = self.selectDisplayViewControllerBasedOn(mimeType: item.mimeType) else {
-			print("LOG ---> error no controller for this mime type: \(item.mimeType!)")
-            let controller = DisplayViewController()
-            controller.item = item
-            controller.core = self.core
-            setupChild(viewController: controller)
-			return
+		var configuration: DisplayViewConfiguration
+		if !shouldDownload {
+			configuration = DisplayViewConfiguration(item: itemToDisplay, core: core, state: .notSupportedMimeType)
+		} else {
+			configuration = DisplayViewConfiguration(item: itemToDisplay, core: core, state: .hasNetworkConnection)
 		}
 
-		viewController.item = item
-		viewController.core = core
-        setupChild(viewController: viewController)
+		viewController.configure(configuration)
 
-		_ = self.core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
+		self.addChildViewController(viewController)
+		self.view.addSubview(viewController.view)
+		viewController.didMove(toParentViewController: self)
 
-			guard error == nil else {
-				print("LOG ---> error downloading")
-				OnMainThread {
-					self.view.backgroundColor = .purple
-				}
-				return
-			}
-
-            OnMainThread {
-                viewController.source = file!.url
-            }
-
-		})
+		if shouldDownload {
+			viewController.downloadItem(sender: nil)
+		} else {
+			viewController.downloadProgress = nil
+		}
 	}
 
-	private func selectDisplayViewControllerBasedOn(mimeType: String) -> (DisplayViewController & DisplayViewProtocol)? {
+	override func viewWillAppear(_ animated: Bool) {
+		navigationController?.tabBarController?.tabBar.isHidden = true
+	}
 
-		let locationIdentifier = OCExtensionLocationIdentifier(rawValue: "viewer")
-		let location: OCDisplayExtensionLocation = OCDisplayExtensionLocation(type: .viewer, identifier: locationIdentifier, supportedMimeTypes: [mimeType])
+	override func viewWillDisappear(_ animated: Bool) {
+		navigationController?.tabBarController?.tabBar.isHidden = false
+	}
+
+	// MARK: - Host Actions
+	private func selectDisplayViewControllerBasedOn(mimeType: String) -> (DisplayViewController) {
+
+		let locationIdentifier = OCExtensionLocationIdentifier(rawValue: mimeType)
+		let location: OCExtensionLocation = OCExtensionLocation(ofType: .viewer, identifier: locationIdentifier)
 		let context = OCExtensionContext(location: location, requirements: nil, preferences: nil)
 
 		var extensions: [OCExtensionMatch]?
@@ -95,27 +99,27 @@ class DisplayHostViewController: UIViewController {
 		do {
 			try extensions = OCExtensionManager.shared.provideExtensions(for: context)
 		} catch {
-			return nil
+			return DisplayViewController()
 		}
 
 		guard let matchedExtensions = extensions else {
-			return nil
+			return DisplayViewController()
 		}
 
 		let preferedExtension: OCExtension = matchedExtensions[0].extension
 
 		let extensionObject = preferedExtension.provideObject(for: context!)
 
-		guard let controllerType = extensionObject as? (DisplayViewController & DisplayViewProtocol) else {
-			return nil
+		guard let controllerType = extensionObject as? (DisplayViewController & DisplayExtension) else {
+			return DisplayViewController()
 		}
 
 		return controllerType
 	}
 }
 
+// MARK: - Themeable support
 extension DisplayHostViewController: Themeable {
-
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.view.backgroundColor = collection.tableBackgroundColor
 	}

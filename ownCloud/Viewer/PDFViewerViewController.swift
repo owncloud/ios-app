@@ -23,7 +23,8 @@ extension UILabel {
     }
 }
 
-class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
+class PDFViewerViewController: DisplayViewController, DisplayExtension {
+
     enum ThumbnailViewPosition {
         case left, right, bottom, none
         func isVertical() -> Bool {
@@ -76,10 +77,12 @@ class PDFViewerViewController: DisplayViewController, DisplayViewProtocol {
         }
     }
 
-    // MARK: - DisplayViewProtocol
+    // MARK: - DisplayExtension
 
-    static var supportedMimeTypes: [String] = ["application/pdf"]
-    static var features: [String : Any]? = [FeatureKeys.canEdit : true, FeatureKeys.showPDF : true]
+    static var customMatcher: OCExtensionCustomContextMatcher?
+    static var displayExtensionIdentifier: String = "org.owncloud.pdfViewer.default"
+    static var supportedMimeTypes: [String]? = ["application/pdf"]
+    static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 
     deinit {
         NotificationCenter.default.removeObserver(self)

@@ -28,12 +28,12 @@ class ThemeNavigationController: UINavigationController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		themeToken = Theme.shared.add(applier: { (_, themeCollection, event) in
-			self.applyThemeCollection(themeCollection)
-			self.toolbar.applyThemeCollection(themeCollection)
+		themeToken = Theme.shared.add(applier: {[weak self] (_, themeCollection, event) in
+			self?.applyThemeCollection(themeCollection)
+			self?.toolbar.applyThemeCollection(themeCollection)
 
 			if event == .update {
-				self.setNeedsStatusBarAppearanceUpdate()
+				self?.setNeedsStatusBarAppearanceUpdate()
 			}
 		}, applyImmediately: true)
 	}

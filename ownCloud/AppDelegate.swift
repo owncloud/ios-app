@@ -29,8 +29,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Override point for customization after application launch.
 		var navigationController: UINavigationController?
 
-		OCCoreManager.shared.postFileProviderNotifications = true
-
 		window = UIWindow(frame: UIScreen.main.bounds)
 
 		serverListTableViewController = ServerListTableViewController(style: UITableViewStyle.plain)
@@ -43,25 +41,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		AppLockManager.shared.showLockscreenIfNeeded()
 
-		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
-
 		application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum + 10)
 
 		Log.debug("Minimum fetch refresh time: \(UIApplicationBackgroundFetchIntervalMinimum)")
 
-		let pdfExtension = OCDisplayExtension.normalPDFExtension(identifier: "normalPDFViewer")
-		let imageExtension = OCDisplayExtension.webViewExtension(identifier: "imageViewer")
-
-		OCExtensionManager.shared.addExtension(pdfExtension)
-		OCExtensionManager.shared.addExtension(imageExtension)
+		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
 
 		return true
-	}
-
-	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-			completionHandler(.newData)
-		}
 	}
 
 	func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
@@ -73,9 +61,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
-		Log.debug("AppDelegate: handle events for background URL session with identifier \(identifier)")
-
-		OCCoreManager.shared.postFileProviderNotifications = true
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
 	}
 }

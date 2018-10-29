@@ -69,6 +69,7 @@
 "size" = "size";
 "date" = "date";
 "Search this folder" = "Search this folder";
+"Pending" = "Pending";
 
 /* Client Messages */
 "Empty folder" = "Empty folder";
@@ -144,13 +145,23 @@
 
 "Forbidden Characters" = "Forbidden Characters";
 "File name cannot contain / or \\" = "File name cannot contain / or \\";
-
 "New Folder" = "New Folder";
 "Rename" =" Rename";
 "Create folder" =" Create folder";
+"Duplicate" = "Duplicate";
+"Move" = "Move";
+
+/* Directory Picker Messages */
+"Move here" = "Move here";
 
 /* PDF Viewer */
 "Resume" = "Resume";
 "Go to page" = "Go to page";
 "Page" = "Page";
 "This document has %@ pages" = "This document has %@ pages";
+
+/* Preview */
+"Open file" = "Open file";
+"There is no network" = "There is no network";
+"Error" = "Error";
+"Could not get the picture" = "Could not get the picture";

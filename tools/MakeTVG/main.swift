@@ -50,6 +50,68 @@ func applyReplacementDict(svgString : String, replacementDict : NSDictionary, de
 	return newString
 }
 
+func extractRootAttributes(from svgString: String) -> [String:String]? {
+	var originX : Double?, originY: Double?, sizeWidth: Double?, sizeHeight: Double?
+
+	if let svgStartRange = svgString.range(of: "<svg", options: .caseInsensitive),
+	   let svgEndRange = svgString.range(of: ">", options: .caseInsensitive, range: Range<String.Index>(uncheckedBounds: (lower: svgStartRange.upperBound, upper: svgString.endIndex))) {
+		let svgAttributesString = svgString[Range<String.Index>(uncheckedBounds: (lower: String.Index(encodedOffset: svgStartRange.upperBound.encodedOffset+1), upper: svgEndRange.lowerBound))]
+		let attributePairs = svgAttributesString.components(separatedBy: "\" ")
+
+		for attributePair in attributePairs {
+			let keyValueArray = attributePair.split(separator: "=")
+
+			if keyValueArray.count == 2 {
+				var key : String = String(keyValueArray[0])
+				var value = keyValueArray[1]
+				var subRange = Range<String.Index>(uncheckedBounds: (lower: value.startIndex, upper: value.endIndex))
+
+			   	if value.hasPrefix("\"") {
+			   		subRange = Range<String.Index>(uncheckedBounds: (lower: String.Index(encodedOffset: subRange.lowerBound.encodedOffset+1), upper: subRange.upperBound))
+				}
+
+			   	if value.hasSuffix("\"") {
+			   		subRange = Range<String.Index>(uncheckedBounds: (lower: subRange.lowerBound, upper: String.Index(encodedOffset: subRange.upperBound.encodedOffset-1)))
+				}
+
+		   		value = value[subRange]
+
+		   		key = key.lowercased()
+
+		   		switch key {
+		   			case "x":
+		   				originX = Double(value)
+
+		   			case "y":
+		   				originY = Double(value)
+
+		   			case "width":
+		   				sizeWidth = Double(value)
+
+		   			case "height":
+		   				sizeHeight = Double(value)
+
+		   			default: break
+				}
+			}
+		}
+
+		var viewBoxRect : CGRect?
+
+		if sizeWidth != nil, sizeHeight != nil {
+			viewBoxRect = CGRect(origin: .zero, size: CGSize(width: sizeWidth!, height: sizeHeight!))
+
+			if originX != nil, originY != nil {
+				viewBoxRect?.origin = CGPoint(x: originX!, y: originY!)
+			}
+
+			return ["viewBox" : NSStringFromRect(viewBoxRect!)]
+		}
+	}
+
+	return nil
+}
+
 if CommandLine.argc < 3 {
 	print("MakeTVG [make.json] [input directory] [output directory]")
 } else {
@@ -68,6 +130,7 @@ if CommandLine.argc < 3 {
 				let fileReplacements : NSDictionary? = makeDict[sourceURL.lastPathComponent] as? NSDictionary
 				var svgString : String = try String(contentsOf: sourceURL, encoding: .utf8)
 
+				// Apply replacements
 				if fileReplacements != nil {
 					svgString = applyReplacementDict(svgString: svgString, replacementDict: fileReplacements!, defaultValues: defaultValuesForVariables)
 				}
@@ -75,7 +138,18 @@ if CommandLine.argc < 3 {
 					svgString = applyReplacementDict(svgString: svgString, replacementDict: globalReplacements!, defaultValues: defaultValuesForVariables)
 				}
 
-				let tvgDict = [ "defaults" : defaultValuesForVariables, "image" : svgString ] as NSDictionary
+				// Start TVG dict
+				var tvgBaseDict : [String:Any] = [ "defaults" : defaultValuesForVariables, "image" : svgString]
+
+				// Extract viewBox from <svg> root attributes
+				if let rootAttributes = extractRootAttributes(from: svgString) {
+					if let viewBoxString = rootAttributes["viewBox"] {
+						tvgBaseDict["viewBox"] = viewBoxString
+					}
+				}
+
+				// Convert and save
+				let tvgDict = tvgBaseDict as NSDictionary
 				let tvgData : Data = try JSONSerialization.data(withJSONObject: tvgDict, options: JSONSerialization.WritingOptions(rawValue: 0))
 				let tvgFileName = (((sourceURL.lastPathComponent as NSString).deletingPathExtension) as NSString).appendingPathExtension("tvg")
 				let targetURL = targetDirectoryURL.appendingPathComponent(tvgFileName!, isDirectory: false)
