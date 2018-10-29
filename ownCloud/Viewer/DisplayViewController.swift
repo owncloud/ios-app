@@ -336,7 +336,7 @@ class DisplayViewController: UIViewController {
 	func openInRow(_ item: OCItem, button: UIBarButtonItem? = nil) {
 
 		if source == nil {
-			let controller = DownloadFileProgressHUDViewController(with: nil)
+			let controller = DownloadFileProgressHUDViewController()
 
 			if let progress = core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
 				if error == nil {

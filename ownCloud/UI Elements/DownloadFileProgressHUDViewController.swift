@@ -16,6 +16,8 @@ class DownloadFileProgressHUDViewController: UIViewController {
 	private let CANCELBUTTON_HEIGHT_CONSTRAINT_CONSTANT: CGFloat = 40
 	private let INFOLABEL_BOTTOM_ANCHOR_CONSTANT: CGFloat = 10
 	private let INFOLABEL_HEIGHT_CONSTRAINT_CONSTANT: CGFloat = 20
+	private let ROOT_VIEW_BACKGROUND_WHITE: CGFloat = 0.0
+	private let ROOT_VIEW_BACKGROUND_ALPHA: CGFloat = 0.7
 
 	// MARK: - Instance variables.
 	private var progressView: UIProgressView {
@@ -42,7 +44,7 @@ class DownloadFileProgressHUDViewController: UIViewController {
 
 		super.init(nibName: nil, bundle: nil)
 
-		self.modalPresentationStyle = .overCurrentContext
+		self.modalPresentationStyle = .overFullScreen
 		self.transitioningDelegate = transitionAnimator
 
 		Theme.shared.register(client: self)
@@ -54,12 +56,16 @@ class DownloadFileProgressHUDViewController: UIViewController {
 
 	deinit {
 		Theme.shared.unregister(client: self)
+
+		if let progress = progressView.observedProgress, !progress.isFinished {
+			progress.cancel()
+		}
 	}
 
 	override func loadView() {
 		super.loadView()
 
-		view.backgroundColor = UIColor.init(white: 0.0, alpha: 0.7)
+		view.backgroundColor = UIColor.init(white: ROOT_VIEW_BACKGROUND_WHITE, alpha: ROOT_VIEW_BACKGROUND_ALPHA)
 
 		// Progress view
 		progressView.translatesAutoresizingMaskIntoConstraints = false
@@ -96,6 +102,7 @@ class DownloadFileProgressHUDViewController: UIViewController {
 		])
 
 		infoLabel.text = "Downloading"
+		infoLabel.textColor = .white
 		infoLabel.textAlignment = .center
 
 		progressView.progressTintColor = .white
@@ -134,14 +141,15 @@ extension DownloadFileProgressHUDViewController {
 // MARK: - Theme support
 extension DownloadFileProgressHUDViewController: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		infoLabel.applyThemeCollection(collection)
 		cancelButton.applyThemeCollection(collection)
 	}
 }
 
 internal class DownloadFileProgressHUDViewControllerAnimator : NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
+	private let ANIMATION_DURATION: Double = 0.4
+	private let AFFINE_TRANSFORM_SCALE: CGAffineTransform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+
 	var isDismissing : Bool = false
-	let duration = 0.4
 
 	// MARK: - UIViewControllerTransitioningDelegate
 	func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -156,7 +164,7 @@ internal class DownloadFileProgressHUDViewControllerAnimator : NSObject, UIViewC
 
 	// MARK: - UIViewControllerAnimatedTransitioning
 	func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-		return duration
+		return ANIMATION_DURATION
 	}
 
 	func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -173,9 +181,9 @@ internal class DownloadFileProgressHUDViewControllerAnimator : NSObject, UIViewC
 
 				containerView.addSubview(fromView)
 
-				UIView.animate(withDuration: duration, animations: {
+				UIView.animate(withDuration: ANIMATION_DURATION, animations: {
 					fromView.alpha = 0
-					hudViewController?.view.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+					hudViewController?.view.transform = self.AFFINE_TRANSFORM_SCALE
 				}, completion: { (_) in
 					transitionContext.completeTransition(true)
 				})
@@ -192,9 +200,9 @@ internal class DownloadFileProgressHUDViewControllerAnimator : NSObject, UIViewC
 				containerView.addSubview(toView)
 
 				toView.alpha = 0
-				hudViewController?.view.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+				hudViewController?.view.transform = self.AFFINE_TRANSFORM_SCALE
 
-				UIView.animate(withDuration: duration, animations: {
+				UIView.animate(withDuration: ANIMATION_DURATION, animations: {
 					toView.alpha = 1
 					hudViewController?.view.transform = .identity
 				}, completion: { (_) in
