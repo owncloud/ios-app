@@ -6,6 +6,16 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudSDK
 import PDFKit
@@ -33,6 +43,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
     }
 
     static let PDFGoToPageNotification = Notification(name: Notification.Name(rawValue: "PDFGoToPageNotification"))
+
+	fileprivate var gotoPageNotificationObserver : Any?
 
     fileprivate let SEARCH_ANNOTATION_DELAY  = 3.0
     fileprivate let ANIMATION_DUR = 0.25
@@ -86,6 +98,9 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
     deinit {
         NotificationCenter.default.removeObserver(self)
+        if gotoPageNotificationObserver != nil {
+	        NotificationCenter.default.removeObserver(gotoPageNotificationObserver!)
+	}
     }
 
     override func renderSpecificView() {
@@ -150,7 +165,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
             containerView.addArrangedSubview(pageCountContainerView)
 
             self.view.addSubview(containerView)
-            
+
             setupConstraints()
 
             pdfView.document = document
@@ -169,9 +184,9 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
         NotificationCenter.default.addObserver(self, selector: #selector(handlePageChanged), name: .PDFViewPageChanged, object: nil)
 
-        NotificationCenter.default.addObserver(forName: PDFViewerViewController.PDFGoToPageNotification.name, object: nil, queue: OperationQueue.main) { (notification) in
+        gotoPageNotificationObserver = NotificationCenter.default.addObserver(forName: PDFViewerViewController.PDFGoToPageNotification.name, object: nil, queue: OperationQueue.main) { [weak self] (notification) in
             if let page = notification.object as? PDFPage {
-                self.pdfView.go(to: page)
+                self?.pdfView.go(to: page)
             }
         }
     }
