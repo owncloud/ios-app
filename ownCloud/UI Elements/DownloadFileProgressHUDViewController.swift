@@ -10,13 +10,13 @@ import UIKit
 
 class DownloadFileProgressHUDViewController: UIViewController {
 
-	private let PROGRESSVIEW_SIDES_CONSTRAINT_CONSTANT: CGFloat = 20
-	private let CANCELBUTTON_TOP_ANCHOR_CONSTANT: CGFloat = 10
-	private let CANCELBUTTON_HEIGHT_CONSTRAINT_CONSTANT: CGFloat = 40
-	private let INFOLABEL_BOTTOM_ANCHOR_CONSTANT: CGFloat = 10
-	private let INFOLABEL_HEIGHT_CONSTRAINT_CONSTANT: CGFloat = 20
-	private let ROOT_VIEW_BACKGROUND_WHITE: CGFloat = 0.0
-	private let ROOT_VIEW_BACKGROUND_ALPHA: CGFloat = 0.7
+	private let progressViewSidesConstraintConstant: CGFloat = 20
+	private let cancelButtonTopAnchor: CGFloat = 10
+	private let cancelButtonHeightConstraintConstant: CGFloat = 40
+	private let infoLabelBottomAnchor: CGFloat = 10
+	private let infoLabelHeightConstraintConstant: CGFloat = 20
+	private let rootViewBackgroundWhite: CGFloat = 0.0
+	private let rootViewBackgroundAlpha: CGFloat = 0.7
 
 	// MARK: - Instance variables.
 	private var progressView: UIProgressView {
@@ -64,7 +64,7 @@ class DownloadFileProgressHUDViewController: UIViewController {
 	override func loadView() {
 		super.loadView()
 
-		view.backgroundColor = UIColor.init(white: ROOT_VIEW_BACKGROUND_WHITE, alpha: ROOT_VIEW_BACKGROUND_ALPHA)
+		view.backgroundColor = UIColor.init(white: rootViewBackgroundWhite, alpha: rootViewBackgroundAlpha)
 
 		// Progress view
 		progressView.translatesAutoresizingMaskIntoConstraints = false
@@ -72,8 +72,8 @@ class DownloadFileProgressHUDViewController: UIViewController {
 		NSLayoutConstraint.activate([
 			progressView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
 			progressView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-			progressView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: PROGRESSVIEW_SIDES_CONSTRAINT_CONSTANT),
-			progressView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -PROGRESSVIEW_SIDES_CONSTRAINT_CONSTANT)
+			progressView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: progressViewSidesConstraintConstant),
+			progressView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -progressViewSidesConstraintConstant)
 		])
 
 		// Cancel button
@@ -81,10 +81,10 @@ class DownloadFileProgressHUDViewController: UIViewController {
 		view.addSubview(cancelButton)
 		NSLayoutConstraint.activate([
 			cancelButton.centerXAnchor.constraint(equalTo: progressView.centerXAnchor),
-			cancelButton.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: CANCELBUTTON_TOP_ANCHOR_CONSTANT),
+			cancelButton.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: cancelButtonTopAnchor),
 			cancelButton.leftAnchor.constraint(equalTo: progressView.leftAnchor),
 			cancelButton.rightAnchor.constraint(equalTo: progressView.rightAnchor),
-			cancelButton.heightAnchor.constraint(equalToConstant: CANCELBUTTON_HEIGHT_CONSTRAINT_CONSTANT)
+			cancelButton.heightAnchor.constraint(equalToConstant: cancelButtonHeightConstraintConstant)
 		])
 		cancelButton.setTitle("Cancel".localized, for: .normal)
 
@@ -93,10 +93,10 @@ class DownloadFileProgressHUDViewController: UIViewController {
 		view.addSubview(infoLabel)
 		NSLayoutConstraint.activate([
 			infoLabel.centerXAnchor.constraint(equalTo: progressView.centerXAnchor),
-			infoLabel.bottomAnchor.constraint(equalTo: progressView.topAnchor, constant: -INFOLABEL_BOTTOM_ANCHOR_CONSTANT),
+			infoLabel.bottomAnchor.constraint(equalTo: progressView.topAnchor, constant: -infoLabelBottomAnchor),
 			infoLabel.leftAnchor.constraint(equalTo: progressView.leftAnchor),
 			infoLabel.rightAnchor.constraint(equalTo: progressView.rightAnchor),
-			infoLabel.heightAnchor.constraint(equalToConstant: INFOLABEL_HEIGHT_CONSTRAINT_CONSTANT)
+			infoLabel.heightAnchor.constraint(equalToConstant: infoLabelHeightConstraintConstant)
 		])
 
 		infoLabel.text = "Downloading".localized
