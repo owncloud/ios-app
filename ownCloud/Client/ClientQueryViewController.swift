@@ -836,40 +836,64 @@ extension ClientQueryViewController: UISearchResultsUpdating {
 
 // MARK: - ClientItemCell Delegate
 extension ClientQueryViewController: ClientItemCellDelegate {
+//	func moreButtonTapped(cell: ClientItemCell) {
+//		if let item = cell.item {
+//
+//			let tableViewController = MoreStaticTableViewController(style: .grouped)
+//			let header = MoreViewHeader(for: item, with: core!)
+//			let moreViewController = MoreViewController(item: item, core: core!, header: header, viewController: tableViewController)
+//
+//			let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
+//
+//			let deleteRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { (_, _) in
+//				moreViewController.dismiss(animated: true, completion: {
+//					self.delete(item)
+//				})
+//			}, title: "Delete".localized, style: .destructive)
+//
+//			let renameRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+//				moreViewController.dismiss(animated: true, completion: {
+//					self?.rename(item)
+//				})
+//			}, title: "Rename".localized, style: .plainNonOpaque)
+//
+//			let moveRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+//				moreViewController.dismiss(animated: true, completion: {
+//					self?.move(item)
+//				})
+//				}, title: "Move".localized, style: .plainNonOpaque)
+//
+//			var rows = [renameRow, moveRow, deleteRow]
+//
+//			if item.type == .file {
+//				let openInRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+//					moreViewController.dismiss(animated: true, completion: {
+//						if UIDevice.current.isIpad() {
+//
+//							self?.openInRow(item, cell: cell)
+//						} else {
+//							self?.openInRow(item)
+//						}
+//					})
+//					}, title: "Open in".localized, style: .plainNonOpaque)
+//
+//				rows.insert(openInRow, at: 0)
+//			}
+//
+//			tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: rows))
+//
+//			self.present(asCard: moreViewController, animated: true)
+//		}
+//	}
+
 	func moreButtonTapped(cell: ClientItemCell) {
-		if let item = cell.item {
+		guard let item = cell.item else {
+			return
+		}
 
-			let tableViewController = MoreStaticTableViewController(style: .grouped)
-			let header = MoreViewHeader(for: item, with: core)
-			let moreViewController = MoreViewController(header: header, viewController: tableViewController)
-
-			let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
-
-			let deleteRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self, weak moreViewController] (_, _) in
-				moreViewController?.dismiss(animated: true, completion: {
-					self?.delete(item)
-				})
-			}, title: "Delete".localized, style: .destructive)
-
-			let renameRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self, weak moreViewController] (_, _) in
-				moreViewController?.dismiss(animated: true, completion: {
-					self?.rename(item)
-				})
-			}, title: "Rename".localized, style: .plainNonOpaque)
-
-			let moveRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self, weak moreViewController] (_, _) in
-				moreViewController?.dismiss(animated: true, completion: {
-					self?.move(item)
-				})
-			}, title: "Move".localized, style: .plainNonOpaque)
-
-			tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [
-				renameRow,
-				moveRow,
-				deleteRow
-			]))
-
-			self.present(asCard: moreViewController, animated: true)
+		let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core!, into: self)
+		actionsObject.presentActionsCard(with: [actionsObject.openIn, actionsObject.duplicate, actionsObject.move, actionsObject.delete]) {
+			print("LOG ---> presented")
 		}
 	}
 }

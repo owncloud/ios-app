@@ -65,6 +65,7 @@
 		59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 59D4895420C83F2E00369C2E /* InfoPlist.strings */; };
 		6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */; };
 		6E0A569E218702400056B7B4 /* DownloadFileProgressHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0A569D218702400056B7B4 /* DownloadFileProgressHUDViewController.swift */; };
+		6E37F48B2188B27D00CF16CA /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E37F48A2188B27D00CF16CA /* Action.swift */; };
 		6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4F1733217749910049A71B /* ImageDisplayViewController.swift */; };
 		6E83C77E20A32C1B0066EC23 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */; };
 		6E83C78420A33C180066EC23 /* LAContext+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C78320A33C180066EC23 /* LAContext+Extension.swift */; };
@@ -435,6 +436,7 @@
 		6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.release.xcconfig"; sourceTree = "<group>"; };
 		6E0A569D218702400056B7B4 /* DownloadFileProgressHUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadFileProgressHUDViewController.swift; sourceTree = "<group>"; };
 		6E216A632112F58700ED21BD /* NamingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamingViewController.swift; sourceTree = "<group>"; };
+		6E37F48A2188B27D00CF16CA /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		6E4F1733217749910049A71B /* ImageDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDisplayViewController.swift; sourceTree = "<group>"; };
 		6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
 		6E83C78320A33C180066EC23 /* LAContext+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LAContext+Extension.swift"; sourceTree = "<group>"; };
@@ -708,6 +710,7 @@
 				232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */,
 				232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */,
 				23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */,
+				6E37F48A2188B27D00CF16CA /* Action.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -1635,6 +1638,7 @@
 				DC42244C207CAFBB0006A2A6 /* ThemeCollection.swift in Sources */,
 				DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */,
 				DCFED9BA20809B8900A2D984 /* ThemeTVGResource.swift in Sources */,
+				6E37F48B2188B27D00CF16CA /* Action.swift in Sources */,
 				DC3BE0DE2077CC14002A0AC0 /* ClientQueryViewController.swift in Sources */,
 				23C56538212167BE00BD4B47 /* CardTransitionDelegate.swift in Sources */,
 				DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */,

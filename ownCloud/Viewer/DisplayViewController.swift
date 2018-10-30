@@ -312,24 +312,28 @@ class DisplayViewController: UIViewController {
 	}
 
 	@objc func optionsBarButtonPressed() {
-		let tableViewController = MoreStaticTableViewController(style: .grouped)
-		let header = MoreViewHeader(for: item, with: core!)
-		let moreViewController = MoreViewController(item: item, core: core!, header: header, viewController: tableViewController)
-
-		let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
-
-		let openInRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
-			if UIDevice.current.isIpad() {
-				self?.openInRow(self!.item, button: self!.parent!.navigationItem.rightBarButtonItem!)
-			} else {
-				self?.openInRow(self!.item)
-			}
-			moreViewController.dismiss(animated: true)
-			}, title: "Open in".localized, style: .plainNonOpaque)
-
-		tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [openInRow]))
-
-		self.present(asCard: moreViewController, animated: true)
+//		let tableViewController = MoreStaticTableViewController(style: .grouped)
+//		let header = MoreViewHeader(for: item, with: core!)
+//		let moreViewController = MoreViewController(item: item, core: core!, header: header, viewController: tableViewController)
+//
+//		let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
+//
+//		let openInRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+//			if UIDevice.current.isIpad() {
+//				self?.openInRow(self!.item, button: self!.parent!.navigationItem.rightBarButtonItem!)
+//			} else {
+//				self?.openInRow(self!.item)
+//			}
+//			moreViewController.dismiss(animated: true)
+//			}, title: "Open in".localized, style: .plainNonOpaque)
+//
+//		tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [openInRow]))
+//
+		//		self.present(asCard: moreViewController, animated: true)let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core!, into: self)
+		let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core!, into: self)
+		actionsObject.presentActionsCard(with: [actionsObject.openIn, actionsObject.delete]) {
+			print("LOG ---> presented")
+		}
 	}
 
 	// MARK: - Actions
