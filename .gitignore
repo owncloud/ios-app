@@ -74,9 +74,8 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
-fastlane/Appfile
-fastlane/Matchfile
 fastlane/Match/
+.env.default
 
 # Code Injection
 #
@@ -114,14 +113,6 @@ playground.xcworkspace
 # CocoaPods - Refactored to standalone file
 
 # Carthage - Refactored to standalone file
-
-# fastlane
-#
-# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
-# screenshots whenever they are needed.
-# For more information about the recommended setup visit:
-# https://docs.fastlane.tools/best-practices/source-control/#source-control
-
 
 ### Xcode ###
 # Xcode
