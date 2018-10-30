@@ -34,7 +34,7 @@
 
 	if (self.progress.cancelled)
 	{
-		_isDone = YES;
+		[self completedRequest];
 		return;
 	}
 
@@ -68,7 +68,7 @@
 					if (!isOngoing)
 					{
 						dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-							self.perThumbnailCompletionHandler(itemIdentifier, thumbnail.data, error);
+							self.perThumbnailCompletionHandler(itemIdentifier, thumbnail.data, (thumbnail==nil) ? nil : error);
 
 							[self requestNextThumbnail];
 						});
@@ -83,49 +83,17 @@
 	{
 		NSLog(@"Done retrieving %ld / %ld", self.cursorPosition, self.itemIdentifiers.count);
 
-		_isDone = YES;
-		dispatch_async(dispatch_get_main_queue(), ^{
-			self.completionHandler(nil);
-		});
+		[self completedRequest];
 	}
+}
 
-	/*
-	dispatch_group_t allThumbnailsFetchedGroup = dispatch_group_create();
-	NSProgress *fetchThumbnailsProgress = [NSProgress indeterminateProgress];
+- (void)completedRequest
+{
+	_isDone = YES;
 
-	for (NSFileProviderItemIdentifier itemIdentifier in itemIdentifiers)
-	{
-		dispatch_group_enter(allThumbnailsFetchedGroup);
-
-		[_core retrieveItemFromDatabaseForFileID:(OCFileID)itemIdentifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
-			if (itemFromDatabase.type == OCItemTypeCollection)
-			{
-				perThumbnailCompletionHandler(itemIdentifier, nil, nil);
-
-				dispatch_group_leave(allThumbnailsFetchedGroup);
-			}
-			else
-			{
-				[_core retrieveThumbnailFor:itemFromDatabase maximumSize:size scale:0 retrieveHandler:^(NSError *error, OCCore *core, OCItem *item, OCItemThumbnail *thumbnail, BOOL isOngoing, NSProgress *progress) {
-					[fetchThumbnailsProgress addChild:progress withPendingUnitCount:0];
-
-					if (!isOngoing)
-					{
-						perThumbnailCompletionHandler(itemIdentifier, thumbnail.data, error);
-
-						dispatch_group_leave(allThumbnailsFetchedGroup);
-					}
-				}];
-			}
-		}];
-	}
-
-	dispatch_group_notify(allThumbnailsFetchedGroup, dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-		completionHandler(nil);
+	dispatch_async(dispatch_get_main_queue(), ^{
+		self.completionHandler(nil);
 	});
-
-	return (fetchThumbnailsProgress);
-	*/
 }
 
 @end

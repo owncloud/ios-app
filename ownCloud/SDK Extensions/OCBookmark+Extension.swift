@@ -24,8 +24,8 @@ extension OCBookmark {
 		if self.authenticationData != nil,
 		   self.authenticationMethodIdentifier != nil,
 		   let authenticationMethod = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: self.authenticationMethodIdentifier),
-		   authenticationMethod.usesUserName {
-		   	return authenticationMethod.userName(fromAuthenticationData: self.authenticationData)
+		   let userName = authenticationMethod.userName(fromAuthenticationData: self.authenticationData) {
+		   	return userName
 		}
 
 		return nil

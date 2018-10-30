@@ -31,6 +31,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		window = UIWindow(frame: UIScreen.main.bounds)
 
+		ThemeStyle.registerDefaultStyles()
+
 		serverListTableViewController = ServerListTableViewController(style: UITableViewStyle.plain)
 
 		navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
@@ -45,7 +47,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum + 10)
 
-		Log.debug("Minimum fetch refresh time: \(UIApplicationBackgroundFetchIntervalMinimum)")
+		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
+
+		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
 		return true
 	}

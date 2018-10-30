@@ -92,6 +92,9 @@
 "Delete" = "Delete";
 "Deletion of '%@' failed" = "Deletion of '%@' failed";
 
+"Help" = "Help";
+"Feedback" = "Feedback";
+
 /* Settings Messages */
 
 "Security" = "Security";
@@ -122,6 +125,13 @@
 "You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
 "Do you want to open the following URL?" = "Do you want to open the following URL?";
 
+/* User Interface Settings */
+"Theme" = "Theme";
+"User Interface" = "User Interface";
+"ownCloud Dark" = "ownCloud Dark";
+"ownCloud Light" = "ownCloud Light";
+"ownCloud Classic" = "ownCloud Classic";
+
 /* Passcode Messages */
 
 "Enter code" = "Enter code";
@@ -145,8 +155,17 @@
 
 "Forbidden Characters" = "Forbidden Characters";
 "File name cannot contain / or \\" = "File name cannot contain / or \\";
-
 "New Folder" = "New Folder";
 "Rename" =" Rename";
 "Create folder" =" Create folder";
 "Duplicate" = "Duplicate";
+"Move" = "Move";
+
+/* Directory Picker Messages */
+"Move here" = "Move here";
+
+/* Preview */
+"Open file" = "Open file";
+"There is no network" = "There is no network";
+"Error" = "Error";
+"Could not get the picture" = "Could not get the picture";

@@ -589,13 +589,15 @@ class BookmarkViewController: StaticTableViewController {
 		var firstResponder : UIView?
 		var firstResponderRow : StaticTableViewRow?
 
-		if self.bookmark?.url == nil {
+		if urlRow?.attached == true, (urlRow?.value as? String)?.count == 0 {
 			firstResponderRow = urlRow
 		} else {
-			if usernameRow?.attached == true, (usernameRow?.value as? String)?.count == 0 {
-				firstResponderRow = usernameRow
-			} else if passwordRow?.attached == true, (passwordRow?.value as? String)?.count == 0 {
-				firstResponderRow = passwordRow
+			if credentialsSection?.attached == true {
+				if usernameRow?.attached == true, (usernameRow?.value as? String)?.count == 0 {
+					firstResponderRow = usernameRow
+				} else if passwordRow?.attached == true, (passwordRow?.value as? String)?.count == 0 {
+					firstResponderRow = passwordRow
+				}
 			}
 		}
 

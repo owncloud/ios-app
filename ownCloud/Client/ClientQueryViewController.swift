@@ -18,15 +18,18 @@
 
 import UIKit
 import ownCloudSDK
+import MobileCoreServices
 
 typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
 class ClientQueryViewController: UITableViewController, Themeable {
-	var core : OCCore?
-	var query : OCQuery?
+	var core : OCCore
+	var query : OCQuery
 
 	var items : [OCItem]?
+
+	var selectedItem: OCItem?
 
 	var queryProgressSummary : ProgressSummary? {
 		willSet {
@@ -51,21 +54,21 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 		observerContext = UnsafeMutableRawPointer(&observerContextValue)
 
-		super.init(style: .plain)
-
 		core = inCore
 		query = inQuery
 
+		super.init(style: .plain)
+
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 
-		query?.delegate = self
+		query.delegate = self
 
-		query?.addObserver(self, forKeyPath: "state", options: .initial, context: observerContext)
-		core?.addObserver(self, forKeyPath: "reachabilityMonitor.available", options: .initial, context: observerContext)
+		query.addObserver(self, forKeyPath: "state", options: .initial, context: observerContext)
+		core.addObserver(self, forKeyPath: "reachabilityMonitor.available", options: .initial, context: observerContext)
 
-		core?.start(query)
+		core.start(query)
 
-		self.navigationItem.title = (query?.queryPath as NSString?)!.lastPathComponent
+		self.navigationItem.title = (query.queryPath as NSString?)!.lastPathComponent
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -73,10 +76,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	deinit {
-		query?.removeObserver(self, forKeyPath: "state", context: observerContext)
-		core?.removeObserver(self, forKeyPath: "reachabilityMonitor.available", context: observerContext)
+		query.removeObserver(self, forKeyPath: "state", context: observerContext)
+		core.removeObserver(self, forKeyPath: "reachabilityMonitor.available", context: observerContext)
 
-		core?.stop(query)
+		core.stop(query)
 		Theme.shared.unregister(client: self)
 
 		if messageThemeApplierToken != nil {
@@ -90,7 +93,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	// MARK: - Actions
 	@objc func refreshQuery() {
 		UIImpactFeedbackGenerator().impactOccurred()
-		core?.reload(query)
+		core.reload(query)
 	}
 
 	// swiftlint:disable block_based_kvo
@@ -138,6 +141,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
 
 		Theme.shared.register(client: self, applyImmediately: true)
+
+		self.tableView.dragDelegate = self
+		self.tableView.dropDelegate = self
+		self.tableView.dragInteractionEnabled = true
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
@@ -153,8 +160,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		// Refresh when navigating back to us
 		if initialAppearance == false {
-			if query?.state == .idle {
-				core?.reload(query)
+			if query.state == .idle {
+				core.reload(query)
 			}
 		}
 
@@ -163,49 +170,49 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		updateQueryProgressSummary()
 
 		sortBar?.sortMethod = self.sortMethod
-		query?.sortComparator = self.sortMethod.comparator()
+		query.sortComparator = self.sortMethod.comparator()
 	}
 
 	func updateQueryProgressSummary() {
 		var summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
 
-		switch query?.state {
-			case .stopped?:
+		switch query.state {
+			case .stopped:
 				summary.message = "Stopped".localized
 
-			case .started?:
+			case .started:
 				summary.message = "Started…".localized
 
-			case .contentsFromCache?:
-				if core?.reachabilityMonitor?.available == true {
+			case .contentsFromCache:
+				if core.reachabilityMonitor.available == true {
 					summary.message = "Contents from cache.".localized
 				} else {
 					summary.message = "Offline. Contents from cache.".localized
 				}
 
-			case .waitingForServerReply?:
+			case .waitingForServerReply:
 				summary.message = "Waiting for server response…".localized
 
-			case .targetRemoved?:
+			case .targetRemoved:
 				summary.message = "This folder no longer exists.".localized
 
-			case .idle?:
+			case .idle:
 				summary.message = "Everything up-to-date.".localized
 				summary.progressCount = 0
 
-			case .none:
+			default:
 				summary.message = "Please wait…".localized
 		}
 
-		switch query?.state {
-			case .idle?:
+		switch query.state {
+			case .idle:
 				DispatchQueue.main.async {
 					if !self.refreshController!.isRefreshing {
 						self.refreshController?.beginRefreshing()
 					}
 				}
 
-			case .contentsFromCache?, .stopped?:
+			case .contentsFromCache, .stopped:
 				DispatchQueue.main.async {
 					self.tableView.refreshControl = nil
 				}
@@ -267,30 +274,18 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		switch rowItem.type {
 			case .collection:
-				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core!, query: OCQuery(forPath: rowItem.path)), animated: true)
+				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core, query: OCQuery(forPath: rowItem.path)), animated: true)
 
 			case .file:
-				if let downloadProgress = self.core?.downloadItem(rowItem, options: nil, resultHandler: { (error, _, item, file) in
-					OnMainThread {
-						if error != nil {
-							// TODO: Handle error
-						} else {
-							let itemViewController : ClientItemViewController = ClientItemViewController()
-
-							itemViewController.file = file
-							itemViewController.item = item
-
-							self.navigationController?.pushViewController(itemViewController, animated: true)
-						}
-					}
-				}) {
-					progressSummarizer?.startTracking(progress: downloadProgress)
-				}
+				let itemViewController = DisplayHostViewController(for: rowItem, with: core)
+				self.navigationController?.pushViewController(itemViewController, animated: true)
 		}
+
+		tableView.deselectRow(at: indexPath, animated: true)
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		guard let item: OCItem = items?[indexPath.row], core != nil else {
+		guard let item: OCItem = items?[indexPath.row] else {
 			return nil
 		}
 
@@ -306,22 +301,72 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			})
 		}
 
-		let duplicateTestContextualAction = UIContextualAction.init(style: .normal, title: "Duplicate".localized, handler: { (_, _, actionPerformed) in
-			if let item = self.items?[indexPath.row] {
-				_ = self.core?.copy(item, to: self.query?.rootItem, withName: item.name + " copy", options: nil, resultHandler: { (error, _, item, _) in
+		let moveContextualAction = UIContextualAction(style: .normal, title: "Move") { (_, _, actionPerformed) in
+
+			let directoryPickerVC = ClientDirectoryPickerViewController(core: self.core, path: "/", completion: { (selectedDirectory) in
+				if let progress = self.core.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
 					if error != nil {
-						Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
+						Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
 					}
-				})
-			}
+				}) {
+					self.progressSummarizer?.startTracking(progress: progress)
+				}
+			})
+
+			let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerVC)
+			self.navigationController?.present(pickerNavigationController, animated: true)
 
 			actionPerformed(false)
-		})
+		}
 
-		let actions: [UIContextualAction] = [duplicateTestContextualAction, renameContextualAction, deleteContextualAction]
+		let actions: [UIContextualAction] = [deleteContextualAction, renameContextualAction, moveContextualAction]
 		let actionsConfigurator: UISwipeActionsConfiguration = UISwipeActionsConfiguration(actions: actions)
 
 		return actionsConfigurator
+	}
+
+	func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
+		return true
+	}
+
+	func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+		guard let item = items?[indexPath.row] else {
+			return []
+		}
+
+		guard item.type != .collection else {
+			return []
+		}
+
+		guard let data = item.serializedData() else {
+			return []
+		}
+
+		let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
+		let dragItem = UIDragItem(itemProvider: itemProvider)
+		dragItem.localObject = item
+		return [dragItem]
+	}
+
+	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+
+		if session.localDragSession != nil {
+				guard let items = items else {
+					return UITableViewDropProposal(operation: .move)
+				}
+
+				if let indexPath = destinationIndexPath, items.count - 1 < indexPath.row {
+					return UITableViewDropProposal(operation: .forbidden)
+				}
+
+				if let indexPath = destinationIndexPath, items[indexPath.row].type == .file {
+					return UITableViewDropProposal(operation: .move)
+				} else {
+					return UITableViewDropProposal(operation: .move, intent: .insertIntoDestinationIndexPath)
+				}
+		} else {
+			return UITableViewDropProposal(operation: .forbidden)
+		}
 	}
 
 	// MARK: - Message
@@ -486,7 +531,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				return
 			}
 
-			if let progress = self.core?.move(item, to: self.query?.rootItem, withName: newName, options: nil, resultHandler: { (error, _, _, _) in
+			if let progress = self.core.move(item, to: self.query.rootItem, withName: newName!, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
 
@@ -514,7 +559,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			destructiveLabel: "Delete".localized,
 			preferredStyle: UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet,
 			destructiveAction: {
-				if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
+				if let progress = self.core.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
 					if error != nil {
 						Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
 
@@ -531,8 +576,27 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.present(alertController, animated: true, completion: viewDidAppearHandler)
 	}
 
+	func move(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
+		let directoryPickerVC = ClientDirectoryPickerViewController(core: self.core, path: "/", completion: { (selectedDirectory) in
+
+			if let progress = self.core.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
+				if error != nil {
+					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
+					completionHandler?(false)
+				} else {
+					completionHandler?(true)
+				}
+			}) {
+				self.progressSummarizer?.startTracking(progress: progress)
+			}
+		})
+
+		let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerVC)
+		self.navigationController?.present(pickerNavigationController, animated: true)
+	}
+
 	func createFolder(viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
-		let createFolderVC = NamingViewController(with: core, defaultName: "New Folder".localized, stringValidator: { name in
+		let createFolderVC = NamingViewController( with: core, defaultName: "New Folder".localized, stringValidator: { name in
 			if name.contains("/") || name.contains("\\") {
 				return (false, "File name cannot contain / or \\")
 			} else {
@@ -544,7 +608,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				return
 			}
 
-			if let progress = self.core?.createFolder(newName, inside: self.query?.rootItem, options: nil, resultHandler: { (error, _, _, _) in
+			if let progress = self.core.createFolder(newName!, inside: self.query.rootItem, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.error("Error \(String(describing: error)) creating folder \(String(describing: newName))")
 					completionHandler?(false)
@@ -578,7 +642,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			name = "\(itemName) copy\(fileExtension)"
 		}
 
-		if let progress = self.core?.copy(item, to: self.query?.rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in
+		if let progress = self.core.copy(item, to: self.query.rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in
 			if error != nil {
 				Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
 
@@ -652,7 +716,7 @@ extension ClientQueryViewController : SortBarDelegate {
 
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
-		query?.sortComparator = sortMethod.comparator()
+		query.sortComparator = sortMethod.comparator()
 	}
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
@@ -674,16 +738,16 @@ extension ClientQueryViewController: UISearchResultsUpdating {
 		}
 
 		if searchText == "" {
-			if let filter = query?.filter(withIdentifier: "text-search") {
-				query?.removeFilter(filter)
+			if let filter = query.filter(withIdentifier: "text-search") {
+				query.removeFilter(filter)
 			}
 		} else {
-			if let filter = query?.filter(withIdentifier: "text-search") {
-				query?.updateFilter(filter, applyChanges: { filterToChange in
+			if let filter = query.filter(withIdentifier: "text-search") {
+				query.updateFilter(filter, applyChanges: { filterToChange in
 					(filterToChange as? OCQueryFilter)?.filterHandler = filterHandler
 				})
 			} else {
-				query?.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
+				query.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
 			}
 		}
 	}
@@ -695,8 +759,8 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 		if let item = cell.item {
 
 			let tableViewController = MoreStaticTableViewController(style: .grouped)
-			let header = MoreViewHeader(for: item, with: core!)
-			let moreViewController = MoreViewController(item: item, core: core!, header: header, viewController: tableViewController)
+			let header = MoreViewHeader(for: item, with: core)
+			let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
 
 			let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
@@ -712,32 +776,88 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 				})
 			}, title: "Rename".localized, style: .plainNonOpaque)
 
-			let duplicateRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+			let moveRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
 				moreViewController.dismiss(animated: true, completion: {
-					self?.duplicate(item)
+					self?.move(item)
 				})
-			}, title: "Duplicate".localized, style: .plainNonOpaque)
+				}, title: "Move".localized, style: .plainNonOpaque)
 
 			tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [
 				renameRow,
-				duplicateRow,
+				moveRow,
 				deleteRow
-//				StaticTableViewRow(label: "1"),
-//				StaticTableViewRow(label: "2"),
-//				StaticTableViewRow(label: "3"),
-//				StaticTableViewRow(label: "4"),
-//				StaticTableViewRow(label: "5"),
-//				StaticTableViewRow(label: "6"),
-//				StaticTableViewRow(label: "7"),
-//				StaticTableViewRow(label: "8"),
-//				StaticTableViewRow(label: "9"),
-//				StaticTableViewRow(label: "10"),
-//				StaticTableViewRow(label: "11"),
-//				StaticTableViewRow(label: "12"),
-//				StaticTableViewRow(label: "13")
 				]))
 
 			self.present(asCard: moreViewController, animated: true)
 		}
 	}
+}
+
+extension ClientQueryViewController: UITableViewDropDelegate {
+	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+
+		for item in coordinator.items {
+
+			var destinationItem: OCItem?
+
+			guard let item = item.dragItem.localObject as? OCItem else {
+				return
+			}
+
+			if coordinator.proposal.intent == .insertIntoDestinationIndexPath {
+
+				guard let destinationIP = coordinator.destinationIndexPath else {
+					return
+				}
+
+				guard let items = items, items.count >= destinationIP.row else {
+					return
+				}
+
+				let rootItem = items[destinationIP.row]
+
+				guard rootItem.type == .collection else {
+					return
+				}
+
+				destinationItem = rootItem
+
+			} else {
+
+				guard item.parentFileID != self.query.rootItem.fileID else {
+					return
+				}
+
+				destinationItem =  self.query.rootItem
+
+			}
+
+			if let progress = self.core.move(item, to: destinationItem!, withName:  item.name, options: nil, resultHandler: { (error, _, _, _) in
+				if error != nil {
+					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
+				}
+			}) {
+				self.progressSummarizer?.startTracking(progress: progress)
+			}
+		}
+	}
+}
+
+extension ClientQueryViewController: UITableViewDragDelegate {
+
+	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+		guard let item = items?[indexPath.row] else {
+			return []
+		}
+
+		guard let data = item.serializedData() else {
+			return []
+		}
+
+		let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
+		let dragItem = UIDragItem(itemProvider: itemProvider)
+		dragItem.localObject = item
+		return [dragItem]
+	}
+
 }

@@ -163,12 +163,12 @@ extension ClientRootViewController : OCCoreDelegate {
 			}
 
 			if presentIssue != nil {
-				if presentIssue?.type == .multipleChoice {
-					let alertViewController = UIAlertController(with: presentIssue!)
+				var presentViewController : UIViewController?
 
-					self.present(alertViewController, animated: true, completion: nil)
+				if presentIssue?.type == .multipleChoice {
+					presentViewController = UIAlertController(with: presentIssue!)
 				} else {
-					let issuesViewController = ConnectionIssueViewController(displayIssues: presentIssue?.prepareForDisplay(), completion: { (response) in
+					presentViewController = ConnectionIssueViewController(displayIssues: presentIssue?.prepareForDisplay(), completion: { (response) in
 						switch response {
 							case .cancel:
 								presentIssue?.reject()
@@ -179,8 +179,16 @@ extension ClientRootViewController : OCCoreDelegate {
 							case .dismiss: break
 						}
 					})
+				}
 
-					self.present(issuesViewController, animated: true, completion: nil)
+				if presentViewController != nil {
+					var hostViewController : UIViewController = self
+
+					while hostViewController.presentedViewController != nil {
+						hostViewController = hostViewController.presentedViewController!
+					}
+
+					hostViewController.present(presentViewController!, animated: true, completion: nil)
 				}
 			}
 		}
