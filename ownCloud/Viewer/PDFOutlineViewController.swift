@@ -106,7 +106,6 @@ class PDFOutlineViewController: UIViewController, Themeable {
         if mode == .ToC {
             let tocViewController = PDFTocTableViewController()
             tocViewController.outlineRoot = self.pdfDocument?.outlineRoot
-            tocViewController.themeCollection = self.themeCollection
             toViewController = tocViewController
         } else {
             let thumbnaisViewController = PDFThumbnailsCollectionViewController()

@@ -19,7 +19,7 @@
 import UIKit
 import PDFKit
 
-class PDFTocTableViewController: UITableViewController {
+class PDFTocTableViewController: UITableViewController, Themeable {
 
     let activityIndicatorView: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
 
@@ -49,8 +49,6 @@ class PDFTocTableViewController: UITableViewController {
 
     var outlineRoot: PDFOutline?
 
-    var themeCollection: ThemeCollection?
-
     fileprivate var tocItems = [PDFTocItem]()
 
     override func viewDidLoad() {
@@ -63,9 +61,8 @@ class PDFTocTableViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if self.themeCollection != nil {
-            self.tableView.applyThemeCollection(self.themeCollection!)
-        }
+        Theme.shared.register(client: self)
+
         enableTocBuilding = true
         if outlineRoot != nil {
             buildTocList(fromRoot: outlineRoot!)
@@ -75,10 +72,17 @@ class PDFTocTableViewController: UITableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         enableTocBuilding = false
+        Theme.shared.unregister(client: self)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+    }
+
+    // MARK: - Themeable support
+
+    func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+        self.tableView.applyThemeCollection(collection)
     }
 
     // MARK: - Table view data source
