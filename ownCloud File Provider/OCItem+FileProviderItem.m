@@ -29,6 +29,11 @@
 
 - (NSFileProviderItemIdentifier)itemIdentifier
 {
+	if ([self.path isEqual:@"/"])
+	{
+		return (NSFileProviderRootContainerItemIdentifier);
+	}
+
 	return (self.fileID);
 }
 

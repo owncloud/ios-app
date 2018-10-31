@@ -234,7 +234,7 @@
 				{
 					if (!observer.didProvideInitialItems)
 					{
-						OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER FOR %@: %@", _enumerationObservers.count, query.queryPath, query.queryResults);
+						OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER %@ FOR %@: %@", _enumerationObservers.count, observer.enumerationObserver, query.queryPath, query.queryResults);
 
 						observer.didProvideInitialItems = YES;
 
