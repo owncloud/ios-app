@@ -60,6 +60,7 @@
 		DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */; };
 		DC0B37972051681600189B9A /* ThemeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B37962051681600189B9A /* ThemeButton.swift */; };
 		DC136582208223F000FC0F60 /* OCBookmark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */; };
+		DC18898E218A773700CFB3F9 /* ownCloudMocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
 		DC1B2707209CF0D3004715E1 /* IssuesDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B26FE209CF0D2004715E1 /* IssuesDismissalAnimator.swift */; };
 		DC1B2708209CF0D3004715E1 /* IssuesPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B26FF209CF0D2004715E1 /* IssuesPresentationAnimator.swift */; };
 		DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B2705209CF0D3004715E1 /* CertificateViewController.swift */; };
@@ -217,6 +218,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = DCA8922F20F5F13F00AEFF98;
 			remoteInfo = ownCloudMockingTests;
+		};
+		DC188986218A772900CFB3F9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DCA8922620F5F13E00AEFF98;
+			remoteInfo = ownCloudMocking;
 		};
 		DC27A19220CAA0C6008ACB6C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -520,6 +528,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC18898E218A773700CFB3F9 /* ownCloudMocking.framework in Frameworks */,
 				EA1D571C6B1E95925C459228 /* EarlGrey.framework in Frameworks */,
 				75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */,
 			);
@@ -1085,6 +1094,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DC188987218A772900CFB3F9 /* PBXTargetDependency */,
 				233BDEB2204FEFE500C06732 /* PBXTargetDependency */,
 			);
 			name = ownCloudTests;
@@ -1599,6 +1609,11 @@
 			isa = PBXTargetDependency;
 			target = 233BDE9B204FEFE500C06732 /* ownCloud */;
 			targetProxy = 233BDEB1204FEFE500C06732 /* PBXContainerItemProxy */;
+		};
+		DC188987218A772900CFB3F9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ownCloudMocking;
+			targetProxy = DC188986218A772900CFB3F9 /* PBXContainerItemProxy */;
 		};
 		DC27A19320CAA0C6008ACB6C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
