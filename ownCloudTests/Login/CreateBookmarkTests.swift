@@ -21,6 +21,12 @@ class CreateBookmarkTests: XCTestCase {
 	public typealias OCMPrepareForSetup = @convention(block)
 		(_ options: NSDictionary, _ completionHandler: OCMPrepareForSetupCompletionHandler) -> Void
 
+	public typealias OCMGenerateAuthenticationDataWithMethodCompletionHandler = @convention(block)
+		(_ error: NSError?, _ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier, _ authenticationData: NSData?) -> Void
+
+	public typealias OCMGenerateAuthenticationDataWithMethod = @convention(block)
+		(_ methodIdentifier: OCAuthenticationMethodIdentifier, _ options: OCAuthenticationMethodBookmarkAuthenticationDataGenerationOptions, _ completionHandler: OCMGenerateAuthenticationDataWithMethodCompletionHandler) -> Void
+
 	override func setUp() {
 		super.setUp()
 		// Put setup code here. This method is called before the invocation of each test method in the class.
@@ -37,17 +43,7 @@ class CreateBookmarkTests: XCTestCase {
 		let mockUrlServer = "http://mocked.owncloud.server.com"
 
 		//Mock
-		let completionHandlerBlock : OCMPrepareForSetup = {
-			(dict, mockedBlock) in
-			let issue: OCConnectionIssue = OCConnectionIssue(forError: nil, level: .informal, issueHandler: nil)
-			let url: NSURL = NSURL(fileURLWithPath: mockUrlServer)
-			let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
-															 OCAuthenticationMethodOAuth2Identifier as NSString]
-			mockedBlock(issue, url, authMethods, authMethods)
-		}
-
-		OCMockManager.shared.addMocking(blocks:
-			[OCMockLocation.ocConnectionPrepareForSetupWithOptions: completionHandlerBlock])
+		mockOCConnctionPrepareForSetup(mockUrlServer: mockUrlServer)
 
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -69,5 +65,57 @@ class CreateBookmarkTests: XCTestCase {
 
 		//Reset status
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+	}
+
+	func testLoginRightCredentials () {
+
+		let mockUrlServer = "http://mocked.owncloud.server.com"
+		let userName = "test"
+		let password = "test"
+
+		//Mock
+		mockOCConnctionPrepareForSetup(mockUrlServer: mockUrlServer)
+		mockOCConnectionGenerateAuthenticationDataWithMethod()
+
+		//Actions
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).perform(grey_replaceText(userName))
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).perform(grey_replaceText(password))
+
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+	}
+
+	// MARK: - Mocks
+	func mockOCConnctionPrepareForSetup(mockUrlServer:String) {
+		let completionHandlerBlock : OCMPrepareForSetup = {
+			(dict, mockedBlock) in
+			let issue: OCConnectionIssue = OCConnectionIssue(forError: nil, level: .informal, issueHandler: nil)
+			let url: NSURL = NSURL(fileURLWithPath: mockUrlServer)
+			let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
+																   OCAuthenticationMethodOAuth2Identifier as NSString]
+			mockedBlock(issue, url, authMethods, authMethods)
+		}
+
+		OCMockManager.shared.addMocking(blocks:
+			[OCMockLocation.ocConnectionPrepareForSetupWithOptions: completionHandlerBlock])
+	}
+
+	func mockOCConnectionGenerateAuthenticationDataWithMethod() {
+		let completionHandlerBlock : OCMGenerateAuthenticationDataWithMethod = {
+			(methodIdentifier, options, mockedBlock) in
+
+			//_ error: NSError, _ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier, _ authenticationData: NSData
+
+			let error:NSError? = nil
+			let authenticationMethodIdentifier = OCAuthenticationMethodBasicAuthIdentifier as NSString
+			let data:NSData? = "test".data(using: .utf8)! as NSData
+
+			mockedBlock(error, authenticationMethodIdentifier, data)
+		}
+
+		OCMockManager.shared.addMocking(blocks:
+			[OCMockLocation.ocConnectionGenerateAuthenticationDataWithMethod: completionHandlerBlock])
 	}
 }

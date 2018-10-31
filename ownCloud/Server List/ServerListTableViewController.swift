@@ -109,7 +109,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			settingsBarButtonItem
 		]
 
-		considerBetaWarning()
+		//considerBetaWarning()
 	}
 
 	func considerBetaWarning() {
