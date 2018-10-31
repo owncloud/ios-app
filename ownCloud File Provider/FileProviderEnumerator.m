@@ -134,7 +134,7 @@
 //
 //						if (item.type == OCItemTypeFile)
 //						{
-//							NSLog(@"Observe item: %@", item);
+//							OCLogDebug(@"Observe item: %@", item);
 //
 //							[observer didEnumerateItems:@[ item ]];
 //							[observer finishEnumeratingUpToPage:nil];
@@ -183,7 +183,7 @@
 	}
 	else
 	{
-		NSLog(@"Query already running..");
+		OCLogDebug(@"Query already running..");
 
 		if (_query != nil)
 		{

@@ -98,7 +98,7 @@
 		}
 	});
 
-	NSLog(@"-itemForIdentifier:error: %@ => %@", identifier, item);
+	OCLogDebug(@"-itemForIdentifier:error: %@ => %@", identifier, item);
 
 	return item;
 }
@@ -113,7 +113,7 @@
 		url = [self.core localURLForItem:item];
 	}
 
-	NSLog(@"-URLForItemWithPersistentIdentifier: %@ => %@", identifier, url);
+	OCLogDebug(@"-URLForItemWithPersistentIdentifier: %@ => %@", identifier, url);
 
 	return (url);
 
@@ -137,7 +137,7 @@
 	// <base storage directory>/<item identifier>/<item file name> above
 	NSParameterAssert(pathComponents.count > 2);
 
-	NSLog(@"-persistentIdentifierForItemAtURL: %@", (pathComponents[pathComponents.count - 2]));
+	OCLogDebug(@"-persistentIdentifierForItemAtURL: %@", (pathComponents[pathComponents.count - 2]));
 
 	return pathComponents[pathComponents.count - 2];
 }
@@ -178,7 +178,7 @@
 		 if ((item = [self itemForIdentifier:itemIdentifier error:&error]) != nil)
 		 {
 			[self.core downloadItem:(OCItem *)item options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, OCFile *file) {
-				NSLog(@"Starting to provide file:\nPAU: %@\nFURL: %@\nID: %@\nErr: %@\nlocalRelativePath: %@", provideAtURL, file.url, item.itemIdentifier, error, item.localRelativePath);
+				OCLogDebug(@"Starting to provide file:\nPAU: %@\nFURL: %@\nID: %@\nErr: %@\nlocalRelativePath: %@", provideAtURL, file.url, item.itemIdentifier, error, item.localRelativePath);
 
 				completionHandler(error);
 			}];
@@ -232,7 +232,7 @@
 			if ((parentItem = [self itemForIdentifier:item.parentItemIdentifier error:&error]) != nil)
 			{
 				[self.core reportLocalModificationOfItem:(OCItem *)item parentItem:(OCItem *)parentItem withContentsOfFileAtURL:changedItemURL isSecurityScoped:NO options:nil placeholderCompletionHandler:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
-					NSLog(@"Upload of update finished with error=%@ item=%@", error, item);
+					OCLogDebug(@"Upload of update finished with error=%@ item=%@", error, item);
 				}];
 			}
 		 }
@@ -513,7 +513,7 @@
 
 - (void)core:(OCCore *)core handleError:(NSError *)error issue:(OCConnectionIssue *)issue
 {
-	NSLog(@"CORE ERROR: error=%@, issue=%@", error, issue);
+	OCLogDebug(@"CORE ERROR: error=%@, issue=%@", error, issue);
 
 	if (issue.type == OCConnectionIssueTypeMultipleChoice)
 	{

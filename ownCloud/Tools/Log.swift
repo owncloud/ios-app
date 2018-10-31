@@ -46,6 +46,6 @@ class Log {
 	}
 
 	static func mask(_ obj: Any?) -> Any {
-		return (OCLogger.shared.applyPrivacyMask(obj))!
+		return OCLogger.applyPrivacyMask(obj) ?? "(null)"
 	}
 }
