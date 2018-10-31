@@ -38,8 +38,6 @@
 {
 	NSDictionary *bundleInfoDict = [[NSBundle bundleForClass:[FileProviderExtension class]] infoDictionary];
 
-	OCLogger.logLevel = OCLogLevelDebug;
-
 	OCCore.hostHasFileProvider = YES;
 
 	OCAppIdentity.sharedAppIdentity.appIdentifierPrefix = bundleInfoDict[@"OCAppIdentifierPrefix"];
