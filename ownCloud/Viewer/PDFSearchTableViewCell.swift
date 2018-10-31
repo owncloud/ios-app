@@ -46,7 +46,6 @@ class PDFSearchTableViewCell: ThemeTableViewCell {
         self.contentView.addSubview(pageLabel)
 
         titleLabel.font = UIFont.systemFont(ofSize: titleFontSize, weight: UIFont.Weight.regular)
-        titleLabel.adjustsFontSizeToFitWidth = false
         titleLabel.lineBreakMode = .byTruncatingTail
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 

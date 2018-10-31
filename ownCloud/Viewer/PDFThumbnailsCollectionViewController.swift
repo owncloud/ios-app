@@ -60,11 +60,9 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
         var thumbnailSize = CGSize(width: thumbnailWidth, height: thumbnailWidth)
 
         // Try to correct cell size to match size of the actual generated thumbnails
-        if let pdfDocument = self.pdfDocument {
-            if let pdfPage = pdfDocument.page(at: 0) {
-                let thumbnail = pdfPage.thumbnail(of: thumbnailSize, for: .cropBox)
-                thumbnailSize = thumbnail.size
-            }
+        if let pdfPage = self.pdfDocument?.page(at: 0)  {
+            let thumbnail = pdfPage.thumbnail(of: thumbnailSize, for: .cropBox)
+            thumbnailSize = thumbnail.size
         }
 
         let flowLayout = self.collectionViewLayout as? UICollectionViewFlowLayout
