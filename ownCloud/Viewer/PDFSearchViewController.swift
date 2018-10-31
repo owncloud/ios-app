@@ -156,15 +156,15 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
     // MARK: - Private helpers
 
     fileprivate func cancelSearch() {
-        guard let pdf = pdfDocument else { return }
+        guard let pdfDocument = pdfDocument else { return }
 
-        if pdf.isFinding {
-            pdf.cancelFindString()
+        if pdfDocument.isFinding {
+            pdfDocument.cancelFindString()
         }
     }
 
     fileprivate func beginSearch() {
-        guard let pdf = pdfDocument else { return }
+        guard let pdfDocument = pdfDocument else { return }
 
         // Remove data from previous search
         self.matches.removeAll()
@@ -172,7 +172,7 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
         // Cancel eventually pending search
         cancelSearch()
         // Begin a new search
-        pdf.beginFindString(self.searchText,
+        pdfDocument.beginFindString(self.searchText,
                             withOptions: [.caseInsensitive, .diacriticInsensitive])
     }
 

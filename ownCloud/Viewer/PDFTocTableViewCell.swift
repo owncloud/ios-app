@@ -27,7 +27,7 @@ class PDFTocTableViewCell: ThemeTableViewCell {
     static let identifier = "PDFTocTableViewCell"
 
     fileprivate let layoutMargin: CGFloat = 15.0
-    fileprivate let pageFontSize: CGFloat = 15
+    fileprivate let pageFontSize: CGFloat = 15.0
 
     // Array of fonts to be used at different chapter nesting levels
     fileprivate static let titleFonts = [
@@ -76,6 +76,7 @@ class PDFTocTableViewCell: ThemeTableViewCell {
     }
 
     // MARK: - Theme support
+    
     override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
         let itemState = ThemeItemState(selected: self.isSelected)
 

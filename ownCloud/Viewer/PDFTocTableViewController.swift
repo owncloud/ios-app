@@ -51,7 +51,7 @@ class PDFTocTableViewController: UITableViewController {
 
     var themeCollection: ThemeCollection?
 
-    fileprivate var items = [PDFTocItem]()
+    fileprivate var tocItems = [PDFTocItem]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,12 +88,12 @@ class PDFTocTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        return tocItems.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: PDFTocTableViewCell.identifier, for: indexPath) as? PDFTocTableViewCell
-        cell!.setup(with: items[indexPath.row])
+        cell!.setup(with: tocItems[indexPath.row])
         return cell!
     }
 
@@ -101,7 +101,7 @@ class PDFTocTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let item = items[indexPath.row]
+        let item = tocItems[indexPath.row]
         if let pdfPage = item.page {
             self.dismiss(animated: true) {
                 NotificationCenter.default.post(name: PDFViewerViewController.PDFGoToPageNotification.name, object: pdfPage)
@@ -122,12 +122,12 @@ class PDFTocTableViewController: UITableViewController {
             guard !outlineLabel.isEmpty else { return }
 
             let item = PDFTocItem(level: stack.count, outline: currentOutline)
-            if let lastItem = items.last {
+            if let lastItem = tocItems.last {
                 if lastItem != item {
-                    items.append(item)
+                    tocItems.append(item)
                 }
             } else {
-                items.append(item)
+                tocItems.append(item)
             }
         }
 
@@ -177,7 +177,7 @@ class PDFTocTableViewController: UITableViewController {
                 }
 
                 if !self.enableTocBuilding {
-                    self.items.removeAll()
+                    self.tocItems.removeAll()
                     break
                 }
 

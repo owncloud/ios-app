@@ -46,11 +46,10 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	fileprivate var gotoPageNotificationObserver : Any?
 
-    fileprivate let SEARCH_ANNOTATION_DELAY  = 3.0
-    fileprivate let ANIMATION_DUR = 0.25
-    fileprivate let THUMBNAIL_VIEW_WIDTH_MULTIPLIER: CGFloat = 0.15
-    fileprivate let THUMBNAIL_VIEW_HEIGHT_MULTIPLIER: CGFloat = 0.1
-    fileprivate let FILENAME_CONTAINER_TOP_MARGIN: CGFloat = 10.0
+    fileprivate let searchAnnotationDelay = 3.0
+    fileprivate let thumbnailViewWidthMultiplier: CGFloat = 0.15
+    fileprivate let thumbnailViewHeightMultiplier: CGFloat = 0.1
+    fileprivate let filenameContainerTopMargin: CGFloat = 10.0
     fileprivate let pdfView = PDFView()
     fileprivate let thumbnailView = PDFThumbnailView()
 
@@ -123,7 +122,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
             containerView.spacing = UIStackView.spacingUseSystem
             containerView.isLayoutMarginsRelativeArrangement = true
-            containerView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: FILENAME_CONTAINER_TOP_MARGIN,
+            containerView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: filenameContainerTopMargin,
                                                                              leading: 0,
                                                                              bottom: 0,
                                                                              trailing: 0)
@@ -227,65 +226,65 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
     @objc func goToPage() {
 
-        guard let pdf = pdfView.document else { return }
+        guard let pdfDocument = pdfView.document else { return }
 
-        let msg = NSString(format: "This document has %@ pages".localized as NSString, "\(pdf.pageCount)") as String
-        let ac = UIAlertController(title: "Go to page".localized, message: msg, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
+        let alertMessage = NSString(format: "This document has %@ pages".localized as NSString, "\(pdfDocument.pageCount)") as String
+        let alertController = UIAlertController(title: "Go to page".localized, message: alertMessage, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
-        ac.addTextField(configurationHandler: { textField in
+        alertController.addTextField(configurationHandler: { textField in
             textField.placeholder = "Page".localized
             textField.keyboardType = .decimalPad
         })
 
-        ac.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { [unowned self] _ in
-            if let pageLabel = ac.textFields?.first?.text {
+        alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { [unowned self] _ in
+            if let pageLabel = alertController.textFields?.first?.text {
                 self.selectPage(with: pageLabel)
             }
         }))
 
-        self.present(ac, animated: true)
+        self.present(alertController, animated: true)
     }
 
     @objc func search() {
-        guard let pdf = pdfView.document else { return }
+        guard let pdfDocument = pdfView.document else { return }
 
         let pdfSearchController = PDFSearchViewController()
-        let searchNC = ThemeNavigationController(rootViewController: pdfSearchController)
-        pdfSearchController.pdfDocument = pdf
+        let searchNavigationController = ThemeNavigationController(rootViewController: pdfSearchController)
+        pdfSearchController.pdfDocument = pdfDocument
         pdfSearchController.userSelectedMatchCallback = { (selection) in
             DispatchQueue.main.async {
                 selection.color = UIColor.yellow
                 self.pdfView.setCurrentSelection(selection, animate: true)
                 self.pdfView.scrollSelectionToVisible(nil)
 
-                DispatchQueue.main.asyncAfter(deadline: .now() + self.SEARCH_ANNOTATION_DELAY, execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + self.searchAnnotationDelay, execute: {
                     self.pdfView.clearSelection()
                 })
             }
         }
 
         if UIDevice.current.userInterfaceIdiom == .pad {
-            searchNC.modalPresentationStyle = .popover
-            searchNC.popoverPresentationController?.barButtonItem = searchButtonItem
+            searchNavigationController.modalPresentationStyle = .popover
+            searchNavigationController.popoverPresentationController?.barButtonItem = searchButtonItem
         }
 
-        self.present(searchNC, animated: true)
+        self.present(searchNavigationController, animated: true)
     }
 
     @objc func showOutline() {
-        guard let pdf = pdfView.document else { return }
+        guard let pdfDocument = pdfView.document else { return }
 
-        let outlineVC = PDFOutlineViewController()
-        let searchNC = ThemeNavigationController(rootViewController: outlineVC)
-        outlineVC.pdfDocument = pdf
+        let outlineViewController = PDFOutlineViewController()
+        let searchNavigationController = ThemeNavigationController(rootViewController: outlineViewController)
+        outlineViewController.pdfDocument = pdfDocument
 
         if UIDevice.current.userInterfaceIdiom == .pad {
-            searchNC.modalPresentationStyle = .popover
-            searchNC.popoverPresentationController?.barButtonItem = outlineItem
+            searchNavigationController.modalPresentationStyle = .popover
+            searchNavigationController.popoverPresentationController?.barButtonItem = outlineItem
         }
 
-        self.present(searchNC, animated: true)
+        self.present(searchNavigationController, animated: true)
     }
 
     // MARK: - Private helpers
@@ -315,7 +314,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
             constraints.append(thumbnailView.topAnchor.constraint(equalTo: guide.topAnchor))
             constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
             constraints.append(thumbnailView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
-            constraints.append(thumbnailView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: THUMBNAIL_VIEW_WIDTH_MULTIPLIER))
+            constraints.append(thumbnailView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: thumbnailViewWidthMultiplier))
 
             constraints.append(containerView.leadingAnchor.constraint(equalTo: thumbnailView.trailingAnchor))
             constraints.append(containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
@@ -326,7 +325,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
             constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: containerView.trailingAnchor))
             constraints.append(thumbnailView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
             constraints.append(thumbnailView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
-            constraints.append(thumbnailView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: THUMBNAIL_VIEW_WIDTH_MULTIPLIER))
+            constraints.append(thumbnailView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: thumbnailViewWidthMultiplier))
 
             constraints.append(containerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
             constraints.append(containerView.trailingAnchor.constraint(equalTo: thumbnailView.leadingAnchor))
@@ -337,7 +336,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
             constraints.append(thumbnailView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
             constraints.append(thumbnailView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))
             constraints.append(thumbnailView.bottomAnchor.constraint(equalTo: guide.bottomAnchor))
-            constraints.append(thumbnailView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: THUMBNAIL_VIEW_HEIGHT_MULTIPLIER))
+            constraints.append(thumbnailView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: thumbnailViewHeightMultiplier))
 
             constraints.append(containerView.leadingAnchor.constraint(equalTo: guide.leadingAnchor))
             constraints.append(containerView.trailingAnchor.constraint(equalTo: guide.trailingAnchor))

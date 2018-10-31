@@ -97,25 +97,25 @@ class PDFOutlineViewController: UIViewController, Themeable {
 
     fileprivate func setupChildController(forMode mode:Mode) {
 
-        var fromVC: UIViewController?
-        var toVC: UIViewController?
+        var fromViewController: UIViewController?
+        var toViewController: UIViewController?
 
         if self.childViewControllers.count > 0 {
-            fromVC = self.childViewControllers.first
+            fromViewController = self.childViewControllers.first
         }
         if mode == .ToC {
-            let tocVC = PDFTocTableViewController()
-            tocVC.outlineRoot = self.pdfDocument?.outlineRoot
-            tocVC.themeCollection = self.themeCollection
-            toVC = tocVC
+            let tocViewController = PDFTocTableViewController()
+            tocViewController.outlineRoot = self.pdfDocument?.outlineRoot
+            tocViewController.themeCollection = self.themeCollection
+            toViewController = tocViewController
         } else {
-            let thumbnaisVC = PDFThumbnailsCollectionViewController()
-            thumbnaisVC.pdfDocument = self.pdfDocument
-            thumbnaisVC.themeCollection = self.themeCollection
-            toVC = thumbnaisVC
+            let thumbnaisViewController = PDFThumbnailsCollectionViewController()
+            thumbnaisViewController.pdfDocument = self.pdfDocument
+            thumbnaisViewController.themeCollection = self.themeCollection
+            toViewController = thumbnaisViewController
         }
 
-        change(fromViewController: fromVC, toViewController: toVC!)
+        change(fromViewController: fromViewController, toViewController: toViewController!)
     }
 
     fileprivate func change(fromViewController:UIViewController?, toViewController:UIViewController) {
