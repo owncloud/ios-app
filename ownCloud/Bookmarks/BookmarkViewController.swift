@@ -712,18 +712,20 @@ extension OCClassSettingsKey {
 }
 
 extension BookmarkViewController : OCClassSettingsSupport {
-	static func classSettingsIdentifier() -> OCClassSettingsIdentifier! {
-		return .bookmark
-	}
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .bookmark
 
-	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier!) -> [OCClassSettingsKey : Any]! {
-		return [ : ]
-		/*
-		return [
-			.bookmarkDefaultURL : "http://demo.owncloud.org/",
-			.bookmarkURLEditable : false
-		]
-		*/
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		if identifier == .bookmark {
+			/*
+			return [
+				.bookmarkDefaultURL : "http://demo.owncloud.org/",
+				.bookmarkURLEditable : false
+			]
+			*/
+			return [ : ]
+		}
+
+		return nil
 	}
 }
 
