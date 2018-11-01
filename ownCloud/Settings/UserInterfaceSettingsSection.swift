@@ -87,11 +87,11 @@ class UserInterfaceSettingsSection: SettingsSection {
 
 		// Log level
 		let logLevels : [[String:Any]] = [
-			[ "Off".localized     : OCLogLevel.off.rawValue     ],
 			[ "Debug".localized   : OCLogLevel.debug.rawValue   ],
 			[ "Default".localized : OCLogLevel.default.rawValue ],
 			[ "Warning".localized : OCLogLevel.warning.rawValue ],
-			[ "Error".localized   : OCLogLevel.error.rawValue   ]
+			[ "Error".localized   : OCLogLevel.error.rawValue   ],
+			[ "Off".localized     : OCLogLevel.off.rawValue     ]
 		]
 
 		logLevelSection.add(radioGroupWithArrayOfLabelValueDictionaries: logLevels, radioAction: { (row, _) in
