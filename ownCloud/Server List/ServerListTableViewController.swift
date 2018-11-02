@@ -279,6 +279,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 			bookmarkCell.titleLabel.text = bookmark.shortName
 			bookmarkCell.detailLabel.text = (bookmark.originURL != nil) ? bookmark.originURL.absoluteString : bookmark.url.absoluteString
+			bookmarkCell.accessibilityIdentifier = "server-bookmark-cell"
 		}
 
 		return bookmarkCell

@@ -75,7 +75,7 @@ class CreateBookmarkTests: XCTestCase {
 
 		//Mock
 		mockOCConnctionPrepareForSetup(mockUrlServer: mockUrlServer)
-		mockOCConnectionGenerateAuthenticationDataWithMethod()
+		mockOCConnectionGenerateAuthenticationDataWithMethodBasic()
 
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -83,8 +83,13 @@ class CreateBookmarkTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).perform(grey_replaceText(userName))
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).perform(grey_replaceText(password))
-
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+
+		//Assert
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
+
+		//Restore test
+		UtilsTests.deleteAllBookmarks()
 	}
 
 	// MARK: - Mocks
@@ -102,7 +107,7 @@ class CreateBookmarkTests: XCTestCase {
 			[OCMockLocation.ocConnectionPrepareForSetupWithOptions: completionHandlerBlock])
 	}
 
-	func mockOCConnectionGenerateAuthenticationDataWithMethod() {
+	func mockOCConnectionGenerateAuthenticationDataWithMethodBasic() {
 		let completionHandlerBlock : OCMGenerateAuthenticationDataWithMethod = {
 			(methodIdentifier, options, mockedBlock) in
 
@@ -116,7 +121,7 @@ class CreateBookmarkTests: XCTestCase {
 			do {
 				data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .binary, options: 0)
 			} catch {
-
+				return
 			}
 
 			mockedBlock(error, authenticationMethodIdentifier, data! as NSData)

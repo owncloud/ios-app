@@ -26,6 +26,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 	public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		prepareViewAndConstraints()
+		self.accessibilityIdentifier = "no-bookmark-cell"
 	}
 
 	public required init?(coder aDecoder: NSCoder) {
