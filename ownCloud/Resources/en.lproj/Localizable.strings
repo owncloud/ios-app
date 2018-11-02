@@ -132,6 +132,25 @@
 "ownCloud Light" = "ownCloud Light";
 "ownCloud Classic" = "ownCloud Classic";
 
+/* Log settings */
+"Log Level" = "Log Level";
+"Log Output" = "Log Output";
+"Privacy" = "Privacy";
+
+"Logging" = "Logging";
+
+"Off" = "Off";
+"Debug" = "Debug";
+"Default" = "Default";
+"Warning" = "Warning";
+"Error" = "Error";
+
+"Share logfile" = "Share logfile";
+"Reset logfile" = "Reset logfile";
+
+"Mask private data" = "Mask private data";
+"Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.";
+
 /* Passcode Messages */
 
 "Enter code" = "Enter code";

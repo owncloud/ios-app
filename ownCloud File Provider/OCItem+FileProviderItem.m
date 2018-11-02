@@ -29,6 +29,11 @@
 
 - (NSFileProviderItemIdentifier)itemIdentifier
 {
+	if ([self.path isEqual:@"/"])
+	{
+		return (NSFileProviderRootContainerItemIdentifier);
+	}
+
 	return (self.fileID);
 }
 
@@ -140,7 +145,7 @@
 
 //- (BOOL)respondsToSelector:(SEL)aSelector
 //{
-//	NSLog(@"Probing for %@", NSStringFromSelector(aSelector));
+//	OCLogDebug(@"Probing for %@", NSStringFromSelector(aSelector));
 //
 //	return ([super respondsToSelector:aSelector]);
 //}

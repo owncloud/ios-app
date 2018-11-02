@@ -134,7 +134,7 @@
 //
 //						if (item.type == OCItemTypeFile)
 //						{
-//							NSLog(@"Observe item: %@", item);
+//							OCLogDebug(@"Observe item: %@", item);
 //
 //							[observer didEnumerateItems:@[ item ]];
 //							[observer finishEnumeratingUpToPage:nil];
@@ -183,7 +183,7 @@
 	}
 	else
 	{
-		NSLog(@"Query already running..");
+		OCLogDebug(@"Query already running..");
 
 		if (_query != nil)
 		{
@@ -234,7 +234,7 @@
 				{
 					if (!observer.didProvideInitialItems)
 					{
-						OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER FOR %@: %@", _enumerationObservers.count, query.queryPath, query.queryResults);
+						OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER %@ FOR %@: %@", _enumerationObservers.count, observer.enumerationObserver, query.queryPath, query.queryResults);
 
 						observer.didProvideInitialItems = YES;
 

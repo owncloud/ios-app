@@ -29,6 +29,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Override point for customization after application launch.
 		var navigationController: UINavigationController?
 
+		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
+		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching")
+
 		window = UIWindow(frame: UIScreen.main.bounds)
 
 		ThemeStyle.registerDefaultStyles()

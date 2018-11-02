@@ -22,7 +22,7 @@
 
 - (void)dealloc
 {
-	NSLog(@"Dealloc %@", self);
+	OCLogDebug(@"Dealloc %@", self);
 }
 
 - (void)requestNextThumbnail
@@ -42,19 +42,19 @@
 	{
 		NSFileProviderItemIdentifier itemIdentifier = self.itemIdentifiers[self.cursorPosition];
 
-		NSLog(@"Retrieving %ld / %ld:", self.cursorPosition, self.itemIdentifiers.count);
+		OCLogDebug(@"Retrieving %ld / %ld:", self.cursorPosition, self.itemIdentifiers.count);
 
 		self.cursorPosition += 1;
 
 		[self.extension.core retrieveItemFromDatabaseForFileID:(OCFileID)itemIdentifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
-			NSLog(@"Retrieving %ld: %@", self.cursorPosition-1, itemFromDatabase.name);
+			OCLogDebug(@"Retrieving %ld: %@", self.cursorPosition-1, itemFromDatabase.name);
 
 			if ((itemFromDatabase.type == OCItemTypeCollection) || (itemFromDatabase.thumbnailAvailability == OCItemThumbnailAvailabilityNone))
 			{
 				dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
 					self.perThumbnailCompletionHandler(itemIdentifier, nil, nil);
 
-					NSLog(@"Replied %ld: %@ -> none available", self.cursorPosition-1, itemFromDatabase.name);
+					OCLogDebug(@"Replied %ld: %@ -> none available", self.cursorPosition-1, itemFromDatabase.name);
 
 					[self requestNextThumbnail];
 				});
@@ -63,7 +63,7 @@
 			{
 				NSProgress *retrieveProgress = [self.extension.core retrieveThumbnailFor:itemFromDatabase maximumSize:self.sizeInPixels scale:1.0 retrieveHandler:^(NSError *error, OCCore *core, OCItem *item, OCItemThumbnail *thumbnail, BOOL isOngoing, NSProgress *progress) {
 
-					NSLog(@"Retrieved %ld: %@ -> %d", self.cursorPosition-1, itemFromDatabase.name, isOngoing);
+					OCLogDebug(@"Retrieved %ld: %@ -> %d", self.cursorPosition-1, itemFromDatabase.name, isOngoing);
 
 					if (!isOngoing)
 					{
@@ -81,7 +81,7 @@
 	}
 	else
 	{
-		NSLog(@"Done retrieving %ld / %ld", self.cursorPosition, self.itemIdentifiers.count);
+		OCLogDebug(@"Done retrieving %ld / %ld", self.cursorPosition, self.itemIdentifiers.count);
 
 		[self completedRequest];
 	}
