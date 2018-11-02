@@ -67,7 +67,7 @@ class CreateBookmarkTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
 	}
 
-	func testLoginRightCredentials () {
+	func testBasicAuthLoginRightCredentials () {
 
 		let mockUrlServer = "http://mocked.owncloud.server.com"
 		let userName = "test"
@@ -106,13 +106,20 @@ class CreateBookmarkTests: XCTestCase {
 		let completionHandlerBlock : OCMGenerateAuthenticationDataWithMethod = {
 			(methodIdentifier, options, mockedBlock) in
 
-			//_ error: NSError, _ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier, _ authenticationData: NSData
-
 			let error:NSError? = nil
 			let authenticationMethodIdentifier = OCAuthenticationMethodBasicAuthIdentifier as NSString
-			let data:NSData? = "test".data(using: .utf8)! as NSData
 
-			mockedBlock(error, authenticationMethodIdentifier, data)
+			let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
+										 "passphrase" : "admin",
+										 "username" : "admin"]
+			var data: Data? = nil
+			do {
+				data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .binary, options: 0)
+			} catch {
+
+			}
+
+			mockedBlock(error, authenticationMethodIdentifier, data! as NSData)
 		}
 
 		OCMockManager.shared.addMocking(blocks:
