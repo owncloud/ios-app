@@ -46,8 +46,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		AppLockManager.shared.showLockscreenIfNeeded()
 
-		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
-
 		application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum + 10)
 
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
