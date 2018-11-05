@@ -76,7 +76,7 @@
          <EnvironmentVariable
             key = "oc:app.show-beta-warning"
             value = "false"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
