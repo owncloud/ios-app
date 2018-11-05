@@ -11,11 +11,6 @@ import ownCloudSDK
 
 typealias ActionCompletion = ((_ item: OCItem, _ core: OCCore, _ vcToPresent: UIViewController) -> Void)?
 
-enum Result<T> {
-	case failure(Error)
-	case sucess(T)
-}
-
 enum ActionType {
 	case destructive
 	case regular
@@ -90,7 +85,7 @@ class ActionsMoreViewController: NSObject {
 		return moreViewController
 	}
 
-	var openIn: Action {
+	func openIn(completion: (() -> Void)? = nil) -> Action {
 		let action = Action(with: "Open in".localized, completion: { (item, core, vcToPresentIn) in
 			let controller = DownloadFileProgressHUDViewController()
 			controller.present(on: vcToPresentIn)
@@ -104,6 +99,7 @@ class ActionsMoreViewController: NSObject {
 						self.interactionController?.presentOptionsMenu(from: .zero, in: vcToPresentIn.view, animated: true)
 					})
 				}
+				completion?()
 			}) {
 				controller.attach(progress: downloadProgress)
 			} else {
@@ -114,7 +110,7 @@ class ActionsMoreViewController: NSObject {
 		return action
 	}
 
-	var duplicate: Action {
+	func duplicate(completion: (() -> Void)? = nil) -> Action {
 		let action = Action(with: "Duplicate", completion: { (item, core, viewcontroller) in
 
 			guard let viewController = viewcontroller as? ClientQueryViewController else {
@@ -134,10 +130,11 @@ class ActionsMoreViewController: NSObject {
 				name = "\(itemName) copy\(fileExtension)"
 			}
 
-			if let progress = core.copy(item, to: viewController.query?.rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in
+			if let progress = core.copy(item, to: viewController.query.rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) deleting \(String(describing: item?.path))")
 				}
+				completion?()
 			}) {
 				viewController.progressSummarizer?.startTracking(progress: progress)
 			}
@@ -147,7 +144,7 @@ class ActionsMoreViewController: NSObject {
 		return action
 	}
 
-	var move: Action {
+	func move(completion: (() -> Void)? = nil) -> Action {
 		let action = Action(with: "Move".localized, completion: { (item, core, viewController) in
 
 			guard let viewController = viewController as? ClientQueryViewController else {
@@ -159,8 +156,8 @@ class ActionsMoreViewController: NSObject {
 				if let progress = core.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
 					if error != nil {
 						Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
-					} else {
 					}
+					completion?()
 				}) {
 					viewController.progressSummarizer?.startTracking(progress: progress)
 				}
@@ -173,7 +170,7 @@ class ActionsMoreViewController: NSObject {
 		return action
 	}
 
-	var delete: Action {
+	func delete(completion: (() -> Void)? = nil) -> Action {
 		let action = Action(with: "Delete".localized, completion: { (item, core, viewController) in
 			let alertController = UIAlertController(
 				with: item.name!,
@@ -185,11 +182,10 @@ class ActionsMoreViewController: NSObject {
 						if error != nil {
 							Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
 						}
+						completion?()
 					}) {
 						if let viewController = viewController as? ClientQueryViewController {
 							viewController.progressSummarizer?.startTracking(progress: progress)
-						} else {
-							viewController.dismiss(animated: true)
 						}
 					}
 			})
@@ -197,6 +193,44 @@ class ActionsMoreViewController: NSObject {
 			viewController.present(alertController, animated: true)
 		}, type: .destructive)
 
+		return action
+	}
+
+	func rename(completion: (() -> Void)? = nil) -> Action {
+		let action = Action(with: "Rename".localized, completion: { (item, core, viewController) in
+			guard let viewController = viewController as? ClientQueryViewController else {
+				return
+			}
+
+			let renameViewController = NamingViewController(with: item, core: self.core, stringValidator: { name in
+				if name.contains("/") || name.contains("\\") {
+					return (false, "File name cannot contain / or \\")
+				} else {
+					return (true, nil)
+				}
+			}, completion: { newName, _ in
+
+				guard newName != nil else {
+					return
+				}
+
+				if let progress = core.move(item, to: viewController.query.rootItem, withName: newName!, options: nil, resultHandler: { (error, _, _, _) in
+					if error != nil {
+						Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
+					}
+					completion?()
+				}) {
+					viewController.progressSummarizer?.startTracking(progress: progress)
+				}
+			})
+
+			renameViewController.navigationItem.title = "Rename".localized
+
+			let navigationController = ThemeNavigationController(rootViewController: renameViewController)
+			navigationController.modalPresentationStyle = .overFullScreen
+
+			viewController.present(navigationController, animated: true)
+		}, type: .regular)
 		return action
 	}
 }

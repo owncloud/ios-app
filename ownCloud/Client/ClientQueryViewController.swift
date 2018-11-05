@@ -53,7 +53,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
-		super.init(style: .plain)
 
 		core = inCore
 		query = inQuery
@@ -891,8 +890,8 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 			return
 		}
 
-		let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core!, into: self)
-		actionsObject.presentActionsCard(with: [actionsObject.openIn, actionsObject.duplicate, actionsObject.move, actionsObject.delete]) {
+		let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core, into: self)
+		actionsObject.presentActionsCard(with: [actionsObject.openIn(), actionsObject.duplicate(), actionsObject.rename(), actionsObject.move(), actionsObject.delete()]) {
 			print("LOG ---> presented")
 		}
 	}

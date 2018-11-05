@@ -331,7 +331,9 @@ class DisplayViewController: UIViewController {
 //
 		//		self.present(asCard: moreViewController, animated: true)let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core!, into: self)
 		let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core!, into: self)
-		actionsObject.presentActionsCard(with: [actionsObject.openIn, actionsObject.delete]) {
+		actionsObject.presentActionsCard(with: [actionsObject.openIn(), actionsObject.delete(completion: {
+			self.parent?.dismiss(animated: true)
+		})]) {
 			print("LOG ---> presented")
 		}
 	}
