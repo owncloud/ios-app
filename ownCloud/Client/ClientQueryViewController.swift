@@ -145,6 +145,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.dragDelegate = self
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
+
+		let actionsBarButton: UIBarButtonItem = UIBarButtonItem(title: "● ● ●", style: .done, target: self, action: #selector(actionsBarButtonPressed))
+		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .normal)
+		self.navigationItem.rightBarButtonItem = actionsBarButton
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
@@ -645,6 +649,21 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 
 	}
+
+	// MARK: - Navigation Bar Actions
+	@objc func actionsBarButtonPressed() {
+		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+		let photoLibrary = UIAlertAction(title: "Upload from Photo Library", style: .default, handler: { (action) in
+			let picker = UIImagePickerController()
+			picker.sourceType = .camera
+			picker.delegate = self
+			self.present(picker, animated: true)
+		})
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		controller.addAction(photoLibrary)
+		controller.addAction(cancelAction)
+		self.present(controller, animated: true)
+	}
 }
 
 // MARK: - Query Delegate
@@ -847,5 +866,34 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		dragItem.localObject = item
 		return [dragItem]
 	}
+
+}
+
+// MARK: - UIImagePickerControllerDelegate
+extension ClientQueryViewController: UIImagePickerControllerDelegate {
+
+	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+
+		var newImage: UIImage
+
+		if let possibleImage = info[UIImagePickerControllerEditedImage] as? UIImage {
+			newImage = possibleImage
+		} else if let possibleImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+			newImage = possibleImage
+		} else {
+			return
+		}
+
+		// do something interesting here!
+		print("LOG --->")
+		print(info)
+		print("LOG --->")
+		core?.up
+
+		dismiss(animated: true)
+	}
+}
+
+extension ClientQueryViewController: UINavigationControllerDelegate {
 
 }
