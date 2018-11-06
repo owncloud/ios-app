@@ -753,15 +753,15 @@ extension BookmarkViewController {
 			Theme.shared.add(tvgResourceFor: "icon-password-manager")
 			vectorImageView.vectorImage = Theme.shared.tvgImage(for: "icon-password-manager")
 
-			vectorImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(BookmarkViewController.openPasswordManagerSheet)))
+			vectorImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(BookmarkViewController.openPasswordManagerSheet(sender:))))
 
 			self.passwordRow?.cell?.accessoryView = vectorImageView
 		}
 	}
 
-	@objc func openPasswordManagerSheet() {
+	@objc func openPasswordManagerSheet(sender: Any?) {
 		if let bookmarkURL = self.bookmark?.url {
-			PasswordManagerAccess.findCredentials(url: bookmarkURL, viewController: self) { (error, inUsername, inPassword) in
+			PasswordManagerAccess.findCredentials(url: bookmarkURL, viewController: self, sourceView: (sender as? UITapGestureRecognizer)?.view) { (error, inUsername, inPassword) in
 				if error == nil {
 					OnMainThread {
 						if let username = inUsername {

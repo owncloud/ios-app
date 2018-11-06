@@ -103,42 +103,78 @@ class UserInterfaceSettingsSection: SettingsSection {
 		logSettingsViewController.addSection(logLevelSection)
 
 		// Log output
+		var logFileWriterSwitchRow : StaticTableViewRow?
+
 		for writer in OCLogger.shared.writers {
-			logOutputSection.add(row: StaticTableViewRow(switchWithAction: { (row, _) in
+			let row = StaticTableViewRow(switchWithAction: { (row, _) in
 				if let enabled = row.value as? Bool {
 					writer.enabled = enabled
 				}
-			}, title: writer.name, value: writer.enabled, identifier: writer.identifier.rawValue))
+			}, title: writer.name, value: writer.enabled, identifier: writer.identifier.rawValue)
+
+			if writer.identifier == .file {
+				logFileWriterSwitchRow = row
+			}
+
+			logOutputSection.add(row: row)
 		}
 
 		logOutputSection.add(row: StaticTableViewRow(buttonWithAction: { (row, _) in
 			if let logFileWriter = OCLogger.shared.writer(withIdentifier: .file) as? OCLogFileWriter {
-				let logURL = FileManager.default.temporaryDirectory.appendingPathComponent("ownCloud App Log.txt")
+				if !FileManager.default.fileExists(atPath: logFileWriter.logFileURL.path) {
+					let alert = UIAlertController(title: "No log file found".localized, message: "The logfile can't be shared because no logfile could be found or the logfile is empty.".localized, preferredStyle: .alert)
 
-				do {
-					if FileManager.default.fileExists(atPath: logURL.path) {
-						try FileManager.default.removeItem(at: logURL)
+					alert.addAction(UIAlertAction(title: "Cancel".localized, style: .default, handler: nil))
+
+					if !logFileWriter.enabled {
+						alert.addAction(UIAlertAction(title: "Enable logfile".localized, style: .default, handler: { (_) in
+							logFileWriter.enabled = true
+							logFileWriterSwitchRow?.value = logFileWriter.enabled
+						}))
 					}
 
-					try FileManager.default.copyItem(at: logFileWriter.logFileURL, to: logURL)
-				} catch {
-				}
+					self.viewController?.present(alert, animated: true, completion: nil)
+				} else {
+					let logURL = FileManager.default.temporaryDirectory.appendingPathComponent("ownCloud App Log.txt")
 
-				let shareViewController = UIActivityViewController(activityItems: [logURL], applicationActivities:nil)
-				shareViewController.completionWithItemsHandler = { (_, _, _, _) in
 					do {
-						try FileManager.default.removeItem(at: logURL)
+						if FileManager.default.fileExists(atPath: logURL.path) {
+							try FileManager.default.removeItem(at: logURL)
+						}
+
+						try FileManager.default.copyItem(at: logFileWriter.logFileURL, to: logURL)
 					} catch {
 					}
+
+					let shareViewController = UIActivityViewController(activityItems: [logURL], applicationActivities:nil)
+					shareViewController.completionWithItemsHandler = { (_, _, _, _) in
+						do {
+							try FileManager.default.removeItem(at: logURL)
+						} catch {
+						}
+					}
+
+					if UIDevice.current.isIpad() {
+						shareViewController.popoverPresentationController?.sourceView = row.cell
+						shareViewController.popoverPresentationController?.sourceRect = CGRect(x: row.cell?.bounds.midX ?? 0, y: row.cell?.bounds.midY ?? 0, width: 1, height: 1)
+						shareViewController.popoverPresentationController?.permittedArrowDirections = .down
+					}
+
+					row.viewController?.present(shareViewController, animated: true, completion: nil)
 				}
-				row.viewController?.present(shareViewController, animated: true, completion: nil)
 			}
 		}, title: "Share logfile".localized, style: .plain, identifier: "share-logfile"))
 
-		logOutputSection.add(row: StaticTableViewRow(buttonWithAction: { (_, _) in
-			if let logFileWriter = OCLogger.shared.writer(withIdentifier: .file) as? OCLogFileWriter {
-				logFileWriter.eraseOrTruncate()
-			}
+		logOutputSection.add(row: StaticTableViewRow(buttonWithAction: { (row, _) in
+			let alert = UIAlertController(with: "Really reset logfile?".localized, message: "This action can't be undone.".localized, destructiveLabel: "Reset logfile".localized, preferredStyle: .alert, destructiveAction: {
+				OCLogger.shared.pauseWriters(intermittentBlock: {
+					if let logFileWriter = OCLogger.shared.writer(withIdentifier: .file) as? OCLogFileWriter {
+						logFileWriter.eraseOrTruncate()
+					}
+				})
+			})
+
+			row.viewController?.present(alert, animated: true, completion: nil)
 		}, title: "Reset logfile".localized, style: .destructive, identifier: "reset-logfile"))
 
 		logSettingsViewController.addSection(logOutputSection)

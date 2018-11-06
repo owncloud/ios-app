@@ -75,11 +75,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		guard let items = items else {
-			return
-		}
-
-		let item = items[indexPath.row]
+		let item: OCItem = itemAtIndexPath(indexPath)
 
 		guard item.type == OCItemType.collection else {
 			return

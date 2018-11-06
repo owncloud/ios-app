@@ -21,13 +21,11 @@ import LocalAuthentication
 import ownCloudSDK
 
 // MARK: - SecurityAskfrequency
-@objc enum SecurityAskFrequency: Int {
+@objc enum SecurityAskFrequency: Int, CaseIterable {
 	case always = 0
 	case oneMinute = 60
 	case fiveMinutes = 300
 	case thirtyMinutes = 1800
-
-	static let all = [always, oneMinute, fiveMinutes, thirtyMinutes]
 
 	func toString() -> String {
 		switch self {
@@ -109,7 +107,7 @@ class SecuritySettingsSection: SettingsSection {
 
 				var radioButtons: [[String : Any]] = []
 
-				for frequency in SecurityAskFrequency.all {
+				for frequency in SecurityAskFrequency.allCases {
 					radioButtons.append([frequency.toString() : frequency.rawValue])
 				}
 
@@ -200,7 +198,6 @@ class SecuritySettingsSection: SettingsSection {
 
 		// Creation of the biometrical row.
 		if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
-			// Creation of the biometrical row.
 			biometricalRow = StaticTableViewRow(switchWithAction: { (_, sender) in
 				if let biometricalSwitch = sender as? UISwitch {
 					if let viewController = self.viewController {

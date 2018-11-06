@@ -6,6 +6,15 @@ The ownCloud iOS App provides a flexible mechanism for configuration. While it c
 
 This document provides an overview over the available sections and variables.
 
+## App
+
+- **Section ID**: `app`
+
+- **Variables**:
+	- `show-beta-warning`: Controls whether a warning should be shown on the first run of a beta version.
+		- type: Bool
+		- default: `true`
+
 ## Bookmarks
 
 - **Section ID**: `bookmark`
@@ -17,3 +26,4 @@ This document provides an overview over the available sections and variables.
 	- `url-editable`: Being able to edit the server URL in the URL TextField.
 		- type: Bool
 		- default: `true`
+
