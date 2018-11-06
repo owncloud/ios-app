@@ -29,6 +29,7 @@ struct IssueButton {
     let title: String
     let type: IssueButtonStyle
     let action: () -> Void
+	let accessibilityIdentifier: String
 }
 
 class IssuesTableViewCell : UITableViewCell {
@@ -126,6 +127,7 @@ class IssuesViewController: UIViewController {
                     ]), for: .normal)
                 button.setTitle($0.title, for: UIControlState.normal)
                 button.addTarget(self, action: #selector(buttonPressed(_:)), for: .touchUpInside)
+				button.accessibilityIdentifier = $0.accessibilityIdentifier
                 button.layer.cornerRadius = 10
                 button.tag = tag
                 tag += 1

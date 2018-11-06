@@ -17,13 +17,13 @@ class BiometricalTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
-		// Put setup code here. This method is called before the invocation of each test method in the class.
+		UtilsTests.deleteAllBookmarks()
+		UtilsTests.showNoServerMessageServerList()
 	}
 
 	override func tearDown() {
-		UtilsTests.removePasscode()
-		UtilsTests.launchUI()
 		super.tearDown()
+		UtilsTests.removePasscode()
 	}
 
 	// MARK: - Tests

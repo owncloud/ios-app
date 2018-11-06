@@ -46,17 +46,8 @@ class UtilsTests {
 		AppLockManager.shared.dismissLockscreen(animated: false)
 	}
 
-	static func launchUI() {
-		var navigationController: UINavigationController?
+	static func showNoServerMessageServerList() {
 		let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-
-		ThemeStyle.registerDefaultStyles()
-
-		appDelegate.serverListTableViewController = ServerListTableViewController(style: UITableViewStyle.plain)
-		navigationController = ThemeNavigationController(rootViewController: appDelegate.serverListTableViewController!)
-
-		appDelegate.window?.rootViewController = navigationController!
-		appDelegate.window?.addSubview((navigationController?.view)!)
-		appDelegate.window?.makeKeyAndVisible()
+		appDelegate.serverListTableViewController?.updateNoServerMessageVisibility()
 	}
 }
