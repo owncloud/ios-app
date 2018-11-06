@@ -151,6 +151,13 @@
 "Mask private data" = "Mask private data";
 "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.";
 
+"No log file found" = "No log file found";
+"The logfile can't be shared because no logfile could be found or the logfile is empty." = "The logfile can't be shared because no logfile could be found or the logfile is empty.";
+"Enable logfile" = "Enable logfile";
+
+"Really reset logfile?" = "Really reset logfile?";
+"This action can't be undone." = "This action can't be undone.";
+
 /* Passcode Messages */
 
 "Enter code" = "Enter code";

@@ -157,7 +157,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 					if UIDevice.current.isIpad() {
 						shareViewController.popoverPresentationController?.sourceView = row.cell
 						shareViewController.popoverPresentationController?.sourceRect = CGRect(x: row.cell?.bounds.midX ?? 0, y: row.cell?.bounds.midY ?? 0, width: 1, height: 1)
-						shareViewController.popoverPresentationController?.permittedArrowDirections = .up
+						shareViewController.popoverPresentationController?.permittedArrowDirections = .down
 					}
 
 					row.viewController?.present(shareViewController, animated: true, completion: nil)
@@ -165,10 +165,16 @@ class UserInterfaceSettingsSection: SettingsSection {
 			}
 		}, title: "Share logfile".localized, style: .plain, identifier: "share-logfile"))
 
-		logOutputSection.add(row: StaticTableViewRow(buttonWithAction: { (_, _) in
-			if let logFileWriter = OCLogger.shared.writer(withIdentifier: .file) as? OCLogFileWriter {
-				logFileWriter.eraseOrTruncate()
-			}
+		logOutputSection.add(row: StaticTableViewRow(buttonWithAction: { (row, _) in
+			let alert = UIAlertController(with: "Really reset logfile?".localized, message: "This action can't be undone.".localized, destructiveLabel: "Reset logfile".localized, preferredStyle: .alert, destructiveAction: {
+				OCLogger.shared.pauseWriters(intermittentBlock: {
+					if let logFileWriter = OCLogger.shared.writer(withIdentifier: .file) as? OCLogFileWriter {
+						logFileWriter.eraseOrTruncate()
+					}
+				})
+			})
+
+			row.viewController?.present(alert, animated: true, completion: nil)
 		}, title: "Reset logfile".localized, style: .destructive, identifier: "reset-logfile"))
 
 		logSettingsViewController.addSection(logOutputSection)
