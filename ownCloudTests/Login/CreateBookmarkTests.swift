@@ -29,12 +29,12 @@ class CreateBookmarkTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
-		// Put setup code here. This method is called before the invocation of each test method in the class.
+
+		let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+		appDelegate.resetApplicationForTesting()
 	}
 
 	override func tearDown() {
-		AppLockManager.shared.passcode = nil
-		AppLockManager.shared.lockEnabled = false
 		super.tearDown()
 	}
 
@@ -87,9 +87,6 @@ class CreateBookmarkTests: XCTestCase {
 
 		//Assert
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
-
-		//Restore test
-		UtilsTests.deleteAllBookmarks()
 	}
 
 	// MARK: - Mocks

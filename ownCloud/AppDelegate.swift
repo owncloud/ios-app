@@ -78,4 +78,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
 	}
+
+	// MARK: - Reset App Testing
+
+	public func resetApplicationForTesting() {
+		UtilsTests.deleteAllBookmarks()
+		UtilsTests.removePasscode()
+		UtilsTests.launchUI()
+	}
 }
