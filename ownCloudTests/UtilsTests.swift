@@ -9,6 +9,8 @@
 import Foundation
 import ownCloudSDK
 
+@testable import ownCloud
+
 class UtilsTests {
 
 	static func deleteAllBookmarks() {
@@ -40,6 +42,8 @@ class UtilsTests {
 		AppLockManager.shared.passcode = nil
 		AppLockManager.shared.lockEnabled = false
 		AppLockManager.shared.biometricalSecurityEnabled = false
+		AppLockManager.shared.lockDelay = SecurityAskFrequency.always.rawValue
+		AppLockManager.shared.dismissLockscreen(animated: false)
 	}
 
 	static func launchUI() {

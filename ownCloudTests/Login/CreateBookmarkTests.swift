@@ -29,9 +29,8 @@ class CreateBookmarkTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
-
-		let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-		appDelegate.resetApplicationForTesting()
+		UtilsTests.deleteAllBookmarks()
+		UtilsTests.launchUI()
 	}
 
 	override func tearDown() {

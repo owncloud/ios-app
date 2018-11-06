@@ -21,8 +21,8 @@ class PasscodeTests: XCTestCase {
     }
 
     override func tearDown() {
-        AppLockManager.shared.passcode = nil
-        AppLockManager.shared.lockEnabled = false
+		UtilsTests.removePasscode()
+		UtilsTests.launchUI()
         super.tearDown()
     }
 
@@ -89,9 +89,6 @@ class PasscodeTests: XCTestCase {
 
         // Asserts
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
-
-        //Reset status
-        EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
     }
 
     /*
@@ -117,9 +114,6 @@ class PasscodeTests: XCTestCase {
 
         // Asserts
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
-
-        //Reset status
-        EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
     }
 
     /*
@@ -148,9 +142,6 @@ class PasscodeTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_text("The entered codes are different".localized)).assert(grey_sufficientlyVisible())
         EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
-
-        //Reset status
-        EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
     }
 
     /*
@@ -174,9 +165,6 @@ class PasscodeTests: XCTestCase {
         // Asserts
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("lockFrequency")).assert(grey_notVisible())
-
-        //Reset status
-        EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
     }
 
     /*
@@ -199,9 +187,6 @@ class PasscodeTests: XCTestCase {
         // Asserts
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(true))
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("lockFrequency")).assert(grey_sufficientlyVisible())
-
-        //Reset status
-        EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
     }
 
     /*
@@ -222,9 +207,5 @@ class PasscodeTests: XCTestCase {
 
         //Asserts
         EarlGrey.select(elementWithMatcher: grey_text("After 1 minute".localized)).assert(grey_sufficientlyVisible())
-
-        //Reset status
-        EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
-        AppLockManager.shared.lockEnabled = false
     }
 }

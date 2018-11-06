@@ -21,9 +21,8 @@ class BiometricalTests: XCTestCase {
 	}
 
 	override func tearDown() {
-		AppLockManager.shared.passcode = nil
-		AppLockManager.shared.lockEnabled = false
-		AppLockManager.shared.biometricalSecurityEnabled = false
+		UtilsTests.removePasscode()
+		UtilsTests.launchUI()
 		super.tearDown()
 	}
 
