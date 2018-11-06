@@ -27,7 +27,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var core : OCCore
 	var query : OCQuery
 
-	var items : [OCItem]?
+	var items : [OCItem] = []
 
 	var selectedItem: OCItem?
 
@@ -236,23 +236,21 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	// MARK: - Table view data source
+	func itemAtIndexPath(_ indexPath : IndexPath) -> OCItem {
+		return items[indexPath.row]
+	}
+
 	override func numberOfSections(in tableView: UITableView) -> Int {
-		// #warning Incomplete implementation, return the number of sections
 		return 1
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		// #warning Incomplete implementation, return the number of rows
-		if self.items != nil {
-			return self.items!.count
-		}
-
-		return 0
+		return self.items.count
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ClientItemCell
-		let newItem = self.items![indexPath.row]
+		let newItem = itemAtIndexPath(indexPath)
 
 		cell?.core = self.core
 
@@ -270,7 +268,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let rowItem : OCItem = self.items![indexPath.row]
+		let rowItem : OCItem = itemAtIndexPath(indexPath)
 
 		switch rowItem.type {
 			case .collection:
@@ -285,9 +283,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		guard let item: OCItem = items?[indexPath.row] else {
-			return nil
-		}
+		let item: OCItem = itemAtIndexPath(indexPath)
 
 		let deleteContextualAction: UIContextualAction = UIContextualAction(style: .destructive, title: "Delete".localized) { (_, _, actionPerformed) in
 			self.delete(item, viewDidAppearHandler: {
@@ -330,9 +326,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-		guard let item = items?[indexPath.row] else {
-			return []
-		}
+		let item: OCItem = itemAtIndexPath(indexPath)
 
 		guard item.type != .collection else {
 			return []
@@ -351,10 +345,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
 
 		if session.localDragSession != nil {
-				guard let items = items else {
-					return UITableViewDropProposal(operation: .move)
-				}
-
 				if let indexPath = destinationIndexPath, items.count - 1 < indexPath.row {
 					return UITableViewDropProposal(operation: .forbidden)
 				}
@@ -676,11 +666,11 @@ extension ClientQueryViewController : OCQueryDelegate {
 				default: break
 				}
 
-				self.items = changeSet?.queryResult
+				self.items = changeSet?.queryResult ?? []
 
 				switch query.state {
 				case .contentsFromCache, .idle:
-					if self.items?.count == 0 {
+					if self.items.count == 0 {
 						if self.searchController?.searchBar.text != "" {
 							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
 						} else {
@@ -810,7 +800,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					return
 				}
 
-				guard let items = items, items.count >= destinationIP.row else {
+				guard items.count >= destinationIP.row else {
 					return
 				}
 
@@ -846,9 +836,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 extension ClientQueryViewController: UITableViewDragDelegate {
 
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-		guard let item = items?[indexPath.row] else {
-			return []
-		}
+		let item: OCItem = itemAtIndexPath(indexPath)
 
 		guard let data = item.serializedData() else {
 			return []
