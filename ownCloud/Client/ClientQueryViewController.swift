@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import MobileCoreServices
+import Photos
 
 typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
@@ -659,22 +660,29 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		} else {
 			style = .actionSheet
 		}
+
 		let controller = UIAlertController(title: nil, message: nil, preferredStyle: style)
 		let photoLibrary = UIAlertAction(title: "Upload from Photo Library", style: .default, handler: { (_) in
-			let picker = UIImagePickerController.regularImagePicker(with: .photoLibrary)
-			picker.delegate = self
-			self.present(picker, animated: true)
-		})
-
-		let camera = UIAlertAction(title: "Upload from Camera", style: .default, handler: { (_) in
-			let picker = UIImagePickerController.regularImagePicker(with: .camera)
-			picker.delegate = self
-			self.present(picker, animated: true)
+			PHPhotoLibrary.requestAuthorization({ newStatus in
+				if newStatus ==  PHAuthorizationStatus.authorized {
+					let picker = UIImagePickerController.regularImagePicker(with: .photoLibrary)
+					picker.delegate = self
+					OnMainThread {
+						self.present(picker, animated: true)
+					}
+				} else {
+					let alert = UIAlertController(with: "Owncloud does not have permissons", message: "You need to activate photos permissons for being able to upload photos or videos", okLabel: "Settings", action: {
+						UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
+					})
+					OnMainThread {
+						self.present(alert, animated: true)
+					}
+				}
+			})
 		})
 
 		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 		controller.addAction(photoLibrary)
-		controller.addAction(camera)
 		controller.addAction(cancelAction)
 		self.present(controller, animated: true)
 	}
@@ -821,7 +829,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 		for item in coordinator.items {
 
-			var destinationItem: OCItem?
+			var destinationItem: OCItem
 
 			guard let item = item.dragItem.localObject as? OCItem else {
 				return
@@ -901,7 +909,7 @@ extension ClientQueryViewController: UIImagePickerControllerDelegate {
 			url = movieURL
 		}
 
-		if let progress = core?.importFileNamed(name, at: query!.rootItem, from: url, isSecurityScoped: true, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+		if let progress = core?.importFileNamed(name, at: query!.rootItem, from: url, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
 			if error != nil {
 				print("LOG ---> error uploading")
 			} else {
@@ -911,11 +919,9 @@ extension ClientQueryViewController: UIImagePickerControllerDelegate {
 			self.progressSummarizer?.startTracking(progress: progress)
 		}
 
-		print("LOG --->")
-		print(info)
-		print("LOG --->")
-
-		dismiss(animated: true)
+		OnMainThread {
+			picker.dismiss(animated: true)
+		}
 	}
 }
 

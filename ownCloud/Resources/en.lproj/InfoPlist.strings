@@ -17,3 +17,7 @@
  */
 
 "NSFaceIDUsageDescription" = "Unlock the app without entering the passcode.";
+"NSAppleMusicUsageDescription" = "Owncloud needs to access to your photos to be able to upload them.";
+"NSPhotoLibraryAddUsageDescription" = "Owncloud needs to access to your photos to be able to upload them.";
+"NSPhotoLibraryUsageDescription" = "Owncloud needs to access to your photos to be able to upload them.";
+
