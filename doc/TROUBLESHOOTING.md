@@ -8,6 +8,32 @@ many relevant logs as possible. Log output can help with tracking down
 problems and, if you report a bug, log output can help to resolve an issue more
 quickly.
 
+### Capturing App Debug Logs
+
+The ownCloud iOS app has a builtin logging feature:  
+`Settings > Logging`
+
+1. Reset logfile
+2. Enable logfile
+3. Perform the steps to reproduce the error
+4. Go back to the settings and share the logfile.
+
+![ios-app-settings-logging](https://user-images.githubusercontent.com/214010/48155052-6c1e5b00-e2ca-11e8-9132-39b957a331b0.png)
+
+#### Record the screen
+
+In iOS 11 or later, you can additionally create a screen recording to better illustrate an error:  
+https://support.apple.com/en-us/HT207935
+
+### Locating iPhone & iPad app crash logs
+
+In the worst case when the app isn't responding or crashing, iOS saves a crashlog on the device.
+
+Here you can find it on iOS 12:  
+`Settings > Privacy > Analytics > Analytics Data`
+
+The list entries are sorted alphabetically with the app name and date and time. Tap the name to open and export with the button on the upper right.
+
 ### ownCloud server Log File
 
 The ownCloud server also maintains an ownCloud specific log file. This log file
@@ -35,3 +61,10 @@ following:
   
 You can find more information about Apache logging at
 http://httpd.apache.org/docs/current/logs.html.
+
+## Tools
+
+### mitmproxy
+
+mitmproxy is an interactive man-in-the-middle proxy for HTTP and HTTPS with a console interface. At ownCloud we use it a lot to investigate every detail of HTTP requests and responses:  
+https://mitmproxy.org/
