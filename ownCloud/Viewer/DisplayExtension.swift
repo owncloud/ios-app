@@ -46,7 +46,7 @@ extension DisplayExtension where Self: DisplayViewController {
 			return Self()
 		}, customMatcher:customMatcher)
 
-		return displayExtension!
+		return displayExtension
 	}
 }
 

@@ -108,7 +108,7 @@ extension ThemeStyle {
 }
 
 extension OCExtensionType {
-	static let themeStyle: OCExtensionType  =  OCExtensionType(rawValue: "themeStyle")
+	static let themeStyle: OCExtensionType  =  OCExtensionType("app.themeStyle")
 }
 
 struct ThemeStyleFeatureKeys {
