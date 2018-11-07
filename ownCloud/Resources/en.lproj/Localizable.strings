@@ -80,6 +80,10 @@
 "Are you sure you want to delete this item from the server?" = "Are you sure you want to delete this item from the server?";
 "Deleting '%@'" = "Deleting '%@'";
 "Renaming to %@" = "Renaming to %@";
+"Upload from your photo library" = "Upload from your photo library";
+"ownCloud does not have permissons" = "ownCloud does not have permissons";
+"We need this so that you can upload photos and videos from your photo library" = "We need this so that you can upload photos and videos from your photo library";
+"Not now" = "Not now";
 
 /* Server List*/
 "Cancel" = "Cancel";

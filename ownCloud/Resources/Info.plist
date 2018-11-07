@@ -34,13 +34,13 @@
 		<true/>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>Owncloud needs to access to your files to be able to upload them.</string>
+	<string>We need this so that you can upload photos and videos from your photo library</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Unlock the app without entering the passcode.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Owncloud needs to access to your photos to be able to upload them</string>
+	<string>We need this so that you can upload photos and videos from your photo library</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Owncloud needs to access to your photos to be able to upload them.</string>
+	<string>We need this so that you can upload photos and videos from your photo library</string>
 	<key>OCAppGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>OCAppIdentifierPrefix</key>

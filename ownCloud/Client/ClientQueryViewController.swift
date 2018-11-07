@@ -147,7 +147,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
 
-		let actionsBarButton: UIBarButtonItem = UIBarButtonItem(title: "● ● ●", style: .done, target: self, action: #selector(actionsBarButtonPressed))
+		let actionsBarButton: UIBarButtonItem = UIBarButtonItem(title: "● ● ●", style: .done, target: self, action: #selector(uploadsBarButtonPressed))
 		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .normal)
 		self.navigationItem.rightBarButtonItem = actionsBarButton
 	}
@@ -652,8 +652,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	// MARK: - Navigation Bar Actions
-	@objc func actionsBarButtonPressed() {
+	@objc func uploadsBarButtonPressed() {
 
+		// Set the correct style for the device
 		var style: UIAlertControllerStyle
 		if UIDevice.current.isIpad() {
 			style = .alert
@@ -661,28 +662,56 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			style = .actionSheet
 		}
 
+		// Create the alert controller to choose from wich provider you want to upload
 		let controller = UIAlertController(title: nil, message: nil, preferredStyle: style)
-		let photoLibrary = UIAlertAction(title: "Upload from Photo Library", style: .default, handler: { (_) in
+
+		let photoLibrary = UIAlertAction(title: "Upload from your photo library".localized, style: .default, handler: { (_) in
+
+			// Check if have permissons to access the library
 			PHPhotoLibrary.requestAuthorization({ newStatus in
+
+				var viewControllerToPresent: UIViewController
+
 				if newStatus ==  PHAuthorizationStatus.authorized {
+
+					// Has permissons
 					let picker = UIImagePickerController.regularImagePicker(with: .photoLibrary)
 					picker.delegate = self
-					OnMainThread {
-						self.present(picker, animated: true)
-					}
+					viewControllerToPresent = picker
 				} else {
-					let alert = UIAlertController(with: "Owncloud does not have permissons", message: "You need to activate photos permissons for being able to upload photos or videos", okLabel: "Settings", action: {
+
+					// Does not have permissons
+					let alert = UIAlertController(with: "ownCloud does not have permissons".localized, message: "We need this so that you can upload photos and videos from your photo library".localized)
+
+					let settingAction = UIAlertAction(title: "Settings".localized, style: .default, handler: { _ in
 						UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
 					})
-					OnMainThread {
-						self.present(alert, animated: true)
-					}
+					let notNowAction = UIAlertAction(title: "Not now".localized, style: .cancel)
+
+					alert.addAction(settingAction)
+					alert.addAction(notNowAction)
+
+					viewControllerToPresent = alert
+				}
+
+				OnMainThread {
+					self.present(viewControllerToPresent, animated: true)
 				}
 			})
 		})
 
+		let locationsDirectory = UIAlertAction(title: "Upload file", style: .default) { _ in
+			let documentDirectory = UIDocumentPickerViewController(documentTypes: [kUTTypeItem as String], in: .import)
+			documentDirectory.delegate = self
+
+			OnMainThread {
+				self.present(documentDirectory, animated: true)
+			}
+		}
+
 		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 		controller.addAction(photoLibrary)
+		controller.addAction(locationsDirectory)
 		controller.addAction(cancelAction)
 		self.present(controller, animated: true)
 	}
@@ -925,6 +954,23 @@ extension ClientQueryViewController: UIImagePickerControllerDelegate {
 	}
 }
 
-extension ClientQueryViewController: UINavigationControllerDelegate {
+// MARK: - UIDocumentPickerDelegate
+extension ClientQueryViewController: UIDocumentPickerDelegate {
 
+	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+		for url in urls {
+			if let progress = core?.importFileNamed(url.lastPathComponent, at: query!.rootItem, from: url, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+				if error != nil {
+					print("LOG ---> error uploading")
+				} else {
+					print("LOG ---> success uploading")
+				}
+			}) {
+				self.progressSummarizer?.startTracking(progress: progress)
+			}
+		}
+	}
 }
+
+// MARK: - UINavigationControllerDelegate
+extension ClientQueryViewController: UINavigationControllerDelegate {}
