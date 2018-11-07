@@ -681,7 +681,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				} else {
 
 					// Does not have permissons
-					let alert = UIAlertController(with: "ownCloud does not have permissons".localized, message: "We need this so that you can upload photos and videos from your photo library".localized)
+					let alert = UIAlertController(title: "ownCloud does not have permissons".localized, message: "We need this so that you can upload photos and videos from your photo library".localized, preferredStyle: .alert)
 
 					let settingAction = UIAlertAction(title: "Settings".localized, style: .default, handler: { _ in
 						UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
