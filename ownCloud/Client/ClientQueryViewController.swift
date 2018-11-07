@@ -652,15 +652,29 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	// MARK: - Navigation Bar Actions
 	@objc func actionsBarButtonPressed() {
-		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-		let photoLibrary = UIAlertAction(title: "Upload from Photo Library", style: .default, handler: { (action) in
-			let picker = UIImagePickerController()
-			picker.sourceType = .camera
+
+		var style: UIAlertControllerStyle
+		if UIDevice.current.isIpad() {
+			style = .alert
+		} else {
+			style = .actionSheet
+		}
+		let controller = UIAlertController(title: nil, message: nil, preferredStyle: style)
+		let photoLibrary = UIAlertAction(title: "Upload from Photo Library", style: .default, handler: { (_) in
+			let picker = UIImagePickerController.regularImagePicker(with: .photoLibrary)
 			picker.delegate = self
 			self.present(picker, animated: true)
 		})
+
+		let camera = UIAlertAction(title: "Upload from Camera", style: .default, handler: { (_) in
+			let picker = UIImagePickerController.regularImagePicker(with: .camera)
+			picker.delegate = self
+			self.present(picker, animated: true)
+		})
+
 		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 		controller.addAction(photoLibrary)
+		controller.addAction(camera)
 		controller.addAction(cancelAction)
 		self.present(controller, animated: true)
 	}
@@ -874,21 +888,32 @@ extension ClientQueryViewController: UIImagePickerControllerDelegate {
 
 	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
 
-		var newImage: UIImage
+		var name: String = "test.jpg"
+		var url: URL = URL(string: "https://demo.owncloud.org")!
 
-		if let possibleImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-			newImage = possibleImage
-		} else if let possibleImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-			newImage = possibleImage
-		} else {
-			return
+		if let imageURL = info[UIImagePickerControllerImageURL] as? URL {
+			name = imageURL.lastPathComponent
+			url = imageURL
 		}
 
-		// do something interesting here!
+		if let movieURL = info[UIImagePickerControllerMediaURL] as? URL {
+			name = movieURL.lastPathComponent
+			url = movieURL
+		}
+
+		if let progress = core?.importFileNamed(name, at: query!.rootItem, from: url, isSecurityScoped: true, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+			if error != nil {
+				print("LOG ---> error uploading")
+			} else {
+				print("LOG ---> success uploading")
+			}
+		}) {
+			self.progressSummarizer?.startTracking(progress: progress)
+		}
+
 		print("LOG --->")
 		print(info)
 		print("LOG --->")
-		core?.up
 
 		dismiss(animated: true)
 	}
