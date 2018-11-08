@@ -17,6 +17,10 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
+<<<<<<< HEAD
 	<string>79</string>
+=======
+	<string>78</string>
+>>>>>>> origin/master
 </dict>
 </plist>
