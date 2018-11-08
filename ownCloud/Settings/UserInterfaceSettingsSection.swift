@@ -88,7 +88,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 		// Log level
 		let logLevels : [[String:Any]] = [
 			[ "Debug".localized   : OCLogLevel.debug.rawValue   ],
-			[ "Default".localized : OCLogLevel.default.rawValue ],
+			[ "Info".localized    : OCLogLevel.info.rawValue ],
 			[ "Warning".localized : OCLogLevel.warning.rawValue ],
 			[ "Error".localized   : OCLogLevel.error.rawValue   ],
 			[ "Off".localized     : OCLogLevel.off.rawValue     ]

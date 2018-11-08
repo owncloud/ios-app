@@ -140,7 +140,7 @@
 "Logging" = "Logging";
 
 "Off" = "Off";
-"Debug" = "Debug";
+"Info" = "Info";
 "Default" = "Default";
 "Warning" = "Warning";
 "Error" = "Error";

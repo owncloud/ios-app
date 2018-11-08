@@ -29,7 +29,7 @@ class Log {
 
 	static func log(_ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
 		withVaList(parameters) { va_list in
-			OCLogger.shared.appendLogLevel(OCLogLevel.default, functionName: functionName, file: file, line: line, message: message, arguments: va_list)
+			OCLogger.shared.appendLogLevel(OCLogLevel.info, functionName: functionName, file: file, line: line, message: message, arguments: va_list)
 		}
 	}
 
