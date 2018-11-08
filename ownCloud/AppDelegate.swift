@@ -29,7 +29,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Override point for customization after application launch.
 		var navigationController: UINavigationController?
 
+		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
+		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching")
+
 		window = UIWindow(frame: UIScreen.main.bounds)
+
+		ThemeStyle.registerDefaultStyles()
 
 		serverListTableViewController = ServerListTableViewController(style: UITableViewStyle.plain)
 
@@ -43,13 +48,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum + 10)
 
-		Log.debug("Minimum fetch refresh time: \(UIApplicationBackgroundFetchIntervalMinimum)")
-
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
 
+		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
+
 		return true
+	}
+
+	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+			completionHandler(.newData)
+		}
 	}
 
 	func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
@@ -61,6 +72,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+		Log.debug("AppDelegate: handle events for background URL session with identifier \(identifier)")
+
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
 	}
 }

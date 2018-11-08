@@ -120,8 +120,8 @@ class BookmarkViewController: StaticTableViewController {
 
 		certificateRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let certificate = self?.bookmark?.certificate {
-				if let certificateViewController : OCCertificateViewController = OCCertificateViewController(certificate: certificate) {
-					let navigationController = UINavigationController(rootViewController: certificateViewController)
+				if let certificateViewController : ThemeCertificateViewController = ThemeCertificateViewController(certificate: certificate) {
+					let navigationController = ThemeNavigationController(rootViewController: certificateViewController)
 
 					self?.present(navigationController, animated: true, completion: nil)
 				}
@@ -589,13 +589,15 @@ class BookmarkViewController: StaticTableViewController {
 		var firstResponder : UIView?
 		var firstResponderRow : StaticTableViewRow?
 
-		if self.bookmark?.url == nil {
+		if urlRow?.attached == true, (urlRow?.value as? String)?.count == 0 {
 			firstResponderRow = urlRow
 		} else {
-			if usernameRow?.attached == true, (usernameRow?.value as? String)?.count == 0 {
-				firstResponderRow = usernameRow
-			} else if passwordRow?.attached == true, (passwordRow?.value as? String)?.count == 0 {
-				firstResponderRow = passwordRow
+			if credentialsSection?.attached == true {
+				if usernameRow?.attached == true, (usernameRow?.value as? String)?.count == 0 {
+					firstResponderRow = usernameRow
+				} else if passwordRow?.attached == true, (passwordRow?.value as? String)?.count == 0 {
+					firstResponderRow = passwordRow
+				}
 			}
 		}
 
@@ -710,18 +712,20 @@ extension OCClassSettingsKey {
 }
 
 extension BookmarkViewController : OCClassSettingsSupport {
-	static func classSettingsIdentifier() -> OCClassSettingsIdentifier! {
-		return .bookmark
-	}
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .bookmark
 
-	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier!) -> [OCClassSettingsKey : Any]! {
-		return [ : ]
-		/*
-		return [
-			.bookmarkDefaultURL : "http://demo.owncloud.org/",
-			.bookmarkURLEditable : false
-		]
-		*/
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		if identifier == .bookmark {
+			/*
+			return [
+				.bookmarkDefaultURL : "http://demo.owncloud.org/",
+				.bookmarkURLEditable : false
+			]
+			*/
+			return [ : ]
+		}
+
+		return nil
 	}
 }
 
@@ -749,15 +753,15 @@ extension BookmarkViewController {
 			Theme.shared.add(tvgResourceFor: "icon-password-manager")
 			vectorImageView.vectorImage = Theme.shared.tvgImage(for: "icon-password-manager")
 
-			vectorImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(BookmarkViewController.openPasswordManagerSheet)))
+			vectorImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(BookmarkViewController.openPasswordManagerSheet(sender:))))
 
 			self.passwordRow?.cell?.accessoryView = vectorImageView
 		}
 	}
 
-	@objc func openPasswordManagerSheet() {
+	@objc func openPasswordManagerSheet(sender: Any?) {
 		if let bookmarkURL = self.bookmark?.url {
-			PasswordManagerAccess.findCredentials(url: bookmarkURL, viewController: self) { (error, inUsername, inPassword) in
+			PasswordManagerAccess.findCredentials(url: bookmarkURL, viewController: self, sourceView: (sender as? UITapGestureRecognizer)?.view) { (error, inUsername, inPassword) in
 				if error == nil {
 					OnMainThread {
 						if let username = inUsername {

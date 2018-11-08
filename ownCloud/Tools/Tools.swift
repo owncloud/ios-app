@@ -1,8 +1,8 @@
 //
-//  OCExtension+DisplayView.swift
+//  Tools.swift
 //  ownCloud
 //
-//  Created by Pablo Carrascal on 30/08/2018.
+//  Created by Felix Schwarz on 26.10.18.
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
@@ -16,8 +16,8 @@
  *
  */
 
-import ownCloudSDK
+import Foundation
 
-extension OCExtensionType {
-	static let viewer: OCExtensionType  =  OCExtensionType("app.viewer")
+func LastGitCommit() -> String? {
+	return Bundle.main.object(forInfoDictionaryKey: "LastGitCommit") as? String
 }

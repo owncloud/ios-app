@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 enum ThemeEvent {
 	case initial
@@ -61,6 +62,8 @@ class Theme: NSObject {
 	// MARK: - Shared instance
 	static var shared : Theme = {
 		let sharedInstance = Theme()
+
+		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.PocketSVG", bundleOf: Theme.self, title: "PocketSVG", resourceName: "PocketSVG", fileExtension: "LICENSE"))
 
 		return (sharedInstance)
 	}()
@@ -224,6 +227,16 @@ class Theme: NSObject {
 			for (_, applier) in appliers {
 				applier(self, collection, .update)
 			}
+		}
+	}
+
+	// MARK: - Theme switching
+	func switchThemeCollection(_ collection: ThemeCollection) {
+		UIView.animate(withDuration: 0.25) {
+			CATransaction.begin()
+			CATransaction.setAnimationDuration(0.25)
+			self.activeCollection = collection
+			CATransaction.commit()
 		}
 	}
 }
