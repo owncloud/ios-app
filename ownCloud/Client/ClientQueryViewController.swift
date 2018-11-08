@@ -700,16 +700,17 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			}
 		})
 
-		let locationsDirectory = UIAlertAction(title: "Upload file", style: .default) { _ in
-			let documentDirectory = UIDocumentPickerViewController(documentTypes: [kUTTypeItem as String], in: .import)
+		let locationsDirectory = UIAlertAction(title: "Upload file".localized, style: .default) { _ in
+			let documentDirectory = UIDocumentPickerViewController(documentTypes: [kUTTypeData as String], in: .import)
 			documentDirectory.delegate = self
+			documentDirectory.allowsMultipleSelection = true
 
 			OnMainThread {
 				self.present(documentDirectory, animated: true)
 			}
 		}
 
-		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
 		controller.addAction(photoLibrary)
 		controller.addAction(locationsDirectory)
 		controller.addAction(cancelAction)

@@ -84,6 +84,7 @@
 "ownCloud does not have permissons" = "ownCloud does not have permissons";
 "We need this so that you can upload photos and videos from your photo library" = "We need this so that you can upload photos and videos from your photo library";
 "Not now" = "Not now";
+"Upload file" = "Upload file";
 
 /* Server List*/
 "Cancel" = "Cancel";
