@@ -662,42 +662,50 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			style = .actionSheet
 		}
 
-		// Create the alert controller to choose from wich provider you want to upload
 		let controller = UIAlertController(title: nil, message: nil, preferredStyle: style)
 
 		let photoLibrary = UIAlertAction(title: "Upload from your photo library".localized, style: .default, handler: { (_) in
 
-			// Check if have permissons to access the library
-			PHPhotoLibrary.requestAuthorization({ newStatus in
-
-				var viewControllerToPresent: UIViewController
-
-				if newStatus ==  PHAuthorizationStatus.authorized {
-
-					// Has permissons
-					let picker = UIImagePickerController.regularImagePicker(with: .photoLibrary)
-					picker.delegate = self
-					viewControllerToPresent = picker
-				} else {
-
-					// Does not have permissons
-					let alert = UIAlertController(title: "ownCloud does not have permissons".localized, message: "We need this so that you can upload photos and videos from your photo library".localized, preferredStyle: .alert)
-
-					let settingAction = UIAlertAction(title: "Settings".localized, style: .default, handler: { _ in
-						UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
-					})
-					let notNowAction = UIAlertAction(title: "Not now".localized, style: .cancel)
-
-					alert.addAction(settingAction)
-					alert.addAction(notNowAction)
-
-					viewControllerToPresent = alert
-				}
-
+			func presentImageGalleryPicker() {
+				let picker = UIImagePickerController.regularImagePicker(with: .photoLibrary)
+				picker.delegate = self
 				OnMainThread {
-					self.present(viewControllerToPresent, animated: true)
+					self.present(picker, animated: true)
 				}
-			})
+			}
+
+			let permisson = PHPhotoLibrary.authorizationStatus()
+			switch permisson {
+
+			case .authorized:
+				presentImageGalleryPicker()
+			case .notDetermined:
+				PHPhotoLibrary.requestAuthorization({ newStatus in
+					if newStatus == .authorized {
+						presentImageGalleryPicker()
+					}
+				})
+
+			default:
+				PHPhotoLibrary.requestAuthorization({ newStatus in
+
+					if newStatus == .denied {
+						let alert = UIAlertController(title: "ownCloud does not have permissons".localized, message: "We need this so that you can upload photos and videos from your photo library".localized, preferredStyle: .alert)
+
+						let settingAction = UIAlertAction(title: "Settings".localized, style: .default, handler: { _ in
+							UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
+						})
+						let notNowAction = UIAlertAction(title: "Not now".localized, style: .cancel)
+
+						alert.addAction(settingAction)
+						alert.addAction(notNowAction)
+
+						OnMainThread {
+							self.present(alert, animated: true)
+						}
+					}
+				})
+			}
 		})
 
 		let locationsDirectory = UIAlertAction(title: "Upload file", style: .default) { _ in
