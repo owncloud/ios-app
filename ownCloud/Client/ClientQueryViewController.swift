@@ -652,17 +652,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	// MARK: - Navigation Bar Actions
-	@objc func uploadsBarButtonPressed() {
+	@objc func uploadsBarButtonPressed(_ sender: UIBarButtonItem) {
 
-		// Set the correct style for the device
-		var style: UIAlertControllerStyle
-		if UIDevice.current.isIpad() {
-			style = .alert
-		} else {
-			style = .actionSheet
-		}
-
-		let controller = UIAlertController(title: nil, message: nil, preferredStyle: style)
+		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
 		let photoLibrary = UIAlertAction(title: "Upload from your photo library".localized, style: .default, handler: { (_) in
 
@@ -721,6 +713,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		controller.addAction(photoLibrary)
 		controller.addAction(locationsDirectory)
 		controller.addAction(cancelAction)
+
+		if let popoverController = controller.popoverPresentationController {
+			popoverController.barButtonItem = sender
+		}
 		self.present(controller, animated: true)
 	}
 }
