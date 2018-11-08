@@ -47,8 +47,6 @@ class StaticTableViewController: UITableViewController, Themeable {
 			tableView.performBatchUpdates({
 				sections.insert(section, at: index)
 				tableView.insertSections(IndexSet(integer: index), with: UITableViewRowAnimation.fade)
-			}, completion: { (_) in
-
 			})
 		} else {
 			sections.insert(section, at: index)
@@ -71,6 +69,56 @@ class StaticTableViewController: UITableViewController, Themeable {
 			sections.remove(at: sections.index(of: section)!)
 
 			section.viewController = nil
+
+			tableView.reloadData()
+		}
+	}
+
+	func addSections(_ addSections: [StaticTableViewSection], animated animateThis: Bool = false) {
+		for section in addSections {
+			section.viewController = self
+		}
+
+		if animateThis {
+			tableView.performBatchUpdates({
+				let index = sections.count
+				sections.append(contentsOf: addSections)
+				tableView.insertSections(IndexSet(integersIn: index..<(index+addSections.count)), with: UITableViewRowAnimation.fade)
+			})
+		} else {
+			sections.append(contentsOf: addSections)
+			tableView.reloadData()
+		}
+	}
+
+	func removeSections(_ removeSections: [StaticTableViewSection], animated animateThis: Bool = false) {
+		if animateThis {
+			tableView.performBatchUpdates({
+				var removalIndexes : IndexSet = IndexSet()
+
+				for section in removeSections {
+					if let index : Int = sections.index(of: section) {
+						removalIndexes.insert(index)
+					}
+				}
+
+				for section in removeSections {
+					if let index : Int = sections.index(of: section) {
+						sections.remove(at: index)
+					}
+				}
+
+				tableView.deleteSections(removalIndexes, with: UITableViewRowAnimation.fade)
+			}, completion: { (_) in
+				for section in removeSections {
+					section.viewController = nil
+				}
+			})
+		} else {
+			for section in removeSections {
+				sections.remove(at: sections.index(of: section)!)
+				section.viewController = nil
+			}
 
 			tableView.reloadData()
 		}

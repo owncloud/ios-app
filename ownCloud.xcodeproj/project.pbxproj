@@ -84,6 +84,7 @@
 		DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */; };
 		DC680576212DF548006C3B1F /* CertificateManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */; };
 		DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */; };
+		DC6CF7FB219446050013B9F9 /* LogSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */; };
 		DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; };
 		DC7DBA20207F5A0400E7337D /* PocketSVG.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC7DBA25207F684700E7337D /* ThemeResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA24207F684700E7337D /* ThemeResource.swift */; };
@@ -390,6 +391,7 @@
 		DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleProgressBar.swift; sourceTree = "<group>"; };
 		DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateManagementViewController.swift; sourceTree = "<group>"; };
 		DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCertificateViewController.swift; sourceTree = "<group>"; };
+		DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSettingsViewController.swift; sourceTree = "<group>"; };
 		DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PocketSVG.xcodeproj; path = external/PocketSVG/PocketSVG.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DC7DBA24207F684700E7337D /* ThemeResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeResource.swift; sourceTree = "<group>"; };
 		DC7DBA28207F71D600E7337D /* VectorImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorImage.swift; sourceTree = "<group>"; };
@@ -899,6 +901,7 @@
 				23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */,
 				DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */,
 				232F7CAE2097260400EE22E4 /* SettingsViewController.swift */,
+				DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */,
 				DC68056B212DF506006C3B1F /* Certificate Management */,
 				593BAB3F209ADFB900023634 /* Passcode */,
 			);
@@ -1284,6 +1287,7 @@
 				DC7DBA25207F684700E7337D /* ThemeResource.swift in Sources */,
 				DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */,
 				6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */,
+				DC6CF7FB219446050013B9F9 /* LogSettingsViewController.swift in Sources */,
 				23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */,
 				DC018F8C20A1060A00135198 /* ProgressHUDViewController.swift in Sources */,
 				DC7DBA29207F71D600E7337D /* VectorImage.swift in Sources */,
