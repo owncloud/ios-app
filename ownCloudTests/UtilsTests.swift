@@ -50,4 +50,26 @@ class UtilsTests {
 		let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
 		appDelegate.serverListTableViewController?.updateNoServerMessageVisibility()
 	}
+
+	static func getBookmark() -> OCBookmark? {
+
+		let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
+		"passphrase" : "admin",
+		"username" : "admin"]
+		var data: Data? = nil
+		do {
+			data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .binary, options: 0)
+		} catch {
+			return nil
+		}
+
+		let bookmark: OCBookmark = OCBookmark()
+		bookmark.name = "server"
+		bookmark.authenticationData = data
+
+//		OCBookmarkManager.shared.addBookmark(bookmark)
+//		OCBookmarkManager.shared.saveBookmarks()
+
+		return bookmark
+	}
 }
