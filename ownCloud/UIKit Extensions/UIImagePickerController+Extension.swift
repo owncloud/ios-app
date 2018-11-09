@@ -15,6 +15,11 @@ extension UIImagePickerController {
 		let picker = UIImagePickerController()
 		picker.sourceType = sourceType
 		picker.mediaTypes = [kUTTypeMovie as String, kUTTypeImage as String]
+		picker.navigationBar.isTranslucent = false
+		picker.navigationBar.barTintColor = Theme.shared.activeCollection.navigationBarColors.backgroundColor
+		picker.navigationBar.backgroundColor = Theme.shared.activeCollection.navigationBarColors.backgroundColor
+		picker.navigationBar.tintColor = Theme.shared.activeCollection.navigationBarColors.tintColor
+		picker.navigationBar.titleTextAttributes = [ .foregroundColor :  Theme.shared.activeCollection.navigationBarColors.labelColor ]
 
 		return picker
 	}
