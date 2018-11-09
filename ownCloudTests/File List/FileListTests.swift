@@ -25,8 +25,19 @@ class FileListTests: XCTestCase {
 		super.tearDown()
 	}
 
+	public typealias OCMRequestCoreForBookmarkCompletionHandler = @convention(block)
+		(_ core: OCCore, _ error: NSError?) -> Void
+
+	public typealias OCMRequestCoreForBookmark = @convention(block)
+		(_ bookmark: OCBookmark, _ completionHandler: OCMRequestCoreForBookmarkCompletionHandler) -> OCCore
+
 	func testShowFileList() {
+
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
+
+			//Mocks
+			self.mockOCoreForBookmark(mockBookmark: bookmark)
+
 			let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
 			let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 
@@ -34,5 +45,17 @@ class FileListTests: XCTestCase {
 		} else {
 			assertionFailure()
 		}
+	}
+
+	// MARK: - Mocks
+	func mockOCoreForBookmark(mockBookmark: OCBookmark) {
+		let completionHandlerBlock : OCMRequestCoreForBookmark = {
+			(bookmark, mockedBlock) in
+			let core = OCCore(bookmark: mockBookmark)
+			mockedBlock(core, nil)
+			return core
+		}
+
+		OCMockManager.shared.addMocking(blocks: [OCMockLocation.ocCoreManagerRequestCoreForBookmark: completionHandlerBlock])
 	}
 }
