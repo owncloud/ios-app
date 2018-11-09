@@ -651,6 +651,20 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	}
 
+	func upload(itemURL: URL, name: String, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
+		if let progress = core.importFileNamed(name, at: query.rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { [weak self](error, _ core, _ item, _) in
+			if error != nil {
+				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
+				completionHandler?(false)
+			} else {
+				Log.debug("Success uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
+				completionHandler?(true)
+			}
+		}) {
+			self.progressSummarizer?.startTracking(progress: progress)
+		}
+	}
+
 	// MARK: - Navigation Bar Actions
 	@objc func uploadsBarButtonPressed(_ sender: UIBarButtonItem) {
 
@@ -704,10 +718,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			let documentDirectory = UIDocumentPickerViewController(documentTypes: [kUTTypeData as String], in: .import)
 			documentDirectory.delegate = self
 			documentDirectory.allowsMultipleSelection = true
-
-			OnMainThread {
-				self.present(documentDirectory, animated: true)
-			}
+			self.present(documentDirectory, animated: true)
 		}
 
 		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
@@ -948,15 +959,7 @@ extension ClientQueryViewController: UIImagePickerControllerDelegate {
 			name = resources[0].originalFilename
 		}
 
-		if let progress = core.importFileNamed(name, at: query.rootItem, from: url, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { [weak self] (error, _ core, _ item, _) in
-			if error != nil {
-				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
-			} else {
-				Log.debug("Success uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
-			}
-		}) {
-			self.progressSummarizer?.startTracking(progress: progress)
-		}
+		upload(itemURL: url, name: name)
 
 		OnMainThread {
 			picker.dismiss(animated: true)
@@ -970,15 +973,7 @@ extension ClientQueryViewController: UIDocumentPickerDelegate {
 
 	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
 		for url in urls {
-			if let progress = core.importFileNamed(url.lastPathComponent, at: query.rootItem, from: url, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { [weak self](error, _ core, _ item, _) in
-				if error != nil {
-					Log.debug("Error uploading \(Log.mask(url.lastPathComponent)) file to \(Log.mask(self?.query.rootItem.path))")
-				} else {
-					Log.debug("Success uploading \(Log.mask(url.lastPathComponent)) file to \(Log.mask(self?.query.rootItem.path))")
-				}
-			}) {
-				self.progressSummarizer?.startTracking(progress: progress)
-			}
+			self.upload(itemURL: url, name: url.lastPathComponent)
 		}
 	}
 }
