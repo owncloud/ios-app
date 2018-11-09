@@ -943,6 +943,11 @@ extension ClientQueryViewController: UIImagePickerControllerDelegate {
 			url = movieURL
 		}
 
+		if let imageAsset = info[UIImagePickerControllerPHAsset] as? PHAsset {
+			let resources = PHAssetResource.assetResources(for: imageAsset)
+			name = resources[0].originalFilename
+		}
+
 		if let progress = core.importFileNamed(name, at: query.rootItem, from: url, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
 			if error != nil {
 				print("LOG ---> error uploading")
@@ -956,6 +961,7 @@ extension ClientQueryViewController: UIImagePickerControllerDelegate {
 		OnMainThread {
 			picker.dismiss(animated: true)
 		}
+
 	}
 }
 
