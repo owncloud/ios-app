@@ -897,7 +897,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 			}
 
-			if let progress = self.core.move(item, to: destinationItem!, withName:  item.name, options: nil, resultHandler: { (error, _, _, _) in
+			if let progress = self.core.move(item, to: destinationItem, withName:  item.name, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
 				}
@@ -943,7 +943,7 @@ extension ClientQueryViewController: UIImagePickerControllerDelegate {
 			url = movieURL
 		}
 
-		if let progress = core?.importFileNamed(name, at: query!.rootItem, from: url, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+		if let progress = core.importFileNamed(name, at: query.rootItem, from: url, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
 			if error != nil {
 				print("LOG ---> error uploading")
 			} else {
@@ -964,7 +964,7 @@ extension ClientQueryViewController: UIDocumentPickerDelegate {
 
 	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
 		for url in urls {
-			if let progress = core?.importFileNamed(url.lastPathComponent, at: query!.rootItem, from: url, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+			if let progress = core.importFileNamed(url.lastPathComponent, at: query.rootItem, from: url, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
 				if error != nil {
 					print("LOG ---> error uploading")
 				} else {
