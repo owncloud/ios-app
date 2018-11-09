@@ -82,7 +82,7 @@ Please submit translations via [Transifex][transifex].
 
 ## Local ownCloud server for testing
 
-You can easily fire up an ownCloud server on your Ma using Docker.
+You can easily fire up an ownCloud server on your Mac using Docker.
 
 1. [Install Docker](https://docs.docker.com/docker-for-mac/)
 2. Run this in Terminal.app to start ownCloud with Docker
@@ -99,7 +99,7 @@ docker run --rm -d \
  http://localhost/  
  user: admin  
  password: admin
-4. To test the  app on a iOs device in your local network, you can use the IP of your machine as the Server URL
+4. To test the  app on a iOS device in your local network, you can use the IP of your machine as the Server URL
 5. To remove the ownCloud Docker, just run `docker kill owncloud`
 
 Here you can find more information about running ownCloud with Docker:
