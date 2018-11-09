@@ -166,4 +166,25 @@
 	return (nil);
 }
 
+- (void)setLocalFavoriteRank:(NSNumber *)localFavoriteRank
+{
+	[self setValue:localFavoriteRank forLocalAttribute:OCLocalAttributeFavoriteRank];
+}
+
+- (NSNumber *)favoriteRank
+{
+	return ([self valueForLocalAttribute:OCLocalAttributeFavoriteRank]);
+}
+
+- (void)setLocalTagData:(NSData *)localTagData
+{
+	[self setValue:localTagData forLocalAttribute:OCLocalAttributeTagData];
+}
+
+- (NSData *)tagData
+{
+	return ([self valueForLocalAttribute:OCLocalAttributeTagData]);
+}
+
+
 @end

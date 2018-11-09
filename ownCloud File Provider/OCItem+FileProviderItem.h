@@ -20,4 +20,7 @@
 
 @interface OCItem (FileProviderItem) <NSFileProviderItem>
 
+- (void)setLocalFavoriteRank:(NSNumber *)localFavoriteRank;
+- (void)setLocalTagData:(NSData *)localTagData;
+
 @end

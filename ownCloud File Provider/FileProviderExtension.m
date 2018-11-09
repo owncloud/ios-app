@@ -383,6 +383,46 @@
 	}
 }
 
+- (void)setFavoriteRank:(NSNumber *)favoriteRank forItemIdentifier:(NSFileProviderItemIdentifier)itemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
+{
+	NSError *error = nil;
+	OCItem *item;
+
+	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
+	{
+		[item setLocalFavoriteRank:favoriteRank];
+
+		[self.core performUpdatesForAddedItems:nil removedItems:nil updatedItems:@[ item ] refreshPaths:nil newSyncAnchor:nil preflightAction:nil postflightAction:^(dispatch_block_t  _Nonnull postFlightCompletionHandler) {
+			completionHandler(item, nil);
+			postFlightCompletionHandler();
+		} queryPostProcessor:nil];
+	}
+	else
+	{
+		completionHandler(nil, error);
+	}
+}
+
+- (void)setTagData:(NSData *)tagData forItemIdentifier:(NSFileProviderItemIdentifier)itemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
+{
+	NSError *error = nil;
+	OCItem *item;
+
+	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
+	{
+		[item setLocalTagData:tagData];
+
+		[self.core performUpdatesForAddedItems:nil removedItems:nil updatedItems:@[ item ] refreshPaths:nil newSyncAnchor:nil preflightAction:nil postflightAction:^(dispatch_block_t  _Nonnull postFlightCompletionHandler) {
+			completionHandler(item, nil);
+			postFlightCompletionHandler();
+		} queryPostProcessor:nil];
+	}
+	else
+	{
+		completionHandler(nil, error);
+	}
+}
+
 #pragma mark - Enumeration
 
 - (nullable id<NSFileProviderEnumerator>)enumeratorForContainerItemIdentifier:(NSFileProviderItemIdentifier)containerItemIdentifier error:(NSError **)error
