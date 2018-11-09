@@ -948,11 +948,11 @@ extension ClientQueryViewController: UIImagePickerControllerDelegate {
 			name = resources[0].originalFilename
 		}
 
-		if let progress = core.importFileNamed(name, at: query.rootItem, from: url, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+		if let progress = core.importFileNamed(name, at: query.rootItem, from: url, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { [weak self] (error, _ core, _ item, _) in
 			if error != nil {
-				print("LOG ---> error uploading")
+				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
 			} else {
-				print("LOG ---> success uploading")
+				Log.debug("Success uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
 			}
 		}) {
 			self.progressSummarizer?.startTracking(progress: progress)
@@ -970,11 +970,11 @@ extension ClientQueryViewController: UIDocumentPickerDelegate {
 
 	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
 		for url in urls {
-			if let progress = core.importFileNamed(url.lastPathComponent, at: query.rootItem, from: url, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+			if let progress = core.importFileNamed(url.lastPathComponent, at: query.rootItem, from: url, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { [weak self](error, _ core, _ item, _) in
 				if error != nil {
-					print("LOG ---> error uploading")
+					Log.debug("Error uploading \(Log.mask(url.lastPathComponent)) file to \(Log.mask(self?.query.rootItem.path))")
 				} else {
-					print("LOG ---> success uploading")
+					Log.debug("Success uploading \(Log.mask(url.lastPathComponent)) file to \(Log.mask(self?.query.rootItem.path))")
 				}
 			}) {
 				self.progressSummarizer?.startTracking(progress: progress)
