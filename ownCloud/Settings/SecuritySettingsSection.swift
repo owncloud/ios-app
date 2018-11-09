@@ -122,7 +122,7 @@ class SecuritySettingsSection: SettingsSection {
 				vc.navigationController?.pushViewController(newVC, animated: true)
 			}
 
-		}, title: "Lock application".localized, subtitle: frequency.toString(), accessoryType: .disclosureIndicator)
+		}, title: "Lock application".localized, subtitle: frequency.toString(), accessoryType: .disclosureIndicator, identifier: "lockFrequency")
 
 		// Creation of the passcode row.
 		passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
@@ -194,7 +194,7 @@ class SecuritySettingsSection: SettingsSection {
 					viewController.present(passcodeViewController!, animated: true, completion: nil)
 				}
 			}
-		}, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled)
+		}, title: "Passcode lock".localized, value: isPasscodeSecurityEnabled, identifier: "passcodeSwitchIdentifier")
 
 		// Creation of the biometrical row.
 		if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
@@ -224,7 +224,7 @@ class SecuritySettingsSection: SettingsSection {
 						viewController.present(passcodeViewController!, animated: true, completion: nil)
 					}
 				}
-			}, title: biometricalSecurityName, value: isBiometricalSecurityEnabled)
+			}, title: biometricalSecurityName, value: isBiometricalSecurityEnabled, identifier: "BiometricalSwitch")
 		}
 
 		// Creation of certificate management row
@@ -232,7 +232,7 @@ class SecuritySettingsSection: SettingsSection {
 			let certificateManagementViewController = CertificateManagementViewController(style: UITableViewStyle.grouped)
 
 			row.viewController?.navigationController?.pushViewController(certificateManagementViewController, animated: true)
-		}, title: "Certificates".localized, accessoryType: .disclosureIndicator)
+		}, title: "Certificates".localized, accessoryType: .disclosureIndicator, identifier: "Certificates")
 	}
 
 	// MARK: - Update UI
