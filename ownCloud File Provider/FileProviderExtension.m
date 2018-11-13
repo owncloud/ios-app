@@ -408,6 +408,16 @@
 	NSError *error = nil;
 	OCItem *item;
 
+//	// Example of self-creating tagData
+//	tagData = [NSKeyedArchiver archivedDataWithRootObject:@{
+//		@"t" : @[
+//			@[ @"Root", @(6) ],	// First value is the label, second a color number
+//			@[ @"Beer", @(4) ],
+//		],
+//
+//		@"v" : @(1)	// Version (?)
+//	}];
+
 	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
 	{
 		[item setLocalTagData:tagData];
