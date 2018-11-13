@@ -34,17 +34,22 @@ class FileListTests: XCTestCase {
 	func testShowFileList() {
 
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
-
 			//Mocks
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
+			self.showFileList(bookmark: bookmark)
 
-			let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-			let clientRootViewController = ClientRootViewController(bookmark: bookmark)
-
-			appDelegate.serverListTableViewController?.present(clientRootViewController, animated: true, completion: nil)
+			//Assets
+			EarlGrey.select(elementWithMatcher: grey_text("Disconnect".localized)).assert(grey_sufficientlyVisible())
 		} else {
-			assertionFailure()
+			assertionFailure("File list not loaded because Bookmark is nil")
 		}
+	}
+
+	func showFileList(bookmark: OCBookmark) {
+		let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+
+		appDelegate.serverListTableViewController?.present(clientRootViewController, animated: true, completion: nil)
 	}
 
 	// MARK: - Mocks
