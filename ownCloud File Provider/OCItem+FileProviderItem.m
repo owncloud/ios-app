@@ -175,7 +175,19 @@ static NSMutableDictionary<OCFileID, NSError *> *sOCItemUploadingErrors;
 
 - (NSNumber *)favoriteRank
 {
-	return ([self valueForLocalAttribute:OCLocalAttributeFavoriteRank]);
+	NSNumber *favoriteRank = [self valueForLocalAttribute:OCLocalAttributeFavoriteRank];
+
+//	NSNumber *favoriteRank = nil;
+//
+//	if (self.isFavorite)
+//	{
+//		if ((favoriteRank = [self valueForLocalAttribute:OCLocalAttributeFavoriteRank]) == nil)
+//		{
+//			favoriteRank = @(NSFileProviderFavoriteRankUnranked);
+//		}
+//	}
+
+	return (favoriteRank);
 }
 
 - (void)setLocalTagData:(NSData *)localTagData

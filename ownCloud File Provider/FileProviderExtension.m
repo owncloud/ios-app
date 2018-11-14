@@ -458,12 +458,13 @@
 
 	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
 	{
-		[item setLocalFavoriteRank:favoriteRank];
+//		item.isFavorite = @(favoriteRank != nil); // Stored on server
 
-		[self.core performUpdatesForAddedItems:nil removedItems:nil updatedItems:@[ item ] refreshPaths:nil newSyncAnchor:nil preflightAction:nil postflightAction:^(dispatch_block_t  _Nonnull postFlightCompletionHandler) {
-			completionHandler(item, nil);
-			postFlightCompletionHandler();
-		} queryPostProcessor:nil];
+		[item setLocalFavoriteRank:favoriteRank]; // Stored in local attributes
+
+		[self.core updateItem:item properties:@[ OCItemPropertyNameLocalAttributes ] options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+			completionHandler(item, error);
+		}];
 	}
 	else
 	{
@@ -488,12 +489,11 @@
 
 	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
 	{
-		[item setLocalTagData:tagData];
+		[item setLocalTagData:tagData]; // Stored in local attributes
 
-		[self.core performUpdatesForAddedItems:nil removedItems:nil updatedItems:@[ item ] refreshPaths:nil newSyncAnchor:nil preflightAction:nil postflightAction:^(dispatch_block_t  _Nonnull postFlightCompletionHandler) {
-			completionHandler(item, nil);
-			postFlightCompletionHandler();
-		} queryPostProcessor:nil];
+		[self.core updateItem:item properties:@[ OCItemPropertyNameLocalAttributes ] options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+			completionHandler(item, error);
+		}];
 	}
 	else
 	{
