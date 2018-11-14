@@ -23,4 +23,6 @@
 - (void)setLocalFavoriteRank:(NSNumber *)localFavoriteRank;
 - (void)setLocalTagData:(NSData *)localTagData;
 
+- (void)setUploadingError:(NSError *)uploadingError;
+
 @end

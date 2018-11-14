@@ -20,6 +20,8 @@
 
 #import "OCItem+FileProviderItem.h"
 
+static NSMutableDictionary<OCFileID, NSError *> *sOCItemUploadingErrors;
+
 @implementation OCItem (FileProviderItem)
 
 @dynamic filename;
@@ -186,5 +188,40 @@
 	return ([self valueForLocalAttribute:OCLocalAttributeTagData]);
 }
 
+- (NSError *)uploadingError
+{
+	if (self.fileID != nil)
+	{
+		if (self.isPlaceholder)
+		{
+			NSLog(@"Request uploadingError for %@", self.fileID);
+		}
+
+		@synchronized ([OCItem class])
+		{
+			return (sOCItemUploadingErrors[self.fileID]);
+		}
+	}
+
+	return (nil);
+}
+
+- (void)setUploadingError:(NSError *)uploadingError
+{
+	NSLog(@"Set uploadingError for %@ to %@", self.fileID, uploadingError);
+
+	if (self.fileID != nil)
+	{
+		@synchronized ([OCItem class])
+		{
+			if (sOCItemUploadingErrors == nil)
+			{
+				sOCItemUploadingErrors = [NSMutableDictionary new];
+			}
+
+			sOCItemUploadingErrors[self.fileID] = uploadingError;
+		}
+	}
+}
 
 @end

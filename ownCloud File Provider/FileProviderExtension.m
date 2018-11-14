@@ -72,7 +72,6 @@
 			// Root item
 			[self.core.vault.database retrieveCacheItemsAtPath:@"/" itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
 				item = items.firstObject;
-
 				returnError = error;
 
 				OCSyncExecDone(itemRetrieval);
@@ -422,7 +421,29 @@
 		// Start import
 		[self.core importFileNamed:importFileName at:parentItem fromURL:fileURL isSecurityScoped:YES options:@{ OCCoreOptionImportByCopying : @(importByCopying) } placeholderCompletionHandler:^(NSError *error, OCItem *item) {
 			completionHandler(item, error);
-		} resultHandler:nil];
+		} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+			if ([error.domain isEqual:OCHTTPStatusErrorDomain] && (error.code == OCHTTPStatusCodePRECONDITION_FAILED))
+			{
+				// Collission: file already exists
+				if ((parameter != nil) && ([parameter isKindOfClass:[OCItem class]]))
+				{
+					OCItem *placeholderItem = (OCItem *)parameter;
+
+					// TODO (defunct):
+					// Upload errors (such as NSFileProviderErrorInsufficientQuota) should be handled
+					// with a subsequent update to the [placeholder] item, setting its uploadingError property.
+
+					// TODO (not yet implemented):
+					// Upload errors should not prevent creating or importing a document, because they
+					// can be resolved at a later date (for example, when the user has quota again.)
+
+					if (placeholderItem.isPlaceholder)
+					{
+						[placeholderItem setUploadingError:[NSError fileProviderErrorForCollisionWithItem:placeholderItem]];
+					}
+				}
+			}
+		}];
 	}
 	else
 	{
