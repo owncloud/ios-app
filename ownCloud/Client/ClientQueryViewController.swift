@@ -923,17 +923,19 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 		do {
 			try extensionsMatch = OCExtensionManager.shared.provideExtensions(for: actionContext)
 		} catch {
-			print("LOG ---> There is no extensions")
+			Log.debug("There is no extensions for the actions required")
+			return
 		}
 
 		if extensionsMatch!.count <= 0 {
-			print("LOG ---> There is no extensions")
+			Log.debug("There is no extensions for the actions required")
 		} else {
 
-			let extensions: [OCExtension] = extensionsMatch!.map({return $0.extension})
+			let extensions: [OCExtension] = extensionsMatch!.reversed().map({return $0.extension})
 			let actionExtensions: [ActionExtension] = extensions.compactMap {
 					return $0 as? ActionExtension
 			}
+
 			let actions: [Action] = actionExtensions.compactMap({
 				return $0.provideObject(for: ActionContext(viewController: self, core: core, items: [item], location: OCExtensionLocation(ofType: .action, identifier: nil))) as? Action
 			})
