@@ -330,12 +330,12 @@ class DisplayViewController: UIViewController {
 //		tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [openInRow]))
 //
 		//		self.present(asCard: moreViewController, animated: true)let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core!, into: self)
-		let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core!, into: self)
-		actionsObject.presentActionsCard(with: [actionsObject.openIn(), actionsObject.delete(completion: {
-			self.parent?.dismiss(animated: true)
-		})]) {
-			print("LOG ---> presented")
-		}
+//		let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core!, into: self)
+//		actionsObject.presentActionsCard(with: [actionsObject.openIn(), actionsObject.delete(completion: {
+//			self.parent?.dismiss(animated: true)
+//		})]) {
+//			print("LOG ---> presented")
+//		}
 	}
 
 	// MARK: - Actions

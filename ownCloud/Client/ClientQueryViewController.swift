@@ -839,16 +839,23 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 //		if let item = cell.item {
 //
 //			let tableViewController = MoreStaticTableViewController(style: .grouped)
-//			let header = MoreViewHeader(for: item, with: core!)
-//			let moreViewController = MoreViewController(item: item, core: core!, header: header, viewController: tableViewController)
+//			let header = MoreViewHeader(for: item, with: core)
+//			let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
 //
 //			let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 //
-//			let deleteRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { (_, _) in
-//				moreViewController.dismiss(animated: true, completion: {
-//					self.delete(item)
-//				})
-//			}, title: "Delete".localized, style: .destructive)
+//			let deleteLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: OCExtensionLocationIdentifier(rawValue: "com.owncloud.actions.delete"))
+//			let deleteActionContext = ActionContext(viewController: self, core: core, items: [item], location: deleteLocation)
+//			let deleteAction = DeleteAction(for: DeleteAction.actionExtension, with: deleteActionContext)
+//
+//			deleteAction.progressHandler = { [weak self, weak moreViewController] (progress) in
+//				OnMainThread {
+//					self?.progressSummarizer?.startTracking(progress: progress)
+//					moreViewController?.dismiss(animated: true, completion: nil)
+//				}
+//			}
+//
+//			let deleteRow: StaticTableViewRow = deleteAction.provideStaticRow()!
 //
 //			let renameRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
 //				moreViewController.dismiss(animated: true, completion: {
@@ -856,25 +863,38 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 //				})
 //			}, title: "Rename".localized, style: .plainNonOpaque)
 //
-//			let moveRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
-//				moreViewController.dismiss(animated: true, completion: {
-//					self?.move(item)
-//				})
-//				}, title: "Move".localized, style: .plainNonOpaque)
+////			let moveRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+////				moreViewController.dismiss(animated: true, completion: {
+////					self?.move(item)
+////				})
+////				}, title: "Move".localized, style: .plainNonOpaque)
+//
+//			let moveLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: OCExtensionLocationIdentifier(rawValue: "com.owncloud.actions.move"))
+//			let moveActionContext = ActionContext(viewController: self, core: core, items: [item], location: moveLocation)
+//			let moveAction = MoveAction(for: MoveAction.actionExtension, with: moveActionContext)
+//
+//			moveAction.progressHandler = { [weak self, weak moreViewController] (progress) in
+//				OnMainThread {
+//					self?.progressSummarizer?.startTracking(progress: progress)
+//					moreViewController?.dismiss(animated: true, completion: nil)
+//				}
+//			}
+//			let moveRow = moveAction.provideStaticRow()!
 //
 //			var rows = [renameRow, moveRow, deleteRow]
 //
 //			if item.type == .file {
-//				let openInRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
-//					moreViewController.dismiss(animated: true, completion: {
-//						if UIDevice.current.isIpad() {
+//				let openInLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: OCExtensionLocationIdentifier(rawValue: "com.owncloud.actions.openin"))
+//				let openInActionContext = ActionContext(viewController: self, core: core, items: [item], location: openInLocation)
+//				let openInAction = OpenInAction(for: OpenInAction.actionExtension, with: openInActionContext)
 //
-//							self?.openInRow(item, cell: cell)
-//						} else {
-//							self?.openInRow(item)
-//						}
-//					})
-//					}, title: "Open in".localized, style: .plainNonOpaque)
+//				openInAction.beforeRunHandler = { [weak moreViewController]  in
+//					OnMainThread {
+//						moreViewController?.dismiss(animated: true, completion: nil)
+//					}
+//				}
+//
+//				let openInRow: StaticTableViewRow = openInAction.provideStaticRow()!
 //
 //				rows.insert(openInRow, at: 0)
 //			}
@@ -890,11 +910,58 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 			return
 		}
 
-		let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core, into: self)
-		actionsObject.presentActionsCard(with: [actionsObject.openIn(), actionsObject.duplicate(), actionsObject.rename(), actionsObject.move(), actionsObject.delete()]) {
-			print("LOG ---> presented")
+		let tableViewController = MoreStaticTableViewController(style: .grouped)
+		let header = MoreViewHeader(for: item, with: core)
+		let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
+
+		let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
+
+		var extensionsMatch: [OCExtensionMatch]?
+
+		let actionsLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: nil)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+		do {
+			try extensionsMatch = OCExtensionManager.shared.provideExtensions(for: actionContext)
+		} catch {
+			print("LOG ---> There is no extensions")
+		}
+
+		if extensionsMatch!.count <= 0 {
+			print("LOG ---> There is no extensions")
+		} else {
+
+			let extensions: [OCExtension] = extensionsMatch!.map({return $0.extension})
+			let actionExtensions: [ActionExtension] = extensions.compactMap {
+					return $0 as? ActionExtension
+			}
+			let actions: [Action] = actionExtensions.compactMap({
+				return $0.provideObject(for: ActionContext(viewController: self, core: core, items: [item], location: OCExtensionLocation(ofType: .action, identifier: nil))) as? Action
+			})
+
+			actions.forEach({
+				$0.beforeRunHandler = {
+					moreViewController.dismiss(animated: true)
+				}
+			})
+
+			let actionsRows: [StaticTableViewRow] = actions.compactMap({return $0.provideStaticRow()})
+
+			tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
+
+			self.present(asCard: moreViewController, animated: true)
 		}
 	}
+
+//	func moreButtonTapped(cell: ClientItemCell) {
+//		guard let item = cell.item else {
+//			return
+//		}
+//
+//		let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core, into: self)
+//		actionsObject.presentActionsCard(with: [actionsObject.openIn(), actionsObject.duplicate(), actionsObject.rename(), actionsObject.move(), actionsObject.delete()]) {
+//			print("LOG ---> presented")
+//		}
+//	}
 }
 
 extension ClientQueryViewController: UITableViewDropDelegate {

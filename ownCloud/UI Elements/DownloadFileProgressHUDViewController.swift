@@ -137,8 +137,8 @@ class DownloadFileProgressHUDViewController: UIViewController {
 // MARK: - Public API
 extension DownloadFileProgressHUDViewController {
 
-	func present(on viewController: UIViewController) {
-		viewController.present(self, animated: true)
+	func present(on viewController: UIViewController, completion: (() -> Void)? = nil) {
+		viewController.present(self, animated: true, completion: completion)
 	}
 
 	func attach(progress: Progress) {

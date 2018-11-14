@@ -9,234 +9,211 @@
 import UIKit
 import ownCloudSDK
 
-typealias ActionCompletion = ((_ item: OCItem, _ core: OCCore, _ vcToPresent: UIViewController) -> Void)?
-
-enum ActionType {
+enum ActionCategory {
+	case normal
 	case destructive
-	case regular
+	case informal
+	case edit
+	case save
 }
 
-struct Action {
-	var name: String
-	var type: ActionType
-	var completion: ActionCompletion
+enum ActionPosition : Int {
+	case none = -1
 
-	init(with name: String, completion: ActionCompletion, type: ActionType) {
-		self.name = name
-		self.completion = completion
-		self.type = type
+	case first = 100
+	case beforeMiddle = 200
+	case middle = 300
+	case afterMiddle = 400
+	case last = 500
 
+	static func between(_ position1: ActionPosition, and position2: ActionPosition) -> ActionPosition {
+		return ActionPosition(rawValue: ((position1.rawValue + position2.rawValue)/2))!
+	}
+
+	func shift(by offset: Int) -> ActionPosition {
+		return ActionPosition(rawValue: self.rawValue + offset)!
 	}
 }
 
-class ActionsMoreViewController: NSObject {
+enum Result<T> {
+	case success(T)
+	case failure(Error)
+}
 
-	weak var vcToPresentIn: UIViewController?
-	var moreViewController: UIViewController?
-	var core: OCCore
-	var item: OCItem
+typealias ActionCompletionHandler<T> = ((Result<T>) -> Void)
+typealias ActionProgressHandler = ((Progress) -> Void)
+typealias ActionBeforeRunHandler = () -> Void
 
-	var interactionController: UIDocumentInteractionController?
+extension OCExtensionType {
+	static let action: OCExtensionType  =  OCExtensionType("app.action")
+}
 
-	init (item: OCItem, core: OCCore, into viewController: UIViewController) {
-		self.vcToPresentIn = viewController
+extension OCExtensionLocationIdentifier {
+	static let tableRow: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("tableRow") //!< Present as table row action
+	static let moreItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreItem") //!< Present in "more" card view for a single item
+	static let moreFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreFolder") //!< Present in "more" options for a whole folder
+	static let toolbar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("toolbar") //!< Present in a toolbar
+}
+
+class ActionExtension: OCExtension {
+	// MARK: - Custom Instance Properties.
+	var name: String
+	var category: ActionCategory
+
+	// MARK: - Init & Deinit
+	init(name: String, category: ActionCategory = .normal, identifier: OCExtensionIdentifier, locations: [OCExtensionLocationIdentifier]?, features: [String : Any]?, objectProvider: OCExtensionObjectProvider?, customMatcher: OCExtensionCustomContextMatcher?) {
+
+		self.name = name
+		self.category = category
+
+		super.init(identifier: identifier, type: .action, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher)
+	}
+}
+
+class ActionContext: OCExtensionContext {
+	// MARK: - Custom Instance Properties.
+	weak var viewController: UIViewController?
+	weak var core: OCCore?
+	weak var query: OCQuery?
+	var items: [OCItem]
+
+	// MARK: - Init & Deinit.
+	init(viewController: UIViewController, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
+		self.items = items
+
+		super.init()
+
+		self.viewController = viewController
 		self.core = core
-		self.item = item
+		self.location = location
+
+		self.query = query
+		self.requirements = requirements
+		self.preferences = preferences
+	}
+}
+
+class Action : NSObject {
+	// MARK: - Extension metadata
+	class var identifier : OCExtensionIdentifier? { return nil }
+	class var category : ActionCategory? { return .normal }
+	class var name : String? { return nil }
+	class var locations : [OCExtensionLocationIdentifier]? { return nil }
+	class var features : [String : Any]? { return nil }
+
+	// MARK: - Extension creation
+	class var actionExtension : ActionExtension {
+		let objectProvider : OCExtensionObjectProvider = { (_ rawExtension, _ context, _ error) -> Any? in
+			if let actionExtension = rawExtension as? ActionExtension,
+				let actionContext   = context as? ActionContext {
+				return self.init(for: actionExtension, with: actionContext)
+			}
+
+			return nil
+		}
+
+		let customMatcher : OCExtensionCustomContextMatcher  = { (context, priority) -> OCExtensionPriority in
+			if let actionContext = context as? ActionContext,
+				self.applicablePosition(forContext: actionContext) == .none {
+				// Exclude actions whose applicablePosition returns .none
+				return .noMatch
+			}
+
+			if let actionContext = context as? ActionContext {
+				let priority = OCExtensionPriority(rawValue: priority.rawValue + UInt(self.applicablePosition(forContext:actionContext).rawValue))!
+				print("LOG ---> priority = \(priority.rawValue) for extension \(context.location?.identifier?.rawValue)")
+				return priority
+			}
+
+			// Additional filtering (f.ex. via OCClassSettings, Settings) goes here
+			return priority
+		}
+
+		return ActionExtension(name: name!, category: category!, identifier: identifier!, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher)
+	}
+
+	// MARK: - Extension matching
+	class func applicablePosition(forContext: ActionContext) -> ActionPosition {
+		return .middle
+	}
+
+	// MARK: - Finding actions
+	class func sortedApplicableActions(for context: ActionContext) -> [Action] {
+		var sortedActions : [Action] = []
+
+		if let matches = try? OCExtensionManager.shared.provideExtensions(for: context) {
+			for match in matches {
+				if let action = match.extension.provideObject(for: context) as? Action {
+					sortedActions.append(action)
+				}
+			}
+		}
+
+		sortedActions.sort { (action1, action2) -> Bool in
+			return action1.position.rawValue < action2.position.rawValue
+		}
+
+		return sortedActions
+	}
+
+	// MARK: - Action metadata
+	var context : ActionContext
+	var actionExtension: ActionExtension
+	var core : OCCore
+
+	// MARK: - Action creation
+	required init(for actionExtension: ActionExtension, with context: ActionContext) {
+		self.actionExtension = actionExtension
+		self.context = context
+		self.core = context.core!
+
 		super.init()
 	}
 
-	func presentActionsCard(with actions: [Action], completion: () -> Void) {
-		self.moreViewController = actionsViewController(with: actions, for: item, core: core)
-		vcToPresentIn?.present(asCard: moreViewController!, animated: true)
-	}
+	// MARK: - Execution metadata
+	var progressHandler : ActionProgressHandler?     // to be filled before calling run(), provideStaticRow(), provideContextualAction(), etc. if desired
+	var completionHandler : ActionCompletionHandler<Any>? // to be filled before calling run(), provideStaticRow(), provideContextualAction(), etc. if desired
+	var beforeRunHandler: ActionBeforeRunHandler? // to be filled before calling run(), provideStaticRow(), provideContextualAction(), etc. if desired
 
-	func actionsViewController(with actions: [Action], for item: OCItem, core: OCCore) -> MoreViewController {
-
-		let header = MoreViewHeader(for: item, with: core)
-		let tableViewController = MoreStaticTableViewController(style: .grouped)
-		let moreViewController: MoreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
-
-		var rows: [StaticTableViewRow] = []
-
-		for action in actions {
-
-			var style: StaticTableViewRowButtonStyle
-			switch action.type {
-			case .destructive:
-				style = .destructive
-			default:
-				style = .plainNonOpaque
-			}
-
-			let row: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { (_, _) in
-				moreViewController.dismiss(animated: true, completion: {
-					action.completion?(item, core, self.vcToPresentIn!)
-				})
-			}, title: action.name, style: style)
-
-			rows.append(row)
+	// MARK: - Action implementation
+	func run() {
+		if beforeRunHandler != nil {
+			beforeRunHandler!()
 		}
 
-		let title = NSAttributedString(string: "Actions".localized, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
-
-		let section = MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: rows)
-
-		tableViewController.addSection(section)
-		return moreViewController
+		if completionHandler != nil {
+			completionHandler!(Result.success(true))
+		}
 	}
 
-	func openIn(completion: (() -> Void)? = nil) -> Action {
-		let action = Action(with: "Open in".localized, completion: { (item, core, vcToPresentIn) in
-			let controller = DownloadFileProgressHUDViewController()
-			controller.present(on: vcToPresentIn)
-
-			if let downloadProgress = core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
-				if error != nil {
-					Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
-				} else {
-					controller.dismiss(animated: true, completion: {
-						self.interactionController = UIDocumentInteractionController(url: file!.url)
-						self.interactionController?.presentOptionsMenu(from: .zero, in: vcToPresentIn.view, animated: true)
-					})
-				}
-				completion?()
-			}) {
-				controller.attach(progress: downloadProgress)
-			} else {
-				let alert = UIAlertController(with: "No Network connection", message: "No network connection")
-				vcToPresentIn.present(alert, animated: true)
-			}
-		}, type: .regular)
-		return action
+	// MARK: - Action UI elements
+	func provideStaticRow() -> StaticTableViewRow? {
+		return StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
+				self.run()
+		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, identifier: actionExtension.identifier.rawValue)
 	}
 
-	func duplicate(completion: (() -> Void)? = nil) -> Action {
-		let action = Action(with: "Duplicate", completion: { (item, core, viewcontroller) in
-
-			guard let viewController = viewcontroller as? ClientQueryViewController else {
-				return
-			}
-
-			var name: String = "\(item.name!) copy"
-
-			if item.type != .collection {
-				let itemName = item.nameWithoutExtension()
-				var fileExtension = item.fileExtension()
-
-				if fileExtension != "" {
-					fileExtension = ".\(fileExtension)"
-				}
-
-				name = "\(itemName) copy\(fileExtension)"
-			}
-
-			if let progress = core.copy(item, to: viewController.query.rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in
-				if error != nil {
-					Log.log("Error \(String(describing: error)) deleting \(String(describing: item?.path))")
-				}
-				completion?()
-			}) {
-				viewController.progressSummarizer?.startTracking(progress: progress)
-			}
-
-		}, type: .regular)
-
-		return action
+	func provideContextualAction() -> UIContextualAction? {
+		return UIContextualAction(style: actionExtension.category == .destructive ? .destructive : .normal, title: self.actionExtension.name, handler: { (_ action, _ view, uiCompletionHandler) in
+			uiCompletionHandler(true)
+			self.run()
+		})
 	}
 
-	func move(completion: (() -> Void)? = nil) -> Action {
-		let action = Action(with: "Move".localized, completion: { (item, core, viewController) in
-
-			guard let viewController = viewController as? ClientQueryViewController else {
-				return
-			}
-
-			let directoryPickerVC = ClientDirectoryPickerViewController(core: core, path: "/", completion: { (selectedDirectory) in
-
-				if let progress = core.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
-					if error != nil {
-						Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
-					}
-					completion?()
-				}) {
-					viewController.progressSummarizer?.startTracking(progress: progress)
-				}
-			})
-
-			let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerVC)
-			viewController.navigationController?.present(pickerNavigationController, animated: true)
-		}, type: .regular)
-
-		return action
+	// MARK: - Action metadata
+	func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+		return nil
 	}
 
-	func delete(completion: (() -> Void)? = nil) -> Action {
-		let action = Action(with: "Delete".localized, completion: { (item, core, viewController) in
-			let alertController = UIAlertController(
-				with: item.name!,
-				message: "Are you sure you want to delete this item from the server?".localized,
-				destructiveLabel: "Delete".localized,
-				preferredStyle: UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet,
-				destructiveAction: {
-					if let progress = core.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
-						if error != nil {
-							Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
-						}
-						completion?()
-					}) {
-						if let viewController = viewController as? ClientQueryViewController {
-							viewController.progressSummarizer?.startTracking(progress: progress)
-						}
-					}
-			})
+	var icon : UIImage? {
+		if let locationIdentifier = context.location?.identifier {
+			return self.iconForLocation(locationIdentifier)
+		}
 
-			viewController.present(alertController, animated: true)
-		}, type: .destructive)
-
-		return action
+		return nil
 	}
 
-	func rename(completion: (() -> Void)? = nil) -> Action {
-		let action = Action(with: "Rename".localized, completion: { (item, core, viewController) in
-			guard let viewController = viewController as? ClientQueryViewController else {
-				return
-			}
-
-			let renameViewController = NamingViewController(with: item, core: self.core, stringValidator: { name in
-				if name.contains("/") || name.contains("\\") {
-					return (false, "File name cannot contain / or \\")
-				} else {
-					return (true, nil)
-				}
-			}, completion: { newName, _ in
-
-				guard newName != nil else {
-					return
-				}
-
-				if let progress = core.move(item, to: viewController.query.rootItem, withName: newName!, options: nil, resultHandler: { (error, _, _, _) in
-					if error != nil {
-						Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
-					}
-					completion?()
-				}) {
-					viewController.progressSummarizer?.startTracking(progress: progress)
-				}
-			})
-
-			renameViewController.navigationItem.title = "Rename".localized
-
-			let navigationController = ThemeNavigationController(rootViewController: renameViewController)
-			navigationController.modalPresentationStyle = .overFullScreen
-
-			viewController.present(navigationController, animated: true)
-		}, type: .regular)
-		return action
-	}
-}
-
-extension ActionsMoreViewController: UIDocumentInteractionControllerDelegate {
-	func documentInteractionControllerDidDismissOpenInMenu(_ controller: UIDocumentInteractionController) {
-		self.interactionController = nil
+	var position : ActionPosition {
+		return type(of: self).applicablePosition(forContext: context)
 	}
 }
