@@ -63,6 +63,7 @@
 - (NSFileProviderItem)itemForIdentifier:(NSFileProviderItemIdentifier)identifier error:(NSError *__autoreleasing  _Nullable *)outError
 {
 	__block NSFileProviderItem item = nil;
+	__block NSError *returnError = nil;
 
 	OCSyncExec(itemRetrieval, {
 		// Resolve the given identifier to a record in the model
@@ -72,10 +73,7 @@
 			[self.core.vault.database retrieveCacheItemsAtPath:@"/" itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
 				item = items.firstObject;
 
-				if (outError != NULL)
-				{
-					*outError = error;
-				}
+				returnError = error;
 
 				OCSyncExecDone(itemRetrieval);
 			}];
@@ -85,11 +83,7 @@
 			// Other item
 			[self.core retrieveItemFromDatabaseForFileID:(OCFileID)identifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
 				item = itemFromDatabase;
-
-				if (outError != NULL)
-				{
-					*outError = error;
-				}
+				returnError = error;
 
 				OCSyncExecDone(itemRetrieval);
 			}];
@@ -97,6 +91,16 @@
 	});
 
 	OCLogDebug(@"-itemForIdentifier:error: %@ => %@", identifier, item);
+
+	if ((item == nil) && (returnError == nil))
+	{
+		returnError = [NSError fileProviderErrorForNonExistentItemWithIdentifier:identifier];
+	}
+
+	if (outError != NULL)
+	{
+		*outError = returnError;
+	}
 
 	return item;
 }
@@ -369,11 +373,54 @@
 - (void)importDocumentAtURL:(NSURL *)fileURL toParentItemIdentifier:(NSFileProviderItemIdentifier)parentItemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
 {
 	NSError *error = nil;
+	BOOL isImportingFromVault = NO;
+	BOOL importByCopying = NO;
+	NSString *importFileName = fileURL.lastPathComponent;
 	OCItem *parentItem;
+
+	// Detect import of documents from our own internal storage (=> used by Files.app for duplication of files)
+	isImportingFromVault = [fileURL.path hasPrefix:self.core.vault.filesRootURL.path];
+
+	if (isImportingFromVault)
+	{
+		NSFileProviderItemIdentifier sourceItemIdentifier;
+		NSFileProviderItem sourceItem;
+
+		// Determine source item
+		if (((sourceItemIdentifier = [self persistentIdentifierForItemAtURL:fileURL]) != nil) &&
+		    ((sourceItem = [self itemForIdentifier:sourceItemIdentifier error:nil]) != nil))
+		{
+			importByCopying = YES;
+		}
+	}
 
 	if ((parentItem = (OCItem *)[self itemForIdentifier:parentItemIdentifier error:&error]) != nil)
 	{
-		[self.core importFileNamed:nil at:parentItem fromURL:fileURL isSecurityScoped:YES options:nil placeholderCompletionHandler:^(NSError *error, OCItem *item) {
+		// Detect name collissions
+		OCPath parentPath;
+
+		if (((parentPath = parentItem.path) != nil) && (importFileName != nil))
+		{
+			OCPath destinationPath = [parentPath stringByAppendingPathComponent:importFileName];
+			__block OCItem *existingItem = nil;
+
+			OCSyncExec(retrieveExistingItem, {
+				[self.core.vault.database retrieveCacheItemsAtPath:destinationPath itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
+					existingItem = items.firstObject;
+					OCSyncExecDone(retrieveExistingItem);
+				}];
+			});
+
+			if (existingItem != nil)
+			{
+				// Return collission error
+				completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]);
+				return;
+			}
+		}
+
+		// Start import
+		[self.core importFileNamed:importFileName at:parentItem fromURL:fileURL isSecurityScoped:YES options:@{ OCCoreOptionImportByCopying : @(importByCopying) } placeholderCompletionHandler:^(NSError *error, OCItem *item) {
 			completionHandler(item, error);
 		} resultHandler:nil];
 	}
