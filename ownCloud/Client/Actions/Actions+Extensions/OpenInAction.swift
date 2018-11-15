@@ -14,6 +14,9 @@ class OpenInAction: Action {
 	override class var name : String { return "Open in".localized }
 
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
+		if forContext.items[0].type == .collection {
+			return .none
+		}
 		return .first
 	}
 

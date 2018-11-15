@@ -18,7 +18,7 @@ class DuplicateAction : Action {
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		// Examine items in context
-		return .last
+		return .middle
 	}
 
 	// MARK: - Action implementation

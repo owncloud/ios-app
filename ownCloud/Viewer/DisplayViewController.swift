@@ -321,42 +321,22 @@ class DisplayViewController: UIViewController {
 
 		let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
-		var extensionsMatch: [OCExtensionMatch]?
-
 		let actionsLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: nil)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item, rootItem], location: actionsLocation)
-		do {
-			try extensionsMatch = OCExtensionManager.shared.provideExtensions(for: actionContext)
-		} catch {
-			Log.debug("There is no extensions for the actions required")
-			return
-		}
+		let actions = Action.sortedApplicableActions(for: actionContext)
 
-		if extensionsMatch!.count <= 0 {
-			Log.debug("There is no extensions for the actions required")
-		} else {
-
-			let extensions: [OCExtension] = extensionsMatch!.reversed().map({return $0.extension})
-			let actionExtensions: [ActionExtension] = extensions.compactMap {
-				return $0 as? ActionExtension
+		actions.forEach({
+			$0.beforeRunHandler = {
+				moreViewController.dismiss(animated: true)
 			}
+		})
 
-			let actions: [Action] = actionExtensions.compactMap({
-				return $0.provideObject(for: ActionContext(viewController: self, core: core, items: [item, rootItem], location: OCExtensionLocation(ofType: .action, identifier: nil))) as? Action
-			})
+		let actionsRows: [StaticTableViewRow] = actions.compactMap({return $0.provideStaticRow()})
 
-			actions.forEach({
-				$0.beforeRunHandler = {
-					moreViewController.dismiss(animated: true)
-				}
-			})
+		tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
 
-			let actionsRows: [StaticTableViewRow] = actions.compactMap({return $0.provideStaticRow()})
+		self.present(asCard: moreViewController, animated: true)
 
-			tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
-
-			self.present(asCard: moreViewController, animated: true)
-		}
 	}
 }
 

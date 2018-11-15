@@ -118,11 +118,6 @@ class Action : NSObject {
 				return .noMatch
 			}
 
-			if actionContext.items[0].type == OCItemType.collection, identifier!.rawValue == "com.owncloud.action.openin" {
-				return .noMatch
-			}
-
-			let priority = OCExtensionPriority(rawValue: priority.rawValue + UInt(self.applicablePosition(forContext:actionContext).rawValue))!
 			return priority
 
 			// Additional filtering (f.ex. via OCClassSettings, Settings) goes here

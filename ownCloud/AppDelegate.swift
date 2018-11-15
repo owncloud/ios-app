@@ -50,9 +50,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum + 10)
 
+		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
+
+		// Action Extensions
 		OCExtensionManager.shared.addExtension(OpenInAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DeleteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(MoveAction.actionExtension)
