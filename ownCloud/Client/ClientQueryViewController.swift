@@ -919,7 +919,7 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 		var extensionsMatch: [OCExtensionMatch]?
 
 		let actionsLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: nil)
-		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item, query.rootItem], location: actionsLocation)
 		do {
 			try extensionsMatch = OCExtensionManager.shared.provideExtensions(for: actionContext)
 		} catch {
@@ -937,12 +937,16 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 			}
 
 			let actions: [Action] = actionExtensions.compactMap({
-				return $0.provideObject(for: ActionContext(viewController: self, core: core, items: [item], location: OCExtensionLocation(ofType: .action, identifier: nil))) as? Action
+				return $0.provideObject(for: ActionContext(viewController: self, core: core, items: [item, query.rootItem], location: OCExtensionLocation(ofType: .action, identifier: nil))) as? Action
 			})
 
 			actions.forEach({
 				$0.beforeRunHandler = {
 					moreViewController.dismiss(animated: true)
+				}
+
+				$0.progressHandler = { [weak self] progress in
+					self?.progressSummarizer?.startTracking(progress: progress)
 				}
 			})
 

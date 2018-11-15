@@ -22,7 +22,7 @@ class MoveAction : Action {
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController else {
-			completionHandler?(Result.failure(NSError(ocError: .errorInsufficientParameters)))
+			completionHandler?(NSError(ocError: .errorInsufficientParameters))
 			return
 		}
 
@@ -33,9 +33,9 @@ class MoveAction : Action {
 		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", completion: { (selectedDirectory) in
 			if let progress = self.core.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
-					self.completionHandler?(Result.failure(error!))
+					self.completionHandler?(error)
 				} else {
-					self.completionHandler?(Result.success(true))
+					self.completionHandler?(nil)
 				}
 
 			}) {

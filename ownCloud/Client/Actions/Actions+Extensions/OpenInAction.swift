@@ -21,7 +21,7 @@ class OpenInAction: Action {
 
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController else {
-			completionHandler?(Result.failure(NSError(ocError: .errorInsufficientParameters)))
+			completionHandler?(NSError(ocError: .errorInsufficientParameters))
 			return
 		}
 
@@ -36,11 +36,11 @@ class OpenInAction: Action {
 				if let progress = self.core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
 					if error != nil {
 						Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
-						self.completionHandler?(Result.failure(error!))
+						self.completionHandler?(error!)
 					} else {
 
 						controller.dismiss(animated: true, completion: {
-							self.completionHandler?(Result.success(file!))
+							self.completionHandler?(nil)
 							self.interactionController = UIDocumentInteractionController(url: file!.url)
 							self.interactionController?.delegate = self
 							OnMainThread {

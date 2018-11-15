@@ -22,7 +22,7 @@ class DeleteAction : Action {
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController else {
-			completionHandler?(Result.failure(NSError(ocError: .errorInsufficientParameters)))
+			completionHandler?(NSError(ocError: .errorInsufficientParameters))
 			return
 		}
 
@@ -39,9 +39,9 @@ class DeleteAction : Action {
 				if let progress = self.core.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
 					if error != nil {
 						Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
-						self.completionHandler?(Result.failure(error!))
+						self.completionHandler?(error!)
 					} else {
-						self.completionHandler?(Result.success(true))
+						self.completionHandler?(nil)
 					}
 				}) {
 					self.progressHandler?(progress)

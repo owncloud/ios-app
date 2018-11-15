@@ -35,12 +35,7 @@ enum ActionPosition : Int {
 	}
 }
 
-enum Result<T> {
-	case success(T)
-	case failure(Error)
-}
-
-typealias ActionCompletionHandler<T> = ((Result<T>) -> Void)
+typealias ActionCompletionHandler = ((Error?) -> Void)
 typealias ActionProgressHandler = ((Progress) -> Void)
 typealias ActionBeforeRunHandler = () -> Void
 
@@ -172,7 +167,7 @@ class Action : NSObject {
 
 	// MARK: - Execution metadata
 	var progressHandler : ActionProgressHandler?     // to be filled before calling run(), provideStaticRow(), provideContextualAction(), etc. if desired
-	var completionHandler : ActionCompletionHandler<Any>? // to be filled before calling run(), provideStaticRow(), provideContextualAction(), etc. if desired
+	var completionHandler : ActionCompletionHandler? // to be filled before calling run(), provideStaticRow(), provideContextualAction(), etc. if desired
 	var beforeRunHandler: ActionBeforeRunHandler? // to be filled before calling run(), provideStaticRow(), provideContextualAction(), etc. if desired
 
 	// MARK: - Action implementation
@@ -182,7 +177,7 @@ class Action : NSObject {
 		}
 
 		if completionHandler != nil {
-			completionHandler!(Result.success(true))
+			completionHandler!(nil)
 		}
 	}
 
