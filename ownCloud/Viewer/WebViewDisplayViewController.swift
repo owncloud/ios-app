@@ -109,15 +109,16 @@ class WebViewDisplayViewController: DisplayViewController {
 extension WebViewDisplayViewController: DisplayExtension {
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		do {
-			let location = context!.location.identifier.rawValue
-			let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/)|(video/(?!(x-flv|ogg|x-ms-wmv|x-msvideo)))|(audio/)|(image/(gif|svg))|(application/(vnd.|ms))(?!oasis)(ms|openxmlformats)?)", options: .caseInsensitive)
-			let matches = supportedFormatsRegex.numberOfMatches(in: location, options: .reportCompletion, range: NSRange(location: 0, length: location.count))
+			if let mimeType = context.location?.identifier?.rawValue {
+				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/)|(video/(?!(x-flv|ogg|x-ms-wmv|x-msvideo)))|(audio/)|(image/(gif|svg))|(application/(vnd.|ms))(?!(oasis|android))(ms|openxmlformats)?)", options: .caseInsensitive)
+				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
 
-			if matches > 0 {
-				return OCExtensionPriority.locationMatch
-			} else {
-				return OCExtensionPriority.noMatch
+				if matches > 0 {
+					return OCExtensionPriority.locationMatch
+				}
 			}
+
+			return OCExtensionPriority.noMatch
 		} catch {
 			return OCExtensionPriority.noMatch
 		}

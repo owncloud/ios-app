@@ -103,12 +103,12 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.action = rowWithAction
 	}
 
-	convenience init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
+	convenience init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, style : UITableViewCellStyle = .subtitle, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
 		self.init()
 
 		self.identifier = identifier
 
-		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: style, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.detailTextLabel?.text = subtitle
 		self.cell?.accessoryType = accessoryType
@@ -116,6 +116,10 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.accessibilityIdentifier = identifier
 
 		self.action = subtitleRowWithAction
+	}
+
+	convenience init(valueRowWithAction: StaticTableViewRowAction?, title: String, value: String, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
+		self.init(subtitleRowWithAction: valueRowWithAction, title: title, subtitle: value, style: .value1, accessoryType: .disclosureIndicator, identifier: identifier)
 	}
 
 	// MARK: - Radio Item

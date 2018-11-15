@@ -36,7 +36,7 @@ class StaticTableViewSection: NSObject {
 		return self.index != nil
 	}
 
-	convenience init( headerTitle theHeaderTitle: String?, footerTitle theFooterTitle: String?, identifier : String? = nil, rows rowsToAdd: [StaticTableViewRow] = Array()) {
+	convenience init( headerTitle theHeaderTitle: String?, footerTitle theFooterTitle: String? = nil, identifier : String? = nil, rows rowsToAdd: [StaticTableViewRow] = Array()) {
 		self.init()
 
 		self.headerTitle = theHeaderTitle
