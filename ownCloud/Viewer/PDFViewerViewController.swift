@@ -192,22 +192,16 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        parent?.navigationController?.hidesBarsOnTap = true
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        parent?.navigationController?.hidesBarsOnTap = false
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let hideThumbnails = self.navigationController!.isNavigationBarHidden
-        if hideThumbnails {
-            self.thumbnailViewPosition = .none
-        } else {
-            self.thumbnailViewPosition = .bottom
-        }
+        self.thumbnailViewPosition = .bottom
+
         pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
         pdfView.autoScales = true
     }
