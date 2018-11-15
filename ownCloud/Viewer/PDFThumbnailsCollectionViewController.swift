@@ -20,10 +20,12 @@ import UIKit
 import PDFKit
 import ownCloudSDK
 
-class PDFThumbnailsCollectionViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching {
+class PDFThumbnailsCollectionViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching, Themeable {
 
     fileprivate let thumbnailSizeMultiplier: CGFloat = 0.3
     fileprivate let maxThumbnailCachedCount: UInt = 100
+    fileprivate let verticalInset: CGFloat = 8.0
+    fileprivate let horizontalInset: CGFloat = 4.0
 
     var pdfDocument: PDFDocument?
     var themeCollection: ThemeCollection?
@@ -56,7 +58,10 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        let thumbnailWidth = floor(self.view.bounds.size.width * thumbnailSizeMultiplier)
+        super.viewWillAppear(animated)
+        Theme.shared.register(client: self)
+
+        let thumbnailWidth = floor(self.view.bounds.size.width * thumbnailSizeMultiplier) - horizontalInset
         var thumbnailSize = CGSize(width: thumbnailWidth, height: thumbnailWidth)
 
         // Try to correct cell size to match size of the actual generated thumbnails
@@ -67,7 +72,13 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
 
         let flowLayout = self.collectionViewLayout as? UICollectionViewFlowLayout
         flowLayout?.itemSize = thumbnailSize
-        super.viewWillAppear(animated)
+        flowLayout?.sectionInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
+    }
+
+    // MARK: - Themeable support
+
+    func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+        self.collectionView!.applyThemeCollection(collection)
     }
 
     // MARK: UICollectionViewDataSource
