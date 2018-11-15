@@ -108,20 +108,24 @@ class Action : NSObject {
 		}
 
 		let customMatcher : OCExtensionCustomContextMatcher  = { (context, priority) -> OCExtensionPriority in
-			if let actionContext = context as? ActionContext,
-				self.applicablePosition(forContext: actionContext) == .none {
+
+			guard let actionContext = context as? ActionContext else {
+				return priority
+			}
+
+			if self.applicablePosition(forContext: actionContext) == .none {
 				// Exclude actions whose applicablePosition returns .none
 				return .noMatch
 			}
 
-			if let actionContext = context as? ActionContext {
-				let priority = OCExtensionPriority(rawValue: priority.rawValue + UInt(self.applicablePosition(forContext:actionContext).rawValue))!
-				print("LOG ---> priority = \(priority.rawValue) for extension \(context.location?.identifier?.rawValue)")
-				return priority
+			if actionContext.items[0].type == OCItemType.collection, identifier!.rawValue == "com.owncloud.action.openin" {
+				return .noMatch
 			}
 
-			// Additional filtering (f.ex. via OCClassSettings, Settings) goes here
+			let priority = OCExtensionPriority(rawValue: priority.rawValue + UInt(self.applicablePosition(forContext:actionContext).rawValue))!
 			return priority
+
+			// Additional filtering (f.ex. via OCClassSettings, Settings) goes here
 		}
 
 		return ActionExtension(name: name!, category: category!, identifier: identifier!, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher)

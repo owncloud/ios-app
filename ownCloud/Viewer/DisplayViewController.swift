@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 
 struct DisplayViewConfiguration {
+	weak var rootItem: OCItem!
 	weak var item: OCItem!
 	weak var core: OCCore!
 	let state: DisplayViewState
@@ -45,6 +46,7 @@ class DisplayViewController: UIViewController {
 	private var interactionController: UIDocumentInteractionController?
 
 	// MARK: - Configuration
+	weak var rootItem: OCItem!
 	weak var item: OCItem!
 	weak var core: OCCore! {
 		didSet {
@@ -312,74 +314,48 @@ class DisplayViewController: UIViewController {
 	}
 
 	@objc func optionsBarButtonPressed() {
-//		let tableViewController = MoreStaticTableViewController(style: .grouped)
-//		let header = MoreViewHeader(for: item, with: core!)
-//		let moreViewController = MoreViewController(item: item, core: core!, header: header, viewController: tableViewController)
-//
-//		let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
-//
-//		let openInRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
-//			if UIDevice.current.isIpad() {
-//				self?.openInRow(self!.item, button: self!.parent!.navigationItem.rightBarButtonItem!)
-//			} else {
-//				self?.openInRow(self!.item)
-//			}
-//			moreViewController.dismiss(animated: true)
-//			}, title: "Open in".localized, style: .plainNonOpaque)
-//
-//		tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [openInRow]))
-//
-		//		self.present(asCard: moreViewController, animated: true)let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core!, into: self)
-//		let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core!, into: self)
-//		actionsObject.presentActionsCard(with: [actionsObject.openIn(), actionsObject.delete(completion: {
-//			self.parent?.dismiss(animated: true)
-//		})]) {
-//			print("LOG ---> presented")
-//		}
-	}
 
-	// MARK: - Actions
-	func openInRow(_ item: OCItem, button: UIBarButtonItem? = nil) {
+		let tableViewController = MoreStaticTableViewController(style: .grouped)
+		let header = MoreViewHeader(for: item, with: core)
+		let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
 
-		if source == nil {
-			if !core.reachabilityMonitor.available {
-				OnMainThread {
-					let alert = UIAlertController(with: "No Network connection", message: "No network connection")
-					self.present(alert, animated: true)
-				}
-			} else {
-				let controller = DownloadFileProgressHUDViewController()
+		let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
-				if let progress = core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
-					if error == nil {
-						self.source = file!.url
-						controller.dismiss(animated: true, completion: {
-							self.openDocumentInteractionController(with: file!.url, button: button)
-						})
-					} else {
-						controller.dismiss(animated: true)
-					}
-				}) {
-					OnMainThread {
-						controller.present(on: self)
-						controller.attach(progress: progress)
-					}
-				}
-			}
-		} else {
-			openDocumentInteractionController(with: source, button: button)
+		var extensionsMatch: [OCExtensionMatch]?
+
+		let actionsLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: nil)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item, rootItem], location: actionsLocation)
+		do {
+			try extensionsMatch = OCExtensionManager.shared.provideExtensions(for: actionContext)
+		} catch {
+			Log.debug("There is no extensions for the actions required")
+			return
 		}
-	}
 
-	private func openDocumentInteractionController(with source: URL, button: UIBarButtonItem?) {
-		OnMainThread {
-			self.interactionController = UIDocumentInteractionController(url: source)
-			self.interactionController?.delegate = self
-			if button != nil {
-				self.interactionController?.presentOptionsMenu(from: button!, animated: true)
-			} else {
-				self.interactionController?.presentOptionsMenu(from: .zero, in: self.view, animated: true)
+		if extensionsMatch!.count <= 0 {
+			Log.debug("There is no extensions for the actions required")
+		} else {
+
+			let extensions: [OCExtension] = extensionsMatch!.reversed().map({return $0.extension})
+			let actionExtensions: [ActionExtension] = extensions.compactMap {
+				return $0 as? ActionExtension
 			}
+
+			let actions: [Action] = actionExtensions.compactMap({
+				return $0.provideObject(for: ActionContext(viewController: self, core: core, items: [item, rootItem], location: OCExtensionLocation(ofType: .action, identifier: nil))) as? Action
+			})
+
+			actions.forEach({
+				$0.beforeRunHandler = {
+					moreViewController.dismiss(animated: true)
+				}
+			})
+
+			let actionsRows: [StaticTableViewRow] = actions.compactMap({return $0.provideStaticRow()})
+
+			tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
+
+			self.present(asCard: moreViewController, animated: true)
 		}
 	}
 }
@@ -394,6 +370,7 @@ extension DisplayViewController: UIDocumentInteractionControllerDelegate {
 // MARK: - Public API
 extension DisplayViewController {
 	func configure(_ configuration: DisplayViewConfiguration) {
+		self.rootItem = configuration.rootItem
 		self.core = configuration.core
 		self.item = configuration.item
 		self.state = configuration.state

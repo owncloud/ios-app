@@ -277,54 +277,11 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core, query: OCQuery(forPath: rowItem.path)), animated: true)
 
 			case .file:
-				let itemViewController = DisplayHostViewController(for: rowItem, with: core)
+				let itemViewController = DisplayHostViewController(for: rowItem, with: core, root: query.rootItem!)
 				self.navigationController?.pushViewController(itemViewController, animated: true)
 		}
 
 		tableView.deselectRow(at: indexPath, animated: true)
-	}
-
-	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		let item: OCItem = itemAtIndexPath(indexPath)
-
-		guard item.isPlaceholder == false else {
-			return UISwipeActionsConfiguration(actions: [])
-		}
-
-		let deleteContextualAction: UIContextualAction = UIContextualAction(style: .destructive, title: "Delete".localized) { (_, _, actionPerformed) in
-			self.delete(item, viewDidAppearHandler: {
-				actionPerformed(false)
-			})
-		}
-
-		let renameContextualAction = UIContextualAction(style: .normal, title: "Rename") { [weak self] (_, _, actionPerformed) in
-			self?.rename(item, viewDidAppearHandler: {
-				actionPerformed(false)
-			})
-		}
-
-		let moveContextualAction = UIContextualAction(style: .normal, title: "Move") { (_, _, actionPerformed) in
-
-			let directoryPickerVC = ClientDirectoryPickerViewController(core: self.core, path: "/", completion: { (selectedDirectory) in
-				if let progress = self.core.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
-					if error != nil {
-						Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
-					}
-				}) {
-					self.progressSummarizer?.startTracking(progress: progress)
-				}
-			})
-
-			let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerVC)
-			self.navigationController?.present(pickerNavigationController, animated: true)
-
-			actionPerformed(false)
-		}
-
-		let actions: [UIContextualAction] = [deleteContextualAction, renameContextualAction, moveContextualAction]
-		let actionsConfigurator: UISwipeActionsConfiguration = UISwipeActionsConfiguration(actions: actions)
-
-		return actionsConfigurator
 	}
 
 	func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
@@ -513,84 +470,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	// MARK: - Search
 	var searchController: UISearchController?
 
-	// MARK: - Actions
-	func rename(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
-		let renameViewController = NamingViewController(with: item, core: self.core, stringValidator: { name in
-			if name.contains("/") || name.contains("\\") {
-				return (false, "File name cannot contain / or \\")
-			} else {
-				return (true, nil)
-			}
-		}, completion: { newName, _ in
-
-			guard newName != nil else {
-				return
-			}
-
-			if let progress = self.core.move(item, to: self.query.rootItem, withName: newName!, options: nil, resultHandler: { (error, _, _, _) in
-				if error != nil {
-					Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
-
-					completionHandler?(false)
-				} else {
-					completionHandler?(true)
-				}
-			}) {
-				self.progressSummarizer?.startTracking(progress: progress)
-			}
-		})
-
-		renameViewController.navigationItem.title = "Rename".localized
-
-		let navigationController = ThemeNavigationController(rootViewController: renameViewController)
-		navigationController.modalPresentationStyle = .overFullScreen
-
-		self.present(navigationController, animated: true, completion: viewDidAppearHandler)
-	}
-
-	func delete(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
-		let alertController = UIAlertController(
-			with: item.name!,
-			message: "Are you sure you want to delete this item from the server?".localized,
-			destructiveLabel: "Delete".localized,
-			preferredStyle: UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet,
-			destructiveAction: {
-				if let progress = self.core.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
-					if error != nil {
-						Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
-
-						completionHandler?(false)
-					} else {
-						completionHandler?(true)
-					}
-				}) {
-					self.progressSummarizer?.startTracking(progress: progress)
-				}
-			}
-		)
-
-		self.present(alertController, animated: true, completion: viewDidAppearHandler)
-	}
-
-	func move(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
-		let directoryPickerVC = ClientDirectoryPickerViewController(core: self.core, path: "/", completion: { (selectedDirectory) in
-
-			if let progress = self.core.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
-				if error != nil {
-					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
-					completionHandler?(false)
-				} else {
-					completionHandler?(true)
-				}
-			}) {
-				self.progressSummarizer?.startTracking(progress: progress)
-			}
-		})
-
-		let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerVC)
-		self.navigationController?.present(pickerNavigationController, animated: true)
-	}
-
 	func createFolder(viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
 		let createFolderVC = NamingViewController( with: core, defaultName: "New Folder".localized, stringValidator: { name in
 			if name.contains("/") || name.contains("\\") {
@@ -622,51 +501,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		createFolderNavigationVC.modalPresentationStyle = .overFullScreen
 
 		self.present(createFolderNavigationVC, animated: true, completion: viewDidAppearHandler)
-	}
-
-	func duplicate(_ item: OCItem, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
-		var name: String = "\(item.name!) copy"
-
-		if item.type != .collection {
-			let itemName = item.nameWithoutExtension()
-			var fileExtension = item.fileExtension()
-
-			if fileExtension != "" {
-				fileExtension = ".\(fileExtension)"
-			}
-
-			name = "\(itemName) copy\(fileExtension)"
-		}
-
-		if let progress = self.core.copy(item, to: self.query.rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in
-			if error != nil {
-				Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
-
-				completionHandler?(false)
-			} else {
-				completionHandler?(true)
-			}
-		}) {
-			self.progressSummarizer?.startTracking(progress: progress)
-		}
-
-	}
-
-	func upload(itemURL: URL, name: String, completionHandler: ClientActionCompletionHandler? = nil) {
-		if let progress = core.importFileNamed(name, at: query.rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { [weak self](error, _ core, _ item, _) in
-			if error != nil {
-				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
-				completionHandler?(false)
-			} else {
-				Log.debug("Success uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
-				completionHandler?(true)
-			}
-		} else {
-			OnMainThread {
-				let alert = UIAlertController(with: "No Network connection", message: "No network connection")
-				self.present(alert, animated: true)
-			}
-		}
 	}
 
 	// MARK: - Navigation Bar Actions
@@ -835,76 +669,6 @@ extension ClientQueryViewController: UISearchResultsUpdating {
 
 // MARK: - ClientItemCell Delegate
 extension ClientQueryViewController: ClientItemCellDelegate {
-//	func moreButtonTapped(cell: ClientItemCell) {
-//		if let item = cell.item {
-//
-//			let tableViewController = MoreStaticTableViewController(style: .grouped)
-//			let header = MoreViewHeader(for: item, with: core)
-//			let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
-//
-//			let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
-//
-//			let deleteLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: OCExtensionLocationIdentifier(rawValue: "com.owncloud.actions.delete"))
-//			let deleteActionContext = ActionContext(viewController: self, core: core, items: [item], location: deleteLocation)
-//			let deleteAction = DeleteAction(for: DeleteAction.actionExtension, with: deleteActionContext)
-//
-//			deleteAction.progressHandler = { [weak self, weak moreViewController] (progress) in
-//				OnMainThread {
-//					self?.progressSummarizer?.startTracking(progress: progress)
-//					moreViewController?.dismiss(animated: true, completion: nil)
-//				}
-//			}
-//
-//			let deleteRow: StaticTableViewRow = deleteAction.provideStaticRow()!
-//
-//			let renameRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
-//				moreViewController.dismiss(animated: true, completion: {
-//					self?.rename(item)
-//				})
-//			}, title: "Rename".localized, style: .plainNonOpaque)
-//
-////			let moveRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
-////				moreViewController.dismiss(animated: true, completion: {
-////					self?.move(item)
-////				})
-////				}, title: "Move".localized, style: .plainNonOpaque)
-//
-//			let moveLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: OCExtensionLocationIdentifier(rawValue: "com.owncloud.actions.move"))
-//			let moveActionContext = ActionContext(viewController: self, core: core, items: [item], location: moveLocation)
-//			let moveAction = MoveAction(for: MoveAction.actionExtension, with: moveActionContext)
-//
-//			moveAction.progressHandler = { [weak self, weak moreViewController] (progress) in
-//				OnMainThread {
-//					self?.progressSummarizer?.startTracking(progress: progress)
-//					moreViewController?.dismiss(animated: true, completion: nil)
-//				}
-//			}
-//			let moveRow = moveAction.provideStaticRow()!
-//
-//			var rows = [renameRow, moveRow, deleteRow]
-//
-//			if item.type == .file {
-//				let openInLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: OCExtensionLocationIdentifier(rawValue: "com.owncloud.actions.openin"))
-//				let openInActionContext = ActionContext(viewController: self, core: core, items: [item], location: openInLocation)
-//				let openInAction = OpenInAction(for: OpenInAction.actionExtension, with: openInActionContext)
-//
-//				openInAction.beforeRunHandler = { [weak moreViewController]  in
-//					OnMainThread {
-//						moreViewController?.dismiss(animated: true, completion: nil)
-//					}
-//				}
-//
-//				let openInRow: StaticTableViewRow = openInAction.provideStaticRow()!
-//
-//				rows.insert(openInRow, at: 0)
-//			}
-//
-//			tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: rows))
-//
-//			self.present(asCard: moreViewController, animated: true)
-//		}
-//	}
-
 	func moreButtonTapped(cell: ClientItemCell) {
 		guard let item = cell.item else {
 			return
@@ -957,17 +721,6 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 			self.present(asCard: moreViewController, animated: true)
 		}
 	}
-
-//	func moreButtonTapped(cell: ClientItemCell) {
-//		guard let item = cell.item else {
-//			return
-//		}
-//
-//		let actionsObject: ActionsMoreViewController = ActionsMoreViewController(item: item, core: core, into: self)
-//		actionsObject.presentActionsCard(with: [actionsObject.openIn(), actionsObject.duplicate(), actionsObject.rename(), actionsObject.move(), actionsObject.delete()]) {
-//			print("LOG ---> presented")
-//		}
-//	}
 }
 
 extension ClientQueryViewController: UITableViewDropDelegate {
@@ -1009,7 +762,11 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 			}
 
+<<<<<<< HEAD
 			if let progress = self.core.move(item, to: destinationItem, withName:  item.name, options: nil, resultHandler: { (error, _, _, _) in
+=======
+			if let progress = self.core.move(item, to: destinationItem!, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
+>>>>>>> 3aded8b... - Made de Duplicate action.
 				if error != nil {
 					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
 				}
