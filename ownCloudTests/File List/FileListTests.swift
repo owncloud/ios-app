@@ -31,6 +31,9 @@ class FileListTests: XCTestCase {
 	public typealias OCMRequestCoreForBookmark = @convention(block)
 		(_ bookmark: OCBookmark, _ completionHandler: OCMRequestCoreForBookmarkCompletionHandler) -> OCCore
 
+	public typealias OCMRequestChangeSetWithFlags = @convention(block)
+		(_ flags: OCQueryChangeSetRequestFlag, _ completionHandler: OCQueryChangeSetRequestCompletionHandler) -> Void
+
 	func testShowFileList() {
 
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
@@ -38,8 +41,38 @@ class FileListTests: XCTestCase {
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.showFileList(bookmark: bookmark)
 
-			//Assets
+			//Assert
 			EarlGrey.select(elementWithMatcher: grey_text("Disconnect".localized)).assert(grey_sufficientlyVisible())
+
+		} else {
+			assertionFailure("File list not loaded because Bookmark is nil")
+		}
+	}
+
+	func testShowFileListWithItems() {
+
+		let expectedCells: Int = 4
+
+		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
+			//Mocks
+			self.mockOCoreForBookmark(mockBookmark: bookmark)
+			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			self.showFileList(bookmark: bookmark)
+
+			//Asserts
+			EarlGrey.select(elementWithMatcher: grey_text("Disconnect".localized)).assert(grey_sufficientlyVisible())
+
+			var error:NSError? = nil
+			var index: UInt = 0
+			while true {
+				EarlGrey.select(elementWithMatcher: grey_kindOfClass(ClientItemCell.self)).atIndex(index).assert(with: grey_notNil(), error: &error)
+				if error != nil {
+					break
+				} else {
+					index += 1
+				}
+			}
+			GREYAssertEqual(index as AnyObject, expectedCells as AnyObject, reason: "Founded \(index) cells when expected \(expectedCells)")
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
@@ -54,13 +87,41 @@ class FileListTests: XCTestCase {
 
 	// MARK: - Mocks
 	func mockOCoreForBookmark(mockBookmark: OCBookmark) {
-		let completionHandlerBlock : OCMRequestCoreForBookmark = {
-			(bookmark, mockedBlock) in
+		let completionHandlerBlock : OCMRequestCoreForBookmark = { (bookmark, mockedBlock) in
 			let core = OCCore(bookmark: mockBookmark)
 			mockedBlock(core, nil)
 			return core
 		}
 
 		OCMockManager.shared.addMocking(blocks: [OCMockLocation.ocCoreManagerRequestCoreForBookmark: completionHandlerBlock])
+	}
+
+	func mockQueryPropfindResults(resourceName: String, basePath: String, state: OCQueryState) {
+		let completionHandlerBlock : OCMRequestChangeSetWithFlags = { (flags, mockedBlock) in
+
+			var items: [OCItem]?
+
+			let bundle = Bundle.main
+			if let path: String = bundle.path(forResource: resourceName, ofType: "xml") {
+
+				if let data = NSData(contentsOf: URL(fileURLWithPath: path)) {
+					if let parser = OCXMLParser(data: data as Data) {
+						parser.options = ["basePath": basePath]
+						parser.addObjectCreationClasses([OCItem.self])
+						if parser.parse() {
+							items = parser.parsedObjects as? [OCItem]
+						}
+					}
+				}
+			}
+
+			let querySet: OCQueryChangeSet = OCQueryChangeSet(queryResult: items, relativeTo: nil)
+			let query: OCQuery = OCQuery()
+			query.state = state
+
+			mockedBlock(query, querySet)
+		}
+
+		OCMockManager.shared.addMocking(blocks: [OCMockLocation.ocQueryRequestChangeSetWithFlags: completionHandlerBlock])
 	}
 }

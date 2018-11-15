@@ -50,6 +50,8 @@
 		5966C8D2219434C300C8875E /* FileListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5966C8D1219434C300C8875E /* FileListTests.swift */; };
 		597A404920AD59EF00B028B2 /* AppLockWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597A404820AD59EF00B028B2 /* AppLockWindow.swift */; };
 		59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 59D4895420C83F2E00369C2E /* InfoPlist.strings */; };
+		59F64776219AE90F00C016FD /* PropfindResponse.xml in Resources */ = {isa = PBXBuildFile; fileRef = 59F64775219AE90F00C016FD /* PropfindResponse.xml */; };
+		59F64777219AFBE600C016FD /* PropfindResponse.xml in Resources */ = {isa = PBXBuildFile; fileRef = 59F64775219AE90F00C016FD /* PropfindResponse.xml */; };
 		6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */; };
 		6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4F1733217749910049A71B /* ImageDisplayViewController.swift */; };
 		6E83C77E20A32C1B0066EC23 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */; };
@@ -407,6 +409,7 @@
 		597A404820AD59EF00B028B2 /* AppLockWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockWindow.swift; sourceTree = "<group>"; };
 		59D4895320C83F2E00369C2E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		59EACA8020CAA37F00F082EE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		59F64775219AE90F00C016FD /* PropfindResponse.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PropfindResponse.xml; sourceTree = "<group>"; };
 		6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.release.xcconfig"; sourceTree = "<group>"; };
 		6E216A632112F58700ED21BD /* NamingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamingViewController.swift; sourceTree = "<group>"; };
 		6E4F1733217749910049A71B /* ImageDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDisplayViewController.swift; sourceTree = "<group>"; };
@@ -642,6 +645,7 @@
 		233BDEB3204FEFE500C06732 /* ownCloudTests */ = {
 			isa = PBXGroup;
 			children = (
+				59F6476F219AE8F300C016FD /* Resources */,
 				233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */,
 				D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */,
 				DC869A582153B1F60088977E /* OCMockingManagerSwiftExtension.swift */,
@@ -766,6 +770,14 @@
 				5966C8D1219434C300C8875E /* FileListTests.swift */,
 			);
 			path = "File List";
+			sourceTree = "<group>";
+		};
+		59F6476F219AE8F300C016FD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				59F64775219AE90F00C016FD /* PropfindResponse.xml */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		5EE06126BB49344475598790 /* Pods */ = {
@@ -1376,6 +1388,7 @@
 				DCE5E8A22080D781005F60CE /* folder-external.tvg in Resources */,
 				DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */,
 				DCE5E8B42080D781005F60CE /* folder-shared.tvg in Resources */,
+				59F64777219AFBE600C016FD /* PropfindResponse.xml in Resources */,
 				DCE5E8A42080D781005F60CE /* audio.tvg in Resources */,
 				59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */,
 				6EB8EDC52114358400C2BF44 /* folder-create.tvg in Resources */,
@@ -1404,6 +1417,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59F64776219AE90F00C016FD /* PropfindResponse.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
