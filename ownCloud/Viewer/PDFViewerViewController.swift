@@ -55,7 +55,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
     fileprivate let containerView = UIStackView()
     fileprivate let pageCountLabel = UILabel()
-    fileprivate let fileNameLabel = UILabel()
 
     fileprivate var searchButtonItem: UIBarButtonItem?
     fileprivate var gotoButtonItem: UIBarButtonItem?
@@ -73,7 +72,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
             }
 
             pageCountLabel.isHidden = thumbnailViewPosition == .none ? true : false
-            fileNameLabel.isHidden = thumbnailViewPosition == .none ? true : false
 
             setupConstraints()
         }
@@ -131,19 +129,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
             containerView.axis = .vertical
             containerView.distribution = .fill
 
-            let fileNameContainerView = UIView()
-            fileNameContainerView.backgroundColor = UIColor.gray
-            fileNameContainerView.translatesAutoresizingMaskIntoConstraints = false
-            fileNameContainerView.addSubview(fileNameLabel)
-
-            fileNameLabel._setupPdfInfoLabel()
-            fileNameLabel.centerXAnchor.constraint(equalTo: fileNameContainerView.centerXAnchor).isActive = true
-            fileNameLabel.centerYAnchor.constraint(equalTo: fileNameContainerView.centerYAnchor).isActive = true
-            fileNameLabel.widthAnchor.constraint(equalTo: fileNameContainerView.widthAnchor, multiplier: 0.9).isActive = true
-            fileNameLabel.heightAnchor.constraint(equalTo: fileNameContainerView.heightAnchor, multiplier: 0.9).isActive = true
-
-            containerView.addArrangedSubview(fileNameContainerView)
-
             // Configure PDFView instance
             pdfView.displayDirection = .horizontal
             pdfView.translatesAutoresizingMaskIntoConstraints = false
@@ -168,7 +153,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
             setupConstraints()
 
             pdfView.document = document
-            fileNameLabel.text = document.documentURL?.lastPathComponent
 
             pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
             pdfView.autoScales = true
