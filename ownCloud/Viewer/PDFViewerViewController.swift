@@ -158,6 +158,9 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
             pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
             pdfView.autoScales = true
             updatePageLabel()
+
+            adjustThumbnailsSize()
+
         }
     }
 
@@ -173,19 +176,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
                 self?.pdfView.go(to: page)
             }
         }
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        adjustThumbnailsSize()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
     }
 
     override func viewDidLayoutSubviews() {
