@@ -29,6 +29,7 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
 
     var userSelectedMatchCallback : PDFSearchMatchSelectedCallback?
 
+    fileprivate var selection: PDFSelection?
     fileprivate var matches = [PDFSelection]()
     fileprivate var searchText = ""
     fileprivate var typeDelayTimer : Timer?
@@ -39,6 +40,7 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.definesPresentationContext = true
 
         self.tableView.register(PDFSearchTableViewCell.self, forCellReuseIdentifier: PDFSearchTableViewCell.identifier)
         self.tableView.rowHeight = searchTableViewCellHeight
@@ -90,7 +92,11 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
 
     @objc func dismissSearch() {
         typeDelayTimer?.invalidate()
-        self.presentingViewController?.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true) {
+            if self.userSelectedMatchCallback != nil && self.selection != nil {
+                self.userSelectedMatchCallback!(self.selection!)
+            }
+        }
     }
 
     // MARK: - Theme support
@@ -125,23 +131,23 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         cancelSearch()
+        searchController?.isActive = false
         tableView.deselectRow(at: indexPath, animated: true)
-        let selection = self.matches[indexPath.row]
-        dismissSearch()
-        if self.userSelectedMatchCallback != nil {
-            userSelectedMatchCallback!(selection)
-        }
+        self.selection = self.matches[indexPath.row]
+        self.dismissSearch()
     }
 
     // MARK: - Norification observers
     @objc func handleDidBeginFind(notification: NSNotification) {
         // TODO: Start displaying progress
         activityView.startAnimating()
+        self.tableView.separatorStyle = .none
     }
 
     @objc func handleDidEndFind(notification: NSNotification) {
         // TODO: End displaying progress
         activityView.stopAnimating()
+        self.tableView.separatorStyle = .singleLine
     }
 
     @objc func handleDidFindMatch(notification: NSNotification) {
@@ -167,8 +173,11 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
         guard let pdfDocument = pdfDocument else { return }
 
         // Remove data from previous search
-        self.matches.removeAll()
-        self.tableView.reloadData()
+        if self.matches.count > 0 {
+            self.matches.removeAll()
+            self.tableView.reloadData()
+        }
+
         // Cancel eventually pending search
         cancelSearch()
         // Begin a new search
