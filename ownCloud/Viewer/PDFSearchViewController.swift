@@ -36,8 +36,6 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
     fileprivate let typingDelay = 0.2
     fileprivate let searchTableViewCellHeight: CGFloat = 40.0
 
-    fileprivate let activityView = UIActivityIndicatorView(activityIndicatorStyle: .gray)
-
     override func viewDidLoad() {
         super.viewDidLoad()
         self.definesPresentationContext = true
@@ -65,12 +63,7 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
                                                name: .PDFDocumentDidFindMatch,
                                                object: nil)
 
-        activityView.sizeToFit()
-        activityView.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin, .flexibleTopMargin, .flexibleBottomMargin]
-        activityView.hidesWhenStopped = true
-
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissSearch))
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: activityView)
 
         Theme.shared.register(client: self, applyImmediately: true)
     }
@@ -139,14 +132,10 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
 
     // MARK: - Norification observers
     @objc func handleDidBeginFind(notification: NSNotification) {
-        // TODO: Start displaying progress
-        activityView.startAnimating()
         self.tableView.separatorStyle = .none
     }
 
     @objc func handleDidEndFind(notification: NSNotification) {
-        // TODO: End displaying progress
-        activityView.stopAnimating()
         self.tableView.separatorStyle = .singleLine
     }
 
