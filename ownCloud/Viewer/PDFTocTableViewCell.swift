@@ -76,7 +76,7 @@ class PDFTocTableViewCell: ThemeTableViewCell {
     }
 
     // MARK: - Theme support
-    
+
     override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
         let itemState = ThemeItemState(selected: self.isSelected)
 
