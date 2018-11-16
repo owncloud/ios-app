@@ -145,15 +145,15 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
         let blockOperation = BlockOperation()
         weak var weakBlockOperation = blockOperation
 
-        blockOperation.addExecutionBlock { [unowned self] in
+        blockOperation.addExecutionBlock { [weak self] in
             let thumbnailImage = page.thumbnail(of: size, for: .cropBox)
-            self.thumbnailCache.setObject(thumbnailImage, forKey: page.label! as NSString)
+            self?.thumbnailCache.setObject(thumbnailImage, forKey: page.label! as NSString)
             if (weakBlockOperation?.isCancelled)! {
                 return
             }
             DispatchQueue.main.async {
-                if let cell : PDFThumbnailCollectionViewCell = self.collectionView?.cellForItem(at: indexPath) as? PDFThumbnailCollectionViewCell {
-                    if let visibleCells = self.collectionView?.visibleCells {
+                if let cell : PDFThumbnailCollectionViewCell = self?.collectionView?.cellForItem(at: indexPath) as? PDFThumbnailCollectionViewCell {
+                    if let visibleCells = self?.collectionView?.visibleCells {
                         if visibleCells.contains(cell) {
                             cell.imageView?.image = thumbnailImage
                             cell.pageLabel?.text = page.label
@@ -161,7 +161,7 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
                     }
                 }
             }
-            self.fetchOperations[indexPath] = nil
+            self?.fetchOperations[indexPath] = nil
         }
         thumbnailFetchQueue.addOperation(blockOperation)
     }
