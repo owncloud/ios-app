@@ -28,8 +28,6 @@ class DuplicateAction : Action {
 			return
 		}
 
-		beforeRunHandler?()
-
 		let item = context.items[0]
 		let rootItem = context.items[1]
 

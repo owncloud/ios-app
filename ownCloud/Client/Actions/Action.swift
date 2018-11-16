@@ -37,7 +37,7 @@ enum ActionPosition : Int {
 
 typealias ActionCompletionHandler = ((Error?) -> Void)
 typealias ActionProgressHandler = ((Progress) -> Void)
-typealias ActionBeforeRunHandler = () -> Void
+typealias ActionWillRunHandler = () -> Void
 
 extension OCExtensionType {
 	static let action: OCExtensionType  =  OCExtensionType("app.action")
@@ -167,14 +167,16 @@ class Action : NSObject {
 	// MARK: - Execution metadata
 	var progressHandler : ActionProgressHandler?     // to be filled before calling run(), provideStaticRow(), provideContextualAction(), etc. if desired
 	var completionHandler : ActionCompletionHandler? // to be filled before calling run(), provideStaticRow(), provideContextualAction(), etc. if desired
-	var beforeRunHandler: ActionBeforeRunHandler? // to be filled before calling run(), provideStaticRow(), provideContextualAction(), etc. if desired
+	var actionWillRunHandler: ActionWillRunHandler? // to be filled before calling run(), provideStaticRow(), provideContextualAction(), etc. if desired
 
 	// MARK: - Action implementation
-	func run() {
-		if beforeRunHandler != nil {
-			beforeRunHandler!()
+	func willRun() {
+		if actionWillRunHandler != nil {
+			actionWillRunHandler!()
 		}
+	}
 
+	func run() {
 		if completionHandler != nil {
 			completionHandler!(nil)
 		}
@@ -183,13 +185,15 @@ class Action : NSObject {
 	// MARK: - Action UI elements
 	func provideStaticRow() -> StaticTableViewRow? {
 		return StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
-				self.run()
+			self.willRun()
+			self.run()
 		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, identifier: actionExtension.identifier.rawValue)
 	}
 
 	func provideContextualAction() -> UIContextualAction? {
 		return UIContextualAction(style: actionExtension.category == .destructive ? .destructive : .normal, title: self.actionExtension.name, handler: { (_ action, _ view, uiCompletionHandler) in
 			uiCompletionHandler(true)
+			self.willRun()
 			self.run()
 		})
 	}

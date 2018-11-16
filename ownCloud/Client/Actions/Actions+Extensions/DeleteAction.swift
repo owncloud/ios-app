@@ -26,8 +26,6 @@ class DeleteAction : Action {
 			return
 		}
 
-		beforeRunHandler?()
-
 		let item = context.items[0]
 
 		let alertController = UIAlertController(

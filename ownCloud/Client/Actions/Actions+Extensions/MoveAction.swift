@@ -26,8 +26,6 @@ class MoveAction : Action {
 			return
 		}
 
-		beforeRunHandler?()
-
 		let item = context.items[0]
 
 		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", completion: { (selectedDirectory) in

@@ -326,7 +326,7 @@ class DisplayViewController: UIViewController {
 		let actions = Action.sortedApplicableActions(for: actionContext)
 
 		actions.forEach({
-			$0.beforeRunHandler = {
+			$0.actionWillRunHandler = {
 				moreViewController.dismiss(animated: true)
 			}
 		})

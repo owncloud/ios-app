@@ -28,8 +28,6 @@ class OpenInAction: Action {
 			return
 		}
 
-		beforeRunHandler?()
-
 		let item = context.items[0]
 
 		let controller = DownloadFileProgressHUDViewController()
