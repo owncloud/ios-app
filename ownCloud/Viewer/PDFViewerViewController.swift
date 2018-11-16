@@ -354,6 +354,13 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
         guard let currentPageLabel = pdfView.currentPage?.label else { return }
 
-        pageCountLabel.text = "\(currentPageLabel) of \(pdf.pageCount)"
+        let maxPageCountText = "\(pdf.pageCount)"
+
+        if currentPageLabel.isNumeric {
+            pageCountLabel.text = NSString(format: "%@ of %@".localized as NSString, currentPageLabel, maxPageCountText) as String
+        } else {
+            // In case page label is not a number, doesn't display confusing "i of 100" but rather just use page label directly
+            pageCountLabel.text = currentPageLabel
+        }
     }
 }
