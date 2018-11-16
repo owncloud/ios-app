@@ -14,7 +14,7 @@ class OpenInAction: Action {
 	override class var name : String { return "Open in".localized }
 
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if forContext.items[0].type == .collection {
+		if forContext.items.contains(where: {$0.type == .collection}) {
 			return .none
 		}
 		return .first
@@ -39,20 +39,17 @@ class OpenInAction: Action {
 						Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
 						self.completionHandler?(error!)
 					} else {
-
-						controller.dismiss(animated: true, completion: {
-							self.completionHandler?(nil)
-							self.interactionController = UIDocumentInteractionController(url: file!.url)
-							self.interactionController?.delegate = self
-							OnMainThread {
+						OnMainThread {
+							controller.dismiss(animated: true, completion: {
+								self.completionHandler?(nil)
+								self.interactionController = UIDocumentInteractionController(url: file!.url)
+								self.interactionController?.delegate = self
 								self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
-							}
-						})
+							})
+						}
 					}
 				}) {
-					OnMainThread {
-						controller.attach(progress: progress)
-					}
+					controller.attach(progress: progress)
 				}
 			}
 		}

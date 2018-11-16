@@ -681,7 +681,7 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 		let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
 		let actionsLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: nil)
-		let actionContext = ActionContext(viewController: self, core: core, items: [item, query.rootItem], location: actionsLocation)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
 		let actions = Action.sortedApplicableActions(for: actionContext)
 

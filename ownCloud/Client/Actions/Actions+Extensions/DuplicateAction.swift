@@ -29,7 +29,7 @@ class DuplicateAction : Action {
 		}
 
 		let item = context.items[0]
-		let rootItem = context.items[1]
+		let rootItem = item.parentItem(from: core)!
 
 		var name: String = "\(item.name!) copy"
 

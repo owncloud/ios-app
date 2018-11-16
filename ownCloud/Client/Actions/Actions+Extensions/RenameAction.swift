@@ -27,7 +27,7 @@ class RenameAction : Action {
 		}
 
 		let item = context.items[0]
-		let rootItem = context.items[1]
+		let rootItem = item.parentItem(from: core)!
 
 		let renameViewController = NamingViewController(with: item, core: self.core, stringValidator: { name in
 			if name.contains("/") || name.contains("\\") {

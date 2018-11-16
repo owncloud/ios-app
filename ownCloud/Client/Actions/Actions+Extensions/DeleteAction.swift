@@ -26,24 +26,40 @@ class DeleteAction : Action {
 			return
 		}
 
-		let item = context.items[0]
+		let items = context.items
+
+		let message: String
+		if items.count > 1 {
+			message = "Are you sure you want to delete this items from the server?".localized
+		} else {
+			message = "Are you sure you want to delete this item from the server?".localized
+		}
+
+		let name: String
+		if items.count > 1 {
+			name = "Multiple items".localized
+		} else {
+			name = items[0].name
+		}
 
 		let alertController = UIAlertController(
-			with: item.name!,
-			message: "Are you sure you want to delete this item from the server?".localized,
+			with: name,
+			message: message,
 			destructiveLabel: "Delete".localized,
 			preferredStyle: UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet,
 			destructiveAction: {
-				if let progress = self.core.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
-					if error != nil {
-						Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
-						self.completionHandler?(error!)
-					} else {
-						self.completionHandler?(nil)
+				for item in items {
+					if let progress = self.core.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
+						if error != nil {
+							Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
+							self.completionHandler?(error!)
+						}
+					}) {
+						self.progressHandler?(progress)
 					}
-				}) {
-					self.progressHandler?(progress)
 				}
+
+				self.completionHandler?(nil)
 		})
 
 		viewController.present(alertController, animated: true)
