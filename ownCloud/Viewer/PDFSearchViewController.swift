@@ -19,7 +19,7 @@
 import UIKit
 import PDFKit
 
-class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Themeable {
+class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Themeable, UISearchBarDelegate {
 
     typealias PDFSearchMatchSelectedCallback = (PDFSelection) -> Void
 
@@ -48,6 +48,8 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
         searchController?.obscuresBackgroundDuringPresentation = false
         searchController?.hidesNavigationBarDuringPresentation = true
 
+        searchController?.searchBar.delegate = self
+
         navigationItem.searchController =  searchController
         navigationItem.hidesSearchBarWhenScrolling = false
 
@@ -63,9 +65,14 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
                                                name: .PDFDocumentDidFindMatch,
                                                object: nil)
 
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissSearch))
-
         Theme.shared.register(client: self, applyImmediately: true)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        DispatchQueue.main.async {
+            self.searchController?.searchBar.becomeFirstResponder()
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -90,6 +97,12 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
                 self.userSelectedMatchCallback!(self.selection!)
             }
         }
+    }
+
+    // MARK: - USearchBarDelegate
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        dismissSearch()
     }
 
     // MARK: - Theme support
