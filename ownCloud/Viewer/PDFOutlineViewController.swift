@@ -19,7 +19,7 @@
 import UIKit
 import PDFKit
 
-class PDFOutlineViewController: UIViewController, Themeable {
+class PDFOutlineViewController: UIViewController {
 
     enum Mode : Int {
         case ToC, Thumbnails
@@ -60,25 +60,6 @@ class PDFOutlineViewController: UIViewController, Themeable {
             let resumeItem = UIBarButtonItem(title: "Resume".localized, style: .plain, target: self, action: #selector(resume))
             self.navigationItem.rightBarButtonItem = resumeItem
         }
-
-        Theme.shared.register(client: self, applyImmediately: true)
-
-    }
-
-    deinit {
-        Theme.shared.unregister(client: self)
-        NotificationCenter.default.removeObserver(self)
-    }
-
-    // MARK: - Theme support
-
-    func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-        self.themeCollection = collection
-        if self.childViewControllers.count > 0 {
-            if let themeableVC = self.childViewControllers.first as? Themeable {
-                themeableVC.applyThemeCollection(theme: theme, collection: collection, event: event)
-            }
-        }
     }
 
     // MARK: - User actions
@@ -110,7 +91,6 @@ class PDFOutlineViewController: UIViewController, Themeable {
         } else {
             let thumbnaisViewController = PDFThumbnailsCollectionViewController()
             thumbnaisViewController.pdfDocument = self.pdfDocument
-            thumbnaisViewController.themeCollection = self.themeCollection
             toViewController = thumbnaisViewController
         }
 

@@ -28,7 +28,6 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
     fileprivate let horizontalInset: CGFloat = 4.0
 
     var pdfDocument: PDFDocument?
-    var themeCollection: ThemeCollection?
     let thumbnailCache = OCCache<NSString, UIImage>()
     var thumbnailFetchQueue = OperationQueue()
     var fetchOperations : [IndexPath : BlockOperation] = [:]
@@ -51,10 +50,6 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
         // Register cell classes
         self.collectionView!.register(PDFThumbnailCollectionViewCell.self,
                                       forCellWithReuseIdentifier: PDFThumbnailCollectionViewCell.identifier)
-
-        if self.themeCollection != nil {
-            self.collectionView!.applyThemeCollection(self.themeCollection!)
-        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -73,6 +68,11 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
         let flowLayout = self.collectionViewLayout as? UICollectionViewFlowLayout
         flowLayout?.itemSize = thumbnailSize
         flowLayout?.sectionInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        Theme.shared.unregister(client: self)
     }
 
     // MARK: - Themeable support
