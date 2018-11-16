@@ -345,6 +345,12 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
                 if let page = pdf.page(at: pageNr - 1) {
                     self.pdfView.go(to: page)
                 }
+            } else {
+                let alertController = UIAlertController(title: "Invalid Page".localized,
+                                                        message: "The entered page number doesn't exist".localized,
+                                                        preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+                self.present(alertController, animated: true, completion: nil)
             }
         }
     }

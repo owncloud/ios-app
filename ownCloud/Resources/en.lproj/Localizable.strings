@@ -203,3 +203,5 @@
 "Page" = "Page";
 "This document has %@ pages" = "This document has %@ pages";
 "%@ of %@" = "%@ of %@";
+"Invalid Page" = "Invalid Page";
+"The entered page number doesn't exist" = "The entered page number doesn't exist";
