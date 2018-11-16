@@ -19,6 +19,7 @@ class FileListTests: XCTestCase {
 		super.setUp()
 		UtilsTests.deleteAllBookmarks()
 		UtilsTests.showNoServerMessageServerList()
+		OCMockManager.shared.removeAllMockingBlocks()
 	}
 
 	override func tearDown() {
@@ -39,7 +40,10 @@ class FileListTests: XCTestCase {
 			self.showFileList(bookmark: bookmark)
 
 			//Assets
-			EarlGrey.select(elementWithMatcher: grey_text("Disconnect".localized)).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("disconnect-button")).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("disconnect-button")).perform(grey_tap())
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}

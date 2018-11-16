@@ -29,6 +29,7 @@ class CreateBookmarkTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
+		OCMockManager.shared.removeAllMockingBlocks()
 		UtilsTests.deleteAllBookmarks()
 		UtilsTests.showNoServerMessageServerList()
 	}
@@ -49,7 +50,7 @@ class CreateBookmarkTests: XCTestCase {
         //Reset status
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
-    
+
     func testCheckURLEmptyBasicAuth () {
 
         //Actions
@@ -157,7 +158,6 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
-
     func testCheckURLBasicAuthWarningIssueCancel () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -183,7 +183,6 @@ class CreateBookmarkTests: XCTestCase {
         //Reset status
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
-    
 
     func testCheckURLBasicAuthWarningIssueCertificate () {
 
@@ -225,16 +224,28 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
-    
     func testCheckURLServerOAuth2 () {
 
-        /*let mockUrlServer = "http://mocked.owncloud.server.com"
+        let mockUrlServer = "http://mocked.owncloud.server.com"
         let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodOAuth2Identifier as NSString,
                                                                OCAuthenticationMethodBasicAuthIdentifier as NSString]
-        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .informal, issueHandler: nil)
+        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .warning, issueHandler: nil)
+
+		let authenticationMethodIdentifier = OCAuthenticationMethodOAuth2Identifier as NSString
+		let tokenResponse:[String : String] = ["access_token" : "RyFyDu1wH0Wvd8KlCP0Qeo9dlTqWajgvWHNqSdfl9bVD6Wp72CGikmgSkvUaAMML",
+										"expires_in" : "3600",
+										"message_url" : "https://localhost/apps/oauth2/authorization-successful",
+										"refresh_token" : "khA8H18TWC84g1DmB0fzqgDOWvNRNPGJkkzQ1E6AZjq8UrqZ79QTK8UgSsJB6MrW",
+										"token_type" : "Bearer",
+										"user_id" : "admin"]
+		let dictionary:[String : Any] = ["bearerString" : "Bearer RyFyDu1wH0Wvd8KlCP0Qeo9dlTqWajgvWHNqSdfl9bVD6Wp72CGikmgSkvUaAMML",
+									 "expirationDate" : "2018-11-15 14:34:39 +0000",
+									 "tokenResponse" : tokenResponse]
+		let error: NSError?  = nil
 
         //Mock
         mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: error)
 
         //Actions
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -256,8 +267,41 @@ class CreateBookmarkTests: XCTestCase {
         GREYAssertTrue(isServerChecked, reason: "Failed check the server")
 
         //Reset status
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())*/
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
+
+	func testLoginOauth2RightCredentials () {
+
+		let mockUrlServer = "http://mocked.owncloud.server.com"
+		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodOAuth2Identifier as NSString,
+															   OCAuthenticationMethodBasicAuthIdentifier as NSString]
+		let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .informal, issueHandler: nil)
+
+		let authenticationMethodIdentifier = OCAuthenticationMethodOAuth2Identifier as NSString
+		let tokenResponse:[String : String] = ["access_token" : "RyFyDu1wH0Wvd8KlCP0Qeo9dlTqWajgvWHNqSdfl9bVD6Wp72CGikmgSkvUaAMML",
+											   "expires_in" : "3600",
+											   "message_url" : "https://localhost/apps/oauth2/authorization-successful",
+											   "refresh_token" : "khA8H18TWC84g1DmB0fzqgDOWvNRNPGJkkzQ1E6AZjq8UrqZ79QTK8UgSsJB6MrW",
+											   "token_type" : "Bearer",
+											   "user_id" : "admin"]
+		let dictionary:[String : Any] = ["bearerString" : "Bearer RyFyDu1wH0Wvd8KlCP0Qeo9dlTqWajgvWHNqSdfl9bVD6Wp72CGikmgSkvUaAMML",
+										 "expirationDate" : "2018-11-15 14:34:39 +0000",
+										 "tokenResponse" : tokenResponse]
+		let error: NSError?  = nil
+
+		//Mock
+		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: error)
+
+		//Actions
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+		//EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).perform(grey_tap())
+
+		//Assert
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
+	}
 
     func testLoginBasicAuthRightCredentials () {
 
@@ -267,11 +311,16 @@ class CreateBookmarkTests: XCTestCase {
         let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
                                                                OCAuthenticationMethodOAuth2Identifier as NSString]
         let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .warning, issueHandler: nil)
-        let error: NSError?  = nil
+
+		let error: NSError?  = nil
+		let authenticationMethodIdentifier = OCAuthenticationMethodBasicAuthIdentifier as NSString
+		let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
+									 "passphrase" : "admin",
+									 "username" : "admin"]
 
         //Mock
         mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
-        mockOCConnectionGenerateAuthenticationDataWithMethodBasic(error: error)
+		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: error)
 
         //Actions
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -285,7 +334,6 @@ class CreateBookmarkTests: XCTestCase {
         //Assert
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
     }
-    
 
     func testLoginBasicAuthWarningIssue () {
 
@@ -298,11 +346,15 @@ class CreateBookmarkTests: XCTestCase {
         let errorURL: NSError = NSError(domain: "mocked.owncloud.server.com", code: 1000, userInfo: [NSLocalizedDescriptionKey: "Error URL"])
         let issue: OCConnectionIssue = OCConnectionIssue(forError: errorURL, level: .informal, issueHandler: nil)
 
-        let errorCredentials: NSError = NSError(domain: "OCError", code: 2, userInfo: [NSLocalizedDescriptionKey: "Error Credentials"])
+		let authenticationMethodIdentifier = OCAuthenticationMethodBasicAuthIdentifier as NSString
+		let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
+									 "passphrase" : "admin",
+									 "username" : "admin"]
+		let errorCredentials: NSError = NSError(domain: "OCError", code: 2, userInfo: [NSLocalizedDescriptionKey: "Error Credentials"])
 
         //Mock
         mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
-        mockOCConnectionGenerateAuthenticationDataWithMethodBasic(error: errorCredentials)
+		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: errorCredentials)
 
         //Actions
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -324,7 +376,6 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
-    
     func testLoginBasicAuthErrorIssue () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -336,11 +387,15 @@ class CreateBookmarkTests: XCTestCase {
         let errorURL: NSError = NSError(domain: "mocked.owncloud.server.com", code: 1000, userInfo: [NSLocalizedDescriptionKey: "Error URL"])
         let issue: OCConnectionIssue = OCConnectionIssue(forError: errorURL, level: .informal, issueHandler: nil)
 
+		let authenticationMethodIdentifier = OCAuthenticationMethodBasicAuthIdentifier as NSString
+		let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
+									 "passphrase" : "admin",
+									 "username" : "admin"]
         let errorCredentials: NSError = NSError(domain: "OCError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Error Credentials"])
 
         //Mock
         mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
-        mockOCConnectionGenerateAuthenticationDataWithMethodBasic(error: errorCredentials)
+		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: errorCredentials)
 
         //Actions
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -362,7 +417,6 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
-    
     // MARK: - Mocks
     func mockOCConnectionPrepareForSetup(mockUrlServer: String, authMethods: [OCAuthenticationMethodIdentifier], issue: OCConnectionIssue) {
         let completionHandlerBlock : OCMPrepareForSetup = {
@@ -375,15 +429,10 @@ class CreateBookmarkTests: XCTestCase {
             [OCMockLocation.ocConnectionPrepareForSetupWithOptions: completionHandlerBlock])
     }
 
-    func mockOCConnectionGenerateAuthenticationDataWithMethodBasic(error: NSError?) {
+	func mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: OCAuthenticationMethodIdentifier, dictionary: [String: Any], error: NSError?) {
         let completionHandlerBlock : OCMGenerateAuthenticationDataWithMethod = {
             (methodIdentifier, options, mockedBlock) in
 
-            let authenticationMethodIdentifier = OCAuthenticationMethodBasicAuthIdentifier as NSString
-
-            let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
-                                         "passphrase" : "admin",
-                                         "username" : "admin"]
             var data: Data? = nil
             do {
                 data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .binary, options: 0)
