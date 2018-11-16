@@ -10,6 +10,7 @@ import XCTest
 import EarlGrey
 import ownCloudSDK
 import LocalAuthentication
+import ownCloudMocking
 
 @testable import ownCloud
 
@@ -17,6 +18,7 @@ class BiometricalTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
+		OCMockManager.shared.removeAllMockingBlocks()
 		UtilsTests.deleteAllBookmarks()
 		UtilsTests.showNoServerMessageServerList()
 	}

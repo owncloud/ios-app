@@ -19,6 +19,7 @@ class OwnCloudTests: XCTestCase {
         super.setUp()
 		UtilsTests.deleteAllBookmarks()
 		UtilsTests.showNoServerMessageServerList()
+		OCMockManager.shared.removeAllMockingBlocks()
     }
 
     override func tearDown() {

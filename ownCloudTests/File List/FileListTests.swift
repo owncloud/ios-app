@@ -19,6 +19,7 @@ class FileListTests: XCTestCase {
 		super.setUp()
 		UtilsTests.deleteAllBookmarks()
 		UtilsTests.showNoServerMessageServerList()
+		OCMockManager.shared.removeAllMockingBlocks()
 	}
 
 	override func tearDown() {
@@ -41,8 +42,11 @@ class FileListTests: XCTestCase {
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.showFileList(bookmark: bookmark)
 
-			//Assert
-			EarlGrey.select(elementWithMatcher: grey_text("Disconnect".localized)).assert(grey_sufficientlyVisible())
+			//Assets
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("disconnect-button")).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("disconnect-button")).perform(grey_tap())
 
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
@@ -73,6 +77,12 @@ class FileListTests: XCTestCase {
 				}
 			}
 			GREYAssertEqual(index as AnyObject, expectedCells as AnyObject, reason: "Founded \(index) cells when expected \(expectedCells)")
+
+			//Assets
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("disconnect-button")).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("disconnect-button")).perform(grey_tap())
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}

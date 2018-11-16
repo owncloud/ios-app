@@ -29,6 +29,7 @@ class CreateBookmarkTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
+		OCMockManager.shared.removeAllMockingBlocks()
 		UtilsTests.deleteAllBookmarks()
 		UtilsTests.showNoServerMessageServerList()
 	}
@@ -37,153 +38,412 @@ class CreateBookmarkTests: XCTestCase {
 		super.tearDown()
 	}
 
-	func testCheckURLServerBasicAuth () {
+    func testCheckInitialViewAuth () {
 
-		let mockUrlServer = "http://mocked.owncloud.server.com"
-		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
-															   OCAuthenticationMethodOAuth2Identifier as NSString]
-		let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .warning, issueHandler: nil)
+        //Actions
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 
-		//Mock
-		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+        //Assert
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).assert(grey_sufficientlyVisible())
 
-		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).perform(grey_tap())
+        //Reset status
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+    }
 
-		//Assert
-		let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
-			var error: NSError?
+    func testCheckURLEmptyBasicAuth () {
 
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible(), error: &error)
+        //Actions
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
 
-			return error == nil
-		}).wait(withTimeout: 5.0, pollInterval: 0.5)
+        //Assert
+        EarlGrey.select(elementWithMatcher: grey_text("Missing hostname".localized)).assert(grey_sufficientlyVisible())
 
-		GREYAssertTrue(isServerChecked, reason: "Failed check the server")
+        //Reset status
+        EarlGrey.select(elementWithMatcher: grey_text("OK")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+    }
 
-		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
-	}
+    
+    func testCheckURLBasicAuthInformalIssue () {
 
-	func testCheckURLServerOauth2 () {
+        let mockUrlServer = "http://mocked.owncloud.server.com"
+        let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
+                                                               OCAuthenticationMethodOAuth2Identifier as NSString]
+        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Informal issue description"]), level: .informal, issueHandler: nil)
+
+        //Mock
+        mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+
+        //Actions
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+
+        //Assert
+        let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
+            var error: NSError?
+
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible(), error: &error)
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible(), error: &error)
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
+
+            return error == nil
+        }).wait(withTimeout: 5.0, pollInterval: 0.5)
+
+        GREYAssertTrue(isServerChecked, reason: "Failed check the server")
+
+        //Reset status
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+    }
+
+    
+    func testCheckURLBasicAuthWarningIssueView () {
+
+        let mockUrlServer = "http://mocked.owncloud.server.com"
+        let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
+                                                               OCAuthenticationMethodOAuth2Identifier as NSString]
+        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Warning issue description"]), level: .warning, issueHandler: nil)
+
+        //Mock
+        mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+
+        //Actions
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+
+        //Assert
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).assert(grey_sufficientlyVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).assert(grey_sufficientlyVisible())
+
+        //Reset status
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+    }
+    
+    func testCheckURLBasicAuthWarningIssueApproval () {
+
+        let mockUrlServer = "http://mocked.owncloud.server.com"
+        let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
+                                                               OCAuthenticationMethodOAuth2Identifier as NSString]
+        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Warning issue description"]), level: .warning, issueHandler: nil)
+
+        //Mock
+        mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+
+        //Actions
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).perform(grey_tap())
+
+        //Assert
+        let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
+            var error: NSError?
+
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible(), error: &error)
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible(), error: &error)
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
+
+            return error == nil
+        }).wait(withTimeout: 5.0, pollInterval: 0.5)
+
+        GREYAssertTrue(isServerChecked, reason: "Failed check the server")
+
+        //Reset status
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+    }
+
+    func testCheckURLBasicAuthWarningIssueCancel () {
+
+        let mockUrlServer = "http://mocked.owncloud.server.com"
+        let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
+                                                               OCAuthenticationMethodOAuth2Identifier as NSString]
+        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Warning issue description"]), level: .warning, issueHandler: nil)
+
+        //Mock
+        mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+
+        //Actions
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
+
+        //Assert
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-name-name")).assert(grey_notVisible())
+
+        //Reset status
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+    }
+
+    func testCheckURLBasicAuthWarningIssueCertificate () {
+
+    }
+
+    func testCheckURLBasicAuthErrorIssue () {
+
+        let mockUrlServer = "http://mocked.owncloud.server.com"
+        let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
+                                                               OCAuthenticationMethodOAuth2Identifier as NSString]
+        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error issue description"]), level: .error, issueHandler: nil)
+
+        //Mock
+        mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+
+        //Actions
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button")).perform(grey_tap())
+
+        //Assert
+        let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
+            var error: NSError?
+
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible(), error: &error)
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible(), error: &error)
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
+
+            return error == nil
+        }).wait(withTimeout: 5.0, pollInterval: 0.5)
+
+        GREYAssertTrue(!isServerChecked, reason: "Failed check the server")
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible())
+
+        //Reset status
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+    }
+
+    func testCheckURLServerOAuth2 () {
+
+        let mockUrlServer = "http://mocked.owncloud.server.com"
+        let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodOAuth2Identifier as NSString,
+                                                               OCAuthenticationMethodBasicAuthIdentifier as NSString]
+        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .warning, issueHandler: nil)
+
+		let authenticationMethodIdentifier = OCAuthenticationMethodOAuth2Identifier as NSString
+		let tokenResponse:[String : String] = ["access_token" : "RyFyDu1wH0Wvd8KlCP0Qeo9dlTqWajgvWHNqSdfl9bVD6Wp72CGikmgSkvUaAMML",
+										"expires_in" : "3600",
+										"message_url" : "https://localhost/apps/oauth2/authorization-successful",
+										"refresh_token" : "khA8H18TWC84g1DmB0fzqgDOWvNRNPGJkkzQ1E6AZjq8UrqZ79QTK8UgSsJB6MrW",
+										"token_type" : "Bearer",
+										"user_id" : "admin"]
+		let dictionary:[String : Any] = ["bearerString" : "Bearer RyFyDu1wH0Wvd8KlCP0Qeo9dlTqWajgvWHNqSdfl9bVD6Wp72CGikmgSkvUaAMML",
+									 "expirationDate" : "2018-11-15 14:34:39 +0000",
+									 "tokenResponse" : tokenResponse]
+		let error: NSError?  = nil
+
+        //Mock
+        mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: error)
+
+        //Actions
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).perform(grey_tap())
+
+        //Assert
+        let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
+            var error: NSError?
+
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible(), error: &error)
+            EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible(), error: &error)
+
+            return error == nil
+        }).wait(withTimeout: 5.0, pollInterval: 0.5)
+
+        GREYAssertTrue(isServerChecked, reason: "Failed check the server")
+
+        //Reset status
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+    }
+
+	func testLoginOauth2RightCredentials () {
 
 		let mockUrlServer = "http://mocked.owncloud.server.com"
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodOAuth2Identifier as NSString,
 															   OCAuthenticationMethodBasicAuthIdentifier as NSString]
-		let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .warning, issueHandler: nil)
+		let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .informal, issueHandler: nil)
+
+		let authenticationMethodIdentifier = OCAuthenticationMethodOAuth2Identifier as NSString
+		let tokenResponse:[String : String] = ["access_token" : "RyFyDu1wH0Wvd8KlCP0Qeo9dlTqWajgvWHNqSdfl9bVD6Wp72CGikmgSkvUaAMML",
+											   "expires_in" : "3600",
+											   "message_url" : "https://localhost/apps/oauth2/authorization-successful",
+											   "refresh_token" : "khA8H18TWC84g1DmB0fzqgDOWvNRNPGJkkzQ1E6AZjq8UrqZ79QTK8UgSsJB6MrW",
+											   "token_type" : "Bearer",
+											   "user_id" : "admin"]
+		let dictionary:[String : Any] = ["bearerString" : "Bearer RyFyDu1wH0Wvd8KlCP0Qeo9dlTqWajgvWHNqSdfl9bVD6Wp72CGikmgSkvUaAMML",
+										 "expirationDate" : "2018-11-15 14:34:39 +0000",
+										 "tokenResponse" : tokenResponse]
+		let error: NSError?  = nil
 
 		//Mock
 		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: error)
 
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).perform(grey_tap())
-
-		//Assert
-		let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
-			var error: NSError?
-
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible(), error: &error)
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible(), error: &error)
-
-			return error == nil
-		}).wait(withTimeout: 5.0, pollInterval: 0.5)
-
-		GREYAssertTrue(isServerChecked, reason: "Failed check the server")
-
-		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
-	}
-
-	func testBasicAuthLoginRightCredentials () {
-
-		let mockUrlServer = "http://mocked.owncloud.server.com"
-		let userName = "test"
-		let password = "test"
-		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
-															   OCAuthenticationMethodOAuth2Identifier as NSString]
-		let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .warning, issueHandler: nil)
-
-		//Mock
-		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
-		mockOCConnectionGenerateAuthenticationDataWithMethodBasic()
-
-		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).perform(grey_replaceText(userName))
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).perform(grey_replaceText(password))
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+		//EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).perform(grey_tap())
 
 		//Assert
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
 	}
 
-	func testOauth2LoginRightCredentials () {
+    func testLoginBasicAuthRightCredentials () {
 
-		let mockUrlServer = "http://mocked.owncloud.server.com"
-		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodOAuth2Identifier as NSString,
-															   OCAuthenticationMethodBasicAuthIdentifier as NSString]
-		let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .warning, issueHandler: nil)
+        let mockUrlServer = "http://mocked.owncloud.server.com"
+        let userName = "test"
+        let password = "test"
+        let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
+                                                               OCAuthenticationMethodOAuth2Identifier as NSString]
+        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .warning, issueHandler: nil)
 
-		//Mock
-		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
-		mockOCConnectionGenerateAuthenticationDataWithMethodBasic()
+		let error: NSError?  = nil
+		let authenticationMethodIdentifier = OCAuthenticationMethodBasicAuthIdentifier as NSString
+		let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
+									 "passphrase" : "admin",
+									 "username" : "admin"]
 
-		//Actions
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+        //Mock
+        mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: error)
 
-		//Assert
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
-	}
+        //Actions
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).perform(grey_replaceText(userName))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).perform(grey_replaceText(password))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
 
-	// MARK: - Mocks
-	func mockOCConnectionPrepareForSetup(mockUrlServer: String, authMethods: [OCAuthenticationMethodIdentifier], issue: OCConnectionIssue) {
-		let completionHandlerBlock : OCMPrepareForSetup = {
-			(dict, mockedBlock) in
-			let url: NSURL = NSURL(fileURLWithPath: mockUrlServer)
-			mockedBlock(issue, url, authMethods, authMethods)
-		}
+        //Assert
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
+    }
 
-		OCMockManager.shared.addMocking(blocks:
-			[OCMockLocation.ocConnectionPrepareForSetupWithOptions: completionHandlerBlock])
-	}
+    func testLoginBasicAuthWarningIssue () {
 
-	func mockOCConnectionGenerateAuthenticationDataWithMethodBasic() {
-		let completionHandlerBlock : OCMGenerateAuthenticationDataWithMethod = {
-			(methodIdentifier, options, mockedBlock) in
+        let mockUrlServer = "http://mocked.owncloud.server.com"
+        let userName = "test"
+        let password = "test"
+        let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
+                                                               OCAuthenticationMethodOAuth2Identifier as NSString]
 
-			let error:NSError? = nil
-			let authenticationMethodIdentifier = OCAuthenticationMethodBasicAuthIdentifier as NSString
+        let errorURL: NSError = NSError(domain: "mocked.owncloud.server.com", code: 1000, userInfo: [NSLocalizedDescriptionKey: "Error URL"])
+        let issue: OCConnectionIssue = OCConnectionIssue(forError: errorURL, level: .informal, issueHandler: nil)
 
-			let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
-										 "passphrase" : "admin",
-										 "username" : "admin"]
-			var data: Data? = nil
-			do {
-				data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .binary, options: 0)
-			} catch {
-				return
-			}
+		let authenticationMethodIdentifier = OCAuthenticationMethodBasicAuthIdentifier as NSString
+		let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
+									 "passphrase" : "admin",
+									 "username" : "admin"]
+		let errorCredentials: NSError = NSError(domain: "OCError", code: 2, userInfo: [NSLocalizedDescriptionKey: "Error Credentials"])
 
-			mockedBlock(error, authenticationMethodIdentifier, data! as NSData)
-		}
+        //Mock
+        mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: errorCredentials)
 
-		OCMockManager.shared.addMocking(blocks:
-			[OCMockLocation.ocConnectionGenerateAuthenticationDataWithMethod: completionHandlerBlock])
-	}
+        //Actions
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).perform(grey_replaceText(userName))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).perform(grey_replaceText(password))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+
+        //Assert
+        //TO-DO: catch shake
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_notVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).assert(grey_sufficientlyVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible())
+
+        //Reset status
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+    }
+
+    func testLoginBasicAuthErrorIssue () {
+
+        let mockUrlServer = "http://mocked.owncloud.server.com"
+        let userName = "test"
+        let password = "test"
+        let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
+                                                               OCAuthenticationMethodOAuth2Identifier as NSString]
+
+        let errorURL: NSError = NSError(domain: "mocked.owncloud.server.com", code: 1000, userInfo: [NSLocalizedDescriptionKey: "Error URL"])
+        let issue: OCConnectionIssue = OCConnectionIssue(forError: errorURL, level: .informal, issueHandler: nil)
+
+		let authenticationMethodIdentifier = OCAuthenticationMethodBasicAuthIdentifier as NSString
+		let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
+									 "passphrase" : "admin",
+									 "username" : "admin"]
+        let errorCredentials: NSError = NSError(domain: "OCError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Error Credentials"])
+
+        //Mock
+        mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: errorCredentials)
+
+        //Actions
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).perform(grey_replaceText(userName))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).perform(grey_replaceText(password))
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button")).perform(grey_tap())
+
+        //Assert
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_notVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).assert(grey_sufficientlyVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible())
+
+        //Reset status
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+    }
+
+    // MARK: - Mocks
+    func mockOCConnectionPrepareForSetup(mockUrlServer: String, authMethods: [OCAuthenticationMethodIdentifier], issue: OCConnectionIssue) {
+        let completionHandlerBlock : OCMPrepareForSetup = {
+            (dict, mockedBlock) in
+            let url: NSURL = NSURL(fileURLWithPath: mockUrlServer)
+            mockedBlock(issue, url, authMethods, authMethods)
+        }
+
+        OCMockManager.shared.addMocking(blocks:
+            [OCMockLocation.ocConnectionPrepareForSetupWithOptions: completionHandlerBlock])
+    }
+
+	func mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: OCAuthenticationMethodIdentifier, dictionary: [String: Any], error: NSError?) {
+        let completionHandlerBlock : OCMGenerateAuthenticationDataWithMethod = {
+            (methodIdentifier, options, mockedBlock) in
+
+            var data: Data? = nil
+            do {
+                data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .binary, options: 0)
+            } catch {
+                return
+            }
+
+            mockedBlock(error, authenticationMethodIdentifier, data! as NSData)
+        }
+
+        OCMockManager.shared.addMocking(blocks:
+            [OCMockLocation.ocConnectionGenerateAuthenticationDataWithMethod: completionHandlerBlock])
+    }
 }
