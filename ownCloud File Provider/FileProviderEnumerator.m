@@ -292,11 +292,6 @@
 				{
 					[self provideItemsForChangeObserverFromQuery:query];
 				}
-
-				if (query.state == OCQueryStateIdle)
-				{
-					[self->_core signalEnumeratorForContainerItemIdentifier:self->_enumeratedItemIdentifier];
-				}
 			}
 		});
 	}
