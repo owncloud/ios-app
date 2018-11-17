@@ -137,7 +137,7 @@ static NSMutableDictionary<OCFileID, NSError *> *sOCItemUploadingErrors;
 
 - (BOOL)isMostRecentVersionDownloaded
 {
-	if ((self.localRelativePath != nil) && (self.remoteItem == nil))
+	if (((self.localRelativePath != nil) && (self.remoteItem == nil)) || self.isUploading)
 	{
 		return (YES);
 	}
