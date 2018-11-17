@@ -181,6 +181,12 @@
 			[self.core downloadItem:(OCItem *)item options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, OCFile *file) {
 				OCLogDebug(@"[FP] Starting to provide file:\nPAU: %@\nFURL: %@\nID: %@\nErr: %@\nlocalRelativePath: %@", provideAtURL, file.url, item.itemIdentifier, error, item.localRelativePath);
 
+				if ([error isOCErrorWithCode:OCErrorCancelled])
+				{
+					// If we provide a real error here, the Files app will show an error "File not found".
+					error = nil;
+				}
+
 				completionHandler(error);
 			}];
 
@@ -253,7 +259,30 @@
 
 - (void)stopProvidingItemAtURL:(NSURL *)url
 {
+	NSError *error = nil;
+	NSFileProviderItemIdentifier itemIdentifier = nil;
+	NSFileProviderItem item = nil;
+
 	OCLogDebug(@"[FP] Stop providing file at %@", url);
+
+	if ((itemIdentifier = [self persistentIdentifierForItemAtURL:url]) != nil)
+	{
+		 if ((item = [self itemForIdentifier:itemIdentifier error:&error]) != nil)
+		 {
+			NSArray <NSProgress *> *downloadProgress = nil;
+
+		 	// Cancel download if the item is currently downloading
+		 	if (item.isDownloading)
+		 	{
+		 		if ((downloadProgress = [self.core progressForItem:(OCItem *)item matchingEventType:OCEventTypeDownload]) != nil)
+		 		{
+		 			[downloadProgress makeObjectsPerformSelector:@selector(cancel)];
+				}
+			}
+
+			OCLogDebug(@"[FP] Item %@ is downloading %d: %@", item, item.isDownloading, downloadProgress);
+		 }
+	}
 
 	// ### Apple template comments: ###
 
