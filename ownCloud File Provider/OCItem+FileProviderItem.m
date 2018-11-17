@@ -68,22 +68,28 @@ static NSMutableDictionary<OCFileID, NSError *> *sOCItemUploadingErrors;
 
 - (NSFileProviderItemCapabilities)capabilities
 {
+	OCItemPermissions permissions = self.permissions;
+
 	switch (self.type)
 	{
 		case OCItemTypeFile:
-			return (NSFileProviderItemCapabilitiesAllowsAll);
-//			return (NSFileProviderItemCapabilitiesAllowsReparenting |
-//				NSFileProviderItemCapabilitiesAllowsRenaming |
-//				NSFileProviderItemCapabilitiesAllowsTrashing |
-//				NSFileProviderItemCapabilitiesAllowsDeleting);
+			return (
+				NSFileProviderItemCapabilitiesAllowsReading |
+				((permissions & OCItemPermissionWritable) 	? NSFileProviderItemCapabilitiesAllowsWriting     : 0) |
+				((permissions & OCItemPermissionMove)     	? NSFileProviderItemCapabilitiesAllowsReparenting : 0) |
+				((permissions & OCItemPermissionRename)   	? NSFileProviderItemCapabilitiesAllowsRenaming    : 0) |
+				((permissions & OCItemPermissionDelete) 	? NSFileProviderItemCapabilitiesAllowsTrashing    : 0) |
+				((permissions & OCItemPermissionDelete) 	? NSFileProviderItemCapabilitiesAllowsDeleting    : 0)
+			);
 		break;
 
 		case OCItemTypeCollection:
 			return (NSFileProviderItemCapabilitiesAllowsContentEnumerating |
-				NSFileProviderItemCapabilitiesAllowsReparenting |
-				NSFileProviderItemCapabilitiesAllowsRenaming |
-				NSFileProviderItemCapabilitiesAllowsDeleting |
-				NSFileProviderItemCapabilitiesAllowsAddingSubItems);
+				((permissions & OCItemPermissionMove)     					? NSFileProviderItemCapabilitiesAllowsReparenting 	: 0) |
+				((permissions & OCItemPermissionRename)   					? NSFileProviderItemCapabilitiesAllowsRenaming    	: 0) |
+				((permissions & OCItemPermissionDelete) 				   	? NSFileProviderItemCapabilitiesAllowsDeleting    	: 0) |
+				((permissions & (OCItemPermissionCreateFile|OCItemPermissionCreateFolder)) 	? NSFileProviderItemCapabilitiesAllowsAddingSubItems 	: 0)
+			);
 		break;
 	}
 
