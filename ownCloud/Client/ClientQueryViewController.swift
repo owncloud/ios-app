@@ -149,6 +149,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		let actionsBarButton: UIBarButtonItem = UIBarButtonItem(title: "● ● ●", style: .done, target: self, action: #selector(uploadsBarButtonPressed))
 		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .normal)
+		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .highlighted)
 		self.navigationItem.rightBarButtonItem = actionsBarButton
 	}
 
