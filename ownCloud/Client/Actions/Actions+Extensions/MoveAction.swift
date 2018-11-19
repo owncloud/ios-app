@@ -36,19 +36,22 @@ class MoveAction : Action {
 			return
 		}
 
-		let item = context.items[0]
+		let items = context.items
 
 		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", completion: { (selectedDirectory) in
-			if let progress = self.core.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
-				if error != nil {
-					self.completionHandler?(error)
-				} else {
-					self.completionHandler?(nil)
-				}
 
-			}) {
-				self.progressHandler?(progress)
-			}
+			items.forEach({ (item) in
+				if let progress = self.core.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
+					if error != nil {
+						self.completionHandler?(error)
+					} else {
+						self.completionHandler?(nil)
+					}
+
+				}) {
+					self.progressHandler?(progress)
+				}
+			})
 		})
 
 		let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)
