@@ -960,11 +960,9 @@ extension ClientQueryViewController: UIImagePickerControllerDelegate {
 			name = resources[0].originalFilename
 		}
 
-		guard name != nil, url != nil else {
-			return
+		if name != nil, url != nil {
+			upload(itemURL: url!, name: name!)
 		}
-
-		upload(itemURL: url!, name: name!)
 
 		OnMainThread {
 			picker.dismiss(animated: true)
