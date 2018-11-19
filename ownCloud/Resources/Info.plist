@@ -34,13 +34,13 @@
 		<true/>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>We need this so that you can upload photos and videos from your photo library</string>
+	<string>This permission is needed by the ownCloud app to upload media files to your server.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Unlock the app without entering the passcode.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>We need this so that you can upload photos and videos from your photo library</string>
+	<string>This permission is needed by the ownCloud app to upload photos and videos from your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need this so that you can upload photos and videos from your photo library</string>
+	<string>This permission is needed by the ownCloud app to upload photos and videos from your photo library.</string>
 	<key>OCAppGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>OCAppIdentifierPrefix</key>

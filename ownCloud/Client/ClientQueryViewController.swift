@@ -696,7 +696,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				PHPhotoLibrary.requestAuthorization({ newStatus in
 
 					if newStatus == .denied {
-						let alert = UIAlertController(title: "ownCloud does not have permissons".localized, message: "We need this so that you can upload photos and videos from your photo library".localized, preferredStyle: .alert)
+						let alert = UIAlertController(title: "ownCloud does not have permissons".localized, message: "This permission is needed by the ownCloud app to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
 
 						let settingAction = UIAlertAction(title: "Settings".localized, style: .default, handler: { _ in
 							UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
@@ -941,8 +941,8 @@ extension ClientQueryViewController: UIImagePickerControllerDelegate {
 
 	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
 
-		var name: String = "test.jpg"
-		var url: URL = URL(string: "https://demo.owncloud.org")!
+		var name: String?
+		var url: URL?
 
 		if let imageURL = info[UIImagePickerControllerImageURL] as? URL {
 			name = imageURL.lastPathComponent
@@ -959,7 +959,11 @@ extension ClientQueryViewController: UIImagePickerControllerDelegate {
 			name = resources[0].originalFilename
 		}
 
-		upload(itemURL: url, name: name)
+		guard name != nil, url != nil else {
+			return
+		}
+
+		upload(itemURL: url!, name: name!)
 
 		OnMainThread {
 			picker.dismiss(animated: true)
