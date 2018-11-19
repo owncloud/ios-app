@@ -53,14 +53,6 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
         navigationItem.searchController =  searchController
         navigationItem.hidesSearchBarWhenScrolling = false
 
-        NotificationCenter.default.addObserver(self, selector: #selector(handleDidBeginFind),
-                                               name: .PDFDocumentDidBeginFind,
-                                               object: nil)
-
-        NotificationCenter.default.addObserver(self, selector: #selector(handleDidEndFind),
-                                               name: .PDFDocumentDidEndFind,
-                                               object: nil)
-
         NotificationCenter.default.addObserver(self, selector: #selector(handleDidFindMatch),
                                                name: .PDFDocumentDidFindMatch,
                                                object: nil)
@@ -143,21 +135,12 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
         self.dismissSearch()
     }
 
-    // MARK: - Norification observers
-    @objc func handleDidBeginFind(notification: NSNotification) {
-        self.tableView.separatorStyle = .none
-    }
-
-    @objc func handleDidEndFind(notification: NSNotification) {
-        self.tableView.separatorStyle = .singleLine
-    }
-
     @objc func handleDidFindMatch(notification: NSNotification) {
         if let selection = notification.userInfo?["PDFDocumentFoundSelection"] as? PDFSelection {
             // Add new match to the list and update table view
             self.matches.append(selection)
             let indexPath = IndexPath(row: (self.matches.count - 1), section: 0)
-            self.tableView.insertRows(at: [indexPath], with: .bottom)
+            self.tableView.insertRows(at: [indexPath], with: .automatic)
         }
     }
 
