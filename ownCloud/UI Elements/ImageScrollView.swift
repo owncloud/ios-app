@@ -49,6 +49,10 @@ class ImageScrollView: UIScrollView {
 
 	// MARK: - Manage Scale
 	private func centerImage() {
+		guard imageView != nil else {
+			return
+		}
+
 		let boundsSize: CGSize = bounds.size
 		var frameToCenter: CGRect = imageView?.frame ?? .zero
 
