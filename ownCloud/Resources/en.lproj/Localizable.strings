@@ -81,8 +81,8 @@
 "Deleting '%@'" = "Deleting '%@'";
 "Renaming to %@" = "Renaming to %@";
 "Upload from your photo library" = "Upload from your photo library";
-"ownCloud does not have permissons" = "ownCloud does not have permissons";
-"This permission is needed by the ownCloud app to upload photos and videos from your photo library." = "This permission is needed by the ownCloud app to upload photos and videos from your photo library.";
+"Missing permissions" = "Missing permissions";
+"This permission is needed to upload photos and videos from your photo library." = "This permission is needed to upload photos and videos from your photo library.";
 "Not now" = "Not now";
 "Upload file" = "Upload file";
 

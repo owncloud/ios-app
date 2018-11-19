@@ -697,7 +697,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				PHPhotoLibrary.requestAuthorization({ newStatus in
 
 					if newStatus == .denied {
-						let alert = UIAlertController(title: "ownCloud does not have permissons".localized, message: "This permission is needed by the ownCloud app to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
+						let alert = UIAlertController(title: "Missing permissions".localized, message: "This permission is needed to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
 
 						let settingAction = UIAlertAction(title: "Settings".localized, style: .default, handler: { _ in
 							UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)

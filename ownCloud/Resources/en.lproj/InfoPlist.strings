@@ -17,7 +17,7 @@
  */
 
 "NSFaceIDUsageDescription" = "Unlock the app without entering the passcode.";
-"NSAppleMusicUsageDescription" = " This permission is needed by the ownCloud app to upload media files to your server.";
-"NSPhotoLibraryAddUsageDescription" = "This permission is needed by the ownCloud app to upload photos and videos from your photo library.";
-"NSPhotoLibraryUsageDescription" = "This permission is needed by the ownCloud app to upload photos and videos from your photo library.";
+"NSAppleMusicUsageDescription" = "This permission is needed for uploading media files to your server.";
+"NSPhotoLibraryAddUsageDescription" = "This permission is needed to upload photos and videos from your photo library.";
+"NSPhotoLibraryUsageDescription" = "This permission is needed to upload photos and videos from your photo library.";
 
