@@ -43,8 +43,6 @@ class DisplayViewController: UIViewController {
 
 	private let iconImageSize: CGSize = CGSize(width: 200.0, height: 200.0)
 
-	private var interactionController: UIDocumentInteractionController?
-
 	// MARK: - Configuration
 	weak var rootItem: OCItem!
 	weak var item: OCItem!
@@ -315,35 +313,14 @@ class DisplayViewController: UIViewController {
 
 	@objc func optionsBarButtonPressed() {
 
-		let tableViewController = MoreStaticTableViewController(style: .grouped)
-		let header = MoreViewHeader(for: item, with: core)
-		let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
-
-		let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
-
 		let actionsLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: nil)
-		let actionContext = ActionContext(viewController: self, core: core, items: [item, rootItem], location: actionsLocation)
-		let actions = Action.sortedApplicableActions(for: actionContext)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
-		actions.forEach({
-			$0.actionWillRunHandler = {
-				moreViewController.dismiss(animated: true)
-			}
+		let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: { [weak self] _ in
+			self?.navigationController?.popViewController(animated: true)
 		})
 
-		let actionsRows: [StaticTableViewRow] = actions.compactMap({return $0.provideStaticRow()})
-
-		tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
-
 		self.present(asCard: moreViewController, animated: true)
-
-	}
-}
-
-// MARK: - UIDocumentInteractionControllerDelegate
-extension DisplayViewController: UIDocumentInteractionControllerDelegate {
-	func documentInteractionControllerDidDismissOpenInMenu(_ controller: UIDocumentInteractionController) {
-		self.interactionController = nil
 	}
 }
 

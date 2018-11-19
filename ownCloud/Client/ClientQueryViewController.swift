@@ -674,30 +674,12 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 			return
 		}
 
-		let tableViewController = MoreStaticTableViewController(style: .grouped)
-		let header = MoreViewHeader(for: item, with: core)
-		let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
-
-		let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
-
 		let actionsLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: nil)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
-		let actions = Action.sortedApplicableActions(for: actionContext)
-
-		actions.forEach({
-			$0.actionWillRunHandler = {
-				moreViewController.dismiss(animated: true)
-			}
-
-			$0.progressHandler = { [weak self] progress in
-				self?.progressSummarizer?.startTracking(progress: progress)
-			}
+		let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: { [weak self] progress in
+			self?.progressSummarizer?.startTracking(progress: progress)
 		})
-
-		let actionsRows: [StaticTableViewRow] = actions.compactMap({return $0.provideStaticRow()})
-
-		tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
 
 		self.present(asCard: moreViewController, animated: true)
 	}

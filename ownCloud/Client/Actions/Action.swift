@@ -160,6 +160,34 @@ class Action : NSObject {
 		return sortedActions
 	}
 
+	// MARK: - Provide Card view controller
+	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ((Progress) -> Void)? = nil, completionHandler: ((Error?)-> Void)? = nil) -> UIViewController {
+
+		let tableViewController = MoreStaticTableViewController(style: .grouped)
+		let header = MoreViewHeader(for: item, with: context.core!)
+		let moreViewController = MoreViewController(item: item, core: context.core!, header: header, viewController: tableViewController)
+
+		let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
+
+		let actions = Action.sortedApplicableActions(for: context)
+
+		actions.forEach({
+			$0.actionWillRunHandler = {
+				moreViewController.dismiss(animated: true)
+			}
+
+			$0.progressHandler = progressHandler
+
+			$0.completionHandler = completionHandler
+		})
+
+		let actionsRows: [StaticTableViewRow] = actions.compactMap({return $0.provideStaticRow()})
+
+		tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
+
+		return moreViewController
+	}
+
 	// MARK: - Action metadata
 	var context : ActionContext
 	var actionExtension: ActionExtension
@@ -181,6 +209,11 @@ class Action : NSObject {
 
 	// MARK: - Action implementation
 	func willRun() {
+
+		if Thread.isMainThread == false {
+			Log.warning("The Run method of the action \(Action.identifier!.rawValue) is not called inside the main thread")
+		}
+
 		if actionWillRunHandler != nil {
 			actionWillRunHandler!()
 		}

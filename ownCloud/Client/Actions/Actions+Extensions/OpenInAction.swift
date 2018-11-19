@@ -42,25 +42,22 @@ class OpenInAction: Action {
 
 		let controller = DownloadFileProgressHUDViewController()
 
-		OnMainThread {
-			controller.present(on: viewController) {
-				if let progress = self.core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
-					if error != nil {
-						Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
-						self.completionHandler?(error!)
-					} else {
-						OnMainThread {
-							controller.dismiss(animated: true, completion: {
-								self.completionHandler?(nil)
-								self.interactionController = UIDocumentInteractionController(url: file!.url)
-								self.interactionController?.delegate = self
-								self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
-							})
-						}
+		controller.present(on: viewController) {
+			if let progress = self.core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
+				if error != nil {
+					Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
+					self.completionHandler?(error!)
+				} else {
+					OnMainThread {
+						controller.dismiss(animated: true, completion: {
+							self.interactionController = UIDocumentInteractionController(url: file!.url)
+							self.interactionController?.delegate = self
+							self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
+						})
 					}
-				}) {
-					controller.attach(progress: progress)
 				}
+			}) {
+				controller.attach(progress: progress)
 			}
 		}
 	}
