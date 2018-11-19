@@ -652,7 +652,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	}
 
-	func upload(itemURL: URL, name: String, viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
+	func upload(itemURL: URL, name: String, completionHandler: ClientActionCompletionHandler? = nil) {
 		if let progress = core.importFileNamed(name, at: query.rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { [weak self](error, _ core, _ item, _) in
 			if error != nil {
 				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
@@ -715,16 +715,16 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			}
 		})
 
-		let locationsDirectory = UIAlertAction(title: "Upload file".localized, style: .default) { _ in
-			let documentDirectory = UIDocumentPickerViewController(documentTypes: [kUTTypeData as String], in: .import)
-			documentDirectory.delegate = self
-			documentDirectory.allowsMultipleSelection = true
-			self.present(documentDirectory, animated: true)
+		let uploadFileAction = UIAlertAction(title: "Upload file".localized, style: .default) { _ in
+			let documentPickerVC = UIDocumentPickerViewController(documentTypes: [kUTTypeData as String], in: .import)
+			documentPickerVC.delegate = self
+			documentPickerVC.allowsMultipleSelection = true
+			self.present(documentPickerVC, animated: true)
 		}
 
 		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
 		controller.addAction(photoLibrary)
-		controller.addAction(locationsDirectory)
+		controller.addAction(uploadFileAction)
 		controller.addAction(cancelAction)
 
 		if let popoverController = controller.popoverPresentationController {
