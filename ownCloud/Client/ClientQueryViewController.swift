@@ -716,10 +716,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		})
 
 		let uploadFileAction = UIAlertAction(title: "Upload file".localized, style: .default) { _ in
-			let documentPickerVC = UIDocumentPickerViewController(documentTypes: [kUTTypeData as String], in: .import)
-			documentPickerVC.delegate = self
-			documentPickerVC.allowsMultipleSelection = true
-			self.present(documentPickerVC, animated: true)
+			let documentPickerViewController = UIDocumentPickerViewController(documentTypes: [kUTTypeData as String], in: .import)
+			documentPickerViewController.delegate = self
+			documentPickerViewController.allowsMultipleSelection = true
+			self.present(documentPickerViewController, animated: true)
 		}
 
 		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
