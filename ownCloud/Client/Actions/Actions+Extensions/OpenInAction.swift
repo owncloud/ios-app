@@ -49,7 +49,9 @@ class OpenInAction: Action {
 			if let progress = self.core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
-					self.completionHandler?(error!)
+					controller.dismiss(animated: true, completion: {
+						self.completionHandler?(error!)
+					})
 				} else {
 					OnMainThread {
 						controller.dismiss(animated: true, completion: {
