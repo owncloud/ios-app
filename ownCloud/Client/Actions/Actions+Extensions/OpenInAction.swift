@@ -50,7 +50,7 @@ class OpenInAction: Action {
 				if error != nil {
 					Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
 					controller.dismiss(animated: true, completion: {
-						self.completionHandler?(error!)
+						self.completed(with: error)
 					})
 				} else {
 					OnMainThread {
@@ -63,6 +63,7 @@ class OpenInAction: Action {
 				}
 			}) {
 				controller.attach(progress: progress)
+				self.publish(progress: progress)
 			}
 		}
 	}

@@ -62,13 +62,12 @@ class RenameAction : Action {
 			if let progress = self.core.move(item, to: rootItem!, withName: newName!, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
-
-					self.completionHandler?(error!)
+					self.completed(with: error)
 				} else {
-					self.completionHandler?(nil)
+					self.completed()
 				}
 			}) {
-				self.progressHandler?(progress)
+				self.publish(progress: progress)
 			}
 		})
 

@@ -34,7 +34,7 @@ class DuplicateAction : Action {
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0 else {
-			completionHandler?(NSError(ocError: .errorInsufficientParameters))
+			completed(with: NSError(ocError: OCError.errorItemNotFound))
 			return
 		}
 
@@ -42,7 +42,7 @@ class DuplicateAction : Action {
 		let rootItem = item.parentItem(from: core)
 
 		guard rootItem != nil else {
-			completionHandler?(NSError(ocError: OCError.errorItemNotFound))
+			completed(with: NSError(ocError: OCError.errorItemNotFound))
 			return
 		}
 
@@ -62,12 +62,12 @@ class DuplicateAction : Action {
 		if let progress = self.core.copy(item, to: rootItem!, withName: name, options: nil, resultHandler: { (error, _, item, _) in
 			if error != nil {
 				Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
-				self.completionHandler?(error!)
+				self.completed(with: error)
 			} else {
-				self.completionHandler?(nil)
+				self.completed()
 			}
 		}) {
-			progressHandler?(progress)
+			publish(progress: progress)
 		}
 	}
 }

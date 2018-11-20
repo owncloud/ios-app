@@ -62,14 +62,14 @@ class DeleteAction : Action {
 					if let progress = self.core.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
 						if error != nil {
 							Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
-							self.completionHandler?(error!)
+							self.completed(with: error)
 						}
 					}) {
-						self.progressHandler?(progress)
+						self.publish(progress: progress)
 					}
 				}
 
-				self.completionHandler?(nil)
+				self.completed()
 		})
 
 		viewController.present(alertController, animated: true)

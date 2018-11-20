@@ -43,13 +43,13 @@ class MoveAction : Action {
 			items.forEach({ (item) in
 				if let progress = self.core.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
 					if error != nil {
-						self.completionHandler?(error)
+						self.completed(with: error)
 					} else {
-						self.completionHandler?(nil)
+						self.completed()
 					}
 
 				}) {
-					self.progressHandler?(progress)
+					self.publish(progress: progress)
 				}
 			})
 		})

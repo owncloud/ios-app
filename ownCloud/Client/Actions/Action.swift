@@ -220,8 +220,18 @@ class Action : NSObject {
 	}
 
 	func run() {
+		completed()
+	}
+
+	func completed(with error: Error? = nil) {
 		if completionHandler != nil {
-			completionHandler!(nil)
+			completionHandler!(error)
+		}
+	}
+
+	func publish(progress: Progress) {
+		if progressHandler != nil {
+			progressHandler!(progress)
 		}
 	}
 
