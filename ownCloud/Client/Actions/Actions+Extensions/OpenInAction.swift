@@ -27,6 +27,9 @@ class OpenInAction: Action {
 		if forContext.items.contains(where: {$0.type == .collection}) {
 			return .none
 		}
+		if forContext.items.count > 1 {
+ 			return .none
+ 		}
 		return .first
 	}
 
