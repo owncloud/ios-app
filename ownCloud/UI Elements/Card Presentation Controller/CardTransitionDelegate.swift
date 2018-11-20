@@ -19,7 +19,7 @@
 import UIKit
 
 final class CardTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
-	private let vcToPresent: UIViewController
+	private weak var vcToPresent: UIViewController?
 	private weak var alreadyPresentedVC: UIViewController?
 
 	init(viewControllerToPresent: UIViewController, presentingViewController: UIViewController) {

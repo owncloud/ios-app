@@ -750,33 +750,33 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 
 			let tableViewController = MoreStaticTableViewController(style: .grouped)
 			let header = MoreViewHeader(for: item, with: core)
-			let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
+			let moreViewController = MoreViewController(header: header, viewController: tableViewController)
 
 			let title = NSAttributedString(string: "Actions", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
-			let deleteRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { (_, _) in
-				moreViewController.dismiss(animated: true, completion: {
-					self.delete(item)
+			let deleteRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self, weak moreViewController] (_, _) in
+				moreViewController?.dismiss(animated: true, completion: {
+					self?.delete(item)
 				})
 			}, title: "Delete".localized, style: .destructive)
 
-			let renameRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
-				moreViewController.dismiss(animated: true, completion: {
+			let renameRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self, weak moreViewController] (_, _) in
+				moreViewController?.dismiss(animated: true, completion: {
 					self?.rename(item)
 				})
 			}, title: "Rename".localized, style: .plainNonOpaque)
 
-			let moveRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
-				moreViewController.dismiss(animated: true, completion: {
+			let moveRow: StaticTableViewRow = StaticTableViewRow(buttonWithAction: { [weak self, weak moreViewController] (_, _) in
+				moreViewController?.dismiss(animated: true, completion: {
 					self?.move(item)
 				})
-				}, title: "Move".localized, style: .plainNonOpaque)
+			}, title: "Move".localized, style: .plainNonOpaque)
 
 			tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: [
 				renameRow,
 				moveRow,
 				deleteRow
-				]))
+			]))
 
 			self.present(asCard: moreViewController, animated: true)
 		}
