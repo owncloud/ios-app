@@ -99,8 +99,8 @@ class SecuritySettingsSection: SettingsSection {
 	func createRows() {
 
 		// Creation of the frequency row.
-		frequencyRow = StaticTableViewRow(subtitleRowWithAction: { (row, _) in
-			if let vc = self.viewController {
+		frequencyRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (row, _) in
+			if let vc = self?.viewController {
 
 				let newVC = StaticTableViewController(style: .grouped)
 				let frequencySection = StaticTableViewSection(headerTitle: "Lock application".localized, footerTitle: nil)
@@ -113,10 +113,10 @@ class SecuritySettingsSection: SettingsSection {
 
 				frequencySection.add(radioGroupWithArrayOfLabelValueDictionaries: radioButtons, radioAction: { (row, _) in
 					if let rawFrequency = row.value! as? Int, let frequency = SecurityAskFrequency.init(rawValue: rawFrequency) {
-						self.frequency = frequency
-						self.frequencyRow?.cell?.detailTextLabel?.text = frequency.toString()
+						self?.frequency = frequency
+						self?.frequencyRow?.cell?.detailTextLabel?.text = frequency.toString()
 					}
-				}, groupIdentifier: "frequency-group-identifier", selectedValue: self.frequency.rawValue, animated: true)
+				}, groupIdentifier: "frequency-group-identifier", selectedValue: self!.frequency.rawValue, animated: true)
 
 				newVC.addSection(frequencySection)
 				vc.navigationController?.pushViewController(newVC, animated: true)
@@ -125,9 +125,9 @@ class SecuritySettingsSection: SettingsSection {
 		}, title: "Lock application".localized, subtitle: frequency.toString(), accessoryType: .disclosureIndicator, identifier: "lockFrequency")
 
 		// Creation of the passcode row.
-		passcodeRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+		passcodeRow = StaticTableViewRow(switchWithAction: { [weak self] (row, sender) in
 			if let passcodeSwitch = sender as? UISwitch {
-				if let viewController = self.viewController {
+				if let viewController = row.viewController {
 
 					var passcodeViewController: PasscodeViewController?
 					var defaultMessage : String?
@@ -135,9 +135,9 @@ class SecuritySettingsSection: SettingsSection {
 					// Handlers
 					let cancelHandler:PasscodeViewControllerCancelHandler = { (passcodeViewController: PasscodeViewController) in
 						passcodeViewController.dismiss(animated: true, completion: {
-							self.isPasscodeSecurityEnabled = !passcodeSwitch.isOn
+							self?.isPasscodeSecurityEnabled = !passcodeSwitch.isOn
 						})
-						self.passcodeFromFirstStep = nil
+						self?.passcodeFromFirstStep = nil
 					}
 
 					if passcodeSwitch.isOn {
@@ -153,8 +153,8 @@ class SecuritySettingsSection: SettingsSection {
 								// Success
 								AppLockManager.shared.passcode = nil
 								passcodeViewController.dismiss(animated: true, completion: {
-									self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
-									self.updateUI()
+									self?.isPasscodeSecurityEnabled = passcodeSwitch.isOn
+									self?.updateUI()
 								})
 							} else {
 								// Error
@@ -164,20 +164,20 @@ class SecuritySettingsSection: SettingsSection {
 							}
 						} else {
 							// Add
-							if self.passcodeFromFirstStep == nil {
+							if self?.passcodeFromFirstStep == nil {
 								// First step
-								self.passcodeFromFirstStep = passcode
+								self?.passcodeFromFirstStep = passcode
 								passcodeViewController.message = "Repeat code".localized
 								passcodeViewController.passcode = nil
 							} else {
 								// Second step
-								if self.passcodeFromFirstStep == passcode {
+								if self?.passcodeFromFirstStep == passcode {
 									// Passcode right
 									// Save to keychain
 									AppLockManager.shared.passcode = passcode
 									passcodeViewController.dismiss(animated: true, completion: {
-										self.isPasscodeSecurityEnabled = passcodeSwitch.isOn
-										self.updateUI()
+										self?.isPasscodeSecurityEnabled = passcodeSwitch.isOn
+										self?.updateUI()
 									})
 								} else {
 									//Passcode is not the same
@@ -185,7 +185,7 @@ class SecuritySettingsSection: SettingsSection {
 									passcodeViewController.errorMessage = "The entered codes are different".localized
 									passcodeViewController.passcode = nil
 								}
-								self.passcodeFromFirstStep = nil
+								self?.passcodeFromFirstStep = nil
 							}
 						}
 					})
@@ -198,20 +198,20 @@ class SecuritySettingsSection: SettingsSection {
 
 		// Creation of the biometrical row.
 		if let biometricalSecurityName = LAContext().supportedBiometricsAuthenticationName() {
-			biometricalRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+			biometricalRow = StaticTableViewRow(switchWithAction: { [weak self] (row, sender) in
 				if let biometricalSwitch = sender as? UISwitch {
-					if let viewController = self.viewController {
+					if let viewController = row.viewController {
 						var passcodeViewController: PasscodeViewController?
 
 						passcodeViewController = PasscodeViewController(cancelHandler: { (passcodeViewController: PasscodeViewController) in
 							passcodeViewController.dismiss(animated: true, completion: {
-								biometricalSwitch.setOn(self.isBiometricalSecurityEnabled, animated: true)
+								biometricalSwitch.setOn(self!.isBiometricalSecurityEnabled, animated: true)
 							})
 						}, completionHandler: { (passcodeViewController: PasscodeViewController, passcode: String) in
 							if passcode == AppLockManager.shared.passcode {
 								// Success
 								passcodeViewController.dismiss(animated: true, completion: {
-									self.isBiometricalSecurityEnabled = biometricalSwitch.isOn
+									self?.isBiometricalSecurityEnabled = biometricalSwitch.isOn
 								})
 							} else {
 								// Error
