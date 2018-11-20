@@ -486,39 +486,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	// MARK: - Search
 	var searchController: UISearchController?
 
-	func createFolder(viewDidAppearHandler: ClientActionVieDidAppearHandler? = nil, completionHandler: ClientActionCompletionHandler? = nil) {
-		let createFolderVC = NamingViewController( with: core, defaultName: "New Folder".localized, stringValidator: { name in
-			if name.contains("/") || name.contains("\\") {
-				return (false, "File name cannot contain / or \\")
-			} else {
-				return (true, nil)
-			}
-		}, completion: { newName, _ in
-
-			guard newName != nil else {
-				return
-			}
-
-			if let progress = self.core.createFolder(newName!, inside: self.query.rootItem, options: nil, resultHandler: { (error, _, _, _) in
-				if error != nil {
-					Log.error("Error \(String(describing: error)) creating folder \(String(describing: newName))")
-					completionHandler?(false)
-				} else {
-					completionHandler?(true)
-				}
-			}) {
-				self.progressSummarizer?.startTracking(progress: progress)
-			}
-		})
-
-		createFolderVC.navigationItem.title = "Create folder".localized
-
-		let createFolderNavigationVC = ThemeNavigationController(rootViewController: createFolderVC)
-		createFolderNavigationVC.modalPresentationStyle = .overFullScreen
-
-		self.present(createFolderNavigationVC, animated: true, completion: viewDidAppearHandler)
-	}
-
 	// MARK: - Navigation Bar Actions
 	@objc func uploadsBarButtonPressed(_ sender: UIBarButtonItem) {
 
@@ -637,7 +604,6 @@ extension ClientQueryViewController : OCQueryDelegate {
 // MARK: - SortBar Delegate
 extension ClientQueryViewController : SortBarDelegate {
 	func sortBar(_ sortBar: SortBar, leftButtonPressed: UIButton) {
-		self.createFolder()
 	}
 
 	func sortBar(_ sortBar: SortBar, rightButtonPressed: UIButton) {

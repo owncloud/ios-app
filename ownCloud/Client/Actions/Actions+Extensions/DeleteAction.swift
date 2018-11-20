@@ -22,7 +22,7 @@ class DeleteAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.delete") }
 	override class var category : ActionCategory? { return .destructive }
 	override class var name : String? { return "Delete".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .tableRow] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .tableRow, .moreFolder] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {

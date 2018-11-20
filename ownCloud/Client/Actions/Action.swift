@@ -220,7 +220,7 @@ class Action : NSObject {
 		}
 	}
 
-	func run() {
+	@objc func run() {
 		completed()
 	}
 

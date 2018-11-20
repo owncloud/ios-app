@@ -22,7 +22,7 @@ class RenameAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.rename") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Rename".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
