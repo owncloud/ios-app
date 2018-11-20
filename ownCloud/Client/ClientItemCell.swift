@@ -99,6 +99,11 @@ class ClientItemCell: ThemeTableViewCell {
 		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
 		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
 		moreButton.setContentHuggingPriority(UILayoutPriority.required, for: UILayoutConstraintAxis.horizontal)
+
+		NSLayoutConstraint.activate([
+			iconView.topAnchor.constraint(greaterThanOrEqualTo: self.topAnchor, constant: 10),
+			iconView.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -10)
+		])
 	}
 
 	// MARK: - Present item
