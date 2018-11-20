@@ -604,6 +604,17 @@ extension ClientQueryViewController : OCQueryDelegate {
 // MARK: - SortBar Delegate
 extension ClientQueryViewController : SortBarDelegate {
 	func sortBar(_ sortBar: SortBar, leftButtonPressed: UIButton) {
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .sortBar)
+		let actionContext = ActionContext(viewController: self, core: core, items: [query.rootItem], location: actionsLocation)
+
+		let actions = Action.sortedApplicableActions(for: actionContext)
+
+		let createFolderAction = actions.first
+		createFolderAction?.progressHandler = { [weak self] progess in
+			self?.progressSummarizer?.startTracking(progress: progess)
+		}
+
+		actions.first?.run()
 	}
 
 	func sortBar(_ sortBar: SortBar, rightButtonPressed: UIButton) {

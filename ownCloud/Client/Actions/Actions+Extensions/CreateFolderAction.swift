@@ -26,7 +26,11 @@ class CreateFolderAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		// Examine items in context
+
+		if forContext.items.count > 1 {
+			return .none
+		}
+
 		return .first
 	}
 
@@ -37,10 +41,9 @@ class CreateFolderAction : Action {
 			return
 		}
 
-		let item = context.items[0]
-		let rootItem = item.parentItem(from: core)
+		let item = context.items.first
 
-		guard rootItem != nil else {
+		guard item != nil else {
 			completed(with: NSError(ocError: OCError.errorItemNotFound))
 			return
 		}
@@ -61,7 +64,7 @@ class CreateFolderAction : Action {
 				return
 			}
 
-			if let progress = self.core.createFolder(newName!, inside: rootItem!, options: nil, resultHandler: { (error, _, _, _) in
+			if let progress = self.core.createFolder(newName!, inside: item!, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.error("Error \(String(describing: error)) creating folder \(String(describing: newName))")
 					self.completed(with: error)
