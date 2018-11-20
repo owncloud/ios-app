@@ -21,7 +21,7 @@ import ownCloudSDK
 
 class ClientRootViewController: UITabBarController {
 	let bookmark : OCBookmark
-	var core : OCCore?
+	weak var core : OCCore?
 	var filesNavigationController : ThemeNavigationController?
 	var progressBar : CollapsibleProgressBar?
 	var progressSummarizer : ProgressSummarizer?

@@ -26,6 +26,8 @@
 	<string>$(AppIdentifierPrefix)</string>
 	<key>OCKeychainAccessGroupIdentifier</key>
 	<string>group.com.owncloud.ios-app</string>
+	<key>OCHasFileProvider</key>
+	<true/>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionFileProviderDocumentGroup</key>
