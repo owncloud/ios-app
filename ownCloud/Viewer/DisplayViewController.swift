@@ -313,7 +313,7 @@ class DisplayViewController: UIViewController {
 
 	@objc func optionsBarButtonPressed() {
 
-		let actionsLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: nil)
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
 		let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: { [weak self] _ in
