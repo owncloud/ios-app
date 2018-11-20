@@ -53,12 +53,28 @@ class FileProviderInterfaceManager: NSObject {
 				if let bookmarks = OCBookmarkManager.shared.bookmarks as? [OCBookmark] {
 					var bookmarkUUIDStrings : [String] = []
 					var bookmarksByUUIDString : [String:OCBookmark] = [:]
+					var displayNamesByUUIDString : [String:String] = [:]
+					var usedBookmarkNames : Set<String> = Set()
 					let waitForManagerGroup = DispatchGroup()
 
 					// Collect info on bookmarks
 					for bookmark in bookmarks {
-						bookmarkUUIDStrings.append(bookmark.uuid.uuidString)
-						bookmarksByUUIDString[bookmark.uuid.uuidString] = bookmark
+						let bookmarkUUIDString = bookmark.uuid.uuidString
+
+						bookmarkUUIDStrings.append(bookmarkUUIDString)
+						bookmarksByUUIDString[bookmarkUUIDString] = bookmark
+
+						// Make sure displayName is unique
+						var displayName = bookmark.shortName
+						var iteration = 1
+
+						while usedBookmarkNames.contains(displayName) {
+							iteration += 1
+							displayName = bookmark.shortName + " \(iteration)"
+						}
+
+						usedBookmarkNames.insert(displayName)
+						displayNamesByUUIDString[bookmarkUUIDString] = displayName
 					}
 
 					for domain in fileProviderDomains {
@@ -67,7 +83,7 @@ class FileProviderInterfaceManager: NSObject {
 
 						if let removeAtIndex = bookmarkUUIDStrings.index(of: domainIdentifierString) {
 							// Domain is already registered for this bookmark -> check if name also still matches
-							if bookmarksByUUIDString[domainIdentifierString]?.shortName == domain.displayName {
+							if displayNamesByUUIDString[domainIdentifierString] == domain.displayName {
 								// Identical -> no changes needed for this bookmark
 								bookmarkUUIDStrings.remove(at: removeAtIndex)
 							} else {
@@ -97,9 +113,10 @@ class FileProviderInterfaceManager: NSObject {
 					// Add domains for bookmarks
 					for bookmarkUUIDToAdd in bookmarkUUIDStrings {
 						if let bookmark = bookmarksByUUIDString[bookmarkUUIDToAdd] {
-							let newDomain = NSFileProviderDomain(identifier: NSFileProviderDomainIdentifier(rawValue: bookmark.uuid.uuidString),
-											     displayName: bookmark.shortName,
-											     pathRelativeToDocumentStorage: bookmark.uuid.uuidString)
+							// Create new domain
+							let newDomain = NSFileProviderDomain(identifier: NSFileProviderDomainIdentifier(rawValue: bookmarkUUIDToAdd),
+											     displayName: displayNamesByUUIDString[bookmarkUUIDToAdd] ?? bookmark.shortName,
+											     pathRelativeToDocumentStorage: bookmarkUUIDToAdd)
 
 							waitForManagerGroup.enter()
 
