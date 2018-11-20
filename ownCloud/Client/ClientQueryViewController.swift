@@ -49,8 +49,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var initialAppearance : Bool = true
 	var refreshController: UIRefreshControl?
 
-	var interactionController: UIDocumentInteractionController?
-
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 

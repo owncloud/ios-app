@@ -20,7 +20,6 @@ import UIKit
 import ownCloudSDK
 
 struct DisplayViewConfiguration {
-	weak var rootItem: OCItem!
 	weak var item: OCItem!
 	weak var core: OCCore!
 	let state: DisplayViewState
@@ -44,7 +43,6 @@ class DisplayViewController: UIViewController {
 	private let iconImageSize: CGSize = CGSize(width: 200.0, height: 200.0)
 
 	// MARK: - Configuration
-	weak var rootItem: OCItem!
 	weak var item: OCItem!
 	weak var core: OCCore! {
 		didSet {
@@ -327,7 +325,6 @@ class DisplayViewController: UIViewController {
 // MARK: - Public API
 extension DisplayViewController {
 	func configure(_ configuration: DisplayViewConfiguration) {
-		self.rootItem = configuration.rootItem
 		self.core = configuration.core
 		self.item = configuration.item
 		self.state = configuration.state

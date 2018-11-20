@@ -64,9 +64,9 @@ class DisplayHostViewController: UIViewController {
 
 		var configuration: DisplayViewConfiguration
 		if !shouldDownload {
-			configuration = DisplayViewConfiguration(rootItem: rootItem, item: itemToDisplay, core: core, state: .notSupportedMimeType)
+			configuration = DisplayViewConfiguration(item: itemToDisplay, core: core, state: .notSupportedMimeType)
 		} else {
-			configuration = DisplayViewConfiguration(rootItem: rootItem, item: itemToDisplay, core: core, state: .hasNetworkConnection)
+			configuration = DisplayViewConfiguration(item: itemToDisplay, core: core, state: .hasNetworkConnection)
 		}
 
 		viewController.configure(configuration)
