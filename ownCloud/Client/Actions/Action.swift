@@ -58,6 +58,7 @@ extension OCExtensionLocationIdentifier {
 	static let moreItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreItem") //!< Present in "more" card view for a single item
 	static let moreFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreFolder") //!< Present in "more" options for a whole folder
 	static let toolbar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("toolbar") //!< Present in a toolbar
+	static let sortBar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("sortBar") //!< Present in the sort bar on top of file lists
 }
 
 class ActionExtension: OCExtension {

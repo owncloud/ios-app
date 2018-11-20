@@ -22,6 +22,7 @@ class MoveAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.move") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Move".localized }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {

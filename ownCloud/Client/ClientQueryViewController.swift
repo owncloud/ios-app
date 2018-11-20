@@ -286,6 +286,24 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		return true
 	}
 
+ 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		guard let cell = tableView.cellForRow(at: indexPath) as? ClientItemCell, let item = cell.item else {
+			return nil
+		}
+
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .tableRow)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+		let actions = Action.sortedApplicableActions(for: actionContext)
+		actions.forEach({$0.progressHandler = { [weak self] progress in
+			self?.progressSummarizer?.startTracking(progress: progress)
+			}
+		})
+
+		let contextualActions = actions.compactMap({$0.provideContextualAction()})
+		let configuration = UISwipeActionsConfiguration(actions: contextualActions)
+		return configuration
+	}
+
 	func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
 		let item: OCItem = itemAtIndexPath(indexPath)
 
