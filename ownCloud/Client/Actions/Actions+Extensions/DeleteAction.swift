@@ -40,7 +40,7 @@ class DeleteAction : Action {
 
 		let message: String
 		if items.count > 1 {
-			message = "Are you sure you want to delete this items from the server?".localized
+			message = "Are you sure you want to delete these items from the server?".localized
 		} else {
 			message = "Are you sure you want to delete this item from the server?".localized
 		}
