@@ -121,7 +121,7 @@ class LogSettingsViewController: StaticTableViewController {
 					logOutputSection?.add(row: row)
 				}
 
-				logOutputSection?.add(row: StaticTableViewRow(buttonWithAction: { (row, _) in
+				logOutputSection?.add(row: StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
 					if let logFileWriter = OCLogger.shared.writer(withIdentifier: .file) as? OCLogFileWriter {
 						if !FileManager.default.fileExists(atPath: logFileWriter.logFileURL.path) {
 							let alert = UIAlertController(title: "No log file found".localized, message: "The log file can't be shared because no log file could be found or the log file is empty.".localized, preferredStyle: .alert)
@@ -135,7 +135,7 @@ class LogSettingsViewController: StaticTableViewController {
 								}))
 							}
 
-							self.present(alert, animated: true, completion: nil)
+							self?.present(alert, animated: true, completion: nil)
 						} else {
 							let logURL = FileManager.default.temporaryDirectory.appendingPathComponent("ownCloud App Log.txt")
 
