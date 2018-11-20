@@ -674,7 +674,7 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 			return
 		}
 
-		let actionsLocation = OCExtensionLocation(ofType: OCExtensionType.action, identifier: nil)
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
 		let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: { [weak self] progress in
