@@ -129,19 +129,6 @@ class Action : NSObject {
 				return .noMatch
 			}
 
-			// Filter by location identifier i.e. .sortbar
-			let matches = self.locations?.filter({ (identifier) in
-				identifier == context.location?.identifier
-			})
-
-			guard matches != nil else {
-				return .noMatch
-			}
-
-			if matches!.count == 0 {
-				return .noMatch
-			}
-
 			return priority
 
 			// Additional filtering (f.ex. via OCClassSettings, Settings) goes here
