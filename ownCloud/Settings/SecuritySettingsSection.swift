@@ -153,8 +153,8 @@ class SecuritySettingsSection: SettingsSection {
 								// Success
 								AppLockManager.shared.passcode = nil
 								passcodeViewController.dismiss(animated: true, completion: {
-									self!.isPasscodeSecurityEnabled = passcodeSwitch.isOn
-									self!.updateUI()
+									self?.isPasscodeSecurityEnabled = passcodeSwitch.isOn
+									self?.updateUI()
 								})
 							} else {
 								// Error
@@ -211,7 +211,7 @@ class SecuritySettingsSection: SettingsSection {
 							if passcode == AppLockManager.shared.passcode {
 								// Success
 								passcodeViewController.dismiss(animated: true, completion: {
-									self!.isBiometricalSecurityEnabled = biometricalSwitch.isOn
+									self?.isBiometricalSecurityEnabled = biometricalSwitch.isOn
 								})
 							} else {
 								// Error
