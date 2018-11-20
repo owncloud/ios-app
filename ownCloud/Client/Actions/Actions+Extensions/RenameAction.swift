@@ -40,7 +40,12 @@ class RenameAction : Action {
 		}
 
 		let item = context.items[0]
-		let rootItem = item.parentItem(from: core)!
+		let rootItem = item.parentItem(from: core)
+
+		guard rootItem != nil else {
+			self.completionHandler?(NSError(ocError: OCError.errorItemNotFound))
+			return
+		}
 
 		let renameViewController = NamingViewController(with: item, core: self.core, stringValidator: { name in
 			if name.contains("/") || name.contains("\\") {
@@ -54,7 +59,7 @@ class RenameAction : Action {
 				return
 			}
 
-			if let progress = self.core.move(item, to: rootItem, withName: newName!, options: nil, resultHandler: { (error, _, _, _) in
+			if let progress = self.core.move(item, to: rootItem!, withName: newName!, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
 

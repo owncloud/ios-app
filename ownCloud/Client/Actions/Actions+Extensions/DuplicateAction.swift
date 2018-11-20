@@ -39,7 +39,12 @@ class DuplicateAction : Action {
 		}
 
 		let item = context.items[0]
-		let rootItem = item.parentItem(from: core)!
+		let rootItem = item.parentItem(from: core)
+
+		guard rootItem != nil else {
+			completionHandler?(NSError(ocError: OCError.errorItemNotFound))
+			return
+		}
 
 		var name: String = "\(item.name!) copy"
 
@@ -54,7 +59,7 @@ class DuplicateAction : Action {
 			name = "\(itemName) copy\(fileExtension)"
 		}
 
-		if let progress = self.core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in
+		if let progress = self.core.copy(item, to: rootItem!, withName: name, options: nil, resultHandler: { (error, _, item, _) in
 			if error != nil {
 				Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
 				self.completionHandler?(error!)
