@@ -55,7 +55,7 @@ class FileListTests: XCTestCase {
 
 	func testShowFileListWithItems() {
 
-		let expectedCells: Int = 4
+		let expectedCells: Int = 3
 
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 			//Mocks
@@ -124,6 +124,8 @@ class FileListTests: XCTestCase {
 					}
 				}
 			}
+
+			items?.removeFirst()
 
 			let querySet: OCQueryChangeSet = OCQueryChangeSet(queryResult: items, relativeTo: nil)
 			let query: OCQuery = OCQuery()
