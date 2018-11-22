@@ -302,6 +302,28 @@
 	//	}
 }
 
+#pragma mark - Helpers
+- (OCItem *)findKnownExistingItemInParent:(OCItem *)parentItem withName:(NSString *)name
+{
+	OCPath parentPath;
+	__block OCItem *existingItem = nil;
+
+	if (((parentPath = parentItem.path) != nil) && (name != nil))
+	{
+		OCPath destinationPath = [parentPath stringByAppendingPathComponent:name];
+
+		OCSyncExec(retrieveExistingItem, {
+			[self.core.vault.database retrieveCacheItemsAtPath:destinationPath itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
+				existingItem = items.firstObject;
+				OCSyncExecDone(retrieveExistingItem);
+			}];
+		});
+	}
+
+	return (existingItem);
+}
+
+
 #pragma mark - Actions
 
 // ### Apple template comments: ###
@@ -320,7 +342,31 @@
 
 	if ((parentItem = (OCItem *)[self itemForIdentifier:parentItemIdentifier error:&error]) != nil)
 	{
+		// Detect collission with existing items
+		OCItem *existingItem;
+
+		if ((existingItem = [self findKnownExistingItemInParent:parentItem withName:directoryName]) != nil)
+		{
+			completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]);
+			return;
+		}
+
 		[self.core createFolder:directoryName inside:parentItem options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+			if (error != nil)
+			{
+				if (error.HTTPStatus.code == OCHTTPStatusCodeMETHOD_NOT_ALLOWED)
+				{
+					// Folder already exists on the server
+					OCItem *existingItem;
+
+					if ((existingItem = [self findKnownExistingItemInParent:parentItem withName:directoryName]) != nil)
+					{
+						completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]);
+						return;
+					}
+				}
+
+			}
 			completionHandler(item, error);
 		}];
 	}
@@ -427,26 +473,13 @@
 	if ((parentItem = (OCItem *)[self itemForIdentifier:parentItemIdentifier error:&error]) != nil)
 	{
 		// Detect name collissions
-		OCPath parentPath;
+		OCItem *existingItem;
 
-		if (((parentPath = parentItem.path) != nil) && (importFileName != nil))
+		if ((existingItem = [self findKnownExistingItemInParent:parentItem withName:importFileName]) != nil)
 		{
-			OCPath destinationPath = [parentPath stringByAppendingPathComponent:importFileName];
-			__block OCItem *existingItem = nil;
-
-			OCSyncExec(retrieveExistingItem, {
-				[self.core.vault.database retrieveCacheItemsAtPath:destinationPath itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
-					existingItem = items.firstObject;
-					OCSyncExecDone(retrieveExistingItem);
-				}];
-			});
-
-			if (existingItem != nil)
-			{
-				// Return collission error
-				completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]);
-				return;
-			}
+			// Return collission error
+			completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]);
+			return;
 		}
 
 		// Start import
