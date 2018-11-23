@@ -1,8 +1,8 @@
 //
-//  String+Extension.swift
-//  ownCloud
+//  OCBookmark+FileProvider.h
+//  ownCloud File Provider
 //
-//  Created by Pablo Carrascal on 05/04/2018.
+//  Created by Felix Schwarz on 09.06.18.
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
@@ -16,16 +16,10 @@
  *
  */
 
-import Foundation
+#import <ownCloudSDK/ownCloudSDK.h>
 
-extension String {
+@interface OCBookmark (FileProvider)
 
-    var localized: String {
-        return NSLocalizedString(self, comment: "")
-    }
+- (NSString *)pathRelativeToDocumentStorage; //!< "The path of the domain's subdirectory relative to the file provider's shared container."
 
-    var isNumeric: Bool {
-        let nonDigitsCharacterSet = CharacterSet.decimalDigits.inverted
-        return !self.isEmpty && rangeOfCharacter(from: nonDigitsCharacterSet) == nil
-    }
-}
+@end

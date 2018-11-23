@@ -1,8 +1,8 @@
 //
-//  String+Extension.swift
-//  ownCloud
+//  OCCore+FileProviderTools.h
+//  ownCloud File Provider
 //
-//  Created by Pablo Carrascal on 05/04/2018.
+//  Created by Felix Schwarz on 09.06.18.
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
@@ -16,16 +16,11 @@
  *
  */
 
-import Foundation
+#import <ownCloudSDK/ownCloudSDK.h>
+#import <ownCloudSDK/OCMacros.h>
 
-extension String {
+@interface OCCore (FileProviderTools)
 
-    var localized: String {
-        return NSLocalizedString(self, comment: "")
-    }
+- (OCItem *)synchronousRetrieveItemFromDatabaseForFileID:(OCFileID)fileID syncAnchor:(OCSyncAnchor __autoreleasing *)outSyncAnchor error:(NSError * __autoreleasing *)outError;
 
-    var isNumeric: Bool {
-        let nonDigitsCharacterSet = CharacterSet.decimalDigits.inverted
-        return !self.isEmpty && rangeOfCharacter(from: nonDigitsCharacterSet) == nil
-    }
-}
+@end

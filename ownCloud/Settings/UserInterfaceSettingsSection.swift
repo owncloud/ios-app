@@ -91,5 +91,4 @@ class UserInterfaceSettingsSection: SettingsSection {
 	func pushLogSettings() {
 		self.viewController?.navigationController?.pushViewController(LogSettingsViewController(style: .grouped), animated: true)
 	}
-
 }

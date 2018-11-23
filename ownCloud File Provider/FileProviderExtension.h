@@ -1,8 +1,8 @@
 //
-//  String+Extension.swift
-//  ownCloud
+//  FileProviderExtension.h
+//  ownCloud File Provider
 //
-//  Created by Pablo Carrascal on 05/04/2018.
+//  Created by Felix Schwarz on 07.06.18.
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
@@ -16,16 +16,17 @@
  *
  */
 
-import Foundation
+#import <FileProvider/FileProvider.h>
+#import <ownCloudSDK/ownCloudSDK.h>
 
-extension String {
-
-    var localized: String {
-        return NSLocalizedString(self, comment: "")
-    }
-
-    var isNumeric: Bool {
-        let nonDigitsCharacterSet = CharacterSet.decimalDigits.inverted
-        return !self.isEmpty && rangeOfCharacter(from: nonDigitsCharacterSet) == nil
-    }
+@interface FileProviderExtension : NSFileProviderExtension <OCCoreDelegate>
+{
+	OCCore *_core;
+	OCBookmark *_bookmark;
 }
+
+@property(strong,nonatomic,readonly) OCCore *core;
+@property(strong,nonatomic,readonly) OCBookmark *bookmark;
+
+@end
+

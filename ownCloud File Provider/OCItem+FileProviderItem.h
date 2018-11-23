@@ -1,8 +1,8 @@
 //
-//  String+Extension.swift
-//  ownCloud
+//  OCItem+FileProviderItem.h
+//  ownCloud File Provider
 //
-//  Created by Pablo Carrascal on 05/04/2018.
+//  Created by Felix Schwarz on 08.06.18.
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
@@ -16,16 +16,13 @@
  *
  */
 
-import Foundation
+#import <ownCloudSDK/ownCloudSDK.h>
 
-extension String {
+@interface OCItem (FileProviderItem) <NSFileProviderItem>
 
-    var localized: String {
-        return NSLocalizedString(self, comment: "")
-    }
+- (void)setLocalFavoriteRank:(NSNumber *)localFavoriteRank;
+- (void)setLocalTagData:(NSData *)localTagData;
 
-    var isNumeric: Bool {
-        let nonDigitsCharacterSet = CharacterSet.decimalDigits.inverted
-        return !self.isEmpty && rangeOfCharacter(from: nonDigitsCharacterSet) == nil
-    }
-}
+- (void)setUploadingError:(NSError *)uploadingError;
+
+@end
