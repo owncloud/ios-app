@@ -29,13 +29,11 @@ class CreateBookmarkTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
-		OCMockManager.shared.removeAllMockingBlocks()
-		UtilsTests.deleteAllBookmarks()
-		UtilsTests.refreshServerList()
 	}
 
 	override func tearDown() {
 		super.tearDown()
+		OCMockManager.shared.removeAllMockingBlocks()
 	}
 
     func testCheckInitialViewAuth () {

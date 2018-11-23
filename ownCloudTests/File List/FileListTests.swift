@@ -24,6 +24,7 @@ class FileListTests: XCTestCase {
 
 	override func tearDown() {
 		super.tearDown()
+		OCMockManager.shared.removeAllMockingBlocks()
 	}
 
 	public typealias OCMRequestCoreForBookmarkCompletionHandler = @convention(block)

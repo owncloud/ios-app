@@ -21,6 +21,7 @@ class EditBookmarkTests: XCTestCase {
 
 	override func tearDown() {
 		super.tearDown()
+		OCMockManager.shared.removeAllMockingBlocks()
 	}
 
 	func testCheckInitialViewAuth () {
