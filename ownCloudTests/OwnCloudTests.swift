@@ -18,7 +18,7 @@ class OwnCloudTests: XCTestCase {
     override func setUp() {
         super.setUp()
 		UtilsTests.deleteAllBookmarks()
-		UtilsTests.showNoServerMessageServerList()
+		UtilsTests.refreshServerList()
 		OCMockManager.shared.removeAllMockingBlocks()
     }
 

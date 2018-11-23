@@ -31,7 +31,7 @@ class CreateBookmarkTests: XCTestCase {
 		super.setUp()
 		OCMockManager.shared.removeAllMockingBlocks()
 		UtilsTests.deleteAllBookmarks()
-		UtilsTests.showNoServerMessageServerList()
+		UtilsTests.refreshServerList()
 	}
 
 	override func tearDown() {
@@ -65,7 +65,6 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
-    
     func testCheckURLBasicAuthInformalIssue () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -99,7 +98,6 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
-    
     func testCheckURLBasicAuthWarningIssueView () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -123,7 +121,7 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
-    
+
     func testCheckURLBasicAuthWarningIssueApproval () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -183,11 +181,7 @@ class CreateBookmarkTests: XCTestCase {
         //Reset status
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
-
-    func testCheckURLBasicAuthWarningIssueCertificate () {
-
-    }
-
+	
     func testCheckURLBasicAuthErrorIssue () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -223,6 +217,34 @@ class CreateBookmarkTests: XCTestCase {
         //Reset status
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
+
+	func testCheckURLBasicAuthWarningIssueCertificate() {
+
+		let mockUrlServer = "http://mocked.owncloud.server.com"
+		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
+															   OCAuthenticationMethodOAuth2Identifier as NSString]
+		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
+
+			let issue: OCConnectionIssue = OCConnectionIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: URL(string: mockUrlServer), level: .warning, issueHandler: nil)
+
+			//Mock
+			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+
+			//Actions
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+
+			//Assert
+			EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		} else {
+			assertionFailure("Not possible to read the test_certificate.cer")
+		}
+	}
 
     func testCheckURLServerOAuth2 () {
 
@@ -270,30 +292,6 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
-	func testCheckUrlWithErrorCertificate() {
-
-		let mockUrlServer = "http://mocked.owncloud.server.com"
-		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
-															   OCAuthenticationMethodOAuth2Identifier as NSString]
-		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
-
-				let issue: OCConnectionIssue = OCConnectionIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: URL(string: mockUrlServer), level: .warning, issueHandler: nil)
-
-				//Mock
-				mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
-
-				//Actions
-				EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-				EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-				EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
-
-				//Assert
-				EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).assert(grey_sufficientlyVisible())
-		} else {
-			assertionFailure("Not possible to read the test_certificate.cer")
-		}
-	}
-
 	func testLoginOauth2RightCredentials () {
 
 		let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -321,10 +319,14 @@ class CreateBookmarkTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
-		//EarlGrey.select(elementWithMatcher: grey_accessibilityID("approve-button")).perform(grey_tap())
 
 		//Assert
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
+
+		//Reset
+		OCMockManager.shared.removeAllMockingBlocks()
+		UtilsTests.deleteAllBookmarks()
+		UtilsTests.refreshServerList()
 	}
 
     func testLoginBasicAuthRightCredentials () {
@@ -357,6 +359,11 @@ class CreateBookmarkTests: XCTestCase {
 
         //Assert
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
+
+		//Reset
+		OCMockManager.shared.removeAllMockingBlocks()
+		UtilsTests.deleteAllBookmarks()
+		UtilsTests.refreshServerList()
     }
 
     func testLoginBasicAuthWarningIssue () {

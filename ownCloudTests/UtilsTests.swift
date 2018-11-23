@@ -46,7 +46,7 @@ class UtilsTests {
 		AppLockManager.shared.dismissLockscreen(animated: false)
 	}
 
-	static func showNoServerMessageServerList() {
+	static func refreshServerList() {
 		let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
 		appDelegate.serverListTableViewController?.updateNoServerMessageVisibility()
 	}

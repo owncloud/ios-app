@@ -17,9 +17,6 @@ class EditBookmarkTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
-		OCMockManager.shared.removeAllMockingBlocks()
-		UtilsTests.deleteAllBookmarks()
-		UtilsTests.showNoServerMessageServerList()
 	}
 
 	override func tearDown() {
@@ -31,16 +28,16 @@ class EditBookmarkTests: XCTestCase {
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 
 			OCBookmarkManager.shared.addBookmark(bookmark)
-			UtilsTests.showNoServerMessageServerList()
+			UtilsTests.refreshServerList()
 
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).perform(grey_swipeFastInDirection(.left))
 			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
-//
+
 			//Assert
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-auth-data-delete")).assert(grey_sufficientlyVisible())
-//
-//			//Reset status
+
+			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
 			UtilsTests.deleteAllBookmarks()
 		}

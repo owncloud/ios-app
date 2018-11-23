@@ -20,7 +20,7 @@ class BiometricalTests: XCTestCase {
 		super.setUp()
 		OCMockManager.shared.removeAllMockingBlocks()
 		UtilsTests.deleteAllBookmarks()
-		UtilsTests.showNoServerMessageServerList()
+		UtilsTests.refreshServerList()
 	}
 
 	override func tearDown() {
