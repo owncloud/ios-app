@@ -63,6 +63,7 @@
 		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DC018F8320A0F56300135198 /* UIView+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC018F8220A0F56300135198 /* UIView+Animation.swift */; };
 		DC018F8C20A1060A00135198 /* ProgressHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC018F8B20A1060A00135198 /* ProgressHUDViewController.swift */; };
+		DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */; };
 		DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */; };
 		DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */; };
 		DC0B37972051681600189B9A /* ThemeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B37962051681600189B9A /* ThemeButton.swift */; };
@@ -74,6 +75,13 @@
 		DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B2706209CF0D3004715E1 /* ConnectionIssueViewController.swift */; };
 		DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */; };
 		DC248C67213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */; };
+		DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */; };
+		DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
+		DC27A19120CAA0BA008ACB6C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC27A19020CAA0BA008ACB6C /* MobileCoreServices.framework */; };
+		DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC27A19C20CAB602008ACB6C /* FileProviderInterfaceManager.swift */; };
+		DC27A1A520CBEF85008ACB6C /* OCBookmark+FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */; };
+		DC27A1A820CC095C008ACB6C /* OCCore+FileProviderTools.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A720CC095C008ACB6C /* OCCore+FileProviderTools.m */; };
+		DC27A1E920CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1E820CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m */; };
 		DC321261207EB01B00DB171D /* ThemeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC321260207EB01B00DB171D /* ThemeImage.swift */; };
 		DC3317CE2084966700E36C8F /* ThemeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3317CD2084966700E36C8F /* ThemeTableViewCell.swift */; };
 		DC3BE0D72077BC5D002A0AC0 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; };
@@ -108,6 +116,8 @@
 		DC85980620D85EE600A433C6 /* AsyncSequentialQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85980120D85EE500A433C6 /* AsyncSequentialQueue.swift */; };
 		DC869A592153B1F60088977E /* OCMockingManagerSwiftExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC869A582153B1F60088977E /* OCMockingManagerSwiftExtension.swift */; };
 		DC89C45D20860B5D0044BCAE /* ProgressSummarizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89C45C20860B5D0044BCAE /* ProgressSummarizer.swift */; };
+		DC98BBCB20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */; };
+		DC98BBD420FF824600F4ED3E /* FileProviderEnumeratorObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */; };
 		DC9BFBB320A19AF4007064B5 /* doc in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB220A19AF3007064B5 /* doc */; };
 		DC9BFBB920A1AF2C007064B5 /* icon-locked.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB820A1AF2B007064B5 /* icon-locked.tvg */; };
 		DC9BFBBB20A1B3CA007064B5 /* icon-password-manager.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */; };
@@ -115,6 +125,11 @@
 		DCB44D7D2186F0F600DAA4CC /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB44D7C2186F0F600DAA4CC /* ThemeStyle.swift */; };
 		DCB44D852186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */; };
 		DCB44D87218718BA00DAA4CC /* VendorServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB44D86218718BA00DAA4CC /* VendorServices.swift */; };
+		DCC6564A20C9B7E400110A97 /* FileProviderExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6564920C9B7E400110A97 /* FileProviderExtension.m */; };
+		DCC6565020C9B7E400110A97 /* FileProviderEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6564F20C9B7E400110A97 /* FileProviderEnumerator.m */; };
+		DCC6565B20C9B7E400110A97 /* DocumentActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6565A20C9B7E400110A97 /* DocumentActionViewController.m */; };
+		DCC6565E20C9B7E400110A97 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCC6565C20C9B7E400110A97 /* MainInterface.storyboard */; };
+		DCC6566520C9B7E400110A97 /* ownCloud File Provider.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DCE5E8A12080D781005F60CE /* video.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88C2080D77E005F60CE /* video.tvg */; };
 		DCE5E8A22080D781005F60CE /* folder-external.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88D2080D77E005F60CE /* folder-external.tvg */; };
 		DCE5E8A32080D781005F60CE /* file.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88E2080D77E005F60CE /* file.tvg */; };
@@ -219,6 +234,13 @@
 			remoteGlobalIDString = DCA8922620F5F13E00AEFF98;
 			remoteInfo = ownCloudMocking;
 		};
+		DC27A19220CAA0C6008ACB6C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC8F9AA202852A200EB6701;
+			remoteInfo = ownCloudSDK;
+		};
 		DC3BE0CC2077BC52002A0AC0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */;
@@ -268,6 +290,20 @@
 			remoteGlobalIDString = C79800BA1A21CB5300380860;
 			remoteInfo = "PocketSVG (iOS)";
 		};
+		DCC6566020C9B7E400110A97 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC6565620C9B7E400110A97;
+			remoteInfo = "ownCloud File ProviderUI";
+		};
+		DCC6566320C9B7E400110A97 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC6564520C9B7E300110A97;
+			remoteInfo = "ownCloud File Provider";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -310,6 +346,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				DCC6566520C9B7E400110A97 /* ownCloud File Provider.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -392,7 +429,16 @@
 		DC1B2706209CF0D3004715E1 /* ConnectionIssueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionIssueViewController.swift; sourceTree = "<group>"; };
 		DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
 		DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extension.swift"; sourceTree = "<group>"; };
+		DC27A18C20CA9F66008ACB6C /* OCItem+FileProviderItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCItem+FileProviderItem.h"; sourceTree = "<group>"; };
+		DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCItem+FileProviderItem.m"; sourceTree = "<group>"; };
 		DC27A19020CAA0BA008ACB6C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		DC27A19C20CAB602008ACB6C /* FileProviderInterfaceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderInterfaceManager.swift; sourceTree = "<group>"; };
+		DC27A1A320CBEF85008ACB6C /* OCBookmark+FileProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCBookmark+FileProvider.h"; sourceTree = "<group>"; };
+		DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCBookmark+FileProvider.m"; sourceTree = "<group>"; };
+		DC27A1A620CC095C008ACB6C /* OCCore+FileProviderTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCCore+FileProviderTools.h"; sourceTree = "<group>"; };
+		DC27A1A720CC095C008ACB6C /* OCCore+FileProviderTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCCore+FileProviderTools.m"; sourceTree = "<group>"; };
+		DC27A1E720CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderExtensionThumbnailRequest.h; sourceTree = "<group>"; };
+		DC27A1E820CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderExtensionThumbnailRequest.m; sourceTree = "<group>"; };
 		DC321260207EB01B00DB171D /* ThemeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeImage.swift; sourceTree = "<group>"; };
 		DC3317CD2084966700E36C8F /* ThemeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewCell.swift; sourceTree = "<group>"; };
 		DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientQueryViewController.swift; sourceTree = "<group>"; };
@@ -424,6 +470,10 @@
 		DC85980120D85EE500A433C6 /* AsyncSequentialQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncSequentialQueue.swift; sourceTree = "<group>"; };
 		DC869A582153B1F60088977E /* OCMockingManagerSwiftExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCMockingManagerSwiftExtension.swift; sourceTree = "<group>"; };
 		DC89C45C20860B5D0044BCAE /* ProgressSummarizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSummarizer.swift; sourceTree = "<group>"; };
+		DC98BBC920FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNumber+OCSyncAnchorData.h"; sourceTree = "<group>"; };
+		DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+OCSyncAnchorData.m"; sourceTree = "<group>"; };
+		DC98BBD220FF824600F4ED3E /* FileProviderEnumeratorObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderEnumeratorObserver.h; sourceTree = "<group>"; };
+		DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderEnumeratorObserver.m; sourceTree = "<group>"; };
 		DC9BFBB220A19AF3007064B5 /* doc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = doc; sourceTree = "<group>"; };
 		DC9BFBB820A1AF2B007064B5 /* icon-locked.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-locked.tvg"; path = "img/filetypes-tvg/icon-locked.tvg"; sourceTree = SOURCE_ROOT; };
 		DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-password-manager.tvg"; path = "img/filetypes-tvg/icon-password-manager.tvg"; sourceTree = SOURCE_ROOT; };
@@ -431,6 +481,18 @@
 		DCB44D7C2186F0F600DAA4CC /* ThemeStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStyle.swift; sourceTree = "<group>"; };
 		DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeStyle+DefaultStyles.swift"; sourceTree = "<group>"; };
 		DCB44D86218718BA00DAA4CC /* VendorServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VendorServices.swift; sourceTree = "<group>"; };
+		DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ownCloud File Provider.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCC6564820C9B7E400110A97 /* FileProviderExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderExtension.h; sourceTree = "<group>"; };
+		DCC6564920C9B7E400110A97 /* FileProviderExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderExtension.m; sourceTree = "<group>"; };
+		DCC6564E20C9B7E400110A97 /* FileProviderEnumerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderEnumerator.h; sourceTree = "<group>"; };
+		DCC6564F20C9B7E400110A97 /* FileProviderEnumerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderEnumerator.m; sourceTree = "<group>"; };
+		DCC6565120C9B7E400110A97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DCC6565220C9B7E400110A97 /* ownCloud_File_Provider.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ownCloud_File_Provider.entitlements; sourceTree = "<group>"; };
+		DCC6565720C9B7E400110A97 /* ownCloud File ProviderUI.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ownCloud File ProviderUI.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCC6565920C9B7E400110A97 /* DocumentActionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DocumentActionViewController.h; sourceTree = "<group>"; };
+		DCC6565A20C9B7E400110A97 /* DocumentActionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DocumentActionViewController.m; sourceTree = "<group>"; };
+		DCC6565D20C9B7E400110A97 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		DCC6565F20C9B7E400110A97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DCD344A5205BD0C000189B9A /* openssl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = openssl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "ios-sdk/ownCloudUI/openssl/framework/openssl.xcodeproj"; sourceTree = "<group>"; };
 		DCE5E88C2080D77E005F60CE /* video.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = video.tvg; path = "img/filetypes-tvg/video.tvg"; sourceTree = SOURCE_ROOT; };
@@ -495,6 +557,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DCC6564320C9B7E300110A97 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC27A19120CAA0BA008ACB6C /* MobileCoreServices.framework in Frameworks */,
+				DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCC6565420C9B7E400110A97 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -518,6 +596,8 @@
 				DC7DBA10207F59C500E7337D /* External */,
 				233BDEB3204FEFE500C06732 /* ownCloudTests */,
 				DC7DBA3B207F86E900E7337D /* Tools */,
+				DCC6564720C9B7E400110A97 /* ownCloud File Provider */,
+				DCC6565820C9B7E400110A97 /* ownCloud File ProviderUI */,
 				233BDE9D204FEFE500C06732 /* Products */,
 				DC85573220513CC700189B9A /* Frameworks */,
 				5EE06126BB49344475598790 /* Pods */,
@@ -531,6 +611,8 @@
 				233BDE9C204FEFE500C06732 /* ownCloud.app */,
 				233BDEB0204FEFE500C06732 /* ownCloudTests.xctest */,
 				DC7DBA34207F84BF00E7337D /* MakeTVG */,
+				DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */,
+				DCC6565720C9B7E400110A97 /* ownCloud File ProviderUI.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -549,6 +631,7 @@
 				239F1314205A69240029F186 /* UIKit Extensions */,
 				DCE5E8B62080D8B8005F60CE /* SDK Extensions */,
 				DCF4F1872052BA3500189B9A /* Tools */,
+				DC27A19B20CAB5D7008ACB6C /* FileProvider Integration */,
 				DC85573120513C7500189B9A /* Resources */,
 				DC0B37952051541C00189B9A /* ownCloud.entitlements */,
 			);
@@ -700,6 +783,14 @@
 			path = "Issues Subclasses";
 			sourceTree = "<group>";
 		};
+		DC27A19B20CAB5D7008ACB6C /* FileProvider Integration */ = {
+			isa = PBXGroup;
+			children = (
+				DC27A19C20CAB602008ACB6C /* FileProviderInterfaceManager.swift */,
+			);
+			path = "FileProvider Integration";
+			sourceTree = "<group>";
+		};
 		DC3BE0DB2077CC13002A0AC0 /* Client */ = {
 			isa = PBXGroup;
 			children = (
@@ -848,6 +939,42 @@
 			path = Progress;
 			sourceTree = "<group>";
 		};
+		DCC6564720C9B7E400110A97 /* ownCloud File Provider */ = {
+			isa = PBXGroup;
+			children = (
+				DCC6564920C9B7E400110A97 /* FileProviderExtension.m */,
+				DCC6564820C9B7E400110A97 /* FileProviderExtension.h */,
+				DC27A1E820CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m */,
+				DC27A1E720CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.h */,
+				DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */,
+				DC27A18C20CA9F66008ACB6C /* OCItem+FileProviderItem.h */,
+				DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */,
+				DC27A1A320CBEF85008ACB6C /* OCBookmark+FileProvider.h */,
+				DC27A1A720CC095C008ACB6C /* OCCore+FileProviderTools.m */,
+				DC27A1A620CC095C008ACB6C /* OCCore+FileProviderTools.h */,
+				DCC6564F20C9B7E400110A97 /* FileProviderEnumerator.m */,
+				DCC6564E20C9B7E400110A97 /* FileProviderEnumerator.h */,
+				DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */,
+				DC98BBD220FF824600F4ED3E /* FileProviderEnumeratorObserver.h */,
+				DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */,
+				DC98BBC920FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.h */,
+				DCC6565120C9B7E400110A97 /* Info.plist */,
+				DCC6565220C9B7E400110A97 /* ownCloud_File_Provider.entitlements */,
+			);
+			path = "ownCloud File Provider";
+			sourceTree = "<group>";
+		};
+		DCC6565820C9B7E400110A97 /* ownCloud File ProviderUI */ = {
+			isa = PBXGroup;
+			children = (
+				DCC6565A20C9B7E400110A97 /* DocumentActionViewController.m */,
+				DCC6565920C9B7E400110A97 /* DocumentActionViewController.h */,
+				DCC6565C20C9B7E400110A97 /* MainInterface.storyboard */,
+				DCC6565F20C9B7E400110A97 /* Info.plist */,
+			);
+			path = "ownCloud File ProviderUI";
+			sourceTree = "<group>";
+		};
 		DCCE54092080175B00067D1D /* TVGs */ = {
 			isa = PBXGroup;
 			children = (
@@ -970,6 +1097,8 @@
 				DC3BE0CD2077BC52002A0AC0 /* PBXTargetDependency */,
 				DC3BE0CF2077BC52002A0AC0 /* PBXTargetDependency */,
 				DC3BE0D12077BC52002A0AC0 /* PBXTargetDependency */,
+				DCC6566120C9B7E400110A97 /* PBXTargetDependency */,
+				DCC6566420C9B7E400110A97 /* PBXTargetDependency */,
 			);
 			name = ownCloud;
 			productName = ownCloud;
@@ -1015,6 +1144,41 @@
 			productReference = DC7DBA34207F84BF00E7337D /* MakeTVG */;
 			productType = "com.apple.product-type.tool";
 		};
+		DCC6564520C9B7E300110A97 /* ownCloud File Provider */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCC6566F20C9B7E400110A97 /* Build configuration list for PBXNativeTarget "ownCloud File Provider" */;
+			buildPhases = (
+				DCC6564220C9B7E300110A97 /* Sources */,
+				DCC6564320C9B7E300110A97 /* Frameworks */,
+				DCC6564420C9B7E300110A97 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DC27A19320CAA0C6008ACB6C /* PBXTargetDependency */,
+			);
+			name = "ownCloud File Provider";
+			productName = "ownCloud File Provider";
+			productReference = DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		DCC6565620C9B7E400110A97 /* ownCloud File ProviderUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCC6566E20C9B7E400110A97 /* Build configuration list for PBXNativeTarget "ownCloud File ProviderUI" */;
+			buildPhases = (
+				DCC6565320C9B7E400110A97 /* Sources */,
+				DCC6565420C9B7E400110A97 /* Frameworks */,
+				DCC6565520C9B7E400110A97 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ownCloud File ProviderUI";
+			productName = "ownCloud File ProviderUI";
+			productReference = DCC6565720C9B7E400110A97 /* ownCloud File ProviderUI.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1052,6 +1216,19 @@
 						CreatedOnToolsVersion = 9.3;
 						ProvisioningStyle = Automatic;
 					};
+					DCC6564520C9B7E300110A97 = {
+						CreatedOnToolsVersion = 9.4;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
+					};
+					DCC6565620C9B7E400110A97 = {
+						CreatedOnToolsVersion = 9.4;
+						ProvisioningStyle = Manual;
+					};
 				};
 			};
 			buildConfigurationList = 233BDE97204FEFE500C06732 /* Build configuration list for PBXProject "ownCloud" */;
@@ -1085,6 +1262,8 @@
 				233BDE9B204FEFE500C06732 /* ownCloud */,
 				233BDEAF204FEFE500C06732 /* ownCloudTests */,
 				DC7DBA33207F84BF00E7337D /* MakeTVG */,
+				DCC6564520C9B7E300110A97 /* ownCloud File Provider */,
+				DCC6565620C9B7E400110A97 /* ownCloud File ProviderUI */,
 			);
 		};
 /* End PBXProject section */
@@ -1213,6 +1392,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCC6564420C9B7E300110A97 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCC6565520C9B7E400110A97 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCC6565E20C9B7E400110A97 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1360,6 +1554,7 @@
 				DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */,
 				23E22BB720C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
 				23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */,
+				DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */,
 				23EC77582137F3DD0032D4E6 /* PDFViewerViewController.swift in Sources */,
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
 				23EC775B2137F3DD0032D4E6 /* OCExtensionType+Extension.swift in Sources */,
@@ -1394,6 +1589,7 @@
 				DC434D1320D7A8F100740056 /* UIAlertController+OCConnectionIssue.swift in Sources */,
 				DC3317CE2084966700E36C8F /* ThemeTableViewCell.swift in Sources */,
 				6E83C77E20A32C1B0066EC23 /* SettingsSection.swift in Sources */,
+				DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */,
 				DC422450207CB2500006A2A6 /* NSObject+ThemeApplication.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1418,6 +1614,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DCC6564220C9B7E300110A97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC98BBD420FF824600F4ED3E /* FileProviderEnumeratorObserver.m in Sources */,
+				DCC6565020C9B7E400110A97 /* FileProviderEnumerator.m in Sources */,
+				DC27A1E920CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m in Sources */,
+				DC27A1A820CC095C008ACB6C /* OCCore+FileProviderTools.m in Sources */,
+				DCC6564A20C9B7E400110A97 /* FileProviderExtension.m in Sources */,
+				DC27A1A520CBEF85008ACB6C /* OCBookmark+FileProvider.m in Sources */,
+				DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */,
+				DC98BBCB20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCC6565320C9B7E400110A97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCC6565B20C9B7E400110A97 /* DocumentActionViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1430,6 +1649,11 @@
 			isa = PBXTargetDependency;
 			name = ownCloudMocking;
 			targetProxy = DC188986218A772900CFB3F9 /* PBXContainerItemProxy */;
+		};
+		DC27A19320CAA0C6008ACB6C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ownCloudSDK;
+			targetProxy = DC27A19220CAA0C6008ACB6C /* PBXContainerItemProxy */;
 		};
 		DC3BE0CD2077BC52002A0AC0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1450,6 +1674,16 @@
 			isa = PBXTargetDependency;
 			name = "PocketSVG (iOS)";
 			targetProxy = DC7DBA1D207F59F200E7337D /* PBXContainerItemProxy */;
+		};
+		DCC6566120C9B7E400110A97 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCC6565620C9B7E400110A97 /* ownCloud File ProviderUI */;
+			targetProxy = DCC6566020C9B7E400110A97 /* PBXContainerItemProxy */;
+		};
+		DCC6566420C9B7E400110A97 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCC6564520C9B7E300110A97 /* ownCloud File Provider */;
+			targetProxy = DCC6566320C9B7E400110A97 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1478,6 +1712,14 @@
 				59EACA8020CAA37F00F082EE /* es */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		DCC6565C20C9B7E400110A97 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DCC6565D20C9B7E400110A97 /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1715,6 +1957,88 @@
 			};
 			name = Release;
 		};
+		DCC6566620C9B7E400110A97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "ownCloud File Provider/ownCloud_File_Provider.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				INFOPLIST_FILE = "ownCloud File Provider/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-Provider";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "b9cd7516-5bdd-4c15-b338-55d02d1ed4aa";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app.ownCloud-File-Provider";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DCC6566720C9B7E400110A97 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "ownCloud File Provider/ownCloud_File_Provider.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				INFOPLIST_FILE = "ownCloud File Provider/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-Provider";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "0be66300-94bb-43be-8e1f-6aee08a7c154";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app.ownCloud-File-Provider";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		DCC6566820C9B7E400110A97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				INFOPLIST_FILE = "ownCloud File ProviderUI/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-ProviderUI";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "2fcc6dc1-dade-404b-b2c3-4ba9674f5680";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app.ownCloud-File-ProviderUI";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DCC6566920C9B7E400110A97 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				INFOPLIST_FILE = "ownCloud File ProviderUI/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-ProviderUI";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "fe9f450c-3f81-4041-903f-b72a48954466";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app.ownCloud-File-ProviderUI";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1750,6 +2074,24 @@
 			buildConfigurations = (
 				DC7DBA39207F84BF00E7337D /* Debug */,
 				DC7DBA3A207F84BF00E7337D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DCC6566E20C9B7E400110A97 /* Build configuration list for PBXNativeTarget "ownCloud File ProviderUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCC6566820C9B7E400110A97 /* Debug */,
+				DCC6566920C9B7E400110A97 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DCC6566F20C9B7E400110A97 /* Build configuration list for PBXNativeTarget "ownCloud File Provider" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCC6566620C9B7E400110A97 /* Debug */,
+				DCC6566720C9B7E400110A97 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

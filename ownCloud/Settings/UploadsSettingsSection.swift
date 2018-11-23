@@ -150,15 +150,15 @@ class UploadsSettingsSection: SettingsSection {
 
 	private func createPhotoRows() {
 
-		photosRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+		photosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 			if let photosSwitch = sender as? UISwitch {
-				self.isPhotoUploadEnabled = photosSwitch.isOn
+				self?.isPhotoUploadEnabled = photosSwitch.isOn
 			}
 		}, title: "Photos".localized, value: isPhotoUploadEnabled)
 
-		photosWifiOnlyRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+		photosWifiOnlyRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 			if let photosWifiOnlySwitch = sender as? UISwitch {
-				self.isPhotoWifiOnlyUploadsEnabled = photosWifiOnlySwitch.isOn
+				self?.isPhotoWifiOnlyUploadsEnabled = photosWifiOnlySwitch.isOn
 			}
 		}, title: "Upload pictures via WiFi only".localized, value: isPhotoWifiOnlyUploadsEnabled)
 
@@ -169,15 +169,15 @@ class UploadsSettingsSection: SettingsSection {
 
 	private func createVideoRows() {
 
-		videosRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+		videosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 			if let videosSwitch = sender as? UISwitch {
-				self.isVideoUploadEnabled = videosSwitch.isOn
+				self?.isVideoUploadEnabled = videosSwitch.isOn
 			}
 		}, title: "Videos".localized, value: isVideoUploadEnabled)
 
-		videosWifiOnlyRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+		videosWifiOnlyRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 			if let videosWifiOnlySwitch = sender as? UISwitch {
-				self.isVideoWifiOnlyUploadsEnabled = videosWifiOnlySwitch.isOn
+				self?.isVideoWifiOnlyUploadsEnabled = videosWifiOnlySwitch.isOn
 			}
 		}, title: "Upload videos via WiFi only".localized, value: isVideoWifiOnlyUploadsEnabled)
 
@@ -187,9 +187,9 @@ class UploadsSettingsSection: SettingsSection {
 	}
 
 	private func createCommonRows() {
-		backgroundUploadsRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+		backgroundUploadsRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 			if let backgroundsSwitch = sender as? UISwitch {
-				self.backgroundUploadsEnabled = backgroundsSwitch.isOn
+				self?.backgroundUploadsEnabled = backgroundsSwitch.isOn
 			}
 		}, title: "Background uploads".localized, value: backgroundUploadsEnabled)
 	}

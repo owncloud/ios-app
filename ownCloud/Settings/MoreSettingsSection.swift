@@ -47,9 +47,9 @@ class MoreSettingsSection: SettingsSection {
 
 	private func createRows() {
 
-		helpRow = StaticTableViewRow(rowWithAction: { (_, _) in
+		helpRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			let url = URL(string: "https://www.owncloud.com/help")
-			self.openSFWebViewWithConfirmation(for: url!)
+			self?.openSFWebViewWithConfirmation(for: url!)
 		}, title: "Help".localized, accessoryType: .disclosureIndicator)
 
 		sendFeedbackRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
@@ -64,9 +64,9 @@ class MoreSettingsSection: SettingsSection {
 			}
 		}, title: "Recommend to a friend".localized, accessoryType: .disclosureIndicator)
 
-		privacyPolicyRow = StaticTableViewRow(rowWithAction: { (_, _) in
+		privacyPolicyRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			let url = URL(string: "https://owncloud.org/privacy-policy/")
-			self.openSFWebViewWithConfirmation(for: url!)
+			self?.openSFWebViewWithConfirmation(for: url!)
 		}, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator)
 
 		acknowledgementsRow = StaticTableViewRow(rowWithAction: { (row, _) in

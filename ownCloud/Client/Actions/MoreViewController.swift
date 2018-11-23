@@ -21,9 +21,6 @@ import ownCloudSDK
 
 class MoreViewController: UIViewController {
 
-	private var item: OCItem
-	private var core: OCCore
-
 	private var headerView: UIView
 	private var viewController: UIViewController
 
@@ -35,9 +32,7 @@ class MoreViewController: UIViewController {
 		}
 	}
 
-	init(item: OCItem, core: OCCore, header: UIView, viewController: UIViewController) {
-		self.item = item
-		self.core = core
+	init(header: UIView, viewController: UIViewController) {
 		self.headerView = header
 		self.viewController = viewController
 

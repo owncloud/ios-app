@@ -31,7 +31,7 @@ protocol Themeable : class {
 typealias ThemeApplier = (_ theme : Theme, _ ThemeCollection: ThemeCollection, _ event: ThemeEvent) -> Void
 typealias ThemeApplierToken = Int
 
-struct WeakThemeable {
+final class WeakThemeable {
 	weak var weakClient : Themeable?
 
 	init(_ client: Themeable) {

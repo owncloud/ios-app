@@ -37,6 +37,8 @@
 	<string>$(AppIdentifierPrefix)</string>
 	<key>OCKeychainAccessGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>OCHasFileProvider</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

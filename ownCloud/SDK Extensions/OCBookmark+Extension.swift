@@ -32,18 +32,20 @@ extension OCBookmark {
 	}
 
 	var shortName: String {
-		var userNamePrefix = ""
-
-		if let userName = self.userName {
-			userNamePrefix = userName + " @ "
-		}
-
 		if self.name != nil {
 			return self.name
-		} else if self.originURL?.host != nil {
-			return userNamePrefix + self.originURL.host!
-		} else if self.url?.host != nil {
-			return userNamePrefix + self.url.host!
+		} else {
+			var userNamePrefix = ""
+
+			if let userName = self.userName {
+				userNamePrefix = userName + " @ "
+			}
+
+			if self.originURL?.host != nil {
+				return userNamePrefix + self.originURL.host!
+			} else if self.url?.host != nil {
+				return userNamePrefix + self.url.host!
+			}
 		}
 
 		return "bookmark"
