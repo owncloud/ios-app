@@ -53,6 +53,8 @@ class UtilsTests {
 
 	static func getBookmark() -> OCBookmark? {
 
+		let mockUrlServer: String = "https://mock.owncloud.com"
+
 		let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
 		"passphrase" : "admin",
 		"username" : "admin"]
@@ -65,11 +67,28 @@ class UtilsTests {
 
 		let bookmark: OCBookmark = OCBookmark()
 		bookmark.name = "server"
+		bookmark.url = URL(string: mockUrlServer)
+		bookmark.authenticationMethodIdentifier = OCAuthenticationMethodBasicAuthIdentifier
 		bookmark.authenticationData = data
-
-//		OCBookmarkManager.shared.addBookmark(bookmark)
-//		OCBookmarkManager.shared.saveBookmarks()
+		bookmark.certificate = self.getCertificate(mockUrlServer: mockUrlServer)
 
 		return bookmark
+	}
+
+	static func getCertificate(mockUrlServer: String) -> OCCertificate? {
+		let bundle = Bundle.main
+		if let url: URL = bundle.url(forResource: "test_certificate", withExtension: "cer") {
+			do {
+				let certificateData = try Data(contentsOf: url as URL)
+				let certificate: OCCertificate = OCCertificate(certificateData: certificateData, hostName: mockUrlServer)
+
+				return certificate
+			} catch {
+				print("Failing reading data of test_certificate.cer")
+			}
+		} else {
+			print("Not possible to read the test_certificate.cer")
+		}
+		return nil
 	}
 }

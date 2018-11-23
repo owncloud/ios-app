@@ -275,11 +275,7 @@ class CreateBookmarkTests: XCTestCase {
 		let mockUrlServer = "http://mocked.owncloud.server.com"
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodBasicAuthIdentifier as NSString,
 															   OCAuthenticationMethodOAuth2Identifier as NSString]
-		let bundle = Bundle.main
-		if let url: URL = bundle.url(forResource: "test_certificate", withExtension: "cer") {
-			do {
-				let certificateData = try Data(contentsOf: url as URL)
-				let certificate: OCCertificate = OCCertificate(certificateData: certificateData, hostName: mockUrlServer)
+		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
 
 				let issue: OCConnectionIssue = OCConnectionIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: URL(string: mockUrlServer), level: .warning, issueHandler: nil)
 
@@ -293,10 +289,6 @@ class CreateBookmarkTests: XCTestCase {
 
 				//Assert
 				EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).assert(grey_sufficientlyVisible())
-
-			} catch {
-				assertionFailure("Failing reading data of test_certificate.cer")
-			}
 		} else {
 			assertionFailure("Not possible to read the test_certificate.cer")
 		}
