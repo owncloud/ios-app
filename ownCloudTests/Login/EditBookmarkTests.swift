@@ -24,7 +24,7 @@ class EditBookmarkTests: XCTestCase {
 		OCMockManager.shared.removeAllMockingBlocks()
 	}
 
-	func testCheckInitialViewAuth () {
+	func testCheckInitialEditViewAuth () {
 
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 
@@ -41,6 +41,30 @@ class EditBookmarkTests: XCTestCase {
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
 			UtilsTests.deleteAllBookmarks()
+			UtilsTests.refreshServerList()
+		}
+	}
+
+	func testCheckEditServerName () {
+
+		let expectedServerName = "New name"
+
+		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
+
+			OCBookmarkManager.shared.addBookmark(bookmark)
+			UtilsTests.refreshServerList()
+
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).perform(grey_swipeFastInDirection(.left))
+			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-name-name")).perform(grey_replaceText(expectedServerName))
+			EarlGrey.select(elementWithMatcher: grey_text("Save".localized)).perform(grey_tap())
+
+			//Assert
+			EarlGrey.select(elementWithMatcher: grey_text(expectedServerName)).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			UtilsTests.deleteAllBookmarks()
+			UtilsTests.refreshServerList()
 		}
 	}
 }
