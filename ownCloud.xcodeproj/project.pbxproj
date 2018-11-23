@@ -49,6 +49,8 @@
 		5966C8C42191B37900C8875E /* UtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5966C8BD21918AAB00C8875E /* UtilsTests.swift */; };
 		5966C8D2219434C300C8875E /* FileListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5966C8D1219434C300C8875E /* FileListTests.swift */; };
 		597A404920AD59EF00B028B2 /* AppLockWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597A404820AD59EF00B028B2 /* AppLockWindow.swift */; };
+		59AB02FC21A6CBDB003F5101 /* test_certificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 59AB02F621A6CBDB003F5101 /* test_certificate.cer */; };
+		59AB02FD21A6D66F003F5101 /* test_certificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 59AB02F621A6CBDB003F5101 /* test_certificate.cer */; };
 		59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 59D4895420C83F2E00369C2E /* InfoPlist.strings */; };
 		59F64776219AE90F00C016FD /* PropfindResponse.xml in Resources */ = {isa = PBXBuildFile; fileRef = 59F64775219AE90F00C016FD /* PropfindResponse.xml */; };
 		59F64777219AFBE600C016FD /* PropfindResponse.xml in Resources */ = {isa = PBXBuildFile; fileRef = 59F64775219AE90F00C016FD /* PropfindResponse.xml */; };
@@ -407,6 +409,7 @@
 		5966C8BD21918AAB00C8875E /* UtilsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilsTests.swift; sourceTree = "<group>"; };
 		5966C8D1219434C300C8875E /* FileListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListTests.swift; sourceTree = "<group>"; };
 		597A404820AD59EF00B028B2 /* AppLockWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockWindow.swift; sourceTree = "<group>"; };
+		59AB02F621A6CBDB003F5101 /* test_certificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_certificate.cer; sourceTree = "<group>"; };
 		59D4895320C83F2E00369C2E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		59EACA8020CAA37F00F082EE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		59F64775219AE90F00C016FD /* PropfindResponse.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PropfindResponse.xml; sourceTree = "<group>"; };
@@ -775,6 +778,7 @@
 		59F6476F219AE8F300C016FD /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				59AB02F621A6CBDB003F5101 /* test_certificate.cer */,
 				59F64775219AE90F00C016FD /* PropfindResponse.xml */,
 			);
 			path = Resources;
@@ -1401,6 +1405,7 @@
 				DCE5E8A72080D781005F60CE /* x-office-spreadsheet.tvg in Resources */,
 				DCE5E8AA2080D781005F60CE /* owncloud-logo.tvg in Resources */,
 				DC9BFBB920A1AF2C007064B5 /* icon-locked.tvg in Resources */,
+				59AB02FD21A6D66F003F5101 /* test_certificate.cer in Resources */,
 				DCE5E8B32080D781005F60CE /* text-vcard.tvg in Resources */,
 				DCE5E8AE2080D781005F60CE /* text-code.tvg in Resources */,
 				DC9BFBBB20A1B3CA007064B5 /* icon-password-manager.tvg in Resources */,
@@ -1417,6 +1422,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59AB02FC21A6CBDB003F5101 /* test_certificate.cer in Resources */,
 				59F64776219AE90F00C016FD /* PropfindResponse.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
