@@ -19,12 +19,10 @@
 import UIKit
 
 final class CardTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
-	private weak var vcToPresent: UIViewController?
-	private weak var alreadyPresentedVC: UIViewController?
+	private weak var viewControllerToPresent: UIViewController?
 
 	init(viewControllerToPresent: UIViewController, presentingViewController: UIViewController) {
-		self.vcToPresent = viewControllerToPresent
-		self.alreadyPresentedVC = presentingViewController
+		self.viewControllerToPresent = viewControllerToPresent
 	}
 
 	func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
