@@ -234,13 +234,33 @@
 				{
 					if (!observer.didProvideInitialItems)
 					{
-						OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER %@ FOR %@: %@", _enumerationObservers.count, observer.enumerationObserver, query.queryPath, query.queryResults);
+						NSArray <OCItem *> *queryResults = query.queryResults;
+
+						OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER %@ FOR %@: %@", _enumerationObservers.count, observer.enumerationObserver, query.queryPath, queryResults);
 
 						observer.didProvideInitialItems = YES;
 
-						if (query.queryResults != nil)
+						if (queryResults != nil)
 						{
-							[observer.enumerationObserver didEnumerateItems:query.queryResults];
+//							NSUInteger offset = 0, count = queryResults.count;
+//
+//							while (offset < count)
+//							{
+//								NSUInteger sliceCount = 100;
+//
+//								if (offset + sliceCount > count)
+//								{
+//									sliceCount = count - offset;
+//								}
+//
+//								NSArray<OCItem *> *partialResults = [queryResults subarrayWithRange:NSMakeRange(offset, sliceCount)];
+//
+//								[observer.enumerationObserver didEnumerateItems:partialResults];
+//
+//								offset += sliceCount;
+//							};
+
+							[observer.enumerationObserver didEnumerateItems:queryResults];
 						}
 
 						[observer.enumerationObserver finishEnumeratingUpToPage:nil];
