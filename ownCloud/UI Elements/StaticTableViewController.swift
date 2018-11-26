@@ -207,6 +207,14 @@ class StaticTableViewController: UITableViewController, Themeable {
 		return sections[section].footerTitle
 	}
 
+	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		return sections[section].headerView
+	}
+
+	override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+		return sections[section].footerView
+	}
+
 	// MARK: - Theme support
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.backgroundColor = collection.tableGroupBackgroundColor

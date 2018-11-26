@@ -69,7 +69,7 @@ extension ThemeStyle {
 		}
 	}
 
-	static func forIdentifier(_ identifier: String) -> ThemeStyle? {
+	static func forIdentifier(_ identifier: ThemeStyleIdentifier) -> ThemeStyle? {
 		let matchContext = OCExtensionContext(location: OCExtensionLocation(ofType: .themeStyle, identifier: OCExtensionLocationIdentifier(rawValue: identifier)), requirements: nil, preferences: nil)
 
 		if let matches : [OCExtensionMatch] = try? OCExtensionManager.shared.provideExtensions(for: matchContext),

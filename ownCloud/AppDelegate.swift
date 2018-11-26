@@ -24,10 +24,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
 	var serverListTableViewController: ServerListTableViewController?
+	var staticLoginViewController : StaticLoginViewController?
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
 		var navigationController: UINavigationController?
+		var rootViewController : UIViewController?
 
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
 		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching")
@@ -36,12 +38,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		ThemeStyle.registerDefaultStyles()
 
-		serverListTableViewController = ServerListTableViewController(style: UITableViewStyle.plain)
+//		serverListTableViewController = ServerListTableViewController(style: UITableViewStyle.plain)
+//		navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
+//		rootViewController = navigationController
 
-		navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
+		staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.demoBundle)
+		rootViewController = staticLoginViewController
 
-		window?.rootViewController = navigationController!
-		window?.addSubview((navigationController?.view)!)
+		window?.rootViewController = rootViewController!
 		window?.makeKeyAndVisible()
 
 		AppLockManager.shared.showLockscreenIfNeeded()

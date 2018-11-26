@@ -33,7 +33,7 @@ extension OCBookmark {
 
 	var shortName: String {
 		if self.name != nil {
-			return self.name
+			return self.name!
 		} else {
 			var userNamePrefix = ""
 
@@ -42,9 +42,9 @@ extension OCBookmark {
 			}
 
 			if self.originURL?.host != nil {
-				return userNamePrefix + self.originURL.host!
+				return userNamePrefix + self.originURL!.host!
 			} else if self.url?.host != nil {
-				return userNamePrefix + self.url.host!
+				return userNamePrefix + self.url!.host!
 			}
 		}
 

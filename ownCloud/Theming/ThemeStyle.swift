@@ -18,8 +18,10 @@
 
 import UIKit
 
+typealias ThemeStyleIdentifier = String
+
 class ThemeStyle : NSObject {
-	var identifier: String
+	var identifier: ThemeStyleIdentifier
 	var localizedName: String
 
 	var lightColor: UIColor
@@ -28,7 +30,7 @@ class ThemeStyle : NSObject {
 
 	var customizedColorsByPath : [String:String]?
 
-	init(identifier idtfr: String, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customizedColorsByPath customizations: [String:String]? = nil) {
+	init(identifier idtfr: ThemeStyleIdentifier, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customizedColorsByPath customizations: [String:String]? = nil) {
 		self.identifier = idtfr
 		self.localizedName = name
 		self.lightColor = lColor

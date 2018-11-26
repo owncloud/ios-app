@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 class ThemeColorPair : NSObject {
 	@objc var foreground: UIColor
@@ -83,6 +84,11 @@ class ThemeCollection : NSObject {
 	// MARK: - Brand color collection
 	@objc var darkBrandColors : ThemeColorCollection
 	@objc var lightBrandColors : ThemeColorCollection
+
+	// MARK: - Brand assets
+	@objc var brandedName : String? {
+		return OCAppIdentity.shared.appName
+	}
 
 	// MARK: - Button / Fill color collections
 	@objc var approvalColors : ThemeColorPairCollection
