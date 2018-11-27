@@ -7,21 +7,26 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
-import UIKit
 import ownCloudSDK
+import UIKit
 
 class StaticLoginSetupViewController : StaticLoginStepViewController {
 	var profile : StaticLoginProfile
 	var bookmark : OCBookmark
+
+	private var username : String?
+	private var password : String?
+
+	private var passwordRow : StaticTableViewRow?
 
 	init(loginViewController theLoginViewController: StaticLoginViewController, profile theProfile: StaticLoginProfile) {
 		profile = theProfile
@@ -34,9 +39,6 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	private var username : String?
-	private var password : String?
-
 	func loginMaskSection() -> StaticTableViewSection {
 		var loginMaskSection : StaticTableViewSection
 
@@ -47,12 +49,13 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			self?.username = row.value as? String
 		}, placeholder: "Username", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "username"))
 
-		loginMaskSection.add(row: StaticTableViewRow(secureTextFieldWithAction: { [weak self] (row, _) in
+		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (row, _) in
 			self?.password = row.value as? String
-		}, placeholder: "Password", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password"))
+		}, placeholder: "Password", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password")
+		loginMaskSection.add(row: passwordRow!)
 
 		let (proceedButton, cancelButton) = loginMaskSection.addButtonFooter(proceedLabel: "Login", cancelLabel: "Cancel")
-		proceedButton.addTarget(self, action: #selector(self.proceed(_:)), for: .touchUpInside)
+		proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
 		cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
 
 		return loginMaskSection
@@ -65,7 +68,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		tokenMaskSection.addStaticHeader(title: profile.name!, message: profile.prompt)
 
 		let (proceedButton, cancelButton) = tokenMaskSection.addButtonFooter(proceedLabel: "Continue", cancelLabel: "Cancel")
-		proceedButton.addTarget(self, action: #selector(self.proceed(_:)), for: .touchUpInside)
+		proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
 		cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
 
 		return tokenMaskSection
@@ -74,7 +77,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	func busySection(message: String) -> StaticTableViewSection {
 		let busySection : StaticTableViewSection = StaticTableViewSection(headerTitle: nil, identifier: "busySection")
 		let activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-		let containerView : StaticLoginStepViewController.FullWidthHeaderView = StaticLoginStepViewController.FullWidthHeaderView()
+		let containerView : FullWidthHeaderView = FullWidthHeaderView()
 		let centerView : UIView = UIView()
 		let messageLabel : UILabel = UILabel()
 
@@ -119,7 +122,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		return busySection
 	}
 
-	@objc func proceed(_ sender: Any?) {
+	@objc func startAuthentication(_ sender: Any?) {
+		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
+
 		if let connection = OCConnection(bookmark: bookmark, persistentStoreBaseURL: nil) {
 			var options : [OCAuthenticationMethodKey : Any] = [:]
 
@@ -132,21 +137,56 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 			options[.presentingViewControllerKey] = self
 
+			hud?.present(on: self, label: "Authenticating…".localized)
+
 			connection.generateAuthenticationData(withMethod: bookmark.authenticationMethodIdentifier, options: options, completionHandler: { (error, authMethodIdentifier, authMethodData) in
-				if error == nil {
-					self.bookmark.authenticationMethodIdentifier = authMethodIdentifier
-					self.bookmark.authenticationData = authMethodData
+				OnMainThread {
+					hud?.dismiss(completion: {
+						if error == nil {
+							self.bookmark.authenticationMethodIdentifier = authMethodIdentifier
+							self.bookmark.authenticationData = authMethodData
 
-					self.bookmark.name = self.profile.bookmarkName
+							self.bookmark.name = self.profile.bookmarkName
 
-					OCBookmarkManager.shared.addBookmark(self.bookmark)
-				} else {
-					if let nsError = error as NSError?,
-					   nsError.isOCError(withCode: .errorAuthorizationFailed) {
-					   	OnMainThread {
-							self.navigationController?.view.shakeHorizontally()
+							self.bookmark.userInfo[StaticLoginProfile.staticLoginProfileIdentifierKey] = self.profile.identifier
+
+							OCBookmarkManager.shared.addBookmark(self.bookmark)
+
+							self.pushSuccessViewController()
+						} else {
+							var issue : OCConnectionIssue?
+							let nsError = error as NSError?
+
+							if let embeddedIssue = nsError?.embeddedIssue() {
+								issue = embeddedIssue
+							} else {
+								issue = OCConnectionIssue(forError: error, level: .error, issueHandler: nil)
+							}
+
+							if nsError?.isOCError(withCode: .errorAuthorizationFailed) == true {
+								// Shake
+								self.navigationController?.view.shakeHorizontally()
+								OnMainThread {
+									self.passwordRow?.textField?.becomeFirstResponder()
+								}
+							} else {
+								let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
+									switch response {
+										case .cancel:
+											issue?.reject()
+
+										case .approve:
+											issue?.approve()
+											self?.startAuthentication(nil)
+
+										case .dismiss: break
+									}
+								})
+
+								self.present(issuesViewController, animated: true, completion: nil)
+							}
 						}
-					}
+					})
 				}
 			})
 		}
@@ -154,6 +194,28 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 	@objc func cancel(_ sender: Any?) {
 		self.navigationController?.popViewController(animated: true)
+	}
+
+	func pushSuccessViewController() {
+		let successViewController : StaticLoginStepViewController = StaticLoginStepViewController(loginViewController: self.loginViewController!)
+		let messageSection = StaticTableViewSection(headerTitle: "")
+
+		messageSection.addStaticHeader(title: "Setup complete")
+
+		let (proceedButton, showAccountsList) = messageSection.addButtonFooter(proceedLabel: "Connect", cancelLabel: "Show accounts")
+
+		proceedButton?.addTarget(self, action: #selector(self.connectToBookmark), for: .touchUpInside)
+		showAccountsList?.addTarget(loginViewController, action: #selector(loginViewController?.showFirstScreen), for: .touchUpInside)
+
+		successViewController.addSection(messageSection)
+
+		self.navigationController?.pushViewController(successViewController, animated: true)
+	}
+
+	@objc func connectToBookmark() {
+		self.loginViewController?.openBookmark(bookmark, closeHandler: {
+			self.loginViewController?.showFirstScreen()
+		})
 	}
 
 	override func viewDidLoad() {

@@ -227,8 +227,11 @@ extension OCItem {
 	}
 
 	var lastModifiedInReadableFormat: String {
-		let dateString = OCItem.dateFormatter.string(from: self.lastModified)
-		return dateString
+		if self.lastModified != nil {
+			return OCItem.dateFormatter.string(from: self.lastModified)
+		} else {
+			return ""
+		}
 	}
 
 	static private let byteCounterFormatter: ByteCountFormatter = {

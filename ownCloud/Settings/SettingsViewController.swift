@@ -21,21 +21,28 @@ import ownCloudSDK
 
 class SettingsViewController: StaticTableViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	override func viewDidLoad() {
+		super.viewDidLoad()
 
-        self.navigationItem.title = "Settings".localized
+		self.navigationItem.title = "Settings".localized
 
-        let userDefaults = OCAppIdentity.shared.userDefaults
+		let userDefaults = OCAppIdentity.shared.userDefaults
 
-        let uploadSettings = UploadsSettingsSection(userDefaults: userDefaults!)
-        let securitySettings = SecuritySettingsSection(userDefaults: userDefaults!)
-        let userInterfaceSettings = UserInterfaceSettingsSection(userDefaults: userDefaults!)
-        let moreSettings = MoreSettingsSection(userDefaults: userDefaults!)
-        self.addSection(securitySettings)
-        self.addSection(userInterfaceSettings)
-        self.addSection(uploadSettings)
-        self.addSection(moreSettings)
-    }
+		let uploadSettings = UploadsSettingsSection(userDefaults: userDefaults!)
+		let securitySettings = SecuritySettingsSection(userDefaults: userDefaults!)
+		let userInterfaceSettings = UserInterfaceSettingsSection(userDefaults: userDefaults!)
+		let moreSettings = MoreSettingsSection(userDefaults: userDefaults!)
+		self.addSection(securitySettings)
+		self.addSection(userInterfaceSettings)
+		self.addSection(uploadSettings)
+		self.addSection(moreSettings)
+	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		if self.navigationController?.topViewController === self {
+			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(self.dismissAnimated))
+		}
+	}
 }

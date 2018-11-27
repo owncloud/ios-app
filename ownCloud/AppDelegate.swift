@@ -43,7 +43,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //		rootViewController = navigationController
 
 		staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.demoBundle)
-		rootViewController = staticLoginViewController
+		navigationController = ThemeNavigationController(rootViewController: staticLoginViewController!)
+		navigationController?.setNavigationBarHidden(true, animated: false)
+		rootViewController = navigationController
 
 		window?.rootViewController = rootViewController!
 		window?.makeKeyAndVisible()

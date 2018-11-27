@@ -32,6 +32,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	var lockedBookmarks : [OCBookmark] = []
 
+	var hasToolbar : Bool = true
+
 	override init(style: UITableViewStyle) {
 		super.init(style: style)
 
@@ -74,22 +76,31 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
 
-		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
+		if welcomeOverlayView != nil {
+			welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
+		}
 
 		Theme.shared.add(tvgResourceFor: "owncloud-logo")
-		welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
+
+		if welcomeLogoTVGView != nil {
+			welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
+		}
 
 		self.navigationItem.title = "ownCloud"
+
+		Theme.shared.register(client: self)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		self.navigationController?.setToolbarHidden(false, animated: animated)
+		if hasToolbar {
+			self.navigationController?.setToolbarHidden(false, animated: animated)
+		}
 
-		Theme.shared.register(client: self)
-
-		welcomeOverlayView.layoutSubviews()
+		if welcomeOverlayView != nil {
+			welcomeOverlayView.layoutSubviews()
+		}
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -97,17 +108,19 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		updateNoServerMessageVisibility()
 
-		let helpBarButtonItem = UIBarButtonItem(title: "Feedback".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(help))
-		helpBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
+		if hasToolbar {
+			let helpBarButtonItem = UIBarButtonItem(title: "Feedback".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(help))
+			helpBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
 
-		let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
-		settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
+			let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
+			settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
 
-		self.toolbarItems = [
-			helpBarButtonItem,
-			UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
-			settingsBarButtonItem
-		]
+			self.toolbarItems = [
+				helpBarButtonItem,
+				UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
+				settingsBarButtonItem
+			]
+		}
 
 		considerBetaWarning()
 	}
@@ -126,7 +139,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				OCAppIdentity.shared.userDefaults?.set(NSDate(), forKey: "LastBetaWarningAcceptDate")
 			}
 
-			self.present(betaAlert, animated: true, completion: nil)
+			self.showModal(viewController: betaAlert)
 		}
 	}
 
@@ -139,15 +152,21 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		welcomeAddServerButton.themeColorCollection = collection.neutralColors
+		if welcomeAddServerButton != nil {
+			welcomeAddServerButton.themeColorCollection = collection.neutralColors
+
+			welcomeTitleLabel.applyThemeCollection(collection, itemStyle: .title)
+			welcomeMessageLabel.applyThemeCollection(collection, itemStyle: .message)
+		}
 
 		self.tableView.applyThemeCollection(collection)
-
-		self.welcomeTitleLabel.applyThemeCollection(collection, itemStyle: .title)
-		self.welcomeMessageLabel.applyThemeCollection(collection, itemStyle: .message)
 	}
 
 	func updateNoServerMessageVisibility() {
+		guard welcomeOverlayView != nil else {
+			return
+		}
+
 		if OCBookmarkManager.shared.bookmarks.count == 0 {
 			let safeAreaLayoutGuide : UILayoutGuide = self.tableView.safeAreaLayoutGuide
 			var constraint : NSLayoutConstraint
@@ -205,7 +224,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		let viewController : BookmarkViewController = BookmarkViewController(bookmark)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
 
-		self.present(navigationController, animated: true, completion: nil)
+		self.showModal(viewController: navigationController)
 	}
 
 	var themeCounter : Int = 0
@@ -228,7 +247,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			if !self.ignoreServerListChanges {
 				self.tableView.reloadData()
 			}
+
+			self.didUpdateServerList()
 		}
+	}
+
+	func didUpdateServerList() {
+		// This is a hook for subclasses
 	}
 
 	// MARK: - Table view delegate
@@ -245,7 +270,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 					self.updateNoServerMessageVisibility()
 				}))
 
-				self.present(alertController, animated: true, completion: nil)
+				self.showModal(viewController: alertController)
 
 				return
 			}
@@ -253,11 +278,21 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			if tableView.isEditing {
 				self.showBookmarkUI(edit: bookmark)
 			} else {
-				let clientRootViewController = ClientRootViewController(bookmark: bookmark)
-
-				self.present(clientRootViewController, animated: true, completion: nil)
+				self.openBookmark(bookmark)
 			}
 		}
+	}
+
+	func openBookmark(_ bookmark: OCBookmark, closeHandler: (() -> Void)? = nil) {
+		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+
+		clientRootViewController.closeHandler = closeHandler
+
+		self.showModal(viewController: clientRootViewController)
+	}
+
+	func showModal(viewController: UIViewController) {
+		self.present(viewController, animated: true, completion: nil)
 	}
 
 	// MARK: - Table view data source
@@ -317,7 +352,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 												alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
-												self.present(alertController, animated: true, completion: nil)
+												self.showModal(viewController: alertController)
 											} else {
 												// Success! We can now remove the bookmark
 												self.ignoreServerListChanges = true
@@ -344,7 +379,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 							}, for: bookmark)
 						}))
 
-						self.present(alertController, animated: true, completion: nil)
+						self.showModal(viewController: alertController)
 					}
 				}),
 

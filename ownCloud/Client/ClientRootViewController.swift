@@ -26,6 +26,8 @@ class ClientRootViewController: UITabBarController {
 	var progressBar : CollapsibleProgressBar?
 	var progressSummarizer : ProgressSummarizer?
 
+	var closeHandler : (() -> Void)?
+
 	init(bookmark inBookmark: OCBookmark) {
 		let openProgress = Progress()
 
@@ -110,6 +112,7 @@ class ClientRootViewController: UITabBarController {
 	}
 
 	func closeClient(completion: (() -> Void)? = nil) {
+		closeHandler?()
 		self.presentingViewController?.dismiss(animated: true, completion: completion)
 	}
 

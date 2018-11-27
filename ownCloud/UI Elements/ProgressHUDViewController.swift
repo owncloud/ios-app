@@ -114,6 +114,8 @@ class ProgressHUDViewController: UIViewController {
 					})
 				}
 			}
+		} else {
+			completion?()
 		}
 	}
 

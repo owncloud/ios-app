@@ -7,14 +7,14 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
 import UIKit
 
@@ -39,48 +39,23 @@ class StaticLoginStepViewController : StaticTableViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	class FullWidthHeaderView : UIView, Themeable {
-		init() {
-			super.init(frame: .zero)
-		}
-
-		deinit {
-			if hasRegistered {
-				Theme.shared.unregister(client: self)
-			}
-		}
-
-		required init?(coder aDecoder: NSCoder) {
-			fatalError("init(coder:) has not been implemented")
-		}
-
-		private var hasRegistered : Bool = false
-
-		override func didMoveToSuperview() {
-			if self.superview != nil {
-				self.widthAnchor.constraint(equalTo: self.superview!.widthAnchor).isActive = true
-
-				if !hasRegistered {
-					hasRegistered = true
-					Theme.shared.register(client: self, applyImmediately: true)
-				}
-			}
-		}
-
-		private var themeAppliers : [ThemeApplier] = []
-
-		func addThemeApplier(_ applier: @escaping ThemeApplier) {
-			themeAppliers.append(applier)
-		}
-
-		func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-			for applier in themeAppliers {
-				applier(theme, collection, event)
-			}
-		}
+	@objc func popViewController() {
+		self.navigationController?.popViewController(animated: true)
 	}
+}
 
-	static func buildHeader(title: String, message: String?, cellSpacing: CGFloat = 20, topSpacing : CGFloat = 30, bottomSpacing : CGFloat = 20 ) -> UIView {
+class FullWidthHeaderView : ThemeView {
+	override func didMoveToSuperview() {
+		if self.superview != nil {
+			self.widthAnchor.constraint(equalTo: self.superview!.widthAnchor).isActive = true
+		}
+
+		super.didMoveToSuperview()
+	}
+}
+
+extension StaticTableViewSection {
+	static func buildHeader(title: String, message: String? = nil, cellSpacing: CGFloat = 20, topSpacing : CGFloat = 30, bottomSpacing : CGFloat = 20 ) -> UIView {
 		let horizontalPadding: CGFloat = 0
 
 		let headerView = FullWidthHeaderView()
@@ -139,12 +114,10 @@ class StaticLoginStepViewController : StaticTableViewController {
 
 		return headerView
 	}
-}
 
-extension StaticTableViewSection {
 	@discardableResult
-	func addStaticHeader(title: String, message: String?) -> UIView {
-		let sectionHeaderView : UIView = StaticLoginStepViewController.buildHeader(title: title, message: message)
+	func addStaticHeader(title: String, message: String? = nil) -> UIView {
+		let sectionHeaderView : UIView = StaticTableViewSection.buildHeader(title: title, message: message)
 
 		self.headerView = sectionHeaderView
 
@@ -152,23 +125,33 @@ extension StaticTableViewSection {
 	}
 
 	@discardableResult
-	func addButtonFooter(proceedLabel: String, cancelLabel : String?, topSpacing : CGFloat = 30) -> (UIButton, UIButton?) {
-		let containerView = StaticLoginStepViewController.FullWidthHeaderView()
-		let continueButton : ThemeButton = ThemeButton()
+	func addButtonFooter(proceedLabel: String? = nil, cancelLabel : String? = nil, topSpacing : CGFloat = 30) -> (UIButton?, UIButton?) {
+		let containerView = FullWidthHeaderView()
+		var continueButton : ThemeButton?
 		var cancelButton : UIButton?
+		var constraints : [NSLayoutConstraint] = []
 
-		// containerView.translatesAutoresizingMaskIntoConstraints = false
-		continueButton.translatesAutoresizingMaskIntoConstraints = false
+		if proceedLabel != nil {
+			continueButton = ThemeButton()
+			// containerView.translatesAutoresizingMaskIntoConstraints = false
+			continueButton?.translatesAutoresizingMaskIntoConstraints = false
 
-		continueButton.setTitle(proceedLabel, for: .normal)
+			continueButton?.setTitle(proceedLabel, for: .normal)
 
-		containerView.addSubview(continueButton)
+			containerView.addSubview(continueButton!)
 
-		NSLayoutConstraint.activate([
-			continueButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: topSpacing),
-			continueButton.leftAnchor.constraint(equalTo: containerView.leftAnchor),
-			continueButton.rightAnchor.constraint(equalTo: containerView.rightAnchor)
-		])
+			constraints += [
+				continueButton!.topAnchor.constraint(equalTo: containerView.topAnchor, constant: topSpacing),
+				continueButton!.leftAnchor.constraint(equalTo: containerView.leftAnchor),
+				continueButton!.rightAnchor.constraint(equalTo: containerView.rightAnchor)
+			]
+
+			if cancelLabel == nil {
+				constraints += [
+					continueButton!.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+				]
+			}
+		}
 
 		if cancelLabel != nil {
 			cancelButton = UIButton()
@@ -178,17 +161,20 @@ extension StaticTableViewSection {
 
 			containerView.addSubview(cancelButton!)
 
-			NSLayoutConstraint.activate([
-				cancelButton!.topAnchor.constraint(equalTo: continueButton.bottomAnchor, constant: 10),
+			if continueButton != nil {
+				constraints += [cancelButton!.topAnchor.constraint(equalTo: continueButton!.bottomAnchor, constant: 10)]
+			} else {
+				constraints += [cancelButton!.topAnchor.constraint(equalTo: containerView.topAnchor, constant: topSpacing)]
+			}
+
+			constraints +=  [
 				cancelButton!.leftAnchor.constraint(equalTo: containerView.leftAnchor),
 				cancelButton!.rightAnchor.constraint(equalTo: containerView.rightAnchor),
 				cancelButton!.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-			])
-		} else {
-			NSLayoutConstraint.activate([
-				continueButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-			])
+			]
 		}
+
+		NSLayoutConstraint.activate(constraints)
 
 		containerView.addThemeApplier({ [weak continueButton, cancelButton] (_, collection, _) in
 			continueButton?.applyThemeCollection(collection)

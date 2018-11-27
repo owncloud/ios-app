@@ -7,14 +7,14 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
 import UIKit
 import ownCloudSDK
@@ -40,37 +40,25 @@ class StaticLoginViewController: UIViewController, Themeable {
 				contentContainerView?.addSubview(contentViewController!.view!)
 				contentViewController!.view!.translatesAutoresizingMaskIntoConstraints = false
 
-				if let stepViewController = contentViewController as? StaticLoginStepViewController, stepViewController.centerVertically {
-
-					NSLayoutConstraint.activate([
-						contentViewController!.view!.topAnchor.constraint(greaterThanOrEqualTo: contentContainerView!.safeAreaLayoutGuide.topAnchor),
-						contentViewController!.view!.heightAnchor.constraint(equalToConstant: stepViewController.tableView.contentSize.height),
-						contentViewController!.view!.centerYAnchor.constraint(equalTo: contentContainerView!.safeAreaLayoutGuide.centerYAnchor),
-						contentViewController!.view!.bottomAnchor.constraint(lessThanOrEqualTo: contentContainerView!.safeAreaLayoutGuide.bottomAnchor),
-						contentViewController!.view!.leftAnchor.constraint(equalTo: contentContainerView!.safeAreaLayoutGuide.leftAnchor),
-						contentViewController!.view!.rightAnchor.constraint(equalTo: contentContainerView!.safeAreaLayoutGuide.rightAnchor)
-					])
-				} else {
-					NSLayoutConstraint.activate([
-						contentViewController!.view!.topAnchor.constraint(equalTo: contentContainerView!.safeAreaLayoutGuide.topAnchor),
-						contentViewController!.view!.bottomAnchor.constraint(equalTo: contentContainerView!.safeAreaLayoutGuide.bottomAnchor),
-						contentViewController!.view!.leftAnchor.constraint(equalTo: contentContainerView!.safeAreaLayoutGuide.leftAnchor, constant: 20),
-						contentViewController!.view!.rightAnchor.constraint(equalTo: contentContainerView!.safeAreaLayoutGuide.rightAnchor, constant: -20)
-					])
-				}
+				NSLayoutConstraint.activate([
+					contentViewController!.view!.topAnchor.constraint(equalTo: contentContainerView!.safeAreaLayoutGuide.topAnchor),
+					contentViewController!.view!.bottomAnchor.constraint(equalTo: contentContainerView!.safeAreaLayoutGuide.bottomAnchor),
+					contentViewController!.view!.leftAnchor.constraint(equalTo: contentContainerView!.safeAreaLayoutGuide.leftAnchor, constant: 20),
+					contentViewController!.view!.rightAnchor.constraint(equalTo: contentContainerView!.safeAreaLayoutGuide.rightAnchor, constant: -20)
+				])
 
 				// Animate transition
 				if oldValue != nil {
 					contentViewController?.view.alpha = 0.0
 
 					UIView.animate(withDuration: 0.25, animations: {
-						oldValue?.view.alpha = 0.0
+						oldValue?.view?.alpha = 0.0
 						self.contentViewController?.view.alpha = 1.0
 					}, completion: { (_) in
 						oldValue?.view?.removeFromSuperview()
 						oldValue?.removeFromParentViewController()
 
-						oldValue?.view.alpha = 1.0
+						oldValue?.view?.alpha = 1.0
 
 						self.contentViewController?.didMove(toParentViewController: self)
 					})
@@ -81,6 +69,25 @@ class StaticLoginViewController: UIViewController, Themeable {
 		}
 	}
 
+	var toolbarShown : Bool = false {
+		didSet {
+			if self.toolbarItems == nil, toolbarShown {
+				let feedbackBarButtonItem = UIBarButtonItem(title: "Feedback".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(sendFeedback))
+				feedbackBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
+
+				let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
+				settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
+
+				self.toolbarItems = [
+					feedbackBarButtonItem,
+					UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
+					settingsBarButtonItem
+				]
+			}
+
+			self.navigationController?.setToolbarHidden(!toolbarShown, animated: true)
+		}
+	}
 	init(with staticLoginBundle: StaticLoginBundle) {
 		loginBundle = staticLoginBundle
 
@@ -165,8 +172,10 @@ class StaticLoginViewController: UIViewController, Themeable {
 		self.headerLabel?.applyThemeCollection(collection)
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
+	override func viewDidLoad() {
+		super.viewDidLoad()
+
+		OCItem.registerIcons()
 
 		Theme.shared.add(tvgResourceFor: "owncloud-logo")
 
@@ -179,22 +188,27 @@ class StaticLoginViewController: UIViewController, Themeable {
 		backgroundImageView?.contentMode = .scaleAspectFill
 
 		contentContainerView?.backgroundColor = UIColor(white: 0.0, alpha: 0.5)
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
 
 		if contentViewController == nil {
 			showFirstScreen()
 		}
 	}
 
-	func showFirstScreen() {
+	@objc func showFirstScreen() {
 		var firstViewController : UIViewController?
 
 		if OCBookmarkManager.shared.bookmarks.count > 0 {
 			// Login selection view
+			firstViewController = self.buildBookmarkSelector()
 		} else {
 			// Setup flow
 			if loginBundle.profiles.count > 1 {
 				// Profile setup selector
-				firstViewController = buildProfileSetupSelector()
+				firstViewController = buildProfileSetupSelector(title: "Welcome")
 			} else {
 				// Single Profile setup
 				firstViewController = buildSetupViewController(for: loginBundle.profiles.first!)
@@ -210,12 +224,12 @@ class StaticLoginViewController: UIViewController, Themeable {
 		}
 	}
 
-	func buildProfileSetupSelector() -> StaticLoginStepViewController {
+	// MARK: - View controller builders
+	func buildProfileSetupSelector(title : String, includeCancelOption: Bool = false) -> StaticLoginStepViewController {
 		let selectorViewController : StaticLoginStepViewController = StaticLoginStepViewController(loginViewController: self)
 		let profileSection = StaticTableViewSection(headerTitle: "")
-		let headerView = StaticLoginStepViewController.buildHeader(title: "Welcome!", message: "Please pick a profile to begin setup:")
 
-		profileSection.headerView = headerView
+		profileSection.addStaticHeader(title: title, message: "Please pick a profile to begin setup:")
 
 		for profile in loginBundle.profiles {
 			profileSection.add(row: StaticTableViewRow(rowWithAction: { (row, _) in
@@ -227,6 +241,12 @@ class StaticLoginViewController: UIViewController, Themeable {
 			}, title: profile.name!, accessoryType: .disclosureIndicator, identifier: profile.identifier))
 		}
 
+		if includeCancelOption {
+			let (_, cancelButton) = profileSection.addButtonFooter(cancelLabel: "Cancel")
+
+			cancelButton?.addTarget(selectorViewController, action: #selector(selectorViewController.popViewController), for: .touchUpInside)
+		}
+
 		selectorViewController.addSection(profileSection)
 
 		return (selectorViewController)
@@ -234,5 +254,60 @@ class StaticLoginViewController: UIViewController, Themeable {
 
 	func buildSetupViewController(for profile: StaticLoginProfile) -> StaticLoginSetupViewController {
 		return StaticLoginSetupViewController(loginViewController: self, profile: profile)
+	}
+
+	func buildBookmarkSelector() -> ServerListTableViewController {
+		let serverList = StaticLoginServerListViewController(style: .grouped)
+
+		serverList.staticLoginViewController = self
+		serverList.hasToolbar = false
+
+		return serverList
+	}
+
+	func profile(for staticLoginProfileIdentifier: StaticLoginProfileIdentifier) -> StaticLoginProfile? {
+		return loginBundle.profiles.first(where: { (profile) -> Bool in
+			return (profile.identifier == staticLoginProfileIdentifier)
+		})
+	}
+
+	func switchToTheme(with styleIdentifier: ThemeStyleIdentifier) {
+		if let themeStyle = ThemeStyle.forIdentifier(styleIdentifier) {
+			Theme.shared.switchThemeCollection(ThemeCollection(with: themeStyle))
+		}
+	}
+
+	// MARK: - Actions
+	@objc func sendFeedback() {
+		VendorServices.shared.sendFeedback(from: self)
+	}
+
+	@objc func settings() {
+        	let viewController : SettingsViewController = SettingsViewController(style: .grouped)
+        	let navigationViewController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
+
+		self.present(navigationViewController, animated: true, completion: nil)
+	}
+
+	func openBookmark(_ bookmark: OCBookmark, closeHandler: (() -> Void)? = nil) {
+		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+
+		// Switch to theme for bookmark
+		if let staticLoginProfileIdentifier = bookmark.userInfo[StaticLoginProfile.staticLoginProfileIdentifierKey] as? StaticLoginProfileIdentifier,
+		   let staticLoginProfile = self.profile(for: staticLoginProfileIdentifier),
+		   let themeStyleIdentifier = staticLoginProfile.themeStyleID {
+			self.switchToTheme(with: themeStyleIdentifier)
+		}
+
+		clientRootViewController.closeHandler = { [weak self] () in
+			// Switch to theme for static login UI
+			if let themeStyleIdentifier = self?.loginBundle.loginThemeStyleID {
+				self?.switchToTheme(with: themeStyleIdentifier)
+			}
+
+			closeHandler?()
+		}
+
+		self.present(clientRootViewController, animated: true, completion: nil)
 	}
 }
