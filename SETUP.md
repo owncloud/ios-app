@@ -89,14 +89,14 @@ You can easily fire up an ownCloud server on your Mac using Docker.
 ```
 docker run --rm -d \
   --name owncloud \
-  -p 80:8080 \
+  -p 18080:8080 \
   -e OWNCLOUD_APPS_INSTALL=oauth2 \
   -e ADMIN_USERNAME=admin \
   -e ADMIN_PASSWORD=admin \
   owncloud/server:latest
 ```
 3. Access from local Mac browser or Simulator:  
- http://localhost/  
+ http://localhost:18080/  
  user: admin  
  password: admin
 4. To test the  app on a iOS device in your local network, you can use the IP of your machine as the Server URL
