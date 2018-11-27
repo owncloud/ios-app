@@ -426,7 +426,7 @@ class BookmarkViewController: StaticTableViewController {
 
 				case .edit:
 					// Update original bookmark
-					originalBookmark?.setValuesFrom(bookmark)
+					originalBookmark?.setValuesFrom(bookmark!)
 					OCBookmarkManager.shared.saveBookmarks()
 					OCBookmarkManager.shared.postChangeNotification()
 			}
@@ -484,7 +484,7 @@ class BookmarkViewController: StaticTableViewController {
 
 		if let authenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier {
 			// Username & Password: show if passphrase-based authentication method is used
-			if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier as String?) {
+			if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
 				// Remove unwanted rows
 				var removeRows : [StaticTableViewRow] = []
 				let authMethodType = authenticationMethodClass.type()
@@ -650,9 +650,9 @@ class BookmarkViewController: StaticTableViewController {
 		// URL
 		if urlRow != nil, fieldSelector(urlRow!) {
 			if bookmark.originURL != nil {
-				urlRow?.value = bookmark.originURL.absoluteString
+				urlRow?.value = bookmark.originURL?.absoluteString
 			} else if bookmark.url != nil {
-				urlRow?.value = bookmark.url.absoluteString
+				urlRow?.value = bookmark.url?.absoluteString
 			} else {
 				urlRow?.value = ""
 			}
@@ -685,7 +685,7 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	func authenticationMethodTypeForIdentifier(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> OCAuthenticationMethodType? {
-		if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier as String?) {
+		if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
 			return authenticationMethodClass.type()
 		}
 
