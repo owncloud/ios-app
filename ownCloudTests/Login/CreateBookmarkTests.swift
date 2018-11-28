@@ -258,7 +258,7 @@ class CreateBookmarkTests: XCTestCase {
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
 
 			//Assert
-            EarlGrey.select(elementWithMatcher: grey_text("Certificate".localized)).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_text("Certificate".localized)).assert(grey_sufficientlyVisible())
 			EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).assert(grey_sufficientlyVisible())
 
 			//Reset status
