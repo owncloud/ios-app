@@ -36,6 +36,9 @@ class CreateBookmarkTests: XCTestCase {
 		OCMockManager.shared.removeAllMockingBlocks()
 	}
 
+    /*
+     * PASSED if: Initial view correct: URL field and continue button are displayed
+     */
     func testCheckInitialViewAuth () {
 
         //Actions
@@ -49,6 +52,9 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
+    /*
+     * PASSED if: Alert view with missing URL displayed if Continue is clicked with empty URL
+     */
     func testCheckURLEmptyBasicAuth () {
 
         //Actions
@@ -63,6 +69,9 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
+    /*
+     * PASSED if: URL leads to informal issue. Credentials fields, name and Continue are displayed
+     */
     func testCheckURLBasicAuthInformalIssue () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -96,6 +105,9 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
+    /*
+     * PASSED if: URL leads to warning issue. Issue with Approve and Cancel buttons are displayed
+     */
     func testCheckURLBasicAuthWarningIssueView () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -120,6 +132,9 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
+    /*
+     * PASSED if: URL leads to warning issue. Issue approved: URL, Credentials fields, Name and Continue are displayed
+     */
     func testCheckURLBasicAuthWarningIssueApproval () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -154,6 +169,9 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
+    /*
+     * PASSED if: URL leads to warning issue. Issue cancelled: URL displayed. Credentials and name not displayed
+     */
     func testCheckURLBasicAuthWarningIssueCancel () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -180,6 +198,9 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 	
+    /*
+     * PASSED if: URL leads to error issue. Error displayed. URL displayed. Credentials and name not displayed
+     */
     func testCheckURLBasicAuthErrorIssue () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -216,6 +237,9 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
+    /*
+     * PASSED if: URL leads to warning issue type Certificate. Certificate issue displayed with Approve displayed
+     */
 	func testCheckURLBasicAuthWarningIssueCertificate() {
 
 		let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -234,6 +258,7 @@ class CreateBookmarkTests: XCTestCase {
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
 
 			//Assert
+            EarlGrey.select(elementWithMatcher: grey_text("Certificate".localized)).assert(grey_sufficientlyVisible())
 			EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).assert(grey_sufficientlyVisible())
 
 			//Reset status
@@ -244,7 +269,10 @@ class CreateBookmarkTests: XCTestCase {
 		}
 	}
 
-    func testCheckURLServerOAuth2 () {
+    /*
+     * PASSED if: URL leads to OAuth2 authentication. Credentials fields not displayed.
+     */
+    func testCheckURLOAuth2 () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.oAuth2,
@@ -290,7 +318,10 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
-	func testLoginOauth2RightCredentials () {
+    /*
+     * PASSED if: URL leads to correct OAuth2 authentication. Bookmark cell created and displayed
+     */
+	 func testLoginOAuth2RightCredentials () {
 
 		let mockUrlServer = "http://mocked.owncloud.server.com"
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.oAuth2,
@@ -327,6 +358,9 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.refreshServerList()
 	}
 
+    /*
+     * PASSED if: URL leads to correct Basic authentication. Bookmark cell created and displayed
+     */
     func testLoginBasicAuthRightCredentials () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -364,6 +398,9 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.refreshServerList()
     }
 
+    /*
+     * PASSED if: URL leads to Basic authentication with warning issue. Bookmark cell is not displayed. Credentials, Name and Continue displayed.
+     */
     func testLoginBasicAuthWarningIssue () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
@@ -405,6 +442,9 @@ class CreateBookmarkTests: XCTestCase {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 
+    /*
+     * PASSED if: URL leads to Basic authentication with error. Bookmark cell is not displayed. Credentials, Name and Continue displayed.
+     */
     func testLoginBasicAuthErrorIssue () {
 
         let mockUrlServer = "http://mocked.owncloud.server.com"
