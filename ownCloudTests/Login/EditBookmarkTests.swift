@@ -24,6 +24,9 @@ class EditBookmarkTests: XCTestCase {
 		OCMockManager.shared.removeAllMockingBlocks()
 	}
 
+	/*
+	* PASSED if: URL and Delete Auth Data displayed
+	*/
 	func testCheckInitialEditViewAuth () {
 
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
@@ -45,6 +48,9 @@ class EditBookmarkTests: XCTestCase {
 		}
 	}
 
+	/*
+	* PASSED if: Server name has change to "New name"
+	*/
 	func testCheckEditServerName () {
 
 		let expectedServerName = "New name"

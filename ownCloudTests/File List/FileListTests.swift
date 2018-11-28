@@ -36,6 +36,9 @@ class FileListTests: XCTestCase {
 	public typealias OCMRequestChangeSetWithFlags = @convention(block)
 		(_ flags: OCQueryChangeSetRequestFlag, _ completionHandler: OCQueryChangeSetRequestCompletionHandler) -> Void
 
+	/*
+	* PASSED if: Disconnect button appears in the view
+	*/
 	func testShowFileList() {
 
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
@@ -54,6 +57,9 @@ class FileListTests: XCTestCase {
 		}
 	}
 
+	/*
+	* PASSED if: The expected files/folders appear in the list
+	*/
 	func testShowFileListWithItems() {
 
 		let expectedCells: Int = 3
