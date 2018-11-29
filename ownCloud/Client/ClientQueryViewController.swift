@@ -112,6 +112,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		self.tableView.register(ClientItemCell.self, forCellReuseIdentifier: "itemCell")
 
+		self.tableView.estimatedRowHeight = 0
+
 		// Uncomment the following line to preserve selection between presentations
 		// self.clearsSelectionOnViewWillAppear = false
 
@@ -136,7 +138,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		tableView.tableHeaderView = sortBar
 
-		refreshController = UIRefreshControl()
+		refreshController = RefreshControl()
 		refreshController?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
 		self.tableView.insertSubview(refreshController!, at: 0)
 		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
@@ -235,7 +237,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
 		self.searchController?.searchBar.applyThemeCollection(collection)
-
+		self.refreshController?.backgroundColor = theme.activeCollection.navigationBarColors.backgroundColor
 		if event == .update {
 			self.tableView.reloadData()
 		}

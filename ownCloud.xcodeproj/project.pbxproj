@@ -68,6 +68,7 @@
 		6E37F48B2188B27D00CF16CA /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E37F48A2188B27D00CF16CA /* Action.swift */; };
 		6E3A103E219D5BBA00F90C96 /* RenameAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3A103D219D5BBA00F90C96 /* RenameAction.swift */; };
 		6E3A104D219D6F0100F90C96 /* DuplicateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3A104C219D6F0100F90C96 /* DuplicateAction.swift */; };
+		6E49F72E21AEFA63009E5247 /* RefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E49F72D21AEFA63009E5247 /* RefreshControl.swift */; };
 		6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4F1733217749910049A71B /* ImageDisplayViewController.swift */; };
 		6E586CFC2199A72600F680C4 /* OpenInAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E586CFB2199A72600F680C4 /* OpenInAction.swift */; };
 		6E586CFE2199A75900F680C4 /* MoveAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E586CFD2199A75900F680C4 /* MoveAction.swift */; };
@@ -445,6 +446,7 @@
 		6E37F48A2188B27D00CF16CA /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		6E3A103D219D5BBA00F90C96 /* RenameAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameAction.swift; sourceTree = "<group>"; };
 		6E3A104C219D6F0100F90C96 /* DuplicateAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateAction.swift; sourceTree = "<group>"; };
+		6E49F72D21AEFA63009E5247 /* RefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshControl.swift; sourceTree = "<group>"; };
 		6E4F1733217749910049A71B /* ImageDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDisplayViewController.swift; sourceTree = "<group>"; };
 		6E586CFB2199A72600F680C4 /* OpenInAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInAction.swift; sourceTree = "<group>"; };
 		6E586CFD2199A75900F680C4 /* MoveAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveAction.swift; sourceTree = "<group>"; };
@@ -1128,6 +1130,7 @@
 				DC89C46220860B680044BCAE /* Progress */,
 				6EA78B8E2179B55400A5216A /* ImageScrollView.swift */,
 				6E0A569D218702400056B7B4 /* DownloadFileProgressHUDViewController.swift */,
+				6E49F72D21AEFA63009E5247 /* RefreshControl.swift */,
 			);
 			path = "UI Elements";
 			sourceTree = "<group>";
@@ -1630,6 +1633,7 @@
 				6E83C78420A33C180066EC23 /* LAContext+Extension.swift in Sources */,
 				593BAB46209AE1BC00023634 /* PasscodeViewController.swift in Sources */,
 				DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */,
+				6E49F72E21AEFA63009E5247 /* RefreshControl.swift in Sources */,
 				DCB44D87218718BA00DAA4CC /* VendorServices.swift in Sources */,
 				DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */,
 				23D5241521491C670002C566 /* DisplayViewController.swift in Sources */,
