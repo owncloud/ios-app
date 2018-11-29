@@ -37,6 +37,14 @@
 		23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */; };
 		23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F6238020B587EF004FDE8B /* SortMethod.swift */; };
 		23FA23E620BFD3D8009A6D73 /* SortBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23FA23E520BFD3D8009A6D73 /* SortBar.swift */; };
+		4C464BEF2187AF1500D30602 /* PDFThumbnailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BE12187AF1400D30602 /* PDFThumbnailCollectionViewCell.swift */; };
+		4C464BF02187AF1500D30602 /* PDFTocTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BE82187AF1400D30602 /* PDFTocTableViewController.swift */; };
+		4C464BF12187AF1500D30602 /* PDFTocTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BE92187AF1400D30602 /* PDFTocTableViewCell.swift */; };
+		4C464BF22187AF1500D30602 /* PDFSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BEA2187AF1400D30602 /* PDFSearchViewController.swift */; };
+		4C464BF32187AF1500D30602 /* PDFOutlineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BEB2187AF1500D30602 /* PDFOutlineViewController.swift */; };
+		4C464BF42187AF1500D30602 /* PDFSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BEC2187AF1500D30602 /* PDFSearchTableViewCell.swift */; };
+		4C464BF52187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BED2187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift */; };
+		4C464BF62187AF1500D30602 /* PDFTocItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BEE2187AF1500D30602 /* PDFTocItem.swift */; };
 		5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5917244D20D3DC2100809B38 /* BiometricalTests.swift */; };
 		593A821120C7D4C5000E2A90 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
 		593BAB46209AE1BC00023634 /* PasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593BAB44209AE1BC00023634 /* PasscodeViewController.swift */; };
@@ -50,20 +58,31 @@
 		6E83C77E20A32C1B0066EC23 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */; };
 		6E83C78420A33C180066EC23 /* LAContext+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C78320A33C180066EC23 /* LAContext+Extension.swift */; };
 		6EA78B8F2179B55400A5216A /* ImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA78B8E2179B55400A5216A /* ImageScrollView.swift */; };
+		6EADE9372192E235006821B3 /* UIImagePickerController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EADE9362192E235006821B3 /* UIImagePickerController+Extension.swift */; };
 		6EB8EDC52114358400C2BF44 /* folder-create.tvg in Resources */ = {isa = PBXBuildFile; fileRef = 6EB8EDBE2114358300C2BF44 /* folder-create.tvg */; };
 		75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */; };
 		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DC018F8320A0F56300135198 /* UIView+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC018F8220A0F56300135198 /* UIView+Animation.swift */; };
 		DC018F8C20A1060A00135198 /* ProgressHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC018F8B20A1060A00135198 /* ProgressHUDViewController.swift */; };
+		DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */; };
+		DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */; };
 		DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */; };
 		DC0B37972051681600189B9A /* ThemeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B37962051681600189B9A /* ThemeButton.swift */; };
 		DC136582208223F000FC0F60 /* OCBookmark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */; };
+		DC18898E218A773700CFB3F9 /* ownCloudMocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
 		DC1B2707209CF0D3004715E1 /* IssuesDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B26FE209CF0D2004715E1 /* IssuesDismissalAnimator.swift */; };
 		DC1B2708209CF0D3004715E1 /* IssuesPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B26FF209CF0D2004715E1 /* IssuesPresentationAnimator.swift */; };
 		DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B2705209CF0D3004715E1 /* CertificateViewController.swift */; };
 		DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B2706209CF0D3004715E1 /* ConnectionIssueViewController.swift */; };
 		DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */; };
 		DC248C67213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */; };
+		DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */; };
+		DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
+		DC27A19120CAA0BA008ACB6C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC27A19020CAA0BA008ACB6C /* MobileCoreServices.framework */; };
+		DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC27A19C20CAB602008ACB6C /* FileProviderInterfaceManager.swift */; };
+		DC27A1A520CBEF85008ACB6C /* OCBookmark+FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */; };
+		DC27A1A820CC095C008ACB6C /* OCCore+FileProviderTools.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A720CC095C008ACB6C /* OCCore+FileProviderTools.m */; };
+		DC27A1E920CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1E820CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m */; };
 		DC321261207EB01B00DB171D /* ThemeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC321260207EB01B00DB171D /* ThemeImage.swift */; };
 		DC3317CE2084966700E36C8F /* ThemeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3317CD2084966700E36C8F /* ThemeTableViewCell.swift */; };
 		DC3BE0D72077BC5D002A0AC0 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; };
@@ -80,6 +99,9 @@
 		DC4FEAE7209E3A7700D4476B /* OCConnectionIssue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE6209E3A7700D4476B /* OCConnectionIssue+Extension.swift */; };
 		DC4FEAEA209E48E800D4476B /* DispatchQueueTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */; };
 		DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */; };
+		DC680576212DF548006C3B1F /* CertificateManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */; };
+		DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */; };
+		DC6CF7FB219446050013B9F9 /* LogSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */; };
 		DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; };
 		DC7DBA20207F5A0400E7337D /* PocketSVG.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC7DBA25207F684700E7337D /* ThemeResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA24207F684700E7337D /* ThemeResource.swift */; };
@@ -87,14 +109,28 @@
 		DC7DBA2B207F71E400E7337D /* VectorImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA2A207F71E400E7337D /* VectorImageView.swift */; };
 		DC7DBA37207F84BF00E7337D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA36207F84BF00E7337D /* main.swift */; };
 		DC7DBA54207FA80C00E7337D /* TVGImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA53207FA80C00E7337D /* TVGImage.swift */; };
+		DC85493421831B0B00782BA8 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85493321831B0B00782BA8 /* Tools.swift */; };
+		DC854936218331CF00782BA8 /* UserInterfaceSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC854935218331CF00782BA8 /* UserInterfaceSettingsSection.swift */; };
+		DC8549382183B4CD00782BA8 /* ThemeStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8549372183B4CD00782BA8 /* ThemeStyle+Extensions.swift */; };
 		DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */; };
 		DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */; };
 		DC85980620D85EE600A433C6 /* AsyncSequentialQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC85980120D85EE500A433C6 /* AsyncSequentialQueue.swift */; };
+		DC869A592153B1F60088977E /* OCMockingManagerSwiftExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC869A582153B1F60088977E /* OCMockingManagerSwiftExtension.swift */; };
 		DC89C45D20860B5D0044BCAE /* ProgressSummarizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89C45C20860B5D0044BCAE /* ProgressSummarizer.swift */; };
+		DC98BBCB20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */; };
+		DC98BBD420FF824600F4ED3E /* FileProviderEnumeratorObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */; };
 		DC9BFBB320A19AF4007064B5 /* doc in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB220A19AF3007064B5 /* doc */; };
 		DC9BFBB920A1AF2C007064B5 /* icon-locked.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB820A1AF2B007064B5 /* icon-locked.tvg */; };
 		DC9BFBBB20A1B3CA007064B5 /* icon-password-manager.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */; };
 		DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */; };
+		DCB44D7D2186F0F600DAA4CC /* ThemeStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB44D7C2186F0F600DAA4CC /* ThemeStyle.swift */; };
+		DCB44D852186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */; };
+		DCB44D87218718BA00DAA4CC /* VendorServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB44D86218718BA00DAA4CC /* VendorServices.swift */; };
+		DCC6564A20C9B7E400110A97 /* FileProviderExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6564920C9B7E400110A97 /* FileProviderExtension.m */; };
+		DCC6565020C9B7E400110A97 /* FileProviderEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6564F20C9B7E400110A97 /* FileProviderEnumerator.m */; };
+		DCC6565B20C9B7E400110A97 /* DocumentActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6565A20C9B7E400110A97 /* DocumentActionViewController.m */; };
+		DCC6565E20C9B7E400110A97 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCC6565C20C9B7E400110A97 /* MainInterface.storyboard */; };
+		DCC6566520C9B7E400110A97 /* ownCloud File Provider.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		DCE5E8A12080D781005F60CE /* video.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88C2080D77E005F60CE /* video.tvg */; };
 		DCE5E8A22080D781005F60CE /* folder-external.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88D2080D77E005F60CE /* folder-external.tvg */; };
 		DCE5E8A32080D781005F60CE /* file.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88E2080D77E005F60CE /* file.tvg */; };
@@ -122,7 +158,6 @@
 		DCF4F17920519F8C00189B9A /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */; };
 		DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */; };
 		DCF4F17F2051A0D000189B9A /* StaticTableViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */; };
-		DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */; };
 		DCF4F18B2052BA4C00189B9A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F18A2052BA4C00189B9A /* Log.swift */; };
 		DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFED971208095E200A2D984 /* ClientItemCell.swift */; };
 		DCFED9BA20809B8900A2D984 /* ThemeTVGResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */; };
@@ -193,6 +228,20 @@
 			remoteGlobalIDString = DCA8922F20F5F13F00AEFF98;
 			remoteInfo = ownCloudMockingTests;
 		};
+		DC188986218A772900CFB3F9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DCA8922620F5F13E00AEFF98;
+			remoteInfo = ownCloudMocking;
+		};
+		DC27A19220CAA0C6008ACB6C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC8F9AA202852A200EB6701;
+			remoteInfo = ownCloudSDK;
+		};
 		DC3BE0CC2077BC52002A0AC0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */;
@@ -242,6 +291,20 @@
 			remoteGlobalIDString = C79800BA1A21CB5300380860;
 			remoteInfo = "PocketSVG (iOS)";
 		};
+		DCC6566020C9B7E400110A97 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC6565620C9B7E400110A97;
+			remoteInfo = "ownCloud File ProviderUI";
+		};
+		DCC6566320C9B7E400110A97 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC6564520C9B7E300110A97;
+			remoteInfo = "ownCloud File Provider";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -284,6 +347,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				DCC6566520C9B7E400110A97 /* ownCloud File Provider.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -325,6 +389,14 @@
 		23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDisplayViewController.swift; sourceTree = "<group>"; };
 		23F6238020B587EF004FDE8B /* SortMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortMethod.swift; sourceTree = "<group>"; };
 		23FA23E520BFD3D8009A6D73 /* SortBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortBar.swift; sourceTree = "<group>"; };
+		4C464BE12187AF1400D30602 /* PDFThumbnailCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFThumbnailCollectionViewCell.swift; sourceTree = "<group>"; };
+		4C464BE82187AF1400D30602 /* PDFTocTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFTocTableViewController.swift; sourceTree = "<group>"; };
+		4C464BE92187AF1400D30602 /* PDFTocTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFTocTableViewCell.swift; sourceTree = "<group>"; };
+		4C464BEA2187AF1400D30602 /* PDFSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFSearchViewController.swift; sourceTree = "<group>"; };
+		4C464BEB2187AF1500D30602 /* PDFOutlineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFOutlineViewController.swift; sourceTree = "<group>"; };
+		4C464BEC2187AF1500D30602 /* PDFSearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFSearchTableViewCell.swift; sourceTree = "<group>"; };
+		4C464BED2187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFThumbnailsCollectionViewController.swift; sourceTree = "<group>"; };
+		4C464BEE2187AF1500D30602 /* PDFTocItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFTocItem.swift; sourceTree = "<group>"; };
 		5917244D20D3DC2100809B38 /* BiometricalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricalTests.swift; sourceTree = "<group>"; };
 		593A821220C7D4C5000E2A90 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		593A821820C7D4DC000E2A90 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -341,12 +413,14 @@
 		6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
 		6E83C78320A33C180066EC23 /* LAContext+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LAContext+Extension.swift"; sourceTree = "<group>"; };
 		6EA78B8E2179B55400A5216A /* ImageScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageScrollView.swift; sourceTree = "<group>"; };
+		6EADE9362192E235006821B3 /* UIImagePickerController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImagePickerController+Extension.swift"; sourceTree = "<group>"; };
 		6EB8EDBE2114358300C2BF44 /* folder-create.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-create.tvg"; path = "img/filetypes-tvg/folder-create.tvg"; sourceTree = SOURCE_ROOT; };
 		A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ownCloudTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0D9C062DD1E85A838608B0F /* EarlGrey.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EarlGrey.framework; path = Pods/EarlGrey/EarlGrey/EarlGrey.framework; sourceTree = SOURCE_ROOT; };
 		D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarlGrey.swift; sourceTree = "<group>"; };
 		DC018F8220A0F56300135198 /* UIView+Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Animation.swift"; sourceTree = "<group>"; };
 		DC018F8B20A1060A00135198 /* ProgressHUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUDViewController.swift; sourceTree = "<group>"; };
+		DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
 		DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListBookmarkCell.swift; sourceTree = "<group>"; };
 		DC0B37952051541C00189B9A /* ownCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ownCloud.entitlements; sourceTree = "<group>"; };
 		DC0B37962051681600189B9A /* ThemeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeButton.swift; sourceTree = "<group>"; };
@@ -357,7 +431,16 @@
 		DC1B2706209CF0D3004715E1 /* ConnectionIssueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionIssueViewController.swift; sourceTree = "<group>"; };
 		DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
 		DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extension.swift"; sourceTree = "<group>"; };
+		DC27A18C20CA9F66008ACB6C /* OCItem+FileProviderItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCItem+FileProviderItem.h"; sourceTree = "<group>"; };
+		DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCItem+FileProviderItem.m"; sourceTree = "<group>"; };
 		DC27A19020CAA0BA008ACB6C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		DC27A19C20CAB602008ACB6C /* FileProviderInterfaceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProviderInterfaceManager.swift; sourceTree = "<group>"; };
+		DC27A1A320CBEF85008ACB6C /* OCBookmark+FileProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCBookmark+FileProvider.h"; sourceTree = "<group>"; };
+		DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCBookmark+FileProvider.m"; sourceTree = "<group>"; };
+		DC27A1A620CC095C008ACB6C /* OCCore+FileProviderTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCCore+FileProviderTools.h"; sourceTree = "<group>"; };
+		DC27A1A720CC095C008ACB6C /* OCCore+FileProviderTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCCore+FileProviderTools.m"; sourceTree = "<group>"; };
+		DC27A1E720CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderExtensionThumbnailRequest.h; sourceTree = "<group>"; };
+		DC27A1E820CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderExtensionThumbnailRequest.m; sourceTree = "<group>"; };
 		DC321260207EB01B00DB171D /* ThemeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeImage.swift; sourceTree = "<group>"; };
 		DC3317CD2084966700E36C8F /* ThemeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewCell.swift; sourceTree = "<group>"; };
 		DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientQueryViewController.swift; sourceTree = "<group>"; };
@@ -370,6 +453,9 @@
 		DC4FEAE6209E3A7700D4476B /* OCConnectionIssue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCConnectionIssue+Extension.swift"; sourceTree = "<group>"; };
 		DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueTools.swift; sourceTree = "<group>"; };
 		DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleProgressBar.swift; sourceTree = "<group>"; };
+		DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateManagementViewController.swift; sourceTree = "<group>"; };
+		DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCertificateViewController.swift; sourceTree = "<group>"; };
+		DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSettingsViewController.swift; sourceTree = "<group>"; };
 		DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PocketSVG.xcodeproj; path = external/PocketSVG/PocketSVG.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DC7DBA24207F684700E7337D /* ThemeResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeResource.swift; sourceTree = "<group>"; };
 		DC7DBA28207F71D600E7337D /* VectorImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorImage.swift; sourceTree = "<group>"; };
@@ -378,14 +464,37 @@
 		DC7DBA36207F84BF00E7337D /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		DC7DBA52207F8BD600E7337D /* img */ = {isa = PBXFileReference; lastKnownFileType = folder; path = img; sourceTree = SOURCE_ROOT; };
 		DC7DBA53207FA80C00E7337D /* TVGImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVGImage.swift; sourceTree = "<group>"; };
+		DC85493321831B0B00782BA8 /* Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
+		DC854935218331CF00782BA8 /* UserInterfaceSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInterfaceSettingsSection.swift; sourceTree = "<group>"; };
+		DC8549372183B4CD00782BA8 /* ThemeStyle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeStyle+Extensions.swift"; sourceTree = "<group>"; };
 		DC85572A20513B8C00189B9A /* ServerListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableViewController.swift; sourceTree = "<group>"; };
 		DC85572B20513B8C00189B9A /* ServerListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServerListTableViewController.xib; sourceTree = "<group>"; };
 		DC85980120D85EE500A433C6 /* AsyncSequentialQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncSequentialQueue.swift; sourceTree = "<group>"; };
+		DC869A582153B1F60088977E /* OCMockingManagerSwiftExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCMockingManagerSwiftExtension.swift; sourceTree = "<group>"; };
 		DC89C45C20860B5D0044BCAE /* ProgressSummarizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSummarizer.swift; sourceTree = "<group>"; };
+		DC98BBC920FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNumber+OCSyncAnchorData.h"; sourceTree = "<group>"; };
+		DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+OCSyncAnchorData.m"; sourceTree = "<group>"; };
+		DC98BBD220FF824600F4ED3E /* FileProviderEnumeratorObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderEnumeratorObserver.h; sourceTree = "<group>"; };
+		DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderEnumeratorObserver.m; sourceTree = "<group>"; };
 		DC9BFBB220A19AF3007064B5 /* doc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = doc; sourceTree = "<group>"; };
 		DC9BFBB820A1AF2B007064B5 /* icon-locked.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-locked.tvg"; path = "img/filetypes-tvg/icon-locked.tvg"; sourceTree = SOURCE_ROOT; };
 		DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-password-manager.tvg"; path = "img/filetypes-tvg/icon-password-manager.tvg"; sourceTree = SOURCE_ROOT; };
 		DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordManagerAccess.swift; sourceTree = "<group>"; };
+		DCB44D7C2186F0F600DAA4CC /* ThemeStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStyle.swift; sourceTree = "<group>"; };
+		DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeStyle+DefaultStyles.swift"; sourceTree = "<group>"; };
+		DCB44D86218718BA00DAA4CC /* VendorServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VendorServices.swift; sourceTree = "<group>"; };
+		DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ownCloud File Provider.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCC6564820C9B7E400110A97 /* FileProviderExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderExtension.h; sourceTree = "<group>"; };
+		DCC6564920C9B7E400110A97 /* FileProviderExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderExtension.m; sourceTree = "<group>"; };
+		DCC6564E20C9B7E400110A97 /* FileProviderEnumerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderEnumerator.h; sourceTree = "<group>"; };
+		DCC6564F20C9B7E400110A97 /* FileProviderEnumerator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderEnumerator.m; sourceTree = "<group>"; };
+		DCC6565120C9B7E400110A97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DCC6565220C9B7E400110A97 /* ownCloud_File_Provider.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ownCloud_File_Provider.entitlements; sourceTree = "<group>"; };
+		DCC6565720C9B7E400110A97 /* ownCloud File ProviderUI.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ownCloud File ProviderUI.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCC6565920C9B7E400110A97 /* DocumentActionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DocumentActionViewController.h; sourceTree = "<group>"; };
+		DCC6565A20C9B7E400110A97 /* DocumentActionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DocumentActionViewController.m; sourceTree = "<group>"; };
+		DCC6565D20C9B7E400110A97 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		DCC6565F20C9B7E400110A97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DCD344A5205BD0C000189B9A /* openssl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = openssl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "ios-sdk/ownCloudUI/openssl/framework/openssl.xcodeproj"; sourceTree = "<group>"; };
 		DCE5E88C2080D77E005F60CE /* video.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = video.tvg; path = "img/filetypes-tvg/video.tvg"; sourceTree = SOURCE_ROOT; };
@@ -437,12 +546,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC18898E218A773700CFB3F9 /* ownCloudMocking.framework in Frameworks */,
 				EA1D571C6B1E95925C459228 /* EarlGrey.framework in Frameworks */,
 				75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DC7DBA31207F84BF00E7337D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCC6564320C9B7E300110A97 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC27A19120CAA0BA008ACB6C /* MobileCoreServices.framework in Frameworks */,
+				DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCC6565420C9B7E400110A97 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -472,6 +598,8 @@
 				DC7DBA10207F59C500E7337D /* External */,
 				233BDEB3204FEFE500C06732 /* ownCloudTests */,
 				DC7DBA3B207F86E900E7337D /* Tools */,
+				DCC6564720C9B7E400110A97 /* ownCloud File Provider */,
+				DCC6565820C9B7E400110A97 /* ownCloud File ProviderUI */,
 				233BDE9D204FEFE500C06732 /* Products */,
 				DC85573220513CC700189B9A /* Frameworks */,
 				5EE06126BB49344475598790 /* Pods */,
@@ -485,6 +613,8 @@
 				233BDE9C204FEFE500C06732 /* ownCloud.app */,
 				233BDEB0204FEFE500C06732 /* ownCloudTests.xctest */,
 				DC7DBA34207F84BF00E7337D /* MakeTVG */,
+				DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */,
+				DCC6565720C9B7E400110A97 /* ownCloud File ProviderUI.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -503,6 +633,7 @@
 				239F1314205A69240029F186 /* UIKit Extensions */,
 				DCE5E8B62080D8B8005F60CE /* SDK Extensions */,
 				DCF4F1872052BA3500189B9A /* Tools */,
+				DC27A19B20CAB5D7008ACB6C /* FileProvider Integration */,
 				DC85573120513C7500189B9A /* Resources */,
 				DC0B37952051541C00189B9A /* ownCloud.entitlements */,
 			);
@@ -514,6 +645,7 @@
 			children = (
 				233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */,
 				D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */,
+				DC869A582153B1F60088977E /* OCMockingManagerSwiftExtension.swift */,
 				233BDEB6204FEFE500C06732 /* Info.plist */,
 				5917244820D3DB1F00809B38 /* Security */,
 			);
@@ -554,7 +686,6 @@
 			children = (
 				230B84F020597F6E00C9F828 /* ownCloudUI.framework */,
 				6E216A632112F58700ED21BD /* NamingViewController.swift */,
-				2370BC87212D4EE200A7A0E5 /* ClientDirectoryPickerViewController.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -582,6 +713,7 @@
 				6E83C78320A33C180066EC23 /* LAContext+Extension.swift */,
 				DC434D1220D7A8F100740056 /* UIAlertController+OCConnectionIssue.swift */,
 				DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */,
+				6EADE9362192E235006821B3 /* UIImagePickerController+Extension.swift */,
 			);
 			path = "UIKit Extensions";
 			sourceTree = "<group>";
@@ -593,6 +725,14 @@
 				23D5241421491C670002C566 /* DisplayViewController.swift */,
 				23EC77562137F3DC0032D4E6 /* DisplayHostViewController.swift */,
 				23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */,
+				4C464BEB2187AF1500D30602 /* PDFOutlineViewController.swift */,
+				4C464BEC2187AF1500D30602 /* PDFSearchTableViewCell.swift */,
+				4C464BEA2187AF1400D30602 /* PDFSearchViewController.swift */,
+				4C464BE12187AF1400D30602 /* PDFThumbnailCollectionViewCell.swift */,
+				4C464BED2187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift */,
+				4C464BEE2187AF1500D30602 /* PDFTocItem.swift */,
+				4C464BE92187AF1400D30602 /* PDFTocTableViewCell.swift */,
+				4C464BE82187AF1400D30602 /* PDFTocTableViewController.swift */,
 				23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */,
 				6E4F1733217749910049A71B /* ImageDisplayViewController.swift */,
 			);
@@ -646,6 +786,14 @@
 			path = "Issues Subclasses";
 			sourceTree = "<group>";
 		};
+		DC27A19B20CAB5D7008ACB6C /* FileProvider Integration */ = {
+			isa = PBXGroup;
+			children = (
+				DC27A19C20CAB602008ACB6C /* FileProviderInterfaceManager.swift */,
+			);
+			path = "FileProvider Integration";
+			sourceTree = "<group>";
+		};
 		DC3BE0DB2077CC13002A0AC0 /* Client */ = {
 			isa = PBXGroup;
 			children = (
@@ -664,12 +812,23 @@
 			children = (
 				DC422449207CAFAA0006A2A6 /* Theme.swift */,
 				DC42244B207CAFBB0006A2A6 /* ThemeCollection.swift */,
+				DCB44D7C2186F0F600DAA4CC /* ThemeStyle.swift */,
+				DC8549372183B4CD00782BA8 /* ThemeStyle+Extensions.swift */,
+				DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */,
 				DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */,
 				DC7DBA27207F6DFD00E7337D /* UI */,
 				DC7DBA26207F6DEE00E7337D /* Resources */,
 				DC7DBA21207F672700E7337D /* TVG */,
 			);
 			path = Theming;
+			sourceTree = "<group>";
+		};
+		DC68056B212DF506006C3B1F /* Certificate Management */ = {
+			isa = PBXGroup;
+			children = (
+				DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */,
+			);
+			path = "Certificate Management";
 			sourceTree = "<group>";
 		};
 		DC7DBA10207F59C500E7337D /* External */ = {
@@ -717,6 +876,7 @@
 				DC3317CD2084966700E36C8F /* ThemeTableViewCell.swift */,
 				DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */,
 				DC0B37962051681600189B9A /* ThemeButton.swift */,
+				DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -782,6 +942,42 @@
 			path = Progress;
 			sourceTree = "<group>";
 		};
+		DCC6564720C9B7E400110A97 /* ownCloud File Provider */ = {
+			isa = PBXGroup;
+			children = (
+				DCC6564920C9B7E400110A97 /* FileProviderExtension.m */,
+				DCC6564820C9B7E400110A97 /* FileProviderExtension.h */,
+				DC27A1E820CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m */,
+				DC27A1E720CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.h */,
+				DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */,
+				DC27A18C20CA9F66008ACB6C /* OCItem+FileProviderItem.h */,
+				DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */,
+				DC27A1A320CBEF85008ACB6C /* OCBookmark+FileProvider.h */,
+				DC27A1A720CC095C008ACB6C /* OCCore+FileProviderTools.m */,
+				DC27A1A620CC095C008ACB6C /* OCCore+FileProviderTools.h */,
+				DCC6564F20C9B7E400110A97 /* FileProviderEnumerator.m */,
+				DCC6564E20C9B7E400110A97 /* FileProviderEnumerator.h */,
+				DC98BBD320FF824600F4ED3E /* FileProviderEnumeratorObserver.m */,
+				DC98BBD220FF824600F4ED3E /* FileProviderEnumeratorObserver.h */,
+				DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */,
+				DC98BBC920FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.h */,
+				DCC6565120C9B7E400110A97 /* Info.plist */,
+				DCC6565220C9B7E400110A97 /* ownCloud_File_Provider.entitlements */,
+			);
+			path = "ownCloud File Provider";
+			sourceTree = "<group>";
+		};
+		DCC6565820C9B7E400110A97 /* ownCloud File ProviderUI */ = {
+			isa = PBXGroup;
+			children = (
+				DCC6565A20C9B7E400110A97 /* DocumentActionViewController.m */,
+				DCC6565920C9B7E400110A97 /* DocumentActionViewController.h */,
+				DCC6565C20C9B7E400110A97 /* MainInterface.storyboard */,
+				DCC6565F20C9B7E400110A97 /* Info.plist */,
+			);
+			path = "ownCloud File ProviderUI";
+			sourceTree = "<group>";
+		};
 		DCCE54092080175B00067D1D /* TVGs */ = {
 			isa = PBXGroup;
 			children = (
@@ -841,6 +1037,7 @@
 				DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */,
 				DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */,
 				DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */,
+				DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */,
 				DC018F8B20A1060A00135198 /* ProgressHUDViewController.swift */,
 				DC89C46220860B680044BCAE /* Progress */,
 				6EA78B8E2179B55400A5216A /* ImageScrollView.swift */,
@@ -853,10 +1050,13 @@
 			children = (
 				6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */,
 				233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */,
+				DC854935218331CF00782BA8 /* UserInterfaceSettingsSection.swift */,
 				232F7CAC2097140300EE22E4 /* UploadsSettingsSection.swift */,
 				23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */,
 				DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */,
 				232F7CAE2097260400EE22E4 /* SettingsViewController.swift */,
+				DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */,
+				DC68056B212DF506006C3B1F /* Certificate Management */,
 				593BAB3F209ADFB900023634 /* Passcode */,
 			);
 			path = Settings;
@@ -871,6 +1071,8 @@
 				DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */,
 				23E22BB220C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift */,
 				DC85980120D85EE500A433C6 /* AsyncSequentialQueue.swift */,
+				DC85493321831B0B00782BA8 /* Tools.swift */,
+				DCB44D86218718BA00DAA4CC /* VendorServices.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -882,12 +1084,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 233BDEB9204FEFE500C06732 /* Build configuration list for PBXNativeTarget "ownCloud" */;
 			buildPhases = (
-				23813A32205286E100DB9488 /* ShellScript */,
+				23813A32205286E100DB9488 /* Run SwiftLint */,
 				233BDE98204FEFE500C06732 /* Sources */,
 				233BDE99204FEFE500C06732 /* Frameworks */,
 				233BDE9A204FEFE500C06732 /* Resources */,
 				DC85573420513CCC00189B9A /* CopyFiles */,
-				23DFDCF120AEEC77003BD16B /* ShellScript */,
+				DC01CDCA212ECEB000FC8E38 /* Copy PocketSVG license */,
+				23DFDCF120AEEC77003BD16B /* Update LastGitCommit key in Info.plist */,
 				DCC6567020C9B7E400110A97 /* Embed App Extensions */,
 			);
 			buildRules = (
@@ -897,6 +1100,8 @@
 				DC3BE0CD2077BC52002A0AC0 /* PBXTargetDependency */,
 				DC3BE0CF2077BC52002A0AC0 /* PBXTargetDependency */,
 				DC3BE0D12077BC52002A0AC0 /* PBXTargetDependency */,
+				DCC6566120C9B7E400110A97 /* PBXTargetDependency */,
+				DCC6566420C9B7E400110A97 /* PBXTargetDependency */,
 			);
 			name = ownCloud;
 			productName = ownCloud;
@@ -917,6 +1122,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DC188987218A772900CFB3F9 /* PBXTargetDependency */,
 				233BDEB2204FEFE500C06732 /* PBXTargetDependency */,
 			);
 			name = ownCloudTests;
@@ -941,6 +1147,41 @@
 			productReference = DC7DBA34207F84BF00E7337D /* MakeTVG */;
 			productType = "com.apple.product-type.tool";
 		};
+		DCC6564520C9B7E300110A97 /* ownCloud File Provider */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCC6566F20C9B7E400110A97 /* Build configuration list for PBXNativeTarget "ownCloud File Provider" */;
+			buildPhases = (
+				DCC6564220C9B7E300110A97 /* Sources */,
+				DCC6564320C9B7E300110A97 /* Frameworks */,
+				DCC6564420C9B7E300110A97 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DC27A19320CAA0C6008ACB6C /* PBXTargetDependency */,
+			);
+			name = "ownCloud File Provider";
+			productName = "ownCloud File Provider";
+			productReference = DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		DCC6565620C9B7E400110A97 /* ownCloud File ProviderUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCC6566E20C9B7E400110A97 /* Build configuration list for PBXNativeTarget "ownCloud File ProviderUI" */;
+			buildPhases = (
+				DCC6565320C9B7E400110A97 /* Sources */,
+				DCC6565420C9B7E400110A97 /* Frameworks */,
+				DCC6565520C9B7E400110A97 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ownCloud File ProviderUI";
+			productName = "ownCloud File ProviderUI";
+			productReference = DCC6565720C9B7E400110A97 /* ownCloud File ProviderUI.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -948,7 +1189,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0930;
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = "ownCloud GmbH";
 				TargetAttributes = {
 					233BDE9B204FEFE500C06732 = {
@@ -957,6 +1198,12 @@
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
+							};
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.DataProtection = {
+								enabled = 0;
 							};
 							com.apple.Keychain = {
 								enabled = 1;
@@ -971,6 +1218,19 @@
 					DC7DBA33207F84BF00E7337D = {
 						CreatedOnToolsVersion = 9.3;
 						ProvisioningStyle = Automatic;
+					};
+					DCC6564520C9B7E300110A97 = {
+						CreatedOnToolsVersion = 9.4;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
+					};
+					DCC6565620C9B7E400110A97 = {
+						CreatedOnToolsVersion = 9.4;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -1005,6 +1265,8 @@
 				233BDE9B204FEFE500C06732 /* ownCloud */,
 				233BDEAF204FEFE500C06732 /* ownCloudTests */,
 				DC7DBA33207F84BF00E7337D /* MakeTVG */,
+				DCC6564520C9B7E300110A97 /* ownCloud File Provider */,
+				DCC6565620C9B7E400110A97 /* ownCloud File ProviderUI */,
 			);
 		};
 /* End PBXProject section */
@@ -1136,34 +1398,52 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DCC6564420C9B7E300110A97 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCC6565520C9B7E400110A97 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCC6565E20C9B7E400110A97 /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		23813A32205286E100DB9488 /* ShellScript */ = {
+		23813A32205286E100DB9488 /* Run SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Run SwiftLint";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
 		};
-		23DFDCF120AEEC77003BD16B /* ShellScript */ = {
+		23DFDCF120AEEC77003BD16B /* Update LastGitCommit key in Info.plist */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
+				"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}",
 			);
+			name = "Update LastGitCommit key in Info.plist";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "LASTGITCOMMIT=$(git rev-parse --short HEAD)\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"LastGitCommit\" \"${LASTGITCOMMIT}\"";
+			shellScript = "LASTGITCOMMIT=$(git rev-parse --short HEAD)\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"LastGitCommit\" \"${LASTGITCOMMIT}\"\n";
 		};
 		CCD5F274B7E08D493D596856 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1182,6 +1462,20 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		DC01CDCA212ECEB000FC8E38 /* Copy PocketSVG license */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy PocketSVG license";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"${PROJECT_DIR}/external/PocketSVG/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/PocketSVG.LICENSE\"\ncp \"${PROJECT_DIR}/external/PocketSVG/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/PocketSVG.LICENSE\"";
 		};
 		FF929A2C3849C01CA20C4475 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1210,18 +1504,27 @@
 			files = (
 				2347446A20761BB700859C93 /* String+Extension.swift in Sources */,
 				DCF4F17920519F8C00189B9A /* StaticTableViewController.swift in Sources */,
-				6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */,
+				DC680576212DF548006C3B1F /* CertificateManagementViewController.swift in Sources */,
 				DC7DBA25207F684700E7337D /* ThemeResource.swift in Sources */,
+				DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */,
+				6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */,
+				DC6CF7FB219446050013B9F9 /* LogSettingsViewController.swift in Sources */,
 				23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */,
 				DC018F8C20A1060A00135198 /* ProgressHUDViewController.swift in Sources */,
 				DC7DBA29207F71D600E7337D /* VectorImage.swift in Sources */,
+				4C464BF12187AF1500D30602 /* PDFTocTableViewCell.swift in Sources */,
 				DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */,
 				23EC775A2137F3DD0032D4E6 /* DisplayHostViewController.swift in Sources */,
+				4C464BF62187AF1500D30602 /* PDFTocItem.swift in Sources */,
 				DC018F8320A0F56300135198 /* UIView+Animation.swift in Sources */,
 				DC42244A207CAFAA0006A2A6 /* Theme.swift in Sources */,
+				4C464BF52187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift in Sources */,
+				4C464BF02187AF1500D30602 /* PDFTocTableViewController.swift in Sources */,
 				DC4FEAEA209E48E800D4476B /* DispatchQueueTools.swift in Sources */,
 				DC1B2708209CF0D3004715E1 /* IssuesPresentationAnimator.swift in Sources */,
 				DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */,
+				DC854936218331CF00782BA8 /* UserInterfaceSettingsSection.swift in Sources */,
+				4C464BF42187AF1500D30602 /* PDFSearchTableViewCell.swift in Sources */,
 				DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */,
 				DC248C67213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift in Sources */,
 				DC136582208223F000FC0F60 /* OCBookmark+Extension.swift in Sources */,
@@ -1230,34 +1533,43 @@
 				6E83C78420A33C180066EC23 /* LAContext+Extension.swift in Sources */,
 				593BAB46209AE1BC00023634 /* PasscodeViewController.swift in Sources */,
 				DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */,
+				DCB44D87218718BA00DAA4CC /* VendorServices.swift in Sources */,
 				DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */,
 				23D5241521491C670002C566 /* DisplayViewController.swift in Sources */,
 				DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */,
 				233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */,
 				DCF4F18B2052BA4C00189B9A /* Log.swift in Sources */,
+				DC8549382183B4CD00782BA8 /* ThemeStyle+Extensions.swift in Sources */,
+				DCB44D7D2186F0F600DAA4CC /* ThemeStyle.swift in Sources */,
 				DCE974B2207E3AF80069FC2B /* ThemeNavigationController.swift in Sources */,
 				DC89C45D20860B5D0044BCAE /* ProgressSummarizer.swift in Sources */,
 				232F7CAF2097260400EE22E4 /* SettingsViewController.swift in Sources */,
+				4C464BF32187AF1500D30602 /* PDFOutlineViewController.swift in Sources */,
+				6EADE9372192E235006821B3 /* UIImagePickerController+Extension.swift in Sources */,
 				DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */,
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
 				236735A621217C3500E5834A /* MoreViewController.swift in Sources */,
 				23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */,
 				DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */,
+				4C464BEF2187AF1500D30602 /* PDFThumbnailCollectionViewCell.swift in Sources */,
 				232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */,
 				593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */,
+				DC85493421831B0B00782BA8 /* Tools.swift in Sources */,
 				DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */,
 				23E22BB720C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
-				2370BC88212D4EE200A7A0E5 /* ClientDirectoryPickerViewController.swift in Sources */,
 				23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */,
+				DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */,
 				23EC77582137F3DD0032D4E6 /* PDFViewerViewController.swift in Sources */,
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
 				23EC775B2137F3DD0032D4E6 /* OCExtensionType+Extension.swift in Sources */,
 				DC3BE0E12077CD4B002A0AC0 /* Synchronized.swift in Sources */,
 				DCE5E8B82080D8D9005F60CE /* OCItem+Extension.swift in Sources */,
 				232F7CAD2097140300EE22E4 /* UploadsSettingsSection.swift in Sources */,
+				DCB44D852186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift in Sources */,
 				597A404920AD59EF00B028B2 /* AppLockWindow.swift in Sources */,
 				6EA78B8F2179B55400A5216A /* ImageScrollView.swift in Sources */,
 				DC42244C207CAFBB0006A2A6 /* ThemeCollection.swift in Sources */,
+				DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */,
 				DCFED9BA20809B8900A2D984 /* ThemeTVGResource.swift in Sources */,
 				DC3BE0DE2077CC14002A0AC0 /* ClientQueryViewController.swift in Sources */,
 				23C56538212167BE00BD4B47 /* CardTransitionDelegate.swift in Sources */,
@@ -1265,6 +1577,7 @@
 				DC0B37972051681600189B9A /* ThemeButton.swift in Sources */,
 				DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */,
 				23C56537212167BE00BD4B47 /* CardPresentationController.swift in Sources */,
+				4C464BF22187AF1500D30602 /* PDFSearchViewController.swift in Sources */,
 				DC7DBA2B207F71E400E7337D /* VectorImageView.swift in Sources */,
 				DCE974BC207EACA60069FC2B /* UIImage+Extension.swift in Sources */,
 				DC1B2707209CF0D3004715E1 /* IssuesDismissalAnimator.swift in Sources */,
@@ -1280,6 +1593,7 @@
 				DC434D1320D7A8F100740056 /* UIAlertController+OCConnectionIssue.swift in Sources */,
 				DC3317CE2084966700E36C8F /* ThemeTableViewCell.swift in Sources */,
 				6E83C77E20A32C1B0066EC23 /* SettingsSection.swift in Sources */,
+				DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */,
 				DC422450207CB2500006A2A6 /* NSObject+ThemeApplication.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1289,6 +1603,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */,
+				DC869A592153B1F60088977E /* OCMockingManagerSwiftExtension.swift in Sources */,
 				6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */,
 				5958C9BE20C000A700E0E567 /* PasscodeTests.swift in Sources */,
 				5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */,
@@ -1303,6 +1618,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DCC6564220C9B7E300110A97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC98BBD420FF824600F4ED3E /* FileProviderEnumeratorObserver.m in Sources */,
+				DCC6565020C9B7E400110A97 /* FileProviderEnumerator.m in Sources */,
+				DC27A1E920CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m in Sources */,
+				DC27A1A820CC095C008ACB6C /* OCCore+FileProviderTools.m in Sources */,
+				DCC6564A20C9B7E400110A97 /* FileProviderExtension.m in Sources */,
+				DC27A1A520CBEF85008ACB6C /* OCBookmark+FileProvider.m in Sources */,
+				DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */,
+				DC98BBCB20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCC6565320C9B7E400110A97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCC6565B20C9B7E400110A97 /* DocumentActionViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1310,6 +1648,16 @@
 			isa = PBXTargetDependency;
 			target = 233BDE9B204FEFE500C06732 /* ownCloud */;
 			targetProxy = 233BDEB1204FEFE500C06732 /* PBXContainerItemProxy */;
+		};
+		DC188987218A772900CFB3F9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ownCloudMocking;
+			targetProxy = DC188986218A772900CFB3F9 /* PBXContainerItemProxy */;
+		};
+		DC27A19320CAA0C6008ACB6C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ownCloudSDK;
+			targetProxy = DC27A19220CAA0C6008ACB6C /* PBXContainerItemProxy */;
 		};
 		DC3BE0CD2077BC52002A0AC0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1330,6 +1678,16 @@
 			isa = PBXTargetDependency;
 			name = "PocketSVG (iOS)";
 			targetProxy = DC7DBA1D207F59F200E7337D /* PBXContainerItemProxy */;
+		};
+		DCC6566120C9B7E400110A97 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCC6565620C9B7E400110A97 /* ownCloud File ProviderUI */;
+			targetProxy = DCC6566020C9B7E400110A97 /* PBXContainerItemProxy */;
+		};
+		DCC6566420C9B7E400110A97 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCC6564520C9B7E300110A97 /* ownCloud File Provider */;
+			targetProxy = DCC6566320C9B7E400110A97 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1360,6 +1718,14 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
+		DCC6565C20C9B7E400110A97 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DCC6565D20C9B7E400110A97 /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1386,6 +1752,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -1414,7 +1781,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1446,6 +1813,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -1467,7 +1835,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -1484,13 +1852,13 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}";
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				INFOPLIST_FILE = ownCloud/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1511,13 +1879,13 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}";
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				INFOPLIST_FILE = ownCloud/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1593,6 +1961,88 @@
 			};
 			name = Release;
 		};
+		DCC6566620C9B7E400110A97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "ownCloud File Provider/ownCloud_File_Provider.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				INFOPLIST_FILE = "ownCloud File Provider/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-Provider";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "b9cd7516-5bdd-4c15-b338-55d02d1ed4aa";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app.ownCloud-File-Provider";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DCC6566720C9B7E400110A97 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = "ownCloud File Provider/ownCloud_File_Provider.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				INFOPLIST_FILE = "ownCloud File Provider/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-Provider";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "0be66300-94bb-43be-8e1f-6aee08a7c154";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app.ownCloud-File-Provider";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		DCC6566820C9B7E400110A97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				INFOPLIST_FILE = "ownCloud File ProviderUI/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-ProviderUI";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "2fcc6dc1-dade-404b-b2c3-4ba9674f5680";
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app.ownCloud-File-ProviderUI";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DCC6566920C9B7E400110A97 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				INFOPLIST_FILE = "ownCloud File ProviderUI/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-ProviderUI";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "fe9f450c-3f81-4041-903f-b72a48954466";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app.ownCloud-File-ProviderUI";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1628,6 +2078,24 @@
 			buildConfigurations = (
 				DC7DBA39207F84BF00E7337D /* Debug */,
 				DC7DBA3A207F84BF00E7337D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DCC6566E20C9B7E400110A97 /* Build configuration list for PBXNativeTarget "ownCloud File ProviderUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCC6566820C9B7E400110A97 /* Debug */,
+				DCC6566920C9B7E400110A97 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DCC6566F20C9B7E400110A97 /* Build configuration list for PBXNativeTarget "ownCloud File Provider" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCC6566620C9B7E400110A97 /* Debug */,
+				DCC6566720C9B7E400110A97 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

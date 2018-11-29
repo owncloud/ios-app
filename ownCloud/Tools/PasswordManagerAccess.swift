@@ -44,7 +44,7 @@ class PasswordManagerAccess {
 		return UIApplication.shared.canOpenURL(URL(string: PasswordManagerAccessURLScheme)!)
 	}
 
-	static func findCredentials(url: URL, viewController: UIViewController, completion: @escaping ((_ error: Error?, _ username: String?, _ password: String?) -> Void)) {
+	static func findCredentials(url: URL, viewController: UIViewController, sourceView: UIView? = nil, completion: @escaping ((_ error: Error?, _ username: String?, _ password: String?) -> Void)) {
 		let extensionItem = NSExtensionItem()
 		let itemProvider = NSItemProvider(item: ([
 			PasswordManagerAccessVersionNumberKey : PasswordManagerAccessVersionNumber,
@@ -65,6 +65,10 @@ class PasswordManagerAccess {
 					self.processExtensionItem(extensionItem: firstExtensionItem, completion: completion)
 				}
 			}
+		}
+
+		if UIDevice.current.isIpad() {
+			activityViewController.popoverPresentationController?.sourceView = sourceView ?? viewController.view
 		}
 
 		viewController.present(activityViewController, animated: true, completion: nil)

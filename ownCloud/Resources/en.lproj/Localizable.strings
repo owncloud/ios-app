@@ -80,6 +80,11 @@
 "Are you sure you want to delete this item from the server?" = "Are you sure you want to delete this item from the server?";
 "Deleting '%@'" = "Deleting '%@'";
 "Renaming to %@" = "Renaming to %@";
+"Upload from your photo library" = "Upload from your photo library";
+"Missing permissions" = "Missing permissions";
+"This permission is needed to upload photos and videos from your photo library." = "This permission is needed to upload photos and videos from your photo library.";
+"Not now" = "Not now";
+"Upload file" = "Upload file";
 
 /* Server List*/
 "Cancel" = "Cancel";
@@ -91,6 +96,9 @@
 "This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
 "Delete" = "Delete";
 "Deletion of '%@' failed" = "Deletion of '%@' failed";
+
+"Help" = "Help";
+"Feedback" = "Feedback";
 
 /* Settings Messages */
 
@@ -111,6 +119,7 @@
 "Send feedback" = "Send feedback";
 "Recommend to a friend" = "Recommend to a friend";
 "Privacy Policy" = "Privacy Policy";
+"Acknowledgements" = "Acknowledgements";
 "Video upload path" = "Video upload path";
 "Photo upload path" = "Photo upload path";
 "Always" = "Always";
@@ -120,6 +129,40 @@
 "Please configure an email account" = "Please configure an email account";
 "You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
 "Do you want to open the following URL?" = "Do you want to open the following URL?";
+
+/* User Interface Settings */
+"Theme" = "Theme";
+"User Interface" = "User Interface";
+"ownCloud Dark" = "ownCloud Dark";
+"ownCloud Light" = "ownCloud Light";
+"ownCloud Classic" = "ownCloud Classic";
+
+/* Log settings */
+"Log Level" = "Log Level";
+"Log Destinations" = "Log Destinations";
+"Privacy" = "Privacy";
+
+"Logging" = "Logging";
+"Enable logging" = "Enable logging";
+
+"Off" = "Off";
+"Info" = "Info";
+"Default" = "Default";
+"Warning" = "Warning";
+"Error" = "Error";
+
+"Share log file" = "Share log file";
+"Reset log file" = "Reset log file";
+
+"Mask private data" = "Mask private data";
+"Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.";
+
+"No log file found" = "No log file found";
+"The log file can't be shared because no log file could be found or the log file is empty." = "The log file can't be shared because no log file could be found or the log file is empty.";
+"Enable log file" = "Enable log file";
+
+"Really reset log file?" = "Really reset log file?";
+"This action can't be undone." = "This action can't be undone.";
 
 /* Passcode Messages */
 
@@ -131,6 +174,14 @@
 "Please try again in %@" = "Please try again in %@";
 "Unlock %@" = "Unlock %@";
 "Biometric authentication failed" = "Biometric authentication failed";
+
+/* Certificate management */
+
+"Certificates" = "Certificates";
+"User-approved certificates" = "User-approved certificates";
+
+"Approved" = "Approved";
+"Revoke approval" =  "Revoke approval";
 
 /* Actions */
 
@@ -150,3 +201,12 @@
 "There is no network" = "There is no network";
 "Error" = "Error";
 "Could not get the picture" = "Could not get the picture";
+
+/* PDF Viewer */
+"Resume" = "Resume";
+"Go to page" = "Go to page";
+"Page" = "Page";
+"This document has %@ pages" = "This document has %@ pages";
+"%@ of %@" = "%@ of %@";
+"Invalid Page" = "Invalid Page";
+"The entered page number doesn't exist" = "The entered page number doesn't exist";

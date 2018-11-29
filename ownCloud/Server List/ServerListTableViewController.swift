@@ -97,37 +97,37 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		updateNoServerMessageVisibility()
 
-        let helpBarButtonItem = UIBarButtonItem(title: "Help".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(help))
-        helpBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
+		let helpBarButtonItem = UIBarButtonItem(title: "Feedback".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(help))
+		helpBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
 
-        let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
-        settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
+		let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
+		settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
 
 		self.toolbarItems = [
 			helpBarButtonItem,
 			UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
-            settingsBarButtonItem
+			settingsBarButtonItem
 		]
 
-		/*
-		let shapeLayers : [CAShapeLayer]? = (welcomeLogoSVGView.layer as? SVGLayer)!.value(forKey: "_shapeLayers") as? [CAShapeLayer]
+		considerBetaWarning()
+	}
 
-		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-			for shapeLayer in shapeLayers! {
-				shapeLayer.strokeColor = UIColor.black.cgColor
-				shapeLayer.lineWidth = 2
-				shapeLayer.fillColor = nil
+	func considerBetaWarning() {
+		let lastBetaWarningCommit = OCAppIdentity.shared.userDefaults?.string(forKey: "LastBetaWarningCommit")
 
-				let pathAnimation = CABasicAnimation(keyPath: "strokeEnd")
+		Log.log("Show beta warning: \(String(describing: self.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool))")
 
-				pathAnimation.duration = 0.5
-				pathAnimation.fromValue = 0
-				pathAnimation.toValue = 1
-
-				shapeLayer.add(pathAnimation, forKey: pathAnimation.keyPath)
+		if self.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool == true,
+		   let lastGitCommit = LastGitCommit(),
+		   (lastBetaWarningCommit == nil) || (lastBetaWarningCommit != lastGitCommit) {
+		   	// Beta warning has never been shown before - or has last been shown for a different release
+			let betaAlert = UIAlertController(with: "Beta Warning", message: "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings.", okLabel: "Agree") {
+				OCAppIdentity.shared.userDefaults?.set(lastGitCommit, forKey: "LastBetaWarningCommit")
+				OCAppIdentity.shared.userDefaults?.set(NSDate(), forKey: "LastBetaWarningAcceptDate")
 			}
+
+			self.present(betaAlert, animated: true, completion: nil)
 		}
-		*/
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
@@ -211,39 +211,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	var themeCounter : Int = 0
 
 	@IBAction func help() {
-		var themeStyle : ThemeCollectionStyle?
-		let darkColor = UIColor(hex: 0x1D293B)
-		let lightColor = UIColor(hex: 0x468CC8)
-
-		themeCounter += 1
-
-		/*
-		// RED experiment
-		if themeCounter >= 3 {
-			darkColor = UIColor(hex: 0xf53034).darker(0.75)
-			lightColor = UIColor(hex: 0xf53034)
-		}
-		*/
-
-		switch themeCounter % 3 {
-			case 0:	themeStyle = .dark
-			case 1:	themeStyle = .light
-			case 2:	themeStyle = .contrast
-			default: break
-		}
-
-		UIView.animate(withDuration: 0.25) {
-			CATransaction.begin()
-			CATransaction.setAnimationDuration(0.25)
-			Theme.shared.activeCollection = ThemeCollection(darkBrandColor: darkColor, lightBrandColor: lightColor, style: themeStyle!)
-			CATransaction.commit()
-		}
+		VendorServices.shared.sendFeedback(from: self)
 	}
 
 	@IBAction func settings() {
-//        let viewController : GlobalSettingsViewController = GlobalSettingsViewController(style: UITableViewStyle.grouped)
-
-        let viewController : SettingsViewController = SettingsViewController(style: .grouped)
+        	let viewController : SettingsViewController = SettingsViewController(style: .grouped)
 
 		self.navigationController?.pushViewController(viewController, animated: true)
 	}
@@ -306,7 +278,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 			bookmarkCell.titleLabel.text = bookmark.shortName
-			bookmarkCell.detailLabel.text = (bookmark.originURL != nil) ? bookmark.originURL.absoluteString : bookmark.url.absoluteString
+			bookmarkCell.detailLabel.text = (bookmark.originURL != nil) ? bookmark.originURL!.absoluteString : bookmark.url?.absoluteString
 		}
 
 		return bookmarkCell
@@ -386,5 +358,26 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		OCBookmarkManager.shared.moveBookmark(from: UInt(fromIndexPath.row), to: UInt(to.row))
+	}
+}
+
+// MARK: - OCClassSettings support
+extension OCClassSettingsIdentifier {
+	static let app = OCClassSettingsIdentifier("app")
+}
+
+extension OCClassSettingsKey {
+	static let showBetaWarning = OCClassSettingsKey("show-beta-warning")
+}
+
+extension ServerListTableViewController : OCClassSettingsSupport {
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .app
+
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		if identifier == .app {
+			return [ .showBetaWarning : true ]
+		}
+
+		return nil
 	}
 }

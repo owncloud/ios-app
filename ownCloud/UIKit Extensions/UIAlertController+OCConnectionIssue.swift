@@ -12,12 +12,14 @@ import ownCloudSDK
 extension OCConnectionIssueChoice {
 	var alertActionStyle : UIAlertActionStyle {
 		switch type {
-		case .cancel:
-			return .cancel
-		case .regular, .default:
-			return .default
-		case .destructive:
-			return .destructive
+			case .cancel:
+				return .cancel
+
+			case .regular, .default:
+				return .default
+
+			case .destructive:
+				return .destructive
 		}
 	}
 }

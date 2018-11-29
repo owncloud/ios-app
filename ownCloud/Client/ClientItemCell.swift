@@ -99,6 +99,11 @@ class ClientItemCell: ThemeTableViewCell {
 		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
 		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
 		moreButton.setContentHuggingPriority(UILayoutPriority.required, for: UILayoutConstraintAxis.horizontal)
+
+		NSLayoutConstraint.activate([
+			iconView.topAnchor.constraint(greaterThanOrEqualTo: self.topAnchor, constant: 10),
+			iconView.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -10)
+		])
 	}
 
 	// MARK: - Present item
@@ -160,6 +165,9 @@ class ClientItemCell: ThemeTableViewCell {
 
 		self.iconView.image = iconImage
 		self.titleLabel.text = item.name
+
+		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
+		self.moreButton.isHidden = item.isPlaceholder ? true : false
 	}
 
 	// MARK: - Themeing

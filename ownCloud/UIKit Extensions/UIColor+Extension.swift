@@ -28,7 +28,8 @@ extension UIColor {
 		self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: CGFloat(alpha))
 	}
 
-	convenience init(hex rgbHex: Int, alpha: Float = 1.0) {
+	convenience init(hex unsignedRGBHex: UInt, alpha: Float = 1.0) {
+		let rgbHex = Int(unsignedRGBHex)
 		self.init(red: (rgbHex >> 16) & 0xFF, green: (rgbHex >> 8) & 0xFF, blue: (rgbHex & 0xFF), alpha: alpha)
 	}
 

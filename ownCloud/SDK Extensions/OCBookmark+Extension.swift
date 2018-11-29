@@ -20,13 +20,32 @@ import UIKit
 import ownCloudSDK
 
 extension OCBookmark {
+	var userName : String? {
+		if self.authenticationData != nil,
+		   self.authenticationMethodIdentifier != nil,
+		   let authenticationMethod = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: self.authenticationMethodIdentifier),
+		   let userName = authenticationMethod.userName(fromAuthenticationData: self.authenticationData) {
+		   	return userName
+		}
+
+		return nil
+	}
+
 	var shortName: String {
 		if self.name != nil {
-			return self.name
-		} else if self.originURL?.host != nil {
-			return self.originURL.host!
-		} else if self.url?.host != nil {
-			return self.url.host!
+			return self.name!
+		} else {
+			var userNamePrefix = ""
+
+			if let userName = self.userName {
+				userNamePrefix = userName + " @ "
+			}
+
+			if self.originURL?.host != nil {
+				return userNamePrefix + self.originURL!.host!
+			} else if self.url?.host != nil {
+				return userNamePrefix + self.url!.host!
+			}
 		}
 
 		return "bookmark"
