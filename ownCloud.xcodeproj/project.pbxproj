@@ -426,7 +426,7 @@
 		59B09E5D21AD61DD007827B8 /* test_certificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_certificate.cer; sourceTree = "<group>"; };
 		59B09E6821AD61F4007827B8 /* FileListTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListTests.swift; sourceTree = "<group>"; };
 		59B09E6A21AD61F4007827B8 /* EditBookmarkTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditBookmarkTests.swift; sourceTree = "<group>"; };
-		59B09E6B21AD61F4007827B8 /* CreateBookmarkTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateBookmarkTests.swift; sourceTree = "<group>"; usesTabs = 1; };
+		59B09E6B21AD61F4007827B8 /* CreateBookmarkTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateBookmarkTests.swift; sourceTree = "<group>"; usesTabs = 1; wrapsLines = 1; };
 		59B09E6C21AD61F4007827B8 /* UtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilsTests.swift; sourceTree = "<group>"; };
 		59D4895320C83F2E00369C2E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		59EACA8020CAA37F00F082EE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
