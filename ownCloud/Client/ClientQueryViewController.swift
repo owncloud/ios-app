@@ -291,6 +291,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		let item: OCItem = itemAtIndexPath(indexPath)
 
+		guard item.isPlaceholder == false else {
+			return UISwipeActionsConfiguration(actions: [])
+		}
+
 		let deleteContextualAction: UIContextualAction = UIContextualAction(style: .destructive, title: "Delete".localized) { (_, _, actionPerformed) in
 			self.delete(item, viewDidAppearHandler: {
 				actionPerformed(false)

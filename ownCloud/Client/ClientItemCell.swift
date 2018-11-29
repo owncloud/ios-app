@@ -167,6 +167,7 @@ class ClientItemCell: ThemeTableViewCell {
 		self.titleLabel.text = item.name
 
 		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
+		self.moreButton.isHidden = item.isPlaceholder ? true : false
 	}
 
 	// MARK: - Themeing
