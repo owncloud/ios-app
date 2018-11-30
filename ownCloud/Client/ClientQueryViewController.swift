@@ -486,6 +486,20 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	// MARK: - Search
 	var searchController: UISearchController?
 
+	func upload(itemURL: URL, name: String, completionHandler: ClientActionCompletionHandler? = nil) {
+		if let progress = core.importFileNamed(name, at: query.rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { [weak self](error, _ core, _ item, _) in
+			if error != nil {
+				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
+				completionHandler?(false)
+			} else {
+				Log.debug("Success uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
+				completionHandler?(true)
+			}
+		}) {
+			self.progressSummarizer?.startTracking(progress: progress)
+		}
+	}
+
 	// MARK: - Navigation Bar Actions
 	@objc func uploadsBarButtonPressed(_ sender: UIBarButtonItem) {
 
@@ -717,11 +731,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 			}
 
-<<<<<<< HEAD
-			if let progress = self.core.move(item, to: destinationItem, withName:  item.name, options: nil, resultHandler: { (error, _, _, _) in
-=======
-			if let progress = self.core.move(item, to: destinationItem!, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
->>>>>>> 3aded8b... - Made de Duplicate action.
+			if let progress = self.core.move(item, to: destinationItem, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
 				}
