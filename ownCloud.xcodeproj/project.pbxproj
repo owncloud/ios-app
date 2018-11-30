@@ -1606,6 +1606,7 @@
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
 				236735A621217C3500E5834A /* MoreViewController.swift in Sources */,
 				23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */,
+				DCF4F1822051A94200189B9A /* GlobalSettingsViewController.swift in Sources */,
 				4C464BEF2187AF1500D30602 /* PDFThumbnailCollectionViewCell.swift in Sources */,
 				232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */,
 				593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */,
