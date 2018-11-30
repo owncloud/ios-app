@@ -40,7 +40,7 @@ protocol DisplayViewEditingDelegate: class {
 
 class DisplayViewController: UIViewController {
 
-	private let ICON_IMAGE_SIZE: CGSize = CGSize(width: 200.0, height: 200.0)
+	private let iconImageSize: CGSize = CGSize(width: 200.0, height: 200.0)
 
 	// MARK: - Configuration
 	weak var item: OCItem!
@@ -154,7 +154,7 @@ class DisplayViewController: UIViewController {
 		NSLayoutConstraint.activate([
 			iconImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
 			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -60),
-			iconImageView.heightAnchor.constraint(equalToConstant: ICON_IMAGE_SIZE.height),
+			iconImageView.heightAnchor.constraint(equalToConstant: iconImageSize.height),
 			iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
 
 			metadataInfoLabel!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
@@ -180,11 +180,11 @@ class DisplayViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		iconImageView.image = item.icon(fitInSize:ICON_IMAGE_SIZE)
+		iconImageView.image = item.icon(fitInSize:iconImageSize)
 
 		if item.thumbnailAvailability != .none {
 			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				_ = thumbnail?.requestImage(for: self.ICON_IMAGE_SIZE, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
+				_ = thumbnail?.requestImage(for: self.iconImageSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
 					if error == nil,
 						image != nil,
 						self.item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
@@ -200,7 +200,7 @@ class DisplayViewController: UIViewController {
 			if let thumbnail = item.thumbnail {
 				displayThumbnail(thumbnail)
 			} else {
-				_ = core?.retrieveThumbnail(for: item, maximumSize: ICON_IMAGE_SIZE, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
+				_ = core?.retrieveThumbnail(for: item, maximumSize: iconImageSize, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
 					displayThumbnail(thumbnail)
 				})
 			}
@@ -213,6 +213,7 @@ class DisplayViewController: UIViewController {
 		}
 
 		parent.navigationItem.title = item.name
+		parent.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
 	}
 
 	// MARK: - Download actions
@@ -306,6 +307,18 @@ class DisplayViewController: UIViewController {
 		self.cancelButton?.isHidden = true
 		self.noNetworkLabel?.isHidden = true
 		self.showPreviewButton?.isHidden = false
+	}
+
+	@objc func optionsBarButtonPressed() {
+
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+
+		let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: { [weak self] _ in
+			self?.navigationController?.popViewController(animated: true)
+		})
+
+		self.present(asCard: moreViewController, animated: true)
 	}
 }
 
