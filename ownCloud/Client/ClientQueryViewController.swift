@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import MobileCoreServices
+import Photos
 
 typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
@@ -145,6 +146,11 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.dragDelegate = self
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
+
+		let actionsBarButton: UIBarButtonItem = UIBarButtonItem(title: "● ● ●", style: .done, target: self, action: #selector(uploadsBarButtonPressed))
+		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .normal)
+		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .highlighted)
+		self.navigationItem.rightBarButtonItem = actionsBarButton
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
@@ -284,6 +290,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		let item: OCItem = itemAtIndexPath(indexPath)
+
+		guard item.isPlaceholder == false else {
+			return UISwipeActionsConfiguration(actions: [])
+		}
 
 		let deleteContextualAction: UIContextualAction = UIContextualAction(style: .destructive, title: "Delete".localized) { (_, _, actionPerformed) in
 			self.delete(item, viewDidAppearHandler: {
@@ -645,6 +655,87 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 
 	}
+
+	func upload(itemURL: URL, name: String, completionHandler: ClientActionCompletionHandler? = nil) {
+		if let progress = core.importFileNamed(name, at: query.rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { [weak self](error, _ core, _ item, _) in
+			if error != nil {
+				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
+				completionHandler?(false)
+			} else {
+				Log.debug("Success uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
+				completionHandler?(true)
+			}
+		}) {
+			self.progressSummarizer?.startTracking(progress: progress)
+		}
+	}
+
+	// MARK: - Navigation Bar Actions
+	@objc func uploadsBarButtonPressed(_ sender: UIBarButtonItem) {
+
+		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+		let photoLibrary = UIAlertAction(title: "Upload from your photo library".localized, style: .default, handler: { (_) in
+
+			func presentImageGalleryPicker() {
+				let picker = UIImagePickerController.regularImagePicker(with: .photoLibrary)
+				picker.delegate = self
+				OnMainThread {
+					self.present(picker, animated: true)
+				}
+			}
+
+			let permisson = PHPhotoLibrary.authorizationStatus()
+			switch permisson {
+
+			case .authorized:
+				presentImageGalleryPicker()
+			case .notDetermined:
+				PHPhotoLibrary.requestAuthorization({ newStatus in
+					if newStatus == .authorized {
+						presentImageGalleryPicker()
+					}
+				})
+
+			default:
+				PHPhotoLibrary.requestAuthorization({ newStatus in
+
+					if newStatus == .denied {
+						let alert = UIAlertController(title: "Missing permissions".localized, message: "This permission is needed to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
+
+						let settingAction = UIAlertAction(title: "Settings".localized, style: .default, handler: { _ in
+							UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
+						})
+						let notNowAction = UIAlertAction(title: "Not now".localized, style: .cancel)
+
+						alert.addAction(settingAction)
+						alert.addAction(notNowAction)
+
+						OnMainThread {
+							self.present(alert, animated: true)
+						}
+					}
+				})
+			}
+		})
+
+		let uploadFileAction = UIAlertAction(title: "Upload file".localized, style: .default) { _ in
+			let documentPickerViewController = UIDocumentPickerViewController(documentTypes: [kUTTypeData as String], in: .import)
+			documentPickerViewController.delegate = self
+			documentPickerViewController.allowsMultipleSelection = true
+			self.present(documentPickerViewController, animated: true)
+		}
+
+		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
+		controller.addAction(photoLibrary)
+		controller.addAction(uploadFileAction)
+		controller.addAction(cancelAction)
+
+		if let popoverController = controller.popoverPresentationController {
+			popoverController.barButtonItem = sender
+		}
+		self.present(controller, animated: true)
+	}
 }
 
 // MARK: - Query Delegate
@@ -788,7 +879,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 		for item in coordinator.items {
 
-			var destinationItem: OCItem?
+			var destinationItem: OCItem
 
 			guard let item = item.dragItem.localObject as? OCItem else {
 				return
@@ -822,7 +913,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 			}
 
-			if let progress = self.core.move(item, to: destinationItem!, withName:  item.name, options: nil, resultHandler: { (error, _, _, _) in
+			if let progress = self.core.move(item, to: destinationItem, withName:  item.name, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
 				}
@@ -849,3 +940,50 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 	}
 
 }
+
+// MARK: - UIImagePickerControllerDelegate
+extension ClientQueryViewController: UIImagePickerControllerDelegate {
+
+	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+
+		var name: String?
+		var url: URL?
+
+		if let imageURL = info[UIImagePickerControllerImageURL] as? URL {
+			name = imageURL.lastPathComponent
+			url = imageURL
+		}
+
+		if let movieURL = info[UIImagePickerControllerMediaURL] as? URL {
+			name = movieURL.lastPathComponent
+			url = movieURL
+		}
+
+		if let imageAsset = info[UIImagePickerControllerPHAsset] as? PHAsset {
+			let resources = PHAssetResource.assetResources(for: imageAsset)
+			name = resources[0].originalFilename
+		}
+
+		if name != nil, url != nil {
+			upload(itemURL: url!, name: name!)
+		}
+
+		OnMainThread {
+			picker.dismiss(animated: true)
+		}
+
+	}
+}
+
+// MARK: - UIDocumentPickerDelegate
+extension ClientQueryViewController: UIDocumentPickerDelegate {
+
+	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+		for url in urls {
+			self.upload(itemURL: url, name: url.lastPathComponent)
+		}
+	}
+}
+
+// MARK: - UINavigationControllerDelegate
+extension ClientQueryViewController: UINavigationControllerDelegate {}
