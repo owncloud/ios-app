@@ -746,11 +746,11 @@ extension ClientQueryViewController : OCQueryDelegate {
 	}
 
 	func queryHasChangesAvailable(_ query: OCQuery!) {
-		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (_, changeSet) in
+		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
 			DispatchQueue.main.async {
 
-				switch query.state {
-				case .idle, .targetRemoved, .contentsFromCache, .stopped:
+				switch query?.state {
+				case .idle?, .targetRemoved?, .contentsFromCache?, .stopped?:
 					if self.refreshController!.isRefreshing {
 						self.refreshController?.endRefreshing()
 					}
@@ -759,8 +759,8 @@ extension ClientQueryViewController : OCQueryDelegate {
 
 				self.items = changeSet?.queryResult ?? []
 
-				switch query.state {
-				case .contentsFromCache, .idle:
+				switch query?.state {
+				case .contentsFromCache?, .idle?:
 					if self.items.count == 0 {
 						if self.searchController?.searchBar.text != "" {
 							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
@@ -773,7 +773,7 @@ extension ClientQueryViewController : OCQueryDelegate {
 
 					self.tableView.reloadData()
 
-				case .targetRemoved:
+				case .targetRemoved?:
 					self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
 					self.tableView.reloadData()
 
