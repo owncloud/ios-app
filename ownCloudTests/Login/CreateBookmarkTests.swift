@@ -269,6 +269,105 @@ class CreateBookmarkTests: XCTestCase {
 		}
 	}
 
+	/*
+	* PASSED if: URL leads to warning issue type Certificate. Click on certificate displays the certificate info
+	*/
+	func testCheckURLBasicAuthWarningIssueCertificateDisplayInfo() {
+
+		let mockUrlServer = "http://mocked.owncloud.server.com"
+		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
+															   OCAuthenticationMethodIdentifier.oAuth2]
+		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
+
+			let issue: OCConnectionIssue = OCConnectionIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: URL(string: mockUrlServer), level: .warning, issueHandler: nil)
+
+			//Mock
+			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+
+			//Actions
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Certificate".localized)).perform(grey_tap())
+
+			//Assert
+			EarlGrey.select(elementWithMatcher: grey_text("Certificate Details".localized)).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		} else {
+			assertionFailure("Not possible to read the test_certificate.cer")
+		}
+	}
+
+	/*
+	* PASSED if: URL leads to warning issue type Certificate. Approve certificate leads to credentials
+	*/
+	func testCheckURLBasicAuthWarningIssueCertificateApproval() {
+
+		let mockUrlServer = "http://mocked.owncloud.server.com"
+		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
+															   OCAuthenticationMethodIdentifier.oAuth2]
+		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
+
+			let issue: OCConnectionIssue = OCConnectionIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: URL(string: mockUrlServer), level: .warning, issueHandler: nil)
+
+			//Mock
+			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+
+			//Actions
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).perform(grey_tap())
+
+			//Assert
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+
+		} else {
+			assertionFailure("Not possible to read the test_certificate.cer")
+		}
+	}
+
+	/*
+	* PASSED if: URL leads to warning issue type Certificate. Cancel certificate does not display credentials
+	*/
+	func testCheckURLBasicAuthWarningIssueCertificateCancel() {
+
+		let mockUrlServer = "http://mocked.owncloud.server.com"
+		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
+															   OCAuthenticationMethodIdentifier.oAuth2]
+		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
+
+			let issue: OCConnectionIssue = OCConnectionIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: URL(string: mockUrlServer), level: .warning, issueHandler: nil)
+
+			//Mock
+			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+
+			//Actions
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
+
+			//Assert
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+
+		} else {
+			assertionFailure("Not possible to read the test_certificate.cer")
+		}
+	}
+
     /*
      * PASSED if: URL leads to OAuth2 authentication. Credentials fields not displayed.
      */
