@@ -32,7 +32,7 @@ class StaticLoginViewController: UIViewController, Themeable {
 
 	var contentViewController : UIViewController? {
 		willSet {
-			contentViewController?.willMove(toParentViewController: nil)
+			contentViewController?.willMove(toParent: nil)
 		}
 
 		didSet {
@@ -56,14 +56,14 @@ class StaticLoginViewController: UIViewController, Themeable {
 						self.contentViewController?.view.alpha = 1.0
 					}, completion: { (_) in
 						oldValue?.view?.removeFromSuperview()
-						oldValue?.removeFromParentViewController()
+						oldValue?.removeFromParent()
 
 						oldValue?.view?.alpha = 1.0
 
-						self.contentViewController?.didMove(toParentViewController: self)
+						self.contentViewController?.didMove(toParent: self)
 					})
 				} else {
-					self.contentViewController?.didMove(toParentViewController: self)
+					self.contentViewController?.didMove(toParent: self)
 				}
 			}
 		}
@@ -72,15 +72,15 @@ class StaticLoginViewController: UIViewController, Themeable {
 	var toolbarShown : Bool = false {
 		didSet {
 			if self.toolbarItems == nil, toolbarShown {
-				let feedbackBarButtonItem = UIBarButtonItem(title: "Feedback".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(sendFeedback))
+				let feedbackBarButtonItem = UIBarButtonItem(title: "Feedback".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(sendFeedback))
 				feedbackBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
 
-				let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
+				let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
 				settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
 
 				self.toolbarItems = [
 					feedbackBarButtonItem,
-					UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
+					UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
 					settingsBarButtonItem
 				]
 			}

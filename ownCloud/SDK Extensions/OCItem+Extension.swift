@@ -248,4 +248,30 @@ extension OCItem {
 		dateFormatter.doesRelativeDateFormatting = true
 		return dateFormatter
 	}()
+
+	func parentItem(from core: OCCore, completionHandler: ((_ error: Error?, _ parentItem: OCItem?) -> Void)? = nil) -> OCItem? {
+		var parentItem : OCItem?
+
+		if let parentItemIdentifier = self.parentFileID {
+			var waitGroup : DispatchGroup?
+
+			if completionHandler == nil {
+				waitGroup = DispatchGroup()
+				waitGroup?.enter()
+			}
+
+			core.retrieveItemFromDatabase(forFileID: parentItemIdentifier) { (error, _, item) in
+				if completionHandler == nil {
+					parentItem = item
+					waitGroup?.leave()
+				} else {
+					completionHandler?(error, item)
+				}
+			}
+
+			waitGroup?.wait()
+		}
+
+		return parentItem
+	}
 }

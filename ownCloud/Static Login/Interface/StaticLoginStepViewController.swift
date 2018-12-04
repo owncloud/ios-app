@@ -63,7 +63,7 @@ extension StaticTableViewSection {
 
 		let titleLabel = UILabel()
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
-		titleLabel.setContentHuggingPriority(UILayoutPriority.defaultLow, for: UILayoutConstraintAxis.horizontal)
+		titleLabel.setContentHuggingPriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
 
 		titleLabel.text = title
 		titleLabel.textAlignment = .center
@@ -87,7 +87,7 @@ extension StaticTableViewSection {
 		if message != nil {
 			let messageLabel = UILabel()
 			messageLabel.translatesAutoresizingMaskIntoConstraints = false
-			messageLabel.setContentHuggingPriority(UILayoutPriority.defaultLow, for: UILayoutConstraintAxis.horizontal)
+			messageLabel.setContentHuggingPriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
 
 			messageLabel.text = message
 			messageLabel.textAlignment = .center

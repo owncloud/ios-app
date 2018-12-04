@@ -25,19 +25,22 @@ class DisplayHostViewController: UIViewController {
 	// MARK: - Instance Properties
 	private var itemsToDisplay: [OCItem] = []
 	private var core: OCCore
+	private var rootItem: OCItem
 
 	// MARK: - Init & deinit
-	init(for item: OCItem, with core: OCCore) {
+	init(for item: OCItem, with core: OCCore, root: OCItem) {
 		itemsToDisplay.append(item)
 		self.core = core
+		self.rootItem = root
 
 		super.init(nibName: nil, bundle: nil)
 		Theme.shared.register(client: self)
 	}
 
-	init(for items: [OCItem], with core: OCCore) {
+	init(for items: [OCItem], with core: OCCore, root: OCItem) {
 		itemsToDisplay = items
 		self.core = core
+		self.rootItem = root
 
 		super.init(nibName: nil, bundle: nil)
 	}
@@ -68,9 +71,9 @@ class DisplayHostViewController: UIViewController {
 
 		viewController.configure(configuration)
 
-		self.addChildViewController(viewController)
+		self.addChild(viewController)
 		self.view.addSubview(viewController.view)
-		viewController.didMove(toParentViewController: self)
+		viewController.didMove(toParent: self)
 
 		if shouldDownload {
 			viewController.downloadItem(sender: nil)
@@ -87,8 +90,8 @@ class DisplayHostViewController: UIViewController {
 		navigationController?.tabBarController?.tabBar.isHidden = false
 	}
 
-	override func childViewControllerForHomeIndicatorAutoHidden() -> UIViewController? {
-		if let childViewController = self.childViewControllers.first {
+	override var childForHomeIndicatorAutoHidden : UIViewController? {
+		if let childViewController = self.children.first {
 			return childViewController
 		}
 		return nil

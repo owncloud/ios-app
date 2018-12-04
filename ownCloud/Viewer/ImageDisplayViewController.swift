@@ -87,7 +87,7 @@ class ImageDisplayViewController : DisplayViewController {
 		setNeedsUpdateOfHomeIndicatorAutoHidden()
 	}
 
-	override func prefersHomeIndicatorAutoHidden() -> Bool {
+	override var prefersHomeIndicatorAutoHidden: Bool {
 		guard let navigationController = navigationController else {
 			return false
 		}

@@ -76,7 +76,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 	func busySection(message: String) -> StaticTableViewSection {
 		let busySection : StaticTableViewSection = StaticTableViewSection(headerTitle: nil, identifier: "busySection")
-		let activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+		let activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(style: .whiteLarge)
 		let containerView : FullWidthHeaderView = FullWidthHeaderView()
 		let centerView : UIView = UIView()
 		let messageLabel : UILabel = UILabel()
@@ -227,7 +227,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		busySection = self.busySection(message: "Contacting sever…")
+		busySection = self.busySection(message: "Contacting server…")
 
 		self.addSection(busySection!)
 		self.determineSupportedAuthMethod()

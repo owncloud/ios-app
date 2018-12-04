@@ -130,7 +130,7 @@ class CollapsibleProgressBar: UIView, Themeable {
 
 		self.addSubview(contentView)
 
-		contentViewHeight = contentView.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+		contentViewHeight = contentView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
 
 		contentView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
 		contentView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true

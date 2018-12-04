@@ -52,13 +52,32 @@
 		593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593BAB96209F8A0500023634 /* AppLockManager.swift */; };
 		5958C9BE20C000A700E0E567 /* PasscodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5958C9BD20C000A700E0E567 /* PasscodeTests.swift */; };
 		597A404920AD59EF00B028B2 /* AppLockWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597A404820AD59EF00B028B2 /* AppLockWindow.swift */; };
+		59B09E6321AD61DD007827B8 /* PropfindResponse.xml in Resources */ = {isa = PBXBuildFile; fileRef = 59B09E5C21AD61DD007827B8 /* PropfindResponse.xml */; };
+		59B09E6421AD61DD007827B8 /* PropfindResponse.xml in Resources */ = {isa = PBXBuildFile; fileRef = 59B09E5C21AD61DD007827B8 /* PropfindResponse.xml */; };
+		59B09E6521AD61DD007827B8 /* test_certificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 59B09E5D21AD61DD007827B8 /* test_certificate.cer */; };
+		59B09E6621AD61DD007827B8 /* test_certificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 59B09E5D21AD61DD007827B8 /* test_certificate.cer */; };
+		59B09E6D21AD61F4007827B8 /* FileListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6821AD61F4007827B8 /* FileListTests.swift */; };
+		59B09E6E21AD61F4007827B8 /* EditBookmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6A21AD61F4007827B8 /* EditBookmarkTests.swift */; };
+		59B09E6F21AD61F4007827B8 /* CreateBookmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6B21AD61F4007827B8 /* CreateBookmarkTests.swift */; };
+		59B09E7021AD61F4007827B8 /* UtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6C21AD61F4007827B8 /* UtilsTests.swift */; };
+		59B09E7121AD6215007827B8 /* ownCloudMocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
+		59B09E7221AD6215007827B8 /* ownCloudMocking.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 59D4895420C83F2E00369C2E /* InfoPlist.strings */; };
 		6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */; };
+		6E0A569E218702400056B7B4 /* DownloadFileProgressHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0A569D218702400056B7B4 /* DownloadFileProgressHUDViewController.swift */; };
+		6E37F48B2188B27D00CF16CA /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E37F48A2188B27D00CF16CA /* Action.swift */; };
+		6E3A103E219D5BBA00F90C96 /* RenameAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3A103D219D5BBA00F90C96 /* RenameAction.swift */; };
+		6E3A104D219D6F0100F90C96 /* DuplicateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3A104C219D6F0100F90C96 /* DuplicateAction.swift */; };
 		6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4F1733217749910049A71B /* ImageDisplayViewController.swift */; };
+		6E586CFC2199A72600F680C4 /* OpenInAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E586CFB2199A72600F680C4 /* OpenInAction.swift */; };
+		6E586CFE2199A75900F680C4 /* MoveAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E586CFD2199A75900F680C4 /* MoveAction.swift */; };
+		6E586D002199A78E00F680C4 /* DeleteAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E586CFF2199A78E00F680C4 /* DeleteAction.swift */; };
 		6E83C77E20A32C1B0066EC23 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */; };
 		6E83C78420A33C180066EC23 /* LAContext+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C78320A33C180066EC23 /* LAContext+Extension.swift */; };
 		6EA78B8F2179B55400A5216A /* ImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA78B8E2179B55400A5216A /* ImageScrollView.swift */; };
+		6EADE9372192E235006821B3 /* UIImagePickerController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EADE9362192E235006821B3 /* UIImagePickerController+Extension.swift */; };
 		6EB8EDC52114358400C2BF44 /* folder-create.tvg in Resources */ = {isa = PBXBuildFile; fileRef = 6EB8EDBE2114358300C2BF44 /* folder-create.tvg */; };
+		6ED1B80B21A4004900E16C95 /* CreateFolderAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1B80A21A4004900E16C95 /* CreateFolderAction.swift */; };
 		75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */; };
 		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DC018F8320A0F56300135198 /* UIView+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC018F8220A0F56300135198 /* UIView+Animation.swift */; };
@@ -221,6 +240,13 @@
 			remoteGlobalIDString = DC7E0A77203732B3006111FA;
 			remoteInfo = Ocean;
 		};
+		59B09E7321AD6215007827B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DCA8922620F5F13E00AEFF98;
+			remoteInfo = ownCloudMocking;
+		};
 		DC0196A520F754CA00C41B78 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
@@ -341,6 +367,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				59B09E7221AD6215007827B8 /* ownCloudMocking.framework in CopyFiles */,
 				DC7DBA20207F5A0400E7337D /* PocketSVG.framework in CopyFiles */,
 				DC3BE0D92077BC6B002A0AC0 /* openssl.framework in CopyFiles */,
 				DC3BE0DA2077BC6B002A0AC0 /* ownCloudSDK.framework in CopyFiles */,
@@ -412,15 +439,30 @@
 		593BAB96209F8A0500023634 /* AppLockManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockManager.swift; sourceTree = "<group>"; };
 		5958C9BD20C000A700E0E567 /* PasscodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeTests.swift; sourceTree = "<group>"; };
 		597A404820AD59EF00B028B2 /* AppLockWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockWindow.swift; sourceTree = "<group>"; };
+		59B09E5C21AD61DD007827B8 /* PropfindResponse.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PropfindResponse.xml; sourceTree = "<group>"; };
+		59B09E5D21AD61DD007827B8 /* test_certificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_certificate.cer; sourceTree = "<group>"; };
+		59B09E6821AD61F4007827B8 /* FileListTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileListTests.swift; sourceTree = "<group>"; };
+		59B09E6A21AD61F4007827B8 /* EditBookmarkTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditBookmarkTests.swift; sourceTree = "<group>"; };
+		59B09E6B21AD61F4007827B8 /* CreateBookmarkTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateBookmarkTests.swift; sourceTree = "<group>"; usesTabs = 1; };
+		59B09E6C21AD61F4007827B8 /* UtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilsTests.swift; sourceTree = "<group>"; };
 		59D4895320C83F2E00369C2E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		59EACA8020CAA37F00F082EE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.release.xcconfig"; sourceTree = "<group>"; };
+		6E0A569D218702400056B7B4 /* DownloadFileProgressHUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadFileProgressHUDViewController.swift; sourceTree = "<group>"; };
 		6E216A632112F58700ED21BD /* NamingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamingViewController.swift; sourceTree = "<group>"; };
+		6E37F48A2188B27D00CF16CA /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
+		6E3A103D219D5BBA00F90C96 /* RenameAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameAction.swift; sourceTree = "<group>"; };
+		6E3A104C219D6F0100F90C96 /* DuplicateAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateAction.swift; sourceTree = "<group>"; };
 		6E4F1733217749910049A71B /* ImageDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDisplayViewController.swift; sourceTree = "<group>"; };
+		6E586CFB2199A72600F680C4 /* OpenInAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInAction.swift; sourceTree = "<group>"; };
+		6E586CFD2199A75900F680C4 /* MoveAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveAction.swift; sourceTree = "<group>"; };
+		6E586CFF2199A78E00F680C4 /* DeleteAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAction.swift; sourceTree = "<group>"; };
 		6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
 		6E83C78320A33C180066EC23 /* LAContext+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LAContext+Extension.swift"; sourceTree = "<group>"; };
 		6EA78B8E2179B55400A5216A /* ImageScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageScrollView.swift; sourceTree = "<group>"; };
+		6EADE9362192E235006821B3 /* UIImagePickerController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImagePickerController+Extension.swift"; sourceTree = "<group>"; };
 		6EB8EDBE2114358300C2BF44 /* folder-create.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-create.tvg"; path = "img/filetypes-tvg/folder-create.tvg"; sourceTree = SOURCE_ROOT; };
+		6ED1B80A21A4004900E16C95 /* CreateFolderAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFolderAction.swift; sourceTree = "<group>"; };
 		A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ownCloudTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0D9C062DD1E85A838608B0F /* EarlGrey.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EarlGrey.framework; path = Pods/EarlGrey/EarlGrey/EarlGrey.framework; sourceTree = SOURCE_ROOT; };
 		D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarlGrey.swift; sourceTree = "<group>"; };
@@ -549,6 +591,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59B09E7121AD6215007827B8 /* ownCloudMocking.framework in Frameworks */,
 				DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */,
 				DC3BE0D72077BC5D002A0AC0 /* openssl.framework in Frameworks */,
 				DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */,
@@ -658,10 +701,14 @@
 		233BDEB3204FEFE500C06732 /* ownCloudTests */ = {
 			isa = PBXGroup;
 			children = (
+				59B09E5B21AD61DD007827B8 /* Resources */,
 				233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */,
 				D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */,
 				DC869A582153B1F60088977E /* OCMockingManagerSwiftExtension.swift */,
+				59B09E6C21AD61F4007827B8 /* UtilsTests.swift */,
 				233BDEB6204FEFE500C06732 /* Info.plist */,
+				59B09E6721AD61F4007827B8 /* File List */,
+				59B09E6921AD61F4007827B8 /* Login */,
 				5917244820D3DB1F00809B38 /* Security */,
 			);
 			path = ownCloudTests;
@@ -687,11 +734,13 @@
 		236735A421217C2300E5834A /* Actions */ = {
 			isa = PBXGroup;
 			children = (
+				6E586CF52199A70100F680C4 /* Actions+Extensions */,
 				2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */,
 				236735A521217C3500E5834A /* MoreViewController.swift */,
 				232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */,
 				232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */,
 				23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */,
+				6E37F48A2188B27D00CF16CA /* Action.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -728,6 +777,7 @@
 				6E83C78320A33C180066EC23 /* LAContext+Extension.swift */,
 				DC434D1220D7A8F100740056 /* UIAlertController+OCConnectionIssue.swift */,
 				DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */,
+				6EADE9362192E235006821B3 /* UIImagePickerController+Extension.swift */,
 			);
 			path = "UIKit Extensions";
 			sourceTree = "<group>";
@@ -773,6 +823,32 @@
 			path = Passcode;
 			sourceTree = "<group>";
 		};
+		59B09E5B21AD61DD007827B8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				59B09E5C21AD61DD007827B8 /* PropfindResponse.xml */,
+				59B09E5D21AD61DD007827B8 /* test_certificate.cer */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		59B09E6721AD61F4007827B8 /* File List */ = {
+			isa = PBXGroup;
+			children = (
+				59B09E6821AD61F4007827B8 /* FileListTests.swift */,
+			);
+			path = "File List";
+			sourceTree = "<group>";
+		};
+		59B09E6921AD61F4007827B8 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				59B09E6A21AD61F4007827B8 /* EditBookmarkTests.swift */,
+				59B09E6B21AD61F4007827B8 /* CreateBookmarkTests.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
 		5EE06126BB49344475598790 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -780,6 +856,19 @@
 				6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		6E586CF52199A70100F680C4 /* Actions+Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6E586CFB2199A72600F680C4 /* OpenInAction.swift */,
+				6E586CFD2199A75900F680C4 /* MoveAction.swift */,
+				6E586CFF2199A78E00F680C4 /* DeleteAction.swift */,
+				6E3A103D219D5BBA00F90C96 /* RenameAction.swift */,
+				6E3A104C219D6F0100F90C96 /* DuplicateAction.swift */,
+				6ED1B80A21A4004900E16C95 /* CreateFolderAction.swift */,
+			);
+			path = "Actions+Extensions";
 			sourceTree = "<group>";
 		};
 		DC1B26FD209CF0D2004715E1 /* Issues Animators */ = {
@@ -1078,6 +1167,7 @@
 				DC018F8B20A1060A00135198 /* ProgressHUDViewController.swift */,
 				DC89C46220860B680044BCAE /* Progress */,
 				6EA78B8E2179B55400A5216A /* ImageScrollView.swift */,
+				6E0A569D218702400056B7B4 /* DownloadFileProgressHUDViewController.swift */,
 			);
 			path = "UI Elements";
 			sourceTree = "<group>";
@@ -1139,6 +1229,7 @@
 				DC3BE0D12077BC52002A0AC0 /* PBXTargetDependency */,
 				DCC6566120C9B7E400110A97 /* PBXTargetDependency */,
 				DCC6566420C9B7E400110A97 /* PBXTargetDependency */,
+				59B09E7421AD6215007827B8 /* PBXTargetDependency */,
 			);
 			name = ownCloud;
 			productName = ownCloud;
@@ -1231,6 +1322,7 @@
 				TargetAttributes = {
 					233BDE9B204FEFE500C06732 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -1249,6 +1341,7 @@
 					};
 					233BDEAF204FEFE500C06732 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 233BDE9B204FEFE500C06732;
 					};
@@ -1404,6 +1497,7 @@
 				DCE5E8A22080D781005F60CE /* folder-external.tvg in Resources */,
 				DC85572D20513B8C00189B9A /* ServerListTableViewController.xib in Resources */,
 				DCE5E8B42080D781005F60CE /* folder-shared.tvg in Resources */,
+				59B09E6321AD61DD007827B8 /* PropfindResponse.xml in Resources */,
 				DCE5E8A42080D781005F60CE /* audio.tvg in Resources */,
 				59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */,
 				6EB8EDC52114358400C2BF44 /* folder-create.tvg in Resources */,
@@ -1417,6 +1511,7 @@
 				DCE5E8A72080D781005F60CE /* x-office-spreadsheet.tvg in Resources */,
 				DCE5E8AA2080D781005F60CE /* owncloud-logo.tvg in Resources */,
 				DC9BFBB920A1AF2C007064B5 /* icon-locked.tvg in Resources */,
+				59B09E6521AD61DD007827B8 /* test_certificate.cer in Resources */,
 				DCE5E8B32080D781005F60CE /* text-vcard.tvg in Resources */,
 				DCE5E8AE2080D781005F60CE /* text-code.tvg in Resources */,
 				DC9BFBBB20A1B3CA007064B5 /* icon-password-manager.tvg in Resources */,
@@ -1433,6 +1528,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59B09E6621AD61DD007827B8 /* test_certificate.cer in Resources */,
+				59B09E6421AD61DD007827B8 /* PropfindResponse.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1466,7 +1563,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
+			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		23DFDCF120AEEC77003BD16B /* Update LastGitCommit key in Info.plist */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1556,17 +1653,20 @@
 				DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */,
 				23EC775A2137F3DD0032D4E6 /* DisplayHostViewController.swift in Sources */,
 				4C464BF62187AF1500D30602 /* PDFTocItem.swift in Sources */,
+				6E3A103E219D5BBA00F90C96 /* RenameAction.swift in Sources */,
 				DC018F8320A0F56300135198 /* UIView+Animation.swift in Sources */,
 				DC42244A207CAFAA0006A2A6 /* Theme.swift in Sources */,
 				4C464BF52187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift in Sources */,
 				4C464BF02187AF1500D30602 /* PDFTocTableViewController.swift in Sources */,
 				DC4FEAEA209E48E800D4476B /* DispatchQueueTools.swift in Sources */,
+				6ED1B80B21A4004900E16C95 /* CreateFolderAction.swift in Sources */,
 				DC1B2708209CF0D3004715E1 /* IssuesPresentationAnimator.swift in Sources */,
 				DC3BE0DF2077CC14002A0AC0 /* ClientRootViewController.swift in Sources */,
 				DC854936218331CF00782BA8 /* UserInterfaceSettingsSection.swift in Sources */,
 				4C464BF42187AF1500D30602 /* PDFSearchTableViewCell.swift in Sources */,
 				DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */,
 				DC248C67213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift in Sources */,
+				6E586CFC2199A72600F680C4 /* OpenInAction.swift in Sources */,
 				DC136582208223F000FC0F60 /* OCBookmark+Extension.swift in Sources */,
 				23D77FCD212BFBD100DE76F1 /* NamingViewController.swift in Sources */,
 				DCFB74C621AD8C51005796AF /* ThemeTableViewCell.swift in Sources */,
@@ -1589,7 +1689,9 @@
 				DCFB74C421AD7E18005796AF /* StaticLoginServerListViewController.swift in Sources */,
 				232F7CAF2097260400EE22E4 /* SettingsViewController.swift in Sources */,
 				4C464BF32187AF1500D30602 /* PDFOutlineViewController.swift in Sources */,
+				6EADE9372192E235006821B3 /* UIImagePickerController+Extension.swift in Sources */,
 				DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */,
+				6E0A569E218702400056B7B4 /* DownloadFileProgressHUDViewController.swift in Sources */,
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
 				236735A621217C3500E5834A /* MoreViewController.swift in Sources */,
 				23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */,
@@ -1613,8 +1715,10 @@
 				DC42244C207CAFBB0006A2A6 /* ThemeCollection.swift in Sources */,
 				DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */,
 				DCFED9BA20809B8900A2D984 /* ThemeTVGResource.swift in Sources */,
+				6E37F48B2188B27D00CF16CA /* Action.swift in Sources */,
 				DC3BE0DE2077CC14002A0AC0 /* ClientQueryViewController.swift in Sources */,
 				23C56538212167BE00BD4B47 /* CardTransitionDelegate.swift in Sources */,
+				6E3A104D219D6F0100F90C96 /* DuplicateAction.swift in Sources */,
 				DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */,
 				DC0B37972051681600189B9A /* ThemeButton.swift in Sources */,
 				DCFB74C121AD5C88005796AF /* StaticLoginStepViewController.swift in Sources */,
@@ -1632,9 +1736,12 @@
 				23EC77592137F3DD0032D4E6 /* DisplayExtension.swift in Sources */,
 				DC321261207EB01B00DB171D /* ThemeImage.swift in Sources */,
 				DC7DBA54207FA80C00E7337D /* TVGImage.swift in Sources */,
+				6E586CFE2199A75900F680C4 /* MoveAction.swift in Sources */,
 				DC4FEAE7209E3A7700D4476B /* OCConnectionIssue+Extension.swift in Sources */,
 				DC434D1320D7A8F100740056 /* UIAlertController+OCConnectionIssue.swift in Sources */,
 				DC448A2121AD4E3500A756D3 /* ThemeView.swift in Sources */,
+				6E586D002199A78E00F680C4 /* DeleteAction.swift in Sources */,
+				DC3317CE2084966700E36C8F /* ThemeTableViewCell.swift in Sources */,
 				6E83C77E20A32C1B0066EC23 /* SettingsSection.swift in Sources */,
 				DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */,
 				DC422450207CB2500006A2A6 /* NSObject+ThemeApplication.swift in Sources */,
@@ -1646,10 +1753,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */,
+				59B09E6F21AD61F4007827B8 /* CreateBookmarkTests.swift in Sources */,
+				59B09E6E21AD61F4007827B8 /* EditBookmarkTests.swift in Sources */,
 				DC869A592153B1F60088977E /* OCMockingManagerSwiftExtension.swift in Sources */,
 				6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */,
+				59B09E6D21AD61F4007827B8 /* FileListTests.swift in Sources */,
 				5958C9BE20C000A700E0E567 /* PasscodeTests.swift in Sources */,
 				5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */,
+				59B09E7021AD61F4007827B8 /* UtilsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1691,6 +1802,11 @@
 			isa = PBXTargetDependency;
 			target = 233BDE9B204FEFE500C06732 /* ownCloud */;
 			targetProxy = 233BDEB1204FEFE500C06732 /* PBXContainerItemProxy */;
+		};
+		59B09E7421AD6215007827B8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ownCloudMocking;
+			targetProxy = 59B09E7321AD6215007827B8 /* PBXContainerItemProxy */;
 		};
 		DC188987218A772900CFB3F9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1895,7 +2011,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 83;
+				CURRENT_PROJECT_VERSION = 85;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}";
 				GCC_WARN_UNUSED_LABEL = YES;
@@ -1907,8 +2023,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "3bae2090-bddc-4ba3-a301-9d8afbbed296";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app";
-				SWIFT_COMPILATION_MODE = singlefile;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1923,7 +2038,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 83;
+				CURRENT_PROJECT_VERSION = 85;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}";
 				GCC_WARN_UNUSED_LABEL = YES;
@@ -1935,7 +2050,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "0720808b-becc-4621-8839-347863375834";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1953,7 +2068,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ownCloud.app/ownCloud";
 			};
@@ -1971,7 +2086,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ownCloud.app/ownCloud";
 			};

@@ -34,7 +34,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	var hasToolbar : Bool = true
 
-	override init(style: UITableViewStyle) {
+	override init(style: UITableView.Style) {
 		super.init(style: style)
 
 		NotificationCenter.default.addObserver(self, selector: #selector(serverListChanged), name: Notification.Name.OCBookmarkManagerListChanged, object: nil)
@@ -70,11 +70,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		OCItem.registerIcons()
 
 		self.tableView.register(ServerListBookmarkCell.self, forCellReuseIdentifier: "bookmark-cell")
-		self.tableView.rowHeight = UITableViewAutomaticDimension
+		self.tableView.rowHeight = UITableView.automaticDimension
 		self.tableView.estimatedRowHeight = 80
 		self.tableView.allowsSelectionDuringEditing = true
 
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(addBookmark))
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
 
 		if welcomeOverlayView != nil {
 			welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
@@ -109,18 +109,30 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		updateNoServerMessageVisibility()
 
 		if hasToolbar {
-			let helpBarButtonItem = UIBarButtonItem(title: "Feedback".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(help))
+			let helpBarButtonItem = UIBarButtonItem(title: "Feedback".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(help))
 			helpBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
 
-			let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItemStyle.plain, target: self, action: #selector(settings))
+			let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
 			settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
 
 			self.toolbarItems = [
 				helpBarButtonItem,
-				UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.flexibleSpace, target: nil, action: nil),
+				UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
 				settingsBarButtonItem
 			]
 		}
+
+		let helpBarButtonItem = UIBarButtonItem(title: "Feedback".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(help))
+		helpBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
+
+		let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
+		settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
+
+		self.toolbarItems = [
+			helpBarButtonItem,
+			UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
+			settingsBarButtonItem
+		]
 
 		considerBetaWarning()
 	}
@@ -192,7 +204,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				constraint.priority = UILayoutPriority(rawValue: 900)
 				constraint.isActive = true
 
-				tableView.separatorStyle = UITableViewCellSeparatorStyle.none
+				tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
 				tableView.reloadData()
 			}
 
@@ -205,7 +217,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			if welcomeOverlayView.superview == self.view {
 				welcomeOverlayView.removeFromSuperview()
 
-				tableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
+				tableView.separatorStyle = UITableViewCell.SeparatorStyle.singleLine
 				tableView.reloadData()
 			}
 
@@ -314,6 +326,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 			bookmarkCell.titleLabel.text = bookmark.shortName
 			bookmarkCell.detailLabel.text = (bookmark.originURL != nil) ? bookmark.originURL!.absoluteString : bookmark.url?.absoluteString
+			bookmarkCell.accessibilityIdentifier = "server-bookmark-cell"
 		}
 
 		return bookmarkCell
@@ -323,7 +336,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		return [
 				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, indexPath) in
 					if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-						var presentationStyle: UIAlertControllerStyle = .actionSheet
+						var presentationStyle: UIAlertController.Style = .actionSheet
 						if UIDevice.current.isIpad() {
 							presentationStyle = .alert
 						}
@@ -360,7 +373,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 												OCBookmarkManager.shared.removeBookmark(bookmark)
 
 												tableView.performBatchUpdates({
-													tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
+													tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
 												}, completion: { (_) in
 													self.ignoreServerListChanges = false
 												})

@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var serverListTableViewController: ServerListTableViewController?
 	var staticLoginViewController : StaticLoginViewController?
 
-	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
 		var navigationController: UINavigationController?
 		var rootViewController : UIViewController?
@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		ThemeStyle.registerDefaultStyles()
 
-//		serverListTableViewController = ServerListTableViewController(style: UITableViewStyle.plain)
+//		serverListTableViewController = ServerListTableViewController(style: UITableView.Style.plain)
 //		navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
 //		rootViewController = navigationController
 
@@ -54,11 +54,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
-		application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum + 10)
+		application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum + 10)
 
+		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
+
+		// Action Extensions
+		OCExtensionManager.shared.addExtension(OpenInAction.actionExtension)
+		OCExtensionManager.shared.addExtension(DeleteAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MoveAction.actionExtension)
+		OCExtensionManager.shared.addExtension(RenameAction.actionExtension)
+		OCExtensionManager.shared.addExtension(DuplicateAction.actionExtension)
+		OCExtensionManager.shared.addExtension(CreateFolderAction.actionExtension)
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 

@@ -35,7 +35,7 @@ class TVGImage: NSObject {
 				defaultValues = tvgDict["defaults"] as? [String:String]
 
 				if (tvgDict["viewBox"] as? String) != nil {
-					viewBox = CGRectFromString((tvgDict["viewBox"] as? String)!)
+					viewBox = NSCoder.cgRect(for: (tvgDict["viewBox"] as? String)!)
 				}
 			}
 		} catch {
@@ -157,7 +157,7 @@ class TVGImage: NSObject {
 			return nil
 		}
 
-		let fittingSize : CGSize = SVGAdjustCGRectForContentsGravity(CGRect(origin: CGPoint.zero, size: fitInSize), (viewBox != nil) ? viewBox!.size : pathBoundingRect.size, kCAGravityResizeAspect).size
+		let fittingSize : CGSize = SVGAdjustCGRectForContentsGravity(CGRect(origin: CGPoint.zero, size: fitInSize), (viewBox != nil) ? viewBox!.size : pathBoundingRect.size, CALayerContentsGravity.resizeAspect.rawValue).size
 
 		image = UIImage.imageWithSize(size: fittingSize, scale: UIScreen.main.scale) { (rect) in
 			if let graphicsContext = UIGraphicsGetCurrentContext() {

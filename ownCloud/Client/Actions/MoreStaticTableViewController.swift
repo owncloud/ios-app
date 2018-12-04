@@ -22,7 +22,7 @@ class MoreStaticTableViewController: StaticTableViewController {
 
 	private var themeApplierTokens: [ThemeApplierToken]
 
-	override init(style: UITableViewStyle) {
+	override init(style: UITableView.Style) {
 		themeApplierTokens = []
 		super.init(style: style)
 	}

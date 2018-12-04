@@ -78,8 +78,7 @@ class PasswordManagerAccess {
 		if let attachments = extensionItem.attachments,
 		   attachments.count > 0,
 
-		   let itemProvider = extensionItem.attachments?.first as? NSItemProvider,
-		   itemProvider.hasItemConformingToTypeIdentifier(kUTTypePropertyList as String) {
+		   let itemProvider = extensionItem.attachments?.first, itemProvider.hasItemConformingToTypeIdentifier(kUTTypePropertyList as String) {
 
 			itemProvider.loadItem(forTypeIdentifier: kUTTypePropertyList as String, options: nil) { (itemDictionary, error) in
 				if error == nil,

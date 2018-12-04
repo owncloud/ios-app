@@ -10,7 +10,7 @@ import UIKit
 import ownCloudSDK
 
 extension OCConnectionIssueChoice {
-	var alertActionStyle : UIAlertActionStyle {
+	var alertActionStyle : UIAlertAction.Style {
 		switch type {
 			case .cancel:
 				return .cancel
@@ -36,7 +36,7 @@ extension UIAlertController {
 		}
 	}
 
-	convenience init(with title: String, message: String, cancelLabel: String = "Cancel".localized, destructiveLabel: String, preferredStyle: UIAlertControllerStyle, destructiveAction action: @escaping () -> Void) {
+	convenience init(with title: String, message: String, cancelLabel: String = "Cancel".localized, destructiveLabel: String, preferredStyle: UIAlertController.Style, destructiveAction action: @escaping () -> Void) {
 
 		self.init(title: title, message: message, preferredStyle: preferredStyle)
 
