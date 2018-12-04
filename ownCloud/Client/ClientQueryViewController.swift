@@ -47,7 +47,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 	var progressSummarizer : ProgressSummarizer?
 	var initialAppearance : Bool = true
-	var refreshController: UIRefreshControl?
+	var customRefreshControl: RefreshControl?
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -112,8 +112,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		self.tableView.register(ClientItemCell.self, forCellReuseIdentifier: "itemCell")
 
-		self.tableView.estimatedRowHeight = 0
-
 		// Uncomment the following line to preserve selection between presentations
 		// self.clearsSelectionOnViewWillAppear = false
 
@@ -138,9 +136,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		tableView.tableHeaderView = sortBar
 
-		refreshController = RefreshControl()
-		refreshController?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
-		self.tableView.insertSubview(refreshController!, at: 0)
+		customRefreshControl = RefreshControl()
+		customRefreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
+		self.tableView.insertSubview(customRefreshControl!, at: 0)
 		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
 
 		Theme.shared.register(client: self, applyImmediately: true)
@@ -215,8 +213,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		switch query.state {
 			case .idle:
 				DispatchQueue.main.async {
-					if !self.refreshController!.isRefreshing {
-						self.refreshController?.beginRefreshing()
+					if !self.customRefreshControl!.isRefreshing {
+						self.customRefreshControl?.beginRefreshing()
 					}
 				}
 
@@ -237,7 +235,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
 		self.searchController?.searchBar.applyThemeCollection(collection)
-		self.refreshController?.backgroundColor = theme.activeCollection.navigationBarColors.backgroundColor
+		self.customRefreshControl?.backgroundColor = theme.activeCollection.navigationBarColors.backgroundColor
 		if event == .update {
 			self.tableView.reloadData()
 		}
