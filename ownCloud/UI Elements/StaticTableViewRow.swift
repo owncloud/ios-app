@@ -88,12 +88,12 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		super.init()
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
 		self.init()
 
 		self.identifier = identifier
 
-		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.accessoryType = accessoryType
@@ -103,7 +103,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.action = rowWithAction
 	}
 
-	convenience init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, style : UITableViewCellStyle = .subtitle, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
+	convenience init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, style : UITableViewCell.CellStyle = .subtitle, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
 		self.init()
 
 		self.identifier = identifier
@@ -118,7 +118,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.action = subtitleRowWithAction
 	}
 
-	convenience init(valueRowWithAction: StaticTableViewRowAction?, title: String, value: String, accessoryType: UITableViewCellAccessoryType = UITableViewCellAccessoryType.none, identifier : String? = nil) {
+	convenience init(valueRowWithAction: StaticTableViewRowAction?, title: String, value: String, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
 		self.init(subtitleRowWithAction: valueRowWithAction, title: title, subtitle: value, style: .value1, accessoryType: .disclosureIndicator, identifier: identifier)
 	}
 
@@ -128,7 +128,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 
 		if let accessibilityIdentifier : String = identifier {
@@ -139,7 +139,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.value = value
 
 		if selected {
-			self.cell?.accessoryType = UITableViewCellAccessoryType.checkmark
+			self.cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
 		}
 
 		self.action = { (row, sender) in
@@ -157,8 +157,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
-		self.cell?.selectionStyle = UITableViewCellSelectionStyle.none
+		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		self.cell?.selectionStyle = UITableViewCell.SelectionStyle.none
 
 		self.action = action
 		self.value = textValue
@@ -178,7 +178,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cellTextField.text = textValue
 		cellTextField.accessibilityIdentifier = identifier
 
-		cellTextField.addTarget(self, action: #selector(textFieldContentChanged(_:)), for: UIControlEvents.editingChanged)
+		cellTextField.addTarget(self, action: #selector(textFieldContentChanged(_:)), for: UIControl.Event.editingChanged)
 
 		if cell != nil {
 			cell?.contentView.addSubview(cellTextField)
@@ -234,7 +234,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = label
 		self.cell?.isUserInteractionEnabled = false
 
@@ -256,7 +256,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		let switchView = UISwitch()
 
-		self.cell = ThemeTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.selectionStyle = .none
 		self.cell?.textLabel?.text = title
 		self.cell?.accessoryView = switchView
@@ -268,7 +268,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.action = action
 
-		switchView.addTarget(self, action: #selector(switchValueChanged(_:)), for: UIControlEvents.valueChanged)
+		switchView.addTarget(self, action: #selector(switchValueChanged(_:)), for: UIControl.Event.valueChanged)
 
 		self.updateViewAppearance = { [weak switchView] (row) in
 			switchView?.isEnabled = row.enabled
@@ -293,7 +293,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		self.cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: nil)
+		self.cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = NSTextAlignment.center
 

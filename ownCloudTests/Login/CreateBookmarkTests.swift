@@ -197,7 +197,7 @@ class CreateBookmarkTests: XCTestCase {
         //Reset status
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
     }
-	
+
     /*
      * PASSED if: URL leads to error issue. Error displayed. URL displayed. Credentials and name not displayed
      */
@@ -502,7 +502,8 @@ class CreateBookmarkTests: XCTestCase {
         let completionHandlerBlock : OCMGenerateAuthenticationDataWithMethod = {
             (methodIdentifier, options, mockedBlock) in
 
-            var data: Data? = nil
+            var data: Data?
+
             do {
                 data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .binary, options: 0)
             } catch {

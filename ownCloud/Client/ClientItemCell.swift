@@ -38,7 +38,7 @@ class ClientItemCell: ThemeTableViewCell {
 
 	weak var core : OCCore?
 
-	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		prepareViewAndConstraints()
 	}
@@ -69,7 +69,7 @@ class ClientItemCell: ThemeTableViewCell {
 		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -15).isActive = true
 
 		moreButton.setAttributedTitle(NSAttributedString(string: "● ● ●", attributes:
-			[NSAttributedStringKey.font: UIFont.systemFont(ofSize: 10)]), for: .normal)
+			[NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10)]), for: .normal)
 
 		moreButton.contentMode = .scaleToFill
 
@@ -95,10 +95,10 @@ class ClientItemCell: ThemeTableViewCell {
 		titleLabel.bottomAnchor.constraint(equalTo: detailLabel.topAnchor, constant: -5).isActive = true
 		detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -20).isActive = true
 
-		iconView.setContentHuggingPriority(UILayoutPriority.required, for: UILayoutConstraintAxis.vertical)
-		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
-		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
-		moreButton.setContentHuggingPriority(UILayoutPriority.required, for: UILayoutConstraintAxis.horizontal)
+		iconView.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.vertical)
+		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
+		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
+		moreButton.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
 
 		NSLayoutConstraint.activate([
 			iconView.topAnchor.constraint(greaterThanOrEqualTo: self.topAnchor, constant: 10),
@@ -178,7 +178,7 @@ class ClientItemCell: ThemeTableViewCell {
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
 
 		let moreTitle: NSMutableAttributedString = NSMutableAttributedString(attributedString: self.moreButton.attributedTitle(for: .normal)!)
-		moreTitle.addAttribute(NSAttributedStringKey.foregroundColor, value: collection.tableRowColors.labelColor, range: NSRange(location:0, length:moreTitle.length))
+		moreTitle.addAttribute(NSAttributedString.Key.foregroundColor, value: collection.tableRowColors.labelColor, range: NSRange(location:0, length:moreTitle.length))
 		self.moreButton.setAttributedTitle(moreTitle, for: .normal)
 	}
 

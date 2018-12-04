@@ -71,9 +71,9 @@ class DisplayHostViewController: UIViewController {
 
 		viewController.configure(configuration)
 
-		self.addChildViewController(viewController)
+		self.addChild(viewController)
 		self.view.addSubview(viewController.view)
-		viewController.didMove(toParentViewController: self)
+		viewController.didMove(toParent: self)
 
 		if shouldDownload {
 			viewController.downloadItem(sender: nil)
@@ -90,8 +90,8 @@ class DisplayHostViewController: UIViewController {
 		navigationController?.tabBarController?.tabBar.isHidden = false
 	}
 
-	override func childViewControllerForHomeIndicatorAutoHidden() -> UIViewController? {
-		if let childViewController = self.childViewControllers.first {
+	override var childForHomeIndicatorAutoHidden : UIViewController? {
+		if let childViewController = self.children.first {
 			return childViewController
 		}
 		return nil

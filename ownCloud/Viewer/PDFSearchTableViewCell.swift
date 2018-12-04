@@ -30,7 +30,7 @@ class PDFSearchTableViewCell: ThemeTableViewCell {
     fileprivate let titleFontSize: CGFloat = 16
     fileprivate let pageFontSize: CGFloat = 15
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupSubviewsAndConstraints()
     }
@@ -63,8 +63,8 @@ class PDFSearchTableViewCell: ThemeTableViewCell {
 
         pageLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor).isActive = true
 
-        titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: UILayoutConstraintAxis.horizontal)
-        pageLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.horizontal)
+        titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
+        pageLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.horizontal)
     }
 
     // MARK: - Theme support

@@ -64,7 +64,13 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		query.addObserver(self, forKeyPath: "state", options: .initial, context: nil)
 		core.start(query)
 
-		self.navigationItem.title = (query.queryPath as NSString?)!.lastPathComponent
+		var title = (query.queryPath as NSString?)!.lastPathComponent
+
+		if title == "/" {
+			title = core.bookmark.shortName
+		}
+
+		self.navigationItem.title = title
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -386,7 +392,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			containerView.addSubview(messageLabel)
 
 			containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageView]-(20)-[titleLabel]-[messageLabel]|",
-										   options: NSLayoutFormatOptions(rawValue: 0),
+										   options: NSLayoutConstraint.FormatOptions(rawValue: 0),
 										   metrics: nil,
 										   views: ["imageView" : imageView, "titleLabel" : titleLabel, "messageLabel" : messageLabel])
 						   )
@@ -534,7 +540,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 						let alert = UIAlertController(title: "Missing permissions".localized, message: "This permission is needed to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
 
 						let settingAction = UIAlertAction(title: "Settings".localized, style: .default, handler: { _ in
-							UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!, options: [:], completionHandler: nil)
+							UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
 						})
 						let notNowAction = UIAlertAction(title: "Not now".localized, style: .cancel)
 
@@ -762,22 +768,22 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 // MARK: - UIImagePickerControllerDelegate
 extension ClientQueryViewController: UIImagePickerControllerDelegate {
 
-	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 
 		var name: String?
 		var url: URL?
 
-		if let imageURL = info[UIImagePickerControllerImageURL] as? URL {
+		if let imageURL = info[UIImagePickerController.InfoKey.imageURL] as? URL {
 			name = imageURL.lastPathComponent
 			url = imageURL
 		}
 
-		if let movieURL = info[UIImagePickerControllerMediaURL] as? URL {
+		if let movieURL = info[UIImagePickerController.InfoKey.mediaURL] as? URL {
 			name = movieURL.lastPathComponent
 			url = movieURL
 		}
 
-		if let imageAsset = info[UIImagePickerControllerPHAsset] as? PHAsset {
+		if let imageAsset = info[UIImagePickerController.InfoKey.phAsset] as? PHAsset {
 			let resources = PHAssetResource.assetResources(for: imageAsset)
 			name = resources[0].originalFilename
 		}

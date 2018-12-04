@@ -229,7 +229,7 @@ class SecuritySettingsSection: SettingsSection {
 
 		// Creation of certificate management row
 		certificateManagementRow = StaticTableViewRow(rowWithAction: { (row, _) in
-			let certificateManagementViewController = CertificateManagementViewController(style: UITableViewStyle.grouped)
+			let certificateManagementViewController = CertificateManagementViewController(style: UITableView.Style.grouped)
 
 			row.viewController?.navigationController?.pushViewController(certificateManagementViewController, animated: true)
 		}, title: "Certificates".localized, accessoryType: .disclosureIndicator, identifier: "Certificates")
