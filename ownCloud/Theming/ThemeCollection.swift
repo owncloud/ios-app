@@ -229,7 +229,7 @@ class ThemeCollection : NSObject {
 			case .light:
 				// Bars
 				self.navigationBarColors = ThemeColorCollection(
-					backgroundColor: nil,
+					backgroundColor: UIColor.white.darker(0.05),
 					tintColor: nil,
 					labelColor: UIColor.black,
 					secondaryLabelColor: UIColor.gray,
