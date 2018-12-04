@@ -25,19 +25,22 @@ class DisplayHostViewController: UIViewController {
 	// MARK: - Instance Properties
 	private var itemsToDisplay: [OCItem] = []
 	private var core: OCCore
+	private var rootItem: OCItem
 
 	// MARK: - Init & deinit
-	init(for item: OCItem, with core: OCCore) {
+	init(for item: OCItem, with core: OCCore, root: OCItem) {
 		itemsToDisplay.append(item)
 		self.core = core
+		self.rootItem = root
 
 		super.init(nibName: nil, bundle: nil)
 		Theme.shared.register(client: self)
 	}
 
-	init(for items: [OCItem], with core: OCCore) {
+	init(for items: [OCItem], with core: OCCore, root: OCItem) {
 		itemsToDisplay = items
 		self.core = core
+		self.rootItem = root
 
 		super.init(nibName: nil, bundle: nil)
 	}

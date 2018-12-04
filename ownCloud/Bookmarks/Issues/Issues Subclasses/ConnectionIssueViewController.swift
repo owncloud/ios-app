@@ -56,8 +56,7 @@ class ConnectionIssueViewController: IssuesViewController {
 				useButtons = [
 					IssueButton(title: "OK".localized, type: .approve, action: { [weak self] in
 						completion(.approve)
-						self?.dismiss(animated: true)
-					})
+						self?.dismiss(animated: true)}, accessibilityIdentifier: "ok-button")
 				]
 
 			case .warning:
@@ -68,11 +67,11 @@ class ConnectionIssueViewController: IssuesViewController {
 				useButtons = [
 					IssueButton(title: "Cancel".localized, type: .cancel, action: { [weak self] in
 						completion(.cancel)
-						self?.dismiss(animated: true)}),
+						self?.dismiss(animated: true)}, accessibilityIdentifier: "cancel-button"),
 
 					IssueButton(title: "Approve".localized, type: .approve, action: { [weak self] in
 						completion(.approve)
-						self?.dismiss(animated: true)})
+						self?.dismiss(animated: true)}, accessibilityIdentifier: "approve-button")
 				]
 
 			case .error:
@@ -83,7 +82,7 @@ class ConnectionIssueViewController: IssuesViewController {
 				useButtons = [
 					IssueButton(title: "OK".localized, type: .approve, action: { [weak self] in
 						completion(.dismiss)
-						self?.dismiss(animated: true)})
+						self?.dismiss(animated: true)}, accessibilityIdentifier: "ok-button")
 				]
 		}
 
