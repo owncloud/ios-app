@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
 	var serverListTableViewController: ServerListTableViewController?
 
-	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
 		var navigationController: UINavigationController?
 
@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		ThemeStyle.registerDefaultStyles()
 
-		serverListTableViewController = ServerListTableViewController(style: UITableViewStyle.plain)
+		serverListTableViewController = ServerListTableViewController(style: UITableView.Style.plain)
 
 		navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
 
@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
-		application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum + 10)
+		application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum + 10)
 
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)

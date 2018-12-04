@@ -431,7 +431,6 @@
 		59EACA8020CAA37F00F082EE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.release.xcconfig"; sourceTree = "<group>"; };
 		6E0A569D218702400056B7B4 /* DownloadFileProgressHUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadFileProgressHUDViewController.swift; sourceTree = "<group>"; };
-		6E216A632112F58700ED21BD /* NamingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamingViewController.swift; sourceTree = "<group>"; };
 		6E37F48A2188B27D00CF16CA /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		6E3A103D219D5BBA00F90C96 /* RenameAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameAction.swift; sourceTree = "<group>"; };
 		6E3A104C219D6F0100F90C96 /* DuplicateAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateAction.swift; sourceTree = "<group>"; };
@@ -1261,6 +1260,7 @@
 				TargetAttributes = {
 					233BDE9B204FEFE500C06732 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -1944,7 +1944,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "3bae2090-bddc-4ba3-a301-9d8afbbed296";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1971,7 +1971,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "0720808b-becc-4621-8839-347863375834";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

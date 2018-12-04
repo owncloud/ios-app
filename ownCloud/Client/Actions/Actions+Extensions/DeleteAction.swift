@@ -57,7 +57,7 @@ class DeleteAction : Action {
 			with: name,
 			message: message,
 			destructiveLabel: "Delete".localized,
-			preferredStyle: UIDevice.current.isIpad() ? UIAlertControllerStyle.alert : UIAlertControllerStyle.actionSheet,
+			preferredStyle: UIDevice.current.isIpad() ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
 			destructiveAction: {
 				for item in items {
 					if let progress = self.core.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in

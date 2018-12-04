@@ -29,7 +29,7 @@ class VectorImage: NSObject {
 
 	func rasteredImage(fitInSize: CGSize, with variables: [String:String], cacheFor identifier: String? = nil) -> UIImage? {
 		var uiImage : UIImage?
-		let sizeString = NSStringFromCGSize(fitInSize)
+		let sizeString = NSCoder.string(for: fitInSize)
 
 		if identifier != nil {
 			OCSynchronized(self) {

@@ -36,7 +36,7 @@ class ProgressHUDViewController: UIViewController {
 		progressContainer = UIView()
 		progressContainer?.translatesAutoresizingMaskIntoConstraints = false
 
-		progressSpinner = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+		progressSpinner = UIActivityIndicatorView(style: .whiteLarge)
 		progressSpinner?.translatesAutoresizingMaskIntoConstraints = false
 
 		progressLabel = UILabel()

@@ -46,7 +46,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 		if animated {
 			tableView.performBatchUpdates({
 				sections.insert(section, at: index)
-				tableView.insertSections(IndexSet(integer: index), with: UITableViewRowAnimation.fade)
+				tableView.insertSections(IndexSet(integer: index), with: UITableView.RowAnimation.fade)
 			})
 		} else {
 			sections.insert(section, at: index)
@@ -60,7 +60,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 			tableView.performBatchUpdates({
 				if let index : Int = sections.index(of: section) {
 					sections.remove(at: index)
-					tableView.deleteSections(IndexSet(integer: index), with: UITableViewRowAnimation.fade)
+					tableView.deleteSections(IndexSet(integer: index), with: UITableView.RowAnimation.fade)
 				}
 			}, completion: { (_) in
 				section.viewController = nil
@@ -83,7 +83,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 			tableView.performBatchUpdates({
 				let index = sections.count
 				sections.append(contentsOf: addSections)
-				tableView.insertSections(IndexSet(integersIn: index..<(index+addSections.count)), with: UITableViewRowAnimation.fade)
+				tableView.insertSections(IndexSet(integersIn: index..<(index+addSections.count)), with: UITableView.RowAnimation.fade)
 			})
 		} else {
 			sections.append(contentsOf: addSections)
@@ -108,7 +108,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 					}
 				}
 
-				tableView.deleteSections(removalIndexes, with: UITableViewRowAnimation.fade)
+				tableView.deleteSections(removalIndexes, with: UITableView.RowAnimation.fade)
 			}, completion: { (_) in
 				for section in removeSections {
 					section.viewController = nil

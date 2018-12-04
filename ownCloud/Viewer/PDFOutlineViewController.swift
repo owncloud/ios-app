@@ -81,8 +81,8 @@ class PDFOutlineViewController: UIViewController {
         var fromViewController: UIViewController?
         var toViewController: UIViewController?
 
-        if self.childViewControllers.count > 0 {
-            fromViewController = self.childViewControllers.first
+        if self.children.count > 0 {
+            fromViewController = self.children.first
         }
         if mode == .ToC {
             let tocViewController = PDFTocTableViewController()
@@ -98,8 +98,8 @@ class PDFOutlineViewController: UIViewController {
     }
 
     fileprivate func change(fromViewController:UIViewController?, toViewController:UIViewController) {
-        fromViewController?.willMove(toParentViewController: nil)
-        self.addChildViewController(toViewController)
+        fromViewController?.willMove(toParent: nil)
+        self.addChild(toViewController)
         toViewController.view.frame = self.view.frame
         self.view.addSubview(toViewController.view)
 
@@ -111,11 +111,11 @@ class PDFOutlineViewController: UIViewController {
                 toViewController.view.alpha = 1.0
             }, completion: { (_) in
                 fromViewController?.view.removeFromSuperview()
-                fromViewController?.removeFromParentViewController()
-                toViewController.didMove(toParentViewController: self)
+                fromViewController?.removeFromParent()
+                toViewController.didMove(toParent: self)
             })
         } else {
-            toViewController.didMove(toParentViewController: self)
+            toViewController.didMove(toParent: self)
         }
     }
 }

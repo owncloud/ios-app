@@ -21,7 +21,7 @@ import PDFKit
 
 class PDFTocTableViewController: UITableViewController, Themeable {
 
-    let activityIndicatorView: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+    let activityIndicatorView: UIActivityIndicatorView = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.whiteLarge)
 
     fileprivate let tocTableViewCellHeight: CGFloat = 40.0
     fileprivate var enableTocBuilding = true
