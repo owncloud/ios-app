@@ -96,7 +96,7 @@ class FileListTests: XCTestCase {
 	}
 
 	func showFileList(bookmark: OCBookmark) {
-		if let appDelegate: AppDelegate = UIApplication.shared.delegate as AppDelegate {
+		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
 			let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 
 			appDelegate.serverListTableViewController?.present(clientRootViewController, animated: true, completion: nil)

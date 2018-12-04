@@ -47,7 +47,7 @@ class UtilsTests {
 	}
 
 	static func refreshServerList() {
-		if let appDelegate: AppDelegate = UIApplication.shared.delegate as AppDelegate {
+		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
 			appDelegate.serverListTableViewController?.updateNoServerMessageVisibility()
 		}
 	}
