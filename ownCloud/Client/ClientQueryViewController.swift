@@ -64,7 +64,13 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		query.addObserver(self, forKeyPath: "state", options: .initial, context: nil)
 		core.start(query)
 
-		self.navigationItem.title = (query.queryPath as NSString?)!.lastPathComponent
+		var title = (query.queryPath as NSString?)!.lastPathComponent
+
+		if title == "/" {
+			title = core.bookmark.shortName
+		}
+
+		self.navigationItem.title = title
 	}
 
 	required init?(coder aDecoder: NSCoder) {

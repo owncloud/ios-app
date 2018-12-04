@@ -56,9 +56,10 @@ class UtilsTests {
 
 		let mockUrlServer: String = "https://mock.owncloud.com/"
 
-		let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
+		let dictionary: Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
 		"passphrase" : "admin",
 		"username" : "admin"]
+
 		var data: Data?
 		do {
 			data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .binary, options: 0)
