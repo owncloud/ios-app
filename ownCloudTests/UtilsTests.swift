@@ -47,18 +47,21 @@ class UtilsTests {
 	}
 
 	static func refreshServerList() {
-		let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-		appDelegate.serverListTableViewController?.updateNoServerMessageVisibility()
+		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
+			appDelegate.serverListTableViewController?.updateNoServerMessageVisibility()
+		}
 	}
 
 	static func getBookmark() -> OCBookmark? {
 
 		let mockUrlServer: String = "https://mock.owncloud.com/"
 
-		let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
+		let dictionary: Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
 		"passphrase" : "admin",
 		"username" : "admin"]
-		var data: Data? = nil
+
+		var data: Data?
+
 		do {
 			data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .binary, options: 0)
 		} catch {

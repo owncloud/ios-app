@@ -37,7 +37,7 @@ class PDFTocTableViewCell: ThemeTableViewCell {
         UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.regular)
     ]
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupSubviewsAndConstraints()
     }
@@ -71,8 +71,8 @@ class PDFTocTableViewCell: ThemeTableViewCell {
 
         pageLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor).isActive = true
 
-        titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: UILayoutConstraintAxis.horizontal)
-        pageLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.horizontal)
+        titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
+        pageLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.horizontal)
     }
 
     // MARK: - Theme support

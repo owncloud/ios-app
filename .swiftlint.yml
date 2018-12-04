@@ -25,6 +25,7 @@ disabled_rules:
     - operator_whitespace
     - type_body_length
     - line_length
+    - type_name
 
 custom_rules:
   empty_line_after_guard_statement:

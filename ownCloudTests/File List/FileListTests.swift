@@ -73,7 +73,7 @@ class FileListTests: XCTestCase {
 			//Asserts
 			EarlGrey.select(elementWithMatcher: grey_text("Disconnect".localized)).assert(grey_sufficientlyVisible())
 
-			var error:NSError? = nil
+			var error:NSError?
 			var index: UInt = 0
 			while true {
 				EarlGrey.select(elementWithMatcher: grey_kindOfClass(ClientItemCell.self)).atIndex(index).assert(with: grey_notNil(), error: &error)
@@ -96,10 +96,11 @@ class FileListTests: XCTestCase {
 	}
 
 	func showFileList(bookmark: OCBookmark) {
-		let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
-		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
+			let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 
-		appDelegate.serverListTableViewController?.present(clientRootViewController, animated: true, completion: nil)
+			appDelegate.serverListTableViewController?.present(clientRootViewController, animated: true, completion: nil)
+		}
 	}
 
 	// MARK: - Mocks

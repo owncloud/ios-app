@@ -117,13 +117,13 @@ class AppLockManager: NSObject {
 
 		super.init()
 
-		NotificationCenter.default.addObserver(self, selector: #selector(self.appDidEnterBackground), name: .UIApplicationDidEnterBackground, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(self.appWillEnterForeground), name: .UIApplicationWillEnterForeground, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(self.appDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(self.appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
 	}
 
 	deinit {
-		NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
-		NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
+		NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+		NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
 	}
 
 	// MARK: - Show / Dismiss Passcode View
@@ -149,7 +149,7 @@ class AppLockManager: NSObject {
 					case, implement prefersStatusBarHidden in PasscodeViewController to return true and remove the dismiss
 					animation (the re-appearance of the status bar will lead to a jump in the UI otherwise).
 				*/
-				window?.windowLevel = UIWindowLevelStatusBar
+				window?.windowLevel = UIWindow.Level.statusBar
 				window?.rootViewController = passcodeViewController!
 				window?.makeKeyAndVisible()
 

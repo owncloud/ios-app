@@ -33,7 +33,7 @@ struct IssueButton {
 }
 
 class IssuesTableViewCell : UITableViewCell {
-	override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
 	}
 
@@ -89,7 +89,7 @@ class IssuesViewController: UIViewController {
 		tableView?.layer.cornerRadius = 10
 		tableView?.separatorInset = .zero
 		tableView?.bounces = false
-		tableView?.rowHeight = UITableViewAutomaticDimension
+		tableView?.rowHeight = UITableView.automaticDimension
 	tableView?.register(IssuesTableViewCell.self, forCellReuseIdentifier: IssuesViewControllerCellIdentifier)
 	}
 
@@ -125,7 +125,7 @@ class IssuesViewController: UIViewController {
 					.foregroundColor : color,
 					.font : UIFont.systemFont(ofSize: 20, weight: .semibold)
 					]), for: .normal)
-				button.setTitle($0.title, for: UIControlState.normal)
+				button.setTitle($0.title, for: UIControl.State.normal)
 				button.addTarget(self, action: #selector(buttonPressed(_:)), for: .touchUpInside)
 				button.accessibilityIdentifier = $0.accessibilityIdentifier
 				button.layer.cornerRadius = 10

@@ -151,7 +151,7 @@ class StaticTableViewSection: NSObject {
 	func selectedValue(forGroupIdentifier groupIdentifier: String) -> Any? {
 		for row in rows {
 			if row.groupIdentifier == groupIdentifier {
-				if row.cell?.accessoryType == UITableViewCellAccessoryType.checkmark {
+				if row.cell?.accessoryType == UITableViewCell.AccessoryType.checkmark {
 					return (row.value)
 				}
 			}
@@ -164,9 +164,9 @@ class StaticTableViewSection: NSObject {
 		for row in rows {
 			if row.groupIdentifier == groupIdentifier {
 				if let rowValueObject = row.value as? NSObject, let valueObject = value as? NSObject, rowValueObject == valueObject {
-					row.cell?.accessoryType = UITableViewCellAccessoryType.checkmark
+					row.cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
 				} else {
-					row.cell?.accessoryType = UITableViewCellAccessoryType.none
+					row.cell?.accessoryType = UITableViewCell.AccessoryType.none
 				}
 			}
 		}
