@@ -60,7 +60,7 @@ class DeleteAction : Action {
 			preferredStyle: UIDevice.current.isIpad() ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
 			destructiveAction: {
 				for item in items {
-					if let progress = self.core.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
+					if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
 						if error != nil {
 							Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
 							self.completed(with: error)

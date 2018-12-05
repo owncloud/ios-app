@@ -64,7 +64,7 @@ class CreateFolderAction : Action {
 				return
 			}
 
-			if let progress = self.core.createFolder(newName!, inside: item!, options: nil, resultHandler: { (error, _, _, _) in
+			if let progress = self.core?.createFolder(newName!, inside: item!, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.error("Error \(String(describing: error)) creating folder \(String(describing: newName))")
 					self.completed(with: error)

@@ -22,7 +22,7 @@ import ownCloudSDK
 class MoreViewController: UIViewController {
 
 	private var item: OCItem
-	private var core: OCCore
+	private weak var core: OCCore?
 
 	private var headerView: UIView
 	private var viewController: UIViewController

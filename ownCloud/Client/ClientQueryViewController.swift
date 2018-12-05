@@ -25,7 +25,7 @@ typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
 class ClientQueryViewController: UITableViewController, Themeable {
-	var core : OCCore
+	weak var core : OCCore?
 	var query : OCQuery
 
 	var items : [OCItem] = []
@@ -46,7 +46,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 	var progressSummarizer : ProgressSummarizer?
-	var initialAppearance : Bool = true
 	var refreshController: UIRefreshControl?
 
 	// MARK: - Init & Deinit
@@ -62,12 +61,12 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		query.delegate = self
 
 		query.addObserver(self, forKeyPath: "state", options: .initial, context: nil)
-		core.start(query)
+		core?.start(query)
 
 		var title = (query.queryPath as NSString?)!.lastPathComponent
 
-		if title == "/" {
-			title = core.bookmark.shortName
+		if title == "/", let shortName = core?.bookmark.shortName {
+			title = shortName
 		}
 
 		self.navigationItem.title = title
@@ -80,7 +79,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	deinit {
 		query.removeObserver(self, forKeyPath: "state", context: nil)
 
-		core.stop(query)
+		core?.stop(query)
 		Theme.shared.unregister(client: self)
 
 		if messageThemeApplierToken != nil {
@@ -94,7 +93,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	// MARK: - Actions
 	@objc func refreshQuery() {
 		UIImpactFeedbackGenerator().impactOccurred()
-		core.reload(query)
+		core?.reload(query)
 	}
 
 	// swiftlint:disable block_based_kvo
@@ -164,15 +163,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		// Refresh when navigating back to us
-		if initialAppearance == false {
-			if query.state == .idle {
-				core.reload(query)
-			}
-		}
-
-		initialAppearance = false
-
 		updateQueryProgressSummary()
 
 		sortBar?.sortMethod = self.sortMethod
@@ -190,7 +180,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				summary.message = "Started…".localized
 
 			case .contentsFromCache:
-				if core.reachabilityMonitor.available == true {
+				if core?.reachabilityMonitor.available == true {
 					summary.message = "Contents from cache.".localized
 				} else {
 					summary.message = "Offline. Contents from cache.".localized
@@ -276,13 +266,15 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let rowItem : OCItem = itemAtIndexPath(indexPath)
 
-		switch rowItem.type {
-			case .collection:
-				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core, query: OCQuery(forPath: rowItem.path)), animated: true)
+		if let core = self.core {
+			switch rowItem.type {
+				case .collection:
+				self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: rowItem.path)), animated: true)
 
-			case .file:
-				let itemViewController = DisplayHostViewController(for: rowItem, with: core, root: query.rootItem!)
-				self.navigationController?.pushViewController(itemViewController, animated: true)
+				case .file:
+					let itemViewController = DisplayHostViewController(for: rowItem, with: core, root: query.rootItem!)
+					self.navigationController?.pushViewController(itemViewController, animated: true)
+			}
 		}
 
 		tableView.deselectRow(at: indexPath, animated: true)
@@ -293,7 +285,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
  	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		guard let cell = tableView.cellForRow(at: indexPath) as? ClientItemCell, let item = cell.item else {
+		guard let cell = tableView.cellForRow(at: indexPath) as? ClientItemCell, let item = cell.item, let core = self.core else {
 			return nil
 		}
 
@@ -493,7 +485,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var searchController: UISearchController?
 
 	func upload(itemURL: URL, name: String, completionHandler: ClientActionCompletionHandler? = nil) {
-		if let progress = core.importFileNamed(name, at: query.rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { [weak self](error, _ core, _ item, _) in
+		if let progress = core?.importFileNamed(name, at: query.rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { [weak self](error, _ core, _ item, _) in
 			if error != nil {
 				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
 				completionHandler?(false)
@@ -624,6 +616,8 @@ extension ClientQueryViewController : OCQueryDelegate {
 // MARK: - SortBar Delegate
 extension ClientQueryViewController : SortBarDelegate {
 	func sortBar(_ sortBar: SortBar, leftButtonPressed: UIButton) {
+		guard let core = self.core else { return }
+
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .sortBar)
 		let actionContext = ActionContext(viewController: self, core: core, items: [query.rootItem], location: actionsLocation)
 
@@ -683,7 +677,7 @@ extension ClientQueryViewController: UISearchResultsUpdating {
 // MARK: - ClientItemCell Delegate
 extension ClientQueryViewController: ClientItemCellDelegate {
 	func moreButtonTapped(cell: ClientItemCell) {
-		guard let item = cell.item else {
+		guard let item = cell.item, let core = self.core else {
 			return
 		}
 
@@ -700,6 +694,7 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 
 extension ClientQueryViewController: UITableViewDropDelegate {
 	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+		guard let core = self.core else { return }
 
 		for item in coordinator.items {
 
@@ -737,7 +732,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 			}
 
-			if let progress = self.core.move(item, to: destinationItem, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
+			if let progress = core.move(item, to: destinationItem, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
 				}

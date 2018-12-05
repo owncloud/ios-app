@@ -34,7 +34,7 @@ class DuplicateAction : Action {
 
 	// MARK: - Action implementation
 	override func run() {
-		guard context.items.count > 0 else {
+		guard context.items.count > 0, let core = self.core else {
 			completed(with: NSError(ocError: OCError.errorItemNotFound))
 			return
 		}
@@ -60,7 +60,7 @@ class DuplicateAction : Action {
 			name = "\(itemName) copy\(fileExtension)"
 		}
 
-		if let progress = self.core.copy(item, to: rootItem!, withName: name, options: nil, resultHandler: { (error, _, item, _) in
+		if let progress = core.copy(item, to: rootItem!, withName: name, options: nil, resultHandler: { (error, _, item, _) in
 			if error != nil {
 				Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
 				self.completed(with: error)
