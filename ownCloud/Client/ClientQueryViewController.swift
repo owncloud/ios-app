@@ -811,4 +811,3 @@ extension ClientQueryViewController: UIDocumentPickerDelegate {
 
 // MARK: - UINavigationControllerDelegate
 extension ClientQueryViewController: UINavigationControllerDelegate {}
-
