@@ -24,7 +24,7 @@ class DisplayHostViewController: UIViewController {
 
 	// MARK: - Instance Properties
 	private var itemsToDisplay: [OCItem] = []
-	private var core: OCCore
+	private weak var core: OCCore?
 	private var rootItem: OCItem
 
 	// MARK: - Init & deinit

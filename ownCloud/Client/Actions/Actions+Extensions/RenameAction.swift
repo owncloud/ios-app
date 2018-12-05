@@ -35,7 +35,7 @@ class RenameAction : Action {
 
 	// MARK: - Action implementation
 	override func run() {
-		guard context.items.count > 0, let viewController = context.viewController else {
+		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
 			completionHandler?(NSError(ocError: .errorInsufficientParameters))
 			return
 		}
@@ -60,7 +60,7 @@ class RenameAction : Action {
 				return
 			}
 
-			if let progress = self.core.move(item, to: rootItem!, withName: newName!, options: nil, resultHandler: { (error, _, _, _) in
+			if let progress = self.core?.move(item, to: rootItem!, withName: newName!, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
 					self.completed(with: error)
