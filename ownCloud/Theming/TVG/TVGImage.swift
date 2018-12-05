@@ -186,4 +186,3 @@ class TVGImage: NSObject {
 		}
 	}
 }
-

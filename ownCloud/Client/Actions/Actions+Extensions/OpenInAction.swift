@@ -48,7 +48,7 @@ class OpenInAction: Action {
 		let controller = DownloadFileProgressHUDViewController()
 
 		controller.present(on: viewController) {
-			if let progress = self.core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
+			if let progress = self.core?.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
 					controller.dismiss(animated: true, completion: {
