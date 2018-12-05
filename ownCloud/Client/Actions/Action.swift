@@ -192,7 +192,7 @@ class Action : NSObject {
 	// MARK: - Action metadata
 	var context : ActionContext
 	var actionExtension: ActionExtension
-	var core : OCCore
+	weak var core : OCCore?
 
 	// MARK: - Action creation
 	required init(for actionExtension: ActionExtension, with context: ActionContext) {
