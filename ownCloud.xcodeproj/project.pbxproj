@@ -175,6 +175,7 @@
 		DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */; };
 		DCF4F17F2051A0D000189B9A /* StaticTableViewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */; };
 		DCF4F18B2052BA4C00189B9A /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F18A2052BA4C00189B9A /* Log.swift */; };
+		DCFBAD0C21BE67A100943F76 /* ownCloudUI.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFED971208095E200A2D984 /* ClientItemCell.swift */; };
 		DCFED9BA20809B8900A2D984 /* ThemeTVGResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */; };
 		EA1D571C6B1E95925C459228 /* EarlGrey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; };
@@ -350,6 +351,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				DCFBAD0C21BE67A100943F76 /* ownCloudUI.framework in CopyFiles */,
 				59B09E7221AD6215007827B8 /* ownCloudMocking.framework in CopyFiles */,
 				DC7DBA20207F5A0400E7337D /* PocketSVG.framework in CopyFiles */,
 				DC3BE0D92077BC6B002A0AC0 /* openssl.framework in CopyFiles */,
