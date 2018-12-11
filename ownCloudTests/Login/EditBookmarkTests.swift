@@ -80,6 +80,34 @@ class EditBookmarkTests: XCTestCase {
 	}
 
 	/*
+	* PASSED if: View cancelled, credentials' fields are not displayed. Server Bookmark cell displayed
+	*/
+	func testCheckCancelEditView () {
+
+		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
+
+			OCBookmarkManager.shared.addBookmark(bookmark)
+			UtilsTests.refreshServerList()
+
+			//Actions
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).perform(grey_swipeFastInDirection(.left))
+			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+
+			//Assert
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_notVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-auth-data-delete")).assert(grey_notVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible())
+
+			//Reset status
+			UtilsTests.deleteAllBookmarks()
+			UtilsTests.refreshServerList()
+		}
+	}
+
+	 /*
 	 * PASSED if: Server name has change to "New name"
 	 */
 	func testCheckEditServerName () {
@@ -101,6 +129,37 @@ class EditBookmarkTests: XCTestCase {
 			EarlGrey.select(elementWithMatcher: grey_text(expectedServerName)).assert(grey_sufficientlyVisible())
 
 			//Reset status
+			UtilsTests.deleteAllBookmarks()
+			UtilsTests.refreshServerList()
+		}
+	}
+
+	/*
+	* PASSED if: After removing the password, Delete Authentication is hidden and Continue is displayed
+	*/
+	func testCheckEditRemovingPasswordBasicAuth () {
+
+		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
+
+			OCBookmarkManager.shared.addBookmark(bookmark)
+			UtilsTests.refreshServerList()
+
+			//Actions
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).perform(grey_swipeFastInDirection(.left))
+			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).perform(grey_replaceText(""))
+			//EarlGrey.select(elementWithMatcher: grey_text("Save".localized)).perform(grey_tap())
+
+			//Assert
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_notVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-auth-data-delete")).assert(grey_notVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
 			UtilsTests.deleteAllBookmarks()
 			UtilsTests.refreshServerList()
 		}
