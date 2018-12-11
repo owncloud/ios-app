@@ -152,12 +152,16 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.navigationItem.rightBarButtonItem = actionsBarButton
 	}
 
+	private var viewControllerVisible : Bool = false
+
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
 		self.queryProgressSummary = nil
 		searchController?.searchBar.text = ""
 		searchController?.dismiss(animated: true, completion: nil)
+
+		viewControllerVisible = false
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -167,6 +171,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		sortBar?.sortMethod = self.sortMethod
 		query.sortComparator = self.sortMethod.comparator()
+
+		viewControllerVisible = true
+
+		self.reloadTableData(ifNeeded: true)
 	}
 
 	func updateQueryProgressSummary() {
@@ -234,7 +242,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.searchController?.searchBar.applyThemeCollection(collection)
 
 		if event == .update {
-			self.tableView.reloadData()
+			self.reloadTableData()
 		}
 	}
 
@@ -292,9 +300,11 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
  	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		guard let cell = tableView.cellForRow(at: indexPath) as? ClientItemCell, let item = cell.item, let core = self.core else {
+		guard let core = self.core else {
 			return nil
 		}
+
+		let item: OCItem = itemAtIndexPath(indexPath)
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .tableRow)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
@@ -488,6 +498,30 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 
+	// MARK: - Reload Data
+	private var tableReloadNeeded = false
+
+	func reloadTableData(ifNeeded: Bool = false) {
+		/*
+			This is a workaround to cope with the fact that:
+			- UITableView.reloadData() does nothing if the view controller is not currently visible (via viewWillDisappear/viewWillAppear), so cells may hold references to outdated OCItems
+			- OCQuery may signal updates at any time, including when the view controller is not currently visible
+
+			This workaround effectively makes sure reloadData() is called in viewWillAppear if a reload has been signalled to the tableView while it wasn't visible.
+		*/
+		if !viewControllerVisible {
+			tableReloadNeeded = true
+		}
+
+		if !ifNeeded || (ifNeeded && tableReloadNeeded) {
+			self.tableView.reloadData()
+
+			if viewControllerVisible {
+				tableReloadNeeded = false
+			}
+		}
+	}
+
 	// MARK: - Search
 	var searchController: UISearchController?
 
@@ -606,11 +640,11 @@ extension ClientQueryViewController : OCQueryDelegate {
 						self.message(show: false)
 					}
 
-					self.tableView.reloadData()
+					self.reloadTableData()
 
 				case .targetRemoved?:
 					self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
-					self.tableView.reloadData()
+					self.reloadTableData()
 
 				default:
 					self.message(show: false)
@@ -684,9 +718,11 @@ extension ClientQueryViewController: UISearchResultsUpdating {
 // MARK: - ClientItemCell Delegate
 extension ClientQueryViewController: ClientItemCellDelegate {
 	func moreButtonTapped(cell: ClientItemCell) {
-		guard let item = cell.item, let core = self.core else {
+		guard let indexPath = self.tableView.indexPath(for: cell), let core = self.core else {
 			return
 		}
+
+		let item = self.itemAtIndexPath(indexPath)
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)

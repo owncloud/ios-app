@@ -58,7 +58,6 @@
 		59B09E6E21AD61F4007827B8 /* EditBookmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6A21AD61F4007827B8 /* EditBookmarkTests.swift */; };
 		59B09E6F21AD61F4007827B8 /* CreateBookmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6B21AD61F4007827B8 /* CreateBookmarkTests.swift */; };
 		59B09E7021AD61F4007827B8 /* UtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6C21AD61F4007827B8 /* UtilsTests.swift */; };
-		59B09E7121AD6215007827B8 /* ownCloudMocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
 		59B09E7221AD6215007827B8 /* ownCloudMocking.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 59D4895420C83F2E00369C2E /* InfoPlist.strings */; };
 		6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */; };
@@ -566,7 +565,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				59B09E7121AD6215007827B8 /* ownCloudMocking.framework in Frameworks */,
 				DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */,
 				DC3BE0D72077BC5D002A0AC0 /* openssl.framework in Frameworks */,
 				DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */,
