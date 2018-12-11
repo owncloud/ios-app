@@ -58,7 +58,6 @@
 		59B09E6E21AD61F4007827B8 /* EditBookmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6A21AD61F4007827B8 /* EditBookmarkTests.swift */; };
 		59B09E6F21AD61F4007827B8 /* CreateBookmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6B21AD61F4007827B8 /* CreateBookmarkTests.swift */; };
 		59B09E7021AD61F4007827B8 /* UtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6C21AD61F4007827B8 /* UtilsTests.swift */; };
-		59B09E7221AD6215007827B8 /* ownCloudMocking.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 59D4895420C83F2E00369C2E /* InfoPlist.strings */; };
 		6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */; };
 		6E0A569E218702400056B7B4 /* DownloadFileProgressHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0A569D218702400056B7B4 /* DownloadFileProgressHUDViewController.swift */; };
@@ -90,6 +89,7 @@
 		DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B2705209CF0D3004715E1 /* CertificateViewController.swift */; };
 		DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B2706209CF0D3004715E1 /* ConnectionIssueViewController.swift */; };
 		DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */; };
+		DC20DE5C21C01A3D0096000B /* ownCloudMocking.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
 		DC248C67213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */; };
 		DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */; };
 		DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
@@ -223,13 +223,6 @@
 			remoteGlobalIDString = DC7E0A77203732B3006111FA;
 			remoteInfo = Ocean;
 		};
-		59B09E7321AD6215007827B8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = DCA8922620F5F13E00AEFF98;
-			remoteInfo = ownCloudMocking;
-		};
 		DC0196A520F754CA00C41B78 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
@@ -330,6 +323,7 @@
 			dstPath = "$(TEST_HOST)/../";
 			dstSubfolderSpec = 0;
 			files = (
+				DC20DE5C21C01A3D0096000B /* ownCloudMocking.framework in EarlGrey Copy Files */,
 				A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */,
 			);
 			name = "EarlGrey Copy Files";
@@ -351,7 +345,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				DCFBAD0C21BE67A100943F76 /* ownCloudUI.framework in CopyFiles */,
-				59B09E7221AD6215007827B8 /* ownCloudMocking.framework in CopyFiles */,
 				DC7DBA20207F5A0400E7337D /* PocketSVG.framework in CopyFiles */,
 				DC3BE0D92077BC6B002A0AC0 /* openssl.framework in CopyFiles */,
 				DC3BE0DA2077BC6B002A0AC0 /* ownCloudSDK.framework in CopyFiles */,
@@ -1167,7 +1160,6 @@
 				DC3BE0D12077BC52002A0AC0 /* PBXTargetDependency */,
 				DCC6566120C9B7E400110A97 /* PBXTargetDependency */,
 				DCC6566420C9B7E400110A97 /* PBXTargetDependency */,
-				59B09E7421AD6215007827B8 /* PBXTargetDependency */,
 			);
 			name = ownCloud;
 			productName = ownCloud;
@@ -1724,11 +1716,6 @@
 			isa = PBXTargetDependency;
 			target = 233BDE9B204FEFE500C06732 /* ownCloud */;
 			targetProxy = 233BDEB1204FEFE500C06732 /* PBXContainerItemProxy */;
-		};
-		59B09E7421AD6215007827B8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ownCloudMocking;
-			targetProxy = 59B09E7321AD6215007827B8 /* PBXContainerItemProxy */;
 		};
 		DC188987218A772900CFB3F9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
