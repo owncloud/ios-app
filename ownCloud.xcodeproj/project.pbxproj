@@ -90,6 +90,8 @@
 		DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B2706209CF0D3004715E1 /* ConnectionIssueViewController.swift */; };
 		DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */; };
 		DC20DE5C21C01A3D0096000B /* ownCloudMocking.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
+		DC20DE6A21C01B210096000B /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
+		DC20DE6B21C01B210096000B /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; };
 		DC248C67213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */; };
 		DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */; };
 		DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
@@ -243,6 +245,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = DCA8922620F5F13E00AEFF98;
 			remoteInfo = ownCloudMocking;
+		};
+		DC20DE6121C01B190096000B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC8F9AA202852A200EB6701;
+			remoteInfo = ownCloudSDK;
+		};
+		DC20DE6321C01B190096000B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DC3094832057358800189B9A;
+			remoteInfo = ownCloudUI;
 		};
 		DC27A19220CAA0C6008ACB6C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -568,6 +584,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC20DE6A21C01B210096000B /* ownCloudSDK.framework in Frameworks */,
+				DC20DE6B21C01B210096000B /* ownCloudUI.framework in Frameworks */,
 				DC18898E218A773700CFB3F9 /* ownCloudMocking.framework in Frameworks */,
 				EA1D571C6B1E95925C459228 /* EarlGrey.framework in Frameworks */,
 				75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */,
@@ -1180,6 +1198,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				DC20DE6221C01B190096000B /* PBXTargetDependency */,
+				DC20DE6421C01B190096000B /* PBXTargetDependency */,
 				DC188987218A772900CFB3F9 /* PBXTargetDependency */,
 				233BDEB2204FEFE500C06732 /* PBXTargetDependency */,
 			);
@@ -1721,6 +1741,16 @@
 			isa = PBXTargetDependency;
 			name = ownCloudMocking;
 			targetProxy = DC188986218A772900CFB3F9 /* PBXContainerItemProxy */;
+		};
+		DC20DE6221C01B190096000B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ownCloudSDK;
+			targetProxy = DC20DE6121C01B190096000B /* PBXContainerItemProxy */;
+		};
+		DC20DE6421C01B190096000B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ownCloudUI;
+			targetProxy = DC20DE6321C01B190096000B /* PBXContainerItemProxy */;
 		};
 		DC27A19320CAA0C6008ACB6C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
