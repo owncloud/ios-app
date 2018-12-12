@@ -25,27 +25,51 @@ class Log {
 		return "level=\(OCLogger.logLevel.label), destinations=\(OCLogger.shared.writers.filter({ (writer) -> Bool in writer.enabled}).map({ (writer) -> String in writer.identifier.rawValue })), options=\(OCLogger.shared.toggles.filter({ (toggle) -> Bool in toggle.enabled}).map({ (toggle) -> String in toggle.identifier.rawValue })), maskPrivateData=\( OCLogger.maskPrivateData ? "true" : "false" )"
 	}
 
-	static func debug(_ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
+	static func debug(tagged : [String]? = nil, _ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
 		withVaList(parameters) { va_list in
-			OCLogger.shared.appendLogLevel(OCLogLevel.debug, functionName: functionName, file: file, line: line, message: message, arguments: va_list)
+ 			var tags : [String] = ["APP"]
+
+			if tagged != nil {
+				tags.append(contentsOf: tagged!)
+			}
+
+			OCLogger.shared.appendLogLevel(OCLogLevel.debug, functionName: functionName, file: file, line: line, tags: tags, message: message, arguments: va_list)
 		}
 	}
 
-	static func log(_ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
+	static func log(tagged : [String]? = nil, _ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
 		withVaList(parameters) { va_list in
-			OCLogger.shared.appendLogLevel(OCLogLevel.info, functionName: functionName, file: file, line: line, message: message, arguments: va_list)
+ 			var tags : [String] = ["APP"]
+
+			if tagged != nil {
+				tags.append(contentsOf: tagged!)
+			}
+
+			OCLogger.shared.appendLogLevel(OCLogLevel.info, functionName: functionName, file: file, line: line, tags: tags, message: message, arguments: va_list)
 		}
 	}
 
-	static func warning(_ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
+	static func warning(tagged : [String]? = nil, _ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
 		withVaList(parameters) { va_list in
-			OCLogger.shared.appendLogLevel(OCLogLevel.warning, functionName: functionName, file: file, line: line, message: message, arguments: va_list)
+ 			var tags : [String] = ["APP"]
+
+			if tagged != nil {
+				tags.append(contentsOf: tagged!)
+			}
+
+			OCLogger.shared.appendLogLevel(OCLogLevel.warning, functionName: functionName, file: file, line: line, tags: tags, message: message, arguments: va_list)
 		}
 	}
 
-	static func error(_ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
+	static func error(tagged : [String]? = nil, _ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
 		withVaList(parameters) { va_list in
-			OCLogger.shared.appendLogLevel(OCLogLevel.error, functionName: functionName, file: file, line: line, message: message, arguments: va_list)
+ 			var tags : [String] = ["APP"]
+
+			if tagged != nil {
+				tags.append(contentsOf: tagged!)
+			}
+
+			OCLogger.shared.appendLogLevel(OCLogLevel.error, functionName: functionName, file: file, line: line, tags: tags, message: message, arguments: va_list)
 		}
 	}
 

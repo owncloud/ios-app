@@ -19,7 +19,7 @@
 #import <FileProvider/FileProvider.h>
 #import <ownCloudSDK/ownCloudSDK.h>
 
-@interface FileProviderExtension : NSFileProviderExtension <OCCoreDelegate>
+@interface FileProviderExtension : NSFileProviderExtension <OCCoreDelegate, OCLogTagging>
 {
 	OCCore *_core;
 	OCBookmark *_bookmark;
