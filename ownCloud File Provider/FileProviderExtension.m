@@ -263,7 +263,7 @@
 	NSFileProviderItemIdentifier itemIdentifier = nil;
 	NSFileProviderItem item = nil;
 
-	OCLogDebug(@"[FP]  Stop providing file at %@", url);
+	OCLogDebug(@"Stop providing file at %@", url);
 
 	if ((itemIdentifier = [self persistentIdentifierForItemAtURL:url]) != nil)
 	{
