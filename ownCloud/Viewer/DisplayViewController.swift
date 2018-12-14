@@ -224,7 +224,7 @@ class DisplayViewController: UIViewController {
 	@objc func downloadItem(sender: Any?) {
 //		self.showPreviewButton?.isHidden = true
 		if core.connectionStatus == .online {
-			if let downloadProgress = self.core.downloadItem(item, options: nil, resultHandler: { [weak self] (error, _, _, file) in
+			if let downloadProgress = self.core.downloadItem(item, options: nil, resultHandler: { [weak self] (error, _, latestItem, file) in
 				guard error == nil else {
 					OnMainThread {
 						self?.state = .errorDownloading(error: error!)
@@ -232,6 +232,7 @@ class DisplayViewController: UIViewController {
 					return
 				}
 				OnMainThread {
+					self?.item = latestItem
 					self?.source = file!.url
 				}
 			}) {
