@@ -383,11 +383,11 @@ class BookmarkViewController: StaticTableViewController {
 							issue = OCConnectionIssue(forError: error, level: .error, issueHandler: nil)
 						}
 
-						if nsError?.isOCError(withCode: .errorAuthorizationFailed) == true {
+						if nsError?.isOCError(withCode: .authorizationFailed) == true {
 							// Shake
 							self.navigationController?.view.shakeHorizontally()
 							self.updateInputFocus(fallbackRow: self.passwordRow)
-						} else {
+						} else if nsError?.isOCError(withCode: .authorizationCancelled) == true {
 							let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
 								switch response {
 									case .cancel:

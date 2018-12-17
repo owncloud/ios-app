@@ -36,7 +36,7 @@ class RenameAction : Action {
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
-			completionHandler?(NSError(ocError: .errorInsufficientParameters))
+			completionHandler?(NSError(ocError: .insufficientParameters))
 			return
 		}
 
@@ -44,7 +44,7 @@ class RenameAction : Action {
 		let rootItem = item.parentItem(from: core)
 
 		guard rootItem != nil else {
-			self.completionHandler?(NSError(ocError: OCError.errorItemNotFound))
+			self.completionHandler?(NSError(ocError: OCError.itemNotFound))
 			return
 		}
 
