@@ -388,6 +388,8 @@ class BookmarkViewController: StaticTableViewController {
 							self.navigationController?.view.shakeHorizontally()
 							self.updateInputFocus(fallbackRow: self.passwordRow)
 						} else if nsError?.isOCError(withCode: .authorizationCancelled) == true {
+							// User cancelled authorization, no reaction needed
+						} else {
 							let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
 								switch response {
 									case .cancel:
