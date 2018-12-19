@@ -318,7 +318,7 @@ class BookmarkViewController: StaticTableViewController {
 							if issue != nil {
 								// Parse issue for display
 								if let displayIssues = issue?.prepareForDisplay() {
-									if displayIssues.displayLevel.rawValue >= OCConnectionIssueLevel.warning.rawValue {
+									if displayIssues.displayLevel.rawValue >= OCIssueLevel.warning.rawValue {
 										// Present issues if the level is >= warning
 										let issuesViewController = ConnectionIssueViewController(displayIssues: displayIssues, completion: { [weak self] (response) in
 											switch response {
@@ -374,13 +374,13 @@ class BookmarkViewController: StaticTableViewController {
 						self.bookmark?.authenticationData = authMethodData
 						self.userActionSave()
 					} else {
-						var issue : OCConnectionIssue?
+						var issue : OCIssue?
 						let nsError = error as NSError?
 
 						if let embeddedIssue = nsError?.embeddedIssue() {
 							issue = embeddedIssue
 						} else {
-							issue = OCConnectionIssue(forError: error, level: .error, issueHandler: nil)
+							issue = OCIssue(forError: error, level: .error, issueHandler: nil)
 						}
 
 						if nsError?.isOCError(withCode: .authorizationFailed) == true {

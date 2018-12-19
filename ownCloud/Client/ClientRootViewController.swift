@@ -127,9 +127,9 @@ class ClientRootViewController: UITabBarController {
 }
 
 extension ClientRootViewController : OCCoreDelegate {
-	func core(_ core: OCCore!, handleError error: Error!, issue: OCConnectionIssue!) {
+	func core(_ core: OCCore!, handleError error: Error!, issue: OCIssue!) {
 		OnMainThread {
-			var presentIssue : OCConnectionIssue? = issue
+			var presentIssue : OCIssue? = issue
 
 			if error != nil {
 				if let nsError : NSError = error as NSError? {
@@ -161,7 +161,7 @@ extension ClientRootViewController : OCCoreDelegate {
 			}
 
 			if issue == nil && error != nil {
-				presentIssue = OCConnectionIssue(forError: error, level: .error, issueHandler: nil)
+				presentIssue = OCIssue(forError: error, level: .error, issueHandler: nil)
 			}
 
 			if presentIssue != nil {

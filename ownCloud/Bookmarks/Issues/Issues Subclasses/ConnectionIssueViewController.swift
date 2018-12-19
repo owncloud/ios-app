@@ -99,7 +99,7 @@ class ConnectionIssueViewController: IssuesViewController {
 
 extension ConnectionIssueViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let issue = displayIssues?.displayIssues[indexPath.row], issue.type == OCConnectionIssueType.certificate {
+        if let issue = displayIssues?.displayIssues[indexPath.row], issue.type == OCIssueType.certificate {
             OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: issue.certificate, withValidationCompletionHandler: { (certificateNodes) in
                 let certDetails: NSAttributedString = OCCertificateDetailsViewNode .attributedString(withCertificateDetails: certificateNodes)
                 DispatchQueue.main.async {
@@ -132,7 +132,7 @@ extension ConnectionIssueViewController: UITableViewDataSource {
         var color: UIColor = .black
         cell.selectionStyle = .none
 
-        if issue.type == OCConnectionIssueType.certificate {
+        if issue.type == OCIssueType.certificate {
             cell.accessoryType = .disclosureIndicator
             cell.accessoryView?.backgroundColor = .blue
         } else {
