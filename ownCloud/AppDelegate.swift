@@ -30,8 +30,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		var navigationController: UINavigationController?
 
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
-		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching")
+		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
 
+		// Set up app
 		window = UIWindow(frame: UIScreen.main.bounds)
 
 		ThemeStyle.registerDefaultStyles()

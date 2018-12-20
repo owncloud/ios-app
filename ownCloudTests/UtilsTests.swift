@@ -61,7 +61,6 @@ class UtilsTests {
 		"username" : "admin"]
 
 		var data: Data?
-
 		do {
 			data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .binary, options: 0)
 		} catch {
