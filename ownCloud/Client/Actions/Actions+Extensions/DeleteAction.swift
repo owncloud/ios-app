@@ -64,13 +64,13 @@ class DeleteAction : Action {
 						if error != nil {
 							Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
 							self.completed(with: error)
+						} else {
+							self.completed()
 						}
 					}) {
 						self.publish(progress: progress)
 					}
 				}
-
-				self.completed()
 		})
 
 		viewController.present(alertController, animated: true)
