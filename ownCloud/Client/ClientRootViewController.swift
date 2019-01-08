@@ -26,6 +26,8 @@ class ClientRootViewController: UITabBarController {
 	var progressBar : CollapsibleProgressBar?
 	var progressSummarizer : ProgressSummarizer?
 
+	var alertQueue : AsyncSequentialQueue = AsyncSequentialQueue()
+
 	init(bookmark inBookmark: OCBookmark) {
 		let openProgress = Progress()
 
@@ -128,8 +130,9 @@ class ClientRootViewController: UITabBarController {
 
 extension ClientRootViewController : OCCoreDelegate {
 	func core(_ core: OCCore!, handleError error: Error!, issue: OCIssue!) {
-		OnMainThread {
+		alertQueue.async { (queueCompletionHandler) in
 			var presentIssue : OCIssue? = issue
+			var queueCompletionHandlerScheduled : Bool = false
 
 			if error != nil {
 				if let nsError : NSError = error as NSError? {
@@ -138,11 +141,15 @@ extension ClientRootViewController : OCCoreDelegate {
 											message: "The server declined access with the credentials stored for this connection.".localized,
 											preferredStyle: .alert)
 
-						alertController.addAction(UIAlertAction(title: "Ignore".localized, style: .destructive, handler: nil))
+						alertController.addAction(UIAlertAction(title: "Ignore".localized, style: .destructive, handler: { (_) in
+							queueCompletionHandler()
+						}))
 
 						alertController.addAction(UIAlertAction(title: "Edit".localized, style: .default, handler: { (_) in
 							let presentingViewController = self.presentingViewController
 							let editBookmark = self.bookmark
+
+							queueCompletionHandler()
 
 							self.closeClient(completion: {
 								if presentingViewController != nil,
@@ -154,6 +161,7 @@ extension ClientRootViewController : OCCoreDelegate {
 						}))
 
 						self.present(alertController, animated: true, completion: nil)
+						queueCompletionHandlerScheduled = true
 
 						return
 					}
@@ -168,10 +176,10 @@ extension ClientRootViewController : OCCoreDelegate {
 				var presentViewController : UIViewController?
 
 				if presentIssue?.type == .multipleChoice {
-					presentViewController = UIAlertController(with: presentIssue!)
+					presentViewController = UIAlertController(with: presentIssue!, completion: queueCompletionHandler)
 				} else {
 					presentViewController = ConnectionIssueViewController(displayIssues: presentIssue?.prepareForDisplay(), completion: { (response) in
-						switch response {
+ 						switch response {
 							case .cancel:
 								presentIssue?.reject()
 
@@ -180,18 +188,26 @@ extension ClientRootViewController : OCCoreDelegate {
 
 							case .dismiss: break
 						}
+						queueCompletionHandler()
 					})
 				}
 
 				if presentViewController != nil {
 					var hostViewController : UIViewController = self
 
-					while hostViewController.presentedViewController != nil {
+					while hostViewController.presentedViewController != nil,
+					      hostViewController.presentedViewController?.isBeingDismissed == false {
 						hostViewController = hostViewController.presentedViewController!
 					}
 
+					queueCompletionHandlerScheduled = true
+
 					hostViewController.present(presentViewController!, animated: true, completion: nil)
 				}
+			}
+
+			if !queueCompletionHandlerScheduled {
+				queueCompletionHandler()
 			}
 		}
 	}
