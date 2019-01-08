@@ -89,7 +89,7 @@
 		}
 	});
 
-	// OCLogDebug(@"[FP] -itemForIdentifier:error: %@ => %@", identifier, item);
+	// OCLogDebug(@"-itemForIdentifier:error: %@ => %@", identifier, item);
 
 	if ((item == nil) && (returnError == nil))
 	{
@@ -114,7 +114,7 @@
 		url = [self.core localURLForItem:item];
 	}
 
-	// OCLogDebug(@"[FP] -URLForItemWithPersistentIdentifier: %@ => %@", identifier, url);
+	// OCLogDebug(@"-URLForItemWithPersistentIdentifier: %@ => %@", identifier, url);
 
 	return (url);
 
@@ -138,7 +138,7 @@
 	// <base storage directory>/<item identifier>/<item file name> above
 	NSParameterAssert(pathComponents.count > 2);
 
-	// OCLogDebug(@"[FP] -persistentIdentifierForItemAtURL: %@", (pathComponents[pathComponents.count - 2]));
+	// OCLogDebug(@"-persistentIdentifierForItemAtURL: %@", (pathComponents[pathComponents.count - 2]));
 
 	return pathComponents[pathComponents.count - 2];
 }
@@ -179,7 +179,7 @@
 		 if ((item = [self itemForIdentifier:itemIdentifier error:&error]) != nil)
 		 {
 			[self.core downloadItem:(OCItem *)item options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, OCFile *file) {
-				OCLogDebug(@"[FP] Starting to provide file:\nPAU: %@\nFURL: %@\nID: %@\nErr: %@\nlocalRelativePath: %@", provideAtURL, file.url, item.itemIdentifier, error, item.localRelativePath);
+				OCLogDebug(@"Starting to provide file:\nPAU: %@\nFURL: %@\nID: %@\nErr: %@\nlocalRelativePath: %@", provideAtURL, file.url, item.itemIdentifier, error, item.localRelativePath);
 
 				if ([error isOCErrorWithCode:OCErrorCancelled])
 				{
@@ -239,7 +239,7 @@
 			if ((parentItem = [self itemForIdentifier:item.parentItemIdentifier error:&error]) != nil)
 			{
 				[self.core reportLocalModificationOfItem:(OCItem *)item parentItem:(OCItem *)parentItem withContentsOfFileAtURL:changedItemURL isSecurityScoped:NO options:nil placeholderCompletionHandler:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
-					OCLogDebug(@"[FP] Upload of update finished with error=%@ item=%@", error, item);
+					OCLogDebug(@"Upload of update finished with error=%@ item=%@", error, item);
 				}];
 			}
 		 }
@@ -263,7 +263,7 @@
 	NSFileProviderItemIdentifier itemIdentifier = nil;
 	NSFileProviderItem item = nil;
 
-	OCLogDebug(@"[FP] Stop providing file at %@", url);
+	OCLogDebug(@"Stop providing file at %@", url);
 
 	if ((itemIdentifier = [self persistentIdentifierForItemAtURL:url]) != nil)
 	{
@@ -280,7 +280,7 @@
 				}
 			}
 
-			OCLogDebug(@"[FP] Item %@ is downloading %d: %@", item, item.isDownloading, downloadProgress);
+			OCLogDebug(@"Item %@ is downloading %d: %@", item, item.isDownloading, downloadProgress);
 		 }
 	}
 
@@ -656,7 +656,7 @@
 
 				if (_bookmark == nil)
 				{
-					OCLogError(@"[FP] Error retrieving bookmark for domain %@ (UUID %@) - reloading", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+					OCLogError(@"Error retrieving bookmark for domain %@ (UUID %@) - reloading", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
 
 					[[OCBookmarkManager sharedBookmarkManager] loadBookmarks];
 
@@ -664,7 +664,7 @@
 
 					if (_bookmark == nil)
 					{
-						OCLogError(@"[FP] Error retrieving bookmark for domain %@ (UUID %@) - final", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+						OCLogError(@"Error retrieving bookmark for domain %@ (UUID %@) - final", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
 					}
 				}
 			}
@@ -694,7 +694,7 @@
 
 		if (_core == nil)
 		{
-			OCLogError(@"[FP] Error getting core for domain %@ (UUID %@)", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
+			OCLogError(@"Error getting core for domain %@ (UUID %@)", OCLogPrivate(self.domain.displayName), OCLogPrivate(self.domain.identifier));
 		}
 	}
 
@@ -703,12 +703,23 @@
 
 - (void)core:(OCCore *)core handleError:(NSError *)error issue:(OCConnectionIssue *)issue
 {
-	OCLogDebug(@"[FP] CORE ERROR: error=%@, issue=%@", error, issue);
+	OCLogDebug(@"CORE ERROR: error=%@, issue=%@", error, issue);
 
 	if (issue.type == OCConnectionIssueTypeMultipleChoice)
 	{
 		[issue cancel];
 	}
+}
+
+#pragma mark - Log tagging
++ (NSArray<OCLogTagName> *)logTags
+{
+	return (@[@"FP"]);
+}
+
+- (NSArray<OCLogTagName> *)logTags
+{
+	return (@[@"FP"]);
 }
 
 @end

@@ -46,7 +46,7 @@ class DisplayViewController: UIViewController {
 	weak var item: OCItem!
 	weak var core: OCCore! {
 		didSet {
-			core.addObserver(self, forKeyPath: "reachabilityMonitor.available", options: [.initial, .new], context: observerContext)
+			core.addObserver(self, forKeyPath: "connectionStatus", options: [.initial, .new], context: observerContext)
 		}
 	}
 
@@ -100,7 +100,7 @@ class DisplayViewController: UIViewController {
 	deinit {
 		Theme.shared.unregister(client: self)
 		self.downloadProgress?.cancel()
-		core.removeObserver(self, forKeyPath: "reachabilityMonitor.available", context: observerContext)
+		core.removeObserver(self, forKeyPath: "connectionStatus", context: observerContext)
 	}
 
 	// MARK: - Controller lifecycle
@@ -223,8 +223,8 @@ class DisplayViewController: UIViewController {
 
 	@objc func downloadItem(sender: Any?) {
 //		self.showPreviewButton?.isHidden = true
-		if core.reachabilityMonitor.available {
-			if let downloadProgress = self.core.downloadItem(item, options: nil, resultHandler: { [weak self] (error, _, _, file) in
+		if core.connectionStatus == .online {
+			if let downloadProgress = self.core.downloadItem(item, options: nil, resultHandler: { [weak self] (error, _, latestItem, file) in
 				guard error == nil else {
 					OnMainThread {
 						self?.state = .errorDownloading(error: error!)
@@ -232,6 +232,7 @@ class DisplayViewController: UIViewController {
 					return
 				}
 				OnMainThread {
+					self?.item = latestItem
 					self?.source = file!.url
 				}
 			}) {
@@ -249,11 +250,11 @@ class DisplayViewController: UIViewController {
 	// MARK: - KVO observing
 	// swiftlint:disable block_based_kvo
 	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-		if let newValue = change?[NSKeyValueChangeKey.newKey] as? Bool {
+		if let newValue = change?[NSKeyValueChangeKey.newKey] as? OCCoreConnectionStatus {
 			if case DisplayViewState.notSupportedMimeType = self.state {
 
 			} else {
-				if newValue {
+				if newValue == .online {
 					self.state = .hasNetworkConnection
 				} else {
 					self.state = .noNetworkConnection
@@ -282,7 +283,7 @@ class DisplayViewController: UIViewController {
 		case .errorDownloading, .canceledDownload:
 			self.downloadProgress?.cancel()
 			self.downloadProgress = nil
-			if core.reachabilityMonitor.available {
+			if core.connectionStatus == .online {
 				hideProgressIndicators()
 			}
 

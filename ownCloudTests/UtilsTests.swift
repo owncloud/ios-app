@@ -52,8 +52,7 @@ class UtilsTests {
 		}
 	}
 
-	static func getBookmark(authenticationMethod: OCAuthenticationMethodIdentifier = OCAuthenticationMethodIdentifier.basicAuth,
-							bookmarkName: String = "Server name") -> OCBookmark? {
+	static func getBookmark(authenticationMethod: OCAuthenticationMethodIdentifier = OCAuthenticationMethodIdentifier.basicAuth, bookmarkName: String = "Server name") -> OCBookmark? {
 
 		let mockUrlServer: String = "https://mock.owncloud.com/"
 
@@ -62,7 +61,6 @@ class UtilsTests {
 		"username" : "admin"]
 
 		var data: Data?
-
 		do {
 			data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .binary, options: 0)
 		} catch {
