@@ -180,6 +180,7 @@
 		DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFED971208095E200A2D984 /* ClientItemCell.swift */; };
 		DCFED9BA20809B8900A2D984 /* ThemeTVGResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */; };
 		EA1D571C6B1E95925C459228 /* EarlGrey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; };
+		EA88A55521BFD5BF0055A58F /* DeleteBookmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA88A55421BFD5BF0055A58F /* DeleteBookmarkTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -567,6 +568,7 @@
 		DCF4F18A2052BA4C00189B9A /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		DCFED971208095E200A2D984 /* ClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientItemCell.swift; sourceTree = "<group>"; };
 		DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTVGResource.swift; sourceTree = "<group>"; };
+		EA88A55421BFD5BF0055A58F /* DeleteBookmarkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteBookmarkTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -817,6 +819,7 @@
 			children = (
 				59B09E6A21AD61F4007827B8 /* EditBookmarkTests.swift */,
 				59B09E6B21AD61F4007827B8 /* CreateBookmarkTests.swift */,
+				EA88A55421BFD5BF0055A58F /* DeleteBookmarkTests.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -1690,6 +1693,7 @@
 				59B09E6F21AD61F4007827B8 /* CreateBookmarkTests.swift in Sources */,
 				59B09E6E21AD61F4007827B8 /* EditBookmarkTests.swift in Sources */,
 				DC869A592153B1F60088977E /* OCMockingManagerSwiftExtension.swift in Sources */,
+				EA88A55521BFD5BF0055A58F /* DeleteBookmarkTests.swift in Sources */,
 				6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */,
 				59B09E6D21AD61F4007827B8 /* FileListTests.swift in Sources */,
 				5958C9BE20C000A700E0E567 /* PasscodeTests.swift in Sources */,
