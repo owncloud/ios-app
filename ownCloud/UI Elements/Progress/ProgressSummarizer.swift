@@ -216,6 +216,45 @@ class ProgressSummarizer: NSObject {
 		}
 	}
 
+	// MARK: - Priority summaries (to be used in favor of everything else whenever they exist)
+	internal var _prioritySummary : ProgressSummary?
+	public var prioritySummary : ProgressSummary? {
+		set(newPrioritySummary) {
+			if _prioritySummary != newPrioritySummary {
+				_prioritySummary = newPrioritySummary
+				self.setNeedsUpdate()
+			}
+		}
+
+		get {
+			return _prioritySummary
+		}
+	}
+
+	private var prioritySummaries : [ProgressSummary] = []
+
+	func pushPrioritySummary(summary : ProgressSummary) {
+		OCSynchronized(self) {
+			prioritySummaries.append(summary)
+
+			self.prioritySummary = summary
+		}
+	}
+
+	func popPrioritySummary(summary : ProgressSummary) {
+		OCSynchronized(self) {
+			if let index = prioritySummaries.index(of: summary) {
+				prioritySummaries.remove(at: index)
+
+				if prioritySummaries.count == 0 {
+					self.prioritySummary = nil
+				} else if prioritySummaries.count == index {
+					self.prioritySummary = prioritySummaries.last
+				}
+			}
+		}
+	}
+
 	// MARK: - Change notifications
 	private var observers : [ProgressSummaryNotificationObserver] = []
 	func addObserver(_ observer: AnyObject, notificationBlock: @escaping ProgressSummarizerNotificationBlock) {

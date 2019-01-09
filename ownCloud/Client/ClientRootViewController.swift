@@ -26,6 +26,21 @@ class ClientRootViewController: UITabBarController {
 	var progressBar : CollapsibleProgressBar?
 	var progressSummarizer : ProgressSummarizer?
 
+	var connectionStatusObservation : NSKeyValueObservation?
+	var connectionStatusSummary : ProgressSummary? {
+		willSet {
+			if newValue != nil {
+				progressSummarizer?.pushPrioritySummary(summary: newValue!)
+			}
+		}
+
+		didSet {
+			if oldValue != nil {
+				progressSummarizer?.popPrioritySummary(summary: oldValue!)
+			}
+		}
+	}
+
 	var alertQueue : AsyncSequentialQueue = AsyncSequentialQueue()
 
 	init(bookmark inBookmark: OCBookmark) {
@@ -39,21 +54,26 @@ class ClientRootViewController: UITabBarController {
 		if progressSummarizer != nil {
 			progressSummarizer?.addObserver(self) { [weak self] (summarizer, summary) in
 				var useSummary : ProgressSummary = summary
+				let prioritySummary : ProgressSummary? = summarizer.prioritySummary
 
 				if (summary.progress == 1) && (summarizer.fallbackSummary != nil) {
 					useSummary = summarizer.fallbackSummary ?? summary
 				}
 
+				if prioritySummary != nil {
+					useSummary = prioritySummary!
+				}
+
 				self?.progressBar?.update(with: useSummary.message, progress: Float(useSummary.progress))
 
-				self?.progressBar?.autoCollapse = (summarizer.fallbackSummary == nil) || (useSummary.progressCount == 0)
+				self?.progressBar?.autoCollapse = ((summarizer.fallbackSummary == nil) || (useSummary.progressCount == 0)) && (prioritySummary == nil)
 			}
 		}
 
 		openProgress.localizedDescription = "Connecting…".localized
 		progressSummarizer?.startTracking(progress: openProgress)
 
-		core = OCCoreManager.shared.requestCore(for: bookmark, completionHandler: { (_, error) in
+		core = OCCoreManager.shared.requestCore(for: bookmark, completionHandler: { (core, error) in
 			if error == nil {
 				self.coreReady()
 			}
@@ -61,6 +81,23 @@ class ClientRootViewController: UITabBarController {
 			openProgress.localizedDescription = "Connected.".localized
 			openProgress.completedUnitCount = 1
 			openProgress.totalUnitCount = 1
+
+			self.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (observedCore, _) in
+				var summary : ProgressSummary? = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
+
+				switch observedCore.connectionStatus {
+					case .online:
+						summary = nil
+
+					case .offline:
+						summary?.message = "Offline. Contents from cache.".localized
+
+					case .unavailable:
+						summary?.message = "Server down for maintenance. Contents from cache.".localized
+				}
+
+				self?.connectionStatusSummary = summary
+			})
 
 			self.progressSummarizer?.stopTracking(progress: openProgress)
 		})
@@ -72,6 +109,11 @@ class ClientRootViewController: UITabBarController {
 	}
 
 	deinit {
+		connectionStatusObservation = nil
+
+		if let statusSummary = connectionStatusSummary {
+			ProgressSummarizer.shared(forBookmark: bookmark).popPrioritySummary(summary: statusSummary)
+		}
 		ProgressSummarizer.shared(forBookmark: bookmark).removeObserver(self)
 
 		if core?.delegate === self {
