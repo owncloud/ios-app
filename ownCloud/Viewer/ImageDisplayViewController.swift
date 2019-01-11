@@ -110,6 +110,18 @@ class ImageDisplayViewController : DisplayViewController {
 
 		return true
 	}
+
+	override func updateUIForNewItem() {
+		if let data = try? Data(contentsOf: source),
+			let image = UIImage(data: data) {
+			scrollView?.display(image: image)
+		} else {
+			let alert = UIAlertController(with: "Error".localized, message: "Could not get the picture".localized, okLabel: "OK")
+			self.parent?.present(alert, animated: true) {
+				self.parent?.dismiss(animated: true)
+			}
+		}
+	}
 }
 
 // MARK: - Display Extension.

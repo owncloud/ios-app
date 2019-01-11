@@ -28,14 +28,14 @@ struct DisplayIssues {
 
 extension OCIssue {
 	func prepareForDisplay() -> DisplayIssues {
-		var displayIssues: [OCIssue] = []
+		var displayIssues: [OCIssue]? = []
 		var primaryCertificate: OCCertificate? = self.certificate
 
 		switch self.type {
 			case .group:
 				displayIssues = self.issuesWithLevelGreaterThanOrEqual(to: self.level)
 
-				for issue in self.issues {
+				for issue in self.issues! {
 					if issue.type == .certificate {
 						primaryCertificate = issue.certificate
 						break
@@ -46,6 +46,6 @@ extension OCIssue {
 				displayIssues = [self]
 		}
 
-		return DisplayIssues(targetIssue: self, displayLevel: self.level, displayIssues: displayIssues, primaryCertificate: primaryCertificate)
+		return DisplayIssues(targetIssue: self, displayLevel: self.level, displayIssues: displayIssues ?? [], primaryCertificate: primaryCertificate)
 	}
 }

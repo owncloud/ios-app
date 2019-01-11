@@ -46,7 +46,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		self.selectButtonTitle = selectButtonTitle
 		self.completion = completion
 
-		super.init(core: inCore, query: OCQuery(forPath: path)!)
+		super.init(core: inCore, query: OCQuery(forPath: path))
 
 		self.query.addFilter(ClientDirectoryPickerViewController.directoryFilter, withIdentifier: ClientDirectoryPickerViewController.DIRECTORY_FILTER_IDENTIFIER)
 
@@ -87,11 +87,11 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let item: OCItem = itemAtIndexPath(indexPath)
 
-		guard item.type == OCItemType.collection, let core = self.core else {
+		guard item.type == OCItemType.collection, let core = self.core, let path = item.path else {
 			return
 		}
 
-		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: item.path, completion: completion), animated: true)
+		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: path, completion: completion), animated: true)
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -105,7 +105,11 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	@objc private func selectButtonPressed() {
 		self.dismiss(animated: true, completion: {
-			self.completion(self.query.rootItem)
+			guard let rootItem = self.query.rootItem else {
+				return
+			}
+
+			self.completion(rootItem)
 		})
 	}
 }

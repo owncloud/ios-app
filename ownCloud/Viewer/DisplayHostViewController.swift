@@ -59,7 +59,7 @@ class DisplayHostViewController: UIViewController {
 
 		let itemToDisplay = itemsToDisplay[0]
 
-		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: itemToDisplay.mimeType)
+		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: itemToDisplay.mimeType!)
 		let shouldDownload = viewController is (DisplayViewController & DisplayExtension) ? true : false
 
 		var configuration: DisplayViewConfiguration

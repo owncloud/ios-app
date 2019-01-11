@@ -43,19 +43,37 @@ class DisplayViewController: UIViewController {
 	private let iconImageSize: CGSize = CGSize(width: 200.0, height: 200.0)
 
 	// MARK: - Configuration
-	weak var item: OCItem!
+	weak var item: OCItem! {
+		didSet {
+			if oldValue == nil {
+				self.query = OCQuery(item: item)
+				core.start(query!)
+			}
+		}
+	}
+
+	var query: OCQuery? {
+		didSet {
+			query?.delegate = self
+		}
+	}
+
 	weak var core: OCCore! {
 		didSet {
-			core.addObserver(self, forKeyPath: "connectionStatus", options: [.initial, .new], context: observerContext)
+			core.addObserver(self, forKeyPath: "connectionStatus", options: [.initial, .new], context: nil)
 		}
 	}
 
 	var source: URL! {
 		didSet {
-			OnMainThread {
-				self.iconImageView.isHidden = true
+			if oldValue != nil {
+				updateUIForNewItem()
+			} else {
+				OnMainThread {
+					self.iconImageView.isHidden = true
+				}
+				renderSpecificView()
 			}
-			renderSpecificView()
 		}
 	}
 
@@ -73,9 +91,6 @@ class DisplayViewController: UIViewController {
 		}
 	}
 
-	private var observerContextValue = 1
-	private var observerContext : UnsafeMutableRawPointer
-
 	// MARK: - Views
 	private var iconImageView: UIImageView!
 	private var progressView : UIProgressView?
@@ -89,7 +104,6 @@ class DisplayViewController: UIViewController {
 
 	// MARK: - Init & Deinit
 	required init() {
-		observerContext = UnsafeMutableRawPointer(&observerContextValue)
 		super.init(nibName: nil, bundle: nil)
 	}
 
@@ -100,7 +114,8 @@ class DisplayViewController: UIViewController {
 	deinit {
 		Theme.shared.unregister(client: self)
 		self.downloadProgress?.cancel()
-		core.removeObserver(self, forKeyPath: "connectionStatus", context: observerContext)
+		core.removeObserver(self, forKeyPath: "connectionStatus", context: nil)
+		core.stop(query!)
 	}
 
 	// MARK: - Controller lifecycle
@@ -246,6 +261,10 @@ class DisplayViewController: UIViewController {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the source property.s
 	}
 
+	func updateUIForNewItem() {
+		self.navigationItem.title = self.item?.name
+	}
+
 	// MARK: - KVO observing
 	// swiftlint:disable block_based_kvo
 	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -339,5 +358,26 @@ extension DisplayViewController : Themeable {
 		metadataInfoLabel?.applyThemeCollection(collection)
 		showPreviewButton?.applyThemeCollection(collection)
 		noNetworkLabel?.applyThemeCollection(collection)
+	}
+}
+
+// MARK: - OCQueryDelegate
+extension DisplayViewController: OCQueryDelegate {
+	func query(_ query: OCQuery, failedWithError error: Error) {
+		//TODO: show an error.
+	}
+
+	func queryHasChangesAvailable(_ query: OCQuery) {
+		query.requestChangeSet(withFlags: .onlyResults) { (_ query, changeSet) in
+			if let updatedItems: [OCItem] = changeSet?.queryResult {
+				guard updatedItems.count == 1 else { return }
+				let updatedItem: OCItem = updatedItems[0]
+
+				if updatedItem.itemVersionIdentifier != self.item.itemVersionIdentifier {
+					self.item = updatedItem
+					self.downloadItem(sender: nil)
+				}
+			}
+		}
 	}
 }

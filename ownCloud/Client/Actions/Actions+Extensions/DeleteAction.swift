@@ -50,7 +50,7 @@ class DeleteAction : Action {
 		if items.count > 1 {
 			name = "Multiple items".localized
 		} else {
-			name = items[0].name
+			name = items[0].name!
 		}
 
 		let deleteItemAndPublishProgress = { (item: OCItem) in

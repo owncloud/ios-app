@@ -41,7 +41,7 @@ class MoveAction : Action {
 
 		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", completion: { (selectedDirectory) in
 			items.forEach({ (item) in
-				if let progress = self.core?.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
+				if let progress = self.core?.move(item, to: selectedDirectory, withName: item.name!, options: nil, resultHandler: { (error, _, _, _) in
 					if error != nil {
 						self.completed(with: error)
 					} else {

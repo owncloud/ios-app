@@ -70,7 +70,7 @@ public enum SortMethod: Int {
 				let leftItem = left as? OCItem
 				let rightItem = right as? OCItem
 
-				return (leftItem?.name.lowercased().compare(rightItem!.name.lowercased()))!
+				return (leftItem?.name!.lowercased().compare(rightItem!.name!.lowercased()))!
 			}
 
 		case .alphabeticallyDescendant:
@@ -79,7 +79,7 @@ public enum SortMethod: Int {
 				let leftItem = left as? OCItem
 				let rightItem = right as? OCItem
 
-				return (rightItem?.name.lowercased().compare(leftItem!.name.lowercased()))!
+				return (rightItem?.name!.lowercased().compare(leftItem!.name!.lowercased()))!
 			}
 
 		case .type:
@@ -115,7 +115,7 @@ public enum SortMethod: Int {
 				let leftItem = left as? OCItem
 				let rightItem = right as? OCItem
 
-				return (rightItem?.lastModified.compare(leftItem!.lastModified))!
+				return (rightItem?.lastModified!.compare(leftItem!.lastModified!))!
 			}
 		}
 		return comparator

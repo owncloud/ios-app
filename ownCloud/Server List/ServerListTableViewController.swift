@@ -312,8 +312,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 							self.lockedBookmarks.append(bookmark)
 
 							OCCoreManager.shared.scheduleOfflineOperation({ (inBookmark, completionHandler) in
-								if let bookmark = inBookmark {
-									let vault : OCVault = OCVault(bookmark: bookmark)
+									let vault : OCVault = OCVault(bookmark: inBookmark)
 
 									vault.erase(completionHandler: { (_, error) in
 										DispatchQueue.main.async {
@@ -345,10 +344,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 												self.lockedBookmarks.remove(at: removeIndex)
 											}
 
-											completionHandler?()
+											completionHandler()
 										}
 									})
-								}
 							}, for: bookmark)
 						}))
 

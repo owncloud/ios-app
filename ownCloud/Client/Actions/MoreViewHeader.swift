@@ -100,7 +100,7 @@ class MoreViewHeader: UIView {
 			labelContainerView.bottomAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -20)
 		])
 
-		titleLabel.attributedText = NSAttributedString(string: item.name, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
+		titleLabel.attributedText = NSAttributedString(string: item.name!, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
 
 		let byteCountFormatter = ByteCountFormatter()
 		byteCountFormatter.countStyle = .file
@@ -112,7 +112,7 @@ class MoreViewHeader: UIView {
 		dateFormatter.locale = Locale.current
 		dateFormatter.doesRelativeDateFormatting = true
 
-		let dateString = dateFormatter.string(from: item.lastModified)
+		let dateString = dateFormatter.string(from: item.lastModified!)
 
 		let detail = size + " - " + dateString
 

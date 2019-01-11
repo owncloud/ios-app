@@ -271,7 +271,7 @@ class SecuritySettingsSection: SettingsSection {
 			}
 		}
 
-		if OCCertificate.userAcceptedCertificates.count > 0 {
+		if OCCertificate.userAcceptedCertificates!.count > 0 {
 			if rows.contains(certificateManagementRow!) {
 				if rowsToAdd.count > 0 {
 					rowsToRemove.append(certificateManagementRow!)

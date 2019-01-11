@@ -214,11 +214,11 @@ extension OCItem {
 	}
 
 	func fileExtension() -> String {
-		return (self.name as NSString).pathExtension
+		return (self.name! as NSString).pathExtension
 	}
 
 	func nameWithoutExtension() -> String {
-		return (self.name as NSString).deletingPathExtension
+		return (self.name! as NSString).deletingPathExtension
 	}
 
 	var sizeInReadableFormat: String {
@@ -227,7 +227,7 @@ extension OCItem {
 	}
 
 	var lastModifiedInReadableFormat: String {
-		let dateString = OCItem.dateFormatter.string(from: self.lastModified)
+		let dateString = OCItem.dateFormatter.string(from: self.lastModified!)
 		return dateString
 	}
 

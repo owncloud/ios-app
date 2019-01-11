@@ -57,7 +57,7 @@ class OpenInAction: Action {
 				} else {
 					OnMainThread {
 						controller.dismiss(animated: true, completion: {
-							self.interactionController = UIDocumentInteractionController(url: file!.url)
+							self.interactionController = UIDocumentInteractionController(url: file!.url!)
 							self.interactionController?.delegate = self
 							self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
 						})

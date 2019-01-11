@@ -380,7 +380,7 @@ class BookmarkViewController: StaticTableViewController {
 						if let embeddedIssue = nsError?.embeddedIssue() {
 							issue = embeddedIssue
 						} else {
-							issue = OCIssue(forError: error, level: .error, issueHandler: nil)
+							issue = OCIssue(forError: error!, level: .error, issueHandler: nil)
 						}
 
 						if nsError?.isOCError(withCode: .authorizationFailed) == true {
