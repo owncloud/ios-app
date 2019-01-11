@@ -82,26 +82,39 @@ class ClientRootViewController: UITabBarController {
 			openProgress.completedUnitCount = 1
 			openProgress.totalUnitCount = 1
 
-			self.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (observedCore, _) in
-				var summary : ProgressSummary? = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
-
-				switch observedCore.connectionStatus {
-					case .online:
-						summary = nil
-
-					case .offline:
-						summary?.message = "Offline. Contents from cache.".localized
-
-					case .unavailable:
-						summary?.message = "Server down for maintenance. Contents from cache.".localized
-				}
-
-				self?.connectionStatusSummary = summary
+			// Start showing connection status with a delay of 1 second, so "Offline" doesn't flash briefly
+			DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0, execute: { [weak self] () in
+				self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
+					self?.updateConnectionStatusSummary()
+				})
 			})
 
 			self.progressSummarizer?.stopTracking(progress: openProgress)
 		})
 		core?.delegate = self
+	}
+
+	func updateConnectionStatusSummary() {
+		var summary : ProgressSummary? = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
+
+		if let connectionStatus = core?.connectionStatus {
+			var connectionShortDescription = core?.connectionStatusShortDescription
+
+			connectionShortDescription = connectionShortDescription != nil ? (connectionShortDescription! + ". ") : ""
+
+			switch connectionStatus {
+				case .online:
+					summary = nil
+
+				case .offline:
+					summary?.message = "\(connectionShortDescription!)Contents from cache.".localized
+
+				case .unavailable:
+					summary?.message = "\(connectionShortDescription!)Contents from cache.".localized
+			}
+		}
+
+		self.connectionStatusSummary = summary
 	}
 
 	required init?(coder aDecoder: NSCoder) {
