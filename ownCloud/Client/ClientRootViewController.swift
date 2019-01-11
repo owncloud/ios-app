@@ -133,7 +133,7 @@ extension ClientRootViewController : OCCoreDelegate {
 
 			if error != nil {
 				if let nsError : NSError = error as NSError? {
-					if nsError.isOCError(withCode: .errorAuthorizationFailed) {
+					if nsError.isOCError(withCode: .authorizationFailed) {
 						let alertController = UIAlertController(title: "Authorization failed".localized,
 											message: "The server declined access with the credentials stored for this connection.".localized,
 											preferredStyle: .alert)
