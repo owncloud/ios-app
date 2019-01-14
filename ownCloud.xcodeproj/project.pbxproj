@@ -70,6 +70,7 @@
 		6E586D002199A78E00F680C4 /* DeleteAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E586CFF2199A78E00F680C4 /* DeleteAction.swift */; };
 		6E83C77E20A32C1B0066EC23 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */; };
 		6E83C78420A33C180066EC23 /* LAContext+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C78320A33C180066EC23 /* LAContext+Extension.swift */; };
+		6E91F37E21ECA6FD009436D2 /* CopyAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E91F37D21ECA6FD009436D2 /* CopyAction.swift */; };
 		6EA78B8F2179B55400A5216A /* ImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EA78B8E2179B55400A5216A /* ImageScrollView.swift */; };
 		6EADE9372192E235006821B3 /* UIImagePickerController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EADE9362192E235006821B3 /* UIImagePickerController+Extension.swift */; };
 		6EB8EDC52114358400C2BF44 /* folder-create.tvg in Resources */ = {isa = PBXBuildFile; fileRef = 6EB8EDBE2114358300C2BF44 /* folder-create.tvg */; };
@@ -479,6 +480,7 @@
 		6E586CFF2199A78E00F680C4 /* DeleteAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAction.swift; sourceTree = "<group>"; };
 		6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
 		6E83C78320A33C180066EC23 /* LAContext+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LAContext+Extension.swift"; sourceTree = "<group>"; };
+		6E91F37D21ECA6FD009436D2 /* CopyAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyAction.swift; sourceTree = "<group>"; };
 		6EA78B8E2179B55400A5216A /* ImageScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageScrollView.swift; sourceTree = "<group>"; };
 		6EADE9362192E235006821B3 /* UIImagePickerController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImagePickerController+Extension.swift"; sourceTree = "<group>"; };
 		6EB8EDBE2114358300C2BF44 /* folder-create.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-create.tvg"; path = "img/filetypes-tvg/folder-create.tvg"; sourceTree = SOURCE_ROOT; };
@@ -870,6 +872,7 @@
 				6E3A103D219D5BBA00F90C96 /* RenameAction.swift */,
 				6E3A104C219D6F0100F90C96 /* DuplicateAction.swift */,
 				6ED1B80A21A4004900E16C95 /* CreateFolderAction.swift */,
+				6E91F37D21ECA6FD009436D2 /* CopyAction.swift */,
 			);
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
@@ -1677,6 +1680,7 @@
 				23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */,
 				4C464BEF2187AF1500D30602 /* PDFThumbnailCollectionViewCell.swift in Sources */,
 				232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */,
+				6E91F37E21ECA6FD009436D2 /* CopyAction.swift in Sources */,
 				593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */,
 				DC85493421831B0B00782BA8 /* Tools.swift in Sources */,
 				DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */,
