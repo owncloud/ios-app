@@ -205,6 +205,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		let viewController : BookmarkViewController = BookmarkViewController(bookmark)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
 
+		// Exit editing mode (unfortunately, self.isEditing = false will not do the trick as it leaves the left bar button unchanged as "Done")
+		if self.tableView.isEditing,
+		   let target = self.navigationItem.leftBarButtonItem?.target,
+		   let action = self.navigationItem.leftBarButtonItem?.action {
+			_ = target.perform(action, with: self)
+		}
+
 		self.present(navigationController, animated: true, completion: nil)
 	}
 

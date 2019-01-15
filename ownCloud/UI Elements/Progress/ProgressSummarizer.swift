@@ -216,6 +216,45 @@ class ProgressSummarizer: NSObject {
 		}
 	}
 
+	// MARK: - Priority summaries (to be used in favor of everything else whenever they exist)
+	internal var _prioritySummary : ProgressSummary?
+	public var prioritySummary : ProgressSummary? {
+		set(newPrioritySummary) {
+			if _prioritySummary != newPrioritySummary {
+				_prioritySummary = newPrioritySummary
+				self.setNeedsUpdate()
+			}
+		}
+
+		get {
+			return _prioritySummary
+		}
+	}
+
+	private var prioritySummaries : [ProgressSummary] = []
+
+	func pushPrioritySummary(summary : ProgressSummary) {
+		OCSynchronized(self) {
+			prioritySummaries.append(summary)
+
+			self.prioritySummary = summary
+		}
+	}
+
+	func popPrioritySummary(summary : ProgressSummary) {
+		OCSynchronized(self) {
+			if let index = prioritySummaries.index(of: summary) {
+				prioritySummaries.remove(at: index)
+
+				if prioritySummaries.count == 0 {
+					self.prioritySummary = nil
+				} else if prioritySummaries.count == index {
+					self.prioritySummary = prioritySummaries.last
+				}
+			}
+		}
+	}
+
 	// MARK: - Change notifications
 	private var observers : [ProgressSummaryNotificationObserver] = []
 	func addObserver(_ observer: AnyObject, notificationBlock: @escaping ProgressSummarizerNotificationBlock) {
@@ -244,38 +283,47 @@ class ProgressSummarizer: NSObject {
 		var completedProgress : [Progress]?
 
 		OCSynchronized(self) {
+			var usedProgress : Int = 0
+
 			for progress in trackedProgress {
-				if progress.isIndeterminate {
-					summary.indeterminate = true
-				}
-
-				if progress.isFinished {
-					if completedProgress == nil {
-						completedProgress = []
-					}
-					completedProgress?.append(progress)
-				}
-
+				// Only consider progress objects that have a description (those without have to be considered to be not active and/or unsuitable)
 				if let message = progress.localizedDescription {
-					// Pick the first localized description that we encounter as message, because it's also the oldest, longest-running one.
-					if summary.message == nil {
-						summary.message = message
+					if message.count > 0 {
+						if progress.isIndeterminate {
+							summary.indeterminate = true
+						}
+
+						if progress.isFinished {
+							if completedProgress == nil {
+								completedProgress = []
+							}
+							completedProgress?.append(progress)
+						}
+
+						// Pick the first localized description that we encounter as message, because it's also the oldest, longest-running one.
+						if summary.message == nil {
+							summary.message = message
+						}
+
+						if !progress.isIndeterminate {
+							totalUnitCount += progress.totalUnitCount
+							completedUnitCount += progress.completedUnitCount
+
+							if progress.totalUnitCount > 0 {
+								totalFraction += 1
+								completedFraction += progress.fractionCompleted
+							}
+						}
+
+						usedProgress += 1
 					}
-				}
-
-				totalUnitCount += progress.totalUnitCount
-				completedUnitCount += progress.completedUnitCount
-
-				if progress.totalUnitCount > 0 {
-					totalFraction += 1
-					completedFraction += progress.fractionCompleted
 				}
 			}
 
-			summary.progressCount = trackedProgress.count
+			summary.progressCount = usedProgress
 
 			if totalUnitCount == 0 {
-				if trackedProgress.count == 0 {
+				if usedProgress == 0 {
 					summary.progress = 1
 				} else {
 					summary.indeterminate = true

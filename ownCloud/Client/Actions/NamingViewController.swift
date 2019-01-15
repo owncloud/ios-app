@@ -55,19 +55,21 @@ class NamingViewController: UIViewController {
 
 	private let thumbnailSize = CGSize(width: 150.0, height: 150.0)
 
-	init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+	init(with item: OCItem? = nil, core: OCCore? = nil, defaultName: String? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
 		self.item = item
 		self.core = core
 		self.completion = completion
 		self.stringValidator = stringValidator
-		self.defaultName = nil
+		self.defaultName = defaultName
 
 		blurView = UIVisualEffectView.init(effect: UIBlurEffect(style: .regular))
 
 		stackView = UIStackView(frame: .zero)
 
 		thumbnailContainer = UIView(frame: .zero)
+
 		thumbnailImageView = UIImageView(frame: .zero)
+		thumbnailImageView.contentMode = .scaleAspectFit
 
 		nameContainer = UIView(frame: .zero)
 		nameTextField = UITextField(frame: .zero)
@@ -81,30 +83,12 @@ class NamingViewController: UIViewController {
 		super.init(nibName: nil, bundle: nil)
 	}
 
-	init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
-		self.item = nil
-		self.core = core
-		self.completion = completion
-		self.stringValidator = stringValidator
-		self.defaultName = defaultName
+	convenience init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+		self.init(with: item, core: core, defaultName: nil, stringValidator: stringValidator, completion: completion)
+	}
 
-		blurView = UIVisualEffectView.init(effect: UIBlurEffect(style: .regular))
-
-		stackView = UIStackView(frame: .zero)
-
-		thumbnailContainer = UIView(frame: .zero)
-		thumbnailImageView = UIImageView(frame: .zero)
-
-		nameContainer = UIView(frame: .zero)
-		nameTextField = UITextField(frame: .zero)
-
-		textfieldCenterYAnchorConstraint = nameTextField.centerYAnchor.constraint(equalTo: nameContainer.centerYAnchor)
-		textfieldTopAnchorConstraint = nameTextField.topAnchor.constraint(equalTo: nameContainer.topAnchor, constant: 15)
-		thumbnailContainerWidthAnchorConstraint = thumbnailContainer.widthAnchor.constraint(equalToConstant: 200)
-		thumbnailContainerWidthAnchorConstraint.priority = .init(999)
-		thumbnailHeightAnchorConstraint = thumbnailImageView.heightAnchor.constraint(equalToConstant: 150)
-
-		super.init(nibName: nil, bundle: nil)
+	convenience init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+		self.init(with: nil, core: core, defaultName: defaultName, stringValidator: stringValidator, completion: completion)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -116,7 +100,7 @@ class NamingViewController: UIViewController {
 	}
 
 	override func viewDidLoad() {
-        super.viewDidLoad()
+        	super.viewDidLoad()
 
 		stackViewLeftAnchorConstraint = stackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0)
 		stackViewRightAnchorConstraint = stackView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0)

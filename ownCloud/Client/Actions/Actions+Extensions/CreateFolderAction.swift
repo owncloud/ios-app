@@ -37,14 +37,14 @@ class CreateFolderAction : Action {
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0 else {
-			completed(with: NSError(ocError: OCError.itemNotFound))
+			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
 
 		let item = context.items.first
 
 		guard item != nil else {
-			completed(with: NSError(ocError: OCError.itemNotFound))
+			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
 
