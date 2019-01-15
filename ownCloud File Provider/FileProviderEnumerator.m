@@ -155,6 +155,7 @@
 				{
 					// Start query
 					self->_query = [OCQuery queryForPath:queryPath];
+					self->_query.includeRootItem = YES;
 					self->_query.delegate = self;
 
 					@synchronized(self)

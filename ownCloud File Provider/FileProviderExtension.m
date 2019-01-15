@@ -45,18 +45,55 @@
 	OCAppIdentity.sharedAppIdentity.appGroupIdentifier = bundleInfoDict[@"OCAppGroupIdentifier"];
 
 	if (self = [super init]) {
-		_fileManager = [[NSFileManager alloc] init];
+		_fileManager = [NSFileManager new];
 	}
+
+	[self addObserver:self forKeyPath:@"domain" options:0 context:(__bridge void *)self];
 
 	return self;
 }
 
 - (void)dealloc
 {
+	[self removeObserver:self forKeyPath:@"domain" context:(__bridge void *)self];
+
 	if (_core != nil)
 	{
 		[[OCCoreManager sharedCoreManager] returnCoreForBookmark:self.bookmark completionHandler:nil];
 	}
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+	if ((context == (__bridge void *)self) && [keyPath isEqual:@"domain"])
+	{
+		OCLogDebug(@"Domain set: %@", self.domain);
+
+		if (self.bookmark != nil)
+		{
+			if (![OCVault vaultInitializedForBookmark:self.bookmark])
+			{
+				OCLogDebug(@"Initial root container scan..");
+
+				OCQuery *query = [OCQuery queryForPath:@"/"];
+				__weak OCCore *weakCore = self.core;
+
+				query.changesAvailableNotificationHandler = ^(OCQuery *query) {
+					if (query.state == OCQueryStateIdle)
+					{
+						[weakCore stopQuery:query];
+					}
+
+				};
+
+				[self.core startQuery:query];
+			}
+		}
+
+		return;
+	}
+
+	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 #pragma mark - ItemIdentifier & URL lookup
