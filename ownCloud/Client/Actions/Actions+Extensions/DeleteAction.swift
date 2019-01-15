@@ -53,6 +53,19 @@ class DeleteAction : Action {
 			name = items[0].name
 		}
 
+		let deleteItemAndPublishProgress = { (item: OCItem) in
+			if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
+				if error != nil {
+					Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
+					self.completed(with: error)
+				} else {
+					self.completed()
+				}
+			}) {
+				self.publish(progress: progress)
+			}
+		}
+
 		let alertController = UIAlertController(
 			with: name,
 			message: message,
@@ -60,17 +73,8 @@ class DeleteAction : Action {
 			preferredStyle: UIDevice.current.isIpad() ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
 			destructiveAction: {
 				for item in items {
-					if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
-						if error != nil {
-							Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
-							self.completed(with: error)
-						}
-					}) {
-						self.publish(progress: progress)
-					}
+					deleteItemAndPublishProgress(item)
 				}
-
-				self.completed()
 		})
 
 		viewController.present(alertController, animated: true)
