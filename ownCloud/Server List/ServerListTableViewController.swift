@@ -311,44 +311,42 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 							self.lockedBookmarks.append(bookmark)
 
-							OCCoreManager.shared.scheduleOfflineOperation({ (inBookmark, completionHandler) in
-								if let bookmark = inBookmark {
-									let vault : OCVault = OCVault(bookmark: bookmark)
+							OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
+								let vault : OCVault = OCVault(bookmark: bookmark)
 
-									vault.erase(completionHandler: { (_, error) in
-										DispatchQueue.main.async {
-											if error != nil {
-												// Inform user if vault couldn't be erased
-												let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
-																	message: error?.localizedDescription,
-																	preferredStyle: .alert)
+								vault.erase(completionHandler: { (_, error) in
+									DispatchQueue.main.async {
+										if error != nil {
+											// Inform user if vault couldn't be erased
+											let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+																message: error?.localizedDescription,
+																preferredStyle: .alert)
 
-												alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+											alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
-												self.present(alertController, animated: true, completion: nil)
-											} else {
-												// Success! We can now remove the bookmark
-												self.ignoreServerListChanges = true
+											self.present(alertController, animated: true, completion: nil)
+										} else {
+											// Success! We can now remove the bookmark
+											self.ignoreServerListChanges = true
 
-												OCBookmarkManager.shared.removeBookmark(bookmark)
+											OCBookmarkManager.shared.removeBookmark(bookmark)
 
-												tableView.performBatchUpdates({
-													tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-												}, completion: { (_) in
-													self.ignoreServerListChanges = false
-												})
+											tableView.performBatchUpdates({
+												tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+											}, completion: { (_) in
+												self.ignoreServerListChanges = false
+											})
 
-												self.updateNoServerMessageVisibility()
-											}
-
-											if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
-												self.lockedBookmarks.remove(at: removeIndex)
-											}
-
-											completionHandler?()
+											self.updateNoServerMessageVisibility()
 										}
-									})
-								}
+
+										if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
+											self.lockedBookmarks.remove(at: removeIndex)
+										}
+
+										completionHandler()
+									}
+								})
 							}, for: bookmark)
 						}))
 

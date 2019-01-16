@@ -225,14 +225,14 @@ class Action : NSObject {
 	}
 
 	func completed(with error: Error? = nil) {
-		if completionHandler != nil {
-			completionHandler!(error)
+		if let completionHandler = completionHandler {
+			completionHandler(error)
 		}
 	}
 
 	func publish(progress: Progress) {
-		if progressHandler != nil {
-			progressHandler!(progress)
+		if let progressHandler = progressHandler {
+			progressHandler(progress)
 		}
 	}
 

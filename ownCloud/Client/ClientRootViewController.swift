@@ -41,7 +41,7 @@ class ClientRootViewController: UITabBarController {
 		}
 	}
 
-	var alertQueue : AsyncSequentialQueue = AsyncSequentialQueue()
+	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
 
 	init(bookmark inBookmark: OCBookmark) {
 		let openProgress = Progress()

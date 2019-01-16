@@ -213,22 +213,23 @@ extension OCItem {
 		return nil
 	}
 
-	func fileExtension() -> String {
-		return (self.name as NSString).pathExtension
+	var fileExtension : String? {
+		return (self.name as NSString?)?.pathExtension
 	}
 
-	func nameWithoutExtension() -> String {
-		return (self.name as NSString).deletingPathExtension
+	var baseName : String? {
+		return (self.name as NSString?)?.deletingPathExtension
 	}
 
-	var sizeInReadableFormat: String {
+	var sizeLocalized: String {
 		let size = OCItem.byteCounterFormatter.string(fromByteCount: Int64(self.size))
 		return size
 	}
 
-	var lastModifiedInReadableFormat: String {
-		let dateString = OCItem.dateFormatter.string(from: self.lastModified)
-		return dateString
+	var lastModifiedLocalized: String {
+		guard let lastModified = self.lastModified else { return "" }
+
+		return OCItem.dateFormatter.string(from: lastModified)
 	}
 
 	static private let byteCounterFormatter: ByteCountFormatter = {
