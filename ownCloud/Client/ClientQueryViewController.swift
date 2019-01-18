@@ -206,14 +206,14 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		switch query.state {
 			case .idle:
-				DispatchQueue.main.async {
+				OnMainThread{
 					if !self.refreshController!.isRefreshing {
 						self.refreshController?.beginRefreshing()
 					}
 				}
 
 			case .contentsFromCache, .stopped:
-				DispatchQueue.main.async {
+				OnMainThread {
 					self.tableView.refreshControl = nil
 				}
 
@@ -608,7 +608,7 @@ extension ClientQueryViewController : OCQueryDelegate {
 
 	func queryHasChangesAvailable(_ query: OCQuery) {
 		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
-			DispatchQueue.main.async {
+			OnMainThread {
 
 				switch query.state {
 				case .idle, .targetRemoved, .contentsFromCache, .stopped:

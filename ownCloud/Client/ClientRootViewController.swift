@@ -83,11 +83,11 @@ class ClientRootViewController: UITabBarController {
 			openProgress.totalUnitCount = 1
 
 			// Start showing connection status with a delay of 1 second, so "Offline" doesn't flash briefly
-			DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0, execute: { [weak self] () in
+			OnMainThread(after: 1.0) { [weak self] () in
 				self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
 					self?.updateConnectionStatusSummary()
 				})
-			})
+			}
 
 			self.progressSummarizer?.stopTracking(progress: openProgress)
 		})
@@ -173,7 +173,7 @@ class ClientRootViewController: UITabBarController {
 	}
 
 	func coreReady() {
-		DispatchQueue.main.async {
+		OnMainThread {
 			let queryViewController = ClientQueryViewController(core: self.core!, query: OCQuery(forPath: "/"))
 
 			queryViewController.navigationItem.leftBarButtonItem = self.logoutBarButtonItem()

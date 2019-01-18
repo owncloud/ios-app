@@ -153,7 +153,7 @@ class CollapsibleProgressBar: UIView, Themeable {
 
 	// MARK: - Collapsing
 	func collapse(_ collapse: Bool, animate: Bool) {
-		DispatchQueue.main.async {
+		OnMainThread {
 			if self.isCollapsed != collapse {
 				self.isCollapsed = collapse
 
@@ -186,7 +186,7 @@ class CollapsibleProgressBar: UIView, Themeable {
 			delay = 0.5
 		}
 
-		DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+		OnMainThread(after: delay) {
 			self.evaluateAutoCollapse(shouldCollapse)
 		}
 	}
@@ -236,7 +236,7 @@ class CollapsibleProgressBar: UIView, Themeable {
 			}
 
 			if doDispatch {
-				DispatchQueue.main.async {
+				OnMainThread {
 					self.performUpdate()
 				}
 			}

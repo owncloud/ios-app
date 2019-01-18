@@ -21,7 +21,7 @@ class UtilsTests {
 					let vault : OCVault = OCVault(bookmark: bookmark)
 
 					vault.erase(completionHandler: { (_, error) in
-						DispatchQueue.main.async {
+						OnMainThread {
 							if error == nil {
 								OCBookmarkManager.shared.removeBookmark(bookmark)
 							} else {

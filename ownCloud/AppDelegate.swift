@@ -70,7 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+		OnMainThread(after: 2.0) {
 			completionHandler(.newData)
 		}
 	}

@@ -231,7 +231,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	var ignoreServerListChanges : Bool = false
 
 	@objc func serverListChanged() {
-		DispatchQueue.main.async {
+		OnMainThread {
 			if !self.ignoreServerListChanges {
 				self.tableView.reloadData()
 			}
@@ -315,7 +315,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 								let vault : OCVault = OCVault(bookmark: bookmark)
 
 								vault.erase(completionHandler: { (_, error) in
-									DispatchQueue.main.async {
+									OnMainThread {
 										if error != nil {
 											// Inform user if vault couldn't be erased
 											let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,

@@ -112,7 +112,8 @@ extension ConnectionIssueViewController {
 		if let issue = displayIssues?.displayIssues[indexPath.row], issue.type == OCIssueType.certificate {
 			OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: issue.certificate, withValidationCompletionHandler: { (certificateNodes) in
 				let certDetails: NSAttributedString = OCCertificateDetailsViewNode .attributedString(withCertificateDetails: certificateNodes)
-				DispatchQueue.main.async {
+
+				OnMainThread {
 					let issuesVC = CertificateViewController(localizedDescription: certDetails)
 					issuesVC.modalPresentationStyle = .overCurrentContext
 					self.present(issuesVC, animated: true, completion: nil)
