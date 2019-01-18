@@ -17,20 +17,18 @@ class UtilsTests {
 
 		if let bookmarks:[OCBookmark] = OCBookmarkManager.shared.bookmarks as? [OCBookmark] {
 			for bookmark:OCBookmark in bookmarks {
-				OCCoreManager.shared.scheduleOfflineOperation({ (inBookmark, completionHandler) in
-					if let bookmark = inBookmark {
-						let vault : OCVault = OCVault(bookmark: bookmark)
+				OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
+					let vault : OCVault = OCVault(bookmark: bookmark)
 
-						vault.erase(completionHandler: { (_, error) in
-							DispatchQueue.main.async {
-								if error == nil {
-									OCBookmarkManager.shared.removeBookmark(bookmark)
-								} else {
-									print("Error deleting bookmarks")
-								}
+					vault.erase(completionHandler: { (_, error) in
+						DispatchQueue.main.async {
+							if error == nil {
+								OCBookmarkManager.shared.removeBookmark(bookmark)
+							} else {
+								print("Error deleting bookmarks")
 							}
-						})
-					}
+						}
+					})
 				}, for: bookmark)
 			}
 		}
