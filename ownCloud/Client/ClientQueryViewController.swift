@@ -618,10 +618,16 @@ extension ClientQueryViewController : OCQueryDelegate {
 				default: break
 				}
 
+				let previousItemCount = self.items.count
+
 				self.items = changeSet?.queryResult ?? []
 
 				switch query.state {
-				case .contentsFromCache, .idle:
+				case .contentsFromCache, .idle, .waitingForServerReply:
+					if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
+						break
+					}
+
 					if self.items.count == 0 {
 						if self.searchController?.searchBar.text != "" {
 							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
