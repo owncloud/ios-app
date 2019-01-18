@@ -71,6 +71,7 @@ class NamingViewController: UIViewController {
 
 		nameContainer = UIView(frame: .zero)
 		nameTextField = UITextField(frame: .zero)
+		nameTextField.accessibilityIdentifier = "name-text-field"
 
 		textfieldCenterYAnchorConstraint = nameTextField.centerYAnchor.constraint(equalTo: nameContainer.centerYAnchor)
 		textfieldTopAnchorConstraint = nameTextField.topAnchor.constraint(equalTo: nameContainer.topAnchor, constant: 15)
@@ -97,6 +98,7 @@ class NamingViewController: UIViewController {
 
 		nameContainer = UIView(frame: .zero)
 		nameTextField = UITextField(frame: .zero)
+		nameTextField.accessibilityIdentifier = "name-text-field"
 
 		textfieldCenterYAnchorConstraint = nameTextField.centerYAnchor.constraint(equalTo: nameContainer.centerYAnchor)
 		textfieldTopAnchorConstraint = nameTextField.topAnchor.constraint(equalTo: nameContainer.topAnchor, constant: 15)
@@ -145,9 +147,11 @@ class NamingViewController: UIViewController {
 
 		// Navigation buttons
 		cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonPressed))
+		cancelButton?.accessibilityIdentifier = "cancel-button"
 		navigationItem.leftBarButtonItem = cancelButton
 
 		doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
+		doneButton?.accessibilityIdentifier = "done-button"
 		navigationItem.rightBarButtonItem = doneButton
 
 		//Blur View
