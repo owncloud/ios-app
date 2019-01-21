@@ -196,6 +196,8 @@
 "Open in" = "Open in";
 "Copy" = "Copy";
 "Copy here" = "Copy here";
+"Cannot connect to ownCloud" = "Cannot connect to ownCloud";
+"ownCloud couldn't download this file" = "ownCloud couldn't download this file";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";
