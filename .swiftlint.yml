@@ -1,5 +1,5 @@
 excluded:
-    - ownCloudTests/EarlGrey.swift
+    - ownCloudTests
     - external
 
 function_body_length: 100
