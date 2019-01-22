@@ -570,8 +570,8 @@
 
 		// Start import
 		[self.core importFileNamed:importFileName at:parentItem fromURL:fileURL isSecurityScoped:YES options:@{ OCCoreOptionImportByCopying : @(importByCopying) } placeholderCompletionHandler:^(NSError *error, OCItem *item) {
-			FPLogCmd(@"Completed with placeholderItem=%@, error=%@", item, error);
-			completionHandler(item, error);
+//			FPLogCmd(@"Completed with placeholderItem=%@, error=%@", item, error);
+//			completionHandler(item, error);
 		} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			if ([error.domain isEqual:OCHTTPStatusErrorDomain] && (error.code == OCHTTPStatusCodePRECONDITION_FAILED))
 			{
@@ -594,6 +594,12 @@
 						[placeholderItem setUploadingError:[NSError fileProviderErrorForCollisionWithItem:placeholderItem]];
 					}
 				}
+			}
+			else
+			{
+				// Temporary: call completion handler only after upload has finished - with the final item
+				FPLogCmd(@"Completed with item=%@, error=%@", item, error);
+				completionHandler(item, error);
 			}
 		}];
 	}
