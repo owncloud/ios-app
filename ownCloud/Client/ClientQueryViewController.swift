@@ -263,6 +263,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ClientItemCell
 		let newItem = itemAtIndexPath(indexPath)
 
+		cell?.accessibilityIdentifier = newItem.name
+		print(newItem.name)
+
 		cell?.core = self.core
 
 		if cell?.delegate == nil {

@@ -70,7 +70,7 @@ class CreateFolderTests: XCTestCase {
 
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 
-			let folderName = "New folder"
+			let folderName = "New Folder"
 
 			//Mocks
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
@@ -93,8 +93,7 @@ class CreateFolderTests: XCTestCase {
 			let isFolderCreated = GREYCondition(name: "Wait for folder is created", block: {
 				var error: NSError?
 
-				//TODO: Validate create folder
-				//EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible(), error: &error)
+				EarlGrey.select(elementWithMatcher: grey_accessibilityID(folderName)).assert(grey_sufficientlyVisible(), error: &error)
 
 				return error == nil
 			}).wait(withTimeout: 5.0, pollInterval: 0.5)
