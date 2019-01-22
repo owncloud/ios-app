@@ -245,8 +245,8 @@ class Action : NSObject {
 	}
 
 	func provideContextualAction() -> UIContextualAction? {
-		return UIContextualAction(style: actionExtension.category == .destructive ? .destructive : .normal, title: self.actionExtension.name, handler: { (_ action, _ view, uiCompletionHandler) in
-			uiCompletionHandler(true)
+		return UIContextualAction(style: actionExtension.category == .destructive ? .destructive : .normal, title: self.actionExtension.name, handler: { (_ action, _ view, _ uiCompletionHandler) in
+			uiCompletionHandler(false)
 			self.willRun()
 			self.run()
 		})

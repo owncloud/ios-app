@@ -25,7 +25,7 @@ private enum CardPosition {
 
 	var heightMultiplier: CGFloat {
 		switch self {
-			case .half: return 0.48
+			case .half: return 0.58
 			case .open: return 0.9
 		}
 	}

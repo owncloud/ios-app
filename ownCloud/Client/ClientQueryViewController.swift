@@ -188,18 +188,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				summary.message = "Started…".localized
 
 			case .contentsFromCache:
-				if let connectionStatus = core?.connectionStatus {
-					switch connectionStatus {
-						case .online:
-							summary.message = "Contents from cache.".localized
-
-						case .offline:
-							summary.message = "Offline. Contents from cache.".localized
-
-						case .unavailable:
-							summary.message = "Server down for maintenance. Contents from cache.".localized
-					}
-				}
+				summary.message = "Contents from cache.".localized
 
 			case .waitingForServerReply:
 				summary.message = "Waiting for server response…".localized
