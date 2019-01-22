@@ -168,6 +168,7 @@ class ClientItemCell: ThemeTableViewCell {
 
 		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
 		self.moreButton.isHidden = item.isPlaceholder ? true : false
+		self.moreButton.accessibilityLabel = item.name! + " " + "Actions".localized
 	}
 
 	// MARK: - Themeing

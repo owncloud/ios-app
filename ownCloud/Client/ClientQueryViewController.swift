@@ -147,6 +147,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.dragInteractionEnabled = true
 
 		let actionsBarButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
+		actionsBarButton.accessibilityLabel = "Upload files".localized
+		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .normal)
+		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .highlighted)
 		self.navigationItem.rightBarButtonItem = actionsBarButton
 	}
 

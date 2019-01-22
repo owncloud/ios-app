@@ -213,7 +213,9 @@ class DisplayViewController: UIViewController {
 		}
 
 		parent.navigationItem.title = item.name
-		parent.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+		let actionsBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+		actionsBarButtonItem.accessibilityLabel = item.name + " " + "Actions".localized
+		parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
 	}
 
 	// MARK: - Download actions

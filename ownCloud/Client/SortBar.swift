@@ -50,6 +50,7 @@ class SortBar: UIView, Themeable {
 
 			let title = NSString(format: "Sorted by %@ ▼".localized as NSString, sortMethod.localizedName()) as String
 			sortButton.setTitle(title, for: .normal)
+			sortButton.accessibilityLabel = NSString(format: "Sorted by %@".localized as NSString, sortMethod.localizedName()) as String
 
 			sortSegmentedControl.selectedSegmentIndex = SortMethod.all.index(of: sortMethod)!
 
@@ -73,6 +74,7 @@ class SortBar: UIView, Themeable {
 		sortButton.accessibilityIdentifier = "sort-bar.sortButton"
 
 		leftButtonImage = Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
+		leftButton.accessibilityLabel = "Create Folder".localized
 
 		rightButtonImage = Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
 
