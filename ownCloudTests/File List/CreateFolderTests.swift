@@ -19,10 +19,6 @@ class CreateFolderTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
-//		hostSimulator.unroutableRequestHandler = { (connection, request, responseHandler) in
-//			responseHandler(NSError(domain: kCFErrorDomainCFNetwork, code: kCFHostErrorHostNotFound, userInfo: nil))
-//			return true
-//		}
 	}
 
 	override func tearDown() {
@@ -58,6 +54,7 @@ class CreateFolderTests: XCTestCase {
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
+			dismissFileList()
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
@@ -89,7 +86,7 @@ class CreateFolderTests: XCTestCase {
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).perform(grey_tap())
 
-			//Assets
+			//Assert
 			let isFolderCreated = GREYCondition(name: "Wait for folder is created", block: {
 				var error: NSError?
 
@@ -98,8 +95,83 @@ class CreateFolderTests: XCTestCase {
 				return error == nil
 			}).wait(withTimeout: 5.0, pollInterval: 0.5)
 
-			//Assert
 			GREYAssertTrue(isFolderCreated, reason: "Failed to create the folder")
+
+			//Reset status
+			dismissFileList()
+
+		} else {
+			assertionFailure("File list not loaded because Bookmark is nil")
+		}
+	}
+
+	/*
+	* PASSED if: Done button is disabled with empty name
+	*/
+	func testDisableButtonCreateFolderWithEmptyName() {
+
+		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
+
+			let folderName = ""
+
+			//Mocks
+			self.mockOCoreForBookmark(mockBookmark: bookmark)
+			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			self.showFileList(bookmark: bookmark)
+
+			//Actions
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
+
+			//Remove Mocks
+			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
+
+			//Mock again
+			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
+
+			//Assert
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).assert(grey_not(grey_enabled()))
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
+			dismissFileList()
+		} else {
+			assertionFailure("File list not loaded because Bookmark is nil")
+		}
+	}
+
+	/*
+	* PASSED if: Done button is enabled with a valid name
+	*/
+	func testEnableButtonCreateFolderWithValidName() {
+
+		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
+
+			let folderName = "Valid Name"
+
+			//Mocks
+			self.mockOCoreForBookmark(mockBookmark: bookmark)
+			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			self.showFileList(bookmark: bookmark)
+
+			//Actions
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
+
+			//Remove Mocks
+			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
+
+			//Mock again
+			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
+
+			//Assert
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).assert(grey_enabled())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
+			dismissFileList()
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
@@ -110,10 +182,15 @@ class CreateFolderTests: XCTestCase {
 
 			let query = MockOCQuery(path: "/")
 			let core = MockOCCore(query: query, bookmark: bookmark)
-//			core.connection.hostSimulator = self.hostSimulator
 
 			let clientQueryViewController = ClientQueryViewController(core: core, query: query)
 			appDelegate.serverListTableViewController?.present(clientQueryViewController, animated: true, completion: nil)
+		}
+	}
+
+	func dismissFileList() {
+		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
+			appDelegate.serverListTableViewController?.dismiss(animated: true, completion: nil)
 		}
 	}
 
@@ -129,20 +206,6 @@ class CreateFolderTests: XCTestCase {
 	}
 
 	func mockQueryPropfindResults(resourceName: String, basePath: String, state: OCQueryState) {
-
-//		hostSimulator.unroutableRequestHandler = nil
-//
-//		let bundle = Bundle.main
-//		if let path: String = bundle.path(forResource: resourceName, ofType: "xml") {
-//
-//			if let data = NSData(contentsOf: URL(fileURLWithPath: path)) {
-//				hostSimulator.responseByPath = ["/remote.php/dav/files/admin" : OCHostSimulatorResponse(url: nil,
-//																								  statusCode: OCHTTPStatusCode.OK,
-//																								  headers: ["Www-Authenticate" : "Bearer realm=\"\", Basic realm=\"\""],
-//																								  contentType: "application/xml",
-//																								  bodyData: data as Data)]
-//			}
-//		}
 
 		let completionHandlerBlock : OCMRequestChangeSetWithFlags = { (flags, mockedBlock) in
 
