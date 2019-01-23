@@ -29,6 +29,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var query : OCQuery
 
 	var items : [OCItem] = []
+
     var actions : [Action]?
 
 	var queryProgressSummary : ProgressSummary? {
