@@ -35,7 +35,7 @@ class DuplicateAction : Action {
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0, let core = self.core else {
-			completed(with: NSError(ocError: OCError.errorItemNotFound))
+			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
 
@@ -43,7 +43,7 @@ class DuplicateAction : Action {
 		let rootItem = item.parentItem(from: core)
 
 		guard rootItem != nil else {
-			completed(with: NSError(ocError: OCError.errorItemNotFound))
+			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
 

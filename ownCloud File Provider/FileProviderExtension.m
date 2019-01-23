@@ -701,11 +701,11 @@
 	return (_core);
 }
 
-- (void)core:(OCCore *)core handleError:(NSError *)error issue:(OCConnectionIssue *)issue
+- (void)core:(OCCore *)core handleError:(NSError *)error issue:(OCIssue *)issue
 {
 	OCLogDebug(@"CORE ERROR: error=%@, issue=%@", error, issue);
 
-	if (issue.type == OCConnectionIssueTypeMultipleChoice)
+	if (issue.type == OCIssueTypeMultipleChoice)
 	{
 		[issue cancel];
 	}

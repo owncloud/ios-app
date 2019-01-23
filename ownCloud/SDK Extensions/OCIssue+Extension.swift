@@ -1,5 +1,5 @@
 //
-//  OCConnectionIssue+Extension.swift
+//  OCIssue+Extension.swift
 //  ownCloud
 //
 //  Created by Felix Schwarz on 05.05.18.
@@ -20,15 +20,15 @@ import UIKit
 import ownCloudSDK
 
 struct DisplayIssues {
-	var targetIssue : OCConnectionIssue //!< The issue to send the approve or decline message to
-	var displayLevel : OCConnectionIssueLevel //!< The issue level to be used for display
-	var displayIssues: [OCConnectionIssue] //!< The selection of issues to be used for display
+	var targetIssue : OCIssue //!< The issue to send the approve or decline message to
+	var displayLevel : OCIssueLevel //!< The issue level to be used for display
+	var displayIssues: [OCIssue] //!< The selection of issues to be used for display
 	var primaryCertificate : OCCertificate? //!< The first certificate found among the issues
 }
 
-extension OCConnectionIssue {
+extension OCIssue {
 	func prepareForDisplay() -> DisplayIssues {
-		var displayIssues: [OCConnectionIssue] = []
+		var displayIssues: [OCIssue] = []
 		var primaryCertificate: OCCertificate? = self.certificate
 
 		switch self.type {
