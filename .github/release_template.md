@@ -13,6 +13,7 @@ Git & Code
 - [ ] [QA] Design Test plan
 - [ ] [QA] Regression Test plan
 - [ ] [DOC] Update user manual with the new functionalities
+- [ ] [DOC] Update owncloud.org/download version numbers (notify rocketchat #marketing)
 
 App Store
 
