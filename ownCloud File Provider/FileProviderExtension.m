@@ -117,7 +117,7 @@
 		else
 		{
 			// Other item
-			[self.core retrieveItemFromDatabaseForFileID:(OCFileID)identifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
+			[self.core retrieveItemFromDatabaseForLocalID:(OCLocalID)identifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
 				item = itemFromDatabase;
 				returnError = error;
 
@@ -465,7 +465,7 @@
 	FPLogCmdBegin(@"Rename", @"Start of renameItemWithIdentifier=%@, toName=%@", itemIdentifier, itemName);
 
 	if (((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil) &&
-	    ((parentItem = (OCItem *)[self itemForIdentifier:item.parentFileID error:&error]) != nil))
+	    ((parentItem = (OCItem *)[self itemForIdentifier:item.parentLocalID error:&error]) != nil))
 	{
 		FPLogCmd(@"Renaming %@ in %@ to %@", item, parentItem, itemName);
 
@@ -570,8 +570,8 @@
 
 		// Start import
 		[self.core importFileNamed:importFileName at:parentItem fromURL:fileURL isSecurityScoped:YES options:@{ OCCoreOptionImportByCopying : @(importByCopying) } placeholderCompletionHandler:^(NSError *error, OCItem *item) {
-//			FPLogCmd(@"Completed with placeholderItem=%@, error=%@", item, error);
-//			completionHandler(item, error);
+			FPLogCmd(@"Completed with placeholderItem=%@, error=%@", item, error);
+			completionHandler(item, error);
 		} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			if ([error.domain isEqual:OCHTTPStatusErrorDomain] && (error.code == OCHTTPStatusCodePRECONDITION_FAILED))
 			{
@@ -594,12 +594,6 @@
 						[placeholderItem setUploadingError:[NSError fileProviderErrorForCollisionWithItem:placeholderItem]];
 					}
 				}
-			}
-			else
-			{
-				// Temporary: call completion handler only after upload has finished - with the final item
-				FPLogCmd(@"Completed with item=%@, error=%@", item, error);
-				completionHandler(item, error);
 			}
 		}];
 	}

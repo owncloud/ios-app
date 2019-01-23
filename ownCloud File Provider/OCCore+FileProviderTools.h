@@ -21,6 +21,6 @@
 
 @interface OCCore (FileProviderTools)
 
-- (OCItem *)synchronousRetrieveItemFromDatabaseForFileID:(OCFileID)fileID syncAnchor:(OCSyncAnchor __autoreleasing *)outSyncAnchor error:(NSError * __autoreleasing *)outError;
+- (OCItem *)synchronousRetrieveItemFromDatabaseForLocalID:(OCLocalID)localID syncAnchor:(OCSyncAnchor __autoreleasing *)outSyncAnchor error:(NSError * __autoreleasing *)outError;
 
 @end

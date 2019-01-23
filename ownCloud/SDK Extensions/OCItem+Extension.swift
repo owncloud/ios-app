@@ -250,7 +250,7 @@ extension OCItem {
 	func parentItem(from core: OCCore, completionHandler: ((_ error: Error?, _ parentItem: OCItem?) -> Void)? = nil) -> OCItem? {
 		var parentItem : OCItem?
 
-		if let parentItemIdentifier = self.parentFileID {
+		if let parentItemLocalID = self.parentLocalID {
 			var waitGroup : DispatchGroup?
 
 			if completionHandler == nil {
@@ -258,7 +258,7 @@ extension OCItem {
 				waitGroup?.enter()
 			}
 
-			core.retrieveItemFromDatabase(forFileID: parentItemIdentifier) { (error, _, item) in
+			core.retrieveItemFromDatabase(forLocalID: parentItemLocalID) { (error, _, item) in
 				if completionHandler == nil {
 					parentItem = item
 					waitGroup?.leave()
