@@ -10,7 +10,6 @@ import UIKit
 
 extension UIViewController {
     func populateToolbar(with items:[UIBarButtonItem]) {
-
         if let tabBarController = self.tabBarController as? ClientRootViewController {
             tabBarController.toolbar?.isHidden = false
             tabBarController.tabBar.isHidden = true

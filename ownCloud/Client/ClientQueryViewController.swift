@@ -48,6 +48,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var refreshController: UIRefreshControl?
 
     let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+
     var deleteMultipleBarButtonItem: UIBarButtonItem?
     var moveMultipleBarButtonItem: UIBarButtonItem?
 
