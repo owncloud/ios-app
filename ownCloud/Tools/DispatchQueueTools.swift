@@ -16,12 +16,16 @@
  *
  */
 
-import UIKit
+import Foundation
 
-func OnMainThread(async: Bool = true, _ block: @escaping () -> Void) {
-	if async {
-		DispatchQueue.main.async(execute: block)
+func OnMainThread(async: Bool = true, after: TimeInterval? = nil, _ block: @escaping () -> Void) {
+	if let after = after {
+		DispatchQueue.main.asyncAfter(deadline: .now() + after, execute: block)
 	} else {
-		DispatchQueue.main.sync(execute: block)
+		if async {
+			DispatchQueue.main.async(execute: block)
+		} else {
+			DispatchQueue.main.sync(execute: block)
+		}
 	}
 }

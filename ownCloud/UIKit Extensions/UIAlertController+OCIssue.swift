@@ -28,12 +28,13 @@ extension UIAlertController {
 	convenience init(with issue: OCIssue, completion: (() -> Void)? = nil) {
 		self.init(title: issue.localizedTitle, message: issue.localizedDescription, preferredStyle: .alert)
 
-		for choice in issue.choices {
-
-			self.addAction(UIAlertAction.init(title: choice.label, style: choice.alertActionStyle, handler: { (_) in
-				issue.selectChoice(choice)
-				completion?()
-			}))
+		if let choices = issue.choices {
+			for choice in choices {
+				self.addAction(UIAlertAction.init(title: choice.label, style: choice.alertActionStyle, handler: { (_) in
+					issue.selectChoice(choice)
+					completion?()
+				}))
+			}
 		}
 	}
 

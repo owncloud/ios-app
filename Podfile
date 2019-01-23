@@ -1,3 +1,5 @@
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
 target 'ownCloudTests' do
   project 'ownCloud'
 

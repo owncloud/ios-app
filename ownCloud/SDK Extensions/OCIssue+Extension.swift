@@ -33,12 +33,16 @@ extension OCIssue {
 
 		switch self.type {
 			case .group:
-				displayIssues = self.issuesWithLevelGreaterThanOrEqual(to: self.level)
+				if let filteredIssues = self.issuesWithLevelGreaterThanOrEqual(to: self.level) {
+					displayIssues = filteredIssues
+				}
 
-				for issue in self.issues {
-					if issue.type == .certificate {
-						primaryCertificate = issue.certificate
-						break
+				if let issues = self.issues {
+					for issue in issues {
+						if issue.type == .certificate {
+							primaryCertificate = issue.certificate
+							break
+						}
 					}
 				}
 

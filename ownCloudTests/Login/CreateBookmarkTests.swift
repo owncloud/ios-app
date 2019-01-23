@@ -246,8 +246,11 @@ class CreateBookmarkTests: XCTestCase {
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
 															   OCAuthenticationMethodIdentifier.oAuth2]
 		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
-
-			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: URL(string: mockUrlServer), level: .warning, issueHandler: nil)
+			guard let url = URL(string: mockUrlServer) else {
+				assertionFailure("Creation of URL object for \(mockUrlServer) failed")
+				return
+			}
+			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: url, level: .warning, issueHandler: nil)
 
 			//Mock
 			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
@@ -278,8 +281,11 @@ class CreateBookmarkTests: XCTestCase {
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
 															   OCAuthenticationMethodIdentifier.oAuth2]
 		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
-
-			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: URL(string: mockUrlServer), level: .warning, issueHandler: nil)
+			guard let url = URL(string: mockUrlServer) else {
+				assertionFailure("Creation of URL object for \(mockUrlServer) failed")
+				return
+			}
+			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: url, level: .warning, issueHandler: nil)
 
 			//Mock
 			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
@@ -311,8 +317,11 @@ class CreateBookmarkTests: XCTestCase {
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
 															   OCAuthenticationMethodIdentifier.oAuth2]
 		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
-
-			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: URL(string: mockUrlServer), level: .warning, issueHandler: nil)
+			guard let url = URL(string: mockUrlServer) else {
+				assertionFailure("Creation of URL object for \(mockUrlServer) failed")
+				return
+			}
+			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url:url, level: .warning, issueHandler: nil)
 
 			//Mock
 			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
@@ -344,8 +353,11 @@ class CreateBookmarkTests: XCTestCase {
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
 															   OCAuthenticationMethodIdentifier.oAuth2]
 		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
-
-			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: URL(string: mockUrlServer), level: .warning, issueHandler: nil)
+			guard let url = URL(string: mockUrlServer) else {
+				assertionFailure("Creation of URL object for \(mockUrlServer) failed")
+				return
+			}
+			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: url, level: .warning, issueHandler: nil)
 
 			//Mock
 			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)

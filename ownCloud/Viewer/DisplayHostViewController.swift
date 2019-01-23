@@ -57,9 +57,11 @@ class DisplayHostViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		let itemToDisplay = itemsToDisplay[0]
+		guard let itemToDisplay = itemsToDisplay.first, let mimeType = itemToDisplay.mimeType else {
+			return
+		}
 
-		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: itemToDisplay.mimeType)
+		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: mimeType)
 		let shouldDownload = viewController is (DisplayViewController & DisplayExtension) ? true : false
 
 		var configuration: DisplayViewConfiguration
