@@ -19,8 +19,8 @@ extension UIViewController {
                 if completed {
                     tabBarController.tabBar.isHidden = true
                     self.navigationController?.toolbar.transform = CGAffineTransform(translationX: 0, y: tabBarHeight)
-                    self.navigationController?.setToolbarItems(items, animated: false)
                     self.navigationController?.setToolbarHidden(false, animated: true)
+                    self.navigationController?.toolbar.setItems(items, animated: false)
                 }
             })
         } else {
@@ -32,7 +32,7 @@ extension UIViewController {
     func removeToolbar() {
         self.navigationController?.setToolbarHidden(true, animated: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + Double(UINavigationController.hideShowBarDuration)) {
-            self.navigationController?.setToolbarItems(nil, animated: false)
+            self.navigationController?.toolbar.setItems(nil, animated: false)
             if let tabBarController = self.tabBarController {
                 tabBarController.tabBar.isHidden = false
                 UIView.animate(withDuration: TimeInterval(UINavigationController.hideShowBarDuration), animations: {

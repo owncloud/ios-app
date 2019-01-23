@@ -30,8 +30,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	var items : [OCItem] = []
 
-	var selectedItem: OCItem?
-
 	var queryProgressSummary : ProgressSummary? {
 		willSet {
 			if newValue != nil {
@@ -47,6 +45,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 	var progressSummarizer : ProgressSummarizer?
 	var refreshController: UIRefreshControl?
+
+    let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+    let deleteMultipleToolbarItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteMultipleItems))
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -146,9 +147,16 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
 
+        self.tableView.allowsMultipleSelectionDuringEditing = true
+
+        /*
 		let actionsBarButton: UIBarButtonItem = UIBarButtonItem(title: "● ● ●", style: .done, target: self, action: #selector(uploadsBarButtonPressed))
 		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .normal)
 		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .highlighted)
+*/
+
+        let actionsBarButton: UIBarButtonItem = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
+
 		self.navigationItem.rightBarButtonItem = actionsBarButton
 	}
 
@@ -207,9 +215,11 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		switch query.state {
 			case .idle:
 				DispatchQueue.main.async {
-					if !self.refreshController!.isRefreshing {
-						self.refreshController?.beginRefreshing()
-					}
+                    if let refreshController = self.refreshController {
+                        if !refreshController.isRefreshing {
+                            refreshController.beginRefreshing()
+                        }
+                    }
 				}
 
 			case .contentsFromCache, .stopped:
@@ -268,21 +278,41 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let rowItem : OCItem = itemAtIndexPath(indexPath)
 
-		if let core = self.core {
-			switch rowItem.type {
-				case .collection:
-				self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: rowItem.path)), animated: true)
+        // If not in multiple-selection mode, just navigate to the file or folder (collection)
+        if !self.tableView.isEditing {
+            let rowItem : OCItem = itemAtIndexPath(indexPath)
 
-				case .file:
-					let itemViewController = DisplayHostViewController(for: rowItem, with: core, root: query.rootItem!)
-					self.navigationController?.pushViewController(itemViewController, animated: true)
-			}
-		}
+            if let core = self.core {
+                switch rowItem.type {
+                case .collection:
+                    self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: rowItem.path)), animated: true)
 
-		tableView.deselectRow(at: indexPath, animated: true)
+                case .file:
+                    let itemViewController = DisplayHostViewController(for: rowItem, with: core, root: query.rootItem!)
+                    self.navigationController?.pushViewController(itemViewController, animated: true)
+                }
+            }
+
+            tableView.deselectRow(at: indexPath, animated: true)
+        } else {
+            updateToolbarItems()
+        }
 	}
+
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if tableView.isEditing {
+            updateToolbarItems()
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        if tableView.isEditing {
+            return true
+        } else {
+            return true
+        }
+    }
 
 	func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
 		return true
@@ -528,7 +558,38 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 
+    // MARK: - Toolbar actions handling multiply selected items
+
+    func updateToolbarItems() {
+        if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
+            if selectedIndexPaths.count > 0 {
+                deleteMultipleToolbarItem.isEnabled = true
+            }
+        } else {
+            deleteMultipleToolbarItem.isEnabled = false
+        }
+    }
+
+    @objc func deleteMultipleItems(_ sender: UIBarButtonItem) {
+
+    }
+
 	// MARK: - Navigation Bar Actions
+
+    @objc func multipleSelectionButtonPressed(_ sender: UIBarButtonItem) {
+
+        if !self.tableView.isEditing {
+            updateToolbarItems()
+            self.tableView.setEditing(true, animated: true)
+            self.navigationItem.rightBarButtonItem?.title = "Done".localized
+            self.populateToolbar(with: [flexibleSpaceBarButton, deleteMultipleToolbarItem, flexibleSpaceBarButton])
+        } else {
+            self.tableView.setEditing(false, animated: true)
+            self.navigationItem.rightBarButtonItem?.title = "Select".localized
+            removeToolbar()
+        }
+     }
+
 	@objc func uploadsBarButtonPressed(_ sender: UIBarButtonItem) {
 
 		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
