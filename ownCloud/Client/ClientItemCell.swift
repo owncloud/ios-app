@@ -140,13 +140,13 @@ class ClientItemCell: ThemeTableViewCell {
 
 		iconImage = item.icon(fitInSize: iconSize)
 
-		var size: String = item.sizeInReadableFormat
+		var size: String = item.sizeLocalized
 
 		if item.size < 0 {
 			size = "Pending".localized
 		}
 
-		self.detailLabel.text = size + " - " + item.lastModifiedInReadableFormat
+		self.detailLabel.text = size + " - " + item.lastModifiedLocalized
 
 		self.accessoryType = .none
 

@@ -34,12 +34,12 @@ class CertificateManagementViewController: StaticTableViewController {
 			let uacSection = StaticTableViewSection(headerTitle: "User-approved certificates".localized)
 
 			for certificate in userAcceptedCertificates {
-				let approvalDate = "Approved".localized + " " + DateFormatter.localizedString(from: certificate.userAcceptedDate, dateStyle: .medium, timeStyle: .short)
+				let approvalDate = "Approved".localized + " " + ((certificate.userAcceptedDate==nil) ? " \("undated".localized)" : DateFormatter.localizedString(from: certificate.userAcceptedDate!, dateStyle: .medium, timeStyle: .short))
 				let certificateRow = CertificateManagementRow(subtitleRowWithAction: { (row, _) in
 					if let certificateDetailsViewController = ThemeCertificateViewController(certificate: certificate) {
 						row.viewController?.navigationController?.pushViewController(certificateDetailsViewController, animated: true)
 					}
-				}, title: certificate.hostName, subtitle: approvalDate, accessoryType: .disclosureIndicator)
+				}, title: certificate.hostName ?? "", subtitle: approvalDate, accessoryType: .disclosureIndicator)
 
 				certificateRow.certificate = certificate
 
@@ -57,7 +57,7 @@ class CertificateManagementViewController: StaticTableViewController {
 
 				certificateRow.section?.remove(rows: [certificateRow], animated: true)
 
-				if OCCertificate.userAcceptedCertificates.count == 0 {
+				if (OCCertificate.userAcceptedCertificates?.count ?? 0) == 0 {
 					self?.navigationController?.popViewController(animated: true)
 				}
 			}

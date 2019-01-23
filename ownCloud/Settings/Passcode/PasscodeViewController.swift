@@ -216,7 +216,7 @@ class PasscodeViewController: UIViewController, Themeable {
 		if let passcode = passcode {
 			if passcode.count == passcodeLength {
 				// Delay to give feedback to user after the last digit was added
-				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+				OnMainThread(after: 0.1) {
 					self.completionHandler?(self, passcode)
 				}
 			}

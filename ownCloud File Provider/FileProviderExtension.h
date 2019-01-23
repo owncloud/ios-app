@@ -30,3 +30,20 @@
 
 @end
 
+#define FPLogCmdBegin(command, format,...) \
+	NSString *actionLogCmdUUID = nil; \
+	NSArray *actionLogTags = nil; \
+	if (OCLogger.logLevel <= OCLogLevelDebug) \
+	{ \
+		actionLogCmdUUID = NSUUID.UUID.UUIDString; \
+		actionLogTags = @[command, @"FPAction", OCLogTagTypedID(@"CmdUUID", actionLogCmdUUID) ]; \
+	 \
+		[[OCLogger sharedLogger] appendLogLevel:OCLogLevelDebug   functionName:@(__PRETTY_FUNCTION__) file:@(__FILE__) line:__LINE__ tags:OCLogAddTags(self,actionLogTags) message:format, ##__VA_ARGS__]; \
+	} \
+
+#define FPLogCmd(format,...) \
+	if (OCLogger.logLevel <= OCLogLevelDebug) \
+	{ \
+		[[OCLogger sharedLogger] appendLogLevel:OCLogLevelDebug   functionName:@(__PRETTY_FUNCTION__) file:@(__FILE__) line:__LINE__ tags:OCLogAddTags(self,actionLogTags) message:format, ##__VA_ARGS__]; \
+	} \
+

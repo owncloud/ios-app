@@ -33,25 +33,33 @@ class MoveAction : Action {
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
-			completionHandler?(NSError(ocError: .insufficientParameters))
+			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
 		let items = context.items
 
 		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", completion: { (selectedDirectory) in
-			items.forEach({ (item) in
-				if let progress = self.core?.move(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
-					if error != nil {
-						self.completed(with: error)
-					} else {
-						self.completed()
-					}
+			guard let selectedDirectory = selectedDirectory else {
+				self.completed(with: NSError(ocError: OCError.cancelled))
+				return
+			}
 
+			items.forEach({ (item) in
+				guard let itemName = item.name else {
+					return
+				}
+
+				if let progress = self.core?.move(item, to: selectedDirectory, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
+					if error != nil {
+						Log.log("Error \(String(describing: error)) moving \(String(describing: itemName))")
+					}
 				}) {
 					self.publish(progress: progress)
 				}
 			})
+
+			self.completed()
 		})
 
 		let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)

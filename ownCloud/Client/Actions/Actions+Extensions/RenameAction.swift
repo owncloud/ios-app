@@ -36,7 +36,7 @@ class RenameAction : Action {
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
-			completionHandler?(NSError(ocError: .insufficientParameters))
+			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
@@ -44,7 +44,7 @@ class RenameAction : Action {
 		let rootItem = item.parentItem(from: core)
 
 		guard rootItem != nil else {
-			self.completionHandler?(NSError(ocError: OCError.itemNotFound))
+			self.completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
 
@@ -55,7 +55,6 @@ class RenameAction : Action {
 				return (true, nil)
 			}
 		}, completion: { newName, _ in
-
 			guard newName != nil else {
 				return
 			}
@@ -63,13 +62,12 @@ class RenameAction : Action {
 			if let progress = self.core?.move(item, to: rootItem!, withName: newName!, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
-					self.completed(with: error)
-				} else {
-					self.completed()
 				}
 			}) {
 				self.publish(progress: progress)
 			}
+
+			self.completed()
 		})
 
 		renameViewController.navigationItem.title = "Rename".localized

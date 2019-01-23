@@ -141,11 +141,11 @@ class ProgressSummarizer: NSObject {
 
 		if scheduleUpdate {
 			if minimumUpdateTimeInterval > 0 {
-				DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + minimumUpdateTimeInterval) {
+				OnMainThread(after: minimumUpdateTimeInterval) {
 					self.performNeededUpdate()
 				}
 			} else {
-				DispatchQueue.main.async {
+				OnMainThread {
 					self.performNeededUpdate()
 				}
 			}

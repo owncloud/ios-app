@@ -379,7 +379,7 @@ class BookmarkViewController: StaticTableViewController {
 
 						if let embeddedIssue = nsError?.embeddedIssue() {
 							issue = embeddedIssue
-						} else {
+						} else if let error = error {
 							issue = OCIssue(forError: error, level: .error, issueHandler: nil)
 						}
 
