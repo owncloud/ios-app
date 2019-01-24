@@ -29,6 +29,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var query : OCQuery
 
 	var items : [OCItem] = []
+    var actions : [Action]?
 
     var actions : [Action]?
 
@@ -616,12 +617,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
         removeToolbar()
     }
 
-
     @objc func actOnMultipleItems(_ sender: UIBarButtonItem) {
 
         // Find associated action
         if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
-
             // Configure progress handler
             action.progressHandler = { [weak self] progress in
                 self?.progressSummarizer?.startTracking(progress: progress)
