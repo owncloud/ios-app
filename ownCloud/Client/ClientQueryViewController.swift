@@ -29,6 +29,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var query : OCQuery
 
 	var items : [OCItem] = []
+    var actions : [Action]?
 
 	var queryProgressSummary : ProgressSummary? {
 		willSet {
@@ -47,7 +48,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var refreshController: UIRefreshControl?
 
     let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-    let deleteMultipleToolbarItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteMultipleItems))
+    var deleteMultipleBarButtonItem: UIBarButtonItem?
+    var moveMultipleBarButtonItem: UIBarButtonItem?
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -158,6 +160,15 @@ class ClientQueryViewController: UITableViewController, Themeable {
         let actionsBarButton: UIBarButtonItem = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
 
 		self.navigationItem.rightBarButtonItem = actionsBarButton
+
+        // Create bar button items for the toolbar
+        deleteMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(actOnMultipleItems))
+        deleteMultipleBarButtonItem?.actionIdentifier = DeleteAction.identifier
+        deleteMultipleBarButtonItem?.isEnabled = false
+
+        moveMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(actOnMultipleItems))
+        moveMultipleBarButtonItem?.actionIdentifier = MoveAction.identifier
+        moveMultipleBarButtonItem?.isEnabled = false
 	}
 
 	private var viewControllerVisible : Bool = false
@@ -561,17 +572,65 @@ class ClientQueryViewController: UITableViewController, Themeable {
     // MARK: - Toolbar actions handling multiply selected items
 
     func updateToolbarItems() {
+        guard let toolbarItems = self.navigationController?.toolbar.items else { return }
+
+        // Do we have selected items?
         if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
             if selectedIndexPaths.count > 0 {
-                deleteMultipleToolbarItem.isEnabled = true
+
+                if let core = self.core {
+                    // Get array of OCItems from selected table view index paths
+                    var selectedItems = [OCItem]()
+                    for indexPath in selectedIndexPaths {
+                        selectedItems.append(itemAtIndexPath(indexPath))
+                    }
+
+                    // Get possible associated actions
+                    let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+                    let actionContext = ActionContext(viewController: self, core: core, items: selectedItems, location: actionsLocation)
+
+                    self.actions = Action.sortedApplicableActions(for: actionContext)
+
+                    // Enable / disable tool-bar items depending on action availability
+                    for item in toolbarItems {
+                        if self.actions?.contains(where: {type(of:$0).identifier == item.actionIdentifier}) ?? false {
+                            item.isEnabled = true
+                        } else {
+                            item.isEnabled = false
+                        }
+                    }
+                }
             }
         } else {
-            deleteMultipleToolbarItem.isEnabled = false
+            self.actions = nil
+            for item in toolbarItems {
+                item.isEnabled = false
+            }
         }
     }
 
-    @objc func deleteMultipleItems(_ sender: UIBarButtonItem) {
+    @objc func actOnMultipleItems(_ sender: UIBarButtonItem) {
 
+        // Find associated action
+        if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
+
+            // Configure progress handler
+            action.progressHandler = { [weak self] progress in
+                self?.progressSummarizer?.startTracking(progress: progress)
+            }
+
+            action.completionHandler = { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.tableView.setEditing(false, animated: true)
+                    self?.navigationItem.rightBarButtonItem?.title = "Select".localized
+                    self?.removeToolbar()
+                }
+            }
+
+            // Execute the action
+            action.willRun()
+            action.run()
+        }
     }
 
 	// MARK: - Navigation Bar Actions
@@ -582,7 +641,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
             updateToolbarItems()
             self.tableView.setEditing(true, animated: true)
             self.navigationItem.rightBarButtonItem?.title = "Done".localized
-            self.populateToolbar(with: [flexibleSpaceBarButton, deleteMultipleToolbarItem, flexibleSpaceBarButton])
+            self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem!])
         } else {
             self.tableView.setEditing(false, animated: true)
             self.navigationItem.rightBarButtonItem?.title = "Select".localized
