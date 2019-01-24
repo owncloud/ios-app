@@ -51,6 +51,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
     var deleteMultipleBarButtonItem: UIBarButtonItem?
     var moveMultipleBarButtonItem: UIBarButtonItem?
 
+    var selectBarButton: UIBarButtonItem?
+
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 
@@ -151,15 +153,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
         self.tableView.allowsMultipleSelectionDuringEditing = true
 
-        /*
-		let actionsBarButton: UIBarButtonItem = UIBarButtonItem(title: "● ● ●", style: .done, target: self, action: #selector(uploadsBarButtonPressed))
-		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .normal)
-		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .highlighted)
-*/
-
-        let actionsBarButton: UIBarButtonItem = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
-
-		self.navigationItem.rightBarButtonItem = actionsBarButton
+        let actionsBarButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
+        selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
+		self.navigationItem.rightBarButtonItems = [selectBarButton!, actionsBarButton]
 
         // Create bar button items for the toolbar
         deleteMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(actOnMultipleItems))
@@ -609,6 +605,12 @@ class ClientQueryViewController: UITableViewController, Themeable {
         }
     }
 
+    func leaveMultipleSelection() {
+        self.tableView.setEditing(false, animated: true)
+        selectBarButton?.title = "Select".localized
+        removeToolbar()
+    }
+
     @objc func actOnMultipleItems(_ sender: UIBarButtonItem) {
 
         // Find associated action
@@ -621,9 +623,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
             action.completionHandler = { [weak self] _ in
                 DispatchQueue.main.async {
-                    self?.tableView.setEditing(false, animated: true)
-                    self?.navigationItem.rightBarButtonItem?.title = "Select".localized
-                    self?.removeToolbar()
+                    self?.leaveMultipleSelection()
                 }
             }
 
@@ -640,12 +640,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
         if !self.tableView.isEditing {
             updateToolbarItems()
             self.tableView.setEditing(true, animated: true)
-            self.navigationItem.rightBarButtonItem?.title = "Done".localized
+            selectBarButton?.title = "Done".localized
             self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem!])
         } else {
-            self.tableView.setEditing(false, animated: true)
-            self.navigationItem.rightBarButtonItem?.title = "Select".localized
-            removeToolbar()
+            leaveMultipleSelection()
         }
      }
 
