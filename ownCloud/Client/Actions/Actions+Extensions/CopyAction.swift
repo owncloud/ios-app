@@ -42,7 +42,8 @@ class CopyAction : Action {
 
 		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Copy here", completion: { (selectedDirectory) in
 			items.forEach({ (item) in
-				if let progress = self.core?.copy(item, to: selectedDirectory, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
+
+				if let progress = self.core?.copy(item, to: selectedDirectory!, withName: item.name!, options: nil, resultHandler: { (error, _, _, _) in
 					if error != nil {
 						self.completed(with: error)
 					} else {
