@@ -316,7 +316,8 @@ class NamingViewController: UIViewController {
 					}
 				} else {
 					let controller = UIAlertController(title: "Forbidden Characters".localized, message: validationErrorMessage, preferredStyle: .alert)
-					let okAction = UIAlertAction(title: "OK", style: .default)
+					controller.view.accessibilityIdentifier = "forbidden-characters-alert"
+					let okAction = UIAlertAction(title: "OK".localized, style: .default)
 					controller.addAction(okAction)
 					self.present(controller, animated: true)
 				}

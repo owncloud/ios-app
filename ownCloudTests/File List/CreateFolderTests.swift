@@ -177,6 +177,44 @@ class CreateFolderTests: XCTestCase {
 		}
 	}
 
+	/*
+	* PASSED if: Done if Forbidden Characters Alert appears
+	*/
+	func testCreateFolderWithInvalidCharacters() {
+
+		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
+
+			let folderName = "New/Folder"
+
+			//Mocks
+			self.mockOCoreForBookmark(mockBookmark: bookmark)
+			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			self.showFileList(bookmark: bookmark)
+
+			//Actions
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
+
+			//Remove Mocks
+			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
+
+			//Mock again
+			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).perform(grey_tap())
+
+			//Assert
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("forbidden-characters-alert")).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_text("OK".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
+			dismissFileList()
+		} else {
+			assertionFailure("File list not loaded because Bookmark is nil")
+		}
+	}
+
 	func showFileList(bookmark: OCBookmark) {
 		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
 
