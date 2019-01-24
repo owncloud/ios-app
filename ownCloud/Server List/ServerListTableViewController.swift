@@ -234,6 +234,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		OnMainThread {
 			if !self.ignoreServerListChanges {
 				self.tableView.reloadData()
+				self.updateNoServerMessageVisibility()
 			}
 		}
 	}

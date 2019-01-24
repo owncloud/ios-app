@@ -107,8 +107,8 @@ class FileProviderInterfaceManager: NSObject {
 						}
 					}
 
-					// Wait for NSFileProviderManager operations to settle
-					_ = waitForManagerGroup.wait(timeout: DispatchTime.distantFuture)
+					// Wait for NSFileProviderManager operations to settle (up to 5 seconds)
+					_ = waitForManagerGroup.wait(timeout: .now() + 5)
 
 					// Add domains for bookmarks
 //					var newDomains : [NSFileProviderDomain] = []
@@ -135,8 +135,8 @@ class FileProviderInterfaceManager: NSObject {
 						}
 					}
 
-					// Wait for NSFileProviderManager operations to settle
-					_ = waitForManagerGroup.wait(timeout: DispatchTime.distantFuture)
+					// Wait for NSFileProviderManager operations to settle (up to 5 seconds)
+					_ = waitForManagerGroup.wait(timeout: .now() + 5)
 //
 //					// Perform initial connection to new and updated bookmarks
 //					for bookmark in newAndUpdatedBookmarks {

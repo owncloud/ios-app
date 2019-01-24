@@ -29,11 +29,13 @@ class CreateBookmarkTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
+		OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 	}
 
 	override func tearDown() {
 		super.tearDown()
 		OCMockManager.shared.removeAllMockingBlocks()
+		OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 	}
 
     /*
@@ -465,8 +467,7 @@ class CreateBookmarkTests: XCTestCase {
 
 		//Reset
 		OCMockManager.shared.removeAllMockingBlocks()
-		UtilsTests.deleteAllBookmarks()
-		UtilsTests.refreshServerList()
+		OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 	}
 
     /*
@@ -505,8 +506,7 @@ class CreateBookmarkTests: XCTestCase {
 
 		//Reset
 		OCMockManager.shared.removeAllMockingBlocks()
-		UtilsTests.deleteAllBookmarks()
-		UtilsTests.refreshServerList()
+		OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
     }
 
     /*
