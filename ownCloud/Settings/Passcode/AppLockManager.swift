@@ -299,23 +299,23 @@ class AppLockManager: NSObject {
 				context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { (success, error) in
 					if success {
 						//Fill the passcode dots
-						DispatchQueue.main.async {
+						OnMainThread {
 							self.passcodeViewController?.passcode = self.passcode
 						}
 						//Remove the passcode after small delay to give user feedback after use the biometrical unlock
-						DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+						OnMainThread(after: 0.3) {
 							self.attemptUnlock(with: self.passcode)
 						}
 					} else {
 						if let error = error {
 							switch error {
 								case LAError.biometryLockout:
-									DispatchQueue.main.async {
+									OnMainThread {
 										self.passcodeViewController?.errorMessage = error.localizedDescription
 									}
 
 								case LAError.authenticationFailed:
-									DispatchQueue.main.async {
+									OnMainThread {
 										self.attemptUnlock(with: nil, customErrorMessage: "Biometric authentication failed".localized)
 									}
 

@@ -116,7 +116,7 @@ class DisplayViewController: UIViewController {
 		metadataInfoLabel = UILabel()
 		metadataInfoLabel?.translatesAutoresizingMaskIntoConstraints = false
 		metadataInfoLabel?.isHidden = false
-		metadataInfoLabel?.text = item.sizeInReadableFormat + " - " + item.lastModifiedInReadableFormat
+		metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
 		metadataInfoLabel?.textAlignment = .center
 
 		view.addSubview(metadataInfoLabel!)

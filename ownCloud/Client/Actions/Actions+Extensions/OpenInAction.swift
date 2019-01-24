@@ -39,7 +39,7 @@ class OpenInAction: Action {
 
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController else {
-			completionHandler?(NSError(ocError: .insufficientParameters))
+			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
@@ -57,9 +57,11 @@ class OpenInAction: Action {
 				} else {
 					OnMainThread {
 						controller.dismiss(animated: true, completion: {
-							self.interactionController = UIDocumentInteractionController(url: file!.url)
-							self.interactionController?.delegate = self
-							self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
+							if let fileURL = file?.url {
+								self.interactionController = UIDocumentInteractionController(url: fileURL)
+								self.interactionController?.delegate = self
+								self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
+							}
 						})
 					}
 				}

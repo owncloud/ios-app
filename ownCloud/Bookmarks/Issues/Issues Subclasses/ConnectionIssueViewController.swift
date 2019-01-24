@@ -112,7 +112,8 @@ extension ConnectionIssueViewController {
 		if let issue = displayIssues?.displayIssues[indexPath.row], issue.type == OCIssueType.certificate {
 			OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: issue.certificate, withValidationCompletionHandler: { (certificateNodes) in
 				let certDetails: NSAttributedString = OCCertificateDetailsViewNode .attributedString(withCertificateDetails: certificateNodes)
-				DispatchQueue.main.async {
+
+				OnMainThread {
 					let issuesVC = CertificateViewController(localizedDescription: certDetails)
 					issuesVC.modalPresentationStyle = .overCurrentContext
 					self.present(issuesVC, animated: true, completion: nil)
@@ -158,12 +159,12 @@ extension ConnectionIssueViewController: UITableViewDataSource {
 			color = Theme.shared.activeCollection.errorColor
 		}
 
-		cell.textLabel?.attributedText = NSAttributedString(string: issue.localizedTitle, attributes: [
+		cell.textLabel?.attributedText = NSAttributedString(string: issue.localizedTitle ?? "", attributes: [
 			.foregroundColor : color,
 			.font : UIFont.systemFont(ofSize: 18, weight: .semibold)
 			])
 
-		cell.detailTextLabel?.attributedText = NSAttributedString(string: issue.localizedDescription, attributes: [
+		cell.detailTextLabel?.attributedText = NSAttributedString(string: issue.localizedDescription ?? "", attributes: [
 			.foregroundColor : UIColor(hex: 0x4F4F4F),
 			.font : UIFont.systemFont(ofSize: 15, weight: .regular)
 			])

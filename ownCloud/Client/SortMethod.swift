@@ -67,24 +67,24 @@ public enum SortMethod: Int {
 
 		case .alphabeticallyAscendant:
 			comparator = { (left, right) in
-				let leftItem = left as? OCItem
-				let rightItem = right as? OCItem
+				guard let leftName  = (left as? OCItem)?.name, let rightName = (right as? OCItem)?.name else {
+					return .orderedSame
+				}
 
-				return (leftItem?.name.lowercased().compare(rightItem!.name.lowercased()))!
+				return (leftName.caseInsensitiveCompare(rightName))
 			}
 
 		case .alphabeticallyDescendant:
-			comparator = {
-				(left, right) in
-				let leftItem = left as? OCItem
-				let rightItem = right as? OCItem
+			comparator = { (left, right) in
+				guard let leftName  = (left as? OCItem)?.name, let rightName = (right as? OCItem)?.name else {
+					return .orderedSame
+				}
 
-				return (rightItem?.name.lowercased().compare(leftItem!.name.lowercased()))!
+				return (rightName.caseInsensitiveCompare(leftName))
 			}
 
 		case .type:
-			comparator = {
-				(left, right) in
+			comparator = { (left, right) in
 				let leftItem = left as? OCItem
 				let rightItem = right as? OCItem
 
@@ -99,23 +99,24 @@ public enum SortMethod: Int {
 					rightMimeType = "folder"
 				}
 
-				if leftItem?.mimeType == nil {
+				if leftMimeType == nil {
 					leftMimeType = "various"
 				}
 
-				if rightItem?.mimeType == nil {
+				if rightMimeType == nil {
 					rightMimeType = "various"
 				}
 
 				return leftMimeType!.compare(rightMimeType!)
 			}
 		case .date:
-			comparator = {
-				(left, right) in
-				let leftItem = left as? OCItem
-				let rightItem = right as? OCItem
+			comparator = { (left, right) in
 
-				return (rightItem?.lastModified.compare(leftItem!.lastModified))!
+				guard let leftLastModified  = (left as? OCItem)?.lastModified, let rightLastModified = (right as? OCItem)?.lastModified else {
+					return .orderedSame
+				}
+
+				return (rightLastModified.compare(leftLastModified))
 			}
 		}
 		return comparator
