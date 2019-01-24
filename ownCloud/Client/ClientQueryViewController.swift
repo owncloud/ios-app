@@ -615,6 +615,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
         removeToolbar()
     }
 
+
     @objc func actOnMultipleItems(_ sender: UIBarButtonItem) {
 
         // Find associated action
@@ -647,6 +648,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
             selectBarButton?.title = "Done".localized
             self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem!])
             self.navigationItem.rightBarButtonItems = [selectBarButton!]
+
         } else {
             leaveMultipleSelection()
         }
