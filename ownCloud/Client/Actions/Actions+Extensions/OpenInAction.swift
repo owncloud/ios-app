@@ -53,7 +53,12 @@ class OpenInAction: Action {
 					Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
 
 					self.completionHandler = { error in
-						let alertController = UIAlertController(with: "Cannot connect to ownCloud".localized, message: "ownCloud couldn't download this file".localized, okLabel: "OK".localized, action: nil)
+						var name = "ownCloud"
+						if let appName = Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String {
+							name = appName
+						}
+
+						let alertController = UIAlertController(with: "Cannot connect to ".localized + name, message: name + " couldn't download this file".localized, okLabel: "OK".localized, action: nil)
 						viewController.present(alertController, animated: true)
 					}
 
