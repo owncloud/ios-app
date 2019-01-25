@@ -54,8 +54,11 @@ class ClientItemCell: ThemeTableViewCell {
 		iconView.contentMode = .scaleAspectFit
 		moreButton.translatesAutoresizingMaskIntoConstraints = false
 
-		titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
-		detailLabel.font = UIFont.systemFont(ofSize: 14)
+		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+		titleLabel.adjustsFontForContentSizeCategory = true
+
+		detailLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+		detailLabel.adjustsFontForContentSizeCategory = true
 
 		detailLabel.textColor = UIColor.gray
 

@@ -55,6 +55,7 @@ class DisplayViewController: UIViewController {
 			OnMainThread {
 				self.iconImageView.isHidden = true
 			}
+			hideUIElements()
 			renderSpecificView()
 		}
 	}
@@ -214,7 +215,7 @@ class DisplayViewController: UIViewController {
 
 		parent.navigationItem.title = item.name
 		let actionsBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
-		actionsBarButtonItem.accessibilityLabel = item.name + " " + "Actions".localized
+		actionsBarButtonItem.accessibilityLabel = item.name! + " " + "Actions".localized
 		parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
 	}
 
@@ -246,6 +247,15 @@ class DisplayViewController: UIViewController {
 
 	func renderSpecificView() {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the source property.s
+	}
+
+	func hideUIElements() {
+		iconImageView.isHidden = true
+		progressView?.isHidden = true
+		cancelButton?.isHidden = true
+		metadataInfoLabel?.isHidden = true
+		showPreviewButton?.isHidden = true
+		noNetworkLabel?.isHidden = true
 	}
 
 	// MARK: - KVO observing

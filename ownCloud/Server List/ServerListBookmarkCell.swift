@@ -40,7 +40,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		iconView.translatesAutoresizingMaskIntoConstraints = false
 		iconView.contentMode = .scaleAspectFit
 
-		titleLabel.font = UIFont.preferredFont(forTextStyle: .body)
+		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
 		titleLabel.adjustsFontForContentSizeCategory = true
 
 		detailLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
