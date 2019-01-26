@@ -50,122 +50,90 @@ class FileProviderInterfaceManager: NSObject {
 					return
 				}
 
-				if let bookmarks = OCBookmarkManager.shared.bookmarks as? [OCBookmark] {
-					var bookmarkUUIDStrings : [String] = []
-					var bookmarksByUUIDString : [String:OCBookmark] = [:]
-					var displayNamesByUUIDString : [String:String] = [:]
-					var usedBookmarkNames : Set<String> = Set()
-					let waitForManagerGroup = DispatchGroup()
+				let bookmarks : [OCBookmark] = OCBookmarkManager.shared.bookmarks as [OCBookmark]
 
-					// Collect info on bookmarks
-					for bookmark in bookmarks {
-						let bookmarkUUIDString = bookmark.uuid.uuidString
+				var bookmarkUUIDStrings : [String] = []
+				var bookmarksByUUIDString : [String:OCBookmark] = [:]
+				var displayNamesByUUIDString : [String:String] = [:]
+				var usedBookmarkNames : Set<String> = Set()
+				let waitForManagerGroup = DispatchGroup()
 
-						bookmarkUUIDStrings.append(bookmarkUUIDString)
-						bookmarksByUUIDString[bookmarkUUIDString] = bookmark
+				// Collect info on bookmarks
+				for bookmark in bookmarks {
+					let bookmarkUUIDString = bookmark.uuid.uuidString
 
-						// Make sure displayName is unique
-						var displayName = bookmark.shortName
-						var iteration = 1
+					bookmarkUUIDStrings.append(bookmarkUUIDString)
+					bookmarksByUUIDString[bookmarkUUIDString] = bookmark
 
-						while usedBookmarkNames.contains(displayName) {
-							iteration += 1
-							displayName = bookmark.shortName + " \(iteration)"
-						}
+					// Make sure displayName is unique
+					var displayName = bookmark.shortName
+					var iteration = 1
 
-						usedBookmarkNames.insert(displayName)
-						displayNamesByUUIDString[bookmarkUUIDString] = displayName
+					while usedBookmarkNames.contains(displayName) {
+						iteration += 1
+						displayName = bookmark.shortName + " \(iteration)"
 					}
 
-					for domain in fileProviderDomains {
-						let domainIdentifierString = domain.identifier.rawValue
-						var removeDomain : Bool = false
+					usedBookmarkNames.insert(displayName)
+					displayNamesByUUIDString[bookmarkUUIDString] = displayName
+				}
 
-						if let removeAtIndex = bookmarkUUIDStrings.index(of: domainIdentifierString) {
-							// Domain is already registered for this bookmark -> check if name also still matches
-							if displayNamesByUUIDString[domainIdentifierString] == domain.displayName {
-								// Identical -> no changes needed for this bookmark
-								bookmarkUUIDStrings.remove(at: removeAtIndex)
-							} else {
-								// Different -> remove
-								removeDomain = true
-							}
+				for domain in fileProviderDomains {
+					let domainIdentifierString = domain.identifier.rawValue
+					var removeDomain : Bool = false
+
+					if let removeAtIndex = bookmarkUUIDStrings.index(of: domainIdentifierString) {
+						// Domain is already registered for this bookmark -> check if name also still matches
+						if displayNamesByUUIDString[domainIdentifierString] == domain.displayName {
+							// Identical -> no changes needed for this bookmark
+							bookmarkUUIDStrings.remove(at: removeAtIndex)
 						} else {
-							// Domain is no longer backed by a bookmark -> remove
+							// Different -> remove
 							removeDomain = true
 						}
-
-						if removeDomain {
-							waitForManagerGroup.enter()
-
-							NSFileProviderManager.remove(domain, completionHandler: { (error) in
-								if error != nil {
-									Log.error("Error removing domain: \(domain) error: \(String(describing: error))")
-								}
-								waitForManagerGroup.leave()
-							})
-						}
+					} else {
+						// Domain is no longer backed by a bookmark -> remove
+						removeDomain = true
 					}
 
-					// Wait for NSFileProviderManager operations to settle (up to 5 seconds)
-					_ = waitForManagerGroup.wait(timeout: .now() + 5)
+					if removeDomain {
+						waitForManagerGroup.enter()
 
-					// Add domains for bookmarks
-//					var newDomains : [NSFileProviderDomain] = []
-//					var newAndUpdatedBookmarks : [OCBookmark] = []
-
-					for bookmarkUUIDToAdd in bookmarkUUIDStrings {
-						if let bookmark = bookmarksByUUIDString[bookmarkUUIDToAdd] {
-							// Create new domain
-							let newDomain = NSFileProviderDomain(identifier: NSFileProviderDomainIdentifier(rawValue: bookmarkUUIDToAdd),
-											     displayName: displayNamesByUUIDString[bookmarkUUIDToAdd] ?? bookmark.shortName,
-											     pathRelativeToDocumentStorage: bookmarkUUIDToAdd)
-
-							waitForManagerGroup.enter()
-
-							NSFileProviderManager.add(newDomain, completionHandler: { (error) in
-								if error != nil {
-									Log.error("Error adding domain: \(newDomain) error: \(String(describing: error))")
-								}
-
-//								newAndUpdatedBookmarks.append(bookmark)
-
-								waitForManagerGroup.leave()
-							})
-						}
+						NSFileProviderManager.remove(domain, completionHandler: { (error) in
+							if error != nil {
+								Log.error("Error removing domain: \(domain) error: \(String(describing: error))")
+							}
+							waitForManagerGroup.leave()
+						})
 					}
-
-					// Wait for NSFileProviderManager operations to settle (up to 5 seconds)
-					_ = waitForManagerGroup.wait(timeout: .now() + 5)
-//
-//					// Perform initial connection to new and updated bookmarks
-//					for bookmark in newAndUpdatedBookmarks {
-//						OCCoreManager.shared.requestCore(for: bookmark, completionHandler: { (core, error) in
-//							if core != nil {
-//							}
-//						})
-//					}
-
-//					// Notify new domains of changes to trigger initial enumeration
-//					for domain in newDomains {
-//						Log.debug("Signaling NSFileProviderManager of changes for root directory after adding domain=\(domain) ..")
-//
-//						if let manager = NSFileProviderManager.init(for: domain) {
-//							waitForManagerGroup.enter()
-//
-//							manager.signalEnumerator(for: .rootContainer, completionHandler: { (error) in
-//								if let error = error {
-//									Log.error("Error signaling NSFileProviderManager of changes for root directory after adding domain=\(domain): error=\(error)")
-//								}
-//								waitForManagerGroup.leave()
-//							})
-//
-//							_ = waitForManagerGroup.wait(timeout: DispatchTime.distantFuture)
-//						}
-//
-//						Log.debug("Done signaling NSFileProviderManager of changes for root directory after adding domain=\(domain) ..")
-//					}
 				}
+
+				// Wait for NSFileProviderManager operations to settle (up to 5 seconds)
+				_ = waitForManagerGroup.wait(timeout: .now() + 5)
+
+				// Add domains for bookmarks
+
+				for bookmarkUUIDToAdd in bookmarkUUIDStrings {
+					if let bookmark = bookmarksByUUIDString[bookmarkUUIDToAdd] {
+						// Create new domain
+						let newDomain = NSFileProviderDomain(identifier: NSFileProviderDomainIdentifier(rawValue: bookmarkUUIDToAdd),
+										     displayName: displayNamesByUUIDString[bookmarkUUIDToAdd] ?? bookmark.shortName,
+										     pathRelativeToDocumentStorage: bookmarkUUIDToAdd)
+
+						waitForManagerGroup.enter()
+
+						NSFileProviderManager.add(newDomain, completionHandler: { (error) in
+							if error != nil {
+								Log.error("Error adding domain: \(newDomain) error: \(String(describing: error))")
+							}
+
+							waitForManagerGroup.leave()
+						})
+					}
+				}
+
+				// Wait for NSFileProviderManager operations to settle (up to 5 seconds)
+				_ = waitForManagerGroup.wait(timeout: .now() + 5)
 			}
 		}
 	}

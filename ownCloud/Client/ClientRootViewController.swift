@@ -23,6 +23,8 @@ class ClientRootViewController: UITabBarController {
 	let bookmark : OCBookmark
 	weak var core : OCCore?
 	var filesNavigationController : ThemeNavigationController?
+	var activityNavigationController : ThemeNavigationController?
+	var activityViewController : ClientActivityViewController?
 	var progressBar : CollapsibleProgressBar?
 	var progressSummarizer : ProgressSummarizer?
 
@@ -144,6 +146,11 @@ class ClientRootViewController: UITabBarController {
 		filesNavigationController?.tabBarItem.title = "Browse".localized
 		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: CGSize(width: 25, height: 25))
 
+		activityViewController = ClientActivityViewController()
+		activityNavigationController = ThemeNavigationController(rootViewController: activityViewController!)
+		activityNavigationController?.tabBarItem.title = "Activity".localized
+		activityNavigationController?.tabBarItem.image = Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25))
+
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false
 
@@ -155,7 +162,10 @@ class ClientRootViewController: UITabBarController {
 
 		self.tabBar.applyThemeCollection(Theme.shared.activeCollection)
 
-		self.viewControllers = [filesNavigationController] as? [UIViewController]
+		if let filesNavigationController = filesNavigationController,
+		   let activityNavigationController = activityNavigationController {
+			self.viewControllers = [ filesNavigationController, activityNavigationController ]
+		}
 	}
 
 	func logoutBarButtonItem() -> UIBarButtonItem {
@@ -179,6 +189,8 @@ class ClientRootViewController: UITabBarController {
 			queryViewController.navigationItem.leftBarButtonItem = self.logoutBarButtonItem()
 
 			self.filesNavigationController?.pushViewController(queryViewController, animated: false)
+
+			self.activityViewController?.core = self.core!
 		}
 	}
 }

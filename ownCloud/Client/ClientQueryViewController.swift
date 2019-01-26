@@ -206,7 +206,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		switch query.state {
 			case .idle:
-				OnMainThread{
+				OnMainThread {
 					if !self.refreshController!.isRefreshing {
 						self.refreshController?.beginRefreshing()
 					}
