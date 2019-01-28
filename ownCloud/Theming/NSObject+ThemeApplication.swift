@@ -90,6 +90,7 @@ extension NSObject {
 			navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
 			navigationBar.tintColor = collection.navigationBarColors.tintColor
 			navigationBar.titleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
+			navigationBar.isTranslucent = false
 		}
 
 		if self.isKind(of: UIToolbar.self) {
@@ -195,6 +196,11 @@ extension NSObject {
 
 			progressView.tintColor = collection.tintColor
 			progressView.trackTintColor = collection.tableSeparatorColor
+		}
+
+		if self.isKind(of: UISegmentedControl.self) {
+			let segmentedControl = (self as? UISegmentedControl)!
+			segmentedControl.tintColor = collection.navigationBarColors.tintColor
 		}
 	}
 }
