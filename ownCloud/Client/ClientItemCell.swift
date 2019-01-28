@@ -109,7 +109,7 @@ class ClientItemCell: ThemeTableViewCell {
 	// MARK: - Present item
 	var item : OCItem? {
 		didSet {
-			if let newItem: OCItem = item {
+			if let newItem = item {
 				updateWith(newItem)
 			}
 		}

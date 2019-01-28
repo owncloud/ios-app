@@ -6,6 +6,16 @@
 //  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2019, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudSDK
 
@@ -76,7 +86,7 @@ class ClientActivityViewController: UITableViewController, Themeable {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "activity-cell")
+		self.tableView.register(ClientActivityCell.self, forCellReuseIdentifier: "activity-cell")
 		self.tableView.rowHeight = UITableView.automaticDimension
 		self.tableView.estimatedRowHeight = 80
 		self.tableView.allowsSelectionDuringEditing = true
@@ -118,15 +128,12 @@ class ClientActivityViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		guard let cell = tableView.dequeueReusableCell(withIdentifier: "activity-cell", for: indexPath) as? UITableViewCell else {
+		guard let cell = tableView.dequeueReusableCell(withIdentifier: "activity-cell", for: indexPath) as? ClientActivityCell else {
 			return UITableViewCell()
 		}
 
 		if let activities = activities, indexPath.row < activities.count {
-			let activity = activities[indexPath.row]
-
-			cell.textLabel?.text = activity.localizedDescription
-			cell.detailTextLabel?.text = activity.localizedStatusMessage
+			cell.activity = activities[indexPath.row]
 		}
 
 		return cell

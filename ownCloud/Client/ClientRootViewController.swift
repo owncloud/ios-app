@@ -135,6 +135,8 @@ class ClientRootViewController: UITabBarController {
 			core?.delegate = nil
 		}
 
+		Theme.shared.unregister(client: self)
+
 		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 	}
 
@@ -160,7 +162,7 @@ class ClientRootViewController: UITabBarController {
 		progressBar?.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
 		progressBar?.bottomAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
 
-		self.tabBar.applyThemeCollection(Theme.shared.activeCollection)
+		Theme.shared.register(client: self, applyImmediately: true)
 
 		if let filesNavigationController = filesNavigationController,
 		   let activityNavigationController = activityNavigationController {
@@ -192,6 +194,14 @@ class ClientRootViewController: UITabBarController {
 
 			self.activityViewController?.core = self.core!
 		}
+	}
+}
+
+extension ClientRootViewController : Themeable {
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.tabBar.applyThemeCollection(collection)
+
+		self.view.backgroundColor = collection.tableBackgroundColor
 	}
 }
 
