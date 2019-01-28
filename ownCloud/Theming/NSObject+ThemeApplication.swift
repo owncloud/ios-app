@@ -197,5 +197,10 @@ extension NSObject {
 			progressView.tintColor = collection.tintColor
 			progressView.trackTintColor = collection.tableSeparatorColor
 		}
+
+		if self.isKind(of: UISegmentedControl.self) {
+			let segmentedControl = (self as? UISegmentedControl)!
+			segmentedControl.tintColor = collection.navigationBarColors.tintColor
+		}
 	}
 }
