@@ -49,16 +49,10 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		super.init(core: inCore, query: OCQuery(forPath: path))
 
 		self.query.addFilter(ClientDirectoryPickerViewController.directoryFilter, withIdentifier: ClientDirectoryPickerViewController.DIRECTORY_FILTER_IDENTIFIER)
-
-		Theme.shared.register(client: self)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
-	}
-
-	deinit {
-		Theme.shared.unregister(client: self)
 	}
 
 	// MARK: - ViewController lifecycle
@@ -91,7 +85,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 			return
 		}
 
-		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: path, completion: completion), animated: true)
+		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, completion: completion), animated: true)
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

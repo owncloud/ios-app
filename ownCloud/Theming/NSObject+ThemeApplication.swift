@@ -90,6 +90,7 @@ extension NSObject {
 			navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
 			navigationBar.tintColor = collection.navigationBarColors.tintColor
 			navigationBar.titleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
+			navigationBar.isTranslucent = false
 		}
 
 		if self.isKind(of: UIToolbar.self) {
