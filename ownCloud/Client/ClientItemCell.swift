@@ -72,7 +72,8 @@ class ClientItemCell: ThemeTableViewCell {
 		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -15).isActive = true
 
 		moreButton.setAttributedTitle(NSAttributedString(string: "● ● ●", attributes:
-			[NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10)]), for: .normal)
+			[NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption2)]), for: .normal)
+		moreButton.titleLabel?.adjustsFontForContentSizeCategory = true
 
 		moreButton.contentMode = .scaleToFill
 
