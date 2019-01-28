@@ -11,7 +11,7 @@ import UIKit
 class ServerListTableHeaderView: UIView, Themeable {
 
     var messageThemeApplierToken : ThemeApplierToken?
-    var textLabel : UILabel?
+    var textLabel : UILabel = UILabel()
     
     
     override init(frame: CGRect) {
@@ -20,13 +20,13 @@ class ServerListTableHeaderView: UIView, Themeable {
         
         Theme.shared.register(client: self, applyImmediately: true)
         
-        textLabel = UILabel.init(frame: CGRect(x: 20.0, y: 10.0, width: frame.size.width - 40.0 , height: 24.0))
-        textLabel?.text = "Locations".localized
-        textLabel?.font = UIFont.boldSystemFont(ofSize: 24.0)
+        textLabel.translatesAutoresizingMaskIntoConstraints = false
+        textLabel.text = "Locations".localized
+        textLabel.font = UIFont.boldSystemFont(ofSize: 24.0)
         
-        self.addSubview(textLabel!)
+        self.addSubview(textLabel)
         
-        let shadowView = UIView.init(frame: CGRect(x: 0.0, y: frame.size.height - 1.0, width: frame.size.width, height: 1.0))
+        let shadowView = UIView()
         shadowView.backgroundColor = UIColor.init(white: 0.0, alpha: 0.1)
         shadowView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -41,17 +41,17 @@ class ServerListTableHeaderView: UIView, Themeable {
             shadowView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             shadowView.heightAnchor.constraint(equalToConstant: 1.0),
             
-            textLabel!.topAnchor.constraint(equalTo: self.topAnchor, constant: 10.0),
-            textLabel!.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20.0),
-            textLabel!.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 20.0),
-            textLabel!.heightAnchor.constraint(equalToConstant: 24.0)
+            textLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10.0),
+            textLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20.0),
+            textLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 20.0),
+            textLabel.heightAnchor.constraint(equalToConstant: 24.0)
 
             ])
         
         
         messageThemeApplierToken = Theme.shared.add(applier: { [weak self] (_, collection, _) in
             self?.backgroundColor = collection.navigationBarColors.backgroundColor
-            self?.textLabel?.textColor = collection.navigationBarColors.labelColor
+            self?.textLabel.textColor = collection.navigationBarColors.labelColor
         })
     }
 
@@ -75,8 +75,7 @@ class ServerListTableHeaderView: UIView, Themeable {
     func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 
         self.backgroundColor = collection.navigationBarColors.backgroundColor
-        
-        textLabel?.textColor = collection.navigationBarColors.labelColor
+        textLabel.textColor = collection.navigationBarColors.labelColor
     }
 
 }
