@@ -26,41 +26,44 @@ class ProgressView: UIView, Themeable {
 	private let dimensions : CGSize = CGSize(width: 30, height: 30)
 	private let circleLineWidth : CGFloat = 3
 
-	private var progressObservationFractionCompleted : NSKeyValueObservation?
-	private var progressObservationIsIndeterminate : NSKeyValueObservation?
-	private var progressObservationCancelled : NSKeyValueObservation?
-	private var progressObservationFinished : NSKeyValueObservation?
+//	private var progressObservationFractionCompleted : NSKeyValueObservation?
+//	private var progressObservationIsIndeterminate : NSKeyValueObservation?
+//	private var progressObservationCancelled : NSKeyValueObservation?
+//	private var progressObservationFinished : NSKeyValueObservation?
 
 	var progress : Progress? {
 		willSet {
-			if newValue != progress {
-				progressObservationFractionCompleted?.invalidate()
-				progressObservationIsIndeterminate?.invalidate()
-				progressObservationCancelled?.invalidate()
-				progressObservationFinished?.invalidate()
+			if newValue !== progress, progress != nil {
+				progress?.removeObserver(self, forKeyPath: "fractionCompleted")
+				progress?.removeObserver(self, forKeyPath: "indeterminate")
+				progress?.removeObserver(self, forKeyPath: "cancelled")
+				progress?.removeObserver(self, forKeyPath: "finished")
 			}
 		}
 
 		didSet {
+			CATransaction.begin()
+			CATransaction.setDisableActions(true)
+			CATransaction.setAnimationDuration(0)
+
 			if let newProgress = progress {
-				progressObservationFractionCompleted = newProgress.observe(\Progress.fractionCompleted) { [weak self] (_, _) in
-					self?.update()
-				}
-
-				progressObservationIsIndeterminate = newProgress.observe(\Progress.isIndeterminate) { [weak self] (_, _) in
-					self?.update()
-				}
-
-				progressObservationCancelled = newProgress.observe(\Progress.isCancelled) { [weak self] (_, _) in
-					self?.update()
-				}
-
-				progressObservationFinished = newProgress.observe(\Progress.isFinished) { [weak self] (_, _) in
-					self?.update()
-				}
+				newProgress.addObserver(self, forKeyPath: "fractionCompleted", options: [], context: nil)
+				newProgress.addObserver(self, forKeyPath: "indeterminate", options: [], context: nil)
+				newProgress.addObserver(self, forKeyPath: "cancelled", options: [], context: nil)
+				newProgress.addObserver(self, forKeyPath: "finished", options: [], context: nil)
 			}
 
 			self.update()
+
+			CATransaction.commit()
+		}
+	}
+
+	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+		if (object as? Progress) === progress {
+			self.update()
+		} else {
+			super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
 		}
 	}
 
@@ -70,6 +73,10 @@ class ProgressView: UIView, Themeable {
 
 	private var spinning : Bool = false {
 		didSet {
+			CATransaction.begin()
+			CATransaction.setDisableActions(true)
+			CATransaction.setAnimationDuration(0)
+
 			if spinning != oldValue {
 				if spinning {
 					let spinningAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
@@ -85,6 +92,8 @@ class ProgressView: UIView, Themeable {
 					foregroundCircleLayer.removeAnimation(forKey: "spinningAnimation")
 				}
 			}
+
+			CATransaction.commit()
 		}
 	}
 
@@ -131,7 +140,6 @@ class ProgressView: UIView, Themeable {
 		}
 
 		if let progress = progress {
-			foregroundCircleLayer.isHidden = false
 
 			self.spinning = progress.isIndeterminate || progress.isCancelled
 
@@ -140,9 +148,20 @@ class ProgressView: UIView, Themeable {
 				foregroundCircleLayer.strokeEnd = 0.9
 			} else {
 				backgroundCircleLayer.isHidden = false
-				foregroundCircleLayer.strokeEnd = CGFloat(progress.fractionCompleted)
+				if foregroundCircleLayer.strokeEnd > CGFloat(progress.fractionCompleted) {
+					CATransaction.begin()
+					CATransaction.setDisableActions(true)
+					CATransaction.setAnimationDuration(0)
+
+					foregroundCircleLayer.strokeEnd = CGFloat(progress.fractionCompleted)
+
+					CATransaction.commit()
+				} else {
+					foregroundCircleLayer.strokeEnd = CGFloat(progress.fractionCompleted)
+				}
 			}
 
+			foregroundCircleLayer.isHidden = false
 			stopButtonLayer.isHidden = !progress.isCancellable
 		} else {
 			foregroundCircleLayer.isHidden = true

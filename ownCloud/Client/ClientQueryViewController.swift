@@ -258,12 +258,14 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
 		// Make sure we don't request the thumbnail multiple times in that case.
-		if (cell?.item?.itemVersionIdentifier != newItem.itemVersionIdentifier) || (cell?.item?.name != newItem.name) {
+		if (cell?.item?.itemVersionIdentifier != newItem.itemVersionIdentifier) || (cell?.item?.name != newItem.name) || (cell?.item?.syncActivity != newItem.syncActivity) || (cell?.item?.cloudStatus != newItem.cloudStatus) {
 			cell?.item = newItem
 		}
 
 		return cell!
 	}
+
+	var lastTappedItemLocalID : String?
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let rowItem : OCItem = itemAtIndexPath(indexPath)
@@ -276,8 +278,18 @@ class ClientQueryViewController: UITableViewController, Themeable {
 					}
 
 				case .file:
-					let itemViewController = DisplayHostViewController(for: rowItem, with: core, root: query.rootItem!)
-					self.navigationController?.pushViewController(itemViewController, animated: true)
+					lastTappedItemLocalID = rowItem.localID
+
+					core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ]) { [weak self, query] (error, core, item, _) in
+						OnMainThread {
+							if error == nil {
+								if let item = item, item.localID == self?.lastTappedItemLocalID, let core = core {
+									let itemViewController = DisplayHostViewController(for: item, with: core, root: query.rootItem!)
+									self?.navigationController?.pushViewController(itemViewController, animated: true)
+								}
+							}
+						}
+					}
 			}
 		}
 
