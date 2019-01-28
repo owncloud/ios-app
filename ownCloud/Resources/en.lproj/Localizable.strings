@@ -194,6 +194,8 @@
 "Duplicate" = "Duplicate";
 "Move" = "Move";
 "Open in" = "Open in";
+"Copy" = "Copy";
+"Copy here" = "Copy here";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";
