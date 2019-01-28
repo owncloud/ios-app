@@ -48,9 +48,20 @@ class OpenInAction: Action {
 		let controller = DownloadFileProgressHUDViewController()
 
 		controller.present(on: viewController) {
-			if let progress = self.core?.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
+			if let progress = self.core?.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, _, _, file) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
+
+					self.completionHandler = { error in
+						var name = "ownCloud"
+						if let appName = Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String {
+							name = appName
+						}
+
+						let alertController = UIAlertController(with: "Cannot connect to ".localized + name, message: name + " couldn't download this file".localized, okLabel: "OK".localized, action: nil)
+						viewController.present(alertController, animated: true)
+					}
+
 					controller.dismiss(animated: true, completion: {
 						self.completed(with: error)
 					})

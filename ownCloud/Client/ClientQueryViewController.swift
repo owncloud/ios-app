@@ -146,9 +146,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
 
-		let actionsBarButton: UIBarButtonItem = UIBarButtonItem(title: "● ● ●", style: .done, target: self, action: #selector(uploadsBarButtonPressed))
-		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .normal)
-		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .highlighted)
+		let actionsBarButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
 		self.navigationItem.rightBarButtonItem = actionsBarButton
 	}
 
@@ -206,7 +204,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		switch query.state {
 			case .idle:
-				OnMainThread{
+				OnMainThread {
 					if !self.refreshController!.isRefreshing {
 						self.refreshController?.beginRefreshing()
 					}
