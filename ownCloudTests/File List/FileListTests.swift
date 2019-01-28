@@ -47,10 +47,10 @@ class FileListTests: XCTestCase {
 			self.showFileList(bookmark: bookmark)
 
 			//Assets
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("disconnect-button")).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityLabel("Back")).assert(grey_sufficientlyVisible())
 
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("disconnect-button")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityLabel("Back")).perform(grey_tap())
 
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
@@ -86,10 +86,10 @@ class FileListTests: XCTestCase {
 			GREYAssertEqual(index as AnyObject, expectedCells as AnyObject, reason: "Founded \(index) cells when expected \(expectedCells)")
 
 			//Assets
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("disconnect-button")).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityLabel("Back")).assert(grey_sufficientlyVisible())
 
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("disconnect-button")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityLabel("Back")).perform(grey_tap())
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}

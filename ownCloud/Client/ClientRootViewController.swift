@@ -19,10 +19,15 @@
 import UIKit
 import ownCloudSDK
 
-class ClientRootViewController: UITabBarController {
+class EmptyViewController : UIViewController {
+
+}
+
+class ClientRootViewController: UITabBarController, UINavigationControllerDelegate {
 	let bookmark : OCBookmark
 	weak var core : OCCore?
 	var filesNavigationController : ThemeNavigationController?
+    let emptyViewController = EmptyViewController()
 	var progressBar : CollapsibleProgressBar?
 	var progressSummarizer : ProgressSummarizer?
 
@@ -139,10 +144,16 @@ class ClientRootViewController: UITabBarController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		filesNavigationController = ThemeNavigationController()
-		filesNavigationController?.navigationBar.isTranslucent = false
-		filesNavigationController?.tabBarItem.title = "Browse".localized
-		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: CGSize(width: 25, height: 25))
+        self.view.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        
+        filesNavigationController = ThemeNavigationController()
+        filesNavigationController?.delegate = self
+        filesNavigationController?.navigationBar.isTranslucent = false
+        filesNavigationController?.navigationBar.prefersLargeTitles = true
+        filesNavigationController?.tabBarItem.title = "Browse".localized
+        filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: CGSize(width: 25, height: 25))
 
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false
@@ -155,32 +166,28 @@ class ClientRootViewController: UITabBarController {
 
 		self.tabBar.applyThemeCollection(Theme.shared.activeCollection)
 
-		self.viewControllers = [filesNavigationController] as? [UIViewController]
-	}
-
-	func logoutBarButtonItem() -> UIBarButtonItem {
-		let barButton = UIBarButtonItem(title: "Disconnect".localized, style: .plain, target: self, action: #selector(logout(_:)))
-		barButton.accessibilityIdentifier = "disconnect-button"
-		return barButton
-	}
-
-	@objc func logout(_: Any) {
-		self.closeClient()
+        self.viewControllers = [filesNavigationController] as? [UIViewController]
 	}
 
 	func closeClient(completion: (() -> Void)? = nil) {
-		self.presentingViewController?.dismiss(animated: true, completion: completion)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.navigationController?.popViewController(animated: true, completion: {
+            
+        })
 	}
 
 	func coreReady() {
 		OnMainThread {
 			let queryViewController = ClientQueryViewController(core: self.core!, query: OCQuery(forPath: "/"))
-
-			queryViewController.navigationItem.leftBarButtonItem = self.logoutBarButtonItem()
-
-			self.filesNavigationController?.pushViewController(queryViewController, animated: false)
+            self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
 		}
 	}
+    
+    func navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) {
+        if willShow.isEqual(emptyViewController) {
+            self.closeClient()
+        }
+    }
 }
 
 extension ClientRootViewController : OCCoreDelegate {

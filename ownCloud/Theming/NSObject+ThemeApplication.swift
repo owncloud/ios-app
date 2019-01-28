@@ -89,7 +89,8 @@ extension NSObject {
 			navigationBar.barTintColor = collection.navigationBarColors.backgroundColor
 			navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
 			navigationBar.tintColor = collection.navigationBarColors.tintColor
-			navigationBar.titleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
+            navigationBar.titleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
+            navigationBar.largeTitleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
 		}
 
 		if self.isKind(of: UIToolbar.self) {
