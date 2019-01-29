@@ -275,6 +275,43 @@ class CreateBookmarkTests: XCTestCase {
 	}
 
 	/*
+	* PASSED if: URL leads to warning issue type Certificate. Click on certificate displays the certificate info
+	*/
+	func testCheckURLBasicAuthWarningIssueCertificateDisplayInfo() {
+
+		let mockUrlServer = "http://mocked.owncloud.server.com"
+		let authMethods: [OCAuthenticationMethodIdentifier] = [.basicAuth, .oAuth2]
+		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
+			guard let url = URL(string: mockUrlServer) else {
+				assertionFailure("Creation of URL object for \(mockUrlServer) failed")
+				return
+			}
+			let issue: OCIssue = OCIssue(for: certificate, validationResult: .userAccepted, url: url, level: .warning, issueHandler: nil)
+
+			//Mock
+			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+
+			//Actions
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Certificate".localized)).perform(grey_tap())
+
+			//Assert
+			EarlGrey.waitForElement(withMatcher: grey_text("Certificate Details".localized), label: "Certificate Details")
+			EarlGrey.select(elementWithMatcher: grey_text("Certificate Details".localized)).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button-certificate-details")).perform(grey_tap())
+
+			EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		} else {
+			assertionFailure("Not possible to read the test_certificate.cer")
+		}
+	}
+
+	/*
 	* PASSED if: URL leads to warning issue type Certificate. Approve certificate leads to credentials
 	*/
 	func testCheckURLBasicAuthWarningIssueCertificateApproval() {
