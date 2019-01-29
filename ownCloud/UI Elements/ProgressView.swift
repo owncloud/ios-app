@@ -26,42 +26,63 @@ class ProgressView: UIView, Themeable {
 	private let dimensions : CGSize = CGSize(width: 30, height: 30)
 	private let circleLineWidth : CGFloat = 3
 
-//	private var progressObservationFractionCompleted : NSKeyValueObservation?
-//	private var progressObservationIsIndeterminate : NSKeyValueObservation?
-//	private var progressObservationCancelled : NSKeyValueObservation?
-//	private var progressObservationFinished : NSKeyValueObservation?
-
+	private var _observerRegistered : Bool = false
+	private var _progress : Progress?
 	var progress : Progress? {
-		willSet {
-			if newValue !== progress, progress != nil {
-				progress?.removeObserver(self, forKeyPath: "fractionCompleted")
-				progress?.removeObserver(self, forKeyPath: "indeterminate")
-				progress?.removeObserver(self, forKeyPath: "cancelled")
-				progress?.removeObserver(self, forKeyPath: "finished")
+		set {
+			OCSynchronized(self) {
+				if _observerRegistered, let progress = _progress {
+					progress.removeObserver(self, forKeyPath: "fractionCompleted")
+					progress.removeObserver(self, forKeyPath: "indeterminate")
+					progress.removeObserver(self, forKeyPath: "cancelled")
+					progress.removeObserver(self, forKeyPath: "finished")
+
+					_observerRegistered = false
+				}
+
+				_progress = newValue
+
+				if !_observerRegistered, let progress = newValue {
+					progress.addObserver(self, forKeyPath: "fractionCompleted", options: [], context: nil)
+					progress.addObserver(self, forKeyPath: "indeterminate", options: [], context: nil)
+					progress.addObserver(self, forKeyPath: "cancelled", options: [], context: nil)
+					progress.addObserver(self, forKeyPath: "finished", options: [], context: nil)
+
+					_observerRegistered = true
+				}
+
+				if Thread.isMainThread {
+					CATransaction.begin()
+					CATransaction.setDisableActions(true)
+					CATransaction.setAnimationDuration(0)
+				} else {
+					Log.log("Progress not set on main thread")
+				}
+
+				self.update()
+
+				if Thread.isMainThread {
+					CATransaction.commit()
+				}
 			}
 		}
 
-		didSet {
-			CATransaction.begin()
-			CATransaction.setDisableActions(true)
-			CATransaction.setAnimationDuration(0)
+		get {
+			var progress : Progress?
 
-			if let newProgress = progress {
-				newProgress.addObserver(self, forKeyPath: "fractionCompleted", options: [], context: nil)
-				newProgress.addObserver(self, forKeyPath: "indeterminate", options: [], context: nil)
-				newProgress.addObserver(self, forKeyPath: "cancelled", options: [], context: nil)
-				newProgress.addObserver(self, forKeyPath: "finished", options: [], context: nil)
+			OCSynchronized(self) {
+				progress = _progress
 			}
 
-			self.update()
-
-			CATransaction.commit()
+			return progress
 		}
 	}
 
 	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
 		if (object as? Progress) === progress {
-			self.update()
+			OnMainThread {
+				self.update()
+			}
 		} else {
 			super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
 		}
@@ -139,7 +160,7 @@ class ProgressView: UIView, Themeable {
 			return
 		}
 
-		if let progress = progress {
+		if let progress = self.progress {
 
 			self.spinning = progress.isIndeterminate || progress.isCancelled
 
