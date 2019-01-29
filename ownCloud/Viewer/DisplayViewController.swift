@@ -80,9 +80,9 @@ class DisplayViewController: UIViewController {
 	// MARK: - Views
 	private var iconImageView: UIImageView!
 	private var progressView : UIProgressView?
-	private var cancelButton : UIButton?
+	private var cancelButton : ThemeButton?
 	private var metadataInfoLabel: UILabel?
-	private var showPreviewButton: UIButton?
+	private var showPreviewButton: ThemeButton?
 	private var noNetworkLabel : UILabel?
 
 	// MARK: - Delegate
@@ -119,6 +119,8 @@ class DisplayViewController: UIViewController {
 		metadataInfoLabel?.isHidden = false
 		metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
 		metadataInfoLabel?.textAlignment = .center
+		metadataInfoLabel?.adjustsFontForContentSizeCategory = true
+		metadataInfoLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
 
 		view.addSubview(metadataInfoLabel!)
 
@@ -130,7 +132,7 @@ class DisplayViewController: UIViewController {
 
 		view.addSubview(progressView!)
 
-		cancelButton = ThemeButton(type: .system)
+		cancelButton = ThemeButton(type: .custom)
 		cancelButton?.translatesAutoresizingMaskIntoConstraints = false
 		cancelButton?.setTitle("Cancel".localized, for: .normal)
 		cancelButton?.isHidden = (downloadProgress != nil)
@@ -138,7 +140,7 @@ class DisplayViewController: UIViewController {
 
 		view.addSubview(cancelButton!)
 
-		showPreviewButton = ThemeButton(type: .system)
+		showPreviewButton = ThemeButton(type: .custom)
 		showPreviewButton?.translatesAutoresizingMaskIntoConstraints = false
 		showPreviewButton?.setTitle("Open file".localized, for: .normal)
 		showPreviewButton?.isHidden = true
@@ -148,8 +150,10 @@ class DisplayViewController: UIViewController {
 		noNetworkLabel = UILabel()
 		noNetworkLabel?.translatesAutoresizingMaskIntoConstraints = false
 		noNetworkLabel?.isHidden = true
+		noNetworkLabel?.adjustsFontForContentSizeCategory = true
 		noNetworkLabel?.text = "There is no network".localized
 		noNetworkLabel?.textAlignment = .center
+		noNetworkLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
 		view.addSubview(noNetworkLabel!)
 
 		NSLayoutConstraint.activate([
@@ -160,7 +164,8 @@ class DisplayViewController: UIViewController {
 
 			metadataInfoLabel!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
 			metadataInfoLabel!.topAnchor.constraint(equalTo: iconImageView!.bottomAnchor, constant: 10),
-			metadataInfoLabel!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
+			metadataInfoLabel!.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 10),
+			metadataInfoLabel!.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -10),
 
 			progressView!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
 			progressView!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),

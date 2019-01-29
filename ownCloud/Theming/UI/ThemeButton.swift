@@ -86,7 +86,8 @@ class ThemeButton : UIButton {
 
 	private func styleButton() {
 		self.layer.cornerRadius = 5
-		self.titleLabel!.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.semibold)
+		self.titleLabel!.font = UIFont.preferredFont(forTextStyle: .headline)
+		self.titleLabel!.adjustsFontForContentSizeCategory = true
 	}
 
 	override init(frame: CGRect) {
