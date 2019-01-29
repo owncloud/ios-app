@@ -275,51 +275,6 @@ class CreateBookmarkTests: XCTestCase {
 	}
 
 	/*
-	* PASSED if: URL leads to warning issue type Certificate. Click on certificate displays the certificate info
-	*/
-	func testCheckURLBasicAuthWarningIssueCertificateDisplayInfo() {
-
-		let mockUrlServer = "http://mocked.owncloud.server.com"
-		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
-															   OCAuthenticationMethodIdentifier.oAuth2]
-		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
-			guard let url = URL(string: mockUrlServer) else {
-				assertionFailure("Creation of URL object for \(mockUrlServer) failed")
-				return
-			}
-			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: url, level: .warning, issueHandler: nil)
-
-			//Mock
-			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
-
-			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-continue-continue")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Certificate".localized)).perform(grey_tap())
-
-			//Assert
-			let isCertificateDetailsShown = GREYCondition(name: "Waiting for show certificate details", block: {
-				var error: NSError?
-
-				//Assert
-				EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button-certificate-details")).assert(grey_sufficientlyVisible())
-
-				return error == nil
-			}).wait(withTimeout: 5.0, pollInterval: 0.5)
-
-			GREYAssertTrue(isCertificateDetailsShown, reason: "Failed showing certificate details")
-
-			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button-certificate-details")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
-		} else {
-			assertionFailure("Not possible to read the test_certificate.cer")
-		}
-	}
-
-	/*
 	* PASSED if: URL leads to warning issue type Certificate. Approve certificate leads to credentials
 	*/
 	func testCheckURLBasicAuthWarningIssueCertificateApproval() {
