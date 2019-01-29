@@ -33,7 +33,7 @@ class PasscodeViewController: UIViewController, Themeable {
 	@IBOutlet private var backgroundBlurView : UIVisualEffectView?
 
 	@IBOutlet private var keypadContainerView : UIView?
-	@IBOutlet private var keypadButtons: [ThemeButton]?
+	@IBOutlet private var keypadButtons: [ThemeRoundedButton]?
 	@IBOutlet private var deleteButton: ThemeButton?
 	@IBOutlet private var cancelButton: ThemeButton?
 
@@ -199,36 +199,44 @@ class PasscodeViewController: UIViewController, Themeable {
 
 	// MARK: - Actions
 	@IBAction func appendDigit(_ sender: UIButton) {
-		if !keypadButtonsEnabled || keypadButtonsHidden {
-			return
-		}
-
-		if let currentPasscode = passcode {
-			// Enforce length limit
-			if currentPasscode.count < passcodeLength {
-				self.passcode = currentPasscode + String(sender.tag)
-			}
-		} else {
-			self.passcode = String(sender.tag)
-		}
-
-		// Check if passcode is complete
-		if let passcode = passcode {
-			if passcode.count == passcodeLength {
-				// Delay to give feedback to user after the last digit was added
-				OnMainThread(after: 0.1) {
-					self.completionHandler?(self, passcode)
-				}
-			}
-		}
+        appendDigit(digit: String(sender.tag))
 	}
+    
+    private func appendDigit(digit: String) {
+        if !keypadButtonsEnabled || keypadButtonsHidden {
+            return
+        }
+        
+        if let currentPasscode = passcode {
+            // Enforce length limit
+            if currentPasscode.count < passcodeLength {
+                self.passcode = currentPasscode + String(digit)
+            }
+        } else {
+            self.passcode = String(digit)
+        }
+        
+        // Check if passcode is complete
+        if let passcode = passcode {
+            if passcode.count == passcodeLength {
+                // Delay to give feedback to user after the last digit was added
+                OnMainThread(after: 0.1) {
+                    self.completionHandler?(self, passcode)
+                }
+            }
+        }
+    }
 
 	@IBAction func deleteLastDigit(_ sender: UIButton) {
-		if passcode != nil, passcode!.count > 0 {
-			passcode?.removeLast()
-			updatePasscodeDots()
-		}
+        deleteLastDigit()
 	}
+    
+    private func deleteLastDigit() {
+        if passcode != nil, passcode!.count > 0 {
+            passcode?.removeLast()
+            updatePasscodeDots()
+        }
+    }
 
 	@IBAction func cancel(_ sender: UIButton) {
 		cancelHandler?(self)
@@ -257,4 +265,54 @@ class PasscodeViewController: UIViewController, Themeable {
 		cancelButton?.applyThemeCollection(collection, itemStyle: .defaultForItem)
 		cancelButton?.layer.cornerRadius = 0
 	}
+    
+    // MARK: - External Keyboard Commands
+    
+    @objc func performKeyCommand(sender: UIKeyCommand) {
+        guard let key = sender.input else {
+            return
+        }
+        
+        switch key {
+        case "\u{8}":
+            deleteLastDigit()
+        case UIKeyCommand.inputEscape:
+            cancelHandler?(self)
+        default:
+            appendDigit(digit: key)
+        }
+        
+    }
+    
+    override var keyCommands: [UIKeyCommand]? {
+        
+        var keyCommands : [UIKeyCommand] = []
+        for i in 0 ..< 10 {
+            keyCommands.append(
+                UIKeyCommand(input:String(i),
+                             modifierFlags: [],
+                             action: #selector(self.performKeyCommand(sender:)),
+                             discoverabilityTitle: String(i))
+            )
+        }
+        
+        keyCommands.append(
+            UIKeyCommand(input: "\u{8}",
+                         modifierFlags: [],
+                         action: #selector(self.performKeyCommand(sender:)),
+                         discoverabilityTitle: "Delete".localized)
+        )
+        
+        if cancelButton?.isHidden == false {
+            keyCommands.append(
+            
+                UIKeyCommand(input: UIKeyCommand.inputEscape,
+                            modifierFlags: [],
+                            action: #selector(self.performKeyCommand(sender:)),
+                            discoverabilityTitle: "Cancel".localized)
+            )
+        }
+        
+        return keyCommands
+    }
 }
