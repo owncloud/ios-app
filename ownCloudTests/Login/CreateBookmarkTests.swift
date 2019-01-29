@@ -299,10 +299,19 @@ class CreateBookmarkTests: XCTestCase {
 			EarlGrey.select(elementWithMatcher: grey_text("Certificate".localized)).perform(grey_tap())
 
 			//Assert
-			EarlGrey.select(elementWithMatcher: grey_text("Certificate Details".localized)).assert(grey_sufficientlyVisible())
+			let isCertificateDetailsShown = GREYCondition(name: "Waiting for bookmark removal", block: {
+				var error: NSError?
+
+				//Assert
+				EarlGrey.select(elementWithMatcher: grey_text("Certificate Details".localized)).assert(grey_sufficientlyVisible())
+
+				return error == nil
+			}).wait(withTimeout: 2.0, pollInterval: 0.5)
+
+			GREYAssertTrue(isCertificateDetailsShown, reason: "Failed showing certificate details")
 
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button-certificate-details")).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
 		} else {
