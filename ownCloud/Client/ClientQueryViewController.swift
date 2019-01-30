@@ -283,7 +283,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 						core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ]) { [weak self, query] (error, core, item, _) in
 							OnMainThread {
-								if error == nil {
+								if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
 									if let item = item, item.localID == self?.lastTappedItemLocalID, let core = core {
 										let itemViewController = DisplayHostViewController(for: item, with: core, root: query.rootItem!)
 										self?.navigationController?.pushViewController(itemViewController, animated: true)
