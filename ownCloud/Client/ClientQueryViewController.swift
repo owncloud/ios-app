@@ -278,14 +278,20 @@ class ClientQueryViewController: UITableViewController, Themeable {
 					}
 
 				case .file:
-					lastTappedItemLocalID = rowItem.localID
+					if lastTappedItemLocalID != rowItem.localID {
+						lastTappedItemLocalID = rowItem.localID
 
-					core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ]) { [weak self, query] (error, core, item, _) in
-						OnMainThread {
-							if error == nil {
-								if let item = item, item.localID == self?.lastTappedItemLocalID, let core = core {
-									let itemViewController = DisplayHostViewController(for: item, with: core, root: query.rootItem!)
-									self?.navigationController?.pushViewController(itemViewController, animated: true)
+						core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ]) { [weak self, query] (error, core, item, _) in
+							OnMainThread {
+								if error == nil {
+									if let item = item, item.localID == self?.lastTappedItemLocalID, let core = core {
+										let itemViewController = DisplayHostViewController(for: item, with: core, root: query.rootItem!)
+										self?.navigationController?.pushViewController(itemViewController, animated: true)
+									}
+								}
+
+								if self?.lastTappedItemLocalID == item?.localID {
+									self?.lastTappedItemLocalID = nil
 								}
 							}
 						}
