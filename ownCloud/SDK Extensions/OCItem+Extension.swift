@@ -222,8 +222,7 @@ extension OCItem {
 	}
 
 	var sizeLocalized: String {
-		let size = OCItem.byteCounterFormatter.string(fromByteCount: Int64(self.size))
-		return size
+		return OCItem.byteCounterFormatter.string(fromByteCount: Int64(self.size))
 	}
 
 	var lastModifiedLocalized: String {

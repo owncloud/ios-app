@@ -38,19 +38,25 @@ protocol DisplayViewEditingDelegate: class {
 	func save(item: OCItem, fileURL newVersion: URL)
 }
 
-class DisplayViewController: UIViewController {
-
+class DisplayViewController: UIViewController, OCQueryDelegate {
 	private let iconImageSize: CGSize = CGSize(width: 200.0, height: 200.0)
 
 	// MARK: - Configuration
-	weak var item: OCItem!
-	weak var core: OCCore! {
+	weak var item: OCItem?
+	weak var core: OCCore? {
+		willSet {
+			if let core = core {
+				core.removeObserver(self, forKeyPath: "connectionStatus")
+			}
+		}
 		didSet {
-			core.addObserver(self, forKeyPath: "connectionStatus", options: [.initial, .new], context: observerContext)
+			if let core = core {
+				core.addObserver(self, forKeyPath: "connectionStatus", options: [.initial, .new], context: nil)
+			}
 		}
 	}
 
-	var source: URL! {
+	var source: URL? {
 		didSet {
 			OnMainThread {
 				self.iconImageView.isHidden = true
@@ -62,6 +68,13 @@ class DisplayViewController: UIViewController {
 	private var state: DisplayViewState = .hasNetworkConnection {
 		didSet {
 			OnMainThread {
+				switch self.state {
+					case .downloading(let progress):
+						self.downloadProgress = progress
+
+					default:
+						self.downloadProgress = nil
+				}
 				self.render()
 			}
 		}
@@ -72,9 +85,6 @@ class DisplayViewController: UIViewController {
 			progressView?.observedProgress = downloadProgress
 		}
 	}
-
-	private var observerContextValue = 1
-	private var observerContext : UnsafeMutableRawPointer
 
 	// MARK: - Views
 	private var iconImageView: UIImageView!
@@ -89,7 +99,6 @@ class DisplayViewController: UIViewController {
 
 	// MARK: - Init & Deinit
 	required init() {
-		observerContext = UnsafeMutableRawPointer(&observerContextValue)
 		super.init(nibName: nil, bundle: nil)
 	}
 
@@ -100,7 +109,10 @@ class DisplayViewController: UIViewController {
 	deinit {
 		Theme.shared.unregister(client: self)
 		self.downloadProgress?.cancel()
-		core.removeObserver(self, forKeyPath: "connectionStatus", context: observerContext)
+		self.stopQuery()
+		if let core = core {
+			core.removeObserver(self, forKeyPath: "connectionStatus")
+		}
 	}
 
 	// MARK: - Controller lifecycle
@@ -116,7 +128,6 @@ class DisplayViewController: UIViewController {
 		metadataInfoLabel = UILabel()
 		metadataInfoLabel?.translatesAutoresizingMaskIntoConstraints = false
 		metadataInfoLabel?.isHidden = false
-		metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
 		metadataInfoLabel?.textAlignment = .center
 
 		view.addSubview(metadataInfoLabel!)
@@ -151,78 +162,87 @@ class DisplayViewController: UIViewController {
 		noNetworkLabel?.textAlignment = .center
 		view.addSubview(noNetworkLabel!)
 
+		guard let iconImageView = iconImageView, let metadataInfoLabel = metadataInfoLabel, let progressView = progressView,
+		      let cancelButton = cancelButton, let showPreviewButton = showPreviewButton, let noNetworkLabel = noNetworkLabel
+		      else {
+			return
+		}
+
 		NSLayoutConstraint.activate([
 			iconImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
 			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -60),
 			iconImageView.heightAnchor.constraint(equalToConstant: iconImageSize.height),
-			iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
+			iconImageView.widthAnchor.constraint(equalToConstant: iconImageSize.width),
 
-			metadataInfoLabel!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			metadataInfoLabel!.topAnchor.constraint(equalTo: iconImageView!.bottomAnchor, constant: 10),
-			metadataInfoLabel!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
+			metadataInfoLabel.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
+			metadataInfoLabel.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 10),
+			metadataInfoLabel.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
 
-			progressView!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			progressView!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
-			progressView!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: 20),
+			progressView.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
+			progressView.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
+			progressView.topAnchor.constraint(equalTo: metadataInfoLabel.bottomAnchor, constant: 20),
 
-			cancelButton!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			cancelButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: 10),
+			cancelButton.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
+			cancelButton.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: 10),
 
-			showPreviewButton!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			showPreviewButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: 10),
+			showPreviewButton.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
+			showPreviewButton.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: 10),
 
-			noNetworkLabel!.centerXAnchor.constraint(equalTo: metadataInfoLabel!.centerXAnchor),
-			noNetworkLabel!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: 10),
-			noNetworkLabel!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor)
+			noNetworkLabel.centerXAnchor.constraint(equalTo: metadataInfoLabel.centerXAnchor),
+			noNetworkLabel.topAnchor.constraint(equalTo: metadataInfoLabel.bottomAnchor, constant: 10),
+			noNetworkLabel.widthAnchor.constraint(equalTo: iconImageView.widthAnchor)
 		])
 	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		iconImageView.image = item.icon(fitInSize:iconImageSize)
-
-		if item.thumbnailAvailability != .none {
-			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				_ = thumbnail?.requestImage(for: self.iconImageSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
-					if error == nil,
-						image != nil,
-						self.item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
-						OnMainThread {
-							if !self.iconImageView.isHidden {
-								self.iconImageView.image = image
-							}
-						}
-					}
-				})
-			}
-
-			if let thumbnail = item.thumbnail {
-				displayThumbnail(thumbnail)
-			} else {
-				_ = core?.retrieveThumbnail(for: item, maximumSize: iconImageSize, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
-					displayThumbnail(thumbnail)
-				})
-			}
-		}
-
 		Theme.shared.register(client: self)
 
-		guard let parent = parent else {
-			return
-		}
+		if let item = item {
+			iconImageView.image = item.icon(fitInSize:iconImageSize)
 
-		parent.navigationItem.title = item.name
-		parent.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+			if item.thumbnailAvailability != .none {
+				let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
+					_ = thumbnail?.requestImage(for: self.iconImageSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
+						if error == nil,
+							image != nil,
+							item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
+							OnMainThread {
+								if !self.iconImageView.isHidden {
+									self.iconImageView.image = image
+								}
+							}
+						}
+					})
+				}
+
+				if let thumbnail = item.thumbnail {
+					displayThumbnail(thumbnail)
+				} else {
+					_ = core?.retrieveThumbnail(for: item, maximumSize: iconImageSize, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
+						displayThumbnail(thumbnail)
+					})
+				}
+			}
+
+		}
 	}
 
 	// MARK: - Download actions
 	@objc func cancelDownload(sender: Any?) {
+		if downloadProgress != nil {
+			downloadProgress?.cancel()
+		}
 		self.state = .canceledDownload
 	}
 
 	@objc func downloadItem(sender: Any?) {
-		if let downloadProgress = self.core.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { [weak self] (error, _, latestItem, file) in
+		guard let core = core, let item = item else {
+			return
+		}
+
+		if let downloadProgress = core.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { [weak self] (error, _, latestItem, file) in
 			guard error == nil else {
 				OnMainThread {
 					if (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
@@ -267,27 +287,20 @@ class DisplayViewController: UIViewController {
 		print("LOG --> State changed to \(state)")
 		switch state {
 		case .hasNetworkConnection:
-			if self.downloadProgress == nil {
-				hideProgressIndicators()
-			}
+			hideProgressIndicators()
 
 		case .noNetworkConnection:
-			self.downloadProgress?.cancel()
-			self.progressView?.progress = 0.0
 			self.progressView?.isHidden = true
 			self.cancelButton?.isHidden = true
 			self.noNetworkLabel?.isHidden = false
 			self.showPreviewButton?.isHidden = true
 
 		case .errorDownloading, .canceledDownload:
-			self.downloadProgress?.cancel()
-			self.downloadProgress = nil
-			if core.connectionStatus == .online {
+			if core?.connectionStatus == .online {
 				hideProgressIndicators()
 			}
 
-		case .downloading(let progress):
-			self.downloadProgress = progress
+		case .downloading(_):
 			self.progressView?.isHidden = false
 			self.cancelButton?.isHidden = false
 			self.noNetworkLabel?.isHidden = true
@@ -310,6 +323,9 @@ class DisplayViewController: UIViewController {
 	}
 
 	@objc func optionsBarButtonPressed() {
+		guard let core = core, let item = item else {
+			return
+		}
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
@@ -319,6 +335,76 @@ class DisplayViewController: UIViewController {
 		})
 
 		self.present(asCard: moreViewController, animated: true)
+	}
+
+	// MARK: - Query management
+	private var query : OCQuery?
+
+	func startQuery() {
+		if query == nil, let item = item, let core = core {
+			query = OCQuery(item: item)
+
+			if let query = query {
+				query.delegate = self
+				core.start(query)
+			}
+		}
+	}
+
+	func stopQuery() {
+		if query != nil, let core = core, let query = query {
+			self.query = nil
+
+			query.delegate = nil
+
+			core.stop(query)
+		}
+	}
+
+	// MARK: - Query handling
+	// (not in an extension, so subclasses can override these as needed)
+	func query(_ query: OCQuery, failedWithError error: Error) {
+		// Not applicable atm
+	}
+
+	func queryHasChangesAvailable(_ query: OCQuery) {
+		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
+			OnMainThread {
+				switch query.state {
+					case .idle, .contentsFromCache, .waitingForServerReply:
+						if let item = self.item, let firstItem = changeSet?.queryResult.first {
+							if (firstItem.itemVersionIdentifier != item.itemVersionIdentifier) || (firstItem.name != item.name) {
+								self.present(item: firstItem)
+							}
+						}
+
+					case .targetRemoved: break
+
+					default: break
+				}
+			}
+		}
+	}
+
+	func present(item: OCItem) {
+		self.item = item
+
+		metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
+
+		switch state {
+			case .notSupportedMimeType: break
+
+			default:
+				self.stopQuery()
+				self.startQuery()
+
+				self.downloadItem(sender: nil)
+
+				if let parent = parent {
+					parent.navigationItem.title = item.name
+					parent.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+				}
+		}
 	}
 }
 

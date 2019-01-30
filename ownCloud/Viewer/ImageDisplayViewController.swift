@@ -43,7 +43,8 @@ class ImageDisplayViewController : DisplayViewController {
 			scrollView!.topAnchor.constraint(equalTo: view.topAnchor)
 		])
 
-		if let data = try? Data(contentsOf: source),
+		if let source = source,
+		   let data = try? Data(contentsOf: source),
 		   let image = UIImage(data: data) {
 			scrollView?.display(image: image)
 

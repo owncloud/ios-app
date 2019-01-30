@@ -617,9 +617,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 // MARK: - Query Delegate
 extension ClientQueryViewController : OCQueryDelegate {
-
 	func query(_ query: OCQuery, failedWithError error: Error) {
-
+		// Not applicable atm
 	}
 
 	func queryHasChangesAvailable(_ query: OCQuery) {
