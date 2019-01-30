@@ -13,7 +13,7 @@ extension UIViewController {
 
         if let tabBarController = self.tabBarController as? ClientRootViewController {
             tabBarController.toolbar?.isHidden = false
-            tabBarController.tabBar.bringSubviewToFront(tabBarController.toolbar!)
+            tabBarController.tabBar.isHidden = true
             tabBarController.toolbar?.setItems(items, animated: true)
         }
     }
@@ -21,6 +21,7 @@ extension UIViewController {
     func removeToolbar() {
         if let tabBarController = self.tabBarController as? ClientRootViewController {
             tabBarController.toolbar?.isHidden = true
+            tabBarController.tabBar.isHidden = false
             tabBarController.toolbar?.setItems(nil, animated: true)
         }
     }

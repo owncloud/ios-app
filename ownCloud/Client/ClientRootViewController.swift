@@ -26,7 +26,7 @@ class ClientRootViewController: UITabBarController {
 	var progressBar : CollapsibleProgressBar?
 	var progressSummarizer : ProgressSummarizer?
     var toolbar:UIToolbar?
-
+    
 	var connectionStatusObservation : NSKeyValueObservation?
 	var connectionStatusSummary : ProgressSummary? {
 		willSet {
@@ -147,7 +147,7 @@ class ClientRootViewController: UITabBarController {
         toolbar?.translatesAutoresizingMaskIntoConstraints = false
         toolbar?.insetsLayoutMarginsFromSafeArea = true
 
-        self.tabBar.addSubview(toolbar!)
+        self.view.addSubview(toolbar!)
 
         toolbar?.applyThemeCollection(Theme.shared.activeCollection)
         toolbar?.leftAnchor.constraint(equalTo: self.tabBar.leftAnchor).isActive = true
