@@ -15,7 +15,6 @@ extension UIViewController {
             tabBarController.toolbar?.isHidden = false
             tabBarController.tabBar.bringSubviewToFront(tabBarController.toolbar!)
             tabBarController.toolbar?.setItems(items, animated: true)
-
         }
     }
 

@@ -145,6 +145,7 @@ class ClientRootViewController: UITabBarController {
 
         toolbar = UIToolbar(frame: CGRect.zero)
         toolbar?.translatesAutoresizingMaskIntoConstraints = false
+        toolbar?.insetsLayoutMarginsFromSafeArea = true
 
         self.tabBar.addSubview(toolbar!)
 
@@ -152,7 +153,7 @@ class ClientRootViewController: UITabBarController {
         toolbar?.leftAnchor.constraint(equalTo: self.tabBar.leftAnchor).isActive = true
         toolbar?.rightAnchor.constraint(equalTo: self.tabBar.rightAnchor).isActive = true
         toolbar?.topAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
-        toolbar?.bottomAnchor.constraint(equalTo: self.tabBar.bottomAnchor).isActive = true
+        toolbar?.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
 
         toolbar?.isHidden = true
 
