@@ -25,6 +25,7 @@ class ClientRootViewController: UITabBarController {
 	var filesNavigationController : ThemeNavigationController?
 	var progressBar : CollapsibleProgressBar?
 	var progressSummarizer : ProgressSummarizer?
+    var toolbar:UIToolbar?
 
 	var connectionStatusObservation : NSKeyValueObservation?
 	var connectionStatusSummary : ProgressSummary? {
@@ -141,6 +142,19 @@ class ClientRootViewController: UITabBarController {
 		progressBar?.bottomAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
 
 		self.tabBar.applyThemeCollection(Theme.shared.activeCollection)
+
+        toolbar = UIToolbar(frame: CGRect.zero)
+        toolbar?.translatesAutoresizingMaskIntoConstraints = false
+
+        self.tabBar.addSubview(toolbar!)
+
+        toolbar?.applyThemeCollection(Theme.shared.activeCollection)
+        toolbar?.leftAnchor.constraint(equalTo: self.tabBar.leftAnchor).isActive = true
+        toolbar?.rightAnchor.constraint(equalTo: self.tabBar.rightAnchor).isActive = true
+        toolbar?.topAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
+        toolbar?.bottomAnchor.constraint(equalTo: self.tabBar.bottomAnchor).isActive = true
+
+        toolbar?.isHidden = true
 
 		self.viewControllers = [filesNavigationController] as? [UIViewController]
 	}

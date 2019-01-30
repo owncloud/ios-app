@@ -568,7 +568,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
     // MARK: - Toolbar actions handling multiply selected items
 
     func updateToolbarItems() {
-        guard let toolbarItems = self.navigationController?.toolbar.items else { return }
+        guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
+        
+        guard let toolbarItems = tabBarController.toolbar?.items else { return }
 
         // Do we have selected items?
         if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
