@@ -46,7 +46,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 	var progressSummarizer : ProgressSummarizer?
-	var refreshController: UIRefreshControl?
+	var queryRefreshControl: UIRefreshControl?
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -92,8 +92,14 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	// MARK: - Actions
 	@objc func refreshQuery() {
-		UIImpactFeedbackGenerator().impactOccurred()
-		core?.reload(query)
+		if core?.connectionStatus == OCCoreConnectionStatus.online {
+			UIImpactFeedbackGenerator().impactOccurred()
+			core?.reload(query)
+		} else {
+			if self.queryRefreshControl?.isRefreshing == true {
+				self.queryRefreshControl?.endRefreshing()
+			}
+		}
 	}
 
 	// swiftlint:disable block_based_kvo
@@ -135,9 +141,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		tableView.tableHeaderView = sortBar
 
-		refreshController = UIRefreshControl()
-		refreshController?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
-		self.tableView.insertSubview(refreshController!, at: 0)
+		queryRefreshControl = UIRefreshControl()
+		queryRefreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
+		self.tableView.insertSubview(queryRefreshControl!, at: 0)
 		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
 
 		Theme.shared.register(client: self, applyImmediately: true)
@@ -205,8 +211,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		switch query.state {
 			case .idle:
 				OnMainThread {
-					if !self.refreshController!.isRefreshing {
-						self.refreshController?.beginRefreshing()
+					if !self.queryRefreshControl!.isRefreshing {
+						self.queryRefreshControl?.beginRefreshing()
 					}
 				}
 
@@ -627,8 +633,8 @@ extension ClientQueryViewController : OCQueryDelegate {
 
 				switch query.state {
 				case .idle, .targetRemoved, .contentsFromCache, .stopped:
-					if self.refreshController!.isRefreshing {
-						self.refreshController?.endRefreshing()
+					if self.queryRefreshControl!.isRefreshing {
+						self.queryRefreshControl?.endRefreshing()
 					}
 				default: break
 				}

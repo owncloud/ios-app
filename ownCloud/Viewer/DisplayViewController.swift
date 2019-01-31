@@ -372,8 +372,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			OnMainThread {
 				switch query.state {
 					case .idle, .contentsFromCache, .waitingForServerReply:
-						if let item = self.item, let firstItem = changeSet?.queryResult.first {
-							if (firstItem.itemVersionIdentifier != item.itemVersionIdentifier) || (firstItem.name != item.name) {
+						if let firstItem = changeSet?.queryResult.first {
+							if (firstItem.itemVersionIdentifier != self.item?.itemVersionIdentifier) || (firstItem.name != self.item?.name) {
 								self.present(item: firstItem)
 							}
 						}
