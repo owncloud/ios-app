@@ -16,7 +16,7 @@ import ownCloudMocking
 class CreateBookmarkTests: XCTestCase {
 
 	public typealias OCMPrepareForSetupCompletionHandler = @convention(block)
-		(_ issue: OCConnectionIssue, _ suggestedURL: NSURL, _ supportedMethods: [OCAuthenticationMethodIdentifier], _ preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]) -> Void
+		(_ issue: OCIssue, _ suggestedURL: NSURL, _ supportedMethods: [OCAuthenticationMethodIdentifier], _ preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]) -> Void
 
 	public typealias OCMPrepareForSetup = @convention(block)
 		(_ options: NSDictionary, _ completionHandler: OCMPrepareForSetupCompletionHandler) -> Void
@@ -77,7 +77,7 @@ class CreateBookmarkTests: XCTestCase {
         let mockUrlServer = "http://mocked.owncloud.server.com"
         let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
                                                                OCAuthenticationMethodIdentifier.oAuth2]
-        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Informal issue description"]), level: .informal, issueHandler: nil)
+        let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Informal issue description"]), level: .informal, issueHandler: nil)
 
         //Mock
         mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
@@ -113,7 +113,7 @@ class CreateBookmarkTests: XCTestCase {
         let mockUrlServer = "http://mocked.owncloud.server.com"
         let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
                                                                OCAuthenticationMethodIdentifier.oAuth2]
-        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Warning issue description"]), level: .warning, issueHandler: nil)
+        let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Warning issue description"]), level: .warning, issueHandler: nil)
 
         //Mock
         mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
@@ -140,7 +140,7 @@ class CreateBookmarkTests: XCTestCase {
         let mockUrlServer = "http://mocked.owncloud.server.com"
         let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
                                                                OCAuthenticationMethodIdentifier.oAuth2]
-        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Warning issue description"]), level: .warning, issueHandler: nil)
+        let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Warning issue description"]), level: .warning, issueHandler: nil)
 
         //Mock
         mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
@@ -177,7 +177,7 @@ class CreateBookmarkTests: XCTestCase {
         let mockUrlServer = "http://mocked.owncloud.server.com"
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
 															   OCAuthenticationMethodIdentifier.oAuth2]
-        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Warning issue description"]), level: .warning, issueHandler: nil)
+        let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Warning issue description"]), level: .warning, issueHandler: nil)
 
         //Mock
         mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
@@ -206,7 +206,7 @@ class CreateBookmarkTests: XCTestCase {
         let mockUrlServer = "http://mocked.owncloud.server.com"
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
 															   OCAuthenticationMethodIdentifier.oAuth2]
-        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error issue description"]), level: .error, issueHandler: nil)
+        let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error issue description"]), level: .error, issueHandler: nil)
 
         //Mock
         mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
@@ -246,8 +246,11 @@ class CreateBookmarkTests: XCTestCase {
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
 															   OCAuthenticationMethodIdentifier.oAuth2]
 		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
-
-			let issue: OCConnectionIssue = OCConnectionIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: URL(string: mockUrlServer), level: .warning, issueHandler: nil)
+			guard let url = URL(string: mockUrlServer) else {
+				assertionFailure("Creation of URL object for \(mockUrlServer) failed")
+				return
+			}
+			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: url, level: .warning, issueHandler: nil)
 
 			//Mock
 			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
@@ -278,8 +281,11 @@ class CreateBookmarkTests: XCTestCase {
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
 															   OCAuthenticationMethodIdentifier.oAuth2]
 		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
-
-			let issue: OCConnectionIssue = OCConnectionIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: URL(string: mockUrlServer), level: .warning, issueHandler: nil)
+			guard let url = URL(string: mockUrlServer) else {
+				assertionFailure("Creation of URL object for \(mockUrlServer) failed")
+				return
+			}
+			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: url, level: .warning, issueHandler: nil)
 
 			//Mock
 			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
@@ -311,8 +317,11 @@ class CreateBookmarkTests: XCTestCase {
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
 															   OCAuthenticationMethodIdentifier.oAuth2]
 		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
-
-			let issue: OCConnectionIssue = OCConnectionIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: URL(string: mockUrlServer), level: .warning, issueHandler: nil)
+			guard let url = URL(string: mockUrlServer) else {
+				assertionFailure("Creation of URL object for \(mockUrlServer) failed")
+				return
+			}
+			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url:url, level: .warning, issueHandler: nil)
 
 			//Mock
 			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
@@ -344,8 +353,11 @@ class CreateBookmarkTests: XCTestCase {
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
 															   OCAuthenticationMethodIdentifier.oAuth2]
 		if let certificate: OCCertificate = UtilsTests.getCertificate(mockUrlServer: mockUrlServer) {
-
-			let issue: OCConnectionIssue = OCConnectionIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: URL(string: mockUrlServer), level: .warning, issueHandler: nil)
+			guard let url = URL(string: mockUrlServer) else {
+				assertionFailure("Creation of URL object for \(mockUrlServer) failed")
+				return
+			}
+			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: url, level: .warning, issueHandler: nil)
 
 			//Mock
 			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
@@ -376,7 +388,7 @@ class CreateBookmarkTests: XCTestCase {
         let mockUrlServer = "http://mocked.owncloud.server.com"
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.oAuth2,
 															   OCAuthenticationMethodIdentifier.basicAuth]
-        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .warning, issueHandler: nil)
+        let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .warning, issueHandler: nil)
 
 		let authenticationMethodIdentifier = OCAuthenticationMethodIdentifier.oAuth2 as NSString
 		let tokenResponse:[String : String] = ["access_token" : "RyFyDu1wH0Wvd8KlCP0Qeo9dlTqWajgvWHNqSdfl9bVD6Wp72CGikmgSkvUaAMML",
@@ -425,7 +437,7 @@ class CreateBookmarkTests: XCTestCase {
 		let mockUrlServer = "http://mocked.owncloud.server.com"
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.oAuth2,
 															   OCAuthenticationMethodIdentifier.basicAuth]
-		let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .informal, issueHandler: nil)
+		let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .informal, issueHandler: nil)
 
 		let authenticationMethodIdentifier = OCAuthenticationMethodIdentifier.oAuth2
 		let tokenResponse:[String : String] = ["access_token" : "RyFyDu1wH0Wvd8KlCP0Qeo9dlTqWajgvWHNqSdfl9bVD6Wp72CGikmgSkvUaAMML",
@@ -467,7 +479,7 @@ class CreateBookmarkTests: XCTestCase {
         let password = "test"
 		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.basicAuth,
 															   OCAuthenticationMethodIdentifier.oAuth2]
-        let issue: OCConnectionIssue = OCConnectionIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .warning, issueHandler: nil)
+        let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .warning, issueHandler: nil)
 
 		let error: NSError?  = nil
 		let authenticationMethodIdentifier = OCAuthenticationMethodIdentifier.basicAuth
@@ -509,7 +521,7 @@ class CreateBookmarkTests: XCTestCase {
 															   OCAuthenticationMethodIdentifier.oAuth2]
 
         let errorURL: NSError = NSError(domain: "mocked.owncloud.server.com", code: 1000, userInfo: [NSLocalizedDescriptionKey: "Error URL"])
-        let issue: OCConnectionIssue = OCConnectionIssue(forError: errorURL, level: .informal, issueHandler: nil)
+        let issue: OCIssue = OCIssue(forError: errorURL, level: .informal, issueHandler: nil)
 
 		let authenticationMethodIdentifier = OCAuthenticationMethodIdentifier.basicAuth
 		let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
@@ -553,7 +565,7 @@ class CreateBookmarkTests: XCTestCase {
 															   OCAuthenticationMethodIdentifier.oAuth2]
 
         let errorURL: NSError = NSError(domain: "mocked.owncloud.server.com", code: 1000, userInfo: [NSLocalizedDescriptionKey: "Error URL"])
-        let issue: OCConnectionIssue = OCConnectionIssue(forError: errorURL, level: .informal, issueHandler: nil)
+        let issue: OCIssue = OCIssue(forError: errorURL, level: .informal, issueHandler: nil)
 
 		let authenticationMethodIdentifier = OCAuthenticationMethodIdentifier.basicAuth
 		let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
@@ -586,7 +598,7 @@ class CreateBookmarkTests: XCTestCase {
     }
 
     // MARK: - Mocks
-    func mockOCConnectionPrepareForSetup(mockUrlServer: String, authMethods: [OCAuthenticationMethodIdentifier], issue: OCConnectionIssue) {
+    func mockOCConnectionPrepareForSetup(mockUrlServer: String, authMethods: [OCAuthenticationMethodIdentifier], issue: OCIssue) {
         let completionHandlerBlock : OCMPrepareForSetup = {
             (dict, mockedBlock) in
             let url: NSURL = NSURL(fileURLWithPath: mockUrlServer)

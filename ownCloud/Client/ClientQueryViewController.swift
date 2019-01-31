@@ -146,9 +146,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
 
-		let actionsBarButton: UIBarButtonItem = UIBarButtonItem(title: "● ● ●", style: .done, target: self, action: #selector(uploadsBarButtonPressed))
-		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .normal)
-		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .highlighted)
+		let actionsBarButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
 		self.navigationItem.rightBarButtonItem = actionsBarButton
 	}
 
@@ -188,18 +186,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				summary.message = "Started…".localized
 
 			case .contentsFromCache:
-				if let connectionStatus = core?.connectionStatus {
-					switch connectionStatus {
-						case .online:
-							summary.message = "Contents from cache.".localized
-
-						case .offline:
-							summary.message = "Offline. Contents from cache.".localized
-
-						case .unavailable:
-							summary.message = "Server down for maintenance. Contents from cache.".localized
-					}
-				}
+				summary.message = "Contents from cache.".localized
 
 			case .waitingForServerReply:
 				summary.message = "Waiting for server response…".localized
@@ -217,14 +204,14 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		switch query.state {
 			case .idle:
-				DispatchQueue.main.async {
+				OnMainThread {
 					if !self.refreshController!.isRefreshing {
 						self.refreshController?.beginRefreshing()
 					}
 				}
 
 			case .contentsFromCache, .stopped:
-				DispatchQueue.main.async {
+				OnMainThread {
 					self.tableView.refreshControl = nil
 				}
 
@@ -287,7 +274,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		if let core = self.core {
 			switch rowItem.type {
 				case .collection:
-				self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: rowItem.path)), animated: true)
+					if let path = rowItem.path {
+						self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: path)), animated: true)
+					}
 
 				case .file:
 					let itemViewController = DisplayHostViewController(for: rowItem, with: core, root: query.rootItem!)
@@ -529,12 +518,13 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var searchController: UISearchController?
 
 	func upload(itemURL: URL, name: String, completionHandler: ClientActionCompletionHandler? = nil) {
-		if let progress = core?.importFileNamed(name, at: query.rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { [weak self](error, _ core, _ item, _) in
+		if let rootItem = query.rootItem,
+		   let progress = core?.importFileNamed(name, at: rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
 			if error != nil {
-				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
+				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(rootItem.path))")
 				completionHandler?(false)
 			} else {
-				Log.debug("Success uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
+				Log.debug("Success uploading \(Log.mask(name)) file to \(Log.mask(rootItem.path))")
 				completionHandler?(true)
 			}
 		}) {
@@ -613,26 +603,32 @@ class ClientQueryViewController: UITableViewController, Themeable {
 // MARK: - Query Delegate
 extension ClientQueryViewController : OCQueryDelegate {
 
-	func query(_ query: OCQuery!, failedWithError error: Error!) {
+	func query(_ query: OCQuery, failedWithError error: Error) {
 
 	}
 
-	func queryHasChangesAvailable(_ query: OCQuery!) {
+	func queryHasChangesAvailable(_ query: OCQuery) {
 		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
-			DispatchQueue.main.async {
+			OnMainThread {
 
-				switch query?.state {
-				case .idle?, .targetRemoved?, .contentsFromCache?, .stopped?:
+				switch query.state {
+				case .idle, .targetRemoved, .contentsFromCache, .stopped:
 					if self.refreshController!.isRefreshing {
 						self.refreshController?.endRefreshing()
 					}
 				default: break
 				}
 
+				let previousItemCount = self.items.count
+
 				self.items = changeSet?.queryResult ?? []
 
-				switch query?.state {
-				case .contentsFromCache?, .idle?:
+				switch query.state {
+				case .contentsFromCache, .idle, .waitingForServerReply:
+					if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
+						break
+					}
+
 					if self.items.count == 0 {
 						if self.searchController?.searchBar.text != "" {
 							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
@@ -645,7 +641,7 @@ extension ClientQueryViewController : OCQueryDelegate {
 
 					self.reloadTableData()
 
-				case .targetRemoved?:
+				case .targetRemoved:
 					self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
 					self.reloadTableData()
 
@@ -660,10 +656,10 @@ extension ClientQueryViewController : OCQueryDelegate {
 // MARK: - SortBar Delegate
 extension ClientQueryViewController : SortBarDelegate {
 	func sortBar(_ sortBar: SortBar, leftButtonPressed: UIButton) {
-		guard let core = self.core else { return }
+		guard let core = self.core, let rootItem = query.rootItem else { return }
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .sortBar)
-		let actionContext = ActionContext(viewController: self, core: core, items: [query.rootItem], location: actionsLocation)
+		let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
 
 		let actions = Action.sortedApplicableActions(for: actionContext)
 
@@ -695,9 +691,8 @@ extension ClientQueryViewController: UISearchResultsUpdating {
 		let searchText = searchController.searchBar.text!
 
 		let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
-			if let item = item {
-				if item.name.localizedCaseInsensitiveContains(searchText) {return true}
-
+			if let itemName = item?.name {
+				return itemName.localizedCaseInsensitiveContains(searchText)
 			}
 			return false
 		}
@@ -746,7 +741,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 			var destinationItem: OCItem
 
-			guard let item = item.dragItem.localObject as? OCItem else {
+			guard let item = item.dragItem.localObject as? OCItem, let itemName = item.name else {
 				return
 			}
 
@@ -770,15 +765,15 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 			} else {
 
-				guard item.parentFileID != self.query.rootItem.fileID else {
+				guard let rootItem = self.query.rootItem, item.parentFileID != rootItem.fileID else {
 					return
 				}
 
-				destinationItem =  self.query.rootItem
+				destinationItem =  rootItem
 
 			}
 
-			if let progress = core.move(item, to: destinationItem, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
+			if let progress = core.move(item, to: destinationItem, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
 				}

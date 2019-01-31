@@ -55,7 +55,6 @@
 "Stopped" = "Stopped";
 "Started…" = "Started…";
 "Contents from cache." = "Contents from cache.";
-"Offline. Contents from cache." = "Offline. Contents from cache.";
 "Waiting for server response…" = "Waiting for server response…";
 "This folder no longer exists." = "This folder no longer exists.";
 "Everything up-to-date." = "Everything up-to-date.";
@@ -195,6 +194,10 @@
 "Duplicate" = "Duplicate";
 "Move" = "Move";
 "Open in" = "Open in";
+"Copy" = "Copy";
+"Copy here" = "Copy here";
+"Cannot connect to " = "Cannot connect to ";
+" couldn't download this file" = " couldn't download this file";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";

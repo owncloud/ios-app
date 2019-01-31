@@ -28,7 +28,7 @@ struct DisplayViewConfiguration {
 enum DisplayViewState {
 	case hasNetworkConnection
 	case noNetworkConnection
-	case downloading(progess: Progress)
+	case downloading(progress: Progress)
 	case errorDownloading(error: Error?)
 	case canceledDownload
 	case notSupportedMimeType
@@ -116,7 +116,7 @@ class DisplayViewController: UIViewController {
 		metadataInfoLabel = UILabel()
 		metadataInfoLabel?.translatesAutoresizingMaskIntoConstraints = false
 		metadataInfoLabel?.isHidden = false
-		metadataInfoLabel?.text = item.sizeInReadableFormat + " - " + item.lastModifiedInReadableFormat
+		metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
 		metadataInfoLabel?.textAlignment = .center
 
 		view.addSubview(metadataInfoLabel!)
@@ -222,24 +222,23 @@ class DisplayViewController: UIViewController {
 	}
 
 	@objc func downloadItem(sender: Any?) {
-//		self.showPreviewButton?.isHidden = true
-		if core.connectionStatus == .online {
-			if let downloadProgress = self.core.downloadItem(item, options: nil, resultHandler: { [weak self] (error, _, latestItem, file) in
-				guard error == nil else {
-					OnMainThread {
+		if let downloadProgress = self.core.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { [weak self] (error, _, latestItem, file) in
+			guard error == nil else {
+				OnMainThread {
+					if (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
+						self?.state = .noNetworkConnection
+					} else {
 						self?.state = .errorDownloading(error: error!)
 					}
-					return
 				}
-				OnMainThread {
-					self?.item = latestItem
-					self?.source = file!.url
-				}
-			}) {
-				self.state = .downloading(progess: downloadProgress)
+				return
 			}
-		} else {
-			self.state = .noNetworkConnection
+			OnMainThread {
+				self?.item = latestItem
+				self?.source = file!.url
+			}
+		}) {
+			self.state = .downloading(progress: downloadProgress)
 		}
 	}
 

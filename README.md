@@ -29,3 +29,4 @@ Easy starting points are also reviewing [pull requests](https://github.com/owncl
   * Also you can check other [channels](https://talk.owncloud.com/directory) for support.
 
 **License:** [GPLv3](https://github.com/owncloud/ios-app/LICENSE)
+

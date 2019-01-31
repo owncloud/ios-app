@@ -111,6 +111,9 @@ class FileProviderInterfaceManager: NSObject {
 					_ = waitForManagerGroup.wait(timeout: DispatchTime.distantFuture)
 
 					// Add domains for bookmarks
+//					var newDomains : [NSFileProviderDomain] = []
+//					var newAndUpdatedBookmarks : [OCBookmark] = []
+
 					for bookmarkUUIDToAdd in bookmarkUUIDStrings {
 						if let bookmark = bookmarksByUUIDString[bookmarkUUIDToAdd] {
 							// Create new domain
@@ -124,6 +127,9 @@ class FileProviderInterfaceManager: NSObject {
 								if error != nil {
 									Log.error("Error adding domain: \(newDomain) error: \(String(describing: error))")
 								}
+
+//								newAndUpdatedBookmarks.append(bookmark)
+
 								waitForManagerGroup.leave()
 							})
 						}
@@ -131,6 +137,34 @@ class FileProviderInterfaceManager: NSObject {
 
 					// Wait for NSFileProviderManager operations to settle
 					_ = waitForManagerGroup.wait(timeout: DispatchTime.distantFuture)
+//
+//					// Perform initial connection to new and updated bookmarks
+//					for bookmark in newAndUpdatedBookmarks {
+//						OCCoreManager.shared.requestCore(for: bookmark, completionHandler: { (core, error) in
+//							if core != nil {
+//							}
+//						})
+//					}
+
+//					// Notify new domains of changes to trigger initial enumeration
+//					for domain in newDomains {
+//						Log.debug("Signaling NSFileProviderManager of changes for root directory after adding domain=\(domain) ..")
+//
+//						if let manager = NSFileProviderManager.init(for: domain) {
+//							waitForManagerGroup.enter()
+//
+//							manager.signalEnumerator(for: .rootContainer, completionHandler: { (error) in
+//								if let error = error {
+//									Log.error("Error signaling NSFileProviderManager of changes for root directory after adding domain=\(domain): error=\(error)")
+//								}
+//								waitForManagerGroup.leave()
+//							})
+//
+//							_ = waitForManagerGroup.wait(timeout: DispatchTime.distantFuture)
+//						}
+//
+//						Log.debug("Done signaling NSFileProviderManager of changes for root directory after adding domain=\(domain) ..")
+//					}
 				}
 			}
 		}
