@@ -18,7 +18,7 @@
 
 import UIKit
 
-class ProgressView: UIView, Themeable {
+class ProgressView: UIView, Themeable, CAAnimationDelegate {
 	var backgroundCircleLayer : CAShapeLayer = CAShapeLayer()
 	var foregroundCircleLayer : CAShapeLayer = CAShapeLayer()
 	var stopButtonLayer : CAShapeLayer = CAShapeLayer()
@@ -88,17 +88,19 @@ class ProgressView: UIView, Themeable {
 		}
 	}
 
-//	var accessibilityLabel: String? {
-//
-//	}
+	private var spinningAnimationActive : Bool = false
 
 	private var spinning : Bool = false {
 		didSet {
+			let spinningAnimationKey = "spinningAnimation"
+
 			CATransaction.begin()
 			CATransaction.setDisableActions(true)
 			CATransaction.setAnimationDuration(0)
 
-			if spinning != oldValue {
+			foregroundCircleLayer.animation(forKey: spinningAnimationKey)
+
+			if (spinning != oldValue) || (spinning && oldValue && !spinningAnimationActive) {
 				if spinning {
 					let spinningAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
 
@@ -106,11 +108,15 @@ class ProgressView: UIView, Themeable {
 
 					spinningAnimation.duration = 1.0
 					spinningAnimation.isCumulative = true
-					spinningAnimation.repeatCount = 1000
+					spinningAnimation.repeatCount = MAXFLOAT
 
-					foregroundCircleLayer.add(spinningAnimation, forKey: "spinningAnimation")
+					foregroundCircleLayer.add(spinningAnimation, forKey: spinningAnimationKey)
+
+					if window != nil {
+						spinningAnimationActive = true
+					}
 				} else {
-					foregroundCircleLayer.removeAnimation(forKey: "spinningAnimation")
+					foregroundCircleLayer.removeAnimation(forKey: spinningAnimationKey)
 				}
 			}
 
@@ -123,6 +129,8 @@ class ProgressView: UIView, Themeable {
 		Theme.shared.register(client: self, applyImmediately: true)
 
 		self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.cancel)))
+
+		NotificationCenter.default.addObserver(self, selector: #selector(self.appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -130,8 +138,15 @@ class ProgressView: UIView, Themeable {
 	}
 
 	deinit {
+		NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+
 		self.progress = nil
 		Theme.shared.unregister(client: self)
+	}
+
+	@objc func appDidBecomeActive() {
+		spinningAnimationActive = false
+		self.update()
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
@@ -242,6 +257,16 @@ class ProgressView: UIView, Themeable {
 		}
 
 		self.adjustFrames()
+	}
+
+	override func didMoveToWindow() {
+		super.didMoveToWindow()
+
+		if window == nil {
+			spinningAnimationActive = false
+		} else {
+			self.update()
+		}
 	}
 
 	override var intrinsicContentSize: CGSize {
