@@ -41,6 +41,12 @@ protocol DisplayViewEditingDelegate: class {
 class DisplayViewController: UIViewController {
 
 	private let iconImageSize: CGSize = CGSize(width: 200.0, height: 200.0)
+	private let iconImageViewCenterYConstraintConstant: CGFloat = -60.0
+	private let metadataInfoLabelMarginAndTopConstraintConstant: CGFloat = 10.0
+	private let noNetworkLabelTopConstraintConstant: CGFloat = 10.0
+	private let showPreviewButtonTopConstraintConstant: CGFloat = 10.0
+	private let cancelButtonTopConstraintConstant: CGFloat = 10.0
+	private let progressViewTopConstraintConstant: CGFloat = 20.0
 
 	// MARK: - Configuration
 	weak var item: OCItem!
@@ -55,7 +61,7 @@ class DisplayViewController: UIViewController {
 			OnMainThread {
 				self.iconImageView.isHidden = true
 			}
-			hideUIElements()
+			hideItemMetadataUIElements()
 			renderSpecificView()
 		}
 	}
@@ -158,27 +164,27 @@ class DisplayViewController: UIViewController {
 
 		NSLayoutConstraint.activate([
 			iconImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -60),
+			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: iconImageViewCenterYConstraintConstant),
 			iconImageView.heightAnchor.constraint(equalToConstant: iconImageSize.height),
 			iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
 
 			metadataInfoLabel!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			metadataInfoLabel!.topAnchor.constraint(equalTo: iconImageView!.bottomAnchor, constant: 10),
-			metadataInfoLabel!.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 10),
-			metadataInfoLabel!.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -10),
+			metadataInfoLabel!.topAnchor.constraint(equalTo: iconImageView!.bottomAnchor, constant: metadataInfoLabelMarginAndTopConstraintConstant),
+			metadataInfoLabel!.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: metadataInfoLabelMarginAndTopConstraintConstant),
+			metadataInfoLabel!.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -metadataInfoLabelMarginAndTopConstraintConstant),
 
 			progressView!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
 			progressView!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
-			progressView!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: 20),
+			progressView!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: progressViewTopConstraintConstant),
 
 			cancelButton!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			cancelButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: 10),
+			cancelButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: cancelButtonTopConstraintConstant),
 
 			showPreviewButton!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			showPreviewButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: 10),
+			showPreviewButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: showPreviewButtonTopConstraintConstant),
 
 			noNetworkLabel!.centerXAnchor.constraint(equalTo: metadataInfoLabel!.centerXAnchor),
-			noNetworkLabel!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: 10),
+			noNetworkLabel!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: noNetworkLabelTopConstraintConstant),
 			noNetworkLabel!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor)
 		])
 	}
@@ -254,7 +260,7 @@ class DisplayViewController: UIViewController {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the source property.s
 	}
 
-	func hideUIElements() {
+	func hideItemMetadataUIElements() {
 		iconImageView.isHidden = true
 		progressView?.isHidden = true
 		cancelButton?.isHidden = true
