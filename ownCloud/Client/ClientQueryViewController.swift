@@ -52,6 +52,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
     var moveMultipleBarButtonItem: UIBarButtonItem?
 
     var selectBarButton: UIBarButtonItem?
+    var uploadBarButton: UIBarButtonItem?
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -153,9 +154,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
         self.tableView.allowsMultipleSelectionDuringEditing = true
 
-        let actionsBarButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
+        uploadBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
         selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
-		self.navigationItem.rightBarButtonItems = [selectBarButton!, actionsBarButton]
+		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
 
         // Create bar button items for the toolbar
         deleteMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(actOnMultipleItems))
@@ -610,6 +611,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
     func leaveMultipleSelection() {
         self.tableView.setEditing(false, animated: true)
         selectBarButton?.title = "Select".localized
+        self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
         removeToolbar()
     }
 
@@ -644,6 +646,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
             self.tableView.setEditing(true, animated: true)
             selectBarButton?.title = "Done".localized
             self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem!])
+            self.navigationItem.rightBarButtonItems = [selectBarButton!]
         } else {
             leaveMultipleSelection()
         }
