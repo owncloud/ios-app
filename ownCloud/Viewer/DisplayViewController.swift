@@ -173,7 +173,7 @@ class DisplayViewController: UIViewController {
 
 			progressView!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
 			progressView!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
-			progressView!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: verticalSpacing),
+			progressView!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: progressViewVerticalSpacing),
 
 			cancelButton!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
 			cancelButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: verticalSpacing),
