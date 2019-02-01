@@ -11,14 +11,22 @@ import ownCloudSDK
 class MockOCCore: OCCore {
 
 	var query:MockOCQuery?
+	var issue: OCIssue?
 
-	convenience init(query: MockOCQuery!, bookmark: OCBookmark!) {
+	convenience init(query: MockOCQuery!, bookmark: OCBookmark!, issue: OCIssue?) {
 		self.init(bookmark: bookmark)
 		self.query = query
+		self.issue = issue
 	}
 
 	override func createFolder(_ folderName: String, inside: OCItem, options: [OCCoreOption : Any]? = nil, resultHandler: OCCoreActionResultHandler? = nil) -> Progress? {
-		query?.delegate?.queryHasChangesAvailable(query!)
+
+		if self.issue != nil {
+			self.delegate?.core(self, handleError: nil, issue: issue)
+		} else {
+			query?.delegate?.queryHasChangesAvailable(query!)
+		}
+
 		return nil
 	}
 }

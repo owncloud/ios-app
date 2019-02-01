@@ -44,7 +44,7 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark)
+			self.showFileList(bookmark: bookmark, issue: nil)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -72,7 +72,7 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark)
+			self.showFileList(bookmark: bookmark, issue: nil)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -117,7 +117,7 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark)
+			self.showFileList(bookmark: bookmark, issue: nil)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -153,7 +153,7 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark)
+			self.showFileList(bookmark: bookmark, issue: nil)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -189,7 +189,7 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark)
+			self.showFileList(bookmark: bookmark, issue: nil)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -215,11 +215,58 @@ class CreateFolderTests: XCTestCase {
 		}
 	}
 
-	func showFileList(bookmark: OCBookmark) {
+	/*
+	* PASSED if: A folder is Created Folder
+	*/
+	func testCreateFolderWithExistingName() {
+
+		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
+
+			let folderName = "New Folder"
+			let errorTitle = "Error title"
+			let errorMessage = "Error message"
+
+			//Mocks
+			self.mockOCoreForBookmark(mockBookmark: bookmark)
+			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+
+//			issue = [OCIssue issueFromSyncIssue:syncIssue forCore:core resolutionResultHandler:^(OCSyncIssueChoice *choice) {
+//				[weakCore resolveSyncIssue:syncIssue withChoice:choice userInfo:userInfo completionHandler:nil];
+//				[weakCore endActivity:@"Handle issue"];
+//				}];
+
+			let issue: OCIssue = OCIssue(forMultipleChoicesWithLocalizedTitle: errorTitle, localizedDescription: errorMessage, choices: [OCIssueChoice(type: .cancel, identifier: nil, label: "Cancel".localized, userInfo: nil, handler: nil)]) { (issue, decission) in
+				print("Test")
+			}
+
+			//let issue: OCIssue = OCIssue.init(forError: NSError(ocError: .itemAlreadyExists), level: .error, issueHandler: nil)
+
+			self.showFileList(bookmark: bookmark, issue: issue)
+
+			//Actions
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
+
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).perform(grey_tap())
+
+			//Assert
+			EarlGrey.select(elementWithMatcher: grey_text(errorTitle)).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_text(errorMessage)).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
+			dismissFileList()
+
+		} else {
+			assertionFailure("File list not loaded because Bookmark is nil")
+		}
+	}
+
+	func showFileList(bookmark: OCBookmark, issue: OCIssue?) {
 		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
 
 			let query = MockOCQuery(path: "/")
-			let core = MockOCCore(query: query, bookmark: bookmark)
+			let core = MockOCCore(query: query, bookmark: bookmark, issue: issue)
 
 			let rootViewController: MockClientRootViewController = MockClientRootViewController(core: core, query: query, bookmark: bookmark)
 
