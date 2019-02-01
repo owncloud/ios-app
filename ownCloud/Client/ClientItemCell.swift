@@ -27,12 +27,18 @@ protocol ClientItemCellDelegate: class {
 
 class ClientItemCell: ThemeTableViewCell {
 
+    let horizontalMargin : CGFloat = 20.0
+    let spacing : CGFloat = 15.0
+    let moreButtonWidth : CGFloat = 60.0
+
 	weak var delegate: ClientItemCellDelegate?
 
 	var titleLabel : UILabel = UILabel()
 	var detailLabel : UILabel = UILabel()
 	var iconView : UIImageView = UIImageView()
 	var moreButton: UIButton = UIButton()
+
+    var moreButtonWidthConstraint : NSLayoutConstraint?
 
 	var activeThumbnailRequestProgress : Progress?
 
@@ -41,6 +47,12 @@ class ClientItemCell: ThemeTableViewCell {
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		prepareViewAndConstraints()
+        self.multipleSelectionBackgroundView = {
+            let blankView = UIView(frame: CGRect.zero)
+            blankView.backgroundColor = UIColor.clear
+            blankView.layer.masksToBounds = true
+            return blankView
+        }()
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -67,9 +79,9 @@ class ClientItemCell: ThemeTableViewCell {
 		self.contentView.addSubview(iconView)
 		self.contentView.addSubview(moreButton)
 
-		iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 20).isActive = true
-		iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -15).isActive = true
-		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -15).isActive = true
+		iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: horizontalMargin).isActive = true
+		iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -spacing).isActive = true
+		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -spacing).isActive = true
 
 		moreButton.setAttributedTitle(NSAttributedString(string: "● ● ●", attributes:
 			[NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption2)]), for: .normal)
@@ -80,24 +92,25 @@ class ClientItemCell: ThemeTableViewCell {
 		moreButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
 		moreButton.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
 		moreButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor).isActive = true
-		moreButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
+		moreButtonWidthConstraint = moreButton.widthAnchor.constraint(equalToConstant: 60)
+        moreButtonWidthConstraint?.isActive = true
 		moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
 		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
 
-		moreButton.contentEdgeInsets.left = -20
+		moreButton.contentEdgeInsets.left = -horizontalMargin
 		moreButton.titleEdgeInsets.right = 10
-		moreButton.titleEdgeInsets.left = 15
-		moreButton.contentEdgeInsets.right = -15
+		moreButton.titleEdgeInsets.left = spacing
+		moreButton.contentEdgeInsets.right = -spacing
 
-		titleLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -20).isActive = true
-		detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -20).isActive = true
+		titleLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -horizontalMargin).isActive = true
+		detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -horizontalMargin).isActive = true
 
-		iconView.widthAnchor.constraint(equalToConstant: 60).isActive = true
+		iconView.widthAnchor.constraint(equalToConstant: moreButtonWidth).isActive = true
 		iconView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor).isActive = true
 
-		titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20).isActive = true
+		titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: horizontalMargin).isActive = true
 		titleLabel.bottomAnchor.constraint(equalTo: detailLabel.topAnchor, constant: -5).isActive = true
-		detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -20).isActive = true
+		detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -horizontalMargin).isActive = true
 
 		iconView.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.vertical)
 		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
@@ -186,6 +199,36 @@ class ClientItemCell: ThemeTableViewCell {
 		moreTitle.addAttribute(NSAttributedString.Key.foregroundColor, value: collection.tableRowColors.labelColor, range: NSRange(location:0, length:moreTitle.length))
 		self.moreButton.setAttributedTitle(moreTitle, for: .normal)
 	}
+
+    // MARK: - Editing mode
+
+    func setMoreButton(hidden:Bool, animated: Bool = false) {
+        if hidden {
+            moreButtonWidthConstraint?.constant = 0
+        } else {
+            moreButtonWidthConstraint?.constant = moreButtonWidth
+        }
+        moreButton.isHidden = hidden
+        if animated {
+            UIView.animate(withDuration: 0.25) {
+                self.contentView.layoutIfNeeded()
+            }
+        } else {
+            self.contentView.layoutIfNeeded()
+        }
+    }
+
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+
+        if editing {
+            setMoreButton(hidden: true, animated: animated)
+        } else {
+            if let item = self.item {
+                setMoreButton(hidden: item.isPlaceholder ? true : false, animated: animated)
+            }
+        }
+    }
 
 	// MARK: - Actions
 	@objc func moreButtonTapped() {

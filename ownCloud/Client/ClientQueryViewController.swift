@@ -29,8 +29,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var query : OCQuery
 
 	var items : [OCItem] = []
+    var actions : [Action]?
 
-	var selectedItem: OCItem?
+    var actions : [Action]?
 
 	var queryProgressSummary : ProgressSummary? {
 		willSet {
@@ -47,6 +48,14 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 	var progressSummarizer : ProgressSummarizer?
 	var refreshController: UIRefreshControl?
+
+    let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+
+    var deleteMultipleBarButtonItem: UIBarButtonItem?
+    var moveMultipleBarButtonItem: UIBarButtonItem?
+
+    var selectBarButton: UIBarButtonItem?
+    var uploadBarButton: UIBarButtonItem?
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -146,9 +155,20 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
 
-		let actionsBarButton: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
-		actionsBarButton.accessibilityLabel = "Upload files".localized
-		self.navigationItem.rightBarButtonItem = actionsBarButton
+    self.tableView.allowsMultipleSelectionDuringEditing = true
+
+    uploadBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
+    selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
+		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
+
+    // Create bar button items for the toolbar
+    deleteMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(actOnMultipleItems))
+    deleteMultipleBarButtonItem?.actionIdentifier = DeleteAction.identifier
+    deleteMultipleBarButtonItem?.isEnabled = false
+
+    moveMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(actOnMultipleItems))
+    moveMultipleBarButtonItem?.actionIdentifier = MoveAction.identifier
+    moveMultipleBarButtonItem?.isEnabled = false
 	}
 
 	private var viewControllerVisible : Bool = false
@@ -205,7 +225,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		switch query.state {
 			case .idle:
-				OnMainThread {
+				OnMainThread{
 					if !self.refreshController!.isRefreshing {
 						self.refreshController?.beginRefreshing()
 					}
@@ -267,23 +287,41 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let rowItem : OCItem = itemAtIndexPath(indexPath)
+        // If not in multiple-selection mode, just navigate to the file or folder (collection)
+        if !self.tableView.isEditing {
+            let rowItem : OCItem = itemAtIndexPath(indexPath)
 
-		if let core = self.core {
-			switch rowItem.type {
-				case .collection:
-					if let path = rowItem.path {
-						self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: path)), animated: true)
-					}
+            if let core = self.core {
+                switch rowItem.type {
+                case .collection:
+                    if let path = rowItem.path {
+                        self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: path)), animated: true)
+                    }
+                case .file:
+                    let itemViewController = DisplayHostViewController(for: rowItem, with: core, root: query.rootItem!)
+                    self.navigationController?.pushViewController(itemViewController, animated: true)
+                }
+            }
 
-				case .file:
-					let itemViewController = DisplayHostViewController(for: rowItem, with: core, root: query.rootItem!)
-					self.navigationController?.pushViewController(itemViewController, animated: true)
-			}
-		}
-
-		tableView.deselectRow(at: indexPath, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
+        } else {
+            updateToolbarItems()
+        }
 	}
+
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if tableView.isEditing {
+            updateToolbarItems()
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        if tableView.isEditing {
+            return true
+        } else {
+            return true
+        }
+    }
 
 	func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
 		return true
@@ -530,7 +568,92 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 
+    // MARK: - Toolbar actions handling multiply selected items
+
+    func updateToolbarItems() {
+        guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
+        
+        guard let toolbarItems = tabBarController.toolbar?.items else { return }
+
+        // Do we have selected items?
+        if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
+            if selectedIndexPaths.count > 0 {
+
+                if let core = self.core {
+                    // Get array of OCItems from selected table view index paths
+                    var selectedItems = [OCItem]()
+                    for indexPath in selectedIndexPaths {
+                        selectedItems.append(itemAtIndexPath(indexPath))
+                    }
+
+                    // Get possible associated actions
+                    let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+                    let actionContext = ActionContext(viewController: self, core: core, items: selectedItems, location: actionsLocation)
+
+                    self.actions = Action.sortedApplicableActions(for: actionContext)
+
+                    // Enable / disable tool-bar items depending on action availability
+                    for item in toolbarItems {
+                        if self.actions?.contains(where: {type(of:$0).identifier == item.actionIdentifier}) ?? false {
+                            item.isEnabled = true
+                        } else {
+                            item.isEnabled = false
+                        }
+                    }
+                }
+            }
+        } else {
+            self.actions = nil
+            for item in toolbarItems {
+                item.isEnabled = false
+            }
+        }
+    }
+
+    func leaveMultipleSelection() {
+        self.tableView.setEditing(false, animated: true)
+        selectBarButton?.title = "Select".localized
+        self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
+        removeToolbar()
+    }
+
+    @objc func actOnMultipleItems(_ sender: UIBarButtonItem) {
+
+        // Find associated action
+        if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
+            // Configure progress handler
+            action.progressHandler = { [weak self] progress in
+                self?.progressSummarizer?.startTracking(progress: progress)
+            }
+
+            action.completionHandler = { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.leaveMultipleSelection()
+                }
+            }
+
+            // Execute the action
+            action.willRun()
+            action.run()
+        }
+    }
+
 	// MARK: - Navigation Bar Actions
+
+    @objc func multipleSelectionButtonPressed(_ sender: UIBarButtonItem) {
+
+        if !self.tableView.isEditing {
+            updateToolbarItems()
+            self.tableView.setEditing(true, animated: true)
+            selectBarButton?.title = "Done".localized
+            self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem!])
+            self.navigationItem.rightBarButtonItems = [selectBarButton!]
+
+        } else {
+            leaveMultipleSelection()
+        }
+     }
+
 	@objc func uploadsBarButtonPressed(_ sender: UIBarButtonItem) {
 
 		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
