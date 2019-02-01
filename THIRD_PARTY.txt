@@ -48,7 +48,7 @@ that govern this software, for the purposes they are being used.
 The third party software included and used by this project is:
 
  * 	ownCloud iOS SDK v 0.0.1
-   	Copyright (c) 2018 ownCloud GmbH. (http://www.owncloud.org/)
+   	Copyright (c) 2018-2019 ownCloud GmbH. (http://www.owncloud.org/)
    	Licensed under GNU Public License, Version 3.
    	Placed at ios-sdk
 	Original license document included at ios-sdk/LICENSE.
@@ -67,7 +67,13 @@ The third party software included and used by this project is:
    	Placed at external/PocketSVG
 	Original license document included at external/PocketSVG/LICENSE
 	See https://github.com/pocketsvg/PocketSVG
-
+ 	
+ * 	libzip
+	Copyright (C) 1999-2017 Dieter Baron and Thomas Klausner
+	Licensed under a 3-clause BSD license
+	Placed at external/libzip
+	Original license document included at external/libzip/LICENSE
+	See https://github.com/nih-at/libzip
 
 
 
