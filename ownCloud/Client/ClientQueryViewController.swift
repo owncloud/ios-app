@@ -155,20 +155,20 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
 
-        self.tableView.allowsMultipleSelectionDuringEditing = true
+    self.tableView.allowsMultipleSelectionDuringEditing = true
 
-        uploadBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
-        selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
+    uploadBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
+    selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
 
-        // Create bar button items for the toolbar
-        deleteMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(actOnMultipleItems))
-        deleteMultipleBarButtonItem?.actionIdentifier = DeleteAction.identifier
-        deleteMultipleBarButtonItem?.isEnabled = false
+    // Create bar button items for the toolbar
+    deleteMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(actOnMultipleItems))
+    deleteMultipleBarButtonItem?.actionIdentifier = DeleteAction.identifier
+    deleteMultipleBarButtonItem?.isEnabled = false
 
-        moveMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(actOnMultipleItems))
-        moveMultipleBarButtonItem?.actionIdentifier = MoveAction.identifier
-        moveMultipleBarButtonItem?.isEnabled = false
+    moveMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(actOnMultipleItems))
+    moveMultipleBarButtonItem?.actionIdentifier = MoveAction.identifier
+    moveMultipleBarButtonItem?.isEnabled = false
 	}
 
 	private var viewControllerVisible : Bool = false
