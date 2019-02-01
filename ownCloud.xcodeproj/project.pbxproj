@@ -78,6 +78,7 @@
 		6EADE9372192E235006821B3 /* UIImagePickerController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EADE9362192E235006821B3 /* UIImagePickerController+Extension.swift */; };
 		6EB8EDC52114358400C2BF44 /* folder-create.tvg in Resources */ = {isa = PBXBuildFile; fileRef = 6EB8EDBE2114358300C2BF44 /* folder-create.tvg */; };
 		6ED1B80B21A4004900E16C95 /* CreateFolderAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1B80A21A4004900E16C95 /* CreateFolderAction.swift */; };
+		6EE97DCA2204703C0062CCBC /* BackgroundImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 6EE97DC42204703C0062CCBC /* BackgroundImage.png */; };
 		75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */; };
 		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DC018F8320A0F56300135198 /* UIView+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC018F8220A0F56300135198 /* UIView+Animation.swift */; };
@@ -521,6 +522,7 @@
 		6EADE9362192E235006821B3 /* UIImagePickerController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImagePickerController+Extension.swift"; sourceTree = "<group>"; };
 		6EB8EDBE2114358300C2BF44 /* folder-create.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-create.tvg"; path = "img/filetypes-tvg/folder-create.tvg"; sourceTree = SOURCE_ROOT; };
 		6ED1B80A21A4004900E16C95 /* CreateFolderAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFolderAction.swift; sourceTree = "<group>"; };
+		6EE97DC42204703C0062CCBC /* BackgroundImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BackgroundImage.png; sourceTree = "<group>"; };
 		A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ownCloudTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0D9C062DD1E85A838608B0F /* EarlGrey.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EarlGrey.framework; path = Pods/EarlGrey/EarlGrey/EarlGrey.framework; sourceTree = SOURCE_ROOT; };
 		D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarlGrey.swift; sourceTree = "<group>"; };
@@ -1068,6 +1070,7 @@
 			isa = PBXGroup;
 			children = (
 				6E93851C220322F30049D676 /* SplashImage.png */,
+				6EE97DC42204703C0062CCBC /* BackgroundImage.png */,
 				DCCE54092080175B00067D1D /* TVGs */,
 				233BDEA8204FEFE500C06732 /* LaunchScreen.storyboard */,
 				233BDEA6204FEFE500C06732 /* Assets.xcassets */,
@@ -1563,6 +1566,7 @@
 				239F437E20D0EE6300B1276D /* icon-search.tvg in Resources */,
 				DCE5E8AC2080D781005F60CE /* x-office-document.tvg in Resources */,
 				DCE5E8AF2080D781005F60CE /* application-pdf.tvg in Resources */,
+				6EE97DCA2204703C0062CCBC /* BackgroundImage.png in Resources */,
 				DCE5E8A82080D781005F60CE /* folder-public.tvg in Resources */,
 				DCE5E8B12080D781005F60CE /* package-x-generic.tvg in Resources */,
 				DCE5E8AD2080D781005F60CE /* folder-starred.tvg in Resources */,
