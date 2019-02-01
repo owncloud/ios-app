@@ -154,7 +154,8 @@ extension NSObject {
 				case .bigMessage:
 					label.font = UIFont.systemFont(ofSize: 17)
 
-				default: break
+				default:
+				break
 			}
 
 			switch itemState {

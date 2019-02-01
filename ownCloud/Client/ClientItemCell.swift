@@ -26,6 +26,10 @@ protocol ClientItemCellDelegate: class {
 }
 
 class ClientItemCell: ThemeTableViewCell {
+	private let horizontalMargin : CGFloat = 20.0
+	private let horizontalSmallMargin : CGFloat = 10.0
+	private let spacing : CGFloat = 15.0
+	private let moreButtonWidth : CGFloat = 60.0
 
 	weak var delegate: ClientItemCellDelegate?
 
@@ -36,6 +40,8 @@ class ClientItemCell: ThemeTableViewCell {
 	var moreButton : UIButton = UIButton()
 	var progressView : ProgressView?
 
+	var moreButtonWidthConstraint : NSLayoutConstraint?
+
 	var activeThumbnailRequestProgress : Progress?
 
 	weak var core : OCCore?
@@ -43,6 +49,12 @@ class ClientItemCell: ThemeTableViewCell {
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		prepareViewAndConstraints()
+		self.multipleSelectionBackgroundView = {
+			let blankView = UIView(frame: CGRect.zero)
+			blankView.backgroundColor = UIColor.clear
+			blankView.layer.masksToBounds = true
+			return blankView
+		}()
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -66,8 +78,11 @@ class ClientItemCell: ThemeTableViewCell {
 		cloudStatusIconView.translatesAutoresizingMaskIntoConstraints = false
 		cloudStatusIconView.contentMode = .center
 
-		titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
-		detailLabel.font = UIFont.systemFont(ofSize: 14)
+		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+		titleLabel.adjustsFontForContentSizeCategory = true
+
+		detailLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+		detailLabel.adjustsFontForContentSizeCategory = true
 
 		self.contentView.addSubview(titleLabel)
 		self.contentView.addSubview(detailLabel)
@@ -75,14 +90,14 @@ class ClientItemCell: ThemeTableViewCell {
 		self.contentView.addSubview(cloudStatusIconView)
 		self.contentView.addSubview(moreButton)
 
-		moreButton.setAttributedTitle(NSAttributedString(string: "● ● ●", attributes:
-			[NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10)]), for: .normal)
+		moreButton.setAttributedTitle(NSAttributedString(string: "● ● ●", attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption2)]), for: .normal)
+		moreButton.titleLabel?.adjustsFontForContentSizeCategory = true
 		moreButton.contentMode = .scaleToFill
 
-		moreButton.contentEdgeInsets.left = -20
-		moreButton.titleEdgeInsets.right = 10
-		moreButton.titleEdgeInsets.left = 15
-		moreButton.contentEdgeInsets.right = -15
+		moreButton.contentEdgeInsets.left = -horizontalMargin
+		moreButton.titleEdgeInsets.right = horizontalSmallMargin
+		moreButton.titleEdgeInsets.left = spacing
+		moreButton.contentEdgeInsets.right = -spacing
 
 		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
 
@@ -96,31 +111,33 @@ class ClientItemCell: ThemeTableViewCell {
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 		moreButton.setContentHuggingPriority(UILayoutPriority.required, for: .horizontal)
 
+		moreButtonWidthConstraint = moreButton.widthAnchor.constraint(equalToConstant: moreButtonWidth)
+
 		NSLayoutConstraint.activate([
-			iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 20),
-			iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -15),
-			iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -15),
+			iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: horizontalMargin),
+			iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -spacing),
+			iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -spacing),
 
 			moreButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 			moreButton.topAnchor.constraint(equalTo: self.contentView.topAnchor),
 			moreButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-			moreButton.widthAnchor.constraint(equalToConstant: 60),
+			moreButtonWidthConstraint!,
 			moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
 
-			cloudStatusIconView.rightAnchor.constraint(lessThanOrEqualTo: moreButton.leftAnchor, constant: -10),
+			cloudStatusIconView.rightAnchor.constraint(lessThanOrEqualTo: moreButton.leftAnchor, constant: -horizontalSmallMargin),
 			cloudStatusIconView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor, constant: 0),
 
-			titleLabel.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: -10),
-			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -10),
+			titleLabel.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
+			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -horizontalMargin),
 
 			iconView.widthAnchor.constraint(equalToConstant: 60),
 			iconView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 			iconView.topAnchor.constraint(greaterThanOrEqualTo: self.topAnchor, constant: 10),
 			iconView.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -10),
 
-			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20),
+			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: horizontalMargin),
 			titleLabel.bottomAnchor.constraint(equalTo: detailLabel.topAnchor, constant: -5),
-			detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -20)
+			detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -horizontalMargin)
 		])
 	}
 
@@ -204,6 +221,8 @@ class ClientItemCell: ThemeTableViewCell {
 		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
 		self.moreButton.isHidden = item.isPlaceholder ? true : false
 
+		self.moreButton.accessibilityLabel = item.name! + " " + "Actions".localized
+
 		self.updateProgress()
 	}
 
@@ -281,6 +300,35 @@ class ClientItemCell: ThemeTableViewCell {
 		let moreTitle: NSMutableAttributedString = NSMutableAttributedString(attributedString: self.moreButton.attributedTitle(for: .normal)!)
 		moreTitle.addAttribute(NSAttributedString.Key.foregroundColor, value: collection.tableRowColors.labelColor, range: NSRange(location:0, length:moreTitle.length))
 		self.moreButton.setAttributedTitle(moreTitle, for: .normal)
+	}
+
+	// MARK: - Editing mode
+	func setMoreButton(hidden:Bool, animated: Bool = false) {
+		if hidden {
+			moreButtonWidthConstraint?.constant = 0
+		} else {
+			moreButtonWidthConstraint?.constant = moreButtonWidth
+		}
+		moreButton.isHidden = hidden
+		if animated {
+			UIView.animate(withDuration: 0.25) {
+				self.contentView.layoutIfNeeded()
+			}
+		} else {
+			self.contentView.layoutIfNeeded()
+		}
+	}
+
+	override func setEditing(_ editing: Bool, animated: Bool) {
+		super.setEditing(editing, animated: animated)
+
+		if editing {
+			setMoreButton(hidden: true, animated: animated)
+		} else {
+			if let item = self.item {
+				setMoreButton(hidden: item.isPlaceholder ? true : false, animated: animated)
+			}
+		}
 	}
 
 	// MARK: - Actions

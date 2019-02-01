@@ -27,6 +27,7 @@ class ClientRootViewController: UITabBarController {
 	var activityViewController : ClientActivityViewController?
 	var progressBar : CollapsibleProgressBar?
 	var progressSummarizer : ProgressSummarizer?
+	var toolbar : UIToolbar?
 
 	var connectionStatusObservation : NSKeyValueObservation?
 	var connectionStatusSummary : ProgressSummary? {
@@ -162,6 +163,19 @@ class ClientRootViewController: UITabBarController {
 		progressBar?.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
 		progressBar?.bottomAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
 
+		toolbar = UIToolbar(frame: .zero)
+		toolbar?.translatesAutoresizingMaskIntoConstraints = false
+		toolbar?.insetsLayoutMarginsFromSafeArea = true
+
+		self.view.addSubview(toolbar!)
+
+		toolbar?.leftAnchor.constraint(equalTo: self.tabBar.leftAnchor).isActive = true
+		toolbar?.rightAnchor.constraint(equalTo: self.tabBar.rightAnchor).isActive = true
+		toolbar?.topAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
+		toolbar?.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+
+		toolbar?.isHidden = true
+
 		Theme.shared.register(client: self, applyImmediately: true)
 
 		if let filesNavigationController = filesNavigationController,
@@ -200,6 +214,8 @@ class ClientRootViewController: UITabBarController {
 extension ClientRootViewController : Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tabBar.applyThemeCollection(collection)
+
+		self.toolbar?.applyThemeCollection(Theme.shared.activeCollection)
 
 		self.view.backgroundColor = collection.tableBackgroundColor
 	}

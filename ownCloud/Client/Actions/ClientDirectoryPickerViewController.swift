@@ -65,7 +65,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 		// Cancel button creation
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
-		navigationItem.rightBarButtonItem = cancelBarButton
+		navigationItem.rightBarButtonItems = [cancelBarButton]
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
