@@ -55,6 +55,7 @@
 		595E2C9F21EE4BF300F0E95D /* PropfindResponseNewFolder.xml in Resources */ = {isa = PBXBuildFile; fileRef = 595E2C9E21EE4BF300F0E95D /* PropfindResponseNewFolder.xml */; };
 		595E2CA721EE4FC400F0E95D /* PropfindResponse.xml in Resources */ = {isa = PBXBuildFile; fileRef = 59B09E5C21AD61DD007827B8 /* PropfindResponse.xml */; };
 		595E2CA821EE501400F0E95D /* PropfindResponseNewFolder.xml in Resources */ = {isa = PBXBuildFile; fileRef = 595E2C9E21EE4BF300F0E95D /* PropfindResponseNewFolder.xml */; };
+		5971CF3A22046F530052FE9A /* MockClientRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5971CF3922046F530052FE9A /* MockClientRootViewController.swift */; };
 		597A404920AD59EF00B028B2 /* AppLockWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597A404820AD59EF00B028B2 /* AppLockWindow.swift */; };
 		59B09E6421AD61DD007827B8 /* PropfindResponse.xml in Resources */ = {isa = PBXBuildFile; fileRef = 59B09E5C21AD61DD007827B8 /* PropfindResponse.xml */; };
 		59B09E6521AD61DD007827B8 /* test_certificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 59B09E5D21AD61DD007827B8 /* test_certificate.cer */; };
@@ -441,6 +442,7 @@
 		59538A1B21E77FB6005E543B /* MockOCCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockOCCore.swift; sourceTree = "<group>"; };
 		5958C9BD20C000A700E0E567 /* PasscodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasscodeTests.swift; sourceTree = "<group>"; };
 		595E2C9E21EE4BF300F0E95D /* PropfindResponseNewFolder.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PropfindResponseNewFolder.xml; sourceTree = "<group>"; };
+		5971CF3922046F530052FE9A /* MockClientRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockClientRootViewController.swift; sourceTree = "<group>"; };
 		597A404820AD59EF00B028B2 /* AppLockWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockWindow.swift; sourceTree = "<group>"; };
 		59AAD95921F76B6800D15F07 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		59AAD95A21F76B6800D15F07 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -841,6 +843,7 @@
 			children = (
 				59538A0A21E4C300005E543B /* MockOCQuery.swift */,
 				59538A1B21E77FB6005E543B /* MockOCCore.swift */,
+				5971CF3922046F530052FE9A /* MockClientRootViewController.swift */,
 			);
 			path = Subclasses;
 			sourceTree = "<group>";
@@ -1767,6 +1770,7 @@
 				5958C9BE20C000A700E0E567 /* PasscodeTests.swift in Sources */,
 				5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */,
 				59538A0B21E4C301005E543B /* MockOCQuery.swift in Sources */,
+				5971CF3A22046F530052FE9A /* MockClientRootViewController.swift in Sources */,
 				59B09E7021AD61F4007827B8 /* UtilsTests.swift in Sources */,
 				59538A1C21E77FB7005E543B /* MockOCCore.swift in Sources */,
 			);

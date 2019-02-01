@@ -221,8 +221,10 @@ class CreateFolderTests: XCTestCase {
 			let query = MockOCQuery(path: "/")
 			let core = MockOCCore(query: query, bookmark: bookmark)
 
-			let clientQueryViewController = ClientQueryViewController(core: core, query: query)
-			appDelegate.serverListTableViewController?.present(clientQueryViewController, animated: true, completion: nil)
+			let rootViewController: MockClientRootViewController = MockClientRootViewController(core: core, query: query, bookmark: bookmark)
+
+			//let clientQueryViewController = ClientQueryViewController(core: core, query: query)
+			appDelegate.serverListTableViewController?.present(rootViewController, animated: true, completion: nil)
 		}
 	}
 
