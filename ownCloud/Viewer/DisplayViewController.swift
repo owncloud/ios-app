@@ -41,12 +41,10 @@ protocol DisplayViewEditingDelegate: class {
 class DisplayViewController: UIViewController {
 
 	private let iconImageSize: CGSize = CGSize(width: 200.0, height: 200.0)
-	private let iconImageViewCenterYConstraintConstant: CGFloat = -60.0
-	private let metadataInfoLabelMarginAndTopConstraintConstant: CGFloat = 10.0
-	private let noNetworkLabelTopConstraintConstant: CGFloat = 10.0
-	private let showPreviewButtonTopConstraintConstant: CGFloat = 10.0
-	private let cancelButtonTopConstraintConstant: CGFloat = 10.0
-	private let progressViewTopConstraintConstant: CGFloat = 20.0
+	private let bottomMarginToYAxis: CGFloat = -60.0
+	private let verticalSpacing: CGFloat = 10.0
+	private let lateralSpacing: CGFloat = 10
+	private let progressViewVerticalSpacing: CGFloat = 20.0
 
 	// MARK: - Configuration
 	weak var item: OCItem!
@@ -164,27 +162,27 @@ class DisplayViewController: UIViewController {
 
 		NSLayoutConstraint.activate([
 			iconImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: iconImageViewCenterYConstraintConstant),
+			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: bottomMarginToYAxis),
 			iconImageView.heightAnchor.constraint(equalToConstant: iconImageSize.height),
 			iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
 
 			metadataInfoLabel!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			metadataInfoLabel!.topAnchor.constraint(equalTo: iconImageView!.bottomAnchor, constant: metadataInfoLabelMarginAndTopConstraintConstant),
-			metadataInfoLabel!.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: metadataInfoLabelMarginAndTopConstraintConstant),
-			metadataInfoLabel!.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -metadataInfoLabelMarginAndTopConstraintConstant),
+			metadataInfoLabel!.topAnchor.constraint(equalTo: iconImageView!.bottomAnchor, constant: verticalSpacing),
+			metadataInfoLabel!.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: lateralSpacing),
+			metadataInfoLabel!.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -lateralSpacing),
 
 			progressView!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
 			progressView!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
-			progressView!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: progressViewTopConstraintConstant),
+			progressView!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: verticalSpacing),
 
 			cancelButton!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			cancelButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: cancelButtonTopConstraintConstant),
+			cancelButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: verticalSpacing),
 
 			showPreviewButton!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			showPreviewButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: showPreviewButtonTopConstraintConstant),
+			showPreviewButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: verticalSpacing),
 
 			noNetworkLabel!.centerXAnchor.constraint(equalTo: metadataInfoLabel!.centerXAnchor),
-			noNetworkLabel!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: noNetworkLabelTopConstraintConstant),
+			noNetworkLabel!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: verticalSpacing),
 			noNetworkLabel!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor)
 		])
 	}
