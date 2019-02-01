@@ -17,8 +17,8 @@ class MockOCCore: OCCore {
 		self.query = query
 	}
 
-	override func createFolder(_ folderName: String, inside parentItem: OCItem, options: [String : Any]? = nil, resultHandler: OCCoreActionResultHandler? = nil) -> Progress? {
-		query?.delegate.queryHasChangesAvailable(query!)
+	override func createFolder(_ folderName: String, inside: OCItem, options: [OCCoreOption : Any]? = nil, resultHandler: OCCoreActionResultHandler? = nil) -> Progress? {
+		query?.delegate?.queryHasChangesAvailable(query!)
 		return nil
 	}
 }

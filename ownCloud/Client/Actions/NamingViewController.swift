@@ -130,9 +130,11 @@ class NamingViewController: UIViewController {
 
 		// Navigation buttons
 		cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonPressed))
+		cancelButton?.accessibilityIdentifier = "cancel-button"
 		navigationItem.leftBarButtonItem = cancelButton
 
 		doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
+		doneButton?.accessibilityIdentifier = "done-button"
 		navigationItem.rightBarButtonItem = doneButton
 
 		//Blur View
@@ -297,7 +299,8 @@ class NamingViewController: UIViewController {
 					}
 				} else {
 					let controller = UIAlertController(title: "Forbidden Characters".localized, message: validationErrorMessage, preferredStyle: .alert)
-					let okAction = UIAlertAction(title: "OK", style: .default)
+					controller.view.accessibilityIdentifier = "forbidden-characters-alert"
+					let okAction = UIAlertAction(title: "OK".localized, style: .default)
 					controller.addAction(okAction)
 					self.present(controller, animated: true)
 				}
