@@ -31,8 +31,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var items : [OCItem] = []
     var actions : [Action]?
 
-    var actions : [Action]?
-
 	var queryProgressSummary : ProgressSummary? {
 		willSet {
 			if newValue != nil {
