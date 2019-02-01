@@ -41,6 +41,10 @@ protocol DisplayViewEditingDelegate: class {
 class DisplayViewController: UIViewController {
 
 	private let iconImageSize: CGSize = CGSize(width: 200.0, height: 200.0)
+	private let bottomMarginToYAxis: CGFloat = -60.0
+	private let verticalSpacing: CGFloat = 10.0
+	private let lateralSpacing: CGFloat = 10
+	private let progressViewVerticalSpacing: CGFloat = 20.0
 
 	// MARK: - Configuration
 	weak var item: OCItem!
@@ -55,6 +59,7 @@ class DisplayViewController: UIViewController {
 			OnMainThread {
 				self.iconImageView.isHidden = true
 			}
+			hideItemMetadataUIElements()
 			renderSpecificView()
 		}
 	}
@@ -79,9 +84,9 @@ class DisplayViewController: UIViewController {
 	// MARK: - Views
 	private var iconImageView: UIImageView!
 	private var progressView : UIProgressView?
-	private var cancelButton : UIButton?
+	private var cancelButton : ThemeButton?
 	private var metadataInfoLabel: UILabel?
-	private var showPreviewButton: UIButton?
+	private var showPreviewButton: ThemeButton?
 	private var noNetworkLabel : UILabel?
 
 	// MARK: - Delegate
@@ -118,6 +123,8 @@ class DisplayViewController: UIViewController {
 		metadataInfoLabel?.isHidden = false
 		metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
 		metadataInfoLabel?.textAlignment = .center
+		metadataInfoLabel?.adjustsFontForContentSizeCategory = true
+		metadataInfoLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
 
 		view.addSubview(metadataInfoLabel!)
 
@@ -129,7 +136,7 @@ class DisplayViewController: UIViewController {
 
 		view.addSubview(progressView!)
 
-		cancelButton = ThemeButton(type: .system)
+		cancelButton = ThemeButton(type: .custom)
 		cancelButton?.translatesAutoresizingMaskIntoConstraints = false
 		cancelButton?.setTitle("Cancel".localized, for: .normal)
 		cancelButton?.isHidden = (downloadProgress != nil)
@@ -137,7 +144,7 @@ class DisplayViewController: UIViewController {
 
 		view.addSubview(cancelButton!)
 
-		showPreviewButton = ThemeButton(type: .system)
+		showPreviewButton = ThemeButton(type: .custom)
 		showPreviewButton?.translatesAutoresizingMaskIntoConstraints = false
 		showPreviewButton?.setTitle("Open file".localized, for: .normal)
 		showPreviewButton?.isHidden = true
@@ -147,32 +154,35 @@ class DisplayViewController: UIViewController {
 		noNetworkLabel = UILabel()
 		noNetworkLabel?.translatesAutoresizingMaskIntoConstraints = false
 		noNetworkLabel?.isHidden = true
+		noNetworkLabel?.adjustsFontForContentSizeCategory = true
 		noNetworkLabel?.text = "There is no network".localized
 		noNetworkLabel?.textAlignment = .center
+		noNetworkLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
 		view.addSubview(noNetworkLabel!)
 
 		NSLayoutConstraint.activate([
 			iconImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -60),
+			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: bottomMarginToYAxis),
 			iconImageView.heightAnchor.constraint(equalToConstant: iconImageSize.height),
 			iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
 
 			metadataInfoLabel!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			metadataInfoLabel!.topAnchor.constraint(equalTo: iconImageView!.bottomAnchor, constant: 10),
-			metadataInfoLabel!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
+			metadataInfoLabel!.topAnchor.constraint(equalTo: iconImageView!.bottomAnchor, constant: verticalSpacing),
+			metadataInfoLabel!.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: lateralSpacing),
+			metadataInfoLabel!.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -lateralSpacing),
 
 			progressView!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
 			progressView!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
-			progressView!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: 20),
+			progressView!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: progressViewVerticalSpacing),
 
 			cancelButton!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			cancelButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: 10),
+			cancelButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: verticalSpacing),
 
 			showPreviewButton!.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
-			showPreviewButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: 10),
+			showPreviewButton!.topAnchor.constraint(equalTo: progressView!.bottomAnchor, constant: verticalSpacing),
 
 			noNetworkLabel!.centerXAnchor.constraint(equalTo: metadataInfoLabel!.centerXAnchor),
-			noNetworkLabel!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: 10),
+			noNetworkLabel!.topAnchor.constraint(equalTo: metadataInfoLabel!.bottomAnchor, constant: verticalSpacing),
 			noNetworkLabel!.widthAnchor.constraint(equalTo: iconImageView.widthAnchor)
 		])
 	}
@@ -213,7 +223,9 @@ class DisplayViewController: UIViewController {
 		}
 
 		parent.navigationItem.title = item.name
-		parent.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+		let actionsBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+		actionsBarButtonItem.accessibilityLabel = item.name! + " " + "Actions".localized
+		parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
 	}
 
 	// MARK: - Download actions
@@ -244,6 +256,15 @@ class DisplayViewController: UIViewController {
 
 	func renderSpecificView() {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the source property.s
+	}
+
+	func hideItemMetadataUIElements() {
+		iconImageView.isHidden = true
+		progressView?.isHidden = true
+		cancelButton?.isHidden = true
+		metadataInfoLabel?.isHidden = true
+		showPreviewButton?.isHidden = true
+		noNetworkLabel?.isHidden = true
 	}
 
 	// MARK: - KVO observing

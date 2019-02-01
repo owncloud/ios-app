@@ -54,8 +54,11 @@ class ClientItemCell: ThemeTableViewCell {
 		iconView.contentMode = .scaleAspectFit
 		moreButton.translatesAutoresizingMaskIntoConstraints = false
 
-		titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
-		detailLabel.font = UIFont.systemFont(ofSize: 14)
+		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+		titleLabel.adjustsFontForContentSizeCategory = true
+
+		detailLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+		detailLabel.adjustsFontForContentSizeCategory = true
 
 		detailLabel.textColor = UIColor.gray
 
@@ -69,7 +72,8 @@ class ClientItemCell: ThemeTableViewCell {
 		iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -15).isActive = true
 
 		moreButton.setAttributedTitle(NSAttributedString(string: "● ● ●", attributes:
-			[NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10)]), for: .normal)
+			[NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption2)]), for: .normal)
+		moreButton.titleLabel?.adjustsFontForContentSizeCategory = true
 
 		moreButton.contentMode = .scaleToFill
 
@@ -168,6 +172,7 @@ class ClientItemCell: ThemeTableViewCell {
 
 		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
 		self.moreButton.isHidden = item.isPlaceholder ? true : false
+		self.moreButton.accessibilityLabel = item.name! + " " + "Actions".localized
 	}
 
 	// MARK: - Themeing
