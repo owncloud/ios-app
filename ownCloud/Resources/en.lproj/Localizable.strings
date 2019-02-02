@@ -44,7 +44,7 @@
 "Missing hostname" = "Missing hostname";
 "The entered URL does not include a hostname." = "The entered URL does not include a hostname.";
 "Add server" = "Add server";
-"Sever name" = "Sever name";
+"Server name" = "Server name";
 "Server Password" = "Server Password";
 "Server Username" = "Server Username";
 
