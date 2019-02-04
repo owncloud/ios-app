@@ -32,9 +32,9 @@ class ThemeRoundedButton: ThemeButton {
     
     private func styleButton() {
         if self.frame.size.height < self.frame.size.width {
-            self.layer.cornerRadius = self.frame.size.height / 2
+            self.layer.cornerRadius = round(self.frame.size.height / 2)
         } else {
-            self.layer.cornerRadius = self.frame.size.width / 2
+            self.layer.cornerRadius = round(self.frame.size.width / 2)
         }
     }
 

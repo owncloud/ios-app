@@ -22,6 +22,10 @@ typealias PasscodeViewControllerCancelHandler = ((_ passcodeViewController: Pass
 typealias PasscodeViewControllerCompletionHandler = ((_ passcodeViewController: PasscodeViewController, _ passcode: String) -> Void)
 
 class PasscodeViewController: UIViewController, Themeable {
+	
+	// MARK: - Constants
+	fileprivate var passCodeCompletionDelay: TimeInterval = 0.1
+	fileprivate let inputDelete: String = "\u{8}"
 
 	// MARK: - Views
 	@IBOutlet private var messageLabel: UILabel?
@@ -210,18 +214,18 @@ class PasscodeViewController: UIViewController, Themeable {
         if let currentPasscode = passcode {
             // Enforce length limit
             if currentPasscode.count < passcodeLength {
-                self.passcode = currentPasscode + String(digit)
+                self.passcode = currentPasscode + digit
             }
         } else {
-            self.passcode = String(digit)
+            self.passcode = digit
         }
         
         // Check if passcode is complete
-        if let passcode = passcode {
-            if passcode.count == passcodeLength {
+        if let enteredPasscode = passcode {
+            if enteredPasscode.count == passcodeLength {
                 // Delay to give feedback to user after the last digit was added
-                OnMainThread(after: 0.1) {
-                    self.completionHandler?(self, passcode)
+                OnMainThread(after: passCodeCompletionDelay) {
+                    self.completionHandler?(self, enteredPasscode)
                 }
             }
         }
@@ -274,7 +278,7 @@ class PasscodeViewController: UIViewController, Themeable {
         }
         
         switch key {
-        case "\u{8}":
+        case inputDelete:
             deleteLastDigit()
         case UIKeyCommand.inputEscape:
             cancelHandler?(self)
@@ -297,7 +301,7 @@ class PasscodeViewController: UIViewController, Themeable {
         }
         
         keyCommands.append(
-            UIKeyCommand(input: "\u{8}",
+            UIKeyCommand(input: inputDelete,
                          modifierFlags: [],
                          action: #selector(self.performKeyCommand(sender:)),
                          discoverabilityTitle: "Delete".localized)
