@@ -16,6 +16,8 @@ identifier_name:
         - y
 
 disabled_rules:
+    - block_based_kvo
+    - empty_enum_arguments
     - switch_case_alignment
     - identifier_name
     - colon

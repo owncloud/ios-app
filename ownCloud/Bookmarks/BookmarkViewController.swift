@@ -74,7 +74,7 @@ class BookmarkViewController: StaticTableViewController {
 			if let textField = sender as? UITextField {
 				self?.bookmark?.name = (textField.text?.count == 0) ? nil : textField.text
 			}
-			}, placeholder: "Name".localized, identifier: "row-name-name", accessibilityLabel: "Server name".localized)
+		}, placeholder: "Name".localized, identifier: "row-name-name", accessibilityLabel: "Server name".localized)
 
 		nameSection = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "section-name", rows: [ nameRow! ])
 
@@ -136,14 +136,14 @@ class BookmarkViewController: StaticTableViewController {
 				self?.bookmark?.authenticationData = nil
 				self?.composeSectionsAndRows(animated: true)
 			}
-			}, placeholder: "Username".localized, autocorrectionType: .no, identifier: "row-credentials-username", accessibilityLabel: "Server Username".localized)
+		}, placeholder: "Username".localized, autocorrectionType: .no, identifier: "row-credentials-username", accessibilityLabel: "Server Username".localized)
 
 		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (_, sender) in
 			if (sender as? UITextField) != nil, self?.bookmark?.authenticationData != nil {
 				self?.bookmark?.authenticationData = nil
 				self?.composeSectionsAndRows(animated: true)
 			}
-			}, placeholder: "Password".localized, autocorrectionType: .no, identifier: "row-credentials-password", accessibilityLabel: "Server Password".localized)
+		}, placeholder: "Password".localized, autocorrectionType: .no, identifier: "row-credentials-password", accessibilityLabel: "Server Password".localized)
 
 		addPasswordManagerButton()
 

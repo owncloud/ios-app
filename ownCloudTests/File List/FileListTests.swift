@@ -17,8 +17,7 @@ class FileListTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
-		UtilsTests.deleteAllBookmarks()
-		UtilsTests.refreshServerList()
+		OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 		OCMockManager.shared.removeAllMockingBlocks()
 	}
 
