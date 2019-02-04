@@ -9,6 +9,15 @@
 import UIKit
 
 class ServerListTableHeaderView: UIView, Themeable {
+	
+	// MARK: - Constants
+	
+	fileprivate let shadowHeight: CGFloat = 1.0
+	fileprivate let textLabelTopMargin: CGFloat = 10.0
+	fileprivate let textLabelHorizontalMargin: CGFloat = 20.0
+	fileprivate let textLabelHeight: CGFloat = 24.0
+	
+	// MARK: - Instance variables.
 
     var messageThemeApplierToken : ThemeApplierToken?
     var textLabel : UILabel = UILabel()
@@ -32,19 +41,18 @@ class ServerListTableHeaderView: UIView, Themeable {
         
         self.addSubview(shadowView)
         
-        
         NSLayoutConstraint.activate([
             
             shadowView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             shadowView.widthAnchor.constraint(equalTo: self.widthAnchor),
             shadowView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             shadowView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            shadowView.heightAnchor.constraint(equalToConstant: 1.0),
+            shadowView.heightAnchor.constraint(equalToConstant: shadowHeight),
             
-            textLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10.0),
-            textLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20.0),
-            textLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 20.0),
-            textLabel.heightAnchor.constraint(equalToConstant: 24.0)
+            textLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: textLabelTopMargin),
+            textLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: textLabelHorizontalMargin),
+            textLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: textLabelHorizontalMargin),
+            textLabel.heightAnchor.constraint(equalToConstant: textLabelHeight)
 
             ])
         

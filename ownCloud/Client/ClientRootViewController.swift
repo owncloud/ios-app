@@ -19,15 +19,16 @@
 import UIKit
 import ownCloudSDK
 
-class EmptyViewController : UIViewController {
-
-}
-
 class ClientRootViewController: UITabBarController, UINavigationControllerDelegate {
+	
+	// MARK: - Constants
+	let folderButtonsSize: CGSize = CGSize(width: 25.0, height: 25.0)
+	
+	// MARK: - Instance variables.
 	let bookmark : OCBookmark
 	weak var core : OCCore?
 	var filesNavigationController : ThemeNavigationController?
-    let emptyViewController = EmptyViewController()
+    let emptyViewController = UIViewController()
 	var progressBar : CollapsibleProgressBar?
 	var progressSummarizer : ProgressSummarizer?
 
@@ -144,16 +145,15 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-        self.view.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
-        
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
-        
-        filesNavigationController = ThemeNavigationController()
-        filesNavigationController?.delegate = self
-        filesNavigationController?.navigationBar.isTranslucent = false
-        filesNavigationController?.navigationBar.prefersLargeTitles = true
-        filesNavigationController?.tabBarItem.title = "Browse".localized
-        filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: CGSize(width: 25, height: 25))
+		self.view.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+		self.navigationController?.setNavigationBarHidden(true, animated: true)
+		
+		filesNavigationController = ThemeNavigationController()
+		filesNavigationController?.delegate = self
+		filesNavigationController?.navigationBar.isTranslucent = false
+		filesNavigationController?.navigationBar.prefersLargeTitles = true
+		filesNavigationController?.tabBarItem.title = "Browse".localized
+		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: folderButtonsSize)
 
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false
@@ -166,24 +166,25 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		self.tabBar.applyThemeCollection(Theme.shared.activeCollection)
 
-        self.viewControllers = [filesNavigationController] as? [UIViewController]
+		self.viewControllers = [filesNavigationController] as? [UIViewController]
 	}
 
 	func closeClient(completion: (() -> Void)? = nil) {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
-        self.navigationController?.popViewController(animated: true, completion: {
-            
-        })
+        self.navigationController?.popViewController(animated: true)
 	}
 
 	func coreReady() {
 		OnMainThread {
 			let queryViewController = ClientQueryViewController(core: self.core!, query: OCQuery(forPath: "/"))
-            self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
+			
+			// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
+			self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
 		}
 	}
     
     func navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) {
+		// if the emptyViewController will show, because the push button in ClientQueryViewController was triggered, push immediately to the ServerListTableViewController, because emptyViewController is only a helper for showing the "Back" button in ClientQueryViewController
         if willShow.isEqual(emptyViewController) {
             self.closeClient()
         }

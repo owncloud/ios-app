@@ -67,9 +67,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		OCItem.registerIcons()
 
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.toolbar.isTranslucent = false
+		self.navigationController?.navigationBar.prefersLargeTitles = true
+		self.navigationController?.navigationBar.isTranslucent = false
+		self.navigationController?.toolbar.isTranslucent = false
 		self.tableView.register(ServerListBookmarkCell.self, forCellReuseIdentifier: "bookmark-cell")
 		self.tableView.rowHeight = UITableView.automaticDimension
 		self.tableView.estimatedRowHeight = 80
@@ -83,19 +83,18 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
 
 		self.navigationItem.title = "ownCloud"
-        
-        self.tableView.tableHeaderView = ServerListTableHeaderView(frame: CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: 50.0))
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        
-        self.tableView.tableHeaderView?.applyThemeCollection(Theme.shared.activeCollection)
- 
+		
+		self.tableView.tableHeaderView = ServerListTableHeaderView(frame: CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: 50.0))
+		self.navigationController?.navigationBar.shadowImage = UIImage()
+		
+		self.tableView.tableHeaderView?.applyThemeCollection(Theme.shared.activeCollection)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		self.navigationController?.setToolbarHidden(false, animated: animated)
-        self.navigationController?.navigationBar.prefersLargeTitles = true
+		self.navigationController?.navigationBar.prefersLargeTitles = true
 
 		Theme.shared.register(client: self)
 
@@ -272,9 +271,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			} else {
 				let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 
-                self.navigationController?.navigationBar.prefersLargeTitles = false
-                self.navigationController?.navigationItem.largeTitleDisplayMode = .never
-                self.navigationController?.pushViewController(viewController: clientRootViewController, animated: true, completion: {
+				self.navigationController?.navigationBar.prefersLargeTitles = false
+				self.navigationController?.navigationItem.largeTitleDisplayMode = .never
+				self.navigationController?.pushViewController(viewController: clientRootViewController, animated: true, completion: {
                     self.navigationController?.setNavigationBarHidden(true, animated: false)
                 })
 			}
