@@ -18,6 +18,7 @@
 
 import UIKit
 import MessageUI
+import ownCloudSDK
 
 class VendorServices : NSObject {
 	// MARK: - App version information
@@ -45,6 +46,18 @@ class VendorServices : NSObject {
 		return ""
 	}
 
+	var isBetaBuild: Bool {
+		if let isBetaBuild = self.classSetting(forOCClassSettingsKey: .isBetaBuild) as? Bool {
+			if isBetaBuild {
+				return true
+			} else {
+				return false
+			}
+		}
+
+		return false
+	}
+
 	static var shared : VendorServices = {
 		return VendorServices()
 	}()
@@ -53,13 +66,20 @@ class VendorServices : NSObject {
 	func recommendToFriend(from viewController: UIViewController) {
 		let message = """
 <p>I want to invite you to use ownCloud on your smartphone!</p>
-<a href="https://itunes.apple.com/app/owncloud/id543672169?mt=8">Download here</a>
+<a href="https://itunes.apple.com/app/id1359583808?mt=8">Download here</a>
 """
 		self.sendMail(to: nil, subject: "Try ownCloud on your smartphone!", message: message, from: viewController)
 	}
 
 	func sendFeedback(from viewController: UIViewController) {
-		self.sendMail(to: "ios-beta@owncloud.com", subject: "ownCloud iOS app beta (\(self.appVersion) (\(self.appBuildNumber)))", message: nil, from: viewController)
+
+		var buildType = "release".localized
+
+		if self.isBetaBuild {
+			buildType = "beta".localized
+		}
+
+		self.sendMail(to: "ios-app@owncloud.com", subject: "ownCloud iOS app \(buildType) (\(self.appVersion) (\(self.appBuildNumber)))", message: nil, from: viewController)
 	}
 
 	func sendMail(to: String?, subject: String?, message: String?, from viewController: UIViewController) {
@@ -94,5 +114,21 @@ class VendorServices : NSObject {
 extension VendorServices: MFMailComposeViewControllerDelegate {
 	func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
 		controller.dismiss(animated: true)
+	}
+}
+
+extension OCClassSettingsKey {
+	static let isBetaBuild = OCClassSettingsKey("is-beta-build")
+}
+
+extension VendorServices : OCClassSettingsSupport {
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .app
+
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		if identifier == .app {
+			return [ .isBetaBuild : false ]
+		}
+
+		return nil
 	}
 }

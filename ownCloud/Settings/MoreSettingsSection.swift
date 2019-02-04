@@ -35,7 +35,16 @@ class MoreSettingsSection: SettingsSection {
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
 		self.headerTitle = "More".localized
-		self.footerTitle = "\(OCAppIdentity.shared.appName!) beta version \(VendorServices.shared.appVersion) build \(VendorServices.shared.appBuildNumber) (\(VendorServices.shared.lastGitCommit))"
+
+		var buildType = "release".localized
+		if VendorServices.shared.isBetaBuild {
+			buildType = "beta".localized
+		}
+		
+		let localizedFooter = "%@ %@ version %@ build %@ (%@)".localized
+		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName!, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit)
+
+		self.footerTitle = footerTitle
 
 		self.identifier = "settings-more-section"
 

@@ -91,6 +91,11 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:app.is-beta-build"
+            value = "true"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:log.log-level"
             value = "0"
             isEnabled = "YES">
