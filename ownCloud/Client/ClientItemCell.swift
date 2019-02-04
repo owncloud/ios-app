@@ -219,7 +219,7 @@ class ClientItemCell: ThemeTableViewCell {
 		self.titleLabel.text = item.name
 
 		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
-		self.moreButton.isHidden = item.isPlaceholder ? true : false
+		self.moreButton.isHidden = (item.isPlaceholder || (progressView != nil)) ? true : false
 
 		self.moreButton.accessibilityLabel = item.name! + " " + "Actions".localized
 
@@ -309,7 +309,7 @@ class ClientItemCell: ThemeTableViewCell {
 		} else {
 			moreButtonWidthConstraint?.constant = moreButtonWidth
 		}
-		moreButton.isHidden = hidden
+		moreButton.isHidden = ((item?.isPlaceholder == true) || (progressView != nil)) ? true : hidden
 		if animated {
 			UIView.animate(withDuration: 0.25) {
 				self.contentView.layoutIfNeeded()
@@ -326,7 +326,7 @@ class ClientItemCell: ThemeTableViewCell {
 			setMoreButton(hidden: true, animated: animated)
 		} else {
 			if let item = self.item {
-				setMoreButton(hidden: item.isPlaceholder ? true : false, animated: animated)
+				setMoreButton(hidden: false, animated: animated)
 			}
 		}
 	}
