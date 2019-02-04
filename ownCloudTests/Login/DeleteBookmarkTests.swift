@@ -34,7 +34,7 @@ class DeleteBookmarkTests: XCTestCase {
 		if let bookmark: OCBookmark = UtilsTests.getBookmark(bookmarkName: bookmarkName) {
 
 			OCBookmarkManager.shared.addBookmark(bookmark)
-			UtilsTests.refreshServerList()
+			EarlGrey.waitForElementMissing(accessibilityID: "addServer")
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_text(bookmarkName)).perform(grey_swipeFastInDirection(.left))
@@ -54,8 +54,7 @@ class DeleteBookmarkTests: XCTestCase {
 			GREYAssertTrue(isBookmarkDeleted, reason: "Failed bookmark removal")
 
 			//Reset status
-			UtilsTests.deleteAllBookmarks()
-			UtilsTests.refreshServerList()
+			OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 		}
 	}
 
@@ -72,7 +71,7 @@ class DeleteBookmarkTests: XCTestCase {
 
 				OCBookmarkManager.shared.addBookmark(bookmark1)
 				OCBookmarkManager.shared.addBookmark(bookmark2)
-				UtilsTests.refreshServerList()
+				EarlGrey.waitForElementMissing(accessibilityID: "addServer")
 
 				//Actions
 				EarlGrey.select(elementWithMatcher: grey_text(bookmarkName1)).perform(grey_swipeFastInDirection(.left))
@@ -92,8 +91,7 @@ class DeleteBookmarkTests: XCTestCase {
 				GREYAssertTrue(isBookmarkDeleted, reason: "Failed bookmark removal")
 
 				//Reset status
-				UtilsTests.deleteAllBookmarks()
-				UtilsTests.refreshServerList()
+				OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 			}
 		}
 	}

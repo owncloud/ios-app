@@ -48,7 +48,9 @@ class ProgressSummarizer: NSObject {
 
 	deinit {
 		OCSynchronized(self) {
-			for progress in trackedProgress {
+			let existingTrackedProgress = trackedProgress
+
+			for progress in existingTrackedProgress {
 				self.stopTracking(progress: progress, remove: false)
 			}
 		}

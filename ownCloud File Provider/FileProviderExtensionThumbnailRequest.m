@@ -46,7 +46,7 @@
 
 		self.cursorPosition += 1;
 
-		[self.extension.core retrieveItemFromDatabaseForFileID:(OCFileID)itemIdentifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
+		[self.extension.core retrieveItemFromDatabaseForLocalID:(OCLocalID)itemIdentifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
 			OCLogDebug(@"Retrieving %ld: %@", self.cursorPosition-1, itemFromDatabase.name);
 
 			if ((itemFromDatabase.type == OCItemTypeCollection) || (itemFromDatabase.thumbnailAvailability == OCItemThumbnailAvailabilityNone))
