@@ -17,6 +17,7 @@ class EditBookmarkTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
+		OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 	}
 
 	override func tearDown() {
@@ -32,10 +33,10 @@ class EditBookmarkTests: XCTestCase {
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 
 			OCBookmarkManager.shared.addBookmark(bookmark)
-			UtilsTests.refreshServerList()
+			EarlGrey.waitForElementMissing(accessibilityID: "addServer")
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).perform(grey_swipeFastInDirection(.left))
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
 			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
 
 			//Assert
@@ -46,8 +47,7 @@ class EditBookmarkTests: XCTestCase {
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
-			UtilsTests.deleteAllBookmarks()
-			UtilsTests.refreshServerList()
+			OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 		}
 	}
 
@@ -59,10 +59,10 @@ class EditBookmarkTests: XCTestCase {
 		if let bookmark: OCBookmark = UtilsTests.getBookmark(authenticationMethod: OCAuthenticationMethodIdentifier.oAuth2) {
 
 			OCBookmarkManager.shared.addBookmark(bookmark)
-			UtilsTests.refreshServerList()
+			EarlGrey.waitForElementMissing(accessibilityID: "addServer")
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).perform(grey_swipeFastInDirection(.left))
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
 			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
 
 			//Assert
@@ -74,8 +74,7 @@ class EditBookmarkTests: XCTestCase {
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
-			UtilsTests.deleteAllBookmarks()
-			UtilsTests.refreshServerList()
+			OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 		}
 	}
 
@@ -87,10 +86,10 @@ class EditBookmarkTests: XCTestCase {
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 
 			OCBookmarkManager.shared.addBookmark(bookmark)
-			UtilsTests.refreshServerList()
+			EarlGrey.waitForElementMissing(accessibilityID: "addServer")
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).perform(grey_swipeFastInDirection(.left))
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
 			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
 
@@ -102,8 +101,7 @@ class EditBookmarkTests: XCTestCase {
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible())
 
 			//Reset status
-			UtilsTests.deleteAllBookmarks()
-			UtilsTests.refreshServerList()
+			OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 		}
 	}
 
@@ -117,10 +115,10 @@ class EditBookmarkTests: XCTestCase {
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 
 			OCBookmarkManager.shared.addBookmark(bookmark)
-			UtilsTests.refreshServerList()
+			EarlGrey.waitForElementMissing(accessibilityID: "addServer")
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).perform(grey_swipeFastInDirection(.left))
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
 			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-name-name")).perform(grey_replaceText(expectedServerName))
 			EarlGrey.select(elementWithMatcher: grey_text("Save".localized)).perform(grey_tap())
@@ -129,8 +127,7 @@ class EditBookmarkTests: XCTestCase {
 			EarlGrey.select(elementWithMatcher: grey_text(expectedServerName)).assert(grey_sufficientlyVisible())
 
 			//Reset status
-			UtilsTests.deleteAllBookmarks()
-			UtilsTests.refreshServerList()
+			OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 		}
 	}
 
@@ -142,10 +139,10 @@ class EditBookmarkTests: XCTestCase {
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 
 			OCBookmarkManager.shared.addBookmark(bookmark)
-			UtilsTests.refreshServerList()
+			EarlGrey.waitForElementMissing(accessibilityID: "addServer")
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).perform(grey_swipeFastInDirection(.left))
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
 			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).perform(grey_replaceText(""))
 			//EarlGrey.select(elementWithMatcher: grey_text("Save".localized)).perform(grey_tap())
@@ -160,8 +157,7 @@ class EditBookmarkTests: XCTestCase {
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
-			UtilsTests.deleteAllBookmarks()
-			UtilsTests.refreshServerList()
+			OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 		}
 	}
 
@@ -173,10 +169,10 @@ class EditBookmarkTests: XCTestCase {
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 
 			OCBookmarkManager.shared.addBookmark(bookmark)
-			UtilsTests.refreshServerList()
+			EarlGrey.waitForElementMissing(accessibilityID: "addServer")
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).perform(grey_swipeFastInDirection(.left))
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
 			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-auth-data-delete")).perform(grey_tap())
 
@@ -186,8 +182,7 @@ class EditBookmarkTests: XCTestCase {
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
-			UtilsTests.deleteAllBookmarks()
-			UtilsTests.refreshServerList()
+			OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 		}
 	}
 
@@ -199,10 +194,10 @@ class EditBookmarkTests: XCTestCase {
 		if let bookmark: OCBookmark = UtilsTests.getBookmark(authenticationMethod: OCAuthenticationMethodIdentifier.oAuth2) {
 
 			OCBookmarkManager.shared.addBookmark(bookmark)
-			UtilsTests.refreshServerList()
+			EarlGrey.waitForElementMissing(accessibilityID: "addServer")
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).perform(grey_swipeFastInDirection(.left))
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
 			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-auth-data-delete")).perform(grey_tap())
 
@@ -212,8 +207,7 @@ class EditBookmarkTests: XCTestCase {
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
-			UtilsTests.deleteAllBookmarks()
-			UtilsTests.refreshServerList()
+			OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 		}
 	}
 }

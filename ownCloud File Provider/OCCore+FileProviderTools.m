@@ -20,12 +20,12 @@
 
 @implementation OCCore (FileProviderTools)
 
-- (OCItem *)synchronousRetrieveItemFromDatabaseForFileID:(OCFileID)fileID syncAnchor:(OCSyncAnchor __autoreleasing *)outSyncAnchor error:(NSError * __autoreleasing *)outError
+- (OCItem *)synchronousRetrieveItemFromDatabaseForLocalID:(OCLocalID)localID syncAnchor:(OCSyncAnchor __autoreleasing *)outSyncAnchor error:(NSError * __autoreleasing *)outError
 {
 	__block OCItem *item = nil;
 
 	OCSyncExec(databaseRetrieval, {
-		[self.vault.database retrieveCacheItemForFileID:fileID completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
+		[self.vault.database retrieveCacheItemForLocalID:localID completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
 			item = itemFromDatabase;
 
 			if (outSyncAnchor != NULL)

@@ -125,7 +125,7 @@
 					NSError *error = nil;
 					OCItem *item;
 
-					if ((item = [core synchronousRetrieveItemFromDatabaseForFileID:self->_enumeratedItemIdentifier syncAnchor:NULL error:&error]) != nil)
+					if ((item = [core synchronousRetrieveItemFromDatabaseForLocalID:self->_enumeratedItemIdentifier syncAnchor:NULL error:&error]) != nil)
 					{
 						if (item.type == OCItemTypeCollection)
 						{

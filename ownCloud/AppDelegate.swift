@@ -67,6 +67,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
+		// Licenses
+		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: Theme.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
+
 		return true
 	}
 

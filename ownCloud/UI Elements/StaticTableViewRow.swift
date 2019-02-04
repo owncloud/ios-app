@@ -7,14 +7,14 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
 import UIKit
 
@@ -151,10 +151,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	// MARK: - Text Field
 	public var textField : UITextField?
 
-	convenience init(textFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "",
-					 secureTextEntry : Bool = false, keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default,
-					 autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true,
-					 returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil, accessibilityLabel: String? = nil) {
+	convenience init(textFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil, accessibilityLabel: String? = nil) {
 
 		self.init()
 
@@ -210,19 +207,17 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cellTextField.accessibilityLabel = accessibilityLabel
 	}
 
-	convenience init(secureTextFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "",
-					 keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default,
-					 autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true,
-					 returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil, accessibilityLabel: String? = nil) {
-		self.init(textFieldWithAction: action,
-				  placeholder: placeholderString,
-				  value: textValue, secureTextEntry: true,
-				  keyboardType: keyboardType,
-				  autocorrectionType: autocorrectionType,
-				  autocapitalizationType: autocapitalizationType,
-				  enablesReturnKeyAutomatically: enablesReturnKeyAutomatically,
-				  returnKeyType: returnKeyType, identifier : identifier,
-				  accessibilityLabel: accessibilityLabel)
+	convenience init(secureTextFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil, accessibilityLabel: String? = nil) {
+		self.init(	textFieldWithAction: action,
+				placeholder: placeholderString,
+				value: textValue, secureTextEntry: true,
+				keyboardType: keyboardType,
+				autocorrectionType: autocorrectionType,
+				autocapitalizationType: autocapitalizationType,
+				enablesReturnKeyAutomatically: enablesReturnKeyAutomatically,
+				returnKeyType: returnKeyType,
+				identifier : identifier,
+				accessibilityLabel: accessibilityLabel)
 	}
 
 	@objc func textFieldContentChanged(_ sender: UITextField) {
@@ -312,29 +307,28 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
 
 			switch style {
-			case .plain:
-				textColor = themeCollection.tintColor
-				backgroundColor = themeCollection.tableRowColors.backgroundColor
+				case .plain:
+					textColor = themeCollection.tintColor
+					backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-			case .plainNonOpaque:
-				textColor = themeCollection.tableRowColors.tintColor
-				backgroundColor = themeCollection.tableRowColors.backgroundColor
+				case .plainNonOpaque:
+					textColor = themeCollection.tableRowColors.tintColor
+					backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-			case .proceed:
-				textColor = themeCollection.neutralColors.normal.foreground
-				backgroundColor = themeCollection.neutralColors.normal.background
-				selectedBackgroundColor = themeCollection.neutralColors.highlighted.background
+				case .proceed:
+					textColor = themeCollection.neutralColors.normal.foreground
+					backgroundColor = themeCollection.neutralColors.normal.background
+					selectedBackgroundColor = themeCollection.neutralColors.highlighted.background
 
-			case .destructive:
-				textColor = UIColor.red
-				backgroundColor = themeCollection.tableRowColors.backgroundColor
+				case .destructive:
+					textColor = UIColor.red
+					backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-			case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
-				textColor = customTextColor
-				selectedTextColor = customSelectedTextColor
-				backgroundColor = customBackgroundColor
-				selectedBackgroundColor = customSelectedBackgroundColor
-
+				case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
+					textColor = customTextColor
+					selectedTextColor = customSelectedTextColor
+					backgroundColor = customBackgroundColor
+					selectedBackgroundColor = customSelectedBackgroundColor
 			}
 
 			self?.cell?.textLabel?.textColor = textColor
@@ -356,7 +350,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 				self?.cell?.selectedBackgroundView? = selectedBackgroundView
 			}
-			}, applyImmediately: true)
+		}, applyImmediately: true)
 
 		self.action = action
 	}

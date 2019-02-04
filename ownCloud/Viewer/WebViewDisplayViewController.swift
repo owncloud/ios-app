@@ -26,7 +26,7 @@ class WebViewDisplayViewController: DisplayViewController {
 
 	override func renderSpecificView() {
 		WebViewDisplayViewController.externalContentBlockingRuleList { (blockList, error) in
-			guard error == nil else {
+			guard error == nil, let source = self.source else {
 				print(error!)
 				return
 			}
@@ -51,7 +51,7 @@ class WebViewDisplayViewController: DisplayViewController {
 					self.webView!.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor)
 					])
 
-				self.webView?.loadFileURL(self.source, allowingReadAccessTo: self.source)
+				self.webView?.loadFileURL(source, allowingReadAccessTo: source)
 
 				let fullScreenGesture = UITapGestureRecognizer(target: self, action: #selector(self.tapToFullScreen))
 				fullScreenGesture.delegate = self

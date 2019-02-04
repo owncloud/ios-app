@@ -51,7 +51,7 @@ class SortBar: UIView, Themeable {
 	var sortMethod: SortMethod {
 		didSet {
 
-			let title = NSString(format: "Sorted by %@ ▼".localized as NSString, sortMethod.localizedName()) as String
+			let title = NSString(format: ("Sorted by %@".localized + " ▼") as NSString, sortMethod.localizedName()) as String
 			sortButton.setTitle(title, for: .normal)
 			sortButton.accessibilityLabel = NSString(format: "Sorted by %@".localized as NSString, sortMethod.localizedName()) as String
 
@@ -187,7 +187,7 @@ class SortBar: UIView, Themeable {
 			sortSegmentedControl.isHidden = false
 			sortButton.isHidden = true
 
-			let title = NSString(format: "Sorted by %@ ▼".localized as NSString, sortMethod.localizedName()) as String
+			let title = NSString(format: ("Sorted by %@".localized + " ▼") as NSString, sortMethod.localizedName()) as String
 			sortButton.setTitle(title, for: .normal)
 		}
 	}

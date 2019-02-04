@@ -84,7 +84,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		guard item.type == OCItemType.collection, let core = self.core, let path = item.path else {
 			return
 		}
-    
+
 		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, completion: completion), animated: true)
 	}
 
