@@ -12,19 +12,23 @@ import ownCloudSDK
 
 class MockClientRootViewController: ClientRootViewController {
 
-	var query:MockOCQuery!
-	var mockedCore:MockOCCore!
+	var query:MockOCQuery
+	var mockedCore:MockOCCore
 
-	convenience init(core: MockOCCore!, query: MockOCQuery!, bookmark: OCBookmark!) {
-		self.init(bookmark: bookmark)
+	init(core: MockOCCore, query: MockOCQuery, bookmark: OCBookmark) {
 		self.query = query
 		self.mockedCore = core
+		super.init(bookmark: bookmark)
 		self.mockedCore.delegate = self
+	}
+
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
 	}
 
 	override func coreReady() {
 		OnMainThread {
-			let queryViewController = ClientQueryViewController(core: self.mockedCore!, query: self.query)
+			let queryViewController = ClientQueryViewController(core: self.mockedCore, query: self.query)
 			queryViewController.navigationItem.leftBarButtonItem = self.logoutBarButtonItem()
 
 			self.filesNavigationController?.pushViewController(queryViewController, animated: false)

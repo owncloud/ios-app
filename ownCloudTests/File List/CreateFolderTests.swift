@@ -44,12 +44,12 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark, issue: nil)
+			self.showFileList(bookmark: bookmark)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
 
-			//Assets
+			//Asserts
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).assert(grey_sufficientlyVisible())
 
 			//Reset status
@@ -72,7 +72,7 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark, issue: nil)
+			self.showFileList(bookmark: bookmark)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -117,7 +117,7 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark, issue: nil)
+			self.showFileList(bookmark: bookmark)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -153,7 +153,7 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark, issue: nil)
+			self.showFileList(bookmark: bookmark)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -189,7 +189,7 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark, issue: nil)
+			self.showFileList(bookmark: bookmark)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -231,7 +231,6 @@ class CreateFolderTests: XCTestCase {
 			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 
 			let issue: OCIssue = OCIssue(forMultipleChoicesWithLocalizedTitle: errorTitle, localizedDescription: errorMessage, choices: [OCIssueChoice(type: .cancel, identifier: nil, label: "Cancel".localized, userInfo: nil, handler: nil)]) { (issue, decission) in
-				print("Test")
 			}
 
 			self.showFileList(bookmark: bookmark, issue: issue)
@@ -255,7 +254,7 @@ class CreateFolderTests: XCTestCase {
 		}
 	}
 
-	func showFileList(bookmark: OCBookmark, issue: OCIssue?) {
+	func showFileList(bookmark: OCBookmark, issue: OCIssue? = nil) {
 		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
 
 			let query = MockOCQuery(path: "/")

@@ -1876,7 +1876,6 @@
 				233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */,
 				59B09E6F21AD61F4007827B8 /* CreateBookmarkTests.swift in Sources */,
 				59B09E6E21AD61F4007827B8 /* EditBookmarkTests.swift in Sources */,
-				DC869A592153B1F60088977E /* OCMockingManagerSwiftExtension.swift in Sources */,
 				59538A0321E4A9C2005E543B /* CreateFolderTests.swift in Sources */,
 				DC869A592153B1F60088977E /* OCMockingManager+SwiftTools.swift in Sources */,
 				EA88A55521BFD5BF0055A58F /* DeleteBookmarkTests.swift in Sources */,

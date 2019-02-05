@@ -276,8 +276,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		let newItem = itemAtIndexPath(indexPath)
 
 		cell?.accessibilityIdentifier = newItem.name
-		print(newItem.name)
-
 		cell?.core = self.core
 
 		if cell?.delegate == nil {

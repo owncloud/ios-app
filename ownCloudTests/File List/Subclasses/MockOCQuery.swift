@@ -11,7 +11,7 @@ import ownCloudSDK
 
 class MockOCQuery: OCQuery {
 
-	convenience init(path: String!) {
+	convenience init(path: String) {
 		self.init(forPath: path)
 		self.rootItem = OCItem()
 	}
