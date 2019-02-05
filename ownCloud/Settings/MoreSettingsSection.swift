@@ -35,7 +35,16 @@ class MoreSettingsSection: SettingsSection {
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
 		self.headerTitle = "More".localized
-		self.footerTitle = "\(OCAppIdentity.shared.appName!) beta version \(VendorServices.shared.appVersion) build \(VendorServices.shared.appBuildNumber) (\(VendorServices.shared.lastGitCommit))"
+
+		var buildType = "release".localized
+		if VendorServices.shared.isBetaBuild {
+			buildType = "beta".localized
+		}
+
+		let localizedFooter = "%@ %@ version %@ build %@ (%@)".localized
+		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName!, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit)
+
+		self.footerTitle = footerTitle
 
 		self.identifier = "settings-more-section"
 
@@ -114,7 +123,19 @@ class MoreSettingsSection: SettingsSection {
 
 	// MARK: - Update UI
 	func updateUI() {
-		add(rows: [helpRow!, sendFeedbackRow!, recommendRow!, privacyPolicyRow!, acknowledgementsRow!])
+		var rows = [helpRow!]
+
+		if let sendFeedbackEnabled = self.classSetting(forOCClassSettingsKey: .sendFeedbackEnabled) as? Bool, sendFeedbackEnabled {
+			rows.append(sendFeedbackRow!)
+		}
+
+		if let recommendToFriend = self.classSetting(forOCClassSettingsKey: .recommendToFriendEnabled) as? Bool, recommendToFriend {
+			rows.append(recommendRow!)
+		}
+
+		rows.append(contentsOf: [privacyPolicyRow!, acknowledgementsRow!])
+
+		add(rows: rows)
 	}
 
 	private func openSFWebViewWithConfirmation(for url: URL) {
@@ -129,5 +150,33 @@ class MoreSettingsSection: SettingsSection {
 		alert.addAction(okAction)
 		alert.addAction(cancelAction)
 		self.viewController?.present(alert, animated: true)
+	}
+}
+
+// MARK: - OCClassSettings support
+extension OCClassSettingsIdentifier {
+	static let feedback = OCClassSettingsIdentifier("feedback")
+}
+
+extension OCClassSettingsKey {
+	static let appStoreLink = OCClassSettingsKey("app-store-link")
+	static let feedbackEmail = OCClassSettingsKey("feedback-email")
+	static let recommendToFriendEnabled = OCClassSettingsKey("recommend-to-friend-enabled")
+	static let sendFeedbackEnabled = OCClassSettingsKey("send-feedback-enabled")
+}
+
+extension MoreSettingsSection : OCClassSettingsSupport {
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .feedback
+
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		if identifier == .feedback {
+			return [ .appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
+					 .feedbackEmail: "ios-app@owncloud.com",
+					 .recommendToFriendEnabled: true,
+					 .sendFeedbackEnabled: true
+			]
+		}
+
+		return nil
 	}
 }
