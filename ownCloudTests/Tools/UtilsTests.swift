@@ -12,42 +12,12 @@ import ownCloudSDK
 @testable import ownCloud
 
 class UtilsTests {
-
-	static func deleteAllBookmarks() {
-
-		if let bookmarks:[OCBookmark] = OCBookmarkManager.shared.bookmarks as? [OCBookmark] {
-			for bookmark:OCBookmark in bookmarks {
-				OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
-					let vault : OCVault = OCVault(bookmark: bookmark)
-
-					vault.erase(completionHandler: { (_, error) in
-						OnMainThread {
-							if error == nil {
-								OCBookmarkManager.shared.removeBookmark(bookmark)
-							} else {
-								print("Error deleting bookmarks")
-							}
-						}
-					})
-				}, for: bookmark)
-			}
-		}
-
-		OCBookmarkManager.shared.bookmarks.removeAllObjects()
-	}
-
 	static func removePasscode() {
 		AppLockManager.shared.passcode = nil
 		AppLockManager.shared.lockEnabled = false
 		AppLockManager.shared.biometricalSecurityEnabled = false
 		AppLockManager.shared.lockDelay = SecurityAskFrequency.always.rawValue
 		AppLockManager.shared.dismissLockscreen(animated: false)
-	}
-
-	static func refreshServerList() {
-		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
-			appDelegate.serverListTableViewController?.updateNoServerMessageVisibility()
-		}
 	}
 
 	static func getBookmark(authenticationMethod: OCAuthenticationMethodIdentifier = OCAuthenticationMethodIdentifier.basicAuth, bookmarkName: String = "Server name") -> OCBookmark? {

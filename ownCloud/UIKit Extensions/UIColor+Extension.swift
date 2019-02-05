@@ -68,6 +68,19 @@ extension UIColor {
 			       alpha: selfAlpha)
 	}
 
+	public func greyscale() -> UIColor {
+		var selfRed : CGFloat = 0, selfGreen : CGFloat  = 0, selfBlue : CGFloat  = 0, selfAlpha : CGFloat = 0, greyscale : CGFloat = 0
+
+		self.getRed(&selfRed, green:&selfGreen, blue:&selfBlue, alpha:&selfAlpha)
+
+		greyscale = (selfRed + selfGreen + selfBlue) / 3
+
+		return UIColor(red:   CGFloat(greyscale),
+			       green: CGFloat(greyscale),
+			       blue:  CGFloat(greyscale),
+			       alpha: selfAlpha)
+	}
+
 	public func hexString(leadIn: String = "#") -> String {
 		var selfRed : CGFloat = 0, selfGreen : CGFloat  = 0, selfBlue : CGFloat  = 0, selfAlpha : CGFloat = 0
 

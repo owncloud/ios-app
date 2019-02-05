@@ -177,6 +177,7 @@ class NamingViewController: UIViewController {
 		nameTextField.addTarget(self, action: #selector(textfieldDidChange(_:)), for: .editingChanged)
 		nameTextField.enablesReturnKeyAutomatically = true
 		nameTextField.autocorrectionType = .no
+		nameTextField.accessibilityLabel = "Folder name".localized
 
 		// Name container view
 		nameContainer.translatesAutoresizingMaskIntoConstraints = false

@@ -35,7 +35,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	override init(style: UITableView.Style) {
 		super.init(style: style)
 
-		NotificationCenter.default.addObserver(self, selector: #selector(serverListChanged), name: Notification.Name.OCBookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(serverListChanged), name: .OCBookmarkManagerListChanged, object: nil)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -43,7 +43,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	deinit {
-		NotificationCenter.default.removeObserver(self, name: Notification.Name.OCBookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.removeObserver(self, name: .OCBookmarkManagerListChanged, object: nil)
 	}
 
 	// TODO: Rebuild welcomeOverlayView in code
@@ -72,7 +72,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.tableView.estimatedRowHeight = 80
 		self.tableView.allowsSelectionDuringEditing = true
 
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
+		let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
+		addServerBarButtonItem.accessibilityLabel = "Add Server".localized
+		self.navigationItem.rightBarButtonItem = addServerBarButtonItem
 
 		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -234,6 +236,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		OnMainThread {
 			if !self.ignoreServerListChanges {
 				self.tableView.reloadData()
+				self.updateNoServerMessageVisibility()
 			}
 		}
 	}
@@ -278,9 +281,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "bookmark-cell", for: indexPath) as? ServerListBookmarkCell else {
-
-		    let cell = ServerListBookmarkCell()
-		    return cell
+		    return ServerListBookmarkCell()
 		}
 
 		if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {

@@ -102,7 +102,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
     }
 
     override func renderSpecificView() {
-        if let document = PDFDocument(url: source) {
+        if let source = source, let document = PDFDocument(url: source) {
             setupToolbar()
 
             self.view.backgroundColor = UIColor.gray
@@ -187,7 +187,9 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
     }
 
     func save(item: OCItem) {
-        editingDelegate?.save(item: item, fileURL: source)
+    	if let source = source {
+	        editingDelegate?.save(item: item, fileURL: source)
+	}
     }
 
     // MARK: - Handlers for PDF View notifications

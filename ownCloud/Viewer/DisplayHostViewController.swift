@@ -28,13 +28,8 @@ class DisplayHostViewController: UIViewController {
 	private var rootItem: OCItem
 
 	// MARK: - Init & deinit
-	init(for item: OCItem, with core: OCCore, root: OCItem) {
-		itemsToDisplay.append(item)
-		self.core = core
-		self.rootItem = root
-
-		super.init(nibName: nil, bundle: nil)
-		Theme.shared.register(client: self)
+	convenience init(for item: OCItem, with core: OCCore, root: OCItem) {
+		self.init(for: [item], with: core, root: root)
 	}
 
 	init(for items: [OCItem], with core: OCCore, root: OCItem) {
@@ -43,6 +38,7 @@ class DisplayHostViewController: UIViewController {
 		self.rootItem = root
 
 		super.init(nibName: nil, bundle: nil)
+		Theme.shared.register(client: self)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -77,11 +73,7 @@ class DisplayHostViewController: UIViewController {
 		self.view.addSubview(viewController.view)
 		viewController.didMove(toParent: self)
 
-		if shouldDownload {
-			viewController.downloadItem(sender: nil)
-		} else {
-			viewController.downloadProgress = nil
-		}
+		viewController.present(item: itemToDisplay)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {

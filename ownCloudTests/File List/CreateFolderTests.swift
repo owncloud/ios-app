@@ -61,7 +61,7 @@ class CreateFolderTests: XCTestCase {
 	}
 
 	/*
-	* PASSED if: A folder is Created Folder
+	* PASSED if: A folder is created
 	*/
 	func testCreateFolder() {
 
@@ -216,7 +216,7 @@ class CreateFolderTests: XCTestCase {
 	}
 
 	/*
-	* PASSED if: A folder is Created Folder
+	* PASSED if: Error is shown on the view
 	*/
 	func testCreateFolderWithExistingName() {
 
@@ -230,16 +230,9 @@ class CreateFolderTests: XCTestCase {
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 
-//			issue = [OCIssue issueFromSyncIssue:syncIssue forCore:core resolutionResultHandler:^(OCSyncIssueChoice *choice) {
-//				[weakCore resolveSyncIssue:syncIssue withChoice:choice userInfo:userInfo completionHandler:nil];
-//				[weakCore endActivity:@"Handle issue"];
-//				}];
-
 			let issue: OCIssue = OCIssue(forMultipleChoicesWithLocalizedTitle: errorTitle, localizedDescription: errorMessage, choices: [OCIssueChoice(type: .cancel, identifier: nil, label: "Cancel".localized, userInfo: nil, handler: nil)]) { (issue, decission) in
 				print("Test")
 			}
-
-			//let issue: OCIssue = OCIssue.init(forError: NSError(ocError: .itemAlreadyExists), level: .error, issueHandler: nil)
 
 			self.showFileList(bookmark: bookmark, issue: issue)
 
