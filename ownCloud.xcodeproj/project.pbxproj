@@ -35,6 +35,7 @@
 		23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */; };
 		23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F6238020B587EF004FDE8B /* SortMethod.swift */; };
 		23FA23E620BFD3D8009A6D73 /* SortBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23FA23E520BFD3D8009A6D73 /* SortBar.swift */; };
+		39E2FE0021FF814A00F0117F /* ThemeRoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */; };
 		4C235CEE21F88C0300A989A8 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C235CED21F88C0300A989A8 /* UIViewController+Extension.swift */; };
 		4C464BEF2187AF1500D30602 /* PDFThumbnailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BE12187AF1400D30602 /* PDFThumbnailCollectionViewCell.swift */; };
 		4C464BF02187AF1500D30602 /* PDFTocTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BE82187AF1400D30602 /* PDFTocTableViewController.swift */; };
@@ -451,6 +452,7 @@
 		23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDisplayViewController.swift; sourceTree = "<group>"; };
 		23F6238020B587EF004FDE8B /* SortMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortMethod.swift; sourceTree = "<group>"; };
 		23FA23E520BFD3D8009A6D73 /* SortBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortBar.swift; sourceTree = "<group>"; };
+		39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeRoundedButton.swift; sourceTree = "<group>"; };
 		4C235CED21F88C0300A989A8 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		4C464BE12187AF1400D30602 /* PDFThumbnailCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFThumbnailCollectionViewCell.swift; sourceTree = "<group>"; };
 		4C464BE82187AF1400D30602 /* PDFTocTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFTocTableViewController.swift; sourceTree = "<group>"; };
@@ -1034,6 +1036,7 @@
 				DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */,
 				DC0B37962051681600189B9A /* ThemeButton.swift */,
 				DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */,
+				39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1786,6 +1789,7 @@
 				6E0A569E218702400056B7B4 /* DownloadFileProgressHUDViewController.swift in Sources */,
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
 				236735A621217C3500E5834A /* MoreViewController.swift in Sources */,
+				39E2FE0021FF814A00F0117F /* ThemeRoundedButton.swift in Sources */,
 				23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */,
 				4C464BEF2187AF1500D30602 /* PDFThumbnailCollectionViewCell.swift in Sources */,
 				232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */,
