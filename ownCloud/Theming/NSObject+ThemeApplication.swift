@@ -69,7 +69,7 @@ extension NSObject {
 
 				case .bigTitle:
 					themeButton.themeColorCollection = collection.neutralColors
-					themeButton.titleLabel?.font = UIFont.systemFont(ofSize: 22)
+					themeButton.titleLabel?.font = UIFont.systemFont(ofSize: 34)
 
 				default:
 					themeButton.themeColorCollection = collection.lightBrandColors.filledColorPairCollection
@@ -155,7 +155,8 @@ extension NSObject {
 				case .bigMessage:
 					label.font = UIFont.systemFont(ofSize: 17)
 
-				default: break
+				default:
+				break
 			}
 
 			switch itemState {

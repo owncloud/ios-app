@@ -20,7 +20,7 @@ class CertificateViewController: IssuesViewController {
         } else {
             super.init(buttons: nil, title: "Certificate Details".localized)
             self.buttons = [IssueButton(title: "OK".localized, type: .plain, action: {
-                self.dismiss(animated: true)}, accessibilityIdentifier: "ok-button")]
+                self.dismiss(animated: true)}, accessibilityIdentifier: "ok-button-certificate-details")]
         }
     }
 

@@ -29,8 +29,11 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	weak var core : OCCore?
 	var filesNavigationController : ThemeNavigationController?
     let emptyViewController = UIViewController()
+	var activityNavigationController : ThemeNavigationController?
+	var activityViewController : ClientActivityViewController?
 	var progressBar : CollapsibleProgressBar?
 	var progressSummarizer : ProgressSummarizer?
+	var toolbar : UIToolbar?
 
 	var connectionStatusObservation : NSKeyValueObservation?
 	var connectionStatusSummary : ProgressSummary? {
@@ -139,6 +142,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 			core?.delegate = nil
 		}
 
+		Theme.shared.unregister(client: self)
+
 		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 	}
 
@@ -155,6 +160,11 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		filesNavigationController?.tabBarItem.title = "Browse".localized
 		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: folderButtonsSize)
 
+		activityViewController = ClientActivityViewController()
+		activityNavigationController = ThemeNavigationController(rootViewController: activityViewController!)
+		activityNavigationController?.tabBarItem.title = "Activity".localized
+		activityNavigationController?.tabBarItem.image = Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25))
+
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false
 
@@ -164,9 +174,25 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		progressBar?.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
 		progressBar?.bottomAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
 
-		self.tabBar.applyThemeCollection(Theme.shared.activeCollection)
+		toolbar = UIToolbar(frame: .zero)
+		toolbar?.translatesAutoresizingMaskIntoConstraints = false
+		toolbar?.insetsLayoutMarginsFromSafeArea = true
 
-		self.viewControllers = [filesNavigationController] as? [UIViewController]
+		self.view.addSubview(toolbar!)
+
+		toolbar?.leftAnchor.constraint(equalTo: self.tabBar.leftAnchor).isActive = true
+		toolbar?.rightAnchor.constraint(equalTo: self.tabBar.rightAnchor).isActive = true
+		toolbar?.topAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
+		toolbar?.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+
+		toolbar?.isHidden = true
+
+		Theme.shared.register(client: self, applyImmediately: true)
+
+		if let filesNavigationController = filesNavigationController,
+		   let activityNavigationController = activityNavigationController {
+			self.viewControllers = [ filesNavigationController, activityNavigationController ]
+		}
 	}
 
 	func closeClient(completion: (() -> Void)? = nil) {
@@ -177,9 +203,9 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	func coreReady() {
 		OnMainThread {
 			let queryViewController = ClientQueryViewController(core: self.core!, query: OCQuery(forPath: "/"))
-			
 			// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
 			self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
+			self.activityViewController?.core = self.core!
 		}
 	}
     
@@ -189,6 +215,16 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
             self.closeClient()
         }
     }
+}
+
+extension ClientRootViewController : Themeable {
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.tabBar.applyThemeCollection(collection)
+
+		self.toolbar?.applyThemeCollection(Theme.shared.activeCollection)
+
+		self.view.backgroundColor = collection.tableBackgroundColor
+	}
 }
 
 extension ClientRootViewController : OCCoreDelegate {
