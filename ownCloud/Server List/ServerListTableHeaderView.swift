@@ -50,8 +50,8 @@ class ServerListTableHeaderView: UIView, Themeable {
             shadowView.heightAnchor.constraint(equalToConstant: shadowHeight),
             
             textLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: textLabelTopMargin),
-            textLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: textLabelHorizontalMargin),
-            textLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: textLabelHorizontalMargin),
+            textLabel.leftAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leftAnchor, constant: textLabelHorizontalMargin),
+            textLabel.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: textLabelHorizontalMargin),
             textLabel.heightAnchor.constraint(equalToConstant: textLabelHeight)
 
             ])
