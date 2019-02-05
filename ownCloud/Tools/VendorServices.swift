@@ -123,8 +123,12 @@ extension VendorServices: MFMailComposeViewControllerDelegate {
 }
 
 // MARK: - OCClassSettings support
+extension OCClassSettingsIdentifier {
+	static let app = OCClassSettingsIdentifier("app")
+}
 
 extension OCClassSettingsKey {
+	static let showBetaWarning = OCClassSettingsKey("show-beta-warning")
 	static let isBetaBuild = OCClassSettingsKey("is-beta-build")
 }
 
@@ -133,7 +137,7 @@ extension VendorServices : OCClassSettingsSupport {
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
-			return [ .isBetaBuild : false ]
+			return [ .isBetaBuild : false, .showBetaWarning : true ]
 		}
 
 		return nil
