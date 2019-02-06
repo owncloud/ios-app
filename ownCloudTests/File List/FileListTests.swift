@@ -46,10 +46,10 @@ class FileListTests: XCTestCase {
 			self.showFileList(bookmark: bookmark)
 
 			//Assets
-			EarlGrey.select(elementWithMatcher: grey_accessibilityLabel("Back")).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).assert(grey_sufficientlyVisible())
 
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_accessibilityLabel("Back")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
 
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
@@ -68,9 +68,9 @@ class FileListTests: XCTestCase {
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
-
+			
 			//Asserts
-			EarlGrey.select(elementWithMatcher: grey_text("Disconnect".localized)).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).assert(grey_sufficientlyVisible())
 
 			var error:NSError?
 			var index: UInt = 0
@@ -83,12 +83,11 @@ class FileListTests: XCTestCase {
 				}
 			}
 			GREYAssertEqual(index as AnyObject, expectedCells as AnyObject, reason: "Founded \(index) cells when expected \(expectedCells)")
-
+			
 			//Assets
-			EarlGrey.select(elementWithMatcher: grey_accessibilityLabel("Back")).assert(grey_sufficientlyVisible())
-
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).assert(grey_sufficientlyVisible())
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_accessibilityLabel("Back")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
@@ -98,7 +97,11 @@ class FileListTests: XCTestCase {
 		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
 			let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 
-			appDelegate.serverListTableViewController?.present(clientRootViewController, animated: true, completion: nil)
+			appDelegate.serverListTableViewController?.navigationController?.navigationBar.prefersLargeTitles = false
+			appDelegate.serverListTableViewController?.navigationController?.navigationItem.largeTitleDisplayMode = .never
+			appDelegate.serverListTableViewController?.navigationController?.pushViewController(viewController: clientRootViewController, animated: true, completion: {
+				appDelegate.serverListTableViewController?.navigationController?.setNavigationBarHidden(true, animated: false)
+			})
 		}
 	}
 
