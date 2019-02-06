@@ -84,12 +84,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		Theme.shared.add(tvgResourceFor: "owncloud-logo")
 		welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
 
-		self.navigationItem.title = "ownCloud"
-		
 		self.tableView.tableHeaderView = ServerListTableHeaderView(frame: CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: 50.0))
 		self.navigationController?.navigationBar.shadowImage = UIImage()
 		
 		self.tableView.tableHeaderView?.applyThemeCollection(Theme.shared.activeCollection)
+		self.navigationItem.title = OCAppIdentity.shared.appName
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -126,9 +125,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	func considerBetaWarning() {
 		let lastBetaWarningCommit = OCAppIdentity.shared.userDefaults?.string(forKey: "LastBetaWarningCommit")
 
-		Log.log("Show beta warning: \(String(describing: self.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool))")
+		Log.log("Show beta warning: \(String(describing: VendorServices.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool))")
 
-		if self.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool == true,
+		if VendorServices.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool == true,
 		   let lastGitCommit = LastGitCommit(),
 		   (lastBetaWarningCommit == nil) || (lastBetaWarningCommit != lastGitCommit) {
 		   	// Beta warning has never been shown before - or has last been shown for a different release
@@ -378,26 +377,5 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		OCBookmarkManager.shared.moveBookmark(from: UInt(fromIndexPath.row), to: UInt(to.row))
-	}
-}
-
-// MARK: - OCClassSettings support
-extension OCClassSettingsIdentifier {
-	static let app = OCClassSettingsIdentifier("app")
-}
-
-extension OCClassSettingsKey {
-	static let showBetaWarning = OCClassSettingsKey("show-beta-warning")
-}
-
-extension ServerListTableViewController : OCClassSettingsSupport {
-	static let classSettingsIdentifier : OCClassSettingsIdentifier = .app
-
-	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
-		if identifier == .app {
-			return [ .showBetaWarning : true ]
-		}
-
-		return nil
 	}
 }

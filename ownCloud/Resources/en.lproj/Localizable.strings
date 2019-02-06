@@ -44,7 +44,7 @@
 "Missing hostname" = "Missing hostname";
 "The entered URL does not include a hostname." = "The entered URL does not include a hostname.";
 "Add server" = "Add server";
-"Sever name" = "Sever name";
+"Server name" = "Server name";
 "Server Password" = "Server Password";
 "Server Username" = "Server Username";
 
@@ -135,6 +135,11 @@
 "Please configure an email account" = "Please configure an email account";
 "You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
 "Do you want to open the following URL?" = "Do you want to open the following URL?";
+
+"%@ %@ version %@ build %@ (%@)" = "%@ %@ version %@ build %@ (%@)";
+"beta" = "beta";
+"release" = "release";
+
 
 /* User Interface Settings */
 "Theme" = "Theme";
