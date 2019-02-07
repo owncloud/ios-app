@@ -31,7 +31,7 @@ class RoundedTableViewCell: UITableViewCell {
 		let maskLayer = CAShapeLayer()
 		let width = self.bounds.width - ((lateralInset * 2) + (safeAreaInsets.left * 2))
 		let originX = lateralInset + safeAreaInsets.left
-		let maskRect = CGRect(x: originY, y: 0, width: width , height: self.bounds.height)
+		let maskRect = CGRect(x: originX, y: 0, width: width , height: self.bounds.height)
 		let path = CGPath(roundedRect: maskRect, cornerWidth: cornerWidth, cornerHeight: cornerHeight, transform: nil)
 		maskLayer.path = path
 		self.layer.mask = maskLayer
