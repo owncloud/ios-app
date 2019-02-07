@@ -83,11 +83,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		Theme.shared.add(tvgResourceFor: "owncloud-logo")
 		welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
-
-		self.tableView.tableHeaderView = ServerListTableHeaderView(frame: CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: 50.0))
-		self.navigationController?.navigationBar.shadowImage = UIImage()
 		
-		self.tableView.tableHeaderView?.applyThemeCollection(Theme.shared.activeCollection)
 		self.navigationItem.title = OCAppIdentity.shared.appName
 	}
 
@@ -183,6 +179,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				constraint.priority = UILayoutPriority(rawValue: 900)
 				constraint.isActive = true
 
+				self.tableView.tableHeaderView = nil
+				self.navigationController?.navigationBar.shadowImage = nil
 				tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
 				tableView.reloadData()
 			}
@@ -199,6 +197,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				tableView.separatorStyle = UITableViewCell.SeparatorStyle.singleLine
 				tableView.reloadData()
 			}
+			
+			self.tableView.tableHeaderView = ServerListTableHeaderView(frame: CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: 50.0))
+			self.navigationController?.navigationBar.shadowImage = UIImage()
+			self.tableView.tableHeaderView?.applyThemeCollection(Theme.shared.activeCollection)
 
 			if self.navigationItem.leftBarButtonItem == nil {
 				self.navigationItem.leftBarButtonItem = self.editButtonItem
