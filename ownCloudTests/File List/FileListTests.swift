@@ -45,7 +45,7 @@ class FileListTests: XCTestCase {
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.showFileList(bookmark: bookmark)
 
-			//Assets
+			//Asserts
 			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).assert(grey_sufficientlyVisible())
 
 			//Reset status
@@ -84,8 +84,9 @@ class FileListTests: XCTestCase {
 			}
 			GREYAssertEqual(index as AnyObject, expectedCells as AnyObject, reason: "Founded \(index) cells when expected \(expectedCells)")
 			
-			//Assets
+			//Asserts
 			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).assert(grey_sufficientlyVisible())
+
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
 		} else {
