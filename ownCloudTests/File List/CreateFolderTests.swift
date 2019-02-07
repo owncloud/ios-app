@@ -262,8 +262,11 @@ class CreateFolderTests: XCTestCase {
 
 			let rootViewController: MockClientRootViewController = MockClientRootViewController(core: core, query: query, bookmark: bookmark)
 
-			//let clientQueryViewController = ClientQueryViewController(core: core, query: query)
-			appDelegate.serverListTableViewController?.present(rootViewController, animated: true, completion: nil)
+			appDelegate.serverListTableViewController?.navigationController?.navigationBar.prefersLargeTitles = false
+			appDelegate.serverListTableViewController?.navigationController?.navigationItem.largeTitleDisplayMode = .never
+			appDelegate.serverListTableViewController?.navigationController?.pushViewController(viewController: rootViewController, animated: true, completion: {
+				appDelegate.serverListTableViewController?.navigationController?.setNavigationBarHidden(true, animated: false)
+			})
 		}
 	}
 
