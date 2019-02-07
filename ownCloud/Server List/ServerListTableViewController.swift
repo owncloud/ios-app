@@ -81,7 +81,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		Theme.shared.add(tvgResourceFor: "owncloud-logo")
 		welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
 
-		self.navigationItem.title = "ownCloud"
+		self.navigationItem.title = OCAppIdentity.shared.appName
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
