@@ -164,7 +164,7 @@ class BookmarkViewController: StaticTableViewController {
 		credentialsSection = StaticTableViewSection(headerTitle: "Credentials".localized, footerTitle: nil, identifier: "section-credentials", rows: [ usernameRow!, passwordRow! ])
 
 		// Continue section + row
-		continueButtonRow = StaticTableViewRow(buttonWithAction: { [weak self] (row, sender) in
+		continueButtonRow = StaticTableViewRow(roundedButtonWithAction: { [weak self] (row, sender) in
 			Log.log("Event: \(row) \(String(describing: sender))")
 			self?.handleContinue()
 		}, title: "Continue".localized, identifier: "row-continue-continue")

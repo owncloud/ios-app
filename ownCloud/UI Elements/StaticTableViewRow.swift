@@ -292,16 +292,14 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Buttons
-	convenience init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = StaticTableViewRowButtonStyle.proceed, identifier : String? = nil) {
 
-		let lateralInset: CGFloat = 20
-		let cornerRadius: CGFloat = 6
+	convenience init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = StaticTableViewRowButtonStyle.proceed, identifier : String? = nil) {
 
 		self.init()
 
 		self.identifier = identifier
 
-		self.cell = RoundedTableViewCell(lateralInset: lateralInset, cornerWidth: cornerRadius, cornerHeight: cornerRadius)
+		self.cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = NSTextAlignment.center
 
@@ -311,28 +309,28 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
 
 			switch style {
-				case .plain:
-					textColor = themeCollection.tintColor
-					backgroundColor = themeCollection.tableRowColors.backgroundColor
+			case .plain:
+				textColor = themeCollection.tintColor
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-				case .plainNonOpaque:
-					textColor = themeCollection.tableRowColors.tintColor
-					backgroundColor = themeCollection.tableRowColors.backgroundColor
+			case .plainNonOpaque:
+				textColor = themeCollection.tableRowColors.tintColor
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-				case .proceed:
-					textColor = themeCollection.neutralColors.normal.foreground
-					backgroundColor = themeCollection.neutralColors.normal.background
-					selectedBackgroundColor = themeCollection.neutralColors.highlighted.background
+			case .proceed:
+				textColor = themeCollection.neutralColors.normal.foreground
+				backgroundColor = themeCollection.neutralColors.normal.background
+				selectedBackgroundColor = themeCollection.neutralColors.highlighted.background
 
-				case .destructive:
-					textColor = UIColor.red
-					backgroundColor = themeCollection.tableRowColors.backgroundColor
+			case .destructive:
+				textColor = UIColor.red
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-				case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
-					textColor = customTextColor
-					selectedTextColor = customSelectedTextColor
-					backgroundColor = customBackgroundColor
-					selectedBackgroundColor = customSelectedBackgroundColor
+			case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
+				textColor = customTextColor
+				selectedTextColor = customSelectedTextColor
+				backgroundColor = customBackgroundColor
+				selectedBackgroundColor = customSelectedBackgroundColor
 			}
 
 			self?.cell?.textLabel?.textColor = textColor
@@ -355,6 +353,73 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 				self?.cell?.selectedBackgroundView? = selectedBackgroundView
 			}
 		}, applyImmediately: true)
+
+		self.action = action
+	}
+
+	convenience init(roundedButtonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = StaticTableViewRowButtonStyle.proceed, identifier : String? = nil) {
+
+		let lateralInset: CGFloat = 20
+		let cornerRadius: CGFloat = 6
+
+		self.init()
+
+		self.identifier = identifier
+
+		self.cell = RoundedTableViewCell(lateralInset: lateralInset, cornerWidth: cornerRadius, cornerHeight: cornerRadius)
+		self.cell?.textLabel?.text = title
+		self.cell?.textLabel?.textAlignment = NSTextAlignment.center
+
+		self.cell?.accessibilityIdentifier = identifier
+
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
+
+			switch style {
+			case .plain:
+				textColor = themeCollection.tintColor
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
+
+			case .plainNonOpaque:
+				textColor = themeCollection.tableRowColors.tintColor
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
+
+			case .proceed:
+				textColor = themeCollection.neutralColors.normal.foreground
+				backgroundColor = themeCollection.neutralColors.normal.background
+				selectedBackgroundColor = themeCollection.neutralColors.highlighted.background
+
+			case .destructive:
+				textColor = UIColor.red
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
+
+			case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
+				textColor = customTextColor
+				selectedTextColor = customSelectedTextColor
+				backgroundColor = customBackgroundColor
+				selectedBackgroundColor = customSelectedBackgroundColor
+			}
+
+			self?.cell?.textLabel?.textColor = textColor
+
+			if selectedTextColor != nil {
+
+				self?.cell?.textLabel?.highlightedTextColor = selectedTextColor
+			}
+
+			if backgroundColor != nil {
+
+				self?.cell?.backgroundColor = backgroundColor
+			}
+
+			if selectedBackgroundColor != nil {
+				let selectedBackgroundView = UIView()
+
+				selectedBackgroundView.backgroundColor = selectedBackgroundColor
+
+				self?.cell?.selectedBackgroundView? = selectedBackgroundView
+			}
+			}, applyImmediately: true)
 
 		self.action = action
 	}
