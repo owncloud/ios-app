@@ -295,13 +295,13 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	convenience init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = StaticTableViewRowButtonStyle.proceed, identifier : String? = nil) {
 
 		let lateralInset: CGFloat = 20
-		let cornerRaidus: CGFloat = 6
+		let cornerRadius: CGFloat = 6
 
 		self.init()
 
 		self.identifier = identifier
 
-		self.cell = RoundedTableViewCell(lateralInset: lateralInset, cornerWidth: cornerRaidus, cornerHeight: cornerRaidus)
+		self.cell = RoundedTableViewCell(lateralInset: lateralInset, cornerWidth: cornerRadius, cornerHeight: cornerRadius)
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = NSTextAlignment.center
 
