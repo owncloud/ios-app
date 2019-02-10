@@ -21,131 +21,162 @@ import UIKit
 import WebKit
 import MessageUI
 import SafariServices
+import ownCloudSDK
 
 class MoreSettingsSection: SettingsSection {
+	// MARK: - More Settings Cells
 
-    var appVersion: String {
-        if let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
-            return version
-        }
+	private var helpRow: StaticTableViewRow?
+	private var sendFeedbackRow: StaticTableViewRow?
+	private var recommendRow: StaticTableViewRow?
+	private var privacyPolicyRow: StaticTableViewRow?
+	private var acknowledgementsRow: StaticTableViewRow?
 
-        return ""
-    }
+	override init(userDefaults: UserDefaults) {
+		super.init(userDefaults: userDefaults)
+		self.headerTitle = "More".localized
 
-    var appBuildNumber: String {
-        if let buildNumber = Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String {
-            return buildNumber
-        }
+		var buildType = "release".localized
+		if VendorServices.shared.isBetaBuild {
+			buildType = "beta".localized
+		}
 
-        return ""
-    }
+		let localizedFooter = "%@ %@ version %@ build %@ (%@)".localized
+		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName!, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit)
 
-    var lastGitCommit: String {
-        if let gitCommit = Bundle.main.object(forInfoDictionaryKey: "LastGitCommit") as? String {
-            return gitCommit
-        }
+		self.footerTitle = footerTitle
 
-        return ""
-    }
+		self.identifier = "settings-more-section"
 
-    // MARK: - More Settings Cells
+		createRows()
+		updateUI()
+	}
 
-    private var helpRow: StaticTableViewRow?
-    private var sendFeedbackRow: StaticTableViewRow?
-    private var recommendRow: StaticTableViewRow?
-    private var privacyPolicyRow: StaticTableViewRow?
+	// MARK: - Creation of the rows.
 
-    override init(userDefaults: UserDefaults) {
-        super.init(userDefaults: userDefaults)
-        self.headerTitle = "More".localized
-        self.footerTitle = "ownCloud beta version \(appVersion) build \(appBuildNumber) (\(lastGitCommit))"
+	private func createRows() {
 
-        self.identifier = "settings-more-section"
+		helpRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+			let url = URL(string: "https://www.owncloud.com/help")
+			self?.openSFWebViewWithConfirmation(for: url!)
+		}, title: "Help".localized, accessoryType: .disclosureIndicator)
 
-        createRows()
-        updateUI()
-    }
+		sendFeedbackRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+			if let viewController = self?.viewController {
+				VendorServices.shared.sendFeedback(from: viewController)
+			}
+		}, title: "Send feedback".localized, accessoryType: .disclosureIndicator)
 
-    // MARK: - Creation of the rows.
+		recommendRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+			if let viewController = self?.viewController {
+				VendorServices.shared.recommendToFriend(from: viewController)
+			}
+		}, title: "Recommend to a friend".localized, accessoryType: .disclosureIndicator)
 
-    private func createRows() {
+		privacyPolicyRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+			let url = URL(string: "https://owncloud.org/privacy-policy/")
+			self?.openSFWebViewWithConfirmation(for: url!)
+		}, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator)
 
-        helpRow = StaticTableViewRow(rowWithAction: { (_, _) in
-            let url = URL(string: "https://www.owncloud.com/help")
-            self.openSFWebViewWithConfirmation(for: url!)
-        }, title: "Help".localized, accessoryType: .disclosureIndicator)
+		acknowledgementsRow = StaticTableViewRow(rowWithAction: { (row, _) in
+			let context = OCExtensionContext(location: OCExtensionLocation(ofType: .license, identifier: nil), requirements: nil, preferences: nil)
 
-        sendFeedbackRow = StaticTableViewRow(rowWithAction: { (_, _) in
-            self.sendMail(to: "apps@owncloud.com", subject: "ownCloud iOS app (\(self.appVersion) (\(self.appBuildNumber)))", message: nil)
-        }, title: "Send feedback".localized, accessoryType: .disclosureIndicator)
+			OCExtensionManager.shared.provideExtensions(for: context, completionHandler: { (_, context, licenses) in
+				OnMainThread {
+					let textViewController = TextViewController()
+					let licenseText : NSMutableAttributedString = NSMutableAttributedString()
 
-        recommendRow = StaticTableViewRow(rowWithAction: { (_, _) in
-            let message = """
-                <p>I want to invite you to use ownCloud on your smartphone!</p>
-                <a href="https://itunes.apple.com/app/owncloud/id543672169?mt=8">Download here</a>
-                """
-            self.sendMail(to: nil, subject: "Try ownCloud on your smartphone!", message: message)
-        }, title: "Recommend to a friend".localized, accessoryType: .disclosureIndicator)
+					textViewController.title = "Acknowledgements".localized
 
-        privacyPolicyRow = StaticTableViewRow(rowWithAction: { (_, _) in
-            let url = URL(string: "https://owncloud.org/privacy-policy/")
-            self.openSFWebViewWithConfirmation(for: url!)
-        }, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator)
+					if licenses != nil {
+						for licenseExtensionMatch in licenses! {
+							let extensionObject = licenseExtensionMatch.extension.provideObject(for: context)
 
-    }
+							if let licenseDict = extensionObject as? [String : Any],
+							   let licenseTitle = licenseDict["title"] as? String,
+							   let licenseURL = licenseDict["url"] as? URL {
+							   	// Title
+								licenseText.append(NSAttributedString(string: licenseTitle + "\n", attributes: [.font : UIFont.boldSystemFont(ofSize: UIFont.systemFontSize * 1.5)]))
 
-    // MARK: - Update UI
-    func updateUI() {
-        add(rows: [helpRow!, sendFeedbackRow!, recommendRow!, privacyPolicyRow!])
-    }
+								// License text
+								do {
+									var encoding : String.Encoding = .utf8
+									let licenseFileContents = try String(contentsOf: licenseURL, usedEncoding: &encoding)
 
-    private func sendMail(to: String?, subject: String?, message: String?) {
-        if MFMailComposeViewController.canSendMail() {
-            let mail = MFMailComposeViewController()
-            mail.mailComposeDelegate = self
-            if to != nil {
-                mail.setToRecipients([to!])
-            }
+									licenseText.append(NSAttributedString(string: "\n" + licenseFileContents + "\n\n", attributes: [
+										.font : UIFont.systemFont(ofSize: UIFont.systemFontSize),
+										.foregroundColor : UIColor.darkGray
+									]))
+								} catch {
+								}
+							}
+						}
+					}
 
-            if subject != nil {
-                mail.setSubject(subject!)
-            }
+					textViewController.attributedText = licenseText
 
-            if message != nil {
-                mail.setMessageBody(message!, isHTML: true)
-            }
+					row.viewController?.navigationController?.pushViewController(textViewController, animated: true)
+				}
+			})
+		}, title: "Acknowledgements".localized, accessoryType: .disclosureIndicator)
+	}
 
-            self.viewController?.present(mail, animated: true)
-        } else {
-            if let vc = self.viewController {
-                let alert = UIAlertController(title: "Please configure an email account".localized,
-                                              message: "You need to configure an email account first to be able to send emails.".localized,
-                                              preferredStyle: .alert)
+	// MARK: - Update UI
+	func updateUI() {
+		var rows = [helpRow!]
 
-                let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-                alert.addAction(okAction)
-                vc.present(alert, animated: true)
-            }
-        }
-    }
+		if let sendFeedbackEnabled = self.classSetting(forOCClassSettingsKey: .sendFeedbackEnabled) as? Bool, sendFeedbackEnabled {
+			rows.append(sendFeedbackRow!)
+		}
 
-    private func openSFWebViewWithConfirmation(for url: URL) {
-        let alert = UIAlertController(title: "Do you want to open the following URL?".localized,
-                                      message: url.absoluteString,
-                                      preferredStyle: .alert)
+		if let recommendToFriend = self.classSetting(forOCClassSettingsKey: .recommendToFriendEnabled) as? Bool, recommendToFriend {
+			rows.append(recommendRow!)
+		}
 
-        let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
-            self.viewController?.present(SFSafariViewController(url: url), animated: true)
-        }
-        let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel)
-        alert.addAction(okAction)
-        alert.addAction(cancelAction)
-        self.viewController?.present(alert, animated: true)
-    }
+		rows.append(contentsOf: [privacyPolicyRow!, acknowledgementsRow!])
+
+		add(rows: rows)
+	}
+
+	private func openSFWebViewWithConfirmation(for url: URL) {
+		let alert = UIAlertController(title: "Do you want to open the following URL?".localized,
+					      message: url.absoluteString,
+					      preferredStyle: .alert)
+
+		let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+			self.viewController?.present(SFSafariViewController(url: url), animated: true)
+		}
+		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel)
+		alert.addAction(okAction)
+		alert.addAction(cancelAction)
+		self.viewController?.present(alert, animated: true)
+	}
 }
 
-extension MoreSettingsSection: MFMailComposeViewControllerDelegate {
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        controller.dismiss(animated: true)
-    }
+// MARK: - OCClassSettings support
+extension OCClassSettingsIdentifier {
+	static let feedback = OCClassSettingsIdentifier("feedback")
+}
+
+extension OCClassSettingsKey {
+	static let appStoreLink = OCClassSettingsKey("app-store-link")
+	static let feedbackEmail = OCClassSettingsKey("feedback-email")
+	static let recommendToFriendEnabled = OCClassSettingsKey("recommend-to-friend-enabled")
+	static let sendFeedbackEnabled = OCClassSettingsKey("send-feedback-enabled")
+}
+
+extension MoreSettingsSection : OCClassSettingsSupport {
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .feedback
+
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		if identifier == .feedback {
+			return [ .appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
+					 .feedbackEmail: "ios-app@owncloud.com",
+					 .recommendToFriendEnabled: true,
+					 .sendFeedbackEnabled: true
+			]
+		}
+
+		return nil
+	}
 }

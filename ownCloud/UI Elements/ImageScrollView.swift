@@ -32,7 +32,7 @@ class ImageScrollView: UIScrollView {
 
 		showsVerticalScrollIndicator = false
 		showsHorizontalScrollIndicator = false
-		decelerationRate = UIScrollViewDecelerationRateFast
+		decelerationRate = UIScrollView.DecelerationRate.fast
 		delegate = self
 		backgroundColor = .black
 		maximumZoomScale = MAXIMUM_ZOOM_SCALE
@@ -49,6 +49,10 @@ class ImageScrollView: UIScrollView {
 
 	// MARK: - Manage Scale
 	private func centerImage() {
+		guard imageView != nil else {
+			return
+		}
+
 		let boundsSize: CGSize = bounds.size
 		var frameToCenter: CGRect = imageView?.frame ?? .zero
 

@@ -25,13 +25,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
 	var serverListTableViewController: ServerListTableViewController?
 
-	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
 		var navigationController: UINavigationController?
 
+		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
+		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
+
+		// Set up app
 		window = UIWindow(frame: UIScreen.main.bounds)
 
-		serverListTableViewController = ServerListTableViewController(style: UITableViewStyle.plain)
+		ThemeStyle.registerDefaultStyles()
+
+		serverListTableViewController = ServerListTableViewController(style: UITableView.Style.plain)
 
 		navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
 
@@ -41,15 +47,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		AppLockManager.shared.showLockscreenIfNeeded()
 
-		application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum + 10)
+		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
-		Log.debug("Minimum fetch refresh time: \(UIApplicationBackgroundFetchIntervalMinimum)")
+		application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum + 10)
 
+		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
 
+		// Action Extensions
+		OCExtensionManager.shared.addExtension(OpenInAction.actionExtension)
+		OCExtensionManager.shared.addExtension(DeleteAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MoveAction.actionExtension)
+		OCExtensionManager.shared.addExtension(RenameAction.actionExtension)
+		OCExtensionManager.shared.addExtension(DuplicateAction.actionExtension)
+		OCExtensionManager.shared.addExtension(CreateFolderAction.actionExtension)
+		OCExtensionManager.shared.addExtension(CopyAction.actionExtension)
+
+		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
+
+		// Licenses
+		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: Theme.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
+
 		return true
+	}
+
+	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+		OnMainThread(after: 2.0) {
+			completionHandler(.newData)
+		}
 	}
 
 	func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
@@ -61,6 +88,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+		Log.debug("AppDelegate: handle events for background URL session with identifier \(identifier)")
+
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
 	}
 }

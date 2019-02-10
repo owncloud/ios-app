@@ -25,7 +25,7 @@ private enum CardPosition {
 
 	var heightMultiplier: CGFloat {
 		switch self {
-			case .half: return 0.48
+			case .half: return 0.58
 			case .open: return 0.9
 		}
 	}
@@ -48,7 +48,7 @@ final class CardPresentationController: UIPresentationController {
 	private var presentedViewFittingSize : CGSize? {
 		if cachedFittingSize == nil {
 			if let moreViewController = presentedViewController as? MoreViewController {
-				cachedFittingSize = moreViewController.moreLayoutSizeFitting(CGSize(width: self.windowFrame.size.width, height: UILayoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
+				cachedFittingSize = moreViewController.moreLayoutSizeFitting(CGSize(width: self.windowFrame.size.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
 			} else {
 				cachedFittingSize = presentedView?.systemLayoutSizeFitting(self.windowFrame.size, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
 			}

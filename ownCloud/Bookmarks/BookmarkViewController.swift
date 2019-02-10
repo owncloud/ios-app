@@ -74,7 +74,7 @@ class BookmarkViewController: StaticTableViewController {
 			if let textField = sender as? UITextField {
 				self?.bookmark?.name = (textField.text?.count == 0) ? nil : textField.text
 			}
-		}, placeholder: "Name".localized, identifier: "row-name-name")
+		}, placeholder: "Name".localized, identifier: "row-name-name", accessibilityLabel: "Server name".localized)
 
 		nameSection = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "section-name", rows: [ nameRow! ])
 
@@ -116,12 +116,12 @@ class BookmarkViewController: StaticTableViewController {
 
 				self?.nameRow?.textField?.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : Theme.shared.activeCollection.tableRowColors.secondaryLabelColor])
 			}
-		}, placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, identifier: "row-url-url")
+			}, placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, identifier: "row-url-url", accessibilityLabel: "Server URL".localized)
 
 		certificateRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let certificate = self?.bookmark?.certificate {
-				if let certificateViewController : OCCertificateViewController = OCCertificateViewController(certificate: certificate) {
-					let navigationController = UINavigationController(rootViewController: certificateViewController)
+				if let certificateViewController : ThemeCertificateViewController = ThemeCertificateViewController(certificate: certificate) {
+					let navigationController = ThemeNavigationController(rootViewController: certificateViewController)
 
 					self?.present(navigationController, animated: true, completion: nil)
 				}
@@ -136,14 +136,14 @@ class BookmarkViewController: StaticTableViewController {
 				self?.bookmark?.authenticationData = nil
 				self?.composeSectionsAndRows(animated: true)
 			}
-		}, placeholder: "Username".localized, autocorrectionType: .no, identifier: "row-credentials-username")
+		}, placeholder: "Username".localized, autocorrectionType: .no, identifier: "row-credentials-username", accessibilityLabel: "Server Username".localized)
 
 		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (_, sender) in
 			if (sender as? UITextField) != nil, self?.bookmark?.authenticationData != nil {
 				self?.bookmark?.authenticationData = nil
 				self?.composeSectionsAndRows(animated: true)
 			}
-		}, placeholder: "Password".localized, autocorrectionType: .no, identifier: "row-credentials-password")
+		}, placeholder: "Password".localized, autocorrectionType: .no, identifier: "row-credentials-password", accessibilityLabel: "Server Password".localized)
 
 		addPasswordManagerButton()
 
@@ -318,7 +318,7 @@ class BookmarkViewController: StaticTableViewController {
 							if issue != nil {
 								// Parse issue for display
 								if let displayIssues = issue?.prepareForDisplay() {
-									if displayIssues.displayLevel.rawValue >= OCConnectionIssueLevel.warning.rawValue {
+									if displayIssues.displayLevel.rawValue >= OCIssueLevel.warning.rawValue {
 										// Present issues if the level is >= warning
 										let issuesViewController = ConnectionIssueViewController(displayIssues: displayIssues, completion: { [weak self] (response) in
 											switch response {
@@ -374,19 +374,21 @@ class BookmarkViewController: StaticTableViewController {
 						self.bookmark?.authenticationData = authMethodData
 						self.userActionSave()
 					} else {
-						var issue : OCConnectionIssue?
+						var issue : OCIssue?
 						let nsError = error as NSError?
 
 						if let embeddedIssue = nsError?.embeddedIssue() {
 							issue = embeddedIssue
-						} else {
-							issue = OCConnectionIssue(forError: error, level: .error, issueHandler: nil)
+						} else if let error = error {
+							issue = OCIssue(forError: error, level: .error, issueHandler: nil)
 						}
 
-						if nsError?.isOCError(withCode: .errorAuthorizationFailed) == true {
+						if nsError?.isOCError(withCode: .authorizationFailed) == true {
 							// Shake
 							self.navigationController?.view.shakeHorizontally()
 							self.updateInputFocus(fallbackRow: self.passwordRow)
+						} else if nsError?.isOCError(withCode: .authorizationCancelled) == true {
+							// User cancelled authorization, no reaction needed
 						} else {
 							let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
 								switch response {
@@ -426,7 +428,7 @@ class BookmarkViewController: StaticTableViewController {
 
 				case .edit:
 					// Update original bookmark
-					originalBookmark?.setValuesFrom(bookmark)
+					originalBookmark?.setValuesFrom(bookmark!)
 					OCBookmarkManager.shared.saveBookmarks()
 					OCBookmarkManager.shared.postChangeNotification()
 			}
@@ -484,7 +486,7 @@ class BookmarkViewController: StaticTableViewController {
 
 		if let authenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier {
 			// Username & Password: show if passphrase-based authentication method is used
-			if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier as String?) {
+			if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
 				// Remove unwanted rows
 				var removeRows : [StaticTableViewRow] = []
 				let authMethodType = authenticationMethodClass.type()
@@ -589,13 +591,15 @@ class BookmarkViewController: StaticTableViewController {
 		var firstResponder : UIView?
 		var firstResponderRow : StaticTableViewRow?
 
-		if self.bookmark?.url == nil {
+		if urlRow?.attached == true, (urlRow?.value as? String)?.count == 0 {
 			firstResponderRow = urlRow
 		} else {
-			if usernameRow?.attached == true, (usernameRow?.value as? String)?.count == 0 {
-				firstResponderRow = usernameRow
-			} else if passwordRow?.attached == true, (passwordRow?.value as? String)?.count == 0 {
-				firstResponderRow = passwordRow
+			if credentialsSection?.attached == true {
+				if usernameRow?.attached == true, (usernameRow?.value as? String)?.count == 0 {
+					firstResponderRow = usernameRow
+				} else if passwordRow?.attached == true, (passwordRow?.value as? String)?.count == 0 {
+					firstResponderRow = passwordRow
+				}
 			}
 		}
 
@@ -648,9 +652,9 @@ class BookmarkViewController: StaticTableViewController {
 		// URL
 		if urlRow != nil, fieldSelector(urlRow!) {
 			if bookmark.originURL != nil {
-				urlRow?.value = bookmark.originURL.absoluteString
+				urlRow?.value = bookmark.originURL?.absoluteString
 			} else if bookmark.url != nil {
-				urlRow?.value = bookmark.url.absoluteString
+				urlRow?.value = bookmark.url?.absoluteString
 			} else {
 				urlRow?.value = ""
 			}
@@ -683,7 +687,7 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	func authenticationMethodTypeForIdentifier(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> OCAuthenticationMethodType? {
-		if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier as String?) {
+		if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
 			return authenticationMethodClass.type()
 		}
 
@@ -710,18 +714,20 @@ extension OCClassSettingsKey {
 }
 
 extension BookmarkViewController : OCClassSettingsSupport {
-	static func classSettingsIdentifier() -> OCClassSettingsIdentifier! {
-		return .bookmark
-	}
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .bookmark
 
-	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier!) -> [OCClassSettingsKey : Any]! {
-		return [ : ]
-		/*
-		return [
-			.bookmarkDefaultURL : "http://demo.owncloud.org/",
-			.bookmarkURLEditable : false
-		]
-		*/
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		if identifier == .bookmark {
+			/*
+			return [
+				.bookmarkDefaultURL : "http://demo.owncloud.org/",
+				.bookmarkURLEditable : false
+			]
+			*/
+			return [ : ]
+		}
+
+		return nil
 	}
 }
 
@@ -749,15 +755,15 @@ extension BookmarkViewController {
 			Theme.shared.add(tvgResourceFor: "icon-password-manager")
 			vectorImageView.vectorImage = Theme.shared.tvgImage(for: "icon-password-manager")
 
-			vectorImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(BookmarkViewController.openPasswordManagerSheet)))
+			vectorImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(BookmarkViewController.openPasswordManagerSheet(sender:))))
 
 			self.passwordRow?.cell?.accessoryView = vectorImageView
 		}
 	}
 
-	@objc func openPasswordManagerSheet() {
+	@objc func openPasswordManagerSheet(sender: Any?) {
 		if let bookmarkURL = self.bookmark?.url {
-			PasswordManagerAccess.findCredentials(url: bookmarkURL, viewController: self) { (error, inUsername, inPassword) in
+			PasswordManagerAccess.findCredentials(url: bookmarkURL, viewController: self, sourceView: (sender as? UITapGestureRecognizer)?.view) { (error, inUsername, inPassword) in
 				if error == nil {
 					OnMainThread {
 						if let username = inUsername {

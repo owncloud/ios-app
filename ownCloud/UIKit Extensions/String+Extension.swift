@@ -23,4 +23,9 @@ extension String {
     var localized: String {
         return NSLocalizedString(self, comment: "")
     }
+
+    var isNumeric: Bool {
+        let nonDigitsCharacterSet = CharacterSet.decimalDigits.inverted
+        return !self.isEmpty && rangeOfCharacter(from: nonDigitsCharacterSet) == nil
+    }
 }

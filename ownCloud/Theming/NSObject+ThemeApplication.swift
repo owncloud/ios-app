@@ -69,7 +69,7 @@ extension NSObject {
 
 				case .bigTitle:
 					themeButton.themeColorCollection = collection.neutralColors
-					themeButton.titleLabel?.font = UIFont.systemFont(ofSize: 22)
+					themeButton.titleLabel?.font = UIFont.systemFont(ofSize: 34)
 
 				default:
 					themeButton.themeColorCollection = collection.lightBrandColors.filledColorPairCollection
@@ -90,6 +90,7 @@ extension NSObject {
 			navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
 			navigationBar.tintColor = collection.navigationBarColors.tintColor
 			navigationBar.titleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
+			navigationBar.isTranslucent = false
 		}
 
 		if self.isKind(of: UIToolbar.self) {
@@ -112,6 +113,12 @@ extension NSObject {
 			tableView.backgroundColor = collection.tableBackgroundColor
 			tableView.separatorColor = collection.tableSeparatorColor
 		}
+
+        if self.isKind(of: UICollectionView.self) {
+            let collectionView : UICollectionView = (self as? UICollectionView)!
+
+            collectionView.backgroundColor = collection.tableBackgroundColor
+        }
 
 		if self.isKind(of: UISearchBar.self) {
 			let searchBar : UISearchBar = (self as? UISearchBar)!
@@ -147,7 +154,8 @@ extension NSObject {
 				case .bigMessage:
 					label.font = UIFont.systemFont(ofSize: 17)
 
-				default: break
+				default:
+				break
 			}
 
 			switch itemState {
@@ -189,6 +197,11 @@ extension NSObject {
 
 			progressView.tintColor = collection.tintColor
 			progressView.trackTintColor = collection.tableSeparatorColor
+		}
+
+		if self.isKind(of: UISegmentedControl.self) {
+			let segmentedControl = (self as? UISegmentedControl)!
+			segmentedControl.tintColor = collection.navigationBarColors.tintColor
 		}
 	}
 }

@@ -213,22 +213,22 @@ extension OCItem {
 		return nil
 	}
 
-	func fileExtension() -> String {
-		return (self.name as NSString).pathExtension
+	var fileExtension : String? {
+		return (self.name as NSString?)?.pathExtension
 	}
 
-	func nameWithoutExtension() -> String {
-		return (self.name as NSString).deletingPathExtension
+	var baseName : String? {
+		return (self.name as NSString?)?.deletingPathExtension
 	}
 
-	var sizeInReadableFormat: String {
-		let size = OCItem.byteCounterFormatter.string(fromByteCount: Int64(self.size))
-		return size
+	var sizeLocalized: String {
+		return OCItem.byteCounterFormatter.string(fromByteCount: Int64(self.size))
 	}
 
-	var lastModifiedInReadableFormat: String {
-		let dateString = OCItem.dateFormatter.string(from: self.lastModified)
-		return dateString
+	var lastModifiedLocalized: String {
+		guard let lastModified = self.lastModified else { return "" }
+
+		return OCItem.dateFormatter.string(from: lastModified)
 	}
 
 	static private let byteCounterFormatter: ByteCountFormatter = {
@@ -245,4 +245,30 @@ extension OCItem {
 		dateFormatter.doesRelativeDateFormatting = true
 		return dateFormatter
 	}()
+
+	func parentItem(from core: OCCore, completionHandler: ((_ error: Error?, _ parentItem: OCItem?) -> Void)? = nil) -> OCItem? {
+		var parentItem : OCItem?
+
+		if let parentItemLocalID = self.parentLocalID {
+			var waitGroup : DispatchGroup?
+
+			if completionHandler == nil {
+				waitGroup = DispatchGroup()
+				waitGroup?.enter()
+			}
+
+			core.retrieveItemFromDatabase(forLocalID: parentItemLocalID) { (error, _, item) in
+				if completionHandler == nil {
+					parentItem = item
+					waitGroup?.leave()
+				} else {
+					completionHandler?(error, item)
+				}
+			}
+
+			waitGroup?.wait()
+		}
+
+		return parentItem
+	}
 }

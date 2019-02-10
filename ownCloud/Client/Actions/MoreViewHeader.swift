@@ -100,23 +100,17 @@ class MoreViewHeader: UIView {
 			labelContainerView.bottomAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -20)
 		])
 
-		titleLabel.attributedText = NSAttributedString(string: item.name, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
+		titleLabel.attributedText = NSAttributedString(string: item.name ?? "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
 
 		let byteCountFormatter = ByteCountFormatter()
 		byteCountFormatter.countStyle = .file
 		let size = byteCountFormatter.string(fromByteCount: Int64(item.size))
 
-		let dateFormatter = DateFormatter()
-		dateFormatter.timeStyle = .none
-		dateFormatter.dateStyle = .medium
-		dateFormatter.locale = Locale.current
-		dateFormatter.doesRelativeDateFormatting = true
-
-		let dateString = dateFormatter.string(from: item.lastModified)
+		let dateString = item.lastModifiedLocalized
 
 		let detail = size + " - " + dateString
 
-		detailLabel.attributedText =  NSAttributedString(string: detail, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14, weight: .regular)])
+		detailLabel.attributedText =  NSAttributedString(string: detail, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)])
 
 		self.iconView.image = item.icon(fitInSize: CGSize(width: thumbnailSize.width, height: thumbnailSize.height))
 

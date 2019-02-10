@@ -6,6 +6,16 @@
 //  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudSDK
 
@@ -33,10 +43,10 @@ class ImageDisplayViewController : DisplayViewController {
 			scrollView!.topAnchor.constraint(equalTo: view.topAnchor)
 		])
 
-		do {
-			let data = try Data(contentsOf: source)
-			let image = UIImage(data: data)
-			scrollView?.display(image: image!)
+		if let source = source,
+		   let data = try? Data(contentsOf: source),
+		   let image = UIImage(data: data) {
+			scrollView?.display(image: image)
 
 			tapToZoomGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapToZoom))
 			tapToZoomGestureRecognizer.numberOfTapsRequired = 2
@@ -47,8 +57,7 @@ class ImageDisplayViewController : DisplayViewController {
 
 			tapToZoomGestureRecognizer.delegate = self
 			tapToHideBarsGestureRecognizer.delegate = self
-
-		} catch {
+		} else {
 			let alert = UIAlertController(with: "Error".localized, message: "Could not get the picture".localized, okLabel: "OK")
 			self.parent?.present(alert, animated: true) {
 				self.parent?.dismiss(animated: true)
@@ -87,7 +96,7 @@ class ImageDisplayViewController : DisplayViewController {
 		setNeedsUpdateOfHomeIndicatorAutoHidden()
 	}
 
-	override func prefersHomeIndicatorAutoHidden() -> Bool {
+	override var prefersHomeIndicatorAutoHidden: Bool {
 		guard let navigationController = navigationController else {
 			return false
 		}
@@ -108,15 +117,16 @@ class ImageDisplayViewController : DisplayViewController {
 extension ImageDisplayViewController: DisplayExtension {
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		do {
-			let location = context!.location.identifier.rawValue
-			let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((image/(?!(gif|svg*))))", options: .caseInsensitive)
-			let matches = supportedFormatsRegex.numberOfMatches(in: location, options: .reportCompletion, range: NSRange(location: 0, length: location.count))
+			if let mimeType = context.location?.identifier?.rawValue {
+				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((image/(?!(gif|svg*))))", options: .caseInsensitive)
+				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
 
-			if matches > 0 {
-				return OCExtensionPriority.locationMatch
-			} else {
-				return OCExtensionPriority.noMatch
+				if matches > 0 {
+					return OCExtensionPriority.locationMatch
+				}
 			}
+
+			return OCExtensionPriority.noMatch
 		} catch {
 			return OCExtensionPriority.noMatch
 		}

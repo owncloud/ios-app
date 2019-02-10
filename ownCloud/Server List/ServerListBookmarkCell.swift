@@ -23,7 +23,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 	public var detailLabel : UILabel = UILabel()
 	public var iconView : UIImageView = UIImageView()
 
-	public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+	public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		prepareViewAndConstraints()
 	}
@@ -40,8 +40,11 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		iconView.translatesAutoresizingMaskIntoConstraints = false
 		iconView.contentMode = .scaleAspectFit
 
-		titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
-		detailLabel.font = UIFont.systemFont(ofSize: 14)
+		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+		titleLabel.adjustsFontForContentSizeCategory = true
+
+		detailLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
+		detailLabel.adjustsFontForContentSizeCategory = true
 
 		detailLabel.textColor = UIColor.gray
 
@@ -63,9 +66,9 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		titleLabel.bottomAnchor.constraint(equalTo: detailLabel.topAnchor, constant: -5).isActive = true
 		detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -20).isActive = true
 
-		iconView.setContentHuggingPriority(UILayoutPriority.required, for: UILayoutConstraintAxis.vertical)
-		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
-		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: UILayoutConstraintAxis.vertical)
+		iconView.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.vertical)
+		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
+		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
 
 		Theme.shared.add(tvgResourceFor: "owncloud-logo")
 	}

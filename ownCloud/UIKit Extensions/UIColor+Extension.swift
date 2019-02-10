@@ -28,7 +28,8 @@ extension UIColor {
 		self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: CGFloat(alpha))
 	}
 
-	convenience init(hex rgbHex: Int, alpha: Float = 1.0) {
+	convenience init(hex unsignedRGBHex: UInt, alpha: Float = 1.0) {
+		let rgbHex = Int(unsignedRGBHex)
 		self.init(red: (rgbHex >> 16) & 0xFF, green: (rgbHex >> 8) & 0xFF, blue: (rgbHex & 0xFF), alpha: alpha)
 	}
 
@@ -64,6 +65,19 @@ extension UIColor {
 		return UIColor(red:   CGFloat(Double(selfRed)   * (1.0-fraction)),
 			       green: CGFloat(Double(selfGreen) * (1.0-fraction)),
 			       blue:  CGFloat(Double(selfBlue)  * (1.0-fraction)),
+			       alpha: selfAlpha)
+	}
+
+	public func greyscale() -> UIColor {
+		var selfRed : CGFloat = 0, selfGreen : CGFloat  = 0, selfBlue : CGFloat  = 0, selfAlpha : CGFloat = 0, greyscale : CGFloat = 0
+
+		self.getRed(&selfRed, green:&selfGreen, blue:&selfBlue, alpha:&selfAlpha)
+
+		greyscale = (selfRed + selfGreen + selfBlue) / 3
+
+		return UIColor(red:   CGFloat(greyscale),
+			       green: CGFloat(greyscale),
+			       blue:  CGFloat(greyscale),
 			       alpha: selfAlpha)
 	}
 
