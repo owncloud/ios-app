@@ -18,7 +18,7 @@ The ownCloud iOS app has a builtin logging feature:
 3. Perform the steps to reproduce the error
 4. Go back to the settings and share the logfile.
 
-![ios-app-settings-logging](https://user-images.githubusercontent.com/214010/48155052-6c1e5b00-e2ca-11e8-9132-39b957a331b0.png)
+![ios-app-settings-logging](https://user-images.githubusercontent.com/214010/52530933-01881b80-2d0e-11e9-8ff9-ae96a4a51832.png)
 
 #### Record the screen
 
