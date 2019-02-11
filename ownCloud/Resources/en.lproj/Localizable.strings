@@ -17,8 +17,8 @@
  */
 
 /* Add / Edit Bookmark */
-"Edit bookmark" = "Edit bookmark";
-"Add bookmark" = "Add bookmark";
+"Edit account" = "Edit account";
+"Add account" = "Add account";
 "Server URL" = "Server URL";
 "https://example.com" = "https://example.com";
 "Continue" = "Continue";
@@ -43,7 +43,7 @@
 
 "Missing hostname" = "Missing hostname";
 "The entered URL does not include a hostname." = "The entered URL does not include a hostname.";
-"Add server" = "Add server";
+"Add account" = "Add account";
 "Server name" = "Server name";
 "Server Password" = "Server Password";
 "Server Username" = "Server Username";
@@ -105,6 +105,8 @@
 
 "Help" = "Help";
 "Feedback" = "Feedback";
+"Welcome" = "Welcome";
+"Thanks for choosing ownCloud! \n Start by adding your account." = "Thanks for choosing ownCloud! \n Start by adding your account.";
 
 /* Settings Messages */
 

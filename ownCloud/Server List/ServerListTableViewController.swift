@@ -73,7 +73,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.tableView.allowsSelectionDuringEditing = true
 
 		let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
-		addServerBarButtonItem.accessibilityLabel = "Add Server".localized
+		addServerBarButtonItem.accessibilityLabel = "Add account".localized
 		self.navigationItem.rightBarButtonItem = addServerBarButtonItem
 
 		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
@@ -174,6 +174,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				constraint = welcomeOverlayView.rightAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.rightAnchor, constant: 30)
 				constraint.priority = UILayoutPriority(rawValue: 900)
 				constraint.isActive = true
+
+				welcomeAddServerButton.setTitle("Add account".localized, for: .normal)
+				welcomeTitleLabel.text = "Welcome".localized
+				welcomeMessageLabel.text = "Thanks for choosing ownCloud! \n Start by adding your account.".localized
 
 				tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
 				tableView.reloadData()
