@@ -38,7 +38,7 @@ extension OCBookmark {
 			var userNamePrefix = ""
 
 			if let userName = self.userName {
-				userNamePrefix = userName + " @ "
+				userNamePrefix = userName + "@"
 			}
 
 			if self.originURL?.host != nil {

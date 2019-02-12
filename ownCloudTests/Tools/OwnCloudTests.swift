@@ -24,7 +24,7 @@ class OwnCloudTests: XCTestCase {
     }
 
     /*
-     * Passed if: "Add Server" button is enabled
+     * Passed if: "Add account" button is enabled
      */
     func testAddServerButtonIsEnabled() {
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(with: grey_enabled())
