@@ -6,12 +6,12 @@ Starting with iOS7, Apple has added support for managed application configuratio
 ### AppConfig XML Schema
 The XML format developed by AppConfig community, makes it easy for developers to define and deploy app configuration. It is not only defining the configuration variables with default value but also provides a configuration UI description which can be interpreted by the tool which generates a plist file. Moreover, specfile XML is consistently supported by major EMM vendors.
 
-### Example: Deployment with Mobile Iron
+### Example: Deployment with MobileIron
 1. Open AppConfig Generator: https://appconfig.jamfresearch.com
 2. Upload a specfile.xml
 3. Change configuration options
 4. Download generated plist file (ManagedAppConfig)
-5. Open Mobile Iron Core
+5. Open MobileIron Core
 6. Navigate to "Policies and Configs" -> "Add New" -> "Apple" -> "iOS/tvOS" -> "Managed App Config"
 7. Upload generated plist and specify name, bundle ID and description
 
