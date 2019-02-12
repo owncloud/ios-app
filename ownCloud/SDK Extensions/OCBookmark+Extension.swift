@@ -31,15 +31,31 @@ extension OCBookmark {
 		return nil
 	}
 
+    var displayName : String? {
+        let core = OCCoreManager.shared.requestCore(for: self, completionHandler: nil)
+        if let connectionState = core?.connection.state {
+            if connectionState == .connected {
+                return core!.connection.loggedInUser.displayName
+            }
+        }
+        return nil
+    }
+
 	var shortName: String {
 		if self.name != nil {
 			return self.name!
 		} else {
 			var userNamePrefix = ""
 
-			if let userName = self.userName {
-				userNamePrefix = userName + "@"
-			}
+            if let displayName = self.displayName {
+                userNamePrefix = displayName + "@"
+            }
+
+            if userNamePrefix.count == 0 {
+                if let userName = self.userName {
+                    userNamePrefix = userName + "@"
+                }
+            }
 
 			if self.originURL?.host != nil {
 				return userNamePrefix + self.originURL!.host!
@@ -50,4 +66,5 @@ extension OCBookmark {
 
 		return "bookmark"
 	}
+
 }

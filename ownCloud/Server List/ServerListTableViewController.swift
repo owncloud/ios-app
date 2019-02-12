@@ -92,6 +92,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		Theme.shared.register(client: self)
 
 		welcomeOverlayView.layoutSubviews()
+
+        self.tableView.reloadData()
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
