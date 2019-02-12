@@ -183,7 +183,7 @@ class BookmarkViewController: StaticTableViewController {
 
 		switch mode {
 			case .create:
-				self.navigationItem.title = "Add bookmark".localized
+				self.navigationItem.title = "Add account".localized
 
 				// Support for bookmark default URL
 				if let defaultURLString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultURL) as? String {
@@ -202,7 +202,7 @@ class BookmarkViewController: StaticTableViewController {
 
 				self.usernameRow?.enabled = false
 
-				self.navigationItem.title = "Edit bookmark".localized
+				self.navigationItem.title = "Edit account".localized
 
 				self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
 		}
