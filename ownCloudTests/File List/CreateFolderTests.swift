@@ -272,7 +272,7 @@ class CreateFolderTests: XCTestCase {
 
 	func dismissFileList() {
 		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
-			appDelegate.serverListTableViewController?.dismiss(animated: true, completion: nil)
+			appDelegate.serverListTableViewController?.navigationController?.popViewController(animated: false)
 		}
 	}
 
