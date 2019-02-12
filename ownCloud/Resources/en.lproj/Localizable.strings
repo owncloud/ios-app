@@ -106,7 +106,7 @@
 "Help" = "Help";
 "Feedback" = "Feedback";
 "Welcome" = "Welcome";
-"Thanks for choosing ownCloud! \n Start by adding your account." = "Thanks for choosing ownCloud! \n Start by adding your account.";
+"Thanks for choosing %@! \n Start by adding your account." = "Thanks for choosing %@! \n Start by adding your account.";
 
 /* Settings Messages */
 
