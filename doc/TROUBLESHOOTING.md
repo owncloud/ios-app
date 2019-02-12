@@ -68,3 +68,8 @@ http://httpd.apache.org/docs/current/logs.html.
 
 mitmproxy is an interactive man-in-the-middle proxy for HTTP and HTTPS with a console interface. At ownCloud we use it a lot to investigate every detail of HTTP requests and responses:  
 https://mitmproxy.org/
+
+### Charles for iOS
+
+The Charles proxy for iOS works similar to mitmproxy. It's more user friendly, runs on the iOS device and has a nice UI. It also supports split view on iPads, so you can work with the ownCloud iOS app and Charles side by side:
+https://www.charlesproxy.com/documentation/ios/
