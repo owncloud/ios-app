@@ -7,14 +7,14 @@
 //
 
 /*
- * Copyright (C) 2018, ownCloud GmbH.
- *
- * This code is covered by the GNU Public License Version 3.
- *
- * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
- * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
- *
- */
+* Copyright (C) 2018, ownCloud GmbH.
+*
+* This code is covered by the GNU Public License Version 3.
+*
+* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+*
+*/
 
 import UIKit
 import ownCloudSDK
@@ -22,24 +22,24 @@ import ownCloudSDK
 extension OCBookmark {
 	var userName : String? {
 		if self.authenticationData != nil,
-		   self.authenticationMethodIdentifier != nil,
-		   let authenticationMethod = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: self.authenticationMethodIdentifier),
-		   let userName = authenticationMethod.userName(fromAuthenticationData: self.authenticationData) {
-		   	return userName
+			self.authenticationMethodIdentifier != nil,
+			let authenticationMethod = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: self.authenticationMethodIdentifier),
+			let userName = authenticationMethod.userName(fromAuthenticationData: self.authenticationData) {
+			return userName
 		}
 
 		return nil
 	}
 
-    var displayName : String? {
-        let core = OCCoreManager.shared.requestCore(for: self, completionHandler: nil)
-        if let connectionState = core?.connection.state {
-            if connectionState == .connected {
-                return core!.connection.loggedInUser.displayName
-            }
-        }
-        return nil
-    }
+	var displayName : String? {
+		let core = OCCoreManager.shared.requestCore(for: self, completionHandler: nil)
+		if let connectionState = core?.connection.state {
+			if connectionState == .connected {
+				return core!.connection.loggedInUser.displayName
+			}
+		}
+		return nil
+	}
 
 	var shortName: String {
 		if self.name != nil {
@@ -47,15 +47,15 @@ extension OCBookmark {
 		} else {
 			var userNamePrefix = ""
 
-            if let displayName = self.displayName {
-                userNamePrefix = displayName + "@"
-            }
+			if let displayName = self.displayName {
+				userNamePrefix = displayName + "@"
+			}
 
-            if userNamePrefix.count == 0 {
-                if let userName = self.userName {
-                    userNamePrefix = userName + "@"
-                }
-            }
+			if userNamePrefix.count == 0 {
+				if let userName = self.userName {
+					userNamePrefix = userName + "@"
+				}
+			}
 
 			if self.originURL?.host != nil {
 				return userNamePrefix + self.originURL!.host!
