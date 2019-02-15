@@ -235,15 +235,25 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 					})
 				}
 			}
-
-			if let parent = parent, let itemName = item.name {
-				parent.navigationItem.title = itemName
-
-				let actionsBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
-				actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
-				parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
-			}
 		}
+	}
+
+	override func didMove(toParent parent: UIViewController?) {
+
+		super.didMove(toParent: parent)
+
+		if (parent == nil && self.parent == nil) { return }
+		if (parent != nil && self.parent == parent) { return }
+
+		if let parent = parent, let item = item, let itemName = item.name {
+			print("LOG ---> parent = \(parent) for item \(item.name)")
+			parent.navigationItem.title = itemName
+
+			let actionsBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+			actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
+			parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
+		}
+
 	}
 
 	// MARK: - Download actions
