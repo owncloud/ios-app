@@ -76,7 +76,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.tableView.allowsSelectionDuringEditing = true
 
 		let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
-		addServerBarButtonItem.accessibilityLabel = "Add Server".localized
+		addServerBarButtonItem.accessibilityLabel = "Add account".localized
 		self.navigationItem.rightBarButtonItem = addServerBarButtonItem
 
 		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
@@ -181,6 +181,12 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 				self.tableView.tableHeaderView = nil
 				self.navigationController?.navigationBar.shadowImage = nil
+
+				welcomeAddServerButton.setTitle("Add account".localized, for: .normal)
+				welcomeTitleLabel.text = "Welcome".localized
+				let welcomeMessage = "Thanks for choosing %@! \n Start by adding your account.".localized
+				welcomeMessageLabel.text = welcomeMessage.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")
+
 				tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
 				tableView.reloadData()
 			}

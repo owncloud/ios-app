@@ -292,7 +292,9 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Buttons
+
 	convenience init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = StaticTableViewRowButtonStyle.proceed, identifier : String? = nil) {
+
 		self.init()
 
 		self.identifier = identifier
@@ -307,28 +309,28 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
 
 			switch style {
-				case .plain:
-					textColor = themeCollection.tintColor
-					backgroundColor = themeCollection.tableRowColors.backgroundColor
+			case .plain:
+				textColor = themeCollection.tintColor
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-				case .plainNonOpaque:
-					textColor = themeCollection.tableRowColors.tintColor
-					backgroundColor = themeCollection.tableRowColors.backgroundColor
+			case .plainNonOpaque:
+				textColor = themeCollection.tableRowColors.tintColor
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-				case .proceed:
-					textColor = themeCollection.neutralColors.normal.foreground
-					backgroundColor = themeCollection.neutralColors.normal.background
-					selectedBackgroundColor = themeCollection.neutralColors.highlighted.background
+			case .proceed:
+				textColor = themeCollection.neutralColors.normal.foreground
+				backgroundColor = themeCollection.neutralColors.normal.background
+				selectedBackgroundColor = themeCollection.neutralColors.highlighted.background
 
-				case .destructive:
-					textColor = UIColor.red
-					backgroundColor = themeCollection.tableRowColors.backgroundColor
+			case .destructive:
+				textColor = UIColor.red
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-				case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
-					textColor = customTextColor
-					selectedTextColor = customSelectedTextColor
-					backgroundColor = customBackgroundColor
-					selectedBackgroundColor = customSelectedBackgroundColor
+			case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
+				textColor = customTextColor
+				selectedTextColor = customSelectedTextColor
+				backgroundColor = customBackgroundColor
+				selectedBackgroundColor = customSelectedBackgroundColor
 			}
 
 			self?.cell?.textLabel?.textColor = textColor
