@@ -153,10 +153,11 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		self.view.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 		self.navigationController?.setNavigationBarHidden(true, animated: true)
 		
+		self.tabBar.isTranslucent = false
+		
 		filesNavigationController = ThemeNavigationController()
 		filesNavigationController?.delegate = self
 		filesNavigationController?.navigationBar.isTranslucent = false
-		filesNavigationController?.navigationBar.prefersLargeTitles = true
 		filesNavigationController?.tabBarItem.title = "Browse".localized
 		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: folderButtonsSize)
 

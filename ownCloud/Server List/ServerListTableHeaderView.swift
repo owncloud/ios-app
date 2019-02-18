@@ -30,7 +30,7 @@ class ServerListTableHeaderView: UIView, Themeable {
         Theme.shared.register(client: self, applyImmediately: true)
         
         textLabel.translatesAutoresizingMaskIntoConstraints = false
-        textLabel.text = "Locations".localized
+        textLabel.text = "Accounts".localized
         textLabel.font = UIFont.boldSystemFont(ofSize: 24.0)
         
         self.addSubview(textLabel)
