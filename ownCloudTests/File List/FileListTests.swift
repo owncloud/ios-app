@@ -39,7 +39,6 @@ class FileListTests: XCTestCase {
 	* PASSED if: Disconnect button appears in the view
 	*/
 	func testShowFileList() {
-
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 			//Mocks
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
@@ -60,7 +59,6 @@ class FileListTests: XCTestCase {
 	* PASSED if: The expected files/folders appear in the list
 	*/
 	func testShowFileListWithItems() {
-
 		let expectedCells: Int = 3
 
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
