@@ -1,10 +1,10 @@
 ## AppConfig how to
 
 ### Managed App Config
-Starting with iOS7, Apple has added support for managed application configuration. MDM server can push configuration to the app. The app can the access the configuration using NSUserDefaults class. The configuration is basically a key-value dictionary provided as .plist file.
+Starting with iOS7, Apple has added support for managed application configuration. MDM server can push configuration to the app. The app can access the configuration using NSUserDefaults class. The configuration is basically a key-value dictionary provided as .plist file.
 
 ### AppConfig XML Schema
-The XML format developed by AppConfig community, makes it easy for developers to define and deploy app configuration. It is not only defining the configuration variables with default value but also provides a configuration UI description which can be interpreted by the tool which generates a plist file. Moreover, specfile XML is consistently supported by major EMM vendors.
+The XML format developed by AppConfig community, makes it easy for developers to define and deploy an app configuration. It is not only defining the configuration variables with default values but also provides a configuration UI description which can be interpreted by the tool which generates a plist file. Moreover, specfile XML is consistently supported by major EMM vendors.
 
 ### Example: Deployment with MobileIron
 1. Open AppConfig Generator: https://appconfig.jamfresearch.com
