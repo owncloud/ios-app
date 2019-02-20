@@ -45,7 +45,7 @@ class FileListTests: XCTestCase {
 			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.showFileList(bookmark: bookmark)
 
-			//Assets
+			//Asserts
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("disconnect-button")).assert(grey_sufficientlyVisible())
 
 			//Reset status
@@ -84,7 +84,7 @@ class FileListTests: XCTestCase {
 			}
 			GREYAssertEqual(index as AnyObject, expectedCells as AnyObject, reason: "Founded \(index) cells when expected \(expectedCells)")
 
-			//Assets
+			//Asserts
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("disconnect-button")).assert(grey_sufficientlyVisible())
 
 			//Reset status

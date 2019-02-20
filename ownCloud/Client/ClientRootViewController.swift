@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 
 class ClientRootViewController: UITabBarController {
-	let bookmark : OCBookmark
+	var bookmark : OCBookmark
 	weak var core : OCCore?
 	var filesNavigationController : ThemeNavigationController?
 	var activityNavigationController : ThemeNavigationController?

@@ -35,8 +35,8 @@ class BookmarkViewController: StaticTableViewController {
 	var tokenInfoRow : StaticTableViewRow?
 	var deleteAuthDataButtonRow : StaticTableViewRow?
 
-	var continueSection : StaticTableViewSection?
-	var continueButtonRow : StaticTableViewRow?
+	lazy var continueBarButtonItem: UIBarButtonItem = UIBarButtonItem(title: "Continue".localized, style: .done, target: self, action: #selector(handleContinue))
+	lazy var saveBarButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
 
 	// MARK: - Internal storage
 	var bookmark : OCBookmark?
@@ -84,6 +84,13 @@ class BookmarkViewController: StaticTableViewController {
 				var placeholderString = "Name".localized
 				var changedBookmark = false
 
+				// Disable Continue button if there is no url
+				if textField.text != "" {
+					self?.continueBarButtonItem.isEnabled = true
+				} else {
+					self?.continueBarButtonItem.isEnabled = false
+				}
+
 				if let normalizedURL = NSURL(username: nil, password: nil, afterNormalizingURLString: textField.text, protocolWasPrepended: nil) {
 					if let host = normalizedURL.host {
 						placeholderString = host
@@ -116,7 +123,7 @@ class BookmarkViewController: StaticTableViewController {
 
 				self?.nameRow?.textField?.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : Theme.shared.activeCollection.tableRowColors.secondaryLabelColor])
 			}
-		}, placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, identifier: "row-url-url", accessibilityLabel: "Sever url".localized)
+			}, placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, identifier: "row-url-url", accessibilityLabel: "Server URL".localized)
 
 		certificateRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let certificate = self?.bookmark?.certificate {
@@ -163,14 +170,6 @@ class BookmarkViewController: StaticTableViewController {
 
 		credentialsSection = StaticTableViewSection(headerTitle: "Credentials".localized, footerTitle: nil, identifier: "section-credentials", rows: [ usernameRow!, passwordRow! ])
 
-		// Continue section + row
-		continueButtonRow = StaticTableViewRow(buttonWithAction: { [weak self] (row, sender) in
-			Log.log("Event: \(row) \(String(describing: sender))")
-			self?.handleContinue()
-		}, title: "Continue".localized, identifier: "row-continue-continue")
-
-		continueSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "section-continue", rows: [ continueButtonRow! ])
-
 		// Input focus tracking
 		urlRow?.textField?.delegate = self
 		passwordRow?.textField?.delegate = self
@@ -183,7 +182,8 @@ class BookmarkViewController: StaticTableViewController {
 
 		switch mode {
 			case .create:
-				self.navigationItem.title = "Add bookmark".localized
+				self.navigationItem.title = "Add account".localized
+				self.navigationItem.rightBarButtonItem = continueBarButtonItem
 
 				// Support for bookmark default URL
 				if let defaultURLString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultURL) as? String {
@@ -202,9 +202,9 @@ class BookmarkViewController: StaticTableViewController {
 
 				self.usernameRow?.enabled = false
 
-				self.navigationItem.title = "Edit bookmark".localized
+				self.navigationItem.title = "Edit account".localized
 
-				self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
+				self.navigationItem.rightBarButtonItem = saveBarButtonItem
 		}
 
 		// Support for bookmark URL editable
@@ -234,7 +234,7 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	// MARK: - Continue
-	func handleContinue() {
+	@objc func handleContinue() {
 		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
 
 		let hudCompletion: (((() -> Void)?) -> Void) = { (completion) in
@@ -574,15 +574,19 @@ class BookmarkViewController: StaticTableViewController {
 			}
 		}
 
-		// Continue section: show always
+		// Continue button: show always
 		if isBookmarkComplete(bookmark: self.bookmark) {
-			// No continue needed
-			if continueSection?.attached == true {
-				self.removeSection(continueSection!, animated: animated)
+			if self.mode == .create {
+				self.navigationItem.rightBarButtonItem = continueBarButtonItem
+			} else {
+				self.navigationItem.rightBarButtonItem = saveBarButtonItem
 			}
 		} else {
-			if continueSection?.attached == false {
-				self.addSection(continueSection!, animated: animated)
+			self.navigationItem.rightBarButtonItem = continueBarButtonItem
+			if urlRow?.textField?.text != ""{
+				continueBarButtonItem.isEnabled = true
+			} else {
+				continueBarButtonItem.isEnabled = false
 			}
 		}
 	}
@@ -734,7 +738,7 @@ extension BookmarkViewController : OCClassSettingsSupport {
 // MARK: - Keyboard / return key tracking
 extension BookmarkViewController : UITextFieldDelegate {
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-		if continueButtonRow?.attached == true {
+		if self.navigationItem.rightBarButtonItem == continueBarButtonItem {
 			if !updateInputFocus() {
 				handleContinue()
 			}
