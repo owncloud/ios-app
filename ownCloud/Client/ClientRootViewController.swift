@@ -76,7 +76,10 @@ class ClientRootViewController: UITabBarController {
 		openProgress.localizedDescription = "Connecting…".localized
 		progressSummarizer?.startTracking(progress: openProgress)
 
-		core = OCCoreManager.shared.requestCore(for: bookmark, completionHandler: { (core, error) in
+		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
+			self.core = core
+			core?.delegate = self
+		}, completionHandler: { (core, error) in
 			if error == nil {
 				self.coreReady()
 			}
@@ -94,7 +97,6 @@ class ClientRootViewController: UITabBarController {
 
 			self.progressSummarizer?.stopTracking(progress: openProgress)
 		})
-		core?.delegate = self
 	}
 
 	func updateConnectionStatusSummary() {

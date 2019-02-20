@@ -47,6 +47,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		AppLockManager.shared.showLockscreenIfNeeded()
 
+		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
+
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
 		application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum + 10)

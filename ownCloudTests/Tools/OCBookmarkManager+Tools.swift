@@ -3,7 +3,7 @@
 //  ownCloudTests
 //
 //  Created by Felix Schwarz on 24.01.19.
-//  Copyright © 2019 ownCloud GmbH. All rights reserved.
+//  Copyright © 2019 ownCloud GmbH. All rights reserved.completionHandler
 //
 
 import UIKit
@@ -31,6 +31,8 @@ extension OCBookmarkManager {
 						}
 
 						waitGroup.leave()
+
+						completionHandler()
 					})
 				}, for: bookmark)
 			}
