@@ -235,7 +235,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	// MARK: - Labels
 	convenience init(label: String, identifier: String? = nil) {
 		self.init()
- 
+
 		self.identifier = identifier
 
 		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
