@@ -15,14 +15,27 @@ class AlternativeCollectionCollectionViewController: UICollectionViewController 
 
 	weak private var core: OCCore?
 	private var items: [OCItem]
+	private var query: OCQuery
+	private var index: Int
 
-	init(core: OCCore, items: [OCItem]) {
+	// MARK: - Init & deinit
+	init(core: OCCore, items: [OCItem], query: OCQuery, index: Int = 0) {
 		self.core = core
 		self.items = items
+		self.query = query
+		self.index = index
 
 		let layout = UICollectionViewFlowLayout()
 		layout.scrollDirection = .horizontal
+		layout.minimumInteritemSpacing = 0
+		layout.minimumLineSpacing = 0
 		super.init(collectionViewLayout: layout)
+
+		query.addObserver(self, forKeyPath: "hasChangesAvailable", options: [.new], context: nil)
+	}
+
+	deinit {
+		query.removeObserver(self, forKeyPath: "hasChangesAvailable")
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -33,8 +46,9 @@ class AlternativeCollectionCollectionViewController: UICollectionViewController 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        self.collectionView!.register(GalleryCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 		self.collectionView.isPagingEnabled = true
+		self.collectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: false)
     }
 
     // MARK: UICollectionViewDataSource
@@ -47,7 +61,7 @@ class AlternativeCollectionCollectionViewController: UICollectionViewController 
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? GalleryCollectionViewCell
 
 		let itemToDisplay = items[indexPath.row]
 		let mimeType = itemToDisplay.mimeType!
@@ -62,14 +76,25 @@ class AlternativeCollectionCollectionViewController: UICollectionViewController 
 			configuration = DisplayViewConfiguration(item: itemToDisplay, core: core, state: .hasNetworkConnection)
 		}
 
-		viewController.configure(configuration)
+		if cell?.item == nil {
+			cell?.item = itemToDisplay
+			viewController.configure(configuration)
+			self.addChild(viewController)
+			cell?.contentView.addSubview(viewController.view)
+			viewController.didMove(toParent: self)
+			viewController.present(item: itemToDisplay)
+		} else {
+			if cell?.item != itemToDisplay {
+				cell?.item = itemToDisplay
+				viewController.configure(configuration)
+				self.addChild(viewController)
+				cell?.contentView.addSubview(viewController.view)
+				viewController.didMove(toParent: self)
+				viewController.present(item: itemToDisplay)
+			}
+		}
 
-		self.addChild(viewController)
-		cell.contentView.addSubview(viewController.view)
-		viewController.didMove(toParent: self)
-
-		viewController.present(item: itemToDisplay)
-        return cell
+        return cell!
     }
 
 	// MARK: - Extension selection
@@ -101,11 +126,32 @@ class AlternativeCollectionCollectionViewController: UICollectionViewController 
 
 		return controllerType
 	}
+
+	// MARK: - KVO observing
+	// swiftlint:disable block_based_kvo
+	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+
+		if keyPath == "hasChangesAvailable" {
+			if let newValue = change?[NSKeyValueChangeKey.newKey] as? Bool {
+				print("LOG ---> newValue = \(newValue)")
+			}
+		}
+		if (object as? OCQuery) === query, query.hasChangesAvailable {
+			query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag.init(rawValue: 0)) { ( _, changeSet) in
+				guard changeSet != nil else { return }
+				self.items = changeSet!.queryResult
+				OnMainThread {
+					self.collectionView.reloadData()
+				}
+			}
+		}
+	}
+	// swiftlint:enable block_based_kvo
 }
 
 extension AlternativeCollectionCollectionViewController: UICollectionViewDelegateFlowLayout {
 
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		return self.view.bounds.size
+		return self.view.frame.size
 	}
 }

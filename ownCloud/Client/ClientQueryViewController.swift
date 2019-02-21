@@ -315,8 +315,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 								OnMainThread {
 									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
 										if let item = item, item.localID == self.lastTappedItemLocalID, let core = core {
-											let itemIndex = self.items.firstIndex(where: {$0.fileID == item.fileID})
-											let itemViewController = AlternativePageViewController(core: core, items: query.queryResults!, index: itemIndex ?? 0, query: self.query)
+											let itemViewController = GalleryHostViewController(core: core, selectedItem: item, query: self.query)
+											itemViewController.hidesBottomBarWhenPushed = true
 											self.navigationController?.pushViewController(itemViewController, animated: true)
 										}
 									}

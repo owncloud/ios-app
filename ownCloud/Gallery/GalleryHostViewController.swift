@@ -9,27 +9,37 @@
 import UIKit
 import ownCloudSDK
 
-class AlternativePageViewController: UIPageViewController {
+class GalleryHostViewController: UIPageViewController {
 
+	// MARK: - Instance Variables
 	weak private var core: OCCore?
-	private var items: [OCItem]
-	private var initialIndex: Int
+	private var selectedItem: OCItem
+	private var items: [OCItem]?
 	private var query: OCQuery
-	private var viewControllerToTansition: DisplayViewController? {
-		didSet {
-			print("LOG ---> viewControllerToTansition = \(viewControllerToTansition?.item?.name)")
-		}
-	}
+	private weak var viewControllerToTansition: DisplayViewController?
 
-	init(core: OCCore, items: [OCItem], index: Int = 0, query: OCQuery) {
+	private var itemsFilter: OCQueryFilter = {
+		var itemFilterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
+			if let item = item {
+				if item.type == .collection {return false}
+			}
+			return true
+		}
+
+		return OCQueryFilter(handler: itemFilterHandler)
+	}()
+
+	// MARK: - Init & deinit
+	init(core: OCCore, selectedItem: OCItem, query: OCQuery) {
 		self.core = core
-		self.items = items
-		self.initialIndex = index
+		self.selectedItem = selectedItem
 		self.query = query
 
 		super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
 
 		query.addObserver(self, forKeyPath: "hasChangesAvailable", options: [.initial, .new], context: nil)
+		query.addFilter(itemsFilter, withIdentifier: "items-filter")
+
 	}
 
 	required init?(coder: NSCoder) {
@@ -40,26 +50,53 @@ class AlternativePageViewController: UIPageViewController {
 		query.removeObserver(self, forKeyPath: "hasChangesAvailable")
 	}
 
+	// MARK: - ViewController lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 		dataSource = self
 		delegate = self
-		let itemToDisplay = items[initialIndex]
-		let mimeType = itemToDisplay.mimeType!
-		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: mimeType)
-		let shouldDownload = viewController is (DisplayViewController & DisplayExtension) ? true : false
-		var configuration: DisplayViewConfiguration
-		if !shouldDownload {
-			configuration = DisplayViewConfiguration(item: itemToDisplay, core: core, state: .notSupportedMimeType)
-		} else {
-			configuration = DisplayViewConfiguration(item: itemToDisplay, core: core, state: .hasNetworkConnection)
+
+		query.requestChangeSet(withFlags: .onlyResults) { [weak self] ( _, changeSet) in
+			guard let `self` = self else {
+				return
+			}
+
+			self.items = changeSet?.queryResult
+
+			if let items = self.items, let index = items.firstIndex(where: {$0.fileID == self.selectedItem.fileID}) {
+				let itemToDisplay = items[index]
+
+				guard let mimeType = itemToDisplay.mimeType else { return }
+				OnMainThread {
+					let viewController = self.selectDisplayViewControllerBasedOn(mimeType: mimeType)
+					let shouldDownload = viewController is DisplayExtension ? true : false
+					let configurationState: DisplayViewState = shouldDownload ? .hasNetworkConnection : .notSupportedMimeType
+					let configuration = DisplayViewConfiguration(item: itemToDisplay, core: self.core, state: configurationState)
+
+					self.addChild(viewController)
+					viewController.didMove(toParent: self)
+
+					viewController.configure(configuration)
+					viewController.present(item: itemToDisplay)
+					viewController.setupStatusBar()
+
+					self.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
+				}
+			}
 		}
-
-		viewController.configure(configuration)
-		viewController.present(item: itemToDisplay)
-
-		self.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
     }
+
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		query.removeFilter(itemsFilter)
+	}
+
+	override var childForHomeIndicatorAutoHidden : UIViewController? {
+		if let childViewController = self.children.first {
+			return childViewController
+		}
+		return nil
+	}
 
 	// swiftlint:disable block_based_kvo
 	// Would love to use the block-based KVO, but it doesn't seem to work when used on the .state property of the query :-(
@@ -67,7 +104,7 @@ class AlternativePageViewController: UIPageViewController {
 		if (object as? OCQuery) === query {
 			query.requestChangeSet(withFlags: .onlyResults) { ( _, changeSet) in
 				guard changeSet != nil else { return }
-				self.items = changeSet!.queryResult
+				self.items = changeSet!.queryResult.filter({$0.mimeType != nil})
 			}
 		}
 	}
@@ -103,9 +140,9 @@ class AlternativePageViewController: UIPageViewController {
 	}
 
 	private func viewControllerAtIndex(index: Int) -> UIViewController? {
-		guard index >= 0, index < items.count else {
-			return nil
-		}
+		guard let items = items else { return nil }
+
+		guard index >= 0, index < items.count else { return nil }
 
 		let item = items[index]
 
@@ -124,11 +161,11 @@ class AlternativePageViewController: UIPageViewController {
 	}
 }
 
-extension AlternativePageViewController: UIPageViewControllerDataSource {
+extension GalleryHostViewController: UIPageViewControllerDataSource {
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
 
 		if let displayViewController = viewController as? DisplayViewController, let item = displayViewController.item, let index =
-			items.firstIndex(where: {$0.fileID == item.fileID}) {
+			items?.firstIndex(where: {$0.fileID == item.fileID}) {
 			return viewControllerAtIndex(index: index + 1)
 		}
 
@@ -139,7 +176,7 @@ extension AlternativePageViewController: UIPageViewControllerDataSource {
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
 
 		if let displayViewController = viewController as? DisplayViewController, let item = displayViewController.item, let index =
-			items.firstIndex(where: {$0.fileID == item.fileID}) {
+			items?.firstIndex(where: {$0.fileID == item.fileID}) {
 			return viewControllerAtIndex(index: index - 1)
 		}
 
@@ -147,18 +184,19 @@ extension AlternativePageViewController: UIPageViewControllerDataSource {
 	}
 }
 
-extension AlternativePageViewController: UIPageViewControllerDelegate {
+extension GalleryHostViewController: UIPageViewControllerDelegate {
 	func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
 
 		let previousViewController = previousViewControllers[0]
 		previousViewController.didMove(toParent: nil)
 
 		if completed, let vc = self.viewControllerToTansition {
-//			if self.children.contains(vc) {
-//			} else {
-//				self.addChild(vc)
-//			}
-//			vc.didMove(toParent: self)
+			if self.children.contains(vc) {
+			} else {
+				self.addChild(vc)
+			}
+			vc.didMove(toParent: self)
+			vc.setupStatusBar()
 		}
 	}
 
