@@ -163,7 +163,7 @@ class SortBar: UIView, Themeable {
 			stackView.topAnchor.constraint(equalTo: topAnchor),
 			stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
 			stackView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 20),
-			stackView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -20)
+			stackView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -50)
 		])
 
 		stackView.addArrangedSubview(leftButton)
