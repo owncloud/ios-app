@@ -417,23 +417,40 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	@objc func userActionSave() {
-		if isBookmarkComplete(bookmark: self.bookmark) {
-			self.bookmark?.authenticationDataStorage = .keychain // Commit auth changes to keychain
 
-			switch mode {
-				case .create:
-					// Add bookmark
-					OCBookmarkManager.shared.addBookmark(bookmark!)
-					OCBookmarkManager.shared.saveBookmarks()
+		guard let bookmark = self.bookmark else { return }
 
-				case .edit:
-					// Update original bookmark
-					originalBookmark?.setValuesFrom(bookmark!)
-					OCBookmarkManager.shared.saveBookmarks()
-					OCBookmarkManager.shared.postChangeNotification()
+		if isBookmarkComplete(bookmark: bookmark) {
+			bookmark.authenticationDataStorage = .keychain // Commit auth changes to keychain
+
+			if let connection = OCConnection(bookmark: bookmark, persistentStoreBaseURL: nil) {
+				connection.connect { [weak self] (error, _) in
+					if let weakSelf = self {
+						if error == nil {
+							bookmark.displayName = connection.loggedInUser.displayName
+							connection.disconnect(completionHandler: {
+								switch weakSelf.mode {
+								case .create:
+									// Add bookmark
+									OCBookmarkManager.shared.addBookmark(bookmark)
+									OCBookmarkManager.shared.saveBookmarks()
+
+								case .edit:
+									// Update original bookmark
+									self?.originalBookmark?.setValuesFrom(bookmark)
+									OCBookmarkManager.shared.saveBookmarks()
+									OCBookmarkManager.shared.postChangeNotification()
+								}
+								weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+
+							})
+						} else {
+							weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+						}
+					}
+				}
 			}
 
-			self.presentingViewController?.dismiss(animated: true, completion: nil)
 		} else {
 			handleContinue()
 		}

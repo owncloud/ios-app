@@ -20,6 +20,8 @@ import UIKit
 import ownCloudSDK
 
 extension OCBookmark {
+	static let OCBookmarkDisplayName : NSString = "OCBookmarkDisplayName"
+
 	var userName : String? {
 		if self.authenticationData != nil,
 			self.authenticationMethodIdentifier != nil,
@@ -32,13 +34,13 @@ extension OCBookmark {
 	}
 
 	var displayName : String? {
-		let core = OCCoreManager.shared.requestCore(for: self, completionHandler: nil)
-		if let connectionState = core?.connection.state {
-			if connectionState == .connected {
-				return core!.connection.loggedInUser.displayName
-			}
+		get {
+			return self.userInfo.object(forKey: OCBookmark.OCBookmarkDisplayName) as? String
 		}
-		return nil
+
+		set {
+			self.userInfo[OCBookmark.OCBookmarkDisplayName] = newValue
+		}
 	}
 
 	var shortName: String {
