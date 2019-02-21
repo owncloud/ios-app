@@ -163,10 +163,12 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		filesNavigationController?.tabBarItem.title = "Browse".localized
 		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: folderButtonsSize)
 
+		Theme.shared.add(tvgResourceFor: "status-flash")
+
 		activityViewController = ClientActivityViewController()
 		activityNavigationController = ThemeNavigationController(rootViewController: activityViewController!)
-		activityNavigationController?.tabBarItem.title = "Activity".localized
-		activityNavigationController?.tabBarItem.image = Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25))
+		activityNavigationController?.tabBarItem.title = "Status".localized
+		activityNavigationController?.tabBarItem.image = Theme.shared.image(for: "status-flash", size: CGSize(width: 25, height: 25))
 
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false
