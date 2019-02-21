@@ -20,15 +20,15 @@ import UIKit
 import ownCloudSDK
 
 class ClientRootViewController: UITabBarController, UINavigationControllerDelegate {
-	
+
 	// MARK: - Constants
 	let folderButtonsSize: CGSize = CGSize(width: 25.0, height: 25.0)
-	
+
 	// MARK: - Instance variables.
 	let bookmark : OCBookmark
 	weak var core : OCCore?
 	var filesNavigationController : ThemeNavigationController?
-    let emptyViewController = UIViewController()
+	let emptyViewController = UIViewController()
 	var activityNavigationController : ThemeNavigationController?
 	var activityViewController : ClientActivityViewController?
 	var progressBar : CollapsibleProgressBar?
@@ -154,9 +154,9 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		self.view.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 		self.navigationController?.setNavigationBarHidden(true, animated: true)
-		
+
 		self.tabBar.isTranslucent = false
-		
+
 		filesNavigationController = ThemeNavigationController()
 		filesNavigationController?.delegate = self
 		filesNavigationController?.navigationBar.isTranslucent = false
@@ -199,8 +199,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	}
 
 	func closeClient(completion: (() -> Void)? = nil) {
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
-        self.navigationController?.popViewController(animated: true)
+		self.navigationController?.setNavigationBarHidden(false, animated: false)
+		self.navigationController?.popViewController(animated: true)
 	}
 
 	func coreReady() {
@@ -211,13 +211,13 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 			self.activityViewController?.core = self.core!
 		}
 	}
-    
-    func navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) {
+
+	func navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) {
 		// if the emptyViewController will show, because the push button in ClientQueryViewController was triggered, push immediately to the ServerListTableViewController, because emptyViewController is only a helper for showing the "Back" button in ClientQueryViewController
-        if willShow.isEqual(emptyViewController) {
-            self.closeClient()
-        }
-    }
+		if willShow.isEqual(emptyViewController) {
+			self.closeClient()
+		}
+	}
 }
 
 extension ClientRootViewController : Themeable {
