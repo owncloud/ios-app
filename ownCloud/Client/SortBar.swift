@@ -34,6 +34,10 @@ class SortBar: UIView, Themeable {
 
 	// MARK: - Constants
 	let sideButtonsSize: CGSize = CGSize(width: 30.0, height: 30.0)
+	let leftPadding: CGFloat = 20.0
+	let rightPadding: CGFloat = -20.0
+	let topPadding: CGFloat = 10.0
+	let bottomPadding: CGFloat = -10.0
 
 	// MARK: - Instance variables.
 
@@ -130,11 +134,11 @@ class SortBar: UIView, Themeable {
 		// Sort segmented control
 		containerView.addSubview(sortSegmentedControl)
 		NSLayoutConstraint.activate([
-			sortSegmentedControl.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
-			sortSegmentedControl.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10),
+			sortSegmentedControl.topAnchor.constraint(equalTo: containerView.topAnchor, constant: topPadding),
+			sortSegmentedControl.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: bottomPadding),
 			sortSegmentedControl.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-			sortSegmentedControl.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor, constant: 20),
-			sortSegmentedControl.rightAnchor.constraint(greaterThanOrEqualTo: containerView.rightAnchor, constant: -20)
+			sortSegmentedControl.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor, constant: leftPadding),
+			sortSegmentedControl.rightAnchor.constraint(greaterThanOrEqualTo: containerView.rightAnchor, constant: rightPadding)
 		])
 
 		for method in SortMethod.all {
@@ -148,11 +152,11 @@ class SortBar: UIView, Themeable {
 		// Sort Button
 		containerView.addSubview(sortButton)
 		NSLayoutConstraint.activate([
-			sortButton.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 10),
-			sortButton.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -10),
+			sortButton.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: topPadding),
+			sortButton.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: bottomPadding),
 			sortButton.centerXAnchor.constraint(equalTo: self.containerView.centerXAnchor),
-			sortButton.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor, constant: 20),
-			sortButton.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor, constant: -20)
+			sortButton.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor, constant: leftPadding),
+			sortButton.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor, constant: rightPadding)
 		])
 
 		sortButton.isHidden = true
@@ -162,8 +166,8 @@ class SortBar: UIView, Themeable {
 		NSLayoutConstraint.activate([
 			stackView.topAnchor.constraint(equalTo: topAnchor),
 			stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-			stackView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 20),
-			stackView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -50)
+			stackView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: leftPadding),
+			stackView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: (rightPadding - sideButtonsSize.width))
 		])
 
 		stackView.addArrangedSubview(leftButton)
@@ -173,8 +177,8 @@ class SortBar: UIView, Themeable {
 		//stackView.addArrangedSubview(rightButton)
 
 		NSLayoutConstraint.activate([
-			leftButton.widthAnchor.constraint(equalToConstant: 30),
-			rightButton.widthAnchor.constraint(equalToConstant: 30)
+			leftButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width),
+			rightButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.height)
 		])
 	}
 
