@@ -222,6 +222,7 @@ class ClientItemCell: ThemeTableViewCell {
 		self.moreButton.isHidden = (item.isPlaceholder || (progressView != nil)) ? true : false
 
 		self.moreButton.accessibilityLabel = item.name! + " " + "Actions".localized
+		self.moreButton.accessibilityIdentifier = item.name! + "-" + "actions"
 
 		self.updateProgress()
 	}
