@@ -40,7 +40,7 @@ class MoreViewController: UIViewController {
 		self.core = core
 		self.headerView = header
 		self.viewController = viewController
-
+		
 		super.init(nibName: nil, bundle: nil)
 	}
 

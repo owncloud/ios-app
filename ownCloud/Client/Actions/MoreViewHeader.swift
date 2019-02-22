@@ -42,6 +42,7 @@ class MoreViewHeader: UIView {
 		super.init(frame: .zero)
 
 		self.translatesAutoresizingMaskIntoConstraints = false
+		self.accessibilityIdentifier = "more-view-header"
 
 		Theme.shared.register(client: self)
 

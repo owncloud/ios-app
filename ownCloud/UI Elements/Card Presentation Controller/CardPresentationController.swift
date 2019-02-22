@@ -155,6 +155,7 @@ final class CardPresentationController: UIPresentationController {
 
 		dimmingViewGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissView))
 		dimmingView.addGestureRecognizer(dimmingViewGestureRecognizer!)
+		dimmingView.accessibilityIdentifier = "dimming-view"
 
 		if let presentedView = presentedView,
 		   let containerView = containerView {
