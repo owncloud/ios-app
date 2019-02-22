@@ -83,6 +83,9 @@ class PasscodeTests: XCTestCase {
 
 		// Assure that the passcode is disabled
 		AppLockManager.shared.lockEnabled = false
+
+		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
+
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
 
@@ -107,6 +110,9 @@ class PasscodeTests: XCTestCase {
 
 		// Assure that the passcode is disabled
 		AppLockManager.shared.lockEnabled = false
+
+		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
+
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
 
@@ -137,6 +143,9 @@ class PasscodeTests: XCTestCase {
 
 		// Assure that the passcode is disabled
 		AppLockManager.shared.lockEnabled = false
+
+		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
+
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
 
@@ -170,6 +179,8 @@ class PasscodeTests: XCTestCase {
 		AppLockManager.shared.passcode = "1111"
 		AppLockManager.shared.lockEnabled = true
 
+		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
+
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(false))
 
@@ -198,6 +209,8 @@ class PasscodeTests: XCTestCase {
 		AppLockManager.shared.passcode = "1111"
 		AppLockManager.shared.lockEnabled = true
 
+		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
+
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(false))
 
@@ -224,6 +237,8 @@ class PasscodeTests: XCTestCase {
 		// Prepare the simulator show the passcode
 		AppLockManager.shared.passcode = "1111"
 		AppLockManager.shared.lockEnabled = true
+
+		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
 
