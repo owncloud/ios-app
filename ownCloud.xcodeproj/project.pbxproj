@@ -70,6 +70,7 @@
 		59B09E6E21AD61F4007827B8 /* EditBookmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6A21AD61F4007827B8 /* EditBookmarkTests.swift */; };
 		59B09E6F21AD61F4007827B8 /* CreateBookmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6B21AD61F4007827B8 /* CreateBookmarkTests.swift */; };
 		59B09E7021AD61F4007827B8 /* UtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6C21AD61F4007827B8 /* UtilsTests.swift */; };
+		59BC2751221D552700548444 /* XCTestsCase+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59BC2750221D552700548444 /* XCTestsCase+Extension.swift */; };
 		59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 59D4895420C83F2E00369C2E /* InfoPlist.strings */; };
 		6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */; };
 		6E0A569E218702400056B7B4 /* DownloadFileProgressHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0A569D218702400056B7B4 /* DownloadFileProgressHUDViewController.swift */; };
@@ -522,6 +523,7 @@
 		59B09E6A21AD61F4007827B8 /* EditBookmarkTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditBookmarkTests.swift; sourceTree = "<group>"; };
 		59B09E6B21AD61F4007827B8 /* CreateBookmarkTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateBookmarkTests.swift; sourceTree = "<group>"; usesTabs = 1; };
 		59B09E6C21AD61F4007827B8 /* UtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilsTests.swift; sourceTree = "<group>"; };
+		59BC2750221D552700548444 /* XCTestsCase+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestsCase+Extension.swift"; sourceTree = "<group>"; };
 		59D4895320C83F2E00369C2E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		59EACA8020CAA37F00F082EE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -1144,6 +1146,7 @@
 				233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */,
 				59B09E6C21AD61F4007827B8 /* UtilsTests.swift */,
 				DCAEB06021F9FC510067E147 /* EarlGrey+Tools.swift */,
+				59BC2750221D552700548444 /* XCTestsCase+Extension.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -1886,6 +1889,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */,
+				59BC2751221D552700548444 /* XCTestsCase+Extension.swift in Sources */,
 				59B09E6F21AD61F4007827B8 /* CreateBookmarkTests.swift in Sources */,
 				59B09E6E21AD61F4007827B8 /* EditBookmarkTests.swift in Sources */,
 				59538A0321E4A9C2005E543B /* CreateFolderTests.swift in Sources */,
