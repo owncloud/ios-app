@@ -46,7 +46,11 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	private let progressViewVerticalSpacing: CGFloat = 20.0
 
 	// MARK: - Configuration
-	weak var item: OCItem?
+	weak var item: OCItem? {
+		didSet {
+			print("LOG ---> new value of item = \(item)")
+		}
+	}
 	weak var core: OCCore? {
 		willSet {
 			if let core = core {
@@ -64,9 +68,9 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		didSet {
 			OnMainThread {
 				self.iconImageView.isHidden = true
+				self.hideItemMetadataUIElements()
+				self.renderSpecificView()
 			}
-			hideItemMetadataUIElements()
-			renderSpecificView()
 		}
 	}
 
@@ -272,10 +276,10 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				}
 				return
 			}
-			OnMainThread {
+//			OnMainThread {
 				self?.item = latestItem
 				self?.source = file!.url
-			}
+//			}
 		}) {
 			self.state = .downloading(progress: downloadProgress)
 		}

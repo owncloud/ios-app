@@ -163,10 +163,13 @@ class GalleryHostViewController: UIPageViewController {
 
 extension GalleryHostViewController: UIPageViewControllerDataSource {
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+		print("LOG ---> pasa after")
+		if let displayViewController = viewController as? DisplayViewController {
 
-		if let displayViewController = viewController as? DisplayViewController, let item = displayViewController.item, let index =
-			items?.firstIndex(where: {$0.fileID == item.fileID}) {
-			return viewControllerAtIndex(index: index + 1)
+			if let item = displayViewController.item, let index =
+				items?.firstIndex(where: {$0.fileID == item.fileID}) {
+					return viewControllerAtIndex(index: index + 1)
+			}
 		}
 
 		return nil
@@ -174,7 +177,7 @@ extension GalleryHostViewController: UIPageViewControllerDataSource {
 	}
 
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-
+		print("LOG ---> pasa before")
 		if let displayViewController = viewController as? DisplayViewController, let item = displayViewController.item, let index =
 			items?.firstIndex(where: {$0.fileID == item.fileID}) {
 			return viewControllerAtIndex(index: index - 1)
