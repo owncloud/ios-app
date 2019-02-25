@@ -29,9 +29,8 @@ class MockClientRootViewController: ClientRootViewController {
 	override func coreReady() {
 		OnMainThread {
 			let queryViewController = ClientQueryViewController(core: self.mockedCore, query: self.query)
-			queryViewController.navigationItem.leftBarButtonItem = self.logoutBarButtonItem()
-
-			self.filesNavigationController?.pushViewController(queryViewController, animated: false)
+			self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
+			self.activityViewController?.core = self.core!
 		}
 	}
 }
