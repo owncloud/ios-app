@@ -31,6 +31,8 @@ extension OCBookmarkManager {
 						}
 
 						waitGroup.leave()
+
+						completionHandler()
 					})
 				}, for: bookmark)
 			}
