@@ -30,8 +30,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		var navigationController: UINavigationController?
 
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
-		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching")
+		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
 
+		// Set up app
 		window = UIWindow(frame: UIScreen.main.bounds)
 
 		ThemeStyle.registerDefaultStyles()
@@ -46,8 +47,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		AppLockManager.shared.showLockscreenIfNeeded()
 
+		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
+
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
+		// Set up background refresh
 		application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum + 10)
 
 		// Display Extensions
@@ -62,15 +66,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(RenameAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DuplicateAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CreateFolderAction.actionExtension)
+		OCExtensionManager.shared.addExtension(CopyAction.actionExtension)
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
+
+		// Licenses
+		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: Theme.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
 
 		return true
 	}
 
 	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-			completionHandler(.newData)
+		Log.debug("AppDelegate: performFetchWithCompletionHandler")
+
+		OnMainThread(after: 2.0) {
+			completionHandler(.noData)
 		}
 	}
 

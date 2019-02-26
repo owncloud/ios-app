@@ -67,7 +67,7 @@ class ThemeResource : NSObject {
 				DispatchQueue.global(qos: .userInteractive).async {
 					let requestedResource : Any? = self.resource(for: theme)
 
-					DispatchQueue.main.async {
+					OnMainThread {
 						completion(requestedResource)
 					}
 				}

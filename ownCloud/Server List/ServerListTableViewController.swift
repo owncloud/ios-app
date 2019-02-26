@@ -35,7 +35,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	override init(style: UITableView.Style) {
 		super.init(style: style)
 
-		NotificationCenter.default.addObserver(self, selector: #selector(serverListChanged), name: Notification.Name.OCBookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(serverListChanged), name: .OCBookmarkManagerListChanged, object: nil)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -43,7 +43,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	deinit {
-		NotificationCenter.default.removeObserver(self, name: Notification.Name.OCBookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.removeObserver(self, name: .OCBookmarkManagerListChanged, object: nil)
 	}
 
 	// TODO: Rebuild welcomeOverlayView in code
@@ -67,25 +67,31 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		OCItem.registerIcons()
 
+		self.navigationController?.navigationBar.prefersLargeTitles = true
+		self.navigationController?.navigationBar.isTranslucent = false
+		self.navigationController?.toolbar.isTranslucent = false
 		self.tableView.register(ServerListBookmarkCell.self, forCellReuseIdentifier: "bookmark-cell")
 		self.tableView.rowHeight = UITableView.automaticDimension
 		self.tableView.estimatedRowHeight = 80
 		self.tableView.allowsSelectionDuringEditing = true
 
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
+		let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
+		addServerBarButtonItem.accessibilityLabel = "Add account".localized
+		self.navigationItem.rightBarButtonItem = addServerBarButtonItem
 
 		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
 
 		Theme.shared.add(tvgResourceFor: "owncloud-logo")
 		welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
 
-		self.navigationItem.title = "ownCloud"
+		self.navigationItem.title = OCAppIdentity.shared.appName
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		self.navigationController?.setToolbarHidden(false, animated: animated)
+		self.navigationController?.navigationBar.prefersLargeTitles = true
 
 		Theme.shared.register(client: self)
 
@@ -115,9 +121,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	func considerBetaWarning() {
 		let lastBetaWarningCommit = OCAppIdentity.shared.userDefaults?.string(forKey: "LastBetaWarningCommit")
 
-		Log.log("Show beta warning: \(String(describing: self.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool))")
+		Log.log("Show beta warning: \(String(describing: VendorServices.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool))")
 
-		if self.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool == true,
+		if VendorServices.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool == true,
 		   let lastGitCommit = LastGitCommit(),
 		   (lastBetaWarningCommit == nil) || (lastBetaWarningCommit != lastGitCommit) {
 		   	// Beta warning has never been shown before - or has last been shown for a different release
@@ -173,6 +179,14 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				constraint.priority = UILayoutPriority(rawValue: 900)
 				constraint.isActive = true
 
+				self.tableView.tableHeaderView = nil
+				self.navigationController?.navigationBar.shadowImage = nil
+
+				welcomeAddServerButton.setTitle("Add account".localized, for: .normal)
+				welcomeTitleLabel.text = "Welcome".localized
+				let welcomeMessage = "Thanks for choosing %@! \n Start by adding your account.".localized
+				welcomeMessageLabel.text = welcomeMessage.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")
+
 				tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
 				tableView.reloadData()
 			}
@@ -193,6 +207,29 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			if self.navigationItem.leftBarButtonItem == nil {
 				self.navigationItem.leftBarButtonItem = self.editButtonItem
 			}
+
+			// Add Header View
+			self.tableView.tableHeaderView = ServerListTableHeaderView(frame: CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: 50.0))
+			self.navigationController?.navigationBar.shadowImage = UIImage()
+			self.tableView.tableHeaderView?.applyThemeCollection(Theme.shared.activeCollection)
+
+			// UITableView background view is nil for default. Set a UIView with clear color to can insert a subview above
+			let backgroundView = UIView.init(frame: self.tableView.frame)
+			backgroundView.backgroundColor = UIColor.clear
+			self.tableView.backgroundView = backgroundView
+
+			// This view is needed to stop flickering when scrolling (white line between UINavigationBar and UITableView header
+			let coloredView = ThemeableColoredView.init(frame: CGRect(x: 0, y: -self.view.frame.size.height, width: self.view.frame.size.width, height: self.view.frame.size.height + 1))
+			coloredView.translatesAutoresizingMaskIntoConstraints = false
+
+			self.tableView.insertSubview(coloredView, aboveSubview: self.tableView.backgroundView!)
+
+			NSLayoutConstraint.activate([
+				coloredView.topAnchor.constraint(equalTo: self.tableView.topAnchor, constant: -self.view.frame.size.height),
+				coloredView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
+				coloredView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
+				coloredView.heightAnchor.constraint(equalToConstant: self.view.frame.size.height + 1)
+			])
 		}
 	}
 
@@ -204,6 +241,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	func showBookmarkUI(edit bookmark: OCBookmark? = nil) {
 		let viewController : BookmarkViewController = BookmarkViewController(bookmark)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
+
+		// Exit editing mode (unfortunately, self.isEditing = false will not do the trick as it leaves the left bar button unchanged as "Done")
+		if self.tableView.isEditing,
+		   let target = self.navigationItem.leftBarButtonItem?.target,
+		   let action = self.navigationItem.leftBarButtonItem?.action {
+			_ = target.perform(action, with: self)
+		}
 
 		self.present(navigationController, animated: true, completion: nil)
 	}
@@ -224,9 +268,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	var ignoreServerListChanges : Bool = false
 
 	@objc func serverListChanged() {
-		DispatchQueue.main.async {
+		OnMainThread {
 			if !self.ignoreServerListChanges {
 				self.tableView.reloadData()
+				self.updateNoServerMessageVisibility()
 			}
 		}
 	}
@@ -255,7 +300,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			} else {
 				let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 
-				self.present(clientRootViewController, animated: true, completion: nil)
+				self.navigationController?.navigationBar.prefersLargeTitles = false
+				self.navigationController?.navigationItem.largeTitleDisplayMode = .never
+				self.navigationController?.pushViewController(viewController: clientRootViewController, animated: true, completion: {
+                    self.navigationController?.setNavigationBarHidden(true, animated: false)
+                })
 			}
 		}
 	}
@@ -271,9 +320,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "bookmark-cell", for: indexPath) as? ServerListBookmarkCell else {
-
-		    let cell = ServerListBookmarkCell()
-		    return cell
+		    return ServerListBookmarkCell()
 		}
 
 		if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
@@ -304,44 +351,42 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 							self.lockedBookmarks.append(bookmark)
 
-							OCCoreManager.shared.scheduleOfflineOperation({ (inBookmark, completionHandler) in
-								if let bookmark = inBookmark {
-									let vault : OCVault = OCVault(bookmark: bookmark)
+							OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
+								let vault : OCVault = OCVault(bookmark: bookmark)
 
-									vault.erase(completionHandler: { (_, error) in
-										DispatchQueue.main.async {
-											if error != nil {
-												// Inform user if vault couldn't be erased
-												let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
-																	message: error?.localizedDescription,
-																	preferredStyle: .alert)
+								vault.erase(completionHandler: { (_, error) in
+									OnMainThread {
+										if error != nil {
+											// Inform user if vault couldn't be erased
+											let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+																message: error?.localizedDescription,
+																preferredStyle: .alert)
 
-												alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+											alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
-												self.present(alertController, animated: true, completion: nil)
-											} else {
-												// Success! We can now remove the bookmark
-												self.ignoreServerListChanges = true
+											self.present(alertController, animated: true, completion: nil)
+										} else {
+											// Success! We can now remove the bookmark
+											self.ignoreServerListChanges = true
 
-												OCBookmarkManager.shared.removeBookmark(bookmark)
+											OCBookmarkManager.shared.removeBookmark(bookmark)
 
-												tableView.performBatchUpdates({
-													tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-												}, completion: { (_) in
-													self.ignoreServerListChanges = false
-												})
+											tableView.performBatchUpdates({
+												tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+											}, completion: { (_) in
+												self.ignoreServerListChanges = false
+											})
 
-												self.updateNoServerMessageVisibility()
-											}
-
-											if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
-												self.lockedBookmarks.remove(at: removeIndex)
-											}
-
-											completionHandler?()
+											self.updateNoServerMessageVisibility()
 										}
-									})
-								}
+
+										if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
+											self.lockedBookmarks.remove(at: removeIndex)
+										}
+
+										completionHandler()
+									}
+								})
 							}, for: bookmark)
 						}))
 
@@ -359,26 +404,5 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		OCBookmarkManager.shared.moveBookmark(from: UInt(fromIndexPath.row), to: UInt(to.row))
-	}
-}
-
-// MARK: - OCClassSettings support
-extension OCClassSettingsIdentifier {
-	static let app = OCClassSettingsIdentifier("app")
-}
-
-extension OCClassSettingsKey {
-	static let showBetaWarning = OCClassSettingsKey("show-beta-warning")
-}
-
-extension ServerListTableViewController : OCClassSettingsSupport {
-	static let classSettingsIdentifier : OCClassSettingsIdentifier = .app
-
-	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
-		if identifier == .app {
-			return [ .showBetaWarning : true ]
-		}
-
-		return nil
 	}
 }

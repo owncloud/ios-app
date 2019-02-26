@@ -41,6 +41,7 @@ class LogSettingsViewController: StaticTableViewController {
 	private let loggingSection = StaticTableViewSection(headerTitle: "Logging".localized)
 	private var logLevelSection : StaticTableViewSection?
 	private var logOutputSection : StaticTableViewSection?
+	private var logTogglesSection : StaticTableViewSection?
 	private var logPrivacySection : StaticTableViewSection?
 
 	static let logLevelChangedNotificationName = NSNotification.Name("settings.log-level-changed")
@@ -101,6 +102,23 @@ class LogSettingsViewController: StaticTableViewController {
 				addSections.append(logLevelSection!)
 			}
 
+			// Log toggles
+			if logTogglesSection == nil {
+				logTogglesSection = StaticTableViewSection(headerTitle: "Options".localized)
+
+				for toggle in OCLogger.shared.toggles {
+					let row = StaticTableViewRow(switchWithAction: { (row, _) in
+						if let enabled = row.value as? Bool {
+							toggle.enabled = enabled
+						}
+					}, title: toggle.localizedName, value: toggle.enabled, identifier: toggle.identifier.rawValue)
+
+					logTogglesSection?.add(row: row)
+				}
+
+				addSections.append(logTogglesSection!)
+			}
+
 			// Log output
 			if logOutputSection == nil {
 				logOutputSection = StaticTableViewSection(headerTitle: "Log Destinations".localized)
@@ -114,7 +132,7 @@ class LogSettingsViewController: StaticTableViewController {
 						}
 					}, title: writer.name, value: writer.enabled, identifier: writer.identifier.rawValue)
 
-					if writer.identifier == .file {
+					if writer.identifier == .writerFile {
 						logFileWriterSwitchRow = row
 					}
 
@@ -122,7 +140,7 @@ class LogSettingsViewController: StaticTableViewController {
 				}
 
 				logOutputSection?.add(row: StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
-					if let logFileWriter = OCLogger.shared.writer(withIdentifier: .file) as? OCLogFileWriter {
+					if let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter {
 						if !FileManager.default.fileExists(atPath: logFileWriter.logFileURL.path) {
 							let alert = UIAlertController(title: "No log file found".localized, message: "The log file can't be shared because no log file could be found or the log file is empty.".localized, preferredStyle: .alert)
 
@@ -170,7 +188,7 @@ class LogSettingsViewController: StaticTableViewController {
 				logOutputSection?.add(row: StaticTableViewRow(buttonWithAction: { (row, _) in
 					let alert = UIAlertController(with: "Really reset log file?".localized, message: "This action can't be undone.".localized, destructiveLabel: "Reset log file".localized, preferredStyle: .alert, destructiveAction: {
 						OCLogger.shared.pauseWriters(intermittentBlock: {
-							if let logFileWriter = OCLogger.shared.writer(withIdentifier: .file) as? OCLogFileWriter {
+							if let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter {
 								logFileWriter.eraseOrTruncate()
 							}
 						})
@@ -205,6 +223,10 @@ class LogSettingsViewController: StaticTableViewController {
 			if logLevelSection != nil {
 				removeSections.append(logLevelSection!)
 				logLevelSection = nil
+			}
+			if logTogglesSection != nil {
+				removeSections.append(logTogglesSection!)
+				logTogglesSection = nil
 			}
 			if logOutputSection != nil {
 				removeSections.append(logOutputSection!)

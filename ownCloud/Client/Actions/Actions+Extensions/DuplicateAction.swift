@@ -34,33 +34,31 @@ class DuplicateAction : Action {
 
 	// MARK: - Action implementation
 	override func run() {
-		guard context.items.count > 0 else {
-			completed(with: NSError(ocError: OCError.errorItemNotFound))
+		guard context.items.count > 0, let core = self.core, let item = context.items.first, let itemName = item.name else {
+			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
 
-		let item = context.items[0]
-		let rootItem = item.parentItem(from: core)
-
-		guard rootItem != nil else {
-			completed(with: NSError(ocError: OCError.errorItemNotFound))
+		guard let rootItem = item.parentItem(from: core) else {
+			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
 
-		var name: String = "\(item.name!) copy"
+		var name: String = "\(itemName) copy"
 
 		if item.type != .collection {
-			let itemName = item.nameWithoutExtension()
-			var fileExtension = item.fileExtension()
+			if let itemFileExtension = item.fileExtension, let baseName = item.baseName {
+				var fileExtension = itemFileExtension
 
-			if fileExtension != "" {
-				fileExtension = ".\(fileExtension)"
+				if fileExtension != "" {
+					fileExtension = ".\(fileExtension)"
+				}
+
+				name = "\(baseName) copy\(fileExtension)"
 			}
-
-			name = "\(itemName) copy\(fileExtension)"
 		}
 
-		if let progress = self.core.copy(item, to: rootItem!, withName: name, options: nil, resultHandler: { (error, _, item, _) in
+		if let progress = core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in
 			if error != nil {
 				Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
 				self.completed(with: error)

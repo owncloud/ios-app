@@ -39,7 +39,7 @@ class OpenInAction: Action {
 
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController else {
-			completionHandler?(NSError(ocError: .errorInsufficientParameters))
+			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
@@ -48,18 +48,28 @@ class OpenInAction: Action {
 		let controller = DownloadFileProgressHUDViewController()
 
 		controller.present(on: viewController) {
-			if let progress = self.core.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
+			if let progress = self.core?.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, _, _, file) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
+
+					self.completionHandler = { error in
+
+						let appName = OCAppIdentity.shared.appName ?? "ownCloud"
+						let alertController = UIAlertController(with: "Cannot connect to ".localized + appName, message: appName + " couldn't download this file".localized, okLabel: "OK".localized, action: nil)
+						viewController.present(alertController, animated: true)
+					}
+
 					controller.dismiss(animated: true, completion: {
 						self.completed(with: error)
 					})
 				} else {
 					OnMainThread {
 						controller.dismiss(animated: true, completion: {
-							self.interactionController = UIDocumentInteractionController(url: file!.url)
-							self.interactionController?.delegate = self
-							self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
+							if let fileURL = file?.url {
+								self.interactionController = UIDocumentInteractionController(url: fileURL)
+								self.interactionController?.delegate = self
+								self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
+							}
 						})
 					}
 				}

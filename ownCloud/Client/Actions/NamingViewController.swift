@@ -55,34 +55,8 @@ class NamingViewController: UIViewController {
 
 	private let thumbnailSize = CGSize(width: 150.0, height: 150.0)
 
-	init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+	init(with item: OCItem? = nil, core: OCCore? = nil, defaultName: String? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
 		self.item = item
-		self.core = core
-		self.completion = completion
-		self.stringValidator = stringValidator
-		self.defaultName = nil
-
-		blurView = UIVisualEffectView.init(effect: UIBlurEffect(style: .regular))
-
-		stackView = UIStackView(frame: .zero)
-
-		thumbnailContainer = UIView(frame: .zero)
-		thumbnailImageView = UIImageView(frame: .zero)
-
-		nameContainer = UIView(frame: .zero)
-		nameTextField = UITextField(frame: .zero)
-
-		textfieldCenterYAnchorConstraint = nameTextField.centerYAnchor.constraint(equalTo: nameContainer.centerYAnchor)
-		textfieldTopAnchorConstraint = nameTextField.topAnchor.constraint(equalTo: nameContainer.topAnchor, constant: 15)
-		thumbnailContainerWidthAnchorConstraint = thumbnailContainer.widthAnchor.constraint(equalToConstant: 200)
-		thumbnailContainerWidthAnchorConstraint.priority = .init(999)
-		thumbnailHeightAnchorConstraint = thumbnailImageView.heightAnchor.constraint(equalToConstant: 150)
-
-		super.init(nibName: nil, bundle: nil)
-	}
-
-	init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
-		self.item = nil
 		self.core = core
 		self.completion = completion
 		self.stringValidator = stringValidator
@@ -93,10 +67,13 @@ class NamingViewController: UIViewController {
 		stackView = UIStackView(frame: .zero)
 
 		thumbnailContainer = UIView(frame: .zero)
+
 		thumbnailImageView = UIImageView(frame: .zero)
+		thumbnailImageView.contentMode = .scaleAspectFit
 
 		nameContainer = UIView(frame: .zero)
 		nameTextField = UITextField(frame: .zero)
+		nameTextField.accessibilityIdentifier = "name-text-field"
 
 		textfieldCenterYAnchorConstraint = nameTextField.centerYAnchor.constraint(equalTo: nameContainer.centerYAnchor)
 		textfieldTopAnchorConstraint = nameTextField.topAnchor.constraint(equalTo: nameContainer.topAnchor, constant: 15)
@@ -105,6 +82,14 @@ class NamingViewController: UIViewController {
 		thumbnailHeightAnchorConstraint = thumbnailImageView.heightAnchor.constraint(equalToConstant: 150)
 
 		super.init(nibName: nil, bundle: nil)
+	}
+
+	convenience init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+		self.init(with: item, core: core, defaultName: nil, stringValidator: stringValidator, completion: completion)
+	}
+
+	convenience init(with core: OCCore? = nil, defaultName: String, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+		self.init(with: nil, core: core, defaultName: defaultName, stringValidator: stringValidator, completion: completion)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -116,7 +101,7 @@ class NamingViewController: UIViewController {
 	}
 
 	override func viewDidLoad() {
-        super.viewDidLoad()
+		super.viewDidLoad()
 
 		stackViewLeftAnchorConstraint = stackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0)
 		stackViewRightAnchorConstraint = stackView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0)
@@ -145,9 +130,11 @@ class NamingViewController: UIViewController {
 
 		// Navigation buttons
 		cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonPressed))
+		cancelButton?.accessibilityIdentifier = "cancel-button"
 		navigationItem.leftBarButtonItem = cancelButton
 
 		doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
+		doneButton?.accessibilityIdentifier = "done-button"
 		navigationItem.rightBarButtonItem = doneButton
 
 		//Blur View
@@ -158,7 +145,7 @@ class NamingViewController: UIViewController {
 			blurView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
 			blurView.leftAnchor.constraint(equalTo: view.leftAnchor),
 			blurView.rightAnchor.constraint(equalTo: view.rightAnchor)
-		])
+			])
 
 		// Thumbnail image view
 		thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -168,7 +155,7 @@ class NamingViewController: UIViewController {
 			thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor),
 			thumbnailImageView.centerXAnchor.constraint(equalTo: thumbnailContainer.centerXAnchor),
 			thumbnailImageView.centerYAnchor.constraint(equalTo: thumbnailContainer.centerYAnchor)
-		])
+			])
 
 		// Thumbnail container View
 		thumbnailContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -181,7 +168,7 @@ class NamingViewController: UIViewController {
 			nameTextField.heightAnchor.constraint(equalToConstant: 40),
 			nameTextField.leftAnchor.constraint(equalTo: nameContainer.leftAnchor, constant: 30),
 			nameTextField.rightAnchor.constraint(equalTo: nameContainer.rightAnchor, constant: -20)
-		])
+			])
 
 		nameTextField.backgroundColor = .white
 		nameTextField.delegate = self
@@ -190,6 +177,7 @@ class NamingViewController: UIViewController {
 		nameTextField.addTarget(self, action: #selector(textfieldDidChange(_:)), for: .editingChanged)
 		nameTextField.enablesReturnKeyAutomatically = true
 		nameTextField.autocorrectionType = .no
+		nameTextField.accessibilityLabel = "Folder name".localized
 
 		// Name container view
 		nameContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -203,10 +191,10 @@ class NamingViewController: UIViewController {
 			stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
 			stackViewLeftAnchorConstraint!,
 			stackViewRightAnchorConstraint!
-		])
+			])
 		render(newTraitCollection: traitCollection)
 		stackView.alignment = .fill
-    }
+	}
 
 	private func render(newTraitCollection: UITraitCollection) {
 
@@ -312,7 +300,8 @@ class NamingViewController: UIViewController {
 					}
 				} else {
 					let controller = UIAlertController(title: "Forbidden Characters".localized, message: validationErrorMessage, preferredStyle: .alert)
-					let okAction = UIAlertAction(title: "OK", style: .default)
+					controller.view.accessibilityIdentifier = "forbidden-characters-alert"
+					let okAction = UIAlertAction(title: "OK".localized, style: .default)
 					controller.addAction(okAction)
 					self.present(controller, animated: true)
 				}
@@ -358,11 +347,11 @@ extension NamingViewController: UITextFieldDelegate {
 	func textFieldDidBeginEditing(_ textField: UITextField) {
 
 		if let name = nameTextField.text,
-			let fileExtension = item?.fileExtension(),
+			let fileExtension = item?.fileExtension,
 			let range = name.range(of: ".\(fileExtension)"),
 			let position: UITextPosition = nameTextField.position(from: nameTextField.beginningOfDocument, offset: range.lowerBound.encodedOffset) {
 
-				textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to:position)
+			textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to:position)
 
 		} else {
 			textField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to: nameTextField.endOfDocument)

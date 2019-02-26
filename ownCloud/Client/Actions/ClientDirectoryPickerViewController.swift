@@ -39,26 +39,20 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	private var selectButton: UIBarButtonItem!
 	private var selectButtonTitle: String
 	private var cancelBarButton: UIBarButtonItem!
-	private var completion: (OCItem) -> Void
+	private var completion: (OCItem?) -> Void
 
 	// MARK: - Init & deinit
-	init(core inCore: OCCore, path: String, selectButtonTitle: String = "Move here".localized, completion: @escaping (OCItem) -> Void) {
+	init(core inCore: OCCore, path: String, selectButtonTitle: String = "Move here".localized, completion: @escaping (OCItem?) -> Void) {
 		self.selectButtonTitle = selectButtonTitle
 		self.completion = completion
 
-		super.init(core: inCore, query: OCQuery(forPath: path)!)
+		super.init(core: inCore, query: OCQuery(forPath: path))
 
 		self.query.addFilter(ClientDirectoryPickerViewController.directoryFilter, withIdentifier: ClientDirectoryPickerViewController.DIRECTORY_FILTER_IDENTIFIER)
-
-		Theme.shared.register(client: self)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
-	}
-
-	deinit {
-		Theme.shared.unregister(client: self)
 	}
 
 	// MARK: - ViewController lifecycle
@@ -71,7 +65,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 		// Cancel button creation
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
-		navigationItem.rightBarButtonItem = cancelBarButton
+		navigationItem.rightBarButtonItems = [cancelBarButton]
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -87,11 +81,11 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let item: OCItem = itemAtIndexPath(indexPath)
 
-		guard item.type == OCItemType.collection else {
+		guard item.type == OCItemType.collection, let core = self.core, let path = item.path else {
 			return
 		}
 
-		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: item.path, completion: completion), animated: true)
+		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, completion: completion), animated: true)
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -100,7 +94,9 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	// MARK: - Actions
 	@objc private func cancelBarButtonPressed() {
-		self.dismiss(animated: true)
+		self.dismiss(animated: true, completion: {
+			self.completion(nil)
+		})
 	}
 
 	@objc private func selectButtonPressed() {

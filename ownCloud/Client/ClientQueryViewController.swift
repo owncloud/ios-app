@@ -25,12 +25,12 @@ typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
 class ClientQueryViewController: UITableViewController, Themeable {
-	var core : OCCore
+	weak var core : OCCore?
 	var query : OCQuery
 
 	var items : [OCItem] = []
 
-	var selectedItem: OCItem?
+	var actions : [Action]?
 
 	var queryProgressSummary : ProgressSummary? {
 		willSet {
@@ -46,8 +46,15 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 	var progressSummarizer : ProgressSummarizer?
-	var initialAppearance : Bool = true
 	var customRefreshControl: RefreshControl?
+
+	let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+
+	var deleteMultipleBarButtonItem: UIBarButtonItem?
+	var moveMultipleBarButtonItem: UIBarButtonItem?
+
+	var selectBarButton: UIBarButtonItem?
+	var uploadBarButton: UIBarButtonItem?
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -62,12 +69,12 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		query.delegate = self
 
 		query.addObserver(self, forKeyPath: "state", options: .initial, context: nil)
-		core.start(query)
+		core?.start(query)
 
 		var title = (query.queryPath as NSString?)!.lastPathComponent
 
-		if title == "/" {
-			title = core.bookmark.shortName
+		if title == "/", let shortName = core?.bookmark.shortName {
+			title = shortName
 		}
 
 		self.navigationItem.title = title
@@ -80,7 +87,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	deinit {
 		query.removeObserver(self, forKeyPath: "state", context: nil)
 
-		core.stop(query)
+		core?.stop(query)
 		Theme.shared.unregister(client: self)
 
 		if messageThemeApplierToken != nil {
@@ -93,8 +100,14 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	// MARK: - Actions
 	@objc func refreshQuery() {
-		UIImpactFeedbackGenerator().impactOccurred()
-		core.reload(query)
+		if core?.connectionStatus == OCCoreConnectionStatus.online {
+			UIImpactFeedbackGenerator().impactOccurred()
+			core?.reload(query)
+		} else {
+			if self.queryRefreshControl?.isRefreshing == true {
+				self.queryRefreshControl?.endRefreshing()
+			}
+		}
 	}
 
 	// swiftlint:disable block_based_kvo
@@ -146,12 +159,23 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.dragDelegate = self
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
+		self.tableView.allowsMultipleSelectionDuringEditing = true
 
-		let actionsBarButton: UIBarButtonItem = UIBarButtonItem(title: "● ● ●", style: .done, target: self, action: #selector(uploadsBarButtonPressed))
-		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .normal)
-		actionsBarButton.setTitleTextAttributes([.font :UIFont.systemFont(ofSize: 10)], for: .highlighted)
-		self.navigationItem.rightBarButtonItem = actionsBarButton
+		uploadBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
+		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
+		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
+
+		// Create bar button items for the toolbar
+		deleteMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(actOnMultipleItems))
+		deleteMultipleBarButtonItem?.actionIdentifier = DeleteAction.identifier
+		deleteMultipleBarButtonItem?.isEnabled = false
+
+		moveMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(actOnMultipleItems))
+		moveMultipleBarButtonItem?.actionIdentifier = MoveAction.identifier
+		moveMultipleBarButtonItem?.isEnabled = false
 	}
+
+	private var viewControllerVisible : Bool = false
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
@@ -159,24 +183,21 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.queryProgressSummary = nil
 		searchController?.searchBar.text = ""
 		searchController?.dismiss(animated: true, completion: nil)
+
+		viewControllerVisible = false
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		// Refresh when navigating back to us
-		if initialAppearance == false {
-			if query.state == .idle {
-				core.reload(query)
-			}
-		}
-
-		initialAppearance = false
-
 		updateQueryProgressSummary()
 
 		sortBar?.sortMethod = self.sortMethod
 		query.sortComparator = self.sortMethod.comparator()
+
+		viewControllerVisible = true
+
+		self.reloadTableData(ifNeeded: true)
 	}
 
 	func updateQueryProgressSummary() {
@@ -190,11 +211,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				summary.message = "Started…".localized
 
 			case .contentsFromCache:
-				if core.reachabilityMonitor.available == true {
-					summary.message = "Contents from cache.".localized
-				} else {
-					summary.message = "Offline. Contents from cache.".localized
-				}
+				summary.message = "Contents from cache.".localized
 
 			case .waitingForServerReply:
 				summary.message = "Waiting for server response…".localized
@@ -219,7 +236,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				}
 
 			case .contentsFromCache, .stopped:
-				DispatchQueue.main.async {
+				OnMainThread {
 					self.tableView.refreshControl = nil
 				}
 
@@ -237,7 +254,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.searchController?.searchBar.applyThemeCollection(collection)
 		self.customRefreshControl?.backgroundColor = theme.activeCollection.navigationBarColors.backgroundColor
 		if event == .update {
-			self.tableView.reloadData()
+			self.reloadTableData()
 		}
 	}
 
@@ -258,6 +275,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ClientItemCell
 		let newItem = itemAtIndexPath(indexPath)
 
+		cell?.accessibilityIdentifier = newItem.name
 		cell?.core = self.core
 
 		if cell?.delegate == nil {
@@ -266,26 +284,67 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
 		// Make sure we don't request the thumbnail multiple times in that case.
-		if (cell?.item?.itemVersionIdentifier != newItem.itemVersionIdentifier) || (cell?.item?.name != newItem.name) {
+		if (cell?.item?.itemVersionIdentifier != newItem.itemVersionIdentifier) || (cell?.item?.name != newItem.name) || (cell?.item?.syncActivity != newItem.syncActivity) || (cell?.item?.cloudStatus != newItem.cloudStatus) {
 			cell?.item = newItem
 		}
 
 		return cell!
 	}
 
+	var lastTappedItemLocalID : String?
+
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let rowItem : OCItem = itemAtIndexPath(indexPath)
+		// If not in multiple-selection mode, just navigate to the file or folder (collection)
+		if !self.tableView.isEditing {
+			let rowItem : OCItem = itemAtIndexPath(indexPath)
 
-		switch rowItem.type {
-			case .collection:
-				self.navigationController?.pushViewController(ClientQueryViewController(core: self.core, query: OCQuery(forPath: rowItem.path)), animated: true)
+			if let core = self.core {
+				switch rowItem.type {
+					case .collection:
+						if let path = rowItem.path {
+							self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: path)), animated: true)
+						}
 
-			case .file:
-				let itemViewController = DisplayHostViewController(for: rowItem, with: core, root: query.rootItem!)
-				self.navigationController?.pushViewController(itemViewController, animated: true)
+					case .file:
+						if lastTappedItemLocalID != rowItem.localID {
+							lastTappedItemLocalID = rowItem.localID
+
+							core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ]) { [weak self, query] (error, core, item, _) in
+								OnMainThread {
+									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
+										if let item = item, item.localID == self?.lastTappedItemLocalID, let core = core {
+											let itemViewController = DisplayHostViewController(for: item, with: core, root: query.rootItem!)
+											self?.navigationController?.pushViewController(itemViewController, animated: true)
+										}
+									}
+
+									if self?.lastTappedItemLocalID == item?.localID {
+										self?.lastTappedItemLocalID = nil
+									}
+								}
+							}
+						}
+				}
+			}
+
+			tableView.deselectRow(at: indexPath, animated: true)
+		} else {
+			updateToolbarItems()
 		}
+	}
 
-		tableView.deselectRow(at: indexPath, animated: true)
+	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+		if tableView.isEditing {
+			updateToolbarItems()
+		}
+	}
+
+	override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+		if tableView.isEditing {
+			return true
+		} else {
+			return true
+		}
 	}
 
 	func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
@@ -293,9 +352,11 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
  	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		guard let cell = tableView.cellForRow(at: indexPath) as? ClientItemCell, let item = cell.item else {
+		guard let core = self.core else {
 			return nil
 		}
+
+		let item: OCItem = itemAtIndexPath(indexPath)
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .tableRow)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
@@ -489,16 +550,41 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 
+	// MARK: - Reload Data
+	private var tableReloadNeeded = false
+
+	func reloadTableData(ifNeeded: Bool = false) {
+		/*
+			This is a workaround to cope with the fact that:
+			- UITableView.reloadData() does nothing if the view controller is not currently visible (via viewWillDisappear/viewWillAppear), so cells may hold references to outdated OCItems
+			- OCQuery may signal updates at any time, including when the view controller is not currently visible
+
+			This workaround effectively makes sure reloadData() is called in viewWillAppear if a reload has been signalled to the tableView while it wasn't visible.
+		*/
+		if !viewControllerVisible {
+			tableReloadNeeded = true
+		}
+
+		if !ifNeeded || (ifNeeded && tableReloadNeeded) {
+			self.tableView.reloadData()
+
+			if viewControllerVisible {
+				tableReloadNeeded = false
+			}
+		}
+	}
+
 	// MARK: - Search
 	var searchController: UISearchController?
 
 	func upload(itemURL: URL, name: String, completionHandler: ClientActionCompletionHandler? = nil) {
-		if let progress = core.importFileNamed(name, at: query.rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { [weak self](error, _ core, _ item, _) in
+		if let rootItem = query.rootItem,
+		   let progress = core?.importFileNamed(name, at: rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
 			if error != nil {
-				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
+				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(rootItem.path))")
 				completionHandler?(false)
 			} else {
-				Log.debug("Success uploading \(Log.mask(name)) file to \(Log.mask(self?.query.rootItem.path))")
+				Log.debug("Success uploading \(Log.mask(name)) file to \(Log.mask(rootItem.path))")
 				completionHandler?(true)
 			}
 		}) {
@@ -506,7 +592,90 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 
+	// MARK: - Toolbar actions handling multiple selected items
+	func updateToolbarItems() {
+		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
+
+		guard let toolbarItems = tabBarController.toolbar?.items else { return }
+
+		// Do we have selected items?
+		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
+			if selectedIndexPaths.count > 0 {
+
+				if let core = self.core {
+					// Get array of OCItems from selected table view index paths
+					var selectedItems = [OCItem]()
+					for indexPath in selectedIndexPaths {
+						selectedItems.append(itemAtIndexPath(indexPath))
+					}
+
+					// Get possible associated actions
+					let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+					let actionContext = ActionContext(viewController: self, core: core, items: selectedItems, location: actionsLocation)
+
+					self.actions = Action.sortedApplicableActions(for: actionContext)
+
+					// Enable / disable tool-bar items depending on action availability
+					for item in toolbarItems {
+						if self.actions?.contains(where: {type(of:$0).identifier == item.actionIdentifier}) ?? false {
+							item.isEnabled = true
+						} else {
+							item.isEnabled = false
+						}
+					}
+				}
+			}
+		} else {
+			self.actions = nil
+			for item in toolbarItems {
+				item.isEnabled = false
+			}
+		}
+	}
+
+	func leaveMultipleSelection() {
+		self.tableView.setEditing(false, animated: true)
+		selectBarButton?.title = "Select".localized
+		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
+		removeToolbar()
+	}
+
+	@objc func actOnMultipleItems(_ sender: UIBarButtonItem) {
+
+		// Find associated action
+		if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
+			// Configure progress handler
+			action.progressHandler = { [weak self] progress in
+				self?.progressSummarizer?.startTracking(progress: progress)
+			}
+
+			action.completionHandler = { [weak self] _ in
+				DispatchQueue.main.async {
+					self?.leaveMultipleSelection()
+				}
+			}
+
+			// Execute the action
+			action.willRun()
+			action.run()
+		}
+	}
+
 	// MARK: - Navigation Bar Actions
+	@objc func multipleSelectionButtonPressed(_ sender: UIBarButtonItem) {
+
+		if !self.tableView.isEditing {
+			updateToolbarItems()
+			self.tableView.setEditing(true, animated: true)
+			selectBarButton?.title = "Done".localized
+			self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem!])
+			self.navigationItem.rightBarButtonItems = [selectBarButton!]
+
+		} else {
+			leaveMultipleSelection()
+		}
+	}
+
 	@objc func uploadsBarButtonPressed(_ sender: UIBarButtonItem) {
 
 		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -576,27 +745,32 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 // MARK: - Query Delegate
 extension ClientQueryViewController : OCQueryDelegate {
-
-	func query(_ query: OCQuery!, failedWithError error: Error!) {
-
+	func query(_ query: OCQuery, failedWithError error: Error) {
+		// Not applicable atm
 	}
 
-	func queryHasChangesAvailable(_ query: OCQuery!) {
+	func queryHasChangesAvailable(_ query: OCQuery) {
 		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
-			DispatchQueue.main.async {
+			OnMainThread {
 
-				switch query?.state {
-				case .idle?, .targetRemoved?, .contentsFromCache?, .stopped?:
-					if self.refreshController!.isRefreshing {
-						self.refreshController?.endRefreshing()
+				switch query.state {
+				case .idle, .targetRemoved, .contentsFromCache, .stopped:
+					if self.queryRefreshControl!.isRefreshing {
+						self.queryRefreshControl?.endRefreshing()
 					}
 				default: break
 				}
 
+				let previousItemCount = self.items.count
+
 				self.items = changeSet?.queryResult ?? []
 
-				switch query?.state {
-				case .contentsFromCache?, .idle?:
+				switch query.state {
+				case .contentsFromCache, .idle, .waitingForServerReply:
+					if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
+						break
+					}
+
 					if self.items.count == 0 {
 						if self.searchController?.searchBar.text != "" {
 							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
@@ -607,11 +781,11 @@ extension ClientQueryViewController : OCQueryDelegate {
 						self.message(show: false)
 					}
 
-					self.tableView.reloadData()
+					self.reloadTableData()
 
-				case .targetRemoved?:
+				case .targetRemoved:
 					self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
-					self.tableView.reloadData()
+					self.reloadTableData()
 
 				default:
 					self.message(show: false)
@@ -624,8 +798,10 @@ extension ClientQueryViewController : OCQueryDelegate {
 // MARK: - SortBar Delegate
 extension ClientQueryViewController : SortBarDelegate {
 	func sortBar(_ sortBar: SortBar, leftButtonPressed: UIButton) {
+		guard let core = self.core, let rootItem = query.rootItem else { return }
+
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .sortBar)
-		let actionContext = ActionContext(viewController: self, core: core, items: [query.rootItem], location: actionsLocation)
+		let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
 
 		let actions = Action.sortedApplicableActions(for: actionContext)
 
@@ -657,9 +833,8 @@ extension ClientQueryViewController: UISearchResultsUpdating {
 		let searchText = searchController.searchBar.text!
 
 		let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
-			if let item = item {
-				if item.name.localizedCaseInsensitiveContains(searchText) {return true}
-
+			if let itemName = item?.name {
+				return itemName.localizedCaseInsensitiveContains(searchText)
 			}
 			return false
 		}
@@ -683,9 +858,11 @@ extension ClientQueryViewController: UISearchResultsUpdating {
 // MARK: - ClientItemCell Delegate
 extension ClientQueryViewController: ClientItemCellDelegate {
 	func moreButtonTapped(cell: ClientItemCell) {
-		guard let item = cell.item else {
+		guard let indexPath = self.tableView.indexPath(for: cell), let core = self.core else {
 			return
 		}
+
+		let item = self.itemAtIndexPath(indexPath)
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
@@ -700,12 +877,13 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 
 extension ClientQueryViewController: UITableViewDropDelegate {
 	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+		guard let core = self.core else { return }
 
 		for item in coordinator.items {
 
 			var destinationItem: OCItem
 
-			guard let item = item.dragItem.localObject as? OCItem else {
+			guard let item = item.dragItem.localObject as? OCItem, let itemName = item.name else {
 				return
 			}
 
@@ -729,15 +907,15 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 			} else {
 
-				guard item.parentFileID != self.query.rootItem.fileID else {
+				guard let rootItem = self.query.rootItem, item.parentFileID != rootItem.fileID else {
 					return
 				}
 
-				destinationItem =  self.query.rootItem
+				destinationItem =  rootItem
 
 			}
 
-			if let progress = self.core.move(item, to: destinationItem, withName: item.name, options: nil, resultHandler: { (error, _, _, _) in
+			if let progress = core.move(item, to: destinationItem, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
 				}

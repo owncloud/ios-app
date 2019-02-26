@@ -15,216 +15,243 @@ import LocalAuthentication
 
 class PasscodeTests: XCTestCase {
 
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+	override func setUp() {
+		super.setUp()
+		OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
+	}
 
-    override func tearDown() {
-        AppLockManager.shared.passcode = nil
-        AppLockManager.shared.lockEnabled = false
-        super.tearDown()
-    }
+	override func tearDown() {
+		AppLockManager.shared.passcode = nil
+		AppLockManager.shared.lockEnabled = false
+		super.tearDown()
+	}
 
-    // MARK: - Passcode
+	// MARK: - Passcode
 
-    /*
-     * PASSED if: Passcode correct. "Add Server" view displayed
-     */
-    func testUnlockRightPasccode() {
+	/*
+	* PASSED if: Passcode correct. "Add Server" view displayed
+	*/
+	func testUnlockRightPasccode() {
 
-        // Prepare the simulator show the passcode
-        AppLockManager.shared.passcode = "1111"
-        AppLockManager.shared.lockEnabled = true
+		// Prepare the simulator show the passcode
+		AppLockManager.shared.passcode = "1111"
+		AppLockManager.shared.lockEnabled = true
 
-        // Show the passcode
-        AppLockManager.shared.showLockscreenIfNeeded()
+		// Show the passcode
+		AppLockManager.shared.showLockscreenIfNeeded()
+		EarlGrey.waitForElement(accessibilityID: "number1Button")
 
-        // Tap the number buttons
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		// Tap the number buttons
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
 
-        // Asserts
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible())
-    }
+		EarlGrey.waitForElement(accessibilityID: "addServer")
 
-    /*
-     * PASSED if: Passcode incorrect. Passcode view displays with error
-     */
-    func testUnlockWrongPasscode() {
+		// Asserts
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible())
+	}
 
-        // Prepare the simulator show the passcode
-        AppLockManager.shared.passcode = "2222"
-        AppLockManager.shared.lockEnabled = true
+	/*
+	* PASSED if: Passcode incorrect. Passcode view displays with error
+	*/
+	func testUnlockWrongPasscode() {
 
-        // Show the passcode
-        AppLockManager.shared.showLockscreenIfNeeded()
+		// Prepare the simulator show the passcode
+		AppLockManager.shared.passcode = "2222"
+		AppLockManager.shared.lockEnabled = true
 
-        // Tap the number buttons
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		// Show the passcode
+		AppLockManager.shared.showLockscreenIfNeeded()
+		EarlGrey.waitForElement(accessibilityID: "number1Button")
 
-        // Asserts
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("messageLabel")).assert(grey_sufficientlyVisible())
-    }
+		// Tap the number buttons
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
 
-    /*
-     * PASSED if: Passcode Lock disabled in Settings view after cancelling
-     */
-    func testCancelPasscode() {
+		// Asserts
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("messageLabel")).assert(grey_sufficientlyVisible())
+	}
 
-        // Assure that the passcode is disabled
-        AppLockManager.shared.lockEnabled = false
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
+	/*
+	* PASSED if: Passcode Lock disabled in Settings view after cancelling
+	*/
+	func testCancelPasscode() {
 
-        // Tap the number buttons
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
+		// Assure that the passcode is disabled
+		AppLockManager.shared.lockEnabled = false
 
-        // Asserts
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
+		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
-        //Reset status
-        EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
-    }
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
 
-    /*
-     * PASSED if: Passcode Lock disabled in Settings view after cancelling in the second typing
-     */
-    func testCancelSecondTryPasscode() {
+		// Tap the number buttons
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
 
-        // Assure that the passcode is disabled
-        AppLockManager.shared.lockEnabled = false
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
+		EarlGrey.waitForElementMissing(accessibilityID: "number1Button")
 
-        // Tap the number buttons first time
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		// Asserts
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
 
-        // Tap the number buttons second time & cancel
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
+		// Reset status
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
+	}
 
-        // Asserts
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
+	/*
+	* PASSED if: Passcode Lock disabled in Settings view after cancelling in the second typing
+	*/
+	func testCancelSecondTryPasscode() {
 
-        //Reset status
-        EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
-    }
+		// Assure that the passcode is disabled
+		AppLockManager.shared.lockEnabled = false
 
-    /*
-     * PASSED if: Correct error when second typing is different than the first one
-     */
-    func testEnterDifferentPasscodes() {
+		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
-        // Assure that the passcode is disabled
-        AppLockManager.shared.lockEnabled = false
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
 
-        // Tap the number buttons
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		// Tap the number buttons first time
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
 
-        // Tap the number buttons again
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number3Button")).perform(grey_tap())
+		// Tap the number buttons second time & cancel
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
 
-        // Asserts
-        EarlGrey.select(elementWithMatcher: grey_text("The entered codes are different".localized)).assert(grey_sufficientlyVisible())
-        EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
+		EarlGrey.waitForElementMissing(accessibilityID: "number1Button")
 
-        //Reset status
-        EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
-    }
+		// Asserts
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
 
-    /*
-     * PASSED if: Passcode lock is correctly disabled in Settings view
-     */
-    func testDisablePasscode() {
+		//Reset status
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
+	}
 
-        // Prepare the simulator show the passcode
-        AppLockManager.shared.passcode = "1111"
-        AppLockManager.shared.lockEnabled = true
+	/*
+	* PASSED if: Correct error when second typing is different than the first one
+	*/
+	func testEnterDifferentPasscodes() {
 
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(false))
+		// Assure that the passcode is disabled
+		AppLockManager.shared.lockEnabled = false
 
-        // Tap the number buttons first time
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
-        // Asserts
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("lockFrequency")).assert(grey_notVisible())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
 
-        //Reset status
-        EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
-    }
+		// Tap the number buttons
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
 
-    /*
-     * PASSED if: Passcode lock keeps enabled in Settings view after cancelling
-     */
-    func testCancelDisablePasscode() {
+		// Tap the number buttons again
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number3Button")).perform(grey_tap())
 
-        // Prepare the simulator show the passcode
-        AppLockManager.shared.passcode = "1111"
-        AppLockManager.shared.lockEnabled = true
+		// Asserts
+		EarlGrey.select(elementWithMatcher: grey_text("The entered codes are different".localized)).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
 
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(false))
+		//Reset status
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
+	}
 
-        // Tap the number buttons first time
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
+	/*
+	* PASSED if: Passcode lock is correctly disabled in Settings view
+	*/
+	func testDisablePasscode() {
 
-        // Asserts
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(true))
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("lockFrequency")).assert(grey_sufficientlyVisible())
+		// Prepare the simulator show the passcode
+		AppLockManager.shared.passcode = "1111"
+		AppLockManager.shared.lockEnabled = true
 
-        //Reset status
-        EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
-    }
+		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
-    /*
-     * PASSED if: 1 minute frequency covered
-     */
-    func testChangeFrequency() {
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(false))
 
-        // Prepare the simulator show the passcode
-        AppLockManager.shared.passcode = "1111"
-        AppLockManager.shared.lockEnabled = true
+		// Tap the number buttons first time
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
 
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
+		EarlGrey.waitForElementMissing(accessibilityID: "number1Button")
 
-        // Tap the number buttons first time
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("lockFrequency")).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_text("After 1 minute".localized)).perform(grey_tap())
-        EarlGrey.select(elementWithMatcher: grey_text("Settings".localized)).perform(grey_tap())
+		// Asserts
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("lockFrequency")).assert(grey_notVisible())
 
-        //Asserts
-        EarlGrey.select(elementWithMatcher: grey_text("After 1 minute".localized)).assert(grey_sufficientlyVisible())
+		//Reset status
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
+	}
 
-        //Reset status
-        EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
-        AppLockManager.shared.lockEnabled = false
-    }
+	/*
+	* PASSED if: Passcode lock keeps enabled in Settings view after cancelling
+	*/
+	func testCancelDisablePasscode() {
+
+		// Prepare the simulator show the passcode
+		AppLockManager.shared.passcode = "1111"
+		AppLockManager.shared.lockEnabled = true
+
+		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
+
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(false))
+
+		// Tap the number buttons first time
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
+
+		EarlGrey.waitForElementMissing(accessibilityID: "number1Button")
+
+		// Asserts
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(true))
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("lockFrequency")).assert(grey_sufficientlyVisible())
+
+		//Reset status
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
+	}
+
+	/*
+	* PASSED if: 1 minute frequency covered
+	*/
+	func testChangeFrequency() {
+
+		// Prepare the simulator show the passcode
+		AppLockManager.shared.passcode = "1111"
+		AppLockManager.shared.lockEnabled = true
+
+		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
+
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
+
+		// Tap the number buttons first time
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("lockFrequency")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text("After 1 minute".localized)).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text("Settings".localized)).perform(grey_tap())
+
+		//Asserts
+		EarlGrey.select(elementWithMatcher: grey_text("After 1 minute".localized)).assert(grey_sufficientlyVisible())
+
+		//Reset status
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
+		AppLockManager.shared.lockEnabled = false
+	}
 }

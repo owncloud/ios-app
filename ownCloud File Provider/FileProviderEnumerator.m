@@ -103,7 +103,7 @@
 
 	if ((_core == nil) && (_query == nil))
 	{
-		_core = [[OCCoreManager sharedCoreManager] requestCoreForBookmark:_bookmark completionHandler:^(OCCore *core, NSError *error) {
+		[[OCCoreManager sharedCoreManager] requestCoreForBookmark:_bookmark setup:nil completionHandler:^(OCCore *core, NSError *error) {
 			self->_core = core;
 
 			if (error != nil)
@@ -125,7 +125,7 @@
 					NSError *error = nil;
 					OCItem *item;
 
-					if ((item = [core synchronousRetrieveItemFromDatabaseForFileID:self->_enumeratedItemIdentifier syncAnchor:NULL error:&error]) != nil)
+					if ((item = [core synchronousRetrieveItemFromDatabaseForLocalID:self->_enumeratedItemIdentifier syncAnchor:NULL error:&error]) != nil)
 					{
 						if (item.type == OCItemTypeCollection)
 						{
@@ -155,6 +155,7 @@
 				{
 					// Start query
 					self->_query = [OCQuery queryForPath:queryPath];
+					self->_query.includeRootItem = YES;
 					self->_query.delegate = self;
 
 					@synchronized(self)
@@ -234,13 +235,33 @@
 				{
 					if (!observer.didProvideInitialItems)
 					{
-						OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER %@ FOR %@: %@", _enumerationObservers.count, observer.enumerationObserver, query.queryPath, query.queryResults);
+						NSArray <OCItem *> *queryResults = query.queryResults;
+
+						OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER %@ FOR %@: %@", _enumerationObservers.count, observer.enumerationObserver, query.queryPath, queryResults);
 
 						observer.didProvideInitialItems = YES;
 
-						if (query.queryResults != nil)
+						if (queryResults != nil)
 						{
-							[observer.enumerationObserver didEnumerateItems:query.queryResults];
+//							NSUInteger offset = 0, count = queryResults.count;
+//
+//							while (offset < count)
+//							{
+//								NSUInteger sliceCount = 100;
+//
+//								if (offset + sliceCount > count)
+//								{
+//									sliceCount = count - offset;
+//								}
+//
+//								NSArray<OCItem *> *partialResults = [queryResults subarrayWithRange:NSMakeRange(offset, sliceCount)];
+//
+//								[observer.enumerationObserver didEnumerateItems:partialResults];
+//
+//								offset += sliceCount;
+//							};
+
+							[observer.enumerationObserver didEnumerateItems:queryResults];
 						}
 
 						[observer.enumerationObserver finishEnumeratingUpToPage:nil];

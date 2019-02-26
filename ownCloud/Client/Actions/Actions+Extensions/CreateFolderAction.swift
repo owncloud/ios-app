@@ -37,14 +37,14 @@ class CreateFolderAction : Action {
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0 else {
-			completed(with: NSError(ocError: OCError.errorItemNotFound))
+			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
 
 		let item = context.items.first
 
 		guard item != nil else {
-			completed(with: NSError(ocError: OCError.errorItemNotFound))
+			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
 
@@ -64,7 +64,7 @@ class CreateFolderAction : Action {
 				return
 			}
 
-			if let progress = self.core.createFolder(newName!, inside: item!, options: nil, resultHandler: { (error, _, _, _) in
+			if let progress = self.core?.createFolder(newName!, inside: item!, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.error("Error \(String(describing: error)) creating folder \(String(describing: newName))")
 					self.completed(with: error)

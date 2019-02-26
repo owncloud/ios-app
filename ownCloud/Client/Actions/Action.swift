@@ -192,7 +192,7 @@ class Action : NSObject {
 	// MARK: - Action metadata
 	var context : ActionContext
 	var actionExtension: ActionExtension
-	var core : OCCore
+	weak var core : OCCore?
 
 	// MARK: - Action creation
 	required init(for actionExtension: ActionExtension, with context: ActionContext) {
@@ -225,14 +225,14 @@ class Action : NSObject {
 	}
 
 	func completed(with error: Error? = nil) {
-		if completionHandler != nil {
-			completionHandler!(error)
+		if let completionHandler = completionHandler {
+			completionHandler(error)
 		}
 	}
 
 	func publish(progress: Progress) {
-		if progressHandler != nil {
-			progressHandler!(progress)
+		if let progressHandler = progressHandler {
+			progressHandler(progress)
 		}
 	}
 
@@ -245,8 +245,8 @@ class Action : NSObject {
 	}
 
 	func provideContextualAction() -> UIContextualAction? {
-		return UIContextualAction(style: actionExtension.category == .destructive ? .destructive : .normal, title: self.actionExtension.name, handler: { (_ action, _ view, uiCompletionHandler) in
-			uiCompletionHandler(true)
+		return UIContextualAction(style: actionExtension.category == .destructive ? .destructive : .normal, title: self.actionExtension.name, handler: { (_ action, _ view, _ uiCompletionHandler) in
+			uiCompletionHandler(false)
 			self.willRun()
 			self.run()
 		})

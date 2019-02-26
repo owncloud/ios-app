@@ -110,6 +110,9 @@ class ThemeCollection : NSObject {
 	@objc var statusBarStyle : UIStatusBarStyle
 	@objc var barStyle : UIBarStyle
 
+	// MARK: - Progress
+	@objc var progressColors : ThemeColorPair
+
 	// MARK: - Icon colors
 	@objc var iconColors : [String:String]
 
@@ -223,13 +226,16 @@ class ThemeCollection : NSObject {
 				self.statusBarStyle = .lightContent
 				self.barStyle = .black
 
+				// Progress
+				self.progressColors = ThemeColorPair(foreground: self.lightBrandColor, background: self.lightBrandColor.withAlphaComponent(0.3))
+
 				// Logo fill color
 				logoFillColor = UIColor.white
 
 			case .light:
 				// Bars
 				self.navigationBarColors = ThemeColorCollection(
-					backgroundColor: nil,
+					backgroundColor: UIColor.white.darker(0.05),
 					tintColor: nil,
 					labelColor: UIColor.black,
 					secondaryLabelColor: UIColor.gray,
@@ -243,6 +249,9 @@ class ThemeCollection : NSObject {
 				self.statusBarStyle = .default
 				self.barStyle = .default
 
+				// Progress
+				self.progressColors = ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3))
+
 				// Logo fill color
 				logoFillColor = UIColor.lightGray
 
@@ -254,6 +263,9 @@ class ThemeCollection : NSObject {
 				// Bar styles
 				self.statusBarStyle = .lightContent
 				self.barStyle = .black
+
+				// Progress
+				self.progressColors = ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3))
 
 				// Logo fill color
 				logoFillColor = UIColor.lightGray

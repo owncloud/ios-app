@@ -24,17 +24,12 @@ class DisplayHostViewController: UIViewController {
 
 	// MARK: - Instance Properties
 	private var itemsToDisplay: [OCItem] = []
-	private var core: OCCore
+	private weak var core: OCCore?
 	private var rootItem: OCItem
 
 	// MARK: - Init & deinit
-	init(for item: OCItem, with core: OCCore, root: OCItem) {
-		itemsToDisplay.append(item)
-		self.core = core
-		self.rootItem = root
-
-		super.init(nibName: nil, bundle: nil)
-		Theme.shared.register(client: self)
+	convenience init(for item: OCItem, with core: OCCore, root: OCItem) {
+		self.init(for: [item], with: core, root: root)
 	}
 
 	init(for items: [OCItem], with core: OCCore, root: OCItem) {
@@ -43,6 +38,7 @@ class DisplayHostViewController: UIViewController {
 		self.rootItem = root
 
 		super.init(nibName: nil, bundle: nil)
+		Theme.shared.register(client: self)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -57,9 +53,11 @@ class DisplayHostViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		let itemToDisplay = itemsToDisplay[0]
+		guard let itemToDisplay = itemsToDisplay.first, let mimeType = itemToDisplay.mimeType else {
+			return
+		}
 
-		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: itemToDisplay.mimeType)
+		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: mimeType)
 		let shouldDownload = viewController is (DisplayViewController & DisplayExtension) ? true : false
 
 		var configuration: DisplayViewConfiguration
@@ -75,11 +73,7 @@ class DisplayHostViewController: UIViewController {
 		self.view.addSubview(viewController.view)
 		viewController.didMove(toParent: self)
 
-		if shouldDownload {
-			viewController.downloadItem(sender: nil)
-		} else {
-			viewController.downloadProgress = nil
-		}
+		viewController.present(item: itemToDisplay)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
