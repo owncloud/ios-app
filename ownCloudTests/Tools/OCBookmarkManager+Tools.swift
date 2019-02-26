@@ -3,7 +3,7 @@
 //  ownCloudTests
 //
 //  Created by Felix Schwarz on 24.01.19.
-//  Copyright © 2019 ownCloud GmbH. All rights reserved.completionHandler
+//  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
 
 import UIKit
