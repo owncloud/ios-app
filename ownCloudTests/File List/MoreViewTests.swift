@@ -29,8 +29,11 @@ class MoreViewTests: XCTestCase {
 	public typealias OCMRequestCoreForBookmarkCompletionHandler = @convention(block)
 		(_ core: OCCore, _ error: NSError?) -> Void
 
+	public typealias OCMRequestCoreForBookmarkSetupHandler = @convention(block)
+		(_ core: OCCore, _ error: NSError?) -> Void
+
 	public typealias OCMRequestCoreForBookmark = @convention(block)
-		(_ bookmark: OCBookmark, _ completionHandler: OCMRequestCoreForBookmarkCompletionHandler) -> OCCore
+		(_ bookmark: OCBookmark, _ setup: OCMRequestCoreForBookmarkSetupHandler, _ completionHandler: OCMRequestCoreForBookmarkCompletionHandler) -> Void
 
 	public typealias OCMRequestChangeSetWithFlags = @convention(block)
 		(_ flags: OCQueryChangeSetRequestFlag, _ completionHandler: OCQueryChangeSetRequestCompletionHandler) -> Void
@@ -95,13 +98,17 @@ class MoreViewTests: XCTestCase {
 		}
 	}
 
-	func showFileList(bookmark: OCBookmark) {
+	func showFileList(bookmark: OCBookmark, issue: OCIssue? = nil) {
 		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
-			let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+
+			let query = MockOCQuery(path: "/")
+			let core = MockOCCore(query: query, bookmark: bookmark, issue: issue)
+
+			let rootViewController: MockClientRootViewController = MockClientRootViewController(core: core, query: query, bookmark: bookmark)
 
 			appDelegate.serverListTableViewController?.navigationController?.navigationBar.prefersLargeTitles = false
 			appDelegate.serverListTableViewController?.navigationController?.navigationItem.largeTitleDisplayMode = .never
-			appDelegate.serverListTableViewController?.navigationController?.pushViewController(viewController: clientRootViewController, animated: true, completion: {
+			appDelegate.serverListTableViewController?.navigationController?.pushViewController(viewController: rootViewController, animated: true, completion: {
 				appDelegate.serverListTableViewController?.navigationController?.setNavigationBarHidden(true, animated: false)
 			})
 		}
@@ -109,16 +116,17 @@ class MoreViewTests: XCTestCase {
 
 	// MARK: - Mocks
 	func mockOCoreForBookmark(mockBookmark: OCBookmark) {
-		let completionHandlerBlock : OCMRequestCoreForBookmark = { (bookmark, mockedBlock) in
+		let completionHandlerBlock : OCMRequestCoreForBookmark = { (bookmark, setupHandler, mockedBlock) in
 			let core = OCCore(bookmark: mockBookmark)
+			setupHandler(core, nil)
 			mockedBlock(core, nil)
-			return core
 		}
 
 		OCMockManager.shared.addMocking(blocks: [OCMockLocation.ocCoreManagerRequestCoreForBookmark: completionHandlerBlock])
 	}
 
 	func mockQueryPropfindResults(resourceName: String, basePath: String, state: OCQueryState) {
+
 		let completionHandlerBlock : OCMRequestChangeSetWithFlags = { (flags, mockedBlock) in
 
 			var items: [OCItem]?
