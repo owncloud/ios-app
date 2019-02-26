@@ -26,18 +26,6 @@ class CreateFolderTests: XCTestCase {
 		OCMockManager.shared.removeAllMockingBlocks()
 	}
 
-	public typealias OCMRequestCoreForBookmarkCompletionHandler = @convention(block)
-		(_ core: OCCore, _ error: NSError?) -> Void
-
-	public typealias OCMRequestCoreForBookmarkSetupHandler = @convention(block)
-		(_ core: OCCore, _ error: NSError?) -> Void
-
-	public typealias OCMRequestCoreForBookmark = @convention(block)
-		(_ bookmark: OCBookmark, _ setup: OCMRequestCoreForBookmarkSetupHandler, _ completionHandler: OCMRequestCoreForBookmarkCompletionHandler) -> Void
-
-	public typealias OCMRequestChangeSetWithFlags = @convention(block)
-		(_ flags: OCQueryChangeSetRequestFlag, _ completionHandler: OCQueryChangeSetRequestCompletionHandler) -> Void
-
 	/*
 	* PASSED if: Create Folder view is shown
 	*/
@@ -45,8 +33,8 @@ class CreateFolderTests: XCTestCase {
 
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
-			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
+			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
@@ -73,8 +61,8 @@ class CreateFolderTests: XCTestCase {
 			let folderName = "New Folder"
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
-			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
+			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
@@ -84,7 +72,7 @@ class CreateFolderTests: XCTestCase {
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
 
 			//Mock again
-			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).perform(grey_tap())
@@ -118,8 +106,8 @@ class CreateFolderTests: XCTestCase {
 			let folderName = ""
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
-			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
+			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
@@ -129,7 +117,7 @@ class CreateFolderTests: XCTestCase {
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
 
 			//Mock again
-			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
 
@@ -154,8 +142,8 @@ class CreateFolderTests: XCTestCase {
 			let folderName = "Valid Name"
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
-			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
+			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
@@ -165,7 +153,7 @@ class CreateFolderTests: XCTestCase {
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
 
 			//Mock again
-			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
 
@@ -190,8 +178,8 @@ class CreateFolderTests: XCTestCase {
 			let folderName = "New/Folder"
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
-			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
+			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
@@ -201,7 +189,7 @@ class CreateFolderTests: XCTestCase {
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
 
 			//Mock again
-			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).perform(grey_tap())
@@ -230,8 +218,8 @@ class CreateFolderTests: XCTestCase {
 			let errorMessage = "Error message"
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
-			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
+			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 
 			let issue: OCIssue = OCIssue(forMultipleChoicesWithLocalizedTitle: errorTitle, localizedDescription: errorMessage, choices: [OCIssueChoice(type: .cancel, identifier: nil, label: "Cancel".localized, userInfo: nil, handler: nil)]) { (issue, decission) in
 			}
@@ -277,48 +265,5 @@ class CreateFolderTests: XCTestCase {
 		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
 			appDelegate.serverListTableViewController?.navigationController?.popViewController(animated: false)
 		}
-	}
-
-	// MARK: - Mocks
-	func mockOCoreForBookmark(mockBookmark: OCBookmark) {
-		let completionHandlerBlock : OCMRequestCoreForBookmark = { (bookmark, setupHandler, mockedBlock) in
-			let core = OCCore(bookmark: mockBookmark)
-			setupHandler(core, nil)
-			mockedBlock(core, nil)
-		}
-
-		OCMockManager.shared.addMocking(blocks: [OCMockLocation.ocCoreManagerRequestCoreForBookmark: completionHandlerBlock])
-	}
-
-	func mockQueryPropfindResults(resourceName: String, basePath: String, state: OCQueryState) {
-
-		let completionHandlerBlock : OCMRequestChangeSetWithFlags = { (flags, mockedBlock) in
-
-			var items: [OCItem]?
-
-			let bundle = Bundle.main
-			if let path: String = bundle.path(forResource: resourceName, ofType: "xml") {
-
-				if let data = NSData(contentsOf: URL(fileURLWithPath: path)) {
-					if let parser = OCXMLParser(data: data as Data) {
-						parser.options = ["basePath": basePath]
-						parser.addObjectCreationClasses([OCItem.self])
-						if parser.parse() {
-							items = parser.parsedObjects as? [OCItem]
-						}
-					}
-				}
-			}
-
-			items?.removeFirst()
-
-			let querySet: OCQueryChangeSet = OCQueryChangeSet(queryResult: items, relativeTo: nil)
-			let query: OCQuery = OCQuery()
-			query.state = state
-
-			mockedBlock(query, querySet)
-		}
-
-		OCMockManager.shared.addMocking(blocks: [OCMockLocation.ocQueryRequestChangeSetWithFlags: completionHandlerBlock])
 	}
 }

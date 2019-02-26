@@ -50,6 +50,8 @@
 		4C464BF62187AF1500D30602 /* PDFTocItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BEE2187AF1500D30602 /* PDFTocItem.swift */; };
 		4CF8CAB121F9B70600B8CA67 /* UIBarButtonItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */; };
 		5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5917244D20D3DC2100809B38 /* BiometricalTests.swift */; };
+		59231CE02225A6FA00B79566 /* OCMockSwizzlingFileList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59231CDF2225A6FA00B79566 /* OCMockSwizzlingFileList.swift */; };
+		59231CE22225AA2E00B79566 /* OCMockSwizzlingBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59231CE12225AA2E00B79566 /* OCMockSwizzlingBookmark.swift */; };
 		592EFB47221ECC0F0041490E /* MoreViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 592EFB46221ECC0F0041490E /* MoreViewTests.swift */; };
 		593A821120C7D4C5000E2A90 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
 		593BAB46209AE1BC00023634 /* PasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593BAB44209AE1BC00023634 /* PasscodeViewController.swift */; };
@@ -479,6 +481,8 @@
 		4C464BEE2187AF1500D30602 /* PDFTocItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFTocItem.swift; sourceTree = "<group>"; };
 		4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Extension.swift"; sourceTree = "<group>"; };
 		5917244D20D3DC2100809B38 /* BiometricalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricalTests.swift; sourceTree = "<group>"; };
+		59231CDF2225A6FA00B79566 /* OCMockSwizzlingFileList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCMockSwizzlingFileList.swift; sourceTree = "<group>"; };
+		59231CE12225AA2E00B79566 /* OCMockSwizzlingBookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCMockSwizzlingBookmark.swift; sourceTree = "<group>"; };
 		592EFB46221ECC0F0041490E /* MoreViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreViewTests.swift; sourceTree = "<group>"; };
 		593A821220C7D4C5000E2A90 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		593A821820C7D4DC000E2A90 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -887,6 +891,15 @@
 			path = Security;
 			sourceTree = "<group>";
 		};
+		59231CD52225A37800B79566 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				59231CDF2225A6FA00B79566 /* OCMockSwizzlingFileList.swift */,
+				59231CE12225AA2E00B79566 /* OCMockSwizzlingBookmark.swift */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
 		593BAB3F209ADFB900023634 /* Passcode */ = {
 			isa = PBXGroup;
 			children = (
@@ -1146,6 +1159,7 @@
 		DCAEB05821F9FB0F0067E147 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				59231CD52225A37800B79566 /* Mocks */,
 				DCAEB05E21F9FB370067E147 /* OCBookmarkManager+Tools.swift */,
 				DC869A582153B1F60088977E /* OCMockingManager+SwiftTools.swift */,
 				233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */,
@@ -1898,11 +1912,13 @@
 				233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */,
 				59BC2751221D552700548444 /* XCTestsCase+Extension.swift in Sources */,
 				59B09E6F21AD61F4007827B8 /* CreateBookmarkTests.swift in Sources */,
+				59231CE22225AA2E00B79566 /* OCMockSwizzlingBookmark.swift in Sources */,
 				59B09E6E21AD61F4007827B8 /* EditBookmarkTests.swift in Sources */,
 				59538A0321E4A9C2005E543B /* CreateFolderTests.swift in Sources */,
 				DC869A592153B1F60088977E /* OCMockingManager+SwiftTools.swift in Sources */,
 				EA88A55521BFD5BF0055A58F /* DeleteBookmarkTests.swift in Sources */,
 				6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */,
+				59231CE02225A6FA00B79566 /* OCMockSwizzlingFileList.swift in Sources */,
 				59B09E6D21AD61F4007827B8 /* FileListTests.swift in Sources */,
 				5958C9BE20C000A700E0E567 /* PasscodeTests.swift in Sources */,
 				5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */,
