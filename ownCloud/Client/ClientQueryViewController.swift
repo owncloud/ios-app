@@ -104,8 +104,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			UIImpactFeedbackGenerator().impactOccurred()
 			core?.reload(query)
 		} else {
-			if self.queryRefreshControl?.isRefreshing == true {
-				self.queryRefreshControl?.endRefreshing()
+			if self.customRefreshControl?.isRefreshing == true {
+				self.customRefreshControl?.endRefreshing()
 			}
 		}
 	}
@@ -755,8 +755,8 @@ extension ClientQueryViewController : OCQueryDelegate {
 
 				switch query.state {
 				case .idle, .targetRemoved, .contentsFromCache, .stopped:
-					if self.queryRefreshControl!.isRefreshing {
-						self.queryRefreshControl?.endRefreshing()
+					if self.customRefreshControl!.isRefreshing {
+						self.customRefreshControl?.endRefreshing()
 					}
 				default: break
 				}
