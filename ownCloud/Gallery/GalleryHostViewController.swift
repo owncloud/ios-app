@@ -114,14 +114,15 @@ class GalleryHostViewController: UIPageViewController {
 					let configurationState: DisplayViewState = shouldDownload ? .hasNetworkConnection : .notSupportedMimeType
 					let configuration = DisplayViewConfiguration(item: itemToDisplay, core: self.core, state: configurationState)
 
+					viewController.configure(configuration)
+
 					self.addChild(viewController)
 					viewController.didMove(toParent: self)
 
-					viewController.configure(configuration)
+					self.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
+
 					viewController.present(item: itemToDisplay)
 					viewController.setupStatusBar()
-
-					self.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
 				}
 			}
 		}
@@ -204,7 +205,7 @@ class GalleryHostViewController: UIPageViewController {
 
 extension GalleryHostViewController: UIPageViewControllerDataSource {
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-		if let displayViewController = viewController as? DisplayViewController,
+		if let displayViewController = viewControllers?.first as? DisplayViewController,
 			let item = displayViewController.item,
 			let index = items?.firstIndex(where: {$0.fileID == item.fileID}) {
 			return viewControllerAtIndex(index: index + 1)
@@ -215,7 +216,8 @@ extension GalleryHostViewController: UIPageViewControllerDataSource {
 	}
 
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-		if let displayViewController = viewController as? DisplayViewController,
+
+		if let displayViewController = viewControllers?.first as? DisplayViewController,
 			let item = displayViewController.item,
 			let index = items?.firstIndex(where: {$0.fileID == item.fileID}) {
 			return viewControllerAtIndex(index: index - 1)

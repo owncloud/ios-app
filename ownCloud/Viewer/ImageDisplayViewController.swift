@@ -31,6 +31,19 @@ class ImageDisplayViewController : DisplayViewController {
 	var tapToZoomGestureRecognizer : UITapGestureRecognizer!
 	var tapToHideBarsGestureRecognizer: UITapGestureRecognizer!
 
+	// MARK: - View controller lifecycle
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+
+		guard let navigationController = navigationController else {
+			return
+		}
+
+		navigationController.setNavigationBarHidden(false, animated: true)
+
+		setNeedsUpdateOfHomeIndicatorAutoHidden()
+	}
+
 	// MARK: - Specific view
 	override func renderSpecificView() {
 		scrollView = ImageScrollView(frame: self.view.bounds)

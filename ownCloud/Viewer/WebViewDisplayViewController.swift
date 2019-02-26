@@ -23,6 +23,9 @@ import WebKit
 class WebViewDisplayViewController: DisplayViewController {
 
 	var webView: WKWebView?
+	lazy var fullScreenGesture: UITapGestureRecognizer = {
+		return UITapGestureRecognizer(target: self, action: #selector(self.tapToFullScreen))
+	}()
 
 	override func renderSpecificView() {
 		WebViewDisplayViewController.externalContentBlockingRuleList { (blockList, error) in
@@ -53,9 +56,8 @@ class WebViewDisplayViewController: DisplayViewController {
 
 				self.webView?.loadFileURL(source, allowingReadAccessTo: source)
 
-				let fullScreenGesture = UITapGestureRecognizer(target: self, action: #selector(self.tapToFullScreen))
-				fullScreenGesture.delegate = self
-				self.webView?.addGestureRecognizer(fullScreenGesture)
+				self.fullScreenGesture.delegate = self
+				self.webView?.addGestureRecognizer(self.fullScreenGesture)
 			}
 		}
 	}
@@ -130,6 +132,10 @@ extension WebViewDisplayViewController: DisplayExtension {
 
 extension WebViewDisplayViewController: UIGestureRecognizerDelegate {
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+		if  otherGestureRecognizer == fullScreenGesture {
+			return false
+		}
+
 		return true
 	}
 }
