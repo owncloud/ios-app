@@ -59,7 +59,7 @@ class MoreViewTests: XCTestCase {
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("dimming-view")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("disconnect-button")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
@@ -89,7 +89,7 @@ class MoreViewTests: XCTestCase {
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("dimming-view")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("disconnect-button")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
@@ -99,7 +99,11 @@ class MoreViewTests: XCTestCase {
 		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
 			let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 
-			appDelegate.serverListTableViewController?.present(clientRootViewController, animated: true, completion: nil)
+			appDelegate.serverListTableViewController?.navigationController?.navigationBar.prefersLargeTitles = false
+			appDelegate.serverListTableViewController?.navigationController?.navigationItem.largeTitleDisplayMode = .never
+			appDelegate.serverListTableViewController?.navigationController?.pushViewController(viewController: clientRootViewController, animated: true, completion: {
+				appDelegate.serverListTableViewController?.navigationController?.setNavigationBarHidden(true, animated: false)
+			})
 		}
 	}
 
