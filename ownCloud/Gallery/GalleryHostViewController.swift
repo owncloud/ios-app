@@ -29,6 +29,44 @@ class GalleryHostViewController: UIPageViewController {
 		return OCQueryFilter(handler: itemFilterHandler)
 	}()
 
+	private lazy var leftEdgeSwipeGestureRecognizer: UIScreenEdgePanGestureRecognizer = {
+		let gestureRecognizer = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(edgeSwipeGesture))
+		gestureRecognizer.edges = [UIRectEdge.left]
+		return gestureRecognizer
+	}()
+
+	private lazy var rightEdgeSwipeGestureRecognizer: UIScreenEdgePanGestureRecognizer = {
+		let gestureRecognizer = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(edgeSwipeGesture(_:)))
+		gestureRecognizer.edges = [UIRectEdge.right]
+		return gestureRecognizer
+	}()
+
+	@objc func edgeSwipeGesture(_ gestureRecognizer: UIScreenEdgePanGestureRecognizer) {
+		var add = 1
+
+		if gestureRecognizer.edges == [.left] {
+			add = -1
+		}
+
+		if let displayViewController = self.viewControllers?[0] as? DisplayViewController,
+			let item = displayViewController.item,
+			let index = items?.firstIndex(where: {$0.fileID == item.fileID}),
+			let viewControllerToDisplay = viewControllerAtIndex(index: index + add) {
+
+			self.setViewControllers([viewControllerToDisplay], direction: .forward, animated: true, completion: nil)
+		}
+	}
+
+	@objc func leftSwipe() {
+		if let displayViewController = self.viewControllers?[0] as? DisplayViewController,
+			let item = displayViewController.item,
+			let index = items?.firstIndex(where: {$0.fileID == item.fileID}),
+			let viewControllerToDisplay = viewControllerAtIndex(index: index - 1) {
+
+			self.setViewControllers([viewControllerToDisplay], direction: .forward, animated: true, completion: nil)
+		}
+	}
+
 	// MARK: - Init & deinit
 	init(core: OCCore, selectedItem: OCItem, query: OCQuery) {
 		self.core = core
@@ -55,6 +93,9 @@ class GalleryHostViewController: UIPageViewController {
         super.viewDidLoad()
 		dataSource = self
 		delegate = self
+
+		view.addGestureRecognizer(leftEdgeSwipeGestureRecognizer)
+		view.addGestureRecognizer(rightEdgeSwipeGestureRecognizer)
 
 		query.requestChangeSet(withFlags: .onlyResults) { [weak self] ( _, changeSet) in
 			guard let `self` = self else {
@@ -163,13 +204,10 @@ class GalleryHostViewController: UIPageViewController {
 
 extension GalleryHostViewController: UIPageViewControllerDataSource {
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-		print("LOG ---> pasa after")
-		if let displayViewController = viewController as? DisplayViewController {
-
-			if let item = displayViewController.item, let index =
-				items?.firstIndex(where: {$0.fileID == item.fileID}) {
-					return viewControllerAtIndex(index: index + 1)
-			}
+		if let displayViewController = viewController as? DisplayViewController,
+			let item = displayViewController.item,
+			let index = items?.firstIndex(where: {$0.fileID == item.fileID}) {
+			return viewControllerAtIndex(index: index + 1)
 		}
 
 		return nil
@@ -177,9 +215,9 @@ extension GalleryHostViewController: UIPageViewControllerDataSource {
 	}
 
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-		print("LOG ---> pasa before")
-		if let displayViewController = viewController as? DisplayViewController, let item = displayViewController.item, let index =
-			items?.firstIndex(where: {$0.fileID == item.fileID}) {
+		if let displayViewController = viewController as? DisplayViewController,
+			let item = displayViewController.item,
+			let index = items?.firstIndex(where: {$0.fileID == item.fileID}) {
 			return viewControllerAtIndex(index: index - 1)
 		}
 
@@ -193,19 +231,18 @@ extension GalleryHostViewController: UIPageViewControllerDelegate {
 		let previousViewController = previousViewControllers[0]
 		previousViewController.didMove(toParent: nil)
 
-		if completed, let vc = self.viewControllerToTansition {
-			if self.children.contains(vc) {
-			} else {
-				self.addChild(vc)
+		if completed, let viewControllerToTransition = self.viewControllerToTansition {
+			if self.children.contains(viewControllerToTransition) == false {
+				self.addChild(viewControllerToTransition)
 			}
-			vc.didMove(toParent: self)
-			vc.setupStatusBar()
+			viewControllerToTransition.didMove(toParent: self)
+			viewControllerToTransition.setupStatusBar()
 		}
 	}
 
 	func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
-		if let vc = pendingViewControllers[0] as? DisplayViewController {
-			self.viewControllerToTansition = vc
+		if let viewControllerToTransition = pendingViewControllers[0] as? DisplayViewController {
+			self.viewControllerToTansition = viewControllerToTransition
 		}
 	}
 }

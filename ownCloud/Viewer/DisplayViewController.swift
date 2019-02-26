@@ -276,10 +276,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				}
 				return
 			}
-//			OnMainThread {
 				self?.item = latestItem
 				self?.source = file!.url
-//			}
 		}) {
 			self.state = .downloading(progress: downloadProgress)
 		}
