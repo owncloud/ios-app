@@ -46,7 +46,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 	var progressSummarizer : ProgressSummarizer?
-	var customRefreshControl: RefreshControl?
+	var refreshController: UIRefreshControl?
 
 	let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 
@@ -104,8 +104,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			UIImpactFeedbackGenerator().impactOccurred()
 			core?.reload(query)
 		} else {
-			if self.customRefreshControl?.isRefreshing == true {
-				self.customRefreshControl?.endRefreshing()
+			if self.refreshController?.isRefreshing == true {
+				self.refreshController?.endRefreshing()
 			}
 		}
 	}
@@ -149,9 +149,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		tableView.tableHeaderView = sortBar
 
-		customRefreshControl = RefreshControl()
-		customRefreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
-		self.tableView.insertSubview(customRefreshControl!, at: 0)
+		refreshController = UIRefreshControl()
+		refreshController?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
+		self.tableView.insertSubview(refreshController!, at: 0)
 		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
 
 		Theme.shared.register(client: self, applyImmediately: true)
@@ -173,6 +173,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		moveMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(actOnMultipleItems))
 		moveMultipleBarButtonItem?.actionIdentifier = MoveAction.identifier
 		moveMultipleBarButtonItem?.isEnabled = false
+
+		self.addThemableBackgroundView()
 	}
 
 	private var viewControllerVisible : Bool = false
@@ -230,8 +232,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		switch query.state {
 			case .idle:
 				DispatchQueue.main.async {
-					if !self.customRefreshControl!.isRefreshing {
-						self.customRefreshControl?.beginRefreshing()
+					if !self.refreshController!.isRefreshing {
+						self.refreshController?.beginRefreshing()
 					}
 				}
 
@@ -252,7 +254,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
 		self.searchController?.searchBar.applyThemeCollection(collection)
-		self.customRefreshControl?.backgroundColor = theme.activeCollection.navigationBarColors.backgroundColor
 		if event == .update {
 			self.reloadTableData()
 		}
@@ -755,8 +756,8 @@ extension ClientQueryViewController : OCQueryDelegate {
 
 				switch query.state {
 				case .idle, .targetRemoved, .contentsFromCache, .stopped:
-					if self.customRefreshControl!.isRefreshing {
-						self.customRefreshControl?.endRefreshing()
+					if self.refreshController!.isRefreshing {
+						self.refreshController?.endRefreshing()
 					}
 				default: break
 				}
