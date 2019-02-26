@@ -26,25 +26,13 @@ class FileListTests: XCTestCase {
 		OCMockManager.shared.removeAllMockingBlocks()
 	}
 
-	public typealias OCMRequestCoreForBookmarkCompletionHandler = @convention(block)
-		(_ core: OCCore, _ error: NSError?) -> Void
-
-	public typealias OCMRequestCoreForBookmarkSetupHandler = @convention(block)
-		(_ core: OCCore, _ error: NSError?) -> Void
-
-	public typealias OCMRequestCoreForBookmark = @convention(block)
-		(_ bookmark: OCBookmark, _ setup: OCMRequestCoreForBookmarkSetupHandler, _ completionHandler: OCMRequestCoreForBookmarkCompletionHandler) -> Void
-
-	public typealias OCMRequestChangeSetWithFlags = @convention(block)
-		(_ flags: OCQueryChangeSetRequestFlag, _ completionHandler: OCQueryChangeSetRequestCompletionHandler) -> Void
-
 	/*
 	* PASSED if: Disconnect button appears in the view
 	*/
 	func testShowFileList() {
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
+			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.showFileList(bookmark: bookmark)
 
 			//Asserts
@@ -66,8 +54,8 @@ class FileListTests: XCTestCase {
 
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
-			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
+			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
+			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 			
 			//Asserts
@@ -105,47 +93,5 @@ class FileListTests: XCTestCase {
 				appDelegate.serverListTableViewController?.navigationController?.setNavigationBarHidden(true, animated: false)
 			})
 		}
-	}
-
-	// MARK: - Mocks
-	func mockOCoreForBookmark(mockBookmark: OCBookmark) {
-		let completionHandlerBlock : OCMRequestCoreForBookmark = { (bookmark, setupHandler, mockedBlock) in
-			let core = OCCore(bookmark: mockBookmark)
-			setupHandler(core, nil)
-			mockedBlock(core, nil)
-		}
-
-		OCMockManager.shared.addMocking(blocks: [OCMockLocation.ocCoreManagerRequestCoreForBookmark: completionHandlerBlock])
-	}
-
-	func mockQueryPropfindResults(resourceName: String, basePath: String, state: OCQueryState) {
-		let completionHandlerBlock : OCMRequestChangeSetWithFlags = { (flags, mockedBlock) in
-
-			var items: [OCItem]?
-
-			let bundle = Bundle.main
-			if let path: String = bundle.path(forResource: resourceName, ofType: "xml") {
-
-				if let data = NSData(contentsOf: URL(fileURLWithPath: path)) {
-					if let parser = OCXMLParser(data: data as Data) {
-						parser.options = ["basePath": basePath]
-						parser.addObjectCreationClasses([OCItem.self])
-						if parser.parse() {
-							items = parser.parsedObjects as? [OCItem]
-						}
-					}
-				}
-			}
-
-			items?.removeFirst()
-
-			let querySet: OCQueryChangeSet = OCQueryChangeSet(queryResult: items, relativeTo: nil)
-			let query: OCQuery = OCQuery()
-			query.state = state
-
-			mockedBlock(query, querySet)
-		}
-
-		OCMockManager.shared.addMocking(blocks: [OCMockLocation.ocQueryRequestChangeSetWithFlags: completionHandlerBlock])
 	}
 }
