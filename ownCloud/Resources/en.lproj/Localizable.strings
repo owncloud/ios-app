@@ -105,6 +105,7 @@
 "This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
 "Delete" = "Delete";
 "Deletion of '%@' failed" = "Deletion of '%@' failed";
+"Accounts" = "Accounts";
 
 "Help" = "Help";
 "Feedback" = "Feedback";
