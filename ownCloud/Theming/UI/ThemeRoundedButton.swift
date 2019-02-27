@@ -7,7 +7,7 @@
 //
 
 /*
- * Copyright (C) 2018, ownCloud GmbH.
+ * Copyright (C) 2019, ownCloud GmbH.
  *
  * This code is covered by the GNU Public License Version 3.
  *
@@ -20,22 +20,22 @@ import UIKit
 
 class ThemeRoundedButton: ThemeButton {
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        styleButton()
-    }
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+		styleButton()
+	}
 
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        styleButton()
-    }
+	required init?(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+		styleButton()
+	}
 
-    private func styleButton() {
-        if self.frame.size.height < self.frame.size.width {
-            self.layer.cornerRadius = round(self.frame.size.height / 2)
-        } else {
-            self.layer.cornerRadius = round(self.frame.size.width / 2)
-        }
-    }
+	private func styleButton() {
+		if self.frame.size.height < self.frame.size.width {
+			self.layer.cornerRadius = round(self.frame.size.height / 2)
+		} else {
+			self.layer.cornerRadius = round(self.frame.size.width / 2)
+		}
+	}
 
 }

@@ -103,7 +103,7 @@
 
 	if ((_core == nil) && (_query == nil))
 	{
-		_core = [[OCCoreManager sharedCoreManager] requestCoreForBookmark:_bookmark completionHandler:^(OCCore *core, NSError *error) {
+		[[OCCoreManager sharedCoreManager] requestCoreForBookmark:_bookmark setup:nil completionHandler:^(OCCore *core, NSError *error) {
 			self->_core = core;
 
 			if (error != nil)
