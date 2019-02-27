@@ -168,7 +168,7 @@ class Action : NSObject {
 		let header = MoreViewHeader(for: item, with: context.core!)
 		let moreViewController = MoreViewController(item: item, core: context.core!, header: header, viewController: tableViewController)
 
-		let title = NSAttributedString(string: "Actions", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
+		let title = NSAttributedString(string: "Actions".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
 		let actions = Action.sortedApplicableActions(for: context)
 

@@ -37,6 +37,7 @@
 "Review Connection" = "Review Connection";
 "Authenticated via" = "Authenticated via";
 "Authenticated as %@ via %@" = "Authenticated as %@ via %@";
+"Edit" = "Edit";
 
 "Contacting server…" = "Contacting server…";
 "Authenticating…" = "Authenticating…";
@@ -54,6 +55,7 @@
 "Connecting…" = "Connecting…";
 "Connected." = "Connected.";
 "Select" = "Select";
+"Done" = "Done";
 
 "Folder" = "Folder";
 
@@ -161,6 +163,7 @@
 
 "Logging" = "Logging";
 "Enable logging" = "Enable logging";
+"Options" = "Options";
 
 "Off" = "Off";
 "Info" = "Info";
