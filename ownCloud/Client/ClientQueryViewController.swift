@@ -314,10 +314,12 @@ class ClientQueryViewController: UITableViewController, Themeable {
 								guard let `self` = self else { return }
 								OnMainThread {
 									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
-										if let item = item, item.localID == self.lastTappedItemLocalID, let core = core {
-											let itemViewController = GalleryHostViewController(core: core, selectedItem: item, query: query)
-											itemViewController.hidesBottomBarWhenPushed = true
-											self.navigationController?.pushViewController(itemViewController, animated: true)
+										if let item = item, let core = core {
+											if item.localID == self.lastTappedItemLocalID {
+												let itemViewController = GalleryHostViewController(core: core, selectedItem: item, query: query)
+												itemViewController.hidesBottomBarWhenPushed = true
+												self.navigationController?.pushViewController(itemViewController, animated: true)
+											}
 										}
 									}
 

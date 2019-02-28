@@ -133,6 +133,10 @@ class GalleryHostViewController: UIPageViewController {
 			return DisplayViewController()
 		}
 
+		guard matchedExtensions.count > 0 else {
+			return DisplayViewController()
+		}
+
 		let preferedExtension: OCExtension = matchedExtensions[0].extension
 
 		let extensionObject = preferedExtension.provideObject(for: context)

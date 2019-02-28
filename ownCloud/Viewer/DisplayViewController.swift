@@ -240,7 +240,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	func updateNavigationBarItems() {
-		if let parent = parent, let item = item, let itemName = item.name {
+		if let parent = parent, let itemName = item?.name {
 			parent.navigationItem.title = itemName
 
 			let actionsBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
