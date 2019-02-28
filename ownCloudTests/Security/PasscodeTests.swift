@@ -51,6 +51,9 @@ class PasscodeTests: XCTestCase {
 
 		// Asserts
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible())
+
+		//Reset Status
+		AppLockManager.shared.dismissLockscreen(animated: false)
 	}
 
 	/*
@@ -74,6 +77,9 @@ class PasscodeTests: XCTestCase {
 
 		// Asserts
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("messageLabel")).assert(grey_sufficientlyVisible())
+
+		//Reset Status
+		AppLockManager.shared.dismissLockscreen(animated: false)
 	}
 
 	/*
