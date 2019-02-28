@@ -592,6 +592,31 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 
+	func upload(asset:PHAsset) {
+		let progress = Progress(totalUnitCount: 100)
+		let options = PHAssetResourceRequestOptions()
+		options.isNetworkAccessAllowed = true
+		options.progressHandler = { (completed:Double) in
+			progress.completedUnitCount = Int64(completed * 100)
+		}
+		let ressources = PHAssetResource.assetResources(for: asset)
+		if let ressource = ressources.first {
+			let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(ressource.originalFilename)
+
+			self.progressSummarizer?.startTracking(progress: progress)
+			PHAssetResourceManager.default().writeData(for: ressource, toFile: localURL, options: options) { (error) in
+				if error == nil {
+					self.upload(itemURL: localURL, name: ressource.originalFilename, completionHandler:{ (_) in
+						// Delete the temporary asset file
+						try? FileManager.default.removeItem(at: localURL)
+					})
+				} else {
+					progress.cancel()
+				}
+			}
+		}
+	}
+
 	// MARK: - Toolbar actions handling multiple selected items
 	func updateToolbarItems() {
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
@@ -683,10 +708,17 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		let photoLibrary = UIAlertAction(title: "Upload from your photo library".localized, style: .default, handler: { (_) in
 
 			func presentImageGalleryPicker() {
-				let picker = UIImagePickerController.regularImagePicker(with: .photoLibrary)
-				picker.delegate = self
+
+				let photoAlbumViewController = PhotoAlbumTableViewController()
+				photoAlbumViewController.selectionCallback = { (assets) in
+					for asset in assets {
+						self.upload(asset: asset)
+					}
+				}
+				let navigationController = ThemeNavigationController(rootViewController: photoAlbumViewController)
+
 				OnMainThread {
-					self.present(picker, animated: true)
+					self.present(navigationController, animated: true)
 				}
 			}
 
@@ -941,40 +973,6 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		return [dragItem]
 	}
 
-}
-
-// MARK: - UIImagePickerControllerDelegate
-extension ClientQueryViewController: UIImagePickerControllerDelegate {
-
-	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-
-		var name: String?
-		var url: URL?
-
-		if let imageURL = info[UIImagePickerController.InfoKey.imageURL] as? URL {
-			name = imageURL.lastPathComponent
-			url = imageURL
-		}
-
-		if let movieURL = info[UIImagePickerController.InfoKey.mediaURL] as? URL {
-			name = movieURL.lastPathComponent
-			url = movieURL
-		}
-
-		if let imageAsset = info[UIImagePickerController.InfoKey.phAsset] as? PHAsset {
-			let resources = PHAssetResource.assetResources(for: imageAsset)
-			name = resources[0].originalFilename
-		}
-
-		if name != nil, url != nil {
-			upload(itemURL: url!, name: name!)
-		}
-
-		OnMainThread {
-			picker.dismiss(animated: true)
-		}
-
-	}
 }
 
 // MARK: - UIDocumentPickerDelegate
