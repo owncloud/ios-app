@@ -112,7 +112,7 @@ class DisplayHostViewController: UIViewController {
 
 		let preferedExtension: OCExtension = matchedExtensions[0].extension
 
-		let extensionObject = preferedExtension.provideObject(for: context)		
+		let extensionObject = preferedExtension.provideObject(for: context)
 
 		guard let controllerType = extensionObject as? (DisplayViewController & DisplayExtension) else {
 			return DisplayViewController()
