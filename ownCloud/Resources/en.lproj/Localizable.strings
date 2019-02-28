@@ -38,6 +38,7 @@
 "Authenticated via" = "Authenticated via";
 "Authenticated as %@ via %@" = "Authenticated as %@ via %@";
 "Edit" = "Edit";
+"Credentials" = "Credentials";
 
 "Contacting server…" = "Contacting server…";
 "Authenticating…" = "Authenticating…";
