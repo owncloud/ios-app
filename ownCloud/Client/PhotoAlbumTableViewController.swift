@@ -9,17 +9,54 @@
 import UIKit
 import Photos
 
+extension PHAssetCollection {
+	var assetCount: Int {
+		if self.estimatedAssetCount != NSNotFound {
+			return self.estimatedAssetCount
+		} else {
+			let options = PHFetchOptions()
+			options.predicate = NSPredicate(format:  "mediaType = %d || mediaType = %d", PHAssetMediaType.image.rawValue, PHAssetMediaType.video.rawValue)
+			return PHAsset.fetchAssets(in: self, options: options).count
+		}
+	}
+
+	func fetchThumbnailAsset() -> PHAsset? {
+		let fetchOptions = PHFetchOptions()
+		fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+		fetchOptions.fetchLimit = 1
+		let fetchResult = PHAsset.fetchAssets(in: self, options: fetchOptions)
+		return fetchResult.firstObject
+	}
+}
+
 class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
-	var collections = [PHAssetCollection]()
-	var thumbnailFetchQueue = OperationQueue()
+	class PhotoAlbum {
+		var name: String?
+		var count: Int?
+		var thumbnail: UIImage?
+		var collection: PHAssetCollection?
+
+		var countString : String {
+			if count != nil {
+				return "\(count!)"
+			} else {
+				return ""
+			}
+		}
+	}
+
+	var albums = [PhotoAlbum]()
+	var fetchAlbumQueue = DispatchQueue(label: "com.owncloud.photoalbum.queue")
+
 	var selectionCallback :PhotosSelectedCallback?
+
+	fileprivate let thumbnailHeight = (PhotoAlbumTableViewCell.cellHeight * 0.9).rounded(.towardZero)
 
 	// MARK: - UIViewController lifecycle
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		thumbnailFetchQueue.qualityOfService = .background
 		self.title = "Albums".localized
 		self.tableView.rowHeight = PhotoAlbumTableViewCell.cellHeight
 		self.tableView.register(PhotoAlbumTableViewCell.self, forCellReuseIdentifier: PhotoAlbumTableViewCell.identifier)
@@ -52,37 +89,68 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 	// MARK: - UITableView datasource / delegate
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return collections.count
+		return albums.count
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: PhotoAlbumTableViewCell.identifier, for: indexPath) as? PhotoAlbumTableViewCell
-		let collection = collections[indexPath.row]
-		cell?.collection = collection
+		let album = albums[indexPath.row]
+		cell?.textLabel?.text = album.name
+		cell?.detailTextLabel?.text = album.countString
+		cell?.imageView?.image = album.thumbnail
+
 		return cell!
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
-		let collection = self.collections[indexPath.row]
+		let album = self.albums[indexPath.row]
 		let photoSelectionViewController = PhotoSelectionViewController()
-		photoSelectionViewController.assetCollection = collection
+		photoSelectionViewController.assetCollection = album.collection
 		photoSelectionViewController.selectionCallback = self.selectionCallback
 		self.navigationController?.pushViewController(photoSelectionViewController, animated: true)
 	}
 
 	// MARK: - Asset collections fetching
 
+	fileprivate func addAlbum(from collection:PHAssetCollection) {
+		fetchAlbumQueue.async {
+
+			func addRow(_ album:PhotoAlbum) {
+				OnMainThread {
+					let indexPath = IndexPath(row: self.albums.count, section: 0)
+					self.albums.append(album)
+					self.tableView.insertRows(at: [indexPath], with: .automatic)
+				}
+			}
+
+			let count = collection.assetCount
+			if count > 0 {
+				let album = PhotoAlbum()
+				album.collection = collection
+				album.name = collection.localizedTitle
+				album.count = count
+
+				if let asset = collection.fetchThumbnailAsset() {
+					self.getThumbnailImage(from: asset, completion: { (image) in
+						album.thumbnail = image
+						addRow(album)
+					})
+				} else {
+					addRow(album)
+				}
+			}
+		}
+	}
+
 	fileprivate func fetchAlbums() {
 
-		guard collections.count == 0 else { return }
+		guard albums.count == 0 else { return }
 
 		func fetchCollections(_ type:PHAssetCollectionType) {
 			let collections = PHAssetCollection.fetchAssetCollections(with: type, subtype: .albumRegular, options: nil)
-			collections.enumerateObjects { [weak self] (assetCollection, _, _) in
-				if assetCollection.estimatedAssetCount > 0 {
-					self?.collections.append(assetCollection)
-				}
+			collections.enumerateObjects { (assetCollection, _, _) in
+				self.addAlbum(from: assetCollection)
 			}
 		}
 
@@ -93,5 +161,28 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 		fetchCollections(.album)
 
 		self.tableView.reloadData()
+	}
+
+	fileprivate func getThumbnailImage(from asset:PHAsset, completion:@escaping (_ image:UIImage?) -> Void) {
+		let imageManager = PHImageManager.default()
+
+		// Setup request options
+		let options = PHImageRequestOptions()
+		options.deliveryMode = PHImageRequestOptionsDeliveryMode.fastFormat
+		options.isSynchronous = false
+		options.isNetworkAccessAllowed = true
+		options.resizeMode = .exact
+		let cropSideLength : CGFloat = min(CGFloat(asset.pixelWidth), CGFloat(asset.pixelHeight))
+		let square = CGRect(x: 0, y: 0, width: cropSideLength, height: cropSideLength)
+		let transform = CGAffineTransform(scaleX: 1.0 / CGFloat(asset.pixelWidth), y: 1.0 / CGFloat(asset.pixelHeight))
+		let cropRect = square.applying(transform)
+		options.normalizedCropRect = cropRect
+
+		// Consider retina scale factor, since target size has to be provided in pixels
+		let scale = UIScreen.main.scale
+		let thumbnailSize = CGSize(width: thumbnailHeight * scale, height: thumbnailHeight * scale)
+		imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: options) { (image, _) in
+			completion(image)
+		}
 	}
 }
