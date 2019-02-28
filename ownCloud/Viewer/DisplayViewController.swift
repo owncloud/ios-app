@@ -239,7 +239,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
-	func setupStatusBar() {
+	func updateNavigationBarItems() {
 		if let parent = parent, let item = item, let itemName = item.name {
 			parent.navigationItem.title = itemName
 

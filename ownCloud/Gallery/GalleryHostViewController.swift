@@ -11,60 +11,29 @@ import ownCloudSDK
 
 class GalleryHostViewController: UIPageViewController {
 
+	typealias Filter = ([OCItem]) -> [OCItem]
+
+	// MARK: - Constants
+	let hasChangesAvailableKeyPath: String = "hasChangesAvailable"
+	let imageFilterRegexp: String = "\\A((image/(?!(gif|svg*))))"
+
 	// MARK: - Instance Variables
 	weak private var core: OCCore?
 	private var selectedItem: OCItem
 	private var items: [OCItem]?
 	private var query: OCQuery
 	private weak var viewControllerToTansition: DisplayViewController?
+	private var selectedFilter: Filter?
 
-	private var itemsFilter: OCQueryFilter = {
-		var itemFilterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
-			if let item = item {
-				if item.type == .collection {return false}
-			}
-			return true
-		}
-
-		return OCQueryFilter(handler: itemFilterHandler)
-	}()
-
-	private lazy var leftEdgeSwipeGestureRecognizer: UIScreenEdgePanGestureRecognizer = {
-		let gestureRecognizer = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(edgeSwipeGesture))
-		gestureRecognizer.edges = [UIRectEdge.left]
-		return gestureRecognizer
-	}()
-
-	private lazy var rightEdgeSwipeGestureRecognizer: UIScreenEdgePanGestureRecognizer = {
-		let gestureRecognizer = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(edgeSwipeGesture(_:)))
-		gestureRecognizer.edges = [UIRectEdge.right]
-		return gestureRecognizer
-	}()
-
-	@objc func edgeSwipeGesture(_ gestureRecognizer: UIScreenEdgePanGestureRecognizer) {
-		var add = 1
-
-		if gestureRecognizer.edges == [.left] {
-			add = -1
-		}
-
-		if let displayViewController = self.viewControllers?[0] as? DisplayViewController,
-			let item = displayViewController.item,
-			let index = items?.firstIndex(where: {$0.fileID == item.fileID}),
-			let viewControllerToDisplay = viewControllerAtIndex(index: index + add) {
-
-			self.setViewControllers([viewControllerToDisplay], direction: .forward, animated: true, completion: nil)
-		}
+	// MARK: - Filters
+	lazy var filterImageFiles: Filter = { items in
+		let filteredItems = items.filter({$0.type != .collection && $0.mimeType?.matches(regExp: self.imageFilterRegexp) ?? false})
+		return filteredItems
 	}
 
-	@objc func leftSwipe() {
-		if let displayViewController = self.viewControllers?[0] as? DisplayViewController,
-			let item = displayViewController.item,
-			let index = items?.firstIndex(where: {$0.fileID == item.fileID}),
-			let viewControllerToDisplay = viewControllerAtIndex(index: index - 1) {
-
-			self.setViewControllers([viewControllerToDisplay], direction: .forward, animated: true, completion: nil)
-		}
+	lazy var filterOneItem: Filter = { items in
+		let filteredItems = items.filter({$0.type != .collection && $0.fileID == self.selectedItem.fileID})
+		return filteredItems
 	}
 
 	// MARK: - Init & deinit
@@ -74,10 +43,7 @@ class GalleryHostViewController: UIPageViewController {
 		self.query = query
 
 		super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
-
-		query.addObserver(self, forKeyPath: "hasChangesAvailable", options: [.initial, .new], context: nil)
-		query.addFilter(itemsFilter, withIdentifier: "items-filter")
-
+		query.addObserver(self, forKeyPath: hasChangesAvailableKeyPath, options: [.initial, .new], context: nil)
 	}
 
 	required init?(coder: NSCoder) {
@@ -85,7 +51,7 @@ class GalleryHostViewController: UIPageViewController {
 	}
 
 	deinit {
-		query.removeObserver(self, forKeyPath: "hasChangesAvailable")
+		query.removeObserver(self, forKeyPath: hasChangesAvailableKeyPath)
 	}
 
 	// MARK: - ViewController lifecycle
@@ -94,15 +60,17 @@ class GalleryHostViewController: UIPageViewController {
 		dataSource = self
 		delegate = self
 
-		view.addGestureRecognizer(leftEdgeSwipeGestureRecognizer)
-		view.addGestureRecognizer(rightEdgeSwipeGestureRecognizer)
+		if selectedItem.mimeType?.matches(regExp: imageFilterRegexp) ?? false {
+			selectedFilter = filterImageFiles
+		} else {
+			selectedFilter = filterOneItem
+		}
 
 		query.requestChangeSet(withFlags: .onlyResults) { [weak self] ( _, changeSet) in
-			guard let `self` = self else {
-				return
-			}
+			guard let `self` = self else { return}
+			guard let queryResult = changeSet?.queryResult else { return }
 
-			self.items = changeSet?.queryResult
+			self.items = self.selectedFilter?(queryResult)
 
 			if let items = self.items, let index = items.firstIndex(where: {$0.fileID == self.selectedItem.fileID}) {
 				let itemToDisplay = items[index]
@@ -110,28 +78,20 @@ class GalleryHostViewController: UIPageViewController {
 				guard let mimeType = itemToDisplay.mimeType else { return }
 				OnMainThread {
 					let viewController = self.selectDisplayViewControllerBasedOn(mimeType: mimeType)
-					let shouldDownload = viewController is DisplayExtension ? true : false
-					let configurationState: DisplayViewState = shouldDownload ? .hasNetworkConnection : .notSupportedMimeType
-					let configuration = DisplayViewConfiguration(item: itemToDisplay, core: self.core, state: configurationState)
+					let configuration = self.configurationFor(itemToDisplay, viewController: viewController)
 
 					viewController.configure(configuration)
-
 					self.addChild(viewController)
 					viewController.didMove(toParent: self)
 
 					self.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
 
 					viewController.present(item: itemToDisplay)
-					viewController.setupStatusBar()
+					viewController.updateNavigationBarItems()
 				}
 			}
 		}
     }
-
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-		query.removeFilter(itemsFilter)
-	}
 
 	override var childForHomeIndicatorAutoHidden : UIViewController? {
 		if let childViewController = self.children.first {
@@ -146,10 +106,11 @@ class GalleryHostViewController: UIPageViewController {
 		if (object as? OCQuery) === query {
 			query.requestChangeSet(withFlags: .onlyResults) { ( _, changeSet) in
 				guard changeSet != nil else { return }
-				self.items = changeSet!.queryResult.filter({$0.mimeType != nil})
+				self.items = self.selectedFilter?(changeSet!.queryResult)
 			}
 		}
 	}
+	// swiftlint:enable block_based_kvo
 
 	// MARK: - Extension selection
 	private func selectDisplayViewControllerBasedOn(mimeType: String) -> (DisplayViewController) {
@@ -181,6 +142,7 @@ class GalleryHostViewController: UIPageViewController {
 		return controllerType
 	}
 
+	// MARK: - Helper methods
 	private func viewControllerAtIndex(index: Int) -> UIViewController? {
 		guard let items = items else { return nil }
 
@@ -189,17 +151,22 @@ class GalleryHostViewController: UIPageViewController {
 		let item = items[index]
 
 		let newViewController = selectDisplayViewControllerBasedOn(mimeType: item.mimeType!)
-		let shouldDownload = newViewController is (DisplayViewController & DisplayExtension) ? true : false
+		let configuration = configurationFor(item, viewController: newViewController)
+
+		newViewController.configure(configuration)
+		newViewController.present(item: item)
+		return newViewController
+	}
+
+	private func configurationFor(_ item: OCItem, viewController: UIViewController) -> DisplayViewConfiguration {
+		let shouldDownload = viewController is (DisplayViewController & DisplayExtension) ? true : false
 		var configuration: DisplayViewConfiguration
 		if !shouldDownload {
 			configuration = DisplayViewConfiguration(item: item, core: core, state: .notSupportedMimeType)
 		} else {
 			configuration = DisplayViewConfiguration(item: item, core: core, state: .hasNetworkConnection)
 		}
-
-		newViewController.configure(configuration)
-		newViewController.present(item: item)
-		return newViewController
+		return configuration
 	}
 }
 
@@ -238,7 +205,7 @@ extension GalleryHostViewController: UIPageViewControllerDelegate {
 				self.addChild(viewControllerToTransition)
 			}
 			viewControllerToTransition.didMove(toParent: self)
-			viewControllerToTransition.setupStatusBar()
+			viewControllerToTransition.updateNavigationBarItems()
 		}
 	}
 
