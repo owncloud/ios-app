@@ -51,6 +51,8 @@ class MoreViewTests: XCTestCase {
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("ownCloud Manual.pdf-actions")).perform(grey_tap())
 
 			//Asserts
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("more-view-header"))
+				.assert(grey_descendant(grey_text("ownCloud Manual.pdf"))).assert(grey_sufficientlyVisible())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("com.owncloud.action.openin")).assert(grey_sufficientlyVisible())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("com.owncloud.action.move")).assert(grey_sufficientlyVisible())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("com.owncloud.action.rename")).assert(grey_sufficientlyVisible())
@@ -81,6 +83,8 @@ class MoreViewTests: XCTestCase {
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("Documents-actions")).perform(grey_tap())
 
 			//Asserts
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("more-view-header"))
+				.assert(grey_descendant(grey_text("Documents"))).assert(grey_sufficientlyVisible())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("com.owncloud.action.openin")).assert(grey_notVisible())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("com.owncloud.action.move")).assert(grey_sufficientlyVisible())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("com.owncloud.action.rename")).assert(grey_sufficientlyVisible())

@@ -66,7 +66,7 @@ class FileListTests: XCTestCase {
 			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
 			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			UtilsTests.showFileList(bookmark: bookmark)
-			
+
 			//Asserts
 			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).assert(grey_sufficientlyVisible())
 
