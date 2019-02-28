@@ -49,6 +49,8 @@
 		_fileManager = [NSFileManager new];
 	}
 
+	[OCHTTPPipelineManager setupPersistentPipelines]; // Set up HTTP pipelines
+
 	[self addObserver:self forKeyPath:@"domain" options:0 context:(__bridge void *)self];
 
 	return self;
@@ -197,7 +199,7 @@
 	}
 	NSURL *placeholderURL = [NSFileProviderManager placeholderURLForURL:url];
 
-	[[NSFileManager defaultManager] createDirectoryAtURL:url.URLByDeletingLastPathComponent withIntermediateDirectories:YES attributes:nil error:NULL];
+	[[NSFileManager defaultManager] createDirectoryAtURL:url.URLByDeletingLastPathComponent withIntermediateDirectories:YES attributes:@{ NSFileProtectionKey : NSFileProtectionCompleteUntilFirstUserAuthentication } error:NULL];
 
 	if (![NSFileProviderManager writePlaceholderAtURL:placeholderURL withMetadata:fileProviderItem error:&error]) {
 		completionHandler(error);
@@ -937,12 +939,14 @@
 			if (self.bookmark != nil)
 			{
 				OCSyncExec(waitForCore, {
-					_core = [[OCCoreManager sharedCoreManager] requestCoreForBookmark:self.bookmark completionHandler:^(OCCore *core, NSError *error) {
+					[[OCCoreManager sharedCoreManager] requestCoreForBookmark:self.bookmark setup:^(OCCore *core, NSError *error) {
+						self->_core = core;
+						core.delegate = self;
+					} completionHandler:^(OCCore *core, NSError *error) {
+						self->_core = core;
 						OCSyncExecDone(waitForCore);
 					}];
 				});
-
-				_core.delegate = self;
 			}
 		}
 

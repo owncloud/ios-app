@@ -47,8 +47,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		AppLockManager.shared.showLockscreenIfNeeded()
 
+		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
+
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
+		// Set up background refresh
 		application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum + 10)
 
 		// Display Extensions
@@ -74,8 +77,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+		Log.debug("AppDelegate: performFetchWithCompletionHandler")
+
 		OnMainThread(after: 2.0) {
-			completionHandler(.newData)
+			completionHandler(.noData)
 		}
 	}
 
