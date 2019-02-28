@@ -95,7 +95,11 @@
 "Not now" = "Not now";
 "Upload file" = "Upload file";
 "Upload files" = "Upload files";
-
+"Ignore" = "Ignore";
+"Authorization failed" = "Authorization failed";
+"The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+"No matches" = "No matches";
+"There is no results for this search" = "There is no results for this search";
 "Status" = "Status";
 
 /* Server List*/

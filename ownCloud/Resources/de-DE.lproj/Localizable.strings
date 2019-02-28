@@ -95,7 +95,11 @@
 "Not now" = "Nicht jetzt";
 "Upload file" = "Datei hochladen";
 "Upload files" = "Dateien hochladen";
-
+"Ignore" = "Ignorieren";
+"Authorization failed" = "Anmeldung fehlgeschlagen";
+"The server declined access with the credentials stored for this connection." = "Der Server verweigerte den Zugriff mit den für diese Verbindung gespeicherten Anmeldeinformationen.";
+"No matches" = "Keine Treffer";
+"There is no results for this search" = "Es gibt keine Ergebnisse für diese Suche";
 "Status" = "Status";
 
 /* Server List*/
