@@ -45,7 +45,7 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
 			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark)
+			UtilsTests.showFileList(bookmark: bookmark)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -55,7 +55,8 @@ class CreateFolderTests: XCTestCase {
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
-			dismissFileList()
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
+			
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
@@ -73,7 +74,7 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
 			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark)
+			UtilsTests.showFileList(bookmark: bookmark)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -99,8 +100,7 @@ class CreateFolderTests: XCTestCase {
 			GREYAssertTrue(isFolderCreated, reason: "Failed to create the folder")
 
 			//Reset status
-			dismissFileList()
-
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
@@ -118,7 +118,7 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
 			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark)
+			UtilsTests.showFileList(bookmark: bookmark)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -136,7 +136,7 @@ class CreateFolderTests: XCTestCase {
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
-			dismissFileList()
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
@@ -154,7 +154,7 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
 			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark)
+			UtilsTests.showFileList(bookmark: bookmark)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -172,7 +172,7 @@ class CreateFolderTests: XCTestCase {
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
-			dismissFileList()
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
@@ -190,7 +190,7 @@ class CreateFolderTests: XCTestCase {
 			//Mocks
 			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
 			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark)
+			UtilsTests.showFileList(bookmark: bookmark)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -210,7 +210,7 @@ class CreateFolderTests: XCTestCase {
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_text("OK".localized)).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
-			dismissFileList()
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
@@ -234,7 +234,7 @@ class CreateFolderTests: XCTestCase {
 			let issue: OCIssue = OCIssue(forMultipleChoicesWithLocalizedTitle: errorTitle, localizedDescription: errorMessage, choices: [OCIssueChoice(type: .cancel, identifier: nil, label: "Cancel".localized, userInfo: nil, handler: nil)]) { (issue, decission) in
 			}
 
-			self.showFileList(bookmark: bookmark, issue: issue)
+			UtilsTests.showFileList(bookmark: bookmark, issue: issue)
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
@@ -248,32 +248,9 @@ class CreateFolderTests: XCTestCase {
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
-			dismissFileList()
-
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
-		}
-	}
-
-	func showFileList(bookmark: OCBookmark, issue: OCIssue? = nil) {
-		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
-
-			let query = MockOCQuery(path: "/")
-			let core = MockOCCore(query: query, bookmark: bookmark, issue: issue)
-
-			let rootViewController: MockClientRootViewController = MockClientRootViewController(core: core, query: query, bookmark: bookmark)
-
-			appDelegate.serverListTableViewController?.navigationController?.navigationBar.prefersLargeTitles = false
-			appDelegate.serverListTableViewController?.navigationController?.navigationItem.largeTitleDisplayMode = .never
-			appDelegate.serverListTableViewController?.navigationController?.pushViewController(viewController: rootViewController, animated: true, completion: {
-				appDelegate.serverListTableViewController?.navigationController?.setNavigationBarHidden(true, animated: false)
-			})
-		}
-	}
-
-	func dismissFileList() {
-		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
-			appDelegate.serverListTableViewController?.navigationController?.popViewController(animated: false)
 		}
 	}
 }

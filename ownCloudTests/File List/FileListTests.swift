@@ -43,14 +43,13 @@ class FileListTests: XCTestCase {
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 			//Mocks
 			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
-			self.showFileList(bookmark: bookmark)
+			UtilsTests.showFileList(bookmark: bookmark)
 
 			//Asserts
 			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).assert(grey_sufficientlyVisible())
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
-
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
@@ -66,7 +65,7 @@ class FileListTests: XCTestCase {
 			//Mocks
 			OCMockSwizzlingFileList.mockOCoreForBookmark(mockBookmark: bookmark)
 			OCMockSwizzlingFileList.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
-			self.showFileList(bookmark: bookmark)
+			UtilsTests.showFileList(bookmark: bookmark)
 			
 			//Asserts
 			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).assert(grey_sufficientlyVisible())
@@ -90,18 +89,6 @@ class FileListTests: XCTestCase {
 			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
-		}
-	}
-
-	func showFileList(bookmark: OCBookmark) {
-		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
-			let clientRootViewController = ClientRootViewController(bookmark: bookmark)
-
-			appDelegate.serverListTableViewController?.navigationController?.navigationBar.prefersLargeTitles = false
-			appDelegate.serverListTableViewController?.navigationController?.navigationItem.largeTitleDisplayMode = .never
-			appDelegate.serverListTableViewController?.navigationController?.pushViewController(viewController: clientRootViewController, animated: true, completion: {
-				appDelegate.serverListTableViewController?.navigationController?.setNavigationBarHidden(true, animated: false)
-			})
 		}
 	}
 }
