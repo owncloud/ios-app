@@ -44,6 +44,7 @@ class GalleryHostViewController: UIPageViewController {
 
 		super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
 		query.addObserver(self, forKeyPath: hasChangesAvailableKeyPath, options: [.initial, .new], context: nil)
+		Theme.shared.register(client: self)
 	}
 
 	required init?(coder: NSCoder) {
@@ -52,6 +53,7 @@ class GalleryHostViewController: UIPageViewController {
 
 	deinit {
 		query.removeObserver(self, forKeyPath: hasChangesAvailableKeyPath)
+		Theme.shared.unregister(client: self)
 	}
 
 	// MARK: - ViewController lifecycle
@@ -213,5 +215,11 @@ extension GalleryHostViewController: UIPageViewControllerDelegate {
 		if let viewControllerToTransition = pendingViewControllers[0] as? DisplayViewController {
 			self.viewControllerToTansition = viewControllerToTransition
 		}
+	}
+}
+
+extension GalleryHostViewController: Themeable {
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.view.backgroundColor = collection.tableBackgroundColor
 	}
 }
