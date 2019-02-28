@@ -47,7 +47,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 	}
 
 	var albums = [PhotoAlbum]()
-	var fetchAlbumQueue = DispatchQueue(label: "com.owncloud.photoalbum.queue")
+	var fetchAlbumQueue = DispatchQueue(label: "com.owncloud.photoalbum.queue", qos: DispatchQoS.userInitiated)
 
 	var selectionCallback :PhotosSelectedCallback?
 
@@ -159,8 +159,6 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 		// Fetch user albums / collections
 		fetchCollections(.album)
-
-		self.tableView.reloadData()
 	}
 
 	fileprivate func getThumbnailImage(from asset:PHAsset, completion:@escaping (_ image:UIImage?) -> Void) {
