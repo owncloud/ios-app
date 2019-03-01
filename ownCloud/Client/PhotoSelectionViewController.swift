@@ -89,9 +89,11 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
 
 		// Setup the toolbar with Upload button
+		let selectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
+		let deselectAllButtonItem = UIBarButtonItem(title: "Deselect All".localized, style: .done, target: self, action: #selector(deselectAllItems))
 		let uploadButtonItem = UIBarButtonItem(title: "Upload".localized, style: .done, target: self, action: #selector(upload))
 		let flexibleSpaceButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-		self.toolbarItems = [flexibleSpaceButtonItem, uploadButtonItem, flexibleSpaceButtonItem]
+		self.toolbarItems = [selectAllButtonItem, flexibleSpaceButtonItem, uploadButtonItem, flexibleSpaceButtonItem, deselectAllButtonItem]
 
 		// Setup duration formatter
 		durationFormatter.unitsStyle = .positional
@@ -159,6 +161,20 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 				}
 			}
 		}
+	}
+
+	@objc func selectAllItems() {
+		(0..<self.collectionView.numberOfItems(inSection: 0)).map { (item) -> IndexPath in
+			return IndexPath(item: item, section: 0)
+			}.forEach { (indexPath) in
+				self.collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
+		}
+	}
+
+	@objc func deselectAllItems() {
+		self.collectionView.indexPathsForSelectedItems?.forEach({ (indexPath) in
+			collectionView.deselectItem(at: indexPath, animated: true)
+		})
 	}
 
 	// MARK: - UICollectionViewDelegate
