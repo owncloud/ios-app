@@ -19,10 +19,16 @@
 import UIKit
 import ownCloudSDK
 
-class ClientRootViewController: UITabBarController {
-	var bookmark : OCBookmark
+class ClientRootViewController: UITabBarController, UINavigationControllerDelegate {
+
+	// MARK: - Constants
+	let folderButtonsSize: CGSize = CGSize(width: 25.0, height: 25.0)
+
+	// MARK: - Instance variables.
+	let bookmark : OCBookmark
 	weak var core : OCCore?
 	var filesNavigationController : ThemeNavigationController?
+	let emptyViewController = UIViewController()
 	var activityNavigationController : ThemeNavigationController?
 	var activityViewController : ClientActivityViewController?
 	var progressBar : CollapsibleProgressBar?
@@ -76,7 +82,10 @@ class ClientRootViewController: UITabBarController {
 		openProgress.localizedDescription = "Connecting…".localized
 		progressSummarizer?.startTracking(progress: openProgress)
 
-		core = OCCoreManager.shared.requestCore(for: bookmark, completionHandler: { (core, error) in
+		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
+			self.core = core
+			core?.delegate = self
+		}, completionHandler: { (core, error) in
 			if error == nil {
 				self.coreReady()
 			}
@@ -94,7 +103,6 @@ class ClientRootViewController: UITabBarController {
 
 			self.progressSummarizer?.stopTracking(progress: openProgress)
 		})
-		core?.delegate = self
 	}
 
 	func updateConnectionStatusSummary() {
@@ -144,15 +152,23 @@ class ClientRootViewController: UITabBarController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		self.view.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+		self.navigationController?.setNavigationBarHidden(true, animated: true)
+
+		self.tabBar.isTranslucent = false
+
 		filesNavigationController = ThemeNavigationController()
+		filesNavigationController?.delegate = self
 		filesNavigationController?.navigationBar.isTranslucent = false
 		filesNavigationController?.tabBarItem.title = "Browse".localized
-		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: CGSize(width: 25, height: 25))
+		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: folderButtonsSize)
+
+		Theme.shared.add(tvgResourceFor: "status-flash")
 
 		activityViewController = ClientActivityViewController()
 		activityNavigationController = ThemeNavigationController(rootViewController: activityViewController!)
-		activityNavigationController?.tabBarItem.title = "Activity".localized
-		activityNavigationController?.tabBarItem.image = Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25))
+		activityNavigationController?.tabBarItem.title = "Status".localized
+		activityNavigationController?.tabBarItem.image = Theme.shared.image(for: "status-flash", size: CGSize(width: 25, height: 25))
 
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false
@@ -184,29 +200,24 @@ class ClientRootViewController: UITabBarController {
 		}
 	}
 
-	func logoutBarButtonItem() -> UIBarButtonItem {
-		let barButton = UIBarButtonItem(title: "Disconnect".localized, style: .plain, target: self, action: #selector(logout(_:)))
-		barButton.accessibilityIdentifier = "disconnect-button"
-		return barButton
-	}
-
-	@objc func logout(_: Any) {
-		self.closeClient()
-	}
-
 	func closeClient(completion: (() -> Void)? = nil) {
-		self.presentingViewController?.dismiss(animated: true, completion: completion)
+		self.navigationController?.setNavigationBarHidden(false, animated: false)
+		self.navigationController?.popViewController(animated: true)
 	}
 
 	func coreReady() {
 		OnMainThread {
 			let queryViewController = ClientQueryViewController(core: self.core!, query: OCQuery(forPath: "/"))
-
-			queryViewController.navigationItem.leftBarButtonItem = self.logoutBarButtonItem()
-
-			self.filesNavigationController?.pushViewController(queryViewController, animated: false)
-
+			// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
+			self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
 			self.activityViewController?.core = self.core!
+		}
+	}
+
+	func navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) {
+		// if the emptyViewController will show, because the push button in ClientQueryViewController was triggered, push immediately to the ServerListTableViewController, because emptyViewController is only a helper for showing the "Back" button in ClientQueryViewController
+		if willShow.isEqual(emptyViewController) {
+			self.closeClient()
 		}
 	}
 }

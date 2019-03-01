@@ -322,13 +322,7 @@ class ClientItemCell: ThemeTableViewCell {
 	override func setEditing(_ editing: Bool, animated: Bool) {
 		super.setEditing(editing, animated: animated)
 
-		if editing {
-			setMoreButton(hidden: true, animated: animated)
-		} else {
-			if let item = self.item {
-				setMoreButton(hidden: false, animated: animated)
-			}
-		}
+		setMoreButton(hidden: editing, animated: animated)
 	}
 
 	// MARK: - Actions

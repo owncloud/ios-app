@@ -29,8 +29,11 @@ class CreateFolderTests: XCTestCase {
 	public typealias OCMRequestCoreForBookmarkCompletionHandler = @convention(block)
 		(_ core: OCCore, _ error: NSError?) -> Void
 
+	public typealias OCMRequestCoreForBookmarkSetupHandler = @convention(block)
+		(_ core: OCCore, _ error: NSError?) -> Void
+
 	public typealias OCMRequestCoreForBookmark = @convention(block)
-		(_ bookmark: OCBookmark, _ completionHandler: OCMRequestCoreForBookmarkCompletionHandler) -> OCCore
+		(_ bookmark: OCBookmark, _ setup: OCMRequestCoreForBookmarkSetupHandler, _ completionHandler: OCMRequestCoreForBookmarkCompletionHandler) -> Void
 
 	public typealias OCMRequestChangeSetWithFlags = @convention(block)
 		(_ flags: OCQueryChangeSetRequestFlag, _ completionHandler: OCQueryChangeSetRequestCompletionHandler) -> Void
@@ -262,23 +265,26 @@ class CreateFolderTests: XCTestCase {
 
 			let rootViewController: MockClientRootViewController = MockClientRootViewController(core: core, query: query, bookmark: bookmark)
 
-			//let clientQueryViewController = ClientQueryViewController(core: core, query: query)
-			appDelegate.serverListTableViewController?.present(rootViewController, animated: true, completion: nil)
+			appDelegate.serverListTableViewController?.navigationController?.navigationBar.prefersLargeTitles = false
+			appDelegate.serverListTableViewController?.navigationController?.navigationItem.largeTitleDisplayMode = .never
+			appDelegate.serverListTableViewController?.navigationController?.pushViewController(viewController: rootViewController, animated: true, completion: {
+				appDelegate.serverListTableViewController?.navigationController?.setNavigationBarHidden(true, animated: false)
+			})
 		}
 	}
 
 	func dismissFileList() {
 		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
-			appDelegate.serverListTableViewController?.dismiss(animated: true, completion: nil)
+			appDelegate.serverListTableViewController?.navigationController?.popViewController(animated: false)
 		}
 	}
 
 	// MARK: - Mocks
 	func mockOCoreForBookmark(mockBookmark: OCBookmark) {
-		let completionHandlerBlock : OCMRequestCoreForBookmark = { (bookmark, mockedBlock) in
+		let completionHandlerBlock : OCMRequestCoreForBookmark = { (bookmark, setupHandler, mockedBlock) in
 			let core = OCCore(bookmark: mockBookmark)
+			setupHandler(core, nil)
 			mockedBlock(core, nil)
-			return core
 		}
 
 		OCMockManager.shared.addMocking(blocks: [OCMockLocation.ocCoreManagerRequestCoreForBookmark: completionHandlerBlock])

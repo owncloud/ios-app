@@ -291,7 +291,7 @@ class BookmarkViewController: StaticTableViewController {
 				// Probe URL
 				bookmark?.url = serverURL
 
-				if let connection = OCConnection(bookmark: bookmark, persistentStoreBaseURL: nil) {
+				if let connection = OCConnection(bookmark: bookmark) {
 					hud?.present(on: self, label: "Contacting server…".localized)
 
 					let previousCertificate = bookmark?.certificate
@@ -353,7 +353,7 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	func handleContinueAuthentication(hud: ProgressHUDViewController?, hudCompletion: @escaping (((() -> Void)?) -> Void)) {
-		if let connection = OCConnection(bookmark: bookmark, persistentStoreBaseURL: nil) {
+		if let connection = OCConnection(bookmark: bookmark) {
 			var options : [OCAuthenticationMethodKey : Any] = [:]
 
 			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {

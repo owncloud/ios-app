@@ -67,6 +67,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		OCItem.registerIcons()
 
+		self.navigationController?.navigationBar.prefersLargeTitles = true
+		self.navigationController?.navigationBar.isTranslucent = false
+		self.navigationController?.toolbar.isTranslucent = false
 		self.tableView.register(ServerListBookmarkCell.self, forCellReuseIdentifier: "bookmark-cell")
 		self.tableView.rowHeight = UITableView.automaticDimension
 		self.tableView.estimatedRowHeight = 80
@@ -88,6 +91,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		super.viewWillAppear(animated)
 
 		self.navigationController?.setToolbarHidden(false, animated: animated)
+		self.navigationController?.navigationBar.prefersLargeTitles = true
 
 		Theme.shared.register(client: self)
 
@@ -177,6 +181,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				constraint.priority = UILayoutPriority(rawValue: 900)
 				constraint.isActive = true
 
+				self.tableView.tableHeaderView = nil
+				self.navigationController?.navigationBar.shadowImage = nil
+
 				welcomeAddServerButton.setTitle("Add account".localized, for: .normal)
 				welcomeTitleLabel.text = "Welcome".localized
 				let welcomeMessage = "Thanks for choosing %@! \n Start by adding your account.".localized
@@ -202,6 +209,29 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			if self.navigationItem.leftBarButtonItem == nil {
 				self.navigationItem.leftBarButtonItem = self.editButtonItem
 			}
+
+			// Add Header View
+			self.tableView.tableHeaderView = ServerListTableHeaderView(frame: CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: 50.0))
+			self.navigationController?.navigationBar.shadowImage = UIImage()
+			self.tableView.tableHeaderView?.applyThemeCollection(Theme.shared.activeCollection)
+
+			// UITableView background view is nil for default. Set a UIView with clear color to can insert a subview above
+			let backgroundView = UIView.init(frame: self.tableView.frame)
+			backgroundView.backgroundColor = UIColor.clear
+			self.tableView.backgroundView = backgroundView
+
+			// This view is needed to stop flickering when scrolling (white line between UINavigationBar and UITableView header
+			let coloredView = ThemeableColoredView.init(frame: CGRect(x: 0, y: -self.view.frame.size.height, width: self.view.frame.size.width, height: self.view.frame.size.height + 1))
+			coloredView.translatesAutoresizingMaskIntoConstraints = false
+
+			self.tableView.insertSubview(coloredView, aboveSubview: self.tableView.backgroundView!)
+
+			NSLayoutConstraint.activate([
+				coloredView.topAnchor.constraint(equalTo: self.tableView.topAnchor, constant: -self.view.frame.size.height),
+				coloredView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
+				coloredView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
+				coloredView.heightAnchor.constraint(equalToConstant: self.view.frame.size.height + 1)
+			])
 		}
 	}
 
@@ -272,7 +302,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			} else {
 				let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 
-				self.present(clientRootViewController, animated: true, completion: nil)
+				self.navigationController?.navigationBar.prefersLargeTitles = false
+				self.navigationController?.navigationItem.largeTitleDisplayMode = .never
+				self.navigationController?.pushViewController(viewController: clientRootViewController, animated: true, completion: {
+                    self.navigationController?.setNavigationBarHidden(true, animated: false)
+                })
 			}
 		}
 	}
