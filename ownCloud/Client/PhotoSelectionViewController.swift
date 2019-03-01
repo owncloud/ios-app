@@ -191,11 +191,12 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 		// Add a badge to the cell if the PHAsset represents a Live Photo.
 		if asset.mediaSubtypes.contains(.photoLive) {
-			cell.livePhotoBadgeImage = PHLivePhotoView.livePhotoBadgeImage(options: .overContent)
+			cell.mediaBadgeImage = PHLivePhotoView.livePhotoBadgeImage(options: .overContent)
 		}
 
 		if asset.mediaType == .video {
 			cell.videoDurationLabel.text = durationFormatter.string(from: asset.duration)
+			cell.mediaBadgeImage = UIImage(named: "camera-badge")?.withRenderingMode(.alwaysTemplate).tinted(with: UIColor.white)
 		}
 
 		// Request an image for the asset from the PHCachingImageManager.

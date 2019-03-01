@@ -12,14 +12,13 @@ class PhotoSelectionViewCell: UICollectionViewCell {
 
 	static let identifier = "PhotoSelectionViewCell"
 
-	fileprivate let badgeSizeMultiplier: CGFloat = 0.25
-	fileprivate let checkmarkMargin: CGFloat = 2.0
+	fileprivate let badgeMargin: CGFloat = 2.0
 
 	var imageView = UIImageView()
-	var livePhotoBadgeImageView = UIImageView()
+	var mediaTypeBadgeImageView = UIImageView()
 	var checkmarkBadgeImageView = UIImageView()
 	var videoDurationLabel = UILabel()
-
+	
 	var assetIdentifier: String!
 
 	var thumbnailImage: UIImage! {
@@ -28,9 +27,9 @@ class PhotoSelectionViewCell: UICollectionViewCell {
 		}
 	}
 
-	var livePhotoBadgeImage: UIImage! {
+	var mediaBadgeImage: UIImage! {
 		didSet {
-			livePhotoBadgeImageView.image = livePhotoBadgeImage
+			mediaTypeBadgeImageView.image = mediaBadgeImage
 		}
 	}
 
@@ -43,7 +42,7 @@ class PhotoSelectionViewCell: UICollectionViewCell {
 	override func prepareForReuse() {
 		super.prepareForReuse()
 		imageView.image = nil
-		livePhotoBadgeImageView.image = nil
+		mediaTypeBadgeImageView.image = nil
 		videoDurationLabel.text = nil
 	}
 
@@ -68,13 +67,11 @@ class PhotoSelectionViewCell: UICollectionViewCell {
 		imageView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
 		imageView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
 
-		livePhotoBadgeImageView.translatesAutoresizingMaskIntoConstraints = false
-		self.imageView.addSubview(livePhotoBadgeImageView)
+		mediaTypeBadgeImageView.translatesAutoresizingMaskIntoConstraints = false
+		self.imageView.addSubview(mediaTypeBadgeImageView)
 
-		livePhotoBadgeImageView.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor).isActive = true
-		livePhotoBadgeImageView.topAnchor.constraint(equalTo: self.imageView.topAnchor).isActive = true
-		livePhotoBadgeImageView.widthAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: badgeSizeMultiplier).isActive = true
-		livePhotoBadgeImageView.heightAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: badgeSizeMultiplier).isActive = true
+		mediaTypeBadgeImageView.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor, constant: badgeMargin).isActive = true
+		mediaTypeBadgeImageView.topAnchor.constraint(equalTo: self.imageView.topAnchor, constant: badgeMargin).isActive = true
 
 		videoDurationLabel.translatesAutoresizingMaskIntoConstraints = false
 		videoDurationLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize, weight: UIFont.Weight.light)
@@ -90,8 +87,8 @@ class PhotoSelectionViewCell: UICollectionViewCell {
 		checkmarkBadgeImageView.translatesAutoresizingMaskIntoConstraints = false
 		imageView.addSubview(checkmarkBadgeImageView)
 
-		checkmarkBadgeImageView.rightAnchor.constraint(equalTo: self.imageView.rightAnchor, constant: -checkmarkMargin).isActive = true
-		checkmarkBadgeImageView.bottomAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: -checkmarkMargin).isActive = true
+		checkmarkBadgeImageView.rightAnchor.constraint(equalTo: self.imageView.rightAnchor, constant: -badgeMargin).isActive = true
+		checkmarkBadgeImageView.bottomAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: -badgeMargin).isActive = true
 
 	}
 
