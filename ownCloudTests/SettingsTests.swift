@@ -32,6 +32,9 @@ class SettingsTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
 	}
 
+	/*
+	* PASSED if: All UI components in Logging view are displayed and correctly visible when option is enabled.
+	*/
 	func testCheckLoggingInterfaceLoggingEnabled () {
 
 		//Actions
@@ -68,6 +71,9 @@ class SettingsTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
 	}
 
+	/*
+	* PASSED if: All UI components in Logging view are not displayed when option is disabled.
+	*/
 	func testCheckLoggingInterfaceLoggingDisabled () {
 
 		//Actions
@@ -96,7 +102,7 @@ class SettingsTests: XCTestCase {
 	}
 
 	/*
-	* PASSED if: Info is selected as Logging Level
+	* PASSED if: "Info" is selected as Logging Level
 	*/
 	func testCheckChangeLoggingLevel () {
 
@@ -106,9 +112,44 @@ class SettingsTests: XCTestCase {
 
 		//Assert
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("enable-logging")).assert(grey_switchWithOnState(true))
-
 		EarlGrey.select(elementWithMatcher: grey_text("Settings".localized)).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_text("Info".localized)).assert(grey_sufficientlyVisible())
+
+		//Reset status
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
+	}
+
+	/*
+	* PASSED if: All themes available are displayed
+	*/
+	func testCheckThemesAvailable () {
+
+		//Actions
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("theme")).perform(grey_tap())
+
+		//Assert
+
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud Dark".localized)).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud Light".localized)).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud Classic".localized)).assert(grey_sufficientlyVisible())
+
+		//Reset status
+		EarlGrey.select(elementWithMatcher: grey_text("Settings".localized)).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
+	}
+
+	/*
+	* PASSED if: Theme changed to Classic is correct
+	*/
+	func testCheckChangeTheme () {
+
+		//Actions
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("theme")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud Classic".localized)).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text("Settings".localized)).perform(grey_tap())
+
+		//Assert
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud Classic".localized)).assert(grey_sufficientlyVisible())
 
 		//Reset status
 		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
