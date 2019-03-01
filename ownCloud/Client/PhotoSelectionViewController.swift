@@ -21,9 +21,11 @@ typealias PhotosSelectedCallback = ([PHAsset]) -> Void
 
 class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
-	fileprivate let thumbnailSizeMultiplier: CGFloat = 0.2
-	fileprivate let verticalInset: CGFloat = 8.0
-	fileprivate let horizontalInset: CGFloat = 4.0
+	fileprivate let thumbnailSizeMultiplier: CGFloat = 0.205
+	fileprivate let verticalInset: CGFloat = 1.0
+	fileprivate let horizontalInset: CGFloat = 1.0
+	fileprivate let itemSpacing: CGFloat = 1.0
+	fileprivate let thumbnailMaxWidth: CGFloat = 120.0
 	
 	var fetchResult: PHFetchResult<PHAsset>!
 	var assetCollection: PHAssetCollection?
@@ -41,6 +43,8 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 	init() {
 		layout.scrollDirection = .vertical
 		layout.sectionInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
+		layout.minimumLineSpacing = itemSpacing
+		layout.minimumInteritemSpacing = itemSpacing
 		super.init(collectionViewLayout: layout)
 	}
 
@@ -61,7 +65,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		// Register collection view cell class
 		self.collectionView!.register(PhotoSelectionViewCell.self,
 									  forCellWithReuseIdentifier: PhotoSelectionViewCell.identifier)
-		thumbnailWidth = floor(self.view.bounds.size.width * thumbnailSizeMultiplier)
+		thumbnailWidth = min(floor(self.view.bounds.size.width * thumbnailSizeMultiplier), thumbnailMaxWidth)
 		layout.itemSize = CGSize(width: thumbnailWidth, height: thumbnailWidth)
 
 		resetCachedAssets()
@@ -88,7 +92,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
 
-		// Setup the toolbar with Upload button
+		// Setup the toolbar buttons
 		let selectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
 		let deselectAllButtonItem = UIBarButtonItem(title: "Deselect All".localized, style: .done, target: self, action: #selector(deselectAllItems))
 		let uploadButtonItem = UIBarButtonItem(title: "Upload".localized, style: .done, target: self, action: #selector(upload))
