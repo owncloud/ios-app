@@ -46,7 +46,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 	var progressSummarizer : ProgressSummarizer?
-	var refreshController: UIRefreshControl?
+	var queryRefreshControl: UIRefreshControl?
 
 	let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 
@@ -104,8 +104,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			UIImpactFeedbackGenerator().impactOccurred()
 			core?.reload(query)
 		} else {
-			if self.refreshController?.isRefreshing == true {
-				self.refreshController?.endRefreshing()
+			if self.queryRefreshControl?.isRefreshing == true {
+				self.queryRefreshControl?.endRefreshing()
 			}
 		}
 	}
@@ -149,9 +149,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		tableView.tableHeaderView = sortBar
 
-		refreshController = UIRefreshControl()
-		refreshController?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
-		self.tableView.insertSubview(refreshController!, at: 0)
+		queryRefreshControl = UIRefreshControl()
+		queryRefreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
+		self.tableView.insertSubview(queryRefreshControl!, at: 0)
 		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
 
 		Theme.shared.register(client: self, applyImmediately: true)
@@ -231,9 +231,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 		switch query.state {
 			case .idle:
-				DispatchQueue.main.async {
-					if !self.refreshController!.isRefreshing {
-						self.refreshController?.beginRefreshing()
+				OnMainThread {
+					if !self.queryRefreshControl!.isRefreshing {
+						self.queryRefreshControl?.beginRefreshing()
 					}
 				}
 
@@ -756,8 +756,8 @@ extension ClientQueryViewController : OCQueryDelegate {
 
 				switch query.state {
 				case .idle, .targetRemoved, .contentsFromCache, .stopped:
-					if self.refreshController!.isRefreshing {
-						self.refreshController?.endRefreshing()
+					if self.queryRefreshControl!.isRefreshing {
+						self.queryRefreshControl?.endRefreshing()
 					}
 				default: break
 				}
