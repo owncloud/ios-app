@@ -33,6 +33,21 @@ class SettingsTests: XCTestCase {
 	}
 
 	/*
+	* PASSED if: "More" options "are displayed
+	*/
+	func testCheckMoreItems () {
+
+		//Assert
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("help")).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("send-feedback")).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("recommend-friend")).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("privacy-policy")).assert(grey_sufficientlyVisible())
+
+		//Reset status
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
+	}
+
+	/*
 	* PASSED if: All UI components in Logging view are displayed and correctly visible when option is enabled.
 	*/
 	func testCheckLoggingInterfaceLoggingEnabled () {
