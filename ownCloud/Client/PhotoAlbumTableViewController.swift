@@ -48,6 +48,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 	var albums = [PhotoAlbum]()
 	var fetchAlbumQueue = DispatchQueue(label: "com.owncloud.photoalbum.queue", qos: DispatchQoS.userInitiated)
+	var fetchAlbumThumbnailsQueue = DispatchQueue(label: "com.owncloud.photoalbum.queue", qos: DispatchQoS.background)
 
 	var selectionCallback :PhotosSelectedCallback?
 
@@ -111,31 +112,17 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 	// MARK: - Asset collections fetching
 
-	fileprivate func addAlbum(from collection:PHAssetCollection) {
-		fetchAlbumQueue.async {
-
-			func addRow(_ album:PhotoAlbum) {
-				OnMainThread {
-					let indexPath = IndexPath(row: self.albums.count, section: 0)
-					self.albums.append(album)
-					self.tableView.insertRows(at: [indexPath], with: .automatic)
-				}
-			}
-
-			let count = collection.assetCount
-			if count > 0 {
-				let album = PhotoAlbum()
-				album.collection = collection
-				album.name = collection.localizedTitle
-				album.count = count
-
-				if let asset = collection.fetchThumbnailAsset() {
+	fileprivate func updateAlbumThumbnails() {
+		fetchAlbumThumbnailsQueue.async {
+			for row in 0..<self.albums.count {
+				let album = self.albums[row]
+				if let asset = album.collection?.fetchThumbnailAsset() {
 					self.getThumbnailImage(from: asset, completion: { (image) in
 						album.thumbnail = image
-						addRow(album)
+						OnMainThread {
+							self.tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+						}
 					})
-				} else {
-					addRow(album)
 				}
 			}
 		}
@@ -147,16 +134,32 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 		func fetchCollections(_ type:PHAssetCollectionType) {
 			let collections = PHAssetCollection.fetchAssetCollections(with: type, subtype: .albumRegular, options: nil)
-			collections.enumerateObjects { (assetCollection, _, _) in
-				self.addAlbum(from: assetCollection)
+			collections.enumerateObjects { (collection, _, _) in
+				//self.addAlbum(from: assetCollection)
+				let count = collection.assetCount
+				if count > 0 {
+					let album = PhotoAlbum()
+					album.collection = collection
+					album.name = collection.localizedTitle
+					album.count = count
+					self.albums.append(album)
+				}
 			}
 		}
 
-		// Fetch smart albums
-		fetchCollections(.smartAlbum)
+		fetchAlbumQueue.async {
+			// Fetch smart albums
+			fetchCollections(.smartAlbum)
 
-		// Fetch user albums / collections
-		fetchCollections(.album)
+			// Fetch user albums / collections
+			fetchCollections(.album)
+
+			OnMainThread {
+				self.tableView.reloadData()
+			}
+
+			self.updateAlbumThumbnails()
+		}
 	}
 
 	fileprivate func getThumbnailImage(from asset:PHAsset, completion:@escaping (_ image:UIImage?) -> Void) {
