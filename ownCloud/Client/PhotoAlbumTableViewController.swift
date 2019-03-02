@@ -51,8 +51,6 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 	var selectionCallback :PhotosSelectedCallback?
 
-	fileprivate let thumbnailHeight = (PhotoAlbumTableViewCell.cellHeight * 0.9).rounded(.towardZero)
-
 	// MARK: - UIViewController lifecycle
 
 	override func viewDidLoad() {
@@ -95,9 +93,9 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: PhotoAlbumTableViewCell.identifier, for: indexPath) as? PhotoAlbumTableViewCell
 		let album = albums[indexPath.row]
-		cell?.textLabel?.text = album.name
-		cell?.detailTextLabel?.text = album.countString
-		cell?.imageView?.image = album.thumbnail
+		cell?.titleLabel.text = album.name
+		cell?.countLabel.text = album.countString
+		cell?.thumbnailImageView.image = album.thumbnail
 
 		return cell!
 	}
@@ -178,6 +176,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 		// Consider retina scale factor, since target size has to be provided in pixels
 		let scale = UIScreen.main.scale
+		let thumbnailHeight = PhotoAlbumTableViewCell.thumbnailHeight
 		let thumbnailSize = CGSize(width: thumbnailHeight * scale, height: thumbnailHeight * scale)
 		imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: options) { (image, _) in
 			completion(image)

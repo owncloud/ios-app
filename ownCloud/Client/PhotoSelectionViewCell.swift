@@ -12,7 +12,7 @@ class PhotoSelectionViewCell: UICollectionViewCell {
 
 	static let identifier = "PhotoSelectionViewCell"
 
-	fileprivate let badgeMargin: CGFloat = 2.0
+	fileprivate let badgeMargin: CGFloat = 4.0
 
 	var imageView = UIImageView()
 	var mediaTypeBadgeImageView = UIImageView()
@@ -78,7 +78,7 @@ class PhotoSelectionViewCell: UICollectionViewCell {
 		videoDurationLabel.textColor = UIColor.white
 		self.imageView.addSubview(videoDurationLabel)
 
-		videoDurationLabel.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor).isActive = true
+		videoDurationLabel.leadingAnchor.constraint(equalTo: self.imageView.leadingAnchor, constant: badgeMargin).isActive = true
 		videoDurationLabel.bottomAnchor.constraint(equalTo: self.imageView.bottomAnchor).isActive = true
 
 		let checkmarkImage =  UIImage(named: "check-mark")
