@@ -11,6 +11,7 @@ import Photos
 
 extension PHAssetCollection {
 	var assetCount: Int {
+		// Some collections can't return the estimated count, therefore we have to fetch the actual assets to get the count
 		if self.estimatedAssetCount != NSNotFound {
 			return self.estimatedAssetCount
 		} else {
@@ -21,6 +22,7 @@ extension PHAssetCollection {
 	}
 
 	func fetchThumbnailAsset() -> PHAsset? {
+		// Fetch only one / most recent asset which shall represent the collection as a thumbnail
 		let fetchOptions = PHFetchOptions()
 		fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
 		fetchOptions.fetchLimit = 1
@@ -47,9 +49,13 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 	}
 
 	var albums = [PhotoAlbum]()
+
 	var fetchAlbumQueue = DispatchQueue(label: "com.owncloud.photoalbum.queue", qos: DispatchQoS.userInitiated)
+
+	// The queue which is used to fetch thumbnails uses lowest priority, to ensure that scrolling is smooth
 	var fetchAlbumThumbnailsQueue = DispatchQueue(label: "com.owncloud.photoalbum.queue", qos: DispatchQoS.background)
 
+	// This is used just to pass the selection callback to PhotoSelectionViewController when an album is selected
 	var selectionCallback :PhotosSelectedCallback?
 
 	// MARK: - UIViewController lifecycle
@@ -113,6 +119,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 	// MARK: - Asset collections fetching
 
 	fileprivate func updateAlbumThumbnails() {
+		// We do it on background view since fetchThumbnailAsset() is quite expensive, getThumbnailImage() is quite quick though
 		fetchAlbumThumbnailsQueue.async {
 			for row in 0..<self.albums.count {
 				let album = self.albums[row]
