@@ -605,8 +605,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 			self.progressSummarizer?.startTracking(progress: progress)
 			PHAssetResourceManager.default().writeData(for: ressource, toFile: localURL, options: options) { (error) in
+				self.progressSummarizer?.stopTracking(progress: progress)
 				if error == nil {
-					self.upload(itemURL: localURL, name: ressource.originalFilename, completionHandler:{ (_) in
+					self.upload(itemURL: localURL, name: ressource.originalFilename, completionHandler: { (_) in
 						// Delete the temporary asset file
 						try? FileManager.default.removeItem(at: localURL)
 					})
