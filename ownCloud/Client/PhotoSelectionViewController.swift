@@ -21,26 +21,29 @@ typealias PhotosSelectedCallback = ([PHAsset]) -> Void
 
 class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
+	// MARK: - Constants
 	fileprivate let thumbnailSizeMultiplier: CGFloat = 0.205
 	fileprivate let verticalInset: CGFloat = 1.0
 	fileprivate let horizontalInset: CGFloat = 1.0
 	fileprivate let itemSpacing: CGFloat = 1.0
 	fileprivate let thumbnailMaxWidthPad: CGFloat = 120.0
 	fileprivate let thumbnailMaxWidthPhone: CGFloat = 80.0
-	
+
+	// MARK: - Instance variables
 	var fetchResult: PHFetchResult<PHAsset>!
 	var assetCollection: PHAssetCollection?
 	var availableWidth: CGFloat = 0
 	var selectionCallback: PhotosSelectedCallback?
 
-	fileprivate let imageManager = PHCachingImageManager()
 	fileprivate var thumbnailSize: CGSize!
 	fileprivate var previousPreheatRect = CGRect.zero
 	fileprivate var thumbnailWidth: CGFloat = 80.0
 
+	fileprivate let imageManager = PHCachingImageManager()
 	fileprivate let layout = UICollectionViewFlowLayout()
 	fileprivate lazy var durationFormatter = DateComponentsFormatter()
 
+	// MARK: - Init / deinit
 	init() {
 		layout.scrollDirection = .vertical
 		layout.sectionInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
