@@ -137,7 +137,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		// Adjust the item size if the available width has changed.
 		if availableWidth != width {
 			availableWidth = width
-			let columnCount = (availableWidth / thumbnailWidth).rounded(.towardZero)
+			let columnCount = (availableWidth / (thumbnailWidth + itemSpacing)).rounded(.towardZero)
 			let itemLength = (availableWidth - columnCount - 1) / columnCount
 			(self.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = CGSize(width: itemLength, height: itemLength)
 		}
