@@ -42,6 +42,8 @@ class ImageDisplayViewController : DisplayViewController {
 		navigationController.setNavigationBarHidden(false, animated: true)
 
 		setNeedsUpdateOfHomeIndicatorAutoHidden()
+
+		scrollView?.setZoomScale(scrollView!.minimumZoomScale, animated: true)
 	}
 
 	// MARK: - Specific view
