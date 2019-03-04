@@ -1,0 +1,36 @@
+<managedAppConfiguration>
+	<version>1</version>
+	<bundleId>com.owncloud.ios-app</bundleId>
+	<dict>
+		<string keyName="bookmark.default-url">
+			<defaultValue>
+				<value>ios.owncloud-demo.com</value>
+			</defaultValue>
+		</string>
+		<boolean keyName="bookmark.url-editable">
+		</boolean>
+	</dict>
+	<presentation defaultLocale="en-US">
+	<fieldGroup>
+		<name>
+			<language value="en-US">Bookmark Setttings</language>
+		</name>
+		<field keyName="bookmark.default-url" type="input">
+			<label>
+				<language value="en-US">Default Server URL</language>
+			</label>
+			<description>
+				<language value="en-US">Allows to define default server URL</language>
+			</description>
+		</field>
+		<field keyName="bookmark.url-editable" type="checkbox">
+			<label>
+				<language value="en-US">Server URL changeable</language>
+			</label>
+			<description>
+				<language value="en-US">Enables or disables changing server URL</language>
+			</description>
+		</field>
+	</fieldGroup>
+	</presentation>
+</managedAppConfiguration>

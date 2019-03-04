@@ -103,6 +103,7 @@ class SecuritySettingsSection: SettingsSection {
 			if let vc = self?.viewController {
 
 				let newVC = StaticTableViewController(style: .grouped)
+				newVC.title = "Lock application".localized
 				let frequencySection = StaticTableViewSection(headerTitle: "Lock application".localized, footerTitle: nil)
 
 				var radioButtons: [[String : Any]] = []
