@@ -25,7 +25,8 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 	fileprivate let verticalInset: CGFloat = 1.0
 	fileprivate let horizontalInset: CGFloat = 1.0
 	fileprivate let itemSpacing: CGFloat = 1.0
-	fileprivate let thumbnailMaxWidth: CGFloat = 120.0
+	fileprivate let thumbnailMaxWidthPad: CGFloat = 120.0
+	fileprivate let thumbnailMaxWidthPhone: CGFloat = 80.0
 	
 	var fetchResult: PHFetchResult<PHAsset>!
 	var assetCollection: PHAssetCollection?
@@ -58,6 +59,24 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 	// MARK: UIViewController life cycles
 
+	func calculateItemSize() {
+		let totalWidth = view.bounds.inset(by: view.safeAreaInsets).width
+		let totalHeight = view.bounds.inset(by: view.safeAreaInsets).height
+
+		let width = UIDevice.current.orientation.isLandscape ? totalHeight : totalWidth
+
+		if availableWidth != width {
+			availableWidth = width
+			let maxThumbnailWidth = UIDevice.current.userInterfaceIdiom == .phone ? thumbnailMaxWidthPhone : thumbnailMaxWidthPad
+			thumbnailWidth = min(floor(availableWidth * thumbnailSizeMultiplier), maxThumbnailWidth)
+
+			let columnCount = (availableWidth / (thumbnailWidth + itemSpacing)).rounded(.towardZero)
+			let itemWidth = floor((availableWidth - columnCount - 1) / columnCount)
+			layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
+		}
+
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.collectionView.allowsMultipleSelection = true
@@ -66,8 +85,6 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		// Register collection view cell class
 		self.collectionView!.register(PhotoSelectionViewCell.self,
 									  forCellWithReuseIdentifier: PhotoSelectionViewCell.identifier)
-		thumbnailWidth = min(floor(self.view.bounds.size.width * thumbnailSizeMultiplier), thumbnailMaxWidth)
-		layout.itemSize = CGSize(width: thumbnailWidth, height: thumbnailWidth)
 
 		resetCachedAssets()
 
@@ -134,15 +151,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 	override func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
-		let width = view.bounds.inset(by: view.safeAreaInsets).width
-
-		// Adjust the item size if the available width has changed.
-		if availableWidth != width {
-			availableWidth = width
-			let columnCount = (availableWidth / (thumbnailWidth + itemSpacing)).rounded(.towardZero)
-			let itemLength = (availableWidth - columnCount - 1) / columnCount
-			(self.collectionViewLayout as? UICollectionViewFlowLayout)?.itemSize = CGSize(width: itemLength, height: itemLength)
-		}
+		calculateItemSize()
 	}
 
 	// MARK: - Themeable support
