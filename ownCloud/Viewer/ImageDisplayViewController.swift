@@ -42,7 +42,11 @@ class ImageDisplayViewController : DisplayViewController {
 		navigationController.setNavigationBarHidden(false, animated: true)
 
 		setNeedsUpdateOfHomeIndicatorAutoHidden()
-
+	}
+	
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		
 		scrollView?.setZoomScale(scrollView!.minimumZoomScale, animated: true)
 	}
 
