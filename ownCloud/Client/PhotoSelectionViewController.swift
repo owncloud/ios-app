@@ -104,6 +104,8 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		durationFormatter.unitsStyle = .positional
 		durationFormatter.allowedUnits = [.hour, .minute, .second]
 		durationFormatter.zeroFormattingBehavior = [.pad]
+
+		self.navigationController?.toolbar.isTranslucent = false
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
