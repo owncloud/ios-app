@@ -61,6 +61,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.collectionView.allowsMultipleSelection = true
+		self.collectionView?.contentInsetAdjustmentBehavior = .always
 
 		// Register collection view cell class
 		self.collectionView!.register(PhotoSelectionViewCell.self,
