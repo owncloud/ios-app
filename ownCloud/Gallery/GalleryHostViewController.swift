@@ -57,8 +57,8 @@ class GalleryHostViewController: UIPageViewController {
 	}
 
 	// MARK: - ViewController lifecycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	override func viewDidLoad() {
+		super.viewDidLoad()
 		dataSource = self
 		delegate = self
 
@@ -93,7 +93,7 @@ class GalleryHostViewController: UIPageViewController {
 				}
 			}
 		}
-    }
+	}
 
 	override var childForHomeIndicatorAutoHidden : UIViewController? {
 		if let childViewController = self.children.first {
