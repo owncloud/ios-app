@@ -52,6 +52,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 	fileprivate let imageManager = PHCachingImageManager()
 	fileprivate let layout = UICollectionViewFlowLayout()
 	fileprivate lazy var durationFormatter = DateComponentsFormatter()
+	fileprivate var uploadButtonItem: UIBarButtonItem?
 
 	// MARK: - Init / deinit
 	init() {
@@ -127,9 +128,9 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		// Setup the toolbar buttons
 		let selectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
 		let deselectAllButtonItem = UIBarButtonItem(title: "Deselect All".localized, style: .done, target: self, action: #selector(deselectAllItems))
-		let uploadButtonItem = UIBarButtonItem(title: "Upload".localized, style: .done, target: self, action: #selector(upload))
+		uploadButtonItem = UIBarButtonItem(title: "Upload".localized, style: .done, target: self, action: #selector(upload))
 		let flexibleSpaceButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-		self.toolbarItems = [selectAllButtonItem, flexibleSpaceButtonItem, uploadButtonItem, flexibleSpaceButtonItem, deselectAllButtonItem]
+		self.toolbarItems = [selectAllButtonItem, flexibleSpaceButtonItem, uploadButtonItem!, flexibleSpaceButtonItem, deselectAllButtonItem]
 
 		// Setup duration formatter
 		durationFormatter.unitsStyle = .positional
@@ -141,6 +142,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		uploadButtonItem?.isEnabled = false
 
 		self.navigationController?.isToolbarHidden = false
 
@@ -240,6 +242,14 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		return cell
 	}
 
+	override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		enableDisableUploadButton()
+	}
+
+	override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+		enableDisableUploadButton()
+	}
+
 	// MARK: - UIScrollViewDelegate
 
 	override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -307,6 +317,12 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 			return (added, removed)
 		} else {
 			return ([new], [old])
+		}
+	}
+
+	fileprivate func enableDisableUploadButton() {
+		if let selectedIndexPaths = self.collectionView.indexPathsForSelectedItems {
+			uploadButtonItem?.isEnabled = (selectedIndexPaths.count > 0) ? true : false
 		}
 	}
 
