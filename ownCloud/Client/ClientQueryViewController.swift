@@ -173,6 +173,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		moveMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(actOnMultipleItems))
 		moveMultipleBarButtonItem?.actionIdentifier = MoveAction.identifier
 		moveMultipleBarButtonItem?.isEnabled = false
+
+		self.addThemableBackgroundView()
 	}
 
 	private var viewControllerVisible : Bool = false
@@ -252,7 +254,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
 		self.searchController?.searchBar.applyThemeCollection(collection)
-
 		if event == .update {
 			self.reloadTableData()
 		}

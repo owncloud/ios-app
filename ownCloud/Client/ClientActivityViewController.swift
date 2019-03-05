@@ -101,7 +101,7 @@ class ClientActivityViewController: UITableViewController, Themeable {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		self.navigationItem.title = "Activities".localized
+		self.navigationItem.title = "Status".localized
 	}
 
 	override func viewDidAppear(_ animated: Bool) {

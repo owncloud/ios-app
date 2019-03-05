@@ -68,7 +68,7 @@ class LogSettingsViewController: StaticTableViewController {
 				LogSettingsViewController.loggingEnabled = enabled
 				self?.updateSectionVisibility(animated: true)
 			}
-		}, title: "Enable logging", value: LogSettingsViewController.loggingEnabled, identifier: "enable-logging"))
+		}, title: "Enable logging".localized, value: LogSettingsViewController.loggingEnabled, identifier: "enable-logging"))
 
 		// Update section visibility
 		self.addSection(loggingSection)

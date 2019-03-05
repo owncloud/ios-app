@@ -83,7 +83,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		Theme.shared.add(tvgResourceFor: "owncloud-logo")
 		welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
-		
+
 		self.navigationItem.title = OCAppIdentity.shared.appName
 	}
 
@@ -172,11 +172,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				welcomeOverlayView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor).isActive = true
 
 				constraint = welcomeOverlayView.leftAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.leftAnchor, constant: 30)
-				constraint.priority = UILayoutPriority(rawValue: 900)
 				constraint.isActive = true
-
 				constraint = welcomeOverlayView.rightAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.rightAnchor, constant: 30)
-				constraint.priority = UILayoutPriority(rawValue: 900)
 				constraint.isActive = true
 
 				self.tableView.tableHeaderView = nil
@@ -189,6 +186,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 				tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
 				tableView.reloadData()
+				tableView.isScrollEnabled = false
 			}
 
 			if self.navigationItem.leftBarButtonItem != nil {
@@ -202,35 +200,19 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 				tableView.separatorStyle = UITableViewCell.SeparatorStyle.singleLine
 				tableView.reloadData()
+				tableView.isScrollEnabled = true
 			}
-			
+
 			if self.navigationItem.leftBarButtonItem == nil {
 				self.navigationItem.leftBarButtonItem = self.editButtonItem
 			}
-			
+
 			// Add Header View
-			
 			self.tableView.tableHeaderView = ServerListTableHeaderView(frame: CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: 50.0))
 			self.navigationController?.navigationBar.shadowImage = UIImage()
 			self.tableView.tableHeaderView?.applyThemeCollection(Theme.shared.activeCollection)
 
-			// UITableView background view is nil for default. Set a UIView with clear color to can insert a subview above
-			let backgroundView = UIView.init(frame: self.tableView.frame)
-			backgroundView.backgroundColor = UIColor.clear
-			self.tableView.backgroundView = backgroundView
-			
-			// This view is needed to stop flickering when scrolling (white line between UINavigationBar and UITableView header
-			let coloredView = ThemeableColoredView.init(frame: CGRect(x: 0, y: -self.view.frame.size.height, width: self.view.frame.size.width, height: self.view.frame.size.height + 1))
-			coloredView.translatesAutoresizingMaskIntoConstraints = false
-
-			self.tableView.insertSubview(coloredView, aboveSubview: self.tableView.backgroundView!)
-			
-			NSLayoutConstraint.activate([
-				coloredView.topAnchor.constraint(equalTo: self.tableView.topAnchor, constant: -self.view.frame.size.height),
-				coloredView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
-				coloredView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
-				coloredView.heightAnchor.constraint(equalToConstant: self.view.frame.size.height + 1)
-				])
+			self.addThemableBackgroundView()
 		}
 	}
 
