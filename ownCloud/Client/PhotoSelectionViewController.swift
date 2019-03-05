@@ -68,6 +68,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 	deinit {
 		PHPhotoLibrary.shared().unregisterChangeObserver(self)
+		Theme.shared.unregister(client: self)
 	}
 
 	// MARK: UIViewController life cycles
@@ -92,6 +93,8 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		Theme.shared.register(client: self)
+
 		self.collectionView.allowsMultipleSelection = true
 		self.collectionView?.contentInsetAdjustmentBehavior = .always
 
@@ -140,7 +143,6 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		Theme.shared.register(client: self)
 
 		self.navigationController?.isToolbarHidden = false
 
@@ -153,7 +155,6 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
-		Theme.shared.unregister(client: self)
 		self.navigationController?.isToolbarHidden = true
 	}
 

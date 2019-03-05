@@ -70,8 +70,14 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 	// MARK: - UIViewController lifecycle
 
+	deinit {
+		Theme.shared.unregister(client: self)
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		Theme.shared.register(client: self)
+
 		self.title = "Albums".localized
 		self.tableView.rowHeight = PhotoAlbumTableViewCell.cellHeight
 		self.tableView.register(PhotoAlbumTableViewCell.self, forCellReuseIdentifier: PhotoAlbumTableViewCell.identifier)
@@ -80,13 +86,11 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		Theme.shared.register(client: self)
 		fetchAlbums()
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
-		Theme.shared.unregister(client: self)
 	}
 
 	// MARK: - Theme support
