@@ -423,7 +423,7 @@ class BookmarkViewController: StaticTableViewController {
 		if isBookmarkComplete(bookmark: bookmark) {
 			bookmark.authenticationDataStorage = .keychain // Commit auth changes to keychain
 
-			if let connection = OCConnection(bookmark: bookmark, persistentStoreBaseURL: nil) {
+			if let connection = OCConnection(bookmark: bookmark) {
 				connection.connect { [weak self] (error, _) in
 					if let weakSelf = self {
 						if error == nil {
