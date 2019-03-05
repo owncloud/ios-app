@@ -74,21 +74,19 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 	// MARK: UIViewController life cycles
 
 	func calculateItemSize() {
-		let totalWidth = view.bounds.inset(by: view.safeAreaInsets).width
-		let totalHeight = view.bounds.inset(by: view.safeAreaInsets).height
-
-		let width = UIDevice.current.orientation.isLandscape ? totalHeight : totalWidth
+		let width = view.bounds.inset(by: view.safeAreaInsets).width - (layout.sectionInset.left + layout.sectionInset.right)
+		let sizeClass = self.traitCollection.horizontalSizeClass
 
 		if availableWidth != width {
 			availableWidth = width
-			let maxThumbnailWidth = UIDevice.current.userInterfaceIdiom == .phone ? thumbnailMaxWidthPhone : thumbnailMaxWidthPad
+			let maxThumbnailWidth = sizeClass == .compact ? thumbnailMaxWidthPhone : thumbnailMaxWidthPad
 			thumbnailWidth = min(floor(availableWidth * thumbnailSizeMultiplier), maxThumbnailWidth)
 
-			let columnCount = (availableWidth / (thumbnailWidth + itemSpacing)).rounded(.towardZero)
-			let itemWidth = floor((availableWidth - columnCount - 1) / columnCount)
-			layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
+			let columnCount = (availableWidth / thumbnailWidth).rounded(.toNearestOrAwayFromZero)
+			let widthAvailableForContent = (availableWidth - (columnCount - 1) * itemSpacing)
+			let adjustedItemWidth = (widthAvailableForContent / columnCount).rounded(.towardZero)
+			layout.itemSize = CGSize(width: adjustedItemWidth, height: adjustedItemWidth)
 		}
-
 	}
 
 	override func viewDidLoad() {
