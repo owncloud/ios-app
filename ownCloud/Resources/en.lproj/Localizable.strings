@@ -243,3 +243,11 @@
 "%@ of %@" = "%@ of %@";
 "Invalid Page" = "Invalid Page";
 "The entered page number doesn't exist" = "The entered page number doesn't exist";
+
+/* Photo Upload */
+"Upload" = "Upload";
+"Select All" = "Select All";
+"Deselect All" = "Deselect All";
+"All Photos" = "All Photos";
+"Albums" = "Albums";
+"Importing '%@' from photo library" = "Importing '%@' from photo library";
