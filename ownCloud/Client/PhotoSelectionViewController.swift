@@ -199,12 +199,14 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 			}.forEach { (indexPath) in
 				self.collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [])
 		}
+		enableDisableUploadButton()
 	}
 
 	@objc func deselectAllItems() {
 		self.collectionView.indexPathsForSelectedItems?.forEach({ (indexPath) in
 			collectionView.deselectItem(at: indexPath, animated: true)
 		})
+		enableDisableUploadButton()
 	}
 
 	// MARK: - UICollectionViewDelegate
