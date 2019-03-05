@@ -445,7 +445,9 @@ class BookmarkViewController: StaticTableViewController {
 
 							})
 						} else {
-							weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+							OnMainThread {
+								weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+							}
 						}
 					}
 				}
