@@ -441,7 +441,9 @@ class BookmarkViewController: StaticTableViewController {
 									OCBookmarkManager.shared.saveBookmarks()
 									OCBookmarkManager.shared.postChangeNotification()
 								}
-								weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+								OnMainThread {
+									weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+								}
 
 							})
 						} else {
