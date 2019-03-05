@@ -172,11 +172,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				welcomeOverlayView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor).isActive = true
 
 				constraint = welcomeOverlayView.leftAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.leftAnchor, constant: 30)
-				constraint.priority = UILayoutPriority(rawValue: 900)
 				constraint.isActive = true
-
 				constraint = welcomeOverlayView.rightAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.rightAnchor, constant: 30)
-				constraint.priority = UILayoutPriority(rawValue: 900)
 				constraint.isActive = true
 
 				self.tableView.tableHeaderView = nil
@@ -189,6 +186,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 				tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
 				tableView.reloadData()
+				tableView.isScrollEnabled = false
 			}
 
 			if self.navigationItem.leftBarButtonItem != nil {
@@ -202,6 +200,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 				tableView.separatorStyle = UITableViewCell.SeparatorStyle.singleLine
 				tableView.reloadData()
+				tableView.isScrollEnabled = true
 			}
 
 			if self.navigationItem.leftBarButtonItem == nil {
