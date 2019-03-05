@@ -593,21 +593,26 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	func upload(asset:PHAsset) {
-		let progress = Progress(totalUnitCount: 100)
-		let options = PHAssetResourceRequestOptions()
-		options.isNetworkAccessAllowed = true
-		options.progressHandler = { (completed:Double) in
-			progress.completedUnitCount = Int64(completed * 100)
-		}
 		let ressources = PHAssetResource.assetResources(for: asset)
 		if let ressource = ressources.first {
-			let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(ressource.originalFilename)
+			let filename = ressource.originalFilename
+
+			let progress = Progress(totalUnitCount: 100)
+			progress.localizedDescription = String(format: "Importing '%@' from photo library".localized , filename)
+
+			let options = PHAssetResourceRequestOptions()
+			options.isNetworkAccessAllowed = true
+			options.progressHandler = { (completed:Double) in
+				progress.completedUnitCount = Int64(completed * 100)
+			}
+
+			let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
 
 			self.progressSummarizer?.startTracking(progress: progress)
 			PHAssetResourceManager.default().writeData(for: ressource, toFile: localURL, options: options) { (error) in
 				self.progressSummarizer?.stopTracking(progress: progress)
 				if error == nil {
-					self.upload(itemURL: localURL, name: ressource.originalFilename, completionHandler: { (_) in
+					self.upload(itemURL: localURL, name: filename, completionHandler: { (_) in
 						// Delete the temporary asset file
 						try? FileManager.default.removeItem(at: localURL)
 					})
