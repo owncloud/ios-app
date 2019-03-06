@@ -124,13 +124,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		super.viewDidLoad()
 
 		self.tableView.register(ClientItemCell.self, forCellReuseIdentifier: "itemCell")
-
-		// Uncomment the following line to preserve selection between presentations
-		// self.clearsSelectionOnViewWillAppear = false
-
-		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-		// self.navigationItem.rightBarButtonItem = self.editButtonItem
-
 		searchController = UISearchController(searchResultsController: nil)
 		searchController?.searchResultsUpdater = self
 		searchController?.obscuresBackgroundDuringPresentation = false
@@ -140,7 +133,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		navigationItem.searchController =  searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
 
-		self.extendedLayoutIncludesOpaqueBars = true
 		self.definesPresentationContext = true
 
 		sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
