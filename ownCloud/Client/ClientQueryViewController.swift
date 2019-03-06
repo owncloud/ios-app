@@ -311,7 +311,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 							core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ]) { [weak self, query] (error, core, item, _) in
 
-								guard let `self` = self else { return }
+								guard let self = self else { return }
 								OnMainThread {
 									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
 										if let item = item, let core = core {

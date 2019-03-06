@@ -152,7 +152,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 	// MARK: - View Controller
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
+
 		extendedLayoutIncludesOpaqueBars = true
 		Theme.shared.register(client: self)
 	}

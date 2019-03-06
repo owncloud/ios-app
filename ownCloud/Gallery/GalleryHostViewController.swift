@@ -69,7 +69,7 @@ class GalleryHostViewController: UIPageViewController {
 		}
 
 		query.requestChangeSet(withFlags: .onlyResults) { [weak self] ( _, changeSet) in
-			guard let `self` = self else { return}
+			guard let self = self else { return}
 			guard let queryResult = changeSet?.queryResult else { return }
 
 			self.items = self.selectedFilter?(queryResult)
@@ -216,6 +216,8 @@ extension GalleryHostViewController: UIPageViewControllerDelegate {
 	}
 
 	func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
+		guard pendingViewControllers.isEmpty == false else { return }
+
 		if let viewControllerToTransition = pendingViewControllers[0] as? DisplayViewController {
 			self.viewControllerToTansition = viewControllerToTransition
 		}
