@@ -15,7 +15,7 @@ class GalleryHostViewController: UIPageViewController {
 
 	// MARK: - Constants
 	let hasChangesAvailableKeyPath: String = "hasChangesAvailable"
-	let imageFilterRegexp: String = "\\A((image/(?!(gif|svg*))))"
+	let imageFilterRegexp: String = "\\A((image/*))" // Filters all the mime types that are images (incluiding gif and svg)
 
 	// MARK: - Instance Variables
 	weak private var core: OCCore?
