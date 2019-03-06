@@ -182,6 +182,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		toolbar = UIToolbar(frame: .zero)
 		toolbar?.translatesAutoresizingMaskIntoConstraints = false
 		toolbar?.insetsLayoutMarginsFromSafeArea = true
+		toolbar?.isTranslucent = false
 
 		self.view.addSubview(toolbar!)
 
