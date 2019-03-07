@@ -21,11 +21,20 @@ import ownCloudSDK
 
 class ImageDisplayViewController : DisplayViewController {
 
-	private let MAX_ZOOM_DIVIDER: CGFloat = 3.0
+	private let max_zoom_divider: CGFloat = 3.0
+	private let activityIndicatorHeight: CGFloat = 50.0
+
+	private let serialQueue: DispatchQueue = DispatchQueue(label: "decode queue")
+
 
 	// MARK: - Instance variables
 	var scrollView: ImageScrollView?
 	var imageView: UIImageView?
+	var activityIndicatorView: UIActivityIndicatorView = {
+		let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.white)
+		activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+		return activityIndicator
+	}()
 
 	// MARK: - Gesture recognizers
 	var tapToZoomGestureRecognizer : UITapGestureRecognizer!
@@ -43,30 +52,60 @@ class ImageDisplayViewController : DisplayViewController {
 
 		setNeedsUpdateOfHomeIndicatorAutoHidden()
 	}
-	
+
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		
+
 		scrollView?.setZoomScale(scrollView!.minimumZoomScale, animated: true)
+	}
+
+	func downSampleImage() {
+		if let source = source {
+			activityIndicatorView.startAnimating()
+			let size: CGSize = self.view.bounds.size
+			let scale: CGFloat = UIScreen.main.scale
+			let imageSourceOptions = [kCGImageSourceShouldCache: true] as CFDictionary
+			let imageSource = CGImageSourceCreateWithURL(source as CFURL, imageSourceOptions)!
+			let maxDimensionInPixels = max(size.width, size.height) * scale
+			let downsampleOptions =  [kCGImageSourceCreateThumbnailFromImageAlways: true,
+									  kCGImageSourceShouldCacheImmediately: true,
+									  kCGImageSourceCreateThumbnailWithTransform: true,
+									  kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels] as CFDictionary
+			serialQueue.async {
+				let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions)!
+				let image = UIImage(cgImage: downsampledImage)
+				OnMainThread {
+					self.activityIndicatorView.stopAnimating()
+					self.scrollView?.display(image: image)
+				}
+			}
+		}
+
 	}
 
 	// MARK: - Specific view
 	override func renderSpecificView() {
-		scrollView = ImageScrollView(frame: self.view.bounds)
+		scrollView = ImageScrollView(frame: .zero)
 		scrollView?.translatesAutoresizingMaskIntoConstraints = false
+
 		self.view.addSubview(scrollView!)
 		NSLayoutConstraint.activate([
 			scrollView!.leftAnchor.constraint(equalTo: view.leftAnchor),
 			scrollView!.rightAnchor.constraint(equalTo: view.rightAnchor),
 			scrollView!.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 			scrollView!.topAnchor.constraint(equalTo: view.topAnchor)
-		])
+			])
 
-		if let source = source,
-		   let data = try? Data(contentsOf: source),
-		   let image = UIImage(data: data) {
-			scrollView?.display(image: image)
+		self.scrollView?.addSubview(activityIndicatorView)
+		NSLayoutConstraint.activate([
+			activityIndicatorView.centerYAnchor.constraint(equalTo: scrollView!.centerYAnchor),
+			activityIndicatorView.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
+			activityIndicatorView.heightAnchor.constraint(equalToConstant: activityIndicatorHeight),
+			activityIndicatorView.widthAnchor.constraint(equalTo: activityIndicatorView.heightAnchor)
+			])
 
+		if source != nil {
+			downSampleImage()
 			tapToZoomGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapToZoom))
 			tapToZoomGestureRecognizer.numberOfTapsRequired = 2
 			scrollView?.addGestureRecognizer(tapToZoomGestureRecognizer)
@@ -95,7 +134,7 @@ class ImageDisplayViewController : DisplayViewController {
 		if scrollView!.zoomScale != scrollView!.minimumZoomScale {
 			scrollView!.setZoomScale(scrollView!.minimumZoomScale, animated: true)
 		} else {
-			scrollView!.setZoomScale(scrollView!.maximumZoomScale / MAX_ZOOM_DIVIDER, animated: true)
+			scrollView!.setZoomScale(scrollView!.maximumZoomScale / max_zoom_divider, animated: true)
 		}
 
 		setNeedsUpdateOfHomeIndicatorAutoHidden()
