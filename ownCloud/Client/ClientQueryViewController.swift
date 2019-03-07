@@ -124,13 +124,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		super.viewDidLoad()
 
 		self.tableView.register(ClientItemCell.self, forCellReuseIdentifier: "itemCell")
-
-		// Uncomment the following line to preserve selection between presentations
-		// self.clearsSelectionOnViewWillAppear = false
-
-		// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-		// self.navigationItem.rightBarButtonItem = self.editButtonItem
-
 		searchController = UISearchController(searchResultsController: nil)
 		searchController?.searchResultsUpdater = self
 		searchController?.obscuresBackgroundDuringPresentation = false
@@ -140,7 +133,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		navigationItem.searchController =  searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
 
-		self.extendedLayoutIncludesOpaqueBars = true
 		self.definesPresentationContext = true
 
 		sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
@@ -593,6 +585,37 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 
+	func upload(asset:PHAsset) {
+		let ressources = PHAssetResource.assetResources(for: asset)
+		if let ressource = ressources.first {
+			let filename = ressource.originalFilename
+
+			let progress = Progress(totalUnitCount: 100)
+			progress.localizedDescription = String(format: "Importing '%@' from photo library".localized , filename)
+
+			let options = PHAssetResourceRequestOptions()
+			options.isNetworkAccessAllowed = true
+			options.progressHandler = { (completed:Double) in
+				progress.completedUnitCount = Int64(completed * 100)
+			}
+
+			let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
+
+			self.progressSummarizer?.startTracking(progress: progress)
+			PHAssetResourceManager.default().writeData(for: ressource, toFile: localURL, options: options) { (error) in
+				self.progressSummarizer?.stopTracking(progress: progress)
+				if error == nil {
+					self.upload(itemURL: localURL, name: filename, completionHandler: { (_) in
+						// Delete the temporary asset file
+						try? FileManager.default.removeItem(at: localURL)
+					})
+				} else {
+					progress.cancel()
+				}
+			}
+		}
+	}
+
 	// MARK: - Toolbar actions handling multiple selected items
 	func updateToolbarItems() {
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
@@ -684,10 +707,17 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		let photoLibrary = UIAlertAction(title: "Upload from your photo library".localized, style: .default, handler: { (_) in
 
 			func presentImageGalleryPicker() {
-				let picker = UIImagePickerController.regularImagePicker(with: .photoLibrary)
-				picker.delegate = self
+
+				let photoAlbumViewController = PhotoAlbumTableViewController()
+				photoAlbumViewController.selectionCallback = { (assets) in
+					for asset in assets {
+						self.upload(asset: asset)
+					}
+				}
+				let navigationController = ThemeNavigationController(rootViewController: photoAlbumViewController)
+
 				OnMainThread {
-					self.present(picker, animated: true)
+					self.present(navigationController, animated: true)
 				}
 			}
 
@@ -942,40 +972,6 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		return [dragItem]
 	}
 
-}
-
-// MARK: - UIImagePickerControllerDelegate
-extension ClientQueryViewController: UIImagePickerControllerDelegate {
-
-	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-
-		var name: String?
-		var url: URL?
-
-		if let imageURL = info[UIImagePickerController.InfoKey.imageURL] as? URL {
-			name = imageURL.lastPathComponent
-			url = imageURL
-		}
-
-		if let movieURL = info[UIImagePickerController.InfoKey.mediaURL] as? URL {
-			name = movieURL.lastPathComponent
-			url = movieURL
-		}
-
-		if let imageAsset = info[UIImagePickerController.InfoKey.phAsset] as? PHAsset {
-			let resources = PHAssetResource.assetResources(for: imageAsset)
-			name = resources[0].originalFilename
-		}
-
-		if name != nil, url != nil {
-			upload(itemURL: url!, name: name!)
-		}
-
-		OnMainThread {
-			picker.dismiss(animated: true)
-		}
-
-	}
 }
 
 // MARK: - UIDocumentPickerDelegate
