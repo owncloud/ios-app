@@ -34,9 +34,24 @@ class BookmarkViewController: StaticTableViewController {
 	var passwordRow : StaticTableViewRow?
 	var tokenInfoRow : StaticTableViewRow?
 	var deleteAuthDataButtonRow : StaticTableViewRow?
+	var activeTextField: UITextField?
 
 	lazy var continueBarButtonItem: UIBarButtonItem = UIBarButtonItem(title: "Continue".localized, style: .done, target: self, action: #selector(handleContinue))
 	lazy var saveBarButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
+	lazy var nextBarButtonItem = UIBarButtonItem(image: UIImage(named: "arrow-down"), style: .plain, target: self, action: #selector(toogleTextField))
+	lazy var previousBarButtonItem = UIBarButtonItem(image: UIImage(named: "arrow-up"), style: .plain, target: self, action: #selector(toogleTextField))
+	lazy var inputToolbar: UIToolbar = {
+		var toolbar = UIToolbar()
+		toolbar.barStyle = .default
+		toolbar.isTranslucent = true
+		toolbar.sizeToFit()
+		let doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(toogleTextField))
+		let flexibleSpaceBarButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+		let fixedSpaceBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+		toolbar.setItems([fixedSpaceBarButtonItem, previousBarButtonItem, fixedSpaceBarButtonItem, fixedSpaceBarButtonItem, nextBarButtonItem, flexibleSpaceBarButtonItem, doneBarButtonItem], animated: false)
+		toolbar.isUserInteractionEnabled = true
+		return toolbar
+	}()
 
 	// MARK: - Internal storage
 	var bookmark : OCBookmark?
@@ -140,6 +155,7 @@ class BookmarkViewController: StaticTableViewController {
 		// Credentials section + rows
 		usernameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender) in
 			if (sender as? UITextField) != nil, self?.bookmark?.authenticationData != nil {
+				//sender.inputAccessoryView = inputToolbar
 				self?.bookmark?.authenticationData = nil
 				self?.composeSectionsAndRows(animated: true)
 			}
@@ -727,6 +743,21 @@ class BookmarkViewController: StaticTableViewController {
 	func isAuthenticationMethodTokenBased(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> Bool {
 		return authenticationMethodTypeForIdentifier(authenticationMethodIdentifier) == OCAuthenticationMethodType.token
 	}
+	
+	// MARK: - Keyboard AccessoryView
+	@objc func toogleTextField (_ sender: UIBarButtonItem) {
+		if sender.style == .done {
+			activeTextField?.resignFirstResponder()
+		} else {
+			if passwordRow?.textField?.isFirstResponder ?? false {
+				// Found next responder, so set it
+				usernameRow?.textField?.becomeFirstResponder()
+			} else {
+				// Not found, so remove keyboard
+				passwordRow?.textField?.becomeFirstResponder()
+			}
+		}
+	}
 }
 
 // MARK: - OCClassSettings support
@@ -759,6 +790,7 @@ extension BookmarkViewController : OCClassSettingsSupport {
 
 // MARK: - Keyboard / return key tracking
 extension BookmarkViewController : UITextFieldDelegate {
+	
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		if self.navigationItem.rightBarButtonItem == continueBarButtonItem {
 			if !updateInputFocus() {
@@ -769,6 +801,23 @@ extension BookmarkViewController : UITextFieldDelegate {
 		}
 
 		return true
+	}
+	
+	func textFieldDidBeginEditing(_ textField: UITextField) {
+		activeTextField = textField
+		if textField.isEqual(urlRow?.textField) {
+			textField.returnKeyType = .continue
+		} else if textField.isEqual(usernameRow?.textField) {
+			previousBarButtonItem.isEnabled = false
+			nextBarButtonItem.isEnabled = true
+			textField.inputAccessoryView = inputToolbar
+			textField.returnKeyType = .next
+		} else if textField.isEqual(passwordRow?.textField) {
+			previousBarButtonItem.isEnabled = true
+			nextBarButtonItem.isEnabled = false
+			textField.inputAccessoryView = inputToolbar
+			textField.returnKeyType = .continue
+		}
 	}
 }
 
