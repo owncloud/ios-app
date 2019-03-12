@@ -394,7 +394,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 					return UITableViewDropProposal(operation: .move, intent: .insertIntoDestinationIndexPath)
 				}
 		} else {
-			return UITableViewDropProposal(operation: .copy)
+			return UITableViewDropProposal(operation: .forbidden)
 		}
 	}
 
@@ -911,54 +911,47 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 		guard let core = self.core else { return }
 
 		for item in coordinator.items {
-			if item.dragItem.localObject != nil {
-				var destinationItem: OCItem
-				
-				guard let item = item.dragItem.localObject as? OCItem, let itemName = item.name else {
+
+			var destinationItem: OCItem
+
+			guard let item = item.dragItem.localObject as? OCItem, let itemName = item.name else {
+				return
+			}
+
+			if coordinator.proposal.intent == .insertIntoDestinationIndexPath {
+
+				guard let destinationIP = coordinator.destinationIndexPath else {
 					return
 				}
-				
-				if coordinator.proposal.intent == .insertIntoDestinationIndexPath {
-					
-					guard let destinationIP = coordinator.destinationIndexPath else {
-						return
-					}
-					
-					guard items.count >= destinationIP.row else {
-						return
-					}
-					
-					let rootItem = items[destinationIP.row]
-					
-					guard rootItem.type == .collection else {
-						return
-					}
-					
-					destinationItem = rootItem
-					
-				} else {
-					
-					guard let rootItem = self.query.rootItem, item.parentFileID != rootItem.fileID else {
-						return
-					}
-					
-					destinationItem =  rootItem
-					
+
+				guard items.count >= destinationIP.row else {
+					return
 				}
-				
-				if let progress = core.move(item, to: destinationItem, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
-					if error != nil {
-						Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
-					}
-				}) {
-					self.progressSummarizer?.startTracking(progress: progress)
+
+				let rootItem = items[destinationIP.row]
+
+				guard rootItem.type == .collection else {
+					return
 				}
+
+				destinationItem = rootItem
+
 			} else {
-				guard let UTI = item.dragItem.itemProvider.registeredTypeIdentifiers.last else { return }
-				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: UTI) { (url, _ error) in
-					guard let url = url else { return }
-					self.upload(itemURL: url, name: url.lastPathComponent)
+
+				guard let rootItem = self.query.rootItem, item.parentFileID != rootItem.fileID else {
+					return
 				}
+
+				destinationItem =  rootItem
+
+			}
+
+			if let progress = core.move(item, to: destinationItem, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
+				if error != nil {
+					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
+				}
+			}) {
+				self.progressSummarizer?.startTracking(progress: progress)
 			}
 		}
 	}
