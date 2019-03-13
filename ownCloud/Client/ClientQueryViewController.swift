@@ -24,7 +24,7 @@ import Photos
 typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
-class ClientQueryViewController: UITableViewController, Themeable {
+class ClientQueryViewController: UITableViewController, Themeable, UIDropInteractionDelegate {
 	weak var core : OCCore?
 	var query : OCQuery
 
@@ -50,7 +50,23 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 
-	var deleteMultipleBarButtonItem: UIBarButtonItem?
+	var deleteMultipleBarButtonItem: UIBarButtonItem {
+		let button  = UIButton(type: .custom)
+		if let image = UIImage(named:"cloud-local-only") {
+			button.setImage(image, for: .normal)
+		}
+		button.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+		button.addTarget(self, action: #selector(actOnMultipleItems), for: .touchUpInside)
+		button.isEnabled = true
+
+		let dropInteraction = UIDropInteraction(delegate: self)
+		button.addInteraction(dropInteraction)
+		button.actionIdentifier = DeleteAction.identifier
+		let customBarButton = UIBarButtonItem(customView: button)
+		customBarButton.actionIdentifier = DeleteAction.identifier
+
+		return customBarButton
+	}
 	var moveMultipleBarButtonItem: UIBarButtonItem?
 
 	var selectBarButton: UIBarButtonItem?
@@ -158,9 +174,11 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
 
 		// Create bar button items for the toolbar
-		deleteMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(actOnMultipleItems))
-		deleteMultipleBarButtonItem?.actionIdentifier = DeleteAction.identifier
-		deleteMultipleBarButtonItem?.isEnabled = false
+		//deleteMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(actOnMultipleItems))
+		deleteMultipleBarButtonItem.actionIdentifier = DeleteAction.identifier
+		deleteMultipleBarButtonItem.target = self
+		deleteMultipleBarButtonItem.action = #selector(actOnMultipleItems)
+		deleteMultipleBarButtonItem.isEnabled = false
 
 		moveMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(actOnMultipleItems))
 		moveMultipleBarButtonItem?.actionIdentifier = MoveAction.identifier
@@ -395,6 +413,72 @@ class ClientQueryViewController: UITableViewController, Themeable {
 				}
 		} else {
 			return UITableViewDropProposal(operation: .copy)
+		}
+	}
+	
+	func tableView(_: UITableView, dragSessionWillBegin: UIDragSession) {
+		//updateToolbarItems()
+
+		self.populateToolbar(with: [flexibleSpaceBarButton, flexibleSpaceBarButton, deleteMultipleBarButtonItem])
+		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
+		guard let toolbarItems = tabBarController.toolbar?.items else { return }
+
+		if let core = self.core {
+			// Get array of OCItems from selected table view index paths
+			var selectedItems = [OCItem]()
+			for dragItem in dragSessionWillBegin.items {
+				let item = dragItem.localObject as! OCItem
+
+				selectedItems.append(item)
+			}
+
+			// Get possible associated actions
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+			let actionContext = ActionContext(viewController: self, core: core, items: selectedItems, location: actionsLocation)
+
+			self.actions = Action.sortedApplicableActions(for: actionContext)
+
+			// Enable / disable tool-bar items depending on action availability
+			for item in toolbarItems {
+				if self.actions?.contains(where: {type(of:$0).identifier == item.actionIdentifier}) ?? false {
+					item.isEnabled = true
+				} else {
+					item.isEnabled = false
+				}
+			}
+		}
+	}
+	
+	func tableView(_: UITableView, dragSessionDidEnd: UIDragSession) {
+		removeToolbar()
+	}
+
+	// MARK - UIBarButtonItem Drop Delegate
+
+	func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+
+		return true
+	}
+
+	func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
+		return UIDropProposal(operation: .copy)
+	}
+
+	func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
+		guard let button = interaction.view as? UIButton, let identifier = button.actionIdentifier  else { return }
+
+		if let action = self.actions?.first(where: {type(of:$0).identifier == identifier}) {
+			// Configure progress handler
+			action.progressHandler = { [weak self] progress in
+				self?.progressSummarizer?.startTracking(progress: progress)
+			}
+
+			action.completionHandler = { [weak self] _ in
+			}
+
+			// Execute the action
+			action.willRun()
+			action.run()
 		}
 	}
 
@@ -665,7 +749,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	@objc func actOnMultipleItems(_ sender: UIBarButtonItem) {
-
+print(">>>>>>>>>>>>>>>>>>> actOnMultipleItems")
 		// Find associated action
 		if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
 			// Configure progress handler
@@ -692,7 +776,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			updateToolbarItems()
 			self.tableView.setEditing(true, animated: true)
 			selectBarButton?.title = "Done".localized
-			self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem!])
+			self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem])
 			self.navigationItem.rightBarButtonItems = [selectBarButton!]
 
 		} else {
@@ -968,17 +1052,28 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
 		let item: OCItem = itemAtIndexPath(indexPath)
-
-		guard let data = item.serializedData() else {
-			return []
+		
+		if let core = self.core {
+			switch item.type {
+			case .collection:
+				guard let data = item.serializedData() else { return [] }
+				let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
+				let dragItem = UIDragItem(itemProvider: itemProvider)
+				dragItem.localObject = item
+				return [dragItem]
+			case .file:
+				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, item.mimeType as! CFString, nil)?.takeRetainedValue() else { return [] }
+				guard let fileData = NSData(contentsOf: core.localURL(for: item)) else { return [] }
+				let itemProvider = NSItemProvider(item: fileData, typeIdentifier: rawUti as! String)
+				itemProvider.suggestedName = item.name
+				let dragItem = UIDragItem(itemProvider: itemProvider)
+				dragItem.localObject = item
+				return [dragItem]
+			}
 		}
-
-		let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
-		let dragItem = UIDragItem(itemProvider: itemProvider)
-		dragItem.localObject = item
-		return [dragItem]
+		
+		return []
 	}
-
 }
 
 // MARK: - UIDocumentPickerDelegate
