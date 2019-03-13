@@ -452,5 +452,6 @@ extension DisplayViewController : Themeable {
 		metadataInfoLabel?.applyThemeCollection(collection)
 		showPreviewButton?.applyThemeCollection(collection)
 		noNetworkLabel?.applyThemeCollection(collection)
+		self.view.backgroundColor = collection.tableBackgroundColor
 	}
 }
