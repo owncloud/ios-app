@@ -226,6 +226,6 @@ extension GalleryHostViewController: UIPageViewControllerDelegate {
 
 extension GalleryHostViewController: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.view.backgroundColor = collection.tableBackgroundColor
+		self.view.backgroundColor = .black
 	}
 }

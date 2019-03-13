@@ -26,7 +26,6 @@ class ImageDisplayViewController : DisplayViewController {
 
 	private let serialQueue: DispatchQueue = DispatchQueue(label: "decode queue")
 
-
 	// MARK: - Instance variables
 	var scrollView: ImageScrollView?
 	var imageView: UIImageView?
@@ -76,7 +75,7 @@ class ImageDisplayViewController : DisplayViewController {
 				let image = UIImage(cgImage: downsampledImage)
 				OnMainThread {
 					self.activityIndicatorView.stopAnimating()
-					self.scrollView?.display(image: image)
+					self.scrollView?.display(image: image, inSize: self.view.bounds.size)
 				}
 			}
 		}
