@@ -174,10 +174,6 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
 
 		// Create bar button items for the toolbar
-		//deleteMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(actOnMultipleItems))
-		deleteMultipleBarButtonItem.actionIdentifier = DeleteAction.identifier
-		deleteMultipleBarButtonItem.target = self
-		deleteMultipleBarButtonItem.action = #selector(actOnMultipleItems)
 		deleteMultipleBarButtonItem.isEnabled = false
 
 		moveMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(actOnMultipleItems))
@@ -382,23 +378,6 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		return configuration
 	}
 
-	func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-		let item: OCItem = itemAtIndexPath(indexPath)
-
-		guard item.type != .collection else {
-			return []
-		}
-
-		guard let data = item.serializedData() else {
-			return []
-		}
-
-		let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
-		let dragItem = UIDragItem(itemProvider: itemProvider)
-		dragItem.localObject = item
-		return [dragItem]
-	}
-
 	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
 
 		if session.localDragSession != nil {
@@ -415,7 +394,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			return UITableViewDropProposal(operation: .copy)
 		}
 	}
-	
+
 	func tableView(_: UITableView, dragSessionWillBegin: UIDragSession) {
 		//updateToolbarItems()
 
@@ -453,10 +432,9 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		removeToolbar()
 	}
 
-	// MARK - UIBarButtonItem Drop Delegate
+	// MARK: - UIBarButtonItem Drop Delegate
 
 	func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
-
 		return true
 	}
 
@@ -1052,27 +1030,37 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
 		let item: OCItem = itemAtIndexPath(indexPath)
-		
+		guard let dragItem = itemForDragging(item: item) else { return [] }
+		return [dragItem]
+	}
+
+	func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+		let item: OCItem = itemAtIndexPath(indexPath)
+		guard let dragItem = itemForDragging(item: item) else { return [] }
+		return [dragItem]
+	}
+
+	func itemForDragging(item : OCItem) -> UIDragItem? {
 		if let core = self.core {
 			switch item.type {
 			case .collection:
-				guard let data = item.serializedData() else { return [] }
+				guard let data = item.serializedData() else { return nil }
 				let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
 				let dragItem = UIDragItem(itemProvider: itemProvider)
 				dragItem.localObject = item
-				return [dragItem]
+				return dragItem
 			case .file:
-				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, item.mimeType as! CFString, nil)?.takeRetainedValue() else { return [] }
-				guard let fileData = NSData(contentsOf: core.localURL(for: item)) else { return [] }
+				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, item.mimeType as! CFString, nil)?.takeRetainedValue() else { return nil }
+				guard let fileData = NSData(contentsOf: core.localURL(for: item)) else { return nil }
 				let itemProvider = NSItemProvider(item: fileData, typeIdentifier: rawUti as! String)
 				itemProvider.suggestedName = item.name
 				let dragItem = UIDragItem(itemProvider: itemProvider)
 				dragItem.localObject = item
-				return [dragItem]
+				return dragItem
 			}
 		}
-		
-		return []
+
+		return nil
 	}
 }
 
