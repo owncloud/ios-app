@@ -36,4 +36,19 @@ public extension UIBarButtonItem {
 			}
 		}
 	}
+
+	public convenience init(image: UIImage?, target: AnyObject, action: Selector, dropTarget: UIDropInteractionDelegate, actionIdentifier: OCExtensionIdentifier) {
+		let button  = UIButton(type: .custom)
+		button.setImage(image, for: .normal)
+		button.frame = CGRect(x: 0, y: 0, width: 30.0, height: 30.0)
+		button.actionIdentifier = actionIdentifier
+		button.addTarget(target, action: action, for: .touchUpInside)
+
+		let dropInteraction = UIDropInteraction(delegate: dropTarget)
+		button.addInteraction(dropInteraction)
+		button.sizeToFit()
+
+		self.init(customView: button)
+		self.actionIdentifier = actionIdentifier
+	}
 }

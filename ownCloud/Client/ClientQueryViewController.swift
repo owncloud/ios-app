@@ -49,24 +49,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	var queryRefreshControl: UIRefreshControl?
 
 	let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-
-	var deleteMultipleBarButtonItem: UIBarButtonItem {
-		let button  = UIButton(type: .custom)
-		if let image = UIImage(named:"cloud-local-only") {
-			button.setImage(image, for: .normal)
-		}
-		button.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-		button.addTarget(self, action: #selector(actOnMultipleItems), for: .touchUpInside)
-		button.isEnabled = true
-
-		let dropInteraction = UIDropInteraction(delegate: self)
-		button.addInteraction(dropInteraction)
-		button.actionIdentifier = DeleteAction.identifier
-		let customBarButton = UIBarButtonItem(customView: button)
-		customBarButton.actionIdentifier = DeleteAction.identifier
-
-		return customBarButton
-	}
+	var deleteMultipleBarButtonItem: UIBarButtonItem?
 	var moveMultipleBarButtonItem: UIBarButtonItem?
 
 	var selectBarButton: UIBarButtonItem?
@@ -174,11 +157,13 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
 
 		// Create bar button items for the toolbar
-		deleteMultipleBarButtonItem.isEnabled = false
+		if let dropDelegate = self as? UIDropInteractionDelegate {
+			deleteMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"trash"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: dropDelegate, actionIdentifier: DeleteAction.identifier!)
+			deleteMultipleBarButtonItem?.isEnabled = false
 
-		moveMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(actOnMultipleItems))
-		moveMultipleBarButtonItem?.actionIdentifier = MoveAction.identifier
-		moveMultipleBarButtonItem?.isEnabled = false
+			moveMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"folder"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: dropDelegate, actionIdentifier: MoveAction.identifier!)
+			moveMultipleBarButtonItem?.isEnabled = false
+		}
 
 		self.addThemableBackgroundView()
 	}
@@ -395,25 +380,14 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		}
 	}
 
-	func tableView(_: UITableView, dragSessionWillBegin: UIDragSession) {
-		//updateToolbarItems()
-
-		self.populateToolbar(with: [flexibleSpaceBarButton, flexibleSpaceBarButton, deleteMultipleBarButtonItem])
+	func addActionItems(_ items: [OCItem]) {
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
 
 		if let core = self.core {
-			// Get array of OCItems from selected table view index paths
-			var selectedItems = [OCItem]()
-			for dragItem in dragSessionWillBegin.items {
-				let item = dragItem.localObject as! OCItem
-
-				selectedItems.append(item)
-			}
-
 			// Get possible associated actions
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-			let actionContext = ActionContext(viewController: self, core: core, items: selectedItems, location: actionsLocation)
+			let actionContext = ActionContext(viewController: self, core: core, items: items, location: actionsLocation)
 
 			self.actions = Action.sortedApplicableActions(for: actionContext)
 
@@ -426,10 +400,12 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 				}
 			}
 		}
+
 	}
-	
+
 	func tableView(_: UITableView, dragSessionDidEnd: UIDragSession) {
 		removeToolbar()
+		self.actions = nil
 	}
 
 	// MARK: - UIBarButtonItem Drop Delegate
@@ -458,6 +434,12 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			action.willRun()
 			action.run()
 		}
+	}
+
+	func dragInteraction(_ interaction: UIDragInteraction,
+						 session: UIDragSession,
+						 didEndWith operation: UIDropOperation) {
+		removeToolbar()
 	}
 
 	// MARK: - Message
@@ -725,10 +707,35 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
 		removeToolbar()
 	}
-
-	@objc func actOnMultipleItems(_ sender: UIBarButtonItem) {
-print(">>>>>>>>>>>>>>>>>>> actOnMultipleItems")
+/*
+	@objc func actOnMultipleItemsNew(_ sender: Any) {
 		// Find associated action
+
+		guard let sender = sender as? ActionIdentifierProtocol.Type else {
+			return
+		}
+		//print("actOnMultipleItems \(sender) \(sender.actionIdentifier)")
+		if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
+			// Configure progress handler
+			action.progressHandler = { [weak self] progress in
+				self?.progressSummarizer?.startTracking(progress: progress)
+			}
+
+			action.completionHandler = { [weak self] _ in
+				DispatchQueue.main.async {
+					self?.leaveMultipleSelection()
+				}
+			}
+
+			// Execute the action
+			action.willRun()
+			action.run()
+		}
+	}
+*/
+	@objc func actOnMultipleItems(_ sender: UIButton) {
+		// Find associated action
+		print("actOnMultipleItems \(sender) \(sender.actionIdentifier)")
 		if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
 			// Configure progress handler
 			action.progressHandler = { [weak self] progress in
@@ -754,7 +761,7 @@ print(">>>>>>>>>>>>>>>>>>> actOnMultipleItems")
 			updateToolbarItems()
 			self.tableView.setEditing(true, animated: true)
 			selectBarButton?.title = "Done".localized
-			self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem])
+			self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem!])
 			self.navigationItem.rightBarButtonItems = [selectBarButton!]
 
 		} else {
@@ -1029,13 +1036,33 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 extension ClientQueryViewController: UITableViewDragDelegate {
 
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+		self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem!])
+
+		var selectedItems = [OCItem]()
+		for dragItem in session.items {
+			guard let item = dragItem.localObject as? OCItem else { continue }
+			selectedItems.append(item)
+		}
+
 		let item: OCItem = itemAtIndexPath(indexPath)
+		selectedItems.append(item)
+		addActionItems(selectedItems)
+
 		guard let dragItem = itemForDragging(item: item) else { return [] }
 		return [dragItem]
 	}
 
 	func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+		var selectedItems = [OCItem]()
+		for dragItem in session.items {
+			guard let item = dragItem.localObject as? OCItem else { continue }
+			selectedItems.append(item)
+		}
+
 		let item: OCItem = itemAtIndexPath(indexPath)
+		selectedItems.append(item)
+		addActionItems(selectedItems)
+
 		guard let dragItem = itemForDragging(item: item) else { return [] }
 		return [dragItem]
 	}
