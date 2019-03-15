@@ -84,7 +84,7 @@ class CreateFolderAction : Action {
 		viewController.present(createFolderNavigationVC, animated: true)
 	}
 
-	override func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .sortBar || location == .toolbar {
 			return Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
 		}

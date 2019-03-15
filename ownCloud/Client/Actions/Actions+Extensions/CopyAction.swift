@@ -23,7 +23,7 @@ class CopyAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.copy") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Copy".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -41,19 +41,23 @@ class CopyAction : Action {
 		let items = context.items
 
 		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Copy here", completion: { (selectedDirectory) in
-			items.forEach({ (item) in
 
-				if let progress = self.core?.copy(item, to: selectedDirectory!, withName: item.name!, options: nil, resultHandler: { (error, _, _, _) in
-					if error != nil {
-						self.completed(with: error)
-					} else {
-						self.completed()
+			if let targetDirectory = selectedDirectory {
+				items.forEach({ (item) in
+
+					if let progress = self.core?.copy(item, to: targetDirectory, withName: item.name!, options: nil, resultHandler: { (error, _, _, _) in
+						if error != nil {
+							self.completed(with: error)
+						} else {
+							self.completed()
+						}
+
+					}) {
+						self.publish(progress: progress)
 					}
+				})
+			}
 
-				}) {
-					self.publish(progress: progress)
-				}
-			})
 		})
 
 		let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)

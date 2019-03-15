@@ -52,6 +52,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 	var deleteMultipleBarButtonItem: UIBarButtonItem?
 	var moveMultipleBarButtonItem: UIBarButtonItem?
+	var duplicateMultipleBarButtonItem: UIBarButtonItem?
+	var copyMultipleBarButtonItem: UIBarButtonItem?
 
 	var selectBarButton: UIBarButtonItem?
 	var uploadBarButton: UIBarButtonItem?
@@ -165,6 +167,16 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		moveMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(actOnMultipleItems))
 		moveMultipleBarButtonItem?.actionIdentifier = MoveAction.identifier
 		moveMultipleBarButtonItem?.isEnabled = false
+
+		let duplicateIcon = UIImage(named: "duplicate-file")?.withRenderingMode(.alwaysTemplate)
+		duplicateMultipleBarButtonItem =  UIBarButtonItem(image: duplicateIcon, style: .plain, target: self, action: #selector(actOnMultipleItems))
+		duplicateMultipleBarButtonItem?.actionIdentifier = DuplicateAction.identifier
+		duplicateMultipleBarButtonItem?.isEnabled = false
+
+		let copyIcon = UIImage(named: "copy-file")?.withRenderingMode(.alwaysTemplate)
+		copyMultipleBarButtonItem =  UIBarButtonItem(image: copyIcon, style: .plain, target: self, action: #selector(actOnMultipleItems))
+		copyMultipleBarButtonItem?.actionIdentifier = CopyAction.identifier
+		copyMultipleBarButtonItem?.isEnabled = false
 
 		self.addThemableBackgroundView()
 	}
@@ -692,7 +704,14 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			updateToolbarItems()
 			self.tableView.setEditing(true, animated: true)
 			selectBarButton?.title = "Done".localized
-			self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem!])
+			self.populateToolbar(with: [moveMultipleBarButtonItem!,	
+										flexibleSpaceBarButton,
+										deleteMultipleBarButtonItem!,
+										flexibleSpaceBarButton,
+										copyMultipleBarButtonItem!,
+										flexibleSpaceBarButton,
+										duplicateMultipleBarButtonItem!])
+
 			self.navigationItem.rightBarButtonItems = [selectBarButton!]
 
 		} else {
