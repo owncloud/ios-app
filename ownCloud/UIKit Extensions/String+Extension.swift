@@ -28,4 +28,10 @@ extension String {
         let nonDigitsCharacterSet = CharacterSet.decimalDigits.inverted
         return !self.isEmpty && rangeOfCharacter(from: nonDigitsCharacterSet) == nil
     }
+
+	func matches (regExp: String) -> Bool {
+			guard let regex = try? NSRegularExpression(pattern: regExp) else { return false }
+			let range = NSRange(location: 0, length: self.count)
+			return regex.firstMatch(in: self, options: [], range: range) != nil
+	}
 }

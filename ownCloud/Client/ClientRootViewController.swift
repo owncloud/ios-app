@@ -32,6 +32,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	var activityNavigationController : ThemeNavigationController?
 	var activityViewController : ClientActivityViewController?
 	var progressBar : CollapsibleProgressBar?
+	var progressBarHeightConstraint: NSLayoutConstraint?
 	var progressSummarizer : ProgressSummarizer?
 	var toolbar : UIToolbar?
 
@@ -177,7 +178,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		progressBar?.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
 		progressBar?.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-		progressBar?.bottomAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
+		progressBarHeightConstraint = NSLayoutConstraint(item: progressBar!, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: -1 * (self.tabBar.bounds.height))
+		progressBarHeightConstraint?.isActive = true
 
 		toolbar = UIToolbar(frame: .zero)
 		toolbar?.translatesAutoresizingMaskIntoConstraints = false
@@ -186,8 +188,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		self.view.addSubview(toolbar!)
 
-		toolbar?.leftAnchor.constraint(equalTo: self.tabBar.leftAnchor).isActive = true
-		toolbar?.rightAnchor.constraint(equalTo: self.tabBar.rightAnchor).isActive = true
+		toolbar?.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+		toolbar?.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
 		toolbar?.topAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
 		toolbar?.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
 
@@ -220,6 +222,13 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		if willShow.isEqual(emptyViewController) {
 			self.closeClient()
 		}
+	}
+
+	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
+		progressBarHeightConstraint?.constant = -1 * (self.tabBar.bounds.height)
+		self.progressBar?.setNeedsLayout()
+//		self.view.setNeedsLayout()
 	}
 }
 

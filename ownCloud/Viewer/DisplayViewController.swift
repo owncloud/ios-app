@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 
 struct DisplayViewConfiguration {
-	weak var item: OCItem!
+	var item: OCItem!
 	weak var core: OCCore!
 	let state: DisplayViewState
 }
@@ -46,7 +46,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	private let progressViewVerticalSpacing: CGFloat = 20.0
 
 	// MARK: - Configuration
-	weak var item: OCItem?
+	var item: OCItem?
 	weak var core: OCCore? {
 		willSet {
 			if let core = core {
@@ -64,9 +64,9 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		didSet {
 			OnMainThread {
 				self.iconImageView.isHidden = true
+				self.hideItemMetadataUIElements()
+				self.renderSpecificView()
 			}
-			hideItemMetadataUIElements()
-			renderSpecificView()
 		}
 	}
 
@@ -104,6 +104,12 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	// MARK: - Init & Deinit
 	required init() {
+		iconImageView = UIImageView()
+		metadataInfoLabel = UILabel()
+		cancelButton = ThemeButton(type: .custom)
+		showPreviewButton = ThemeButton(type: .custom)
+		noNetworkLabel = UILabel()
+
 		super.init(nibName: nil, bundle: nil)
 	}
 
@@ -124,13 +130,11 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	override func loadView() {
 		super.loadView()
 
-		iconImageView = UIImageView()
 		iconImageView.translatesAutoresizingMaskIntoConstraints = false
 		iconImageView.contentMode = .scaleAspectFit
 
 		view.addSubview(iconImageView)
 
-		metadataInfoLabel = UILabel()
 		metadataInfoLabel?.translatesAutoresizingMaskIntoConstraints = false
 		metadataInfoLabel?.isHidden = false
 		metadataInfoLabel?.textAlignment = .center
@@ -147,7 +151,6 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 		view.addSubview(progressView!)
 
-		cancelButton = ThemeButton(type: .custom)
 		cancelButton?.translatesAutoresizingMaskIntoConstraints = false
 		cancelButton?.setTitle("Cancel".localized, for: .normal)
 		cancelButton?.isHidden = (downloadProgress != nil)
@@ -155,14 +158,12 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 		view.addSubview(cancelButton!)
 
-		showPreviewButton = ThemeButton(type: .custom)
 		showPreviewButton?.translatesAutoresizingMaskIntoConstraints = false
 		showPreviewButton?.setTitle("Open file".localized, for: .normal)
 		showPreviewButton?.isHidden = true
 		showPreviewButton?.addTarget(self, action: #selector(downloadItem), for: UIControl.Event.touchUpInside)
 		view.addSubview(showPreviewButton!)
 
-		noNetworkLabel = UILabel()
 		noNetworkLabel?.translatesAutoresizingMaskIntoConstraints = false
 		noNetworkLabel?.isHidden = true
 		noNetworkLabel?.adjustsFontForContentSizeCategory = true
@@ -235,14 +236,16 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 					})
 				}
 			}
+		}
+	}
 
-			if let parent = parent, let itemName = item.name {
-				parent.navigationItem.title = itemName
+	func updateNavigationBarItems() {
+		if let parent = parent, let itemName = item?.name {
+			parent.navigationItem.title = itemName
 
-				let actionsBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
-				actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
-				parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
-			}
+			let actionsBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+			actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
+			parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
 		}
 	}
 
@@ -270,10 +273,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				}
 				return
 			}
-			OnMainThread {
 				self?.item = latestItem
 				self?.source = file!.url
-			}
 		}) {
 			self.state = .downloading(progress: downloadProgress)
 		}
@@ -437,8 +438,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 // MARK: - Public API
 extension DisplayViewController {
 	func configure(_ configuration: DisplayViewConfiguration) {
-		self.core = configuration.core
 		self.item = configuration.item
+		self.core = configuration.core
 		self.state = configuration.state
 	}
 }
@@ -451,5 +452,6 @@ extension DisplayViewController : Themeable {
 		metadataInfoLabel?.applyThemeCollection(collection)
 		showPreviewButton?.applyThemeCollection(collection)
 		noNetworkLabel?.applyThemeCollection(collection)
+		self.view.backgroundColor = collection.tableBackgroundColor
 	}
 }
