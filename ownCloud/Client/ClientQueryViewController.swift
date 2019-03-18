@@ -390,10 +390,11 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
 
 		if let core = self.core {
+			// Remove duplicates
+			let uniqueItems = Array(Set(items))
 			// Get possible associated actions
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-			let actionContext = ActionContext(viewController: self, core: core, items: items, location: actionsLocation)
-
+			let actionContext = ActionContext(viewController: self, core: core, items: uniqueItems, location: actionsLocation)
 			self.actions = Action.sortedApplicableActions(for: actionContext)
 
 			// Enable / disable tool-bar items depending on action availability
@@ -1044,6 +1045,14 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem!])
 
 		var selectedItems = [OCItem]()
+		// Add Items from Multiselection too
+		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
+			if selectedIndexPaths.count > 0 {
+				for indexPath in selectedIndexPaths {
+					selectedItems.append(itemAtIndexPath(indexPath))
+				}
+			}
+		}
 		for dragItem in session.items {
 			guard let item = dragItem.localObject as? OCItem else { continue }
 			selectedItems.append(item)
