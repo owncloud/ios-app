@@ -37,6 +37,8 @@
 "Review Connection" = "Review Connection";
 "Authenticated via" = "Authenticated via";
 "Authenticated as %@ via %@" = "Authenticated as %@ via %@";
+"Edit" = "Edit";
+"Credentials" = "Credentials";
 
 "Contacting server…" = "Contacting server…";
 "Authenticating…" = "Authenticating…";
@@ -53,6 +55,8 @@
 "Disconnect" = "Disconnect";
 "Connecting…" = "Connecting…";
 "Connected." = "Connected.";
+"Select" = "Select";
+"Done" = "Done";
 
 "Folder" = "Folder";
 
@@ -91,7 +95,11 @@
 "Not now" = "Not now";
 "Upload file" = "Upload file";
 "Upload files" = "Upload files";
-
+"Ignore" = "Ignore";
+"Authorization failed" = "Authorization failed";
+"The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+"No matches" = "No matches";
+"There is no results for this search" = "There is no results for this search";
 "Status" = "Status";
 
 /* Server List*/
@@ -104,6 +112,7 @@
 "This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
 "Delete" = "Delete";
 "Deletion of '%@' failed" = "Deletion of '%@' failed";
+"Accounts" = "Accounts";
 
 "Help" = "Help";
 "Feedback" = "Feedback";
@@ -159,6 +168,7 @@
 
 "Logging" = "Logging";
 "Enable logging" = "Enable logging";
+"Options" = "Options";
 
 "Off" = "Off";
 "Info" = "Info";
@@ -233,3 +243,11 @@
 "%@ of %@" = "%@ of %@";
 "Invalid Page" = "Invalid Page";
 "The entered page number doesn't exist" = "The entered page number doesn't exist";
+
+/* Photo Upload */
+"Upload" = "Upload";
+"Select All" = "Select All";
+"Deselect All" = "Deselect All";
+"All Photos" = "All Photos";
+"Albums" = "Albums";
+"Importing '%@' from photo library" = "Importing '%@' from photo library";

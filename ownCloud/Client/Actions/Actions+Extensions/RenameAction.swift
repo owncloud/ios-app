@@ -50,7 +50,7 @@ class RenameAction : Action {
 
 		let renameViewController = NamingViewController(with: item, core: self.core, stringValidator: { name in
 			if name.contains("/") || name.contains("\\") {
-				return (false, "File name cannot contain / or \\")
+				return (false, "File name cannot contain / or \\".localized)
 			} else {
 				return (true, nil)
 			}
