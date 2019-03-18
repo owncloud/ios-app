@@ -302,16 +302,21 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 							lastTappedItemLocalID = rowItem.localID
 
 							core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ]) { [weak self, query] (error, core, item, _) in
+
+								guard let self = self else { return }
 								OnMainThread {
 									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
-										if let item = item, item.localID == self?.lastTappedItemLocalID, let core = core {
-											let itemViewController = DisplayHostViewController(for: item, with: core, root: query.rootItem!)
-											self?.navigationController?.pushViewController(itemViewController, animated: true)
+										if let item = item, let core = core {
+											if item.localID == self.lastTappedItemLocalID {
+												let itemViewController = GalleryHostViewController(core: core, selectedItem: item, query: query)
+												itemViewController.hidesBottomBarWhenPushed = true
+												self.navigationController?.pushViewController(itemViewController, animated: true)
+											}
 										}
 									}
 
-									if self?.lastTappedItemLocalID == item?.localID {
-										self?.lastTappedItemLocalID = nil
+									if self.lastTappedItemLocalID == item?.localID {
+										self.lastTappedItemLocalID = nil
 									}
 								}
 							}
