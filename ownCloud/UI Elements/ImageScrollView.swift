@@ -102,11 +102,11 @@ extension ImageScrollView {
 		setNeedsLayout()
 	}
 
-	func display(image: UIImage) {
+	func display(image: UIImage, inSize: CGSize) {
 		imageView?.removeFromSuperview()
 		imageView = UIImageView(image: image)
 		addSubview(imageView)
-		updateScaleForRotation(size: self.bounds.size)
+		updateScaleForRotation(size: inSize)
 	}
 }
 

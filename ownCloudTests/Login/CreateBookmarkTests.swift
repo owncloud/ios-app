@@ -544,7 +544,9 @@ class CreateBookmarkTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible())
 		
 		//Reset status
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible())
 	}
 	
 	/*
