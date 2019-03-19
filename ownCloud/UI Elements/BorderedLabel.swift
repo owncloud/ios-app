@@ -28,10 +28,21 @@ class BorderedLabel: UIView {
 	private let verticalLabelPadding : CGFloat = 5.0
 
 	// MARK: - Instance Variables
-	private var labelText : String = ""
 	private var label = UILabel()
 	private var font : UIFont = UIFont.systemFont(ofSize: 14)
-	private var mainColor : UIColor = UIColor.black
+	public var labelText : String = "" {
+		didSet {
+			label.text = labelText
+		}
+	}
+	public var mainColor : UIColor = UIColor.black {
+		didSet {
+			self.layer.borderColor = mainColor.cgColor
+			label.textColor = mainColor
+		}
+	}
+
+	// MARK: - Init & Deinit
 
 	init() {
 		super.init(frame: CGRect.zero)
@@ -48,6 +59,8 @@ class BorderedLabel: UIView {
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
+
+	// MARK: - Prepare and Update View
 
 	private func styleView() {
 		self.layer.cornerRadius = cornerRadius
@@ -75,9 +88,6 @@ class BorderedLabel: UIView {
 	public func update(text: String, color: UIColor) {
 		labelText = text
 		mainColor = color
-		self.layer.borderColor = mainColor.cgColor
-		label.text = labelText
-		label.textColor = mainColor
 	}
 
 }
