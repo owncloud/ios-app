@@ -116,12 +116,38 @@ class EditBookmarkTests: XCTestCase {
 
 			OCBookmarkManager.shared.addBookmark(bookmark)
 			EarlGrey.waitForElementMissing(accessibilityID: "addServer")
+			
+			
+			let mockUrlServer = "http://mocked.owncloud.server.com"
+			let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.oAuth2,
+																   OCAuthenticationMethodIdentifier.basicAuth]
+			let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .informal, issueHandler: nil)
+			
+			let authenticationMethodIdentifier = OCAuthenticationMethodIdentifier.oAuth2
+			let tokenResponse:[String : String] = ["access_token" : "RyFyDu1wH0Wvd8KlCP0Qeo9dlTqWajgvWHNqSdfl9bVD6Wp72CGikmgSkvUaAMML",
+												   "expires_in" : "3600",
+												   "message_url" : "https://localhost/apps/oauth2/authorization-successful",
+												   "refresh_token" : "khA8H18TWC84g1DmB0fzqgDOWvNRNPGJkkzQ1E6AZjq8UrqZ79QTK8UgSsJB6MrW",
+												   "token_type" : "Bearer",
+												   "user_id" : "admin"]
+			let dictionary:[String : Any] = ["bearerString" : "Bearer RyFyDu1wH0Wvd8KlCP0Qeo9dlTqWajgvWHNqSdfl9bVD6Wp72CGikmgSkvUaAMML",
+											 "expirationDate" : "2018-11-15 14:34:39 +0000",
+											 "tokenResponse" : tokenResponse]
+			let error: NSError?  = nil
+			let user: OCUser = OCUser.init()
+			user.displayName = "Admin"
+			
+			//Mock
+			UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+			UtilsTests.mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: error)
+			UtilsTests.mockOCConnectionConnectWithCompletionHandler(issue: issue, user: user, error: error)
+			UtilsTests.mockOCConnectionDisconnectWithCompletionHandler()
 
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
 			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-name-name")).perform(grey_replaceText(expectedServerName))
-			EarlGrey.select(elementWithMatcher: grey_text("Save".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("account-save")).perform(grey_tap())
 
 			//Assert
 			EarlGrey.select(elementWithMatcher: grey_text(expectedServerName)).assert(grey_sufficientlyVisible())

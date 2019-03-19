@@ -73,6 +73,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 		if let navController = self.navigationController {
 			navController.isToolbarHidden = false
+			navController.toolbar.isTranslucent = false
 			let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 			self.setToolbarItems([flexibleSpaceBarButton, selectButton, flexibleSpaceBarButton], animated: false)
 		}

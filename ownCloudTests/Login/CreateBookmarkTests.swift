@@ -15,18 +15,6 @@ import ownCloudMocking
 
 class CreateBookmarkTests: XCTestCase {
 	
-	public typealias OCMPrepareForSetupCompletionHandler = @convention(block)
-		(_ issue: OCIssue, _ suggestedURL: NSURL, _ supportedMethods: [OCAuthenticationMethodIdentifier], _ preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]) -> Void
-	
-	public typealias OCMPrepareForSetup = @convention(block)
-		(_ options: NSDictionary, _ completionHandler: OCMPrepareForSetupCompletionHandler) -> Void
-	
-	public typealias OCMGenerateAuthenticationDataWithMethodCompletionHandler = @convention(block)
-		(_ error: NSError?, _ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier, _ authenticationData: NSData?) -> Void
-	
-	public typealias OCMGenerateAuthenticationDataWithMethod = @convention(block)
-		(_ methodIdentifier: OCAuthenticationMethodIdentifier, _ options: OCAuthenticationMethodBookmarkAuthenticationDataGenerationOptions, _ completionHandler: OCMGenerateAuthenticationDataWithMethodCompletionHandler) -> Void
-	
 	override func setUp() {
 		super.setUp()
 		OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
@@ -80,7 +68,7 @@ class CreateBookmarkTests: XCTestCase {
 		let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Informal issue description"]), level: .informal, issueHandler: nil)
 		
 		//Mock
-		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 		
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -116,7 +104,7 @@ class CreateBookmarkTests: XCTestCase {
 		let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Warning issue description"]), level: .warning, issueHandler: nil)
 		
 		//Mock
-		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 		
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -143,7 +131,7 @@ class CreateBookmarkTests: XCTestCase {
 		let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Warning issue description"]), level: .warning, issueHandler: nil)
 		
 		//Mock
-		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 		
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -180,7 +168,7 @@ class CreateBookmarkTests: XCTestCase {
 		let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Warning issue description"]), level: .warning, issueHandler: nil)
 		
 		//Mock
-		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 		
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -209,7 +197,7 @@ class CreateBookmarkTests: XCTestCase {
 		let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error issue description"]), level: .error, issueHandler: nil)
 		
 		//Mock
-		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 		
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -253,7 +241,7 @@ class CreateBookmarkTests: XCTestCase {
 			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: url, level: .warning, issueHandler: nil)
 			
 			//Mock
-			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+			UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 			
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -287,7 +275,7 @@ class CreateBookmarkTests: XCTestCase {
 			let issue: OCIssue = OCIssue(for: certificate, validationResult: .userAccepted, url: url, level: .warning, issueHandler: nil)
 			
 			//Mock
-			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+			UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 			
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -325,7 +313,7 @@ class CreateBookmarkTests: XCTestCase {
 			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url:url, level: .warning, issueHandler: nil)
 			
 			//Mock
-			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+			UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 			
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -361,7 +349,7 @@ class CreateBookmarkTests: XCTestCase {
 			let issue: OCIssue = OCIssue.init(for: certificate, validationResult: OCCertificateValidationResult.userAccepted, url: url, level: .warning, issueHandler: nil)
 			
 			//Mock
-			mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+			UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 			
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -404,8 +392,8 @@ class CreateBookmarkTests: XCTestCase {
 		let error: NSError?  = nil
 		
 		//Mock
-		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
-		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier as OCAuthenticationMethodIdentifier, dictionary: dictionary, error: error)
+		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		UtilsTests.mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier as OCAuthenticationMethodIdentifier, dictionary: dictionary, error: error)
 		
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -451,10 +439,14 @@ class CreateBookmarkTests: XCTestCase {
 										 "expirationDate" : "2018-11-15 14:34:39 +0000",
 										 "tokenResponse" : tokenResponse]
 		let error: NSError?  = nil
+		let user: OCUser = OCUser.init()
+		user.displayName = "Admin"
 		
 		//Mock
-		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
-		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: error)
+		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		UtilsTests.mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: error)
+		UtilsTests.mockOCConnectionConnectWithCompletionHandler(issue: issue, user: user, error: error)
+		UtilsTests.mockOCConnectionDisconnectWithCompletionHandler()
 		
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -486,10 +478,14 @@ class CreateBookmarkTests: XCTestCase {
 		let dictionary:Dictionary = ["BasicAuthString" : "Basic YWRtaW46YWRtaW4=",
 									 "passphrase" : "admin",
 									 "username" : "admin"]
+		let user: OCUser = OCUser.init()
+		user.displayName = "Admin"
 		
 		//Mock
-		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
-		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: error)
+		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		UtilsTests.mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: error)
+		UtilsTests.mockOCConnectionConnectWithCompletionHandler(issue: issue, user: user, error: error)
+		UtilsTests.mockOCConnectionDisconnectWithCompletionHandler()
 		
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -529,8 +525,8 @@ class CreateBookmarkTests: XCTestCase {
 		let errorCredentials: NSError = NSError(domain: "OCError", code: 2, userInfo: [NSLocalizedDescriptionKey: "Error Credentials"])
 		
 		//Mock
-		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
-		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: errorCredentials)
+		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		UtilsTests.mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: errorCredentials)
 		
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -548,7 +544,9 @@ class CreateBookmarkTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible())
 		
 		//Reset status
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible())
 	}
 	
 	/*
@@ -572,8 +570,8 @@ class CreateBookmarkTests: XCTestCase {
 		let errorCredentials: NSError = NSError(domain: "OCError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Error Credentials"])
 		
 		//Mock
-		mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
-		mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: errorCredentials)
+		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+		UtilsTests.mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: errorCredentials)
 		
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
@@ -592,36 +590,5 @@ class CreateBookmarkTests: XCTestCase {
 		
 		//Reset status
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
-	}
-	
-	// MARK: - Mocks
-	func mockOCConnectionPrepareForSetup(mockUrlServer: String, authMethods: [OCAuthenticationMethodIdentifier], issue: OCIssue) {
-		let completionHandlerBlock : OCMPrepareForSetup = {
-			(dict, mockedBlock) in
-			let url: NSURL = NSURL(fileURLWithPath: mockUrlServer)
-			mockedBlock(issue, url, authMethods, authMethods)
-		}
-		
-		OCMockManager.shared.addMocking(blocks:
-			[OCMockLocation.ocConnectionPrepareForSetupWithOptions: completionHandlerBlock])
-	}
-	
-	func mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: OCAuthenticationMethodIdentifier, dictionary: [String: Any], error: NSError?) {
-		let completionHandlerBlock : OCMGenerateAuthenticationDataWithMethod = {
-			(methodIdentifier, options, mockedBlock) in
-			
-			var data: Data?
-			
-			do {
-				data = try PropertyListSerialization.data(fromPropertyList: dictionary, format: .binary, options: 0)
-			} catch {
-				return
-			}
-			
-			mockedBlock(error, authenticationMethodIdentifier, data! as NSData)
-		}
-		
-		OCMockManager.shared.addMocking(blocks:
-			[OCMockLocation.ocConnectionGenerateAuthenticationDataWithMethod: completionHandlerBlock])
 	}
 }
