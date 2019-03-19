@@ -43,13 +43,43 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "59371D922241125700C6BC5B"
+               BuildableName = "iosapp.xctest"
+               BlueprintName = "iosapp"
+               ReferencedContainer = "container:ownCloud.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "59371DA02241126900C6BC5B"
+               BuildableName = "ownCloud Screenshots Tests.xctest"
+               BlueprintName = "ownCloud Screenshots Tests"
+               ReferencedContainer = "container:ownCloud.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "59056CA922414F3C00A18A22"
+               BuildableName = "ownCloudScreenshotsTests.xctest"
+               BlueprintName = "ownCloudScreenshotsTests"
+               ReferencedContainer = "container:ownCloud.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DCC6565620C9B7E400110A97"
-            BuildableName = "ownCloud File ProviderUI.appex"
-            BlueprintName = "ownCloud File ProviderUI"
+            BlueprintIdentifier = "233BDE9B204FEFE500C06732"
+            BuildableName = "ownCloud.app"
+            BlueprintName = "ownCloud"
             ReferencedContainer = "container:ownCloud.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
