@@ -39,6 +39,15 @@
 "Authenticated as %@ via %@" = "Als %@ mit %@ angemeldet";
 "Edit" = "Bearbeiten";
 "Credentials" = "Zugangsdaten";
+"Rejected" = "Abgelehnt";
+"Passed" = "Bestanden";
+"Accepted" = "Akzeptiert";
+"Validation Error" = "Validierungsfehler";
+"Certificate was rejected by user." = "Zertifikat wurde vom Benutzer abgelehnt.";
+"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Zertifikat hat Probleme.\nÖffnen Sie 'Zertifikat-Details' für weitere Informationen.";
+"No issues found. Certificate passed validation." = "Keine Probleme gefunden. Zertifikat hat die Validierung bestanden.";
+"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Das Zertifikat hat möglicherweise Probleme, wurde aber vom Benutzer akzeptiert.\nÖffnen Sie 'Zertifikat-Details' für weitere Informationen.";
+"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth 2 login where you can enter your credentials." = "Wenn Sie auf 'Fortsetzen' klicken, werden Sie aufgefordert, der App '%@' zu erlauben, die Anmeldung bei OAuth 2 zu öffnen, wo Sie Ihre Zugangsdaten eingeben können.";
 
 "Contacting server…" = "Kontaktiere Server...";
 "Authenticating…" = "Authentifiziere";
