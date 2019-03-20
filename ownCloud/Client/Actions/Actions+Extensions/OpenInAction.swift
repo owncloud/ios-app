@@ -36,6 +36,9 @@ class OpenInAction: Action {
 	}
 
 	private var interactionController: UIDocumentInteractionController?
+	private var downloadProgressController: DownloadFileProgressHUDViewController?
+	private var downloadedFiles: [OCFile] = [OCFile]()
+	var downloadError: Error?
 
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController else {
@@ -43,40 +46,71 @@ class OpenInAction: Action {
 			return
 		}
 
-		let item = context.items[0]
+		downloadProgressController = DownloadFileProgressHUDViewController()
 
-		let controller = DownloadFileProgressHUDViewController()
+		downloadProgressController?.present(on: viewController) { [weak self] in
 
-		controller.present(on: viewController) {
-			if let progress = self.core?.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, _, _, file) in
-				if error != nil {
-					Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
+			let downloadGroup = DispatchGroup()
 
-					self.completionHandler = { error in
-
-						let appName = OCAppIdentity.shared.appName ?? "ownCloud"
-						let alertController = UIAlertController(with: "Cannot connect to ".localized + appName, message: appName + " couldn't download this file".localized, okLabel: "OK".localized, action: nil)
-						viewController.present(alertController, animated: true)
+			if let items = self?.context.items {
+				for item in items {
+					downloadGroup.enter()
+					if let progress = self?.core?.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, _, _, file) in
+						if error != nil {
+							Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
+							self?.downloadError = error
+						} else {
+							self?.downloadedFiles.append(file!)
+						}
+						downloadGroup.leave()
+					}) {
+						self?.downloadProgressController?.attach(progress: progress)
+						self?.publish(progress: progress)
 					}
 
-					controller.dismiss(animated: true, completion: {
-						self.completed(with: error)
-					})
-				} else {
-					OnMainThread {
-						controller.dismiss(animated: true, completion: {
-							if let fileURL = file?.url {
-								self.interactionController = UIDocumentInteractionController(url: fileURL)
-								self.interactionController?.delegate = self
-								self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
-							}
-						})
+					if self?.downloadError != nil {
+						break
 					}
 				}
-			}) {
-				controller.attach(progress: progress)
-				self.publish(progress: progress)
 			}
+
+			downloadGroup.notify(queue: .main) { [weak self] in
+				self?.downloadProgressController?.dismiss(animated: true, completion: {
+					if let error = self?.downloadError {
+						self?.showDownloadError()
+						self?.completed(with: error)
+					} else {
+						self?.presentSharingViewController()
+						self?.completed()
+					}
+				})
+			}
+		}
+	}
+
+	fileprivate func showDownloadError() {
+
+		guard let viewController = context.viewController else { return }
+
+		let appName = OCAppIdentity.shared.appName ?? "ownCloud"
+		let alertController = UIAlertController(with: "Cannot connect to ".localized + appName, message: appName + " couldn't download file(s)".localized, okLabel: "OK".localized, action: nil)
+		viewController.present(alertController, animated: true)
+	}
+
+	fileprivate func presentSharingViewController() {
+
+		guard downloadedFiles.count > 0, let viewController = context.viewController else { return }
+
+		// UIDocumentInteractionController can deal only with single file
+		if self.context.items.count == 1 {
+			if let fileURL = self.downloadedFiles.first?.url {
+				self.interactionController = UIDocumentInteractionController(url: fileURL)
+				self.interactionController?.delegate = self
+				self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
+			}
+
+		} else {
+			// TODO: Handle multiple files with a fallback solution
 		}
 	}
 }
