@@ -108,7 +108,7 @@
 
 "'%@' is currently locked" = "1%@ ist gerade gesperrt";
 "An operation is currently performed that prevents connecting to '%@'. Please try again later." = "Die Verbindung zu 1%@ wird gerade durch eine laufende Operation verhindert. Bitte später probieren.";
-"Really delete '%@'?" = "1%@ wirklich löschen?";
+"Really delete '%@'?" = "\"%@\" wirklich löschen?";
 "This will also delete all locally stored file copies." = "Dies löscht auch alle lokalen Datei-Kopien";
 "Delete" = "Löschen";
 "Deletion of '%@' failed" = "Löschen von '%@' ist fehlgeschlagen";
