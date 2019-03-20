@@ -20,7 +20,16 @@ import Foundation
 import UIKit
 import ownCloudSDK
 
+
 public extension UIBarButtonItem {
+
+	private struct imageFrame {
+		static var x = 0.0
+		static var y = 0.0
+		static var width = 30.0
+		static var height = 30.0
+	}
+
 	private struct AssociatedKeys {
 		static var actionKey = "actionKey"
 	}
@@ -37,16 +46,18 @@ public extension UIBarButtonItem {
 		}
 	}
 
-	public convenience init(image: UIImage?, target: AnyObject, action: Selector, dropTarget: UIDropInteractionDelegate, actionIdentifier: OCExtensionIdentifier) {
+	public convenience init(image: UIImage?, target: AnyObject, action: Selector, dropTarget: AnyObject, actionIdentifier: OCExtensionIdentifier) {
 		let button  = UIButton(type: .custom)
 		button.setImage(image, for: .normal)
-		button.frame = CGRect(x: 0, y: 0, width: 30.0, height: 30.0)
+		button.frame = CGRect(x: imageFrame.x, y: imageFrame.y, width: imageFrame.width, height: imageFrame.height)
 		button.actionIdentifier = actionIdentifier
 		button.addTarget(target, action: action, for: .touchUpInside)
-
-		let dropInteraction = UIDropInteraction(delegate: dropTarget)
-		button.addInteraction(dropInteraction)
 		button.sizeToFit()
+
+		if let dropDelegate = dropTarget as? UIDropInteractionDelegate {
+			let dropInteraction = UIDropInteraction(delegate: dropDelegate)
+			button.addInteraction(dropInteraction)
+		}
 
 		self.init(customView: button)
 		self.actionIdentifier = actionIdentifier

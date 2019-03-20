@@ -157,13 +157,11 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
 
 		// Create bar button items for the toolbar
-		if let dropDelegate = self as? UIDropInteractionDelegate {
-			deleteMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"trash"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: dropDelegate, actionIdentifier: DeleteAction.identifier!)
-			deleteMultipleBarButtonItem?.isEnabled = false
+		deleteMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"trash"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: DeleteAction.identifier!)
+		deleteMultipleBarButtonItem?.isEnabled = false
 
-			moveMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"folder"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: dropDelegate, actionIdentifier: MoveAction.identifier!)
-			moveMultipleBarButtonItem?.isEnabled = false
-		}
+		moveMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"folder"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: MoveAction.identifier!)
+		moveMultipleBarButtonItem?.isEnabled = false
 
 		self.addThemableBackgroundView()
 	}
@@ -385,7 +383,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		}
 	}
 
-	func addActionItems(_ items: [OCItem]) {
+	func updateToolbarItemsForDropping(_ items: [OCItem]) {
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
 
@@ -713,35 +711,9 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
 		removeToolbar()
 	}
-/*
-	@objc func actOnMultipleItemsNew(_ sender: Any) {
-		// Find associated action
 
-		guard let sender = sender as? ActionIdentifierProtocol.Type else {
-			return
-		}
-		//print("actOnMultipleItems \(sender) \(sender.actionIdentifier)")
-		if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
-			// Configure progress handler
-			action.progressHandler = { [weak self] progress in
-				self?.progressSummarizer?.startTracking(progress: progress)
-			}
-
-			action.completionHandler = { [weak self] _ in
-				DispatchQueue.main.async {
-					self?.leaveMultipleSelection()
-				}
-			}
-
-			// Execute the action
-			action.willRun()
-			action.run()
-		}
-	}
-*/
 	@objc func actOnMultipleItems(_ sender: UIButton) {
 		// Find associated action
-		print("actOnMultipleItems \(sender) \(sender.actionIdentifier)")
 		if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
 			// Configure progress handler
 			action.progressHandler = { [weak self] progress in
@@ -995,15 +967,15 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 				
 				if coordinator.proposal.intent == .insertIntoDestinationIndexPath {
 					
-					guard let destinationIP = coordinator.destinationIndexPath else {
+					guard let destinationIndexPath = coordinator.destinationIndexPath else {
 						return
 					}
 					
-					guard items.count >= destinationIP.row else {
+					guard items.count >= destinationIndexPath.row else {
 						return
 					}
 					
-					let rootItem = items[destinationIP.row]
+					let rootItem = items[destinationIndexPath.row]
 					
 					guard rootItem.type == .collection else {
 						return
@@ -1060,7 +1032,7 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 
 		let item: OCItem = itemAtIndexPath(indexPath)
 		selectedItems.append(item)
-		addActionItems(selectedItems)
+		updateToolbarItemsForDropping(selectedItems)
 
 		guard let dragItem = itemForDragging(item: item) else { return [] }
 		return [dragItem]
@@ -1075,7 +1047,7 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 
 		let item: OCItem = itemAtIndexPath(indexPath)
 		selectedItems.append(item)
-		addActionItems(selectedItems)
+		updateToolbarItemsForDropping(selectedItems)
 
 		guard let dragItem = itemForDragging(item: item) else { return [] }
 		return [dragItem]
