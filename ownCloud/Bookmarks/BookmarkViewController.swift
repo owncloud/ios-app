@@ -45,7 +45,7 @@ class BookmarkViewController: StaticTableViewController {
 		toolbar.barStyle = .default
 		toolbar.isTranslucent = true
 		toolbar.sizeToFit()
-		let doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(toogleTextField))
+		let doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(resignTextField))
 		let flexibleSpaceBarButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 		let fixedSpaceBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
 		toolbar.setItems([fixedSpaceBarButtonItem, previousBarButtonItem, fixedSpaceBarButtonItem, fixedSpaceBarButtonItem, nextBarButtonItem, flexibleSpaceBarButtonItem, doneBarButtonItem], animated: false)
@@ -155,7 +155,6 @@ class BookmarkViewController: StaticTableViewController {
 		// Credentials section + rows
 		usernameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender) in
 			if (sender as? UITextField) != nil, self?.bookmark?.authenticationData != nil {
-				//sender.inputAccessoryView = inputToolbar
 				self?.bookmark?.authenticationData = nil
 				self?.composeSectionsAndRows(animated: true)
 			}
@@ -746,17 +745,17 @@ class BookmarkViewController: StaticTableViewController {
 	
 	// MARK: - Keyboard AccessoryView
 	@objc func toogleTextField (_ sender: UIBarButtonItem) {
-		if sender.style == .done {
-			activeTextField?.resignFirstResponder()
+		if passwordRow?.textField?.isFirstResponder ?? false {
+			// Found next responder, so set it
+			usernameRow?.textField?.becomeFirstResponder()
 		} else {
-			if passwordRow?.textField?.isFirstResponder ?? false {
-				// Found next responder, so set it
-				usernameRow?.textField?.becomeFirstResponder()
-			} else {
-				// Not found, so remove keyboard
-				passwordRow?.textField?.becomeFirstResponder()
-			}
+			// Not found, so remove keyboard
+			passwordRow?.textField?.becomeFirstResponder()
 		}
+	}
+
+	@objc func resignTextField (_ sender: UIBarButtonItem) {
+		activeTextField?.resignFirstResponder()
 	}
 }
 
