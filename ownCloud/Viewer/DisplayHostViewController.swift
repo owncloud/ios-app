@@ -52,7 +52,7 @@ class DisplayHostViewController: UIViewController {
 	// MARK: - Controller lifcycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
+		self.extendedLayoutIncludesOpaqueBars = true
 		guard let itemToDisplay = itemsToDisplay.first, let mimeType = itemToDisplay.mimeType else {
 			return
 		}
