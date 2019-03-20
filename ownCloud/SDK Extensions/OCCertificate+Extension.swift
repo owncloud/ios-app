@@ -33,23 +33,23 @@ extension OCCertificate {
 			case .none:
 				break
 			case .error:
-				color = UIColor.red
+				color = Theme.shared.activeCollection.errorColor
 				shortDescription = "Error".localized
 				longDescription = "\("Validation Error".localized) \(error.localizedDescription)"
 			case .reject:
-				color = UIColor.red
+				color = Theme.shared.activeCollection.errorColor
 				shortDescription = "Rejected".localized
 				longDescription = "Certificate was rejected by user.".localized
 			case .promptUser:
-				color = UIColor.orange
+				color = Theme.shared.activeCollection.warningColor
 				shortDescription = "Warning".localized
 				longDescription = "Certificate has issues.\nOpen 'Certificate Details' for more informations.".localized
 			case .passed:
-				color = UIColor(red: 0.173, green: 0.745, blue: 0.306, alpha: 1.000)
+				color = Theme.shared.activeCollection.successColor
 				shortDescription = "Passed".localized
 				longDescription = "No issues found. Certificate passed validation.".localized
 			case .userAccepted:
-				color = UIColor(red: 0.5, green: 0.5, blue: 1.0, alpha: 1.000)
+				color = Theme.shared.activeCollection.warningColor
 				shortDescription = "Accepted".localized
 				longDescription = "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations.".localized
 			}
