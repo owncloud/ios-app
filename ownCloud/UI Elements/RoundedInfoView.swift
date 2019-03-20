@@ -38,7 +38,7 @@ class RoundedInfoView: UIView, Themeable {
 		super.init(frame: CGRect.zero)
 		infoText = text
 		Theme.shared.register(client: self, applyImmediately: true)
-		styleView()
+		setupView()
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -54,7 +54,7 @@ class RoundedInfoView: UIView, Themeable {
 		}
 	}
 
-	private func styleView() {
+	private func setupView() {
 		backgroundView.layer.cornerRadius = cornerRadius
 		backgroundView.layer.borderWidth = borderWidth
 		backgroundView.translatesAutoresizingMaskIntoConstraints = false
