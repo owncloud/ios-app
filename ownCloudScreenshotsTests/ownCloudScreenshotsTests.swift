@@ -41,7 +41,7 @@ class ownCloudScreenshotsTests: XCTestCase {
 		setupSnapshot(app)
 		app.launch()
 
-		snapshot("01LoginView")
+		snapshot("Brainstorming")
 		
 	}
 }
