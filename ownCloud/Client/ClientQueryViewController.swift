@@ -54,9 +54,13 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var moveMultipleBarButtonItem: UIBarButtonItem?
 	var duplicateMultipleBarButtonItem: UIBarButtonItem?
 	var copyMultipleBarButtonItem: UIBarButtonItem?
+	var openMultipleBarButtonItem: UIBarButtonItem?
 
 	var selectBarButton: UIBarButtonItem?
 	var uploadBarButton: UIBarButtonItem?
+
+	var selectDeselectAllButtonItem: UIBarButtonItem?
+	var exitMultipleSelectionBarButtonItem: UIBarButtonItem?
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -159,6 +163,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
 
+		selectDeselectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
+		exitMultipleSelectionBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(exitMultipleSelection))
+
 		// Create bar button items for the toolbar
 		deleteMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(actOnMultipleItems))
 		deleteMultipleBarButtonItem?.actionIdentifier = DeleteAction.identifier
@@ -168,15 +175,17 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		moveMultipleBarButtonItem?.actionIdentifier = MoveAction.identifier
 		moveMultipleBarButtonItem?.isEnabled = false
 
-		let duplicateIcon = UIImage(named: "duplicate-file")?.withRenderingMode(.alwaysTemplate)
-		duplicateMultipleBarButtonItem =  UIBarButtonItem(image: duplicateIcon, style: .plain, target: self, action: #selector(actOnMultipleItems))
+		duplicateMultipleBarButtonItem =  UIBarButtonItem(image: UIImage(named: "duplicate-file"), style: .plain, target: self, action: #selector(actOnMultipleItems))
 		duplicateMultipleBarButtonItem?.actionIdentifier = DuplicateAction.identifier
 		duplicateMultipleBarButtonItem?.isEnabled = false
 
-		let copyIcon = UIImage(named: "copy-file")?.withRenderingMode(.alwaysTemplate)
-		copyMultipleBarButtonItem =  UIBarButtonItem(image: copyIcon, style: .plain, target: self, action: #selector(actOnMultipleItems))
+		copyMultipleBarButtonItem =  UIBarButtonItem(image: UIImage(named: "copy-file"), style: .plain, target: self, action: #selector(actOnMultipleItems))
 		copyMultipleBarButtonItem?.actionIdentifier = CopyAction.identifier
 		copyMultipleBarButtonItem?.isEnabled = false
+
+		openMultipleBarButtonItem =  UIBarButtonItem(image: UIImage(named: "open-in"), style: .plain, target: self, action: #selector(actOnMultipleItems))
+		openMultipleBarButtonItem?.actionIdentifier = OpenInAction.identifier
+		openMultipleBarButtonItem?.isEnabled = false
 
 		self.addThemableBackgroundView()
 	}
@@ -191,6 +200,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		searchController?.dismiss(animated: true, completion: nil)
 
 		viewControllerVisible = false
+		leaveMultipleSelection()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -334,13 +344,13 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 			tableView.deselectRow(at: indexPath, animated: true)
 		} else {
-			updateToolbarItems()
+			updateMultiSelectionUI()
 		}
 	}
 
 	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
 		if tableView.isEditing {
-			updateToolbarItems()
+			updateMultiSelectionUI()
 		}
 	}
 
@@ -628,8 +638,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 
+
 	// MARK: - Toolbar actions handling multiple selected items
-	func updateToolbarItems() {
+
+	fileprivate func updateMultiSelectionUI() {
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
 
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
@@ -637,6 +649,16 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		// Do we have selected items?
 		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
 			if selectedIndexPaths.count > 0 {
+
+				if selectedIndexPaths.count == self.items.count {
+					selectDeselectAllButtonItem?.title = "Deselect All".localized
+					selectDeselectAllButtonItem?.target = self
+					selectDeselectAllButtonItem?.action = #selector(deselectAllItems)
+				} else {
+					selectDeselectAllButtonItem?.title = "Select All".localized
+					selectDeselectAllButtonItem?.target = self
+					selectDeselectAllButtonItem?.action = #selector(selectAllItems)
+				}
 
 				if let core = self.core {
 					// Get array of OCItems from selected table view index paths
@@ -673,6 +695,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.setEditing(false, animated: true)
 		selectBarButton?.title = "Select".localized
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
+		self.navigationItem.leftBarButtonItem = nil
 		removeToolbar()
 	}
 
@@ -701,22 +724,44 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	@objc func multipleSelectionButtonPressed(_ sender: UIBarButtonItem) {
 
 		if !self.tableView.isEditing {
-			updateToolbarItems()
+			updateMultiSelectionUI()
 			self.tableView.setEditing(true, animated: true)
-			selectBarButton?.title = "Done".localized
-			self.populateToolbar(with: [moveMultipleBarButtonItem!,	
-										flexibleSpaceBarButton,
-										deleteMultipleBarButtonItem!,
-										flexibleSpaceBarButton,
-										copyMultipleBarButtonItem!,
-										flexibleSpaceBarButton,
-										duplicateMultipleBarButtonItem!])
 
-			self.navigationItem.rightBarButtonItems = [selectBarButton!]
+			self.populateToolbar(with: [
+				openMultipleBarButtonItem!,
+				flexibleSpaceBarButton,
+				moveMultipleBarButtonItem!,
+				flexibleSpaceBarButton,
+				copyMultipleBarButtonItem!,
+				flexibleSpaceBarButton,
+				duplicateMultipleBarButtonItem!,
+				flexibleSpaceBarButton,
+				deleteMultipleBarButtonItem!])
 
-		} else {
-			leaveMultipleSelection()
+			self.navigationItem.leftBarButtonItem = selectDeselectAllButtonItem!
+			self.navigationItem.rightBarButtonItems = [exitMultipleSelectionBarButtonItem!]
 		}
+	}
+
+	@objc func exitMultipleSelection(_ sender: UIBarButtonItem) {
+		leaveMultipleSelection()
+	}
+
+	@objc func selectAllItems(_ sender: UIBarButtonItem) {
+		(0..<self.items.count).map { (item) -> IndexPath in
+			return IndexPath(item: item, section: 0)
+			}.forEach { (indexPath) in
+				self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
+		}
+		updateMultiSelectionUI()
+	}
+
+	@objc func deselectAllItems(_ sender: UIBarButtonItem) {
+
+		self.tableView.indexPathsForSelectedRows?.forEach({ (indexPath) in
+			self.tableView.deselectRow(at: indexPath, animated: true)
+		})
+		updateMultiSelectionUI()
 	}
 
 	@objc func uploadsBarButtonPressed(_ sender: UIBarButtonItem) {
