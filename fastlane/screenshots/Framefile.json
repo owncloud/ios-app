@@ -1,17 +1,21 @@
 {
   "default": {
-    "keyword": {
-      "fonts": [
-        {
-          "font": "./fonts/Maiden Crimes.otf",
-          "supported": ["de-DE", "en-US", "es-ES", "fr-FR", "it-IT", "nl-NL", "sv-SE", "pt-BR"]
-        }
-      ]
-    },
+
+    "stack_title": "true",
+
     "title": {
       "fonts": [
         {
-          "font": "./fonts/Maiden Crimes.otf",
+          "font": "./fonts/Verdana Bold.ttf",
+          "supported": ["de-DE", "en-US", "es-ES", "fr-FR", "it-IT", "nl-NL", "sv-SE", "pt-BR"]
+        }
+      ],
+      "color": "#545454"
+    },
+    "keyword": {
+      "fonts": [
+        {
+          "font": "./fonts/Verdana Bold.ttf",
           "supported": ["de-DE", "en-US", "es-ES", "fr-FR", "it-IT", "nl-NL", "sv-SE", "pt-BR"]
         }
       ],
@@ -23,29 +27,6 @@
 
 
   "data": [
-    {
-      "filter": "Brainstorming",
-      "keyword": {
-        "color": "#d21559"
-      }
-    },
-    {
-      "filter": "Organizing",
-      "keyword": {
-        "color": "#feb909"
-      }
-    },
-    {
-      "filter": "Sharing",
-      "keyword": {
-        "color": "#aa4dbc"
-      }
-    },
-    {
-      "filter": "Styling",
-      "keyword": {
-        "color": "#31bb48"
-      }
-    }
+    
   ]
 }

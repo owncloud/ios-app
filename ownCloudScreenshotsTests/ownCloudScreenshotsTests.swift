@@ -41,7 +41,9 @@ class ownCloudScreenshotsTests: XCTestCase {
 		setupSnapshot(app)
 		app.launch()
 
-		snapshot("Brainstorming")
-		
+		//snapshot("01_connect_with_owncloud")
+
+		//Actions
+		//EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 	}
 }
