@@ -806,12 +806,12 @@ extension BookmarkViewController : UITextFieldDelegate {
 		activeTextField = textField
 		if textField.isEqual(urlRow?.textField) {
 			textField.returnKeyType = .continue
-		} else if textField.isEqual(usernameRow?.textField) {
+		} else if textField.isEqual(usernameRow?.textField) && passwordRow?.textField?.isEnabled ?? false {
 			previousBarButtonItem.isEnabled = false
 			nextBarButtonItem.isEnabled = true
 			textField.inputAccessoryView = inputToolbar
 			textField.returnKeyType = .next
-		} else if textField.isEqual(passwordRow?.textField) {
+		} else if textField.isEqual(passwordRow?.textField) && usernameRow?.textField?.isEnabled ?? false {
 			previousBarButtonItem.isEnabled = true
 			nextBarButtonItem.isEnabled = false
 			textField.inputAccessoryView = inputToolbar
