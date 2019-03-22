@@ -94,11 +94,10 @@ class OpenInAction: Action {
 	}
 
 	fileprivate func presentSharingViewController() {
-
 		guard downloadedFiles.count > 0, let viewController = context.viewController else { return }
 
 		// UIDocumentInteractionController can deal only with single file
-		if self.context.items.count == 1 {
+		if downloadedFiles.count == 1 {
 			if let fileURL = self.downloadedFiles.first?.url {
 				self.interactionController = UIDocumentInteractionController(url: fileURL)
 				self.interactionController?.delegate = self
@@ -106,7 +105,12 @@ class OpenInAction: Action {
 			}
 
 		} else {
-			// TODO: Handle multiple files with a fallback solution
+			// Handle multiple files with a fallback solution
+			let urls = downloadedFiles.map { (file) -> URL in
+				return file.url!
+			}
+			let activityController = UIActivityViewController(activityItems: urls, applicationActivities: nil)
+			context.viewController?.present(activityController, animated: true, completion: nil)
 		}
 	}
 }
