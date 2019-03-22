@@ -46,7 +46,7 @@ extension OCIssue {
 					}
 				}
 
-			case .urlRedirection, .certificate, .error, .multipleChoice:
+			case .urlRedirection, .certificate, .error, .generic, .multipleChoice:
 				displayIssues = [self]
 		}
 

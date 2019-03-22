@@ -596,7 +596,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			let filename = ressource.originalFilename
 
 			let progress = Progress(totalUnitCount: 100)
-			progress.localizedDescription = String(format: "Importing '%@' from photo library".localized , filename)
+			progress.localizedDescription = String(format: "Importing '%@' from photo library".localized, filename)
 
 			let options = PHAssetResourceRequestOptions()
 			options.isNetworkAccessAllowed = true

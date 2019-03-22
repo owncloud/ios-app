@@ -742,7 +742,7 @@ class BookmarkViewController: StaticTableViewController {
 	func isAuthenticationMethodTokenBased(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> Bool {
 		return authenticationMethodTypeForIdentifier(authenticationMethodIdentifier) == OCAuthenticationMethodType.token
 	}
-	
+
 	// MARK: - Keyboard AccessoryView
 	@objc func toogleTextField (_ sender: UIBarButtonItem) {
 		if passwordRow?.textField?.isFirstResponder ?? false {
@@ -789,7 +789,7 @@ extension BookmarkViewController : OCClassSettingsSupport {
 
 // MARK: - Keyboard / return key tracking
 extension BookmarkViewController : UITextFieldDelegate {
-	
+
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		if self.navigationItem.rightBarButtonItem == continueBarButtonItem {
 			if !updateInputFocus() {
@@ -801,7 +801,7 @@ extension BookmarkViewController : UITextFieldDelegate {
 
 		return true
 	}
-	
+
 	func textFieldDidBeginEditing(_ textField: UITextField) {
 		activeTextField = textField
 		if textField.isEqual(urlRow?.textField) {
