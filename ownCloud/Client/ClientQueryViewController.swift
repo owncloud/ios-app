@@ -613,7 +613,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			let filename = ressource.originalFilename
 
 			let progress = Progress(totalUnitCount: 100)
-			progress.localizedDescription = String(format: "Importing '%@' from photo library".localized , filename)
+			progress.localizedDescription = String(format: "Importing '%@' from photo library".localized, filename)
 
 			let options = PHAssetResourceRequestOptions()
 			options.isNetworkAccessAllowed = true
@@ -638,27 +638,34 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		}
 	}
 
-
 	// MARK: - Toolbar actions handling multiple selected items
+	fileprivate func updateSelectDeselectAllButton() {
+		var selectedCount = 0
+		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
+			selectedCount = selectedIndexPaths.count
+		}
+
+		if selectedCount == self.items.count {
+			selectDeselectAllButtonItem?.title = "Deselect All".localized
+			selectDeselectAllButtonItem?.target = self
+			selectDeselectAllButtonItem?.action = #selector(deselectAllItems)
+		} else {
+			selectDeselectAllButtonItem?.title = "Select All".localized
+			selectDeselectAllButtonItem?.target = self
+			selectDeselectAllButtonItem?.action = #selector(selectAllItems)
+		}
+	}
 
 	fileprivate func updateMultiSelectionUI() {
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
 
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
 
+		updateSelectDeselectAllButton()
+
 		// Do we have selected items?
 		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
 			if selectedIndexPaths.count > 0 {
-
-				if selectedIndexPaths.count == self.items.count {
-					selectDeselectAllButtonItem?.title = "Deselect All".localized
-					selectDeselectAllButtonItem?.target = self
-					selectDeselectAllButtonItem?.action = #selector(deselectAllItems)
-				} else {
-					selectDeselectAllButtonItem?.title = "Select All".localized
-					selectDeselectAllButtonItem?.target = self
-					selectDeselectAllButtonItem?.action = #selector(selectAllItems)
-				}
 
 				if let core = self.core {
 					// Get array of OCItems from selected table view index paths
@@ -740,6 +747,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 
 			self.navigationItem.leftBarButtonItem = selectDeselectAllButtonItem!
 			self.navigationItem.rightBarButtonItems = [exitMultipleSelectionBarButtonItem!]
+
+			updateMultiSelectionUI()
 		}
 	}
 
