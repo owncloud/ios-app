@@ -35,6 +35,7 @@ class BookmarkViewController: StaticTableViewController {
 	var tokenInfoRow : StaticTableViewRow?
 	var deleteAuthDataButtonRow : StaticTableViewRow?
 	var oAuthInfoView : RoundedInfoView?
+	var showedOAuthInfoHeader : Bool = false
 
 	lazy var continueBarButtonItem: UIBarButtonItem = UIBarButtonItem(title: "Continue".localized, style: .done, target: self, action: #selector(handleContinue))
 	lazy var saveBarButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
@@ -268,7 +269,21 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		if bookmark?.authenticationData == nil {
-			handleContinueAuthentication(hud: hud, hudCompletion: hudCompletion)
+			var proceed = true
+			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {
+				if isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
+					// Only proceed, if OAuth Info Header was shown to the user, before continue was pressed
+					// Statement here is only important for http connections and token based auth
+					if showedOAuthInfoHeader == false {
+						proceed = false
+						showedOAuthInfoHeader = true
+					}
+				}
+			}
+			if proceed == true {
+				handleContinueAuthentication(hud: hud, hudCompletion: hudCompletion)
+			}
+
 			return
 		}
 	}
@@ -505,7 +520,7 @@ class BookmarkViewController: StaticTableViewController {
 		if bookmark?.certificate != nil {
 			if certificateRow != nil, certificateRow?.attached == false {
 				urlSection?.add(row: certificateRow!, animated: animated)
-
+				showedOAuthInfoHeader = true
 				bookmark?.certificate?.validationResult(completionHandler: { (_, shortDescription, longDescription, color, _) in
 					OnMainThread {
 						guard let accessoryView = self.certificateRow?.additionalAccessoryView as? BorderedLabel else { return }
