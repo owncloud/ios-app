@@ -452,6 +452,7 @@ class CreateBookmarkTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
 		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
 		
 		//Assert
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_sufficientlyVisible())
