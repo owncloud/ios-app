@@ -35,6 +35,7 @@ class BookmarkViewController: StaticTableViewController {
 	var tokenInfoRow : StaticTableViewRow?
 	var deleteAuthDataButtonRow : StaticTableViewRow?
 	var oAuthInfoView : RoundedInfoView?
+	var showOAuthInfoHeader = false
 	var showedOAuthInfoHeader : Bool = false
 	var activeTextField: UITextField?
 
@@ -135,6 +136,7 @@ class BookmarkViewController: StaticTableViewController {
 				}
 
 				if changedBookmark {
+					self?.showOAuthInfoHeader = false
 					self?.composeSectionsAndRows(animated: true)
 				}
 
@@ -175,6 +177,13 @@ class BookmarkViewController: StaticTableViewController {
 
 		deleteAuthDataButtonRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
 			if self?.bookmark?.authenticationData != nil {
+
+				if let authMethodIdentifier = self?.bookmark?.authenticationMethodIdentifier {
+					if self?.isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) ?? false {
+						self?.showOAuthInfoHeader = true
+					}
+				}
+
 				self?.bookmark?.authenticationMethodIdentifier = nil
 				self?.bookmark?.authenticationData = nil
 				self?.updateUI(from: (self?.bookmark)!, fieldSelector: { (row) -> Bool in
@@ -546,8 +555,8 @@ class BookmarkViewController: StaticTableViewController {
 			}
 		} else {
 			if certificateRow != nil, certificateRow?.attached == true {
+				urlSection?.updateFooter(title: nil)
 				urlSection?.remove(rows: [certificateRow!], animated: animated)
-				urlSection?.footerTitle = nil
 			}
 		}
 
@@ -558,9 +567,6 @@ class BookmarkViewController: StaticTableViewController {
 
 		// Credentials section: show depending on authentication method and data
 		var showCredentialsSection = false
-		// OAuth Info Header: show depending on authentication method
-		var showOAuthInfoHeader = false
-
 		if let authenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier {
 			// Username & Password: show if passphrase-based authentication method is used
 			if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
@@ -592,7 +598,6 @@ class BookmarkViewController: StaticTableViewController {
 						if bookmark?.authenticationData != nil {
 							showCredentialsSection = true
 						}
-						showOAuthInfoHeader = true
 				}
 
 				if self.bookmark?.authenticationData == nil {
@@ -629,6 +634,8 @@ class BookmarkViewController: StaticTableViewController {
 							}
 
 							showCredentialsSection = true
+						} else {
+							showOAuthInfoHeader = true
 						}
 				}
 
