@@ -587,7 +587,6 @@ class CreateBookmarkTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_notVisible())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible())
 		
 		//Reset status
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
