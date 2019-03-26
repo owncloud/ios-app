@@ -181,6 +181,7 @@ class BookmarkViewController: StaticTableViewController {
 				if let authMethodIdentifier = self?.bookmark?.authenticationMethodIdentifier {
 					if self?.isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) ?? false {
 						self?.showOAuthInfoHeader = true
+						self?.showedOAuthInfoHeader = true
 					}
 				}
 
@@ -663,7 +664,7 @@ class BookmarkViewController: StaticTableViewController {
 			self.tableView.tableHeaderView = oAuthInfoView
 			self.tableView.layoutTableHeaderView()
 		} else {
-			self.tableView.tableHeaderView = nil
+			self.tableView.tableHeaderView?.removeFromSuperview()
 		}
 
 		// Continue button: show always
