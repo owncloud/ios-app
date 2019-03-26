@@ -210,7 +210,14 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 	func coreReady() {
 		OnMainThread {
-			let queryViewController = ClientQueryViewController(core: self.core!, query: OCQuery(forPath: "/"))
+			let query = OCQuery(forPath: "/")
+//			let query = OCQuery(condition: OCQueryCondition.require([
+//				.where(.name, contains: "i"),
+//				.where(.type, isEqualTo: OCItemType.file.rawValue),
+//				.where(.size, isGreaterThan: 220000)
+//			]).sorted(by: .size, ascending: true), inputFilter:nil)
+
+			let queryViewController = ClientQueryViewController(core: self.core!, query: query)
 			// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
 			self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
 			self.activityViewController?.core = self.core!
