@@ -21,6 +21,7 @@ import UIKit
 class DownloadFileProgressHUDViewController: UIViewController {
 
 	private let progressViewSidesConstraintConstant: CGFloat = 20
+	private let progressViewWidthConstraintConstant: CGFloat = 280
 	private let cancelButtonTopAnchor: CGFloat = 10
 	private let cancelButtonHeightConstraintConstant: CGFloat = 40
 	private let infoLabelBottomAnchor: CGFloat = 10
@@ -82,8 +83,9 @@ class DownloadFileProgressHUDViewController: UIViewController {
 		NSLayoutConstraint.activate([
 			progressView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
 			progressView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-			progressView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: progressViewSidesConstraintConstant),
-			progressView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -progressViewSidesConstraintConstant)
+			progressView.leftAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leftAnchor, constant: progressViewSidesConstraintConstant),
+			progressView.rightAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.rightAnchor, constant: progressViewSidesConstraintConstant),
+			progressView.widthAnchor.constraint(lessThanOrEqualToConstant: progressViewWidthConstraintConstant)
 		])
 
 		// Cancel button
