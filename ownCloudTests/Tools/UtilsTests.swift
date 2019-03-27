@@ -47,7 +47,7 @@ class UtilsTests {
 	}
 
 	// MARK: - Helper
-	static func getBookmark(authenticationMethod: OCAuthenticationMethodIdentifier = OCAuthenticationMethodIdentifier.basicAuth, bookmarkName: String = "Server name") -> OCBookmark? {
+	static func getBookmark(authenticationMethod: OCAuthenticationMethodIdentifier = OCAuthenticationMethodIdentifier.basicAuth, bookmarkName: String = "Server name", certifUserApproved: Bool = true) -> OCBookmark? {
 
 		let mockUrlServer: String = "https://mock.owncloud.com/"
 
@@ -68,6 +68,7 @@ class UtilsTests {
 		bookmark.authenticationMethodIdentifier = authenticationMethod
 		bookmark.authenticationData = data
 		bookmark.certificate = self.getCertificate(mockUrlServer: mockUrlServer)
+		bookmark.certificate?.userAccepted = certifUserApproved
 
 		return bookmark
 	}

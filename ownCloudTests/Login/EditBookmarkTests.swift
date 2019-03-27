@@ -267,4 +267,50 @@ class EditBookmarkTests: XCTestCase {
 			OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 		}
 	}
+
+	/*
+	* PASSED if: After deleting authentication data, "Warning" level of certificate is displayed
+	*/
+	func testCheckEditCertificateWarning () {
+
+		if let bookmark: OCBookmark = UtilsTests.getBookmark(authenticationMethod: OCAuthenticationMethodIdentifier.oAuth2, certifUserApproved: false) {
+
+			OCBookmarkManager.shared.addBookmark(bookmark)
+			EarlGrey.waitForElementMissing(accessibilityID: "addServer")
+
+			//Actions
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
+			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
+
+			//Asserts
+			EarlGrey.select(elementWithMatcher: grey_text("Warning".localized)).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+			OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
+		}
+	}
+
+	/*
+	* PASSED if: After deleting authentication data, "Accepted" level of certificate is displayed
+	*/
+	func testCheckEditCertificateAccepted () {
+
+		if let bookmark: OCBookmark = UtilsTests.getBookmark(authenticationMethod: OCAuthenticationMethodIdentifier.oAuth2, certifUserApproved: true) {
+
+			OCBookmarkManager.shared.addBookmark(bookmark)
+			EarlGrey.waitForElementMissing(accessibilityID: "addServer")
+
+			//Actions
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
+			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
+
+			//Asserts
+			EarlGrey.select(elementWithMatcher: grey_text("Accepted".localized)).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+			OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
+		}
+	}
 }
