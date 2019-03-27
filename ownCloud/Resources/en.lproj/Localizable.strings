@@ -87,6 +87,8 @@
 "Search this folder" = "Search this folder";
 "Pending" = "Pending";
 
+"%@ of %@ used" = "%@ of %@ used";
+
 /* Client Messages */
 "Empty folder" = "Empty folder";
 "This folder contains no files or folders." = "This folder contains no files or folders.";

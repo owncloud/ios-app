@@ -873,6 +873,10 @@ extension ClientQueryViewController : OCQueryDelegate {
 				default:
 					self.message(show: false)
 				}
+
+				if let rootItem = self.query.rootItem {
+					self.navigationItem.prompt = rootItem.quotaLocalized
+				}
 			}
 		}
 	}

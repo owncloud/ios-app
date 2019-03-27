@@ -86,6 +86,7 @@ extension NSObject {
 		if self.isKind(of: UINavigationBar.self) {
 			let navigationBar : UINavigationBar = (self as? UINavigationBar)!
 
+			navigationBar.barStyle = .black // HACK: titleTextAttributes are not applied to the prompt label unless style is set to .black (broken since iOS11.x)
 			navigationBar.barTintColor = collection.navigationBarColors.backgroundColor
 			navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
 			navigationBar.tintColor = collection.navigationBarColors.tintColor
