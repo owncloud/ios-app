@@ -343,6 +343,11 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	}
 
 	func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
+		for item in session.items {
+			if item.localObject == nil, item.itemProvider.hasItemConformingToTypeIdentifier("public.folder") {
+				return false
+			}
+		}
 		return true
 	}
 
@@ -1064,12 +1069,20 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 				return dragItem
 			case .file:
 				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, item.mimeType as! CFString, nil)?.takeRetainedValue() else { return nil }
-				guard let fileData = NSData(contentsOf: core.localURL(for: item)) else { return nil }
-				let itemProvider = NSItemProvider(item: fileData, typeIdentifier: rawUti as! String)
-				itemProvider.suggestedName = item.name
-				let dragItem = UIDragItem(itemProvider: itemProvider)
-				dragItem.localObject = item
-				return dragItem
+
+				if let fileData = NSData(contentsOf: core.localURL(for: item)) {
+					let itemProvider = NSItemProvider(item: fileData, typeIdentifier: rawUti as! String)
+					itemProvider.suggestedName = item.name
+					let dragItem = UIDragItem(itemProvider: itemProvider)
+					dragItem.localObject = item
+					return dragItem
+				} else {
+					guard let data = item.serializedData() else { return nil }
+					let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
+					let dragItem = UIDragItem(itemProvider: itemProvider)
+					dragItem.localObject = item
+					return dragItem
+				}
 			}
 		}
 
