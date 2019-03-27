@@ -77,6 +77,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
 		addServerBarButtonItem.accessibilityLabel = "Add account".localized
+		addServerBarButtonItem.accessibilityIdentifier = "addAccount"
 		self.navigationItem.rightBarButtonItem = addServerBarButtonItem
 
 		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false

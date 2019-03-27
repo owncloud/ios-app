@@ -154,7 +154,9 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.allowsMultipleSelectionDuringEditing = true
 
 		uploadBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
+		uploadBarButton?.accessibilityIdentifier = "upload-button"
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
+		selectBarButton?.accessibilityIdentifier = "select-button"
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
 
 		// Create bar button items for the toolbar
