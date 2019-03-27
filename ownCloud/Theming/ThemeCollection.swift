@@ -103,6 +103,7 @@ class ThemeCollection : NSObject {
 	@objc var tableSeparatorColor : UIColor?
 	@objc var tableRowColors : ThemeColorCollection
 	@objc var tableRowHighlightColors : ThemeColorCollection
+	@objc var tableRowBorderColor : UIColor?
 
 	// MARK: - Bars
 	@objc var navigationBarColors : ThemeColorCollection
@@ -174,6 +175,7 @@ class ThemeCollection : NSObject {
 		self.tableBackgroundColor = UIColor.white
 		self.tableGroupBackgroundColor = UIColor.groupTableViewBackground
 		self.tableSeparatorColor = nil
+		self.tableRowBorderColor = UIColor.black.withAlphaComponent(0.1)
 
 		self.tableRowColors = ThemeColorCollection(
 			backgroundColor: tableBackgroundColor,
@@ -204,6 +206,7 @@ class ThemeCollection : NSObject {
 				self.tableBackgroundColor = navigationBarColors.backgroundColor!.darker(0.1)
 				self.tableGroupBackgroundColor = navigationBarColors.backgroundColor!.darker(0.3)
 				self.tableSeparatorColor = UIColor.darkGray
+				self.tableRowBorderColor = UIColor.white.withAlphaComponent(0.1)
 				self.tableRowColors = ThemeColorCollection(
 					backgroundColor: tableBackgroundColor,
 					tintColor: navigationBarColors.tintColor,
