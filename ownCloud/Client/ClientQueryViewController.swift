@@ -24,7 +24,7 @@ import Photos
 typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
-class ClientQueryViewController: UITableViewController, Themeable {
+class ClientQueryViewController: UITableViewController, Themeable, UIDropInteractionDelegate {
 	weak var core : OCCore?
 	var query : OCQuery
 
@@ -49,7 +49,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	var queryRefreshControl: UIRefreshControl?
 
 	let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-
 	var deleteMultipleBarButtonItem: UIBarButtonItem?
 	var moveMultipleBarButtonItem: UIBarButtonItem?
 
@@ -158,12 +157,10 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
 
 		// Create bar button items for the toolbar
-		deleteMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(actOnMultipleItems))
-		deleteMultipleBarButtonItem?.actionIdentifier = DeleteAction.identifier
+		deleteMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"trash"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: DeleteAction.identifier!)
 		deleteMultipleBarButtonItem?.isEnabled = false
 
-		moveMultipleBarButtonItem =  UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(actOnMultipleItems))
-		moveMultipleBarButtonItem?.actionIdentifier = MoveAction.identifier
+		moveMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"folder"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: MoveAction.identifier!)
 		moveMultipleBarButtonItem?.isEnabled = false
 
 		self.addThemableBackgroundView()
@@ -346,6 +343,11 @@ class ClientQueryViewController: UITableViewController, Themeable {
 	}
 
 	func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
+		for item in session.items {
+			if item.localObject == nil, item.itemProvider.hasItemConformingToTypeIdentifier("public.folder") {
+				return false
+			}
+		}
 		return true
 	}
 
@@ -369,23 +371,6 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		return configuration
 	}
 
-	func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-		let item: OCItem = itemAtIndexPath(indexPath)
-
-		guard item.type != .collection else {
-			return []
-		}
-
-		guard let data = item.serializedData() else {
-			return []
-		}
-
-		let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
-		let dragItem = UIDragItem(itemProvider: itemProvider)
-		dragItem.localObject = item
-		return [dragItem]
-	}
-
 	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
 
 		if session.localDragSession != nil {
@@ -399,8 +384,71 @@ class ClientQueryViewController: UITableViewController, Themeable {
 					return UITableViewDropProposal(operation: .move, intent: .insertIntoDestinationIndexPath)
 				}
 		} else {
-			return UITableViewDropProposal(operation: .forbidden)
+			return UITableViewDropProposal(operation: .copy)
 		}
+	}
+
+	func updateToolbarItemsForDropping(_ items: [OCItem]) {
+		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
+		guard let toolbarItems = tabBarController.toolbar?.items else { return }
+
+		if let core = self.core {
+			// Remove duplicates
+			let uniqueItems = Array(Set(items))
+			// Get possible associated actions
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+			let actionContext = ActionContext(viewController: self, core: core, items: uniqueItems, location: actionsLocation)
+			self.actions = Action.sortedApplicableActions(for: actionContext)
+
+			// Enable / disable tool-bar items depending on action availability
+			for item in toolbarItems {
+				if self.actions?.contains(where: {type(of:$0).identifier == item.actionIdentifier}) ?? false {
+					item.isEnabled = true
+				} else {
+					item.isEnabled = false
+				}
+			}
+		}
+
+	}
+
+	func tableView(_: UITableView, dragSessionDidEnd: UIDragSession) {
+		removeToolbar()
+		self.actions = nil
+	}
+
+	// MARK: - UIBarButtonItem Drop Delegate
+
+	func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+		return true
+	}
+
+	func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
+		return UIDropProposal(operation: .copy)
+	}
+
+	func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
+		guard let button = interaction.view as? UIButton, let identifier = button.actionIdentifier  else { return }
+
+		if let action = self.actions?.first(where: {type(of:$0).identifier == identifier}) {
+			// Configure progress handler
+			action.progressHandler = { [weak self] progress in
+				self?.progressSummarizer?.startTracking(progress: progress)
+			}
+
+			action.completionHandler = { [weak self] _ in
+			}
+
+			// Execute the action
+			action.willRun()
+			action.run()
+		}
+	}
+
+	func dragInteraction(_ interaction: UIDragInteraction,
+						 session: UIDragSession,
+						 didEndWith operation: UIDropOperation) {
+		removeToolbar()
 	}
 
 	// MARK: - Message
@@ -669,8 +717,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		removeToolbar()
 	}
 
-	@objc func actOnMultipleItems(_ sender: UIBarButtonItem) {
-
+	@objc func actOnMultipleItems(_ sender: UIButton) {
 		// Find associated action
 		if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
 			// Configure progress handler
@@ -916,47 +963,54 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 		guard let core = self.core else { return }
 
 		for item in coordinator.items {
-
-			var destinationItem: OCItem
-
-			guard let item = item.dragItem.localObject as? OCItem, let itemName = item.name else {
-				return
-			}
-
-			if coordinator.proposal.intent == .insertIntoDestinationIndexPath {
-
-				guard let destinationIP = coordinator.destinationIndexPath else {
+			if item.dragItem.localObject != nil {
+				var destinationItem: OCItem
+				
+				guard let item = item.dragItem.localObject as? OCItem, let itemName = item.name else {
 					return
 				}
-
-				guard items.count >= destinationIP.row else {
-					return
+				
+				if coordinator.proposal.intent == .insertIntoDestinationIndexPath {
+					
+					guard let destinationIndexPath = coordinator.destinationIndexPath else {
+						return
+					}
+					
+					guard items.count >= destinationIndexPath.row else {
+						return
+					}
+					
+					let rootItem = items[destinationIndexPath.row]
+					
+					guard rootItem.type == .collection else {
+						return
+					}
+					
+					destinationItem = rootItem
+					
+				} else {
+					
+					guard let rootItem = self.query.rootItem, item.parentFileID != rootItem.fileID else {
+						return
+					}
+					
+					destinationItem =  rootItem
+					
 				}
-
-				let rootItem = items[destinationIP.row]
-
-				guard rootItem.type == .collection else {
-					return
+				
+				if let progress = core.move(item, to: destinationItem, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
+					if error != nil {
+						Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
+					}
+				}) {
+					self.progressSummarizer?.startTracking(progress: progress)
 				}
-
-				destinationItem = rootItem
-
 			} else {
-
-				guard let rootItem = self.query.rootItem, item.parentFileID != rootItem.fileID else {
-					return
+				guard let UTI = item.dragItem.itemProvider.registeredTypeIdentifiers.last else { return }
+				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: UTI) { (url, _ error) in
+					guard let url = url else { return }
+					self.upload(itemURL: url, name: url.lastPathComponent)
 				}
-
-				destinationItem =  rootItem
-
-			}
-
-			if let progress = core.move(item, to: destinationItem, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
-				if error != nil {
-					Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
-				}
-			}) {
-				self.progressSummarizer?.startTracking(progress: progress)
 			}
 		}
 	}
@@ -965,18 +1019,75 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 extension ClientQueryViewController: UITableViewDragDelegate {
 
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-		let item: OCItem = itemAtIndexPath(indexPath)
+		self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem!])
 
-		guard let data = item.serializedData() else {
-			return []
+		var selectedItems = [OCItem]()
+		// Add Items from Multiselection too
+		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
+			if selectedIndexPaths.count > 0 {
+				for indexPath in selectedIndexPaths {
+					selectedItems.append(itemAtIndexPath(indexPath))
+				}
+			}
+		}
+		for dragItem in session.items {
+			guard let item = dragItem.localObject as? OCItem else { continue }
+			selectedItems.append(item)
 		}
 
-		let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
-		let dragItem = UIDragItem(itemProvider: itemProvider)
-		dragItem.localObject = item
+		let item: OCItem = itemAtIndexPath(indexPath)
+		selectedItems.append(item)
+		updateToolbarItemsForDropping(selectedItems)
+
+		guard let dragItem = itemForDragging(item: item) else { return [] }
 		return [dragItem]
 	}
 
+	func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+		var selectedItems = [OCItem]()
+		for dragItem in session.items {
+			guard let item = dragItem.localObject as? OCItem else { continue }
+			selectedItems.append(item)
+		}
+
+		let item: OCItem = itemAtIndexPath(indexPath)
+		selectedItems.append(item)
+		updateToolbarItemsForDropping(selectedItems)
+
+		guard let dragItem = itemForDragging(item: item) else { return [] }
+		return [dragItem]
+	}
+
+	func itemForDragging(item : OCItem) -> UIDragItem? {
+		if let core = self.core {
+			switch item.type {
+			case .collection:
+				guard let data = item.serializedData() else { return nil }
+				let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
+				let dragItem = UIDragItem(itemProvider: itemProvider)
+				dragItem.localObject = item
+				return dragItem
+			case .file:
+				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, item.mimeType as! CFString, nil)?.takeRetainedValue() else { return nil }
+
+				if let fileData = NSData(contentsOf: core.localURL(for: item)) {
+					let itemProvider = NSItemProvider(item: fileData, typeIdentifier: rawUti as! String)
+					itemProvider.suggestedName = item.name
+					let dragItem = UIDragItem(itemProvider: itemProvider)
+					dragItem.localObject = item
+					return dragItem
+				} else {
+					guard let data = item.serializedData() else { return nil }
+					let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
+					let dragItem = UIDragItem(itemProvider: itemProvider)
+					dragItem.localObject = item
+					return dragItem
+				}
+			}
+		}
+
+		return nil
+	}
 }
 
 // MARK: - UIDocumentPickerDelegate
