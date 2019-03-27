@@ -235,4 +235,36 @@ class EditBookmarkTests: XCTestCase {
 			OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 		}
 	}
+
+	/*
+	* PASSED if: After deleting authentication data, warning is displayed
+	*/
+	func testCheckEditWarningOAuth2 () {
+
+		if let bookmark: OCBookmark = UtilsTests.getBookmark(authenticationMethod: OCAuthenticationMethodIdentifier.oAuth2) {
+
+			OCBookmarkManager.shared.addBookmark(bookmark)
+			EarlGrey.waitForElementMissing(accessibilityID: "addServer")
+
+			//Actions
+			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
+			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-auth-data-delete")).perform(grey_tap())
+
+			let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
+				var error: NSError?
+
+				//Assert
+				EarlGrey.select(elementWithMatcher: grey_text("If you 'Continue', you will be prompted to allow the ownCloud App to open OAuth2 login where you can enter your credentials.".localized)).assert(grey_sufficientlyVisible(), error: &error)
+
+				return error == nil
+			}).wait(withTimeout: 5.0, pollInterval: 0.5)
+
+			GREYAssertTrue(!isServerChecked, reason: "Failed check the server")
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+			OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
+		}
+	}
 }
