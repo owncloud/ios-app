@@ -1035,37 +1035,37 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 		for item in coordinator.items {
 			if item.dragItem.localObject != nil {
 				var destinationItem: OCItem
-				
+
 				guard let item = item.dragItem.localObject as? OCItem, let itemName = item.name else {
 					return
 				}
-				
+
 				if coordinator.proposal.intent == .insertIntoDestinationIndexPath {
-					
+
 					guard let destinationIndexPath = coordinator.destinationIndexPath else {
 						return
 					}
-					
+
 					guard items.count >= destinationIndexPath.row else {
 						return
 					}
-					
+
 					let rootItem = items[destinationIndexPath.row]
-					
+
 					guard rootItem.type == .collection else {
 						return
 					}
-					
+
 					destinationItem = rootItem
-					
+
 				} else {
-					
+
 					guard let rootItem = self.query.rootItem, item.parentFileID != rootItem.fileID else {
 						return
 					}
-					
+
 					destinationItem =  rootItem
-					
+
 				}
 				
 				if let progress = core.move(item, to: destinationItem, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in

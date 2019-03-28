@@ -20,7 +20,6 @@ import Foundation
 import UIKit
 import ownCloudSDK
 
-
 public extension UIBarButtonItem {
 
 	private struct imageFrame {
