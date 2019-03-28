@@ -432,8 +432,10 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	}
 
 	func tableView(_: UITableView, dragSessionDidEnd: UIDragSession) {
-		removeToolbar()
-		self.actions = nil
+		if !self.tableView.isEditing {
+			removeToolbar()
+			self.actions = nil
+		}
 	}
 
 	// MARK: - UIBarButtonItem Drop Delegate
@@ -756,6 +758,19 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		removeToolbar()
 	}
 
+	func populateToolbar() {
+		self.populateToolbar(with: [
+			openMultipleBarButtonItem!,
+			flexibleSpaceBarButton,
+			moveMultipleBarButtonItem!,
+			flexibleSpaceBarButton,
+			copyMultipleBarButtonItem!,
+			flexibleSpaceBarButton,
+			duplicateMultipleBarButtonItem!,
+			flexibleSpaceBarButton,
+			deleteMultipleBarButtonItem!])
+	}
+
 	@objc func actOnMultipleItems(_ sender: UIButton) {
 		// Find associated action
 		if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
@@ -783,16 +798,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			updateMultiSelectionUI()
 			self.tableView.setEditing(true, animated: true)
 
-			self.populateToolbar(with: [
-				openMultipleBarButtonItem!,
-				flexibleSpaceBarButton,
-				moveMultipleBarButtonItem!,
-				flexibleSpaceBarButton,
-				copyMultipleBarButtonItem!,
-				flexibleSpaceBarButton,
-				duplicateMultipleBarButtonItem!,
-				flexibleSpaceBarButton,
-				deleteMultipleBarButtonItem!])
+			populateToolbar()
 
 			self.navigationItem.leftBarButtonItem = selectDeselectAllButtonItem!
 			self.navigationItem.rightBarButtonItems = [exitMultipleSelectionBarButtonItem!]
@@ -1067,7 +1073,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 					destinationItem =  rootItem
 
 				}
-				
+
 				if let progress = core.move(item, to: destinationItem, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
 					if error != nil {
 						Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
@@ -1089,7 +1095,10 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 extension ClientQueryViewController: UITableViewDragDelegate {
 
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-		self.populateToolbar(with: [moveMultipleBarButtonItem!, flexibleSpaceBarButton, deleteMultipleBarButtonItem!])
+
+		if !self.tableView.isEditing {
+			self.populateToolbar()
+		}
 
 		var selectedItems = [OCItem]()
 		// Add Items from Multiselection too
