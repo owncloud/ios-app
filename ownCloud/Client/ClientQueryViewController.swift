@@ -172,16 +172,13 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		moveMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"folder"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: MoveAction.identifier!)
 		moveMultipleBarButtonItem?.isEnabled = false
 
-		duplicateMultipleBarButtonItem =  UIBarButtonItem(image: UIImage(named: "duplicate-file"), style: .plain, target: self, action: #selector(actOnMultipleItems))
-		duplicateMultipleBarButtonItem?.actionIdentifier = DuplicateAction.identifier
+		duplicateMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "duplicate-file"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: DuplicateAction.identifier!)
 		duplicateMultipleBarButtonItem?.isEnabled = false
 
-		copyMultipleBarButtonItem =  UIBarButtonItem(image: UIImage(named: "copy-file"), style: .plain, target: self, action: #selector(actOnMultipleItems))
-		copyMultipleBarButtonItem?.actionIdentifier = CopyAction.identifier
+		copyMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "copy-file"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: CopyAction.identifier!)
 		copyMultipleBarButtonItem?.isEnabled = false
 
-		openMultipleBarButtonItem =  UIBarButtonItem(image: UIImage(named: "open-in"), style: .plain, target: self, action: #selector(actOnMultipleItems))
-		openMultipleBarButtonItem?.actionIdentifier = OpenInAction.identifier
+		openMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "open-in"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: OpenInAction.identifier!)
 		openMultipleBarButtonItem?.isEnabled = false
 
 		self.addThemableBackgroundView()

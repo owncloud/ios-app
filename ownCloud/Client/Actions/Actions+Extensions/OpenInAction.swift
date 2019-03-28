@@ -110,6 +110,11 @@ class OpenInAction: Action {
 				return file.url!
 			}
 			let activityController = UIActivityViewController(activityItems: urls, applicationActivities: nil)
+
+			if UIDevice.current.isIpad() {
+				activityController.popoverPresentationController?.sourceView = viewController.view
+			}
+
 			context.viewController?.present(activityController, animated: true, completion: nil)
 		}
 	}
