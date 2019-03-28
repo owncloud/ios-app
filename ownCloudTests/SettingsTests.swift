@@ -38,10 +38,21 @@ class SettingsTests: XCTestCase {
 	func testCheckMoreItems () {
 
 		//Assert
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("help")).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("send-feedback")).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("recommend-friend")).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("privacy-policy")).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_text("SECURITY".localized))
+			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_accessibilityID("help".localized))
+			.assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_text("SECURITY".localized))
+			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_accessibilityID("send-feedback".localized))
+			.assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_text("SECURITY".localized))
+			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_accessibilityID("recommend-friend".localized))
+			.assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_text("SECURITY".localized))
+			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_accessibilityID("privacy-policy".localized))
+			.assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_text("SECURITY".localized))
+			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_text("Acknowledgements".localized))
+			.assert(grey_sufficientlyVisible())
 
 		//Reset status
 		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
@@ -62,15 +73,15 @@ class SettingsTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_text("Warning".localized)).assert(grey_sufficientlyVisible())
 		EarlGrey.select(elementWithMatcher: grey_text("Error".localized)).assert(grey_sufficientlyVisible())
 
-		EarlGrey.select(elementWithMatcher: grey_text("Log HTTP requests and responses")).assert(grey_sufficientlyVisible())
-
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("Logging"))
+			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_text("Log HTTP requests and responses"))
+			.assert(grey_sufficientlyVisible())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("Logging"))
 			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_text("Standard error output".localized))
 			.assert(grey_sufficientlyVisible())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("Logging"))
 			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_text("Log file".localized))
 			.assert(grey_sufficientlyVisible())
-
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("Logging"))
 			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_accessibilityID("share-logfile"))
 			.assert(grey_sufficientlyVisible())
@@ -143,7 +154,6 @@ class SettingsTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("theme")).perform(grey_tap())
 
 		//Assert
-
 		EarlGrey.select(elementWithMatcher: grey_text("ownCloud Dark".localized)).assert(grey_sufficientlyVisible())
 		EarlGrey.select(elementWithMatcher: grey_text("ownCloud Light".localized)).assert(grey_sufficientlyVisible())
 		EarlGrey.select(elementWithMatcher: grey_text("ownCloud Classic".localized)).assert(grey_sufficientlyVisible())
