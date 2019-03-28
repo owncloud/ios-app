@@ -34,6 +34,9 @@ class BookmarkViewController: StaticTableViewController {
 	var passwordRow : StaticTableViewRow?
 	var tokenInfoRow : StaticTableViewRow?
 	var deleteAuthDataButtonRow : StaticTableViewRow?
+	var oAuthInfoView : RoundedInfoView?
+	var showOAuthInfoHeader = false
+	var showedOAuthInfoHeader : Bool = false
 	var activeTextField: UITextField?
 
 	lazy var continueBarButtonItem: UIBarButtonItem = UIBarButtonItem(title: "Continue".localized, style: .done, target: self, action: #selector(handleContinue))
@@ -133,6 +136,7 @@ class BookmarkViewController: StaticTableViewController {
 				}
 
 				if changedBookmark {
+					self?.showOAuthInfoHeader = false
 					self?.composeSectionsAndRows(animated: true)
 				}
 
@@ -148,7 +152,7 @@ class BookmarkViewController: StaticTableViewController {
 					self?.present(navigationController, animated: true, completion: nil)
 				}
 			}
-		}, title: "Certificate Details".localized, accessoryType: .disclosureIndicator, identifier: "row-url-certificate")
+			}, title: "Certificate Details".localized, accessoryType: .disclosureIndicator, accessoryView: BorderedLabel(), identifier: "row-url-certificate")
 
 		urlSection = StaticTableViewSection(headerTitle: "Server URL".localized, footerTitle: nil, identifier: "section-url", rows: [ urlRow! ])
 
@@ -173,6 +177,14 @@ class BookmarkViewController: StaticTableViewController {
 
 		deleteAuthDataButtonRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
 			if self?.bookmark?.authenticationData != nil {
+
+				if let authMethodIdentifier = self?.bookmark?.authenticationMethodIdentifier {
+					if self?.isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) ?? false {
+						self?.showOAuthInfoHeader = true
+						self?.showedOAuthInfoHeader = true
+					}
+				}
+
 				self?.bookmark?.authenticationMethodIdentifier = nil
 				self?.bookmark?.authenticationData = nil
 				self?.updateUI(from: (self?.bookmark)!, fieldSelector: { (row) -> Bool in
@@ -184,6 +196,10 @@ class BookmarkViewController: StaticTableViewController {
 		}, title: "Delete Authentication Data".localized, style: .destructive, identifier: "row-credentials-auth-data-delete")
 
 		credentialsSection = StaticTableViewSection(headerTitle: "Credentials".localized, footerTitle: nil, identifier: "section-credentials", rows: [ usernameRow!, passwordRow! ])
+
+		var oAuthInfoText = "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials.".localized
+		oAuthInfoText = oAuthInfoText.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")
+		oAuthInfoView = RoundedInfoView(text: oAuthInfoText)
 
 		// Input focus tracking
 		urlRow?.textField?.delegate = self
@@ -249,6 +265,15 @@ class BookmarkViewController: StaticTableViewController {
 		self.updateInputFocus()
 	}
 
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		if size.width != self.view.frame.size.width {
+			DispatchQueue.main.async {
+				self.tableView.layoutTableHeaderView()
+			}
+		}
+	}
+
 	// MARK: - Continue
 	@objc func handleContinue() {
 		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
@@ -269,7 +294,21 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		if bookmark?.authenticationData == nil {
-			handleContinueAuthentication(hud: hud, hudCompletion: hudCompletion)
+			var proceed = true
+			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {
+				if isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
+					// Only proceed, if OAuth Info Header was shown to the user, before continue was pressed
+					// Statement here is only important for http connections and token based auth
+					if showedOAuthInfoHeader == false {
+						proceed = false
+						showedOAuthInfoHeader = true
+					}
+				}
+			}
+			if proceed == true {
+				handleContinueAuthentication(hud: hud, hudCompletion: hudCompletion)
+			}
+
 			return
 		}
 	}
@@ -506,9 +545,18 @@ class BookmarkViewController: StaticTableViewController {
 		if bookmark?.certificate != nil {
 			if certificateRow != nil, certificateRow?.attached == false {
 				urlSection?.add(row: certificateRow!, animated: animated)
+				showedOAuthInfoHeader = true
+				bookmark?.certificate?.validationResult(completionHandler: { (_, shortDescription, longDescription, color, _) in
+					OnMainThread {
+						guard let accessoryView = self.certificateRow?.additionalAccessoryView as? BorderedLabel else { return }
+						accessoryView.update(text: shortDescription, color: color)
+					}
+					self.urlSection?.footerTitle = longDescription
+				})
 			}
 		} else {
 			if certificateRow != nil, certificateRow?.attached == true {
+				urlSection?.updateFooter(title: nil)
 				urlSection?.remove(rows: [certificateRow!], animated: animated)
 			}
 		}
@@ -520,7 +568,6 @@ class BookmarkViewController: StaticTableViewController {
 
 		// Credentials section: show depending on authentication method and data
 		var showCredentialsSection = false
-
 		if let authenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier {
 			// Username & Password: show if passphrase-based authentication method is used
 			if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
@@ -588,6 +635,8 @@ class BookmarkViewController: StaticTableViewController {
 							}
 
 							showCredentialsSection = true
+						} else {
+							showOAuthInfoHeader = true
 						}
 				}
 
@@ -609,6 +658,13 @@ class BookmarkViewController: StaticTableViewController {
 			if credentialsSection?.attached == true {
 				self.removeSection(credentialsSection!, animated: animated)
 			}
+		}
+
+		if showOAuthInfoHeader {
+			self.tableView.tableHeaderView = oAuthInfoView
+			self.tableView.layoutTableHeaderView()
+		} else {
+			self.tableView.tableHeaderView?.removeFromSuperview()
 		}
 
 		// Continue button: show always
