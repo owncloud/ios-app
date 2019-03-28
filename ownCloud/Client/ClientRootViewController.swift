@@ -250,7 +250,7 @@ extension ClientRootViewController : Themeable {
 }
 
 extension ClientRootViewController : OCCoreDelegate {
-	func core(_ core: OCCore!, handleError error: Error!, issue: OCIssue!) {
+	func core(_ core: OCCore, handleError error: Error?, issue: OCIssue?) {
 		alertQueue.async { (queueCompletionHandler) in
 			var presentIssue : OCIssue? = issue
 			var queueCompletionHandlerScheduled : Bool = false
@@ -289,7 +289,7 @@ extension ClientRootViewController : OCCoreDelegate {
 				}
 			}
 
-			if issue == nil && error != nil {
+			if issue == nil, let error = error {
 				presentIssue = OCIssue(forError: error, level: .error, issueHandler: nil)
 			}
 

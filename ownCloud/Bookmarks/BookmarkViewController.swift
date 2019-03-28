@@ -307,10 +307,11 @@ class BookmarkViewController: StaticTableViewController {
 				// Probe URL
 				bookmark?.url = serverURL
 
-				if let connection = OCConnection(bookmark: bookmark) {
-					hud?.present(on: self, label: "Contacting server…".localized)
-
+				if let connectionBookmark = bookmark {
+					let connection = OCConnection(bookmark: connectionBookmark)
 					let previousCertificate = bookmark?.certificate
+
+					hud?.present(on: self, label: "Contacting server…".localized)
 
 					connection.prepareForSetup(options: nil) { (issue, _, _, preferredAuthenticationMethods) in
 						hudCompletion({
@@ -369,8 +370,10 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	func handleContinueAuthentication(hud: ProgressHUDViewController?, hudCompletion: @escaping (((() -> Void)?) -> Void)) {
-		if let connection = OCConnection(bookmark: bookmark) {
+		if let connectionBookmark = bookmark {
 			var options : [OCAuthenticationMethodKey : Any] = [:]
+
+			let connection = OCConnection(bookmark: connectionBookmark)
 
 			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {
 				if isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
@@ -381,9 +384,11 @@ class BookmarkViewController: StaticTableViewController {
 
 			options[.presentingViewControllerKey] = self
 
+			guard let bookmarkAuthenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier else { return }
+
 			hud?.present(on: self, label: "Authenticating…".localized)
 
-			connection.generateAuthenticationData(withMethod: bookmark?.authenticationMethodIdentifier, options: options) { (error, authMethodIdentifier, authMethodData) in
+			connection.generateAuthenticationData(withMethod: bookmarkAuthenticationMethodIdentifier, options: options) { (error, authMethodIdentifier, authMethodData) in
 				hudCompletion({
 					if error == nil {
 						self.bookmark?.authenticationMethodIdentifier = authMethodIdentifier
@@ -433,44 +438,42 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	@objc func userActionSave() {
-
 		guard let bookmark = self.bookmark else { return }
 
 		if isBookmarkComplete(bookmark: bookmark) {
 			bookmark.authenticationDataStorage = .keychain // Commit auth changes to keychain
 
-			if let connection = OCConnection(bookmark: bookmark) {
-				connection.connect { [weak self] (error, _) in
-					if let weakSelf = self {
-						if error == nil {
-							bookmark.displayName = connection.loggedInUser.displayName
-							connection.disconnect(completionHandler: {
-								switch weakSelf.mode {
-								case .create:
-									// Add bookmark
-									OCBookmarkManager.shared.addBookmark(bookmark)
-									OCBookmarkManager.shared.saveBookmarks()
+			let connection = OCConnection(bookmark: bookmark)
 
-								case .edit:
-									// Update original bookmark
-									self?.originalBookmark?.setValuesFrom(bookmark)
-									OCBookmarkManager.shared.saveBookmarks()
-									OCBookmarkManager.shared.postChangeNotification()
-								}
-								OnMainThread {
-									weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
-								}
+			connection.connect { [weak self] (error, _) in
+				if let weakSelf = self {
+					if error == nil {
+						bookmark.displayName = connection.loggedInUser?.displayName
+						connection.disconnect(completionHandler: {
+							switch weakSelf.mode {
+							case .create:
+								// Add bookmark
+								OCBookmarkManager.shared.addBookmark(bookmark)
+								OCBookmarkManager.shared.saveBookmarks()
 
-							})
-						} else {
+							case .edit:
+								// Update original bookmark
+								self?.originalBookmark?.setValuesFrom(bookmark)
+								OCBookmarkManager.shared.saveBookmarks()
+								OCBookmarkManager.shared.postChangeNotification()
+							}
 							OnMainThread {
 								weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
 							}
+
+						})
+					} else {
+						OnMainThread {
+							weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
 						}
 					}
 				}
 			}
-
 		} else {
 			handleContinue()
 		}
@@ -742,7 +745,7 @@ class BookmarkViewController: StaticTableViewController {
 	func isAuthenticationMethodTokenBased(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> Bool {
 		return authenticationMethodTypeForIdentifier(authenticationMethodIdentifier) == OCAuthenticationMethodType.token
 	}
-	
+
 	// MARK: - Keyboard AccessoryView
 	@objc func toogleTextField (_ sender: UIBarButtonItem) {
 		if passwordRow?.textField?.isFirstResponder ?? false {
@@ -789,7 +792,7 @@ extension BookmarkViewController : OCClassSettingsSupport {
 
 // MARK: - Keyboard / return key tracking
 extension BookmarkViewController : UITextFieldDelegate {
-	
+
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		if self.navigationItem.rightBarButtonItem == continueBarButtonItem {
 			if !updateInputFocus() {
@@ -801,7 +804,7 @@ extension BookmarkViewController : UITextFieldDelegate {
 
 		return true
 	}
-	
+
 	func textFieldDidBeginEditing(_ textField: UITextField) {
 		activeTextField = textField
 		if textField.isEqual(urlRow?.textField) {

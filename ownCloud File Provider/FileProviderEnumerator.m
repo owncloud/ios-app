@@ -61,7 +61,7 @@
 {
 	FileProviderEnumeratorObserver *enumerationObserver = [FileProviderEnumeratorObserver new];
 
-	OCLogDebug(@"##### Enumerate ITEMS for observer: %@ fromPage: %@", observer, page);
+	OCLogDebug(@"##### Enumerate ITEMS for observer: %@ fromPage: %@ itemIdentifier: %@", observer, page, _enumeratedItemIdentifier);
 
 	enumerationObserver.enumerationObserver = observer;
 	enumerationObserver.enumerationStartPage = page;
@@ -101,8 +101,10 @@
 {
 	OCLogDebug(@"##### Starting query..");
 
-	if ((_core == nil) && (_query == nil))
+	if ((_core == nil) && (_query == nil) && (!_isStarted))
 	{
+		_isStarted = YES;
+
 		[[OCCoreManager sharedCoreManager] requestCoreForBookmark:_bookmark setup:nil completionHandler:^(OCCore *core, NSError *error) {
 			self->_core = core;
 
@@ -113,71 +115,89 @@
 			}
 			else
 			{
-				// Create and add query
-				__block OCPath queryPath = nil;
+				OCQuery *query = nil;
 
-				if ([self->_enumeratedItemIdentifier isEqualToString:NSFileProviderRootContainerItemIdentifier])
+				// Create and add query
+				if ([self->_enumeratedItemIdentifier isEqualToString:NSFileProviderWorkingSetContainerItemIdentifier])
 				{
-					queryPath = @"/";
+					// Working set
+					query = [OCQuery queryWithCondition:[OCQueryCondition where:OCItemPropertyNameHasLocalAttributes isEqualTo:@(YES)] inputFilter:nil];
+					query.delegate = self;
 				}
 				else
 				{
-					NSError *error = nil;
-					OCItem *item;
+					// Path
+					__block OCPath queryPath = nil;
 
-					if ((item = [core synchronousRetrieveItemFromDatabaseForLocalID:self->_enumeratedItemIdentifier syncAnchor:NULL error:&error]) != nil)
+					if ([self->_enumeratedItemIdentifier isEqualToString:NSFileProviderRootContainerItemIdentifier])
 					{
-						if (item.type == OCItemTypeCollection)
+						// Root directory
+						queryPath = @"/";
+					}
+					else
+					{
+						NSError *error = nil;
+						OCItem *item;
+
+						if ((item = [core synchronousRetrieveItemFromDatabaseForLocalID:self->_enumeratedItemIdentifier syncAnchor:NULL error:&error]) != nil)
 						{
-							queryPath = item.path;
+							if (item.type == OCItemTypeCollection)
+							{
+								queryPath = item.path;
+							}
+	//
+	//						if (item.type == OCItemTypeFile)
+	//						{
+	//							OCLogDebug(@"Observe item: %@", item);
+	//
+	//							[observer didEnumerateItems:@[ item ]];
+	//							[observer finishEnumeratingUpToPage:nil];
+	//							return;
+	//						}
 						}
-//
-//						if (item.type == OCItemTypeFile)
-//						{
-//							OCLogDebug(@"Observe item: %@", item);
-//
-//							[observer didEnumerateItems:@[ item ]];
-//							[observer finishEnumeratingUpToPage:nil];
-//							return;
-//						}
+					}
+
+					if (queryPath == nil)
+					{
+						// Item not found or not a directory
+						NSError *enumerationError = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNoSuchItem userInfo:nil];
+
+						[self _finishAllEnumeratorsWithError:enumerationError];
+						return;
+					}
+					else
+					{
+						// Start query
+						query = [OCQuery queryForPath:queryPath];
+						query.includeRootItem = YES;
+						query.delegate = self;
 					}
 				}
 
-				if (queryPath == nil)
+				if (query != nil)
 				{
-					// Item not found or not a directory
-					NSError *enumerationError = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNoSuchItem userInfo:nil];
-
-					[self _finishAllEnumeratorsWithError:enumerationError];
-					return;
-				}
-				else
-				{
-					// Start query
-					self->_query = [OCQuery queryForPath:queryPath];
-					self->_query.includeRootItem = YES;
-					self->_query.delegate = self;
-
 					@synchronized(self)
 					{
 						if ([self->_enumerationObservers.lastObject.enumerationStartPage isEqual:NSFileProviderInitialPageSortedByDate])
 						{
-							self->_query.sortComparator = ^NSComparisonResult(OCItem *item1, OCItem *item2) {
+							query.sortComparator = ^NSComparisonResult(OCItem *item1, OCItem *item2) {
 								return ([item1.lastModified compare:item2.lastModified]);
 							};
 						}
 
 						if ([self->_enumerationObservers.lastObject.enumerationStartPage isEqual:NSFileProviderInitialPageSortedByName])
 						{
-							self->_query.sortComparator = ^NSComparisonResult(OCItem *item1, OCItem *item2) {
+							query.sortComparator = ^NSComparisonResult(OCItem *item1, OCItem *item2) {
 								return ([item1.name compare:item2.name]);
 							};
 						}
 					}
 
-					OCLogDebug(@"##### START QUERY FOR %@", self->_query.queryPath);
+					self->_query = query;
 
-					[core startQuery:self->_query];
+					OCLogDebug(@"##### START QUERY FOR %@", query.queryPath);
+
+					[core startQuery:query];
 				}
 			}
 		}];
@@ -304,6 +324,12 @@
 		dispatch_async(dispatch_get_main_queue(), ^{
 			@synchronized(self)
 			{
+				if ([self->_enumeratedItemIdentifier isEqualToString:NSFileProviderWorkingSetContainerItemIdentifier])
+				{
+					OCLogDebug(@"Signal working set change");
+//					[self->_core signalEnumeratorForContainerItemIdentifier:NSFileProviderWorkingSetContainerItemIdentifier];
+				}
+
 				if (self->_enumerationObservers.count > 0)
 				{
 					[self provideItemsForEnumerationObserverFromQuery:query];
@@ -325,7 +351,17 @@
 
 - (void)enumerateChangesForObserver:(id<NSFileProviderChangeObserver>)observer fromSyncAnchor:(NSFileProviderSyncAnchor)syncAnchor
 {
-	OCLogDebug(@"##### Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
+	OCLogDebug(@"##### Enumerate CHANGES for observer: %@ fromSyncAnchor: %@ itemIdentifier: %@", observer, syncAnchor, _enumeratedItemIdentifier);
+
+	if ([self->_enumeratedItemIdentifier isEqual:NSFileProviderWorkingSetContainerItemIdentifier])
+	{
+		dispatch_async(dispatch_get_main_queue(), ^{
+			OCLogDebug(@"##### END(EXPIRED) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@ itemIdentifier: %@", observer, syncAnchor, self->_enumeratedItemIdentifier);
+			[observer finishEnumeratingWithError:[NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorSyncAnchorExpired userInfo:nil]];
+		});
+
+		return;
+	}
 
 	if (syncAnchor != nil)
 	{
@@ -337,12 +373,12 @@
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if ([syncAnchor isEqual:[self->_core.latestSyncAnchor syncAnchorData]])
 			{
-				OCLogDebug(@"##### END(LATEST) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
+				OCLogDebug(@"##### END(LATEST) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@ itemIdentifier: %@", observer, syncAnchor, self->_enumeratedItemIdentifier);
 				[observer finishEnumeratingChangesUpToSyncAnchor:syncAnchor moreComing:NO];
 			}
 			else
 			{
-				OCLogDebug(@"##### END(EXPIRED) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@", observer, syncAnchor);
+				OCLogDebug(@"##### END(EXPIRED) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@ itemIdentifier: %@", observer, syncAnchor, self->_enumeratedItemIdentifier);
 				[observer finishEnumeratingWithError:[NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorSyncAnchorExpired userInfo:nil]];
 			}
 		});

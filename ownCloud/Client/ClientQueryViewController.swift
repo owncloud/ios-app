@@ -310,7 +310,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 							core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ]) { [weak self, query] (error, core, item, _) in
 
 								guard let self = self else { return }
-								OnMainThread {
+								OnMainThread { [weak core] in
 									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
 										if let item = item, let core = core {
 											if item.localID == self.lastTappedItemLocalID {
@@ -601,7 +601,7 @@ class ClientQueryViewController: UITableViewController, Themeable {
 			let filename = ressource.originalFilename
 
 			let progress = Progress(totalUnitCount: 100)
-			progress.localizedDescription = String(format: "Importing '%@' from photo library".localized , filename)
+			progress.localizedDescription = String(format: "Importing '%@' from photo library".localized, filename)
 
 			let options = PHAssetResourceRequestOptions()
 			options.isNetworkAccessAllowed = true
