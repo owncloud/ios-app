@@ -351,12 +351,12 @@
 
 - (void)enumerateChangesForObserver:(id<NSFileProviderChangeObserver>)observer fromSyncAnchor:(NSFileProviderSyncAnchor)syncAnchor
 {
-	OCLogDebug(@"##### Enumerate CHANGES for observer: %@ fromSyncAnchor: %@ itemIdentifier: %@", observer, syncAnchor, _enumeratedItemIdentifier);
+	OCLogDebug(@"##### Enumerate CHANGES for observer: %@ fromSyncAnchor: %@ itemIdentifier: %@", observer, [NSNumber numberFromSyncAnchorData:syncAnchor], _enumeratedItemIdentifier);
 
 	if ([self->_enumeratedItemIdentifier isEqual:NSFileProviderWorkingSetContainerItemIdentifier])
 	{
 		dispatch_async(dispatch_get_main_queue(), ^{
-			OCLogDebug(@"##### END(EXPIRED) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@ itemIdentifier: %@", observer, syncAnchor, self->_enumeratedItemIdentifier);
+			OCLogDebug(@"##### END(EXPIRED) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@ itemIdentifier: %@", observer, [NSNumber numberFromSyncAnchorData:syncAnchor], self->_enumeratedItemIdentifier);
 			[observer finishEnumeratingWithError:[NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorSyncAnchorExpired userInfo:nil]];
 		});
 
@@ -373,12 +373,12 @@
 		dispatch_async(dispatch_get_main_queue(), ^{
 			if ([syncAnchor isEqual:[self->_core.latestSyncAnchor syncAnchorData]])
 			{
-				OCLogDebug(@"##### END(LATEST) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@ itemIdentifier: %@", observer, syncAnchor, self->_enumeratedItemIdentifier);
+				OCLogDebug(@"##### END(LATEST) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@ itemIdentifier: %@", observer, [NSNumber numberFromSyncAnchorData:syncAnchor], self->_enumeratedItemIdentifier);
 				[observer finishEnumeratingChangesUpToSyncAnchor:syncAnchor moreComing:NO];
 			}
 			else
 			{
-				OCLogDebug(@"##### END(EXPIRED) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@ itemIdentifier: %@", observer, syncAnchor, self->_enumeratedItemIdentifier);
+				OCLogDebug(@"##### END(EXPIRED) Enumerate CHANGES for observer: %@ fromSyncAnchor: %@ itemIdentifier: %@", observer, [NSNumber numberFromSyncAnchorData:syncAnchor], self->_enumeratedItemIdentifier);
 				[observer finishEnumeratingWithError:[NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorSyncAnchorExpired userInfo:nil]];
 			}
 		});
@@ -410,6 +410,7 @@
 	OCLogDebug(@"#### Request current sync anchor");
 
 	dispatch_async(dispatch_get_main_queue(), ^{
+		OCLogDebug(@"#### Return current sync anchor: %@", self->_core.latestSyncAnchor);
 		completionHandler([self->_core.latestSyncAnchor syncAnchorData]);
 	});
 }
