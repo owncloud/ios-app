@@ -59,6 +59,7 @@
 		59056CAD22414F3C00A18A22 /* ownCloudScreenshotsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59056CAC22414F3C00A18A22 /* ownCloudScreenshotsTests.swift */; };
 		59056CB422414F8000A18A22 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59371D7B224103D300C6BC5B /* SnapshotHelper.swift */; };
 		5917244E20D3DC2100809B38 /* BiometricalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5917244D20D3DC2100809B38 /* BiometricalTests.swift */; };
+		59296652224CD1DB0078F13D /* OCBookmarkManager+Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAEB05E21F9FB370067E147 /* OCBookmarkManager+Tools.swift */; };
 		593A821120C7D4C5000E2A90 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
 		593BAB46209AE1BC00023634 /* PasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593BAB44209AE1BC00023634 /* PasscodeViewController.swift */; };
 		593BAB47209AE1BC00023634 /* PasscodeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 593BAB45209AE1BC00023634 /* PasscodeViewController.xib */; };
@@ -2104,6 +2105,7 @@
 				59056CAD22414F3C00A18A22 /* ownCloudScreenshotsTests.swift in Sources */,
 				59056CB422414F8000A18A22 /* SnapshotHelper.swift in Sources */,
 				59799F822241595C007E8008 /* XCTestsCase+Extension.swift in Sources */,
+				59296652224CD1DB0078F13D /* OCBookmarkManager+Tools.swift in Sources */,
 				59799F8122415956007E8008 /* EarlGrey+Tools.swift in Sources */,
 				59799F80224158FD007E8008 /* EarlGrey.swift in Sources */,
 			);

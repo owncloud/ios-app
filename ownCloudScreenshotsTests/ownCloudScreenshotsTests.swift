@@ -19,8 +19,14 @@
 import XCTest
 import EarlGrey
 import LocalAuthentication
+import ownCloudSDK
 
 class ScreenshotsTests: XCTestCase {
+
+	let url = ""
+	let user = ""
+	let password = ""
+	let serverDescription = "ownCloud"
 
     override func setUp() {
 		super.setUp()
@@ -31,49 +37,127 @@ class ScreenshotsTests: XCTestCase {
 		super.tearDown()
     }
 
-	func testScreenshot01Login() {
+	func testScreenshotStep01() {
 
 		let app = XCUIApplication()
 		app.launchEnvironment = ["oc:app.show-beta-warning": "false"]
 		setupSnapshot(app)
 		app.launch()
 
-		let url = ""
-		let user = ""
-		let password = ""
-		let description = "ownCloud"
+		snapshot("01_screenshot")
+
+		//Settings
+		app.toolbars["Toolbar"]/*@START_MENU_TOKEN@*/.buttons["settingsBarButtonItem"]/*[[".buttons[\"Settings\"]",".buttons[\"settingsBarButtonItem\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+		snapshot("05_screenshot")
+		app.navigationBars.element(boundBy: 0).buttons["ownCloud"].tap()
 
 		//Login
 		app.navigationBars["ownCloud"].buttons["addAccount"].tap()
 		app.textFields["row-url-url"].typeText(url)
 
-		app.navigationBars.element(boundBy: 0)/*@START_MENU_TOKEN@*/.buttons["continue-bar-button"]/*[[".buttons[\"Continuar\"]",".buttons[\"continue-bar-button\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+		app.navigationBars.element(boundBy: 0).buttons["continue-bar-button"].tap()
+
+		//Expectation add server
+		if waitForUserNameTextField(app: app) != .completed {
+			XCTFail("Error: Can not check auth method of the server")
+		}
 
 		app.textFields["row-credentials-username"].typeText(user)
 		app.secureTextFields["row-credentials-password"].tap()
 		app.secureTextFields["row-credentials-password"].typeText(password)
 		app.textFields["row-name-name"].tap()
-		app.textFields["row-name-name"].typeText(description)
+		app.textFields["row-name-name"].typeText(serverDescription)
 
+		app.navigationBars.element(boundBy: 0).buttons["continue-bar-button"].tap()
 
-		XCUIApplication().navigationBars.element(boundBy: 0)/*@START_MENU_TOKEN@*/.buttons["continue-bar-button"]/*[[".buttons[\"Continuar\"]",".buttons[\"continue-bar-button\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+		//Expectation add server
+		if waitForServerCell(app: app) != .completed {
+			XCTFail("Error: Can not create server connection")
+		}
+	}
 
-		let label = app.tables.cells.staticTexts[description]
-		let exists = NSPredicate(format: "exists == 1")
+	func testScreenshotStep02() {
+		let app = XCUIApplication()
+		app.launchEnvironment = ["oc:app.show-beta-warning": "false"]
+		setupSnapshot(app)
+		app.launch()
 
-		expectation(for: exists, evaluatedWith: label, handler: nil)
-		waitForExpectations(timeout: 15, handler: nil)
+		app.tables.cells.staticTexts[serverDescription].tap()
 
-		app.tables.cells.staticTexts["demo@demo.owncloud.com"].tap()
+		if waitForDocumentsCell(app: app) != .completed {
+			XCTFail("Error: Can not show the root file list")
+		}
 
-
-		//TODO:
+		snapshot("02_screenshot")
 
 		//Create folder
-		//app.buttons.element(boundBy: 5).label
+//		app.tables.buttons["create-folder-button"].tap()
+//		app.navigationBars["Create folder"]/*@START_MENU_TOKEN@*/.buttons["cancel-button"]/*[[".buttons[\"Cancel\"]",".buttons[\"cancel-button\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
 
-		//Setting button
-		//XCUIApplication().toolbars["Toolbar"].buttons["settingsBarButtonItem"].tap()
-		//snapshot("01_screenshot")
+		app.buttons["create-folder-button"].tap()
+		snapshot("03_screenshot")
+	}
+
+	func testScreenshotStep03() {
+
+		let app = XCUIApplication()
+		app.launchEnvironment = ["oc:app.show-beta-warning": "false"]
+		setupSnapshot(app)
+		app.launch()
+
+		app.tables.cells.staticTexts[serverDescription].tap()
+
+		if waitForDocumentsCell(app: app) != .completed {
+			XCTFail("Error: Can not show the root file list")
+		}
+
+		app.windows.element(boundBy: 0).tables.element(boundBy: 0).cells.element(boundBy: 2).tap()
+
+		if waitForSquirrelCell(app: app) != .completed {
+			XCTFail("Error: Can not show the cell of Squirrel.jpg")
+		}
+
+		app.tables.cells.staticTexts["Squirrel.jpg"].tap()
+		snapshot("04_screenshot")
+
+		XCTAssert(true, "Screenshots taken")
+	}
+
+	//MARK: Waiters
+
+	func waitForUserNameTextField(app: XCUIApplication) -> XCTWaiter.Result {
+		let textField = app.textFields["row-credentials-username"]
+		let predicate = NSPredicate(format: "exists == 1")
+		let ocExpectation = expectation(for: predicate, evaluatedWith: textField, handler: nil)
+
+		let result = XCTWaiter().wait(for: [ocExpectation], timeout: 15)
+		return result
+	}
+
+	func waitForServerCell(app: XCUIApplication) -> XCTWaiter.Result {
+		let element = app.tables.cells.staticTexts[serverDescription]
+		let predicate = NSPredicate(format: "exists == 1")
+		let ocExpectation = expectation(for: predicate, evaluatedWith: element, handler: nil)
+
+		let result = XCTWaiter().wait(for: [ocExpectation], timeout: 15)
+		return result
+	}
+
+	func waitForDocumentsCell(app: XCUIApplication) -> XCTWaiter.Result {
+		let element = app.tables.cells.staticTexts["Documents"]
+		let predicate = NSPredicate(format: "exists == 1")
+		let ocExpectation = expectation(for: predicate, evaluatedWith: element, handler: nil)
+
+		let result = XCTWaiter().wait(for: [ocExpectation], timeout: 15)
+		return result
+	}
+
+	func waitForSquirrelCell(app: XCUIApplication) -> XCTWaiter.Result {
+		let element = app.tables.cells.staticTexts["Squirrel.jpg"]
+		let predicate = NSPredicate(format: "exists == 1")
+		let ocExpectation = expectation(for: predicate, evaluatedWith: element, handler: nil)
+
+		let result = XCTWaiter().wait(for: [ocExpectation], timeout: 15)
+		return result
 	}
 }
