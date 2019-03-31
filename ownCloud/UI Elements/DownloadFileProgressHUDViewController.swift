@@ -83,33 +83,30 @@ class DownloadFileProgressHUDViewController: UIViewController {
 		NSLayoutConstraint.activate([
 			progressView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
 			progressView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-			progressView.leftAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leftAnchor, constant: progressViewSidesConstraintConstant),
-			progressView.rightAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.rightAnchor, constant: progressViewSidesConstraintConstant),
-			progressView.widthAnchor.constraint(lessThanOrEqualToConstant: progressViewWidthConstraintConstant)
-		])
+			progressView.leftAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leftAnchor, constant: progressViewSidesConstraintConstant).with(priority: .defaultHigh - 100),
+			progressView.rightAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.rightAnchor, constant: -progressViewSidesConstraintConstant).with(priority: .defaultHigh - 100),
+			progressView.widthAnchor.constraint(lessThanOrEqualToConstant: progressViewWidthConstraintConstant).with(priority: .defaultHigh)
+			])
 
 		// Cancel button
 		cancelButton.translatesAutoresizingMaskIntoConstraints = false
 		view.addSubview(cancelButton)
 		NSLayoutConstraint.activate([
 			cancelButton.centerXAnchor.constraint(equalTo: progressView.centerXAnchor),
-			cancelButton.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: cancelButtonTopAnchor),
-			cancelButton.leftAnchor.constraint(equalTo: progressView.leftAnchor),
-			cancelButton.rightAnchor.constraint(equalTo: progressView.rightAnchor),
-			cancelButton.heightAnchor.constraint(equalToConstant: cancelButtonHeightConstraintConstant)
-		])
+			cancelButton.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: cancelButtonTopAnchor)
+			])
 		cancelButton.setTitle("Cancel".localized, for: .normal)
 
 		// Info label
 		infoLabel.translatesAutoresizingMaskIntoConstraints = false
+		infoLabel.setContentHuggingPriority(.required, for: .vertical)
 		view.addSubview(infoLabel)
 		NSLayoutConstraint.activate([
-			infoLabel.centerXAnchor.constraint(equalTo: progressView.centerXAnchor),
 			infoLabel.bottomAnchor.constraint(equalTo: progressView.topAnchor, constant: -infoLabelBottomAnchor),
-			infoLabel.leftAnchor.constraint(equalTo: progressView.leftAnchor),
-			infoLabel.rightAnchor.constraint(equalTo: progressView.rightAnchor),
-			infoLabel.heightAnchor.constraint(equalToConstant: infoLabelHeightConstraintConstant)
-		])
+			infoLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+			infoLabel.leftAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.leftAnchor, constant: progressViewSidesConstraintConstant),
+			infoLabel.rightAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.rightAnchor, constant: -progressViewSidesConstraintConstant)
+			])
 
 		infoLabel.text = "Downloading".localized
 		infoLabel.textColor = .white
