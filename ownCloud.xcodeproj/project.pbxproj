@@ -35,9 +35,14 @@
 		23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */; };
 		23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F6238020B587EF004FDE8B /* SortMethod.swift */; };
 		23FA23E620BFD3D8009A6D73 /* SortBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23FA23E520BFD3D8009A6D73 /* SortBar.swift */; };
+		39104E10223991C8002FC02F /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39104E0A223991C8002FC02F /* UIButton+Extension.swift */; };
 		39607CBC2225D480007B386D /* UITableViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39607CBB2225D480007B386D /* UITableViewController+Extension.swift */; };
 		3971B48F221B23FE006FB441 /* ThemeableColoredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */; };
 		39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */; };
+		3998F5CC2240CD8300B66713 /* RoundedInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */; };
+		3998F5D3224102FE00B66713 /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D2224102FE00B66713 /* UITableView+Extension.swift */; };
+		3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D422411EDF00B66713 /* BorderedLabel.swift */; };
+		3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */; };
 		39E2FDED21FDEC7500F0117F /* ServerListTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */; };
 		39E2FE0021FF814A00F0117F /* ThemeRoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */; };
 		4C1561E8222321E0009C4EF3 /* PhotoSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1561E7222321E0009C4EF3 /* PhotoSelectionViewController.swift */; };
@@ -469,9 +474,14 @@
 		23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDisplayViewController.swift; sourceTree = "<group>"; };
 		23F6238020B587EF004FDE8B /* SortMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortMethod.swift; sourceTree = "<group>"; };
 		23FA23E520BFD3D8009A6D73 /* SortBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortBar.swift; sourceTree = "<group>"; };
+		39104E0A223991C8002FC02F /* UIButton+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		39607CBB2225D480007B386D /* UITableViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewController+Extension.swift"; sourceTree = "<group>"; };
 		3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableColoredView.swift; sourceTree = "<group>"; };
 		39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extension.swift"; sourceTree = "<group>"; };
+		3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedInfoView.swift; sourceTree = "<group>"; };
+		3998F5D2224102FE00B66713 /* UITableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
+		3998F5D422411EDF00B66713 /* BorderedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedLabel.swift; sourceTree = "<group>"; };
+		3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCCertificate+Extension.swift"; sourceTree = "<group>"; };
 		39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableHeaderView.swift; sourceTree = "<group>"; };
 		39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeRoundedButton.swift; sourceTree = "<group>"; };
 		4C1561E7222321E0009C4EF3 /* PhotoSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSelectionViewController.swift; sourceTree = "<group>"; };
@@ -853,6 +863,7 @@
 		239F1314205A69240029F186 /* UIKit Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				39104E0A223991C8002FC02F /* UIButton+Extension.swift */,
 				239F1318205A693A0029F186 /* UIColor+Extension.swift */,
 				2347446920761BB700859C93 /* String+Extension.swift */,
 				DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */,
@@ -865,6 +876,7 @@
 				4C235CED21F88C0300A989A8 /* UIViewController+Extension.swift */,
 				4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */,
 				39607CBB2225D480007B386D /* UITableViewController+Extension.swift */,
+				3998F5D2224102FE00B66713 /* UITableView+Extension.swift */,
 			);
 			path = "UIKit Extensions";
 			sourceTree = "<group>";
@@ -1255,6 +1267,7 @@
 				DCE5E8B72080D8D9005F60CE /* OCItem+Extension.swift */,
 				DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */,
 				DC4FEAE6209E3A7700D4476B /* OCIssue+Extension.swift */,
+				3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */,
 			);
 			path = "SDK Extensions";
 			sourceTree = "<group>";
@@ -1290,6 +1303,8 @@
 				6E0A569D218702400056B7B4 /* DownloadFileProgressHUDViewController.swift */,
 				DC63208621FCEE5D007EC0A8 /* ProgressView.swift */,
 				3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */,
+				3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */,
+				3998F5D422411EDF00B66713 /* BorderedLabel.swift */,
 			);
 			path = "UI Elements";
 			sourceTree = "<group>";
@@ -1807,9 +1822,11 @@
 				DC680576212DF548006C3B1F /* CertificateManagementViewController.swift in Sources */,
 				DC7DBA25207F684700E7337D /* ThemeResource.swift in Sources */,
 				DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */,
+				3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */,
 				6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */,
 				DC6CF7FB219446050013B9F9 /* LogSettingsViewController.swift in Sources */,
 				39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */,
+				3998F5CC2240CD8300B66713 /* RoundedInfoView.swift in Sources */,
 				23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */,
 				DC018F8C20A1060A00135198 /* ProgressHUDViewController.swift in Sources */,
 				DC7DBA29207F71D600E7337D /* VectorImage.swift in Sources */,
@@ -1839,6 +1856,7 @@
 				23FA23E620BFD3D8009A6D73 /* SortBar.swift in Sources */,
 				3971B48F221B23FE006FB441 /* ThemeableColoredView.swift in Sources */,
 				4C1561E8222321E0009C4EF3 /* PhotoSelectionViewController.swift in Sources */,
+				3998F5D3224102FE00B66713 /* UITableView+Extension.swift in Sources */,
 				6E83C78420A33C180066EC23 /* LAContext+Extension.swift in Sources */,
 				593BAB46209AE1BC00023634 /* PasscodeViewController.swift in Sources */,
 				DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */,
@@ -1869,6 +1887,7 @@
 				6E5FC172221590B000F60846 /* GalleryHostViewController.swift in Sources */,
 				DC85493421831B0B00782BA8 /* Tools.swift in Sources */,
 				DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */,
+				3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */,
 				23E22BB720C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
 				4C235CEE21F88C0300A989A8 /* UIViewController+Extension.swift in Sources */,
 				23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */,
@@ -1916,6 +1935,7 @@
 				DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */,
 				4C6B78122226B86300C5F3DB /* PhotoAlbumTableViewCell.swift in Sources */,
 				39607CBC2225D480007B386D /* UITableViewController+Extension.swift in Sources */,
+				39104E10223991C8002FC02F /* UIButton+Extension.swift in Sources */,
 				DC422450207CB2500006A2A6 /* NSObject+ThemeApplication.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
