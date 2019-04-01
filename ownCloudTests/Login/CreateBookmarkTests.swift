@@ -419,6 +419,41 @@ class CreateBookmarkTests: XCTestCase {
 	}
 	
 	/*
+	* PASSED if: URL leads to correct OAuth2 authentication. Warning is displayed
+	*/
+	func testLoginOAuth2Warning () {
+
+		let mockUrlServer = "http://mocked.owncloud.server.com"
+		let authMethods: [OCAuthenticationMethodIdentifier] = [OCAuthenticationMethodIdentifier.oAuth2,
+															   OCAuthenticationMethodIdentifier.basicAuth]
+		let issue: OCIssue = OCIssue(forError: NSError(domain: "mocked.owncloud.server.com", code: 1033, userInfo: [NSLocalizedDescriptionKey: "Error description"]), level: .informal, issueHandler: nil)
+
+		//Mock
+		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
+
+		//Actions
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
+		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
+
+		let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
+			var error: NSError?
+
+			//Assert
+			EarlGrey.select(elementWithMatcher: grey_text("If you 'Continue', you will be prompted to allow the ownCloud App to open OAuth2 login where you can enter your credentials.".localized)).assert(grey_sufficientlyVisible(), error: &error)
+
+			return error == nil
+		}).wait(withTimeout: 5.0, pollInterval: 0.5)
+
+		GREYAssertTrue(!isServerChecked, reason: "Failed check the server")
+
+		//Reset
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+		OCMockManager.shared.removeAllMockingBlocks()
+		OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
+	}
+
+	/*
 	* PASSED if: URL leads to correct OAuth2 authentication. Bookmark cell created and displayed
 	*/
 	func testLoginOAuth2RightCredentials () {
