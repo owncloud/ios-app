@@ -231,7 +231,7 @@
 "Copy" = "Copy";
 "Copy here" = "Copy here";
 "Cannot connect to " = "Cannot connect to ";
-" couldn't download this file" = " couldn't download this file";
+" couldn't download file(s)" = " couldn't download file(s)";
 "Actions" = "Actions";
 
 /* Directory Picker Messages */
