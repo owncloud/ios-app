@@ -158,6 +158,8 @@ class ClientQueryViewController: UITableViewController, Themeable {
 		self.tableView.dragInteractionEnabled = true
 		self.tableView.allowsMultipleSelectionDuringEditing = true
 
+		self.tableView.estimatedRowHeight = 80
+
 		uploadBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
