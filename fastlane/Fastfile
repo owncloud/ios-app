@@ -91,7 +91,8 @@ platform :ios do
       team_id: ENTERPRISE_TEAM,
       code_sign_identity: ENTERPRISE_IDENTITY,
       profile_name: ENTERPRISE_APP_PROFILE,
-      bundle_identifier: ENTERPRISE_APP_ID
+      bundle_identifier: ENTERPRISE_APP_ID,
+      targets: ["ownCloud"]
     )
 
     automatic_code_signing(
@@ -100,7 +101,8 @@ platform :ios do
       team_id: ENTERPRISE_TEAM,
       code_sign_identity: ENTERPRISE_IDENTITY,
       profile_name: ENTERPRISE_FP_PROFILE,
-      bundle_identifier: ENTERPRISE_FP_ID
+      bundle_identifier: ENTERPRISE_FP_ID,
+      targets: ["ownCloud File Provider"]
     )
 
     automatic_code_signing(
@@ -109,7 +111,8 @@ platform :ios do
       team_id: ENTERPRISE_TEAM,
       code_sign_identity: ENTERPRISE_IDENTITY,
       profile_name: ENTERPRISE_FP_UI_PROFILE,
-      bundle_identifier: ENTERPRISE_FP_UI_ID
+      bundle_identifier: ENTERPRISE_FP_UI_ID,
+      targets: ["ownCloud File ProviderUI"]
     )
 
     #Create the build
