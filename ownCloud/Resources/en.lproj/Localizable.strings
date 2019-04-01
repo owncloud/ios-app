@@ -88,6 +88,7 @@
 "Pending" = "Pending";
 
 "%@ of %@ used" = "%@ of %@ used";
+"Total: %@" = "Total: %@";
 
 /* Client Messages */
 "Empty folder" = "Empty folder";

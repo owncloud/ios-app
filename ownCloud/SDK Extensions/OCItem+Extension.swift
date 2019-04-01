@@ -237,7 +237,7 @@ extension OCItem {
 		let quotaAvailable = OCItem.byteCounterFormatter.string(fromByteCount: quotaBytesAvailable)
 		let quotaUsed = OCItem.byteCounterFormatter.string(fromByteCount: quotaBytesUsed)
 
-		return String(format: "%@ of %@ used", quotaUsed, quotaAvailable)
+		return String(format: "%@ of %@ used".localized, quotaUsed, quotaAvailable)
 	}
 
 	static private let byteCounterFormatter: ByteCountFormatter = {

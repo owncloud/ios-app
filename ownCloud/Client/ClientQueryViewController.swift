@@ -55,6 +55,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	var selectBarButton: UIBarButtonItem?
 	var uploadBarButton: UIBarButtonItem?
 
+	var quotaLabel = UILabel()
+
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 
@@ -164,6 +166,10 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		moveMultipleBarButtonItem?.isEnabled = false
 
 		self.addThemableBackgroundView()
+
+		quotaLabel.textAlignment = .center
+		quotaLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
+		self.tableView.tableFooterView = self.quotaLabel
 	}
 
 	private var viewControllerVisible : Bool = false
@@ -189,6 +195,16 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		viewControllerVisible = true
 
 		self.reloadTableData(ifNeeded: true)
+	}
+
+	override func viewDidLayoutSubviews() {
+		// Resize quota label
+		self.quotaLabel.sizeToFit()
+		var frame = self.quotaLabel.frame
+		frame.size.width = self.tableView.frame.size.width
+		quotaLabel.frame = frame
+
+		super.viewDidLayoutSubviews()
 	}
 
 	func updateQueryProgressSummary() {
@@ -242,6 +258,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
+		self.quotaLabel.textColor = collection.toolbarColors.labelColor
 		self.searchController?.searchBar.applyThemeCollection(collection)
 		if event == .update {
 			self.reloadTableData()
@@ -875,7 +892,12 @@ extension ClientQueryViewController : OCQueryDelegate {
 				}
 
 				if let rootItem = self.query.rootItem {
-					self.navigationItem.prompt = rootItem.quotaLocalized
+					if query.queryPath == "/" {
+						self.quotaLabel.text = rootItem.quotaLocalized
+					} else {
+						let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
+						self.quotaLabel.text = totalSize
+					}
 				}
 			}
 		}
@@ -969,7 +991,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 		for item in coordinator.items {
 			if item.dragItem.localObject != nil {
 				var destinationItem: OCItem
-				
+
 				guard let item = item.dragItem.localObject as? OCItem, let itemName = item.name else {
 					return
 				}
