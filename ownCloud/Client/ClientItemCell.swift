@@ -289,10 +289,6 @@ class ClientItemCell: ThemeTableViewCell {
 		detailLabel.textColor = collection.tableRowColors.secondaryLabelColor
 
 		moreButton.tintColor = collection.tableRowColors.labelColor;
-
-//		let moreTitle: NSMutableAttributedString = NSMutableAttributedString(attributedString: self.moreButton.attributedTitle(for: .normal)!)
-//		moreTitle.addAttribute(NSAttributedString.Key.foregroundColor, value: collection.tableRowColors.labelColor, range: NSRange(location:0, length:moreTitle.length))
-//		self.moreButton.setAttributedTitle(moreTitle, for: .normal)
 	}
 
 	// MARK: - Editing mode
