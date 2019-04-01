@@ -76,12 +76,17 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		query.addObserver(self, forKeyPath: "state", options: .initial, context: nil)
 		core?.start(query)
 
-		var title = (query.queryPath as NSString?)!.lastPathComponent
+		var title : String?
 
-		if title == "/", let shortName = core?.bookmark.shortName {
-			title = shortName
+		if let queryTitle = (query.queryPath as NSString?)?.lastPathComponent {
+			title = queryTitle
+
+			if title == "/" {
+				if let shortName = core?.bookmark.shortName {
+					title = shortName
+				}
+			}
 		}
-
 		self.navigationItem.title = title
 	}
 
@@ -157,6 +162,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
 		self.tableView.allowsMultipleSelectionDuringEditing = true
+
+		self.tableView.estimatedRowHeight = 80
 
 		uploadBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
@@ -321,7 +328,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 							core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ]) { [weak self, query] (error, core, item, _) in
 
 								guard let self = self else { return }
-								OnMainThread {
+								OnMainThread { [weak core] in
 									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
 										if let item = item, let core = core {
 											if item.localID == self.lastTappedItemLocalID {
