@@ -69,7 +69,7 @@ class DuplicateAction : Action, OCQueryDelegate {
 				if baseName.contains(" copy ") == false {
 				}
 
-				if let regex = try? NSRegularExpression(pattern: " copy [0-9]+$", options: .caseInsensitive) {
+				if let regex = try? NSRegularExpression(pattern: " copy[ ]?[0-9]{0,}$", options: .caseInsensitive) {
 					searchName = regex.stringByReplacingMatches(in: baseName, options: [], range: NSRange(location: 0, length:  baseName.count), withTemplate: "")
 					print("---> modString \(searchName)")
 				}
@@ -132,7 +132,7 @@ var newCounter = 0
 					print("----> changeset last name \(anItem.baseName)")
 					guard let baseName = anItem.baseName else { return }
 
-					let matched = self.matches(for: "copy [0-9]+$", in: baseName)
+					let matched = self.matches(for: "copy[ ]?[0-9]{0,}$", in: baseName)
 
 						if matched.count > 0 {
 
@@ -213,7 +213,7 @@ var newCounter = 0
 				}
 */
 
-				if let regex = try? NSRegularExpression(pattern: " copy [0-9]+$", options: .caseInsensitive) {
+				if let regex = try? NSRegularExpression(pattern: " copy[ ]?[0-9]{0,}$", options: .caseInsensitive) {
 					newName = regex.stringByReplacingMatches(in: baseName, options: [], range: NSRange(location: 0, length:  baseName.count), withTemplate: "")
 					print("---> modString \(newName)")
 				}
