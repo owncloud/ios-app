@@ -56,8 +56,7 @@ class DuplicateAction : Action, OCQueryDelegate {
 		print("----> changeset error rootItemName \(rootItemName)")
 
 
-		var name: String = "\(itemName) copy"
-		var searchName = name
+		var searchName: String = "\(itemName) copy"
 
 		if item.type != .collection {
 			if let itemFileExtension = item.fileExtension, let baseName = item.baseName {
@@ -68,12 +67,19 @@ class DuplicateAction : Action, OCQueryDelegate {
 				}
 
 				if baseName.contains(" copy ") == false {
-					name = "\(baseName) copy\(fileExtension)"
 				}
-				searchName = "\(baseName) copy"
+
+				if let regex = try? NSRegularExpression(pattern: " copy [0-9]+$", options: .caseInsensitive) {
+					searchName = regex.stringByReplacingMatches(in: baseName, options: [], range: NSRange(location: 0, length:  baseName.count), withTemplate: "")
+					print("---> modString \(searchName)")
+				}
+
+
+				searchName = "\(searchName) copy"
 			}
 		}
 
+		print("---> searchName ##\(searchName)##")
 			query = OCQuery(forPath: rootItemName)
 			query?.delegate = self
 
@@ -182,7 +188,9 @@ var newCounter = 0
 		}
 
 		var newName = ""
+
 			newName = "\(itemBaseName) copy"
+
 			if counter > 0 {
 				newName = "\(newName) \(String(counter))"
 			}
@@ -196,7 +204,23 @@ var newCounter = 0
 					fileExtension = ".\(fileExtension)"
 				}
 
-				newName = "\(baseName) copy"
+/*
+
+				if baseName.contains(" copy ") == false {
+					newName = "\(baseName) copy"
+				} else {
+					newName = baseName
+				}
+*/
+
+				if let regex = try? NSRegularExpression(pattern: " copy [0-9]+$", options: .caseInsensitive) {
+					newName = regex.stringByReplacingMatches(in: baseName, options: [], range: NSRange(location: 0, length:  baseName.count), withTemplate: "")
+					print("---> modString \(newName)")
+				}
+
+				newName = "\(newName) copy"
+
+
 				if counter > 0 {
 					newName = "\(newName) \(String(counter))"
 				}
