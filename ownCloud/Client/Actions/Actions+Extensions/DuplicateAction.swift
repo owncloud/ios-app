@@ -106,7 +106,10 @@ class DuplicateAction : Action, OCQueryDelegate {
 					}
 				}
 				fileCounter = (fileCounter + 1)
-				self.copy(item: queryItem, with: fileCounter)
+
+				DispatchQueue.global(qos: .background).async {
+					self.copy(item: queryItem, with: fileCounter)
+				}
 
 			case .targetRemoved: break
 
