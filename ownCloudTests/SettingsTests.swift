@@ -16,7 +16,7 @@ import ownCloudMocking
 class SettingsTests: XCTestCase {
 
 	override func setUp() {
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text("Settings".localized)).perform(grey_tap())
 	}
 
 	/*
