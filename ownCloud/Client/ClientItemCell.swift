@@ -29,7 +29,9 @@ class ClientItemCell: ThemeTableViewCell {
 	private let horizontalMargin : CGFloat = 15.0
 	private let horizontalSmallMargin : CGFloat = 10.0
 	private let spacing : CGFloat = 15.0
+	private let iconViewWidth : CGFloat = 60.0
 	private let moreButtonWidth : CGFloat = 60.0
+	private let verticalLabelMarginFromCenter : CGFloat = 2
 
 	weak var delegate: ClientItemCellDelegate?
 
@@ -110,15 +112,15 @@ class ClientItemCell: ThemeTableViewCell {
 			iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: horizontalMargin),
 			iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -spacing),
 			iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -spacing),
-			iconView.widthAnchor.constraint(equalToConstant: 60),
+			iconView.widthAnchor.constraint(equalToConstant: iconViewWidth),
 			iconView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 
 			titleLabel.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
 			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -horizontalMargin),
 
 			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: horizontalMargin),
-			titleLabel.bottomAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: -2),
-			detailLabel.topAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: 2),
+			titleLabel.bottomAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: -verticalLabelMarginFromCenter),
+			detailLabel.topAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: verticalLabelMarginFromCenter),
 			detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -horizontalMargin),
 
 			moreButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
@@ -128,7 +130,7 @@ class ClientItemCell: ThemeTableViewCell {
 			moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
 
 			cloudStatusIconView.rightAnchor.constraint(lessThanOrEqualTo: moreButton.leftAnchor, constant: -horizontalSmallMargin),
-			cloudStatusIconView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor, constant: 0)
+			cloudStatusIconView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor)
 		])
 	}
 
@@ -288,7 +290,7 @@ class ClientItemCell: ThemeTableViewCell {
 		cloudStatusIconView.tintColor = collection.tableRowColors.secondaryLabelColor
 		detailLabel.textColor = collection.tableRowColors.secondaryLabelColor
 
-		moreButton.tintColor = collection.tableRowColors.labelColor;
+		moreButton.tintColor = collection.tableRowColors.labelColor
 	}
 
 	// MARK: - Editing mode

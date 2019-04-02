@@ -130,6 +130,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	// swiftlint:enable block_based_kvo
 
 	// MARK: - View controller events
+	private let estimatedTableRowHeight : CGFloat = 80
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -163,7 +165,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		self.tableView.dragInteractionEnabled = true
 		self.tableView.allowsMultipleSelectionDuringEditing = true
 
-		self.tableView.estimatedRowHeight = 80
+		self.tableView.estimatedRowHeight = estimatedTableRowHeight
 
 		uploadBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
@@ -464,7 +466,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 				self?.progressSummarizer?.startTracking(progress: progress)
 			}
 
-			action.completionHandler = { [weak self] _ in
+			action.completionHandler = { _ in
 			}
 
 			// Execute the action
@@ -1154,10 +1156,14 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 				dragItem.localObject = item
 				return dragItem
 			case .file:
-				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, item.mimeType as! CFString, nil)?.takeRetainedValue() else { return nil }
+				guard let itemMimeType = item.mimeType else { return nil }
+				let mimeTypeCF = itemMimeType as CFString
+
+				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() else { return nil }
 
 				if let fileData = NSData(contentsOf: core.localURL(for: item)) {
-					let itemProvider = NSItemProvider(item: fileData, typeIdentifier: rawUti as! String)
+					let rawUtiString = rawUti as String
+					let itemProvider = NSItemProvider(item: fileData, typeIdentifier: rawUtiString)
 					itemProvider.suggestedName = item.name
 					let dragItem = UIDragItem(itemProvider: itemProvider)
 					dragItem.localObject = item

@@ -142,7 +142,7 @@ class BookmarkViewController: StaticTableViewController {
 
 				self?.nameRow?.textField?.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : Theme.shared.activeCollection.tableRowColors.secondaryLabelColor])
 			}
-			}, placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, identifier: "row-url-url", accessibilityLabel: "Server URL".localized)
+		}, placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, identifier: "row-url-url", accessibilityLabel: "Server URL".localized)
 
 		certificateRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let certificate = self?.bookmark?.certificate {
@@ -152,7 +152,7 @@ class BookmarkViewController: StaticTableViewController {
 					self?.present(navigationController, animated: true, completion: nil)
 				}
 			}
-			}, title: "Certificate Details".localized, accessoryType: .disclosureIndicator, accessoryView: BorderedLabel(), identifier: "row-url-certificate")
+		}, title: "Certificate Details".localized, accessoryType: .disclosureIndicator, accessoryView: BorderedLabel(), identifier: "row-url-certificate")
 
 		urlSection = StaticTableViewSection(headerTitle: "Server URL".localized, footerTitle: nil, identifier: "section-url", rows: [ urlRow! ])
 
@@ -209,7 +209,7 @@ class BookmarkViewController: StaticTableViewController {
 		// Mode setup
 		self.navigationController?.navigationBar.isHidden = false
 		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(BookmarkViewController.userActionCancel))
-        self.navigationItem.leftBarButtonItem?.accessibilityIdentifier = "cancel"
+		self.navigationItem.leftBarButtonItem?.accessibilityIdentifier = "cancel"
 
 		switch mode {
 			case .create:
