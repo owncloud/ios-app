@@ -966,12 +966,14 @@ extension ClientQueryViewController : OCQueryDelegate {
 					self.message(show: false)
 				}
 
-				if let rootItem = self.query.rootItem {
-					if query.queryPath == "/" {
-						self.quotaLabel.text = rootItem.quotaLocalized
-					} else {
-						let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
-						self.quotaLabel.text = totalSize
+				if self.quotaLabel.text == nil {
+					if let rootItem = self.query.rootItem {
+						if query.queryPath == "/" {
+							self.quotaLabel.text = rootItem.quotaLocalized
+						} else {
+							let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
+							self.quotaLabel.text = totalSize
+						}
 					}
 				}
 			}
