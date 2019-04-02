@@ -26,7 +26,7 @@ class DuplicateAction : Action, OCQueryDelegate {
 	override class var name : String? { return "Duplicate".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
 	var query : OCQuery?
-	var localizedCopy = "copy".localized
+	let localizedCopy = "copy".localized
 	var remainingItems : [OCItem] = []
 
 	// MARK: - Extension matching
@@ -42,10 +42,10 @@ class DuplicateAction : Action, OCQueryDelegate {
 			return
 		}
 		remainingItems.append(contentsOf: context.items)
-		proceed()
+		prepareNameForNextItem()
 	}
 
-	func proceed() {
+	func prepareNameForNextItem() {
 		guard let item = remainingItems.first, let baseName = item.baseName, let core = self.core, let itemPath = item.path, let rootItemPath = itemPath.parentPath() else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
@@ -119,7 +119,7 @@ class DuplicateAction : Action, OCQueryDelegate {
 	}
 
 	// MARK: - Copy Action
-	func copy(item: OCItem, with counter: Int) {
+	func copy(item: OCItem, with duplicateCounter: Int) {
 		guard let core = self.core, let itemBaseName = item.baseName else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
@@ -131,8 +131,8 @@ class DuplicateAction : Action, OCQueryDelegate {
 
 		let pattern = " \(localizedCopy)[ ]?[0-9]{0,}$"
 		var copyFileName = "\(itemBaseName.replacingOccurrences(for: pattern)) \(localizedCopy)"
-		if counter > 0 {
-			copyFileName = "\(copyFileName) \(String(counter))"
+		if duplicateCounter > 0 {
+			copyFileName = "\(copyFileName) \(String(duplicateCounter))"
 		}
 
 		if let itemFileExtension = item.fileExtension {
@@ -150,7 +150,7 @@ class DuplicateAction : Action, OCQueryDelegate {
 			} else {
 				self.remainingItems.removeFirst()
 				if self.remainingItems.count > 0 {
-					self.proceed()
+					self.prepareNameForNextItem()
 				} else {
 					self.completed()
 				}
