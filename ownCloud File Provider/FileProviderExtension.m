@@ -23,7 +23,6 @@
 #import "FileProviderEnumerator.h"
 #import "OCItem+FileProviderItem.h"
 #import "FileProviderExtensionThumbnailRequest.h"
-#import "OCCore+FileProviderTools.h"
 
 @interface FileProviderExtension ()
 
@@ -63,12 +62,6 @@
 
 	if (_core != nil)
 	{
-		if (_workingSetQuery != nil)
-		{
-			_workingSetQuery.delegate = nil;
-			[_core stopQuery:_workingSetQuery];
-		}
-
 		[[OCCoreManager sharedCoreManager] returnCoreForBookmark:self.bookmark completionHandler:nil];
 	}
 }
@@ -842,17 +835,16 @@
 		return (nil);
 	}
 
-	FileProviderEnumerator *enumerator = [[FileProviderEnumerator alloc] initWithBookmark:self.bookmark enumeratedItemIdentifier:containerItemIdentifier];
-
-	enumerator.fileProviderExtension = self;
-
-	if ([containerItemIdentifier isEqualToString:NSFileProviderRootContainerItemIdentifier])
+	if (![containerItemIdentifier isEqualToString:NSFileProviderWorkingSetContainerItemIdentifier])
 	{
-		// Signal changes for working set whenever the root dir is enumerated
-		[self.core signalEnumeratorForContainerItemIdentifier:NSFileProviderWorkingSetContainerItemIdentifier];
+		FileProviderEnumerator *enumerator = [[FileProviderEnumerator alloc] initWithBookmark:self.bookmark enumeratedItemIdentifier:containerItemIdentifier];
+
+		enumerator.fileProviderExtension = self;
+
+		return (enumerator);
 	}
 
-	return (enumerator);
+	return (nil);
 
 	// ### Apple template comments: ###
 
@@ -952,12 +944,6 @@
 						core.delegate = self;
 					} completionHandler:^(OCCore *core, NSError *error) {
 						self->_core = core;
-
-						self.workingSetQuery = [OCQuery queryWithCondition:[OCQueryCondition where:OCItemPropertyNameHasLocalAttributes isEqualTo:@(YES)] inputFilter:nil];
-						self.workingSetQuery.delegate = self;
-
-						[core startQuery:self.workingSetQuery];
-
 						OCSyncExecDone(waitForCore);
 					}];
 				});
@@ -981,22 +967,6 @@
 	{
 		[issue cancel];
 	}
-}
-
-#pragma mark - Working set query
-- (void)queryHasChangesAvailable:(OCQuery *)query
-{
-	if (query == _workingSetQuery)
-	{
-		[query requestChangeSetWithFlags:OCQueryChangeSetRequestFlagOnlyResults completionHandler:^(OCQuery * _Nonnull query, OCQueryChangeSet * _Nullable changeset) {
-			OCLogDebug(@"Working set changed to: %@", changeset.queryResult);
-		}];
-//		[self.core signalEnumeratorForContainerItemIdentifier:NSFileProviderWorkingSetContainerItemIdentifier];
-	}
-}
-
-- (void)query:(nonnull OCQuery *)query failedWithError:(nonnull NSError *)error
-{
 }
 
 #pragma mark - Log tagging

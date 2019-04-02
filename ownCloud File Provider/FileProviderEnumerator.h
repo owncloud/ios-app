@@ -31,7 +31,6 @@
 	NSFileProviderItemIdentifier _enumeratedItemIdentifier;
 
 	OCQuery *_query;
-	BOOL _isStarted;
 
 	NSMutableArray <FileProviderEnumeratorObserver *> *_enumerationObservers;
 	NSMutableArray <FileProviderEnumeratorObserver *> *_changeObservers;

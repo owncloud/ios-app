@@ -19,7 +19,7 @@
 #import <FileProvider/FileProvider.h>
 #import <ownCloudSDK/ownCloudSDK.h>
 
-@interface FileProviderExtension : NSFileProviderExtension <OCCoreDelegate, OCLogTagging, OCQueryDelegate>
+@interface FileProviderExtension : NSFileProviderExtension <OCCoreDelegate, OCLogTagging>
 {
 	OCCore *_core;
 	OCBookmark *_bookmark;
@@ -27,8 +27,6 @@
 
 @property(strong,nonatomic,readonly) OCCore *core;
 @property(strong,nonatomic,readonly) OCBookmark *bookmark;
-
-@property(strong) OCQuery *workingSetQuery;
 
 @end
 
