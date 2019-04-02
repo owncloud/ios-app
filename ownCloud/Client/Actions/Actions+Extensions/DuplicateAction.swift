@@ -24,9 +24,10 @@ class DuplicateAction : Action, OCQueryDelegate {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.duplicate") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Duplicate".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
 	var query : OCQuery?
 	var localizedCopy = "copy".localized
+	var remainingItems : [OCItem] = []
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -36,11 +37,16 @@ class DuplicateAction : Action, OCQueryDelegate {
 
 	// MARK: - Action implementation
 	override func run() {
-		guard context.items.count > 0, let core = self.core, let item = context.items.first, let baseName = item.baseName else {
+		guard context.items.count > 0 else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
-		guard let rootItem = item.parentItem(from: core), let rootItemPath = rootItem.path else {
+		remainingItems.append(contentsOf: context.items)
+		proceed()
+	}
+
+	func proceed() {
+		guard let item = remainingItems.first, let baseName = item.baseName, let core = self.core, let rootItem = item.parentItem(from: core), let rootItemPath = rootItem.path else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
@@ -50,6 +56,7 @@ class DuplicateAction : Action, OCQueryDelegate {
 
 		query = OCQuery(forPath: rootItemPath)
 		query?.delegate = self
+		query?.queryItem = item
 
 		let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
 			if let itemName = item?.baseName {
@@ -58,6 +65,7 @@ class DuplicateAction : Action, OCQueryDelegate {
 			return false
 		}
 		query?.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "rename-file")
+
 		core.start(query!)
 	}
 
@@ -69,6 +77,8 @@ class DuplicateAction : Action, OCQueryDelegate {
 	func queryHasChangesAvailable(_ query: OCQuery) {
 		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
 
+			guard let queryItem = query.queryItem else { return }
+
 			switch query.state {
 			case .contentsFromCache, .waitingForServerReply:
 				break
@@ -78,7 +88,7 @@ class DuplicateAction : Action, OCQueryDelegate {
 				let items = changeSet?.queryResult ?? []
 				guard items.first != nil else {
 
-					self.copyItem(with: 0)
+					self.copy(item: queryItem, with: 0)
 					return
 				}
 
@@ -96,7 +106,7 @@ class DuplicateAction : Action, OCQueryDelegate {
 					}
 				}
 				fileCounter = (fileCounter + 1)
-				self.copyItem(with: fileCounter)
+				self.copy(item: queryItem, with: fileCounter)
 
 			case .targetRemoved: break
 
@@ -106,8 +116,8 @@ class DuplicateAction : Action, OCQueryDelegate {
 	}
 
 	// MARK: - Copy Action
-	func copyItem(with counter: Int) {
-		guard context.items.count > 0, let core = self.core, let item = context.items.first, let itemBaseName = item.baseName else {
+	func copy(item: OCItem, with counter: Int) {
+		guard let core = self.core, let itemBaseName = item.baseName else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
@@ -135,7 +145,12 @@ class DuplicateAction : Action, OCQueryDelegate {
 				Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
 				self.completed(with: error)
 			} else {
-				self.completed()
+				self.remainingItems.removeFirst()
+				if self.remainingItems.count > 0 {
+					self.proceed()
+				} else {
+					self.completed()
+				}
 			}
 		}) {
 			publish(progress: progress)
