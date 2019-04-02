@@ -26,6 +26,7 @@ class DuplicateAction : Action, OCQueryDelegate {
 	override class var name : String? { return "Duplicate".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder] }
 	var query : OCQuery?
+	var localizedCopy = "copy".localized
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -35,202 +36,101 @@ class DuplicateAction : Action, OCQueryDelegate {
 
 	// MARK: - Action implementation
 	override func run() {
-		guard context.items.count > 0, let core = self.core, let item = context.items.first, let itemName = item.name else {
+		guard context.items.count > 0, let core = self.core, let item = context.items.first, let baseName = item.baseName else {
+			completed(with: NSError(ocError: .itemNotFound))
+			return
+		}
+		guard let rootItem = item.parentItem(from: core), let rootItemPath = rootItem.path else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
 
-		print("----> changeset itemName \(itemName))")
+		let pattern = " \(localizedCopy)[ ]?[0-9]{0,}$"
+		let searchName = baseName.replacingOccurrences(for: pattern)
 
-		guard let rootItem = item.parentItem(from: core) else {
-			print("----> changeset error rootItem \(item)")
-			completed(with: NSError(ocError: .itemNotFound))
-			return
-		}
+		query = OCQuery(forPath: rootItemPath)
+		query?.delegate = self
 
-		guard let rootItemName = rootItem.path else {
-			completed(with: NSError(ocError: .itemNotFound))
-			return
-		}
-
-		print("----> changeset error rootItemName \(rootItemName)")
-
-
-		var searchName: String = "\(itemName) copy"
-
-		if item.type != .collection {
-			if let itemFileExtension = item.fileExtension, let baseName = item.baseName {
-				var fileExtension = itemFileExtension
-
-				if fileExtension != "" {
-					fileExtension = ".\(fileExtension)"
-				}
-
-				if baseName.contains(" copy ") == false {
-				}
-
-				if let regex = try? NSRegularExpression(pattern: " copy[ ]?[0-9]{0,}$", options: .caseInsensitive) {
-					searchName = regex.stringByReplacingMatches(in: baseName, options: [], range: NSRange(location: 0, length:  baseName.count), withTemplate: "")
-					print("---> modString \(searchName)")
-				}
-
-
-				searchName = "\(searchName) copy"
+		let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
+			if let itemName = item?.baseName {
+				return itemName.hasPrefix(searchName)
 			}
+			return false
 		}
-
-		print("---> searchName ##\(searchName)##")
-			query = OCQuery(forPath: rootItemName)
-			query?.delegate = self
-
-			let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
-				if let itemName = item?.baseName {
-
-					//print("----> changeset serachtext \(searchName) \(itemName) \(itemName.hasPrefix(searchName))")
-					return itemName.hasPrefix(searchName)
-				}
-				return false
-			}
-			query?.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "rename-file")
-			core.start(query!)
+		query?.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "rename-file")
+		core.start(query!)
 	}
 
-
-
 	// MARK: - Query handling
-	// (not in an extension, so subclasses can override these as needed)
 	func query(_ query: OCQuery, failedWithError error: Error) {
-		// Not applicable atm
+		completed(with: NSError(ocError: .itemNotFound))
 	}
 
 	func queryHasChangesAvailable(_ query: OCQuery) {
 		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
 
-			print("----> changeset \(changeSet)")
+			switch query.state {
+			case .contentsFromCache, .waitingForServerReply:
+				break
+			case .idle:
+				self.core?.stop(query)
 
-				switch query.state {
-				case .contentsFromCache, .waitingForServerReply:
-					break
-				case .idle:
-					self.core?.stop(query)
+				let items = changeSet?.queryResult ?? []
+				guard items.first != nil else {
 
-					let items = changeSet?.queryResult ?? []
-					print("----> changeset items \(items)")
+					self.copyItem(with: 0)
+					return
+				}
 
-					guard let firstItem = items.first else {
-
-						self.copyItem(with: 0)
-						return
-					}
-
-var newCounter = 0
-
-					for anItem in items {
-
-
-
-					print("----> changeset last name \(anItem.baseName)")
+				var fileCounter = -1
+				for anItem in items {
 					guard let baseName = anItem.baseName else { return }
 
-					let matched = self.matches(for: "copy[ ]?[0-9]{0,}$", in: baseName)
-
-						if matched.count > 0 {
-
-							let copyCounter = Int(matched.first!.replacingOccurrences(of: "copy ", with: "")) ?? 0
-
-							if copyCounter > newCounter {
-								newCounter = copyCounter
-							}
-							print("----> changeset match \(newCounter)")
+					let pattern = "\(self.localizedCopy)[ ]?[0-9]{0,}$"
+					let matched = baseName.matches(for: pattern)
+					if matched.count > 0 {
+						let copyCounter = Int(matched.first!.replacingOccurrences(of: "\(self.localizedCopy) ", with: "")) ?? 0
+						if copyCounter > fileCounter {
+							fileCounter = copyCounter
 						}
-
-
 					}
-
-					newCounter = (newCounter + 1)
-					print("----> changeset newCounter \(newCounter)")
-					self.copyItem(with: newCounter)
-
-				case .targetRemoved: break
-
-				default: break
 				}
+				fileCounter = (fileCounter + 1)
+				self.copyItem(with: fileCounter)
+
+			case .targetRemoved: break
+
+			default: break
 			}
-
-		//}
-
-	}
-
-	func matches(for regex: String, in text: String) -> [String] {
-
-		do {
-			let regex = try NSRegularExpression(pattern: regex)
-			let results = regex.matches(in: text,
-										range: NSRange(text.startIndex..., in: text))
-			return results.map {
-				String(text[Range($0.range, in: text)!])
-			}
-		} catch let error {
-			print("invalid regex: \(error.localizedDescription)")
-			return []
 		}
 	}
 
+	// MARK: - Copy Action
 	func copyItem(with counter: Int) {
 		guard context.items.count > 0, let core = self.core, let item = context.items.first, let itemBaseName = item.baseName else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
-
 		guard let rootItem = item.parentItem(from: core) else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
 
-		var newName = ""
+		let pattern = " \(localizedCopy)[ ]?[0-9]{0,}$"
+		var copyFileName = "\(itemBaseName.replacingOccurrences(for: pattern)) \(localizedCopy)"
+		if counter > 0 {
+			copyFileName = "\(copyFileName) \(String(counter))"
+		}
 
-			newName = "\(itemBaseName) copy"
-
-			if counter > 0 {
-				newName = "\(newName) \(String(counter))"
-			}
-
-
-		if item.type != .collection {
-			if let itemFileExtension = item.fileExtension, let baseName = item.baseName {
-				var fileExtension = itemFileExtension
-
-				if fileExtension != "" {
-					fileExtension = ".\(fileExtension)"
-				}
-
-/*
-
-				if baseName.contains(" copy ") == false {
-					newName = "\(baseName) copy"
-				} else {
-					newName = baseName
-				}
-*/
-
-				if let regex = try? NSRegularExpression(pattern: " copy[ ]?[0-9]{0,}$", options: .caseInsensitive) {
-					newName = regex.stringByReplacingMatches(in: baseName, options: [], range: NSRange(location: 0, length:  baseName.count), withTemplate: "")
-					print("---> modString \(newName)")
-				}
-
-				newName = "\(newName) copy"
-
-
-				if counter > 0 {
-					newName = "\(newName) \(String(counter))"
-				}
-				newName = "\(newName)\(fileExtension)"
+		if let itemFileExtension = item.fileExtension {
+			var fileExtension = itemFileExtension
+			if fileExtension != "" {
+				fileExtension = ".\(fileExtension)"
+				copyFileName = "\(copyFileName)\(fileExtension)"
 			}
 		}
 
-		print("----> changeset new name \(newName)")
-
-		if let progress = core.copy(item, to: rootItem, withName: newName, options: nil, resultHandler: { (error, _, item, _) in
+		if let progress = core.copy(item, to: rootItem, withName: copyFileName, options: nil, resultHandler: { (error, _, item, _) in
 			if error != nil {
 				Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
 				self.completed(with: error)

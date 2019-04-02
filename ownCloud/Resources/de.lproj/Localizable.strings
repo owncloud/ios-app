@@ -233,6 +233,7 @@
 "Cannot connect to " = "Keine Verbindung möglich zu";
 " couldn't download this file" = "Datei konnte nicht geladen werden";
 "Actions" = "Aktionen";
+"copy" = "Kopie";
 
 /* Directory Picker Messages */
 "Move here" = "Hierhin verschieben";
