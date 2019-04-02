@@ -24,7 +24,7 @@ class DuplicateAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.duplicate") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Duplicate".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -39,34 +39,32 @@ class DuplicateAction : Action {
 			return
 		}
 
-		guard let rootItem = item.parentItem(from: core) else {
-			completed(with: NSError(ocError: .itemNotFound))
-			return
-		}
+		context.items.forEach({ (item) in
+			if let rootItem = item.parentItem(from: core) {
 
-		var name: String = "\(itemName) copy"
+				var name: String = "\(itemName) copy"
 
-		if item.type != .collection {
-			if let itemFileExtension = item.fileExtension, let baseName = item.baseName {
-				var fileExtension = itemFileExtension
+				if let itemFileExtension = item.fileExtension, let baseName = item.baseName {
+					var fileExtension = itemFileExtension
 
-				if fileExtension != "" {
-					fileExtension = ".\(fileExtension)"
+					if fileExtension != "" {
+						fileExtension = ".\(fileExtension)"
+					}
+
+					name = "\(baseName) copy\(fileExtension)"
 				}
 
-				name = "\(baseName) copy\(fileExtension)"
+				if let progress = core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in
+					if error != nil {
+						Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
+						self.completed(with: error)
+					} else {
+						self.completed()
+					}
+				}) {
+					publish(progress: progress)
+				}
 			}
-		}
-
-		if let progress = core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, item, _) in
-			if error != nil {
-				Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
-				self.completed(with: error)
-			} else {
-				self.completed()
-			}
-		}) {
-			publish(progress: progress)
-		}
+		})
 	}
 }
