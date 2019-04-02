@@ -46,7 +46,7 @@ class DuplicateAction : Action, OCQueryDelegate {
 	}
 
 	func proceed() {
-		guard let item = remainingItems.first, let baseName = item.baseName, let core = self.core, let rootItem = item.parentItem(from: core), let rootItemPath = rootItem.path else {
+		guard let item = remainingItems.first, let baseName = item.baseName, let core = self.core, let itemPath = item.path, let rootItemPath = itemPath.parentPath() else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
@@ -87,8 +87,9 @@ class DuplicateAction : Action, OCQueryDelegate {
 
 				let items = changeSet?.queryResult ?? []
 				guard items.first != nil else {
-
-					self.copy(item: queryItem, with: 0)
+					OnBackgroundQueue {
+						self.copy(item: queryItem, with: 0)
+					}
 					return
 				}
 
@@ -106,8 +107,7 @@ class DuplicateAction : Action, OCQueryDelegate {
 					}
 				}
 				fileCounter = (fileCounter + 1)
-
-				DispatchQueue.global(qos: .background).async {
+				OnBackgroundQueue {
 					self.copy(item: queryItem, with: fileCounter)
 				}
 
