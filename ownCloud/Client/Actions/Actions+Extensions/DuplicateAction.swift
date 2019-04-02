@@ -41,26 +41,19 @@ class DuplicateAction : Action, OCQueryDelegate {
 		}
 
 		print("----> changeset itemName \(itemName))")
-/*
+
 		guard let rootItem = item.parentItem(from: core) else {
 			print("----> changeset error rootItem \(item)")
 			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
-		print("----> changeset root \(rootItem.name) \(rootItem.baseName)")
-		guard let rootItemName = rootItem.name else {
+
+		guard let rootItemName = rootItem.path else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
 
-		print("----> changeset rootItemName \(rootItemName)")
-*/
-
-		guard let rootItemName = item.path else {
-			completed(with: NSError(ocError: .itemNotFound))
-			return
-		}
-		let newrootItemName = rootItemName.replacingOccurrences(of: itemName, with: "")
+		print("----> changeset error rootItemName \(rootItemName)")
 
 
 		var name: String = "\(itemName) copy"
@@ -81,7 +74,7 @@ class DuplicateAction : Action, OCQueryDelegate {
 			}
 		}
 
-			query = OCQuery(forPath: newrootItemName)
+			query = OCQuery(forPath: rootItemName)
 			query?.delegate = self
 
 			let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
