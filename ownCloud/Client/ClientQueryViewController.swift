@@ -101,8 +101,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 							// PROPFIND can return negative value for available quota if it is set to Default
 							if quotaAvailable > 0 {
-								let quotaAvailableFormatted = byteCounterFormatter.string(fromByteCount: quotaAvailable)
-								footerText = String(format: "%@ of %@ used".localized, quotaUsedFormatted, quotaAvailableFormatted)
+								let quotaTotalFormatted = byteCounterFormatter.string(fromByteCount: (quotaAvailable + quotaUsed) )
+								footerText = String(format: "%@ of %@ used".localized, quotaUsedFormatted, quotaTotalFormatted)
 							} else {
 								footerText = String(format: "Total: %@".localized, quotaUsedFormatted)
 							}
