@@ -105,6 +105,7 @@ extension ImageScrollView {
 	func display(image: UIImage, inSize: CGSize) {
 		imageView?.removeFromSuperview()
 		imageView = UIImageView(image: image)
+		imageView.accessibilityIdentifier = "loaded-image-gallery"
 		addSubview(imageView)
 		updateScaleForRotation(size: inSize)
 	}

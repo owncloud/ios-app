@@ -6,20 +6,22 @@
     "title": {
       "fonts": [
         {
-          "font": "./fonts/Verdana Bold.ttf",
+          "font": "./fonts/OpenSans-Regular.ttf",
           "supported": ["de-DE", "en-US", "es-ES", "fr-FR", "it-IT", "nl-NL", "sv-SE", "pt-BR"]
         }
       ],
-      "color": "#545454"
+      "color": "#182a3b",
+      "font_scale_factor" : 0.6
     },
     "keyword": {
       "fonts": [
         {
-          "font": "./fonts/Verdana Bold.ttf",
+          "font": "./fonts/OpenSans-Regular.ttf",
           "supported": ["de-DE", "en-US", "es-ES", "fr-FR", "it-IT", "nl-NL", "sv-SE", "pt-BR"]
         }
       ],
-      "color": "#545454"
+      "color": "#182a3b",
+      "font_scale_factor" : 0.6
     },
     "background": "./background.jpg",
     "padding": 50

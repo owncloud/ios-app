@@ -130,6 +130,7 @@ extension OCClassSettingsIdentifier {
 extension OCClassSettingsKey {
 	static let showBetaWarning = OCClassSettingsKey("show-beta-warning")
 	static let isBetaBuild = OCClassSettingsKey("is-beta-build")
+	static let enableUIAnimations = OCClassSettingsKey("enable-ui-animations")
 }
 
 extension VendorServices : OCClassSettingsSupport {
@@ -137,7 +138,7 @@ extension VendorServices : OCClassSettingsSupport {
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
-			return [ .isBetaBuild : false, .showBetaWarning : true ]
+			return [ .isBetaBuild : false, .showBetaWarning : true, .enableUIAnimations: true ]
 		}
 
 		return nil

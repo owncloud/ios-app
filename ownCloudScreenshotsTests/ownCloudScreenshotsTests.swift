@@ -23,9 +23,9 @@ import ownCloudSDK
 
 class ScreenshotsTests: XCTestCase {
 
-	let url = ""
-	let user = ""
-	let password = ""
+	let url = "localhost"
+	let user = "admin"
+	let password = "admin"
 	let serverDescription = "ownCloud"
 
     override func setUp() {
@@ -37,10 +37,10 @@ class ScreenshotsTests: XCTestCase {
 		super.tearDown()
     }
 
-	func testScreenshotStep01() {
+	func testTakeScreenshotStep() {
 
 		let app = XCUIApplication()
-		app.launchEnvironment = ["oc:app.show-beta-warning": "false"]
+		app.launchEnvironment = ["oc:app.show-beta-warning": "false", "oc:app.enable-ui-animations": "false"]
 		setupSnapshot(app)
 		app.launch()
 
@@ -49,41 +49,37 @@ class ScreenshotsTests: XCTestCase {
 		//Settings
 		app.toolbars["Toolbar"]/*@START_MENU_TOKEN@*/.buttons["settingsBarButtonItem"]/*[[".buttons[\"Settings\"]",".buttons[\"settingsBarButtonItem\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
 		snapshot("05_screenshot")
-		app.navigationBars.element(boundBy: 0).buttons["ownCloud"].tap()
+		app.navigationBars.element(boundBy: 0).buttons.element(boundBy: 0).tap()
 
 		//Login
-		app.navigationBars["ownCloud"].buttons["addAccount"].tap()
-		app.textFields["row-url-url"].typeText(url)
+		app.navigationBars.element(boundBy: 0).buttons.element(boundBy: 0).tap()
+		app.textFields["row-url-url"].setText(text: url, application: app)
 
-		app.navigationBars.element(boundBy: 0).buttons["continue-bar-button"].tap()
+		app.navigationBars.element(boundBy: 0).buttons["continue-bar-button"].doubleTap()
 
-		//Expectation add server
+		if waitForApproveCertificate(app: app) == .completed {
+			app.buttons["approve-button"].tap()
+		}
+
 		if waitForUserNameTextField(app: app) != .completed {
 			XCTFail("Error: Can not check auth method of the server")
 		}
 
-		app.textFields["row-credentials-username"].typeText(user)
+		app.textFields["row-credentials-username"].setText(text: user, application: app)
 		app.secureTextFields["row-credentials-password"].tap()
-		app.secureTextFields["row-credentials-password"].typeText(password)
+		app.secureTextFields["row-credentials-password"].setText(text: password, application: app)
 		app.textFields["row-name-name"].tap()
-		app.textFields["row-name-name"].typeText(serverDescription)
+		app.textFields["row-name-name"].setText(text: serverDescription, application: app)
 
 		app.navigationBars.element(boundBy: 0).buttons["continue-bar-button"].tap()
 
-		//Expectation add server
 		if waitForServerCell(app: app) != .completed {
 			XCTFail("Error: Can not create server connection")
 		}
-	}
 
-	func testScreenshotStep02() {
-		let app = XCUIApplication()
-		app.launchEnvironment = ["oc:app.show-beta-warning": "false"]
-		setupSnapshot(app)
-		app.launch()
+		app.cells.element(boundBy: 0).tap()
 
-		app.tables.cells.staticTexts[serverDescription].tap()
-
+		//File list
 		if waitForDocumentsCell(app: app) != .completed {
 			XCTFail("Error: Can not show the root file list")
 		}
@@ -91,39 +87,38 @@ class ScreenshotsTests: XCTestCase {
 		snapshot("02_screenshot")
 
 		//Create folder
-//		app.tables.buttons["create-folder-button"].tap()
-//		app.navigationBars["Create folder"]/*@START_MENU_TOKEN@*/.buttons["cancel-button"]/*[[".buttons[\"Cancel\"]",".buttons[\"cancel-button\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
-
 		app.buttons["create-folder-button"].tap()
 		snapshot("03_screenshot")
-	}
+		app.navigationBars.element(boundBy: 0).buttons.element(boundBy: 0).tap()
 
-	func testScreenshotStep03() {
-
-		let app = XCUIApplication()
-		app.launchEnvironment = ["oc:app.show-beta-warning": "false"]
-		setupSnapshot(app)
-		app.launch()
-
-		app.tables.cells.staticTexts[serverDescription].tap()
-
-		if waitForDocumentsCell(app: app) != .completed {
-			XCTFail("Error: Can not show the root file list")
-		}
-
+		//Navigate to Photos
 		app.windows.element(boundBy: 0).tables.element(boundBy: 0).cells.element(boundBy: 2).tap()
 
 		if waitForSquirrelCell(app: app) != .completed {
 			XCTFail("Error: Can not show the cell of Squirrel.jpg")
 		}
 
+		//Image gallery
 		app.tables.cells.staticTexts["Squirrel.jpg"].tap()
+
+		if waitForImageGalleryCell(app: app) != .completed {
+			XCTFail("Error: Can not load the gallery")
+		}
+
 		snapshot("04_screenshot")
 
 		XCTAssert(true, "Screenshots taken")
 	}
 
-	//MARK: Waiters
+	// MARK: - Waiters
+	func waitForApproveCertificate(app: XCUIApplication) -> XCTWaiter.Result {
+		let textField = app.buttons["approve-button"]
+		let predicate = NSPredicate(format: "exists == 1")
+		let ocExpectation = expectation(for: predicate, evaluatedWith: textField, handler: nil)
+
+		let result = XCTWaiter().wait(for: [ocExpectation], timeout: 15)
+		return result
+	}
 
 	func waitForUserNameTextField(app: XCUIApplication) -> XCTWaiter.Result {
 		let textField = app.textFields["row-credentials-username"]
@@ -159,5 +154,24 @@ class ScreenshotsTests: XCTestCase {
 
 		let result = XCTWaiter().wait(for: [ocExpectation], timeout: 15)
 		return result
+	}
+
+	func waitForImageGalleryCell(app: XCUIApplication) -> XCTWaiter.Result {
+		let element = app.images["loaded-image-gallery"]
+		let predicate = NSPredicate(format: "exists == 1")
+		let ocExpectation = expectation(for: predicate, evaluatedWith: element, handler: nil)
+
+		let result = XCTWaiter().wait(for: [ocExpectation], timeout: 15)
+		return result
+	}
+}
+
+extension XCUIElement {
+	// The following is a workaround for inputting text in the
+	//simulator when the keyboard is hidden
+	func setText(text: String, application: XCUIApplication) {
+		UIPasteboard.general.string = text
+		doubleTap()
+		application.menuItems.element(boundBy: 0).tap()
 	}
 }
