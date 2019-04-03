@@ -387,7 +387,7 @@ class CreateBookmarkTests: XCTestCase {
 											   "token_type" : "Bearer",
 											   "user_id" : "admin"]
 		let dictionary:[String : Any] = ["bearerString" : "Bearer RyFyDu1wH0Wvd8KlCP0Qeo9dlTqWajgvWHNqSdfl9bVD6Wp72CGikmgSkvUaAMML",
-										 "expirationDate" : "2018-11-15 14:34:39 +0000",
+										 "expirationDate" : NSDate.distantPast,
 										 "tokenResponse" : tokenResponse]
 		let error: NSError?  = nil
 		
@@ -471,7 +471,7 @@ class CreateBookmarkTests: XCTestCase {
 											   "token_type" : "Bearer",
 											   "user_id" : "admin"]
 		let dictionary:[String : Any] = ["bearerString" : "Bearer RyFyDu1wH0Wvd8KlCP0Qeo9dlTqWajgvWHNqSdfl9bVD6Wp72CGikmgSkvUaAMML",
-										 "expirationDate" : "2018-11-15 14:34:39 +0000",
+										 "expirationDate" : NSDate.distantPast,
 										 "tokenResponse" : tokenResponse]
 		let error: NSError?  = nil
 		let user: OCUser = OCUser.init()
