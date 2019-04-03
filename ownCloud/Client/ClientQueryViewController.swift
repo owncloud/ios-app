@@ -89,15 +89,26 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		if lastPathComponent == "/" {
 			quotaObservation = core?.observe(\OCCore.rootQuotaAvailableBytes, options: [.initial], changeHandler: { [weak self] (_, _) in
 				if let quotaAvailable = self?.core!.rootQuotaAvailableBytes?.int64Value, let quotaUsed = self?.core!.rootQuotaUsedBytes?.int64Value {
-					let byteCounterFormatter = ByteCountFormatter()
-					byteCounterFormatter.allowsNonnumericFormatting = false
-
-					let quotaAvailableFormatted = byteCounterFormatter.string(fromByteCount: quotaAvailable)
-					let quotaUsedFormatted = byteCounterFormatter.string(fromByteCount: quotaUsed)
 
 					OnMainThread {
-						let quotaInfo = String(format: "%@ of %@ used".localized, quotaUsedFormatted, quotaAvailableFormatted)
-						self?.updateFooter(text: quotaInfo)
+						var footerText: String?
+						if quotaUsed > 0 {
+
+							let byteCounterFormatter = ByteCountFormatter()
+							byteCounterFormatter.allowsNonnumericFormatting = false
+
+							let quotaUsedFormatted = byteCounterFormatter.string(fromByteCount: quotaUsed)
+
+							// PROPFIND can return negative value for available quota if it is set to Default
+							if quotaAvailable > 0 {
+								let quotaAvailableFormatted = byteCounterFormatter.string(fromByteCount: quotaAvailable)
+								footerText = String(format: "%@ of %@ used".localized, quotaUsedFormatted, quotaAvailableFormatted)
+							} else {
+								footerText = String(format: "Total: %@".localized, quotaUsedFormatted)
+							}
+						}
+
+						self?.updateFooter(text: footerText)
 					}
 				}
 			})
@@ -239,9 +250,11 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		self.reloadTableData(ifNeeded: true)
 	}
 
-	private func updateFooter(text:String) {
+	private func updateFooter(text:String?) {
+		guard let labelText = text else { return }
+
 		// Resize quota label
-		self.quotaLabel.text = text
+		self.quotaLabel.text = labelText
 		self.quotaLabel.sizeToFit()
 		var frame = self.quotaLabel.frame
 		// Width is ignored and set by the UITableView when assigning to tableFooterView property
