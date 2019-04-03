@@ -29,9 +29,29 @@ extension String {
         return !self.isEmpty && rangeOfCharacter(from: nonDigitsCharacterSet) == nil
     }
 
-	func matches (regExp: String) -> Bool {
-			guard let regex = try? NSRegularExpression(pattern: regExp) else { return false }
-			let range = NSRange(location: 0, length: self.count)
-			return regex.firstMatch(in: self, options: [], range: range) != nil
+	func matches(regExp: String) -> Bool {
+		guard let regex = try? NSRegularExpression(pattern: regExp) else { return false }
+		let range = NSRange(location: 0, length: self.count)
+		return regex.firstMatch(in: self, options: [], range: range) != nil
+	}
+
+	func matches(for regex: String) -> [String] {
+		do {
+			let regex = try NSRegularExpression(pattern: regex)
+			let results = regex.matches(in: self,
+										range: NSRange(self.startIndex..., in: self))
+			return results.map {
+				String(self[Range($0.range, in: self)!])
+			}
+		} catch _ {
+			return []
+		}
+	}
+
+	func replacingOccurrences(for regex: String) -> String {
+		if let regex = try? NSRegularExpression(pattern: regex, options: .caseInsensitive) {
+			return regex.stringByReplacingMatches(in: self, options: [], range: NSRange(location: 0, length:  self.count), withTemplate: "")
+		}
+		return self
 	}
 }
