@@ -59,7 +59,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	var uploadBarButton: UIBarButtonItem?
 	var selectDeselectAllButtonItem: UIBarButtonItem?
 	var exitMultipleSelectionBarButtonItem: UIBarButtonItem?
-  
+
 	var quotaLabel = UILabel()
 	var quotaObservation : NSKeyValueObservation?
 
@@ -87,29 +87,29 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		}
 
 		if lastPathComponent == "/" {
-			quotaObservation = core?.observe(\OCCore.rootQuotaAvailableBytes, options: [.initial], changeHandler: { [weak self] (_, _) in
-				if let quotaAvailable = self?.core!.rootQuotaAvailableBytes?.int64Value, let quotaUsed = self?.core!.rootQuotaUsedBytes?.int64Value {
+			quotaObservation = core?.observe(\OCCore.rootQuotaBytesUsed, options: [.initial], changeHandler: { [weak self, core] (_, _) in
+				let quotaUsed = core?.rootQuotaBytesUsed?.int64Value ?? 0
 
-					OnMainThread {
-						var footerText: String?
-						if quotaUsed > 0 {
+				OnMainThread {
+					var footerText: String?
 
-							let byteCounterFormatter = ByteCountFormatter()
-							byteCounterFormatter.allowsNonnumericFormatting = false
+					if quotaUsed > 0 {
 
-							let quotaUsedFormatted = byteCounterFormatter.string(fromByteCount: quotaUsed)
+						let byteCounterFormatter = ByteCountFormatter()
+						byteCounterFormatter.allowsNonnumericFormatting = false
 
-							// PROPFIND can return negative value for available quota if it is set to Default
-							if quotaAvailable > 0 {
-								let quotaTotalFormatted = byteCounterFormatter.string(fromByteCount: (quotaAvailable + quotaUsed) )
-								footerText = String(format: "%@ of %@ used".localized, quotaUsedFormatted, quotaTotalFormatted)
-							} else {
-								footerText = String(format: "Total: %@".localized, quotaUsedFormatted)
-							}
+						let quotaUsedFormatted = byteCounterFormatter.string(fromByteCount: quotaUsed)
+
+						// A rootQuotaBytesRemaining value of nil indicates that no quota has been set
+						if core?.rootQuotaBytesRemaining != nil, let quotaTotal = core?.rootQuotaBytesTotal?.int64Value {
+							let quotaTotalFormatted = byteCounterFormatter.string(fromByteCount: quotaTotal )
+							footerText = String(format: "%@ of %@ used".localized, quotaUsedFormatted, quotaTotalFormatted)
+						} else {
+							footerText = String(format: "Total: %@".localized, quotaUsedFormatted)
 						}
-
-						self?.updateFooter(text: footerText)
 					}
+
+					self?.updateFooter(text: footerText)
 				}
 			})
 		}
@@ -221,7 +221,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		quotaLabel.textAlignment = .center
 		quotaLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
-		quotaLabel.numberOfLines = 0;
+		quotaLabel.numberOfLines = 0
 	}
 
 	private var viewControllerVisible : Bool = false
@@ -251,14 +251,13 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	}
 
 	private func updateFooter(text:String?) {
-		guard let labelText = text else { return }
+		let labelText = text ?? ""
 
 		// Resize quota label
 		self.quotaLabel.text = labelText
 		self.quotaLabel.sizeToFit()
 		var frame = self.quotaLabel.frame
 		// Width is ignored and set by the UITableView when assigning to tableFooterView property
-		frame.size.width = 0
 		frame.size.height = floor(self.quotaLabel.frame.size.height * 2.0)
 		quotaLabel.frame = frame
 		self.tableView.tableFooterView = quotaLabel
@@ -315,7 +314,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
-		self.quotaLabel.textColor = collection.toolbarColors.labelColor
+		self.quotaLabel.textColor = collection.tableRowColors.secondaryLabelColor
 		self.searchController?.searchBar.applyThemeCollection(collection)
 		if event == .update {
 			self.reloadTableData()
