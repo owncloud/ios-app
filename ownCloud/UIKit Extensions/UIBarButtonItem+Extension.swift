@@ -33,7 +33,7 @@ public extension UIBarButtonItem {
 		static var actionKey = "actionKey"
 	}
 
-	public var actionIdentifier: OCExtensionIdentifier? {
+	var actionIdentifier: OCExtensionIdentifier? {
 		get {
 			return objc_getAssociatedObject(self, &AssociatedKeys.actionKey) as? OCExtensionIdentifier
 		}
@@ -45,7 +45,7 @@ public extension UIBarButtonItem {
 		}
 	}
 
-	public convenience init(image: UIImage?, target: AnyObject, action: Selector, dropTarget: AnyObject, actionIdentifier: OCExtensionIdentifier) {
+	convenience init(image: UIImage?, target: AnyObject, action: Selector, dropTarget: AnyObject, actionIdentifier: OCExtensionIdentifier) {
 		let button  = UIButton(type: .custom)
 		button.setImage(image, for: .normal)
 		button.frame = CGRect(x: imageFrame.x, y: imageFrame.y, width: imageFrame.width, height: imageFrame.height)
