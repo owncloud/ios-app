@@ -85,6 +85,10 @@ platform :ios do
       app_group_identifiers: ["group.com.owncloud.enterprise.ios-app"]
     )
 
+    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCAppGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
+    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
+    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "NSExtension", subkey: "NSExtensionFileProviderDocumentGroup", value: "group.com.owncloud.enterprise.ios-app")
+
     automatic_code_signing(
       path: "ownCloud.xcodeproj",
       use_automatic_signing: false,
