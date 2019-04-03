@@ -61,6 +61,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	var exitMultipleSelectionBarButtonItem: UIBarButtonItem?
   
 	var quotaLabel = UILabel()
+	var quotaObservation : NSKeyValueObservation?
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -77,13 +78,30 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		query.addObserver(self, forKeyPath: "state", options: .initial, context: nil)
 		core?.start(query)
 
-		var title = (query.queryPath as NSString?)!.lastPathComponent
+		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
 
-		if title == "/", let shortName = core?.bookmark.shortName {
-			title = shortName
+		if lastPathComponent == "/", let shortName = core?.bookmark.shortName {
+			self.navigationItem.title = shortName
+		} else {
+			self.navigationItem.title = lastPathComponent
 		}
 
-		self.navigationItem.title = title
+		if lastPathComponent == "/" {
+			quotaObservation = core?.observe(\OCCore.rootQuotaAvailableBytes, options: [.initial], changeHandler: { [weak self] (_, _) in
+				if let quotaAvailable = self?.core!.rootQuotaAvailableBytes?.int64Value, let quotaUsed = self?.core!.rootQuotaUsedBytes?.int64Value {
+					let byteCounterFormatter = ByteCountFormatter()
+					byteCounterFormatter.allowsNonnumericFormatting = false
+
+					let quotaAvailableFormatted = byteCounterFormatter.string(fromByteCount: quotaAvailable)
+					let quotaUsedFormatted = byteCounterFormatter.string(fromByteCount: quotaUsed)
+
+					OnMainThread {
+						let quotaInfo = String(format: "%@ of %@ used".localized, quotaUsedFormatted, quotaAvailableFormatted)
+						self?.updateFooter(text: quotaInfo)
+					}
+				}
+			})
+		}
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -102,6 +120,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		}
 
 		self.queryProgressSummary = nil
+
+		quotaObservation = nil
 	}
 
 	// MARK: - Actions
@@ -186,7 +206,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		quotaLabel.textAlignment = .center
 		quotaLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
-		self.tableView.tableFooterView = self.quotaLabel
+		quotaLabel.numberOfLines = 0;
 	}
 
 	private var viewControllerVisible : Bool = false
@@ -215,14 +235,16 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		self.reloadTableData(ifNeeded: true)
 	}
 
-	override func viewDidLayoutSubviews() {
+	private func updateFooter(text:String) {
 		// Resize quota label
+		self.quotaLabel.text = text
 		self.quotaLabel.sizeToFit()
 		var frame = self.quotaLabel.frame
-		frame.size.width = self.tableView.frame.size.width
+		// Width is ignored and set by the UITableView when assigning to tableFooterView property
+		frame.size.width = 0
+		frame.size.height = floor(self.quotaLabel.frame.size.height * 2.0)
 		quotaLabel.frame = frame
-
-		super.viewDidLayoutSubviews()
+		self.tableView.tableFooterView = quotaLabel
 	}
 
 	func updateQueryProgressSummary() {
@@ -966,14 +988,10 @@ extension ClientQueryViewController : OCQueryDelegate {
 					self.message(show: false)
 				}
 
-				if self.quotaLabel.text == nil {
-					if let rootItem = self.query.rootItem {
-						if query.queryPath == "/" {
-							self.quotaLabel.text = rootItem.quotaLocalized
-						} else {
-							let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
-							self.quotaLabel.text = totalSize
-						}
+				if let rootItem = self.query.rootItem {
+					if query.queryPath != "/" {
+						let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
+						self.updateFooter(text: totalSize)
 					}
 				}
 			}

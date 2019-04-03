@@ -231,15 +231,6 @@ extension OCItem {
 		return OCItem.dateFormatter.string(from: lastModified)
 	}
 
-	var quotaLocalized: String {
-		guard quotaBytesAvailable > 0 else { return "" }
-
-		let quotaAvailable = OCItem.byteCounterFormatter.string(fromByteCount: quotaBytesAvailable)
-		let quotaUsed = OCItem.byteCounterFormatter.string(fromByteCount: quotaBytesUsed)
-
-		return String(format: "%@ of %@ used".localized, quotaUsed, quotaAvailable)
-	}
-
 	static private let byteCounterFormatter: ByteCountFormatter = {
 		let byteCounterFormatter = ByteCountFormatter()
 		byteCounterFormatter.allowsNonnumericFormatting = false
