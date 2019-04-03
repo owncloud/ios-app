@@ -236,6 +236,7 @@
 "Cannot connect to " = "Cannot connect to ";
 " couldn't download file(s)" = " couldn't download file(s)";
 "Actions" = "Actions";
+"copy" = "copy";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";
