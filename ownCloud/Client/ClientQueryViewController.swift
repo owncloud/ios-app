@@ -488,7 +488,6 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	func tableView(_: UITableView, dragSessionDidEnd: UIDragSession) {
 		if !self.tableView.isEditing {
 			removeToolbar()
-			self.actions = nil
 		}
 	}
 
