@@ -1,34 +1,78 @@
 {
   "default": {
 
-    "stack_title": "true",
-
     "title": {
       "fonts": [
         {
           "font": "./fonts/OpenSans-Regular.ttf",
-          "supported": ["de-DE", "en-US", "es-ES", "fr-FR", "it-IT", "nl-NL", "sv-SE", "pt-BR"]
+          "supported": ["de-DE", "en", "es", "fr-FR", "it-IT", "nl-NL", "sv-SE", "pt-BR"]
         }
       ],
-      "color": "#182a3b",
-      "font_scale_factor" : 0.6
+      "color": "#182a3b"
     },
     "keyword": {
       "fonts": [
         {
           "font": "./fonts/OpenSans-Regular.ttf",
-          "supported": ["de-DE", "en-US", "es-ES", "fr-FR", "it-IT", "nl-NL", "sv-SE", "pt-BR"]
+          "supported": ["de-DE", "en", "es", "fr-FR", "it-IT", "nl-NL", "sv-SE", "pt-BR"]
         }
       ],
-      "color": "#182a3b",
-      "font_scale_factor" : 0.6
+      "color": "#182a3b"
     },
     "background": "./background.jpg",
-    "padding": 50
+    "padding": "50x40",
+    "show_complete_frame": false,
+    "stack_title" : true,
+    "title_below_image": false,
+    "frame": "WHITE"
   },
 
 
   "data": [
-    
+    {
+      "filter": "01_screenshot",
+      "keyword": {
+        "font_scale_factor" : 0.1
+      },
+      "title": {
+        "font_scale_factor" : 0.15
+      }
+    },
+    {
+      "filter": "02_screenshot",
+      "keyword": {
+        "font_scale_factor" : 0.1
+      },
+      "title": {
+        "font_scale_factor" : 0.15
+      }
+    },
+    {
+      "filter": "03_screenshot",
+      "keyword": {
+        "font_scale_factor" : 0.1
+      },
+      "title": {
+        "font_scale_factor" : 0.15
+      }
+    },
+    {
+      "filter": "04_screenshot",
+      "keyword": {
+        "font_scale_factor" : 0.1
+      },
+      "title": {
+        "font_scale_factor" : 0.15
+      }
+    },
+    {
+      "filter": "05_screenshot",
+      "keyword": {
+        "font_scale_factor" : 0.1
+      },
+      "title": {
+        "font_scale_factor" : 0.15
+      }
+    }
   ]
 }
