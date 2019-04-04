@@ -133,7 +133,7 @@
          <EnvironmentVariable
             key = "oc:log.log-synchronous"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.log-only-tags"

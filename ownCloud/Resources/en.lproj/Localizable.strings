@@ -39,6 +39,15 @@
 "Authenticated as %@ via %@" = "Authenticated as %@ via %@";
 "Edit" = "Edit";
 "Credentials" = "Credentials";
+"Rejected" = "Rejected";
+"Passed" = "Passed";
+"Accepted" = "Accepted";
+"Validation Error" = "Validation Error";
+"Certificate was rejected by user." = "Certificate was rejected by user.";
+"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Certificate has issues.\nOpen 'Certificate Details' for more informations.";
+"No issues found. Certificate passed validation." = "No issues found. Certificate passed validation.";
+"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations.";
+"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials.";
 
 "Contacting server…" = "Contacting server…";
 "Authenticating…" = "Authenticating…";
@@ -77,6 +86,9 @@
 "date" = "date";
 "Search this folder" = "Search this folder";
 "Pending" = "Pending";
+
+"%@ of %@ used" = "%@ of %@ used";
+"Total: %@" = "Total: %@";
 
 /* Client Messages */
 "Empty folder" = "Empty folder";
@@ -222,8 +234,9 @@
 "Copy" = "Copy";
 "Copy here" = "Copy here";
 "Cannot connect to " = "Cannot connect to ";
-" couldn't download this file" = " couldn't download this file";
+" couldn't download file(s)" = " couldn't download file(s)";
 "Actions" = "Actions";
+"copy" = "copy";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";

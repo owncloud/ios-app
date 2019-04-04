@@ -29,3 +29,15 @@ func OnMainThread(async: Bool = true, after: TimeInterval? = nil, _ block: @esca
 		}
 	}
 }
+
+func OnBackgroundQueue(async: Bool = true, after: TimeInterval? = nil, _ block: @escaping () -> Void) {
+	if let after = after {
+		DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + after, execute: block)
+	} else {
+		if async {
+			DispatchQueue.global(qos: .background).async(execute: block)
+		} else {
+			DispatchQueue.global(qos: .background).sync(execute: block)
+		}
+	}
+}

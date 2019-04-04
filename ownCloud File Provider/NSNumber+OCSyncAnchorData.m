@@ -22,7 +22,12 @@
 
 + (instancetype)numberFromSyncAnchorData:(NSFileProviderSyncAnchor)syncAnchor
 {
-	return ([NSKeyedUnarchiver unarchiveObjectWithData:syncAnchor]);
+	if (syncAnchor != nil)
+	{
+		return ([NSKeyedUnarchiver unarchiveObjectWithData:syncAnchor]);
+	}
+
+	return (nil);
 }
 
 - (NSFileProviderSyncAnchor)syncAnchorData

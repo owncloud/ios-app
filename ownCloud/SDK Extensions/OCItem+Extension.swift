@@ -239,7 +239,7 @@ extension OCItem {
 
 	static private let dateFormatter: DateFormatter = {
 		let dateFormatter: DateFormatter =  DateFormatter()
-		dateFormatter.timeStyle = .none
+		dateFormatter.timeStyle = .short
 		dateFormatter.dateStyle = .medium
 		dateFormatter.locale = Locale.current
 		dateFormatter.doesRelativeDateFormatting = true

@@ -19,6 +19,8 @@
 #import <Foundation/Foundation.h>
 #import "FileProviderExtension.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef void (^FileProviderExtensionThumbnailRequestPerThumbnailCompletionHandler)(NSFileProviderItemIdentifier identifier, NSData * _Nullable imageData, NSError * _Nullable error);
 typedef void (^FileProviderExtensionThumbnailRequestCompletionHandler)(NSError * _Nullable error);
 
@@ -37,8 +39,10 @@ typedef void (^FileProviderExtensionThumbnailRequestCompletionHandler)(NSError *
 @property(copy) FileProviderExtensionThumbnailRequestPerThumbnailCompletionHandler perThumbnailCompletionHandler;
 @property(copy) FileProviderExtensionThumbnailRequestCompletionHandler completionHandler;
 
-@property(strong) NSProgress *progress;
+@property(nullable,strong) NSProgress *progress;
 
 - (void)requestNextThumbnail;
 
 @end
+
+NS_ASSUME_NONNULL_END
