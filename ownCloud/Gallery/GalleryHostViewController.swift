@@ -1,5 +1,5 @@
 //
-//  AlternativePageViewController.swift
+//  GalleryHostViewController.swift
 //  ownCloud
 //
 //  Created by Pablo Carrascal on 14/02/2019.
@@ -24,6 +24,7 @@ class GalleryHostViewController: UIPageViewController {
 	private var query: OCQuery
 	private weak var viewControllerToTansition: DisplayViewController?
 	private var selectedFilter: Filter?
+	private var queryObservation : NSKeyValueObservation?
 
 	// MARK: - Filters
 	lazy var filterImageFiles: Filter = { items in
@@ -43,7 +44,20 @@ class GalleryHostViewController: UIPageViewController {
 		self.query = query
 
 		super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
-		query.addObserver(self, forKeyPath: hasChangesAvailableKeyPath, options: [.initial, .new], context: nil)
+
+		if selectedItem.mimeType?.matches(regExp: imageFilterRegexp) ?? false {
+			selectedFilter = filterImageFiles
+		} else {
+			selectedFilter = filterOneItem
+		}
+
+		queryObservation = query.observe(\OCQuery.hasChangesAvailable, options: [.initial, .new]) { [weak self] (query, _) in
+			query.requestChangeSet(withFlags: .onlyResults) { ( _, changeSet) in
+				guard let changeSet = changeSet  else { return }
+				self?.items = self?.selectedFilter?(changeSet.queryResult)
+			}
+		}
+
 		Theme.shared.register(client: self)
 	}
 
@@ -52,7 +66,7 @@ class GalleryHostViewController: UIPageViewController {
 	}
 
 	deinit {
-		query.removeObserver(self, forKeyPath: hasChangesAvailableKeyPath)
+		queryObservation?.invalidate()
 		Theme.shared.unregister(client: self)
 	}
 
@@ -62,37 +76,20 @@ class GalleryHostViewController: UIPageViewController {
 		dataSource = self
 		delegate = self
 
-		if selectedItem.mimeType?.matches(regExp: imageFilterRegexp) ?? false {
-			selectedFilter = filterImageFiles
-		} else {
-			selectedFilter = filterOneItem
-		}
+		// Display first item
+		guard let mimeType = self.selectedItem.mimeType else { return }
 
-		query.requestChangeSet(withFlags: .onlyResults) { [weak self] ( _, changeSet) in
-			guard let self = self else { return}
-			guard let queryResult = changeSet?.queryResult else { return }
+		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: mimeType)
+		let configuration = self.configurationFor(self.selectedItem, viewController: viewController)
 
-			self.items = self.selectedFilter?(queryResult)
+		viewController.configure(configuration)
+		self.addChild(viewController)
+		viewController.didMove(toParent: self)
 
-			if let items = self.items, let index = items.firstIndex(where: {$0.fileID == self.selectedItem.fileID}) {
-				let itemToDisplay = items[index]
+		self.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
 
-				guard let mimeType = itemToDisplay.mimeType else { return }
-				OnMainThread {
-					let viewController = self.selectDisplayViewControllerBasedOn(mimeType: mimeType)
-					let configuration = self.configurationFor(itemToDisplay, viewController: viewController)
-
-					viewController.configure(configuration)
-					self.addChild(viewController)
-					viewController.didMove(toParent: self)
-
-					self.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
-
-					viewController.present(item: itemToDisplay)
-					viewController.updateNavigationBarItems()
-				}
-			}
-		}
+		viewController.present(item: self.selectedItem)
+		viewController.updateNavigationBarItems()
 	}
 
 	override var childForHomeIndicatorAutoHidden : UIViewController? {
@@ -101,18 +98,6 @@ class GalleryHostViewController: UIPageViewController {
 		}
 		return nil
 	}
-
-	// swiftlint:disable block_based_kvo
-	// Would love to use the block-based KVO, but it doesn't seem to work when used on the .state property of the query :-(
-	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-		if (object as? OCQuery) === query {
-			query.requestChangeSet(withFlags: .onlyResults) { ( _, changeSet) in
-				guard changeSet != nil else { return }
-				self.items = self.selectedFilter?(changeSet!.queryResult)
-			}
-		}
-	}
-	// swiftlint:enable block_based_kvo
 
 	// MARK: - Extension selection
 	private func selectDisplayViewControllerBasedOn(mimeType: String) -> (DisplayViewController) {
