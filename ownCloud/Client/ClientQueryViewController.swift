@@ -184,6 +184,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		queryRefreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
 		self.tableView.insertSubview(queryRefreshControl!, at: 0)
 		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
+		tableView.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
 
 		Theme.shared.register(client: self, applyImmediately: true)
 

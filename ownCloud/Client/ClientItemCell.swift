@@ -26,11 +26,13 @@ protocol ClientItemCellDelegate: class {
 }
 
 class ClientItemCell: ThemeTableViewCell {
-	private let horizontalMargin : CGFloat = 15.0
-	private let horizontalSmallMargin : CGFloat = 10.0
-	private let spacing : CGFloat = 15.0
-	private let iconViewWidth : CGFloat = 60.0
-	private let moreButtonWidth : CGFloat = 60.0
+	private let horizontalMargin : CGFloat = 15
+	private let verticalLabelMargin : CGFloat = 15
+	private let verticalIconMargin : CGFloat = 15
+	private let horizontalSmallMargin : CGFloat = 10
+	private let spacing : CGFloat = 15
+	private let iconViewWidth : CGFloat = 60
+	private let moreButtonWidth : CGFloat = 60
 	private let verticalLabelMarginFromCenter : CGFloat = 2
 
 	weak var delegate: ClientItemCellDelegate?
@@ -102,7 +104,8 @@ class ClientItemCell: ThemeTableViewCell {
 		cloudStatusIconView.setContentCompressionResistancePriority(.required, for: .vertical)
 		cloudStatusIconView.setContentCompressionResistancePriority(.required, for: .horizontal)
 
-		iconView.setContentHuggingPriority(.required, for: .vertical)
+		iconView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+
 		titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
@@ -113,15 +116,16 @@ class ClientItemCell: ThemeTableViewCell {
 			iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -spacing),
 			iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -spacing),
 			iconView.widthAnchor.constraint(equalToConstant: iconViewWidth),
-			iconView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+			iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
+			iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
 
 			titleLabel.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
 			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -horizontalMargin),
 
-			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: horizontalMargin),
+			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalLabelMargin),
 			titleLabel.bottomAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: -verticalLabelMarginFromCenter),
 			detailLabel.topAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: verticalLabelMarginFromCenter),
-			detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -horizontalMargin),
+			detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalLabelMargin),
 
 			moreButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 			moreButton.topAnchor.constraint(equalTo: self.contentView.topAnchor),
