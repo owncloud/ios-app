@@ -82,7 +82,6 @@ class SortBar: UIView, Themeable {
 
 		leftButtonImage = Theme.shared.image(for: "folder-create", size: sideButtonsSize)!.withRenderingMode(.alwaysTemplate)
 		leftButton.accessibilityLabel = "Create Folder".localized
-		leftButton.accessibilityIdentifier = "create-folder-button"
 
 		rightButtonImage = Theme.shared.image(for: "folder-create", size: sideButtonsSize)!.withRenderingMode(.alwaysTemplate)
 

@@ -87,7 +87,7 @@ class ScreenshotsTests: XCTestCase {
 		snapshot("02_screenshot")
 
 		//Create folder
-		app.buttons["create-folder-button"].tap()
+		app.buttons["sort-bar.leftButton"].tap()
 		snapshot("03_screenshot")
 		app.navigationBars.element(boundBy: 0).buttons.element(boundBy: 0).tap()
 
