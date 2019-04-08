@@ -141,11 +141,11 @@ class ClientItemCell: ThemeTableViewCell {
 	// MARK: - Present item
 	var item : OCItem? {
 		didSet {
+			localID = item?.localID as NSString?
+
 			if let newItem = item {
 				updateWith(newItem)
 			}
-
-			localID = item?.localID as NSString?
 		}
 	}
 
