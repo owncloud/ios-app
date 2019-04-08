@@ -249,12 +249,12 @@ class ClientItemCell: ThemeTableViewCell {
 	func updateProgress() {
 		var progress : Progress?
 
-		if let item = item {
+		if let item = item, (item.syncActivity.rawValue & (OCItemSyncActivity.downloading.rawValue | OCItemSyncActivity.uploading.rawValue) != 0) {
 			progress = self.core?.progress(for: item, matching: .none)?.first
-		}
 
-		if progress == nil, let item = item, (item.syncActivity.rawValue & (OCItemSyncActivity.downloading.rawValue | OCItemSyncActivity.uploading.rawValue) != 0) {
-			progress = Progress.indeterminate()
+			if progress == nil {
+				progress = Progress.indeterminate()
+			}
 		}
 
 		if progress != nil {
