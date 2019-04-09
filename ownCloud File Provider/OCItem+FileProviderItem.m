@@ -79,7 +79,6 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 				((permissions & OCItemPermissionWritable) 	? NSFileProviderItemCapabilitiesAllowsWriting     : 0) |
 				((permissions & OCItemPermissionMove)     	? NSFileProviderItemCapabilitiesAllowsReparenting : 0) |
 				((permissions & OCItemPermissionRename)   	? NSFileProviderItemCapabilitiesAllowsRenaming    : 0) |
-				((permissions & OCItemPermissionDelete) 	? NSFileProviderItemCapabilitiesAllowsTrashing    : 0) |
 				((permissions & OCItemPermissionDelete) 	? NSFileProviderItemCapabilitiesAllowsDeleting    : 0)
 			);
 		break;

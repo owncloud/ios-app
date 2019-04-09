@@ -465,40 +465,17 @@
 - (void)renameItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier toName:(NSString *)itemName completionHandler:(void (^)(NSFileProviderItem renamedItem, NSError *error))completionHandler
 {
 	NSError *error = nil;
-	OCItem *item, *parentItem;
+	OCItem *item;
 
 	FPLogCmdBegin(@"Rename", @"Start of renameItemWithIdentifier=%@, toName=%@", itemIdentifier, itemName);
 
 	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
 	{
-		FPLogCmd(@"Renaming %@ in %@ to %@", item, parentItem, itemName);
+		FPLogCmd(@"Renaming %@ in %@ to %@", item, item.path.parentPath, itemName);
 
 		[self.core renameItem:item to:itemName options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
 			completionHandler(item, [error resolvedError]);
-		}];
-	}
-	else
-	{
-		FPLogCmd(@"Completed with item=%@ or parentItem=%@ not found, error=%@", item, parentItem, error);
-		completionHandler(nil, error);
-	}
-}
-
-- (void)trashItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
-{
-	NSError *error = nil;
-	OCItem *item;
-
-	FPLogCmdBegin(@"Trash", @"Start of trashItemWithIdentifier=%@", itemIdentifier);
-
-	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
-	{
-		FPLogCmd(@"Trashing %@", item);
-
-		[self.core deleteItem:item requireMatch:YES resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
-			FPLogCmd(@"Completed with error=%@", error);
-			completionHandler(nil, [error resolvedError]);
 		}];
 	}
 	else
@@ -981,4 +958,3 @@
 }
 
 @end
-
