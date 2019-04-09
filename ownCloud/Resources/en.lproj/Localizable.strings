@@ -86,6 +86,7 @@
 "date" = "date";
 "Search this folder" = "Search this folder";
 "Pending" = "Pending";
+"Show parent paths" = "Show parent paths";
 
 /* Client Messages */
 "Empty folder" = "Empty folder";

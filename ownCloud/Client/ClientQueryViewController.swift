@@ -84,8 +84,11 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		} else {
 			let titleButton = UIButton()
 			titleButton.setTitle(title, for: .normal)
+			titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
 			titleButton.addTarget(self, action: #selector(showPathBreadCrumb(_:)), for: .touchUpInside)
 			titleButton.sizeToFit()
+			titleButton.accessibilityLabel = "Show parent paths".localized
+			titleButton.accessibilityIdentifier = "show-paths-button"
 			self.navigationItem.titleView = titleButton
 		}
 	}

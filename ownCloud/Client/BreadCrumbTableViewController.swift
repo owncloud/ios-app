@@ -20,6 +20,13 @@ import UIKit
 
 class BreadCrumbTableViewController: StaticTableViewController {
 
+	// MARK: - Constants
+	private let contentWidth = 300
+	private let rowHeight = 44
+	private let imageWidth = 30
+	private let imageHeight = 30
+
+	// MARK: - Instance Variables
 	var parentNavigationController : UINavigationController?
 	var queryPath : NSString = ""
 
@@ -40,8 +47,8 @@ class BreadCrumbTableViewController: StaticTableViewController {
 		var rows : [StaticTableViewRow] = []
 		let counter = pathComp.count
 		var iterator = 2
-		let height = 44 * counter - 1
-		self.preferredContentSize = CGSize(width: 300, height: height)
+		let height = rowHeight * counter - 1
+		self.preferredContentSize = CGSize(width: contentWidth, height: height)
 
 		for (_, path) in pathComp.enumerated().reversed() {
 			let counter = stackViewControllers.count
@@ -49,7 +56,7 @@ class BreadCrumbTableViewController: StaticTableViewController {
 			let aRow = StaticTableViewRow(rowWithAction: { (_, _) in
 				self.parentNavigationController?.popToViewController((stackViewControllers[stackIndex]), animated: true)
 				self.dismiss(animated: false, completion: nil)
-			}, title: path, image: Theme.shared.image(for: "folder", size: CGSize(width: 30, height: 30)))
+			}, title: path, image: Theme.shared.image(for: "folder", size: CGSize(width: imageWidth, height: imageHeight)))
 
 			rows.append(aRow)
 			iterator += 1
