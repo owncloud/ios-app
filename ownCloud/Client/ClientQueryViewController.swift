@@ -57,9 +57,11 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 	var selectBarButton: UIBarButtonItem?
 	var uploadBarButton: UIBarButtonItem?
-
 	var selectDeselectAllButtonItem: UIBarButtonItem?
 	var exitMultipleSelectionBarButtonItem: UIBarButtonItem?
+
+	var quotaLabel = UILabel()
+	var quotaObservation : NSKeyValueObservation?
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -76,20 +78,47 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		query.addObserver(self, forKeyPath: "state", options: .initial, context: nil)
 		core?.start(query)
 
-		var title = (query.queryPath as NSString?)!.lastPathComponent
+		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
 
-		if title == "/", let shortName = core?.bookmark.shortName {
-			title = shortName
-			self.navigationItem.title = title
+		if lastPathComponent == "/", let shortName = core?.bookmark.shortName {
+			self.navigationItem.title = shortName
 		} else {
 			let titleButton = UIButton()
-			titleButton.setTitle(title, for: .normal)
+			titleButton.setTitle(lastPathComponent, for: .normal)
 			titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
 			titleButton.addTarget(self, action: #selector(showPathBreadCrumb(_:)), for: .touchUpInside)
 			titleButton.sizeToFit()
 			titleButton.accessibilityLabel = "Show parent paths".localized
 			titleButton.accessibilityIdentifier = "show-paths-button"
 			self.navigationItem.titleView = titleButton
+		}
+
+		if lastPathComponent == "/" {
+			quotaObservation = core?.observe(\OCCore.rootQuotaBytesUsed, options: [.initial], changeHandler: { [weak self, core] (_, _) in
+				let quotaUsed = core?.rootQuotaBytesUsed?.int64Value ?? 0
+
+				OnMainThread {
+					var footerText: String?
+
+					if quotaUsed > 0 {
+
+						let byteCounterFormatter = ByteCountFormatter()
+						byteCounterFormatter.allowsNonnumericFormatting = false
+
+						let quotaUsedFormatted = byteCounterFormatter.string(fromByteCount: quotaUsed)
+
+						// A rootQuotaBytesRemaining value of nil indicates that no quota has been set
+						if core?.rootQuotaBytesRemaining != nil, let quotaTotal = core?.rootQuotaBytesTotal?.int64Value {
+							let quotaTotalFormatted = byteCounterFormatter.string(fromByteCount: quotaTotal )
+							footerText = String(format: "%@ of %@ used".localized, quotaUsedFormatted, quotaTotalFormatted)
+						} else {
+							footerText = String(format: "Total: %@".localized, quotaUsedFormatted)
+						}
+					}
+
+					self?.updateFooter(text: footerText)
+				}
+			})
 		}
 	}
 
@@ -109,6 +138,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		}
 
 		self.queryProgressSummary = nil
+
+		quotaObservation = nil
 	}
 
 	// MARK: - Actions
@@ -133,6 +164,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	// swiftlint:enable block_based_kvo
 
 	// MARK: - View controller events
+	private let estimatedTableRowHeight : CGFloat = 80
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -166,6 +199,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		self.tableView.dragInteractionEnabled = true
 		self.tableView.allowsMultipleSelectionDuringEditing = true
 
+		self.tableView.estimatedRowHeight = estimatedTableRowHeight
+
 		uploadBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
@@ -190,6 +225,10 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		openMultipleBarButtonItem?.isEnabled = false
 
 		self.addThemableBackgroundView()
+
+		quotaLabel.textAlignment = .center
+		quotaLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
+		quotaLabel.numberOfLines = 0
 	}
 
 	private var viewControllerVisible : Bool = false
@@ -216,6 +255,19 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		viewControllerVisible = true
 
 		self.reloadTableData(ifNeeded: true)
+	}
+
+	private func updateFooter(text:String?) {
+		let labelText = text ?? ""
+
+		// Resize quota label
+		self.quotaLabel.text = labelText
+		self.quotaLabel.sizeToFit()
+		var frame = self.quotaLabel.frame
+		// Width is ignored and set by the UITableView when assigning to tableFooterView property
+		frame.size.height = floor(self.quotaLabel.frame.size.height * 2.0)
+		quotaLabel.frame = frame
+		self.tableView.tableFooterView = quotaLabel
 	}
 
 	func updateQueryProgressSummary() {
@@ -269,6 +321,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
+		self.quotaLabel.textColor = collection.tableRowColors.secondaryLabelColor
 		self.searchController?.searchBar.applyThemeCollection(collection)
 		if event == .update {
 			self.reloadTableData()
@@ -329,7 +382,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 							core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ]) { [weak self, query] (error, core, item, _) in
 
 								guard let self = self else { return }
-								OnMainThread {
+								OnMainThread { [weak core] in
 									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
 										if let item = item, let core = core {
 											if item.localID == self.lastTappedItemLocalID {
@@ -465,7 +518,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 				self?.progressSummarizer?.startTracking(progress: progress)
 			}
 
-			action.completionHandler = { [weak self] _ in
+			action.completionHandler = { _ in
 			}
 
 			// Execute the action
@@ -977,6 +1030,13 @@ extension ClientQueryViewController : OCQueryDelegate {
 				default:
 					self.message(show: false)
 				}
+
+				if let rootItem = self.query.rootItem {
+					if query.queryPath != "/" {
+						let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
+						self.updateFooter(text: totalSize)
+					}
+				}
 			}
 		}
 	}
@@ -1175,10 +1235,14 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 				dragItem.localObject = item
 				return dragItem
 			case .file:
-				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, item.mimeType as! CFString, nil)?.takeRetainedValue() else { return nil }
+				guard let itemMimeType = item.mimeType else { return nil }
+				let mimeTypeCF = itemMimeType as CFString
+
+				guard let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() else { return nil }
 
 				if let fileData = NSData(contentsOf: core.localURL(for: item)) {
-					let itemProvider = NSItemProvider(item: fileData, typeIdentifier: rawUti as! String)
+					let rawUtiString = rawUti as String
+					let itemProvider = NSItemProvider(item: fileData, typeIdentifier: rawUtiString)
 					itemProvider.suggestedName = item.name
 					let dragItem = UIDragItem(itemProvider: itemProvider)
 					dragItem.localObject = item

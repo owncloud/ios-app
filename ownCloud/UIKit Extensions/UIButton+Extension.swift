@@ -25,7 +25,7 @@ public extension UIButton {
 		static var actionKey = "actionKey"
 	}
 
-	public var actionIdentifier: OCExtensionIdentifier? {
+	var actionIdentifier: OCExtensionIdentifier? {
 		get {
 			return objc_getAssociatedObject(self, &AssociatedKeys.actionKey) as? OCExtensionIdentifier
 		}

@@ -88,6 +88,9 @@
 "Pending" = "Pending";
 "Show parent paths" = "Show parent paths";
 
+"%@ of %@ used" = "%@ of %@ used";
+"Total: %@" = "Total: %@";
+
 /* Client Messages */
 "Empty folder" = "Empty folder";
 "This folder contains no files or folders." = "This folder contains no files or folders.";
@@ -234,6 +237,7 @@
 "Cannot connect to " = "Cannot connect to ";
 " couldn't download file(s)" = " couldn't download file(s)";
 "Actions" = "Actions";
+"copy" = "copy";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";
