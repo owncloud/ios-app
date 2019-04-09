@@ -46,7 +46,7 @@ enum ActionPosition : Int {
 }
 
 typealias ActionCompletionHandler = ((Error?) -> Void)
-typealias ActionProgressHandler = ((Progress) -> Void)
+typealias ActionProgressHandler = ((Progress, Bool) -> Void)
 typealias ActionWillRunHandler = () -> Void
 
 extension OCExtensionType {
@@ -163,7 +163,7 @@ class Action : NSObject {
 	}
 
 	// MARK: - Provide Card view controller
-	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ((Progress) -> Void)? = nil, completionHandler: ((Error?) -> Void)? = nil) -> UIViewController {
+	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ActionProgressHandler? = nil, completionHandler: ((Error?) -> Void)? = nil) -> UIViewController {
 
 		let tableViewController = MoreStaticTableViewController(style: .grouped)
 		let header = MoreViewHeader(for: item, with: context.core!)
@@ -233,7 +233,13 @@ class Action : NSObject {
 
 	func publish(progress: Progress) {
 		if let progressHandler = progressHandler {
-			progressHandler(progress)
+			progressHandler(progress, true)
+		}
+	}
+
+	func unpublish(progress: Progress) {
+		if let progressHandler = progressHandler {
+			progressHandler(progress, false)
 		}
 	}
 
@@ -254,7 +260,7 @@ class Action : NSObject {
 	}
 
 	func provideAlertAction() -> UIAlertAction? {
-		return UIAlertAction(title: self.actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .default, handler: { (alertAction) in
+		return UIAlertAction(title: self.actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .default, handler: { (_ alertAction) in
 			self.willRun()
 			self.run()
 		})

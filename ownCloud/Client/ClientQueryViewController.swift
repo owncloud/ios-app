@@ -19,7 +19,6 @@
 import UIKit
 import ownCloudSDK
 import MobileCoreServices
-import Photos
 
 typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
@@ -62,6 +61,22 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 	var quotaLabel = UILabel()
 	var quotaObservation : NSKeyValueObservation?
+
+	private var _actionProgressHandler : ActionProgressHandler?
+
+	func makeActionProgressHandler() -> ActionProgressHandler {
+		if _actionProgressHandler == nil {
+			_actionProgressHandler = { [weak self] (progress, publish) in
+				if publish {
+					self?.progressSummarizer?.startTracking(progress: progress)
+				} else {
+					self?.progressSummarizer?.stopTracking(progress: progress)
+				}
+			}
+		}
+
+		return _actionProgressHandler!
+	}
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -436,9 +451,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .tableRow)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 		let actions = Action.sortedApplicableActions(for: actionContext)
-		actions.forEach({$0.progressHandler = { [weak self] progress in
-			self?.progressSummarizer?.startTracking(progress: progress)
-			}
+		actions.forEach({
+			$0.progressHandler = makeActionProgressHandler()
 		})
 
 		let contextualActions = actions.compactMap({$0.provideContextualAction()})
@@ -508,9 +522,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		if let action = self.actions?.first(where: {type(of:$0).identifier == identifier}) {
 			// Configure progress handler
-			action.progressHandler = { [weak self] progress in
-				self?.progressSummarizer?.startTracking(progress: progress)
-			}
+			action.progressHandler = makeActionProgressHandler()
 
 			action.completionHandler = { _ in
 			}
@@ -714,37 +726,6 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		}
 	}
 
-	func upload(asset:PHAsset) {
-		let ressources = PHAssetResource.assetResources(for: asset)
-		if let ressource = ressources.first {
-			let filename = ressource.originalFilename
-
-			let progress = Progress(totalUnitCount: 100)
-			progress.localizedDescription = String(format: "Importing '%@' from photo library".localized, filename)
-
-			let options = PHAssetResourceRequestOptions()
-			options.isNetworkAccessAllowed = true
-			options.progressHandler = { (completed:Double) in
-				progress.completedUnitCount = Int64(completed * 100)
-			}
-
-			let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
-
-			self.progressSummarizer?.startTracking(progress: progress)
-			PHAssetResourceManager.default().writeData(for: ressource, toFile: localURL, options: options) { (error) in
-				self.progressSummarizer?.stopTracking(progress: progress)
-				if error == nil {
-					self.upload(itemURL: localURL, name: filename, completionHandler: { (_) in
-						// Delete the temporary asset file
-						try? FileManager.default.removeItem(at: localURL)
-					})
-				} else {
-					progress.cancel()
-				}
-			}
-		}
-	}
-
 	// MARK: - Toolbar actions handling multiple selected items
 	fileprivate func updateSelectDeselectAllButton() {
 		var selectedCount = 0
@@ -830,9 +811,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		// Find associated action
 		if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
 			// Configure progress handler
-			action.progressHandler = { [weak self] progress in
-				self?.progressSummarizer?.startTracking(progress: progress)
-			}
+			action.progressHandler = makeActionProgressHandler()
 
 			action.completionHandler = { [weak self] _ in
 				DispatchQueue.main.async {
@@ -887,70 +866,6 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-		// Upload from photo library
-		let photoLibrary = UIAlertAction(title: "Upload from your photo library".localized, style: .default, handler: { (_) in
-
-			func presentImageGalleryPicker() {
-
-				let photoAlbumViewController = PhotoAlbumTableViewController()
-				photoAlbumViewController.selectionCallback = { (assets) in
-					for asset in assets {
-						self.upload(asset: asset)
-					}
-				}
-				let navigationController = ThemeNavigationController(rootViewController: photoAlbumViewController)
-
-				OnMainThread {
-					self.present(navigationController, animated: true)
-				}
-			}
-
-			let permisson = PHPhotoLibrary.authorizationStatus()
-			switch permisson {
-
-			case .authorized:
-				presentImageGalleryPicker()
-			case .notDetermined:
-				PHPhotoLibrary.requestAuthorization({ newStatus in
-					if newStatus == .authorized {
-						presentImageGalleryPicker()
-					}
-				})
-
-			default:
-				PHPhotoLibrary.requestAuthorization({ newStatus in
-
-					if newStatus == .denied {
-						let alert = UIAlertController(title: "Missing permissions".localized, message: "This permission is needed to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
-
-						let settingAction = UIAlertAction(title: "Settings".localized, style: .default, handler: { _ in
-							UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
-						})
-						let notNowAction = UIAlertAction(title: "Not now".localized, style: .cancel)
-
-						alert.addAction(settingAction)
-						alert.addAction(notNowAction)
-
-						OnMainThread {
-							self.present(alert, animated: true)
-						}
-					}
-				})
-			}
-		})
-
-		// Upload file
-		let uploadFileAction = UIAlertAction(title: "Upload file".localized, style: .default) { _ in
-			let documentPickerViewController = UIDocumentPickerViewController(documentTypes: [kUTTypeData as String], in: .import)
-			documentPickerViewController.delegate = self
-			documentPickerViewController.allowsMultipleSelection = true
-			self.present(documentPickerViewController, animated: true)
-		}
-
-		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
-		controller.addAction(photoLibrary)
-		controller.addAction(uploadFileAction)
-
 		// Actions for plusButton
 		if let core = self.core, let rootItem = query.rootItem {
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .plusButton)
@@ -959,12 +874,16 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			let actions = Action.sortedApplicableActions(for: actionContext)
 
 			for action in actions {
+				action.progressHandler = makeActionProgressHandler()
+
 				if let controllerAction = action.provideAlertAction() {
 					controller.addAction(controllerAction)
 				}
 			}
 		}
 
+		// Cancel button
+		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
 		controller.addAction(cancelAction)
 
 		if let popoverController = controller.popoverPresentationController {
@@ -1045,9 +964,7 @@ extension ClientQueryViewController : SortBarDelegate {
 		let actions = Action.sortedApplicableActions(for: actionContext)
 
 		let createFolderAction = actions.first
-		createFolderAction?.progressHandler = { [weak self] progess in
-			self?.progressSummarizer?.startTracking(progress: progess)
-		}
+		createFolderAction?.progressHandler = makeActionProgressHandler()
 
 		actions.first?.run()
 	}
@@ -1106,9 +1023,7 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
-		let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: { [weak self] progress in
-			self?.progressSummarizer?.startTracking(progress: progress)
-		})
+		let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: makeActionProgressHandler())
 
 		self.present(asCard: moreViewController, animated: true)
 	}
@@ -1250,16 +1165,6 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		}
 
 		return nil
-	}
-}
-
-// MARK: - UIDocumentPickerDelegate
-extension ClientQueryViewController: UIDocumentPickerDelegate {
-
-	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-		for url in urls {
-			self.upload(itemURL: url, name: url.lastPathComponent)
-		}
 	}
 }
 

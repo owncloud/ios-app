@@ -26,8 +26,11 @@ class CreateFolderAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-
 		if forContext.items.count > 1 {
+			return .none
+		}
+
+		if forContext.items.first?.type != OCItemType.collection {
 			return .none
 		}
 

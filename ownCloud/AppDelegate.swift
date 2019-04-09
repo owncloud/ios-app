@@ -67,6 +67,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(DuplicateAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CreateFolderAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CopyAction.actionExtension)
+		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
+		OCExtensionManager.shared.addExtension(UploadPhotosAction.actionExtension)
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
