@@ -28,14 +28,14 @@ class ScreenshotsTests: XCTestCase {
 	let password = "admin"
 	let serverDescription = "ownCloud"
 
-    override func setUp() {
+	override func setUp() {
 		super.setUp()
-        continueAfterFailure = false
-    }
+		continueAfterFailure = false
+	}
 
-    override func tearDown() {
+	override func tearDown() {
 		super.tearDown()
-    }
+	}
 
 	func testTakeScreenshotStep() {
 
@@ -167,8 +167,7 @@ class ScreenshotsTests: XCTestCase {
 }
 
 extension XCUIElement {
-	// The following is a workaround for inputting text in the
-	//simulator when the keyboard is hidden
+	// The following is a workaround for inputting text in the simulator and prevent errors
 	func setText(text: String, application: XCUIApplication) {
 		UIPasteboard.general.string = text
 		doubleTap()
