@@ -24,7 +24,7 @@ import Photos
 typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
-class ClientQueryViewController: UITableViewController, Themeable, UIDropInteractionDelegate {
+class ClientQueryViewController: UITableViewController, Themeable, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
 	weak var core : OCCore?
 	var query : OCQuery
 
@@ -80,9 +80,14 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		if title == "/", let shortName = core?.bookmark.shortName {
 			title = shortName
+			self.navigationItem.title = title
+		} else {
+			let titleButton = UIButton()
+			titleButton.setTitle(title, for: .normal)
+			titleButton.addTarget(self, action: #selector(showPathBreadCrumb(_:)), for: .touchUpInside)
+			titleButton.sizeToFit()
+			self.navigationItem.titleView = titleButton
 		}
-
-		self.navigationItem.title = title
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -899,6 +904,26 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			popoverController.barButtonItem = sender
 		}
 		self.present(controller, animated: true)
+	}
+
+	// MARK: - Path Bread Crumb Action
+	@objc func showPathBreadCrumb(_ sender: UIButton) {
+		let tableViewController = BreadCrumbTableViewController()
+		tableViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+		tableViewController.parentNavigationController = self.navigationController
+		tableViewController.queryPath = (query.queryPath as NSString?)!
+
+		let popoverPresentationController = tableViewController.popoverPresentationController
+		popoverPresentationController?.sourceView = sender
+		popoverPresentationController?.delegate = self
+		popoverPresentationController?.sourceRect = CGRect(x: 0, y: 0, width: sender.frame.size.width, height: sender.frame.size.height)
+
+		present(tableViewController, animated: true, completion: nil)
+	}
+
+	// MARK: - UIPopoverPresentationControllerDelegate
+	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+		return .none
 	}
 }
 
