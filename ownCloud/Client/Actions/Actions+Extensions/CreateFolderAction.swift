@@ -22,7 +22,7 @@ class CreateFolderAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.crateFolder") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Create Folder".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.sortBar] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.sortBar, .plusButton] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {

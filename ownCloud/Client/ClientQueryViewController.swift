@@ -56,7 +56,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	var openMultipleBarButtonItem: UIBarButtonItem?
 
 	var selectBarButton: UIBarButtonItem?
-	var uploadBarButton: UIBarButtonItem?
+	var plusBarButton: UIBarButtonItem?
 	var selectDeselectAllButtonItem: UIBarButtonItem?
 	var exitMultipleSelectionBarButtonItem: UIBarButtonItem?
 
@@ -195,10 +195,10 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		self.tableView.estimatedRowHeight = estimatedTableRowHeight
 
-		uploadBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
+		plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusBarButtonPressed))
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
 		selectBarButton?.isEnabled = false
-		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
+		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
 
 		selectDeselectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
 		exitMultipleSelectionBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(exitMultipleSelection))
@@ -808,7 +808,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	func leaveMultipleSelection() {
 		self.tableView.setEditing(false, animated: true)
 		selectBarButton?.title = "Select".localized
-		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
+		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
 		self.navigationItem.leftBarButtonItem = nil
 		removeToolbar()
 	}
@@ -883,10 +883,11 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		updateMultiSelectionUI()
 	}
 
-	@objc func uploadsBarButtonPressed(_ sender: UIBarButtonItem) {
+	@objc func plusBarButtonPressed(_ sender: UIBarButtonItem) {
 
 		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
+		// Upload from photo library
 		let photoLibrary = UIAlertAction(title: "Upload from your photo library".localized, style: .default, handler: { (_) in
 
 			func presentImageGalleryPicker() {
@@ -938,6 +939,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			}
 		})
 
+		// Upload file
 		let uploadFileAction = UIAlertAction(title: "Upload file".localized, style: .default) { _ in
 			let documentPickerViewController = UIDocumentPickerViewController(documentTypes: [kUTTypeData as String], in: .import)
 			documentPickerViewController.delegate = self
@@ -948,6 +950,21 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
 		controller.addAction(photoLibrary)
 		controller.addAction(uploadFileAction)
+
+		// Actions for plusButton
+		if let core = self.core, let rootItem = query.rootItem {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .plusButton)
+			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
+
+			let actions = Action.sortedApplicableActions(for: actionContext)
+
+			for action in actions {
+				if let controllerAction = action.provideAlertAction() {
+					controller.addAction(controllerAction)
+				}
+			}
+		}
+
 		controller.addAction(cancelAction)
 
 		if let popoverController = controller.popoverPresentationController {
