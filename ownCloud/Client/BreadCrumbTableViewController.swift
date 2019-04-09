@@ -29,6 +29,7 @@ class BreadCrumbTableViewController: StaticTableViewController {
 	// MARK: - Instance Variables
 	var parentNavigationController : UINavigationController?
 	var queryPath : NSString = ""
+	var bookmarkShortName : String?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -50,13 +51,17 @@ class BreadCrumbTableViewController: StaticTableViewController {
 		let height = rowHeight * counter - 1
 		self.preferredContentSize = CGSize(width: contentWidth, height: height)
 
-		for (_, path) in pathComp.enumerated().reversed() {
+		for (_, currentPath) in pathComp.enumerated().reversed() {
 			let counter = stackViewControllers.count
 			let stackIndex = counter - iterator
+			var pathTitle = currentPath
+			if currentPath == "/", let shortName = self.bookmarkShortName {
+				pathTitle = shortName
+			}
 			let aRow = StaticTableViewRow(rowWithAction: { (_, _) in
 				self.parentNavigationController?.popToViewController((stackViewControllers[stackIndex]), animated: true)
 				self.dismiss(animated: false, completion: nil)
-			}, title: path, image: Theme.shared.image(for: "folder", size: CGSize(width: imageWidth, height: imageHeight)))
+			}, title: pathTitle, image: Theme.shared.image(for: "folder", size: CGSize(width: imageWidth, height: imageHeight)))
 
 			rows.append(aRow)
 			iterator += 1

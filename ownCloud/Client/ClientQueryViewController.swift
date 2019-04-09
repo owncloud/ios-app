@@ -968,6 +968,9 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		tableViewController.modalPresentationStyle = UIModalPresentationStyle.popover
 		tableViewController.parentNavigationController = self.navigationController
 		tableViewController.queryPath = (query.queryPath as NSString?)!
+		if let shortName = core?.bookmark.shortName {
+			tableViewController.bookmarkShortName = shortName
+		}
 
 		let popoverPresentationController = tableViewController.popoverPresentationController
 		popoverPresentationController?.sourceView = sender
