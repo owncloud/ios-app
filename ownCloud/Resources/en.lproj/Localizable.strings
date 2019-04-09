@@ -52,6 +52,9 @@
 "Contacting server…" = "Contacting server…";
 "Authenticating…" = "Authenticating…";
 
+"Fetching user information…" = "Fetching user information…";
+"Updating connection…" = "Updating connection…";
+
 "Missing hostname" = "Missing hostname";
 "The entered URL does not include a hostname." = "The entered URL does not include a hostname.";
 "Add account" = "Add account";

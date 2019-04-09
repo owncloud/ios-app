@@ -428,12 +428,13 @@ class BookmarkViewController: StaticTableViewController {
 			hud?.present(on: self, label: "Authenticating…".localized)
 
 			connection.generateAuthenticationData(withMethod: bookmarkAuthenticationMethodIdentifier, options: options) { (error, authMethodIdentifier, authMethodData) in
-				hudCompletion({
-					if error == nil {
-						self.bookmark?.authenticationMethodIdentifier = authMethodIdentifier
-						self.bookmark?.authenticationData = authMethodData
-						self.userActionSave()
-					} else {
+				if error == nil {
+					self.bookmark?.authenticationMethodIdentifier = authMethodIdentifier
+					self.bookmark?.authenticationData = authMethodData
+					hud?.updateLabel(with: "Fetching user information…".localized)
+					self.save(hudCompletion: hudCompletion)
+				} else {
+					hudCompletion({
 						var issue : OCIssue?
 						let nsError = error as NSError?
 
@@ -465,8 +466,8 @@ class BookmarkViewController: StaticTableViewController {
 
 							self.present(issuesViewController, animated: true, completion: nil)
 						}
-					}
-				})
+					})
+				}
 			}
 		}
 	}
@@ -477,6 +478,24 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	@objc func userActionSave() {
+		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
+
+		let hudCompletion: (((() -> Void)?) -> Void) = { (completion) in
+			OnMainThread {
+				if hud?.presenting == true {
+					hud?.dismiss(completion: completion)
+				} else {
+					completion?()
+				}
+			}
+		}
+
+		hud?.present(on: self, label: "Updating connection…".localized)
+
+		save(hudCompletion: hudCompletion)
+	}
+
+	func save(hudCompletion: @escaping (((() -> Void)?) -> Void)) {
 		guard let bookmark = self.bookmark else { return }
 
 		if isBookmarkComplete(bookmark: bookmark) {
@@ -502,19 +521,27 @@ class BookmarkViewController: StaticTableViewController {
 								OCBookmarkManager.shared.postChangeNotification()
 							}
 							OnMainThread {
-								weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+								hudCompletion({
+									weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+								})
 							}
 
 						})
 					} else {
 						OnMainThread {
-							weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+							hudCompletion({
+								weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+							})
 						}
 					}
 				}
 			}
 		} else {
-			handleContinue()
+			hudCompletion({ [weak self] in
+				if let weakSelf = self {
+					weakSelf.handleContinue()
+				}
+			})
 		}
 	}
 
