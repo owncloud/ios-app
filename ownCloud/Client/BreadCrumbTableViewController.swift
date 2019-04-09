@@ -40,7 +40,7 @@ class BreadCrumbTableViewController: StaticTableViewController {
 		var rows : [StaticTableViewRow] = []
 		let counter = pathComp.count
 		var iterator = 2
-		let height = 44 * counter
+		let height = 44 * counter - 1
 		self.preferredContentSize = CGSize(width: 300, height: height)
 
 		for (_, path) in pathComp.enumerated().reversed() {
