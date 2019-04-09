@@ -29,6 +29,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 	var items : [OCItem] = []
 
+	var selectedItemIds = Set<OCLocalID>()
+
 	var actions : [Action]?
 
 	var queryProgressSummary : ProgressSummary? {
@@ -705,6 +707,19 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			if viewControllerVisible {
 				tableReloadNeeded = false
 			}
+
+			// Restore previously selected items
+			if tableView.isEditing && selectedItemIds.count > 0 {
+				var selectedItems = [OCItem]()
+				for row in 0..<self.items.count {
+					if let itemLocalID = self.items[row].localID as OCLocalID? {
+						if selectedItemIds.contains(itemLocalID) {
+							selectedItems.append(self.items[row])
+							self.tableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -744,46 +759,62 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		}
 	}
 
-	fileprivate func updateMultiSelectionUI() {
+
+	fileprivate func updateActions(for selectedItems:[OCItem]) {
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
 
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
 
-		updateSelectDeselectAllButton()
+		if selectedItems.count > 0 {
+			if let core = self.core {
+				// Get possible associated actions
+				let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+				let actionContext = ActionContext(viewController: self, core: core, items: selectedItems, location: actionsLocation)
 
-		// Do we have selected items?
-		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
-			if selectedIndexPaths.count > 0 {
+				self.actions = Action.sortedApplicableActions(for: actionContext)
 
-				if let core = self.core {
-					// Get array of OCItems from selected table view index paths
-					var selectedItems = [OCItem]()
-					for indexPath in selectedIndexPaths {
-						selectedItems.append(itemAtIndexPath(indexPath))
-					}
-
-					// Get possible associated actions
-					let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-					let actionContext = ActionContext(viewController: self, core: core, items: selectedItems, location: actionsLocation)
-
-					self.actions = Action.sortedApplicableActions(for: actionContext)
-
-					// Enable / disable tool-bar items depending on action availability
-					for item in toolbarItems {
-						if self.actions?.contains(where: {type(of:$0).identifier == item.actionIdentifier}) ?? false {
-							item.isEnabled = true
-						} else {
-							item.isEnabled = false
-						}
+				// Enable / disable tool-bar items depending on action availability
+				for item in toolbarItems {
+					if self.actions?.contains(where: {type(of:$0).identifier == item.actionIdentifier}) ?? false {
+						item.isEnabled = true
+					} else {
+						item.isEnabled = false
 					}
 				}
 			}
+
 		} else {
 			self.actions = nil
 			for item in toolbarItems {
 				item.isEnabled = false
 			}
 		}
+
+	}
+
+	fileprivate func updateMultiSelectionUI() {
+
+		updateSelectDeselectAllButton()
+
+		var selectedItems = [OCItem]()
+
+		// Do we have selected items?
+		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
+			if selectedIndexPaths.count > 0 {
+
+				// Get array of OCItems from selected table view index paths
+				selectedItemIds.removeAll()
+				for indexPath in selectedIndexPaths {
+					let item = itemAtIndexPath(indexPath)
+					selectedItems.append(item)
+					if let localID = item.localID as OCLocalID? {
+						selectedItemIds.insert(localID)
+					}
+				}
+			}
+		}
+
+		updateActions(for: selectedItems)
 	}
 
 	func leaveMultipleSelection() {
