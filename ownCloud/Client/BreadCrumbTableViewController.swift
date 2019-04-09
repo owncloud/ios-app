@@ -21,7 +21,7 @@ import UIKit
 class BreadCrumbTableViewController: StaticTableViewController {
 
 	// MARK: - Constants
-	private let contentWidth = 300
+	private let contentWidth = 500
 	private let rowHeight = 44
 	private let imageWidth = 30
 	private let imageHeight = 30
