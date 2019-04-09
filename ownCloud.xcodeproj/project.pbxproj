@@ -142,6 +142,7 @@
 		DC434D1320D7A8F100740056 /* UIAlertController+OCIssue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */; };
 		DC4FEAE7209E3A7700D4476B /* OCIssue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE6209E3A7700D4476B /* OCIssue+Extension.swift */; };
 		DC4FEAEA209E48E800D4476B /* DispatchQueueTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */; };
+		DC625141225C904700736874 /* NSError+MessageResolution.m in Sources */ = {isa = PBXBuildFile; fileRef = DC625140225C904700736874 /* NSError+MessageResolution.m */; };
 		DC63207B21FCA712007EC0A8 /* libzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE93FF321FCA434000E14F2 /* libzip.framework */; };
 		DC63207E21FCA731007EC0A8 /* libzip.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = DCE93FF321FCA434000E14F2 /* libzip.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC63208321FCAC1E007EC0A8 /* ClientActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63208221FCAC1E007EC0A8 /* ClientActivityViewController.swift */; };
@@ -604,6 +605,8 @@
 		DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+OCIssue.swift"; sourceTree = "<group>"; };
 		DC4FEAE6209E3A7700D4476B /* OCIssue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCIssue+Extension.swift"; sourceTree = "<group>"; };
 		DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueTools.swift; sourceTree = "<group>"; };
+		DC62513F225C904700736874 /* NSError+MessageResolution.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSError+MessageResolution.h"; sourceTree = "<group>"; };
+		DC625140225C904700736874 /* NSError+MessageResolution.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSError+MessageResolution.m"; sourceTree = "<group>"; };
 		DC63208221FCAC1E007EC0A8 /* ClientActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientActivityViewController.swift; sourceTree = "<group>"; };
 		DC63208421FCEBE9007EC0A8 /* ClientActivityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientActivityCell.swift; sourceTree = "<group>"; };
 		DC63208621FCEE5D007EC0A8 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
@@ -1210,6 +1213,8 @@
 				DC98BBD220FF824600F4ED3E /* FileProviderEnumeratorObserver.h */,
 				DC98BBCA20FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.m */,
 				DC98BBC920FF815C00F4ED3E /* NSNumber+OCSyncAnchorData.h */,
+				DC625140225C904700736874 /* NSError+MessageResolution.m */,
+				DC62513F225C904700736874 /* NSError+MessageResolution.h */,
 				DCC6565120C9B7E400110A97 /* Info.plist */,
 				DCC6565220C9B7E400110A97 /* ownCloud_File_Provider.entitlements */,
 			);
@@ -1979,6 +1984,7 @@
 				DC98BBD420FF824600F4ED3E /* FileProviderEnumeratorObserver.m in Sources */,
 				DCC6565020C9B7E400110A97 /* FileProviderEnumerator.m in Sources */,
 				DC27A1E920CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m in Sources */,
+				DC625141225C904700736874 /* NSError+MessageResolution.m in Sources */,
 				DC27A1A820CC095C008ACB6C /* OCCore+FileProviderTools.m in Sources */,
 				DCC6564A20C9B7E400110A97 /* FileProviderExtension.m in Sources */,
 				DC27A1A520CBEF85008ACB6C /* OCBookmark+FileProvider.m in Sources */,

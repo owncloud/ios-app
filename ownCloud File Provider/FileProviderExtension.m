@@ -23,6 +23,7 @@
 #import "FileProviderEnumerator.h"
 #import "OCItem+FileProviderItem.h"
 #import "FileProviderExtensionThumbnailRequest.h"
+#import "NSError+MessageResolution.h"
 
 @interface FileProviderExtension ()
 
@@ -138,7 +139,7 @@
 
 	if (outError != NULL)
 	{
-		*outError = returnError;
+		*outError = [returnError resolvedError];
 	}
 
 	return item;
@@ -233,7 +234,7 @@
 
 				FPLogCmd(@"Completed with error=%@", error);
 
-				completionHandler(error);
+				completionHandler([error resolvedError]);
 			}];
 
 			return;
@@ -400,8 +401,8 @@
 		if ((existingItem = [self findKnownExistingItemInParent:parentItem withName:directoryName]) != nil)
 		{
 			FPLogCmd(@"Completed with collission with existingItem=%@ (locally detected)", existingItem);
-//			completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
-			completionHandler(nil, OCError(OCErrorItemAlreadyExists)); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
+			// completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
+			completionHandler(nil, [OCError(OCErrorItemAlreadyExists) resolvedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
 			return;
 		}
 
@@ -416,8 +417,8 @@
 					if ((existingItem = [self findKnownExistingItemInParent:parentItem withName:directoryName]) != nil)
 					{
 						FPLogCmd(@"Completed with collission with existingItem=%@ (server response)", existingItem);
-			//			completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
-						completionHandler(nil, OCError(OCErrorItemAlreadyExists)); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
+						// completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
+						completionHandler(nil, [OCError(OCErrorItemAlreadyExists) resolvedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
 						return;
 					}
 				}
@@ -425,7 +426,7 @@
 
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
 
-			completionHandler(item, error);
+			completionHandler(item, [error resolvedError]);
 		}];
 	}
 	else
@@ -436,7 +437,7 @@
 	}
 }
 
-- (void)reparentItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier toParentItemWithIdentifier:(NSFileProviderItemIdentifier)parentItemIdentifier newName:(NSString *)newName completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
+- (void)reparentItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier toParentItemWithIdentifier:(NSFileProviderItemIdentifier)parentItemIdentifier newName:(NSString *)newName completionHandler:(void (^)(NSFileProviderItem _Nullable reparentedItem, NSError * _Nullable))completionHandler
 {
 	NSError *error = nil;
 	OCItem *item=nil, *parentItem=nil;
@@ -451,7 +452,7 @@
 		[self.core moveItem:item to:parentItem withName:((newName != nil) ? newName : item.name) options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
 
-			completionHandler(item, error);
+			completionHandler(item, [error resolvedError]);
 		}];
 	}
 	else
@@ -468,14 +469,13 @@
 
 	FPLogCmdBegin(@"Rename", @"Start of renameItemWithIdentifier=%@, toName=%@", itemIdentifier, itemName);
 
-	if (((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil) &&
-	    ((parentItem = (OCItem *)[self itemForIdentifier:item.parentLocalID error:&error]) != nil))
+	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
 	{
 		FPLogCmd(@"Renaming %@ in %@ to %@", item, parentItem, itemName);
 
-		[self.core moveItem:item to:parentItem withName:itemName options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+		[self.core renameItem:item to:itemName options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
-			completionHandler(item, error);
+			completionHandler(item, [error resolvedError]);
 		}];
 	}
 	else
@@ -498,7 +498,7 @@
 
 		[self.core deleteItem:item requireMatch:YES resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with error=%@", error);
-			completionHandler(nil, error);
+			completionHandler(nil, [error resolvedError]);
 		}];
 	}
 	else
@@ -521,7 +521,7 @@
 
 		[self.core deleteItem:item requireMatch:YES resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with error=%@", error);
-			completionHandler(error);
+			completionHandler([error resolvedError]);
 		}];
 	}
 	else
@@ -715,7 +715,7 @@
 				else
 				{
 					// Import of directories not supported
-					completionHandler(nil, OCError(OCErrorFeatureNotSupportedForItem));
+					completionHandler(nil, [OCError(OCErrorFeatureNotSupportedForItem) resolvedError]);
 					return;
 				}
 			}
@@ -727,7 +727,7 @@
 			[transformation copy], OCCoreOptionImportTransformation,
 		nil] placeholderCompletionHandler:^(NSError *error, OCItem *item) {
 			FPLogCmd(@"Completed with placeholderItem=%@, error=%@", item, error);
-			completionHandler(item, error);
+			completionHandler(item, [error resolvedError]);
 		} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			if ([error.domain isEqual:OCHTTPStatusErrorDomain] && (error.code == OCHTTPStatusCodePRECONDITION_FAILED))
 			{
@@ -777,7 +777,7 @@
 
 		[self.core updateItem:item properties:@[ OCItemPropertyNameLocalAttributes ] options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
-			completionHandler(item, error);
+			completionHandler(item, [error resolvedError]);
 		}];
 	}
 	else
@@ -812,7 +812,7 @@
 
 		[self.core updateItem:item properties:@[ OCItemPropertyNameLocalAttributes ] options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
-			completionHandler(item, error);
+			completionHandler(item, [error resolvedError]);
 		}];
 	}
 	else
