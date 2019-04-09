@@ -197,6 +197,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		uploadBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
+		selectBarButton?.isEnabled = false
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
 
 		selectDeselectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
@@ -994,6 +995,7 @@ extension ClientQueryViewController : OCQueryDelegate {
 						self.message(show: false)
 					}
 
+					self.selectBarButton?.isEnabled = (self.items.count == 0) ? false : true
 					self.reloadTableData()
 
 				case .targetRemoved:
