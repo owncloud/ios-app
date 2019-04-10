@@ -79,6 +79,12 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		}
 	}
 
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = super.tableView(tableView, cellForRowAt: indexPath) as! ClientItemCell
+		cell.isMoreButtonPermanentlyHidden = true
+		return cell
+	}
+
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let item: OCItem = itemAtIndexPath(indexPath)
 
@@ -91,6 +97,10 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		return nil
+	}
+
+	override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+		return .none
 	}
 
 	// MARK: - Actions

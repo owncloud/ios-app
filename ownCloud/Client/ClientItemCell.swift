@@ -48,6 +48,16 @@ class ClientItemCell: ThemeTableViewCell {
 
 	var activeThumbnailRequestProgress : Progress?
 
+	var isMoreButtonPermanentlyHidden = false {
+		didSet {
+			if isMoreButtonPermanentlyHidden {
+				moreButtonWidthConstraint?.constant = 0
+			} else {
+				moreButtonWidthConstraint?.constant = moreButtonWidth
+			}
+		}
+	}
+
 	weak var core : OCCore?
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -299,7 +309,7 @@ class ClientItemCell: ThemeTableViewCell {
 
 	// MARK: - Editing mode
 	func setMoreButton(hidden:Bool, animated: Bool = false) {
-		if hidden {
+		if hidden || isMoreButtonPermanentlyHidden {
 			moreButtonWidthConstraint?.constant = 0
 		} else {
 			moreButtonWidthConstraint?.constant = moreButtonWidth
