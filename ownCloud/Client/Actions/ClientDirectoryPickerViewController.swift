@@ -59,6 +59,10 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		// Remove pull to refresh
+		queryRefreshControl?.removeFromSuperview()
+		self.tableView.alwaysBounceVertical = false
+
 		// Select button creation
 		selectButton = UIBarButtonItem(title: selectButtonTitle, style: .plain, target: self, action: #selector(selectButtonPressed))
 		selectButton.title = selectButtonTitle

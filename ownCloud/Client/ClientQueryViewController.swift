@@ -23,7 +23,19 @@ import MobileCoreServices
 typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
+extension OCQueryState {
+	var isFinal: Bool {
+		switch self {
+		case .idle, .targetRemoved, .contentsFromCache, .stopped:
+			return true
+		default:
+			return false
+		}
+	}
+}
+
 class ClientQueryViewController: UITableViewController, Themeable, UIDropInteractionDelegate {
+
 	weak var core : OCCore?
 	var query : OCQuery
 
@@ -308,21 +320,20 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 				summary.message = "Please wait…".localized
 		}
 
-		switch query.state {
-			case .idle:
+		if let refreshControl = self.queryRefreshControl {
+			if query.state == .idle {
 				OnMainThread {
-					if !self.queryRefreshControl!.isRefreshing {
-						self.queryRefreshControl?.beginRefreshing()
+					if refreshControl.isRefreshing {
+						refreshControl.beginRefreshing()
 					}
 				}
-
-			case .contentsFromCache, .stopped:
+			} else if query.state.isFinal {
 				OnMainThread {
-					self.tableView.refreshControl = nil
+					if refreshControl.isRefreshing {
+						refreshControl.endRefreshing()
+					}
 				}
-
-			default:
-			break
+			}
 		}
 
 		self.queryProgressSummary = summary
@@ -933,12 +944,10 @@ extension ClientQueryViewController : OCQueryDelegate {
 		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
 			OnMainThread {
 
-				switch query.state {
-				case .idle, .targetRemoved, .contentsFromCache, .stopped:
+				if query.state.isFinal {
 					if self.queryRefreshControl!.isRefreshing {
 						self.queryRefreshControl?.endRefreshing()
 					}
-				default: break
 				}
 
 				let previousItemCount = self.items.count
