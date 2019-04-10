@@ -65,11 +65,11 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 		// Cancel button creation
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
-		navigationItem.rightBarButtonItems = [cancelBarButton]
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
+		navigationItem.rightBarButtonItems = [cancelBarButton]
 
 		if let navController = self.navigationController {
 			navController.isToolbarHidden = false
