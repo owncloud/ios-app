@@ -63,7 +63,7 @@
 "This folder no longer exists." = "Эта папка больше не существует.";
 "Everything up-to-date." = "Всё обновлено.";
 "Please wait…" = "Пожалуйста, ждите…";
-"Sorted by %@" = "Сортировка по %@";
+"Sort by %@" = "Сортировка по %@";
 "Sort by" = "Упорядочить по";
 
 "name (A-Z)" = "имени (А-Я)";

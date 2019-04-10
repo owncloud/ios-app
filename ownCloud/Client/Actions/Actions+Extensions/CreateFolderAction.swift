@@ -22,7 +22,7 @@ class CreateFolderAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.crateFolder") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Create Folder".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.sortBar, .plusButton] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [ .plusButton ] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -88,7 +88,7 @@ class CreateFolderAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .sortBar || location == .toolbar {
+		if location == .toolbar {
 			return Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
 		}
 

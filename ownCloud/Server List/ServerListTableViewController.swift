@@ -266,8 +266,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 			if lockedBookmarks.contains(bookmark) {
 				let alertController = UIAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName as NSString) as String,
-														message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
-														preferredStyle: .alert)
+									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
+									preferredStyle: .alert)
 
 				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
 					// There was an error erasing the vault => re-add bookmark to give user another chance to delete its contents
@@ -288,8 +288,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				self.navigationController?.navigationBar.prefersLargeTitles = false
 				self.navigationController?.navigationItem.largeTitleDisplayMode = .never
 				self.navigationController?.pushViewController(viewController: clientRootViewController, animated: true, completion: {
-                    self.navigationController?.setNavigationBarHidden(true, animated: false)
-                })
+					self.navigationController?.setNavigationBarHidden(true, animated: false)
+				})
 			}
 		}
 	}

@@ -205,7 +205,9 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 	func closeClient(completion: (() -> Void)? = nil) {
 		self.navigationController?.setNavigationBarHidden(false, animated: false)
-		self.navigationController?.popViewController(animated: true)
+		self.navigationController?.popViewController(animated: true, completion: {
+			completion?()
+		})
 	}
 
 	func coreReady() {
@@ -267,18 +269,17 @@ extension ClientRootViewController : OCCoreDelegate {
 						}))
 
 						alertController.addAction(UIAlertAction(title: "Edit".localized, style: .default, handler: { (_) in
-							let presentingViewController = self.presentingViewController
 							let editBookmark = self.bookmark
 
 							queueCompletionHandler()
 
-							self.closeClient(completion: {
-								if presentingViewController != nil,
-								   let serverListNavigationController = presentingViewController as? UINavigationController,
-								   let serverListTableViewController = serverListNavigationController.topViewController as? ServerListTableViewController {
-									serverListTableViewController.showBookmarkUI(edit: editBookmark)
-								}
-							})
+							if let navigationController = self.navigationController {
+								self.closeClient(completion: {
+									if let serverListTableViewController = navigationController.topViewController as? ServerListTableViewController {
+										serverListTableViewController.showBookmarkUI(edit: editBookmark)
+									}
+								})
+							}
 						}))
 
 						self.present(alertController, animated: true, completion: nil)

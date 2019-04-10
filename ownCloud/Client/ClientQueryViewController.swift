@@ -90,6 +90,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 
+		query.sortComparator = self.sortMethod.comparator()
+
 		query.delegate = self
 
 		query.addObserver(self, forKeyPath: "state", options: .initial, context: nil)
@@ -193,7 +195,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
 		sortBar?.delegate = self
-		sortBar?.updateSortMethod()
+		sortBar?.sortMethod = self.sortMethod
 
 		tableView.tableHeaderView = sortBar
 
@@ -260,9 +262,6 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		super.viewWillAppear(animated)
 
 		updateQueryProgressSummary()
-
-		sortBar?.sortMethod = self.sortMethod
-		query.sortComparator = self.sortMethod.comparator()
 
 		viewControllerVisible = true
 
@@ -986,24 +985,6 @@ extension ClientQueryViewController : OCQueryDelegate {
 
 // MARK: - SortBar Delegate
 extension ClientQueryViewController : SortBarDelegate {
-	func sortBar(_ sortBar: SortBar, leftButtonPressed: UIButton) {
-		guard let core = self.core, let rootItem = query.rootItem else { return }
-
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .sortBar)
-		let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
-
-		let actions = Action.sortedApplicableActions(for: actionContext)
-
-		let createFolderAction = actions.first
-		createFolderAction?.progressHandler = makeActionProgressHandler()
-
-		actions.first?.run()
-	}
-
-	func sortBar(_ sortBar: SortBar, rightButtonPressed: UIButton) {
-		print("LOG ---> right button pressed")
-	}
-
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
 		query.sortComparator = sortMethod.comparator()

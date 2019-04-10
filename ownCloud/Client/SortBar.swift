@@ -22,10 +22,6 @@ protocol SortBarDelegate: class {
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod)
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?)
-
-	func sortBar(_ sortBar: SortBar, leftButtonPressed: UIButton)
-
-	func sortBar(_ sortBar: SortBar, rightButtonPressed: UIButton)
 }
 
 class SortBar: UIView, Themeable {
@@ -35,31 +31,26 @@ class SortBar: UIView, Themeable {
 	// MARK: - Constants
 	let sideButtonsSize: CGSize = CGSize(width: 30.0, height: 30.0)
 	let leftPadding: CGFloat = 20.0
-	let rightPadding: CGFloat = -20.0
+	let rightPadding: CGFloat = 20.0
 	let topPadding: CGFloat = 10.0
-	let bottomPadding: CGFloat = -10.0
+	let bottomPadding: CGFloat = 10.0
 
 	// MARK: - Instance variables.
 
-	var stackView: UIStackView
-	var leftButton: UIButton
-	var rightButton: UIButton
-
-	var containerView: UIView
-	var sortSegmentedControl: UISegmentedControl
-	var sortButton: ThemeButton
-
-	var leftButtonImage: UIImage
-	var rightButtonImage: UIImage
+	var sortSegmentedControl: UISegmentedControl?
+	var sortButton: UIButton?
 
 	var sortMethod: SortMethod {
 		didSet {
 
-			let title = NSString(format: ("Sorted by %@".localized + " ▼") as NSString, sortMethod.localizedName()) as String
-			sortButton.setTitle(title, for: .normal)
-			sortButton.accessibilityLabel = NSString(format: "Sorted by %@".localized as NSString, sortMethod.localizedName()) as String
+			let title = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName()) as String
+			sortButton?.setTitle(title, for: .normal)
+			sortButton?.accessibilityLabel = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName()) as String
+			sortButton?.sizeToFit()
 
-			sortSegmentedControl.selectedSegmentIndex = SortMethod.all.index(of: sortMethod)!
+			if let segmentIndex = SortMethod.all.index(of: sortMethod) {
+				sortSegmentedControl?.selectedSegmentIndex = segmentIndex
+			}
 
 			delegate?.sortBar(self, didUpdateSortMethod: sortMethod)
 		}
@@ -68,27 +59,61 @@ class SortBar: UIView, Themeable {
 	// MARK: - Init & Deinit
 
 	init(frame: CGRect, sortMethod: SortMethod) {
-		stackView = UIStackView()
-		leftButton = UIButton()
-		leftButton.accessibilityIdentifier = "sort-bar.leftButton"
-		rightButton = UIButton()
-		rightButton.accessibilityIdentifier = "sort-bar.rightButton"
-
-		containerView = UIView()
 		sortSegmentedControl = UISegmentedControl()
-		sortSegmentedControl.accessibilityIdentifier = "sort-bar.segmentedControl"
-		sortButton = ThemeButton()
-		sortButton.accessibilityIdentifier = "sort-bar.sortButton"
 
-		leftButtonImage = Theme.shared.image(for: "folder-create", size: sideButtonsSize)!.withRenderingMode(.alwaysTemplate)
-		leftButton.accessibilityLabel = "Create Folder".localized
-
-		rightButtonImage = Theme.shared.image(for: "folder-create", size: sideButtonsSize)!.withRenderingMode(.alwaysTemplate)
+		sortButton = UIButton(type: .system)
 
 		self.sortMethod = sortMethod
 
 		super.init(frame: frame)
-		render()
+
+		if let sortButton = sortButton, let sortSegmentedControl = sortSegmentedControl {
+			sortButton.translatesAutoresizingMaskIntoConstraints = false
+			sortSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
+
+			sortButton.accessibilityIdentifier = "sort-bar.sortButton"
+			sortSegmentedControl.accessibilityIdentifier = "sort-bar.segmentedControl"
+
+			self.addSubview(sortSegmentedControl)
+			self.addSubview(sortButton)
+
+			// Sort segmented control
+			NSLayoutConstraint.activate([
+				sortSegmentedControl.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
+				sortSegmentedControl.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding),
+				sortSegmentedControl.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+				sortSegmentedControl.leftAnchor.constraint(greaterThanOrEqualTo: self.leftAnchor, constant: leftPadding),
+				sortSegmentedControl.rightAnchor.constraint(lessThanOrEqualTo: self.rightAnchor, constant: -rightPadding)
+			])
+
+			for method in SortMethod.all {
+				sortSegmentedControl.insertSegment(withTitle: method.localizedName(), at: SortMethod.all.index(of: method)!, animated: false)
+			}
+
+			sortSegmentedControl.selectedSegmentIndex = SortMethod.all.index(of: sortMethod)!
+			sortSegmentedControl.isHidden = true
+			sortSegmentedControl.addTarget(self, action: #selector(sortSegmentedControllerValueChanged), for: .valueChanged)
+
+			// Sort Button
+			sortButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
+			sortButton.titleLabel?.adjustsFontForContentSizeCategory = true
+			sortButton.semanticContentAttribute = (sortButton.effectiveUserInterfaceLayoutDirection == .leftToRight) ? .forceRightToLeft : .forceLeftToRight
+			sortButton.setImage(UIImage(named: "chevron-small-light"), for: .normal)
+
+			sortButton.setContentHuggingPriority(.required, for: .horizontal)
+
+			NSLayoutConstraint.activate([
+				sortButton.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
+				sortButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding),
+				sortButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: leftPadding),
+				sortButton.rightAnchor.constraint(lessThanOrEqualTo: self.rightAnchor, constant: -rightPadding)
+			])
+
+			sortButton.isHidden = true
+			sortButton.addTarget(self, action: #selector(presentSortButtonOptions), for: .touchUpInside)
+		}
+
+		// Finalize view setup
 		self.accessibilityIdentifier = "sort-bar"
 		Theme.shared.register(client: self)
 	}
@@ -104,95 +129,21 @@ class SortBar: UIView, Themeable {
 	// MARK: - Theme support
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.sortButton.applyThemeCollection(collection)
-		self.sortSegmentedControl.applyThemeCollection(collection)
+		self.sortButton?.applyThemeCollection(collection)
+		self.sortSegmentedControl?.applyThemeCollection(collection)
 		self.backgroundColor = collection.navigationBarColors.backgroundColor
-		self.leftButton.tintColor = collection.navigationBarColors.tintColor
-		self.rightButton.tintColor = collection.navigationBarColors.tintColor
 	}
 
 	// MARK: - Sort UI
 
-	private func render() {
-		stackView.translatesAutoresizingMaskIntoConstraints = false
-		leftButton.translatesAutoresizingMaskIntoConstraints = false
-		rightButton.translatesAutoresizingMaskIntoConstraints = false
-
-		containerView.translatesAutoresizingMaskIntoConstraints = false
-		sortButton.translatesAutoresizingMaskIntoConstraints = false
-		sortSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
-
-		stackView.axis = .horizontal
-		stackView.alignment = .fill
-		stackView.distribution = .fillProportionally
-
-		leftButton.setImage(leftButtonImage, for: .normal)
-		rightButton.setImage(rightButtonImage, for: .normal)
-
-		leftButton.addTarget(self, action: #selector(leftButtonPressed), for: .touchUpInside)
-
-		// Sort segmented control
-		containerView.addSubview(sortSegmentedControl)
-		NSLayoutConstraint.activate([
-			sortSegmentedControl.topAnchor.constraint(equalTo: containerView.topAnchor, constant: topPadding),
-			sortSegmentedControl.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: bottomPadding),
-			sortSegmentedControl.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-			sortSegmentedControl.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor, constant: leftPadding),
-			sortSegmentedControl.rightAnchor.constraint(greaterThanOrEqualTo: containerView.rightAnchor, constant: rightPadding)
-		])
-
-		for method in SortMethod.all {
-			sortSegmentedControl.insertSegment(withTitle: method.localizedName(), at: SortMethod.all.index(of: method)!, animated: false)
-		}
-
-		sortSegmentedControl.selectedSegmentIndex = SortMethod.all.index(of: sortMethod)!
-		sortSegmentedControl.isHidden = true
-		sortSegmentedControl.addTarget(self, action: #selector(sortSegmentedControllerValueChanged), for: .valueChanged)
-
-		// Sort Button
-		containerView.addSubview(sortButton)
-		NSLayoutConstraint.activate([
-			sortButton.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: topPadding),
-			sortButton.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: bottomPadding),
-			sortButton.centerXAnchor.constraint(equalTo: self.containerView.centerXAnchor),
-			sortButton.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor, constant: leftPadding),
-			sortButton.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor, constant: rightPadding)
-		])
-
-		sortButton.isHidden = true
-		sortButton.addTarget(self, action: #selector(presentSortButtonOptions), for: .touchUpInside)
-
-		addSubview(stackView)
-		NSLayoutConstraint.activate([
-			stackView.topAnchor.constraint(equalTo: topAnchor),
-			stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-			stackView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: leftPadding),
-			stackView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: (rightPadding - sideButtonsSize.width))
-		])
-
-		stackView.addArrangedSubview(leftButton)
-		stackView.addArrangedSubview(containerView)
-
-		// Uncomment this line for the right button ()
-		//stackView.addArrangedSubview(rightButton)
-
-		NSLayoutConstraint.activate([
-			leftButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width),
-			rightButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.height)
-		])
-	}
-
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		switch (traitCollection.horizontalSizeClass, traitCollection.verticalSizeClass) {
 		case (.compact, .regular):
-			sortSegmentedControl.isHidden = true
-			sortButton.isHidden = false
+			sortSegmentedControl?.isHidden = true
+			sortButton?.isHidden = false
 		default:
-			sortSegmentedControl.isHidden = false
-			sortButton.isHidden = true
-
-			let title = NSString(format: ("Sorted by %@".localized + " ▼") as NSString, sortMethod.localizedName()) as String
-			sortButton.setTitle(title, for: .normal)
+			sortSegmentedControl?.isHidden = false
+			sortButton?.isHidden = true
 		}
 	}
 
@@ -213,16 +164,9 @@ class SortBar: UIView, Themeable {
 	}
 
 	@objc private func sortSegmentedControllerValueChanged() {
-		self.sortMethod = SortMethod.all[sortSegmentedControl.selectedSegmentIndex]
-		delegate?.sortBar(self, didUpdateSortMethod: self.sortMethod)
+		if let selectedIndex = sortSegmentedControl?.selectedSegmentIndex {
+			self.sortMethod = SortMethod.all[selectedIndex]
+			delegate?.sortBar(self, didUpdateSortMethod: self.sortMethod)
+		}
 	}
-
-	func updateSortMethod() {
-		_ = self.sortMethod
-	}
-
-	@objc private func leftButtonPressed() {
-		delegate?.sortBar(self, leftButtonPressed: leftButton)
-	}
-
 }
