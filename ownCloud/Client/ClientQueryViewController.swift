@@ -832,6 +832,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		selectBarButton?.title = "Select".localized
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
 		self.navigationItem.leftBarButtonItem = nil
+		selectedItemIds.removeAll()
 		removeToolbar()
 	}
 
