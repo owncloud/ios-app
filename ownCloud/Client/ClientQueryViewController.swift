@@ -769,7 +769,6 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		}
 	}
 
-
 	fileprivate func updateActions(for selectedItems:[OCItem]) {
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
 
@@ -855,7 +854,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			action.progressHandler = makeActionProgressHandler()
 
 			action.completionHandler = { [weak self] _ in
-				DispatchQueue.main.async {
+				OnMainThread {
 					self?.leaveMultipleSelection()
 				}
 			}

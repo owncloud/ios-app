@@ -351,28 +351,6 @@
 	//	}
 }
 
-#pragma mark - Helpers
-- (OCItem *)findKnownExistingItemInParent:(OCItem *)parentItem withName:(NSString *)name
-{
-	OCPath parentPath;
-	__block OCItem *existingItem = nil;
-
-	if (((parentPath = parentItem.path) != nil) && (name != nil))
-	{
-		OCPath destinationPath = [parentPath stringByAppendingPathComponent:name];
-
-		OCSyncExec(retrieveExistingItem, {
-			[self.core.vault.database retrieveCacheItemsAtPath:destinationPath itemOnly:YES completionHandler:^(OCDatabase *db, NSError *error, OCSyncAnchor syncAnchor, NSArray<OCItem *> *items) {
-				existingItem = items.firstObject;
-				OCSyncExecDone(retrieveExistingItem);
-			}];
-		});
-	}
-
-	return (existingItem);
-}
-
-
 #pragma mark - Actions
 
 // ### Apple template comments: ###
@@ -398,7 +376,7 @@
 
 		FPLogCmd(@"Creating folder %@ inside %@", directoryName, parentItem.path);
 
-		if ((existingItem = [self findKnownExistingItemInParent:parentItem withName:directoryName]) != nil)
+		if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
 		{
 			FPLogCmd(@"Completed with collission with existingItem=%@ (locally detected)", existingItem);
 			// completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
@@ -406,7 +384,13 @@
 			return;
 		}
 
-		[self.core createFolder:directoryName inside:parentItem options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+		[self.core createFolder:directoryName inside:parentItem options:@{
+//			OCCoreOptionPlaceholderCompletionHandler : [^(NSError * _Nullable error, OCItem * _Nullable item) {
+//				FPLogCmd(@"Completed placeholder creation with item=%@, error=%@", item, error);
+//
+//				completionHandler(item, [error resolvedError]);
+//			} copy]
+		} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			if (error != nil)
 			{
 				if (error.HTTPStatus.code == OCHTTPStatusCodeMETHOD_NOT_ALLOWED)
@@ -414,7 +398,7 @@
 					// Folder already exists on the server
 					OCItem *existingItem;
 
-					if ((existingItem = [self findKnownExistingItemInParent:parentItem withName:directoryName]) != nil)
+					if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
 					{
 						FPLogCmd(@"Completed with collission with existingItem=%@ (server response)", existingItem);
 						// completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
@@ -636,7 +620,7 @@
 		OCItem *existingItem;
 		OCCoreImportTransformation transformation = nil;
 
-		if ((existingItem = [self findKnownExistingItemInParent:parentItem withName:importFileName]) != nil)
+		if ((existingItem = [self.core cachedItemInParent:parentItem withName:importFileName isDirectory:NO error:NULL]) != nil)
 		{
 			// Return collission error
 			FPLogCmd(@"Completed with collission with existingItem=%@ (local)", existingItem);
@@ -797,6 +781,32 @@
 		FPLogCmd(@"Completed with item=%@ not found, error=%@", item, error);
 		completionHandler(nil, error);
 	}
+}
+
+#pragma mark - Unimplemented actions
+/*
+	"You must override all of the extension's methods (except the deprecated methods), even if your implementation is only an empty method."
+	- [Source: https://developer.apple.com/documentation/fileprovider/nsfileproviderextension?language=objc]
+*/
+
+- (void)trashItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
+{
+	completionHandler(nil, [NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{}]);
+}
+
+- (void)untrashItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier toParentItemIdentifier:(NSFileProviderItemIdentifier)parentItemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
+{
+	completionHandler(nil, [NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{}]);
+}
+
+- (void)setLastUsedDate:(NSDate *)lastUsedDate forItemIdentifier:(NSFileProviderItemIdentifier)itemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
+{
+	completionHandler(nil, [NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{}]);
+}
+
+- (NSArray<id<NSFileProviderServiceSource>> *)supportedServiceSourcesForItemIdentifier:(NSFileProviderItemIdentifier)itemIdentifier error:(NSError * _Nullable __autoreleasing *)error
+{
+	return (nil);
 }
 
 #pragma mark - Enumeration

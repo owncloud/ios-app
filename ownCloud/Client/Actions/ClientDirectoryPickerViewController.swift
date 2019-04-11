@@ -84,8 +84,12 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = super.tableView(tableView, cellForRowAt: indexPath) as! ClientItemCell
-		cell.isMoreButtonPermanentlyHidden = true
+		let cell = super.tableView(tableView, cellForRowAt: indexPath)
+
+		if let clientItemCell = cell as? ClientItemCell {
+			clientItemCell.isMoreButtonPermanentlyHidden = true
+		}
+
 		return cell
 	}
 

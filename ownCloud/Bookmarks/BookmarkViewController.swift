@@ -431,7 +431,9 @@ class BookmarkViewController: StaticTableViewController {
 				if error == nil {
 					self.bookmark?.authenticationMethodIdentifier = authMethodIdentifier
 					self.bookmark?.authenticationData = authMethodData
-					hud?.updateLabel(with: "Fetching user information…".localized)
+					OnMainThread {
+						hud?.updateLabel(with: "Fetching user information…".localized)
+					}
 					self.save(hudCompletion: hudCompletion)
 				} else {
 					hudCompletion({
