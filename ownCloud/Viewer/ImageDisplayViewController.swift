@@ -71,11 +71,16 @@ class ImageDisplayViewController : DisplayViewController {
 									  kCGImageSourceCreateThumbnailWithTransform: true,
 									  kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels] as CFDictionary
 			serialQueue.async {
-				let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions)!
-				let image = UIImage(cgImage: downsampledImage)
-				OnMainThread {
-					self.activityIndicatorView.stopAnimating()
-					self.scrollView?.display(image: image, inSize: self.view.bounds.size)
+				if let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) {
+					let image = UIImage(cgImage: downsampledImage)
+					OnMainThread {
+						self.activityIndicatorView.stopAnimating()
+						self.scrollView?.display(image: image, inSize: self.view.bounds.size)
+					}
+				} else {
+					OnMainThread {
+						self.activityIndicatorView.stopAnimating()
+					}
 				}
 			}
 		}
