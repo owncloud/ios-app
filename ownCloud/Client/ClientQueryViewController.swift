@@ -945,8 +945,10 @@ extension ClientQueryViewController : OCQueryDelegate {
 			OnMainThread {
 
 				if query.state.isFinal {
-					if self.queryRefreshControl!.isRefreshing {
-						self.queryRefreshControl?.endRefreshing()
+					OnMainThread {
+						if self.queryRefreshControl!.isRefreshing {
+							self.queryRefreshControl?.endRefreshing()
+						}
 					}
 				}
 
