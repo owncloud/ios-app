@@ -28,7 +28,7 @@ class PhotoSelectionViewCell: UICollectionViewCell {
 	var mediaTypeBadgeImageView = UIImageView()
 	var checkmarkBadgeImageView = UIImageView()
 	var videoDurationLabel = UILabel()
-	
+
 	var assetIdentifier: String!
 
 	var thumbnailImage: UIImage! {

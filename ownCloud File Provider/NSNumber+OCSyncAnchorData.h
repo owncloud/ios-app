@@ -19,9 +19,13 @@
 #import <Foundation/Foundation.h>
 #import <FileProvider/FileProvider.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSNumber (OCSyncAnchorData)
 
-+ (instancetype)numberFromSyncAnchorData:(NSFileProviderSyncAnchor)syncAnchor;
++ (nullable instancetype)numberFromSyncAnchorData:(nullable NSFileProviderSyncAnchor)syncAnchor;
 - (NSFileProviderSyncAnchor)syncAnchorData;
 
 @end
+
+NS_ASSUME_NONNULL_END

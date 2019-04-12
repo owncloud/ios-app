@@ -84,6 +84,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		return self.index != nil
 	}
 
+	public var additionalAccessoryView : UIView?
+
 	override init() {
 		super.init()
 	}
@@ -101,6 +103,34 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.accessibilityIdentifier = identifier
 
 		self.action = rowWithAction
+	}
+
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, accessoryView: UIView, identifier: String? = nil) {
+		self.init()
+
+		self.identifier = identifier
+
+		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+
+		guard let cell = self.cell else { return }
+
+		cell.textLabel?.text = title
+		cell.textLabel?.textAlignment = alignment
+		cell.accessoryType = accessoryType
+		cell.accessibilityIdentifier = identifier
+		self.action = rowWithAction
+
+		additionalAccessoryView = accessoryView
+		guard let additionalAccessoryView = additionalAccessoryView else { return }
+		cell.contentView.addSubview(additionalAccessoryView)
+		additionalAccessoryView.translatesAutoresizingMaskIntoConstraints = false
+
+		NSLayoutConstraint.activate([
+			additionalAccessoryView.trailingAnchor.constraint(equalTo: cell.accessoryView?.leadingAnchor ?? cell.contentView.trailingAnchor, constant: -5.0),
+			additionalAccessoryView.widthAnchor.constraint(greaterThanOrEqualToConstant: 0),
+			additionalAccessoryView.heightAnchor.constraint(equalToConstant: 24.0),
+			additionalAccessoryView.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor)
+			])
 	}
 
 	convenience init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, style : UITableViewCell.CellStyle = .subtitle, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {

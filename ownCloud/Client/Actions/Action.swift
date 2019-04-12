@@ -253,13 +253,13 @@ class Action : NSObject {
 	}
 
 	// MARK: - Action metadata
-	func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+	class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		return nil
 	}
 
 	var icon : UIImage? {
 		if let locationIdentifier = context.location?.identifier {
-			return self.iconForLocation(locationIdentifier)
+			return Action.iconForLocation(locationIdentifier)
 		}
 
 		return nil
