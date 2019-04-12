@@ -98,6 +98,32 @@ class StaticTableViewSection: NSObject {
 		return radioGroupRows
 	}
 
+	@discardableResult
+	func add(toogleGroupWithArrayOfLabelValueDictionaries labelValueDictRows: [[String : Bool]], radioAction:StaticTableViewRowAction?, subtitles: [String]? = nil, groupIdentifier: String, selectedValue: Bool, animated : Bool = false) -> [StaticTableViewRow] {
+
+		var toogleGroupRows : [StaticTableViewRow] = []
+
+		if let subtitles = subtitles {
+
+		for (labelValueDict, subtitle) in zip(labelValueDictRows, subtitles) {
+			for (label, value) in labelValueDict {
+				toogleGroupRows.append(StaticTableViewRow(radioItemWithAction: radioAction, groupIdentifier: "\(groupIdentifier)-\(label)", value: value, title: label, subtitle: subtitle, selected: value))
+			}
+		}
+		} else {
+
+			for labelValueDict in labelValueDictRows {
+				for (label, value) in labelValueDict {
+					toogleGroupRows.append(StaticTableViewRow(radioItemWithAction: radioAction, groupIdentifier: "\(groupIdentifier)-\(label)", value: value, title: label, subtitle: nil, selected: value))
+				}
+			}
+		}
+
+		self.add(rows: toogleGroupRows, animated: animated)
+
+		return toogleGroupRows
+	}
+
 	func add(row rowToAdd: StaticTableViewRow, animated: Bool = false) {
 		self.insert(row: rowToAdd, at: rows.count, animated: animated)
 	}

@@ -90,17 +90,70 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		super.init()
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
 		self.init()
 
 		self.identifier = identifier
+		var cellStyle = UITableViewCell.CellStyle.default
+		if subtitle != nil {
+			cellStyle = UITableViewCell.CellStyle.subtitle
+		}
 
-		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: cellStyle, reuseIdentifier: nil)
+		if subtitle != nil {
+			self.cell?.detailTextLabel?.text = subtitle
+		}
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.accessoryType = accessoryType
 
 		self.cell?.accessibilityIdentifier = identifier
+
+		self.action = rowWithAction
+	}
+
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryView: UIView? = nil, identifier : String? = nil, multiline : Bool) {
+
+		self.init()
+
+		self.identifier = identifier
+
+		self.cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		self.cell?.textLabel?.text = title
+		self.cell?.textLabel?.textAlignment = alignment
+		self.cell?.accessoryView = accessoryView
+		if multiline {
+			self.cell?.textLabel?.numberOfLines = 0
+		}
+
+		self.cell?.accessibilityIdentifier = identifier
+
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
+
+			textColor = themeCollection.tintColor
+			backgroundColor = themeCollection.tableRowColors.backgroundColor
+
+			self?.cell?.textLabel?.textColor = textColor
+
+			if selectedTextColor != nil {
+
+				self?.cell?.textLabel?.highlightedTextColor = selectedTextColor
+			}
+
+			if backgroundColor != nil {
+
+				self?.cell?.backgroundColor = backgroundColor
+			}
+
+			if selectedBackgroundColor != nil {
+				let selectedBackgroundView = UIView()
+
+				selectedBackgroundView.backgroundColor = selectedBackgroundColor
+
+				self?.cell?.selectedBackgroundView? = selectedBackgroundView
+			}
+			}, applyImmediately: true)
 
 		self.action = rowWithAction
 	}
@@ -153,13 +206,21 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Radio Item
-	convenience init(radioItemWithAction: StaticTableViewRowAction?, groupIdentifier: String, value: Any, title: String, selected: Bool, identifier : String? = nil) {
+	convenience init(radioItemWithAction: StaticTableViewRowAction?, groupIdentifier: String, value: Any, title: String, subtitle: String? = nil, selected: Bool, identifier : String? = nil) {
 		self.init()
 
+		var tableViewStyle = UITableViewCell.CellStyle.default
 		self.identifier = identifier
+		if subtitle != nil {
+			tableViewStyle = UITableViewCell.CellStyle.subtitle
+		}
 
-		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: tableViewStyle, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
+		if subtitle != nil {
+			self.cell?.detailTextLabel?.text = subtitle
+			self.cell?.detailTextLabel?.numberOfLines = 0
+		}
 
 		if let accessibilityIdentifier : String = identifier {
 			self.cell?.accessibilityIdentifier = groupIdentifier + "." + accessibilityIdentifier

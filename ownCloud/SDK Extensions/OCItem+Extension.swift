@@ -271,4 +271,11 @@ extension OCItem {
 
 		return parentItem
 	}
+
+	func isShared() -> Bool {
+		if self.shareTypesMask.isEmpty {
+			return false
+		}
+		return true
+	}
 }
