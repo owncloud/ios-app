@@ -536,7 +536,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			// Configure progress handler
 			action.progressHandler = makeActionProgressHandler()
 
-			action.completionHandler = { _ in
+			action.completionHandler = { (_, _) in
 			}
 
 			// Execute the action
@@ -854,7 +854,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			// Configure progress handler
 			action.progressHandler = makeActionProgressHandler()
 
-			action.completionHandler = { [weak self] _ in
+			action.completionHandler = { [weak self] (_, _) in
 				OnMainThread {
 					self?.leaveMultipleSelection()
 				}

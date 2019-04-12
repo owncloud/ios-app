@@ -45,7 +45,7 @@ enum ActionPosition : Int {
 	}
 }
 
-typealias ActionCompletionHandler = ((Error?) -> Void)
+typealias ActionCompletionHandler = ((Action, Error?) -> Void)
 typealias ActionProgressHandler = ((Progress, Bool) -> Void)
 typealias ActionWillRunHandler = () -> Void
 
@@ -162,7 +162,7 @@ class Action : NSObject {
 	}
 
 	// MARK: - Provide Card view controller
-	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ActionProgressHandler? = nil, completionHandler: ((Error?) -> Void)? = nil) -> UIViewController {
+	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ActionProgressHandler? = nil, completionHandler: ((Action, Error?) -> Void)? = nil) -> UIViewController {
 
 		let tableViewController = MoreStaticTableViewController(style: .grouped)
 		let header = MoreViewHeader(for: item, with: context.core!)
@@ -226,7 +226,7 @@ class Action : NSObject {
 
 	func completed(with error: Error? = nil) {
 		if let completionHandler = completionHandler {
-			completionHandler(error)
+			completionHandler(self, error)
 		}
 	}
 
