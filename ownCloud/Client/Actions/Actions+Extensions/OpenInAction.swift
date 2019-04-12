@@ -44,9 +44,10 @@ class OpenInAction: Action {
 
 		var itemsToDownload : [OCItem] = []
 		for item in context.items {
-			let file = item.file(with: core)
-			if file != nil {
-				downloadedFiles.append(file!)
+			if core.localCopy(of: item) != nil {
+				if let file = item.file(with: core) {
+					downloadedFiles.append(file)
+				}
 			} else {
 				itemsToDownload.append(item)
 			}
