@@ -575,12 +575,11 @@ class CreateBookmarkTests: XCTestCase {
 		//Assert
 		//TO-DO: catch shake
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("server-bookmark-cell")).assert(grey_notVisible())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible())
 		
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible())
 	}

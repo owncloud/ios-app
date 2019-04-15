@@ -13,6 +13,9 @@ class MockOCQuery: OCQuery {
 
 	convenience init(path: String) {
 		self.init(forPath: path)
-		self.rootItem = OCItem()
+		let rootItem = OCItem()
+		rootItem.path = "/"
+		rootItem.type = OCItemType.collection
+		self.rootItem = rootItem
 	}
 }
