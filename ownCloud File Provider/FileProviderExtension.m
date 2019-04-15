@@ -441,6 +441,17 @@
 	}
 	else
 	{
+		if (([error.domain isEqual:NSFileProviderErrorDomain] && error.code == NSFileProviderErrorNoSuchItem) && (parentItem == nil) && (item != nil))
+		{
+			// When moving files from one OC bookmark to another, the Files app will call with the ID of the item to move on this server
+			// and the ID on the destination server for the item to move to. For now, we provide an error message covering that case. A
+			// future release could possibly go through the bookmarks, request the cores, search for the item IDs, etc. - and then implement
+			// a cross-server move using OCCore actions. The complexity of such an undertaking should not be underestimated, though, as in
+			// the case of moving folders, we'd have to download and upload entire hierarchies of files - that could change while we're at it.
+			FPLogCmd(@"parentItem not found. Likely a cross-domain move. Changing error message accordingly.");
+			error = OCErrorWithDescription(OCErrorItemNotFound, OCLocalized(@"The destination folder couldn't be found on this server. Moving items across servers is currently not supported."));
+		}
+
 		FPLogCmd(@"Completed with item=%@ or parentItem=%@ not found, error=%@", item, parentItem, error);
 		completionHandler(nil, error);
 	}
