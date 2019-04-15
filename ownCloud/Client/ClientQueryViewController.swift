@@ -227,6 +227,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		self.tableView.estimatedRowHeight = estimatedTableRowHeight
 
 		plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusBarButtonPressed))
+		plusBarButton?.accessibilityIdentifier = "client.file-add"
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
 		selectBarButton?.isEnabled = false
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
