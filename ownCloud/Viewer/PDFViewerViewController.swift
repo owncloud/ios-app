@@ -114,9 +114,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
             thumbnailView.pdfView = pdfView
             thumbnailView.isExclusiveTouch = true
 
-            // Adding dummy tap recognizer to prevent navigation bar from hiding if user just taps it
-            let tapRecognizer = UITapGestureRecognizer(target: nil, action: nil)
-            thumbnailView.addGestureRecognizer(tapRecognizer)
             self.view.addSubview(thumbnailView)
 
             containerView.spacing = UIStackView.spacingUseSystem
