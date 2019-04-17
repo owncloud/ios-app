@@ -28,7 +28,14 @@ class GalleryHostViewController: UIPageViewController {
 	// MARK: - Instance Variables
 	weak private var core: OCCore?
 	private var selectedItem: OCItem
-	private var items: [OCItem]?
+
+	private var items: [OCItem]? {
+		didSet {
+			OnMainThread { [weak self] in
+				self?.configureScrolling()
+			}
+		}
+	}
 	private var query: OCQuery
 	private weak var viewControllerToTansition: DisplayViewController?
 	private var queryObservation : NSKeyValueObservation?
@@ -79,6 +86,11 @@ class GalleryHostViewController: UIPageViewController {
 
 		viewController.present(item: self.selectedItem)
 		viewController.updateNavigationBarItems()
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		configureScrolling()
 	}
 
 	override var childForHomeIndicatorAutoHidden : UIViewController? {
@@ -206,6 +218,11 @@ extension GalleryHostViewController: UIPageViewControllerDelegate {
 		if let viewControllerToTransition = pendingViewControllers[0] as? DisplayViewController {
 			self.viewControllerToTansition = viewControllerToTransition
 		}
+	}
+
+	private func configureScrolling() {
+		guard let items = self.items else { return }
+		self.dataSource = items.count > 1 ? self : nil
 	}
 }
 
