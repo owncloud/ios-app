@@ -23,6 +23,7 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 
 	var share : OCShare?
 	var reshares : [OCShare]?
+	var core : OCCore?
 	var showSubtitles : Bool = false
 
 	override func viewDidLoad() {
@@ -85,15 +86,29 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 			}
 		}
 
-		section.add(toogleGroupWithArrayOfLabelValueDictionaries: permissions, radioAction: { (row, _) in
-			let selectedValueFromSection = row.section?.selectedValue(forGroupIdentifier: row.groupIdentifier!)
+		section.add(toogleGroupWithArrayOfLabelValueDictionaries: permissions, toggleAction: { (row, _) in
 
-			Log.log("Radio value for \(row.groupIdentifier!) changed to \(row.value!)")
-			Log.log("Values can also be read from the section object: \(selectedValueFromSection!)")
+			guard let value = row.value as? Bool else { return }
 
-		}, subtitles: subtitles, groupIdentifier: "radioExample", selectedValue:true)
+			Log.log("--> Toogle value for \(row.groupIdentifier!) changed to \(value) \(row.index)")
+
+			//share.canShare = value
+print("--> permissions \(share.permissions)")
+
+			if let core = self.core {
+				print("--> connection update")
+				core.connection.update(share, afterPerformingChanges: { (share) in
+					print("--> update share after performing changes: \(share)")
+					//share.name = "Test Foo"
+					share.permissions = .update
+					print("--> permissions \(share.permissions)")
+				}, resultTarget: OCEventTarget(ephermalEventHandlerBlock: { (event, sender) in
+					print("--> update share result: \(event.error) \(event.result)")
+				}, userInfo: nil, ephermalUserInfo: nil))
+			}
+
+		}, subtitles: subtitles, groupIdentifier: "preferences-section", selectedValue:true)
 		self.insertSection(section, at: 0, animated: false)
-		//self.addSection(section)
 	}
 
 	func loadReshares() {

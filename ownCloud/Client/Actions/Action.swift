@@ -176,29 +176,52 @@ class Action : NSObject {
 			if item.isShared() {
 				if context.core!.connection.capabilities?.sharingGroupSharing == 1 {
 
+					//let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item)
 					let shareQuery = OCShareQuery(scope: .itemWithReshares, item: item)
+					//let shareQuery = OCShareQuery(scope: .sharedByUser, item: item)
 
 					context.core!.start(shareQuery!)
 					shareQuery?.changesAvailableNotificationHandler = { query in
-						//print("--> query: \(query.queryResults)")
+						print("--> query: \(query.queryResults)")
+
+						var currentItemShare = query.queryResults
+
+						currentItemShare = query.queryResults.filter({ (share) -> Bool in
+							if share.itemPath == item.path {
+								return true
+							}
+							return false
+						})
+
+						print("--> currentItemShare \(currentItemShare)")
 
 						OnMainThread {
-							if query.queryResults.count > 0 {
-								let privateShares = query.queryResults.filter { (OCShare) -> Bool in
+							if currentItemShare.count > 0 {
+								let privateShares = currentItemShare.filter { (OCShare) -> Bool in
 									if OCShare.type != .link {
 										return true
 									}
 									return false
 								}
-								let linkSharesCounter = query.queryResults.count - privateShares.count
+								let linkSharesCounter = currentItemShare.count - privateShares.count
 
 								var userTitle = ""
 								if privateShares.count > 0 {
+
+
+
 									var title = "Recipient".localized
 									if privateShares.count > 1 {
 										title = "Recipients".localized
 									}
 									userTitle = "\(privateShares.count) \(title)"
+
+									for share in privateShares {
+										if let ownerName = share.owner?.displayName {
+											userTitle = "Shared by \(ownerName)"
+										}
+									}
+
 								}
 								if linkSharesCounter > 0 {
 									var title = "Public Link".localized
@@ -216,7 +239,7 @@ class Action : NSObject {
 								let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
 
 									let sharingViewController = SharingTableViewController(style: .grouped)
-									sharingViewController.shares = query.queryResults
+									sharingViewController.shares = currentItemShare
 									sharingViewController.core = context.core!
 									sharingViewController.item = item
 									let navigationController = ThemeNavigationController(rootViewController: sharingViewController)

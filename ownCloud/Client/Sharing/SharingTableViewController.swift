@@ -65,12 +65,27 @@ class SharingTableViewController: StaticTableViewController {
 					return false
 				}
 
-				shareRows.append( StaticTableViewRow(rowWithAction: { (_, _) in
-					let editSharingViewController = SharingEditUserGroupsTableViewController(style: .grouped)
-					editSharingViewController.share = share
-					editSharingViewController.reshares = resharedUsers
-					self.navigationController?.pushViewController(editSharingViewController, animated: true)
-				}, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: .disclosureIndicator) )
+				var canEdit = false
+				var accessoryType : UITableViewCell.AccessoryType = .none
+				if core?.connection.loggedInUser == share.owner {
+					canEdit = true
+					accessoryType = .disclosureIndicator
+				}
+
+				print("--> edit share \(share)")
+
+				shareRows.append( StaticTableViewRow(rowWithAction: { (row, _) in
+
+					if canEdit {
+						let editSharingViewController = SharingEditUserGroupsTableViewController(style: .grouped)
+						editSharingViewController.share = share
+						editSharingViewController.reshares = resharedUsers
+						editSharingViewController.core = self.core
+						self.navigationController?.pushViewController(editSharingViewController, animated: true)
+					} else {
+						row.cell?.selectionStyle = .none
+					}
+				}, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: accessoryType) )
 			}
 
 			let section : StaticTableViewSection = StaticTableViewSection(headerTitle: title, footerTitle: nil, rows: shareRows)

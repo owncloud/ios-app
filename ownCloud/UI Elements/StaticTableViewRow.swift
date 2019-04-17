@@ -239,6 +239,51 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 	}
 
+	// MARK: - Toggle Item
+	convenience init(toogleItemWithAction: StaticTableViewRowAction?, groupIdentifier: String, title: String, subtitle: String? = nil, selected: Bool, identifier : String? = nil) {
+		self.init()
+
+		var tableViewStyle = UITableViewCell.CellStyle.default
+		self.identifier = identifier
+		if subtitle != nil {
+			tableViewStyle = UITableViewCell.CellStyle.subtitle
+		}
+
+		self.cell = ThemeTableViewCell(style: tableViewStyle, reuseIdentifier: nil)
+		self.cell?.textLabel?.text = title
+		if subtitle != nil {
+			self.cell?.detailTextLabel?.text = subtitle
+			self.cell?.detailTextLabel?.numberOfLines = 0
+		}
+
+		if let accessibilityIdentifier : String = identifier {
+			self.cell?.accessibilityIdentifier = groupIdentifier + "." + accessibilityIdentifier
+		}
+
+		self.groupIdentifier = groupIdentifier
+
+		if selected {
+			self.cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
+			self.value = true
+		} else {
+			self.value = false
+		}
+//25.04. 16 Uhr
+		self.action = { (row, sender) in
+
+			guard let value = self.value as? Bool else { return }
+			if value {
+				row.cell?.accessoryType = UITableViewCell.AccessoryType.none
+				self.value = false
+			} else {
+				row.cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
+				self.value = true
+			}
+
+			toogleItemWithAction?(row, sender)
+		}
+	}
+
 	// MARK: - Text Field
 	public var textField : UITextField?
 
