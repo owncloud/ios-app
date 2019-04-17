@@ -22,8 +22,8 @@ import ownCloudSDK
 
 class PDFThumbnailsCollectionViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching, Themeable {
 
-    fileprivate let thumbnailSizeMultiplierCompact: CGFloat = 0.3
-	fileprivate let thumbnailSizeMultiplierRegular: CGFloat = 0.2
+    fileprivate let thumbnailSizeMultiplierLandscape: CGFloat = 0.2
+	fileprivate let thumbnailSizeMultiplierPortrait: CGFloat = 0.3
 
     fileprivate let maxThumbnailCachedCount: UInt = 100
     fileprivate let verticalInset: CGFloat = 8.0
@@ -54,7 +54,7 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
         // Register cell classes
         self.collectionView!.register(PDFThumbnailCollectionViewCell.self,
                                       forCellWithReuseIdentifier: PDFThumbnailCollectionViewCell.identifier)
-		self.collectionView.contentInsetAdjustmentBehavior = .always
+		self.collectionView.contentInsetAdjustmentBehavior = .automatic
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -69,9 +69,22 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
         Theme.shared.unregister(client: self)
     }
 
-	override func viewWillLayoutSubviews() {
-		super.viewWillLayoutSubviews()
-		recalculateThumbnailSize()
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		// These lines mitigates the issue with incorrect layout of child view controller
+		if let parentView = self.parent?.view {
+			self.view.frame = parentView.frame
+		}
+	}
+
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		coordinator.animate(alongsideTransition: { (_) in
+			// do nothing for now, later useful animations can be added
+		}, completion: { [weak self] (_) in
+			// rotation has finished
+			self?.recalculateThumbnailSize()
+		})
 	}
 
     // MARK: - Themeable support
@@ -140,11 +153,24 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
 
     // MARK: - Private methods
 
-	fileprivate func recalculateThumbnailSize() {
-		let sizeClass = self.traitCollection.horizontalSizeClass
-		let width = view.bounds.inset(by: view.safeAreaInsets).width - (layout.sectionInset.left + layout.sectionInset.right)
+	fileprivate func recalculateThumbnailSize(newTotalWidth: CGFloat = -1.0) {
+		let orientation = UIDevice.current.orientation
+		var viewWidth: CGFloat = 0.0
 
-		let multiplier = (sizeClass == .regular) ? thumbnailSizeMultiplierRegular : thumbnailSizeMultiplierCompact
+		if newTotalWidth > 0 {
+			viewWidth = newTotalWidth
+		} else {
+			// Heads up! bounds on iPad are incorrect for the own view controller's view
+			if UIDevice.current.isIpad() {
+				viewWidth = parent!.view.bounds.width
+			} else {
+				viewWidth = view.bounds.inset(by: view.safeAreaInsets).width
+			}
+		}
+
+		let width = viewWidth - (layout.sectionInset.left + layout.sectionInset.right)
+
+		let multiplier = (orientation.isPortrait || UIDevice.current.isIpad()) ? thumbnailSizeMultiplierPortrait : thumbnailSizeMultiplierLandscape
 		let thumbnailWidth = floor(width * multiplier) - horizontalInset
 		var thumbnailSize = CGSize(width: thumbnailWidth, height: thumbnailWidth)
 
