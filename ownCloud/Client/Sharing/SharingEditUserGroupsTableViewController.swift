@@ -21,6 +21,7 @@ import ownCloudSDK
 
 class SharingEditUserGroupsTableViewController: StaticTableViewController {
 
+	// MARK: - Instance Variables
 	var share : OCShare?
 	var reshares : [OCShare]?
 	var core : OCCore?
@@ -120,7 +121,7 @@ print("--> permissions \(share.permissions)")
 					let editSharingViewController = SharingEditUserGroupsTableViewController(style: .grouped)
 					editSharingViewController.share = share
 					self.navigationController?.pushViewController(editSharingViewController, animated: true)
-				}, title: share.recipient!.displayName!, subtitle: "Share, Edit, Change", accessoryType: .disclosureIndicator) )
+				}, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: .disclosureIndicator) )
 			}
 
 			let section = StaticTableViewSection(headerTitle: "Shared to".localized, footerTitle: nil, rows: shareRows)
@@ -130,8 +131,17 @@ print("--> permissions \(share.permissions)")
 		let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil)
 		section.add(rows: [
 			StaticTableViewRow(buttonWithAction: { (_, _) in
-				Log.log("Destructive pressed")
-			}, title: "Revoke Recipient", style: StaticTableViewRowButtonStyle.destructive)
+				if let core = self.core, let share = self.share {
+					core.connection.delete(share, resultTarget: OCEventTarget(ephermalEventHandlerBlock: { (event, _) in
+						if event.error == nil {
+							self.navigationController?.popViewController(animated: true)
+						} else {
+							let alertController = UIAlertController(with: "Delete Recipient failed".localized, message: event.description, okLabel: "OK".localized, action: nil)
+							self.present(alertController, animated: true)
+						}
+					}))
+				}
+			}, title: "Delete Recipient".localized, style: StaticTableViewRowButtonStyle.destructive)
 			])
 
 		self.addSection(section)

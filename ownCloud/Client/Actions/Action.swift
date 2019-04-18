@@ -175,83 +175,23 @@ class Action : NSObject {
 
 			if item.isShared() {
 				if context.core!.connection.capabilities?.sharingGroupSharing == 1 {
-
-					//let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item)
-					let shareQuery = OCShareQuery(scope: .itemWithReshares, item: item)
-					//let shareQuery = OCShareQuery(scope: .sharedByUser, item: item)
-
-					context.core!.start(shareQuery!)
-					shareQuery?.changesAvailableNotificationHandler = { query in
-						print("--> query: \(query.queryResults)")
-
-						var currentItemShare = query.queryResults
-
-						currentItemShare = query.queryResults.filter({ (share) -> Bool in
-							if share.itemPath == item.path {
-								return true
+					context.core!.sharesWithReshares(for: item) { (sharesWithReshares) in
+						if sharesWithReshares.count > 0 {
+							OnMainThread {
+								let rows = self.shareRows(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
+								self.addShareRows(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
 							}
-							return false
-						})
+						}
+						context.core!.sharesSharedWithMe(for: item) { (sharesWithMe) in
+							if sharesWithMe.count > 0 {
+								var shares : [OCShare] = []
+								shares.append(contentsOf: sharesWithMe)
+								shares.append(contentsOf: sharesWithReshares)
 
-						print("--> currentItemShare \(currentItemShare)")
-
-						OnMainThread {
-							if currentItemShare.count > 0 {
-								let privateShares = currentItemShare.filter { (OCShare) -> Bool in
-									if OCShare.type != .link {
-										return true
-									}
-									return false
+								OnMainThread {
+									let rows = self.shareRows(shares: shares, item: item, presentingController: moreViewController, context: context, byMe: false)
+									self.addShareRows(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
 								}
-								let linkSharesCounter = currentItemShare.count - privateShares.count
-
-								var userTitle = ""
-								if privateShares.count > 0 {
-
-
-
-									var title = "Recipient".localized
-									if privateShares.count > 1 {
-										title = "Recipients".localized
-									}
-									userTitle = "\(privateShares.count) \(title)"
-
-									for share in privateShares {
-										if let ownerName = share.owner?.displayName {
-											userTitle = "Shared by \(ownerName)"
-										}
-									}
-
-								}
-								if linkSharesCounter > 0 {
-									var title = "Public Link".localized
-									if userTitle.count > 0 {
-										userTitle.append(", ")
-									}
-									if linkSharesCounter > 1 {
-										title = "Public Links".localized
-									}
-									userTitle.append("\(linkSharesCounter) \(title)")
-								}
-
-								let roundAddButton = UIImageView(image: UIImage(named: "round-add-button"))
-								roundAddButton.tintColor = Theme.shared.activeCollection.tableRowColors.labelColor
-								let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
-
-									let sharingViewController = SharingTableViewController(style: .grouped)
-									sharingViewController.shares = currentItemShare
-									sharingViewController.core = context.core!
-									sharingViewController.item = item
-									let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
-
-									moreViewController.present(navigationController, animated: true, completion: nil)
-
-								}, title: userTitle, alignment: .left, accessoryView: roundAddButton, multiline: true)
-								shareRows.append(addGroupRow)
-							}
-
-							if shareRows.count > 0 {
-								tableViewController.insertSection(MoreStaticTableViewSection(headerAttributedTitle: shareTitle, identifier: "share-section", rows: shareRows), at: 0, animated: true)
 							}
 						}
 					}
@@ -368,5 +308,81 @@ class Action : NSObject {
 
 	var position : ActionPosition {
 		return type(of: self).applicablePosition(forContext: context)
+	}
+
+	// MARK: - Sharing
+
+	class func shareRows(shares: [OCShare], item: OCItem, presentingController: UIViewController, context: ActionContext, byMe: Bool) -> [StaticTableViewRow] {
+
+			var shareRows: [StaticTableViewRow] = []
+
+			if shares.count > 0 {
+				var roundAddButton : UIImageView?
+				var userTitle = ""
+
+				if byMe {
+					let privateShares = shares.filter { (OCShare) -> Bool in
+						if OCShare.type != .link {
+							return true
+						}
+						return false
+					}
+					let linkSharesCounter = shares.count - privateShares.count
+
+					if privateShares.count > 0 {
+						var title = "Recipient".localized
+						if privateShares.count > 1 {
+							title = "Recipients".localized
+						}
+						userTitle = "\(privateShares.count) \(title)"
+					}
+					if linkSharesCounter > 0 {
+						var title = "Public Link".localized
+						if userTitle.count > 0 {
+							userTitle.append(", ")
+						}
+						if linkSharesCounter > 1 {
+							title = "Public Links".localized
+						}
+						userTitle.append("\(linkSharesCounter) \(title)")
+					}
+
+					roundAddButton = UIImageView(image: UIImage(named: "round-add-button"))
+					roundAddButton?.tintColor = Theme.shared.activeCollection.tableRowColors.labelColor
+				} else {
+					for share in shares {
+						if let ownerName = share.itemOwner?.displayName {
+							userTitle = "Shared by \(ownerName)"
+							break
+						}
+					}
+				}
+
+				let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
+
+					let sharingViewController = SharingTableViewController(style: .grouped)
+					sharingViewController.shares = shares
+					sharingViewController.core = context.core!
+					sharingViewController.item = item
+					let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
+
+					presentingController.present(navigationController, animated: true, completion: nil)
+
+				}, title: userTitle, alignment: .left, accessoryView: roundAddButton, multiline: true)
+				shareRows.append(addGroupRow)
+			}
+
+		return shareRows
+	}
+
+	class func addShareRows(sectionIdentifier: String, rows: [StaticTableViewRow], tableViewController: MoreStaticTableViewController) {
+		if rows.count > 0 {
+			if let section = tableViewController.sectionForIdentifier(sectionIdentifier) {
+				tableViewController.removeSection(section)
+			}
+
+			let shareTitle = NSAttributedString(string: "Sharing".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
+			tableViewController.insertSection(MoreStaticTableViewSection(headerAttributedTitle: shareTitle, identifier: "share-section", rows: rows), at: 0, animated: false)
+		}
 	}
 }

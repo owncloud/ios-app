@@ -39,6 +39,7 @@ class ClientItemCell: ThemeTableViewCell {
 	var detailLabel : UILabel = UILabel()
 	var iconView : UIImageView = UIImageView()
 	var cloudStatusIconView : UIImageView = UIImageView()
+	var sharedStatusIconView : UIImageView = UIImageView()
 	var moreButton : UIButton = UIButton()
 	var progressView : ProgressView?
 
@@ -80,6 +81,9 @@ class ClientItemCell: ThemeTableViewCell {
 		cloudStatusIconView.translatesAutoresizingMaskIntoConstraints = false
 		cloudStatusIconView.contentMode = .center
 
+		sharedStatusIconView.translatesAutoresizingMaskIntoConstraints = false
+		sharedStatusIconView.contentMode = .center
+
 		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
 		titleLabel.adjustsFontForContentSizeCategory = true
 
@@ -89,6 +93,7 @@ class ClientItemCell: ThemeTableViewCell {
 		self.contentView.addSubview(titleLabel)
 		self.contentView.addSubview(detailLabel)
 		self.contentView.addSubview(iconView)
+		self.contentView.addSubview(sharedStatusIconView)
 		self.contentView.addSubview(cloudStatusIconView)
 		self.contentView.addSubview(moreButton)
 
@@ -96,6 +101,11 @@ class ClientItemCell: ThemeTableViewCell {
 		moreButton.contentMode = .center
 
 		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
+
+		sharedStatusIconView.setContentHuggingPriority(.required, for: .vertical)
+		sharedStatusIconView.setContentHuggingPriority(.required, for: .horizontal)
+		sharedStatusIconView.setContentCompressionResistancePriority(.required, for: .vertical)
+		sharedStatusIconView.setContentCompressionResistancePriority(.required, for: .horizontal)
 
 		cloudStatusIconView.setContentHuggingPriority(.required, for: .vertical)
 		cloudStatusIconView.setContentHuggingPriority(.required, for: .horizontal)
@@ -115,7 +125,8 @@ class ClientItemCell: ThemeTableViewCell {
 			iconView.widthAnchor.constraint(equalToConstant: iconViewWidth),
 			iconView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 
-			titleLabel.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
+			titleLabel.rightAnchor.constraint(equalTo: sharedStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
+			sharedStatusIconView.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
 			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -horizontalMargin),
 
 			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: horizontalMargin),
@@ -128,6 +139,9 @@ class ClientItemCell: ThemeTableViewCell {
 			moreButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 			moreButtonWidthConstraint!,
 			moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
+
+			sharedStatusIconView.rightAnchor.constraint(lessThanOrEqualTo: cloudStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
+			sharedStatusIconView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
 
 			cloudStatusIconView.rightAnchor.constraint(lessThanOrEqualTo: moreButton.leftAnchor, constant: -horizontalSmallMargin),
 			cloudStatusIconView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor)
@@ -191,6 +205,12 @@ class ClientItemCell: ThemeTableViewCell {
 					}
 				})
 			}
+		}
+
+		if item.isShared() {
+			sharedStatusIconView.image = UIImage(named: "shared")
+		} else {
+			sharedStatusIconView.image = nil
 		}
 
 		if item.type == .file {
@@ -287,6 +307,7 @@ class ClientItemCell: ThemeTableViewCell {
 		titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
 
+		sharedStatusIconView.tintColor = collection.tableRowColors.secondaryLabelColor
 		cloudStatusIconView.tintColor = collection.tableRowColors.secondaryLabelColor
 		detailLabel.textColor = collection.tableRowColors.secondaryLabelColor
 

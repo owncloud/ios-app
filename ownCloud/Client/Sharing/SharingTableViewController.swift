@@ -21,6 +21,7 @@ import ownCloudSDK
 
 class SharingTableViewController: StaticTableViewController {
 
+	// MARK: - Instance Variables
 	var shares : [OCShare] = []
 	var core : OCCore?
 	var item : OCItem?
@@ -67,12 +68,10 @@ class SharingTableViewController: StaticTableViewController {
 
 				var canEdit = false
 				var accessoryType : UITableViewCell.AccessoryType = .none
-				if core?.connection.loggedInUser == share.owner {
+				if core?.connection.loggedInUser?.userName == share.owner?.userName || core?.connection.loggedInUser?.userName == share.itemOwner?.userName {
 					canEdit = true
 					accessoryType = .disclosureIndicator
 				}
-
-				print("--> edit share \(share)")
 
 				shareRows.append( StaticTableViewRow(rowWithAction: { (row, _) in
 
