@@ -34,6 +34,7 @@ extension OCShare {
 		}
 		if self.canUpdate {
 			permissionsDescription.append("Change")
+			permissionsDescription.append("Edit")
 		}
 		if self.canDelete {
 			permissionsDescription.append("Delete")

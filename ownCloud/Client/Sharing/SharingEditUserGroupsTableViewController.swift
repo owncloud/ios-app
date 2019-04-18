@@ -53,15 +53,23 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 		let section = StaticTableViewSection(headerTitle: "Permissions".localized, footerTitle: footer, identifier: "permission-section")
 		guard let share = share else { return }
 		var permissions : [[String: Bool]] = []
+		var permissionValues : [OCSharePermissionsMask] = []
 		var subtitles : [String]?
 
 		if share.itemType == .collection {
 			permissions = [
 				["Share" : share.canShare],
-				["Edit" : share.canReadWrite],
+				["Edit" : share.canUpdate],
 				["Create" : share.canCreate],
-				["Change" : share.canUpdate],
+				["Change" : share.canReadWrite],
 				["Delete" : share.canDelete]
+			]
+			permissionValues = [
+				.share,
+				.update,
+				.update,
+				.create,
+				.delete
 			]
 			if showSubtitles {
 				subtitles = [
@@ -75,8 +83,11 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 		} else {
 			permissions = [
 				["Share" : share.canShare],
-				["Edit" : share.canReadWrite],
-				["Change" : share.canUpdate]
+				["Edit and Change" : share.canUpdate]
+			]
+			permissionValues = [
+				.share,
+				.update
 			]
 			if showSubtitles {
 				subtitles = [
@@ -88,23 +99,27 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 		}
 
 		section.add(toogleGroupWithArrayOfLabelValueDictionaries: permissions, toggleAction: { (row, _) in
-
-			guard let value = row.value as? Bool else { return }
-
-			Log.log("--> Toogle value for \(row.groupIdentifier!) changed to \(value) \(row.index)")
-
-			//share.canShare = value
-print("--> permissions \(share.permissions)")
-
+			guard let selected = row.value as? Bool else { return }
 			if let core = self.core {
-				print("--> connection update")
 				core.connection.update(share, afterPerformingChanges: { (share) in
-					print("--> update share after performing changes: \(share)")
-					//share.name = "Test Foo"
-					share.permissions = .update
-					print("--> permissions \(share.permissions)")
-				}, resultTarget: OCEventTarget(ephermalEventHandlerBlock: { (event, sender) in
-					print("--> update share result: \(event.error) \(event.result)")
+					if let rowIndex = row.index {
+						guard permissionValues.indices.contains(rowIndex) else { return }
+						let permissionValue = permissionValues[rowIndex]
+
+						if selected {
+							share.permissions.insert(permissionValue)
+						} else {
+							share.permissions.remove(permissionValue)
+						}
+					}
+				}, resultTarget: OCEventTarget(ephermalEventHandlerBlock: { (event, _) in
+					if event.error == nil {
+						guard let changedShare = event.result as? OCShare else { return }
+						self.share?.permissions = changedShare.permissions
+					} else {
+						let alertController = UIAlertController(with: "Setting permission failed".localized, message: event.description, okLabel: "OK".localized, action: nil)
+						self.present(alertController, animated: true)
+					}
 				}, userInfo: nil, ephermalUserInfo: nil))
 			}
 
