@@ -196,7 +196,7 @@ extension OCItem {
 
 		if iconName == nil {
 			if self.type == .collection {
-				if self.isShared() {
+				if self.isSharedWithUser || self.isShared() {
 					iconName = "folder-shared"
 				} else {
 					iconName = "folder"

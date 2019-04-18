@@ -173,7 +173,7 @@ class Action : NSObject {
 			var shareRows: [StaticTableViewRow] = []
 			let shareTitle = NSAttributedString(string: "Sharing".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
-			if item.isShared() {
+			if item.isSharedWithUser || item.isShared() {
 				if context.core!.connection.capabilities?.sharingGroupSharing == 1 {
 					context.core!.sharesWithReshares(for: item) { (sharesWithReshares) in
 						if sharesWithReshares.count > 0 {
