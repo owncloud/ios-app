@@ -58,6 +58,11 @@ class ImageDisplayViewController : DisplayViewController {
 		scrollView?.setZoomScale(scrollView!.minimumZoomScale, animated: true)
 	}
 
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		scrollView?.updateScaleForRotation(size: self.view!.bounds.size)
+	}
+
 	func downSampleImage() {
 		if let source = source {
 			activityIndicatorView.startAnimating()
