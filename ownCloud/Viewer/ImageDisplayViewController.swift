@@ -28,7 +28,7 @@ class ImageDisplayViewController : DisplayViewController {
 
 	// MARK: - Instance variables
 	var scrollView: ImageScrollView?
-	var imageView: UIImageView?
+
 	var activityIndicatorView: UIActivityIndicatorView = {
 		let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.white)
 		activityIndicator.translatesAutoresizingMaskIntoConstraints = false
