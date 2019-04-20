@@ -61,6 +61,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	var progressSummarizer : ProgressSummarizer?
 	var queryRefreshControl: UIRefreshControl?
 
+	var queryRefreshRateLimiter : OCRateLimiter = OCRateLimiter(minimumTime: 0.2)
+
 	let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 	var deleteMultipleBarButtonItem: UIBarButtonItem?
 	var moveMultipleBarButtonItem: UIBarButtonItem?
@@ -942,52 +944,53 @@ extension ClientQueryViewController : OCQueryDelegate {
 	}
 
 	func queryHasChangesAvailable(_ query: OCQuery) {
-		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
-			OnMainThread {
-
-				if query.state.isFinal {
-					OnMainThread {
-						if self.queryRefreshControl!.isRefreshing {
-							self.queryRefreshControl?.endRefreshing()
+		queryRefreshRateLimiter.runRateLimitedBlock {
+			query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
+				OnMainThread {
+					if query.state.isFinal {
+						OnMainThread {
+							if self.queryRefreshControl!.isRefreshing {
+								self.queryRefreshControl?.endRefreshing()
+							}
 						}
 					}
-				}
 
-				let previousItemCount = self.items.count
+					let previousItemCount = self.items.count
 
-				self.items = changeSet?.queryResult ?? []
+					self.items = changeSet?.queryResult ?? []
 
-				switch query.state {
-				case .contentsFromCache, .idle, .waitingForServerReply:
-					if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
-						break
-					}
+					switch query.state {
+					case .contentsFromCache, .idle, .waitingForServerReply:
+						if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
+							break
+						}
 
-					if self.items.count == 0 {
-						if self.searchController?.searchBar.text != "" {
-							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
+						if self.items.count == 0 {
+							if self.searchController?.searchBar.text != "" {
+								self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
+							} else {
+								self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized, showSortBar : true)
+							}
 						} else {
-							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized, showSortBar : true)
+							self.message(show: false)
 						}
-					} else {
+
+						self.selectBarButton?.isEnabled = (self.items.count == 0) ? false : true
+						self.reloadTableData()
+
+					case .targetRemoved:
+						self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
+						self.reloadTableData()
+
+					default:
 						self.message(show: false)
 					}
 
-					self.selectBarButton?.isEnabled = (self.items.count == 0) ? false : true
-					self.reloadTableData()
-
-				case .targetRemoved:
-					self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
-					self.reloadTableData()
-
-				default:
-					self.message(show: false)
-				}
-
-				if let rootItem = self.query.rootItem {
-					if query.queryPath != "/" {
-						let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
-						self.updateFooter(text: totalSize)
+					if let rootItem = self.query.rootItem {
+						if query.queryPath != "/" {
+							let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
+							self.updateFooter(text: totalSize)
+						}
 					}
 				}
 			}
