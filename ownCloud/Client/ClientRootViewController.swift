@@ -104,6 +104,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 			self.progressSummarizer?.stopTracking(progress: openProgress)
 		})
+
+		self.delegate = self
 	}
 
 	func updateConnectionStatusSummary() {
@@ -332,5 +334,22 @@ extension ClientRootViewController : OCCoreDelegate {
 				queueCompletionHandler()
 			}
 		}
+	}
+}
+
+extension ClientRootViewController: UITabBarControllerDelegate {
+	func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+		if tabBarController.selectedViewController == viewController {
+			if let navigationController = viewController as? ThemeNavigationController {
+				let navigationStack = navigationController.viewControllers
+
+				if navigationStack.count > 1 {
+					navigationController.popToViewController(navigationStack[1], animated: true)
+					return false
+				}
+			}
+		}
+
+		return true
 	}
 }
