@@ -137,7 +137,6 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			self?.cell?.textLabel?.textColor = textColor
 
 			if selectedTextColor != nil {
-
 				self?.cell?.textLabel?.highlightedTextColor = selectedTextColor
 			}
 

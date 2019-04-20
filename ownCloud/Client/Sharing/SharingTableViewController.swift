@@ -22,24 +22,47 @@ import ownCloudSDK
 class SharingTableViewController: StaticTableViewController, UISearchResultsUpdating, UISearchBarDelegate, OCRecipientSearchControllerDelegate {
 
 	// MARK: - Instance Variables
-	var shares : [OCShare] = []
+	var shares : [OCShare] = [] {
+		didSet {
+			let meShares = shares.filter { (share) -> Bool in
+				if share.recipient?.user?.userName == core?.connection.loggedInUser?.userName && share.canShare {
+					return true
+				} else if share.itemOwner?.userName == core?.connection.loggedInUser?.userName && share.canShare {
+					return true
+				}
+				return false
+			}
+			if meShares.count > 0 {
+				meCanShareItem = true
+			}
+		}
+	}
 	var core : OCCore?
-	var item : OCItem?
+	var item : OCItem? {
+		didSet {
+			if item?.isShareable ?? false {
+				meCanShareItem = true
+			}
+		}
+	}
 	var searchController : UISearchController?
 	var recipientSearchController : OCRecipientSearchController?
+	var meCanShareItem : Bool = false
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		searchController = UISearchController(searchResultsController: nil)
-		searchController?.searchResultsUpdater = self
-		searchController?.hidesNavigationBarDuringPresentation = true
-		searchController?.dimsBackgroundDuringPresentation = false
-		searchController?.searchBar.placeholder = "Search User, Group, Remote".localized
-		searchController?.searchBar.delegate = self
-		navigationItem.hidesSearchBarWhenScrolling = false
-		navigationItem.searchController = searchController
-		definesPresentationContext = true
+		if meCanShareItem {
+			searchController = UISearchController(searchResultsController: nil)
+			searchController?.searchResultsUpdater = self
+			searchController?.hidesNavigationBarDuringPresentation = true
+			searchController?.dimsBackgroundDuringPresentation = false
+			searchController?.searchBar.placeholder = "Search User, Group, Remote".localized
+			searchController?.searchBar.delegate = self
+			navigationItem.hidesSearchBarWhenScrolling = false
+			navigationItem.searchController = searchController
+			definesPresentationContext = true
+		}
 
 		//navigationController?.navigationItem.searchController?.searchBar.applyThemeCollection(collection)
 
@@ -123,10 +146,11 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		if shares.count == 0 {
-		self.searchController?.isActive = true
-		OnMainThread {
-			self.searchController?.searchBar.becomeFirstResponder()
-		}
+			resetTable(showShares: false)
+			self.searchController?.isActive = true
+			OnMainThread {
+				self.searchController?.searchBar.becomeFirstResponder()
+			}
 		}
 	}
 

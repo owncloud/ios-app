@@ -42,5 +42,4 @@ extension OCCore {
 			completionHandler(query.queryResults)
 		}
 	}
-	
 }

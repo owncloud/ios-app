@@ -168,23 +168,16 @@ class Action : NSObject {
 		let header = MoreViewHeader(for: item, with: context.core!)
 		let moreViewController = MoreViewController(item: item, core: context.core!, header: header, viewController: tableViewController)
 
-		if context.core!.connectionStatus == .online, context.core!.connection.capabilities?.sharingAPIEnabled == 1, item.isShareable {
+		if context.core!.connectionStatus == .online, context.core!.connection.capabilities?.sharingAPIEnabled == 1 {
 
 			var shareRows: [StaticTableViewRow] = []
 			let shareTitle = NSAttributedString(string: "Sharing".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
 			if item.isSharedWithUser || item.isShared() {
-
 				let row = StaticTableViewRow(buttonWithAction: nil, title: "Searching...", style: .plain, identifier: "share-searching")
 				self.addShareRows(sectionIdentifier: "share-section", rows: [row], tableViewController: tableViewController)
 
 				if context.core!.connection.capabilities?.sharingGroupSharing == 1 {
-
-
-					context.core!.sharesSharedWithMe(for: item) { (sharesWithMe) in
-						print("--> shared with me \(sharesWithMe)")
-					}
-
 					context.core!.sharesWithReshares(for: item) { (sharesWithReshares) in
 						if sharesWithReshares.count > 0 {
 							OnMainThread {
@@ -193,7 +186,6 @@ class Action : NSObject {
 							}
 						}
 						context.core!.sharesSharedWithMe(for: item) { (sharesWithMe) in
-							print("--> shared with me \(sharesWithMe)")
 							if sharesWithMe.count > 0 {
 								var shares : [OCShare] = []
 								shares.append(contentsOf: sharesWithMe)
@@ -207,7 +199,7 @@ class Action : NSObject {
 						}
 					}
 				}
-			} else {
+			} else if item.isShareable {
 				var title = "Share this file".localized
 				if item.type == .collection {
 					title = "Share this folder".localized
@@ -366,9 +358,6 @@ class Action : NSObject {
 						}
 						userTitle.append("\(linkSharesCounter) \(title)")
 					}
-
-					roundAddButton = UIImageView(image: UIImage(named: "round-add-button"))
-					roundAddButton?.tintColor = Theme.shared.activeCollection.tableRowColors.labelColor
 				} else {
 					for share in shares {
 						if let ownerName = share.itemOwner?.displayName {
@@ -377,7 +366,6 @@ class Action : NSObject {
 						}
 					}
 				}
-
 				let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
 
 					let sharingViewController = SharingTableViewController(style: .grouped)
@@ -388,7 +376,7 @@ class Action : NSObject {
 
 					presentingController.present(navigationController, animated: true, completion: nil)
 
-				}, title: userTitle, alignment: .left, accessoryView: roundAddButton, multiline: true)
+				}, title: userTitle, subtitle: nil, alignment: .left, accessoryType: .disclosureIndicator)
 				shareRows.append(addGroupRow)
 			}
 
