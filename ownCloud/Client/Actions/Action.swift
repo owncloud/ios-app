@@ -174,7 +174,17 @@ class Action : NSObject {
 			let shareTitle = NSAttributedString(string: "Sharing".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
 			if item.isSharedWithUser || item.isShared() {
+
+				let row = StaticTableViewRow(buttonWithAction: nil, title: "Searching...", style: .plain, identifier: "share-searching")
+				self.addShareRows(sectionIdentifier: "share-section", rows: [row], tableViewController: tableViewController)
+
 				if context.core!.connection.capabilities?.sharingGroupSharing == 1 {
+
+
+					context.core!.sharesSharedWithMe(for: item) { (sharesWithMe) in
+						print("--> shared with me \(sharesWithMe)")
+					}
+
 					context.core!.sharesWithReshares(for: item) { (sharesWithReshares) in
 						if sharesWithReshares.count > 0 {
 							OnMainThread {
@@ -183,6 +193,7 @@ class Action : NSObject {
 							}
 						}
 						context.core!.sharesSharedWithMe(for: item) { (sharesWithMe) in
+							print("--> shared with me \(sharesWithMe)")
 							if sharesWithMe.count > 0 {
 								var shares : [OCShare] = []
 								shares.append(contentsOf: sharesWithMe)
@@ -202,7 +213,16 @@ class Action : NSObject {
 					title = "Share this folder".localized
 				}
 
-				let addGroupRow = StaticTableViewRow(buttonWithAction: nil, title: title, style: .plain, identifier: "share-add-group")
+				let addGroupRow = StaticTableViewRow(buttonWithAction: { (_, _) in
+
+					let sharingViewController = SharingTableViewController(style: .grouped)
+					sharingViewController.core = context.core!
+					sharingViewController.item = item
+					let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
+
+					moreViewController.present(navigationController, animated: true, completion: nil)
+
+				}, title: title, style: .plain, identifier: "share-add-group")
 				shareRows.append(addGroupRow)
 
 				tableViewController.insertSection(MoreStaticTableViewSection(headerAttributedTitle: shareTitle, identifier: "share-section", rows: shareRows), at: 0, animated: true)
