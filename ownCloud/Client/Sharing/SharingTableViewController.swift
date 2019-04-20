@@ -31,10 +31,6 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		let resultsController = SharingSearchResultsTableViewController(style: .grouped)
-		resultsController.core = core
-		resultsController.item = item
-
 		searchController = UISearchController(searchResultsController: nil)
 		searchController?.searchResultsUpdater = self
 		searchController?.hidesNavigationBarDuringPresentation = true
