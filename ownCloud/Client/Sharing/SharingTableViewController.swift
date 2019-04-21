@@ -175,8 +175,10 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 					StaticTableViewRow(rowWithAction: { (_, _) in
 						let share = OCShare(recipient: recipient, path: itemPath, permissions: .read, expiration: nil)
 
-						self.searchController?.searchBar.text = ""
-						self.searchController?.dismiss(animated: true, completion: nil)
+						OnMainThread {
+							self.searchController?.searchBar.text = ""
+							self.searchController?.dismiss(animated: true, completion: nil)
+						}
 						self.core?.connection.createShare(share, options: nil, resultTarget: OCEventTarget(ephermalEventHandlerBlock: { (event, _) in
 							if event.error == nil {
 								OnMainThread {
@@ -202,7 +204,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 			}
 
 			self.addSection(
-				StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "search-results", rows: rows)
+				StaticTableViewSection(headerTitle: "Select Share Recipient".localized, footerTitle: nil, identifier: "search-results", rows: rows)
 			)
 		}
 	}
