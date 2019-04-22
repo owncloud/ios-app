@@ -174,15 +174,18 @@ class Action : NSObject {
 			let shareTitle = NSAttributedString(string: "Sharing".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
 			if item.isSharedWithUser || item.isShared() {
-				let row = StaticTableViewRow(buttonWithAction: nil, title: "Searching...", style: .plain, identifier: "share-searching")
-				self.addShareRows(sectionIdentifier: "share-section", rows: [row], tableViewController: tableViewController)
+				let progressView = UIActivityIndicatorView(style: .gray)
+				progressView.startAnimating()
+
+				let row = StaticTableViewRow(rowWithAction: nil, title: "Searching Shares...".localized, alignment: .left, accessoryView: progressView, identifier: "share-searching")
+				self.updateSharingRow(sectionIdentifier: "share-section", rows: [row], tableViewController: tableViewController)
 
 				if context.core!.connection.capabilities?.sharingGroupSharing == 1 {
 					context.core!.sharesWithReshares(for: item) { (sharesWithReshares) in
 						if sharesWithReshares.count > 0 {
 							OnMainThread {
-								let rows = self.shareRows(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
-								self.addShareRows(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
+								let rows = self.sharingRow(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
+								self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
 							}
 						}
 						context.core!.sharesSharedWithMe(for: item) { (sharesWithMe) in
@@ -192,8 +195,8 @@ class Action : NSObject {
 								shares.append(contentsOf: sharesWithReshares)
 
 								OnMainThread {
-									let rows = self.shareRows(shares: shares, item: item, presentingController: moreViewController, context: context, byMe: false)
-									self.addShareRows(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
+									let rows = self.sharingRow(shares: shares, item: item, presentingController: moreViewController, context: context, byMe: false)
+									self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
 								}
 							}
 						}
@@ -324,7 +327,7 @@ class Action : NSObject {
 
 	// MARK: - Sharing
 
-	class func shareRows(shares: [OCShare], item: OCItem, presentingController: UIViewController, context: ActionContext, byMe: Bool) -> [StaticTableViewRow] {
+	class func sharingRow(shares: [OCShare], item: OCItem, presentingController: UIViewController, context: ActionContext, byMe: Bool) -> [StaticTableViewRow] {
 
 			var shareRows: [StaticTableViewRow] = []
 
@@ -383,7 +386,7 @@ class Action : NSObject {
 		return shareRows
 	}
 
-	class func addShareRows(sectionIdentifier: String, rows: [StaticTableViewRow], tableViewController: MoreStaticTableViewController) {
+	class func updateSharingRow(sectionIdentifier: String, rows: [StaticTableViewRow], tableViewController: MoreStaticTableViewController) {
 		if rows.count > 0 {
 			if let section = tableViewController.sectionForIdentifier(sectionIdentifier) {
 				tableViewController.removeSection(section)
