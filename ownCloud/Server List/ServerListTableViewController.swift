@@ -301,7 +301,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 					// Set up custom push transition for presentation
 					if let navigationController = self.navigationController {
 
-						let transitionDelegate = PushTransitionDelegate(viewControllerToPresent: clientRootViewController, presentingViewController: navigationController)
+						let transitionDelegate = PushTransitionDelegate()
 
 						clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
 						clientRootViewController.transitioningDelegate = transitionDelegate

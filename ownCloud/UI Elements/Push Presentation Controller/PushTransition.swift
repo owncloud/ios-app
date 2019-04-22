@@ -51,7 +51,7 @@ class PushTransition: NSObject, UIViewControllerAnimatedTransitioning {
 					fromViewController.view.transform = .identity
 					transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
 
-					// Work around an iOS bug where usting a custom dismissal animation removes both from and to view controllers
+					// Work around an iOS bug where using a custom dismissal animation removes both fromViewController and toViewController at the end of the animation, leaving behind a black device screen with no views
 					if !transitionContext.transitionWasCancelled, let window = window {
 						if toViewController.view.window == nil {
 							window.addSubview(toViewController.view)

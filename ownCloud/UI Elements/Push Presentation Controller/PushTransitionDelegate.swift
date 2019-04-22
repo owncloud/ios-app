@@ -21,10 +21,6 @@ import UIKit
 final class PushTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
 	private weak var viewControllerToPresent: UIViewController?
 
-	init(viewControllerToPresent: UIViewController, presentingViewController: UIViewController) {
-		self.viewControllerToPresent = viewControllerToPresent
-	}
-
 	func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
 		return PushPresentationController(presentedViewController: presented, presenting: presenting)
 	}
