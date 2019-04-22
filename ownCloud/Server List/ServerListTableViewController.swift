@@ -285,11 +285,34 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			} else {
 				let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 
-				self.navigationController?.navigationBar.prefersLargeTitles = false
-				self.navigationController?.navigationItem.largeTitleDisplayMode = .never
-				self.navigationController?.pushViewController(viewController: clientRootViewController, animated: true, completion: {
-					self.navigationController?.setNavigationBarHidden(true, animated: false)
-				})
+				let bookmarkRow = self.tableView.cellForRow(at: indexPath)
+				let activityIndicator = UIActivityIndicatorView(style: .white)
+
+				var bookmarkRowAccessoryView : UIView?
+
+				if bookmarkRow != nil {
+					bookmarkRowAccessoryView = bookmarkRow?.accessoryView
+					bookmarkRow?.accessoryView = activityIndicator
+
+					activityIndicator.startAnimating()
+				}
+
+				clientRootViewController.afterCoreStart {
+					// Set up custom push transition for presentation
+					if let navigationController = self.navigationController {
+
+						let transitionDelegate = PushTransitionDelegate(viewControllerToPresent: clientRootViewController, presentingViewController: navigationController)
+
+						clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
+						clientRootViewController.transitioningDelegate = transitionDelegate
+						clientRootViewController.modalPresentationStyle = .custom
+
+						navigationController.present(clientRootViewController, animated: true, completion: {
+							activityIndicator.stopAnimating()
+							bookmarkRow?.accessoryView = bookmarkRowAccessoryView
+						})
+					}
+				}
 			}
 		}
 	}

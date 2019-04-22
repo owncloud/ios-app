@@ -54,8 +54,6 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
 
 	init(bookmark inBookmark: OCBookmark) {
-		let openProgress = Progress()
-
 		bookmark = inBookmark
 
 		super.init(nibName: nil, bundle: nil)
@@ -79,31 +77,6 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 				self?.progressBar?.autoCollapse = ((summarizer.fallbackSummary == nil) || (useSummary.progressCount == 0)) && (prioritySummary == nil)
 			}
 		}
-
-		openProgress.localizedDescription = "Connecting…".localized
-		progressSummarizer?.startTracking(progress: openProgress)
-
-		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
-			self.core = core
-			core?.delegate = self
-		}, completionHandler: { (core, error) in
-			if error == nil {
-				self.coreReady()
-			}
-
-			openProgress.localizedDescription = "Connected.".localized
-			openProgress.completedUnitCount = 1
-			openProgress.totalUnitCount = 1
-
-			// Start showing connection status with a delay of 1 second, so "Offline" doesn't flash briefly
-			OnMainThread(after: 1.0) { [weak self] () in
-				self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
-					self?.updateConnectionStatusSummary()
-				})
-			}
-
-			self.progressSummarizer?.stopTracking(progress: openProgress)
-		})
 
 		self.delegate = self
 	}
@@ -151,6 +124,31 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 	}
+
+	// MARK: - Startup
+	func afterCoreStart(_ completionHandler: @escaping (() -> Void)) {
+		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
+			self.core = core
+			core?.delegate = self
+		}, completionHandler: { (core, error) in
+			if error == nil {
+				self.coreReady()
+			}
+
+			// Start showing connection status with a delay of 1 second, so "Offline" doesn't flash briefly
+			OnMainThread(after: 1.0) { [weak self] () in
+				self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
+					self?.updateConnectionStatusSummary()
+				})
+			}
+
+			OnMainThread {
+				completionHandler()
+			}
+		})
+	}
+
+	var pushTransition : PushTransitionDelegate?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -206,8 +204,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	}
 
 	func closeClient(completion: (() -> Void)? = nil) {
-		self.navigationController?.setNavigationBarHidden(false, animated: false)
-		self.navigationController?.popViewController(animated: true, completion: {
+		self.dismiss(animated: true, completion: {
 			completion?()
 		})
 	}
@@ -224,6 +221,17 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 			let queryViewController = ClientQueryViewController(core: self.core!, query: query)
 			// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
 			self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
+
+			let emptyViewController = self.emptyViewController
+			self.filesNavigationController?.popLastHandler = { [weak self] (viewController) in
+				if viewController == emptyViewController {
+					OnMainThread {
+						self?.closeClient()
+					}
+				}
+
+				return (viewController != emptyViewController)
+			}
 			self.activityViewController?.core = self.core!
 		}
 	}
