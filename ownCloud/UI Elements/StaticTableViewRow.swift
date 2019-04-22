@@ -109,10 +109,14 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.cell?.accessibilityIdentifier = identifier
 
-		self.action = rowWithAction
+		if rowWithAction != nil {
+			self.action = rowWithAction
+		} else {
+			self.cell?.selectionStyle = .none
+		}
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryView: UIView? = nil, identifier : String? = nil, multiline : Bool) {
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryView: UIView? = nil, identifier : String? = nil) {
 
 		self.init()
 
@@ -122,10 +126,6 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.accessoryView = accessoryView
-		if multiline {
-			self.cell?.textLabel?.numberOfLines = 0
-		}
-
 		self.cell?.accessibilityIdentifier = identifier
 
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
@@ -154,7 +154,11 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			}
 			}, applyImmediately: true)
 
-		self.action = rowWithAction
+		if rowWithAction != nil {
+			self.action = rowWithAction
+		} else {
+			self.cell?.selectionStyle = .none
+		}
 	}
 
 	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, accessoryView: UIView, identifier: String? = nil) {
@@ -170,7 +174,11 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cell.textLabel?.textAlignment = alignment
 		cell.accessoryType = accessoryType
 		cell.accessibilityIdentifier = identifier
-		self.action = rowWithAction
+		if rowWithAction != nil {
+			self.action = rowWithAction
+		} else {
+			self.cell?.selectionStyle = .none
+		}
 
 		additionalAccessoryView = accessoryView
 		guard let additionalAccessoryView = additionalAccessoryView else { return }

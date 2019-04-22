@@ -174,7 +174,7 @@ class Action : NSObject {
 			let shareTitle = NSAttributedString(string: "Sharing".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
 			if item.isSharedWithUser || item.isShared() {
-				let progressView = UIActivityIndicatorView(style: .gray)
+				let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 				progressView.startAnimating()
 
 				let row = StaticTableViewRow(rowWithAction: nil, title: "Searching Shares...".localized, alignment: .left, accessoryView: progressView, identifier: "share-searching")
@@ -332,7 +332,6 @@ class Action : NSObject {
 			var shareRows: [StaticTableViewRow] = []
 
 			if shares.count > 0 {
-				var roundAddButton : UIImageView?
 				var userTitle = ""
 
 				if byMe {

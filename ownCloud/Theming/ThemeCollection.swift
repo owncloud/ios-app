@@ -114,6 +114,9 @@ class ThemeCollection : NSObject {
 	// MARK: - Progress
 	@objc var progressColors : ThemeColorPair
 
+	// MARK: - Activity View
+	@objc var activityIndicatorViewStyle : UIActivityIndicatorView.Style
+
 	// MARK: - Icon colors
 	@objc var iconColors : [String:String]
 
@@ -232,6 +235,9 @@ class ThemeCollection : NSObject {
 				// Progress
 				self.progressColors = ThemeColorPair(foreground: self.lightBrandColor, background: self.lightBrandColor.withAlphaComponent(0.3))
 
+				// Activity
+				self.activityIndicatorViewStyle = .white
+
 				// Logo fill color
 				logoFillColor = UIColor.white
 
@@ -255,6 +261,9 @@ class ThemeCollection : NSObject {
 				// Progress
 				self.progressColors = ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3))
 
+				// Activity
+				self.activityIndicatorViewStyle = .gray
+
 				// Logo fill color
 				logoFillColor = UIColor.lightGray
 
@@ -269,6 +278,9 @@ class ThemeCollection : NSObject {
 
 				// Progress
 				self.progressColors = ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3))
+
+				// Activity
+				self.activityIndicatorViewStyle = .gray
 
 				// Logo fill color
 				logoFillColor = UIColor.lightGray

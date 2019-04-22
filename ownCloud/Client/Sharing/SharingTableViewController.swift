@@ -62,9 +62,8 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 			navigationItem.hidesSearchBarWhenScrolling = false
 			navigationItem.searchController = searchController
 			definesPresentationContext = true
+			searchController?.searchBar.applyThemeCollection(Theme.shared.activeCollection)
 		}
-
-		//navigationController?.navigationItem.searchController?.searchBar.applyThemeCollection(collection)
 
 		guard let item = item else { return }
 
@@ -104,19 +103,17 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 					canEdit = true
 					accessoryType = .disclosureIndicator
 				}
-
-				shareRows.append( StaticTableViewRow(rowWithAction: { (row, _) in
-
-					if canEdit {
+				if canEdit {
+					shareRows.append( StaticTableViewRow(rowWithAction: { (_, _) in
 						let editSharingViewController = SharingEditUserGroupsTableViewController(style: .grouped)
 						editSharingViewController.share = share
 						editSharingViewController.reshares = resharedUsers
 						editSharingViewController.core = self.core
 						self.navigationController?.pushViewController(editSharingViewController, animated: true)
-					} else {
-						row.cell?.selectionStyle = .none
-					}
-				}, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: accessoryType) )
+					}, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: accessoryType) )
+				} else {
+					shareRows.append( StaticTableViewRow(rowWithAction: nil, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: accessoryType) )
+				}
 			}
 
 			let section : StaticTableViewSection = StaticTableViewSection(headerTitle: title, footerTitle: nil, identifier: "share-section", rows: shareRows)
