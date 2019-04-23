@@ -19,7 +19,6 @@
 import UIKit
 
 class PushPresentationController: UIPresentationController {
-
 	override func presentationTransitionWillBegin() {
 		if let transitionCoordinator = self.presentingViewController.transitionCoordinator {
 			self.presentingViewController.view.alpha = 1.0
