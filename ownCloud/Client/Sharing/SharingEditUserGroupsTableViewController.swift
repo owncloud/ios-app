@@ -47,7 +47,7 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 		dateFormatter.timeStyle = .short
 		var footer = ""
 		if let date = share?.creationDate {
-			footer = "Shared since: \(dateFormatter.string(from: date))"
+			footer = String(format: "Shared since: %@".localized, dateFormatter.string(from: date))
 		}
 
 		let section = StaticTableViewSection(headerTitle: "Permissions".localized, footerTitle: footer, identifier: "permission-section")
@@ -145,14 +145,20 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 
 		let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil)
 		section.add(rows: [
-			StaticTableViewRow(buttonWithAction: { (_, _) in
+			StaticTableViewRow(buttonWithAction: { (row, _) in
+				let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+				progressView.startAnimating()
+
+				row.cell?.accessoryView = progressView
 				if let core = self.core, let share = self.share {
 					core.connection.delete(share, resultTarget: OCEventTarget(ephermalEventHandlerBlock: { (event, _) in
-						if event.error == nil {
-							self.navigationController?.popViewController(animated: true)
-						} else {
-							let alertController = UIAlertController(with: "Delete Recipient failed".localized, message: event.description, okLabel: "OK".localized, action: nil)
-							self.present(alertController, animated: true)
+						OnMainThread {
+							if event.error == nil {
+								self.navigationController?.popViewController(animated: true)
+							} else {
+								let alertController = UIAlertController(with: "Delete Recipient failed".localized, message: event.description, okLabel: "OK".localized, action: nil)
+								self.present(alertController, animated: true)
+							}
 						}
 					}))
 				}

@@ -48,6 +48,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 	var searchController : UISearchController?
 	var recipientSearchController : OCRecipientSearchController?
 	var meCanShareItem : Bool = false
+	var messageView : MessageView?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -66,16 +67,38 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 		}
 
 		guard let item = item else { return }
-
+		messageView = MessageView(add: self.view)
 		recipientSearchController = core?.recipientSearchController(for: item)
 		recipientSearchController?.delegate = self
 
 		self.navigationItem.title = "Sharing".localized
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
 
-		addSectionFor(type: .userShare, with: "Users".localized)
-		addSectionFor(type: .groupShare, with: "Groups".localized)
-		addSectionFor(type: .remote, with: "Remote Users".localized)
+		let query = core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
+			if sharesWithReshares.count > 0 {
+				self.shares = sharesWithReshares
+				self.populateShares()
+			}
+			_ = self.core!.sharesSharedWithMe(for: item, initialPopulationHandler: { (sharesWithMe) in
+				if sharesWithMe.count > 0 {
+					var shares : [OCShare] = []
+					shares.append(contentsOf: sharesWithMe)
+					shares.append(contentsOf: sharesWithReshares)
+					self.shares = shares
+					self.removeShareSections()
+					self.populateShares()
+				}
+			})
+		})
+
+		query?.refreshInterval = 2
+		query?.changesAvailableNotificationHandler = { query in
+			let sharesWithReshares = query.queryResults
+			self.shares = sharesWithReshares
+			self.removeShareSections()
+			self.populateShares()
+			self.handleEmptyShares()
+		}
 	}
 
 	func addSectionFor(type: OCShareType, with title: String) {
@@ -115,9 +138,56 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 					shareRows.append( StaticTableViewRow(rowWithAction: nil, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: accessoryType) )
 				}
 			}
+			let sectionType = "share-section-\(String(type.rawValue))"
+			if let section = self.sectionForIdentifier(sectionType) {
+				self.removeSection(section)
+			}
 
-			let section : StaticTableViewSection = StaticTableViewSection(headerTitle: title, footerTitle: nil, identifier: "share-section", rows: shareRows)
+			let section : StaticTableViewSection = StaticTableViewSection(headerTitle: title, footerTitle: nil, identifier: sectionType, rows: shareRows)
 			self.addSection(section)
+		}
+	}
+
+	func populateShares() {
+		OnMainThread {
+			self.addSectionFor(type: .userShare, with: "Users".localized)
+			self.addSectionFor(type: .groupShare, with: "Groups".localized)
+			self.addSectionFor(type: .remote, with: "Remote Users".localized)
+		}
+	}
+
+	func removeShareSections() {
+		OnMainThread {
+			let types : [OCShareType] = [.userShare, .groupShare, .remote]
+			for type in types {
+				let identifier = "share-section-\(String(type.rawValue))"
+				if let section = self.sectionForIdentifier(identifier) {
+					self.removeSection(section)
+				}
+			}
+		}
+	}
+
+	func resetTable(showShares : Bool) {
+		removeShareSections()
+		if let section = self.sectionForIdentifier("search-results") {
+			self.removeSection(section)
+		}
+		if shares.count > 0 && showShares {
+			messageView?.message(show: false)
+			self.populateShares()
+		} else {
+			messageView?.message(show: true, imageName: "icon-search", title: "Search Recipients".localized, message: "Start typing to search users, groups and remote users.".localized)
+		}
+	}
+
+	func handleEmptyShares() {
+		if shares.count == 0 {
+			OnMainThread {
+				self.resetTable(showShares: false)
+				self.searchController?.isActive = true
+				self.searchController?.searchBar.becomeFirstResponder()
+			}
 		}
 	}
 
@@ -127,28 +197,14 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 		if text.count > 1 {
 			recipientSearchController?.searchTerm = text
 			recipientSearchController?.search()
-		}
-	}
-
-	func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-		guard let text = searchBar.text else { return }
-		if text.count > 1 {
-			recipientSearchController?.searchTerm = text
-			recipientSearchController?.search()
-		} else {
+		} else if searchController.isActive {
 			resetTable(showShares: false)
 		}
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		if shares.count == 0 {
-			resetTable(showShares: false)
-			self.searchController?.isActive = true
-			OnMainThread {
-				self.searchController?.searchBar.becomeFirstResponder()
-			}
-		}
+		handleEmptyShares()
 	}
 
 	func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -156,17 +212,26 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 	}
 
 	func searchControllerHasNewResults(_ searchController: OCRecipientSearchController, error: Error?) {
-		//print("---> searchController.recipients \(searchController.recipients)")
 		OnMainThread {
-		guard let recipients = searchController.recipients else {
-			self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
-			return
-		}
+			guard let recipients = searchController.recipients else {
+				self.messageView?.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
+				return
+			}
 
-			self.message(show: false)
+			self.messageView?.message(show: false)
 			var rows : [StaticTableViewRow] = []
 			for recipient in recipients {
-				guard let user = recipient.user, let name = user.displayName, let itemPath = self.item?.path else { continue }
+
+				guard let itemPath = self.item?.path else { continue }
+				var title = ""
+				if recipient.type == .user {
+					guard let user = recipient.user, let name = user.displayName else { continue }
+					title = name
+				} else {
+					guard let group = recipient.group, let name = group.name else { continue }
+					let groupTitle = "(Group)".localized
+					title = "\(name) \(groupTitle)"
+				}
 
 				rows.append(
 					StaticTableViewRow(rowWithAction: { (_, _) in
@@ -180,22 +245,22 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 							if event.error == nil {
 								OnMainThread {
 									self.shares.append(share)
-									self.resetTable(showShares: false)
+									self.resetTable(showShares: true)
 								}
 							} else {
 								if let error = event.error {
-									self.resetTable(showShares: true)
-								let alertController = UIAlertController(with: "Adding User to Share failed".localized, message: error.localizedDescription, okLabel: "OK".localized, action: nil)
-								self.present(alertController, animated: true)
+									OnMainThread {
+										self.resetTable(showShares: true)
+										let alertController = UIAlertController(with: "Adding User to Share failed".localized, message: error.localizedDescription, okLabel: "OK".localized, action: nil)
+										self.present(alertController, animated: true)
+									}
 								}
 							}
 						}, userInfo: nil, ephermalUserInfo: nil))
-					}, title: name)
+					}, title: title)
 				)
 			}
-			if let section = self.sectionForIdentifier("share-section") {
-				self.removeSection(section)
-			}
+			self.removeShareSections()
 			if let section = self.sectionForIdentifier("search-results") {
 				self.removeSection(section)
 			}
@@ -209,152 +274,4 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 	func searchController(_ searchController: OCRecipientSearchController, isWaitingForResults isSearching: Bool) {
 
 	}
-
-	func resetTable(showShares : Bool) {
-		if let section = self.sectionForIdentifier("share-section") {
-			self.removeSection(section)
-		}
-		if let section = self.sectionForIdentifier("search-results") {
-			self.removeSection(section)
-		}
-		if shares.count > 0 && showShares {
-			self.message(show: false)
-			self.addSectionFor(type: .userShare, with: "Users".localized)
-			self.addSectionFor(type: .groupShare, with: "Groups".localized)
-			self.addSectionFor(type: .remote, with: "Remote Users".localized)
-		} else {
-			self.message(show: true, imageName: "icon-search", title: "Search Recipients".localized, message: "Start typing to search users, groups and remote users.".localized)
-		}
-	}
-
-	// MARK: - Message
-	var messageView : UIView?
-	var messageContainerView : UIView?
-	var messageImageView : VectorImageView?
-	var messageTitleLabel : UILabel?
-	var messageMessageLabel : UILabel?
-	var messageThemeApplierToken : ThemeApplierToken?
-
-	func message(show: Bool, imageName : String? = nil, title : String? = nil, message : String? = nil) {
-		if !show {
-			if messageView?.superview != nil {
-				messageView?.removeFromSuperview()
-			}
-			if !show {
-				return
-			}
-		}
-
-		if messageView == nil {
-			var rootView : UIView
-			var containerView : UIView
-			var imageView : VectorImageView
-			var titleLabel : UILabel
-			var messageLabel : UILabel
-
-			rootView = UIView()
-			rootView.translatesAutoresizingMaskIntoConstraints = false
-
-			containerView = UIView()
-			containerView.translatesAutoresizingMaskIntoConstraints = false
-
-			imageView = VectorImageView()
-			imageView.translatesAutoresizingMaskIntoConstraints = false
-
-			titleLabel = UILabel()
-			titleLabel.translatesAutoresizingMaskIntoConstraints = false
-
-			messageLabel = UILabel()
-			messageLabel.translatesAutoresizingMaskIntoConstraints = false
-			messageLabel.numberOfLines = 0
-			messageLabel.textAlignment = .center
-
-			containerView.addSubview(imageView)
-			containerView.addSubview(titleLabel)
-			containerView.addSubview(messageLabel)
-
-			containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageView]-(20)-[titleLabel]-[messageLabel]|",
-																		options: NSLayoutConstraint.FormatOptions(rawValue: 0),
-																		metrics: nil,
-																		views: ["imageView" : imageView, "titleLabel" : titleLabel, "messageLabel" : messageLabel])
-			)
-
-			imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
-			imageView.widthAnchor.constraint(equalToConstant: 96).isActive = true
-			imageView.heightAnchor.constraint(equalToConstant: 96).isActive = true
-
-			titleLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
-			titleLabel.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor).isActive = true
-			titleLabel.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor).isActive = true
-
-			messageLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
-			messageLabel.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor).isActive = true
-			messageLabel.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor).isActive = true
-
-			rootView.addSubview(containerView)
-
-			containerView.centerXAnchor.constraint(equalTo: rootView.centerXAnchor).isActive = true
-			containerView.centerYAnchor.constraint(equalTo: rootView.centerYAnchor).isActive = true
-
-			containerView.leftAnchor.constraint(greaterThanOrEqualTo: rootView.leftAnchor, constant: 20).isActive = true
-			containerView.rightAnchor.constraint(lessThanOrEqualTo: rootView.rightAnchor, constant: -20).isActive = true
-			containerView.topAnchor.constraint(greaterThanOrEqualTo: rootView.topAnchor, constant: 20).isActive = true
-			containerView.bottomAnchor.constraint(lessThanOrEqualTo: rootView.bottomAnchor, constant: -20).isActive = true
-
-			messageView = rootView
-			messageContainerView = containerView
-			messageImageView = imageView
-			messageTitleLabel = titleLabel
-			messageMessageLabel = messageLabel
-
-			messageThemeApplierToken = Theme.shared.add(applier: { [weak self] (_, collection, _) in
-				self?.messageView?.backgroundColor = collection.tableBackgroundColor
-
-				self?.messageTitleLabel?.applyThemeCollection(collection, itemStyle: .bigTitle)
-				self?.messageMessageLabel?.applyThemeCollection(collection, itemStyle: .bigMessage)
-			})
-		}
-
-		if messageView?.superview == nil {
-			if let rootView = self.messageView, let containerView = self.messageContainerView {
-				containerView.alpha = 0
-				containerView.transform = CGAffineTransform(translationX: 0, y: 15)
-
-				rootView.alpha = 0
-
-				self.view.addSubview(rootView)
-
-				rootView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
-				rootView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
-				rootView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
-				rootView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-
-				UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
-					rootView.alpha = 1
-				}, completion: { (_) in
-					UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut, animations: {
-						containerView.alpha = 1
-						containerView.transform = CGAffineTransform.identity
-					})
-				})
-			}
-		}
-
-		if imageName != nil {
-			messageImageView?.vectorImage = Theme.shared.tvgImage(for: imageName!)
-		}
-		if title != nil {
-			messageTitleLabel?.text = title!
-		}
-		if message != nil {
-			messageMessageLabel?.text = message!
-		}
-	}
-/*
-	// MARK: - Theme support
-
-	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.searchController?.searchBar.applyThemeCollection(collection)
-		super.applyThemeCollection(theme: theme, collection: collection, event: event)
-	}*/
 }

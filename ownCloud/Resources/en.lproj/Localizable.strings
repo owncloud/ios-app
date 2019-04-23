@@ -264,3 +264,34 @@
 "All Photos" = "All Photos";
 "Albums" = "Albums";
 "Importing '%@' from photo library" = "Importing '%@' from photo library";
+
+/* Sharing */
+"Searching Shares..." = "Searching Shares...";
+"Recipient" = "Recipient";
+"Recipients" = "Recipients";
+"Public Link" = "Public Link";
+"Public Links" = "Public Links";
+"Shared by %@" = "Shared by %@";
+"Share this file" = "Share this file";
+"Share this folder" = "Share this folder";
+"Search User, Group, Remote" = "Search User, Group, Remote";
+"Sharing" = "Sharing";
+"Users" = "Users";
+"Groups" = "Groups";
+"Remote Users" = "Remote Users";
+"Search Recipients" = "Search Recipients";
+"Start typing to search users, groups and remote users." = "Start typing to search users, groups and remote users.";
+"(Group)" = "(Group)";
+"Adding User to Share failed" = "Adding User to Share failed";
+"Select Share Recipient" = "Select Share Recipient";
+"Permissions" = "Permissions";
+"Shared since: %@" = "Shared since: %@";
+"Allows the users you share with to re-share" = "Allows the users you share with to re-share";
+"Allows the users you share with to edit your shared files, and to collaborate" = "Allows the users you share with to edit your shared files, and to collaborate";
+"Allows the users you share with to create new files and add them to the share" = "Allows the users you share with to create new files and add them to the share";
+"Allows uploading a new version of a shared file and replacing it" = "Allows uploading a new version of a shared file and replacing it";
+"Allows the users you share with to delete shared files" = "Allows the users you share with to delete shared files";
+"Setting permission failed" = "Setting permission failed";
+"Shared to" = "Shared to";
+"Delete Recipient failed" = "Delete Recipient failed";
+"Delete Recipient" = "Delete Recipient";

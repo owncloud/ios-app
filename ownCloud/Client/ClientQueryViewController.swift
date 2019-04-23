@@ -62,6 +62,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 	var quotaLabel = UILabel()
 	var quotaObservation : NSKeyValueObservation?
+	var messageView : MessageView?
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -124,12 +125,6 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		core?.stop(query)
 		Theme.shared.unregister(client: self)
-
-		if messageThemeApplierToken != nil {
-			Theme.shared.remove(applierForToken: messageThemeApplierToken)
-			messageThemeApplierToken = nil
-		}
-
 		self.queryProgressSummary = nil
 
 		quotaObservation = nil
@@ -222,6 +217,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		quotaLabel.textAlignment = .center
 		quotaLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
 		quotaLabel.numberOfLines = 0
+
+		messageView = MessageView(add: self.view)
 	}
 
 	private var viewControllerVisible : Bool = false
@@ -524,137 +521,6 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 						 session: UIDragSession,
 						 didEndWith operation: UIDropOperation) {
 		removeToolbar()
-	}
-
-	// MARK: - Message
-	var messageView : UIView?
-	var messageContainerView : UIView?
-	var messageImageView : VectorImageView?
-	var messageTitleLabel : UILabel?
-	var messageMessageLabel : UILabel?
-	var messageThemeApplierToken : ThemeApplierToken?
-	var messageShowsSortBar : Bool = false
-
-	func message(show: Bool, imageName : String? = nil, title : String? = nil, message : String? = nil, showSortBar : Bool = false) {
-		if !show || (show && (messageShowsSortBar != showSortBar)) {
-			if messageView?.superview != nil {
-				messageView?.removeFromSuperview()
-			}
-			if !show {
-				return
-			}
-		}
-
-		if messageView == nil {
-			var rootView : UIView
-			var containerView : UIView
-			var imageView : VectorImageView
-			var titleLabel : UILabel
-			var messageLabel : UILabel
-
-			rootView = UIView()
-			rootView.translatesAutoresizingMaskIntoConstraints = false
-
-			containerView = UIView()
-			containerView.translatesAutoresizingMaskIntoConstraints = false
-
-			imageView = VectorImageView()
-			imageView.translatesAutoresizingMaskIntoConstraints = false
-
-			titleLabel = UILabel()
-			titleLabel.translatesAutoresizingMaskIntoConstraints = false
-
-			messageLabel = UILabel()
-			messageLabel.translatesAutoresizingMaskIntoConstraints = false
-			messageLabel.numberOfLines = 0
-			messageLabel.textAlignment = .center
-
-			containerView.addSubview(imageView)
-			containerView.addSubview(titleLabel)
-			containerView.addSubview(messageLabel)
-
-			containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageView]-(20)-[titleLabel]-[messageLabel]|",
-										   options: NSLayoutConstraint.FormatOptions(rawValue: 0),
-										   metrics: nil,
-										   views: ["imageView" : imageView, "titleLabel" : titleLabel, "messageLabel" : messageLabel])
-						   )
-
-			imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
-			imageView.widthAnchor.constraint(equalToConstant: 96).isActive = true
-			imageView.heightAnchor.constraint(equalToConstant: 96).isActive = true
-
-			titleLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
-			titleLabel.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor).isActive = true
-			titleLabel.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor).isActive = true
-
-			messageLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
-			messageLabel.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor).isActive = true
-			messageLabel.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor).isActive = true
-
-			rootView.addSubview(containerView)
-
-			containerView.centerXAnchor.constraint(equalTo: rootView.centerXAnchor).isActive = true
-			containerView.centerYAnchor.constraint(equalTo: rootView.centerYAnchor).isActive = true
-
-			containerView.leftAnchor.constraint(greaterThanOrEqualTo: rootView.leftAnchor, constant: 20).isActive = true
-			containerView.rightAnchor.constraint(lessThanOrEqualTo: rootView.rightAnchor, constant: -20).isActive = true
-			containerView.topAnchor.constraint(greaterThanOrEqualTo: rootView.topAnchor, constant: 20).isActive = true
-			containerView.bottomAnchor.constraint(lessThanOrEqualTo: rootView.bottomAnchor, constant: -20).isActive = true
-
-			messageView = rootView
-			messageContainerView = containerView
-			messageImageView = imageView
-			messageTitleLabel = titleLabel
-			messageMessageLabel = messageLabel
-
-			messageThemeApplierToken = Theme.shared.add(applier: { [weak self] (_, collection, _) in
-				self?.messageView?.backgroundColor = collection.tableBackgroundColor
-
-				self?.messageTitleLabel?.applyThemeCollection(collection, itemStyle: .bigTitle)
-				self?.messageMessageLabel?.applyThemeCollection(collection, itemStyle: .bigMessage)
-			})
-		}
-
-		if messageView?.superview == nil {
-			if let rootView = self.messageView, let containerView = self.messageContainerView {
-				containerView.alpha = 0
-				containerView.transform = CGAffineTransform(translationX: 0, y: 15)
-
-				rootView.alpha = 0
-
-				self.view.addSubview(rootView)
-
-				rootView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
-				rootView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
-				if showSortBar {
-					rootView.topAnchor.constraint(equalTo: (sortBar?.bottomAnchor)!).isActive = true
-				} else {
-					rootView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
-				}
-				rootView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-
-				messageShowsSortBar = showSortBar
-
-				UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
-					rootView.alpha = 1
-				}, completion: { (_) in
-					UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseOut, animations: {
-						containerView.alpha = 1
-						containerView.transform = CGAffineTransform.identity
-					})
-				})
-			}
-		}
-
-		if imageName != nil {
-			messageImageView?.vectorImage = Theme.shared.tvgImage(for: imageName!)
-		}
-		if title != nil {
-			messageTitleLabel?.text = title!
-		}
-		if message != nil {
-			messageMessageLabel?.text = message!
-		}
 	}
 
 	// MARK: - Sorting
@@ -986,22 +852,22 @@ extension ClientQueryViewController : OCQueryDelegate {
 
 					if self.items.count == 0 {
 						if self.searchController?.searchBar.text != "" {
-							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
+							self.messageView?.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
 						} else {
-							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized, showSortBar : true)
+							self.messageView?.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
 						}
 					} else {
-						self.message(show: false)
+						self.messageView?.message(show: false)
 					}
 
 					self.reloadTableData()
 
 				case .targetRemoved:
-					self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
+					self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
 					self.reloadTableData()
 
 				default:
-					self.message(show: false)
+					self.messageView?.message(show: false)
 				}
 
 				if let rootItem = self.query.rootItem {

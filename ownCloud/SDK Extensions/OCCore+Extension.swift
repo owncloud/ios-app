@@ -21,7 +21,7 @@ import ownCloudSDK
 
 extension OCCore {
 
-	func sharesSharedWithMe(for item: OCItem, completionHandler: @escaping (_ shares: [OCShare]) -> Void) {
+	func sharesSharedWithMe(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void) -> OCShareQuery? {
 		let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item)
 		start(shareQuery!)
 		shareQuery?.initialPopulationHandler = { query in
@@ -31,15 +31,20 @@ extension OCCore {
 				}
 				return false
 			})
-			completionHandler(shares)
+			initialPopulationHandler(shares)
 		}
+
+		return shareQuery
 	}
 
-	func sharesWithReshares(for item: OCItem, completionHandler: @escaping (_ shares: [OCShare]) -> Void) {
+	func sharesWithReshares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void) -> OCShareQuery? {
 		let shareQuery = OCShareQuery(scope: .itemWithReshares, item: item)
+		shareQuery?.refreshInterval = 5
 		start(shareQuery!)
 		shareQuery?.initialPopulationHandler = { query in
-			completionHandler(query.queryResults)
+			initialPopulationHandler(query.queryResults)
 		}
+
+		return shareQuery
 	}
 }
