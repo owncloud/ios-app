@@ -227,6 +227,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		let viewController : BookmarkViewController = BookmarkViewController(bookmark)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
 
+		// Prevent any in-progress connection from being shown
+		resetPreviousBookmarkSelection()
+
 		// Exit editing mode (unfortunately, self.isEditing = false will not do the trick as it leaves the left bar button unchanged as "Done")
 		if self.tableView.isEditing,
 			let target = self.navigationItem.leftBarButtonItem?.target,
@@ -240,11 +243,17 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	var themeCounter : Int = 0
 
 	@IBAction func help() {
+		// Prevent any in-progress connection from being shown
+		resetPreviousBookmarkSelection()
+
 		VendorServices.shared.sendFeedback(from: self)
 	}
 
 	@IBAction func settings() {
 		let viewController : SettingsViewController = SettingsViewController(style: .grouped)
+
+		// Prevent any in-progress connection from being shown
+		resetPreviousBookmarkSelection()
 
 		self.navigationController?.pushViewController(viewController, animated: true)
 	}
@@ -262,6 +271,27 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	// MARK: - Table view delegate
+	var lastSelectedBookmark : OCBookmark?
+	var lastSelectedBookmarkOpenedBlock : (() -> Void)?
+
+	func setLastSelectedBookmark(_ bookmark: OCBookmark, openedBlock: (() -> Void)?) {
+		resetPreviousBookmarkSelection()
+
+		lastSelectedBookmark = bookmark
+		lastSelectedBookmarkOpenedBlock = openedBlock
+	}
+
+	func resetPreviousBookmarkSelection(_ bookmark: OCBookmark? = nil) {
+		if (bookmark == nil) || ((bookmark != nil) && (bookmark?.uuid == lastSelectedBookmark?.uuid)) {
+			if lastSelectedBookmark != nil, lastSelectedBookmarkOpenedBlock != nil {
+				lastSelectedBookmarkOpenedBlock?()
+				lastSelectedBookmarkOpenedBlock = nil
+
+				lastSelectedBookmark = nil
+			}
+		}
+	}
+
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 			if lockedBookmarks.contains(bookmark) {
@@ -297,20 +327,26 @@ class ServerListTableViewController: UITableViewController, Themeable {
 					activityIndicator.startAnimating()
 				}
 
+				self.setLastSelectedBookmark(bookmark, openedBlock: {
+					activityIndicator.stopAnimating()
+					bookmarkRow?.accessoryView = bookmarkRowAccessoryView
+				})
+
 				clientRootViewController.afterCoreStart {
-					// Set up custom push transition for presentation
-					if let navigationController = self.navigationController {
+					// Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
+					if self.lastSelectedBookmark?.uuid == bookmark.uuid {
+						// Set up custom push transition for presentation
+						if let navigationController = self.navigationController {
+							let transitionDelegate = PushTransitionDelegate()
 
-						let transitionDelegate = PushTransitionDelegate()
+							clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
+							clientRootViewController.transitioningDelegate = transitionDelegate
+							clientRootViewController.modalPresentationStyle = .custom
 
-						clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
-						clientRootViewController.transitioningDelegate = transitionDelegate
-						clientRootViewController.modalPresentationStyle = .custom
-
-						navigationController.present(clientRootViewController, animated: true, completion: {
-							activityIndicator.stopAnimating()
-							bookmarkRow?.accessoryView = bookmarkRowAccessoryView
-						})
+							navigationController.present(clientRootViewController, animated: true, completion: {
+								self.resetPreviousBookmarkSelection(bookmark)
+							})
+						}
 					}
 				}
 			}
