@@ -27,7 +27,6 @@ class FileListTests: FileTests {
 	func testShowFileList() {
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.showFileList(bookmark: bookmark)
 
 			//Asserts
@@ -49,7 +48,6 @@ class FileListTests: FileTests {
 
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 			

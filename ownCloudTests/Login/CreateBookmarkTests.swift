@@ -284,9 +284,12 @@ class CreateBookmarkTests: XCTestCase {
 			EarlGrey.select(elementWithMatcher: grey_text("Certificate".localized)).perform(grey_tap())
 
 			//Assert
-			EarlGrey.waitForElement(withMatcher: grey_text("Review Connection".localized), label: "Review Connection".localized)
-			EarlGrey.select(elementWithMatcher: grey_text("Review Connection".localized)).assert(grey_sufficientlyVisible())
-			
+			EarlGrey.waitForElement(withMatcher: grey_text("Certificate Details".localized), label: "Certificate Details")
+			EarlGrey.select(elementWithMatcher: grey_text("Certificate Details".localized)).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("ok-button-certificate-details")).perform(grey_tap())
+
 			EarlGrey.select(elementWithMatcher: grey_text("Approve".localized)).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
 		} else {

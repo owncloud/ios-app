@@ -43,6 +43,8 @@ class FileTests: XCTestCase {
 			let query = MockOCQuery(path: "/")
 			let core = MockOCCore(query: query, bookmark: bookmark, issue: issue)
 
+			self.mockOCoreForBookmark(mockBookmark: bookmark, mockCore: core)
+
 			let rootViewController: MockClientRootViewController = MockClientRootViewController(core: core, query: query, bookmark: bookmark)
 
 			rootViewController.afterCoreStart {
@@ -60,20 +62,20 @@ class FileTests: XCTestCase {
 
 	func dismissFileList() {
 		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
-			appDelegate.serverListTableViewController?.navigationController?.popViewController(animated: false)
+			appDelegate.serverListTableViewController?.navigationController?.dismiss(animated: false, completion: nil)
 		}
 	}
 
 	// MARK: - Mocks
 
-	func mockOCoreForBookmark(mockBookmark: OCBookmark) {
-		let completionHandlerBlock : OCMRequestCoreForBookmark = { (bookmark, setupHandler, mockedBlock) in
-			let core = OCCore(bookmark: mockBookmark)
+	func mockOCoreForBookmark(mockBookmark: OCBookmark, mockCore: OCCore? = nil) {
+		let requestCoreBlock : OCMRequestCoreForBookmark = { (bookmark, setupHandler, completionHandler) in
+			let core = mockCore ?? OCCore(bookmark: mockBookmark)
 			setupHandler(core, nil)
-			mockedBlock(core, nil)
+			completionHandler(core, nil)
 		}
 
-		OCMockManager.shared.addMocking(blocks: [OCMockLocation.ocCoreManagerRequestCoreForBookmark: completionHandlerBlock])
+		OCMockManager.shared.addMocking(blocks: [OCMockLocation.ocCoreManagerRequestCoreForBookmark : requestCoreBlock])
 	}
 
 	func mockQueryPropfindResults(resourceName: String, basePath: String, state: OCQueryState) {

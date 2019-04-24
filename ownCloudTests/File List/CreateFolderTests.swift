@@ -24,7 +24,6 @@ class CreateFolderTests: FileTests {
 
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
@@ -34,6 +33,9 @@ class CreateFolderTests: FileTests {
 
 			//Asserts
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).assert(grey_sufficientlyVisible())
+
+			//Remove Mocks
+			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
@@ -53,7 +55,6 @@ class CreateFolderTests: FileTests {
 			let folderName = "New Folder"
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
@@ -81,6 +82,9 @@ class CreateFolderTests: FileTests {
 
 			GREYAssertTrue(isFolderCreated, reason: "Failed to create the folder")
 
+			//Remove Mocks
+			OCMockManager.shared.removeAllMockingBlocks()
+
 			//Reset status
 			dismissFileList()
 
@@ -99,7 +103,6 @@ class CreateFolderTests: FileTests {
 			let folderName = ""
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
@@ -117,6 +120,9 @@ class CreateFolderTests: FileTests {
 
 			//Assert
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).assert(grey_not(grey_enabled()))
+
+			//Remove Mocks
+			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
@@ -136,7 +142,6 @@ class CreateFolderTests: FileTests {
 			let folderName = "Valid Name"
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
@@ -154,6 +159,9 @@ class CreateFolderTests: FileTests {
 
 			//Assert
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).assert(grey_enabled())
+
+			//Remove Mocks
+			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
@@ -173,7 +181,6 @@ class CreateFolderTests: FileTests {
 			let folderName = "New/Folder"
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
@@ -193,6 +200,9 @@ class CreateFolderTests: FileTests {
 			//Assert
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("forbidden-characters-alert")).assert(grey_sufficientlyVisible())
 
+			//Remove Mocks
+			OCMockManager.shared.removeAllMockingBlocks()
+
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_text("OK".localized)).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
@@ -206,7 +216,6 @@ class CreateFolderTests: FileTests {
 	* PASSED if: Error is shown on the view
 	*/
 	func testCreateFolderWithExistingName() {
-
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 
 			let folderName = "New Folder"
@@ -214,7 +223,6 @@ class CreateFolderTests: FileTests {
 			let errorMessage = "Error message"
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 
 			let issue: OCIssue = OCIssue(forMultipleChoicesWithLocalizedTitle: errorTitle, localizedDescription: errorMessage, choices: [OCIssueChoice(type: .cancel, identifier: nil, label: "Cancel".localized, userInfo: nil, handler: nil)]) { (issue, decission) in
@@ -230,8 +238,12 @@ class CreateFolderTests: FileTests {
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).perform(grey_tap())
 
 			//Assert
+			EarlGrey.waitForElement(withMatcher: grey_text(errorTitle), label: errorTitle)
 			EarlGrey.select(elementWithMatcher: grey_text(errorTitle)).assert(grey_sufficientlyVisible())
 			EarlGrey.select(elementWithMatcher: grey_text(errorMessage)).assert(grey_sufficientlyVisible())
+
+			//Remove Mocks
+			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
