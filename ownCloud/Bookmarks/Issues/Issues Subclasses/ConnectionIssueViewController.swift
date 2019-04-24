@@ -110,15 +110,19 @@ class ConnectionIssueViewController: IssuesViewController {
 extension ConnectionIssueViewController {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if let issue = displayIssues?.displayIssues[indexPath.row], issue.type == OCIssueType.certificate {
-			OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: issue.certificate, withValidationCompletionHandler: { (certificateNodes) in
-				let certDetails: NSAttributedString = OCCertificateDetailsViewNode .attributedString(withCertificateDetails: certificateNodes)
+			let certificateViewController = CertificateViewController()
+			certificateViewController.modalPresentationStyle = .overCurrentContext
+
+			if let certificateNodes = OCCertificateDetailsViewNode.certificateDetailsViewNodes(for: issue.certificate, withValidationCompletionHandler: { (certificateNodes) in
+				let certDetails: NSAttributedString = OCCertificateDetailsViewNode.attributedString(withCertificateDetails: certificateNodes)
 
 				OnMainThread {
-					let issuesVC = CertificateViewController(localizedDescription: certDetails)
-					issuesVC.modalPresentationStyle = .overCurrentContext
-					self.present(issuesVC, animated: true, completion: nil)
+					certificateViewController.localizedDescription = certDetails
 				}
-			})
+			}) {
+				certificateViewController.localizedDescription = OCCertificateDetailsViewNode.attributedString(withCertificateDetails: certificateNodes)
+				self.present(certificateViewController, animated: true, completion: nil)
+			}
 		}
 	}
 }
