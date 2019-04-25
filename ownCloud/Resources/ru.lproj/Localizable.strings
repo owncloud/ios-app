@@ -233,3 +233,7 @@
 "%@ of %@" = "%@ из %@";
 "Invalid Page" = "Неверная страница";
 "The entered page number doesn't exist" = "Введённый номер страницы не существует";
+
+/* Photo upload settings */
+"Photo Upload" = "Загрузка фото";
+"Convert HEIC to JPEG" = "Конвертировать HEIC в JPEG";

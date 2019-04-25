@@ -253,3 +253,7 @@
 "%@ of %@" = "%@ von %@";
 "Invalid Page" = "Ungültige Seite";
 "The entered page number doesn't exist" = "Die eingegebene Seitennummer existiert nicht";
+
+/* Photo upload settings */
+"Photo Upload" = "Fotos hochladen";
+"Convert HEIC to JPEG" = "HEIC in JPEG konvertieren";
