@@ -96,6 +96,9 @@ class UploadPhotosAction: UploadBaseAction {
 	}
 
 	func upload(asset:PHAsset) {
+
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
+
 		let ressources = PHAssetResource.assetResources(for: asset)
 
 		if let ressource = ressources.first, let rootItem = context.items.first {
@@ -110,22 +113,45 @@ class UploadPhotosAction: UploadBaseAction {
 				progress.completedUnitCount = Int64(completed * 100)
 			}
 
-			let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
-
 			self.publish(progress: progress)
 
-			PHAssetResourceManager.default().writeData(for: ressource, toFile: localURL, options: options) { (error) in
+			func finishUpload(_ error:Error?, url:URL) {
 				self.unpublish(progress: progress)
-
 				if error == nil {
-					self.upload(itemURL: localURL, to: rootItem, name: filename, completionHandler: { (_) in
+					self.upload(itemURL: url, to: rootItem, name: url.lastPathComponent, completionHandler: { (_) in
 						// Delete the temporary asset file
-						try? FileManager.default.removeItem(at: localURL)
+						try? FileManager.default.removeItem(at: url)
 					})
 				} else {
 					progress.cancel()
 				}
 			}
+
+			if ressource.uniformTypeIdentifier == "public.heic" && userDefaults.convertHeic {
+				// Convert HEIC to JPEG using CoreImage APIs
+				var imageData = Data()
+				let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename).deletingPathExtension().appendingPathExtension("jpg")
+
+				PHAssetResourceManager.default().requestData(for: ressource, options: options, dataReceivedHandler: { (data) in
+					imageData.append(data)
+				}, completionHandler: { (error) in
+					if error == nil {
+						if let ciImage = CIImage(data: imageData) {
+							let jpegData = CIContext().jpegRepresentation(of: ciImage, colorSpace: CGColorSpaceCreateDeviceRGB())
+							try? jpegData?.write(to: localURL)
+						}
+					}
+					finishUpload(error, url:localURL)
+				})
+			} else {
+				// No conversion
+				let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
+
+				PHAssetResourceManager.default().writeData(for: ressource, toFile: localURL, options: options) { (error) in
+					finishUpload(error, url:localURL)
+				}
+			}
+
 		} else {
 			self.completed(with: NSError(ocError: .internal))
 		}
