@@ -794,24 +794,57 @@
 	}
 }
 
+#pragma mark - Incomplete/Compatibility actions
+- (void)trashItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
+{
+	NSError *error = nil;
+	OCItem *item;
+
+	/*
+		This File Provider does not actually support trashing items - and also indicates so via NSFileProviderItem.capabilities.
+
+		Regardless, iOS will call -trashItemWithIdentifier: instead of -deleteItemWithIdentifier: when a user chooses to replace an
+		existing file. And - if we return NSFeatureUnsupportedError - will make the replace action unusuable.
+
+		This File Provider therefore implements this method to work around this problem. As soon as iOS uses NSFileProviderItem.capabilities
+		and picks the correct action in that case, this implementation can and should be removed.
+	*/
+
+	FPLogCmdBegin(@"Trash", @"Start of trashItemWithIdentifier=%@", itemIdentifier);
+
+	if ((item = (OCItem *)[self itemForIdentifier:itemIdentifier error:&error]) != nil)
+	{
+		FPLogCmd(@"Deleting %@", item);
+
+		[self.core deleteItem:item requireMatch:YES resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+			FPLogCmd(@"Completed with error=%@", error);
+			completionHandler(nil, [error resolvedError]);
+		}];
+	}
+	else
+	{
+		FPLogCmd(@"Completed with item=%@ not found, error=%@", item, error);
+		completionHandler(nil, error);
+	}
+}
+
 #pragma mark - Unimplemented actions
 /*
 	"You must override all of the extension's methods (except the deprecated methods), even if your implementation is only an empty method."
 	- [Source: https://developer.apple.com/documentation/fileprovider/nsfileproviderextension?language=objc]
 */
 
-- (void)trashItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
-{
-	completionHandler(nil, [NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{}]);
-}
-
 - (void)untrashItemWithIdentifier:(NSFileProviderItemIdentifier)itemIdentifier toParentItemIdentifier:(NSFileProviderItemIdentifier)parentItemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
 {
+	FPLogCmdBegin(@"Untrash", @"Invocation of unimplemented untrashItemWithIdentifier=%@ toParentItemIdentifier=%@", itemIdentifier, parentItemIdentifier);
+
 	completionHandler(nil, [NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{}]);
 }
 
 - (void)setLastUsedDate:(NSDate *)lastUsedDate forItemIdentifier:(NSFileProviderItemIdentifier)itemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
 {
+	FPLogCmdBegin(@"SetLastUsedDate", @"Invocation of unimplemented setLastUsedDate=%@ forItemIdentifier=%@", lastUsedDate, itemIdentifier);
+
 	completionHandler(nil, [NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{}]);
 }
 
