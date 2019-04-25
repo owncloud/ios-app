@@ -247,7 +247,7 @@
 
 /* Preview */
 "Open file" = "Open file";
-"There is no network" = "There is no network";
+"Network unavailable" = "Network unavailable";
 "Error" = "Error";
 "Could not get the picture" = "Could not get the picture";
 "Downloading" = "Downloading";
