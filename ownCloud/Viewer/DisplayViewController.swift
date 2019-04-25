@@ -62,7 +62,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	var source: URL? {
 		didSet {
-			OnMainThread {
+			OnMainThread(inline: true) {
 				self.iconImageView.isHidden = true
 				self.hideItemMetadataUIElements()
 				self.renderSpecificView()
@@ -72,7 +72,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	private var state: DisplayViewState = .hasNetworkConnection {
 		didSet {
-			OnMainThread {
+			OnMainThread(inline: true) {
 				switch self.state {
 					case .downloading(let progress):
 						self.downloadProgress = progress
@@ -427,7 +427,13 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				self.stopQuery()
 				self.startQuery()
 
-				self.downloadItem(sender: nil)
+				if core?.localCopy(of: item) == nil {
+					self.downloadItem(sender: nil)
+				} else {
+					if let core = core, let file = item.file(with: core) {
+						self.source = file.url
+					}
+				}
 
 				if let parent = parent {
 					parent.navigationItem.title = item.name

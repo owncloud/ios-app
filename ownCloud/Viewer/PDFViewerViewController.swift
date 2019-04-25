@@ -150,6 +150,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
             setupConstraints()
 
+            self.view.layoutIfNeeded()
+
             pdfView.document = document
 
             pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
