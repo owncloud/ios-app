@@ -115,40 +115,34 @@ class UploadPhotosAction: UploadBaseAction {
 
 			self.publish(progress: progress)
 
-			func finishUpload(_ error:Error?, url:URL) {
-				self.unpublish(progress: progress)
-				if error == nil {
-					self.upload(itemURL: url, to: rootItem, name: url.lastPathComponent, completionHandler: { (_) in
-						// Delete the temporary asset file
-						try? FileManager.default.removeItem(at: url)
-					})
-				} else {
-					progress.cancel()
-				}
-			}
+			var localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
 
-			if ressource.uniformTypeIdentifier == "public.heic" && userDefaults.convertHeic {
-				// Convert HEIC to JPEG using CoreImage APIs
-				var imageData = Data()
-				let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename).deletingPathExtension().appendingPathExtension("jpg")
+			let contentInputOptions = PHContentEditingInputRequestOptions()
+			contentInputOptions.isNetworkAccessAllowed = true
+			asset.requestContentEditingInput(with: contentInputOptions) { (input, _) in
+				if let fullImage = CIImage(contentsOf: input!.fullSizeImageURL!) {
+					let storeAsHEIF = ressource.uniformTypeIdentifier == "public.heic" && !userDefaults.convertHeic
+					let colorSpace = CGColorSpaceCreateDeviceRGB()
 
-				PHAssetResourceManager.default().requestData(for: ressource, options: options, dataReceivedHandler: { (data) in
-					imageData.append(data)
-				}, completionHandler: { (error) in
-					if error == nil {
-						if let ciImage = CIImage(data: imageData) {
-							let jpegData = CIContext().jpegRepresentation(of: ciImage, colorSpace: CGColorSpaceCreateDeviceRGB())
-							try? jpegData?.write(to: localURL)
-						}
+					var imageData : Data?
+					if storeAsHEIF {
+						imageData = CIContext().heifRepresentation(of: fullImage, format: CIFormat.RGBA8, colorSpace: colorSpace)
+						print(fullImage.properties)
+					} else {
+						localURL = localURL.deletingPathExtension().appendingPathExtension("jpg")
+						imageData = CIContext().jpegRepresentation(of: fullImage, colorSpace: colorSpace)
 					}
-					finishUpload(error, url:localURL)
-				})
-			} else {
-				// No conversion
-				let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
-
-				PHAssetResourceManager.default().writeData(for: ressource, toFile: localURL, options: options) { (error) in
-					finishUpload(error, url:localURL)
+					do {
+						self.unpublish(progress: progress)
+						try imageData?.write(to: localURL)
+						self.upload(itemURL: localURL, to: rootItem, name: localURL.lastPathComponent, completionHandler: { (_) in
+							// Delete the temporary asset file
+							try? FileManager.default.removeItem(at: localURL)
+							self.completed()
+						})
+					} catch {
+						self.completed(with: NSError(ocError: .internal))
+					}
 				}
 			}
 
