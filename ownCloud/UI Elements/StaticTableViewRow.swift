@@ -107,7 +107,10 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.accessoryType = accessoryType
 		self.cell?.imageView?.image = image
-		self.cell?.imageView?.tintColor = self.cell?.textLabel?.textColor
+
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+				self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.labelColor
+			})
 
 		self.cell?.accessibilityIdentifier = identifier
 

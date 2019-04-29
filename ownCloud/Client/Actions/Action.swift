@@ -180,54 +180,55 @@ class Action : NSObject {
 
 				let row = StaticTableViewRow(rowWithAction: nil, title: "Searching Shares...".localized, alignment: .left, accessoryView: progressView, identifier: "share-searching")
 				self.updateSharingRow(sectionIdentifier: "share-section", rows: [row], tableViewController: tableViewController)
+
+				if context.core!.connection.capabilities?.sharingGroupSharing == 1 {
+					let query = context.core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
+						if sharesWithReshares.count > 0 {
+							OnMainThread {
+								let rows = self.sharingRow(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
+								self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
+								moreViewController.preferredContentSize = tableViewController.tableView.contentSize
+							}
+						}
+						_ = context.core!.sharesSharedWithMe(for: item, initialPopulationHandler: { (sharesWithMe) in
+							if sharesWithMe.count > 0 {
+								var shares : [OCShare] = []
+								shares.append(contentsOf: sharesWithMe)
+								shares.append(contentsOf: sharesWithReshares)
+
+								OnMainThread {
+									let rows = self.sharingRow(shares: shares, item: item, presentingController: moreViewController, context: context, byMe: false)
+									self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
+								}
+							} else if sharesWithReshares.count == 0 {
+								OnMainThread {
+									if let section = tableViewController.sectionForIdentifier("share-section") {
+										tableViewController.removeSection(section)
+										moreViewController.preferredContentSize = tableViewController.tableView.contentSize
+									}
+								}
+							}
+						})
+					})
+					query?.refreshInterval = 3
+					query?.changesAvailableNotificationHandler = { query in
+						let sharesWithReshares = query.queryResults
+						OnMainThread {
+							if sharesWithReshares.count > 0 {
+								let rows = self.sharingRow(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
+								self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
+							} else {
+								let shareRow = self.shareRow(item: item, presentingController: moreViewController, context: context)
+								self.updateSharingRow(sectionIdentifier: "share-section", rows: [shareRow], tableViewController: tableViewController)
+							}
+						}
+					}
+				}
 			} else if item.isShareable {
 				let shareRow = self.shareRow(item: item, presentingController: moreViewController, context: context)
 				tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: [shareRow]), at: 0, animated: true)
 			}
 
-			if context.core!.connection.capabilities?.sharingGroupSharing == 1 {
-				let query = context.core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
-					if sharesWithReshares.count > 0 {
-						OnMainThread {
-							let rows = self.sharingRow(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
-							self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
-							moreViewController.preferredContentSize = tableViewController.tableView.contentSize
-						}
-					}
-					_ = context.core!.sharesSharedWithMe(for: item, initialPopulationHandler: { (sharesWithMe) in
-						if sharesWithMe.count > 0 {
-							var shares : [OCShare] = []
-							shares.append(contentsOf: sharesWithMe)
-							shares.append(contentsOf: sharesWithReshares)
-
-							OnMainThread {
-								let rows = self.sharingRow(shares: shares, item: item, presentingController: moreViewController, context: context, byMe: false)
-								self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
-							}
-						} else if sharesWithReshares.count == 0 {
-							OnMainThread {
-								if let section = tableViewController.sectionForIdentifier("share-section") {
-									tableViewController.removeSection(section)
-									moreViewController.preferredContentSize = tableViewController.tableView.contentSize
-								}
-							}
-						}
-					})
-				})
-				query?.refreshInterval = 3
-				query?.changesAvailableNotificationHandler = { query in
-					let sharesWithReshares = query.queryResults
-					OnMainThread {
-						if sharesWithReshares.count > 0 {
-							let rows = self.sharingRow(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
-							self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
-						} else {
-							let shareRow = self.shareRow(item: item, presentingController: moreViewController, context: context)
-							self.updateSharingRow(sectionIdentifier: "share-section", rows: [shareRow], tableViewController: tableViewController)
-						}
-					}
-				}
-			}
 		}
 
 		let title = NSAttributedString(string: "Actions".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
@@ -415,17 +416,16 @@ class Action : NSObject {
 		}
 
 		let addGroupRow = StaticTableViewRow(buttonWithAction: { (_, _) in
-
 			presentingController.dismiss(animated: true)
 
-/*
-			let sharingViewController = SharingTableViewController(style: .grouped)
-			sharingViewController.core = context.core!
-			sharingViewController.item = item
-			let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
+			if let viewController = context.viewController {
+				let sharingViewController = SharingTableViewController(style: .grouped)
+				sharingViewController.core = context.core!
+				sharingViewController.item = item
+				let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 
-			presentingController.present(navigationController, animated: true, completion: nil)
-*/
+				viewController.present(navigationController, animated: true, completion: nil)
+			}
 		}, title: title, style: .plain, image: UIImage(named: "shared"), alignment: .left, identifier: "share-add-group")
 
 		return addGroupRow
