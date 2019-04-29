@@ -45,6 +45,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 	var actions : [Action]?
 
+	var shallShowEmptyFolderMessage = true
+
 	var queryProgressSummary : ProgressSummary? {
 		willSet {
 			if newValue != nil {
@@ -968,8 +970,10 @@ extension ClientQueryViewController : OCQueryDelegate {
 						if self.items.count == 0 {
 							if self.searchController?.searchBar.text != "" {
 								self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
-							} else {
+							} else if self.shallShowEmptyFolderMessage == true {
 								self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized, showSortBar : true)
+							} else {
+								self.message(show: false)
 							}
 						} else {
 							self.message(show: false)
