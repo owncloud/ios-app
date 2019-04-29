@@ -34,7 +34,7 @@ class CopyAction : Action {
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
-			completionHandler?(NSError(ocError: .insufficientParameters))
+			completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 

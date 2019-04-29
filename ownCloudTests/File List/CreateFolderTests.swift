@@ -13,30 +13,9 @@ import ownCloudMocking
 
 @testable import ownCloud
 
-class CreateFolderTests: XCTestCase {
+class CreateFolderTests: FileTests {
 
 	let hostSimulator: OCHostSimulator = OCHostSimulator()
-
-	override func setUp() {
-		super.setUp()
-	}
-
-	override func tearDown() {
-		super.tearDown()
-		OCMockManager.shared.removeAllMockingBlocks()
-	}
-
-	public typealias OCMRequestCoreForBookmarkCompletionHandler = @convention(block)
-		(_ core: OCCore, _ error: NSError?) -> Void
-
-	public typealias OCMRequestCoreForBookmarkSetupHandler = @convention(block)
-		(_ core: OCCore, _ error: NSError?) -> Void
-
-	public typealias OCMRequestCoreForBookmark = @convention(block)
-		(_ bookmark: OCBookmark, _ setup: OCMRequestCoreForBookmarkSetupHandler, _ completionHandler: OCMRequestCoreForBookmarkCompletionHandler) -> Void
-
-	public typealias OCMRequestChangeSetWithFlags = @convention(block)
-		(_ flags: OCQueryChangeSetRequestFlag, _ completionHandler: OCQueryChangeSetRequestCompletionHandler) -> Void
 
 	/*
 	* PASSED if: Create Folder view is shown
@@ -45,15 +24,18 @@ class CreateFolderTests: XCTestCase {
 
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
 
 			//Asserts
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).assert(grey_sufficientlyVisible())
+
+			//Remove Mocks
+			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
@@ -73,12 +55,12 @@ class CreateFolderTests: XCTestCase {
 			let folderName = "New Folder"
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
@@ -100,6 +82,9 @@ class CreateFolderTests: XCTestCase {
 
 			GREYAssertTrue(isFolderCreated, reason: "Failed to create the folder")
 
+			//Remove Mocks
+			OCMockManager.shared.removeAllMockingBlocks()
+
 			//Reset status
 			dismissFileList()
 
@@ -118,12 +103,12 @@ class CreateFolderTests: XCTestCase {
 			let folderName = ""
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
@@ -135,6 +120,9 @@ class CreateFolderTests: XCTestCase {
 
 			//Assert
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).assert(grey_not(grey_enabled()))
+
+			//Remove Mocks
+			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
@@ -154,12 +142,12 @@ class CreateFolderTests: XCTestCase {
 			let folderName = "Valid Name"
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
@@ -171,6 +159,9 @@ class CreateFolderTests: XCTestCase {
 
 			//Assert
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).assert(grey_enabled())
+
+			//Remove Mocks
+			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
@@ -190,12 +181,12 @@ class CreateFolderTests: XCTestCase {
 			let folderName = "New/Folder"
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
@@ -208,6 +199,9 @@ class CreateFolderTests: XCTestCase {
 
 			//Assert
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("forbidden-characters-alert")).assert(grey_sufficientlyVisible())
+
+			//Remove Mocks
+			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_text("OK".localized)).perform(grey_tap())
@@ -222,7 +216,6 @@ class CreateFolderTests: XCTestCase {
 	* PASSED if: Error is shown on the view
 	*/
 	func testCreateFolderWithExistingName() {
-
 		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
 
 			let folderName = "New Folder"
@@ -230,7 +223,6 @@ class CreateFolderTests: XCTestCase {
 			let errorMessage = "Error message"
 
 			//Mocks
-			self.mockOCoreForBookmark(mockBookmark: bookmark)
 			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 
 			let issue: OCIssue = OCIssue(forMultipleChoicesWithLocalizedTitle: errorTitle, localizedDescription: errorMessage, choices: [OCIssueChoice(type: .cancel, identifier: nil, label: "Cancel".localized, userInfo: nil, handler: nil)]) { (issue, decission) in
@@ -239,14 +231,19 @@ class CreateFolderTests: XCTestCase {
 			self.showFileList(bookmark: bookmark, issue: issue)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("sort-bar.leftButton")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
 
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).perform(grey_tap())
 
 			//Assert
+			EarlGrey.waitForElement(withMatcher: grey_text(errorTitle), label: errorTitle)
 			EarlGrey.select(elementWithMatcher: grey_text(errorTitle)).assert(grey_sufficientlyVisible())
 			EarlGrey.select(elementWithMatcher: grey_text(errorMessage)).assert(grey_sufficientlyVisible())
+
+			//Remove Mocks
+			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
@@ -255,70 +252,5 @@ class CreateFolderTests: XCTestCase {
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
-	}
-
-	func showFileList(bookmark: OCBookmark, issue: OCIssue? = nil) {
-		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
-
-			let query = MockOCQuery(path: "/")
-			let core = MockOCCore(query: query, bookmark: bookmark, issue: issue)
-
-			let rootViewController: MockClientRootViewController = MockClientRootViewController(core: core, query: query, bookmark: bookmark)
-
-			appDelegate.serverListTableViewController?.navigationController?.navigationBar.prefersLargeTitles = false
-			appDelegate.serverListTableViewController?.navigationController?.navigationItem.largeTitleDisplayMode = .never
-			appDelegate.serverListTableViewController?.navigationController?.pushViewController(viewController: rootViewController, animated: true, completion: {
-				appDelegate.serverListTableViewController?.navigationController?.setNavigationBarHidden(true, animated: false)
-			})
-		}
-	}
-
-	func dismissFileList() {
-		if let appDelegate: AppDelegate = UIApplication.shared.delegate as? AppDelegate {
-			appDelegate.serverListTableViewController?.navigationController?.popViewController(animated: false)
-		}
-	}
-
-	// MARK: - Mocks
-	func mockOCoreForBookmark(mockBookmark: OCBookmark) {
-		let completionHandlerBlock : OCMRequestCoreForBookmark = { (bookmark, setupHandler, mockedBlock) in
-			let core = OCCore(bookmark: mockBookmark)
-			setupHandler(core, nil)
-			mockedBlock(core, nil)
-		}
-
-		OCMockManager.shared.addMocking(blocks: [OCMockLocation.ocCoreManagerRequestCoreForBookmark: completionHandlerBlock])
-	}
-
-	func mockQueryPropfindResults(resourceName: String, basePath: String, state: OCQueryState) {
-
-		let completionHandlerBlock : OCMRequestChangeSetWithFlags = { (flags, mockedBlock) in
-
-			var items: [OCItem]?
-
-			let bundle = Bundle.main
-			if let path: String = bundle.path(forResource: resourceName, ofType: "xml") {
-
-				if let data = NSData(contentsOf: URL(fileURLWithPath: path)) {
-					if let parser = OCXMLParser(data: data as Data) {
-						parser.options = ["basePath": basePath]
-						parser.addObjectCreationClasses([OCItem.self])
-						if parser.parse() {
-							items = parser.parsedObjects as? [OCItem]
-						}
-					}
-				}
-			}
-
-			items?.removeFirst()
-
-			let querySet: OCQueryChangeSet = OCQueryChangeSet(queryResult: items, relativeTo: nil)
-			let query: OCQuery = OCQuery()
-			query.state = state
-
-			mockedBlock(query, querySet)
-		}
-
-		OCMockManager.shared.addMocking(blocks: [OCMockLocation.ocQueryRequestChangeSetWithFlags: completionHandlerBlock])
 	}
 }

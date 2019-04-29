@@ -18,7 +18,14 @@
 
 import Foundation
 
-func OnMainThread(async: Bool = true, after: TimeInterval? = nil, _ block: @escaping () -> Void) {
+func OnMainThread(async: Bool = true, after: TimeInterval? = nil, inline: Bool = false, _ block: @escaping () -> Void) {
+	if inline {
+		if Thread.isMainThread {
+			block()
+			return
+		}
+	}
+
 	if let after = after {
 		DispatchQueue.main.asyncAfter(deadline: .now() + after, execute: block)
 	} else {

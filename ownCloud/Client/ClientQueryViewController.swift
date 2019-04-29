@@ -19,16 +19,29 @@
 import UIKit
 import ownCloudSDK
 import MobileCoreServices
-import Photos
 
 typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
+extension OCQueryState {
+	var isFinal: Bool {
+		switch self {
+		case .idle, .targetRemoved, .contentsFromCache, .stopped:
+			return true
+		default:
+			return false
+		}
+	}
+}
+
 class ClientQueryViewController: UITableViewController, Themeable, UIDropInteractionDelegate {
+
 	weak var core : OCCore?
 	var query : OCQuery
 
 	var items : [OCItem] = []
+
+	var selectedItemIds = Set<OCLocalID>()
 
 	var actions : [Action]?
 
@@ -48,6 +61,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	var progressSummarizer : ProgressSummarizer?
 	var queryRefreshControl: UIRefreshControl?
 
+	var queryRefreshRateLimiter : OCRateLimiter = OCRateLimiter(minimumTime: 0.2)
+
 	let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 	var deleteMultipleBarButtonItem: UIBarButtonItem?
 	var moveMultipleBarButtonItem: UIBarButtonItem?
@@ -56,12 +71,28 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	var openMultipleBarButtonItem: UIBarButtonItem?
 
 	var selectBarButton: UIBarButtonItem?
-	var uploadBarButton: UIBarButtonItem?
+	var plusBarButton: UIBarButtonItem?
 	var selectDeselectAllButtonItem: UIBarButtonItem?
 	var exitMultipleSelectionBarButtonItem: UIBarButtonItem?
 
 	var quotaLabel = UILabel()
 	var quotaObservation : NSKeyValueObservation?
+
+	private var _actionProgressHandler : ActionProgressHandler?
+
+	func makeActionProgressHandler() -> ActionProgressHandler {
+		if _actionProgressHandler == nil {
+			_actionProgressHandler = { [weak self] (progress, publish) in
+				if publish {
+					self?.progressSummarizer?.startTracking(progress: progress)
+				} else {
+					self?.progressSummarizer?.stopTracking(progress: progress)
+				}
+			}
+		}
+
+		return _actionProgressHandler!
+	}
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -72,6 +103,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		super.init(style: .plain)
 
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
+
+		query.sortComparator = self.sortMethod.comparator()
 
 		query.delegate = self
 
@@ -176,7 +209,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
 		sortBar?.delegate = self
-		sortBar?.updateSortMethod()
+		sortBar?.sortMethod = self.sortMethod
 
 		tableView.tableHeaderView = sortBar
 
@@ -184,6 +217,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		queryRefreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
 		self.tableView.insertSubview(queryRefreshControl!, at: 0)
 		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
+		tableView.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
 
 		Theme.shared.register(client: self, applyImmediately: true)
 
@@ -194,9 +228,11 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		self.tableView.estimatedRowHeight = estimatedTableRowHeight
 
-		uploadBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(uploadsBarButtonPressed))
+		plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusBarButtonPressed))
+		plusBarButton?.accessibilityIdentifier = "client.file-add"
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
-		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
+		selectBarButton?.isEnabled = false
+		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
 
 		selectDeselectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
 		exitMultipleSelectionBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(exitMultipleSelection))
@@ -241,9 +277,6 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		super.viewWillAppear(animated)
 
 		updateQueryProgressSummary()
-
-		sortBar?.sortMethod = self.sortMethod
-		query.sortComparator = self.sortMethod.comparator()
 
 		viewControllerVisible = true
 
@@ -290,21 +323,20 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 				summary.message = "Please wait…".localized
 		}
 
-		switch query.state {
-			case .idle:
+		if let refreshControl = self.queryRefreshControl {
+			if query.state == .idle {
 				OnMainThread {
-					if !self.queryRefreshControl!.isRefreshing {
-						self.queryRefreshControl?.beginRefreshing()
+					if refreshControl.isRefreshing {
+						refreshControl.beginRefreshing()
 					}
 				}
-
-			case .contentsFromCache, .stopped:
+			} else if query.state.isFinal {
 				OnMainThread {
-					self.tableView.refreshControl = nil
+					if refreshControl.isRefreshing {
+						refreshControl.endRefreshing()
+					}
 				}
-
-			default:
-			break
+			}
 		}
 
 		self.queryProgressSummary = summary
@@ -434,9 +466,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .tableRow)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 		let actions = Action.sortedApplicableActions(for: actionContext)
-		actions.forEach({$0.progressHandler = { [weak self] progress in
-			self?.progressSummarizer?.startTracking(progress: progress)
-			}
+		actions.forEach({
+			$0.progressHandler = makeActionProgressHandler()
 		})
 
 		let contextualActions = actions.compactMap({$0.provideContextualAction()})
@@ -488,7 +519,6 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	func tableView(_: UITableView, dragSessionDidEnd: UIDragSession) {
 		if !self.tableView.isEditing {
 			removeToolbar()
-			self.actions = nil
 		}
 	}
 
@@ -507,11 +537,9 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		if let action = self.actions?.first(where: {type(of:$0).identifier == identifier}) {
 			// Configure progress handler
-			action.progressHandler = { [weak self] progress in
-				self?.progressSummarizer?.startTracking(progress: progress)
-			}
+			action.progressHandler = makeActionProgressHandler()
 
-			action.completionHandler = { _ in
+			action.completionHandler = { (_, _) in
 			}
 
 			// Execute the action
@@ -692,6 +720,19 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			if viewControllerVisible {
 				tableReloadNeeded = false
 			}
+
+			// Restore previously selected items
+			if tableView.isEditing && selectedItemIds.count > 0 {
+				var selectedItems = [OCItem]()
+				for row in 0..<self.items.count {
+					if let itemLocalID = self.items[row].localID as OCLocalID? {
+						if selectedItemIds.contains(itemLocalID) {
+							selectedItems.append(self.items[row])
+							self.tableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -713,37 +754,6 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		}
 	}
 
-	func upload(asset:PHAsset) {
-		let ressources = PHAssetResource.assetResources(for: asset)
-		if let ressource = ressources.first {
-			let filename = ressource.originalFilename
-
-			let progress = Progress(totalUnitCount: 100)
-			progress.localizedDescription = String(format: "Importing '%@' from photo library".localized, filename)
-
-			let options = PHAssetResourceRequestOptions()
-			options.isNetworkAccessAllowed = true
-			options.progressHandler = { (completed:Double) in
-				progress.completedUnitCount = Int64(completed * 100)
-			}
-
-			let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
-
-			self.progressSummarizer?.startTracking(progress: progress)
-			PHAssetResourceManager.default().writeData(for: ressource, toFile: localURL, options: options) { (error) in
-				self.progressSummarizer?.stopTracking(progress: progress)
-				if error == nil {
-					self.upload(itemURL: localURL, name: filename, completionHandler: { (_) in
-						// Delete the temporary asset file
-						try? FileManager.default.removeItem(at: localURL)
-					})
-				} else {
-					progress.cancel()
-				}
-			}
-		}
-	}
-
 	// MARK: - Toolbar actions handling multiple selected items
 	fileprivate func updateSelectDeselectAllButton() {
 		var selectedCount = 0
@@ -762,53 +772,69 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		}
 	}
 
-	fileprivate func updateMultiSelectionUI() {
+	fileprivate func updateActions(for selectedItems:[OCItem]) {
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
 
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
 
-		updateSelectDeselectAllButton()
+		if selectedItems.count > 0 {
+			if let core = self.core {
+				// Get possible associated actions
+				let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
+				let actionContext = ActionContext(viewController: self, core: core, items: selectedItems, location: actionsLocation)
 
-		// Do we have selected items?
-		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
-			if selectedIndexPaths.count > 0 {
+				self.actions = Action.sortedApplicableActions(for: actionContext)
 
-				if let core = self.core {
-					// Get array of OCItems from selected table view index paths
-					var selectedItems = [OCItem]()
-					for indexPath in selectedIndexPaths {
-						selectedItems.append(itemAtIndexPath(indexPath))
-					}
-
-					// Get possible associated actions
-					let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-					let actionContext = ActionContext(viewController: self, core: core, items: selectedItems, location: actionsLocation)
-
-					self.actions = Action.sortedApplicableActions(for: actionContext)
-
-					// Enable / disable tool-bar items depending on action availability
-					for item in toolbarItems {
-						if self.actions?.contains(where: {type(of:$0).identifier == item.actionIdentifier}) ?? false {
-							item.isEnabled = true
-						} else {
-							item.isEnabled = false
-						}
+				// Enable / disable tool-bar items depending on action availability
+				for item in toolbarItems {
+					if self.actions?.contains(where: {type(of:$0).identifier == item.actionIdentifier}) ?? false {
+						item.isEnabled = true
+					} else {
+						item.isEnabled = false
 					}
 				}
 			}
+
 		} else {
 			self.actions = nil
 			for item in toolbarItems {
 				item.isEnabled = false
 			}
 		}
+
+	}
+
+	fileprivate func updateMultiSelectionUI() {
+
+		updateSelectDeselectAllButton()
+
+		var selectedItems = [OCItem]()
+
+		// Do we have selected items?
+		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
+			if selectedIndexPaths.count > 0 {
+
+				// Get array of OCItems from selected table view index paths
+				selectedItemIds.removeAll()
+				for indexPath in selectedIndexPaths {
+					let item = itemAtIndexPath(indexPath)
+					selectedItems.append(item)
+					if let localID = item.localID as OCLocalID? {
+						selectedItemIds.insert(localID)
+					}
+				}
+			}
+		}
+
+		updateActions(for: selectedItems)
 	}
 
 	func leaveMultipleSelection() {
 		self.tableView.setEditing(false, animated: true)
 		selectBarButton?.title = "Select".localized
-		self.navigationItem.rightBarButtonItems = [selectBarButton!, uploadBarButton!]
+		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
 		self.navigationItem.leftBarButtonItem = nil
+		selectedItemIds.removeAll()
 		removeToolbar()
 	}
 
@@ -829,12 +855,10 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		// Find associated action
 		if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
 			// Configure progress handler
-			action.progressHandler = { [weak self] progress in
-				self?.progressSummarizer?.startTracking(progress: progress)
-			}
+			action.progressHandler = makeActionProgressHandler()
 
-			action.completionHandler = { [weak self] _ in
-				DispatchQueue.main.async {
+			action.completionHandler = { [weak self] (_, _) in
+				OnMainThread {
 					self?.leaveMultipleSelection()
 				}
 			}
@@ -882,71 +906,28 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		updateMultiSelectionUI()
 	}
 
-	@objc func uploadsBarButtonPressed(_ sender: UIBarButtonItem) {
+	@objc func plusBarButtonPressed(_ sender: UIBarButtonItem) {
 
 		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-		let photoLibrary = UIAlertAction(title: "Upload from your photo library".localized, style: .default, handler: { (_) in
+		// Actions for plusButton
+		if let core = self.core, let rootItem = query.rootItem {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .plusButton)
+			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
 
-			func presentImageGalleryPicker() {
+			let actions = Action.sortedApplicableActions(for: actionContext)
 
-				let photoAlbumViewController = PhotoAlbumTableViewController()
-				photoAlbumViewController.selectionCallback = { (assets) in
-					for asset in assets {
-						self.upload(asset: asset)
-					}
-				}
-				let navigationController = ThemeNavigationController(rootViewController: photoAlbumViewController)
+			for action in actions {
+				action.progressHandler = makeActionProgressHandler()
 
-				OnMainThread {
-					self.present(navigationController, animated: true)
+				if let controllerAction = action.provideAlertAction() {
+					controller.addAction(controllerAction)
 				}
 			}
-
-			let permisson = PHPhotoLibrary.authorizationStatus()
-			switch permisson {
-
-			case .authorized:
-				presentImageGalleryPicker()
-			case .notDetermined:
-				PHPhotoLibrary.requestAuthorization({ newStatus in
-					if newStatus == .authorized {
-						presentImageGalleryPicker()
-					}
-				})
-
-			default:
-				PHPhotoLibrary.requestAuthorization({ newStatus in
-
-					if newStatus == .denied {
-						let alert = UIAlertController(title: "Missing permissions".localized, message: "This permission is needed to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
-
-						let settingAction = UIAlertAction(title: "Settings".localized, style: .default, handler: { _ in
-							UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
-						})
-						let notNowAction = UIAlertAction(title: "Not now".localized, style: .cancel)
-
-						alert.addAction(settingAction)
-						alert.addAction(notNowAction)
-
-						OnMainThread {
-							self.present(alert, animated: true)
-						}
-					}
-				})
-			}
-		})
-
-		let uploadFileAction = UIAlertAction(title: "Upload file".localized, style: .default) { _ in
-			let documentPickerViewController = UIDocumentPickerViewController(documentTypes: [kUTTypeData as String], in: .import)
-			documentPickerViewController.delegate = self
-			documentPickerViewController.allowsMultipleSelection = true
-			self.present(documentPickerViewController, animated: true)
 		}
 
+		// Cancel button
 		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
-		controller.addAction(photoLibrary)
-		controller.addAction(uploadFileAction)
 		controller.addAction(cancelAction)
 
 		if let popoverController = controller.popoverPresentationController {
@@ -963,51 +944,53 @@ extension ClientQueryViewController : OCQueryDelegate {
 	}
 
 	func queryHasChangesAvailable(_ query: OCQuery) {
-		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
-			OnMainThread {
-
-				switch query.state {
-				case .idle, .targetRemoved, .contentsFromCache, .stopped:
-					if self.queryRefreshControl!.isRefreshing {
-						self.queryRefreshControl?.endRefreshing()
-					}
-				default: break
-				}
-
-				let previousItemCount = self.items.count
-
-				self.items = changeSet?.queryResult ?? []
-
-				switch query.state {
-				case .contentsFromCache, .idle, .waitingForServerReply:
-					if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
-						break
-					}
-
-					if self.items.count == 0 {
-						if self.searchController?.searchBar.text != "" {
-							self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
-						} else {
-							self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized, showSortBar : true)
+		queryRefreshRateLimiter.runRateLimitedBlock {
+			query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
+				OnMainThread {
+					if query.state.isFinal {
+						OnMainThread {
+							if self.queryRefreshControl!.isRefreshing {
+								self.queryRefreshControl?.endRefreshing()
+							}
 						}
-					} else {
+					}
+
+					let previousItemCount = self.items.count
+
+					self.items = changeSet?.queryResult ?? []
+
+					switch query.state {
+					case .contentsFromCache, .idle, .waitingForServerReply:
+						if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
+							break
+						}
+
+						if self.items.count == 0 {
+							if self.searchController?.searchBar.text != "" {
+								self.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
+							} else {
+								self.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized, showSortBar : true)
+							}
+						} else {
+							self.message(show: false)
+						}
+
+						self.selectBarButton?.isEnabled = (self.items.count == 0) ? false : true
+						self.reloadTableData()
+
+					case .targetRemoved:
+						self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
+						self.reloadTableData()
+
+					default:
 						self.message(show: false)
 					}
 
-					self.reloadTableData()
-
-				case .targetRemoved:
-					self.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
-					self.reloadTableData()
-
-				default:
-					self.message(show: false)
-				}
-
-				if let rootItem = self.query.rootItem {
-					if query.queryPath != "/" {
-						let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
-						self.updateFooter(text: totalSize)
+					if let rootItem = self.query.rootItem {
+						if query.queryPath != "/" {
+							let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
+							self.updateFooter(text: totalSize)
+						}
 					}
 				}
 			}
@@ -1017,26 +1000,6 @@ extension ClientQueryViewController : OCQueryDelegate {
 
 // MARK: - SortBar Delegate
 extension ClientQueryViewController : SortBarDelegate {
-	func sortBar(_ sortBar: SortBar, leftButtonPressed: UIButton) {
-		guard let core = self.core, let rootItem = query.rootItem else { return }
-
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .sortBar)
-		let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
-
-		let actions = Action.sortedApplicableActions(for: actionContext)
-
-		let createFolderAction = actions.first
-		createFolderAction?.progressHandler = { [weak self] progess in
-			self?.progressSummarizer?.startTracking(progress: progess)
-		}
-
-		actions.first?.run()
-	}
-
-	func sortBar(_ sortBar: SortBar, rightButtonPressed: UIButton) {
-		print("LOG ---> right button pressed")
-	}
-
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
 		query.sortComparator = sortMethod.comparator()
@@ -1087,9 +1050,7 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
-		let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: { [weak self] progress in
-			self?.progressSummarizer?.startTracking(progress: progress)
-		})
+		let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: makeActionProgressHandler())
 
 		self.present(asCard: moreViewController, animated: true)
 	}
@@ -1231,16 +1192,6 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		}
 
 		return nil
-	}
-}
-
-// MARK: - UIDocumentPickerDelegate
-extension ClientQueryViewController: UIDocumentPickerDelegate {
-
-	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-		for url in urls {
-			self.upload(itemURL: url, name: url.lastPathComponent)
-		}
 	}
 }
 

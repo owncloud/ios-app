@@ -60,7 +60,7 @@
 "This folder no longer exists." = "Tento adresář již neexistuje";
 "Everything up-to-date." = "Vše je aktuální.";
 "Please wait…" = "Čekejte prosím...";
-"Sorted by %@" = "Seřazeno podle '%@'";
+"Sort by %@" = "Seřazeno podle '%@'";
 "Sort by" = "Seřadit podle";
 
 "name (A-Z)" = "Jméno (A-Z)";

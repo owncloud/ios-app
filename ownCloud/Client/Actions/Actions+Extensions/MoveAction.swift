@@ -63,6 +63,6 @@ class MoveAction : Action {
 		})
 
 		let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)
-		viewController.navigationController?.present(pickerNavigationController, animated: true)
+		viewController.present(pickerNavigationController, animated: true)
 	}
 }

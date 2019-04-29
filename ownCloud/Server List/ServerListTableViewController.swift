@@ -105,7 +105,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		updateNoServerMessageVisibility()
 
-		let helpBarButtonItem = UIBarButtonItem(title: "Feedback".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(help))
+		let helpBarButtonItem = UIBarButtonItem(title: "Feedback", style: UIBarButtonItem.Style.plain, target: self, action: #selector(help))
 		helpBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
 
 		let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
@@ -227,6 +227,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		let viewController : BookmarkViewController = BookmarkViewController(bookmark)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
 
+		// Prevent any in-progress connection from being shown
+		resetPreviousBookmarkSelection()
+
 		// Exit editing mode (unfortunately, self.isEditing = false will not do the trick as it leaves the left bar button unchanged as "Done")
 		if self.tableView.isEditing,
 			let target = self.navigationItem.leftBarButtonItem?.target,
@@ -240,11 +243,17 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	var themeCounter : Int = 0
 
 	@IBAction func help() {
+		// Prevent any in-progress connection from being shown
+		resetPreviousBookmarkSelection()
+
 		VendorServices.shared.sendFeedback(from: self)
 	}
 
 	@IBAction func settings() {
 		let viewController : SettingsViewController = SettingsViewController(style: .grouped)
+
+		// Prevent any in-progress connection from being shown
+		resetPreviousBookmarkSelection()
 
 		self.navigationController?.pushViewController(viewController, animated: true)
 	}
@@ -262,12 +271,33 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	// MARK: - Table view delegate
+	var lastSelectedBookmark : OCBookmark?
+	var lastSelectedBookmarkOpenedBlock : (() -> Void)?
+
+	func setLastSelectedBookmark(_ bookmark: OCBookmark, openedBlock: (() -> Void)?) {
+		resetPreviousBookmarkSelection()
+
+		lastSelectedBookmark = bookmark
+		lastSelectedBookmarkOpenedBlock = openedBlock
+	}
+
+	func resetPreviousBookmarkSelection(_ bookmark: OCBookmark? = nil) {
+		if (bookmark == nil) || ((bookmark != nil) && (bookmark?.uuid == lastSelectedBookmark?.uuid)) {
+			if lastSelectedBookmark != nil, lastSelectedBookmarkOpenedBlock != nil {
+				lastSelectedBookmarkOpenedBlock?()
+				lastSelectedBookmarkOpenedBlock = nil
+
+				lastSelectedBookmark = nil
+			}
+		}
+	}
+
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 			if lockedBookmarks.contains(bookmark) {
 				let alertController = UIAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName as NSString) as String,
-														message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
-														preferredStyle: .alert)
+									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
+									preferredStyle: .alert)
 
 				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
 					// There was an error erasing the vault => re-add bookmark to give user another chance to delete its contents
@@ -285,11 +315,40 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			} else {
 				let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 
-				self.navigationController?.navigationBar.prefersLargeTitles = false
-				self.navigationController?.navigationItem.largeTitleDisplayMode = .never
-				self.navigationController?.pushViewController(viewController: clientRootViewController, animated: true, completion: {
-                    self.navigationController?.setNavigationBarHidden(true, animated: false)
-                })
+				let bookmarkRow = self.tableView.cellForRow(at: indexPath)
+				let activityIndicator = UIActivityIndicatorView(style: .white)
+
+				var bookmarkRowAccessoryView : UIView?
+
+				if bookmarkRow != nil {
+					bookmarkRowAccessoryView = bookmarkRow?.accessoryView
+					bookmarkRow?.accessoryView = activityIndicator
+
+					activityIndicator.startAnimating()
+				}
+
+				self.setLastSelectedBookmark(bookmark, openedBlock: {
+					activityIndicator.stopAnimating()
+					bookmarkRow?.accessoryView = bookmarkRowAccessoryView
+				})
+
+				clientRootViewController.afterCoreStart {
+					// Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
+					if self.lastSelectedBookmark?.uuid == bookmark.uuid {
+						// Set up custom push transition for presentation
+						if let navigationController = self.navigationController {
+							let transitionDelegate = PushTransitionDelegate()
+
+							clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
+							clientRootViewController.transitioningDelegate = transitionDelegate
+							clientRootViewController.modalPresentationStyle = .custom
+
+							navigationController.present(clientRootViewController, animated: true, completion: {
+								self.resetPreviousBookmarkSelection(bookmark)
+							})
+						}
+					}
+				}
 			}
 		}
 	}

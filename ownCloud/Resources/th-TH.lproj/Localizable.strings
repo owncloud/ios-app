@@ -63,7 +63,7 @@
 "This folder no longer exists." = "โฟลเดอร์นี้ไม่มีอยู่แล้ว";
 "Everything up-to-date." = "ทุกอย่างใหม่ล่าสุดแล้ว";
 "Please wait…" = "โปรดรอ…";
-"Sorted by %@" = "จัดเรียงโดย %@";
+"Sort by %@" = "จัดเรียงโดย %@";
 "Sort by" = "เรียงตาม";
 
 "name (A-Z)" = "ชื่อ (A-Z)";
