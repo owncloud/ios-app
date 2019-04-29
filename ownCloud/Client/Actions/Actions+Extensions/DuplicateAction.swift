@@ -25,6 +25,7 @@ class DuplicateAction : Action, OCQueryDelegate {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Duplicate".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
+	override class var image : UIImage? { return UIImage(named: "duplicate-file") }
 	var query : OCQuery?
 	let localizedCopy = "copy".localized
 	var remainingItems : [OCItem] = []

@@ -23,6 +23,7 @@ class OpenInAction: Action {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Open in".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .toolbar] }
+	override class var image : UIImage? { return UIImage(named: "open-in") }
 
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.contains(where: {$0.type == .collection}) {

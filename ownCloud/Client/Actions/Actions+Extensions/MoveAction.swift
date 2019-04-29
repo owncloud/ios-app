@@ -23,6 +23,7 @@ class MoveAction : Action {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Move".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
+	override class var image : UIImage? { return UIImage(named: "folder") }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {

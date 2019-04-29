@@ -63,6 +63,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	var quotaLabel = UILabel()
 	var quotaObservation : NSKeyValueObservation?
 	var messageView : MessageView?
+	private let thumbnailSize = CGSize(width: 30.0, height: 30.0)
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -802,6 +803,9 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 				})
 			}
 		})
+		let photoImage = Theme.shared.image(for: "image", size: thumbnailSize)!.withRenderingMode(.alwaysTemplate)
+		photoLibrary.setValue(photoImage, forKey: "image")
+		photoLibrary.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
 
 		let uploadFileAction = UIAlertAction(title: "Upload file".localized, style: .default) { _ in
 			let documentPickerViewController = UIDocumentPickerViewController(documentTypes: [kUTTypeData as String], in: .import)
@@ -809,6 +813,9 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			documentPickerViewController.allowsMultipleSelection = true
 			self.present(documentPickerViewController, animated: true)
 		}
+		let fileImage = Theme.shared.image(for: "file", size: thumbnailSize)!.withRenderingMode(.alwaysTemplate)
+		uploadFileAction.setValue(fileImage, forKey: "image")
+		uploadFileAction.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
 
 		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
 		controller.addAction(photoLibrary)

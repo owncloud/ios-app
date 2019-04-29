@@ -65,12 +65,14 @@ class ActionExtension: OCExtension {
 	// MARK: - Custom Instance Properties.
 	var name: String
 	var category: ActionCategory
+	var image: UIImage
 
 	// MARK: - Init & Deinit
-	init(name: String, category: ActionCategory = .normal, identifier: OCExtensionIdentifier, locations: [OCExtensionLocationIdentifier]?, features: [String : Any]?, objectProvider: OCExtensionObjectProvider?, customMatcher: OCExtensionCustomContextMatcher?) {
+	init(name: String, category: ActionCategory = .normal, image: UIImage, identifier: OCExtensionIdentifier, locations: [OCExtensionLocationIdentifier]?, features: [String : Any]?, objectProvider: OCExtensionObjectProvider?, customMatcher: OCExtensionCustomContextMatcher?) {
 
 		self.name = name
 		self.category = category
+		self.image = image
 
 		super.init(identifier: identifier, type: .action, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher)
 	}
@@ -106,6 +108,7 @@ class Action : NSObject {
 	class var name : String? { return nil }
 	class var locations : [OCExtensionLocationIdentifier]? { return nil }
 	class var features : [String : Any]? { return nil }
+	class var image : UIImage? { return UIImage(named: "open-in") }
 
 	// MARK: - Extension creation
 	class var actionExtension : ActionExtension {
@@ -134,7 +137,7 @@ class Action : NSObject {
 			// Additional filtering (f.ex. via OCClassSettings, Settings) goes here
 		}
 
-		return ActionExtension(name: name!, category: category!, identifier: identifier!, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher)
+		return ActionExtension(name: name!, category: category!, image: image!, identifier: identifier!, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher)
 	}
 
 	// MARK: - Extension matching
@@ -164,14 +167,13 @@ class Action : NSObject {
 	// MARK: - Provide Card view controller
 	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ((Progress) -> Void)? = nil, completionHandler: ((Error?) -> Void)? = nil) -> UIViewController {
 
+
+
 		let tableViewController = MoreStaticTableViewController(style: .plain)
 		let header = MoreViewHeader(for: item, with: context.core!)
 		let moreViewController = MoreViewController(item: item, core: context.core!, header: header, viewController: tableViewController)
 
 		if context.core!.connectionStatus == .online, context.core!.connection.capabilities?.sharingAPIEnabled == 1 {
-
-			let shareTitle = NSAttributedString(string: "Sharing".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
-
 			if item.isSharedWithUser || item.isShared() {
 				let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 				progressView.startAnimating()
@@ -180,7 +182,7 @@ class Action : NSObject {
 				self.updateSharingRow(sectionIdentifier: "share-section", rows: [row], tableViewController: tableViewController)
 			} else if item.isShareable {
 				let shareRow = self.shareRow(item: item, presentingController: moreViewController, context: context)
-				tableViewController.insertSection(MoreStaticTableViewSection(headerAttributedTitle: shareTitle, identifier: "share-section", rows: [shareRow]), at: 0, animated: true)
+				tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: [shareRow]), at: 0, animated: true)
 			}
 
 			if context.core!.connection.capabilities?.sharingGroupSharing == 1 {
@@ -189,6 +191,7 @@ class Action : NSObject {
 						OnMainThread {
 							let rows = self.sharingRow(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
 							self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
+							moreViewController.preferredContentSize = tableViewController.tableView.contentSize
 						}
 					}
 					_ = context.core!.sharesSharedWithMe(for: item, initialPopulationHandler: { (sharesWithMe) in
@@ -200,6 +203,13 @@ class Action : NSObject {
 							OnMainThread {
 								let rows = self.sharingRow(shares: shares, item: item, presentingController: moreViewController, context: context, byMe: false)
 								self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
+							}
+						} else if sharesWithReshares.count == 0 {
+							OnMainThread {
+								if let section = tableViewController.sectionForIdentifier("share-section") {
+									tableViewController.removeSection(section)
+									moreViewController.preferredContentSize = tableViewController.tableView.contentSize
+								}
 							}
 						}
 					})
@@ -293,7 +303,7 @@ class Action : NSObject {
 		return StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
 			self.willRun()
 			self.run()
-		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, identifier: actionExtension.identifier.rawValue)
+		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, image: actionExtension.image, alignment: .left, identifier: actionExtension.identifier.rawValue)
 	}
 
 	func provideContextualAction() -> UIContextualAction? {
@@ -329,6 +339,8 @@ class Action : NSObject {
 
 			if shares.count > 0 {
 				var userTitle = ""
+				var linkTitle = ""
+				var hasLinkSharing = false
 
 				if byMe {
 					let privateShares = shares.filter { (OCShare) -> Bool in
@@ -348,13 +360,11 @@ class Action : NSObject {
 					}
 					if linkSharesCounter > 0 {
 						var title = "Public Link".localized
-						if userTitle.count > 0 {
-							userTitle.append(", ")
-						}
 						if linkSharesCounter > 1 {
 							title = "Public Links".localized
 						}
-						userTitle.append("\(linkSharesCounter) \(title)")
+						linkTitle.append("\(linkSharesCounter) \(title)")
+						hasLinkSharing = true
 					}
 				} else {
 					for share in shares {
@@ -365,17 +375,25 @@ class Action : NSObject {
 					}
 				}
 				let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
+					presentingController.dismiss(animated: true)
 
-					let sharingViewController = SharingTableViewController(style: .grouped)
-					sharingViewController.shares = shares
-					sharingViewController.core = context.core!
-					sharingViewController.item = item
-					let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
-
-					presentingController.present(navigationController, animated: true, completion: nil)
-
-				}, title: userTitle, subtitle: nil, alignment: .left, accessoryType: .disclosureIndicator)
+					if let viewController = context.viewController {
+						let sharingViewController = SharingTableViewController(style: .grouped)
+						sharingViewController.shares = shares
+						sharingViewController.core = context.core!
+						sharingViewController.item = item
+						let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
+						viewController.present(navigationController, animated: true, completion: nil)
+					}
+				}, title: userTitle, subtitle: nil, image: UIImage(named: "shared"), alignment: .left, accessoryType: .disclosureIndicator)
 				shareRows.append(addGroupRow)
+
+				if hasLinkSharing {
+					let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
+
+					}, title: linkTitle, subtitle: nil, image: UIImage(named: "link"), alignment: .left, accessoryType: .disclosureIndicator)
+					shareRows.append(addGroupRow)
+				}
 			}
 
 		return shareRows
@@ -386,9 +404,7 @@ class Action : NSObject {
 			if let section = tableViewController.sectionForIdentifier(sectionIdentifier) {
 				tableViewController.removeSection(section)
 			}
-
-			let shareTitle = NSAttributedString(string: "Sharing".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
-			tableViewController.insertSection(MoreStaticTableViewSection(headerAttributedTitle: shareTitle, identifier: "share-section", rows: rows), at: 0, animated: false)
+			tableViewController.insertSection(MoreStaticTableViewSection(identifier: "share-section", rows: rows), at: 0, animated: false)
 		}
 	}
 
@@ -400,14 +416,17 @@ class Action : NSObject {
 
 		let addGroupRow = StaticTableViewRow(buttonWithAction: { (_, _) in
 
+			presentingController.dismiss(animated: true)
+
+/*
 			let sharingViewController = SharingTableViewController(style: .grouped)
 			sharingViewController.core = context.core!
 			sharingViewController.item = item
 			let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 
 			presentingController.present(navigationController, animated: true, completion: nil)
-
-		}, title: title, style: .plain, identifier: "share-add-group")
+*/
+		}, title: title, style: .plain, image: UIImage(named: "shared"), alignment: .left, identifier: "share-add-group")
 
 		return addGroupRow
 	}
