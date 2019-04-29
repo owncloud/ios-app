@@ -54,8 +54,6 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
 
 	init(bookmark inBookmark: OCBookmark) {
-		let openProgress = Progress()
-
 		bookmark = inBookmark
 
 		super.init(nibName: nil, bundle: nil)
@@ -80,30 +78,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 			}
 		}
 
-		openProgress.localizedDescription = "Connecting…".localized
-		progressSummarizer?.startTracking(progress: openProgress)
-
-		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
-			self.core = core
-			core?.delegate = self
-		}, completionHandler: { (core, error) in
-			if error == nil {
-				self.coreReady()
-			}
-
-			openProgress.localizedDescription = "Connected.".localized
-			openProgress.completedUnitCount = 1
-			openProgress.totalUnitCount = 1
-
-			// Start showing connection status with a delay of 1 second, so "Offline" doesn't flash briefly
-			OnMainThread(after: 1.0) { [weak self] () in
-				self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
-					self?.updateConnectionStatusSummary()
-				})
-			}
-
-			self.progressSummarizer?.stopTracking(progress: openProgress)
-		})
+		self.delegate = self
 	}
 
 	func updateConnectionStatusSummary() {
@@ -149,6 +124,31 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 	}
+
+	// MARK: - Startup
+	func afterCoreStart(_ completionHandler: @escaping (() -> Void)) {
+		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
+			self.core = core
+			core?.delegate = self
+		}, completionHandler: { (core, error) in
+			if error == nil {
+				self.coreReady()
+			}
+
+			// Start showing connection status with a delay of 1 second, so "Offline" doesn't flash briefly
+			OnMainThread(after: 1.0) { [weak self] () in
+				self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
+					self?.updateConnectionStatusSummary()
+				})
+			}
+
+			OnMainThread {
+				completionHandler()
+			}
+		})
+	}
+
+	var pushTransition : PushTransitionDelegate?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -204,23 +204,37 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	}
 
 	func closeClient(completion: (() -> Void)? = nil) {
-		self.navigationController?.setNavigationBarHidden(false, animated: false)
-		self.navigationController?.popViewController(animated: true)
+		self.dismiss(animated: true, completion: {
+			completion?()
+		})
 	}
 
 	func coreReady() {
 		OnMainThread {
-			let query = OCQuery(forPath: "/")
-//			let query = OCQuery(condition: OCQueryCondition.require([
-//				.where(.name, contains: "i"),
-//				.where(.type, isEqualTo: OCItemType.file.rawValue),
-//				.where(.size, isGreaterThan: 220000)
-//			]).sorted(by: .size, ascending: true), inputFilter:nil)
+			if let core = self.core {
+				let query = OCQuery(forPath: "/")
+//				let query = OCQuery(condition: OCQueryCondition.require([
+//					.where(.name, contains: "i"),
+//					.where(.type, isEqualTo: OCItemType.file.rawValue),
+//					.where(.size, isGreaterThan: 220000)
+//				]).sorted(by: .size, ascending: true), inputFilter:nil)
 
-			let queryViewController = ClientQueryViewController(core: self.core!, query: query)
-			// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
-			self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
-			self.activityViewController?.core = self.core!
+				let queryViewController = ClientQueryViewController(core: core, query: query)
+				// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
+				self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
+
+				let emptyViewController = self.emptyViewController
+				self.filesNavigationController?.popLastHandler = { [weak self] (viewController) in
+					if viewController == emptyViewController {
+						OnMainThread {
+							self?.closeClient()
+						}
+					}
+
+					return (viewController != emptyViewController)
+				}
+				self.activityViewController?.core = core
+			}
 		}
 	}
 
@@ -267,18 +281,17 @@ extension ClientRootViewController : OCCoreDelegate {
 						}))
 
 						alertController.addAction(UIAlertAction(title: "Edit".localized, style: .default, handler: { (_) in
-							let presentingViewController = self.presentingViewController
 							let editBookmark = self.bookmark
 
 							queueCompletionHandler()
 
-							self.closeClient(completion: {
-								if presentingViewController != nil,
-								   let serverListNavigationController = presentingViewController as? UINavigationController,
-								   let serverListTableViewController = serverListNavigationController.topViewController as? ServerListTableViewController {
-									serverListTableViewController.showBookmarkUI(edit: editBookmark)
-								}
-							})
+							if let navigationController = self.navigationController {
+								self.closeClient(completion: {
+									if let serverListTableViewController = navigationController.topViewController as? ServerListTableViewController {
+										serverListTableViewController.showBookmarkUI(edit: editBookmark)
+									}
+								})
+							}
 						}))
 
 						self.present(alertController, animated: true, completion: nil)
@@ -331,5 +344,22 @@ extension ClientRootViewController : OCCoreDelegate {
 				queueCompletionHandler()
 			}
 		}
+	}
+}
+
+extension ClientRootViewController: UITabBarControllerDelegate {
+	func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+		if tabBarController.selectedViewController == viewController {
+			if let navigationController = viewController as? ThemeNavigationController {
+				let navigationStack = navigationController.viewControllers
+
+				if navigationStack.count > 1 {
+					navigationController.popToViewController(navigationStack[1], animated: true)
+					return false
+				}
+			}
+		}
+
+		return true
 	}
 }

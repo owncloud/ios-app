@@ -54,9 +54,7 @@ enum ThemeItemState {
 
 extension NSObject {
 	func applyThemeCollection(_ collection: ThemeCollection, itemStyle: ThemeItemStyle = .defaultForItem, itemState: ThemeItemState = .normal) {
-		if self.isKind(of: ThemeButton.self) {
-			let themeButton : ThemeButton = (self as? ThemeButton)!
-
+		if let themeButton = self as? ThemeButton {
 			switch itemStyle {
 				case .approval:
 					themeButton.themeColorCollection = collection.approvalColors
@@ -74,18 +72,16 @@ extension NSObject {
 				default:
 					themeButton.themeColorCollection = collection.lightBrandColors.filledColorPairCollection
 			}
+		} else if let button = self as? UIButton {
+			button.tintColor = collection.navigationBarColors.tintColor
 		}
 
-		if self.isKind(of: UINavigationController.self) {
-			let navigationController : UINavigationController = (self as? UINavigationController)!
-
+		if let navigationController = self as? UINavigationController {
 			navigationController.navigationBar.applyThemeCollection(collection, itemStyle: itemStyle)
 			//navigationController.view.backgroundColor = collection.tableBackgroundColor
 		}
 
-		if self.isKind(of: UINavigationBar.self) {
-			let navigationBar : UINavigationBar = (self as? UINavigationBar)!
-
+		if let navigationBar = self as? UINavigationBar {
 			navigationBar.barTintColor = collection.navigationBarColors.backgroundColor
 			navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
 			navigationBar.tintColor = collection.navigationBarColors.tintColor
@@ -94,42 +90,33 @@ extension NSObject {
 			navigationBar.isTranslucent = false
 		}
 
-		if self.isKind(of: UIToolbar.self) {
-			let toolbar : UIToolbar = (self as? UIToolbar)!
-
+		if let toolbar = self as? UIToolbar {
 			toolbar.barTintColor = collection.toolbarColors.backgroundColor
 			toolbar.tintColor = collection.toolbarColors.tintColor
 		}
 
-		if self.isKind(of: UITabBar.self) {
-			let tabBar : UITabBar = (self as? UITabBar)!
-
+		if let tabBar = self as? UITabBar {
 			tabBar.barTintColor = collection.toolbarColors.backgroundColor
 			tabBar.tintColor = collection.toolbarColors.tintColor
 		}
 
-		if self.isKind(of: UITableView.self) {
-			let tableView : UITableView = (self as? UITableView)!
-
+		if let tableView = self as? UITableView {
 			tableView.backgroundColor = collection.tableBackgroundColor
 			tableView.separatorColor = collection.tableSeparatorColor
 		}
 
-        if self.isKind(of: UICollectionView.self) {
-            let collectionView : UICollectionView = (self as? UICollectionView)!
+		if let collectionView = self as? UICollectionView {
 
-            collectionView.backgroundColor = collection.tableBackgroundColor
-        }
+			collectionView.backgroundColor = collection.tableBackgroundColor
+		}
 
-		if self.isKind(of: UISearchBar.self) {
-			let searchBar : UISearchBar = (self as? UISearchBar)!
+		if let searchBar = self as? UISearchBar {
 
 			searchBar.tintColor = collection.tintColor
 			searchBar.barStyle = collection.barStyle
 		}
 
-		if self.isKind(of: UILabel.self) {
-			let label : UILabel = (self as? UILabel)!
+		if let label = self as? UILabel {
 			var normalColor : UIColor = collection.tableRowColors.labelColor
 			var highlightColor : UIColor = collection.tableRowHighlightColors.labelColor
 			let disabledColor : UIColor = collection.tableRowColors.secondaryLabelColor
@@ -171,13 +158,11 @@ extension NSObject {
 			}
 		}
 
-		if self.isKind(of: UITextField.self) {
-			let textField : UITextField = (self as? UITextField)!
+		if let textField = self as? UITextField {
 			textField.textColor = collection.tableRowColors.labelColor
 		}
 
-		if self.isKind(of: UITableViewCell.self) {
-			let cell : UITableViewCell = (self as? UITableViewCell)!
+		if let cell = self as? UITableViewCell {
 			cell.backgroundColor = collection.tableRowColors.backgroundColor
 
 			if cell.selectionStyle != .none {
@@ -193,15 +178,12 @@ extension NSObject {
 			}
 		}
 
-		if self.isKind(of: UIProgressView.self) {
-			let progressView = (self as? UIProgressView)!
-
+		if let progressView = self as? UIProgressView {
 			progressView.tintColor = collection.tintColor
 			progressView.trackTintColor = collection.tableSeparatorColor
 		}
 
-		if self.isKind(of: UISegmentedControl.self) {
-			let segmentedControl = (self as? UISegmentedControl)!
+		if let segmentedControl = self as? UISegmentedControl {
 			segmentedControl.tintColor = collection.navigationBarColors.tintColor
 		}
 	}

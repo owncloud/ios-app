@@ -19,6 +19,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 
 #import "OCItem+FileProviderItem.h"
+#import "NSError+MessageResolution.h"
 
 static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 
@@ -78,7 +79,6 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 				((permissions & OCItemPermissionWritable) 	? NSFileProviderItemCapabilitiesAllowsWriting     : 0) |
 				((permissions & OCItemPermissionMove)     	? NSFileProviderItemCapabilitiesAllowsReparenting : 0) |
 				((permissions & OCItemPermissionRename)   	? NSFileProviderItemCapabilitiesAllowsRenaming    : 0) |
-				((permissions & OCItemPermissionDelete) 	? NSFileProviderItemCapabilitiesAllowsTrashing    : 0) |
 				((permissions & OCItemPermissionDelete) 	? NSFileProviderItemCapabilitiesAllowsDeleting    : 0)
 			);
 		break;
@@ -237,7 +237,7 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 				sOCItemUploadingErrors = [NSMutableDictionary new];
 			}
 
-			sOCItemUploadingErrors[self.localID] = uploadingError;
+			sOCItemUploadingErrors[self.localID] = [uploadingError resolvedError];
 		}
 	}
 }

@@ -57,6 +57,7 @@ class PDFTocTableViewController: UITableViewController, Themeable {
         self.tableView.rowHeight = tocTableViewCellHeight
         tableView.backgroundView = activityIndicatorView
         self.tableView.separatorStyle = .none
+		self.tableView.contentInsetAdjustmentBehavior = .automatic
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -78,6 +79,14 @@ class PDFTocTableViewController: UITableViewController, Themeable {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
+
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		// These lines mitigates the issue with incorrect layout of child view controller
+		if let parentView = self.parent?.view {
+			self.view.frame = parentView.frame
+		}
+	}
 
     // MARK: - Themeable support
 
