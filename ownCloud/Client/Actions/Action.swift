@@ -166,9 +166,6 @@ class Action : NSObject {
 
 	// MARK: - Provide Card view controller
 	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ((Progress) -> Void)? = nil, completionHandler: ((Error?) -> Void)? = nil) -> UIViewController {
-
-
-
 		let tableViewController = MoreStaticTableViewController(style: .plain)
 		let header = MoreViewHeader(for: item, with: context.core!)
 		let moreViewController = MoreViewController(item: item, core: context.core!, header: header, viewController: tableViewController)
@@ -304,7 +301,7 @@ class Action : NSObject {
 		return StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
 			self.willRun()
 			self.run()
-		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, image: actionExtension.image, alignment: .left, identifier: actionExtension.identifier.rawValue)
+		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, alignment: .left, identifier: actionExtension.identifier.rawValue, accessoryView: UIImageView(image: actionExtension.image))
 	}
 
 	func provideContextualAction() -> UIContextualAction? {
@@ -386,13 +383,13 @@ class Action : NSObject {
 						let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 						viewController.present(navigationController, animated: true, completion: nil)
 					}
-				}, title: userTitle, subtitle: nil, image: UIImage(named: "shared"), alignment: .left, accessoryType: .disclosureIndicator)
+				}, title: userTitle, subtitle: nil, alignment: .left, accessoryType: .disclosureIndicator)
 				shareRows.append(addGroupRow)
 
 				if hasLinkSharing {
 					let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
 
-					}, title: linkTitle, subtitle: nil, image: UIImage(named: "link"), alignment: .left, accessoryType: .disclosureIndicator)
+					}, title: linkTitle, subtitle: nil, alignment: .left, accessoryType: .disclosureIndicator)
 					shareRows.append(addGroupRow)
 				}
 			}
@@ -426,7 +423,7 @@ class Action : NSObject {
 
 				viewController.present(navigationController, animated: true, completion: nil)
 			}
-		}, title: title, style: .plain, image: UIImage(named: "shared"), alignment: .left, identifier: "share-add-group")
+		}, title: title, style: .plain, alignment: .left, identifier: "share-add-group", accessoryView: UIImageView(image: UIImage(named: "shared")))
 
 		return addGroupRow
 	}

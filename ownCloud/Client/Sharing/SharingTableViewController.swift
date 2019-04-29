@@ -74,7 +74,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 		self.navigationItem.title = "Sharing".localized
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
 
-		let query = core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
+		let shareQuery = core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
 			if sharesWithReshares.count > 0 {
 				self.shares = sharesWithReshares
 				self.populateShares()
@@ -91,8 +91,8 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 			})
 		})
 
-		query?.refreshInterval = 2
-		query?.changesAvailableNotificationHandler = { query in
+		shareQuery?.refreshInterval = 2
+		shareQuery?.changesAvailableNotificationHandler = { query in
 			let sharesWithReshares = query.queryResults
 			self.shares = sharesWithReshares
 			self.removeShareSections()

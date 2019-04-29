@@ -90,7 +90,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		super.init()
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil, accessoryView: UIView? = nil) {
 		self.init()
 
 		self.identifier = identifier
@@ -107,9 +107,13 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.accessoryType = accessoryType
 		self.cell?.imageView?.image = image
+		if accessoryView != nil {
+			self.cell?.accessoryView = accessoryView
+		}
 
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
-				self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.labelColor
+			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.labelColor
+			self?.cell?.accessoryView?.tintColor = themeCollection.tableRowColors.labelColor
 			})
 
 		self.cell?.accessibilityIdentifier = identifier
@@ -441,7 +445,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	// MARK: - Buttons
 
-	convenience init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = StaticTableViewRowButtonStyle.proceed, image: UIImage? = nil, alignment: NSTextAlignment = NSTextAlignment.center, identifier : String? = nil) {
+	convenience init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = StaticTableViewRowButtonStyle.proceed, image: UIImage? = nil, alignment: NSTextAlignment = NSTextAlignment.center, identifier : String? = nil, accessoryView: UIView? = nil) {
 
 		self.init()
 
@@ -451,6 +455,9 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.imageView?.image = image
+		if accessoryView != nil {
+			self.cell?.accessoryView = accessoryView
+		}
 
 		self.cell?.accessibilityIdentifier = identifier
 
@@ -484,6 +491,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 			self?.cell?.textLabel?.textColor = textColor
 			self?.cell?.imageView?.tintColor = textColor
+			self?.cell?.accessoryView?.tintColor = textColor
 
 			if selectedTextColor != nil {
 
