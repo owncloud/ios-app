@@ -34,7 +34,19 @@ class CertificateManagementViewController: StaticTableViewController {
 			let uacSection = StaticTableViewSection(headerTitle: "User-approved certificates".localized)
 
 			for certificate in userAcceptedCertificates {
-				let approvalDate = "Approved".localized + " " + ((certificate.userAcceptedDate==nil) ? " \("undated".localized)" : DateFormatter.localizedString(from: certificate.userAcceptedDate!, dateStyle: .medium, timeStyle: .short))
+				var shortReason = "Approved".localized
+
+				if let userAcceptedReason = certificate.userAcceptedReason {
+					switch userAcceptedReason {
+						case .autoAccepted:
+							shortReason = "Auto-approved".localized
+
+						case .userAccepted: break
+						default: break
+					}
+				}
+
+				let approvalDate = shortReason + " " + ((certificate.userAcceptedDate==nil) ? " \("undated".localized)" : DateFormatter.localizedString(from: certificate.userAcceptedDate!, dateStyle: .medium, timeStyle: .short))
 				let certificateRow = CertificateManagementRow(subtitleRowWithAction: { (row, _) in
 					if let certificateDetailsViewController = ThemeCertificateViewController(certificate: certificate) {
 						row.viewController?.navigationController?.pushViewController(certificateDetailsViewController, animated: true)

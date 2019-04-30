@@ -29,6 +29,7 @@ disabled_rules:
     - line_length
     - type_name
     - vertical_parameter_alignment
+    - function_body_length
 custom_rules:
   empty_line_after_guard_statement:
     included: ".*\\.swift"

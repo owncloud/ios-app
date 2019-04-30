@@ -89,7 +89,7 @@ class ClientActivityViewController: UITableViewController, Themeable {
 		self.tableView.register(ClientActivityCell.self, forCellReuseIdentifier: "activity-cell")
 		self.tableView.rowHeight = UITableView.automaticDimension
 		self.tableView.estimatedRowHeight = 80
-		self.tableView.allowsSelectionDuringEditing = true
+		self.tableView.allowsSelection = false
 
 		Theme.shared.register(client: self, applyImmediately: true)
 	}

@@ -1,8 +1,8 @@
 If you want to start help developing ownCloud please follow the [contribution guidelines][0] and observe these instructions:
 
 
-NOTE: To compile the code you need Xcode 9, iOS11, cocoa pods and swiftlint.
-  
+NOTE: To compile the code you need Xcode 10.2, iOS11, cocoa pods and swiftlint.
+
 ### 1. Fork and download ios-app/master repository:
 
 * Navigate to https://github.com/owncloud/ios-app, click fork.
@@ -46,7 +46,7 @@ NOTE: You must use the same "extension" on the certificates of the extensions (o
 * Create 4 Development Profiles. One for each App Id.
 
 ### 5. Create pull request:
-  
+
 NOTE: You must sign the [Contributor Agreement][1] or contribute your code under the [MIT license][2] before your changes can be accepted! See the [iOS license exception][3] for testing the ownCloud iOS app on Apple hardware.
 
 * Remove your own App Id from the project and set again the ownCloud ones:
