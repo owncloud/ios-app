@@ -99,55 +99,61 @@ class UploadPhotosAction: UploadBaseAction {
 
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
-		let ressources = PHAssetResource.assetResources(for: asset)
+		guard let rootItem = context.items.first else { return }
 
-		if let ressource = ressources.first, let rootItem = context.items.first {
-			let filename = ressource.originalFilename
+		// Prepare progress object for importing full size asset from photo library
+		let progress = Progress(totalUnitCount: 100)
+		progress.localizedDescription = "Importing asset from photo library".localized
+		self.publish(progress: progress)
 
-			let progress = Progress(totalUnitCount: 100)
-			progress.localizedDescription = String(format: "Importing '%@' from photo library".localized, filename)
+		// Setup import options, allow download asset from network if necessary
+		let contentInputOptions = PHContentEditingInputRequestOptions()
+		contentInputOptions.isNetworkAccessAllowed = true
+		contentInputOptions.progressHandler = { (percentage:Double, _) in
+			progress.completedUnitCount = Int64(percentage * 100)
+		}
 
-			let options = PHAssetResourceRequestOptions()
-			options.isNetworkAccessAllowed = true
-			options.progressHandler = { (completed:Double) in
-				progress.completedUnitCount = Int64(completed * 100)
-			}
+		// Import full size asset
+		asset.requestContentEditingInput(with: contentInputOptions) { (input, _) in
+			self.unpublish(progress: progress)
 
-			self.publish(progress: progress)
-
-			var localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(filename)
-
-			let contentInputOptions = PHContentEditingInputRequestOptions()
-			contentInputOptions.isNetworkAccessAllowed = true
-			asset.requestContentEditingInput(with: contentInputOptions) { (input, _) in
-				if let fullImage = CIImage(contentsOf: input!.fullSizeImageURL!) {
-					let storeAsHEIF = ressource.uniformTypeIdentifier == "public.heic" && !userDefaults.convertHeic
+			if let input = input {
+				if let fullImage = CIImage(contentsOf: input.fullSizeImageURL!) {
+					let storeAsHEIF = input.uniformTypeIdentifier == "public.heic" && !userDefaults.convertHeic
 					let colorSpace = CGColorSpaceCreateDeviceRGB()
 
-					var imageData : Data?
-					if storeAsHEIF {
-						imageData = CIContext().heifRepresentation(of: fullImage, format: CIFormat.RGBA8, colorSpace: colorSpace)
-						print(fullImage.properties)
-					} else {
-						localURL = localURL.deletingPathExtension().appendingPathExtension("jpg")
-						imageData = CIContext().jpegRepresentation(of: fullImage, colorSpace: colorSpace)
-					}
-					do {
-						self.unpublish(progress: progress)
-						try imageData?.write(to: localURL)
-						self.upload(itemURL: localURL, to: rootItem, name: localURL.lastPathComponent, completionHandler: { (_) in
-							// Delete the temporary asset file
-							try? FileManager.default.removeItem(at: localURL)
-							self.completed()
-						})
-					} catch {
-						self.completed(with: NSError(ocError: .internal))
-					}
-				}
-			}
+					if let fileName = input.fullSizeImageURL?.lastPathComponent {
+						var localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
 
-		} else {
-			self.completed(with: NSError(ocError: .internal))
+						// Store image to disk on a background queue
+						DispatchQueue.global(qos: .background).async {
+							var imageData : Data?
+							if storeAsHEIF {
+								imageData = CIContext().heifRepresentation(of: fullImage, format: CIFormat.RGBA8, colorSpace: colorSpace)
+								print(fullImage.properties)
+							} else {
+								localURL = localURL.deletingPathExtension().appendingPathExtension("jpg")
+								imageData = CIContext().jpegRepresentation(of: fullImage, colorSpace: colorSpace)
+							}
+							do {
+								try imageData?.write(to: localURL)
+								self.upload(itemURL: localURL, to: rootItem, name: localURL.lastPathComponent, completionHandler: { (_) in
+									// Delete the temporary asset file
+									try? FileManager.default.removeItem(at: localURL)
+									self.completed()
+								})
+
+							} catch {
+								self.completed(with: NSError(ocError: .internal))
+							}
+						}
+					}
+				} else {
+					self.completed(with: NSError(ocError: .internal))
+				}
+			} else {
+				self.completed(with: NSError(ocError: .internal))
+			}
 		}
 	}
 }
