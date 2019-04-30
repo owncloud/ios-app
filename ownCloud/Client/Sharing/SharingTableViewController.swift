@@ -119,23 +119,16 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 					}
 					return false
 				}
-
-				var canEdit = false
-				var accessoryType : UITableViewCell.AccessoryType = .none
-				if core?.connection.loggedInUser?.userName == share.owner?.userName || core?.connection.loggedInUser?.userName == share.itemOwner?.userName {
-					canEdit = true
-					accessoryType = .disclosureIndicator
-				}
-				if canEdit {
+				if canEdit(share: share) {
 					shareRows.append( StaticTableViewRow(rowWithAction: { (_, _) in
 						let editSharingViewController = SharingEditUserGroupsTableViewController(style: .grouped)
 						editSharingViewController.share = share
 						editSharingViewController.reshares = resharedUsers
 						editSharingViewController.core = self.core
 						self.navigationController?.pushViewController(editSharingViewController, animated: true)
-					}, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: accessoryType) )
+					}, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: .disclosureIndicator) )
 				} else {
-					shareRows.append( StaticTableViewRow(rowWithAction: nil, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: accessoryType) )
+					shareRows.append( StaticTableViewRow(rowWithAction: nil, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: .none) )
 				}
 			}
 			let sectionType = "share-section-\(String(type.rawValue))"
@@ -189,6 +182,14 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 				self.searchController?.searchBar.becomeFirstResponder()
 			}
 		}
+	}
+
+	func canEdit(share: OCShare) -> Bool {
+		if core?.connection.loggedInUser?.userName == share.owner?.userName || core?.connection.loggedInUser?.userName == share.itemOwner?.userName {
+			return true
+		}
+
+		return false
 	}
 
 	// MARK: - UISearchResultsUpdating Delegate
@@ -275,38 +276,42 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 	}
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		return [
-			UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, indexPath) in
-				let share = self.shares[indexPath.row]
-				var presentationStyle: UIAlertController.Style = .actionSheet
-				if UIDevice.current.isIpad() {
-					presentationStyle = .alert
-				}
+		let share = self.shares[indexPath.row]
+		if self.canEdit(share: share) {
+			return [
+				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, _) in
+					var presentationStyle: UIAlertController.Style = .actionSheet
+					if UIDevice.current.isIpad() {
+						presentationStyle = .alert
+					}
 
-				let alertController = UIAlertController(title: "Delete Recipient".localized,
-														message: nil,
-														preferredStyle: presentationStyle)
-				alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
+					let alertController = UIAlertController(title: "Delete Recipient".localized,
+															message: nil,
+															preferredStyle: presentationStyle)
+					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
-				alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
-					if let core = self.core {
-						core.delete(share, completionHandler: { (error) in
-							OnMainThread {
-								if error == nil {
-									self.navigationController?.popViewController(animated: true)
-								} else {
-									if let shareError = error {
-										let alertController = UIAlertController(with: "Delete Recipient failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-										self.present(alertController, animated: true)
+					alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
+						if let core = self.core {
+							core.delete(share, completionHandler: { (error) in
+								OnMainThread {
+									if error == nil {
+										self.navigationController?.popViewController(animated: true)
+									} else {
+										if let shareError = error {
+											let alertController = UIAlertController(with: "Delete Recipient failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+											self.present(alertController, animated: true)
+										}
 									}
 								}
-							}
-						})
-					}
-				}))
+							})
+						}
+					}))
 
-				self.present(alertController, animated: true, completion: nil)
-			})
-		]
+					self.present(alertController, animated: true, completion: nil)
+				})
+			]
+		}
+
+		return []
 	}
 }
