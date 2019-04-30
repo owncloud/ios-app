@@ -101,7 +101,7 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 		section.add(toogleGroupWithArrayOfLabelValueDictionaries: permissions, toggleAction: { (row, _) in
 			guard let selected = row.value as? Bool else { return }
 			if let core = self.core {
-				core.connection.update(share, afterPerformingChanges: { (share) in
+				core.update(share, afterPerformingChanges: {(share) in
 					if let rowIndex = row.index {
 						guard permissionValues.indices.contains(rowIndex) else { return }
 						let permissionValue = permissionValues[rowIndex]
@@ -112,17 +112,18 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 							share.permissions.remove(permissionValue)
 						}
 					}
-				}, resultTarget: OCEventTarget(ephermalEventHandlerBlock: { (event, _) in
-					if event.error == nil {
-						guard let changedShare = event.result as? OCShare else { return }
+				}, completionHandler: { (error, share) in
+					if error == nil {
+						guard let changedShare = share else { return }
 						self.share?.permissions = changedShare.permissions
 					} else {
-						let alertController = UIAlertController(with: "Setting permission failed".localized, message: event.description, okLabel: "OK".localized, action: nil)
-						self.present(alertController, animated: true)
+						if let shareError = error {
+							let alertController = UIAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+							self.present(alertController, animated: true)
+						}
 					}
-				}, userInfo: nil, ephermalUserInfo: nil))
+				})
 			}
-
 		}, subtitles: subtitles, groupIdentifier: "preferences-section", selectedValue:true)
 		self.insertSection(section, at: 0, animated: false)
 	}
@@ -151,16 +152,18 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 
 				row.cell?.accessoryView = progressView
 				if let core = self.core, let share = self.share {
-					core.connection.delete(share, resultTarget: OCEventTarget(ephermalEventHandlerBlock: { (event, _) in
+					core.delete(share, completionHandler: { (error) in
 						OnMainThread {
-							if event.error == nil {
+							if error == nil {
 								self.navigationController?.popViewController(animated: true)
 							} else {
-								let alertController = UIAlertController(with: "Delete Recipient failed".localized, message: event.description, okLabel: "OK".localized, action: nil)
-								self.present(alertController, animated: true)
+								if let shareError = error {
+									let alertController = UIAlertController(with: "Delete Recipient failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+									self.present(alertController, animated: true)
+								}
 							}
 						}
-					}))
+					})
 				}
 			}, title: "Delete Recipient".localized, style: StaticTableViewRowButtonStyle.destructive)
 			])
