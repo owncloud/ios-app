@@ -116,6 +116,7 @@ class ThemeCollection : NSObject {
 
 	// MARK: - Activity View
 	@objc var activityIndicatorViewStyle : UIActivityIndicatorView.Style
+	@objc var searchBarActivityIndicatorViewStyle : UIActivityIndicatorView.Style
 
 	// MARK: - Icon colors
 	@objc var iconColors : [String:String]
@@ -237,6 +238,7 @@ class ThemeCollection : NSObject {
 
 				// Activity
 				self.activityIndicatorViewStyle = .white
+				self.searchBarActivityIndicatorViewStyle = .white
 
 				// Logo fill color
 				logoFillColor = UIColor.white
@@ -263,6 +265,7 @@ class ThemeCollection : NSObject {
 
 				// Activity
 				self.activityIndicatorViewStyle = .gray
+				self.searchBarActivityIndicatorViewStyle = .gray
 
 				// Logo fill color
 				logoFillColor = UIColor.lightGray
@@ -281,6 +284,7 @@ class ThemeCollection : NSObject {
 
 				// Activity
 				self.activityIndicatorViewStyle = .gray
+				self.searchBarActivityIndicatorViewStyle = .white
 
 				// Logo fill color
 				logoFillColor = UIColor.lightGray

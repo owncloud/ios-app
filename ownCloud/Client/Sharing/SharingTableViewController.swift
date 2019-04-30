@@ -101,6 +101,13 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 		}
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		handleEmptyShares()
+	}
+
+	// MARK: - Sharing UI
+
 	func addSectionFor(type: OCShareType, with title: String) {
 		var shareRows: [StaticTableViewRow] = []
 
@@ -184,6 +191,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 		}
 	}
 
+	// MARK: - Sharing Helper
 	func canEdit(share: OCShare) -> Bool {
 		if core?.connection.loggedInUser?.userName == share.owner?.userName || core?.connection.loggedInUser?.userName == share.itemOwner?.userName {
 			return true
@@ -203,13 +211,9 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 		}
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		handleEmptyShares()
-	}
-
 	func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
 		self.resetTable(showShares: true)
+		self.searchController?.searchBar.isLoading = false
 	}
 
 	func searchControllerHasNewResults(_ searchController: OCRecipientSearchController, error: Error?) {
@@ -272,7 +276,11 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 	}
 
 	func searchController(_ searchController: OCRecipientSearchController, isWaitingForResults isSearching: Bool) {
-
+		if isSearching {
+			self.searchController?.searchBar.isLoading = true
+		} else {
+			self.searchController?.searchBar.isLoading = false
+		}
 	}
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
