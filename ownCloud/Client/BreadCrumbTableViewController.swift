@@ -21,10 +21,10 @@ import UIKit
 class BreadCrumbTableViewController: StaticTableViewController {
 
 	// MARK: - Constants
-	private let contentWidth = 500
-	private let rowHeight = 44
-	private let imageWidth = 30
-	private let imageHeight = 30
+	private let maxContentWidth : CGFloat = 500
+	private let rowHeight : CGFloat = 44
+	private let imageWidth : CGFloat = 30
+	private let imageHeight : CGFloat = 30
 
 	// MARK: - Instance Variables
 	var parentNavigationController : UINavigationController?
@@ -46,14 +46,14 @@ class BreadCrumbTableViewController: StaticTableViewController {
 		}
 
 		var rows : [StaticTableViewRow] = []
-		let counter = pathComp.count
-		var iterator = 2
-		let height = rowHeight * counter - 1
-		self.preferredContentSize = CGSize(width: contentWidth, height: height)
+		let pathCount = pathComp.count
+		var currentViewContollerIndex = 2
+		let contentHeight : CGFloat = rowHeight * CGFloat(pathCount)
+		let contentWidth : CGFloat = (view.frame.size.width < maxContentWidth) ? view.frame.size.width : maxContentWidth
+		self.preferredContentSize = CGSize(width: contentWidth, height: contentHeight)
 
 		for (_, currentPath) in pathComp.enumerated().reversed() {
-			let counter = stackViewControllers.count
-			let stackIndex = counter - iterator
+			let stackIndex = stackViewControllers.count - currentViewContollerIndex
 			var pathTitle = currentPath
 			if currentPath == "/", let shortName = self.bookmarkShortName {
 				pathTitle = shortName
@@ -64,7 +64,7 @@ class BreadCrumbTableViewController: StaticTableViewController {
 			}, title: pathTitle, image: Theme.shared.image(for: "folder", size: CGSize(width: imageWidth, height: imageHeight)))
 
 			rows.append(aRow)
-			iterator += 1
+			currentViewContollerIndex += 1
 		}
 
 		let section : StaticTableViewSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, rows: rows)
