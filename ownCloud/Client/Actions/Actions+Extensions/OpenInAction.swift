@@ -37,8 +37,25 @@ class OpenInAction: Action {
 	var downloadError: Error?
 
 	override func run() {
-		guard context.items.count > 0, let viewController = context.viewController else {
+		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
+			return
+		}
+
+		var itemsToDownload : [OCItem] = []
+		for item in context.items {
+			if core.localCopy(of: item) != nil {
+				if let file = item.file(with: core) {
+					downloadedFiles.append(file)
+				}
+			} else {
+				itemsToDownload.append(item)
+			}
+		}
+
+		if itemsToDownload.count == 0 {
+			self.presentSharingViewController()
+			self.completed()
 			return
 		}
 
@@ -48,25 +65,23 @@ class OpenInAction: Action {
 
 			let downloadGroup = DispatchGroup()
 
-			if let items = self?.context.items {
-				for item in items {
-					downloadGroup.enter()
-					if let progress = self?.core?.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, _, _, file) in
-						if error != nil {
-							Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
-							self?.downloadError = error
-						} else {
-							self?.downloadedFiles.append(file!)
-						}
-						downloadGroup.leave()
-					}) {
-						self?.downloadProgressController?.attach(progress: progress)
-						self?.publish(progress: progress)
+			for item in itemsToDownload {
+				downloadGroup.enter()
+				if let progress = core.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, _, _, file) in
+					if error != nil {
+						Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
+						self?.downloadError = error
+					} else {
+						self?.downloadedFiles.append(file!)
 					}
+					downloadGroup.leave()
+				}) {
+					self?.downloadProgressController?.attach(progress: progress)
+					self?.publish(progress: progress)
+				}
 
-					if self?.downloadError != nil {
-						break
-					}
+				if self?.downloadError != nil {
+					break
 				}
 			}
 

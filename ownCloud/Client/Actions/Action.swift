@@ -45,8 +45,8 @@ enum ActionPosition : Int {
 	}
 }
 
-typealias ActionCompletionHandler = ((Error?) -> Void)
-typealias ActionProgressHandler = ((Progress) -> Void)
+typealias ActionCompletionHandler = ((Action, Error?) -> Void)
+typealias ActionProgressHandler = ((Progress, Bool) -> Void)
 typealias ActionWillRunHandler = () -> Void
 
 extension OCExtensionType {
@@ -58,7 +58,7 @@ extension OCExtensionLocationIdentifier {
 	static let moreItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreItem") //!< Present in "more" card view for a single item
 	static let moreFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreFolder") //!< Present in "more" options for a whole folder
 	static let toolbar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("toolbar") //!< Present in a toolbar
-	static let sortBar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("sortBar") //!< Present in the sort bar on top of file lists
+	static let plusButton: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("plusButton") //!< Present in the alert sheet when the plus bar button is pressed
 }
 
 class ActionExtension: OCExtension {
@@ -162,7 +162,7 @@ class Action : NSObject {
 	}
 
 	// MARK: - Provide Card view controller
-	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ((Progress) -> Void)? = nil, completionHandler: ((Error?) -> Void)? = nil) -> UIViewController {
+	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ActionProgressHandler? = nil, completionHandler: ((Action, Error?) -> Void)? = nil) -> UIViewController {
 
 		let tableViewController = MoreStaticTableViewController(style: .grouped)
 		let header = MoreViewHeader(for: item, with: context.core!)
@@ -226,13 +226,19 @@ class Action : NSObject {
 
 	func completed(with error: Error? = nil) {
 		if let completionHandler = completionHandler {
-			completionHandler(error)
+			completionHandler(self, error)
 		}
 	}
 
 	func publish(progress: Progress) {
 		if let progressHandler = progressHandler {
-			progressHandler(progress)
+			progressHandler(progress, true)
+		}
+	}
+
+	func unpublish(progress: Progress) {
+		if let progressHandler = progressHandler {
+			progressHandler(progress, false)
 		}
 	}
 
@@ -247,6 +253,13 @@ class Action : NSObject {
 	func provideContextualAction() -> UIContextualAction? {
 		return UIContextualAction(style: actionExtension.category == .destructive ? .destructive : .normal, title: self.actionExtension.name, handler: { (_ action, _ view, _ uiCompletionHandler) in
 			uiCompletionHandler(false)
+			self.willRun()
+			self.run()
+		})
+	}
+
+	func provideAlertAction() -> UIAlertAction? {
+		return UIAlertAction(title: self.actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .default, handler: { (_ alertAction) in
 			self.willRun()
 			self.run()
 		})

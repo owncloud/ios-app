@@ -38,7 +38,6 @@ class PDFOutlineViewController: UIViewController {
     }
 
     var modeSegmentedControl: UISegmentedControl?
-
     override func viewDidLoad() {
         super.viewDidLoad()
         var iconArray: [UIImage] = [UIImage]()
@@ -60,6 +59,7 @@ class PDFOutlineViewController: UIViewController {
             let resumeItem = UIBarButtonItem(title: "Resume".localized, style: .plain, target: self, action: #selector(resume))
             self.navigationItem.rightBarButtonItem = resumeItem
         }
+		self.extendedLayoutIncludesOpaqueBars = true
     }
 
     // MARK: - User actions
@@ -100,7 +100,6 @@ class PDFOutlineViewController: UIViewController {
     fileprivate func change(fromViewController:UIViewController?, toViewController:UIViewController) {
         fromViewController?.willMove(toParent: nil)
         self.addChild(toViewController)
-        toViewController.view.frame = self.view.frame
         self.view.addSubview(toViewController.view)
 
         if fromViewController != nil {

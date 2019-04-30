@@ -282,7 +282,7 @@
 	{
 		if (_changeObservers.count > 0)
 		{
-			OCLogDebug(@"##### PROVIDE ITEMS TO %d --CHANGE-- OBSERVER FOR %@: %@", _changeObservers.count, query.queryPath, query.queryResults);
+			OCLogDebug(@"##### PROVIDE ITEMS TO %lu --CHANGE-- OBSERVER FOR %@: %@", _changeObservers.count, query.queryPath, query.queryResults);
 
 			for (FileProviderEnumeratorObserver *observer in _changeObservers)
 			{

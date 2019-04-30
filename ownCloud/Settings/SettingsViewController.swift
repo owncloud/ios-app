@@ -20,20 +20,22 @@ import UIKit
 import ownCloudSDK
 
 class SettingsViewController: StaticTableViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        self.navigationItem.title = "Settings".localized
-
-        let userDefaults = OCAppIdentity.shared.userDefaults
-
-        let securitySettings = SecuritySettingsSection(userDefaults: userDefaults!)
-        let userInterfaceSettings = UserInterfaceSettingsSection(userDefaults: userDefaults!)
-        let moreSettings = MoreSettingsSection(userDefaults: userDefaults!)
-        self.addSection(securitySettings)
-        self.addSection(userInterfaceSettings)
-        self.addSection(moreSettings)
-    }
-
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		self.navigationItem.title = "Settings".localized
+		
+		let userDefaults = OCAppIdentity.shared.userDefaults
+		
+		let securitySettings = SecuritySettingsSection(userDefaults: userDefaults!)
+		let userInterfaceSettings = UserInterfaceSettingsSection(userDefaults: userDefaults!)
+		let photoUploadSettings = PhotoUploadSettingsSection(userDefaults: userDefaults!)
+		let moreSettings = MoreSettingsSection(userDefaults: userDefaults!)
+		self.addSection(securitySettings)
+		self.addSection(userInterfaceSettings)
+		self.addSection(photoUploadSettings)
+		self.addSection(moreSettings)
+	}
+	
 }

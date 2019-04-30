@@ -1,0 +1,9 @@
+/* 
+  Localizable.strings
+  ownCloud
+
+  Created by Felix Schwarz on 15.04.19.
+  Copyright © 2019 ownCloud GmbH. All rights reserved.
+*/
+
+"The destination folder couldn't be found on this server. Moving items across servers is currently not supported." = "The destination folder couldn't be found on this server. Moving items across servers is currently not supported.";
