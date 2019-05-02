@@ -101,6 +101,16 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:core.override-reachability-signal"
+            value = "false"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:core.override-availability-signal"
+            value = "false"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:app.show-beta-warning"
             value = "false"
             isEnabled = "NO">
