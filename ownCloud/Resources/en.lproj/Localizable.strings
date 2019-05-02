@@ -299,6 +299,19 @@
 "Shared to" = "Shared to";
 "Delete Recipient failed" = "Delete Recipient failed";
 "Delete Recipient" = "Delete Recipient";
+"View" = "View";
+"Download" = "Download";
+"Create" = "Create";
+"Change" = "Change";
+"Recipients can view or download contents." = "Recipients can view or download contents.";
+"Recipients can view, download, edit, delete and upload contents." = "Recipients can view, download, edit, delete and upload contents.";
+"Receive files from multiple recipients without revealing the contents of the folder." = "Receive files from multiple recipients without revealing the contents of the folder.";
+"Download / View" = "Download / View";
+"Download / View / Upload" = "Download / View / Upload";
+"Upload only (File Drop)" = "Upload only (File Drop)";
+"Creating public link failed" = "Creating public link failed";
+"Create Public Link" = "Create Public Link";
+"Link" = "Link";
 
 /* Photo upload settings */
 "Photo Upload" = "Photo Upload";

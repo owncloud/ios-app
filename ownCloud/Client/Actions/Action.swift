@@ -219,14 +219,16 @@ class Action : NSObject {
 								self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
 							} else {
 								let shareRow = self.shareRow(item: item, presentingController: moreViewController, context: context)
-								self.updateSharingRow(sectionIdentifier: "share-section", rows: [shareRow], tableViewController: tableViewController)
+								let sharePublicRow = self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context)
+								self.updateSharingRow(sectionIdentifier: "share-section", rows: [shareRow, sharePublicRow], tableViewController: tableViewController)
 							}
 						}
 					}
 				}
 			} else if item.isShareable {
 				let shareRow = self.shareRow(item: item, presentingController: moreViewController, context: context)
-				tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: [shareRow]), at: 0, animated: true)
+				let sharePublicRow = self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context)
+				tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: [shareRow, sharePublicRow]), at: 0, animated: true)
 			}
 
 		}
@@ -360,6 +362,7 @@ class Action : NSObject {
 			if shares.count > 0 {
 				var userTitle = ""
 				var linkTitle = ""
+				var hasUserGroupSharing = false
 				var hasLinkSharing = false
 
 				if byMe {
@@ -377,6 +380,7 @@ class Action : NSObject {
 							title = "Recipients".localized
 						}
 						userTitle = "\(privateShares.count) \(title)"
+						hasUserGroupSharing = true
 					}
 					if linkSharesCounter > 0 {
 						var title = "Public Link".localized
@@ -390,10 +394,13 @@ class Action : NSObject {
 					for share in shares {
 						if let ownerName = share.itemOwner?.displayName {
 							userTitle = String(format: "Shared by %@".localized, ownerName)
+							hasUserGroupSharing = true
 							break
 						}
 					}
 				}
+
+				if hasUserGroupSharing {
 				let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
 					presentingController.dismiss(animated: true)
 
@@ -407,12 +414,26 @@ class Action : NSObject {
 					}
 				}, title: userTitle, subtitle: nil, alignment: .left, accessoryType: .disclosureIndicator)
 				shareRows.append(addGroupRow)
+				} else {
+					shareRows.append(self.shareRow(item: item, presentingController: presentingController, context: context))
+				}
 
 				if hasLinkSharing {
 					let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
+						presentingController.dismiss(animated: true)
 
+						if let viewController = context.viewController {
+							let sharingViewController = PublicLinkTableViewController(style: .grouped)
+							sharingViewController.shares = shares
+							sharingViewController.core = context.core!
+							sharingViewController.item = item
+							let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
+							viewController.present(navigationController, animated: true, completion: nil)
+						}
 					}, title: linkTitle, subtitle: nil, alignment: .left, accessoryType: .disclosureIndicator)
 					shareRows.append(addGroupRow)
+				} else {
+					shareRows.append(self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context))
 				}
 			}
 
@@ -446,6 +467,25 @@ class Action : NSObject {
 				viewController.present(navigationController, animated: true, completion: nil)
 			}
 		}, title: title, style: .plain, alignment: .left, identifier: "share-add-group", accessoryView: UIImageView(image: UIImage(named: "shared")))
+
+		return addGroupRow
+	}
+
+	class func shareAsPublicLinkRow(item : OCItem, presentingController: UIViewController, context: ActionContext) -> StaticTableViewRow {
+
+		let addGroupRow = StaticTableViewRow(buttonWithAction: { (_, _) in
+			presentingController.dismiss(animated: true)
+
+			if let viewController = context.viewController {
+				let sharingViewController = PublicLinkTableViewController(style: .grouped)
+				sharingViewController.core = context.core!
+				sharingViewController.item = item
+				sharingViewController.addPublicLink()
+				let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
+
+				viewController.present(navigationController, animated: true, completion: nil)
+			}
+		}, title: "Create Public Link".localized, style: .plain, alignment: .left, identifier: "share-add-group", accessoryView: UIImageView(image: UIImage(named: "link")))
 
 		return addGroupRow
 	}

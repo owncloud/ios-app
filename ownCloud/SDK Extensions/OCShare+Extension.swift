@@ -23,21 +23,39 @@ extension OCShare {
 
 	func permissionDescription() -> String {
 		var permissionsDescription : [String] = []
-		if self.canRead {
-			permissionsDescription.append("Read")
-		}
-		if self.canShare {
-			permissionsDescription.append("Share")
-		}
-		if self.canReadWrite {
-			permissionsDescription.append("Create")
-		}
-		if self.canUpdate {
-			permissionsDescription.append("Change")
-			permissionsDescription.append("Edit")
-		}
-		if self.canDelete {
-			permissionsDescription.append("Delete")
+		
+		if self.type == .link {
+			if self.canRead {
+				permissionsDescription.append("View".localized)
+				permissionsDescription.append("Download".localized)
+			}
+			if self.canReadWrite {
+				permissionsDescription.append("Create".localized)
+			}
+			if self.canUpdate {
+				permissionsDescription.append("Change".localized)
+				permissionsDescription.append("Edit".localized)
+			}
+			if self.canDelete {
+				permissionsDescription.append("Delete".localized)
+			}
+		} else {
+			if self.canRead {
+				permissionsDescription.append("Read".localized)
+			}
+			if self.canShare {
+				permissionsDescription.append("Share".localized)
+			}
+			if self.canReadWrite {
+				permissionsDescription.append("Create".localized)
+			}
+			if self.canUpdate {
+				permissionsDescription.append("Change".localized)
+				permissionsDescription.append("Edit".localized)
+			}
+			if self.canDelete {
+				permissionsDescription.append("Delete".localized)
+			}
 		}
 
 		return permissionsDescription.joined(separator:", ")

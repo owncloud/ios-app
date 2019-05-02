@@ -76,7 +76,12 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 
 		let shareQuery = core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
 			if sharesWithReshares.count > 0 {
-				self.shares = sharesWithReshares
+				self.shares = sharesWithReshares.filter { (OCShare) -> Bool in
+					if OCShare.type != .link {
+						return true
+					}
+					return false
+				}
 				self.populateShares()
 			}
 			_ = self.core!.sharesSharedWithMe(for: item, initialPopulationHandler: { (sharesWithMe) in
@@ -93,7 +98,12 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 
 		shareQuery?.refreshInterval = 2
 		shareQuery?.changesAvailableNotificationHandler = { query in
-			let sharesWithReshares = query.queryResults
+			let sharesWithReshares = query.queryResults.filter { (OCShare) -> Bool in
+				if OCShare.type != .link {
+					return true
+				}
+				return false
+			}
 			self.shares = sharesWithReshares
 			self.removeShareSections()
 			self.populateShares()

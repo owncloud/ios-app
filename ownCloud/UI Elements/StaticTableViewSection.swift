@@ -99,27 +99,27 @@ class StaticTableViewSection: NSObject {
 	}
 
 	@discardableResult
-	func add(toogleGroupWithArrayOfLabelValueDictionaries labelValueDictRows: [[String : Bool]], toggleAction:StaticTableViewRowAction?, subtitles: [String]? = nil, groupIdentifier: String, selectedValue: Bool, animated : Bool = false) -> [StaticTableViewRow] {
+	func add(toggleGroupWithArrayOfLabelValueDictionaries labelValueDictRows: [[String : Bool]], toggleAction:StaticTableViewRowAction?, subtitles: [String]? = nil, groupIdentifier: String, selectedValue: Bool, animated : Bool = false) -> [StaticTableViewRow] {
 
-		var toogleGroupRows : [StaticTableViewRow] = []
+		var toggleGroupRows : [StaticTableViewRow] = []
 
 		if let subtitles = subtitles {
 			for (labelValueDict, subtitle) in zip(labelValueDictRows, subtitles) {
 				for (label, value) in labelValueDict {
-					toogleGroupRows.append(StaticTableViewRow(toogleItemWithAction: toggleAction, groupIdentifier: "\(groupIdentifier)-\(label)", title: label, subtitle: subtitle, selected: value))
+					toggleGroupRows.append(StaticTableViewRow(toggleItemWithAction: toggleAction, groupIdentifier: "\(groupIdentifier)-\(label)", title: label, subtitle: subtitle, selected: value))
 				}
 			}
 		} else {
 			for labelValueDict in labelValueDictRows {
 				for (label, value) in labelValueDict {
-					toogleGroupRows.append(StaticTableViewRow(toogleItemWithAction: toggleAction, groupIdentifier: "\(groupIdentifier)-\(label)", title: label, subtitle: nil, selected: value))
+					toggleGroupRows.append(StaticTableViewRow(toggleItemWithAction: toggleAction, groupIdentifier: "\(groupIdentifier)-\(label)", title: label, subtitle: nil, selected: value))
 				}
 			}
 		}
 
-		self.add(rows: toogleGroupRows, animated: animated)
+		self.add(rows: toggleGroupRows, animated: animated)
 
-		return toogleGroupRows
+		return toggleGroupRows
 	}
 
 	func add(row rowToAdd: StaticTableViewRow, animated: Bool = false) {

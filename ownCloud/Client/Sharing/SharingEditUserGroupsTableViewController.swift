@@ -98,7 +98,7 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 			}
 		}
 
-		section.add(toogleGroupWithArrayOfLabelValueDictionaries: permissions, toggleAction: { (row, _) in
+		section.add(toggleGroupWithArrayOfLabelValueDictionaries: permissions, toggleAction: { (row, _) in
 			guard let selected = row.value as? Bool else { return }
 			if let core = self.core {
 				core.update(share, afterPerformingChanges: {(share) in

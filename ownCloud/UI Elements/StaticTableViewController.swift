@@ -208,6 +208,15 @@ class StaticTableViewController: UITableViewController, Themeable {
 		return sections[section].footerTitle
 	}
 
+	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		let cell = staticRowForIndexPath(indexPath)
+		if cell.type == .datePicker {
+			return 216.0
+		}
+
+		return 44.0
+	}
+
 	// MARK: - Theme support
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.backgroundColor = collection.tableGroupBackgroundColor
