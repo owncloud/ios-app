@@ -21,9 +21,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 		self.navigationItem.title = share?.name!
 
-		let infoButton = UIButton(type: .infoLight)
-		infoButton.addTarget(self, action: #selector(showInfoSubtitles), for: .touchUpInside)
-		let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
+		let infoBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareLinkURL))
 		navigationItem.rightBarButtonItem = infoBarButtonItem
 
 		let dateFormatter = DateFormatter()
@@ -55,15 +53,12 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		}, placeholder: "Public Link".localized, value: (share?.name!)!, secureTextEntry: false, keyboardType: .default, autocorrectionType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "Name")
 
 		section.add(row: nameRow)
-
-
 		self.addSection(section)
 
 		loadPermissionRow()
 
-
 		var hasPassword = false
-		if share?.password != nil {
+		if let protected = share?.protectedByPassword {
 			hasPassword = true
 		}
 
@@ -105,7 +100,6 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 				}
 
-
 				if let core = self.core {
 					guard let share = self.share, let datePicker = sender as? UIDatePicker else { return }
 					core.update(share, afterPerformingChanges: {(share) in
@@ -133,13 +127,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						}
 					})
 				}
-
-
-
 			}
-
-
-
 		}, title: "Link has expire date".localized, value: hasExpireDate, identifier: "ExpireRow")
 		expireSection.add(row: expireDateRow)
 
@@ -151,9 +139,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		}
 		self.addSection(expireSection)
 
-
 		let deleteSection = StaticTableViewSection(headerTitle: nil, footerTitle: footer)
-
 		deleteSection.add(rows: [
 			StaticTableViewRow(buttonWithAction: { (_, _) in
 				guard let share = self.share, let shareURL = share.url else { return }
@@ -184,19 +170,16 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			}, title: "Delete Public Link".localized, style: StaticTableViewRowButtonStyle.destructive)
 			])
 
-
-
 		self.addSection(deleteSection)
 	}
 
 	func passwordRow(_ passwordSection : StaticTableViewSection) {
-
 		var passwordValue = ""
-		if let password = share?.password{
+		if let password = share?.password {
 			passwordValue = password
 		}
 
-		let expireDateRow = StaticTableViewRow(secureTextFieldWithAction: { (row, sender) in
+		let expireDateRow = StaticTableViewRow(secureTextFieldWithAction: { (_, sender) in
 
 			if let core = self.core {
 				guard let share = self.share, let textField = sender as? UITextField else { return }
@@ -225,7 +208,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			let dateFormatter = DateFormatter()
 			dateFormatter.dateStyle = .long
 			dateFormatter.timeStyle = .none
-			let expireDateRow = StaticTableViewRow(buttonWithAction: { (row, value) in
+			let expireDateRow = StaticTableViewRow(buttonWithAction: { (_, value) in
 
 				if expireSection.row(withIdentifier: "datePickerRow") == nil {
 
@@ -253,9 +236,6 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 								}
 							})
 						}
-
-
-
 					}, date: date, identifier: "datePickerRow")
 					expireSection.add(row: datePickerRow, animated: true)
 				} else {
@@ -264,7 +244,6 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					}
 				}
 			}, title: dateFormatter.string(from: date), style: .plain, alignment: .left, identifier: "expireDateRow")
-
 
 			return expireDateRow
 		}
@@ -302,35 +281,6 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					"Receive files from multiple recipients without revealing the contents of the folder.".localized
 				]
 			}
-			/*
-			section.add(toogleGroupWithArrayOfLabelValueDictionaries: permissions, toggleAction: { (row, _) in
-			guard let selected = row.value as? Bool else { return }
-			if let core = self.core {
-			core.update(share, afterPerformingChanges: {(share) in
-			if let rowIndex = row.index {
-			guard permissionValues.indices.contains(rowIndex) else { return }
-			let permissionValue = permissionValues[rowIndex]
-
-			if selected {
-			share.permissions.insert(permissionValue)
-			} else {
-			share.permissions.remove(permissionValue)
-			}
-			}
-			}, completionHandler: { (error, share) in
-			if error == nil {
-			guard let changedShare = share else { return }
-			self.share?.permissions = changedShare.permissions
-			} else {
-			if let shareError = error {
-			let alertController = UIAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-			self.present(alertController, animated: true)
-			}
-			}
-			})
-			}
-			}, subtitles: subtitles, groupIdentifier: "preferences-section", selectedValue:true)
-			*/
 
 			section.add(radioGroupWithArrayOfLabelValueDictionaries: [
 				["Download / View" : "value-of-line-1"],
@@ -343,16 +293,15 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					Log.log("Values can also be read from the section object: \(selectedValueFromSection!)")
 			}, groupIdentifier: "radioExample", selectedValue: "value-of-line-2")
 
-
 			self.addSection(section)
-
 		}
 	}
 
-	@objc func showInfoSubtitles() {
-		showSubtitles.toggle()
-		guard let removeSection = self.sectionForIdentifier("permission-section") else { return }
-		self.removeSection(removeSection)
-		loadPermissionRow()
+	@objc func shareLinkURL() {
+		guard let share = self.share, let shareURL = share.url else { return }
+
+		let activityViewController = UIActivityViewController(activityItems: [shareURL], applicationActivities: nil)
+		activityViewController.popoverPresentationController?.sourceView = self.view
+		self.present(activityViewController, animated: true, completion: nil)
 	}
 }
