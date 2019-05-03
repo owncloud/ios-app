@@ -225,21 +225,20 @@ class PublicLinkTableViewController: StaticTableViewController {
 	}
 
 	@objc func addPublicLink() {
-
 		if let item = item, let path = item.path, let name = item.name {
 			var permissions = OCSharePermissionsMask.create
 			if item.type == .file {
 				permissions = OCSharePermissionsMask.read
 			}
 
-			let share = OCShare(publicLinkToPath: path, linkName: String(format:"%@ %@", name, "Link".localized), permissions: permissions, password: nil, expiration: nil)
-			self.core?.createShare(share, options: nil, completionHandler: { (error, _) in
+			let share = OCShare(publicLinkToPath: path, linkName: String(format:"%@ %@ (%ld)", name, "Link".localized, (shares.count + 1)), permissions: permissions, password: nil, expiration: nil)
+			self.core?.createShare(share, options: nil, completionHandler: { (error, newShare) in
 				if error == nil {
 					OnMainThread {
 						self.resetTable(showShares: true)
 
 						let editPublicLinkViewController = PublicLinkEditTableViewController(style: .grouped)
-						editPublicLinkViewController.share = share
+						editPublicLinkViewController.share = newShare
 						editPublicLinkViewController.core = self.core
 						editPublicLinkViewController.item = item
 						self.navigationController?.pushViewController(editPublicLinkViewController, animated: true)

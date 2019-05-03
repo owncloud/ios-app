@@ -218,9 +218,12 @@ class Action : NSObject {
 								let rows = self.sharingRow(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
 								self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
 							} else {
-								let shareRow = self.shareRow(item: item, presentingController: moreViewController, context: context)
-								let sharePublicRow = self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context)
-								self.updateSharingRow(sectionIdentifier: "share-section", rows: [shareRow, sharePublicRow], tableViewController: tableViewController)
+								var shareRows : [StaticTableViewRow] = []
+								shareRows.append(self.shareRow(item: item, presentingController: moreViewController, context: context))
+								if item.isShareable {
+									shareRows.append(self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context))
+								}
+								self.updateSharingRow(sectionIdentifier: "share-section", rows: shareRows, tableViewController: tableViewController)
 							}
 						}
 					}
@@ -432,7 +435,7 @@ class Action : NSObject {
 						}
 					}, title: linkTitle, subtitle: nil, alignment: .left, accessoryType: .disclosureIndicator)
 					shareRows.append(addGroupRow)
-				} else {
+				} else if item.isShareable {
 					shareRows.append(self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context))
 				}
 			}
