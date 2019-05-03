@@ -34,8 +34,7 @@ extension OCQueryState {
 	}
 }
 
-class ClientQueryViewController: UITableViewController, Themeable, UIDropInteractionDelegate {
-
+class ClientQueryViewController: UITableViewController, Themeable, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
 	weak var core : OCCore?
 	var query : OCQuery
 
@@ -117,7 +116,17 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		if lastPathComponent == "/", let shortName = core?.bookmark.shortName {
 			self.navigationItem.title = shortName
 		} else {
-			self.navigationItem.title = lastPathComponent
+			let titleButton = UIButton()
+			titleButton.setTitle(lastPathComponent, for: .normal)
+			titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+			titleButton.addTarget(self, action: #selector(showPathBreadCrumb(_:)), for: .touchUpInside)
+			titleButton.sizeToFit()
+			titleButton.accessibilityLabel = "Show parent paths".localized
+			titleButton.accessibilityIdentifier = "show-paths-button"
+			messageThemeApplierToken = Theme.shared.add(applier: { (_, collection, _) in
+				titleButton.setTitleColor(collection.navigationBarColors.labelColor, for: .normal)
+			})
+			self.navigationItem.titleView = titleButton
 		}
 
 		if lastPathComponent == "/" {
@@ -800,6 +809,29 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			popoverController.barButtonItem = sender
 		}
 		self.present(controller, animated: true)
+	}
+
+	// MARK: - Path Bread Crumb Action
+	@objc func showPathBreadCrumb(_ sender: UIButton) {
+		let tableViewController = BreadCrumbTableViewController()
+		tableViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+		tableViewController.parentNavigationController = self.navigationController
+		tableViewController.queryPath = (query.queryPath as NSString?)!
+		if let shortName = core?.bookmark.shortName {
+			tableViewController.bookmarkShortName = shortName
+		}
+
+		let popoverPresentationController = tableViewController.popoverPresentationController
+		popoverPresentationController?.sourceView = sender
+		popoverPresentationController?.delegate = self
+		popoverPresentationController?.sourceRect = CGRect(x: 0, y: 0, width: sender.frame.size.width, height: sender.frame.size.height)
+
+		present(tableViewController, animated: true, completion: nil)
+	}
+
+	// MARK: - UIPopoverPresentationControllerDelegate
+	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+		return .none
 	}
 }
 
