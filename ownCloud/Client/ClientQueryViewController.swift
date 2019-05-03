@@ -123,9 +123,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			titleButton.sizeToFit()
 			titleButton.accessibilityLabel = "Show parent paths".localized
 			titleButton.accessibilityIdentifier = "show-paths-button"
-			messageThemeApplierToken = Theme.shared.add(applier: { (_, collection, _) in
-				titleButton.setTitleColor(collection.navigationBarColors.labelColor, for: .normal)
-			})
+			titleButton.setTitleColor(Theme.shared.activeCollection.navigationBarColors.labelColor, for: .normal)
 			self.navigationItem.titleView = titleButton
 		}
 
