@@ -214,7 +214,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 			return 216.0
 		}
 
-		return 44.0
+		return UITableView.automaticDimension
 	}
 
 	// MARK: - Theme support

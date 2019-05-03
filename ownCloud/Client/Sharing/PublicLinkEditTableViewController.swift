@@ -68,20 +68,23 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		}
 
 		let passwordSection = StaticTableViewSection(headerTitle: "Password", footerTitle: nil, identifier: "permission-section")
-		let passwordRow = StaticTableViewRow(switchWithAction: { (row, _) in
-
+		let passwordRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+			if let passwordSwitch = sender as? UISwitch {
+				if passwordSwitch.isEnabled, let passwordFieldRow = passwordSection.row(withIdentifier: "passwordFieldRow") {
+					passwordSection.remove(rows: [passwordFieldRow], animated: true)
+				} else if passwordSwitch.isEnabled {
+					self.passwordRow(passwordSection)
+				}
+			}
 		}, title: "Protect with password".localized, value: hasPassword, identifier: "PasswordRow")
 		passwordSection.add(row: passwordRow)
 		if hasPassword {
-			let expireDateRow = StaticTableViewRow(secureTextFieldWithAction: { (row, value) in
-
-			}, placeholder: "Password".localized, value: (share?.password!)!, keyboardType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "Identifier")
-			passwordSection.add(row: expireDateRow)
+			self.passwordRow(passwordSection)
 		}
 		self.addSection(passwordSection)
 
 		var hasExpireDate = false
-		if let expirationDate = share?.expirationDate {
+		if share?.expirationDate != nil {
 			hasExpireDate = true
 		}
 
@@ -89,7 +92,11 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		let expireDateRow = StaticTableViewRow(switchWithAction: { (_, sender) in
 			if let expireDateSwitch = sender as? UISwitch {
 				if expireDateSwitch.isEnabled, let expireDateRow = expireSection.row(withIdentifier: "expireDateRow") {
-					expireSection.remove(rows: [expireDateRow], animated: true)
+					var rows : [StaticTableViewRow] = [expireDateRow]
+					if let expireDatePickerRow = expireSection.row(withIdentifier: "datePickerRow") {
+						rows.append(expireDatePickerRow)
+					}
+					expireSection.remove(rows: rows, animated: true)
 				} else if expireDateSwitch.isEnabled {
 
 					if let row = self.expireDateRow(expireSection) {
@@ -180,6 +187,36 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 
 		self.addSection(deleteSection)
+	}
+
+	func passwordRow(_ passwordSection : StaticTableViewSection) {
+
+		var passwordValue = ""
+		if let password = share?.password{
+			passwordValue = password
+		}
+
+		let expireDateRow = StaticTableViewRow(secureTextFieldWithAction: { (row, sender) in
+
+			if let core = self.core {
+				guard let share = self.share, let textField = sender as? UITextField else { return }
+				core.update(share, afterPerformingChanges: {(share) in
+					share.password = textField.text
+				}, completionHandler: { (error, share) in
+					if error == nil {
+						guard let changedShare = share else { return }
+						self.share?.password = changedShare.password
+					} else {
+						if let shareError = error {
+							let alertController = UIAlertController(with: "Setting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+							self.present(alertController, animated: true)
+						}
+					}
+				})
+			}
+
+		}, placeholder: "Password".localized, value: passwordValue, keyboardType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "passwordFieldRow")
+		passwordSection.add(row: expireDateRow)
 	}
 
 	func expireDateRow(_ expireSection : StaticTableViewSection) -> StaticTableViewRow? {
