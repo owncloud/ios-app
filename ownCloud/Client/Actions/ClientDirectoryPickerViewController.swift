@@ -59,17 +59,21 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		// Remove pull to refresh
+		queryRefreshControl?.removeFromSuperview()
+		self.tableView.alwaysBounceVertical = false
+
 		// Select button creation
 		selectButton = UIBarButtonItem(title: selectButtonTitle, style: .plain, target: self, action: #selector(selectButtonPressed))
 		selectButton.title = selectButtonTitle
 
 		// Cancel button creation
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
-		navigationItem.rightBarButtonItems = [cancelBarButton]
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
+		navigationItem.rightBarButtonItems = [cancelBarButton]
 
 		if let navController = self.navigationController {
 			navController.isToolbarHidden = false
@@ -77,6 +81,16 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 			let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 			self.setToolbarItems([flexibleSpaceBarButton, selectButton, flexibleSpaceBarButton], animated: false)
 		}
+	}
+
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = super.tableView(tableView, cellForRowAt: indexPath)
+
+		if let clientItemCell = cell as? ClientItemCell {
+			clientItemCell.isMoreButtonPermanentlyHidden = true
+		}
+
+		return cell
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -91,6 +105,10 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		return nil
+	}
+
+	override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+		return .none
 	}
 
 	// MARK: - Actions

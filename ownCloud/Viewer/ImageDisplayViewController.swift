@@ -28,7 +28,7 @@ class ImageDisplayViewController : DisplayViewController {
 
 	// MARK: - Instance variables
 	var scrollView: ImageScrollView?
-	var imageView: UIImageView?
+
 	var activityIndicatorView: UIActivityIndicatorView = {
 		let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.white)
 		activityIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -40,22 +40,16 @@ class ImageDisplayViewController : DisplayViewController {
 	var tapToHideBarsGestureRecognizer: UITapGestureRecognizer!
 
 	// MARK: - View controller lifecycle
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-
-		guard let navigationController = navigationController else {
-			return
-		}
-
-		navigationController.setNavigationBarHidden(false, animated: true)
-
-		setNeedsUpdateOfHomeIndicatorAutoHidden()
-	}
 
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 
 		scrollView?.setZoomScale(scrollView!.minimumZoomScale, animated: true)
+	}
+
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		scrollView?.updateScaleForRotation(size: self.view!.bounds.size)
 	}
 
 	func downSampleImage() {
@@ -71,11 +65,16 @@ class ImageDisplayViewController : DisplayViewController {
 									  kCGImageSourceCreateThumbnailWithTransform: true,
 									  kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels] as CFDictionary
 			serialQueue.async {
-				let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions)!
-				let image = UIImage(cgImage: downsampledImage)
-				OnMainThread {
-					self.activityIndicatorView.stopAnimating()
-					self.scrollView?.display(image: image, inSize: self.view.bounds.size)
+				if let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) {
+					let image = UIImage(cgImage: downsampledImage)
+					OnMainThread {
+						self.activityIndicatorView.stopAnimating()
+						self.scrollView?.display(image: image, inSize: self.view.bounds.size)
+					}
+				} else {
+					OnMainThread {
+						self.activityIndicatorView.stopAnimating()
+					}
 				}
 			}
 		}

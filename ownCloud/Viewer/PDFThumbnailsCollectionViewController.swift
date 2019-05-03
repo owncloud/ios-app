@@ -22,10 +22,13 @@ import ownCloudSDK
 
 class PDFThumbnailsCollectionViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching, Themeable {
 
-    fileprivate let thumbnailSizeMultiplier: CGFloat = 0.3
+    fileprivate let thumbnailSizeMultiplierLandscape: CGFloat = 0.2
+	fileprivate let thumbnailSizeMultiplierPortrait: CGFloat = 0.3
+
     fileprivate let maxThumbnailCachedCount: UInt = 100
     fileprivate let verticalInset: CGFloat = 8.0
     fileprivate let horizontalInset: CGFloat = 4.0
+	fileprivate let layout = UICollectionViewFlowLayout()
 
     var pdfDocument: PDFDocument?
     let thumbnailCache = OCCache<NSString, UIImage>()
@@ -33,8 +36,9 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
     var fetchOperations : [IndexPath : BlockOperation] = [:]
 
     init() {
-        let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
+		layout.sectionInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
+
         thumbnailCache.countLimit = maxThumbnailCachedCount
         super.init(collectionViewLayout: layout)
     }
@@ -50,30 +54,38 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
         // Register cell classes
         self.collectionView!.register(PDFThumbnailCollectionViewCell.self,
                                       forCellWithReuseIdentifier: PDFThumbnailCollectionViewCell.identifier)
+		self.collectionView.contentInsetAdjustmentBehavior = .automatic
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Theme.shared.register(client: self)
 
-        let thumbnailWidth = floor(self.view.bounds.size.width * thumbnailSizeMultiplier) - horizontalInset
-        var thumbnailSize = CGSize(width: thumbnailWidth, height: thumbnailWidth)
-
-        // Try to correct cell size to match size of the actual generated thumbnails
-        if let pdfPage = self.pdfDocument?.page(at: 0) {
-            let thumbnail = pdfPage.thumbnail(of: thumbnailSize, for: .cropBox)
-            thumbnailSize = thumbnail.size
-        }
-
-        let flowLayout = self.collectionViewLayout as? UICollectionViewFlowLayout
-        flowLayout?.itemSize = thumbnailSize
-        flowLayout?.sectionInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right: horizontalInset)
+        recalculateThumbnailSize()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         Theme.shared.unregister(client: self)
     }
+
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		// These lines mitigates the issue with incorrect layout of child view controller
+		if let parentView = self.parent?.view {
+			self.view.frame = parentView.frame
+		}
+	}
+
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		coordinator.animate(alongsideTransition: { (_) in
+			// do nothing for now, later useful animations can be added
+		}, completion: { [weak self] (_) in
+			// rotation has finished
+			self?.recalculateThumbnailSize()
+		})
+	}
 
     // MARK: - Themeable support
 
@@ -140,6 +152,37 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
     }
 
     // MARK: - Private methods
+
+	fileprivate func recalculateThumbnailSize(newTotalWidth: CGFloat = -1.0) {
+		let orientation = UIDevice.current.orientation
+		var viewWidth: CGFloat = 0.0
+
+		if newTotalWidth > 0 {
+			viewWidth = newTotalWidth
+		} else {
+			// Heads up! bounds on iPad are incorrect for the own view controller's view
+			if UIDevice.current.isIpad() {
+				viewWidth = parent!.view.bounds.width
+			} else {
+				viewWidth = view.bounds.inset(by: view.safeAreaInsets).width
+			}
+		}
+
+		let width = viewWidth - (layout.sectionInset.left + layout.sectionInset.right)
+
+		let multiplier = (orientation.isPortrait || UIDevice.current.isIpad()) ? thumbnailSizeMultiplierPortrait : thumbnailSizeMultiplierLandscape
+		let thumbnailWidth = floor(width * multiplier) - horizontalInset
+		var thumbnailSize = CGSize(width: thumbnailWidth, height: thumbnailWidth)
+
+		// Try to correct cell size to match size of the actual generated thumbnails
+		if let pdfPage = self.pdfDocument?.page(at: 0) {
+			let thumbnail = pdfPage.thumbnail(of: thumbnailSize, for: .cropBox)
+			thumbnailSize = thumbnail.size
+		}
+
+		let flowLayout = self.collectionViewLayout as? UICollectionViewFlowLayout
+		flowLayout?.itemSize = thumbnailSize
+	}
 
     fileprivate func fetchThumbnail(for page:PDFPage, indexPath:IndexPath, size:CGSize) {
         let blockOperation = BlockOperation()

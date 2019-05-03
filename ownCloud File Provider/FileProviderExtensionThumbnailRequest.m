@@ -17,6 +17,7 @@
  */
 
 #import "FileProviderExtensionThumbnailRequest.h"
+#import "NSError+MessageResolution.h"
 
 @implementation FileProviderExtensionThumbnailRequest
 
@@ -68,7 +69,7 @@
 					if (!isOngoing)
 					{
 						dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-							self.perThumbnailCompletionHandler(itemIdentifier, thumbnail.data, (thumbnail==nil) ? nil : error);
+							self.perThumbnailCompletionHandler(itemIdentifier, thumbnail.data, (thumbnail==nil) ? nil : [error resolvedError]);
 
 							[self requestNextThumbnail];
 						});

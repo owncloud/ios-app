@@ -41,6 +41,7 @@ class ClientActivityCell: ThemeTableViewCell {
 	}
 
 	func prepareViewAndConstraints() {
+		descriptionLabel.numberOfLines = 0
 		descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
 		statusLabel.translatesAutoresizingMaskIntoConstraints = false
 		statusCircle.translatesAutoresizingMaskIntoConstraints = false
