@@ -26,7 +26,7 @@ class UploadPhotosAction: UploadBaseAction {
 	override class var name : String { return "Upload from your photo library".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.plusButton] }
 
-	private let uploadSerialQueue = DispatchQueue(label: "com.owncloud.upload.queue", qos: .background)
+	private let uploadSerialQueue = DispatchQueue(label: "com.owncloud.upload.queue", target: DispatchQueue.global(qos: .background))
 
 	private struct AssociatedKeys {
 		static var actionKey = "action"
@@ -99,6 +99,8 @@ class UploadPhotosAction: UploadBaseAction {
 									uploadGroup.leave()
 								})
 
+								_ = uploadGroup.wait(timeout: .now() + 0.5)
+
 							} else {
 								// Escape on first failed download
 								break
@@ -142,41 +144,53 @@ class UploadPhotosAction: UploadBaseAction {
 
 			self.uploadSerialQueue.async {
 				if let input = input, let url = input.fullSizeImageURL {
-					var image = CIImage(contentsOf: url)
-					if image != nil {
-						let storeAsHEIF = input.uniformTypeIdentifier == "public.heic" && !userDefaults.convertHeic
-						let colorSpace = CGColorSpaceCreateDeviceRGB()
+					autoreleasepool {
+						var image = CIImage(contentsOf: url)
+						if image != nil {
+							let storeAsHEIF = input.uniformTypeIdentifier == "public.heic" && !userDefaults.convertHeic
+							let colorSpace = CGColorSpaceCreateDeviceRGB()
 
-						let fileName = url.lastPathComponent
-						var localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
+							let fileName = url.lastPathComponent
+							var localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
 
-						var imageData : Data?
-						if storeAsHEIF {
-							imageData = CIContext().heifRepresentation(of: image!, format: CIFormat.RGBA8, colorSpace: colorSpace)
+							var ciContext = CIContext()
+							var imageData : Data?
+
+							func cleanUpCoreImageRessources() {
+								// Release memory consuming resources
+								imageData = nil
+								image = nil
+								ciContext.clearCaches()
+							}
+
+							if storeAsHEIF {
+								imageData = ciContext.heifRepresentation(of: image!, format: CIFormat.RGBA8, colorSpace: colorSpace)
+							} else {
+								localURL = localURL.deletingPathExtension().appendingPathExtension("jpg")
+								imageData = ciContext.jpegRepresentation(of: image!, colorSpace: colorSpace)
+							}
+							do {
+								// First write an image to a file stored in temporary directory
+								try imageData?.write(to: localURL)
+
+								cleanUpCoreImageRessources()
+
+								// Upload to the cloud
+								self.upload(itemURL: localURL, to: rootItem, name: localURL.lastPathComponent, completionHandler: { (actionPerformed) in
+									// Delete the temporary asset file
+									try? FileManager.default.removeItem(at: localURL)
+									completion(actionPerformed)
+								})
+
+							} catch {
+								cleanUpCoreImageRessources()
+
+								completion(false)
+							}
+
 						} else {
-							localURL = localURL.deletingPathExtension().appendingPathExtension("jpg")
-							imageData = CIContext().jpegRepresentation(of: image!, colorSpace: colorSpace)
-						}
-						do {
-							// First write an image to a file stored in temporary directory
-							try imageData?.write(to: localURL)
-
-							// Release memory consuming resources
-							imageData = nil
-							image = nil
-
-							// Upload to the cloud
-							self.upload(itemURL: localURL, to: rootItem, name: localURL.lastPathComponent, completionHandler: { (actionPerformed) in
-								// Delete the temporary asset file
-								try? FileManager.default.removeItem(at: localURL)
-								completion(actionPerformed)
-							})
-
-						} catch {
 							completion(false)
 						}
-					} else {
-						completion(false)
 					}
 				} else {
 					completion(false)
