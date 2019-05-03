@@ -118,8 +118,10 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 						self.share?.permissions = changedShare.permissions
 					} else {
 						if let shareError = error {
-							let alertController = UIAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-							self.present(alertController, animated: true)
+							OnMainThread {
+								let alertController = UIAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+								self.present(alertController, animated: true)
+							}
 						}
 					}
 				})

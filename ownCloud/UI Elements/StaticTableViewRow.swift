@@ -541,6 +541,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Date Picker
+
 	convenience init(datePickerWithAction action: StaticTableViewRowAction?, date dateValue: Date, identifier: String? = nil) {
 		self.init()
 		type = .datePicker
@@ -551,39 +552,34 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		datePickerView.date = dateValue
 		datePickerView.datePickerMode = .date
 		datePickerView.minimumDate = Date()
-		datePickerView.clipsToBounds = true
+		datePickerView.accessibilityIdentifier = identifier
+		datePickerView.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: UIControl.Event.valueChanged)
+		datePickerView.translatesAutoresizingMaskIntoConstraints = false
+		datePickerView.setValue(Theme.shared.activeCollection.tableRowColors.labelColor, forKey: "textColor")
 
 		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.selectionStyle = .none
 		self.cell?.addSubview(datePickerView)
 
-		//datePickerView.
-		datePickerView.accessibilityIdentifier = identifier
-
 		self.value = dateValue
-
 		self.action = action
 
-		datePickerView.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: UIControl.Event.valueChanged)
-
-/*
-		self.updateViewAppearance = { [weak switchView] (row) in
-			switchView?.isEnabled = row.enabled
+		if let cell = self.cell {
+			NSLayoutConstraint.activate([
+				datePickerView.leftAnchor.constraint(equalTo: cell.safeAreaLayoutGuide.leftAnchor),
+				datePickerView.rightAnchor.constraint(equalTo: cell.safeAreaLayoutGuide.rightAnchor),
+				datePickerView.topAnchor.constraint(equalTo: cell.topAnchor),
+				datePickerView.heightAnchor.constraint(equalToConstant: 216.0)
+				])
 		}
-
-		self.updateViewFromValue = { [weak switchView] (row) in
-			if let value = row.value as? Bool {
-				switchView?.setOn(value, animated: true)
-			}
-		}*/
 	}
 
-
-	@objc func datePickerValueChanged(_ sender: UIDatePicker){
+	@objc func datePickerValueChanged(_ sender: UIDatePicker) {
 		self.action?(self, sender)
 	}
 
 	// MARK: - Deinit
+
 	deinit {
 		if themeApplierToken != nil {
 			Theme.shared.remove(applierForToken: themeApplierToken)

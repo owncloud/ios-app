@@ -33,11 +33,14 @@ extension OCShare {
 				permissionsDescription.append("Create".localized)
 			}
 			if self.canUpdate {
-				permissionsDescription.append("Change".localized)
+				permissionsDescription.append("Upload".localized)
 				permissionsDescription.append("Edit".localized)
 			}
 			if self.canDelete {
 				permissionsDescription.append("Delete".localized)
+			}
+			if self.canCreate, self.canUpdate == false {
+				permissionsDescription.append("Upload (File Drop)".localized)
 			}
 		} else {
 			if self.canRead {

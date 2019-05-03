@@ -111,6 +111,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 						let editPublicLinkViewController = PublicLinkEditTableViewController(style: .grouped)
 						editPublicLinkViewController.share = share
 						editPublicLinkViewController.core = self.core
+						editPublicLinkViewController.item = self.item
 						self.navigationController?.pushViewController(editPublicLinkViewController, animated: true)
 					}, title: share.name!, subtitle: share.permissionDescription(), accessoryType: .disclosureIndicator) )
 				} else {
@@ -226,30 +227,33 @@ class PublicLinkTableViewController: StaticTableViewController {
 	@objc func addPublicLink() {
 
 		if let item = item, let path = item.path, let name = item.name {
+			var permissions = OCSharePermissionsMask.create
+			if item.type == .file {
+				permissions = OCSharePermissionsMask.read
+			}
 
-			let permissions = OCSharePermissionsMask.read
-
-		let share = OCShare(publicLinkToPath: path, linkName: String(format:"%@ %@", name, "Link".localized), permissions: permissions, password: nil, expiration: nil)
-		self.core?.createShare(share, options: nil, completionHandler: { (error, _) in
-			if error == nil {
-				OnMainThread {
-					self.resetTable(showShares: true)
-
-					let editPublicLinkViewController = PublicLinkEditTableViewController(style: .grouped)
-					editPublicLinkViewController.share = share
-					editPublicLinkViewController.core = self.core
-					self.navigationController?.pushViewController(editPublicLinkViewController, animated: true)
-				}
-			} else {
-				if let shareError = error {
+			let share = OCShare(publicLinkToPath: path, linkName: String(format:"%@ %@", name, "Link".localized), permissions: permissions, password: nil, expiration: nil)
+			self.core?.createShare(share, options: nil, completionHandler: { (error, _) in
+				if error == nil {
 					OnMainThread {
 						self.resetTable(showShares: true)
-						let alertController = UIAlertController(with: "Creating public link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-						self.present(alertController, animated: true)
+
+						let editPublicLinkViewController = PublicLinkEditTableViewController(style: .grouped)
+						editPublicLinkViewController.share = share
+						editPublicLinkViewController.core = self.core
+						editPublicLinkViewController.item = item
+						self.navigationController?.pushViewController(editPublicLinkViewController, animated: true)
+					}
+				} else {
+					if let shareError = error {
+						OnMainThread {
+							self.resetTable(showShares: true)
+							let alertController = UIAlertController(with: "Creating public link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+							self.present(alertController, animated: true)
+						}
 					}
 				}
-			}
-		})
+			})
 		}
 	}
 }

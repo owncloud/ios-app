@@ -14,6 +14,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	// MARK: - Instance Variables
 	var share : OCShare?
 	var core : OCCore?
+	var item : OCItem?
 	var showSubtitles : Bool = false
 
 	override func viewDidLoad() {
@@ -44,8 +45,10 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						self.share?.name = changedShare.name
 					} else {
 						if let shareError = error {
-							let alertController = UIAlertController(with: "Setting name failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-							self.present(alertController, animated: true)
+							OnMainThread {
+								let alertController = UIAlertController(with: "Setting name failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+								self.present(alertController, animated: true)
+							}
 						}
 					}
 				})
@@ -58,16 +61,16 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		loadPermissionRow()
 
 		var hasPassword = false
-		if let protected = share?.protectedByPassword {
+		if share?.protectedByPassword == true {
 			hasPassword = true
 		}
 
 		let passwordSection = StaticTableViewSection(headerTitle: "Password", footerTitle: nil, identifier: "permission-section")
 		let passwordRow = StaticTableViewRow(switchWithAction: { (_, sender) in
 			if let passwordSwitch = sender as? UISwitch {
-				if passwordSwitch.isEnabled, let passwordFieldRow = passwordSection.row(withIdentifier: "passwordFieldRow") {
+				if passwordSwitch.isOn == false, let passwordFieldRow = passwordSection.row(withIdentifier: "passwordFieldRow") {
 					passwordSection.remove(rows: [passwordFieldRow], animated: true)
-				} else if passwordSwitch.isEnabled {
+				} else if passwordSwitch.isOn {
 					self.passwordRow(passwordSection)
 				}
 			}
@@ -86,18 +89,14 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		let expireSection = StaticTableViewSection(headerTitle: "Expire Date", footerTitle: nil, identifier: "expire-section")
 		let expireDateRow = StaticTableViewRow(switchWithAction: { (_, sender) in
 			if let expireDateSwitch = sender as? UISwitch {
-				if expireDateSwitch.isEnabled, let expireDateRow = expireSection.row(withIdentifier: "expireDateRow") {
+				if expireDateSwitch.isOn == false, let expireDateRow = expireSection.row(withIdentifier: "expireDateRow") {
 					var rows : [StaticTableViewRow] = [expireDateRow]
 					if let expireDatePickerRow = expireSection.row(withIdentifier: "datePickerRow") {
 						rows.append(expireDatePickerRow)
 					}
 					expireSection.remove(rows: rows, animated: true)
-				} else if expireDateSwitch.isEnabled {
-
-					if let row = self.expireDateRow(expireSection) {
-						expireSection.add(row: row)
-					}
-
+				} else if expireDateSwitch.isOn {
+					self.expireDateRow(expireSection)
 				}
 
 				if let core = self.core {
@@ -121,8 +120,10 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							}
 						} else {
 							if let shareError = error {
-								let alertController = UIAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-								self.present(alertController, animated: true)
+								OnMainThread {
+									let alertController = UIAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+									self.present(alertController, animated: true)
+								}
 							}
 						}
 					})
@@ -132,10 +133,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		expireSection.add(row: expireDateRow)
 
 		if hasExpireDate {
-			if let row = self.expireDateRow(expireSection) {
-				expireSection.add(row: row)
-			}
-
+			self.expireDateRow(expireSection)
 		}
 		self.addSection(expireSection)
 
@@ -191,25 +189,29 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						self.share?.password = changedShare.password
 					} else {
 						if let shareError = error {
-							let alertController = UIAlertController(with: "Setting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-							self.present(alertController, animated: true)
+							OnMainThread {
+								let alertController = UIAlertController(with: "Setting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+								self.present(alertController, animated: true)
+							}
 						}
 					}
 				})
 			}
 
-		}, placeholder: "Password".localized, value: passwordValue, keyboardType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "passwordFieldRow")
+		}, placeholder: "Type to update password".localized, value: passwordValue, keyboardType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "passwordFieldRow")
 		passwordSection.add(row: expireDateRow)
 	}
 
-	func expireDateRow(_ expireSection : StaticTableViewSection) -> StaticTableViewRow? {
-
+	func expireDateRow(_ expireSection : StaticTableViewSection) {
+		var expireDate = Date()
 		if let date = share?.expirationDate {
+			expireDate = date
+		}
+
 			let dateFormatter = DateFormatter()
 			dateFormatter.dateStyle = .long
 			dateFormatter.timeStyle = .none
-			let expireDateRow = StaticTableViewRow(buttonWithAction: { (_, value) in
-
+			let expireDateRow = StaticTableViewRow(buttonWithAction: { (_, _) in
 				if expireSection.row(withIdentifier: "datePickerRow") == nil {
 
 					let datePickerRow = StaticTableViewRow(datePickerWithAction: { (row, sender) in
@@ -230,36 +232,34 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 									}
 								} else {
 									if let shareError = error {
-										let alertController = UIAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-										self.present(alertController, animated: true)
+										OnMainThread {
+											let alertController = UIAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+											self.present(alertController, animated: true)
+										}
 									}
 								}
 							})
 						}
-					}, date: date, identifier: "datePickerRow")
+					}, date: expireDate, identifier: "datePickerRow")
 					expireSection.add(row: datePickerRow, animated: true)
 				} else {
 					if let datePickerRow = expireSection.row(withIdentifier: "datePickerRow") {
 						expireSection.remove(rows: [datePickerRow], animated: true)
 					}
 				}
-			}, title: dateFormatter.string(from: date), style: .plain, alignment: .left, identifier: "expireDateRow")
+			}, title: dateFormatter.string(from: expireDate), style: .plain, alignment: .left, identifier: "expireDateRow")
 
-			return expireDateRow
-		}
-
-		return nil
+			expireSection.add(row: expireDateRow)
 	}
 
 	func loadPermissionRow() {
-
 		let section = StaticTableViewSection(headerTitle: "Permissions".localized, footerTitle: nil, identifier: "permission-section")
-		guard let share = share else { return }
-		var permissions : [[String: Bool]] = []
-		var permissionValues : [OCSharePermissionsMask] = []
-		var subtitles : [String]?
+		guard let share = share, let item = item else { return }
 
-		if share.itemType == .collection {
+		if item.type == .collection {
+			var permissions : [[String: Bool]] = []
+			var permissionValues : [OCSharePermissionsMask] = []
+			var subtitles : [String]?
 			permissions = [
 				["Download / View" : share.canShare],
 				["Download / View / Upload" : share.canUpdate],
@@ -282,16 +282,49 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				]
 			}
 
-			section.add(radioGroupWithArrayOfLabelValueDictionaries: [
-				["Download / View" : "value-of-line-1"],
-				["Download / View / Upload" : "value-of-line-2"],
-				["Upload only (File Drop)" : "value-of-line-3"]
-				], radioAction: { (row, _) in
-					let selectedValueFromSection = row.section?.selectedValue(forGroupIdentifier: "radioExample")
+			var currentPermission = 2
+			if share.canUpdate {
+				currentPermission = 1
+			} else if share.canRead {
+				currentPermission = 0
+			}
 
-					Log.log("Radio value for \(row.groupIdentifier!) changed to \(row.value!)")
-					Log.log("Values can also be read from the section object: \(selectedValueFromSection!)")
-			}, groupIdentifier: "radioExample", selectedValue: "value-of-line-2")
+			section.add(radioGroupWithArrayOfLabelValueDictionaries: [
+				["Download / View" : 0],
+				["Download / View / Upload" : 1],
+				["Upload only (File Drop)" : 2]
+				], radioAction: { (row, _) in
+
+					if let core = self.core {
+						guard let share = self.share, let selectedValueFromSection = row.section?.selectedValue(forGroupIdentifier: "radioExample") as? Int else { return }
+						core.update(share, afterPerformingChanges: {(share) in
+
+							switch selectedValueFromSection {
+							case 0:
+								share.permissions = OCSharePermissionsMask.read
+							case 1:
+								share.permissions = OCSharePermissionsMask(rawValue: OCSharePermissionsMask.read.rawValue + OCSharePermissionsMask.update.rawValue + OCSharePermissionsMask.create.rawValue + OCSharePermissionsMask.delete.rawValue)
+							case 2:
+								share.permissions = OCSharePermissionsMask.create
+							default:
+								break
+							}
+						}, completionHandler: { (error, share) in
+							if error == nil {
+								guard let changedShare = share else { return }
+								self.share?.permissions = changedShare.permissions
+							} else {
+								if let shareError = error {
+									OnMainThread {
+										let alertController = UIAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										self.present(alertController, animated: true)
+									}
+								}
+							}
+						})
+					}
+
+			}, groupIdentifier: "radioExample", selectedValue: currentPermission)
 
 			self.addSection(section)
 		}
