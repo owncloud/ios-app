@@ -44,7 +44,7 @@ extension OCBookmarkManager {
 		}
 
 		if waitForServerlistRefresh {
-			print ("Waiting for element addServer result: \(EarlGrey.waitForElement(accessibilityID: "addServer"))")
+			Log.log("Waiting for element addServer result: \(EarlGrey.waitForElement(accessibilityID: "addServer"))")
 		}
 	}
 }

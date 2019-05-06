@@ -30,7 +30,9 @@ class WebViewDisplayViewController: DisplayViewController {
 	override func renderSpecificView() {
 		WebViewDisplayViewController.externalContentBlockingRuleList { (blockList, error) in
 			guard error == nil, let source = self.source else {
-				print(error!)
+				if let error = error {
+					Log.error("Error adding external content blocking rule list: \(error)")
+				}
 				return
 			}
 

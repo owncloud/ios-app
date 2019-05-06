@@ -22,6 +22,6 @@ import XCTest
 extension XCTestCase {
 	override open func setUp() {
 		super.setUp()
-		print("Starting \(self.name)")
+		Log.log("Starting \(self.name)")
 	}
 }

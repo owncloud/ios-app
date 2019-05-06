@@ -307,7 +307,6 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	private func render() {
-		print("LOG --> State changed to \(state)")
 		switch state {
 		case .hasNetworkConnection:
 			hideProgressIndicators()
