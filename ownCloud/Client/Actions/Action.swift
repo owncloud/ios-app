@@ -166,7 +166,7 @@ class Action : NSObject {
 	}
 
 	// MARK: - Provide Card view controller
-	
+
 	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ActionProgressHandler? = nil, completionHandler: ((Action, Error?) -> Void)? = nil) -> UIViewController {
 
 		let tableViewController = MoreStaticTableViewController(style: .plain)
@@ -181,50 +181,50 @@ class Action : NSObject {
 				let row = StaticTableViewRow(rowWithAction: nil, title: "Searching Shares...".localized, alignment: .left, accessoryView: progressView, identifier: "share-searching")
 				self.updateSharingRow(sectionIdentifier: "share-section", rows: [row], tableViewController: tableViewController)
 
-				if context.core!.connection.capabilities?.sharingGroupSharing == 1 {
-					let query = context.core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
-						if sharesWithReshares.count > 0 {
-							OnMainThread {
-								let rows = self.sharingRow(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
-								self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
-								moreViewController.preferredContentSize = tableViewController.tableView.contentSize
-							}
-						}
-						_ = context.core!.sharesSharedWithMe(for: item, initialPopulationHandler: { (sharesWithMe) in
-							if sharesWithMe.count > 0 {
-								var shares : [OCShare] = []
-								shares.append(contentsOf: sharesWithMe)
-								shares.append(contentsOf: sharesWithReshares)
-
-								OnMainThread {
-									let rows = self.sharingRow(shares: shares, item: item, presentingController: moreViewController, context: context, byMe: false)
-									self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
-								}
-							} else if sharesWithReshares.count == 0 {
-								OnMainThread {
-									if let section = tableViewController.sectionForIdentifier("share-section") {
-										tableViewController.removeSection(section)
-										moreViewController.preferredContentSize = tableViewController.tableView.contentSize
-									}
-								}
-							}
-						})
-					})
-					query?.refreshInterval = 3
-					query?.changesAvailableNotificationHandler = { query in
-						let sharesWithReshares = query.queryResults
+				let query = context.core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
+					if sharesWithReshares.count > 0 {
 						OnMainThread {
-							if sharesWithReshares.count > 0 {
-								let rows = self.sharingRow(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
+							let rows = self.sharingRow(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
+							self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
+							moreViewController.preferredContentSize = tableViewController.tableView.contentSize
+						}
+					}
+					_ = context.core!.sharesSharedWithMe(for: item, initialPopulationHandler: { (sharesWithMe) in
+						if sharesWithMe.count > 0 {
+							var shares : [OCShare] = []
+							shares.append(contentsOf: sharesWithMe)
+							shares.append(contentsOf: sharesWithReshares)
+
+							OnMainThread {
+								let rows = self.sharingRow(shares: shares, item: item, presentingController: moreViewController, context: context, byMe: false)
 								self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
-							} else {
+							}
+						} else if item.isShareable, sharesWithReshares.count == 0 {
+							OnMainThread {
 								var shareRows : [StaticTableViewRow] = []
 								shareRows.append(self.shareRow(item: item, presentingController: moreViewController, context: context))
-								if item.isShareable, context.core!.connection.capabilities?.publicSharingEnabled == true {
+								if context.core!.connection.capabilities?.publicSharingEnabled == true {
 									shareRows.append(self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context))
 								}
 								self.updateSharingRow(sectionIdentifier: "share-section", rows: shareRows, tableViewController: tableViewController)
 							}
+						}
+					})
+				})
+				query?.refreshInterval = 3
+				query?.changesAvailableNotificationHandler = { query in
+					let sharesWithReshares = query.queryResults
+					OnMainThread {
+						if sharesWithReshares.count > 0 {
+							let rows = self.sharingRow(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
+							self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
+						} else {
+							var shareRows : [StaticTableViewRow] = []
+							shareRows.append(self.shareRow(item: item, presentingController: moreViewController, context: context))
+							if item.isShareable, context.core!.connection.capabilities?.publicSharingEnabled == true {
+								shareRows.append(self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context))
+							}
+							self.updateSharingRow(sectionIdentifier: "share-section", rows: shareRows, tableViewController: tableViewController)
 						}
 					}
 				}
@@ -362,9 +362,7 @@ class Action : NSObject {
 	// MARK: - Sharing
 
 	class func sharingRow(shares: [OCShare], item: OCItem, presentingController: UIViewController, context: ActionContext, byMe: Bool) -> [StaticTableViewRow] {
-
 			var shareRows: [StaticTableViewRow] = []
-
 			if shares.count > 0 {
 				var userTitle = ""
 				var linkTitle = ""

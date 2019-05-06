@@ -180,7 +180,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 		case 2:
 			type = .remote
 		default:
-				break;
+			break
 		}
 
 		if type != nil {
@@ -334,6 +334,8 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 			self.searchController?.searchBar.isLoading = false
 		}
 	}
+
+	//MARK: TableView Delegate
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		if let shareAtPath = share(at: indexPath), self.canEdit(share: shareAtPath) {

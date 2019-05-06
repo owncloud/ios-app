@@ -27,6 +27,8 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 	var core : OCCore?
 	var showSubtitles : Bool = false
 
+	// MARK: - Init
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -37,11 +39,14 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 		let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
 		navigationItem.rightBarButtonItem = infoBarButtonItem
 
-		loadPermissionRow()
-		loadReshares()
+		addPermissionSection()
+		addResharesSection()
+		addActionSection()
 	}
 
-	func loadPermissionRow() {
+	// MARK: Permission Section
+
+	func addPermissionSection() {
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateStyle = .medium
 		dateFormatter.timeStyle = .short
@@ -130,7 +135,9 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 		self.insertSection(section, at: 0, animated: false)
 	}
 
-	func loadReshares() {
+	// MARK: - Reshares Section
+
+	func addResharesSection() {
 		var shareRows: [StaticTableViewRow] = []
 
 		if let reshares = reshares, reshares.count > 0 {
@@ -145,7 +152,11 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 			let section = StaticTableViewSection(headerTitle: "Shared to".localized, footerTitle: nil, rows: shareRows)
 			self.addSection(section)
 		}
+	}
 
+	//MARK: - Action Section
+
+	func addActionSection() {
 		let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil)
 		section.add(rows: [
 			StaticTableViewRow(buttonWithAction: { (row, _) in
@@ -173,10 +184,12 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 		self.addSection(section)
 	}
 
+	// MARK: Actions
+
 	@objc func showInfoSubtitles() {
 		showSubtitles.toggle()
 		guard let removeSection = self.sectionForIdentifier("permission-section") else { return }
 		self.removeSection(removeSection)
-		loadPermissionRow()
+		addPermissionSection()
 	}
 }

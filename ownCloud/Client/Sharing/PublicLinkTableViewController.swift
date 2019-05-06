@@ -50,6 +50,8 @@ class PublicLinkTableViewController: StaticTableViewController {
 	var meCanShareItem : Bool = false
 	var messageView : MessageView?
 
+	//MARK: - Init
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
