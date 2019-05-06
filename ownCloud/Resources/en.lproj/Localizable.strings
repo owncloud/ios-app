@@ -272,3 +272,12 @@
 /* Photo upload settings */
 "Photo Upload" = "Photo Upload";
 "Convert HEIC to JPEG" = "Convert HEIC to JPEG";
+
+/* Progress summarizer */
+"Creating %ld of %ld folders…" = "Creating %ld of %ld folders…";
+"Moving %ld of %ld items…" = "Moving %ld of %ld items…";
+"Copying %ld of %ld items…" = "Copying %ld of %ld items…";
+"Deleting %ld of %ld items…" = "Deleting %ld of %ld items…";
+"Uploading %ld of %ld files…" = "Uploading %ld of %ld files…";
+"Downloading %ld of %ld files…" = "Downloading %ld of %ld files…";
+"Updating %ld of %ld items…" = "Updating %ld of %ld items…";
