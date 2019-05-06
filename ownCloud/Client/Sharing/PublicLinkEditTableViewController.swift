@@ -6,6 +6,16 @@
 //  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
 
+/*
+* Copyright (C) 2019, ownCloud GmbH.
+*
+* This code is covered by the GNU Public License Version 3.
+*
+* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+*
+*/
+
 import UIKit
 import ownCloudSDK
 
@@ -22,8 +32,15 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 		self.navigationItem.title = share?.name!
 
-		let infoBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareLinkURL))
+		let infoButton = UIButton(type: .infoLight)
+		infoButton.addTarget(self, action: #selector(showInfoSubtitles), for: .touchUpInside)
+		let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
 		navigationItem.rightBarButtonItem = infoBarButtonItem
+
+		let shareBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareLinkURL))
+		self.toolbarItems = [shareBarButtonItem]
+		self.navigationController?.toolbar.isTranslucent = false
+		self.navigationController?.isToolbarHidden = false
 
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateStyle = .medium
@@ -33,7 +50,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			footer = String(format: "Shared since: %@".localized, dateFormatter.string(from: date))
 		}
 
-		let section = StaticTableViewSection(headerTitle: "Name", footerTitle: nil, identifier: "permission-section")
+		let section = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "name-section")
 		let nameRow = StaticTableViewRow(textFieldWithAction: { (row, _) in
 			if let core = self.core {
 				guard let share = self.share, let name = row.textField?.text else { return }
@@ -53,7 +70,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					}
 				})
 			}
-		}, placeholder: "Public Link".localized, value: (share?.name!)!, secureTextEntry: false, keyboardType: .default, autocorrectionType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "Name")
+		}, placeholder: "Public Link".localized, value: (share?.name!)!, secureTextEntry: false, keyboardType: .default, autocorrectionType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "name-text-row")
 
 		section.add(row: nameRow)
 		self.addSection(section)
@@ -65,72 +82,67 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			hasPassword = true
 		}
 
-		let passwordSection = StaticTableViewSection(headerTitle: "Password", footerTitle: nil, identifier: "permission-section")
-		let passwordRow = StaticTableViewRow(switchWithAction: { (_, sender) in
-			if let passwordSwitch = sender as? UISwitch {
-				if passwordSwitch.isOn == false, let passwordFieldRow = passwordSection.row(withIdentifier: "passwordFieldRow") {
-					passwordSection.remove(rows: [passwordFieldRow], animated: true)
-				} else if passwordSwitch.isOn {
-					self.passwordRow(passwordSection)
-				}
-			}
-		}, title: "Protect with password".localized, value: hasPassword, identifier: "PasswordRow")
-		passwordSection.add(row: passwordRow)
+		let passwordSection = StaticTableViewSection(headerTitle: "Password".localized, footerTitle: nil, identifier: "password-section")
+		passwordSwitchRow(hasPassword, passwordSection)
 		if hasPassword {
 			self.passwordRow(passwordSection)
 		}
 		self.addSection(passwordSection)
 
 		var hasExpireDate = false
-		if share?.expirationDate != nil {
+		if share?.expirationDate != nil || core?.connection.capabilities?.publicSharingExpireDateEnforced == true {
 			hasExpireDate = true
 		}
 
-		let expireSection = StaticTableViewSection(headerTitle: "Expire Date", footerTitle: nil, identifier: "expire-section")
-		let expireDateRow = StaticTableViewRow(switchWithAction: { (_, sender) in
-			if let expireDateSwitch = sender as? UISwitch {
-				if expireDateSwitch.isOn == false, let expireDateRow = expireSection.row(withIdentifier: "expireDateRow") {
-					var rows : [StaticTableViewRow] = [expireDateRow]
-					if let expireDatePickerRow = expireSection.row(withIdentifier: "datePickerRow") {
-						rows.append(expireDatePickerRow)
+		let expireSection = StaticTableViewSection(headerTitle: "Expire Date".localized, footerTitle: nil, identifier: "expire-section")
+
+		if self.core?.connection.capabilities?.publicSharingExpireDateEnforced == false {
+
+			let expireDateRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+				if let expireDateSwitch = sender as? UISwitch {
+					if expireDateSwitch.isOn == false, let expireDateRow = expireSection.row(withIdentifier: "expireDate-row") {
+						var rows : [StaticTableViewRow] = [expireDateRow]
+						if let expireDatePickerRow = expireSection.row(withIdentifier: "datePicker-Row") {
+							rows.append(expireDatePickerRow)
+						}
+						expireSection.remove(rows: rows, animated: true)
+					} else if expireDateSwitch.isOn, expireSection.row(withIdentifier: "expireDate-row") == nil {
+						self.expireDateRow(expireSection)
 					}
-					expireSection.remove(rows: rows, animated: true)
-				} else if expireDateSwitch.isOn {
-					self.expireDateRow(expireSection)
-				}
 
-				if let core = self.core {
-					guard let share = self.share, let datePicker = sender as? UIDatePicker else { return }
-					core.update(share, afterPerformingChanges: {(share) in
-						if expireDateSwitch.isEnabled {
-							share.expirationDate = Date()
-						} else {
-							share.expirationDate = nil
-						}
+					if let core = self.core {
+						guard let share = self.share, let datePicker = sender as? UIDatePicker else { return }
+						core.update(share, afterPerformingChanges: {(share) in
+							if expireDateSwitch.isEnabled {
+								share.expirationDate = Date()
+							} else {
+								share.expirationDate = nil
+							}
 
-					}, completionHandler: { (error, share) in
-						if error == nil {
-							guard let changedShare = share else { return }
-							self.share?.expirationDate = changedShare.expirationDate
+						}, completionHandler: { (error, share) in
+							if error == nil {
+								guard let changedShare = share else { return }
+								self.share?.expirationDate = changedShare.expirationDate
 
-							if let expireDateRow = expireSection.row(withIdentifier: "expireDateRow") {
-								OnMainThread {
-									expireDateRow.cell?.textLabel?.text = dateFormatter.string(from: datePicker.date)
+								if let expireDateRow = expireSection.row(withIdentifier: "expireDate-row") {
+									OnMainThread {
+										expireDateRow.cell?.textLabel?.text = dateFormatter.string(from: datePicker.date)
+									}
+								}
+							} else {
+								if let shareError = error {
+									OnMainThread {
+										let alertController = UIAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										self.present(alertController, animated: true)
+									}
 								}
 							}
-						} else {
-							if let shareError = error {
-								OnMainThread {
-									let alertController = UIAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-									self.present(alertController, animated: true)
-								}
-							}
-						}
-					})
+						})
+					}
 				}
-			}
-		}, title: "Link has expire date".localized, value: hasExpireDate, identifier: "ExpireRow")
-		expireSection.add(row: expireDateRow)
+			}, title: "Link has expire date".localized, value: hasExpireDate, identifier: "expire-row")
+			expireSection.add(row: expireDateRow)
+		}
 
 		if hasExpireDate {
 			self.expireDateRow(expireSection)
@@ -158,7 +170,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 								self.navigationController?.popViewController(animated: true)
 							} else {
 								if let shareError = error {
-									let alertController = UIAlertController(with: "Delete Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+									let alertController = UIAlertController(with: "Deleting Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 									self.present(alertController, animated: true)
 								}
 							}
@@ -169,6 +181,39 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			])
 
 		self.addSection(deleteSection)
+	}
+
+	func passwordSwitchRow(_ hasPassword : Bool, _ passwordSection : StaticTableViewSection) {
+		let passwordRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+			if let passwordSwitch = sender as? UISwitch {
+				if passwordSwitch.isOn == false, let passwordFieldRow = passwordSection.row(withIdentifier: "password-field-row") {
+					passwordSection.remove(rows: [passwordFieldRow], animated: true)
+
+					// delete password
+					if let core = self.core {
+						guard let share = self.share else { return }
+						core.update(share, afterPerformingChanges: {(share) in
+							share.protectedByPassword = false
+						}, completionHandler: { (error, share) in
+							if error == nil {
+								guard let changedShare = share else { return }
+								self.share?.protectedByPassword = changedShare.protectedByPassword
+							} else {
+								if let shareError = error {
+									OnMainThread {
+										let alertController = UIAlertController(with: "Deleting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										self.present(alertController, animated: true)
+									}
+								}
+							}
+						})
+					}
+				} else if passwordSwitch.isOn {
+					self.passwordRow(passwordSection)
+				}
+			}
+		}, title: "Protected by password".localized, value: hasPassword, identifier: "password-switch-row")
+		passwordSection.insert(row: passwordRow, at: 0, animated: true)
 	}
 
 	func passwordRow(_ passwordSection : StaticTableViewSection) {
@@ -183,10 +228,12 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				guard let share = self.share, let textField = sender as? UITextField else { return }
 				core.update(share, afterPerformingChanges: {(share) in
 					share.password = textField.text
+					share.protectedByPassword = true
 				}, completionHandler: { (error, share) in
 					if error == nil {
 						guard let changedShare = share else { return }
 						self.share?.password = changedShare.password
+						self.share?.protectedByPassword = changedShare.protectedByPassword
 					} else {
 						if let shareError = error {
 							OnMainThread {
@@ -198,7 +245,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				})
 			}
 
-		}, placeholder: "Type to update password".localized, value: passwordValue, keyboardType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "passwordFieldRow")
+		}, placeholder: "Type to update password".localized, value: passwordValue, keyboardType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "password-field-row")
 		passwordSection.add(row: expireDateRow)
 	}
 
@@ -206,50 +253,54 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		var expireDate = Date()
 		if let date = share?.expirationDate {
 			expireDate = date
+		} else if self.core?.connection.capabilities?.publicSharingExpireDateEnabled == true, let defaultDays = self.core?.connection.capabilities?.publicSharingDefaultExpireDateDays {
+			if let newDate = Calendar.current.date(byAdding: .day, value: defaultDays.intValue, to: expireDate) {
+				expireDate = newDate
+			}
 		}
 
-			let dateFormatter = DateFormatter()
-			dateFormatter.dateStyle = .long
-			dateFormatter.timeStyle = .none
-			let expireDateRow = StaticTableViewRow(buttonWithAction: { (_, _) in
-				if expireSection.row(withIdentifier: "datePickerRow") == nil {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateStyle = .long
+		dateFormatter.timeStyle = .none
+		let expireDateRow = StaticTableViewRow(buttonWithAction: { (_, _) in
+			if expireSection.row(withIdentifier: "datePicker-Row") == nil {
 
-					let datePickerRow = StaticTableViewRow(datePickerWithAction: { (row, sender) in
+				let datePickerRow = StaticTableViewRow(datePickerWithAction: { (row, sender) in
 
-						if let core = self.core {
-							guard let share = self.share, let datePicker = sender as? UIDatePicker else { return }
-							core.update(share, afterPerformingChanges: {(share) in
-								share.expirationDate = datePicker.date
-							}, completionHandler: { (error, share) in
-								if error == nil {
-									guard let changedShare = share else { return }
-									self.share?.expirationDate = changedShare.expirationDate
+					if let core = self.core {
+						guard let share = self.share, let datePicker = sender as? UIDatePicker else { return }
+						core.update(share, afterPerformingChanges: {(share) in
+							share.expirationDate = datePicker.date
+						}, completionHandler: { (error, share) in
+							if error == nil {
+								guard let changedShare = share else { return }
+								self.share?.expirationDate = changedShare.expirationDate
 
-									if let expireDateRow = expireSection.row(withIdentifier: "expireDateRow") {
-										OnMainThread {
-											expireDateRow.cell?.textLabel?.text = dateFormatter.string(from: datePicker.date)
-										}
-									}
-								} else {
-									if let shareError = error {
-										OnMainThread {
-											let alertController = UIAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-											self.present(alertController, animated: true)
-										}
+								if let expireDateRow = expireSection.row(withIdentifier: "expireDate-row") {
+									OnMainThread {
+										expireDateRow.cell?.textLabel?.text = dateFormatter.string(from: datePicker.date)
 									}
 								}
-							})
-						}
-					}, date: expireDate, identifier: "datePickerRow")
-					expireSection.add(row: datePickerRow, animated: true)
-				} else {
-					if let datePickerRow = expireSection.row(withIdentifier: "datePickerRow") {
-						expireSection.remove(rows: [datePickerRow], animated: true)
+							} else {
+								if let shareError = error {
+									OnMainThread {
+										let alertController = UIAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										self.present(alertController, animated: true)
+									}
+								}
+							}
+						})
 					}
+				}, date: expireDate, identifier: "datePicker-Row")
+				expireSection.add(row: datePickerRow, animated: true)
+			} else {
+				if let datePickerRow = expireSection.row(withIdentifier: "datePicker-Row") {
+					expireSection.remove(rows: [datePickerRow], animated: true)
 				}
-			}, title: dateFormatter.string(from: expireDate), style: .plain, alignment: .left, identifier: "expireDateRow")
+			}
+		}, title: dateFormatter.string(from: expireDate), style: .plain, alignment: .left, identifier: "expireDate-row")
 
-			expireSection.add(row: expireDateRow)
+		expireSection.add(row: expireDateRow)
 	}
 
 	func loadPermissionRow() {
@@ -257,48 +308,28 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		guard let share = share, let item = item else { return }
 
 		if item.type == .collection {
-			var permissions : [[String: Bool]] = []
-			var permissionValues : [OCSharePermissionsMask] = []
-			var subtitles : [String]?
-			permissions = [
-				["Download / View" : share.canShare],
-				["Download / View / Upload" : share.canUpdate],
-				["Upload only (File Drop)" : share.canCreate],
-				["Change" : share.canReadWrite],
-				["Delete" : share.canDelete]
-			]
-			permissionValues = [
-				.share,
-				.update,
-				.update,
-				.create,
-				.delete
-			]
-			if showSubtitles {
-				subtitles = [
-					"Recipients can view or download contents.".localized,
-					"Recipients can view, download, edit, delete and upload contents.".localized,
-					"Receive files from multiple recipients without revealing the contents of the folder.".localized
-				]
-			}
-
-			var currentPermission = 2
+			var currentPermission = 0
 			if share.canUpdate {
 				currentPermission = 1
-			} else if share.canRead {
-				currentPermission = 0
+			} else if share.canCreate, share.canUpdate == false {
+				currentPermission = 2
 			}
 
-			section.add(radioGroupWithArrayOfLabelValueDictionaries: [
-				["Download / View" : 0],
-				["Download / View / Upload" : 1],
-				["Upload only (File Drop)" : 2]
-				], radioAction: { (row, _) in
+			let values = [
+				["Download / View".localized : 0],
+				["Download / View / Upload".localized : 1],
+				["Upload only (File Drop)".localized : 2]
+			]
 
-					if let core = self.core {
-						guard let share = self.share, let selectedValueFromSection = row.section?.selectedValue(forGroupIdentifier: "radioExample") as? Int else { return }
+			section.add(radioGroupWithArrayOfLabelValueDictionaries: values, radioAction: { (row, _) in
+				if let core = self.core {
+					guard let share = self.share, let selectedValueFromSection = row.section?.selectedValue(forGroupIdentifier: "permission-group") as? Int else { return }
+
+					if self.canPerformPermissionChange(for: selectedValueFromSection) {
+
+						self.preparePasswordSection(for: selectedValueFromSection)
+
 						core.update(share, afterPerformingChanges: {(share) in
-
 							switch selectedValueFromSection {
 							case 0:
 								share.permissions = OCSharePermissionsMask.read
@@ -322,19 +353,114 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 								}
 							}
 						})
+					} else {
+						// set selection back to previous selected value
+						row.section?.setSelected(currentPermission, groupIdentifier: "permission-group")
+						let permissionName = Array(values[selectedValueFromSection])[0].key
+
+						let alertController = UIAlertController(with: "Cannot change permission".localized, message: String(format: "Before you can set the permission\n%@,\n you must enter a password.".localized, permissionName), okLabel: "OK".localized, action: nil)
+						self.present(alertController, animated: true)
 					}
+				}
+			}, groupIdentifier: "permission-group", selectedValue: currentPermission)
 
-			}, groupIdentifier: "radioExample", selectedValue: currentPermission)
+			let subtitles = [
+				"Recipients can view or download contents.".localized,
+				"Recipients can view, download, edit, delete and upload contents.".localized,
+				"Receive files from multiple recipients without revealing the contents of the folder.".localized
+			]
 
-			self.addSection(section)
+			var subtitleIndex = 0
+			for row in section.rows {
+				if showSubtitles {
+					row.cell?.detailTextLabel?.text = subtitles[subtitleIndex]
+				} else {
+					row.cell?.detailTextLabel?.text = ""
+				}
+				subtitleIndex += 1
+			}
+
+			self.insertSection(section, at: 1)
 		}
 	}
 
+	func canPerformPermissionChange(for selectionIndex : Int) -> Bool {
+		if share?.protectedByPassword == false, passwordRequired(for: selectionIndex) {
+			return false
+		}
+
+		return true
+	}
+
+	func preparePasswordSection(for selectionIndex : Int) {
+		let needsPassword = passwordRequired(for: selectionIndex)
+		var hasPassword = false
+		if share?.protectedByPassword ?? false {
+			hasPassword = true
+		}
+
+		if let passwordSection = self.sectionForIdentifier("password-section") {
+			if needsPassword {
+				if let passwordSwitchRow = passwordSection.row(withIdentifier: "password-switch-row") {
+					passwordSection.remove(rows: [passwordSwitchRow], animated: false)
+				}
+
+				if passwordSection.row(withIdentifier: "password-field-row") == nil {
+					self.passwordRow(passwordSection)
+				}
+			} else {
+				if let passwordSwitchRow = passwordSection.row(withIdentifier: "password-switch-row") {
+					if let switchView = passwordSwitchRow.cell?.accessoryView as? UISwitch {
+						switchView.isOn = hasPassword
+					}
+				} else {
+					self.passwordSwitchRow(hasPassword, passwordSection)
+				}
+
+				if hasPassword == false, let passwordFieldRow = passwordSection.row(withIdentifier: "password-field-row") {
+					passwordSection.remove(rows: [passwordFieldRow], animated: false)
+				}
+			}
+		}
+	}
+
+	@objc func showInfoSubtitles() {
+		showSubtitles.toggle()
+		guard let removeSection = self.sectionForIdentifier("permission-section") else { return }
+		self.removeSection(removeSection)
+		loadPermissionRow()
+	}
+
 	@objc func shareLinkURL() {
-		guard let share = self.share, let shareURL = share.url else { return }
+		guard let share = self.share, let shareURL = share.url, let capabilities = self.core?.connection.capabilities else { return }
 
 		let activityViewController = UIActivityViewController(activityItems: [shareURL], applicationActivities: nil)
+		if capabilities.publicSharingSocialShare == false {
+			activityViewController.excludedActivityTypes = [
+				UIActivity.ActivityType.postToTwitter,
+				UIActivity.ActivityType.postToVimeo,
+				UIActivity.ActivityType.postToWeibo,
+				UIActivity.ActivityType.postToFlickr,
+				UIActivity.ActivityType.postToFacebook,
+				UIActivity.ActivityType.postToTencentWeibo,
+				UIActivity.ActivityType("com.facebook.Facebook")
+			]
+		}
 		activityViewController.popoverPresentationController?.sourceView = self.view
 		self.present(activityViewController, animated: true, completion: nil)
+	}
+
+	func passwordRequired(for selectionIndex: Int) -> Bool {
+		guard let capabilities = self.core?.connection.capabilities else { return false }
+
+		if selectionIndex == 0, capabilities.publicSharingPasswordEnforcedForReadOnly == true {
+			return true
+		} else if selectionIndex == 1, capabilities.publicSharingPasswordEnforcedForReadWrite == true {
+			return true
+		} else if selectionIndex == 2, capabilities.publicSharingPasswordEnforcedForUploadOnly == true {
+			return true
+		}
+
+		return false
 	}
 }

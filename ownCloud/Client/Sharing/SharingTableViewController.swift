@@ -41,7 +41,11 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 	var item : OCItem? {
 		didSet {
 			if item?.isShareable ?? false {
-				meCanShareItem = true
+				if item?.isSharedWithUser == false {
+					meCanShareItem = true
+				} else if item?.isSharedWithUser ?? false, core?.connection.capabilities?.sharingResharing == true {
+					meCanShareItem = true
+				}
 			}
 		}
 	}
@@ -213,7 +217,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 	// MARK: - UISearchResultsUpdating Delegate
 	func updateSearchResults(for searchController: UISearchController) {
 		guard let text = searchController.searchBar.text else { return }
-		if text.count > 1 {
+		if text.count > core?.connection.capabilities?.sharingSearchMinLength?.intValue ?? 1 {
 			recipientSearchController?.searchTerm = text
 			recipientSearchController?.search()
 		} else if searchController.isActive {
@@ -250,7 +254,12 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 
 				rows.append(
 					StaticTableViewRow(rowWithAction: { (_, _) in
-						let share = OCShare(recipient: recipient, path: itemPath, permissions: .read, expiration: nil)
+						var defaultPermissions : OCSharePermissionsMask = .read
+						if let capabilitiesDefaultPermission = self.core?.connection.capabilities?.sharingDefaultPermissions {
+							defaultPermissions = capabilitiesDefaultPermission
+						}
+
+						let share = OCShare(recipient: recipient, path: itemPath, permissions: defaultPermissions, expiration: nil)
 
 						OnMainThread {
 							self.searchController?.searchBar.text = ""

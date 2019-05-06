@@ -231,7 +231,12 @@ class PublicLinkTableViewController: StaticTableViewController {
 				permissions = OCSharePermissionsMask.read
 			}
 
-			let share = OCShare(publicLinkToPath: path, linkName: String(format:"%@ %@ (%ld)", name, "Link".localized, (shares.count + 1)), permissions: permissions, password: nil, expiration: nil)
+			var linkName = String(format:"%@ %@ (%ld)", name, "Link".localized, (shares.count + 1))
+			if let defaultLinkName = core?.connection.capabilities?.publicSharingDefaultLinkName {
+				linkName = defaultLinkName
+			}
+
+			let share = OCShare(publicLinkToPath: path, linkName: linkName, permissions: permissions, password: nil, expiration: nil)
 			self.core?.createShare(share, options: nil, completionHandler: { (error, newShare) in
 				if error == nil {
 					OnMainThread {

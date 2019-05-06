@@ -313,6 +313,18 @@
 "Creating public link failed" = "Creating public link failed";
 "Create Public Link" = "Create Public Link";
 "Link" = "Link";
+"Expire Date" = "Expire Date";
+"Setting expiration date failed" = "Setting expiration date failed";
+"Link has expire date" = "Link has expire date";
+"Copy Public Link URL" = "Copy Public Link URL";
+"Delete Public Link" = "Delete Public Link";
+"Deleting Public Link failed" = "Deleting Public Link failed";
+"Deleting password failed" = "Deleting password failed";
+"Protected by password" = "Protected by password";
+"Setting password failed" = "Setting password failed";
+"Type to update password" = "Type to update password";
+"Cannot change permission" = "Cannot change permission";
+"Before you can set the permission\n%@,\n you must enter a password." = "Before you can set the permission\n%@,\n you must enter a password.";
 
 /* Photo upload settings */
 "Photo Upload" = "Photo Upload";

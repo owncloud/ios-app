@@ -220,7 +220,7 @@ class Action : NSObject {
 							} else {
 								var shareRows : [StaticTableViewRow] = []
 								shareRows.append(self.shareRow(item: item, presentingController: moreViewController, context: context))
-								if item.isShareable {
+								if item.isShareable, context.core!.connection.capabilities?.publicSharingEnabled == true {
 									shareRows.append(self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context))
 								}
 								self.updateSharingRow(sectionIdentifier: "share-section", rows: shareRows, tableViewController: tableViewController)
@@ -229,9 +229,12 @@ class Action : NSObject {
 					}
 				}
 			} else if item.isShareable {
-				let shareRow = self.shareRow(item: item, presentingController: moreViewController, context: context)
-				let sharePublicRow = self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context)
-				tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: [shareRow, sharePublicRow]), at: 0, animated: true)
+				var shareRows : [StaticTableViewRow] = []
+				shareRows.append(self.shareRow(item: item, presentingController: moreViewController, context: context))
+				if context.core!.connection.capabilities?.publicSharingEnabled == true {
+					shareRows.append(self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context))
+				}
+				tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: shareRows), at: 0, animated: true)
 			}
 
 		}
@@ -435,7 +438,7 @@ class Action : NSObject {
 						}
 					}, title: linkTitle, subtitle: nil, alignment: .left, accessoryType: .disclosureIndicator)
 					shareRows.append(addGroupRow)
-				} else if item.isShareable {
+				} else if item.isShareable, context.core!.connection.capabilities?.publicSharingEnabled == true {
 					shareRows.append(self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context))
 				}
 			}
