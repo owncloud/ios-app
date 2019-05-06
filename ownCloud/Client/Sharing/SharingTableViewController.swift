@@ -170,6 +170,34 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 		}
 	}
 
+	func share(at indexPath : IndexPath) -> OCShare? {
+		var type : OCShareType?
+		switch indexPath.section {
+		case 0:
+			type = .userShare
+		case 1:
+			type = .groupShare
+		case 2:
+			type = .remote
+		default:
+				break;
+		}
+
+		if type != nil {
+			let shares = self.shares.filter { (OCShare) -> Bool in
+				if OCShare.type == type {
+					return true
+				}
+				return false
+			}
+			if shares.indices.contains(indexPath.row) {
+				return shares[indexPath.row]
+			}
+		}
+
+		return nil
+	}
+
 	func removeShareSections() {
 		OnMainThread {
 			let types : [OCShareType] = [.userShare, .groupShare, .remote]
@@ -268,6 +296,11 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 						self.core?.createShare(share, options: nil, completionHandler: { (error, _) in
 							if error == nil {
 								OnMainThread {
+									let editSharingViewController = SharingEditUserGroupsTableViewController(style: .grouped)
+									editSharingViewController.share = share
+									editSharingViewController.core = self.core
+									self.navigationController?.pushViewController(editSharingViewController, animated: true)
+
 									self.resetTable(showShares: true)
 								}
 							} else {
@@ -303,8 +336,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 	}
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		let share = self.shares[indexPath.row]
-		if self.canEdit(share: share) {
+		if let shareAtPath = share(at: indexPath), self.canEdit(share: shareAtPath) {
 			return [
 				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, _) in
 					var presentationStyle: UIAlertController.Style = .actionSheet
@@ -319,7 +351,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 
 					alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
 						if let core = self.core {
-							core.delete(share, completionHandler: { (error) in
+							core.delete(shareAtPath, completionHandler: { (error) in
 								OnMainThread {
 									if error == nil {
 										self.navigationController?.popViewController(animated: true)

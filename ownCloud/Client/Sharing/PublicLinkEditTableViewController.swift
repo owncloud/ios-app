@@ -93,10 +93,14 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		if share?.expirationDate != nil || core?.connection.capabilities?.publicSharingExpireDateEnforced == true {
 			hasExpireDate = true
 		}
+		var needsExpireDate = false
+		if self.core?.connection.capabilities?.publicSharingExpireDateEnforced == true {
+			needsExpireDate = true
+		}
 
 		let expireSection = StaticTableViewSection(headerTitle: "Expire Date".localized, footerTitle: nil, identifier: "expire-section")
 
-		if self.core?.connection.capabilities?.publicSharingExpireDateEnforced == false {
+		if needsExpireDate == false {
 
 			let expireDateRow = StaticTableViewRow(switchWithAction: { (_, sender) in
 				if let expireDateSwitch = sender as? UISwitch {
@@ -144,7 +148,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			expireSection.add(row: expireDateRow)
 		}
 
-		if hasExpireDate {
+		if hasExpireDate || needsExpireDate {
 			self.expireDateRow(expireSection)
 		}
 		self.addSection(expireSection)
