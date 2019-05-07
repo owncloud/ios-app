@@ -39,6 +39,9 @@ class BookmarkViewController: StaticTableViewController {
 	var showedOAuthInfoHeader : Bool = false
 	var activeTextField: UITextField?
 
+	var storageSection : StaticTableViewSection?
+	var deleteLocalFilesRow : StaticTableViewRow?
+
 	lazy var continueBarButtonItem: UIBarButtonItem = UIBarButtonItem(title: "Continue".localized, style: .done, target: self, action: #selector(handleContinue))
 	lazy var saveBarButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
 	lazy var nextBarButtonItem = UIBarButtonItem(image: UIImage(named: "arrow-down"), style: .plain, target: self, action: #selector(toogleTextField))
@@ -250,6 +253,13 @@ class BookmarkViewController: StaticTableViewController {
 
 			self.urlRow?.cell?.accessoryView = vectorImageView
 		}
+
+		deleteLocalFilesRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+			// TODO:
+			}, title: "Delete Offline Copies".localized, style: .destructive, identifier: "row-offline-copies-delete")
+
+		storageSection = StaticTableViewSection(headerTitle: "Storage".localized, footerTitle: nil, identifier: "section-credentials", rows: [ deleteLocalFilesRow! ])
+
 
 		// Update contents
 		self.composeSectionsAndRows(animated: false)
@@ -689,6 +699,12 @@ class BookmarkViewController: StaticTableViewController {
 		} else {
 			if credentialsSection?.attached == true {
 				self.removeSection(credentialsSection!, animated: animated)
+			}
+		}
+
+		if storageSection?.attached == false {
+			if let storageSectionIndex = credentialsSection?.index {
+				self.insertSection(storageSection!, at: storageSectionIndex+1, animated: animated)
 			}
 		}
 
