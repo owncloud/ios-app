@@ -76,7 +76,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					}
 				})
 			}
-		}, placeholder: "Public Link".localized, value: (share?.name!)!, secureTextEntry: false, keyboardType: .default, autocorrectionType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "name-text-row")
+		}, placeholder: "Public Link".localized, value: (share?.name!)!, secureTextEntry: false, keyboardType: .default, autocorrectionType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "name-text-row", actionEvent: UIControl.Event.editingDidEnd)
 
 		section.add(row: nameRow)
 		self.addSection(section)
