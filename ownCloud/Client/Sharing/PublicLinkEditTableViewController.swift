@@ -275,7 +275,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				})
 			}
 
-		}, placeholder: "Type to update password".localized, value: passwordValue, keyboardType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "password-field-row")
+		}, placeholder: "Type to update password".localized, value: passwordValue, keyboardType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "password-field-row", actionEvent: UIControl.Event.editingDidEnd)
 		passwordSection.add(row: expireDateRow)
 	}
 
