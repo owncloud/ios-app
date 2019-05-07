@@ -442,6 +442,37 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 					self?.showBookmarkUI(edit: bookmark)
 				}
+			}),
+
+			UITableViewRowAction(style: .normal, title: "Compact".localized, handler: { [weak self] (_, indexPath) in
+				if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+					self?.lockedBookmarks.append(bookmark)
+
+					OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
+						let vault : OCVault = OCVault(bookmark: bookmark)
+
+						vault.compact(completionHandler: { (_, error) in
+							OnMainThread {
+								if error != nil {
+									// Inform user if vault couldn't be comp acted
+									let alertController = UIAlertController(title: NSString(format: "Compacting of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+																			message: error?.localizedDescription,
+																			preferredStyle: .alert)
+
+									alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+
+									self?.present(alertController, animated: true, completion: nil)
+								}
+
+								if let removeIndex = self?.lockedBookmarks.index(of: bookmark) {
+									self?.lockedBookmarks.remove(at: removeIndex)
+								}
+
+								completionHandler()
+							}
+						})
+					}, for: bookmark)
+				}
 			})
 		]
 	}
