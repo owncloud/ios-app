@@ -409,7 +409,7 @@ class Action : NSObject {
 					presentingController.dismiss(animated: true)
 
 					if let viewController = context.viewController {
-						let sharingViewController = SharingTableViewController(style: .grouped)
+						let sharingViewController = GroupSharingTableViewController(style: .grouped)
 						sharingViewController.shares = shares
 						sharingViewController.core = context.core!
 						sharingViewController.item = item
@@ -463,7 +463,7 @@ class Action : NSObject {
 			presentingController.dismiss(animated: true)
 
 			if let viewController = context.viewController {
-				let sharingViewController = SharingTableViewController(style: .grouped)
+				let sharingViewController = GroupSharingTableViewController(style: .grouped)
 				sharingViewController.core = context.core!
 				sharingViewController.item = item
 				let navigationController = ThemeNavigationController(rootViewController: sharingViewController)

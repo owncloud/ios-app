@@ -1,5 +1,5 @@
 //
-//  SharingEditUserGroupsTableViewController.swift
+//  GroupSharingEditUserGroupsTableViewController.swift
 //  ownCloud
 //
 //  Created by Matthias Hühne on 10.04.19.
@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class SharingEditUserGroupsTableViewController: StaticTableViewController {
+class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 
 	// MARK: - Instance Variables
 	var share : OCShare?
@@ -143,7 +143,7 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 		if let reshares = reshares, reshares.count > 0 {
 			for share in reshares {
 				shareRows.append( StaticTableViewRow(rowWithAction: { (_, _) in
-					let editSharingViewController = SharingEditUserGroupsTableViewController(style: .grouped)
+					let editSharingViewController = GroupSharingEditUserGroupsTableViewController(style: .grouped)
 					editSharingViewController.share = share
 					self.navigationController?.pushViewController(editSharingViewController, animated: true)
 				}, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: .disclosureIndicator) )

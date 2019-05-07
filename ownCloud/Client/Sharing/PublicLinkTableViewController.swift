@@ -22,32 +22,9 @@ import ownCloudSDK
 class PublicLinkTableViewController: StaticTableViewController {
 
 	// MARK: - Instance Variables
-	var shares : [OCShare] = [] {
-		didSet {
-			let meShares = shares.filter { (share) -> Bool in
-				if share.recipient?.user?.userName == core?.connection.loggedInUser?.userName && share.canShare {
-					return true
-				} else if share.itemOwner?.userName == core?.connection.loggedInUser?.userName && share.canShare {
-					return true
-				}
-				return false
-			}
-			if meShares.count > 0 {
-				meCanShareItem = true
-			}
-		}
-	}
+	var shares : [OCShare] = []
 	var core : OCCore?
-	var item : OCItem? {
-		didSet {
-			if item?.isShareable ?? false {
-				meCanShareItem = true
-			}
-		}
-	}
-	var searchController : UISearchController?
-	var recipientSearchController : OCRecipientSearchController?
-	var meCanShareItem : Bool = false
+	var item : OCItem?
 	var messageView : MessageView?
 
 	// MARK: - Init
@@ -70,7 +47,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 					}
 					return false
 				}
-				self.populateShares()
+				self.addShareSections()
 			}
 		})
 
@@ -84,13 +61,13 @@ class PublicLinkTableViewController: StaticTableViewController {
 			}
 			self.shares = sharesWithReshares
 			self.removeShareSections()
-			self.populateShares()
+			self.addShareSections()
 			self.handleEmptyShares()
 		}
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
 		handleEmptyShares()
 	}
 
@@ -130,7 +107,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 		}
 	}
 
-	func populateShares() {
+	func addShareSections() {
 		OnMainThread {
 			self.addSectionFor(type: .link, with: "Public Links".localized)
 		}
@@ -152,7 +129,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 		removeShareSections()
 		if shares.count > 0 && showShares {
 			messageView?.message(show: false)
-			self.populateShares()
+			self.addShareSections()
 		} else {
 			messageView?.message(show: true, imageName: "icon-search", title: "Public Link".localized, message: "Add a public link".localized)
 		}
@@ -162,8 +139,6 @@ class PublicLinkTableViewController: StaticTableViewController {
 		if shares.count == 0 {
 			OnMainThread {
 				self.resetTable(showShares: false)
-				self.searchController?.isActive = true
-				self.searchController?.searchBar.becomeFirstResponder()
 			}
 		}
 	}
@@ -176,6 +151,8 @@ class PublicLinkTableViewController: StaticTableViewController {
 
 		return false
 	}
+
+	// MARK: TableView Delegate
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let share = self.shares[indexPath.row]
@@ -222,6 +199,8 @@ class PublicLinkTableViewController: StaticTableViewController {
 
 		return []
 	}
+
+	// MARK: Add New Link Share
 
 	@objc func addPublicLink() {
 		if let item = item, let path = item.path, let name = item.name {

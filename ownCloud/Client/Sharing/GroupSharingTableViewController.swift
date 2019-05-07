@@ -1,5 +1,5 @@
 //
-//  SharingTableViewController.swift
+//  GroupSharingTableViewController.swift
 //  ownCloud
 //
 //  Created by Matthias Hühne on 10.04.19.
@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class SharingTableViewController: StaticTableViewController, UISearchResultsUpdating, UISearchBarDelegate, OCRecipientSearchControllerDelegate {
+class GroupSharingTableViewController: StaticTableViewController, UISearchResultsUpdating, UISearchBarDelegate, OCRecipientSearchControllerDelegate {
 
 	// MARK: - Instance Variables
 	var shares : [OCShare] = [] {
@@ -54,8 +54,12 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 	var meCanShareItem : Bool = false
 	var messageView : MessageView?
 
+	// MARK: - Init
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		guard let item = item else { return }
 
 		if meCanShareItem {
 			searchController = UISearchController(searchResultsController: nil)
@@ -68,12 +72,11 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 			navigationItem.searchController = searchController
 			definesPresentationContext = true
 			searchController?.searchBar.applyThemeCollection(Theme.shared.activeCollection)
+			recipientSearchController = core?.recipientSearchController(for: item)
+			recipientSearchController?.delegate = self
 		}
 
-		guard let item = item else { return }
 		messageView = MessageView(add: self.view)
-		recipientSearchController = core?.recipientSearchController(for: item)
-		recipientSearchController?.delegate = self
 
 		self.navigationItem.title = "Sharing".localized
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
@@ -86,7 +89,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 					}
 					return false
 				}
-				self.populateShares()
+				self.addShareSections()
 			}
 			_ = self.core!.sharesSharedWithMe(for: item, initialPopulationHandler: { (sharesWithMe) in
 				if sharesWithMe.count > 0 {
@@ -95,7 +98,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 					shares.append(contentsOf: sharesWithReshares)
 					self.shares = shares
 					self.removeShareSections()
-					self.populateShares()
+					self.addShareSections()
 				}
 			})
 		})
@@ -110,13 +113,13 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 			}
 			self.shares = sharesWithReshares
 			self.removeShareSections()
-			self.populateShares()
+			self.addShareSections()
 			self.handleEmptyShares()
 		}
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
+		super.viewDidAppear(animated)
 		handleEmptyShares()
 	}
 
@@ -142,7 +145,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 				}
 				if canEdit(share: share) {
 					shareRows.append( StaticTableViewRow(rowWithAction: { (_, _) in
-						let editSharingViewController = SharingEditUserGroupsTableViewController(style: .grouped)
+						let editSharingViewController = GroupSharingEditUserGroupsTableViewController(style: .grouped)
 						editSharingViewController.share = share
 						editSharingViewController.reshares = resharedUsers
 						editSharingViewController.core = self.core
@@ -162,13 +165,49 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 		}
 	}
 
-	func populateShares() {
+	func addShareSections() {
 		OnMainThread {
 			self.addSectionFor(type: .userShare, with: "Users".localized)
 			self.addSectionFor(type: .groupShare, with: "Groups".localized)
 			self.addSectionFor(type: .remote, with: "Remote Users".localized)
 		}
 	}
+
+	func removeShareSections() {
+		OnMainThread {
+			let types : [OCShareType] = [.userShare, .groupShare, .remote]
+			for type in types {
+				let identifier = "share-section-\(String(type.rawValue))"
+				if let section = self.sectionForIdentifier(identifier) {
+					self.removeSection(section)
+				}
+			}
+		}
+	}
+
+	func resetTable(showShares : Bool) {
+		removeShareSections()
+		if let section = self.sectionForIdentifier("search-results") {
+			self.removeSection(section)
+		}
+		if shares.count > 0 && showShares {
+			messageView?.message(show: false)
+			self.addShareSections()
+		} else {
+			messageView?.message(show: true, imageName: "icon-search", title: "Search Recipients".localized, message: "Start typing to search users, groups and remote users.".localized)
+		}
+	}
+
+	func handleEmptyShares() {
+		if shares.count == 0 {
+			OnMainThread {
+				self.resetTable(showShares: false)
+				self.searchController?.searchBar.becomeFirstResponder()
+			}
+		}
+	}
+
+	// MARK: - Sharing Helper
 
 	func share(at indexPath : IndexPath) -> OCShare? {
 		var type : OCShareType?
@@ -198,41 +237,6 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 		return nil
 	}
 
-	func removeShareSections() {
-		OnMainThread {
-			let types : [OCShareType] = [.userShare, .groupShare, .remote]
-			for type in types {
-				let identifier = "share-section-\(String(type.rawValue))"
-				if let section = self.sectionForIdentifier(identifier) {
-					self.removeSection(section)
-				}
-			}
-		}
-	}
-
-	func resetTable(showShares : Bool) {
-		removeShareSections()
-		if let section = self.sectionForIdentifier("search-results") {
-			self.removeSection(section)
-		}
-		if shares.count > 0 && showShares {
-			messageView?.message(show: false)
-			self.populateShares()
-		} else {
-			messageView?.message(show: true, imageName: "icon-search", title: "Search Recipients".localized, message: "Start typing to search users, groups and remote users.".localized)
-		}
-	}
-
-	func handleEmptyShares() {
-		if shares.count == 0 {
-			OnMainThread {
-				self.resetTable(showShares: false)
-				self.searchController?.searchBar.becomeFirstResponder()
-			}
-		}
-	}
-
-	// MARK: - Sharing Helper
 	func canEdit(share: OCShare) -> Bool {
 		if core?.connection.loggedInUser?.userName == share.owner?.userName || core?.connection.loggedInUser?.userName == share.itemOwner?.userName {
 			return true
@@ -296,7 +300,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 						self.core?.createShare(share, options: nil, completionHandler: { (error, _) in
 							if error == nil {
 								OnMainThread {
-									let editSharingViewController = SharingEditUserGroupsTableViewController(style: .grouped)
+									let editSharingViewController = GroupSharingEditUserGroupsTableViewController(style: .grouped)
 									editSharingViewController.share = share
 									editSharingViewController.core = self.core
 									self.navigationController?.pushViewController(editSharingViewController, animated: true)
