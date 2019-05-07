@@ -119,6 +119,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell = ThemeTableViewCell(style: cellStyle, reuseIdentifier: nil)
 		if subtitle != nil {
 			self.cell?.detailTextLabel?.text = subtitle
+			self.cell?.detailTextLabel?.numberOfLines = 0
 		}
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = alignment
