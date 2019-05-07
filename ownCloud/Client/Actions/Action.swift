@@ -318,7 +318,7 @@ class Action : NSObject {
 		return StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
 			self.willRun()
 			self.run()
-		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, alignment: .left, identifier: actionExtension.identifier.rawValue, accessoryView: UIImageView(image: actionExtension.image))
+		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, image: actionExtension.image, alignment: .left, identifier: actionExtension.identifier.rawValue)
 	}
 
 	func provideContextualAction() -> UIContextualAction? {
@@ -416,7 +416,7 @@ class Action : NSObject {
 						let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 						viewController.present(navigationController, animated: true, completion: nil)
 					}
-				}, title: userTitle, subtitle: nil, alignment: .left, accessoryType: .disclosureIndicator)
+				}, title: userTitle, subtitle: nil, image: UIImage(named: "group"), alignment: .left, accessoryType: .disclosureIndicator)
 				shareRows.append(addGroupRow)
 				} else {
 					shareRows.append(self.shareRow(item: item, presentingController: presentingController, context: context))
@@ -434,7 +434,7 @@ class Action : NSObject {
 							let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 							viewController.present(navigationController, animated: true, completion: nil)
 						}
-					}, title: linkTitle, subtitle: nil, alignment: .left, accessoryType: .disclosureIndicator)
+					}, title: linkTitle, subtitle: nil, image: UIImage(named: "link"), alignment: .left, accessoryType: .disclosureIndicator)
 					shareRows.append(addGroupRow)
 				} else if item.isShareable, context.core!.connection.capabilities?.publicSharingEnabled == true {
 					shareRows.append(self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context))
@@ -470,7 +470,7 @@ class Action : NSObject {
 
 				viewController.present(navigationController, animated: true, completion: nil)
 			}
-		}, title: title, style: .plain, alignment: .left, identifier: "share-add-group", accessoryView: UIImageView(image: UIImage(named: "shared")))
+		}, title: title, style: .plain, image: UIImage(named: "group"), alignment: .left, identifier: "share-add-group")
 
 		return addGroupRow
 	}
@@ -489,7 +489,7 @@ class Action : NSObject {
 
 				viewController.present(navigationController, animated: true, completion: nil)
 			}
-		}, title: "Create Public Link".localized, style: .plain, alignment: .left, identifier: "share-add-group", accessoryView: UIImageView(image: UIImage(named: "link")))
+		}, title: "Create Public Link".localized, style: .plain, image: UIImage(named: "link"), alignment: .left, identifier: "share-add-group")
 
 		return addGroupRow
 	}

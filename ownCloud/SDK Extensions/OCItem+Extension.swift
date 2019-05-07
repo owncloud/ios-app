@@ -196,11 +196,7 @@ extension OCItem {
 
 		if iconName == nil {
 			if self.type == .collection {
-				if self.isSharedWithUser || self.isShared() {
-					iconName = "folder-shared"
-				} else {
-					iconName = "folder"
-				}
+				iconName = "folder"
 			} else {
 				iconName = "file"
 			}
@@ -285,5 +281,12 @@ extension OCItem {
 			return false
 		}
 		return true
+	}
+
+	func sharedByPublicLink() -> Bool {
+		if self.shareTypesMask.contains(.link) {
+			return true
+		}
+		return false
 	}
 }
