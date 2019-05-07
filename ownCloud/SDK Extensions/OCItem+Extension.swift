@@ -283,6 +283,13 @@ extension OCItem {
 		return true
 	}
 
+	func sharedByUserOrGroup() -> Bool {
+		if self.shareTypesMask.contains(.userShare) || self.shareTypesMask.contains(.groupShare) || self.shareTypesMask.contains(.remote)  {
+			return true
+		}
+		return false
+	}
+
 	func sharedByPublicLink() -> Bool {
 		if self.shareTypesMask.contains(.link) {
 			return true

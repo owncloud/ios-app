@@ -53,6 +53,7 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 	var recipientSearchController : OCRecipientSearchController?
 	var meCanShareItem : Bool = false
 	var messageView : MessageView?
+	var shareQuery : OCShareQuery?
 
 	// MARK: - Init
 
@@ -79,9 +80,9 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 		messageView = MessageView(add: self.view)
 
 		self.navigationItem.title = "Sharing".localized
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissView))
 
-		let shareQuery = core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
+		shareQuery = core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
 			if sharesWithReshares.count > 0 {
 				self.shares = sharesWithReshares.filter { (OCShare) -> Bool in
 					if OCShare.type != .link {
@@ -116,6 +117,13 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 			self.addShareSections()
 			self.handleEmptyShares()
 		}
+	}
+
+	@objc func dismissView() {
+		if let query = self.shareQuery {
+			self.core?.stop(query)
+		}
+		dismissAnimated()
 	}
 
 	override func viewDidAppear(_ animated: Bool) {

@@ -181,7 +181,7 @@ class Action : NSObject {
 				let row = StaticTableViewRow(rowWithAction: nil, title: "Searching Shares...".localized, alignment: .left, accessoryView: progressView, identifier: "share-searching")
 				self.updateSharingRow(sectionIdentifier: "share-section", rows: [row], tableViewController: tableViewController)
 
-				let query = context.core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
+				_ = context.core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
 					if sharesWithReshares.count > 0 {
 						OnMainThread {
 							let rows = self.sharingRow(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
@@ -211,23 +211,6 @@ class Action : NSObject {
 						}
 					})
 				})
-				query?.refreshInterval = 3
-				query?.changesAvailableNotificationHandler = { query in
-					let sharesWithReshares = query.queryResults
-					OnMainThread {
-						if sharesWithReshares.count > 0 {
-							let rows = self.sharingRow(shares: sharesWithReshares, item: item, presentingController: moreViewController, context: context, byMe: true)
-							self.updateSharingRow(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
-						} else {
-							var shareRows : [StaticTableViewRow] = []
-							shareRows.append(self.shareRow(item: item, presentingController: moreViewController, context: context))
-							if item.isShareable, context.core!.connection.capabilities?.publicSharingEnabled == true {
-								shareRows.append(self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context))
-							}
-							self.updateSharingRow(sectionIdentifier: "share-section", rows: shareRows, tableViewController: tableViewController)
-						}
-					}
-				}
 			} else if item.isShareable {
 				var shareRows : [StaticTableViewRow] = []
 				shareRows.append(self.shareRow(item: item, presentingController: moreViewController, context: context))
@@ -236,7 +219,6 @@ class Action : NSObject {
 				}
 				tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: shareRows), at: 0, animated: true)
 			}
-
 		}
 
 		let title = NSAttributedString(string: "Actions".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])

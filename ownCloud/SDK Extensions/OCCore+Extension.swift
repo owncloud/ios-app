@@ -39,7 +39,6 @@ extension OCCore {
 
 	func sharesWithReshares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void) -> OCShareQuery? {
 		let shareQuery = OCShareQuery(scope: .itemWithReshares, item: item)
-		shareQuery?.refreshInterval = 5
 		start(shareQuery!)
 		shareQuery?.initialPopulationHandler = { query in
 			initialPopulationHandler(query.queryResults)

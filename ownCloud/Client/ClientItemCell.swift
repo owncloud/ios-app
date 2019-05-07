@@ -235,7 +235,7 @@ class ClientItemCell: ThemeTableViewCell {
 			}
 		}
 
-		if item.isSharedWithUser || item.isShared() {
+		if item.isSharedWithUser || item.sharedByUserOrGroup() {
 			sharedStatusIconView.image = UIImage(named: "group")
 		} else {
 			sharedStatusIconView.image = nil
