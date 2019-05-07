@@ -27,7 +27,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	var item : OCItem?
 	var showSubtitles : Bool = false
 
-	//MARK: - Init
+	// MARK: - Init
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -53,7 +53,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		addActionSection()
 	}
 
-	//MARK: - Name Section
+	// MARK: - Name Section
 
 	func addNameSection() {
 		let section = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "name-section")
@@ -82,7 +82,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		self.addSection(section)
 	}
 
-	//MARK: - Permission Section
+	// MARK: - Permission Section
 
 	func addPermissionsSection() {
 		let section = StaticTableViewSection(headerTitle: "Permissions".localized, footerTitle: nil, identifier: "permission-section")
@@ -165,7 +165,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		}
 	}
 
-	//MARK: - Password Section
+	// MARK: - Password Section
 
 	func addPasswordSection() {
 		var hasPassword = false
@@ -279,7 +279,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		passwordSection.add(row: expireDateRow)
 	}
 
-	//MARK: - Expire Date Section
+	// MARK: - Expire Date Section
 
 	func addExpireDateSection() {
 		var hasExpireDate = false
@@ -404,7 +404,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		expireSection.add(row: expireDateRow)
 	}
 
-	//MARK: - Action Section
+	// MARK: - Action Section
 
 	func addActionSection() {
 		let dateFormatter = DateFormatter()
@@ -449,7 +449,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		self.addSection(deleteSection)
 	}
 
-	//MARK: - Actions
+	// MARK: - Actions
 
 	@objc func showInfoSubtitles() {
 		showSubtitles.toggle()
@@ -477,7 +477,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		self.present(activityViewController, animated: true, completion: nil)
 	}
 
-	//MARK: - Permission Helper
+	// MARK: - Permission Helper
 
 	func canPerformPermissionChange(for selectionIndex : Int) -> Bool {
 		if share?.protectedByPassword == false, passwordRequired(for: selectionIndex) {
@@ -487,7 +487,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		return true
 	}
 
-	//MARK: - Password Helper
+	// MARK: - Password Helper
 
 	func passwordRequired(for selectionIndex: Int) -> Bool {
 		guard let capabilities = self.core?.connection.capabilities else { return false }

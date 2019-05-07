@@ -115,7 +115,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 		}
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	override func viewDidAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		handleEmptyShares()
 	}
@@ -227,7 +227,6 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 		if shares.count == 0 {
 			OnMainThread {
 				self.resetTable(showShares: false)
-				self.searchController?.isActive = true
 				self.searchController?.searchBar.becomeFirstResponder()
 			}
 		}
@@ -243,6 +242,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 	}
 
 	// MARK: - UISearchResultsUpdating Delegate
+
 	func updateSearchResults(for searchController: UISearchController) {
 		guard let text = searchController.searchBar.text else { return }
 		if text.count > core?.connection.capabilities?.sharingSearchMinLength?.intValue ?? 1 {
@@ -335,7 +335,7 @@ class SharingTableViewController: StaticTableViewController, UISearchResultsUpda
 		}
 	}
 
-	//MARK: TableView Delegate
+	// MARK: TableView Delegate
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		if let shareAtPath = share(at: indexPath), self.canEdit(share: shareAtPath) {

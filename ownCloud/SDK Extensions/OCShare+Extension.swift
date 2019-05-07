@@ -42,6 +42,12 @@ extension OCShare {
 			if self.canCreate, self.canUpdate == false {
 				permissionsDescription.append("Upload (File Drop)".localized)
 			}
+			if self.expirationDate != nil {
+				permissionsDescription.append("Expire Date".localized)
+			}
+			if self.protectedByPassword {
+				permissionsDescription.append("Password Protected".localized)
+			}
 		} else {
 			if self.canRead {
 				permissionsDescription.append("Read".localized)

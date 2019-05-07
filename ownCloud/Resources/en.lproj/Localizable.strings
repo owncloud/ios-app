@@ -325,6 +325,7 @@
 "Type to update password" = "Type to update password";
 "Cannot change permission" = "Cannot change permission";
 "Before you can set the permission\n%@,\n you must enter a password." = "Before you can set the permission\n%@,\n you must enter a password.";
+"Password Protected" = "Password Protected";
 
 /* Photo upload settings */
 "Photo Upload" = "Photo Upload";

@@ -50,7 +50,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 	var meCanShareItem : Bool = false
 	var messageView : MessageView?
 
-	//MARK: - Init
+	// MARK: - Init
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -138,7 +138,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 
 	func removeShareSections() {
 		OnMainThread {
-			let types : [OCShareType] = [.userShare, .groupShare, .remote]
+			let types : [OCShareType] = [.link]
 			for type in types {
 				let identifier = "share-section-\(String(type.rawValue))"
 				if let section = self.sectionForIdentifier(identifier) {
@@ -150,9 +150,6 @@ class PublicLinkTableViewController: StaticTableViewController {
 
 	func resetTable(showShares : Bool) {
 		removeShareSections()
-		if let section = self.sectionForIdentifier("search-results") {
-			self.removeSection(section)
-		}
 		if shares.count > 0 && showShares {
 			messageView?.message(show: false)
 			self.populateShares()
@@ -240,12 +237,13 @@ class PublicLinkTableViewController: StaticTableViewController {
 
 			let share = OCShare(publicLinkToPath: path, linkName: linkName, permissions: permissions, password: nil, expiration: nil)
 			self.core?.createShare(share, options: nil, completionHandler: { (error, newShare) in
-				if error == nil {
+				if error == nil, let share = newShare {
 					OnMainThread {
+						self.shares.append(share)
 						self.resetTable(showShares: true)
 
 						let editPublicLinkViewController = PublicLinkEditTableViewController(style: .grouped)
-						editPublicLinkViewController.share = newShare
+						editPublicLinkViewController.share = share
 						editPublicLinkViewController.core = self.core
 						editPublicLinkViewController.item = item
 						self.navigationController?.pushViewController(editPublicLinkViewController, animated: true)

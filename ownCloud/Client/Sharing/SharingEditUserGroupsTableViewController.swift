@@ -154,7 +154,7 @@ class SharingEditUserGroupsTableViewController: StaticTableViewController {
 		}
 	}
 
-	//MARK: - Action Section
+	// MARK: - Action Section
 
 	func addActionSection() {
 		let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil)
