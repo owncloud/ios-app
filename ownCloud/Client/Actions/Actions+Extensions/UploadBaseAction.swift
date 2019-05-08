@@ -43,9 +43,10 @@ class UploadBaseAction: Action {
 												isSecurityScoped: false,
 												options: importByCopy ? [OCCoreOption.importByCopying : true] : nil,
 												placeholderCompletionHandler: { (error, item) in
-													Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
-													completionHandler?(false, error)
-
+													if error != nil {
+														Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
+														completionHandler?(false, error)
+													}
 		},
 												resultHandler: { (error, _ core, _ item, _) in
 													if error != nil {
