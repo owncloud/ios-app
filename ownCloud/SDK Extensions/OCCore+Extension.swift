@@ -21,6 +21,32 @@ import ownCloudSDK
 
 extension OCCore {
 
+	func unifiedShares(for item: OCItem, completionHandler: @escaping (_ shares: [OCShare]) -> Void) {
+		let shareQuery = OCShareQuery(scope: .itemWithReshares, item: item)
+		start(shareQuery!)
+		shareQuery?.initialPopulationHandler = { query in
+			let sharesWithReshares = query.queryResults
+
+			let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item)
+			self.start(shareQuery!)
+			shareQuery?.initialPopulationHandler = { query in
+				let sharesWithMe = query.queryResults.filter({ (share) -> Bool in
+					if share.itemPath == item.path {
+						return true
+					}
+					return false
+				})
+
+				var shares : [OCShare] = []
+
+				shares.append(contentsOf: sharesWithMe)
+				shares.append(contentsOf: sharesWithReshares)
+
+				completionHandler(shares)
+			}
+		}
+	}
+
 	func sharesSharedWithMe(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void) -> OCShareQuery? {
 		let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item)
 		start(shareQuery!)
@@ -46,4 +72,5 @@ extension OCCore {
 
 		return shareQuery
 	}
+	
 }
