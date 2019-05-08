@@ -55,12 +55,11 @@ extension OCShare {
 			if self.canShare {
 				permissionsDescription.append("Share".localized)
 			}
-			if self.canReadWrite {
+			if self.canCreate {
 				permissionsDescription.append("Create".localized)
 			}
 			if self.canUpdate {
 				permissionsDescription.append("Change".localized)
-				permissionsDescription.append("Edit".localized)
 			}
 			if self.canDelete {
 				permissionsDescription.append("Delete".localized)

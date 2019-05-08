@@ -183,8 +183,8 @@ class Action : NSObject {
 
 				context.core!.unifiedShares(for: item, completionHandler: { (shares) in
 					OnMainThread {
-						let rows = self.shareRows(shares: shares, item: item, presentingController: moreViewController, context: context)
-						self.updateSharingSection(sectionIdentifier: "share-section", rows: rows, tableViewController: tableViewController)
+						let shareRows = self.shareRows(shares: shares, item: item, presentingController: moreViewController, context: context)
+						self.updateSharingSection(sectionIdentifier: "share-section", rows: shareRows, tableViewController: tableViewController)
 						moreViewController.preferredContentSize = tableViewController.tableView.contentSize
 					}
 				})
@@ -323,6 +323,7 @@ class Action : NSObject {
 
 	class func shareRows(shares: [OCShare], item: OCItem, presentingController: UIViewController, context: ActionContext) -> [StaticTableViewRow] {
 		var shareRows: [StaticTableViewRow] = []
+
 		if shares.count > 0 {
 			var userTitle = ""
 			var linkTitle = ""
@@ -409,11 +410,9 @@ class Action : NSObject {
 				shareRows.append(publicLinkRow)
 			}
 		} else if item.isShareable {
-			OnMainThread {
-				shareRows.append(self.shareAsGroupRow(item: item, presentingController: presentingController, context: context))
-				if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context) {
-					shareRows.append(publicLinkRow)
-				}
+			shareRows.append(self.shareAsGroupRow(item: item, presentingController: presentingController, context: context))
+			if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context) {
+				shareRows.append(publicLinkRow)
 			}
 		}
 
@@ -421,10 +420,10 @@ class Action : NSObject {
 	}
 
 	class func updateSharingSection(sectionIdentifier: String, rows: [StaticTableViewRow], tableViewController: MoreStaticTableViewController) {
+		if let section = tableViewController.sectionForIdentifier(sectionIdentifier) {
+			tableViewController.removeSection(section)
+		}
 		if rows.count > 0 {
-			if let section = tableViewController.sectionForIdentifier(sectionIdentifier) {
-				tableViewController.removeSection(section)
-			}
 			tableViewController.insertSection(MoreStaticTableViewSection(identifier: "share-section", rows: rows), at: 0, animated: false)
 		}
 	}

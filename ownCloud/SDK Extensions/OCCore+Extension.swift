@@ -38,7 +38,6 @@ extension OCCore {
 				})
 
 				var shares : [OCShare] = []
-
 				shares.append(contentsOf: sharesWithMe)
 				shares.append(contentsOf: sharesWithReshares)
 
@@ -71,6 +70,5 @@ extension OCCore {
 		}
 
 		return shareQuery
-	}
-	
+	}	
 }

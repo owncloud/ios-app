@@ -278,7 +278,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Toggle Item
-	convenience init(toggleItemWithAction: StaticTableViewRowAction?, groupIdentifier: String, title: String, subtitle: String? = nil, selected: Bool, identifier : String? = nil) {
+	convenience init(toggleItemWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, selected: Bool, identifier : String? = nil) {
 		self.init()
 		type = .toggle
 
@@ -296,10 +296,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 
 		if let accessibilityIdentifier : String = identifier {
-			self.cell?.accessibilityIdentifier = groupIdentifier + "." + accessibilityIdentifier
+			self.cell?.accessibilityIdentifier = accessibilityIdentifier
 		}
-
-		self.groupIdentifier = groupIdentifier
 
 		if selected {
 			self.cell?.accessoryType = UITableViewCell.AccessoryType.checkmark

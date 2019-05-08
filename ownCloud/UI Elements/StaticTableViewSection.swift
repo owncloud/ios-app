@@ -106,13 +106,13 @@ class StaticTableViewSection: NSObject {
 		if let subtitles = subtitles {
 			for (labelValueDict, subtitle) in zip(labelValueDictRows, subtitles) {
 				for (label, value) in labelValueDict {
-					toggleGroupRows.append(StaticTableViewRow(toggleItemWithAction: toggleAction, groupIdentifier: "\(groupIdentifier)-\(label)", title: label, subtitle: subtitle, selected: value))
+					toggleGroupRows.append(StaticTableViewRow(toggleItemWithAction: toggleAction, title: label, subtitle: subtitle, selected: value, identifier: "\(groupIdentifier)-\(label)"))
 				}
 			}
 		} else {
 			for labelValueDict in labelValueDictRows {
 				for (label, value) in labelValueDict {
-					toggleGroupRows.append(StaticTableViewRow(toggleItemWithAction: toggleAction, groupIdentifier: "\(groupIdentifier)-\(label)", title: label, subtitle: nil, selected: value))
+					toggleGroupRows.append(StaticTableViewRow(toggleItemWithAction: toggleAction, title: label, subtitle: nil, selected: value, identifier: "\(groupIdentifier)-\(label)"))
 				}
 			}
 		}

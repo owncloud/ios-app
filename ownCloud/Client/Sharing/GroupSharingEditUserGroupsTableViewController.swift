@@ -47,33 +47,31 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 	// MARK: Permission Section
 
 	func addPermissionSection() {
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateStyle = .medium
-		dateFormatter.timeStyle = .short
-		var footer = ""
-		if let date = share?.creationDate {
-			footer = String(format: "Shared since: %@".localized, dateFormatter.string(from: date))
-		}
-
-		let section = StaticTableViewSection(headerTitle: "Permissions".localized, footerTitle: footer, identifier: "permission-section")
+		let section = StaticTableViewSection(headerTitle: "Permissions".localized, footerTitle: nil, identifier: "permission-section")
 		guard let share = share else { return }
 		var permissions : [[String: Bool]] = []
 		var permissionValues : [OCSharePermissionsMask] = []
 		var subtitles : [String]?
 
 		if share.itemType == .collection {
+
+			var canEdit = false
+			if share.canCreate || share.canUpdate || share.canDelete {
+				canEdit = true
+			}
+
 			permissions = [
 				["Share" : share.canShare],
-				["Edit" : share.canUpdate],
+				["Edit" : canEdit],
 				["Create" : share.canCreate],
-				["Change" : share.canReadWrite],
+				["Change" : share.canUpdate],
 				["Delete" : share.canDelete]
 			]
 			permissionValues = [
 				.share,
-				.update,
-				.update,
+				.read, // Placeholder value, will not be used
 				.create,
+				.update,
 				.delete
 			]
 			if showSubtitles {
@@ -104,18 +102,41 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 		}
 
 		section.add(toggleGroupWithArrayOfLabelValueDictionaries: permissions, toggleAction: { (row, _) in
-			guard let selected = row.value as? Bool else { return }
+			guard let selected = row.value as? Bool, let rowIndex = row.index else { return }
+
+			var neededPermissions : [Int] = []
+			if rowIndex == 1 {
+				neededPermissions = [2, 3, 4]
+			} else {
+				neededPermissions = [rowIndex]
+			}
+
 			if let core = self.core {
 				core.update(share, afterPerformingChanges: {(share) in
-					if let rowIndex = row.index {
-						guard permissionValues.indices.contains(rowIndex) else { return }
-						let permissionValue = permissionValues[rowIndex]
 
+					for currentRowIndex in neededPermissions {
+						guard permissionValues.indices.contains(currentRowIndex), let labelKey = permissions[currentRowIndex].keys.first else { return }
+
+						let permissionValue = permissionValues[currentRowIndex]
+						let newRow = section.row(withIdentifier: String(format: "preferences-section-%@", labelKey))
 						if selected {
 							share.permissions.insert(permissionValue)
+							newRow?.cell?.accessoryType = .checkmark
+							newRow?.value = true
 						} else {
+							newRow?.cell?.accessoryType = .none
+							newRow?.value = false
 							share.permissions.remove(permissionValue)
 						}
+					}
+
+					let newRow = section.row(withIdentifier: "preferences-section-Edit")
+					if share.canDelete || share.canCreate || share.canUpdate {
+						newRow?.cell?.accessoryType = .checkmark
+						newRow?.value = true
+					} else {
+						newRow?.cell?.accessoryType = .none
+						newRow?.value = false
 					}
 				}, completionHandler: { (error, share) in
 					if error == nil {
@@ -157,7 +178,16 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 	// MARK: - Action Section
 
 	func addActionSection() {
-		let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil)
+
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateStyle = .medium
+		dateFormatter.timeStyle = .short
+		var footer = ""
+		if let date = share?.creationDate {
+			footer = String(format: "Shared since: %@".localized, dateFormatter.string(from: date))
+		}
+
+		let section = StaticTableViewSection(headerTitle: nil, footerTitle: footer)
 		section.add(rows: [
 			StaticTableViewRow(buttonWithAction: { (row, _) in
 				let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
