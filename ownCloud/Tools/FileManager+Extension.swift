@@ -19,7 +19,7 @@
 import Foundation
 
 extension FileManager {
-	func calculateDirectorySize(at url:URL, completion:@escaping (_ sizeInBytes:Int64?)->Void) {
+	func calculateDirectorySize(at url:URL, completion:@escaping (_ sizeInBytes:Int64?) -> Void) {
 		DispatchQueue.global(qos: .background).async {
 			let enumerator = self.enumerator(at: url, includingPropertiesForKeys: [URLResourceKey.fileSizeKey], options: [.skipsHiddenFiles])
 
