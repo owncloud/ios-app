@@ -305,7 +305,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		} else {
 			self.value = false
 		}
-//25.04. 16 Uhr
+
 		self.action = { (row, sender) in
 
 			guard let value = self.value as? Bool else { return }
