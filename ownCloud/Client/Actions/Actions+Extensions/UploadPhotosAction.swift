@@ -85,33 +85,45 @@ class UploadPhotosAction: UploadBaseAction {
 				let photoAlbumViewController = PhotoAlbumTableViewController()
 				photoAlbumViewController.selectionCallback = { (assets) in
 
-					DispatchQueue.global(qos: .userInitiated).async {
-						let uploadGroup = DispatchGroup()
-						var uploadFailed = false
+					self.completed()
 
-						for asset in assets {
-							if uploadFailed == false {
-								// Upload image on a background queue
-								uploadGroup.enter()
+					let queue = DispatchQueue.global(qos: .userInitiated)
 
-								self.upload(asset: asset, completion: { (success) in
-									if !success {
-										uploadFailed = true
-									}
-									uploadGroup.leave()
-								})
+					queue.async {
 
-								_ = uploadGroup.wait(timeout: .now() + 0.5)
+						self.core?.perform(inRunningCore: { (runningCoreCompletion) in
 
-							} else {
-								// Escape on first failed download
-								break
+							let uploadGroup = DispatchGroup()
+							var uploadFailed = false
+
+							for asset in assets {
+								if uploadFailed == false {
+									// Upload image on a background queue
+									uploadGroup.enter()
+
+									self.upload(asset: asset, completion: { (success, uploadFinished) in
+										if !success {
+											uploadFailed = true
+										}
+										if uploadFinished {
+											uploadGroup.leave()
+										}
+									})
+
+									// Avoid submitting to many jobs simultaneously to reduce memory pressure
+									_ = uploadGroup.wait(timeout: .now() + 0.5)
+
+								} else {
+									// Escape on first failed download
+									break
+								}
 							}
-						}
 
-						uploadGroup.notify(queue: DispatchQueue.main, execute: {
-							self.completed( with: uploadFailed ? NSError(ocError: .internal) : nil)
-						})
+							uploadGroup.notify(queue: queue, execute: {
+								runningCoreCompletion()
+							})
+
+						}, withDescription: "Uploading \(assets.count) photo assets")
 					}
 				}
 				let navigationController = ThemeNavigationController(rootViewController: photoAlbumViewController)
@@ -161,7 +173,7 @@ class UploadPhotosAction: UploadBaseAction {
 		return false
 	}
 
-	private func upload(asset:PHAsset, completion:@escaping (_ success:Bool) -> Void ) {
+	private func upload(asset:PHAsset, completion:@escaping (_ success:Bool, _ uploadFinished:Bool) -> Void ) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
 		guard let rootItem = context.items.first else { return }
@@ -184,35 +196,46 @@ class UploadPhotosAction: UploadBaseAction {
 
 			self.uploadSerialQueue.async {
 				if let input = input, let url = input.fullSizeImageURL {
-					let fileName = url.lastPathComponent
+
+					func performUpload(sourceURL:URL, copySource:Bool) {
+
+						@discardableResult func removeSourceFile() -> Bool {
+							do {
+								try FileManager.default.removeItem(at: sourceURL)
+								return true
+							} catch {
+								return false
+							}
+						}
+
+						let fileName = sourceURL.lastPathComponent
+						self.upload(itemURL: sourceURL, to: rootItem, name:fileName, completionHandler: { ( success, _) in
+							completion(success, true)
+						}, placeholderHandler: { (_, error) in
+							if copySource && error != nil {
+								// Delete the temporary asset file in case of critical error
+								removeSourceFile()
+							}
+							completion(error == nil, false)
+						}, importByCopy: copySource)
+					}
 
 					if !userDefaults.convertHeic || input.uniformTypeIdentifier == "public.jpeg" {
 						// No conversion of the image data, upload as is
-						self.upload(itemURL: url, to: rootItem, name:fileName, completionHandler: { (actionPerformed, _) in
-							// Delete the temporary asset file
-							completion(actionPerformed)
-						}, importByCopy: true)
+						performUpload(sourceURL: url, copySource: true)
 					} else {
+						let fileName = url.lastPathComponent
 						let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("jpg")
+						// Convert to JPEG
 						if self.convertImage(url, targetURL: localURL, outputFormat: .JPEG) {
 							// Upload to the cloud
-							self.upload(itemURL: localURL, to: rootItem, name: localURL.lastPathComponent, completionHandler: { (actionPerformed, error) in
-								// Delete the temporary asset file in case of critical error
-								do {
-									if error != nil {
-										try FileManager.default.removeItem(at: localURL)
-									}
-									completion(actionPerformed)
-								} catch {
-									completion(false)
-								}
-							})
+							performUpload(sourceURL: localURL, copySource: false)
 						} else {
-							completion(false)
+							completion(false, false)
 						}
 					}
 				} else {
-					completion(false)
+					completion(false, false)
 				}
 			}
 		}

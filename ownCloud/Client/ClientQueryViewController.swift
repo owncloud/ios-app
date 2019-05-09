@@ -21,7 +21,7 @@ import ownCloudSDK
 import MobileCoreServices
 
 typealias ClientActionVieDidAppearHandler = () -> Void
-typealias ClientActionCompletionHandler = (_ actionPerformed: Bool, _ error:Error?) -> Void
+typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
 
 extension OCQueryState {
 	var isFinal: Bool {
@@ -744,10 +744,10 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		   let progress = core?.importFileNamed(name, at: rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
 			if error != nil {
 				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(rootItem.path))")
-				completionHandler?(false, error)
+				completionHandler?(false)
 			} else {
 				Log.debug("Success uploading \(Log.mask(name)) file to \(Log.mask(rootItem.path))")
-				completionHandler?(true, nil)
+				completionHandler?(true)
 			}
 		}) {
 			self.progressSummarizer?.startTracking(progress: progress)

@@ -20,6 +20,10 @@ import UIKit
 import ownCloudSDK
 
 class UploadBaseAction: Action {
+
+	typealias UploadCompletionHandler = (_ success: Bool, _ item:OCItem?) -> Void
+	typealias UploadPlaceholderCompletionHandler = (_ item:OCItem?, _ error:Error?) -> Void
+
 	// MARK: - Action Matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		// Only available for a single item ..
@@ -36,7 +40,7 @@ class UploadBaseAction: Action {
 	}
 
 	// MARK: - Upload
-	func upload(itemURL: URL, to rootItem: OCItem, name: String, completionHandler: ClientActionCompletionHandler? = nil, importByCopy:Bool = false) {
+	func upload(itemURL: URL, to rootItem: OCItem, name: String, completionHandler: UploadCompletionHandler? = nil, placeholderHandler:UploadPlaceholderCompletionHandler? = nil, importByCopy:Bool = false) {
 		if let progress = core?.importFileNamed(name,
 												at: rootItem,
 												from: itemURL,
@@ -45,16 +49,16 @@ class UploadBaseAction: Action {
 												placeholderCompletionHandler: { (error, item) in
 													if error != nil {
 														Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
-														completionHandler?(false, error)
 													}
+													placeholderHandler?(item, error)
 		},
 												resultHandler: { (error, _ core, _ item, _) in
 													if error != nil {
 														Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
-														completionHandler?(false, error)
+														completionHandler?(false, item)
 													} else {
 														Log.debug("Success uploading \(Log.mask(name)) to \(Log.mask(rootItem.path))")
-														completionHandler?(true, nil)
+														completionHandler?(true, item)
 													}
 		}) {
 			self.publish(progress: progress)
