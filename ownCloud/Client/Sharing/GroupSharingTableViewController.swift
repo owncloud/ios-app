@@ -305,15 +305,16 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 							self.searchController?.searchBar.text = ""
 							self.searchController?.dismiss(animated: true, completion: nil)
 						}
-						self.core?.createShare(share, options: nil, completionHandler: { (error, _) in
-							if error == nil {
+						self.core?.createShare(share, options: nil, completionHandler: { (error, newShare) in
+							if error == nil, let share = newShare {
 								OnMainThread {
+									self.shares.append(share)
+									self.resetTable(showShares: true)
+
 									let editSharingViewController = GroupSharingEditUserGroupsTableViewController(style: .grouped)
 									editSharingViewController.share = share
 									editSharingViewController.core = self.core
 									self.navigationController?.pushViewController(editSharingViewController, animated: true)
-
-									self.resetTable(showShares: true)
 								}
 							} else {
 								if let shareError = error {
