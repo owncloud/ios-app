@@ -90,7 +90,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		super.init()
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil, image : UIImage? = nil) {
 		self.init()
 
 		self.identifier = identifier
@@ -99,6 +99,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.accessoryType = accessoryType
+		self.cell?.imageView?.image = image
 
 		self.cell?.accessibilityIdentifier = identifier
 
