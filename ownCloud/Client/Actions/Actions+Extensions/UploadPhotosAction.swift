@@ -231,7 +231,7 @@ class UploadPhotosAction: UploadBaseAction {
 							// Upload to the cloud
 							performUpload(sourceURL: localURL, copySource: false)
 						} else {
-							completion(false, false)
+							completion(false, true)
 						}
 					}
 				} else {
