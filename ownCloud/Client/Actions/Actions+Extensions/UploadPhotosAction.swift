@@ -101,13 +101,11 @@ class UploadPhotosAction: UploadBaseAction {
 									// Upload image on a background queue
 									uploadGroup.enter()
 
-									self.upload(asset: asset, completion: { (success, uploadFinished) in
+									self.upload(asset: asset, completion: { (success) in
 										if !success {
 											uploadFailed = true
 										}
-										if uploadFinished {
-											uploadGroup.leave()
-										}
+										uploadGroup.leave()
 									})
 
 									// Avoid submitting to many jobs simultaneously to reduce memory pressure
@@ -173,7 +171,7 @@ class UploadPhotosAction: UploadBaseAction {
 		return false
 	}
 
-	private func upload(asset:PHAsset, completion:@escaping (_ success:Bool, _ uploadFinished:Bool) -> Void ) {
+	private func upload(asset:PHAsset, completion:@escaping (_ success:Bool) -> Void ) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
 		guard let rootItem = context.items.first else { return }
@@ -209,14 +207,12 @@ class UploadPhotosAction: UploadBaseAction {
 						}
 
 						let fileName = sourceURL.lastPathComponent
-						self.upload(itemURL: sourceURL, to: rootItem, name:fileName, completionHandler: { ( success, _) in
-							completion(success, true)
-						}, placeholderHandler: { (_, error) in
-							if copySource && error != nil {
+						self.upload(itemURL: sourceURL, to: rootItem, name:fileName, placeholderHandler: { (_, error) in
+							if !copySource && error != nil {
 								// Delete the temporary asset file in case of critical error
 								removeSourceFile()
 							}
-							completion(error == nil, false)
+							completion(error == nil)
 						}, importByCopy: copySource)
 					}
 
@@ -231,11 +227,11 @@ class UploadPhotosAction: UploadBaseAction {
 							// Upload to the cloud
 							performUpload(sourceURL: localURL, copySource: false)
 						} else {
-							completion(false, true)
+							completion(false)
 						}
 					}
 				} else {
-					completion(false, false)
+					completion(false)
 				}
 			}
 		}
