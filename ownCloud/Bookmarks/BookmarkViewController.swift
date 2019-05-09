@@ -39,11 +39,6 @@ class BookmarkViewController: StaticTableViewController {
 	var showedOAuthInfoHeader : Bool = false
 	var activeTextField: UITextField?
 
-	var storageSection : StaticTableViewSection?
-	var offlineStorageInfoRow: StaticTableViewRow?
-	var deviceAvailableStorageInfoRow: StaticTableViewRow?
-	var deleteLocalFilesRow : StaticTableViewRow?
-
 	lazy var continueBarButtonItem: UIBarButtonItem = UIBarButtonItem(title: "Continue".localized, style: .done, target: self, action: #selector(handleContinue))
 	lazy var saveBarButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
 	lazy var nextBarButtonItem = UIBarButtonItem(image: UIImage(named: "arrow-down"), style: .plain, target: self, action: #selector(toogleTextField))
@@ -71,12 +66,6 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	private var mode : BookmarkViewControllerMode
-
-	lazy var byteCounterFormatter: ByteCountFormatter =  {
-		let formatter = ByteCountFormatter()
-		formatter.allowsNonnumericFormatting = false
-		return formatter
-	}()
 
 	// MARK: - Init & Deinit
 	init(_ editBookmark: OCBookmark?) {
@@ -262,40 +251,6 @@ class BookmarkViewController: StaticTableViewController {
 			self.urlRow?.cell?.accessoryView = vectorImageView
 		}
 
-		offlineStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: "Offline files use".localized, value: "uknown".localized)
-		let deviceFreeTitle = String(format: "Free on %@".localized, UIDevice.current.name)
-		deviceAvailableStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: deviceFreeTitle, value: "uknown".localized)
-
-		deleteLocalFilesRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
-			if let bookmark  = self?.bookmark {
-
-				OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
-					let vault : OCVault = OCVault(bookmark: bookmark)
-
-					vault.compact(completionHandler: { (_, error) in
-						OnMainThread {
-							if error != nil {
-								// Inform user if vault couldn't be comp acted
-								let alertController = UIAlertController(title: NSString(format: "Compacting of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
-																		message: error?.localizedDescription,
-																		preferredStyle: .alert)
-
-								alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
-
-								self?.present(alertController, animated: true, completion: nil)
-							}
-
-							self?.updateStorageInfo()
-
-							completionHandler()
-						}
-					})
-				}, for: bookmark)
-			}
-			}, title: "Delete Offline Copies".localized, style: .destructive, identifier: "row-offline-copies-delete")
-
-		storageSection = StaticTableViewSection(headerTitle: "Storage".localized, footerTitle: nil, identifier: "section-credentials", rows: [ offlineStorageInfoRow!, deviceAvailableStorageInfoRow!, deleteLocalFilesRow! ])
-
 		// Update contents
 		self.composeSectionsAndRows(animated: false)
 	}
@@ -308,7 +263,6 @@ class BookmarkViewController: StaticTableViewController {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		self.updateInputFocus()
-		updateStorageInfo()
 	}
 
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -738,12 +692,6 @@ class BookmarkViewController: StaticTableViewController {
 			}
 		}
 
-		if storageSection?.attached == false {
-			if let storageSectionIndex = credentialsSection?.index {
-				self.insertSection(storageSection!, at: storageSectionIndex+1, animated: animated)
-			}
-		}
-
 		if showOAuthInfoHeader {
 			self.tableView.tableHeaderView = oAuthInfoView
 			self.tableView.layoutTableHeaderView()
@@ -859,25 +807,6 @@ class BookmarkViewController: StaticTableViewController {
 
 		if passwordRow != nil, fieldSelector(passwordRow!) {
 			passwordRow?.value = password ?? ""
-		}
-	}
-
-	func updateStorageInfo() {
-		if bookmark != nil {
-			if let vaultURL = OCVault(bookmark: bookmark!).filesRootURL {
-				FileManager.default.calculateDirectorySize(at: vaultURL) { (size) in
-					if size != nil {
-						let occupiedSpace = self.byteCounterFormatter.string(fromByteCount: size!)
-						OnMainThread {
-							self.offlineStorageInfoRow?.value = occupiedSpace
-						}
-					}
-				}
-			}
-		}
-		let deviceFreeByteCount = FileManager.default.availableFreeStorageSpace()
-		if deviceFreeByteCount >= 0 {
-			deviceAvailableStorageInfoRow?.value = self.byteCounterFormatter.string(fromByteCount: deviceFreeByteCount)
 		}
 	}
 

@@ -240,6 +240,16 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.present(navigationController, animated: true, completion: nil)
 	}
 
+	func showBookmarkInfoUI(_ bookmark: OCBookmark) {
+		let viewController = BookmarkInfoViewController(bookmark)
+		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
+
+		// Prevent any in-progress connection from being shown
+		resetPreviousBookmarkSelection()
+
+		self.present(navigationController, animated: true, completion: nil)
+	}
+
 	var themeCounter : Int = 0
 
 	@IBAction func help() {
@@ -443,6 +453,12 @@ class ServerListTableViewController: UITableViewController, Themeable {
 					self?.showBookmarkUI(edit: bookmark)
 				}
 			}),
+
+			UITableViewRowAction(style: .normal, title: "Manage".localized, handler: { [weak self] (_, indexPath) in
+				if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+					self?.showBookmarkInfoUI(bookmark)
+				}
+			})
 		]
 	}
 
