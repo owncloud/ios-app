@@ -35,9 +35,7 @@ extension FileManager {
 				}
 			}
 
-			OnMainThread {
-				completion(totalSize)
-			}
+			completion(totalSize)
 		}
 	}
 

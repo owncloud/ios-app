@@ -868,7 +868,9 @@ class BookmarkViewController: StaticTableViewController {
 				FileManager.default.calculateDirectorySize(at: vaultURL) { (size) in
 					if size != nil {
 						let occupiedSpace = self.byteCounterFormatter.string(fromByteCount: size!)
-						self.offlineStorageInfoRow?.value = occupiedSpace
+						OnMainThread {
+							self.offlineStorageInfoRow?.value = occupiedSpace
+						}
 					}
 				}
 			}
