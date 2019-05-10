@@ -82,6 +82,8 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 		self.navigationItem.title = "Sharing".localized
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissView))
 
+		addHeaderView()
+
 		shareQuery = core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
 			if sharesWithReshares.count > 0 {
 				self.shares = sharesWithReshares.filter { (OCShare) -> Bool in
@@ -129,6 +131,27 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		handleEmptyShares()
+	}
+
+	// MARK: - Header View
+
+	func addHeaderView() {
+		guard let item = item, let core = core else { return }
+		let containerView = UIView()
+		containerView.translatesAutoresizingMaskIntoConstraints = false
+
+		let headerView = MoreViewHeader(for: item, with: core)
+		containerView.addSubview(headerView)
+		self.tableView.tableHeaderView = containerView
+
+		containerView.centerXAnchor.constraint(equalTo: self.tableView.centerXAnchor).isActive = true
+		containerView.widthAnchor.constraint(equalTo: self.tableView.widthAnchor).isActive = true
+		containerView.topAnchor.constraint(equalTo: self.tableView.topAnchor).isActive = true
+		containerView.heightAnchor.constraint(equalTo: headerView.heightAnchor).isActive = true
+
+		self.tableView.tableHeaderView?.layoutIfNeeded()
+		self.tableView.tableHeaderView = self.tableView.tableHeaderView
+		self.tableView.tableHeaderView?.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 
 	// MARK: - Sharing UI
