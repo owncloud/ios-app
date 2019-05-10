@@ -307,12 +307,12 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 				guard let itemPath = self.item?.path else { continue }
 				var title = ""
 				if recipient.type == .user {
-					guard let user = recipient.user, let name = user.displayName else { continue }
-					title = name
+					guard let displayName = recipient.displayName else { continue }
+					title = displayName
 				} else {
-					guard let group = recipient.group, let name = group.name else { continue }
+					guard let displayName = recipient.displayName else { continue }
 					let groupTitle = "(Group)".localized
-					title = "\(name) \(groupTitle)"
+					title = "\(displayName) \(groupTitle)"
 				}
 
 				rows.append(
