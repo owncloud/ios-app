@@ -137,9 +137,7 @@ class IssuesViewController: UIViewController {
 	}
 
 	@objc func buttonPressed(_ button :UIButton) {
-
 		if let buttonPressed: IssueButton = buttons?[button.tag] {
-			print("buttonPressed name \(buttonPressed.title)")
 			buttonPressed.action()
 		}
 	}
