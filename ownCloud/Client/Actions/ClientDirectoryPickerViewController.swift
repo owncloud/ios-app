@@ -59,9 +59,6 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		// Don't confuse the user by showing 'Empty folder' for the folder which actually has files in it
-		shallShowEmptyFolderMessage = false
-
 		// Remove pull to refresh
 		queryRefreshControl?.removeFromSuperview()
 		self.tableView.alwaysBounceVertical = false
