@@ -387,79 +387,83 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		return [
-			UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, indexPath) in
-				if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-					var presentationStyle: UIAlertController.Style = .actionSheet
-					if UIDevice.current.isIpad() {
-						presentationStyle = .alert
-					}
 
-					let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
-															message: "This will also delete all locally stored file copies.".localized,
-															preferredStyle: presentationStyle)
+		let deleteRowAction = UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, indexPath) in
+			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+				var presentationStyle: UIAlertController.Style = .actionSheet
+				if UIDevice.current.isIpad() {
+					presentationStyle = .alert
+				}
 
-					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
+				let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
+														message: "This will also delete all locally stored file copies.".localized,
+														preferredStyle: presentationStyle)
 
-					alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
+				alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
-						self.lockedBookmarks.append(bookmark)
+				alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
 
-						OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
-							let vault : OCVault = OCVault(bookmark: bookmark)
+					self.lockedBookmarks.append(bookmark)
 
-							vault.erase(completionHandler: { (_, error) in
-								OnMainThread {
-									if error != nil {
-										// Inform user if vault couldn't be erased
-										let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
-																				message: error?.localizedDescription,
-																				preferredStyle: .alert)
+					OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
+						let vault : OCVault = OCVault(bookmark: bookmark)
 
-										alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+						vault.erase(completionHandler: { (_, error) in
+							OnMainThread {
+								if error != nil {
+									// Inform user if vault couldn't be erased
+									let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+																			message: error?.localizedDescription,
+																			preferredStyle: .alert)
 
-										self.present(alertController, animated: true, completion: nil)
-									} else {
-										// Success! We can now remove the bookmark
-										self.ignoreServerListChanges = true
+									alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
-										OCBookmarkManager.shared.removeBookmark(bookmark)
+									self.present(alertController, animated: true, completion: nil)
+								} else {
+									// Success! We can now remove the bookmark
+									self.ignoreServerListChanges = true
 
-										tableView.performBatchUpdates({
-											tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-										}, completion: { (_) in
-											self.ignoreServerListChanges = false
-										})
+									OCBookmarkManager.shared.removeBookmark(bookmark)
 
-										self.updateNoServerMessageVisibility()
-									}
+									tableView.performBatchUpdates({
+										tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+									}, completion: { (_) in
+										self.ignoreServerListChanges = false
+									})
 
-									if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
-										self.lockedBookmarks.remove(at: removeIndex)
-									}
-
-									completionHandler()
+									self.updateNoServerMessageVisibility()
 								}
-							})
-						}, for: bookmark)
-					}))
 
-					self.present(alertController, animated: true, completion: nil)
-				}
-			}),
+								if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
+									self.lockedBookmarks.remove(at: removeIndex)
+								}
 
-			UITableViewRowAction(style: .normal, title: "Edit".localized, handler: { [weak self] (_, indexPath) in
-				if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-					self?.showBookmarkUI(edit: bookmark)
-				}
-			}),
+								completionHandler()
+							}
+						})
+					}, for: bookmark)
+				}))
 
-			UITableViewRowAction(style: .normal, title: "Manage".localized, handler: { [weak self] (_, indexPath) in
-				if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-					self?.showBookmarkInfoUI(bookmark)
-				}
-			})
-		]
+				self.present(alertController, animated: true, completion: nil)
+			}
+		})
+
+		let editRowAction = UITableViewRowAction(style: .normal, title: "Edit".localized, handler: { [weak self] (_, indexPath) in
+			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+				self?.showBookmarkUI(edit: bookmark)
+			}
+		})
+		editRowAction.backgroundColor = .blue
+
+		let manageRowAction = UITableViewRowAction(style: .normal,
+												   title: "Manage".localized,
+												   handler: { [weak self] (_, indexPath) in
+			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+				self?.showBookmarkInfoUI(bookmark)
+			}
+		})
+
+		return [deleteRowAction, editRowAction, manageRowAction]
 	}
 
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
