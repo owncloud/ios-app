@@ -31,6 +31,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	let emptyViewController = UIViewController()
 	var activityNavigationController : ThemeNavigationController?
 	var activityViewController : ClientActivityViewController?
+	var libraryNavigationController : ThemeNavigationController?
+	var libraryViewController : LibraryTableViewController?
 	var progressBar : CollapsibleProgressBar?
 	var progressBarHeightConstraint: NSLayoutConstraint?
 	var progressSummarizer : ProgressSummarizer?
@@ -171,6 +173,11 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		activityNavigationController?.tabBarItem.title = "Status".localized
 		activityNavigationController?.tabBarItem.image = Theme.shared.image(for: "status-flash", size: CGSize(width: 25, height: 25))
 
+		libraryViewController = LibraryTableViewController(style: .grouped)
+		libraryNavigationController = ThemeNavigationController(rootViewController: libraryViewController!)
+		libraryNavigationController?.tabBarItem.title = "Library".localized
+		libraryNavigationController?.tabBarItem.image = Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25))
+
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false
 
@@ -198,8 +205,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		Theme.shared.register(client: self, applyImmediately: true)
 
 		if let filesNavigationController = filesNavigationController,
-		   let activityNavigationController = activityNavigationController {
-			self.viewControllers = [ filesNavigationController, activityNavigationController ]
+		   let activityNavigationController = activityNavigationController, let libraryNavigationController = libraryNavigationController {
+			self.viewControllers = [ filesNavigationController, libraryNavigationController, activityNavigationController ]
 		}
 	}
 
@@ -234,6 +241,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 					return (viewController != emptyViewController)
 				}
 				self.activityViewController?.core = core
+				self.libraryViewController?.core = core
+				self.libraryViewController?.updateLibrary()
 			}
 		}
 	}

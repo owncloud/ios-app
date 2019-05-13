@@ -384,6 +384,7 @@ class Action : NSObject {
 						sharingViewController.core = context.core!
 						sharingViewController.item = item
 						let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
+						navigationController.modalPresentationStyle = .formSheet
 						viewController.present(navigationController, animated: true, completion: nil)
 					}
 				}, title: userTitle, subtitle: nil, image: UIImage(named: "group"), alignment: .left, accessoryType: .disclosureIndicator)
@@ -402,6 +403,7 @@ class Action : NSObject {
 						sharingViewController.core = context.core!
 						sharingViewController.item = item
 						let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
+						navigationController.modalPresentationStyle = .formSheet
 						viewController.present(navigationController, animated: true, completion: nil)
 					}
 				}, title: linkTitle, subtitle: nil, image: UIImage(named: "link"), alignment: .left, accessoryType: .disclosureIndicator)
@@ -442,6 +444,7 @@ class Action : NSObject {
 				sharingViewController.core = context.core!
 				sharingViewController.item = item
 				let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
+				navigationController.modalPresentationStyle = .formSheet
 
 				viewController.present(navigationController, animated: true, completion: nil)
 			}
@@ -461,6 +464,7 @@ class Action : NSObject {
 					sharingViewController.item = item
 					sharingViewController.addPublicLink()
 					let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
+					navigationController.modalPresentationStyle = .formSheet
 
 					viewController.present(navigationController, animated: true, completion: nil)
 				}

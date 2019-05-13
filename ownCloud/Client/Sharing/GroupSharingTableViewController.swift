@@ -103,6 +103,10 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 					self.removeShareSections()
 					self.addShareSections()
 				}
+
+				if item.isSharedWithUser {
+					self.addDeclineShareSection()
+				}
 			})
 		})
 
@@ -118,6 +122,10 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 			self.removeShareSections()
 			self.addShareSections()
 			self.handleEmptyShares()
+
+			if item.isSharedWithUser {
+				self.addDeclineShareSection()
+			}
 		}
 	}
 
@@ -154,6 +162,49 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 		self.tableView.tableHeaderView?.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 
+	// MARK: - Action Section
+
+	func addDeclineShareSection() {
+		if let share = shares.first {
+
+			let dateFormatter = DateFormatter()
+			dateFormatter.dateStyle = .medium
+			dateFormatter.timeStyle = .short
+			var footer = ""
+			if let date = share.creationDate {
+				footer = String(format: "Shared since: %@".localized, dateFormatter.string(from: date))
+			}
+
+			OnMainThread {
+				let section = StaticTableViewSection(headerTitle: nil, footerTitle: footer, identifier: "decline-section")
+				section.add(rows: [
+					StaticTableViewRow(buttonWithAction: { (row, _) in
+						let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+						progressView.startAnimating()
+
+						row.cell?.accessoryView = progressView
+						if let core = self.core {
+							core.makeDecision(on: share, accept: false, completionHandler: { (error) in
+								OnMainThread {
+									if error == nil {
+										self.dismissView()
+									} else {
+										if let shareError = error {
+											let alertController = UIAlertController(with: "Decline Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+											self.present(alertController, animated: true)
+										}
+									}
+								}
+							})
+						}
+					}, title: "Decline Share".localized, style: StaticTableViewRowButtonStyle.destructive)
+					])
+
+				self.addSection(section)
+			}
+		}
+	}
+
 	// MARK: - Sharing UI
 
 	func addSectionFor(type: OCShareType, with title: String) {
@@ -175,6 +226,15 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 					return false
 				}
 				if canEdit(share: share) {
+/*
+					switch share.state {
+						case .accepted
+
+						case .pending
+
+						case .rejected
+					}
+*/
 					shareRows.append( StaticTableViewRow(rowWithAction: { (_, _) in
 						let editSharingViewController = GroupSharingEditUserGroupsTableViewController(style: .grouped)
 						editSharingViewController.share = share
@@ -212,6 +272,11 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 				if let section = self.sectionForIdentifier(identifier) {
 					self.removeSection(section)
 				}
+			}
+
+			let identifier = "decline-section"
+			if let section = self.sectionForIdentifier(identifier) {
+				self.removeSection(section)
 			}
 		}
 	}

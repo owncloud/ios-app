@@ -51,7 +51,9 @@ class GalleryHostViewController: UIPageViewController {
 		queryObservation = query.observe(\OCQuery.hasChangesAvailable, options: [.initial, .new]) { [weak self] (query, _) in
 			query.requestChangeSet(withFlags: .onlyResults) { ( _, changeSet) in
 				guard let changeSet = changeSet  else { return }
-				self?.items = self?.applyImageFilesFilter(items: changeSet.queryResult)
+				if let queryResult = changeSet.queryResult, let items = self?.applyImageFilesFilter(items: queryResult) {
+					self?.items = items
+				}
 			}
 		}
 		Theme.shared.register(client: self)

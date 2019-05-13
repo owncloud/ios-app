@@ -188,7 +188,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, accessoryView: UIView, identifier: String? = nil) {
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, image: UIImage? = nil, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, accessoryView: UIView, identifier: String? = nil) {
 		self.init()
 		type = .row
 
@@ -201,6 +201,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cell.textLabel?.text = title
 		cell.textLabel?.textAlignment = alignment
 		cell.accessoryType = accessoryType
+		self.cell?.imageView?.image = image
 		cell.accessibilityIdentifier = identifier
 		if rowWithAction != nil {
 			self.action = rowWithAction
@@ -219,6 +220,10 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			additionalAccessoryView.heightAnchor.constraint(equalToConstant: 24.0),
 			additionalAccessoryView.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor)
 			])
+
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.labelColor
+		})
 	}
 
 	convenience init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, style : UITableViewCell.CellStyle = .subtitle, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
