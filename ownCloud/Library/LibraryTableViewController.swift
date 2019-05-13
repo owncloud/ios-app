@@ -73,7 +73,7 @@ class LibraryTableViewController: StaticTableViewController {
 
 		OnMainThread {
 			self.updatePendingShareRow(sharedWithUser: sharedWithUserPending)
-			self.updateGenericShareRow(shares: sharedWithUserAccepted, title: "Shared with others".localized, image: UIImage(named: "shared")!)
+			self.updateGenericShareRow(shares: sharedWithUserAccepted, title: "Shared with you".localized, image: UIImage(named: "shared")!)
 		}
 	}
 
@@ -93,7 +93,7 @@ class LibraryTableViewController: StaticTableViewController {
 		})
 
 		OnMainThread {
-			self.updateGenericShareRow(shares: sharedByUser, title: "Shared with you".localized, image: UIImage(named: "shared")!)
+			self.updateGenericShareRow(shares: sharedByUser, title: "Shared with others".localized, image: UIImage(named: "shared")!)
 			self.updateGenericShareRow(shares: sharedByUserLinks, title: "Public Links".localized, image: UIImage(named: "link")!)
 		}
 	}
