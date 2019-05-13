@@ -89,6 +89,7 @@
 "date" = "date";
 "Search this folder" = "Search this folder";
 "Pending" = "Pending";
+"Show parent paths" = "Show parent paths";
 
 "%@ of %@ used" = "%@ of %@ used";
 "Total: %@" = "Total: %@";
@@ -267,7 +268,7 @@
 "Deselect All" = "Deselect All";
 "All Photos" = "All Photos";
 "Albums" = "Albums";
-"Importing asset from photo library" = "Importing asset from photo library";
+"Importing from photo library" = "Importing from photo library";
 
 /* Photo upload settings */
 "Photo Upload" = "Photo Upload";

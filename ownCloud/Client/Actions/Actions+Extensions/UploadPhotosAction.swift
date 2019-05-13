@@ -32,6 +32,8 @@ class UploadPhotosAction: UploadBaseAction {
 		static var actionKey = "action"
 	}
 
+	private enum OutputImageFormat { case HEIF, JPEG}
+
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count == 1, context.items.first?.type == .collection, let viewController = context.viewController else {
@@ -77,39 +79,49 @@ class UploadPhotosAction: UploadBaseAction {
 		}
 	}
 
-	func presentImageGalleryPicker() {
+	private func presentImageGalleryPicker() {
 		OnMainThread {
 			if let viewController = self.context.viewController {
 				let photoAlbumViewController = PhotoAlbumTableViewController()
 				photoAlbumViewController.selectionCallback = { (assets) in
 
-					DispatchQueue.global(qos: .userInitiated).async {
-						let uploadGroup = DispatchGroup()
-						var uploadFailed = false
+					self.completed()
 
-						for asset in assets {
-							if uploadFailed == false {
-								// Upload image on a background queue
-								uploadGroup.enter()
+					let queue = DispatchQueue.global(qos: .userInitiated)
 
-								self.upload(asset: asset, completion: { (success) in
-									if !success {
-										uploadFailed = true
-									}
-									uploadGroup.leave()
-								})
+					queue.async {
 
-								_ = uploadGroup.wait(timeout: .now() + 0.5)
+						self.core?.perform(inRunningCore: { (runningCoreCompletion) in
 
-							} else {
-								// Escape on first failed download
-								break
+							let uploadGroup = DispatchGroup()
+							var uploadFailed = false
+
+							for asset in assets {
+								if uploadFailed == false {
+									// Upload image on a background queue
+									uploadGroup.enter()
+
+									self.upload(asset: asset, completion: { (success) in
+										if !success {
+											uploadFailed = true
+										}
+										uploadGroup.leave()
+									})
+
+									// Avoid submitting to many jobs simultaneously to reduce memory pressure
+									_ = uploadGroup.wait(timeout: .now() + 0.5)
+
+								} else {
+									// Escape on first failed download
+									break
+								}
 							}
-						}
 
-						uploadGroup.notify(queue: DispatchQueue.main, execute: {
-							self.completed( with: uploadFailed ? NSError(ocError: .internal) : nil)
-						})
+							uploadGroup.notify(queue: queue, execute: {
+								runningCoreCompletion()
+							})
+
+						}, withDescription: "Uploading \(assets.count) photo assets")
 					}
 				}
 				let navigationController = ThemeNavigationController(rootViewController: photoAlbumViewController)
@@ -121,14 +133,52 @@ class UploadPhotosAction: UploadBaseAction {
 		}
 	}
 
-	func upload(asset:PHAsset, completion:@escaping (_ success:Bool) -> Void ) {
+	private func convertImage(_ sourceURL:URL, targetURL:URL, outputFormat:OutputImageFormat) -> Bool {
+		// Conversion to JPEG required
+		let colorSpace = CGColorSpaceCreateDeviceRGB()
+		var ciContext = CIContext()
+		var imageData : Data?
+
+		var image = CIImage(contentsOf: sourceURL)
+
+		func cleanUpCoreImageRessources() {
+			// Release memory consuming resources
+			imageData = nil
+			image = nil
+			ciContext.clearCaches()
+		}
+
+		if image != nil {
+			switch outputFormat {
+			case .JPEG:
+				imageData = ciContext.jpegRepresentation(of: image!, colorSpace: colorSpace)
+			case .HEIF:
+				imageData = ciContext.heifRepresentation(of: image!, format: CIFormat.RGBA8, colorSpace: colorSpace)
+			}
+
+			if imageData != nil {
+				do {
+					// First write an image to a file stored in temporary directory
+					try imageData!.write(to: targetURL)
+					cleanUpCoreImageRessources()
+					return true
+				} catch {
+					cleanUpCoreImageRessources()
+				}
+			}
+		}
+
+		return false
+	}
+
+	private func upload(asset:PHAsset, completion:@escaping (_ success:Bool) -> Void ) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
 		guard let rootItem = context.items.first else { return }
 
 		// Prepare progress object for importing full size asset from photo library
 		let progress = Progress(totalUnitCount: 100)
-		progress.localizedDescription = "Importing asset from photo library".localized
+		progress.localizedDescription = "Importing from photo library".localized
 		self.publish(progress: progress)
 
 		// Setup import options, allow download asset from network if necessary
@@ -144,50 +194,38 @@ class UploadPhotosAction: UploadBaseAction {
 
 			self.uploadSerialQueue.async {
 				if let input = input, let url = input.fullSizeImageURL {
-					autoreleasepool {
-						var image = CIImage(contentsOf: url)
-						if image != nil {
-							let storeAsHEIF = input.uniformTypeIdentifier == "public.heic" && !userDefaults.convertHeic
-							let colorSpace = CGColorSpaceCreateDeviceRGB()
 
-							let fileName = url.lastPathComponent
-							var localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
+					func performUpload(sourceURL:URL, copySource:Bool) {
 
-							var ciContext = CIContext()
-							var imageData : Data?
-
-							func cleanUpCoreImageRessources() {
-								// Release memory consuming resources
-								imageData = nil
-								image = nil
-								ciContext.clearCaches()
-							}
-
-							if storeAsHEIF {
-								imageData = ciContext.heifRepresentation(of: image!, format: CIFormat.RGBA8, colorSpace: colorSpace)
-							} else {
-								localURL = localURL.deletingPathExtension().appendingPathExtension("jpg")
-								imageData = ciContext.jpegRepresentation(of: image!, colorSpace: colorSpace)
-							}
+						@discardableResult func removeSourceFile() -> Bool {
 							do {
-								// First write an image to a file stored in temporary directory
-								try imageData?.write(to: localURL)
-
-								cleanUpCoreImageRessources()
-
-								// Upload to the cloud
-								self.upload(itemURL: localURL, to: rootItem, name: localURL.lastPathComponent, completionHandler: { (actionPerformed) in
-									// Delete the temporary asset file
-									try? FileManager.default.removeItem(at: localURL)
-									completion(actionPerformed)
-								})
-
+								try FileManager.default.removeItem(at: sourceURL)
+								return true
 							} catch {
-								cleanUpCoreImageRessources()
-
-								completion(false)
+								return false
 							}
+						}
 
+						let fileName = sourceURL.lastPathComponent
+						self.upload(itemURL: sourceURL, to: rootItem, name:fileName, placeholderHandler: { (_, error) in
+							if !copySource && error != nil {
+								// Delete the temporary asset file in case of critical error
+								removeSourceFile()
+							}
+							completion(error == nil)
+						}, importByCopy: copySource)
+					}
+
+					if !userDefaults.convertHeic || input.uniformTypeIdentifier == "public.jpeg" {
+						// No conversion of the image data, upload as is
+						performUpload(sourceURL: url, copySource: true)
+					} else {
+						let fileName = url.lastPathComponent
+						let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("jpg")
+						// Convert to JPEG
+						if self.convertImage(url, targetURL: localURL, outputFormat: .JPEG) {
+							// Upload to the cloud
+							performUpload(sourceURL: localURL, copySource: false)
 						} else {
 							completion(false)
 						}
@@ -196,7 +234,6 @@ class UploadPhotosAction: UploadBaseAction {
 					completion(false)
 				}
 			}
-
 		}
 	}
 }
