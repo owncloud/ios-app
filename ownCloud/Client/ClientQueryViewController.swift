@@ -78,6 +78,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	var quotaLabel = UILabel()
 	var quotaObservation : NSKeyValueObservation?
 
+	var shallShowSortBar = true
+
 	private var _actionProgressHandler : ActionProgressHandler?
 
 	func makeActionProgressHandler() -> ActionProgressHandler {
@@ -104,7 +106,9 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 
-		query.sortComparator = self.sortMethod.comparator()
+		if query.sortComparator == nil {
+			query.sortComparator = self.sortMethod.comparator()
+		}
 
 		query.delegate = self
 
@@ -207,11 +211,13 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		self.definesPresentationContext = true
 
-		sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
-		sortBar?.delegate = self
-		sortBar?.sortMethod = self.sortMethod
+		if shallShowSortBar {
+			sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
+			sortBar?.delegate = self
+			sortBar?.sortMethod = self.sortMethod
 
-		tableView.tableHeaderView = sortBar
+			tableView.tableHeaderView = sortBar
+		}
 
 		queryRefreshControl = UIRefreshControl()
 		queryRefreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
@@ -654,14 +660,17 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 				rootView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
 				rootView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
-				if showSortBar {
-					rootView.topAnchor.constraint(equalTo: (sortBar?.bottomAnchor)!).isActive = true
-				} else {
-					rootView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
-				}
-				rootView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
 
-				messageShowsSortBar = showSortBar
+				if shallShowSortBar {
+					if showSortBar {
+						rootView.topAnchor.constraint(equalTo: (sortBar?.bottomAnchor)!).isActive = true
+					} else {
+						rootView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+					}
+					rootView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+
+					messageShowsSortBar = showSortBar
+				}
 
 				UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
 					rootView.alpha = 1
