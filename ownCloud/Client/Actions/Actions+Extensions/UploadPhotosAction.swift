@@ -171,6 +171,29 @@ class UploadPhotosAction: UploadBaseAction {
 		return false
 	}
 
+	private func exportVideoAsset(_ asset:AVAsset, targetURL:URL, completion:@escaping () -> Void) {
+		if asset.isExportable {
+
+			let preset = AVAssetExportPresetHighestQuality
+			let outFileType = AVFileType.mp4
+
+			AVAssetExportSession.determineCompatibility(ofExportPreset: preset, with: asset, outputFileType: outFileType, completionHandler: { (isCompatible) in
+				if !isCompatible {
+					return
+				}})
+
+			guard let export = AVAssetExportSession(asset: asset, presetName: preset) else {
+				return
+			}
+
+			export.outputFileType = outFileType
+			export.outputURL = targetURL
+			export.exportAsynchronously {
+				completion()
+			}
+		}
+	}
+
 	private func upload(asset:PHAsset, completion:@escaping (_ success:Bool) -> Void ) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
@@ -192,8 +215,18 @@ class UploadPhotosAction: UploadBaseAction {
 		asset.requestContentEditingInput(with: contentInputOptions) { (input, _) in
 			self.unpublish(progress: progress)
 
+			var assetURL: URL?
+			switch asset.mediaType {
+			case .image:
+				assetURL = input?.fullSizeImageURL
+			case .video:
+				assetURL = (input?.audiovisualAsset as? AVURLAsset)?.url
+			default:
+				break
+			}
+
 			self.uploadSerialQueue.async {
-				if let input = input, let url = input.fullSizeImageURL {
+				if let input = input, let url = assetURL {
 
 					func performUpload(sourceURL:URL, copySource:Bool) {
 
@@ -216,20 +249,25 @@ class UploadPhotosAction: UploadBaseAction {
 						}, importByCopy: copySource)
 					}
 
-					if !userDefaults.convertHeic || input.uniformTypeIdentifier == "public.jpeg" {
-						// No conversion of the image data, upload as is
-						performUpload(sourceURL: url, copySource: true)
-					} else {
-						let fileName = url.lastPathComponent
-						let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("jpg")
-						// Convert to JPEG
-						if self.convertImage(url, targetURL: localURL, outputFormat: .JPEG) {
-							// Upload to the cloud
-							performUpload(sourceURL: localURL, copySource: false)
+					if asset.mediaType == .image {
+						if !userDefaults.convertHeic || input.uniformTypeIdentifier == "public.jpeg" {
+							// No conversion of the image data, upload as is
+							performUpload(sourceURL: url, copySource: true)
 						} else {
-							completion(false)
+							let fileName = url.lastPathComponent
+							let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("jpg")
+							// Convert to JPEG
+							if self.convertImage(url, targetURL: localURL, outputFormat: .JPEG) {
+								// Upload to the cloud
+								performUpload(sourceURL: localURL, copySource: false)
+							} else {
+								completion(false)
+							}
 						}
+					} else if asset.mediaType == .video {
+						performUpload(sourceURL: url, copySource: true)
 					}
+
 				} else {
 					completion(false)
 				}
