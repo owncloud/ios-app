@@ -235,5 +235,6 @@
 "The entered page number doesn't exist" = "Введённый номер страницы не существует";
 
 /* Photo upload settings */
-"Photo Upload" = "Загрузка фото";
+"Media Upload" = "Загрузка фото и видео";
 "Convert HEIC to JPEG" = "Конвертировать HEIC в JPEG";
+"Convert videos to MP4" = "Конвертировать видео в MP4";

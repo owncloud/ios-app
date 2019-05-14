@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import Photos
 
-class UploadPhotosAction: UploadBaseAction {
+class UploadMediaAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadphotos") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Upload from your photo library".localized }
@@ -171,26 +171,28 @@ class UploadPhotosAction: UploadBaseAction {
 		return false
 	}
 
-	private func exportVideoAsset(_ asset:AVAsset, targetURL:URL, completion:@escaping () -> Void) {
+	private func exportVideoAsset(_ asset:AVAsset, targetURL:URL, type:AVFileType, completion:@escaping (_ success:Bool) -> Void) {
 		if asset.isExportable {
 
 			let preset = AVAssetExportPresetHighestQuality
-			let outFileType = AVFileType.mp4
 
-			AVAssetExportSession.determineCompatibility(ofExportPreset: preset, with: asset, outputFileType: outFileType, completionHandler: { (isCompatible) in
+			AVAssetExportSession.determineCompatibility(ofExportPreset: preset, with: asset, outputFileType: type, completionHandler: { (isCompatible) in
 				if !isCompatible {
-					return
+					completion(false)
 				}})
 
 			guard let export = AVAssetExportSession(asset: asset, presetName: preset) else {
+				completion(false)
 				return
 			}
 
-			export.outputFileType = outFileType
+			export.outputFileType = type
 			export.outputURL = targetURL
 			export.exportAsynchronously {
-				completion()
+				completion(true)
 			}
+		} else {
+			completion(false)
 		}
 	}
 
@@ -265,7 +267,20 @@ class UploadPhotosAction: UploadBaseAction {
 							}
 						}
 					} else if asset.mediaType == .video {
-						performUpload(sourceURL: url, copySource: true)
+						if userDefaults.convertVideosToMP4 {
+							let fileName = url.lastPathComponent
+							let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("mp4")
+							self.exportVideoAsset(input.audiovisualAsset!, targetURL: localURL, type: .mp4, completion: { (exportSuccess) in
+								if exportSuccess {
+									performUpload(sourceURL: localURL, copySource: false)
+								} else {
+									completion(false)
+								}
+							})
+
+						} else {
+							performUpload(sourceURL: url, copySource: true)
+						}
 					}
 
 				} else {
