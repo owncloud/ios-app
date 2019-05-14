@@ -408,15 +408,16 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 						if lastTappedItemLocalID != rowItem.localID {
 							lastTappedItemLocalID = rowItem.localID
 
-							core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ]) { [weak self, query] (error, core, item, _) in
+							if let progress = core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { [weak self, query] (error, core, item, _) in
 
 								guard let self = self else { return }
 								OnMainThread { [weak core] in
 									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
 										if let item = item, let core = core {
 											if item.localID == self.lastTappedItemLocalID {
-												let itemViewController = GalleryHostViewController(core: core, selectedItem: item, query: query)
+												let itemViewController = DisplayHostViewController(core: core, selectedItem: item, query: query)
 												itemViewController.hidesBottomBarWhenPushed = true
+												itemViewController.progressSummarizer = self.progressSummarizer
 												self.navigationController?.pushViewController(itemViewController, animated: true)
 											}
 										}
@@ -426,6 +427,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 										self.lastTappedItemLocalID = nil
 									}
 								}
+							}) {
+								progressSummarizer?.startTracking(progress: progress)
 							}
 						}
 				}

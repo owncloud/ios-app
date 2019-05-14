@@ -1,5 +1,5 @@
 //
-//  GalleryHostViewController.swift
+//  DisplayHostViewController.swift
 //  ownCloud
 //
 //  Created by Pablo Carrascal on 14/02/2019.
@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class GalleryHostViewController: UIPageViewController {
+class DisplayHostViewController: UIPageViewController {
 
 	// MARK: - Constants
 	let hasChangesAvailableKeyPath: String = "hasChangesAvailable"
@@ -39,6 +39,8 @@ class GalleryHostViewController: UIPageViewController {
 	private var query: OCQuery
 	private weak var viewControllerToTansition: DisplayViewController?
 	private var queryObservation : NSKeyValueObservation?
+
+	var progressSummarizer : ProgressSummarizer?
 
 	// MARK: - Init & deinit
 	init(core: OCCore, selectedItem: OCItem, query: OCQuery) {
@@ -125,15 +127,15 @@ class GalleryHostViewController: UIPageViewController {
 			return DisplayViewController()
 		}
 
-		let preferedExtension: OCExtension = matchedExtensions[0].extension
+		let preferredExtension: OCExtension = matchedExtensions[0].extension
 
-		let extensionObject = preferedExtension.provideObject(for: context)
-
-		guard let controllerType = extensionObject as? (DisplayViewController & DisplayExtension) else {
+		guard let displayViewController = preferredExtension.provideObject(for: context) as? (DisplayViewController & DisplayExtension) else {
 			return DisplayViewController()
 		}
 
-		return controllerType
+		displayViewController.progressSummarizer = progressSummarizer
+
+		return displayViewController
 	}
 
 	// MARK: - Helper methods
@@ -175,7 +177,7 @@ class GalleryHostViewController: UIPageViewController {
 	}
 }
 
-extension GalleryHostViewController: UIPageViewControllerDataSource {
+extension DisplayHostViewController: UIPageViewControllerDataSource {
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
 		if let displayViewController = viewControllers?.first as? DisplayViewController,
 			let item = displayViewController.item,
@@ -199,7 +201,7 @@ extension GalleryHostViewController: UIPageViewControllerDataSource {
 	}
 }
 
-extension GalleryHostViewController: UIPageViewControllerDelegate {
+extension DisplayHostViewController: UIPageViewControllerDelegate {
 	func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
 
 		let previousViewController = previousViewControllers[0]
@@ -228,7 +230,7 @@ extension GalleryHostViewController: UIPageViewControllerDelegate {
 	}
 }
 
-extension GalleryHostViewController: Themeable {
+extension DisplayHostViewController: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.view.backgroundColor = .black
 	}
