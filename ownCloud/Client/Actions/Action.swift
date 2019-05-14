@@ -457,7 +457,6 @@ class Action : NSObject {
 
 				if let viewController = context.viewController {
 					let sharingViewController = PublicLinkTableViewController(core: context.core!, item: item)
-					sharingViewController.addPublicLink()
 					let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 					navigationController.modalPresentationStyle = .formSheet
 

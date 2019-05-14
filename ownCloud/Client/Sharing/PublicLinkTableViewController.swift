@@ -171,8 +171,6 @@ class PublicLinkTableViewController: StaticTableViewController {
 		if shares.count > 0 && showShares {
 			messageView?.message(show: false)
 			self.addShareSections()
-		} else {
-			messageView?.message(show: true, imageName: "icon-search", title: "Public Link".localized, message: "Add a public link".localized)
 		}
 	}
 

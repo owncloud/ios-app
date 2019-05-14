@@ -38,17 +38,7 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 		}
 	}
 	var core : OCCore
-	var item : OCItem {
-		didSet {
-			if item.isShareable {
-				if item.isSharedWithUser == false {
-					meCanShareItem = true
-				} else if item.isSharedWithUser, core.connection.capabilities?.sharingResharing == true {
-					meCanShareItem = true
-				}
-			}
-		}
-	}
+	var item : OCItem
 	var searchController : UISearchController?
 	var recipientSearchController : OCRecipientSearchController?
 	var meCanShareItem : Bool = false
@@ -60,6 +50,14 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 	public init(core inCore: OCCore, item inItem: OCItem) {
 		core = inCore
 		item = inItem
+
+		if item.isShareable {
+			if item.isSharedWithUser == false {
+				meCanShareItem = true
+			} else if item.isSharedWithUser, core.connection.capabilities?.sharingResharing == true {
+				meCanShareItem = true
+			}
+		}
 
 		super.init(style: .grouped)
 	}
@@ -128,7 +126,6 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 			self.shares = sharesWithReshares
 			self.removeShareSections()
 			self.addShareSections()
-			self.handleEmptyShares()
 
 			self.addActionShareSection()
 		}
@@ -139,11 +136,6 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 			self.core.stop(query)
 		}
 		dismissAnimated()
-	}
-
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-		handleEmptyShares()
 	}
 
 	// MARK: - Header View
@@ -284,23 +276,12 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 
 	func resetTable(showShares : Bool) {
 		removeShareSections()
+		messageView?.message(show: false)
 		if let section = self.sectionForIdentifier("search-results") {
 			self.removeSection(section)
 		}
 		if shares.count > 0 && showShares {
-			messageView?.message(show: false)
 			self.addShareSections()
-		} else {
-			messageView?.message(show: true, imageName: "icon-search", title: "Search Recipients".localized, message: "Start typing to search users, groups and remote users.".localized)
-		}
-	}
-
-	func handleEmptyShares() {
-		if shares.count == 0 {
-			OnMainThread {
-				self.resetTable(showShares: false)
-				self.searchController?.searchBar.becomeFirstResponder()
-			}
 		}
 	}
 

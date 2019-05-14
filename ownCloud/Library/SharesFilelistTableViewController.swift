@@ -162,7 +162,7 @@ class SharesFilelistTableViewController: UITableViewController, Themeable {
 								if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
 									if let item = item, let core = core, let path = rowItem.path {
 										if item.localID == self.lastTappedItemLocalID {
-											let itemViewController = GalleryHostViewController(core: core, selectedItem: item, query: OCQuery(forPath: path))
+											let itemViewController = DisplayHostViewController(core: core, selectedItem: item, query: OCQuery(forPath: path))
 											itemViewController.hidesBottomBarWhenPushed = true
 											self.navigationController?.pushViewController(itemViewController, animated: true)
 										}
