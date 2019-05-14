@@ -22,6 +22,27 @@ import ownCloudSDK
 class LibraryTableViewController: StaticTableViewController {
 
 	var core : OCCore?
+	var pendingSharesCounter : Int = 0 {
+		didSet {
+			OnMainThread {
+				if self.pendingSharesCounter > 0 {
+					self.navigationController?.tabBarItem.badgeValue = String(self.pendingSharesCounter)
+				} else {
+					self.navigationController?.tabBarItem.badgeValue = nil
+				}
+			}
+		}
+	}
+	var pendingLocalSharesCounter : Int = 0 {
+		didSet {
+			pendingSharesCounter = pendingCloudSharesCounter + pendingLocalSharesCounter
+		}
+	}
+	var pendingCloudSharesCounter : Int = 0 {
+		didSet {
+			pendingSharesCounter = pendingCloudSharesCounter + pendingLocalSharesCounter
+		}
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -38,6 +59,7 @@ class LibraryTableViewController: StaticTableViewController {
 	func updateLibrary() {
 		let shareQueryWithUser = OCShareQuery(scope: .sharedWithUser, item: nil)
 		let shareQueryByUser = OCShareQuery(scope: .sharedByUser, item: nil)
+		let shareQueryCloudShares = OCShareQuery(scope: .pendingCloudShares, item: nil)
 
 		core?.start(shareQueryWithUser!)
 		shareQueryWithUser?.initialPopulationHandler = { query in
@@ -45,6 +67,16 @@ class LibraryTableViewController: StaticTableViewController {
 		}
 		shareQueryWithUser?.changesAvailableNotificationHandler = { query in
 			self.handleSharedWithUser(shares: query.queryResults)
+		}
+
+		core?.start(shareQueryCloudShares!)
+		shareQueryCloudShares?.initialPopulationHandler = { query in
+			self.pendingCloudSharesCounter = query.queryResults.count
+			self.updatePendingShareRow(shares: query.queryResults, title: "Pending Cloud Shares".localized)
+		}
+		shareQueryCloudShares?.changesAvailableNotificationHandler = { query in
+			self.pendingCloudSharesCounter = query.queryResults.count
+			self.updatePendingShareRow(shares: query.queryResults, title: "Pending Cloud Shares".localized)
 		}
 
 		core?.start(shareQueryByUser!)
@@ -64,6 +96,7 @@ class LibraryTableViewController: StaticTableViewController {
 			}
 			return false
 		})
+		pendingCloudSharesCounter = sharedWithUserPending.count
 
 		let sharedWithUserAccepted = shares.filter({ (share) -> Bool in
 			if share.state == .accepted {
@@ -73,7 +106,7 @@ class LibraryTableViewController: StaticTableViewController {
 		})
 
 		OnMainThread {
-			self.updatePendingShareRow(sharedWithUser: sharedWithUserPending)
+			self.updatePendingShareRow(shares: sharedWithUserPending, title: "Pending Shares".localized)
 			self.updateGenericShareRow(shares: sharedWithUserAccepted, title: "Shared with you".localized, image: UIImage(named: "group")!)
 		}
 	}
@@ -108,35 +141,35 @@ class LibraryTableViewController: StaticTableViewController {
 		}
 	}
 
-	func updatePendingShareRow(sharedWithUser: [OCShare]) {
-		self.addShareSection()
-		let section = self.sectionForIdentifier("share-section")
-		if sharedWithUser.count > 0 {
-			let shareCounter = String(sharedWithUser.count)
-			self.navigationController?.tabBarItem.badgeValue = shareCounter
+	func updatePendingShareRow(shares: [OCShare], title: String) {
+		OnMainThread {
+			self.addShareSection()
+			let rowIdentifier = String(format: "%@-share-row", title)
+			let section = self.sectionForIdentifier("share-section")
+			if shares.count > 0 {
+				let shareCounter = String(shares.count)
 
-			if section?.row(withIdentifier: "pending-share-row") == nil {
-				let pendingLabel = RoundedLabel()
-				pendingLabel.update(text: shareCounter, textColor: UIColor.white, backgroundColor: UIColor.red)
+				if section?.row(withIdentifier: rowIdentifier) == nil {
+					let pendingLabel = RoundedLabel()
+					pendingLabel.update(text: shareCounter, textColor: UIColor.white, backgroundColor: UIColor.red)
 
-				let row = StaticTableViewRow(rowWithAction: { (_, _) in
-					let pendingSharesController = PendingSharesTableViewController()
-					pendingSharesController.shares = sharedWithUser
-					pendingSharesController.core = self.core
-					self.navigationController?.pushViewController(pendingSharesController, animated: true)
-				}, title: "Pending Shares".localized, image: UIImage(named: "group"), accessoryType: .disclosureIndicator, accessoryView: pendingLabel, identifier: "pending-share-row")
-				section?.insert(row: row, at: 0, animated: true)
-			} else if let row = section?.row(withIdentifier: "pending-share-row") {
-				OnMainThread {
+					let row = StaticTableViewRow(rowWithAction: { (_, _) in
+						let pendingSharesController = PendingSharesTableViewController()
+						pendingSharesController.shares = shares
+						pendingSharesController.title = title
+						pendingSharesController.core = self.core
+						self.navigationController?.pushViewController(pendingSharesController, animated: true)
+					}, title: title, image: UIImage(named: "group"), accessoryType: .disclosureIndicator, accessoryView: pendingLabel, identifier: rowIdentifier)
+					section?.insert(row: row, at: 0, animated: true)
+				} else if let row = section?.row(withIdentifier: rowIdentifier) {
 					guard let accessoryView = row.additionalAccessoryView as? RoundedLabel else { return }
 					accessoryView.update(text: shareCounter, textColor: UIColor.white, backgroundColor: UIColor.red)
 				}
+			} else {
+				if let row = section?.row(withIdentifier: rowIdentifier) {
+					section?.remove(rows: [row], animated: true)
+				}
 			}
-		} else {
-			if let row = section?.row(withIdentifier: "pending-share-row") {
-				section?.remove(rows: [row], animated: true)
-			}
-			self.navigationController?.tabBarItem.badgeValue = nil
 		}
 	}
 

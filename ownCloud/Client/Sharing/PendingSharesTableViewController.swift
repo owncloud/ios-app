@@ -35,8 +35,11 @@ class PendingSharesTableViewController: StaticTableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.title = "Pending Shares".localized
+		self.navigationController?.navigationBar.prefersLargeTitles = false
+		prepareItems()
+	}
 
+	func prepareItems() {
 		if self.sectionForIdentifier("pending-section") == nil {
 			let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "pending-section")
 			self.insertSection(section, at: 0, animated: false)
@@ -47,14 +50,26 @@ class PendingSharesTableViewController: StaticTableViewController {
 
 			if let shares = shares {
 				for share in shares {
-					if let displayName = share.itemOwner?.displayName {
+					var ownerName : String?
+					if share.itemOwner?.displayName != nil {
+						ownerName = share.itemOwner?.displayName
+					} else if share.owner?.userName != nil {
+						ownerName = share.owner?.userName
+					}
+
+					if let displayName = ownerName {
 						var itemImageType = "file"
 						if share.itemType == .collection {
 							itemImageType = "folder"
 						}
-						var footer = ""
+						var footer = String(format: "Shared by %@".localized, displayName)
 						if let date = share.creationDate {
-							footer = String(format: "Shared by %@\n%@".localized, displayName, dateFormatter.string(from: date))
+							footer = footer.appendingFormat("\n%@", dateFormatter.string(from: date))
+						}
+
+						var itemName = share.name
+						if share.itemPath.count > 0 {
+							itemName = (share.itemPath as NSString).lastPathComponent
 						}
 
 						let row = StaticTableViewRow(rowWithAction: { (_, _) in
@@ -63,7 +78,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 								presentationStyle = .alert
 							}
 
-							let alertController = UIAlertController(title: "Pending Share".localized,
+							let alertController = UIAlertController(title: self.title,
 																	message: nil,
 																	preferredStyle: presentationStyle)
 							alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
@@ -106,20 +121,23 @@ class PendingSharesTableViewController: StaticTableViewController {
 
 							self.present(alertController, animated: true, completion: nil)
 
-						}, title: (share.itemPath as NSString).lastPathComponent, subtitle: footer, image: Theme.shared.image(for: itemImageType, size: CGSize(width: imageWidth, height: imageHeight)), identifier: "row")
+						}, title: itemName ?? "Share".localized, subtitle: footer, image: Theme.shared.image(for: itemImageType, size: CGSize(width: imageWidth, height: imageHeight)), identifier: "row")
 						section.add(row: row)
 
-						itemTracker = core?.trackItem(atPath: share.itemPath, trackingHandler: { (error, item, isInitial) in
-							if error == nil, isInitial {
-								OnMainThread {
-									row.cell?.imageView?.image = item?.icon(fitInSize: CGSize(width: self.imageWidth, height: self.imageHeight))
+						if share.itemPath.count > 0 {
+							itemTracker = core?.trackItem(atPath: share.itemPath, trackingHandler: { (error, item, isInitial) in
+								if error == nil, isInitial {
+									OnMainThread {
+										row.cell?.imageView?.image = item?.icon(fitInSize: CGSize(width: self.imageWidth, height: self.imageHeight))
+									}
 								}
-							}
-						})
+							})
+						}
 					}
 				}
 			}
 		}
+
 	}
 
 	// MARK: TableView Delegate

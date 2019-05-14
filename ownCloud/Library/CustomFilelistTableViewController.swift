@@ -32,6 +32,9 @@
 		var queryRefreshRateLimiter : OCRateLimiter = OCRateLimiter(minimumTime: 0.2)
 		var messageView : MessageView?
 
+		// MARK: - Search
+		var searchController: UISearchController?
+
 		// MARK: - Sorting
 		private var sortBar: SortBar?
 		private var sortMethod: SortMethod {
@@ -93,15 +96,30 @@
 			Theme.shared.register(client: self, applyImmediately: true)
 			self.tableView.estimatedRowHeight = estimatedTableRowHeight
 
+			searchController = UISearchController(searchResultsController: nil)
+			searchController?.searchResultsUpdater = self
+			searchController?.obscuresBackgroundDuringPresentation = false
+			searchController?.hidesNavigationBarDuringPresentation = true
+			searchController?.searchBar.placeholder = "Search this folder".localized
+			searchController?.searchBar.applyThemeCollection(Theme.shared.activeCollection)
+
+			navigationItem.searchController =  searchController
+			navigationItem.hidesSearchBarWhenScrolling = false
+
+			self.definesPresentationContext = true
+
 			queryRefreshControl = UIRefreshControl()
 			queryRefreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
 			self.tableView.insertSubview(queryRefreshControl!, at: 0)
+			tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
+			tableView.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
 
 			sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
 			sortBar?.delegate = self
 			sortBar?.sortMethod = self.sortMethod
 
 			tableView.tableHeaderView = sortBar
+			messageView = MessageView(add: self.view)
 		}
 
 		deinit {
@@ -118,10 +136,18 @@
 			self.tableView.reloadData()
 		}
 
+		override func viewWillDisappear(_ animated: Bool) {
+			super.viewWillDisappear(animated)
+
+			searchController?.searchBar.text = ""
+			searchController?.dismiss(animated: true, completion: nil)
+		}
+
 		// MARK: - Theme support
 
 		func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 			self.tableView.applyThemeCollection(collection)
+			self.searchController?.searchBar.applyThemeCollection(collection)
 			if event == .update {
 				self.tableView.reloadData()
 			}
@@ -205,24 +231,55 @@
 
 		override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
 			if sortMethod == .alphabeticallyAscendant || sortMethod == .alphabeticallyDescendant {
-				return Array( Set( self.items.map{ String(( $0.name?.first!.uppercased() )!)})).sorted()
+				return Array( Set( self.items.map { String(( $0.name?.first!.uppercased() )!) } ) ).sorted()
 			}
 
 			return []
 		}
 
 		override open func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
-			let firstItem = self.items.filter{(($0.name?.hasPrefix(title) ?? nil)!)}.first
+			let firstItem = self.items.filter { (( $0.name?.uppercased().hasPrefix(title) ?? nil)! ) }.first
 
 			if let firstItem = firstItem {
-				let itemIndex = self.items.index(of: firstItem)
-				tableView.scrollToRow(at: IndexPath(row: itemIndex ?? 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
+				if let itemIndex = self.items.index(of: firstItem) {
+					OnMainThread {
+						tableView.scrollToRow(at: IndexPath(row: itemIndex, section: 0), at: UITableView.ScrollPosition.top , animated: false)
+					}
+				}
 			}
 
 			return 0
 		}
 
 	}
+
+// MARK: - UISearchResultsUpdating Delegate
+extension CustomFilelistTableViewController: UISearchResultsUpdating {
+	func updateSearchResults(for searchController: UISearchController) {
+		let searchText = searchController.searchBar.text!
+
+		let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
+			if let itemName = item?.name {
+				return itemName.localizedCaseInsensitiveContains(searchText)
+			}
+			return false
+		}
+
+		if searchText == "" {
+			if let filter = query.filter(withIdentifier: "text-search") {
+				query.removeFilter(filter)
+			}
+		} else {
+			if let filter = query.filter(withIdentifier: "text-search") {
+				query.updateFilter(filter, applyChanges: { filterToChange in
+					(filterToChange as? OCQueryFilter)?.filterHandler = filterHandler
+				})
+			} else {
+				query.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
+			}
+		}
+	}
+}
 
 	// MARK: - ClientItemCell Delegate
 	extension CustomFilelistTableViewController: ClientItemCellDelegate {
@@ -283,7 +340,11 @@ extension CustomFilelistTableViewController : OCQueryDelegate {
 						}
 
 						if self.items.count == 0 {
+							if self.searchController?.searchBar.text != "" {
+								self.messageView?.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
+							} else {
 								self.messageView?.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
+							}
 						} else {
 							self.messageView?.message(show: false)
 						}

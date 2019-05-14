@@ -226,17 +226,6 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 					return false
 				}
 				if canEdit(share: share) {
-
-					print("--> statae \(share)")
-/*
-					switch share.state {
-						case .accepted
-
-						case .pending
-
-						case .rejected
-					}
-*/
 					shareRows.append( StaticTableViewRow(rowWithAction: { (_, _) in
 						let editSharingViewController = GroupSharingEditUserGroupsTableViewController(style: .grouped)
 						editSharingViewController.share = share
