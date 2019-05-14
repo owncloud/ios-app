@@ -39,6 +39,8 @@ class ProgressSummarizer: NSObject {
 	private var observerContext : UnsafeMutableRawPointer?
 
 	var trackedProgress : [Progress] = []
+	var trackedProgressByType : [ OCEventType : [Progress] ] = [ : ]
+	var trackedProgressByTypeCount : [ OCEventType : Int ] = [ : ]
 
 	override init() {
 		observerContext = UnsafeMutableRawPointer(&observerContextTarget)
@@ -85,7 +87,18 @@ class ProgressSummarizer: NSObject {
 	func startTracking(progress: Progress) {
 		OCSynchronized(self) {
 			if !trackedProgress.contains(progress) {
-				trackedProgress.append(progress)
+				trackedProgress.insert(progress, at: 0)
+
+				if progress.eventType != .none {
+					if trackedProgressByType[progress.eventType] != nil {
+						trackedProgressByType[progress.eventType]?.append(progress)
+					} else {
+						trackedProgressByType[progress.eventType] = [ progress ]
+					}
+
+					// Count the number of progress objects with the same type
+					trackedProgressByTypeCount[progress.eventType] = (trackedProgressByTypeCount[progress.eventType] ?? 0) + 1
+				}
 
 				progress.addObserver(self, forKeyPath: "fractionCompleted", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 				progress.addObserver(self, forKeyPath: "isFinished", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
@@ -99,14 +112,29 @@ class ProgressSummarizer: NSObject {
 
 	func stopTracking(progress: Progress, remove: Bool = true) {
 		OCSynchronized(self) {
-			if trackedProgress.contains(progress) {
+			if let trackedProgressIndex = trackedProgress.index(of: progress) {
 				progress.removeObserver(self, forKeyPath: "fractionCompleted", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "isFinished", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "isIndeterminate", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "localizedDescription", context: observerContext)
 
 				if remove {
-					trackedProgress.remove(at: trackedProgress.index(of: progress)!)
+					trackedProgress.remove(at: trackedProgressIndex)
+
+					if progress.eventType != .none {
+						if let progressByTypeIndex = trackedProgressByType[progress.eventType]?.index(of: progress) {
+							trackedProgressByType[progress.eventType]?.remove(at: progressByTypeIndex)
+
+							let remainingProgressByType = (trackedProgressByType[progress.eventType]?.count ?? 0)
+
+							if remainingProgressByType < 2 {
+								// Reset the number of progress objects with the same type only after at least (all-1) have finished
+								// to make sure using trackedProgressByTypeCount leads to an evenly drawn progress bar, but also
+								// resets the count if only one is left, so the next that's scheduled doesn't bring the message back to "x of previousAll"
+								trackedProgressByTypeCount[progress.eventType] = remainingProgressByType
+							}
+						}
+					}
 
 					self.setNeedsUpdate()
 				}
@@ -158,7 +186,7 @@ class ProgressSummarizer: NSObject {
 		OCSynchronized(self) {
 			self.update()
 
-			updateInProgress = false
+			self.updateInProgress = false
 		}
 	}
 
@@ -283,6 +311,7 @@ class ProgressSummarizer: NSObject {
 		var completedFraction : Double = 0
 		var totalFraction : Double = 0
 		var completedProgress : [Progress]?
+		var isGroupedProgress : Bool = false
 
 		OCSynchronized(self) {
 			var usedProgress : Int = 0
@@ -302,9 +331,68 @@ class ProgressSummarizer: NSObject {
 							completedProgress?.append(progress)
 						}
 
-						// Pick the first localized description that we encounter as message, because it's also the oldest, longest-running one.
+						// Pick the first localized description that we encounter as message, because it's also the most recent one (=> trackedProgress is reversed above!)
 						if summary.message == nil {
 							summary.message = message
+
+							if progress.eventType != .none, let progressOfSameType = trackedProgressByType[progress.eventType], progressOfSameType.count > 1 {
+								var multiMessage : String?
+								var sameTypeCount = progressOfSameType.count
+								let totalSameTypeCount = trackedProgressByTypeCount[progress.eventType] ?? sameTypeCount
+
+								for progress in progressOfSameType {
+									if !progress.isIndeterminate, progress.isFinished {
+										sameTypeCount -= 1
+									}
+								}
+
+								if sameTypeCount > 1 {
+									switch progress.eventType {
+										case .createFolder:
+											multiMessage = NSString(format:"Creating %ld of %ld folders…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+
+										case .move:
+											multiMessage = NSString(format:"Moving %ld of %ld items…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+
+										case .copy:
+											multiMessage = NSString(format:"Copying %ld of %ld items…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+
+										case .delete:
+											multiMessage = NSString(format:"Deleting %ld of %ld items…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+
+										case .upload:
+											multiMessage = NSString(format:"Uploading %ld of %ld files…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+
+										case .download:
+											multiMessage = NSString(format:"Downloading %ld of %ld files…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+
+										case .update:
+											multiMessage = NSString(format:"Updating %ld of %ld items…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+
+										case .createShare, .updateShare, .deleteShare, .decideOnShare: break
+										case .none, .retrieveThumbnail, .retrieveItemList, .retrieveShares, .issueResponse: break
+									}
+
+									if multiMessage != nil {
+										var multiProgress : Double = Double(totalSameTypeCount - sameTypeCount) / Double(totalSameTypeCount) // add progress for already completed & removed progress
+
+										isGroupedProgress = true
+
+										summary.message = multiMessage
+
+										for progress in progressOfSameType {
+											if !progress.isIndeterminate, !progress.isFinished {
+												multiProgress += (progress.fractionCompleted / Double(totalSameTypeCount))
+											}
+										}
+
+										summary.progress = multiProgress
+
+										usedProgress += sameTypeCount
+										break
+									}
+								}
+							}
 						}
 
 						if !progress.isIndeterminate {
@@ -324,22 +412,24 @@ class ProgressSummarizer: NSObject {
 
 			summary.progressCount = usedProgress
 
-			if totalUnitCount == 0 {
-				if usedProgress == 0 {
-					summary.progress = 1
+			if !isGroupedProgress {
+				if totalUnitCount == 0 {
+					if usedProgress == 0 {
+						summary.progress = 1
+					} else {
+						summary.indeterminate = true
+					}
 				} else {
-					summary.indeterminate = true
-				}
-			} else {
-				if totalFraction != 0 {
-					summary.progress = completedFraction / totalFraction
-				} else {
-					summary.progress = Double(completedUnitCount) / Double(totalUnitCount)
+					if totalFraction != 0 {
+						summary.progress = completedFraction / totalFraction
+					} else {
+						summary.progress = Double(completedUnitCount) / Double(totalUnitCount)
+					}
 				}
 			}
 
-			if completedProgress != nil {
-				for removeProgress in completedProgress! {
+			if let completedProgress = completedProgress {
+				for removeProgress in completedProgress {
 					self.stopTracking(progress: removeProgress)
 				}
 			}

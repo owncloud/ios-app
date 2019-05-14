@@ -30,7 +30,6 @@
 		23E22BB720C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E22BB220C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift */; };
 		23EC77582137F3DD0032D4E6 /* PDFViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */; };
 		23EC77592137F3DD0032D4E6 /* DisplayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77552137F3DC0032D4E6 /* DisplayExtension.swift */; };
-		23EC775A2137F3DD0032D4E6 /* DisplayHostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77562137F3DC0032D4E6 /* DisplayHostViewController.swift */; };
 		23EC775B2137F3DD0032D4E6 /* OCExtensionType+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC77572137F3DD0032D4E6 /* OCExtensionType+Extension.swift */; };
 		23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */; };
 		23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F6238020B587EF004FDE8B /* SortMethod.swift */; };
@@ -85,7 +84,6 @@
 		59B09E6E21AD61F4007827B8 /* EditBookmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6A21AD61F4007827B8 /* EditBookmarkTests.swift */; };
 		59B09E6F21AD61F4007827B8 /* CreateBookmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6B21AD61F4007827B8 /* CreateBookmarkTests.swift */; };
 		59B09E7021AD61F4007827B8 /* UtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B09E6C21AD61F4007827B8 /* UtilsTests.swift */; };
-		59BC2751221D552700548444 /* XCTestsCase+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59BC2750221D552700548444 /* XCTestsCase+Extension.swift */; };
 		59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 59D4895420C83F2E00369C2E /* InfoPlist.strings */; };
 		6D107AA0B21417432C72755A /* EarlGrey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */; };
 		6E0A569E218702400056B7B4 /* DownloadFileProgressHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0A569D218702400056B7B4 /* DownloadFileProgressHUDViewController.swift */; };
@@ -96,7 +94,7 @@
 		6E586CFC2199A72600F680C4 /* OpenInAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E586CFB2199A72600F680C4 /* OpenInAction.swift */; };
 		6E586CFE2199A75900F680C4 /* MoveAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E586CFD2199A75900F680C4 /* MoveAction.swift */; };
 		6E586D002199A78E00F680C4 /* DeleteAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E586CFF2199A78E00F680C4 /* DeleteAction.swift */; };
-		6E5FC172221590B000F60846 /* GalleryHostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E5FC171221590B000F60846 /* GalleryHostViewController.swift */; };
+		6E5FC172221590B000F60846 /* DisplayHostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E5FC171221590B000F60846 /* DisplayHostViewController.swift */; };
 		6E83C77E20A32C1B0066EC23 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */; };
 		6E83C78420A33C180066EC23 /* LAContext+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C78320A33C180066EC23 /* LAContext+Extension.swift */; };
 		6E91F37E21ECA6FD009436D2 /* CopyAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E91F37D21ECA6FD009436D2 /* CopyAction.swift */; };
@@ -478,12 +476,11 @@
 		23BEF1172076667F00DD2E6F /* IssuesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesViewController.swift; sourceTree = "<group>"; };
 		23C5652F212167BD00BD4B47 /* CardPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardPresentationController.swift; sourceTree = "<group>"; };
 		23C56536212167BE00BD4B47 /* CardTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardTransitionDelegate.swift; sourceTree = "<group>"; };
-		23D5241421491C670002C566 /* DisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DisplayViewController.swift; path = ownCloud/Viewer/DisplayViewController.swift; sourceTree = SOURCE_ROOT; };
+		23D5241421491C670002C566 /* DisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayViewController.swift; sourceTree = "<group>"; };
 		23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NamingViewController.swift; sourceTree = "<group>"; };
 		23E22BB220C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIDevice+UIUserInterfaceIdiom.swift"; sourceTree = "<group>"; };
 		23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFViewerViewController.swift; sourceTree = "<group>"; };
 		23EC77552137F3DC0032D4E6 /* DisplayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayExtension.swift; sourceTree = "<group>"; };
-		23EC77562137F3DC0032D4E6 /* DisplayHostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayHostViewController.swift; sourceTree = "<group>"; };
 		23EC77572137F3DD0032D4E6 /* OCExtensionType+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCExtensionType+Extension.swift"; sourceTree = "<group>"; };
 		23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDisplayViewController.swift; sourceTree = "<group>"; };
 		23F6238020B587EF004FDE8B /* SortMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortMethod.swift; sourceTree = "<group>"; };
@@ -564,7 +561,6 @@
 		59B09E6A21AD61F4007827B8 /* EditBookmarkTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditBookmarkTests.swift; sourceTree = "<group>"; };
 		59B09E6B21AD61F4007827B8 /* CreateBookmarkTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateBookmarkTests.swift; sourceTree = "<group>"; usesTabs = 1; };
 		59B09E6C21AD61F4007827B8 /* UtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilsTests.swift; sourceTree = "<group>"; };
-		59BC2750221D552700548444 /* XCTestsCase+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestsCase+Extension.swift"; sourceTree = "<group>"; };
 		59D4895320C83F2E00369C2E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		59EACA8020CAA37F00F082EE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6CBDF92D3844CF78B20B5770 /* Pods-ownCloudTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -576,7 +572,7 @@
 		6E586CFB2199A72600F680C4 /* OpenInAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenInAction.swift; sourceTree = "<group>"; };
 		6E586CFD2199A75900F680C4 /* MoveAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveAction.swift; sourceTree = "<group>"; };
 		6E586CFF2199A78E00F680C4 /* DeleteAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAction.swift; sourceTree = "<group>"; };
-		6E5FC171221590B000F60846 /* GalleryHostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryHostViewController.swift; sourceTree = "<group>"; };
+		6E5FC171221590B000F60846 /* DisplayHostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayHostViewController.swift; sourceTree = "<group>"; };
 		6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
 		6E83C78320A33C180066EC23 /* LAContext+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LAContext+Extension.swift"; sourceTree = "<group>"; };
 		6E91F37D21ECA6FD009436D2 /* CopyAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyAction.swift; sourceTree = "<group>"; };
@@ -813,8 +809,6 @@
 		233BDE9E204FEFE500C06732 /* ownCloud */ = {
 			isa = PBXGroup;
 			children = (
-				6E8E3CAB2213287500BF8BDB /* Gallery */,
-				23EC774D2137F3CD0032D4E6 /* Viewer */,
 				233BDE9F204FEFE500C06732 /* AppDelegate.swift */,
 				DCF4F1612051925A00189B9A /* Bookmarks */,
 				DC3BE0DB2077CC13002A0AC0 /* Client */,
@@ -916,18 +910,10 @@
 			children = (
 				23EC77552137F3DC0032D4E6 /* DisplayExtension.swift */,
 				23D5241421491C670002C566 /* DisplayViewController.swift */,
-				23EC77562137F3DC0032D4E6 /* DisplayHostViewController.swift */,
-				23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */,
-				4C464BEB2187AF1500D30602 /* PDFOutlineViewController.swift */,
-				4C464BEC2187AF1500D30602 /* PDFSearchTableViewCell.swift */,
-				4C464BEA2187AF1400D30602 /* PDFSearchViewController.swift */,
-				4C464BE12187AF1400D30602 /* PDFThumbnailCollectionViewCell.swift */,
-				4C464BED2187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift */,
-				4C464BEE2187AF1500D30602 /* PDFTocItem.swift */,
-				4C464BE92187AF1400D30602 /* PDFTocTableViewCell.swift */,
-				4C464BE82187AF1400D30602 /* PDFTocTableViewController.swift */,
-				23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */,
-				6E4F1733217749910049A71B /* ImageDisplayViewController.swift */,
+				6E5FC171221590B000F60846 /* DisplayHostViewController.swift */,
+				DCBF0A5E2280393A00465530 /* PDF */,
+				DCBF0A5F2280394B00465530 /* Image */,
+				DCBF0A602280395F00465530 /* WebView */,
 			);
 			path = Viewer;
 			sourceTree = "<group>";
@@ -1019,14 +1005,6 @@
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
 		};
-		6E8E3CAB2213287500BF8BDB /* Gallery */ = {
-			isa = PBXGroup;
-			children = (
-				6E5FC171221590B000F60846 /* GalleryHostViewController.swift */,
-			);
-			path = Gallery;
-			sourceTree = "<group>";
-		};
 		DC1B26FD209CF0D2004715E1 /* Issues Animators */ = {
 			isa = PBXGroup;
 			children = (
@@ -1066,6 +1044,7 @@
 		DC3BE0DB2077CC13002A0AC0 /* Client */ = {
 			isa = PBXGroup;
 			children = (
+				23EC774D2137F3CD0032D4E6 /* Viewer */,
 				236735A421217C2300E5834A /* Actions */,
 				DCFED971208095E200A2D984 /* ClientItemCell.swift */,
 				DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */,
@@ -1232,9 +1211,40 @@
 				233BDEB4204FEFE500C06732 /* OwnCloudTests.swift */,
 				59B09E6C21AD61F4007827B8 /* UtilsTests.swift */,
 				DCAEB06021F9FC510067E147 /* EarlGrey+Tools.swift */,
-				59BC2750221D552700548444 /* XCTestsCase+Extension.swift */,
 			);
 			path = Tools;
+			sourceTree = "<group>";
+		};
+		DCBF0A5E2280393A00465530 /* PDF */ = {
+			isa = PBXGroup;
+			children = (
+				23EC77542137F3DC0032D4E6 /* PDFViewerViewController.swift */,
+				4C464BEB2187AF1500D30602 /* PDFOutlineViewController.swift */,
+				4C464BEC2187AF1500D30602 /* PDFSearchTableViewCell.swift */,
+				4C464BEA2187AF1400D30602 /* PDFSearchViewController.swift */,
+				4C464BE12187AF1400D30602 /* PDFThumbnailCollectionViewCell.swift */,
+				4C464BED2187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift */,
+				4C464BEE2187AF1500D30602 /* PDFTocItem.swift */,
+				4C464BE92187AF1400D30602 /* PDFTocTableViewCell.swift */,
+				4C464BE82187AF1400D30602 /* PDFTocTableViewController.swift */,
+			);
+			path = PDF;
+			sourceTree = "<group>";
+		};
+		DCBF0A5F2280394B00465530 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				6E4F1733217749910049A71B /* ImageDisplayViewController.swift */,
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
+		DCBF0A602280395F00465530 /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */,
+			);
+			path = WebView;
 			sourceTree = "<group>";
 		};
 		DCC6564720C9B7E400110A97 /* ownCloud File Provider */ = {
@@ -1888,7 +1898,6 @@
 				4C80B1E62271BBB400252901 /* PhotoUploadSection.swift in Sources */,
 				DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */,
 				DC63208321FCAC1E007EC0A8 /* ClientActivityViewController.swift in Sources */,
-				23EC775A2137F3DD0032D4E6 /* DisplayHostViewController.swift in Sources */,
 				4C464BF62187AF1500D30602 /* PDFTocItem.swift in Sources */,
 				6E3A103E219D5BBA00F90C96 /* RenameAction.swift in Sources */,
 				DC018F8320A0F56300135198 /* UIView+Animation.swift in Sources */,
@@ -2009,7 +2018,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */,
-				59BC2751221D552700548444 /* XCTestsCase+Extension.swift in Sources */,
 				59B09E6F21AD61F4007827B8 /* CreateBookmarkTests.swift in Sources */,
 				59B09E6E21AD61F4007827B8 /* EditBookmarkTests.swift in Sources */,
 				59538A0321E4A9C2005E543B /* CreateFolderTests.swift in Sources */,
