@@ -82,10 +82,10 @@ class UtilsTests {
 
 				return certificate
 			} catch {
-				print("Failing reading data of test_certificate.cer")
+				Log.error("Failing reading data of test_certificate.cer")
 			}
 		} else {
-			print("Not possible to read the test_certificate.cer")
+			Log.error("Not possible to read the test_certificate.cer")
 		}
 		return nil
 	}
