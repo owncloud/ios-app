@@ -59,22 +59,29 @@ class LibraryTableViewController: StaticTableViewController {
 	func updateLibrary() {
 		let shareQueryWithUser = OCShareQuery(scope: .sharedWithUser, item: nil)
 		let shareQueryByUser = OCShareQuery(scope: .sharedByUser, item: nil)
-		let shareQueryCloudShares = OCShareQuery(scope: .pendingCloudShares, item: nil)
+		let shareQueryPendingCloudShares = OCShareQuery(scope: .pendingCloudShares, item: nil)
+		let shareQueryAcceptedCloudShares = OCShareQuery(scope: .acceptedCloudShares, item: nil)
 
 		core?.start(shareQueryWithUser!)
 		shareQueryWithUser?.initialPopulationHandler = { query in
-			self.handleSharedWithUser(shares: query.queryResults)
+			var sharedWithUser = query.queryResults
+
+			self.core?.start(shareQueryAcceptedCloudShares!)
+			shareQueryAcceptedCloudShares?.initialPopulationHandler = { query in
+				sharedWithUser.append(contentsOf: query.queryResults)
+				self.handleSharedWithUser(shares: sharedWithUser)
+			}
 		}
 		shareQueryWithUser?.changesAvailableNotificationHandler = { query in
 			self.handleSharedWithUser(shares: query.queryResults)
 		}
 
-		core?.start(shareQueryCloudShares!)
-		shareQueryCloudShares?.initialPopulationHandler = { query in
+		core?.start(shareQueryPendingCloudShares!)
+		shareQueryPendingCloudShares?.initialPopulationHandler = { query in
 			self.pendingCloudSharesCounter = query.queryResults.count
 			self.updatePendingShareRow(shares: query.queryResults, title: "Pending Cloud Shares".localized)
 		}
-		shareQueryCloudShares?.changesAvailableNotificationHandler = { query in
+		shareQueryPendingCloudShares?.changesAvailableNotificationHandler = { query in
 			self.pendingCloudSharesCounter = query.queryResults.count
 			self.updatePendingShareRow(shares: query.queryResults, title: "Pending Cloud Shares".localized)
 		}
@@ -99,7 +106,7 @@ class LibraryTableViewController: StaticTableViewController {
 		pendingCloudSharesCounter = sharedWithUserPending.count
 
 		let sharedWithUserAccepted = shares.filter({ (share) -> Bool in
-			if share.state == .accepted {
+			if share.state == .accepted || share.type == .remote {
 				return true
 			}
 			return false
