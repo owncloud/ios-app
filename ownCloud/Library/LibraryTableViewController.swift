@@ -26,7 +26,7 @@ class LibraryTableViewController: StaticTableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.title = "Library".localized
+		self.title = "Quick Access".localized
 		self.navigationController?.navigationBar.prefersLargeTitles = true
 	}
 
@@ -54,6 +54,7 @@ class LibraryTableViewController: StaticTableViewController {
 		shareQueryByUser?.changesAvailableNotificationHandler = { query in
 			self.handleSharedByUser(shares: query.queryResults)
 		}
+		addCollectionSection()
 	}
 
 	func handleSharedWithUser(shares: [OCShare]) {
@@ -73,7 +74,7 @@ class LibraryTableViewController: StaticTableViewController {
 
 		OnMainThread {
 			self.updatePendingShareRow(sharedWithUser: sharedWithUserPending)
-			self.updateGenericShareRow(shares: sharedWithUserAccepted, title: "Shared with you".localized, image: UIImage(named: "shared")!)
+			self.updateGenericShareRow(shares: sharedWithUserAccepted, title: "Shared with you".localized, image: UIImage(named: "group")!)
 		}
 	}
 
@@ -93,7 +94,7 @@ class LibraryTableViewController: StaticTableViewController {
 		})
 
 		OnMainThread {
-			self.updateGenericShareRow(shares: sharedByUser, title: "Shared with others".localized, image: UIImage(named: "shared")!)
+			self.updateGenericShareRow(shares: sharedByUser, title: "Shared with others".localized, image: UIImage(named: "group")!)
 			self.updateGenericShareRow(shares: sharedByUserLinks, title: "Public Links".localized, image: UIImage(named: "link")!)
 		}
 	}
@@ -162,6 +163,50 @@ class LibraryTableViewController: StaticTableViewController {
 			if let row = section?.row(withIdentifier: rowIdentifier) {
 				section?.remove(rows: [row], animated: true)
 			}
+		}
+	}
+	// MARK: Collection Section
+
+	func addCollectionSection() {
+		if self.sectionForIdentifier("collection-section") == nil {
+			let section = StaticTableViewSection(headerTitle: "Collection".localized, footerTitle: nil, identifier: "collection-section")
+			self.addSection(section)
+
+			let lastWeekDate = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date())!
+			let query = OCQuery(condition: .require([
+				.where(.lastUsed, isGreaterThan: lastWeekDate),
+				.where(.name, isNotEqualTo: "/")
+				]), inputFilter:nil)
+			addCollectionRow(to: section, title: "Recents".localized, image: UIImage(named: "recents")!, query: query)
+
+			let favoriteQuery = OCQuery(condition: .require([
+				.where(.isFavorite, isEqualTo: true)
+				]), inputFilter:nil)
+			addCollectionRow(to: section, title: "Favorites".localized, image: UIImage(named: "star")!, query: favoriteQuery)
+
+			let imageQuery = OCQuery(condition: .require([
+				.where(.mimeType, contains: "image")
+				]), inputFilter:nil)
+			addCollectionRow(to: section, title: "Images".localized, image: Theme.shared.image(for: "image", size: CGSize(width: 25, height: 25))!, query: imageQuery)
+
+			let pdfQuery = OCQuery(condition: .require([
+				.where(.mimeType, contains: "pdf")
+				]), inputFilter:nil)
+			addCollectionRow(to: section, title: "PDF Documents".localized, image: Theme.shared.image(for: "application-pdf", size: CGSize(width: 25, height: 25))!, query: pdfQuery)
+		}
+	}
+
+	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage, query: OCQuery) {
+		let identifier = String(format:"%@-collection-row", title)
+		if section.row(withIdentifier: identifier) == nil, let core = core {
+			let row = StaticTableViewRow(rowWithAction: { (_, _) in
+
+				let favoritesFileListController = CustomFilelistTableViewController(core: core, query: query)
+				favoritesFileListController.title = title
+				self.navigationController?.pushViewController(favoritesFileListController, animated: true)
+
+			}, title: title, image: image, accessoryType: .disclosureIndicator, identifier: identifier)
+			section.add(row: row)
 		}
 	}
 

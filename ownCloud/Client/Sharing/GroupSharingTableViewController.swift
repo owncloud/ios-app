@@ -226,6 +226,8 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 					return false
 				}
 				if canEdit(share: share) {
+
+					print("--> statae \(share)")
 /*
 					switch share.state {
 						case .accepted

@@ -175,7 +175,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		libraryViewController = LibraryTableViewController(style: .grouped)
 		libraryNavigationController = ThemeNavigationController(rootViewController: libraryViewController!)
-		libraryNavigationController?.tabBarItem.title = "Library".localized
+		libraryNavigationController?.tabBarItem.title = "Quick Access".localized
 		libraryNavigationController?.tabBarItem.image = Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25))
 
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)

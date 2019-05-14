@@ -35,6 +35,7 @@
 		23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */; };
 		23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F6238020B587EF004FDE8B /* SortMethod.swift */; };
 		23FA23E620BFD3D8009A6D73 /* SortBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23FA23E520BFD3D8009A6D73 /* SortBar.swift */; };
+		390FA8BB2289E674006A746B /* CustomFilelistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390FA8BA2289E674006A746B /* CustomFilelistTableViewController.swift */; };
 		39104E10223991C8002FC02F /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39104E0A223991C8002FC02F /* UIButton+Extension.swift */; };
 		3918FE7B2287DBD800BACE03 /* LibraryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3918FE7A2287DBD800BACE03 /* LibraryTableViewController.swift */; };
 		392557FE2278703300E83F60 /* UISearchBar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392557FD2278703300E83F60 /* UISearchBar+Extension.swift */; };
@@ -498,6 +499,7 @@
 		23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDisplayViewController.swift; sourceTree = "<group>"; };
 		23F6238020B587EF004FDE8B /* SortMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortMethod.swift; sourceTree = "<group>"; };
 		23FA23E520BFD3D8009A6D73 /* SortBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortBar.swift; sourceTree = "<group>"; };
+		390FA8BA2289E674006A746B /* CustomFilelistTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFilelistTableViewController.swift; sourceTree = "<group>"; };
 		39104E0A223991C8002FC02F /* UIButton+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		3918FE7A2287DBD800BACE03 /* LibraryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryTableViewController.swift; sourceTree = "<group>"; };
 		3922880F227335B200C36F81 /* public.tvg */ = {isa = PBXFileReference; lastKnownFileType = text; path = public.tvg; sourceTree = "<group>"; };
@@ -966,7 +968,6 @@
 				39E98B3D22797D1B009911F1 /* PublicLinkTableViewController.swift */,
 				39E98B442279ACF5009911F1 /* PublicLinkEditTableViewController.swift */,
 				396BE4C22288A84C00B254A9 /* PendingSharesTableViewController.swift */,
-				396BE4CB2289903900B254A9 /* SharesFilelistTableViewController.swift */,
 			);
 			path = Sharing;
 			sourceTree = "<group>";
@@ -975,6 +976,8 @@
 			isa = PBXGroup;
 			children = (
 				3918FE7A2287DBD800BACE03 /* LibraryTableViewController.swift */,
+				396BE4CB2289903900B254A9 /* SharesFilelistTableViewController.swift */,
+				390FA8BA2289E674006A746B /* CustomFilelistTableViewController.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -1972,6 +1975,7 @@
 				39E98B3E22797D1B009911F1 /* PublicLinkTableViewController.swift in Sources */,
 				DC63208521FCEBE9007EC0A8 /* ClientActivityCell.swift in Sources */,
 				39AFC3D1225E72FB00A6D3AE /* GroupSharingTableViewController.swift in Sources */,
+				390FA8BB2289E674006A746B /* CustomFilelistTableViewController.swift in Sources */,
 				DC62514A225CEB4300736874 /* UploadPhotosAction.swift in Sources */,
 				DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */,
 				39A5135322608836002CF1AA /* OCShare+Extension.swift in Sources */,

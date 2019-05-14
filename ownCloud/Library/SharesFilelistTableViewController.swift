@@ -34,8 +34,8 @@ class SharesFilelistTableViewController: UITableViewController, Themeable {
 				itemTracker = core?.trackItem(atPath: share.itemPath, trackingHandler: { (error, item, isInitial) in
 					if error == nil, let item = item, isInitial {
 						self.items.append(item)
+						waitGroup.leave()
 					}
-					waitGroup.leave()
 				})
 				waitGroup.wait()
 			}
