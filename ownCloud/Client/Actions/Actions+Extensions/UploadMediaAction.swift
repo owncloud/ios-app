@@ -189,7 +189,7 @@ class UploadMediaAction: UploadBaseAction {
 			export.outputFileType = type
 			export.outputURL = targetURL
 			export.exportAsynchronously {
-				completion(true)
+				completion( export.status == .completed )
 			}
 		} else {
 			completion(false)
