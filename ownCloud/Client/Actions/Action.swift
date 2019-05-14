@@ -382,10 +382,8 @@ class Action : NSObject {
 					presentingController.dismiss(animated: true)
 
 					if let viewController = context.viewController {
-						let sharingViewController = GroupSharingTableViewController(style: .grouped)
+						let sharingViewController = GroupSharingTableViewController(core: context.core!, item: item)
 						sharingViewController.shares = shares
-						sharingViewController.core = context.core!
-						sharingViewController.item = item
 						let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 						navigationController.modalPresentationStyle = .formSheet
 						viewController.present(navigationController, animated: true, completion: nil)
@@ -401,10 +399,8 @@ class Action : NSObject {
 					presentingController.dismiss(animated: true)
 
 					if let viewController = context.viewController {
-						let sharingViewController = PublicLinkTableViewController(style: .grouped)
+						let sharingViewController = PublicLinkTableViewController(core: context.core!, item: item)
 						sharingViewController.shares = shares
-						sharingViewController.core = context.core!
-						sharingViewController.item = item
 						let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 						navigationController.modalPresentationStyle = .formSheet
 						viewController.present(navigationController, animated: true, completion: nil)
@@ -443,9 +439,7 @@ class Action : NSObject {
 			presentingController.dismiss(animated: true)
 
 			if let viewController = context.viewController {
-				let sharingViewController = GroupSharingTableViewController(style: .grouped)
-				sharingViewController.core = context.core!
-				sharingViewController.item = item
+				let sharingViewController = GroupSharingTableViewController(core: context.core!, item: item)
 				let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 				navigationController.modalPresentationStyle = .formSheet
 
@@ -462,9 +456,7 @@ class Action : NSObject {
 				presentingController.dismiss(animated: true)
 
 				if let viewController = context.viewController {
-					let sharingViewController = PublicLinkTableViewController(style: .grouped)
-					sharingViewController.core = context.core!
-					sharingViewController.item = item
+					let sharingViewController = PublicLinkTableViewController(core: context.core!, item: item)
 					sharingViewController.addPublicLink()
 					let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 					navigationController.modalPresentationStyle = .formSheet

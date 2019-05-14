@@ -23,17 +23,27 @@ class PublicLinkTableViewController: StaticTableViewController {
 
 	// MARK: - Instance Variables
 	var shares : [OCShare] = []
-	var core : OCCore?
-	var item : OCItem?
+	var core : OCCore
+	var item : OCItem
 	var messageView : MessageView?
 	var shareQuery : OCShareQuery?
 
-	// MARK: - Init
+	// MARK: - Init & Deinit
+
+	public init(core inCore: OCCore, item inItem: OCItem) {
+		core = inCore
+		item = inItem
+
+		super.init(style: .grouped)
+	}
+
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		guard let item = item else { return }
 		messageView = MessageView(add: self.view)
 
 		self.navigationItem.title = "Public Links".localized
@@ -41,8 +51,9 @@ class PublicLinkTableViewController: StaticTableViewController {
 		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPublicLink))
 
 		addHeaderView()
+		addPrivateLinkSection()
 
-		shareQuery = core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
+		shareQuery = core.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
 			if sharesWithReshares.count > 0 {
 				self.shares = sharesWithReshares.filter { (OCShare) -> Bool in
 					if OCShare.type == .link {
@@ -71,7 +82,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 
 	@objc func dismissView() {
 		if let query = self.shareQuery {
-			self.core?.stop(query)
+			self.core.stop(query)
 		}
 		dismissAnimated()
 	}
@@ -84,11 +95,10 @@ class PublicLinkTableViewController: StaticTableViewController {
 	// MARK: - Header View
 
 	func addHeaderView() {
-		guard let item = item, let core = core else { return }
 		let containerView = UIView()
 		containerView.translatesAutoresizingMaskIntoConstraints = false
 
-		let headerView = MoreViewHeader(for: item, with: core)
+		let headerView = MoreViewHeader(for: item, with: core, favorite: false)
 		containerView.addSubview(headerView)
 		self.tableView.tableHeaderView = containerView
 
@@ -174,9 +184,47 @@ class PublicLinkTableViewController: StaticTableViewController {
 		}
 	}
 
+	// MARK: - Private Link Section
+
+	func addPrivateLinkSection() {
+			let identifier = "private-link-section"
+			if let section = self.sectionForIdentifier(identifier) {
+				self.removeSection(section)
+			}
+
+			let footer = "This link is unique for this resource, but grants no additional permissions. Recipients can request permissions from the owner.".localized
+
+			OnMainThread {
+				let section = StaticTableViewSection(headerTitle: nil, footerTitle: footer, identifier: "private-link-section")
+				var rows : [StaticTableViewRow] = []
+
+				let privateLinkRow = StaticTableViewRow(buttonWithAction: { (row, _) in
+					let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+					progressView.startAnimating()
+
+					row.cell?.accessoryView = progressView
+
+					self.core.retrievePrivateLink(for: self.item, completionHandler: { (error, url) in
+						OnMainThread {
+							row.cell?.accessoryView = nil
+						}
+						if error == nil {
+							guard let url = url else { return }
+							UIPasteboard.general.url = url
+						}
+					})
+
+				}, title: "Copy Private Link".localized, style: StaticTableViewRowButtonStyle.plain)
+				rows.append(privateLinkRow)
+
+				section.add(rows: rows)
+				self.addSection(section)
+			}
+	}
+
 	// MARK: - Sharing Helper
 	func canEdit(share: OCShare) -> Bool {
-		if core?.connection.loggedInUser?.userName == share.owner?.userName || core?.connection.loggedInUser?.userName == share.itemOwner?.userName {
+		if core.connection.loggedInUser?.userName == share.owner?.userName || core.connection.loggedInUser?.userName == share.itemOwner?.userName {
 			return true
 		}
 
@@ -201,8 +249,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
 					alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
-						if let core = self.core {
-							core.delete(share, completionHandler: { (error) in
+							self.core.delete(share, completionHandler: { (error) in
 								OnMainThread {
 									if error == nil {
 										self.navigationController?.popViewController(animated: true)
@@ -214,7 +261,6 @@ class PublicLinkTableViewController: StaticTableViewController {
 									}
 								}
 							})
-						}
 					}))
 
 					self.present(alertController, animated: true, completion: nil)
@@ -234,19 +280,19 @@ class PublicLinkTableViewController: StaticTableViewController {
 	// MARK: Add New Link Share
 
 	@objc func addPublicLink() {
-		if let item = item, let path = item.path, let name = item.name {
+		if let path = item.path, let name = item.name {
 			var permissions = OCSharePermissionsMask.create
 			if item.type == .file {
 				permissions = OCSharePermissionsMask.read
 			}
 
 			var linkName = String(format:"%@ %@ (%ld)", name, "Link".localized, (shares.count + 1))
-			if let defaultLinkName = core?.connection.capabilities?.publicSharingDefaultLinkName {
+			if let defaultLinkName = core.connection.capabilities?.publicSharingDefaultLinkName {
 				linkName = defaultLinkName
 			}
 
 			let share = OCShare(publicLinkToPath: path, linkName: linkName, permissions: permissions, password: nil, expiration: nil)
-			self.core?.createShare(share, options: nil, completionHandler: { (error, newShare) in
+			self.core.createShare(share, options: nil, completionHandler: { (error, newShare) in
 				if error == nil, let share = newShare {
 					OnMainThread {
 						self.shares.append(share)
@@ -255,7 +301,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 						let editPublicLinkViewController = PublicLinkEditTableViewController(style: .grouped)
 						editPublicLinkViewController.share = share
 						editPublicLinkViewController.core = self.core
-						editPublicLinkViewController.item = item
+						editPublicLinkViewController.item = self.item
 						self.navigationController?.pushViewController(editPublicLinkViewController, animated: true)
 					}
 				} else {

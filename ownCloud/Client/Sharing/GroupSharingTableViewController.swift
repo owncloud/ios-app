@@ -25,9 +25,9 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 	var shares : [OCShare] = [] {
 		didSet {
 			let meShares = shares.filter { (share) -> Bool in
-				if share.recipient?.user?.userName == core?.connection.loggedInUser?.userName && share.canShare {
+				if share.recipient?.user?.userName == core.connection.loggedInUser?.userName && share.canShare {
 					return true
-				} else if share.itemOwner?.userName == core?.connection.loggedInUser?.userName && share.canShare {
+				} else if share.itemOwner?.userName == core.connection.loggedInUser?.userName && share.canShare {
 					return true
 				}
 				return false
@@ -37,13 +37,13 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 			}
 		}
 	}
-	var core : OCCore?
-	var item : OCItem? {
+	var core : OCCore
+	var item : OCItem {
 		didSet {
-			if item?.isShareable ?? false {
-				if item?.isSharedWithUser == false {
+			if item.isShareable {
+				if item.isSharedWithUser == false {
 					meCanShareItem = true
-				} else if item?.isSharedWithUser ?? false, core?.connection.capabilities?.sharingResharing == true {
+				} else if item.isSharedWithUser, core.connection.capabilities?.sharingResharing == true {
 					meCanShareItem = true
 				}
 			}
@@ -55,12 +55,21 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 	var messageView : MessageView?
 	var shareQuery : OCShareQuery?
 
-	// MARK: - Init
+	// MARK: - Init & Deinit
+
+	public init(core inCore: OCCore, item inItem: OCItem) {
+		core = inCore
+		item = inItem
+
+		super.init(style: .grouped)
+	}
+
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
-		guard let item = item else { return }
 
 		if meCanShareItem {
 			searchController = UISearchController(searchResultsController: nil)
@@ -73,7 +82,7 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 			navigationItem.searchController = searchController
 			definesPresentationContext = true
 			searchController?.searchBar.applyThemeCollection(Theme.shared.activeCollection)
-			recipientSearchController = core?.recipientSearchController(for: item)
+			recipientSearchController = core.recipientSearchController(for: item)
 			recipientSearchController?.delegate = self
 		}
 
@@ -84,7 +93,7 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 
 		addHeaderView()
 
-		shareQuery = core!.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
+		shareQuery = core.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
 			if sharesWithReshares.count > 0 {
 				self.shares = sharesWithReshares.filter { (OCShare) -> Bool in
 					if OCShare.type != .link {
@@ -94,7 +103,7 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 				}
 				self.addShareSections()
 			}
-			_ = self.core!.sharesSharedWithMe(for: item, initialPopulationHandler: { (sharesWithMe) in
+			_ = self.core.sharesSharedWithMe(for: self.item, initialPopulationHandler: { (sharesWithMe) in
 				if sharesWithMe.count > 0 {
 					var shares : [OCShare] = []
 					shares.append(contentsOf: sharesWithMe)
@@ -104,9 +113,7 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 					self.addShareSections()
 				}
 
-				if item.isSharedWithUser {
-					self.addDeclineShareSection()
-				}
+				self.addActionShareSection()
 			})
 		})
 
@@ -123,15 +130,13 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 			self.addShareSections()
 			self.handleEmptyShares()
 
-			if item.isSharedWithUser {
-				self.addDeclineShareSection()
-			}
+			self.addActionShareSection()
 		}
 	}
 
 	@objc func dismissView() {
 		if let query = self.shareQuery {
-			self.core?.stop(query)
+			self.core.stop(query)
 		}
 		dismissAnimated()
 	}
@@ -144,11 +149,10 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 	// MARK: - Header View
 
 	func addHeaderView() {
-		guard let item = item, let core = core else { return }
 		let containerView = UIView()
 		containerView.translatesAutoresizingMaskIntoConstraints = false
 
-		let headerView = MoreViewHeader(for: item, with: core)
+		let headerView = MoreViewHeader(for: item, with: core, favorite: false)
 		containerView.addSubview(headerView)
 		self.tableView.tableHeaderView = containerView
 
@@ -164,43 +168,49 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 
 	// MARK: - Action Section
 
-	func addDeclineShareSection() {
+	func addActionShareSection() {
 		if let share = shares.first {
+
+			let identifier = "action-section"
+			if let section = self.sectionForIdentifier(identifier) {
+				self.removeSection(section)
+			}
 
 			let dateFormatter = DateFormatter()
 			dateFormatter.dateStyle = .medium
 			dateFormatter.timeStyle = .short
-			var footer = ""
+			var footer = "This link is unique for this resource, but grants no additional permissions. Recipients can request permissions from the owner.".localized
 			if let date = share.creationDate {
-				footer = String(format: "Shared since: %@".localized, dateFormatter.string(from: date))
+				footer = footer.appendingFormat("\n\nShared since: %@".localized, dateFormatter.string(from: date))
 			}
 
 			OnMainThread {
-				let section = StaticTableViewSection(headerTitle: nil, footerTitle: footer, identifier: "decline-section")
-				section.add(rows: [
-					StaticTableViewRow(buttonWithAction: { (row, _) in
+				if self.item.isSharedWithUser {
+					let section = StaticTableViewSection(headerTitle: nil, footerTitle: footer, identifier: "action-section")
+					var rows : [StaticTableViewRow] = []
+
+					let declineRow = StaticTableViewRow(buttonWithAction: { (row, _) in
 						let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 						progressView.startAnimating()
 
 						row.cell?.accessoryView = progressView
-						if let core = self.core {
-							core.makeDecision(on: share, accept: false, completionHandler: { (error) in
-								OnMainThread {
-									if error == nil {
-										self.dismissView()
-									} else {
-										if let shareError = error {
-											let alertController = UIAlertController(with: "Decline Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-											self.present(alertController, animated: true)
-										}
+						self.core.makeDecision(on: share, accept: false, completionHandler: { (error) in
+							OnMainThread {
+								if error == nil {
+									self.dismissView()
+								} else {
+									if let shareError = error {
+										let alertController = UIAlertController(with: "Decline Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										self.present(alertController, animated: true)
 									}
 								}
-							})
-						}
+							}
+						})
 					}, title: "Decline Share".localized, style: StaticTableViewRowButtonStyle.destructive)
-					])
-
-				self.addSection(section)
+					rows.append(declineRow)
+					section.add(rows: rows)
+					self.addSection(section)
+				}
 			}
 		}
 	}
@@ -265,7 +275,7 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 				}
 			}
 
-			let identifier = "decline-section"
+			let identifier = "action-section"
 			if let section = self.sectionForIdentifier(identifier) {
 				self.removeSection(section)
 			}
@@ -325,7 +335,7 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 	}
 
 	func canEdit(share: OCShare) -> Bool {
-		if core?.connection.loggedInUser?.userName == share.owner?.userName || core?.connection.loggedInUser?.userName == share.itemOwner?.userName {
+		if core.connection.loggedInUser?.userName == share.owner?.userName || core.connection.loggedInUser?.userName == share.itemOwner?.userName {
 			return true
 		}
 
@@ -336,9 +346,8 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 
 	func updateSearchResults(for searchController: UISearchController) {
 		guard let text = searchController.searchBar.text else { return }
-		if text.count > core?.connection.capabilities?.sharingSearchMinLength?.intValue ?? 1 {
+		if text.count > core.connection.capabilities?.sharingSearchMinLength?.intValue ?? 1 {
 			recipientSearchController?.searchTerm = text
-			recipientSearchController?.search()
 		} else if searchController.isActive {
 			resetTable(showShares: false)
 		}
@@ -360,7 +369,7 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 			var rows : [StaticTableViewRow] = []
 			for recipient in recipients {
 
-				guard let itemPath = self.item?.path else { continue }
+				guard let itemPath = self.item.path else { continue }
 				var title = ""
 				if recipient.type == .user {
 					guard let displayName = recipient.displayName else { continue }
@@ -374,7 +383,7 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 				rows.append(
 					StaticTableViewRow(rowWithAction: { (_, _) in
 						var defaultPermissions : OCSharePermissionsMask = .read
-						if let capabilitiesDefaultPermission = self.core?.connection.capabilities?.sharingDefaultPermissions {
+						if let capabilitiesDefaultPermission = self.core.connection.capabilities?.sharingDefaultPermissions {
 							defaultPermissions = capabilitiesDefaultPermission
 						}
 
@@ -384,7 +393,7 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 							self.searchController?.searchBar.text = ""
 							self.searchController?.dismiss(animated: true, completion: nil)
 						}
-						self.core?.createShare(share, options: nil, completionHandler: { (error, newShare) in
+						self.core.createShare(share, options: nil, completionHandler: { (error, newShare) in
 							if error == nil, let share = newShare {
 								OnMainThread {
 									self.shares.append(share)
@@ -444,8 +453,7 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
 					alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
-						if let core = self.core {
-							core.delete(shareAtPath, completionHandler: { (error) in
+						self.core.delete(shareAtPath, completionHandler: { (error) in
 								OnMainThread {
 									if error == nil {
 										self.navigationController?.popViewController(animated: true)
@@ -457,7 +465,6 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 									}
 								}
 							})
-						}
 					}))
 
 					self.present(alertController, animated: true, completion: nil)

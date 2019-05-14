@@ -24,20 +24,26 @@ class MoreViewHeader: UIView {
 	private var labelContainerView : UIView
 	private var titleLabel: UILabel
 	private var detailLabel: UILabel
+	private var favoriteButton: UIButton
 
 	var thumbnailSize = CGSize(width: 60, height: 60)
+	let favoriteSize = CGSize(width: 24, height: 24)
+
+	var showFavoriteButton: Bool
 
 	var item: OCItem
 	weak var core: OCCore?
 
-	init(for item: OCItem, with core: OCCore) {
+	init(for item: OCItem, with core: OCCore, favorite: Bool = true) {
 		self.item = item
 		self.core = core
+		self.showFavoriteButton = favorite
 
 		iconView = UIImageView()
 		titleLabel = UILabel()
 		detailLabel = UILabel()
 		labelContainerView = UIView()
+		favoriteButton = UIButton()
 
 		super.init(frame: .zero)
 
@@ -57,6 +63,7 @@ class MoreViewHeader: UIView {
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
 		iconView.translatesAutoresizingMaskIntoConstraints = false
 		labelContainerView.translatesAutoresizingMaskIntoConstraints = false
+		favoriteButton.translatesAutoresizingMaskIntoConstraints = false
 		iconView.contentMode = .scaleAspectFit
 
 		titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
@@ -97,8 +104,22 @@ class MoreViewHeader: UIView {
 			labelContainerView.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -20),
 			labelContainerView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
 			labelContainerView.topAnchor.constraint(greaterThanOrEqualTo: self.safeAreaLayoutGuide.topAnchor, constant: 20),
-			labelContainerView.bottomAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+			labelContainerView.bottomAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -20),
 		])
+
+		if showFavoriteButton {
+			updateFavoriteButtonImage()
+			favoriteButton.addTarget(self, action: #selector(toogleFavoriteState), for: UIControl.Event.touchUpInside)
+			self.addSubview(favoriteButton)
+
+			NSLayoutConstraint.activate([
+				favoriteButton.widthAnchor.constraint(equalToConstant: favoriteSize.width),
+				favoriteButton.heightAnchor.constraint(equalToConstant: favoriteSize.height),
+
+				favoriteButton.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -15),
+				favoriteButton.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+			])
+		}
 
 		titleLabel.attributedText = NSAttributedString(string: item.name ?? "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
 
@@ -137,11 +158,35 @@ class MoreViewHeader: UIView {
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
+
+	@objc func toogleFavoriteState() {
+		if item.isFavorite == true {
+			item.isFavorite = false
+		} else {
+			item.isFavorite = true
+		}
+		core?.update(item, properties: [OCItemPropertyName.isFavorite], options: nil, resultHandler: { (error, _, item, _) in
+			if error == nil {
+				OnMainThread {
+					self.updateFavoriteButtonImage()
+				}
+			}
+		})
+	}
+
+	func updateFavoriteButtonImage() {
+		if item.isFavorite == true {
+			favoriteButton.setImage(UIImage(named: "star"), for: .normal)
+		} else {
+			favoriteButton.setImage(UIImage(named: "unstar"), for: .normal)
+		}
+	}
 }
 
 extension MoreViewHeader: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.titleLabel.applyThemeCollection(collection)
 		self.detailLabel.applyThemeCollection(collection)
+		self.favoriteButton.applyThemeCollection(collection)
 	}
 }

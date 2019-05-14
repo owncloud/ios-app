@@ -61,6 +61,10 @@ class LibraryTableViewController: StaticTableViewController {
 		let shareQueryByUser = OCShareQuery(scope: .sharedByUser, item: nil)
 		let shareQueryPendingCloudShares = OCShareQuery(scope: .pendingCloudShares, item: nil)
 		let shareQueryAcceptedCloudShares = OCShareQuery(scope: .acceptedCloudShares, item: nil)
+		shareQueryWithUser?.refreshInterval = 60
+		shareQueryByUser?.refreshInterval = 60
+		shareQueryPendingCloudShares?.refreshInterval = 60
+		shareQueryAcceptedCloudShares?.refreshInterval = 60
 
 		core?.start(shareQueryWithUser!)
 		shareQueryWithUser?.initialPopulationHandler = { query in
@@ -150,10 +154,10 @@ class LibraryTableViewController: StaticTableViewController {
 
 	func updatePendingShareRow(shares: [OCShare], title: String) {
 		OnMainThread {
-			self.addShareSection()
 			let rowIdentifier = String(format: "%@-share-row", title)
 			let section = self.sectionForIdentifier("share-section")
 			if shares.count > 0 {
+				self.addShareSection()
 				let shareCounter = String(shares.count)
 
 				if section?.row(withIdentifier: rowIdentifier) == nil {
