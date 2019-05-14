@@ -61,7 +61,9 @@ class PublicLinkTableViewController: StaticTableViewController {
 					}
 					return false
 				}
-				self.addShareSections()
+				OnMainThread {
+					self.addShareSections()
+				}
 			}
 		})
 
@@ -74,9 +76,11 @@ class PublicLinkTableViewController: StaticTableViewController {
 				return false
 			}
 			self.shares = sharesWithReshares
-			self.removeShareSections()
-			self.addShareSections()
-			self.handleEmptyShares()
+			OnMainThread {
+				self.removeShareSections()
+				self.addShareSections()
+				self.handleEmptyShares()
+			}
 		}
 	}
 
@@ -144,7 +148,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 			}
 
 			let section : StaticTableViewSection = StaticTableViewSection(headerTitle: title, footerTitle: nil, identifier: sectionType, rows: shareRows)
-			self.addSection(section)
+			self.addSection(section, animated: true)
 		}
 	}
 

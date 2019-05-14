@@ -99,19 +99,23 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 					}
 					return false
 				}
-				self.addShareSections()
-			}
-			_ = self.core.sharesSharedWithMe(for: self.item, initialPopulationHandler: { (sharesWithMe) in
-				if sharesWithMe.count > 0 {
-					var shares : [OCShare] = []
-					shares.append(contentsOf: sharesWithMe)
-					shares.append(contentsOf: sharesWithReshares)
-					self.shares = shares
-					self.removeShareSections()
+				OnMainThread {
 					self.addShareSections()
 				}
+			}
+			_ = self.core.sharesSharedWithMe(for: self.item, initialPopulationHandler: { (sharesWithMe) in
+				OnMainThread {
+					if sharesWithMe.count > 0 {
+						var shares : [OCShare] = []
+						shares.append(contentsOf: sharesWithMe)
+						shares.append(contentsOf: sharesWithReshares)
+						self.shares = shares
+						self.removeShareSections()
+						self.addShareSections()
+					}
 
-				self.addActionShareSection()
+					self.addActionShareSection()
+				}
 			})
 		})
 
@@ -124,10 +128,12 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 				return false
 			}
 			self.shares = sharesWithReshares
-			self.removeShareSections()
-			self.addShareSections()
+			OnMainThread {
+				self.removeShareSections()
+				self.addShareSections()
 
-			self.addActionShareSection()
+				self.addActionShareSection()
+			}
 		}
 	}
 
@@ -245,7 +251,7 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 			}
 
 			let section : StaticTableViewSection = StaticTableViewSection(headerTitle: title, footerTitle: nil, identifier: sectionType, rows: shareRows)
-			self.addSection(section)
+			self.addSection(section, animated: true)
 		}
 	}
 
