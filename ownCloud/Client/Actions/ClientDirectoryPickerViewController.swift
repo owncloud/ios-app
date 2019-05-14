@@ -45,6 +45,8 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 				return .orderedAscending
 			} else if leftItem.type != OCItemType.collection && rightItem.type == OCItemType.collection {
 				return .orderedDescending
+			} else if leftItem.name != nil && rightItem.name != nil {
+				return leftItem.name!.caseInsensitiveCompare(rightItem.name!)
 			}
 			return .orderedSame
 		}
