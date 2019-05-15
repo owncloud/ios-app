@@ -147,10 +147,16 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.accessibilityIdentifier = identifier
 
 		self.action = subtitleRowWithAction
+
+		self.updateViewFromValue = { (row) in
+			if let value = row.value as? String {
+				row.cell?.detailTextLabel?.text = value
+			}
+		}
 	}
 
 	convenience init(valueRowWithAction: StaticTableViewRowAction?, title: String, value: String, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
-		self.init(subtitleRowWithAction: valueRowWithAction, title: title, subtitle: value, style: .value1, accessoryType: .disclosureIndicator, identifier: identifier)
+		self.init(subtitleRowWithAction: valueRowWithAction, title: title, subtitle: value, style: .value1, accessoryType: accessoryType, identifier: identifier)
 	}
 
 	// MARK: - Radio Item
