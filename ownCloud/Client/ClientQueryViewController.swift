@@ -77,6 +77,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	var quotaLabel = UILabel()
 	var quotaObservation : NSKeyValueObservation?
 
+	var shallShowSortBar = true
+
 	private var _actionProgressHandler : ActionProgressHandler?
 
 	func makeActionProgressHandler() -> ActionProgressHandler {
@@ -103,7 +105,9 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 
-		query.sortComparator = self.sortMethod.comparator()
+		if query.sortComparator == nil {
+			query.sortComparator = self.sortMethod.comparator()
+		}
 
 		query.delegate = self
 
@@ -216,11 +220,13 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		self.definesPresentationContext = true
 
-		sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
-		sortBar?.delegate = self
-		sortBar?.sortMethod = self.sortMethod
+		if shallShowSortBar {
+			sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
+			sortBar?.delegate = self
+			sortBar?.sortMethod = self.sortMethod
 
-		tableView.tableHeaderView = sortBar
+			tableView.tableHeaderView = sortBar
+		}
 
 		queryRefreshControl = UIRefreshControl()
 		queryRefreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
@@ -413,15 +419,16 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 						if lastTappedItemLocalID != rowItem.localID {
 							lastTappedItemLocalID = rowItem.localID
 
-							core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ]) { [weak self, query] (error, core, item, _) in
+							if let progress = core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { [weak self, query] (error, core, item, _) in
 
 								guard let self = self else { return }
 								OnMainThread { [weak core] in
 									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
 										if let item = item, let core = core {
 											if item.localID == self.lastTappedItemLocalID {
-												let itemViewController = GalleryHostViewController(core: core, selectedItem: item, query: query)
+												let itemViewController = DisplayHostViewController(core: core, selectedItem: item, query: query)
 												itemViewController.hidesBottomBarWhenPushed = true
+												itemViewController.progressSummarizer = self.progressSummarizer
 												self.navigationController?.pushViewController(itemViewController, animated: true)
 											}
 										}
@@ -431,6 +438,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 										self.lastTappedItemLocalID = nil
 									}
 								}
+							}) {
+								progressSummarizer?.startTracking(progress: progress)
 							}
 						}
 				}
@@ -663,14 +672,17 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 				rootView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
 				rootView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
-				if showSortBar {
-					rootView.topAnchor.constraint(equalTo: (sortBar?.bottomAnchor)!).isActive = true
-				} else {
-					rootView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
-				}
-				rootView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
 
-				messageShowsSortBar = showSortBar
+				if shallShowSortBar {
+					if showSortBar {
+						rootView.topAnchor.constraint(equalTo: (sortBar?.bottomAnchor)!).isActive = true
+					} else {
+						rootView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+					}
+					rootView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+
+					messageShowsSortBar = showSortBar
+				}
 
 				UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
 					rootView.alpha = 1

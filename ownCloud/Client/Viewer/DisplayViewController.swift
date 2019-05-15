@@ -45,6 +45,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	private let lateralSpacing: CGFloat = 10
 	private let progressViewVerticalSpacing: CGFloat = 20.0
 
+	var progressSummarizer : ProgressSummarizer?
+
 	// MARK: - Configuration
 	var item: OCItem?
 	private var coreConnectionStatusObservation : NSKeyValueObservation?
@@ -286,6 +288,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			self?.source = file?.url
 		}) {
 			self.state = .downloading(progress: downloadProgress)
+
+			self.progressSummarizer?.startTracking(progress: downloadProgress)
 		}
 	}
 
@@ -303,7 +307,6 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	private func render() {
-		print("LOG --> State changed to \(state)")
 		switch state {
 		case .hasNetworkConnection:
 			hideProgressIndicators()
