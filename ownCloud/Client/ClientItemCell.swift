@@ -58,6 +58,16 @@ class ClientItemCell: ThemeTableViewCell {
 		}
 	}
 
+	var isActive = true {
+		didSet {
+			let alpha : CGFloat = self.isActive ? 1.0 : 0.5
+			titleLabel.alpha = alpha
+			detailLabel.alpha = alpha
+			iconView.alpha = alpha
+			cloudStatusIconView.alpha = alpha
+		}
+	}
+
 	weak var core : OCCore?
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
