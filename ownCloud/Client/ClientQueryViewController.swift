@@ -78,6 +78,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	var quotaObservation : NSKeyValueObservation?
 	var messageView : MessageView?
 
+	var shallShowSortBar = true
+
 	private var _actionProgressHandler : ActionProgressHandler?
 
 	func makeActionProgressHandler() -> ActionProgressHandler {
@@ -104,7 +106,9 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 
-		query.sortComparator = self.sortMethod.comparator()
+		if query.sortComparator == nil {
+			query.sortComparator = self.sortMethod.comparator()
+		}
 
 		query.delegate = self
 
@@ -209,11 +213,13 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		self.definesPresentationContext = true
 
-		sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
-		sortBar?.delegate = self
-		sortBar?.sortMethod = self.sortMethod
+		if shallShowSortBar {
+			sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
+			sortBar?.delegate = self
+			sortBar?.sortMethod = self.sortMethod
 
-		tableView.tableHeaderView = sortBar
+			tableView.tableHeaderView = sortBar
+		}
 
 		queryRefreshControl = UIRefreshControl()
 		queryRefreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
