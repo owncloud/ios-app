@@ -38,7 +38,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 
 		themeRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 			self?.pushThemeStyleSelector()
-		}, title: "Theme".localized, value: ThemeStyle.preferredStyle.localizedName, identifier: "theme")
+		}, title: "Theme".localized, value: ThemeStyle.preferredStyle.localizedName, accessoryType: .disclosureIndicator, identifier: "theme")
 
 		self.add(row: themeRow!)
 

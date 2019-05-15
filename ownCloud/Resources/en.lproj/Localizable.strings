@@ -328,8 +328,9 @@
 "Password Protected" = "Password Protected";
 
 /* Photo upload settings */
-"Photo Upload" = "Photo Upload";
+"Media Upload" = "Media Upload";
 "Convert HEIC to JPEG" = "Convert HEIC to JPEG";
+"Convert videos to MP4" = "Convert videos to MP4";
 
 /* Progress summarizer */
 "Creating %ld of %ld folders…" = "Creating %ld of %ld folders…";
@@ -339,3 +340,11 @@
 "Uploading %ld of %ld files…" = "Uploading %ld of %ld files…";
 "Downloading %ld of %ld files…" = "Downloading %ld of %ld files…";
 "Updating %ld of %ld items…" = "Updating %ld of %ld items…";
+
+/* Offline storage management */
+"Free on %@" = "Free on %@";
+"unknown" = "unknown";
+"Offline files use" = "Offline files use";
+"Compacting of '%@' failed" = "Compacting of '%@' failed";
+"Delete Offline Copies" = "Delete Offline Copies";
+"Manage" = "Manage";

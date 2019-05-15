@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import Photos
 
-class UploadPhotosAction: UploadBaseAction {
+class UploadMediaAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadphotos") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Upload from your photo library".localized }
@@ -175,6 +175,31 @@ class UploadPhotosAction: UploadBaseAction {
 		return false
 	}
 
+	private func exportVideoAsset(_ asset:AVAsset, targetURL:URL, type:AVFileType, completion:@escaping (_ success:Bool) -> Void) {
+		if asset.isExportable {
+
+			let preset = AVAssetExportPresetHighestQuality
+
+			AVAssetExportSession.determineCompatibility(ofExportPreset: preset, with: asset, outputFileType: type, completionHandler: { (isCompatible) in
+				if !isCompatible {
+					completion(false)
+				}})
+
+			guard let export = AVAssetExportSession(asset: asset, presetName: preset) else {
+				completion(false)
+				return
+			}
+
+			export.outputFileType = type
+			export.outputURL = targetURL
+			export.exportAsynchronously {
+				completion( export.status == .completed )
+			}
+		} else {
+			completion(false)
+		}
+	}
+
 	private func upload(asset:PHAsset, completion:@escaping (_ success:Bool) -> Void ) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
@@ -196,8 +221,18 @@ class UploadPhotosAction: UploadBaseAction {
 		asset.requestContentEditingInput(with: contentInputOptions) { (input, _) in
 			self.unpublish(progress: progress)
 
+			var assetURL: URL?
+			switch asset.mediaType {
+			case .image:
+				assetURL = input?.fullSizeImageURL
+			case .video:
+				assetURL = (input?.audiovisualAsset as? AVURLAsset)?.url
+			default:
+				break
+			}
+
 			self.uploadSerialQueue.async {
-				if let input = input, let url = input.fullSizeImageURL {
+				if let input = input, let url = assetURL {
 
 					func performUpload(sourceURL:URL, copySource:Bool) {
 
@@ -220,20 +255,38 @@ class UploadPhotosAction: UploadBaseAction {
 						}, importByCopy: copySource)
 					}
 
-					if !userDefaults.convertHeic || input.uniformTypeIdentifier == "public.jpeg" {
-						// No conversion of the image data, upload as is
-						performUpload(sourceURL: url, copySource: true)
-					} else {
-						let fileName = url.lastPathComponent
-						let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("jpg")
-						// Convert to JPEG
-						if self.convertImage(url, targetURL: localURL, outputFormat: .JPEG) {
-							// Upload to the cloud
-							performUpload(sourceURL: localURL, copySource: false)
+					if asset.mediaType == .image {
+						if !userDefaults.convertHeic || input.uniformTypeIdentifier == "public.jpeg" {
+							// No conversion of the image data, upload as is
+							performUpload(sourceURL: url, copySource: true)
 						} else {
-							completion(false)
+							let fileName = url.lastPathComponent
+							let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("jpg")
+							// Convert to JPEG
+							if self.convertImage(url, targetURL: localURL, outputFormat: .JPEG) {
+								// Upload to the cloud
+								performUpload(sourceURL: localURL, copySource: false)
+							} else {
+								completion(false)
+							}
+						}
+					} else if asset.mediaType == .video {
+						if userDefaults.convertVideosToMP4 {
+							let fileName = url.lastPathComponent
+							let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("mp4")
+							self.exportVideoAsset(input.audiovisualAsset!, targetURL: localURL, type: .mp4, completion: { (exportSuccess) in
+								if exportSuccess {
+									performUpload(sourceURL: localURL, copySource: false)
+								} else {
+									completion(false)
+								}
+							})
+
+						} else {
+							performUpload(sourceURL: url, copySource: true)
 						}
 					}
+
 				} else {
 					completion(false)
 				}
