@@ -117,8 +117,8 @@ public enum SortMethod: Int {
 				guard let leftItem = left as? OCItem else { return .orderedSame }
 				guard let rightItem = right as? OCItem else { return .orderedSame }
 
-				let leftShared = leftItem.isSharedWithUser || leftItem.isShared()
-				let rightShared = rightItem.isSharedWithUser || rightItem.isShared()
+				let leftShared = leftItem.isSharedWithUser || leftItem.isShared
+				let rightShared = rightItem.isSharedWithUser || rightItem.isShared
 
 				if leftShared == rightShared {
 					return .orderedSame

@@ -22,7 +22,7 @@ import ownCloudSDK
 class PendingSharesTableViewController: StaticTableViewController {
 
 	var shares : [OCShare]?
-	var core : OCCore?
+	weak var core : OCCore?
 	var messageView : MessageView?
 	private let imageWidth : CGFloat = 50
 	private let imageHeight : CGFloat = 50

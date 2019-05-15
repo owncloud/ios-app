@@ -21,7 +21,7 @@ import ownCloudSDK
 
 class LibraryTableViewController: StaticTableViewController {
 
-	var core : OCCore?
+	weak var core : OCCore?
 	var pendingSharesCounter : Int = 0 {
 		didSet {
 			OnMainThread {

@@ -245,12 +245,12 @@ class ClientItemCell: ThemeTableViewCell {
 			}
 		}
 
-		if item.isSharedWithUser || item.sharedByUserOrGroup() {
+		if item.isSharedWithUser || item.sharedByUserOrGroup {
 			sharedStatusIconView.image = UIImage(named: "group")
 		} else {
 			sharedStatusIconView.image = nil
 		}
-		if item.sharedByPublicLink() {
+		if item.sharedByPublicLink {
 			publicLinkStatusIconView.image = UIImage(named: "link")
 		} else {
 			publicLinkStatusIconView.image = nil

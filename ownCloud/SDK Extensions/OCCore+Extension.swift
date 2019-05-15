@@ -26,6 +26,7 @@ extension OCCore {
 		start(shareQuery!)
 		shareQuery?.initialPopulationHandler = { query in
 			let sharesWithReshares = query.queryResults
+			self.stop(shareQuery!)
 
 			let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item)
 			self.start(shareQuery!)
@@ -40,6 +41,7 @@ extension OCCore {
 				var shares : [OCShare] = []
 				shares.append(contentsOf: sharesWithMe)
 				shares.append(contentsOf: sharesWithReshares)
+				self.stop(shareQuery!)
 
 				completionHandler(shares)
 			}

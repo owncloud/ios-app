@@ -293,9 +293,9 @@ extension CustomFilelistTableViewController: UISearchResultsUpdating {
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
-			let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: makeActionProgressHandler())
-
-			self.present(asCard: moreViewController, animated: true)
+			if let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: makeActionProgressHandler()) {
+				self.present(asCard: moreViewController, animated: true)
+			}
 		}
 
 		// MARK: - Actions

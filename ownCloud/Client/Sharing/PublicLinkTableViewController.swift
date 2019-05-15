@@ -23,7 +23,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 
 	// MARK: - Instance Variables
 	var shares : [OCShare] = []
-	var core : OCCore
+	weak var core : OCCore?
 	var item : OCItem
 	var messageView : MessageView?
 	var shareQuery : OCShareQuery?
@@ -53,7 +53,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 		addHeaderView()
 		addPrivateLinkSection()
 
-		shareQuery = core.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
+		shareQuery = core?.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
 			if sharesWithReshares.count > 0 {
 				self.shares = sharesWithReshares.filter { (OCShare) -> Bool in
 					if OCShare.type == .link {
@@ -86,7 +86,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 
 	@objc func dismissView() {
 		if let query = self.shareQuery {
-			self.core.stop(query)
+			self.core?.stop(query)
 		}
 		dismissAnimated()
 	}
@@ -99,6 +99,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 	// MARK: - Header View
 
 	func addHeaderView() {
+		guard let core = core else { return }
 		let containerView = UIView()
 		containerView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -206,7 +207,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 
 					row.cell?.accessoryView = progressView
 
-					self.core.retrievePrivateLink(for: self.item, completionHandler: { (error, url) in
+					self.core?.retrievePrivateLink(for: self.item, completionHandler: { (error, url) in
 						OnMainThread {
 							row.cell?.accessoryView = nil
 						}
@@ -226,7 +227,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 
 	// MARK: - Sharing Helper
 	func canEdit(share: OCShare) -> Bool {
-		if core.connection.loggedInUser?.userName == share.owner?.userName || core.connection.loggedInUser?.userName == share.itemOwner?.userName {
+		if core?.connection.loggedInUser?.userName == share.owner?.userName || core?.connection.loggedInUser?.userName == share.itemOwner?.userName {
 			return true
 		}
 
@@ -251,7 +252,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
 					alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
-							self.core.delete(share, completionHandler: { (error) in
+							self.core?.delete(share, completionHandler: { (error) in
 								OnMainThread {
 									if error == nil {
 										self.navigationController?.popViewController(animated: true)
@@ -289,12 +290,12 @@ class PublicLinkTableViewController: StaticTableViewController {
 			}
 
 			var linkName = String(format:"%@ %@ (%ld)", name, "Link".localized, (shares.count + 1))
-			if let defaultLinkName = core.connection.capabilities?.publicSharingDefaultLinkName {
+			if let defaultLinkName = core?.connection.capabilities?.publicSharingDefaultLinkName {
 				linkName = defaultLinkName
 			}
 
 			let share = OCShare(publicLinkToPath: path, linkName: linkName, permissions: permissions, password: nil, expiration: nil)
-			self.core.createShare(share, options: nil, completionHandler: { (error, newShare) in
+			self.core?.createShare(share, options: nil, completionHandler: { (error, newShare) in
 				if error == nil, let share = newShare {
 					OnMainThread {
 						self.shares.append(share)

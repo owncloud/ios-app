@@ -167,15 +167,16 @@ class Action : NSObject {
 
 	// MARK: - Provide Card view controller
 
-	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ActionProgressHandler? = nil, completionHandler: ((Action, Error?) -> Void)? = nil) -> UIViewController {
+	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ActionProgressHandler? = nil, completionHandler: ((Action, Error?) -> Void)? = nil) -> UIViewController? {
+		guard let core = context.core else { return nil }
 
 		let tableViewController = MoreStaticTableViewController(style: .plain)
-		let header = MoreViewHeader(for: item, with: context.core!)
-		let moreViewController = MoreViewController(item: item, core: context.core!, header: header, viewController: tableViewController)
+		let header = MoreViewHeader(for: item, with: core)
+		let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
 
-		if context.core!.connectionStatus == .online, context.core!.connection.capabilities?.sharingAPIEnabled == 1 {
+		if core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1 {
 			OnMainThread {
-				if item.isSharedWithUser || item.isShared() {
+				if item.isSharedWithUser || item.isShared {
 
 					let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 					progressView.startAnimating()
@@ -183,7 +184,7 @@ class Action : NSObject {
 					let row = StaticTableViewRow(rowWithAction: nil, title: "Searching Shares...".localized, alignment: .left, accessoryView: progressView, identifier: "share-searching")
 					self.updateSharingSection(sectionIdentifier: "share-section", rows: [row], tableViewController: tableViewController)
 
-					context.core!.unifiedShares(for: item, completionHandler: { (shares) in
+					core.unifiedShares(for: item, completionHandler: { (shares) in
 						OnMainThread {
 							let shareRows = self.shareRows(shares: shares, item: item, presentingController: moreViewController, context: context)
 							self.updateSharingSection(sectionIdentifier: "share-section", rows: shareRows, tableViewController: tableViewController)
@@ -299,8 +300,12 @@ class Action : NSObject {
 		})
 
 		let image = self.actionExtension.image
-		alertAction.setValue(image, forKey: "image")
-		alertAction.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+		if alertAction.responds(to: NSSelectorFromString("setImage:")) {
+			alertAction.setValue(image, forKey: "image")
+		}
+		if alertAction.responds(to: NSSelectorFromString("setTitleTextAlignment:")) {
+			alertAction.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+		}
 
 		return alertAction
 	}
@@ -322,7 +327,11 @@ class Action : NSObject {
 		return type(of: self).applicablePosition(forContext: context)
 	}
 
-	// MARK: - Sharing
+}
+
+// MARK: - Sharing
+
+extension Action {
 
 	class func shareRows(shares: [OCShare], item: OCItem, presentingController: UIViewController, context: ActionContext) -> [StaticTableViewRow] {
 		var shareRows: [StaticTableViewRow] = []
@@ -381,8 +390,8 @@ class Action : NSObject {
 				let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
 					presentingController.dismiss(animated: true)
 
-					if let viewController = context.viewController {
-						let sharingViewController = GroupSharingTableViewController(core: context.core!, item: item)
+					if let viewController = context.viewController, let core = context.core {
+						let sharingViewController = GroupSharingTableViewController(core: core, item: item)
 						sharingViewController.shares = shares
 						let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 						navigationController.modalPresentationStyle = .formSheet
@@ -398,8 +407,8 @@ class Action : NSObject {
 				let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
 					presentingController.dismiss(animated: true)
 
-					if let viewController = context.viewController {
-						let sharingViewController = PublicLinkTableViewController(core: context.core!, item: item)
+					if let viewController = context.viewController, let core = context.core {
+						let sharingViewController = PublicLinkTableViewController(core: core, item: item)
 						sharingViewController.shares = shares
 						let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 						navigationController.modalPresentationStyle = .formSheet
@@ -438,8 +447,8 @@ class Action : NSObject {
 		let addGroupRow = StaticTableViewRow(buttonWithAction: { (_, _) in
 			presentingController.dismiss(animated: true)
 
-			if let viewController = context.viewController {
-				let sharingViewController = GroupSharingTableViewController(core: context.core!, item: item)
+			if let viewController = context.viewController, let core = context.core {
+				let sharingViewController = GroupSharingTableViewController(core: core, item: item)
 				let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 				navigationController.modalPresentationStyle = .formSheet
 
@@ -451,12 +460,12 @@ class Action : NSObject {
 	}
 
 	class func shareAsPublicLinkRow(item : OCItem, presentingController: UIViewController, context: ActionContext) -> StaticTableViewRow? {
-		if context.core!.connection.capabilities?.publicSharingEnabled == true, item.sharedByPublicLink() == false, item.isShareable {
+		if let core = context.core, core.connection.capabilities?.publicSharingEnabled == true, !item.sharedByPublicLink, item.isShareable {
 			let addGroupRow = StaticTableViewRow(buttonWithAction: { (_, _) in
 				presentingController.dismiss(animated: true)
 
 				if let viewController = context.viewController {
-					let sharingViewController = PublicLinkTableViewController(core: context.core!, item: item)
+					let sharingViewController = PublicLinkTableViewController(core: core, item: item)
 					let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
 					navigationController.modalPresentationStyle = .formSheet
 

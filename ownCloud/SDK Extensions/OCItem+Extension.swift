@@ -246,6 +246,27 @@ extension OCItem {
 		return dateFormatter
 	}()
 
+	var sharedByPublicLink : Bool {
+		if self.shareTypesMask.contains(.link) {
+			return true
+		}
+		return false
+	}
+
+	var isShared : Bool {
+		if self.shareTypesMask.isEmpty {
+			return false
+		}
+		return true
+	}
+
+	var sharedByUserOrGroup : Bool {
+		if self.shareTypesMask.contains(.userShare) || self.shareTypesMask.contains(.groupShare) || self.shareTypesMask.contains(.remote) {
+			return true
+		}
+		return false
+	}
+
 	func parentItem(from core: OCCore, completionHandler: ((_ error: Error?, _ parentItem: OCItem?) -> Void)? = nil) -> OCItem? {
 		var parentItem : OCItem?
 
@@ -274,26 +295,5 @@ extension OCItem {
 		}
 
 		return parentItem
-	}
-
-	func isShared() -> Bool {
-		if self.shareTypesMask.isEmpty {
-			return false
-		}
-		return true
-	}
-
-	func sharedByUserOrGroup() -> Bool {
-		if self.shareTypesMask.contains(.userShare) || self.shareTypesMask.contains(.groupShare) || self.shareTypesMask.contains(.remote)  {
-			return true
-		}
-		return false
-	}
-
-	func sharedByPublicLink() -> Bool {
-		if self.shareTypesMask.contains(.link) {
-			return true
-		}
-		return false
 	}
 }
