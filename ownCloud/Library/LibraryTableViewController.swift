@@ -73,11 +73,13 @@ class LibraryTableViewController: StaticTableViewController {
 			self.core?.start(shareQueryAcceptedCloudShares!)
 			shareQueryAcceptedCloudShares?.initialPopulationHandler = { query in
 				sharedWithUser.append(contentsOf: query.queryResults)
-				self.handleSharedWithUser(shares: sharedWithUser)
+				let shares = sharedWithUser.unique { $0.itemPath }
+				self.handleSharedWithUser(shares: shares)
 			}
 		}
 		shareQueryWithUser?.changesAvailableNotificationHandler = { query in
-			self.handleSharedWithUser(shares: query.queryResults)
+			let shares = query.queryResults.unique { $0.itemPath }
+			self.handleSharedWithUser(shares: shares)
 		}
 
 		core?.start(shareQueryPendingCloudShares!)
@@ -92,10 +94,12 @@ class LibraryTableViewController: StaticTableViewController {
 
 		core?.start(shareQueryByUser!)
 		shareQueryByUser?.initialPopulationHandler = { query in
-			self.handleSharedByUser(shares: query.queryResults)
+			let shares = query.queryResults.unique { $0.itemPath }
+			self.handleSharedByUser(shares: shares)
 		}
 		shareQueryByUser?.changesAvailableNotificationHandler = { query in
-			self.handleSharedByUser(shares: query.queryResults)
+			let shares = query.queryResults.unique { $0.itemPath }
+			self.handleSharedByUser(shares: shares)
 		}
 		addCollectionSection()
 	}

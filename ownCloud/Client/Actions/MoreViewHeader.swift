@@ -165,7 +165,7 @@ class MoreViewHeader: UIView {
 		} else {
 			item.isFavorite = true
 		}
-		core?.update(item, properties: [OCItemPropertyName.isFavorite], options: nil, resultHandler: { (error, _, item, _) in
+		core?.update(item, properties: [OCItemPropertyName.isFavorite], options: nil, resultHandler: { (error, _, _, _) in
 			if error == nil {
 				OnMainThread {
 					self.updateFavoriteButtonImage()
@@ -177,8 +177,10 @@ class MoreViewHeader: UIView {
 	func updateFavoriteButtonImage() {
 		if item.isFavorite == true {
 			favoriteButton.setImage(UIImage(named: "star"), for: .normal)
+			favoriteButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
 		} else {
 			favoriteButton.setImage(UIImage(named: "unstar"), for: .normal)
+			favoriteButton.tintColor = Theme.shared.activeCollection.favoriteDisabledColor
 		}
 	}
 }
@@ -187,6 +189,5 @@ extension MoreViewHeader: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.titleLabel.applyThemeCollection(collection)
 		self.detailLabel.applyThemeCollection(collection)
-		self.favoriteButton.applyThemeCollection(collection)
 	}
 }

@@ -121,6 +121,9 @@ class ThemeCollection : NSObject {
 	// MARK: - Icon colors
 	@objc var iconColors : [String:String]
 
+	@objc var favoriteEnabledColor : UIColor?
+	@objc var favoriteDisabledColor : UIColor?
+
 	// MARK: - Default Collection
 	static var defaultCollection : ThemeCollection = {
 		let collection = ThemeCollection()
@@ -198,6 +201,9 @@ class ThemeCollection : NSObject {
 			symbolColor: darkColor,
 			filledColorPairCollection: ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: lightBrandColor))
 		)
+
+		self.favoriteEnabledColor = UIColor(hex: 0xFFCC00)
+		self.favoriteDisabledColor = UIColor(hex: 0x7C7C7C)
 
 		// Styles
 		switch style {
