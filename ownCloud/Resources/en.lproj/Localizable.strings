@@ -271,8 +271,9 @@
 "Importing from photo library" = "Importing from photo library";
 
 /* Photo upload settings */
-"Photo Upload" = "Photo Upload";
+"Media Upload" = "Media Upload";
 "Convert HEIC to JPEG" = "Convert HEIC to JPEG";
+"Convert videos to MP4" = "Convert videos to MP4";
 
 /* Progress summarizer */
 "Creating %ld of %ld folders…" = "Creating %ld of %ld folders…";
