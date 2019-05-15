@@ -20,14 +20,12 @@ import UIKit
 import ownCloudSDK
 
 class SettingsViewController: StaticTableViewController {
-	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
 		self.navigationItem.title = "Settings".localized
-		
+
 		let userDefaults = OCAppIdentity.shared.userDefaults
-		
+
 		let securitySettings = SecuritySettingsSection(userDefaults: userDefaults!)
 		let userInterfaceSettings = UserInterfaceSettingsSection(userDefaults: userDefaults!)
 		let photoUploadSettings = MediaUploadSettingsSection(userDefaults: userDefaults!)
@@ -37,5 +35,4 @@ class SettingsViewController: StaticTableViewController {
 		self.addSection(photoUploadSettings)
 		self.addSection(moreSettings)
 	}
-	
 }
