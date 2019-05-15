@@ -23,7 +23,6 @@ class DeleteAction : Action {
 	override class var category : ActionCategory? { return .destructive }
 	override class var name : String? { return "Delete".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .tableRow, .moreFolder, .toolbar] }
-	override class var image : UIImage? { return UIImage(named: "trash") }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -84,5 +83,13 @@ class DeleteAction : Action {
 
 		viewController.present(alertController, animated: true)
 
+	}
+
+	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+		if location == .moreItem {
+			return UIImage(named: "trash")
+		}
+
+		return nil
 	}
 }

@@ -65,14 +65,12 @@ class ActionExtension: OCExtension {
 	// MARK: - Custom Instance Properties.
 	var name: String
 	var category: ActionCategory
-	var image: UIImage
 
 	// MARK: - Init & Deinit
-	init(name: String, category: ActionCategory = .normal, image: UIImage, identifier: OCExtensionIdentifier, locations: [OCExtensionLocationIdentifier]?, features: [String : Any]?, objectProvider: OCExtensionObjectProvider?, customMatcher: OCExtensionCustomContextMatcher?) {
+	init(name: String, category: ActionCategory = .normal, identifier: OCExtensionIdentifier, locations: [OCExtensionLocationIdentifier]?, features: [String : Any]?, objectProvider: OCExtensionObjectProvider?, customMatcher: OCExtensionCustomContextMatcher?) {
 
 		self.name = name
 		self.category = category
-		self.image = image
 
 		super.init(identifier: identifier, type: .action, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher)
 	}
@@ -108,8 +106,6 @@ class Action : NSObject {
 	class var name : String? { return nil }
 	class var locations : [OCExtensionLocationIdentifier]? { return nil }
 	class var features : [String : Any]? { return nil }
-	class var image : UIImage? { return UIImage(named: "open-in") }
-	private let thumbnailSize = CGSize(width: 30.0, height: 30.0)
 
 	// MARK: - Extension creation
 	class var actionExtension : ActionExtension {
@@ -138,7 +134,7 @@ class Action : NSObject {
 			// Additional filtering (f.ex. via OCClassSettings, Settings) goes here
 		}
 
-		return ActionExtension(name: name!, category: category!, image: image!, identifier: identifier!, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher)
+		return ActionExtension(name: name!, category: category!, identifier: identifier!, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher)
 	}
 
 	// MARK: - Extension matching
@@ -282,7 +278,7 @@ class Action : NSObject {
 		return StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
 			self.willRun()
 			self.run()
-		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, image: actionExtension.image, alignment: .left, identifier: actionExtension.identifier.rawValue)
+		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, image: self.icon, alignment: .left, identifier: actionExtension.identifier.rawValue)
 	}
 
 	func provideContextualAction() -> UIContextualAction? {
@@ -299,13 +295,13 @@ class Action : NSObject {
 			self.run()
 		})
 
-		let image = self.actionExtension.image
-		if alertAction.responds(to: NSSelectorFromString("setImage:")) {
+		let image = self.icon
+		//if alertAction.responds(to: NSSelectorFromString("setImage:")) {
 			alertAction.setValue(image, forKey: "image")
-		}
-		if alertAction.responds(to: NSSelectorFromString("setTitleTextAlignment:")) {
+		//}
+		//if alertAction.responds(to: NSSelectorFromString("setTitleTextAlignment:")) {
 			alertAction.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
-		}
+		//}
 
 		return alertAction
 	}
@@ -317,7 +313,7 @@ class Action : NSObject {
 
 	var icon : UIImage? {
 		if let locationIdentifier = context.location?.identifier {
-			return Action.iconForLocation(locationIdentifier)
+			return type(of: self).iconForLocation(locationIdentifier)
 		}
 
 		return nil

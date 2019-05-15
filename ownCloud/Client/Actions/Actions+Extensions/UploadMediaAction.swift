@@ -25,10 +25,6 @@ class UploadMediaAction: UploadBaseAction {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Upload from your photo library".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.plusButton] }
-	override class var image : UIImage? {
-		Theme.shared.add(tvgResourceFor: "image")
-		return Theme.shared.image(for: "image", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
-	}
 
 	private let uploadSerialQueue = DispatchQueue(label: "com.owncloud.upload.queue", target: DispatchQueue.global(qos: .background))
 
@@ -292,5 +288,14 @@ class UploadMediaAction: UploadBaseAction {
 				}
 			}
 		}
+	}
+
+	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+		if location == .plusButton {
+			Theme.shared.add(tvgResourceFor: "image")
+			return Theme.shared.image(for: "image", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
+		}
+
+		return nil
 	}
 }

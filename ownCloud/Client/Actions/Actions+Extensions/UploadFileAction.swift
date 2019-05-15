@@ -25,10 +25,6 @@ class UploadFileAction: UploadBaseAction {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Upload file".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.plusButton] }
-	override class var image : UIImage? {
-		Theme.shared.add(tvgResourceFor: "text")
-		return Theme.shared.image(for: "text", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
-	}
 
 	private struct AssociatedKeys {
 		static var actionKey = "action"
@@ -50,6 +46,15 @@ class UploadFileAction: UploadBaseAction {
 		objc_setAssociatedObject(documentPickerViewController, &AssociatedKeys.actionKey, self, .OBJC_ASSOCIATION_RETAIN)
 
 		viewController.present(documentPickerViewController, animated: true)
+	}
+
+	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+		if location == .plusButton {
+			Theme.shared.add(tvgResourceFor: "text")
+			return Theme.shared.image(for: "text", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
+		}
+
+		return nil
 	}
 }
 
