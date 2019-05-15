@@ -143,66 +143,8 @@ class LogSettingsViewController: StaticTableViewController {
 				let logsRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
 						let logFilesViewController = LogFilesViewController()
 						self?.navigationController?.pushViewController(logFilesViewController, animated: true)
-					}, title: "View Logs".localized, accessoryType: .disclosureIndicator, identifier: "viewLogs")
+					}, title: "Log Files".localized, accessoryType: .disclosureIndicator, identifier: "viewLogs")
 				logOutputSection?.add(row: logsRow)
-
-				logOutputSection?.add(row: StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
-					if let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter {
-						if !FileManager.default.fileExists(atPath: logFileWriter.logFileURL.path) {
-							let alert = UIAlertController(title: "No log file found".localized, message: "The log file can't be shared because no log file could be found or the log file is empty.".localized, preferredStyle: .alert)
-
-							alert.addAction(UIAlertAction(title: "Cancel".localized, style: .default, handler: nil))
-
-							if !logFileWriter.enabled {
-								alert.addAction(UIAlertAction(title: "Enable log file".localized, style: .default, handler: { (_) in
-									logFileWriter.enabled = true
-									logFileWriterSwitchRow?.value = logFileWriter.enabled
-								}))
-							}
-
-							self?.present(alert, animated: true, completion: nil)
-						} else {
-							let logURL = FileManager.default.temporaryDirectory.appendingPathComponent("ownCloud App Log.txt")
-
-							do {
-								if FileManager.default.fileExists(atPath: logURL.path) {
-									try FileManager.default.removeItem(at: logURL)
-								}
-
-								try FileManager.default.copyItem(at: logFileWriter.logFileURL, to: logURL)
-							} catch {
-							}
-
-							let shareViewController = UIActivityViewController(activityItems: [logURL], applicationActivities:nil)
-							shareViewController.completionWithItemsHandler = { (_, _, _, _) in
-								do {
-									try FileManager.default.removeItem(at: logURL)
-								} catch {
-								}
-							}
-
-							if UIDevice.current.isIpad() {
-								shareViewController.popoverPresentationController?.sourceView = row.cell
-								shareViewController.popoverPresentationController?.sourceRect = CGRect(x: row.cell?.bounds.midX ?? 0, y: row.cell?.bounds.midY ?? 0, width: 1, height: 1)
-								shareViewController.popoverPresentationController?.permittedArrowDirections = .down
-							}
-
-							row.viewController?.present(shareViewController, animated: true, completion: nil)
-						}
-					}
-				}, title: "Share log file".localized, style: .plain, identifier: "share-logfile"))
-
-				logOutputSection?.add(row: StaticTableViewRow(buttonWithAction: { (row, _) in
-					let alert = UIAlertController(with: "Really reset log file?".localized, message: "This action can't be undone.".localized, destructiveLabel: "Reset log file".localized, preferredStyle: .alert, destructiveAction: {
-						OCLogger.shared.pauseWriters(intermittentBlock: {
-							if let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter {
-								logFileWriter.eraseOrTruncate()
-							}
-						})
-					})
-
-					row.viewController?.present(alert, animated: true, completion: nil)
-				}, title: "Reset log file".localized, style: .destructive, identifier: "reset-logfile"))
 
 				addSections.append(logOutputSection!)
 			}

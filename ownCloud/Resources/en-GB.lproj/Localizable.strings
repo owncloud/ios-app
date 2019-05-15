@@ -162,6 +162,11 @@
 "ownCloud Classic" = "ownCloud Classic";
 
 /* Log settings */
+"Log Files" = "Log Files";
+"Share" = "Share";
+"Delete all log files?" = "Delete all log files?";
+"Delete All" = "Delete All";
+
 "Log Level" = "Log Level";
 "Log Destinations" = "Log Destinations";
 "Privacy" = "Privacy";

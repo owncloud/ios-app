@@ -153,6 +153,11 @@
 "ownCloud Classic" = "ownCloud Классическая";
 
 /* Log settings */
+"Log Files" = "Журналы";
+"Share" = "Поделиться";
+"Delete all log files?" = "Удалить все журналы?";
+"Delete All" = "Удалить все";
+
 "Log Level" = "Уровень журнала";
 "Log Destinations" = "Направления журнала";
 "Privacy" = "Конфиденциальность";

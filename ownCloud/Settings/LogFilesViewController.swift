@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class LogFileTableViewCell : UITableViewCell {
+class LogFileTableViewCell : ThemeTableViewCell {
 
 	static let identifier = "LogFileTableViewCell"
 
@@ -34,9 +34,26 @@ class LogFileTableViewCell : UITableViewCell {
 
 class LogFilesViewController : UITableViewController, Themeable {
 
-	var logFiles: [String]?
+	struct LogEntry {
+		var name:String?
+		var size:Int64?
+		var creationDate:Date?
+	}
 
-	lazy var byteCounterFormatter = ByteCountFormatter()
+	var logFileEntries = [LogEntry]()
+
+	lazy var byteCounterFormatter: ByteCountFormatter = {
+		let fmtr = ByteCountFormatter()
+		fmtr.allowsNonnumericFormatting = true
+		return fmtr
+	}()
+
+	lazy var dateFormatter: DateFormatter = {
+		let fmtr = DateFormatter()
+		fmtr.dateStyle = .short
+		fmtr.timeStyle = .medium
+		return fmtr
+	}()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -48,6 +65,17 @@ class LogFilesViewController : UITableViewController, Themeable {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		self.populateLogFileList()
+
+		let removeAllButtonItem = UIBarButtonItem(title: "Delete All".localized, style: .done, target: self, action: #selector(removeAllLogs))
+		let flexibleSpaceButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+
+		self.toolbarItems = [flexibleSpaceButtonItem, removeAllButtonItem, flexibleSpaceButtonItem]
+		self.navigationController?.setToolbarHidden(false, animated: false)
+	}
+
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		self.navigationController?.setToolbarHidden(true, animated: false)
 	}
 
 	deinit {
@@ -71,13 +99,17 @@ class LogFilesViewController : UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return logFiles != nil ? logFiles!.count : 0
+		return logFileEntries.count
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: LogFileTableViewCell.identifier, for: indexPath) as? LogFileTableViewCell
-		cell?.textLabel?.text = self.logFiles![indexPath.row]
-		
+		let logEntry = self.logFileEntries[indexPath.row]
+		cell?.textLabel?.text = logEntry.name
+		if let date = logEntry.creationDate, let size = logEntry.size {
+			cell?.detailTextLabel?.text = "\(self.dateFormatter.string(from: date)), \(self.byteCounterFormatter.string(fromByteCount: size))"
+		}
+
 		return cell!
 	}
 
@@ -85,15 +117,100 @@ class LogFilesViewController : UITableViewController, Themeable {
 		tableView.deselectRow(at: indexPath, animated: true)
 	}
 
+	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+
+		return [
+			UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { [weak self] (_, indexPath) in
+				let logEntry = self?.logFileEntries[indexPath.row]
+				if let name = logEntry?.name {
+					self?.removeLog(with: name, indexPath: indexPath)
+				}
+			}),
+
+			UITableViewRowAction(style: .normal, title: "Share".localized, handler: { [weak self] (_, indexPath) in
+				let logEntry = self?.logFileEntries[indexPath.row]
+				if let name = logEntry?.name {
+					self?.shareLog(with: name)
+				}
+			})
+		]
+	}
+
 	// MARK: - Private Helpers
 
 	private func populateLogFileList() {
 		guard let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter else { return }
-
+		guard let appGroupURL = OCAppIdentity.shared.appGroupContainerURL else { return }
 		guard let logFiles = logFileWriter.logFiles() else { return }
 
-		self.logFiles = logFiles as? [String]
+		for fileName in logFiles {
+			if let name = fileName as? String {
+				let logURL = appGroupURL.appendingPathComponent(name)
+
+				var fileSize:Int64?
+				var creationDate:Date?
+
+				if let attributes = try? FileManager.default.attributesOfItem(atPath: logURL.path) {
+					creationDate = attributes[FileAttributeKey.creationDate] as? Date
+					fileSize = (attributes[FileAttributeKey.size] as? NSNumber)?.int64Value
+				}
+
+				let logEntry = LogEntry(name: name, size: fileSize, creationDate: creationDate)
+				self.logFileEntries.append(logEntry)
+			}
+		}
 
 		self.tableView.reloadData()
+	}
+
+	private func shareLog(with fileName:String) {
+		guard let appGroupURL = OCAppIdentity.shared.appGroupContainerURL else { return }
+		let shareableLogURL = FileManager.default.temporaryDirectory.appendingPathComponent("ownCloud App Log.txt")
+		let logURL = appGroupURL.appendingPathComponent(fileName)
+
+		do {
+			if FileManager.default.fileExists(atPath: shareableLogURL.path) {
+				try FileManager.default.removeItem(at: shareableLogURL)
+			}
+
+			try FileManager.default.copyItem(at: logURL, to: shareableLogURL)
+		} catch {
+		}
+
+		let shareViewController = UIActivityViewController(activityItems: [shareableLogURL], applicationActivities:nil)
+		shareViewController.completionWithItemsHandler = { (_, _, _, _) in
+			do {
+				try FileManager.default.removeItem(at: shareableLogURL)
+			} catch {
+			}
+		}
+
+		if UIDevice.current.isIpad() {
+			shareViewController.popoverPresentationController?.sourceView = self.view
+		}
+		self.present(shareViewController, animated: true, completion: nil)
+	}
+
+	private func removeLog(with fileName:String, indexPath:IndexPath) {
+		guard let appGroupURL = OCAppIdentity.shared.appGroupContainerURL else { return }
+		let logURL = appGroupURL.appendingPathComponent(fileName)
+		do {
+			try FileManager.default.removeItem(at: logURL)
+			self.logFileEntries.remove(at: indexPath.row)
+			self.tableView.deleteRows(at: [indexPath], with: .automatic)
+		} catch {
+		}
+	}
+
+	@objc private func removeAllLogs() {
+		let alert = UIAlertController(with: "Delete all log files?".localized, message: "This action can't be undone.".localized, destructiveLabel: "Delete All".localized, preferredStyle: .alert, destructiveAction: {
+			OCLogger.shared.pauseWriters(intermittentBlock: {
+				if let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter {
+					logFileWriter.cleanUpLogs(true)
+				}
+			})
+		})
+
+		self.present(alert, animated: true, completion: nil)
 	}
 }
