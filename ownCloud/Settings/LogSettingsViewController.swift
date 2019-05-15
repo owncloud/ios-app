@@ -139,6 +139,13 @@ class LogSettingsViewController: StaticTableViewController {
 					logOutputSection?.add(row: row)
 				}
 
+				// Creation of the frequency row.
+				let logsRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
+						let logFilesViewController = LogFilesViewController()
+						self?.navigationController?.pushViewController(logFilesViewController, animated: true)
+					}, title: "View Logs".localized, accessoryType: .disclosureIndicator, identifier: "viewLogs")
+				logOutputSection?.add(row: logsRow)
+
 				logOutputSection?.add(row: StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
 					if let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter {
 						if !FileManager.default.fileExists(atPath: logFileWriter.logFileURL.path) {
