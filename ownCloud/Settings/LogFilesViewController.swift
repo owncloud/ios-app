@@ -46,24 +46,18 @@ class LogFileTableViewCell : ThemeTableViewCell {
 	}
 }
 
+extension OCLogFileRecord {
+	func truncatedName() -> String? {
+		if let nameRange: Range<String.Index> = name.range(of: #".*\.log"#, options: .regularExpression) {
+			return "\(name[nameRange])"
+		}
+		return nil
+	}
+}
+
 class LogFilesViewController : UITableViewController, Themeable {
 
-	struct LogEntry {
-		var name:String?
-		var size:Int64?
-		var creationDate:Date?
-
-		func truncatedName() -> String? {
-			if let name = name {
-				if let nameRange: Range<String.Index> = name.range(of: #".*\.log"#, options: .regularExpression) {
-					return "\(name[nameRange])"
-				}
-			}
-			return nil
-		}
-	}
-
-	var logFileEntries = [LogEntry]()
+	var logRecords = [OCLogFileRecord]()
 
 	lazy var byteCounterFormatter: ByteCountFormatter = {
 		let fmtr = ByteCountFormatter()
@@ -124,22 +118,20 @@ class LogFilesViewController : UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return logFileEntries.count
+		return logRecords.count
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: LogFileTableViewCell.identifier, for: indexPath) as? LogFileTableViewCell
-		let logEntry = self.logFileEntries[indexPath.row]
+		let logEntry = self.logRecords[indexPath.row]
 		cell?.textLabel?.text = logEntry.truncatedName()
-		if let date = logEntry.creationDate, let size = logEntry.size {
-			cell?.detailTextLabel?.text = "\(self.dateFormatter.string(from: date)), \(self.byteCounterFormatter.string(fromByteCount: size))"
+		if let date = logEntry.creationDate {
+			cell?.detailTextLabel?.text = "\(self.dateFormatter.string(from: date)), \(self.byteCounterFormatter.string(fromByteCount: logEntry.size))"
 		}
 
 		cell?.shareAction = { [weak self] (cell) in
 			if let indexPath = self?.tableView.indexPath(for: cell) {
-				if let name = self?.logFileEntries[indexPath.row].name {
-					self?.shareLog(with: name)
-				}
+				self?.shareLogRecord(at: indexPath)
 			}
 		}
 
@@ -154,10 +146,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 		return [
 			UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { [weak self] (_, indexPath) in
-				let logEntry = self?.logFileEntries[indexPath.row]
-				if let name = logEntry?.name {
-					self?.removeLog(with: name, indexPath: indexPath)
-				}
+				self?.removeLogRecord(at: indexPath)
 			})
 		]
 	}
@@ -166,41 +155,22 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 	private func populateLogFileList() {
 		guard let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter else { return }
-		guard let appGroupLogsURL = OCAppIdentity.shared.appGroupLogsContainerURL else { return }
-		guard let logFiles = logFileWriter.logFiles() else { return }
-
-		for fileName in logFiles {
-			if let name = fileName as? String {
-				let logURL = appGroupLogsURL.appendingPathComponent(name)
-
-				var fileSize:Int64?
-				var creationDate:Date?
-
-				if let attributes = try? FileManager.default.attributesOfItem(atPath: logURL.path) {
-					creationDate = attributes[FileAttributeKey.creationDate] as? Date
-					fileSize = (attributes[FileAttributeKey.size] as? NSNumber)?.int64Value
-				}
-
-				let logEntry = LogEntry(name: name, size: fileSize, creationDate: creationDate)
-				self.logFileEntries.append(logEntry)
-			}
-		}
-
+		self.logRecords = logFileWriter.logRecords()
 		self.tableView.reloadData()
 	}
 
-	private func shareLog(with fileName:String) {
-		guard let appGroupLogsURL = OCAppIdentity.shared.appGroupLogsContainerURL else { return }
-		let shareableFileName = fileName + ".txt"
+	private func shareLogRecord(at indexPath:IndexPath) {
+
+		let logRecord = self.logRecords[indexPath.row]
+		let shareableFileName = logRecord.name + ".txt"
 		let shareableLogURL = FileManager.default.temporaryDirectory.appendingPathComponent(shareableFileName)
-		let logURL = appGroupLogsURL.appendingPathComponent(fileName)
 
 		do {
 			if FileManager.default.fileExists(atPath: shareableLogURL.path) {
 				try FileManager.default.removeItem(at: shareableLogURL)
 			}
 
-			try FileManager.default.copyItem(at: logURL, to: shareableLogURL)
+			try FileManager.default.copyItem(atPath: logRecord.fullPath(), toPath: shareableLogURL.path)
 		} catch {
 		}
 
@@ -218,15 +188,15 @@ class LogFilesViewController : UITableViewController, Themeable {
 		self.present(shareViewController, animated: true, completion: nil)
 	}
 
-	private func removeLog(with fileName:String, indexPath:IndexPath) {
-		guard let appGroupLogsURL = OCAppIdentity.shared.appGroupLogsContainerURL else { return }
-		let logURL = appGroupLogsURL.appendingPathComponent(fileName)
-		do {
-			try FileManager.default.removeItem(at: logURL)
-			self.logFileEntries.remove(at: indexPath.row)
-			self.tableView.deleteRows(at: [indexPath], with: .automatic)
-		} catch {
-		}
+	private func removeLogRecord(at indexPath:IndexPath) {
+
+		guard let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter else { return }
+
+		let record = self.logRecords[indexPath.row]
+		logFileWriter.deleteLogRecord(record)
+
+		self.logRecords.remove(at: indexPath.row)
+		self.tableView.deleteRows(at: [indexPath], with: .automatic)
 	}
 
 	@objc private func removeAllLogs() {
