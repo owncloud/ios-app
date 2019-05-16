@@ -34,8 +34,7 @@ extension OCQueryState {
 	}
 }
 
-class ClientQueryViewController: UITableViewController, Themeable, UIDropInteractionDelegate {
-
+class ClientQueryViewController: UITableViewController, Themeable, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
 	weak var core : OCCore?
 	var query : OCQuery
 
@@ -78,6 +77,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	var quotaLabel = UILabel()
 	var quotaObservation : NSKeyValueObservation?
 
+	var shallShowSortBar = true
+
 	private var _actionProgressHandler : ActionProgressHandler?
 
 	func makeActionProgressHandler() -> ActionProgressHandler {
@@ -104,7 +105,9 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 
-		query.sortComparator = self.sortMethod.comparator()
+		if query.sortComparator == nil {
+			query.sortComparator = self.sortMethod.comparator()
+		}
 
 		query.delegate = self
 
@@ -116,7 +119,17 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		if lastPathComponent == "/", let shortName = core?.bookmark.shortName {
 			self.navigationItem.title = shortName
 		} else {
-			self.navigationItem.title = lastPathComponent
+			let titleButton = UIButton()
+			titleButton.setTitle(lastPathComponent, for: .normal)
+			titleButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+			titleButton.addTarget(self, action: #selector(showPathBreadCrumb(_:)), for: .touchUpInside)
+			titleButton.sizeToFit()
+			titleButton.accessibilityLabel = "Show parent paths".localized
+			titleButton.accessibilityIdentifier = "show-paths-button"
+			messageThemeApplierToken = Theme.shared.add(applier: { (_, collection, _) in
+				titleButton.setTitleColor(collection.navigationBarColors.labelColor, for: .normal)
+			})
+			self.navigationItem.titleView = titleButton
 		}
 
 		if lastPathComponent == "/" {
@@ -207,11 +220,13 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		self.definesPresentationContext = true
 
-		sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
-		sortBar?.delegate = self
-		sortBar?.sortMethod = self.sortMethod
+		if shallShowSortBar {
+			sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
+			sortBar?.delegate = self
+			sortBar?.sortMethod = self.sortMethod
 
-		tableView.tableHeaderView = sortBar
+			tableView.tableHeaderView = sortBar
+		}
 
 		queryRefreshControl = UIRefreshControl()
 		queryRefreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
@@ -404,15 +419,16 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 						if lastTappedItemLocalID != rowItem.localID {
 							lastTappedItemLocalID = rowItem.localID
 
-							core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ]) { [weak self, query] (error, core, item, _) in
+							if let progress = core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { [weak self, query] (error, core, item, _) in
 
 								guard let self = self else { return }
 								OnMainThread { [weak core] in
 									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
 										if let item = item, let core = core {
 											if item.localID == self.lastTappedItemLocalID {
-												let itemViewController = GalleryHostViewController(core: core, selectedItem: item, query: query)
+												let itemViewController = DisplayHostViewController(core: core, selectedItem: item, query: query)
 												itemViewController.hidesBottomBarWhenPushed = true
+												itemViewController.progressSummarizer = self.progressSummarizer
 												self.navigationController?.pushViewController(itemViewController, animated: true)
 											}
 										}
@@ -422,6 +438,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 										self.lastTappedItemLocalID = nil
 									}
 								}
+							}) {
+								progressSummarizer?.startTracking(progress: progress)
 							}
 						}
 				}
@@ -654,14 +672,17 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 				rootView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
 				rootView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
-				if showSortBar {
-					rootView.topAnchor.constraint(equalTo: (sortBar?.bottomAnchor)!).isActive = true
-				} else {
-					rootView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
-				}
-				rootView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
 
-				messageShowsSortBar = showSortBar
+				if shallShowSortBar {
+					if showSortBar {
+						rootView.topAnchor.constraint(equalTo: (sortBar?.bottomAnchor)!).isActive = true
+					} else {
+						rootView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+					}
+					rootView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+
+					messageShowsSortBar = showSortBar
+				}
 
 				UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
 					rootView.alpha = 1
@@ -934,6 +955,29 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			popoverController.barButtonItem = sender
 		}
 		self.present(controller, animated: true)
+	}
+
+	// MARK: - Path Bread Crumb Action
+	@objc func showPathBreadCrumb(_ sender: UIButton) {
+		let tableViewController = BreadCrumbTableViewController()
+		tableViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+		tableViewController.parentNavigationController = self.navigationController
+		tableViewController.queryPath = (query.queryPath as NSString?)!
+		if let shortName = core?.bookmark.shortName {
+			tableViewController.bookmarkShortName = shortName
+		}
+
+		let popoverPresentationController = tableViewController.popoverPresentationController
+		popoverPresentationController?.sourceView = sender
+		popoverPresentationController?.delegate = self
+		popoverPresentationController?.sourceRect = CGRect(x: 0, y: 0, width: sender.frame.size.width, height: sender.frame.size.height)
+
+		present(tableViewController, animated: true, completion: nil)
+	}
+
+	// MARK: - UIPopoverPresentationControllerDelegate
+	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+		return .none
 	}
 }
 
