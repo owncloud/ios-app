@@ -23,12 +23,25 @@ class LogFileTableViewCell : ThemeTableViewCell {
 
 	static let identifier = "LogFileTableViewCell"
 
+	var shareAction : ((_ cell:UITableViewCell) -> ())?
+
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+
+		let shareButton = UIButton(type: .system)
+		shareButton.setImage(UIImage(named: "open-in"), for: .normal)
+		shareButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
+		shareButton.frame = CGRect(origin: CGPoint(x:0.0, y:0.0), size: shareButton.imageView!.image!.size)
+		self.accessoryView = shareButton
 	}
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+
+	// MARK: - Actions
+	@objc func shareButtonTapped() {
+		shareAction?(self)
 	}
 }
 
@@ -38,6 +51,15 @@ class LogFilesViewController : UITableViewController, Themeable {
 		var name:String?
 		var size:Int64?
 		var creationDate:Date?
+
+		func truncatedName() -> String? {
+			if let name = name {
+				if let nameRange: Range<String.Index> = name.range(of: #".*\.log"#, options: .regularExpression) {
+					return "\(name[nameRange])"
+				}
+			}
+			return nil
+		}
 	}
 
 	var logFileEntries = [LogEntry]()
@@ -105,9 +127,17 @@ class LogFilesViewController : UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: LogFileTableViewCell.identifier, for: indexPath) as? LogFileTableViewCell
 		let logEntry = self.logFileEntries[indexPath.row]
-		cell?.textLabel?.text = logEntry.name
+		cell?.textLabel?.text = logEntry.truncatedName()
 		if let date = logEntry.creationDate, let size = logEntry.size {
 			cell?.detailTextLabel?.text = "\(self.dateFormatter.string(from: date)), \(self.byteCounterFormatter.string(fromByteCount: size))"
+		}
+
+		cell?.shareAction = { [weak self] (cell) in
+			if let indexPath = self?.tableView.indexPath(for: cell) {
+				if let name = self?.logFileEntries[indexPath.row].name {
+					self?.shareLog(with: name)
+				}
+			}
 		}
 
 		return cell!
