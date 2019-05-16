@@ -23,7 +23,7 @@ class LogFileTableViewCell : ThemeTableViewCell {
 
 	static let identifier = "LogFileTableViewCell"
 
-	var shareAction : ((_ cell:UITableViewCell) -> ())?
+	var shareAction : ((_ cell:UITableViewCell) -> Void)?
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
@@ -32,6 +32,7 @@ class LogFileTableViewCell : ThemeTableViewCell {
 		shareButton.setImage(UIImage(named: "open-in"), for: .normal)
 		shareButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
 		shareButton.frame = CGRect(origin: CGPoint(x:0.0, y:0.0), size: shareButton.imageView!.image!.size)
+		shareButton.accessibilityLabel = "Share".localized
 		self.accessoryView = shareButton
 	}
 
@@ -155,13 +156,6 @@ class LogFilesViewController : UITableViewController, Themeable {
 				if let name = logEntry?.name {
 					self?.removeLog(with: name, indexPath: indexPath)
 				}
-			}),
-
-			UITableViewRowAction(style: .normal, title: "Share".localized, handler: { [weak self] (_, indexPath) in
-				let logEntry = self?.logFileEntries[indexPath.row]
-				if let name = logEntry?.name {
-					self?.shareLog(with: name)
-				}
 			})
 		]
 	}
@@ -195,7 +189,8 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 	private func shareLog(with fileName:String) {
 		guard let appGroupURL = OCAppIdentity.shared.appGroupContainerURL else { return }
-		let shareableLogURL = FileManager.default.temporaryDirectory.appendingPathComponent("ownCloud App Log.txt")
+		let shareableFileName = fileName + ".txt"
+		let shareableLogURL = FileManager.default.temporaryDirectory.appendingPathComponent(shareableFileName)
 		let logURL = appGroupURL.appendingPathComponent(fileName)
 
 		do {
