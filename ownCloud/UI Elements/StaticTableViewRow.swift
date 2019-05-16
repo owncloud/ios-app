@@ -99,6 +99,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		return self.index != nil
 	}
 
+	var representedObject : Any?
+
 	public var additionalAccessoryView : UIView?
 
 	override init() {

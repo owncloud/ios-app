@@ -25,21 +25,8 @@ class SharesFilelistTableViewController: UITableViewController, Themeable {
 	var itemTracker : OCCoreItemTracking?
 
 	var lastTappedItemLocalID : String?
-	var items : [OCItem] = []
 	var shares : [OCShare] = [] {
 		didSet {
-			let waitGroup = DispatchGroup()
-			for share in shares {
-				waitGroup.enter()
-				itemTracker = core?.trackItem(atPath: share.itemPath, trackingHandler: { (error, item, isInitial) in
-					if error == nil, let item = item, isInitial {
-						self.items.append(item)
-						waitGroup.leave()
-					}
-				})
-				waitGroup.wait()
-			}
-
 			OnMainThread {
 				self.tableView.reloadData()
 			}
@@ -81,7 +68,7 @@ class SharesFilelistTableViewController: UITableViewController, Themeable {
         super.viewDidLoad()
 
 		self.navigationController?.navigationBar.prefersLargeTitles = false
-		self.tableView.register(ClientItemCell.self, forCellReuseIdentifier: "itemCell")
+		self.tableView.register(ShareClientItemCell.self, forCellReuseIdentifier: "itemCell")
 		Theme.shared.register(client: self, applyImmediately: true)
 		self.tableView.estimatedRowHeight = estimatedTableRowHeight
     }
@@ -107,8 +94,8 @@ class SharesFilelistTableViewController: UITableViewController, Themeable {
 	}
 
 	// MARK: - Table view data source
-	func itemAtIndexPath(_ indexPath : IndexPath) -> OCItem {
-		return items[indexPath.row]
+	func itemAtIndexPath(_ indexPath : IndexPath) -> OCShare {
+		return shares[indexPath.row]
 	}
 
 	override func numberOfSections(in tableView: UITableView) -> Int {
@@ -116,24 +103,19 @@ class SharesFilelistTableViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return self.items.count
+		return self.shares.count
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ClientItemCell
+		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ShareClientItemCell
 		let newItem = itemAtIndexPath(indexPath)
 
 		cell?.accessibilityIdentifier = newItem.name
 		cell?.core = self.core
+		cell?.share = newItem
 
 		if cell?.delegate == nil {
 			cell?.delegate = self
-		}
-
-		// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
-		// Make sure we don't request the thumbnail multiple times in that case.
-		if (cell?.item?.itemVersionIdentifier != newItem.itemVersionIdentifier) || (cell?.item?.name != newItem.name) || (cell?.item?.syncActivity != newItem.syncActivity) || (cell?.item?.cloudStatus != newItem.cloudStatus) {
-			cell?.item = newItem
 		}
 
 		return cell!
@@ -142,7 +124,8 @@ class SharesFilelistTableViewController: UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// If not in multiple-selection mode, just navigate to the file or folder (collection)
 		if !self.tableView.isEditing {
-			let rowItem : OCItem = itemAtIndexPath(indexPath)
+
+			guard let cell = tableView.cellForRow(at: indexPath) as? ShareClientItemCell, let rowItem = cell.item else { return }
 
 			if let core = self.core {
 				switch rowItem.type {
@@ -187,11 +170,9 @@ class SharesFilelistTableViewController: UITableViewController, Themeable {
 // MARK: - ClientItemCell Delegate
 extension SharesFilelistTableViewController: ClientItemCellDelegate {
 	func moreButtonTapped(cell: ClientItemCell) {
-		guard let indexPath = self.tableView.indexPath(for: cell), let core = self.core else {
+		guard let item = cell.item, let core = self.core else {
 			return
 		}
-
-		let item = self.itemAtIndexPath(indexPath)
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)

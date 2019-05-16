@@ -197,15 +197,19 @@ class LibraryTableViewController: StaticTableViewController {
 			}
 
 			if section?.row(withIdentifier: rowIdentifier) == nil, let core = core {
-				let row = StaticTableViewRow(rowWithAction: { (_, _) in
+				let row = StaticTableViewRow(rowWithAction: { (row, _) in
 
 					let sharesFileListController = SharesFilelistTableViewController(core: core)
 					sharesFileListController.shares = shares
 					sharesFileListController.title = title
 					self.navigationController?.pushViewController(sharesFileListController, animated: true)
 
+					row.representedObject = sharesFileListController
 				}, title: title, image: image, accessoryType: .disclosureIndicator, identifier: rowIdentifier)
 				section?.add(row: row)
+			} else if let row = section?.row(withIdentifier: rowIdentifier) {
+				guard let sharesFileListController = row.representedObject as? SharesFilelistTableViewController else { return }
+				sharesFileListController.shares = shares
 			}
 		} else {
 			if let row = section?.row(withIdentifier: rowIdentifier) {
