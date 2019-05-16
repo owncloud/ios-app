@@ -28,7 +28,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 
 	var bookmark : OCBookmark?
 
-	lazy var byteCounterFormatter: ByteCountFormatter =  {
+	lazy var byteCounterFormatter: ByteCountFormatter = {
 		let formatter = ByteCountFormatter()
 		formatter.allowsNonnumericFormatting = false
 		return formatter

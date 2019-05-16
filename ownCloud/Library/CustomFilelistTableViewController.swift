@@ -231,7 +231,7 @@
 
 		override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
 			if sortMethod == .alphabeticallyAscendant || sortMethod == .alphabeticallyDescendant {
-				return Array( Set( self.items.map { String(( $0.name?.first!.uppercased() )!) } ) ).sorted()
+				return Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
 			}
 
 			return []
@@ -243,7 +243,7 @@
 			if let firstItem = firstItem {
 				if let itemIndex = self.items.index(of: firstItem) {
 					OnMainThread {
-						tableView.scrollToRow(at: IndexPath(row: itemIndex, section: 0), at: UITableView.ScrollPosition.top , animated: false)
+						tableView.scrollToRow(at: IndexPath(row: itemIndex, section: 0), at: UITableView.ScrollPosition.top, animated: false)
 					}
 				}
 			}

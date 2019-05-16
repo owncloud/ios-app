@@ -326,6 +326,26 @@
 "Cannot change permission" = "Cannot change permission";
 "Before you can set the permission\n%@,\n you must enter a password." = "Before you can set the permission\n%@,\n you must enter a password.";
 "Password Protected" = "Password Protected";
+"Pending Cloud Shares" = "Pending Cloud Shares";
+"Pending Shares" = "Pending Shares";
+"Shared with you" = "Shared with you";
+"Shared with others" = "Shared with others";
+"Shares" = "Shares";
+"Copy Private Link" = "Copy Private Link";
+"This link is unique for this resource, but grants no additional permissions. Recipients can request permissions from the owner." = "This link is unique for this resource, but grants no additional permissions. Recipients can request permissions from the owner.";
+"Accept Share failed" = "Accept Share failed";
+"Decline Share failed" = "Decline Share failed";
+"Accept" = "Accept";
+"Decline" = "Decline";
+"Decline Share" = "Decline Share";
+
+/* Quick Access view */
+"Quick Access" = "Quick Access";
+"Collection" = "Collection";
+"Recents" = "Recents";
+"Favorites"= "Favorites";
+"Images" = "Images";
+"PDF Documents" = "PDF Documents";
 
 /* Photo upload settings */
 "Media Upload" = "Media Upload";

@@ -72,5 +72,5 @@ extension OCCore {
 		}
 
 		return shareQuery
-	}	
+	}
 }

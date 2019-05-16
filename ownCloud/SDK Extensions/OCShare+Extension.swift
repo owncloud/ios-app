@@ -23,7 +23,7 @@ extension OCShare {
 
 	func permissionDescription() -> String {
 		var permissionsDescription : [String] = []
-		
+
 		if self.type == .link {
 			if self.canRead {
 				permissionsDescription.append("View".localized)
