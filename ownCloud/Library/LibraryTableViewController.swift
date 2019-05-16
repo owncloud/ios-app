@@ -229,34 +229,39 @@ class LibraryTableViewController: StaticTableViewController {
 				.where(.lastUsed, isGreaterThan: lastWeekDate),
 				.where(.name, isNotEqualTo: "/")
 				]), inputFilter:nil)
-			addCollectionRow(to: section, title: "Recents".localized, image: UIImage(named: "recents")!, query: query)
+			addCollectionRow(to: section, title: "Recents".localized, image: UIImage(named: "recents")!, query: query, actionHandler: nil)
 
 			let favoriteQuery = OCQuery(condition: .require([
 				.where(.isFavorite, isEqualTo: true)
 				]), inputFilter:nil)
-			addCollectionRow(to: section, title: "Favorites".localized, image: UIImage(named: "star")!, query: favoriteQuery)
+			addCollectionRow(to: section, title: "Favorites".localized, image: UIImage(named: "star")!, query: favoriteQuery, actionHandler: {
+				self.core?.refreshFavorites(completionHandler: { (_, _) in
+				})
+			})
 
 			let imageQuery = OCQuery(condition: .require([
 				.where(.mimeType, contains: "image")
 				]), inputFilter:nil)
-			addCollectionRow(to: section, title: "Images".localized, image: Theme.shared.image(for: "image", size: CGSize(width: 25, height: 25))!, query: imageQuery)
+			addCollectionRow(to: section, title: "Images".localized, image: Theme.shared.image(for: "image", size: CGSize(width: 25, height: 25))!, query: imageQuery, actionHandler: nil)
 
 			let pdfQuery = OCQuery(condition: .require([
 				.where(.mimeType, contains: "pdf")
 				]), inputFilter:nil)
-			addCollectionRow(to: section, title: "PDF Documents".localized, image: Theme.shared.image(for: "application-pdf", size: CGSize(width: 25, height: 25))!, query: pdfQuery)
+			addCollectionRow(to: section, title: "PDF Documents".localized, image: Theme.shared.image(for: "application-pdf", size: CGSize(width: 25, height: 25))!, query: pdfQuery, actionHandler: nil)
 		}
 	}
 
-	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage, query: OCQuery) {
+	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage, query: OCQuery, actionHandler: (() -> Void)?) {
 		let identifier = String(format:"%@-collection-row", title)
 		if section.row(withIdentifier: identifier) == nil, let core = core {
 			let row = StaticTableViewRow(rowWithAction: { (_, _) in
 
-				let favoritesFileListController = CustomFilelistTableViewController(core: core, query: query)
-				favoritesFileListController.title = title
-				self.navigationController?.pushViewController(favoritesFileListController, animated: true)
+				let customFileListController = CustomFilelistTableViewController(core: core, query: query)
+				customFileListController.title = title
+				customFileListController.refreshActionHandler = actionHandler
+				self.navigationController?.pushViewController(customFileListController, animated: true)
 
+				actionHandler?()
 			}, title: title, image: image, accessoryType: .disclosureIndicator, identifier: identifier)
 			section.add(row: row)
 		}

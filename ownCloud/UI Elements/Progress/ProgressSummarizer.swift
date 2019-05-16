@@ -369,7 +369,7 @@ class ProgressSummarizer: NSObject {
 										case .update:
 											multiMessage = NSString(format:"Updating %ld of %ld items…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
 
-										case .createShare, .updateShare, .deleteShare, .decideOnShare: break
+										case .createShare, .updateShare, .deleteShare, .decideOnShare, .filterFiles: break
 										case .none, .retrieveThumbnail, .retrieveItemList, .retrieveShares, .issueResponse: break
 									}
 

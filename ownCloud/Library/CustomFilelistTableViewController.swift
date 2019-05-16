@@ -31,6 +31,7 @@
 		var queryRefreshControl: UIRefreshControl?
 		var queryRefreshRateLimiter : OCRateLimiter = OCRateLimiter(minimumTime: 0.2)
 		var messageView : MessageView?
+		var refreshActionHandler: (() -> Void)?
 
 		// MARK: - Search
 		var searchController: UISearchController?
@@ -148,6 +149,7 @@
 		func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 			self.tableView.applyThemeCollection(collection)
 			self.searchController?.searchBar.applyThemeCollection(collection)
+			tableView.sectionIndexColor = collection.tintColor
 			if event == .update {
 				self.tableView.reloadData()
 			}
@@ -302,6 +304,7 @@ extension CustomFilelistTableViewController: UISearchResultsUpdating {
 		@objc func refreshQuery() {
 			if core?.connectionStatus == OCCoreConnectionStatus.online {
 				UIImpactFeedbackGenerator().impactOccurred()
+				refreshActionHandler?()
 				core?.reload(query)
 			} else {
 				if self.queryRefreshControl?.isRefreshing == true {
