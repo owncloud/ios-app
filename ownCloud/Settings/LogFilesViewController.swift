@@ -90,7 +90,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 		OCLogger.shared.pause()
 		self.populateLogFileList()
 
-		let removeAllButtonItem = UIBarButtonItem(title: "Delete All".localized, style: .done, target: self, action: #selector(removeAllLogs))
+		let removeAllButtonItem = UIBarButtonItem(title: "Delete all".localized, style: .done, target: self, action: #selector(removeAllLogs))
 		let flexibleSpaceButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 
 		self.toolbarItems = [flexibleSpaceButtonItem, removeAllButtonItem, flexibleSpaceButtonItem]
@@ -230,7 +230,11 @@ class LogFilesViewController : UITableViewController, Themeable {
 	}
 
 	@objc private func removeAllLogs() {
-		let alert = UIAlertController(with: "Delete all log files?".localized, message: "This action can't be undone.".localized, destructiveLabel: "Delete All".localized, preferredStyle: .alert, destructiveAction: {
+		let alert = UIAlertController(with: "Delete all log files?".localized,
+									  message: "This action can't be undone.".localized,
+									  destructiveLabel: "Delete all".localized,
+									  preferredStyle: .alert,
+									  destructiveAction: {
 			OCLogger.shared.pauseWriters(intermittentBlock: {
 				if let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter {
 					logFileWriter.cleanUpLogs(true)
