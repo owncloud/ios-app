@@ -87,6 +87,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		OCLogger.shared.pause()
 		self.populateLogFileList()
 
 		let removeAllButtonItem = UIBarButtonItem(title: "Delete All".localized, style: .done, target: self, action: #selector(removeAllLogs))
@@ -99,6 +100,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		self.navigationController?.setToolbarHidden(true, animated: false)
+		OCLogger.shared.resume()
 	}
 
 	deinit {
@@ -164,12 +166,12 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 	private func populateLogFileList() {
 		guard let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter else { return }
-		guard let appGroupURL = OCAppIdentity.shared.appGroupContainerURL else { return }
+		guard let appGroupLogsURL = OCAppIdentity.shared.appGroupLogsContainerURL else { return }
 		guard let logFiles = logFileWriter.logFiles() else { return }
 
 		for fileName in logFiles {
 			if let name = fileName as? String {
-				let logURL = appGroupURL.appendingPathComponent(name)
+				let logURL = appGroupLogsURL.appendingPathComponent(name)
 
 				var fileSize:Int64?
 				var creationDate:Date?
@@ -188,10 +190,10 @@ class LogFilesViewController : UITableViewController, Themeable {
 	}
 
 	private func shareLog(with fileName:String) {
-		guard let appGroupURL = OCAppIdentity.shared.appGroupContainerURL else { return }
+		guard let appGroupLogsURL = OCAppIdentity.shared.appGroupLogsContainerURL else { return }
 		let shareableFileName = fileName + ".txt"
 		let shareableLogURL = FileManager.default.temporaryDirectory.appendingPathComponent(shareableFileName)
-		let logURL = appGroupURL.appendingPathComponent(fileName)
+		let logURL = appGroupLogsURL.appendingPathComponent(fileName)
 
 		do {
 			if FileManager.default.fileExists(atPath: shareableLogURL.path) {
@@ -217,8 +219,8 @@ class LogFilesViewController : UITableViewController, Themeable {
 	}
 
 	private func removeLog(with fileName:String, indexPath:IndexPath) {
-		guard let appGroupURL = OCAppIdentity.shared.appGroupContainerURL else { return }
-		let logURL = appGroupURL.appendingPathComponent(fileName)
+		guard let appGroupLogsURL = OCAppIdentity.shared.appGroupLogsContainerURL else { return }
+		let logURL = appGroupLogsURL.appendingPathComponent(fileName)
 		do {
 			try FileManager.default.removeItem(at: logURL)
 			self.logFileEntries.remove(at: indexPath.row)
