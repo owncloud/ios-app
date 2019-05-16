@@ -119,6 +119,8 @@
 			sortBar?.delegate = self
 			sortBar?.sortMethod = self.sortMethod
 
+			self.addThemableBackgroundView()
+
 			tableView.tableHeaderView = sortBar
 			messageView = MessageView(add: self.view)
 		}

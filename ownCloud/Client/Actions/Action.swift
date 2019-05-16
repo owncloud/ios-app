@@ -390,7 +390,6 @@ extension Action {
 						let sharingViewController = GroupSharingTableViewController(core: core, item: item)
 						sharingViewController.shares = shares
 						let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
-						navigationController.modalPresentationStyle = .formSheet
 						viewController.present(navigationController, animated: true, completion: nil)
 					}
 				}, title: userTitle, subtitle: nil, image: UIImage(named: "group"), alignment: .left, accessoryType: .disclosureIndicator)
@@ -407,7 +406,6 @@ extension Action {
 						let sharingViewController = PublicLinkTableViewController(core: core, item: item)
 						sharingViewController.shares = shares
 						let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
-						navigationController.modalPresentationStyle = .formSheet
 						viewController.present(navigationController, animated: true, completion: nil)
 					}
 				}, title: linkTitle, subtitle: nil, image: UIImage(named: "link"), alignment: .left, accessoryType: .disclosureIndicator)
@@ -446,7 +444,6 @@ extension Action {
 			if let viewController = context.viewController, let core = context.core {
 				let sharingViewController = GroupSharingTableViewController(core: core, item: item)
 				let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
-				navigationController.modalPresentationStyle = .formSheet
 
 				viewController.present(navigationController, animated: true, completion: nil)
 			}
@@ -463,7 +460,6 @@ extension Action {
 				if let viewController = context.viewController {
 					let sharingViewController = PublicLinkTableViewController(core: core, item: item)
 					let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
-					navigationController.modalPresentationStyle = .formSheet
 
 					viewController.present(navigationController, animated: true, completion: nil)
 				}
