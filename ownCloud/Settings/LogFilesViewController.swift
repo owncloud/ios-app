@@ -75,7 +75,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 	override init(style: UITableView.Style) {
 		super.init(style: style)
-		NotificationCenter.default.addObserver(self, selector: #selector(handleLogRotationNotification), name:NSNotification.Name.OCLocalLogRotationNotificationName , object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(handleLogRotationNotification), name:NSNotification.Name.OCLogFileWriterLogRecordsChanged, object: nil)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -166,7 +166,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 		guard let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter else { return }
 		self.logRecords = logFileWriter.logRecords().sorted(by: { (record1, record2) in
 			if let date1 = record1.creationDate, let date2 = record2.creationDate {
-				return date1 > date2;
+				return date1 > date2
 			}
 			return false
 		})
