@@ -145,12 +145,14 @@ class LogSettingsViewController: StaticTableViewController {
 						self?.navigationController?.pushViewController(logFilesViewController, animated: true)
 					}, title: "Log Files".localized, accessoryType: .disclosureIndicator, identifier: "viewLogs")
 				logOutputSection?.add(row: logsRow)
-				logOutputSection?.footerTitle = "Up to 10 recent logs are kept on the device and each log can accumulate messages for the last 24 hours of the app use".localized
+				logOutputSection?.footerTitle = "Up to 10 recent logs are kept on the device and each log can accumulate messages for the last 24 hours of the app use. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.".localized
 
 				addSections.append(logOutputSection!)
 			}
 
 			// Privacy
+			// TODO: Reactivate the below code when the code base is reviewed in terms of correct masking of private data
+			#if false
 			if logPrivacySection == nil {
 				logPrivacySection = StaticTableViewSection(headerTitle: "Privacy".localized)
 
@@ -163,6 +165,7 @@ class LogSettingsViewController: StaticTableViewController {
 
 				addSections.append(logPrivacySection!)
 			}
+			#endif
 
 			if addSections.count > 0 {
 				self.addSections(addSections, animated: animated)

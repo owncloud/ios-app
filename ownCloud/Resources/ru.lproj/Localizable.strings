@@ -174,8 +174,6 @@
 "Share log file" = "Поделиться файлом журнала";
 "Reset log file" = "Сброс файла журнала";
 
-"Up to 10 recent logs are kept on the device and each log can accumulate messages for the last 24 hours of the app use" = "В памяти устройства сохраняется до 10 журналов. В каждом журнале содержатся записи о использовании приложения за период последних 24 часов";
-
 "Mask private data" = "Замаскировать конфиденциальные данные";
 "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Включение этой настройки приведёт к попытке замаскировать конфиденциальные данные, чтобы они не попали ни в один журнал. Однако поскольку журналирование — это средство для разработки и отладки, мы не можем гарантировать, что  включение этой настройки исключит любое появление конфиденциальной информации в файле журнала. Таким образом, если вы сомневаетесь, то прежде чем делиться файлом с кем-либо, просмотрите его и убедитесь, что в нём нет данных, которые вам не хотелось бы распространять.";
 

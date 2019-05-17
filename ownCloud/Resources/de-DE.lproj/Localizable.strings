@@ -193,8 +193,6 @@
 "Share log file" = "Protokolldatei teilen";
 "Reset log file" = "Protokolldatei zurücksetzen";
 
-"Up to 10 recent logs are kept on the device and each log can accumulate messages for the last 24 hours of the app use" = "Bis zu 10 Protokolle werden auf dem Gerät gespeichert. In einem Protokoll werden maximal die letzten 24 Stunden der App-Nutzung protokolliert";
-
 "Mask private data" = "Private Daten maskieren";
 "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Wenn Sie diese Option aktivieren, wird versucht, private Daten zu maskieren, so dass sie nicht Teil des Protokolls werden. Da es sich bei der Protokollierung jedoch um eine Entwicklungs- und Debugging-Funktion handelt, können wir nicht garantieren, dass die Protokolldatei auch bei aktivierter Option frei von privaten Daten ist. Schauen Sie sich daher bitte jede Protokolldatei an und überprüfen Sie, ob sie frei von Daten ist, die Sie nicht gerne weitergeben, bevor Sie sie mit anderen teilen.";
 
