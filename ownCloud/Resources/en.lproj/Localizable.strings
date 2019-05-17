@@ -200,6 +200,8 @@
 "Share log file" = "Share log file";
 "Reset log file" = "Reset log file";
 
+"Up to 10 recent logs are kept on the device and each log can accumulate messages for the last 24 hours of the app use" = "Up to 10 recent logs are kept on the device and each log can accumulate messages for the last 24 hours of the app use";
+
 "Mask private data" = "Mask private data";
 "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.";
 

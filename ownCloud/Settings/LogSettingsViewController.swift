@@ -145,6 +145,7 @@ class LogSettingsViewController: StaticTableViewController {
 						self?.navigationController?.pushViewController(logFilesViewController, animated: true)
 					}, title: "Log Files".localized, accessoryType: .disclosureIndicator, identifier: "viewLogs")
 				logOutputSection?.add(row: logsRow)
+				logOutputSection?.footerTitle = "Up to 10 recent logs are kept on the device and each log can accumulate messages for the last 24 hours of the app use".localized
 
 				addSections.append(logOutputSection!)
 			}
