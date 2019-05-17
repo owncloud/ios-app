@@ -179,6 +179,7 @@
 
 /* Log settings */
 "Log Files" = "Log Files";
+"Browse log files" = "Browse log files";
 "Share" = "Share";
 "Delete all log files?" = "Delete all log files?";
 "Delete all" = "Delete all";
@@ -200,7 +201,9 @@
 "Share log file" = "Share log file";
 "Reset log file" = "Reset log file";
 
-"Up to 10 recent logs are kept on the device and each log can accumulate messages for the last 24 hours of the app use. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "Up to 10 recent logs are kept on the device and each log can accumulate messages for the last 24 hours of the app use. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.";
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to ownCloud servers. Sharing logs with others is sole user responsibility." = "When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to ownCloud servers. Sharing logs with others is sole user responsibility.";
+
+"The last 10 logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "The last 10 logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.";
 
 "Mask private data" = "Mask private data";
 "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.";

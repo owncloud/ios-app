@@ -172,6 +172,7 @@
 
 /* Log settings */
 "Log Files" = "Protokolle";
+"Browse log files" = "Protokolle einsehen";
 "Share" = "Teilen";
 "Delete all log files?" = "Alle Protokolle entfernen?";
 "Delete all" = "Alle entfernen";

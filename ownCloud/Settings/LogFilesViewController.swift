@@ -28,10 +28,11 @@ class LogFileTableViewCell : ThemeTableViewCell {
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
 
+		let image = UIImage(named: "open-in")
 		let shareButton = UIButton(type: .system)
-		shareButton.setImage(UIImage(named: "open-in"), for: .normal)
+		shareButton.setImage(image, for: .normal)
 		shareButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
-		shareButton.frame = CGRect(origin: CGPoint(x:0.0, y:0.0), size: shareButton.imageView!.image!.size)
+		shareButton.frame = CGRect(origin: CGPoint(x:0.0, y:0.0), size: image!.size)
 		shareButton.accessibilityLabel = "Share".localized
 		self.accessoryView = shareButton
 	}
@@ -72,6 +73,15 @@ class LogFilesViewController : UITableViewController, Themeable {
 		return fmtr
 	}()
 
+	override init(style: UITableView.Style) {
+		super.init(style: style)
+		NotificationCenter.default.addObserver(self, selector: #selector(handleLogRotationNotification), name:NSNotification.Name.OCLocalLogRotationNotificationName , object: nil)
+	}
+
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("not implemented")
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		Theme.shared.register(client: self, applyImmediately: true)
@@ -88,17 +98,15 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 		self.toolbarItems = [flexibleSpaceButtonItem, removeAllButtonItem, flexibleSpaceButtonItem]
 		self.navigationController?.setToolbarHidden(false, animated: false)
-
-		NotificationCenter.default.addObserver(self, selector: #selector(handleLogRotationNotification), name:NSNotification.Name.OCLocalLogRotationNotificationName , object: nil)
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		self.navigationController?.setToolbarHidden(true, animated: false)
-		NotificationCenter.default.removeObserver(self)
 	}
 
 	deinit {
+		NotificationCenter.default.removeObserver(self)
 		Theme.shared.unregister(client: self)
 	}
 
@@ -156,7 +164,12 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 	private func populateLogFileList() {
 		guard let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter else { return }
-		self.logRecords = logFileWriter.logRecords()
+		self.logRecords = logFileWriter.logRecords().sorted(by: { (record1, record2) in
+			if let date1 = record1.creationDate, let date2 = record2.creationDate {
+				return date1 > date2;
+			}
+			return false
+		})
 		self.tableView.reloadData()
 	}
 

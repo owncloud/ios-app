@@ -163,6 +163,7 @@
 
 /* Log settings */
 "Log Files" = "Log Files";
+"Browse log files" = "Browse log files";
 "Share" = "Share";
 "Delete all log files?" = "Delete all log files?";
 "Delete all" = "Delete all";

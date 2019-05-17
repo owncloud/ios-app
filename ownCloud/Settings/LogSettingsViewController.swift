@@ -70,6 +70,8 @@ class LogSettingsViewController: StaticTableViewController {
 			}
 		}, title: "Enable logging".localized, value: LogSettingsViewController.loggingEnabled, identifier: "enable-logging"))
 
+		loggingSection.footerTitle = "When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to ownCloud servers. Sharing logs with others is sole user responsibility.".localized
+		
 		// Update section visibility
 		self.addSection(loggingSection)
 
@@ -123,8 +125,6 @@ class LogSettingsViewController: StaticTableViewController {
 			if logOutputSection == nil {
 				logOutputSection = StaticTableViewSection(headerTitle: "Log Destinations".localized)
 
-				var logFileWriterSwitchRow : StaticTableViewRow?
-
 				for writer in OCLogger.shared.writers {
 					let row = StaticTableViewRow(switchWithAction: { (row, _) in
 						if let enabled = row.value as? Bool {
@@ -132,20 +132,16 @@ class LogSettingsViewController: StaticTableViewController {
 						}
 					}, title: writer.name, value: writer.enabled, identifier: writer.identifier.rawValue)
 
-					if writer.identifier == .writerFile {
-						logFileWriterSwitchRow = row
-					}
-
 					logOutputSection?.add(row: row)
 				}
 
 				// Creation of the frequency row.
 				let logsRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
-						let logFilesViewController = LogFilesViewController()
+						let logFilesViewController = LogFilesViewController(style: .plain)
 						self?.navigationController?.pushViewController(logFilesViewController, animated: true)
-					}, title: "Log Files".localized, accessoryType: .disclosureIndicator, identifier: "viewLogs")
+					}, title: "Browse log files".localized, accessoryType: .disclosureIndicator, identifier: "viewLogs")
 				logOutputSection?.add(row: logsRow)
-				logOutputSection?.footerTitle = "Up to 10 recent logs are kept on the device and each log can accumulate messages for the last 24 hours of the app use. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.".localized
+				logOutputSection?.footerTitle = "The last 10 logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.".localized
 
 				addSections.append(logOutputSection!)
 			}

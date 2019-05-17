@@ -154,6 +154,7 @@
 
 /* Log settings */
 "Log Files" = "Журналы";
+"Browse log files" = "Просмотреть журналы";
 "Share" = "Поделиться";
 "Delete all log files?" = "Удалить все журналы?";
 "Delete all" = "Удалить все";
