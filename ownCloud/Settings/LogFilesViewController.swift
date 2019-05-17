@@ -81,7 +81,6 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		OCLogger.shared.pause()
 		self.populateLogFileList()
 
 		let removeAllButtonItem = UIBarButtonItem(title: "Delete all".localized, style: .done, target: self, action: #selector(removeAllLogs))
@@ -89,12 +88,14 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 		self.toolbarItems = [flexibleSpaceButtonItem, removeAllButtonItem, flexibleSpaceButtonItem]
 		self.navigationController?.setToolbarHidden(false, animated: false)
+
+		NotificationCenter.default.addObserver(self, selector: #selector(handleLogRotationNotification), name:NSNotification.Name.OCLocalLogRotationNotificationName , object: nil)
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		self.navigationController?.setToolbarHidden(true, animated: false)
-		OCLogger.shared.resume()
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	deinit {
@@ -213,5 +214,9 @@ class LogFilesViewController : UITableViewController, Themeable {
 		})
 
 		self.present(alert, animated: true, completion: nil)
+	}
+
+	@objc private func handleLogRotationNotification() {
+		populateLogFileList()
 	}
 }
