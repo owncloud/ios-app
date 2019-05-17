@@ -132,10 +132,10 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: LogFileTableViewCell.identifier, for: indexPath) as? LogFileTableViewCell
-		let logEntry = self.logRecords[indexPath.row]
-		cell?.textLabel?.text = logEntry.truncatedName()
-		if let date = logEntry.creationDate {
-			cell?.detailTextLabel?.text = "\(self.dateFormatter.string(from: date)), \(self.byteCounterFormatter.string(fromByteCount: logEntry.size))"
+		let logRecord = self.logRecords[indexPath.row]
+		cell?.textLabel?.text = logRecord.truncatedName()
+		if let date = logRecord.creationDate {
+			cell?.detailTextLabel?.text = "\(self.dateFormatter.string(from: date)), \(self.byteCounterFormatter.string(fromByteCount: logRecord.size))"
 		}
 
 		cell?.shareAction = { [weak self] (cell) in
@@ -184,7 +184,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 				try FileManager.default.removeItem(at: shareableLogURL)
 			}
 
-			try FileManager.default.copyItem(atPath: logRecord.fullPath(), toPath: shareableLogURL.path)
+			try FileManager.default.copyItem(atPath: logRecord.url.path, toPath: shareableLogURL.path)
 		} catch {
 		}
 
