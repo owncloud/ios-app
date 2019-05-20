@@ -40,8 +40,12 @@ class StaticTableViewController: UITableViewController, Themeable {
 		self.insertSection(section, at: sections.count, animated: animateThis)
 	}
 
-	func insertSection(_ section: StaticTableViewSection, at index: Int, animated: Bool = false) {
+	func insertSection(_ section: StaticTableViewSection, at index: Int, animated: Bool = false, completionHandler: ((_ section: StaticTableViewSection) -> Void)? = nil) {
 		section.viewController = self
+		CATransaction.begin()
+		CATransaction.setCompletionBlock({
+			completionHandler?(section)
+		})
 
 		if animated {
 			tableView.performBatchUpdates({
@@ -53,6 +57,8 @@ class StaticTableViewController: UITableViewController, Themeable {
 
 			tableView.reloadData()
 		}
+
+		CATransaction.commit()
 	}
 
 	func removeSection(_ section: StaticTableViewSection, animated: Bool = false) {

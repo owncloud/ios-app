@@ -193,7 +193,9 @@ class Action : NSObject {
 					if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context) {
 						shareRows.append(publicLinkRow)
 					}
-					tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: shareRows), at: 0, animated: true)
+					tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: shareRows), at: 0, animated: false, completionHandler: { (_) in
+						updatePreferredContenSize(for: moreViewController)
+					})
 				}
 			}
 		}
@@ -427,7 +429,9 @@ private extension Action {
 			tableViewController.removeSection(section)
 		}
 		if rows.count > 0 {
-			tableViewController.insertSection(MoreStaticTableViewSection(identifier: "share-section", rows: rows), at: 0, animated: false)
+			tableViewController.insertSection(MoreStaticTableViewSection(identifier: "share-section", rows: rows), at: 0, animated: false, completionHandler: { (_) in
+				updatePreferredContenSize(for: contentViewController)
+			})
 		}
 	}
 
@@ -469,5 +473,14 @@ private extension Action {
 		}
 
 		return nil
+	}
+
+	private class func updatePreferredContenSize(for contentViewController: MoreViewController) {
+		if let scrollView = contentViewController.view as? UIScrollView {
+			var contentSize = scrollView.contentSize
+			let safeBottom = contentViewController.view?.window?.safeAreaInsets.bottom ?? 0
+			contentSize.height += safeBottom
+			contentViewController.preferredContentSize = contentSize
+		}
 	}
 }
