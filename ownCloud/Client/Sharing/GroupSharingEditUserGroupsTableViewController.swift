@@ -24,7 +24,7 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 	// MARK: - Instance Variables
 	var share : OCShare?
 	var reshares : [OCShare]?
-	var core : OCCore?
+	weak var core : OCCore?
 	var showSubtitles : Bool = false
 
 	// MARK: - Init

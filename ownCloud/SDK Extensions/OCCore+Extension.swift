@@ -22,55 +22,64 @@ import ownCloudSDK
 extension OCCore {
 
 	func unifiedShares(for item: OCItem, completionHandler: @escaping (_ shares: [OCShare]) -> Void) {
-		let shareQuery = OCShareQuery(scope: .itemWithReshares, item: item)
-		start(shareQuery!)
-		shareQuery?.initialPopulationHandler = { query in
-			let sharesWithReshares = query.queryResults
-			self.stop(shareQuery!)
+		if let shareQuery = OCShareQuery(scope: .itemWithReshares, item: item) {
+			shareQuery.initialPopulationHandler = { [weak self] query in
+				let sharesWithReshares = query.queryResults
+				self?.stop(shareQuery)
 
-			let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item)
-			self.start(shareQuery!)
-			shareQuery?.initialPopulationHandler = { query in
-				let sharesWithMe = query.queryResults.filter({ (share) -> Bool in
+				if let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item) {
+					shareQuery.initialPopulationHandler = { query in
+						let sharesWithMe = query.queryResults.filter({ (share) -> Bool in
+							if share.itemPath == item.path {
+								return true
+							}
+							return false
+						})
+
+						var shares : [OCShare] = []
+						shares.append(contentsOf: sharesWithMe)
+						shares.append(contentsOf: sharesWithReshares)
+						self?.stop(shareQuery)
+
+						completionHandler(shares)
+					}
+					self?.start(shareQuery)
+				}
+			}
+			start(shareQuery)
+		}
+	}
+
+	func sharesSharedWithMe(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void) -> OCShareQuery? {
+		if let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item) {
+			shareQuery.initialPopulationHandler = { query in
+				let shares = query.queryResults.filter({ (share) -> Bool in
 					if share.itemPath == item.path {
 						return true
 					}
 					return false
 				})
-
-				var shares : [OCShare] = []
-				shares.append(contentsOf: sharesWithMe)
-				shares.append(contentsOf: sharesWithReshares)
-				self.stop(shareQuery!)
-
-				completionHandler(shares)
+				initialPopulationHandler(shares)
 			}
+			start(shareQuery)
+			return shareQuery
 		}
+
+		return nil
 	}
 
-	func sharesSharedWithMe(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void) -> OCShareQuery? {
-		let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item)
-		start(shareQuery!)
-		shareQuery?.initialPopulationHandler = { query in
-			let shares = query.queryResults.filter({ (share) -> Bool in
-				if share.itemPath == item.path {
-					return true
-				}
-				return false
-			})
-			initialPopulationHandler(shares)
+	func sharesWithReshares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, changesAvailableNotificationHandler: @escaping (_ shares: [OCShare]) -> Void) -> OCShareQuery? {
+		if let shareQuery = OCShareQuery(scope: .itemWithReshares, item: item) {
+			shareQuery.initialPopulationHandler = { query in
+				initialPopulationHandler(query.queryResults)
+			}
+			shareQuery.changesAvailableNotificationHandler = { query in
+				changesAvailableNotificationHandler(query.queryResults)
+			}
+			start(shareQuery)
+			return shareQuery
 		}
 
-		return shareQuery
-	}
-
-	func sharesWithReshares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void) -> OCShareQuery? {
-		let shareQuery = OCShareQuery(scope: .itemWithReshares, item: item)
-		start(shareQuery!)
-		shareQuery?.initialPopulationHandler = { query in
-			initialPopulationHandler(query.queryResults)
-		}
-
-		return shareQuery
+		return nil
 	}
 }

@@ -65,11 +65,8 @@ class PublicLinkTableViewController: StaticTableViewController {
 					self.addShareSections()
 				}
 			}
-		})
-
-		shareQuery?.refreshInterval = 2
-		shareQuery?.changesAvailableNotificationHandler = { query in
-			let sharesWithReshares = query.queryResults.filter { (OCShare) -> Bool in
+		}, changesAvailableNotificationHandler: { (sharesWithReshares) in
+			let sharesWithReshares = sharesWithReshares.filter { (OCShare) -> Bool in
 				if OCShare.type == .link {
 					return true
 				}
@@ -81,7 +78,8 @@ class PublicLinkTableViewController: StaticTableViewController {
 				self.addShareSections()
 				self.handleEmptyShares()
 			}
-		}
+		})
+		shareQuery?.refreshInterval = 2
 	}
 
 	@objc func dismissView() {

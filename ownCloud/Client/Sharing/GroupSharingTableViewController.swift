@@ -117,11 +117,10 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 					self.addActionShareSection()
 				}
 			})
-		})
 
-		shareQuery?.refreshInterval = 2
-		shareQuery?.changesAvailableNotificationHandler = { query in
-			let sharesWithReshares = query.queryResults.filter { (OCShare) -> Bool in
+
+		}, changesAvailableNotificationHandler: { (sharesWithReshares) in
+			let sharesWithReshares = sharesWithReshares.filter { (OCShare) -> Bool in
 				if OCShare.type != .link {
 					return true
 				}
@@ -134,7 +133,8 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 
 				self.addActionShareSection()
 			}
-		}
+		})
+		shareQuery?.refreshInterval = 2
 	}
 
 	@objc func dismissView() {
@@ -234,16 +234,18 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 					}
 					return false
 				}
-				if canEdit(share: share) {
-					shareRows.append( StaticTableViewRow(rowWithAction: { (_, _) in
-						let editSharingViewController = GroupSharingEditUserGroupsTableViewController(style: .grouped)
-						editSharingViewController.share = share
-						editSharingViewController.reshares = resharedUsers
-						editSharingViewController.core = self.core
-						self.navigationController?.pushViewController(editSharingViewController, animated: true)
-					}, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: .disclosureIndicator) )
-				} else {
-					shareRows.append( StaticTableViewRow(rowWithAction: nil, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: .none) )
+				if let recipient = share.recipient {
+					if canEdit(share: share) {
+						shareRows.append( StaticTableViewRow(rowWithAction: { (_, _) in
+							let editSharingViewController = GroupSharingEditUserGroupsTableViewController(style: .grouped)
+							editSharingViewController.share = share
+							editSharingViewController.reshares = resharedUsers
+							editSharingViewController.core = self.core
+							self.navigationController?.pushViewController(editSharingViewController, animated: true)
+						}, title: recipient.displayName!, subtitle: share.permissionDescription(), image: recipient.user?.avatar, accessoryType: .disclosureIndicator) )
+					} else {
+						shareRows.append( StaticTableViewRow(rowWithAction: nil, title: recipient.displayName!, subtitle: share.permissionDescription(), image: recipient.user?.avatar, accessoryType: .none) )
+					}
 				}
 			}
 			let sectionType = "share-section-\(String(type.rawValue))"
@@ -335,6 +337,12 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 	func updateSearchResults(for searchController: UISearchController) {
 		guard let text = searchController.searchBar.text else { return }
 		if text.count > core?.connection.capabilities?.sharingSearchMinLength?.intValue ?? 1 {
+			if let recipients = recipientSearchController?.recipients, recipients.count > 0,
+				recipientSearchController?.searchTerm == text,
+				self.sectionForIdentifier("search-results") == nil {
+				self.searchControllerHasNewResults(recipientSearchController!, error: nil)
+			}
+
 			recipientSearchController?.searchTerm = text
 		} else if searchController.isActive {
 			resetTable(showShares: false)

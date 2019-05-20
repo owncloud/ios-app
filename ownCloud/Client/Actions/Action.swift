@@ -296,12 +296,12 @@ class Action : NSObject {
 		})
 
 		let image = self.icon
-		//if alertAction.responds(to: NSSelectorFromString("setImage:")) {
+		if alertAction.responds(to: NSSelectorFromString("setImage:")) {
 			alertAction.setValue(image, forKey: "image")
-		//}
-		//if alertAction.responds(to: NSSelectorFromString("setTitleTextAlignment:")) {
+		}
+		if alertAction.responds(to: NSSelectorFromString("_setTitleTextAlignment:")) {
 			alertAction.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
-		//}
+		}
 
 		return alertAction
 	}
