@@ -141,7 +141,7 @@ class LogSettingsViewController: StaticTableViewController {
 						self?.navigationController?.pushViewController(logFilesViewController, animated: true)
 					}, title: "Browse log files".localized, accessoryType: .disclosureIndicator, identifier: "viewLogs")
 				logOutputSection?.add(row: logsRow)
-				logOutputSection?.footerTitle = "The last 10 logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.".localized
+				logOutputSection?.footerTitle = "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.".localized
 
 				addSections.append(logOutputSection!)
 			}

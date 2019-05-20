@@ -68,7 +68,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 	lazy var dateFormatter: DateFormatter = {
 		let fmtr = DateFormatter()
-		fmtr.dateStyle = .short
+		fmtr.dateStyle = .medium
 		fmtr.timeStyle = .medium
 		return fmtr
 	}()
@@ -164,19 +164,31 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 	private func populateLogFileList() {
 		guard let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter else { return }
-		self.logRecords = logFileWriter.logRecords().sorted(by: { (record1, record2) in
-			if let date1 = record1.creationDate, let date2 = record2.creationDate {
-				return date1 > date2
-			}
-			return false
-		})
-		self.tableView.reloadData()
+		OnMainThread {
+			self.logRecords = logFileWriter.logRecords().sorted(by: { (record1, record2) in
+				if let date1 = record1.creationDate, let date2 = record2.creationDate {
+					return date1 > date2
+				}
+				return false
+			})
+			self.tableView.reloadData()
+		}
 	}
 
 	private func shareLogRecord(at indexPath:IndexPath) {
 
 		let logRecord = self.logRecords[indexPath.row]
-		let shareableFileName = logRecord.name + ".txt"
+
+		// Create a file name for sharing with format ownCloud_<date>_<time>.log.txt
+		var time = ""
+		if let creationDate = logRecord.creationDate {
+			let delimiteresRegex = try? NSRegularExpression(pattern: "[/ ,:]", options: .caseInsensitive)
+			let timestamp = self.dateFormatter.string(from: creationDate)
+			time = delimiteresRegex?.stringByReplacingMatches(in: timestamp, options: .withoutAnchoringBounds, range: NSRange(location: 0, length: timestamp.count), withTemplate: "_") ?? ""
+
+		}
+		let shareableFileName = "ownCloud_" + time + ".log.txt"
+
 		let shareableLogURL = FileManager.default.temporaryDirectory.appendingPathComponent(shareableFileName)
 
 		do {
@@ -204,13 +216,18 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 	private func removeLogRecord(at indexPath:IndexPath) {
 
-		guard let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter else { return }
-
 		let record = self.logRecords[indexPath.row]
-		logFileWriter.deleteLogRecord(record)
 
-		self.logRecords.remove(at: indexPath.row)
-		self.tableView.deleteRows(at: [indexPath], with: .automatic)
+		OCLogger.shared.pauseWriters(intermittentBlock: {
+			if let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter {
+				logFileWriter.deleteLogRecord(record)
+				OnMainThread {
+					self.logRecords.remove(at: indexPath.row)
+					self.tableView.deleteRows(at: [indexPath], with: .automatic)
+					self.populateLogFileList()
+				}
+			}
+		})
 	}
 
 	@objc private func removeAllLogs() {
@@ -230,8 +247,6 @@ class LogFilesViewController : UITableViewController, Themeable {
 	}
 
 	@objc private func handleLogRotationNotification() {
-		OnMainThread {
-			self.populateLogFileList()
-		}
+		self.populateLogFileList()
 	}
 }
