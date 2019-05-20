@@ -265,6 +265,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		if let cell = self.cell as? HeaderActionTableViewCell {
 			cell.headerLabel.text = headerTitle
 			cell.headerLabel.textAlignment = headerAlignment
+			cell.headerLabel.numberOfLines = 0
 			cell.actionLabel.text = title
 			cell.actionLabel.textAlignment = alignment
 		}
