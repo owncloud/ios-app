@@ -50,9 +50,9 @@ extension OCCore {
 		}
 	}
 
-	func sharesSharedWithMe(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void) -> OCShareQuery? {
+	@discardableResult func sharesSharedWithMe(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, keepRunning: Bool = false) -> OCShareQuery? {
 		if let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item) {
-			shareQuery.initialPopulationHandler = { query in
+			shareQuery.initialPopulationHandler = { [weak self] query in
 				let shares = query.queryResults.filter({ (share) -> Bool in
 					if share.itemPath == item.path {
 						return true
@@ -60,24 +60,34 @@ extension OCCore {
 					return false
 				})
 				initialPopulationHandler(shares)
+
+				if !keepRunning {
+					self?.stop(query)
+				}
 			}
 			start(shareQuery)
-			return shareQuery
+
+			return keepRunning ? shareQuery : nil
 		}
 
 		return nil
 	}
 
-	func sharesWithReshares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, changesAvailableNotificationHandler: @escaping (_ shares: [OCShare]) -> Void) -> OCShareQuery? {
+	@discardableResult func sharesWithReshares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, changesAvailableNotificationHandler: @escaping (_ shares: [OCShare]) -> Void, keepRunning: Bool) -> OCShareQuery? {
 		if let shareQuery = OCShareQuery(scope: .itemWithReshares, item: item) {
-			shareQuery.initialPopulationHandler = { query in
+			shareQuery.initialPopulationHandler = { [weak self] query in
 				initialPopulationHandler(query.queryResults)
+
+				if !keepRunning {
+					self?.stop(query)
+				}
 			}
 			shareQuery.changesAvailableNotificationHandler = { query in
 				changesAvailableNotificationHandler(query.queryResults)
 			}
 			start(shareQuery)
-			return shareQuery
+
+			return keepRunning ? shareQuery : nil
 		}
 
 		return nil

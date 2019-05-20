@@ -36,6 +36,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 		super.viewDidLoad()
 
 		self.navigationController?.navigationBar.prefersLargeTitles = false
+		self.tableView.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 		prepareItems()
 	}
 

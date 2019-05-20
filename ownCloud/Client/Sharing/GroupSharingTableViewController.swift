@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class GroupSharingTableViewController: StaticTableViewController, UISearchResultsUpdating, UISearchBarDelegate, OCRecipientSearchControllerDelegate {
+class GroupSharingTableViewController: SharingTableViewController, UISearchResultsUpdating, UISearchBarDelegate, OCRecipientSearchControllerDelegate {
 
 	// MARK: - Instance Variables
 	var shares : [OCShare] = [] {
@@ -37,19 +37,15 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 			}
 		}
 	}
-	weak var core : OCCore?
-	var item : OCItem
 	var searchController : UISearchController?
 	var recipientSearchController : OCRecipientSearchController?
 	var meCanShareItem : Bool = false
-	var messageView : MessageView?
-	var shareQuery : OCShareQuery?
+	var shouldStartSearch : Bool = false
 
 	// MARK: - Init & Deinit
 
-	public init(core inCore: OCCore, item inItem: OCItem) {
-		core = inCore
-		item = inItem
+	override public init(core inCore: OCCore, item inItem: OCItem) {
+		super.init(core: inCore, item: inItem)
 
 		if item.isShareable {
 			if item.isSharedWithUser == false {
@@ -58,8 +54,6 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 				meCanShareItem = true
 			}
 		}
-
-		super.init(style: .grouped)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -87,82 +81,64 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 		messageView = MessageView(add: self.view)
 
 		self.navigationItem.title = "Sharing".localized
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissView))
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
 
 		addHeaderView()
 
-		shareQuery = core?.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
+		shareQuery = core?.sharesWithReshares(for: item, initialPopulationHandler: { [weak self] (sharesWithReshares) in
+			guard let item = self?.item else { return }
+
 			if sharesWithReshares.count > 0 {
-				self.shares = sharesWithReshares.filter { (OCShare) -> Bool in
-					if OCShare.type != .link {
+				self?.shares = sharesWithReshares.filter { (share) -> Bool in
+					if share.type != .link {
 						return true
 					}
 					return false
 				}
 				OnMainThread {
-					self.addShareSections()
+					self?.addShareSections()
 				}
 			}
-			_ = self.core?.sharesSharedWithMe(for: self.item, initialPopulationHandler: { (sharesWithMe) in
+
+			self?.core?.sharesSharedWithMe(for: item, initialPopulationHandler: { [weak self] (sharesWithMe) in
 				OnMainThread {
 					if sharesWithMe.count > 0 {
 						var shares : [OCShare] = []
 						shares.append(contentsOf: sharesWithMe)
 						shares.append(contentsOf: sharesWithReshares)
-						self.shares = shares
-						self.removeShareSections()
-						self.addShareSections()
+						self?.shares = shares
+						self?.removeShareSections()
+						self?.addShareSections()
 					}
 
-					self.addActionShareSection()
+					self?.addActionShareSection()
 				}
 			})
-
-
-		}, changesAvailableNotificationHandler: { (sharesWithReshares) in
-			let sharesWithReshares = sharesWithReshares.filter { (OCShare) -> Bool in
-				if OCShare.type != .link {
-					return true
+			}, changesAvailableNotificationHandler: { [weak self] (sharesWithReshares) in
+				let sharesWithReshares = sharesWithReshares.filter { (share) -> Bool in
+					if share.type != .link {
+						return true
+					}
+					return false
 				}
-				return false
-			}
-			self.shares = sharesWithReshares
-			OnMainThread {
-				self.removeShareSections()
-				self.addShareSections()
+				self?.shares = sharesWithReshares
+				OnMainThread {
+					self?.removeShareSections()
+					self?.addShareSections()
 
-				self.addActionShareSection()
-			}
-		})
+					self?.addActionShareSection()
+				}
+			}, keepRunning: true)
 		shareQuery?.refreshInterval = 2
 	}
 
-	@objc func dismissView() {
-		if let query = self.shareQuery {
-			self.core?.stop(query)
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		if shouldStartSearch {
+			shouldStartSearch = false
+			// Setting search bar to first responder does only work, if view did appeared
+			activateRecipienSearch()
 		}
-		dismissAnimated()
-	}
-
-	// MARK: - Header View
-
-	func addHeaderView() {
-		guard let core = core else { return }
-		let containerView = UIView()
-		containerView.translatesAutoresizingMaskIntoConstraints = false
-
-		let headerView = MoreViewHeader(for: item, with: core, favorite: false)
-		containerView.addSubview(headerView)
-		self.tableView.tableHeaderView = containerView
-
-		containerView.centerXAnchor.constraint(equalTo: self.tableView.centerXAnchor).isActive = true
-		containerView.widthAnchor.constraint(equalTo: self.tableView.widthAnchor).isActive = true
-		containerView.topAnchor.constraint(equalTo: self.tableView.topAnchor).isActive = true
-		containerView.heightAnchor.constraint(equalTo: headerView.heightAnchor).isActive = true
-
-		self.tableView.tableHeaderView?.layoutIfNeeded()
-		self.tableView.tableHeaderView = self.tableView.tableHeaderView
-		self.tableView.tableHeaderView?.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 
 	// MARK: - Action Section
@@ -430,6 +406,11 @@ class GroupSharingTableViewController: StaticTableViewController, UISearchResult
 		} else {
 			self.searchController?.searchBar.isLoading = false
 		}
+	}
+
+	func activateRecipienSearch() {
+		self.searchController?.isActive = true
+		self.searchController?.searchBar.becomeFirstResponder()
 	}
 
 	// MARK: TableView Delegate

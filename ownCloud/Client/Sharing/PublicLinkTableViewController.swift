@@ -19,27 +19,10 @@
 import UIKit
 import ownCloudSDK
 
-class PublicLinkTableViewController: StaticTableViewController {
+class PublicLinkTableViewController: SharingTableViewController {
 
 	// MARK: - Instance Variables
 	var shares : [OCShare] = []
-	weak var core : OCCore?
-	var item : OCItem
-	var messageView : MessageView?
-	var shareQuery : OCShareQuery?
-
-	// MARK: - Init & Deinit
-
-	public init(core inCore: OCCore, item inItem: OCItem) {
-		core = inCore
-		item = inItem
-
-		super.init(style: .grouped)
-	}
-
-	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -47,7 +30,7 @@ class PublicLinkTableViewController: StaticTableViewController {
 		messageView = MessageView(add: self.view)
 
 		self.navigationItem.title = "Public Links".localized
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissView))
+		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
 		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPublicLink))
 
 		addHeaderView()
@@ -55,8 +38,8 @@ class PublicLinkTableViewController: StaticTableViewController {
 
 		shareQuery = core?.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
 			if sharesWithReshares.count > 0 {
-				self.shares = sharesWithReshares.filter { (OCShare) -> Bool in
-					if OCShare.type == .link {
+				self.shares = sharesWithReshares.filter { (share) -> Bool in
+					if share.type == .link {
 						return true
 					}
 					return false
@@ -66,8 +49,8 @@ class PublicLinkTableViewController: StaticTableViewController {
 				}
 			}
 		}, changesAvailableNotificationHandler: { (sharesWithReshares) in
-			let sharesWithReshares = sharesWithReshares.filter { (OCShare) -> Bool in
-				if OCShare.type == .link {
+			let sharesWithReshares = sharesWithReshares.filter { (share) -> Bool in
+				if share.type == .link {
 					return true
 				}
 				return false
@@ -78,41 +61,13 @@ class PublicLinkTableViewController: StaticTableViewController {
 				self.addShareSections()
 				self.handleEmptyShares()
 			}
-		})
+		}, keepRunning: true)
 		shareQuery?.refreshInterval = 2
-	}
-
-	@objc func dismissView() {
-		if let query = self.shareQuery {
-			self.core?.stop(query)
-		}
-		dismissAnimated()
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		handleEmptyShares()
-	}
-
-	// MARK: - Header View
-
-	func addHeaderView() {
-		guard let core = core else { return }
-		let containerView = UIView()
-		containerView.translatesAutoresizingMaskIntoConstraints = false
-
-		let headerView = MoreViewHeader(for: item, with: core, favorite: false)
-		containerView.addSubview(headerView)
-		self.tableView.tableHeaderView = containerView
-
-		containerView.centerXAnchor.constraint(equalTo: self.tableView.centerXAnchor).isActive = true
-		containerView.widthAnchor.constraint(equalTo: self.tableView.widthAnchor).isActive = true
-		containerView.topAnchor.constraint(equalTo: self.tableView.topAnchor).isActive = true
-		containerView.heightAnchor.constraint(equalTo: headerView.heightAnchor).isActive = true
-
-		self.tableView.tableHeaderView?.layoutIfNeeded()
-		self.tableView.tableHeaderView = self.tableView.tableHeaderView
-		self.tableView.tableHeaderView?.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 
 	// MARK: - Sharing UI

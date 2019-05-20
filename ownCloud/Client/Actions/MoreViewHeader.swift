@@ -165,6 +165,7 @@ class MoreViewHeader: UIView {
 		} else {
 			item.isFavorite = true
 		}
+		self.updateFavoriteButtonImage()
 		core?.update(item, properties: [OCItemPropertyName.isFavorite], options: nil, resultHandler: { (error, _, _, _) in
 			if error == nil {
 				OnMainThread {
