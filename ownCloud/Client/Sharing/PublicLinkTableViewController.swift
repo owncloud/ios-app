@@ -141,14 +141,18 @@ class PublicLinkTableViewController: StaticTableViewController {
 					shareRows.append( StaticTableViewRow(rowWithAction: nil, title: share.name!, subtitle: share.permissionDescription(), accessoryType: .none) )
 				}
 			}
-			let sectionType = "share-section-\(String(type.rawValue))"
-			if let section = self.sectionForIdentifier(sectionType) {
-				self.removeSection(section)
-			}
-
-			let section : StaticTableViewSection = StaticTableViewSection(headerTitle: title, footerTitle: nil, identifier: sectionType, rows: shareRows)
-			self.addSection(section, animated: true)
+		} else {
+			shareRows.append( StaticTableViewRow(buttonWithAction: { (_, _) in
+				self.addPublicLink()
+			}, title: "Create Public Link".localized, style: StaticTableViewRowButtonStyle.plain))
 		}
+
+		let sectionType = "share-section-\(String(type.rawValue))"
+		if let section = self.sectionForIdentifier(sectionType) {
+			self.removeSection(section)
+		}
+		let section : StaticTableViewSection = StaticTableViewSection(headerTitle: title, footerTitle: nil, identifier: sectionType, rows: shareRows)
+		self.addSection(section, animated: false)
 	}
 
 	func addShareSections() {
@@ -173,8 +177,8 @@ class PublicLinkTableViewController: StaticTableViewController {
 		removeShareSections()
 		if shares.count > 0 && showShares {
 			messageView?.message(show: false)
-			self.addShareSections()
 		}
+		self.addShareSections()
 	}
 
 	func handleEmptyShares() {
@@ -188,39 +192,49 @@ class PublicLinkTableViewController: StaticTableViewController {
 	// MARK: - Private Link Section
 
 	func addPrivateLinkSection() {
-			let identifier = "private-link-section"
-			if let section = self.sectionForIdentifier(identifier) {
-				self.removeSection(section)
-			}
+		let identifier = "private-link-section"
+		if let section = self.sectionForIdentifier(identifier) {
+			self.removeSection(section)
+		}
 
-			let footer = "This link is unique for this resource, but grants no additional permissions. Recipients can request permissions from the owner.".localized
+		let footer = "This link is unique for this resource, but grants no additional permissions. Recipients can request permissions from the owner.".localized
 
+		OnMainThread {
+			let section = StaticTableViewSection(headerTitle: nil, footerTitle: footer, identifier: "private-link-section")
+			var rows : [StaticTableViewRow] = []
+
+			self.core?.retrievePrivateLink(for: self.item, completionHandler: { (error, url) in
+
+				guard let url = url else { return }
+				if error == nil {
+					OnMainThread {
+						let privateLinkRow = StaticTableViewRow(headerRowWithAction: { (row, _) in
+							self.retrievePrivateLink(for: self.item, in: row)
+						}, headerTitle: String(format:"%@", url.absoluteString), title: "Copy Private Link".localized, accessoryView: nil)
+						rows.append(privateLinkRow)
+
+						section.add(rows: rows)
+						self.insertSection(section, at: 0)
+					}
+				}
+			})
+		}
+	}
+
+	func retrievePrivateLink(for item: OCItem, in row: StaticTableViewRow) {
+		let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+		progressView.startAnimating()
+		row.cell?.accessoryView = progressView
+
+		self.core?.retrievePrivateLink(for: item, completionHandler: { (error, url) in
 			OnMainThread {
-				let section = StaticTableViewSection(headerTitle: nil, footerTitle: footer, identifier: "private-link-section")
-				var rows : [StaticTableViewRow] = []
-
-				let privateLinkRow = StaticTableViewRow(buttonWithAction: { (row, _) in
-					let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
-					progressView.startAnimating()
-
-					row.cell?.accessoryView = progressView
-
-					self.core?.retrievePrivateLink(for: self.item, completionHandler: { (error, url) in
-						OnMainThread {
-							row.cell?.accessoryView = nil
-						}
-						if error == nil {
-							guard let url = url else { return }
-							UIPasteboard.general.url = url
-						}
-					})
-
-				}, title: "Copy Private Link".localized, style: StaticTableViewRowButtonStyle.plain)
-				rows.append(privateLinkRow)
-
-				section.add(rows: rows)
-				self.addSection(section)
+				row.cell?.accessoryView = nil
 			}
+			if error == nil {
+				guard let url = url else { return }
+				UIPasteboard.general.url = url
+			}
+		})
 	}
 
 	// MARK: - Sharing Helper

@@ -416,12 +416,14 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		}
 
 		let deleteSection = StaticTableViewSection(headerTitle: nil, footerTitle: footer)
-		deleteSection.add(rows: [
-			StaticTableViewRow(buttonWithAction: { (_, _) in
-				guard let share = self.share, let shareURL = share.url else { return }
-				UIPasteboard.general.url = shareURL
-			}, title: "Copy Public Link URL".localized, style: StaticTableViewRowButtonStyle.plain)
-			])
+
+		if let share = self.share, let shareURL = share.url {
+			deleteSection.add(rows: [
+				StaticTableViewRow(headerRowWithAction: { (_, _) in
+					UIPasteboard.general.url = shareURL
+				}, headerTitle: String(format:"%@", shareURL.absoluteString), title: "Copy Public Link URL".localized, accessoryView: .none)
+				])
+		}
 
 		deleteSection.add(rows: [
 			StaticTableViewRow(buttonWithAction: { (row, _) in
