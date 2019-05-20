@@ -343,13 +343,16 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 				guard let itemPath = self.item.path else { continue }
 				var title = ""
+				var image: UIImage?
 				if recipient.type == .user {
 					guard let displayName = recipient.displayName else { continue }
 					title = displayName
+					image = UIImage(named: "person")
 				} else {
 					guard let displayName = recipient.displayName else { continue }
 					let groupTitle = "(Group)".localized
 					title = "\(displayName) \(groupTitle)"
+					image = UIImage(named: "group")
 				}
 
 				rows.append(
@@ -386,7 +389,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 								}
 							}
 						})
-					}, title: title)
+					}, title: title, image: image)
 				)
 			}
 			self.removeShareSections()
