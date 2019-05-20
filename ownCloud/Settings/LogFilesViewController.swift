@@ -230,6 +230,8 @@ class LogFilesViewController : UITableViewController, Themeable {
 	}
 
 	@objc private func handleLogRotationNotification() {
-		populateLogFileList()
+		OnMainThread {
+			self.populateLogFileList()
+		}
 	}
 }
