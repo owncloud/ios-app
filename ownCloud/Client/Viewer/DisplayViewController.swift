@@ -20,8 +20,8 @@ import UIKit
 import ownCloudSDK
 
 struct DisplayViewConfiguration {
-	var item: OCItem!
-	weak var core: OCCore!
+	var item: OCItem?
+	weak var core: OCCore?
 	let state: DisplayViewState
 }
 
@@ -45,25 +45,37 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	private let lateralSpacing: CGFloat = 10
 	private let progressViewVerticalSpacing: CGFloat = 20.0
 
+	var progressSummarizer : ProgressSummarizer?
+
 	// MARK: - Configuration
 	var item: OCItem?
+	private var coreConnectionStatusObservation : NSKeyValueObservation?
 	weak var core: OCCore? {
 		willSet {
-			if let core = core {
-				core.removeObserver(self, forKeyPath: "connectionStatus")
-			}
+			coreConnectionStatusObservation?.invalidate()
+			coreConnectionStatusObservation = nil
 		}
 		didSet {
 			if let core = core {
-				core.addObserver(self, forKeyPath: "connectionStatus", options: [.initial, .new], context: nil)
+				coreConnectionStatusObservation = core.observe(\OCCore.connectionStatus, options: [.initial, .new]) { [weak self] (core, _) in
+					guard let state = self?.state, case DisplayViewState.notSupportedMimeType = state else {
+						if core.connectionStatus == .online {
+							self?.state = .hasNetworkConnection
+						} else {
+							self?.state = .noNetworkConnection
+						}
+
+						return
+					}
+				}
 			}
 		}
 	}
 
 	var source: URL? {
 		didSet {
-			OnMainThread {
-				self.iconImageView.isHidden = true
+			OnMainThread(inline: true) {
+				self.iconImageView?.isHidden = true
 				self.hideItemMetadataUIElements()
 				self.renderSpecificView()
 			}
@@ -72,7 +84,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	private var state: DisplayViewState = .hasNetworkConnection {
 		didSet {
-			OnMainThread {
+			OnMainThread(inline: true) {
 				switch self.state {
 					case .downloading(let progress):
 						self.downloadProgress = progress
@@ -92,7 +104,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	// MARK: - Views
-	private var iconImageView: UIImageView!
+	private var iconImageView: UIImageView?
 	private var progressView : UIProgressView?
 	private var cancelButton : ThemeButton?
 	private var metadataInfoLabel: UILabel?
@@ -104,12 +116,6 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	// MARK: - Init & Deinit
 	required init() {
-		iconImageView = UIImageView()
-		metadataInfoLabel = UILabel()
-		cancelButton = ThemeButton(type: .custom)
-		showPreviewButton = ThemeButton(type: .custom)
-		noNetworkLabel = UILabel()
-
 		super.init(nibName: nil, bundle: nil)
 	}
 
@@ -118,65 +124,68 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	deinit {
+		coreConnectionStatusObservation?.invalidate()
+
 		Theme.shared.unregister(client: self)
 		self.downloadProgress?.cancel()
 		self.stopQuery()
-		if let core = core {
-			core.removeObserver(self, forKeyPath: "connectionStatus")
-		}
 	}
 
 	// MARK: - Controller lifecycle
 	override func loadView() {
 		super.loadView()
 
+		iconImageView = UIImageView()
+		metadataInfoLabel = UILabel()
+		cancelButton = ThemeButton(type: .custom)
+		showPreviewButton = ThemeButton(type: .custom)
+		noNetworkLabel = UILabel()
+		progressView = UIProgressView(progressViewStyle: .bar)
+
+		guard let iconImageView = iconImageView, let metadataInfoLabel = metadataInfoLabel, let progressView = progressView, let cancelButton = cancelButton, let showPreviewButton = showPreviewButton, let noNetworkLabel = noNetworkLabel else {
+			return
+		}
+
 		iconImageView.translatesAutoresizingMaskIntoConstraints = false
 		iconImageView.contentMode = .scaleAspectFit
 
 		view.addSubview(iconImageView)
 
-		metadataInfoLabel?.translatesAutoresizingMaskIntoConstraints = false
-		metadataInfoLabel?.isHidden = false
-		metadataInfoLabel?.textAlignment = .center
-		metadataInfoLabel?.adjustsFontForContentSizeCategory = true
-		metadataInfoLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+		metadataInfoLabel.translatesAutoresizingMaskIntoConstraints = false
+		metadataInfoLabel.isHidden = false
+		metadataInfoLabel.textAlignment = .center
+		metadataInfoLabel.adjustsFontForContentSizeCategory = true
+		metadataInfoLabel.font = UIFont.preferredFont(forTextStyle: .headline)
 
-		view.addSubview(metadataInfoLabel!)
+		view.addSubview(metadataInfoLabel)
 
-		progressView = UIProgressView(progressViewStyle: .bar)
-		progressView?.translatesAutoresizingMaskIntoConstraints = false
-		progressView?.progress = 0
-		progressView?.observedProgress = downloadProgress
-		progressView?.isHidden = (downloadProgress != nil)
+		progressView.translatesAutoresizingMaskIntoConstraints = false
+		progressView.progress = 0
+		progressView.observedProgress = downloadProgress
+		progressView.isHidden = (downloadProgress != nil)
 
-		view.addSubview(progressView!)
+		view.addSubview(progressView)
 
-		cancelButton?.translatesAutoresizingMaskIntoConstraints = false
-		cancelButton?.setTitle("Cancel".localized, for: .normal)
-		cancelButton?.isHidden = (downloadProgress != nil)
-		cancelButton?.addTarget(self, action: #selector(cancelDownload(sender:)), for: UIControl.Event.touchUpInside)
+		cancelButton.translatesAutoresizingMaskIntoConstraints = false
+		cancelButton.setTitle("Cancel".localized, for: .normal)
+		cancelButton.isHidden = (downloadProgress != nil)
+		cancelButton.addTarget(self, action: #selector(cancelDownload(sender:)), for: UIControl.Event.touchUpInside)
 
-		view.addSubview(cancelButton!)
+		view.addSubview(cancelButton)
 
-		showPreviewButton?.translatesAutoresizingMaskIntoConstraints = false
-		showPreviewButton?.setTitle("Open file".localized, for: .normal)
-		showPreviewButton?.isHidden = true
-		showPreviewButton?.addTarget(self, action: #selector(downloadItem), for: UIControl.Event.touchUpInside)
-		view.addSubview(showPreviewButton!)
+		showPreviewButton.translatesAutoresizingMaskIntoConstraints = false
+		showPreviewButton.setTitle("Open file".localized, for: .normal)
+		showPreviewButton.isHidden = true
+		showPreviewButton.addTarget(self, action: #selector(downloadItem), for: UIControl.Event.touchUpInside)
+		view.addSubview(showPreviewButton)
 
-		noNetworkLabel?.translatesAutoresizingMaskIntoConstraints = false
-		noNetworkLabel?.isHidden = true
-		noNetworkLabel?.adjustsFontForContentSizeCategory = true
-		noNetworkLabel?.text = "There is no network".localized
-		noNetworkLabel?.textAlignment = .center
-		noNetworkLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
-		view.addSubview(noNetworkLabel!)
-
-		guard let iconImageView = iconImageView, let metadataInfoLabel = metadataInfoLabel, let progressView = progressView,
-		      let cancelButton = cancelButton, let showPreviewButton = showPreviewButton, let noNetworkLabel = noNetworkLabel
-		      else {
-			return
-		}
+		noNetworkLabel.translatesAutoresizingMaskIntoConstraints = false
+		noNetworkLabel.isHidden = true
+		noNetworkLabel.adjustsFontForContentSizeCategory = true
+		noNetworkLabel.text = "Network unavailable".localized
+		noNetworkLabel.textAlignment = .center
+		noNetworkLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+		view.addSubview(noNetworkLabel)
 
 		NSLayoutConstraint.activate([
 			iconImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
@@ -211,7 +220,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		Theme.shared.register(client: self)
 
 		if let item = item {
-			iconImageView.image = item.icon(fitInSize:iconImageSize)
+			iconImageView?.image = item.icon(fitInSize:iconImageSize)
 
 			if item.thumbnailAvailability != .none {
 				let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
@@ -220,8 +229,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 							image != nil,
 							item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
 							OnMainThread {
-								if !self.iconImageView.isHidden {
-									self.iconImageView.image = image
+								if self.iconImageView?.isHidden == false {
+									self.iconImageView?.image = image
 								}
 							}
 						}
@@ -237,6 +246,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				}
 			}
 		}
+
+		self.render()
 	}
 
 	func updateNavigationBarItems() {
@@ -273,10 +284,12 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				}
 				return
 			}
-				self?.item = latestItem
-				self?.source = file!.url
+			self?.item = latestItem
+			self?.source = file?.url
 		}) {
 			self.state = .downloading(progress: downloadProgress)
+
+			self.progressSummarizer?.startTracking(progress: downloadProgress)
 		}
 	}
 
@@ -285,7 +298,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	func hideItemMetadataUIElements() {
-		iconImageView.isHidden = true
+		iconImageView?.isHidden = true
 		progressView?.isHidden = true
 		cancelButton?.isHidden = true
 		metadataInfoLabel?.isHidden = true
@@ -293,25 +306,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		noNetworkLabel?.isHidden = true
 	}
 
-	// MARK: - KVO observing
-	// swiftlint:disable block_based_kvo
-	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-		if let newValue = change?[NSKeyValueChangeKey.newKey] as? OCCoreConnectionStatus {
-			if case DisplayViewState.notSupportedMimeType = self.state {
-
-			} else {
-				if newValue == .online {
-					self.state = .hasNetworkConnection
-				} else {
-					self.state = .noNetworkConnection
-				}
-			}
-		}
-	}
-	// swiftlint:enable block_based_kvo
-
 	private func render() {
-		print("LOG --> State changed to \(state)")
 		switch state {
 		case .hasNetworkConnection:
 			hideProgressIndicators()
@@ -357,8 +352,10 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
-		let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: { [weak self] _ in
-			self?.navigationController?.popViewController(animated: true)
+		let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: { [weak self] (action, _) in
+			if !(action is OpenInAction) {
+				self?.navigationController?.popViewController(animated: true)
+			}
 		})
 
 		self.present(asCard: moreViewController, animated: true)
@@ -414,6 +411,10 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	func present(item: OCItem) {
+		guard self.view != nil else {
+			return
+		}
+
 		self.item = item
 
 		metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
@@ -425,7 +426,13 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				self.stopQuery()
 				self.startQuery()
 
-				self.downloadItem(sender: nil)
+				if core?.localCopy(of: item) == nil {
+					self.downloadItem(sender: nil)
+				} else {
+					if let core = core, let file = item.file(with: core) {
+						self.source = file.url
+					}
+				}
 
 				if let parent = parent {
 					parent.navigationItem.title = item.name

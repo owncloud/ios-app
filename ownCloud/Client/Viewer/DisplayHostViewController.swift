@@ -1,17 +1,25 @@
 //
-//  GalleryHostViewController.swift
+//  DisplayHostViewController.swift
 //  ownCloud
 //
 //  Created by Pablo Carrascal on 14/02/2019.
 //  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2019, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudSDK
 
-class GalleryHostViewController: UIPageViewController {
-
-	typealias Filter = ([OCItem]) -> [OCItem]
+class DisplayHostViewController: UIPageViewController {
 
 	// MARK: - Constants
 	let hasChangesAvailableKeyPath: String = "hasChangesAvailable"
@@ -20,22 +28,19 @@ class GalleryHostViewController: UIPageViewController {
 	// MARK: - Instance Variables
 	weak private var core: OCCore?
 	private var selectedItem: OCItem
-	private var items: [OCItem]?
+
+	private var items: [OCItem]? {
+		didSet {
+			OnMainThread { [weak self] in
+				self?.configureScrolling()
+			}
+		}
+	}
 	private var query: OCQuery
 	private weak var viewControllerToTansition: DisplayViewController?
-	private var selectedFilter: Filter?
 	private var queryObservation : NSKeyValueObservation?
 
-	// MARK: - Filters
-	lazy var filterImageFiles: Filter = { items in
-		let filteredItems = items.filter({$0.type != .collection && $0.mimeType?.matches(regExp: self.imageFilterRegexp) ?? false})
-		return filteredItems
-	}
-
-	lazy var filterOneItem: Filter = { items in
-		let filteredItems = items.filter({$0.type != .collection && $0.fileID == self.selectedItem.fileID})
-		return filteredItems
-	}
+	var progressSummarizer : ProgressSummarizer?
 
 	// MARK: - Init & deinit
 	init(core: OCCore, selectedItem: OCItem, query: OCQuery) {
@@ -45,19 +50,12 @@ class GalleryHostViewController: UIPageViewController {
 
 		super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
 
-		if selectedItem.mimeType?.matches(regExp: imageFilterRegexp) ?? false {
-			selectedFilter = filterImageFiles
-		} else {
-			selectedFilter = filterOneItem
-		}
-
 		queryObservation = query.observe(\OCQuery.hasChangesAvailable, options: [.initial, .new]) { [weak self] (query, _) in
 			query.requestChangeSet(withFlags: .onlyResults) { ( _, changeSet) in
 				guard let changeSet = changeSet  else { return }
-				self?.items = self?.selectedFilter?(changeSet.queryResult)
+				self?.items = self?.applyImageFilesFilter(items: changeSet.queryResult)
 			}
 		}
-
 		Theme.shared.register(client: self)
 	}
 
@@ -92,6 +90,11 @@ class GalleryHostViewController: UIPageViewController {
 		viewController.updateNavigationBarItems()
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		configureScrolling()
+	}
+
 	override var childForHomeIndicatorAutoHidden : UIViewController? {
 		if let childViewController = self.children.first {
 			return childViewController
@@ -122,15 +125,15 @@ class GalleryHostViewController: UIPageViewController {
 			return DisplayViewController()
 		}
 
-		let preferedExtension: OCExtension = matchedExtensions[0].extension
+		let preferredExtension: OCExtension = matchedExtensions[0].extension
 
-		let extensionObject = preferedExtension.provideObject(for: context)
-
-		guard let controllerType = extensionObject as? (DisplayViewController & DisplayExtension) else {
+		guard let displayViewController = preferredExtension.provideObject(for: context) as? (DisplayViewController & DisplayExtension) else {
 			return DisplayViewController()
 		}
 
-		return controllerType
+		displayViewController.progressSummarizer = progressSummarizer
+
+		return displayViewController
 	}
 
 	// MARK: - Helper methods
@@ -159,9 +162,20 @@ class GalleryHostViewController: UIPageViewController {
 		}
 		return configuration
 	}
+
+	// MARK: - Filters
+	private func applyImageFilesFilter(items: [OCItem]) -> [OCItem] {
+		if selectedItem.mimeType?.matches(regExp: imageFilterRegexp) ?? false {
+			let filteredItems = items.filter({$0.type != .collection && $0.mimeType?.matches(regExp: self.imageFilterRegexp) ?? false})
+			return filteredItems
+		} else {
+			let filteredItems = items.filter({$0.type != .collection && $0.fileID == self.selectedItem.fileID})
+			return filteredItems
+		}
+	}
 }
 
-extension GalleryHostViewController: UIPageViewControllerDataSource {
+extension DisplayHostViewController: UIPageViewControllerDataSource {
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
 		if let displayViewController = viewControllers?.first as? DisplayViewController,
 			let item = displayViewController.item,
@@ -185,7 +199,7 @@ extension GalleryHostViewController: UIPageViewControllerDataSource {
 	}
 }
 
-extension GalleryHostViewController: UIPageViewControllerDelegate {
+extension DisplayHostViewController: UIPageViewControllerDelegate {
 	func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
 
 		let previousViewController = previousViewControllers[0]
@@ -207,9 +221,14 @@ extension GalleryHostViewController: UIPageViewControllerDelegate {
 			self.viewControllerToTansition = viewControllerToTransition
 		}
 	}
+
+	private func configureScrolling() {
+		guard let items = self.items else { return }
+		self.dataSource = items.count > 1 ? self : nil
+	}
 }
 
-extension GalleryHostViewController: Themeable {
+extension DisplayHostViewController: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.view.backgroundColor = .black
 	}

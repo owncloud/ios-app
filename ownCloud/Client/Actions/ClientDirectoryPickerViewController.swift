@@ -23,18 +23,6 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	private let SELECT_BUTTON_HEIGHT: CGFloat = 44.0
 
-	// MARK: - Query directory filter
-	private static let DIRECTORY_FILTER_IDENTIFIER: String = "directory-filter"
-	private static var directoryFilterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
-		if let item = item {
-			if item.type == .collection {return true}
-		}
-		return false
-	}
-	private static var directoryFilter: OCQueryFilter {
-		return OCQueryFilter(handler: ClientDirectoryPickerViewController.directoryFilterHandler)
-	}
-
 	// MARK: - Instance Properties
 	private var selectButton: UIBarButtonItem!
 	private var selectButtonTitle: String
@@ -46,9 +34,27 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		self.selectButtonTitle = selectButtonTitle
 		self.completion = completion
 
-		super.init(core: inCore, query: OCQuery(forPath: path))
+		let targetDirectoryQuery = OCQuery(forPath: path)
 
-		self.query.addFilter(ClientDirectoryPickerViewController.directoryFilter, withIdentifier: ClientDirectoryPickerViewController.DIRECTORY_FILTER_IDENTIFIER)
+		// Sort folders first
+		targetDirectoryQuery.sortComparator = { (left, right) in
+			guard let leftItem  = left as? OCItem, let rightItem = right as? OCItem else {
+				return .orderedSame
+			}
+			if leftItem.type == OCItemType.collection && rightItem.type != OCItemType.collection {
+				return .orderedAscending
+			} else if leftItem.type != OCItemType.collection && rightItem.type == OCItemType.collection {
+				return .orderedDescending
+			} else if leftItem.name != nil && rightItem.name != nil {
+				return leftItem.name!.caseInsensitiveCompare(rightItem.name!)
+			}
+			return .orderedSame
+		}
+
+		super.init(core: inCore, query: targetDirectoryQuery)
+
+		// Force disable sorting options
+		self.shallShowSortBar = false
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -59,23 +65,47 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		// Remove pull to refresh
+		queryRefreshControl?.removeFromSuperview()
+		self.tableView.alwaysBounceVertical = false
+
 		// Select button creation
 		selectButton = UIBarButtonItem(title: selectButtonTitle, style: .plain, target: self, action: #selector(selectButtonPressed))
 		selectButton.title = selectButtonTitle
 
 		// Cancel button creation
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
-		navigationItem.rightBarButtonItems = [cancelBarButton]
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
+		navigationItem.rightBarButtonItems = [cancelBarButton]
 
 		if let navController = self.navigationController {
 			navController.isToolbarHidden = false
 			navController.toolbar.isTranslucent = false
 			let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 			self.setToolbarItems([flexibleSpaceBarButton, selectButton, flexibleSpaceBarButton], animated: false)
+		}
+	}
+
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = super.tableView(tableView, cellForRowAt: indexPath)
+
+		if let clientItemCell = cell as? ClientItemCell {
+			clientItemCell.isMoreButtonPermanentlyHidden = true
+			clientItemCell.isActive = (clientItemCell.item?.type == OCItemType.collection) ? true : false
+		}
+
+		return cell
+	}
+
+	override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+		let item: OCItem = itemAtIndexPath(indexPath)
+		if item.type != OCItemType.collection {
+			return nil
+		} else {
+			return indexPath
 		}
 	}
 
@@ -91,6 +121,10 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		return nil
+	}
+
+	override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+		return .none
 	}
 
 	// MARK: - Actions

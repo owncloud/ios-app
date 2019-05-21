@@ -76,7 +76,7 @@
 "This folder no longer exists." = "Dieser Ordner existiert nicht mehr.";
 "Everything up-to-date." = "Alles ist aktuell.";
 "Please wait…" = "Bitte warten ...";
-"Sorted by %@" = "Sortiert nach %@";
+"Sort by %@" = "Sortiert nach %@";
 "Sort by" = "Sortieren nach";
 
 "name (A-Z)" = "Name (A-Z)";
@@ -253,3 +253,8 @@
 "%@ of %@" = "%@ von %@";
 "Invalid Page" = "Ungültige Seite";
 "The entered page number doesn't exist" = "Die eingegebene Seitennummer existiert nicht";
+
+/* Photo upload settings */
+"Media Upload" = "Medien hochladen";
+"Convert HEIC to JPEG" = "HEIC in JPEG konvertieren";
+"Convert videos to MP4" = "Videos in MP4 konvertieren";
