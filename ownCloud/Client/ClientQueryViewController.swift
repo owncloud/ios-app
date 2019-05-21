@@ -81,6 +81,26 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 	private var _actionProgressHandler : ActionProgressHandler?
 
+	var currentPathContainsFolders : Bool {
+		let folders = items.filter { (item) -> Bool in
+			if item.type == .collection {
+				return true
+			}
+			return false
+		}
+		if folders.count == 0 {
+			return false
+		}
+		return true
+	}
+
+	var inRootPath : Bool {
+		if let path = query.queryPath, path.isRootPath {
+			return true
+		}
+		return false
+	}
+
 	func makeActionProgressHandler() -> ActionProgressHandler {
 		if _actionProgressHandler == nil {
 			_actionProgressHandler = { [weak self] (progress, publish) in
@@ -116,7 +136,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
 
-		if lastPathComponent == "/", let shortName = core?.bookmark.shortName {
+		if inRootPath, let shortName = core?.bookmark.shortName {
 			self.navigationItem.title = shortName
 		} else {
 			let titleButton = UIButton()
@@ -132,7 +152,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			self.navigationItem.titleView = titleButton
 		}
 
-		if lastPathComponent == "/" {
+		if inRootPath {
 			quotaObservation = core?.observe(\OCCore.rootQuotaBytesUsed, options: [.initial], changeHandler: { [weak self, core] (_, _) in
 				let quotaUsed = core?.rootQuotaBytesUsed?.int64Value ?? 0
 
@@ -797,12 +817,13 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
 
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
+		let containsFolders = currentPathContainsFolders
 
 		if selectedItems.count > 0 {
 			if let core = self.core {
 				// Get possible associated actions
 				let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-				let actionContext = ActionContext(viewController: self, core: core, items: selectedItems, location: actionsLocation)
+				let actionContext = ActionContext(viewController: self, core: core, query: query, items: selectedItems, location: actionsLocation, preferences: ["containsFolders" : containsFolders])
 
 				self.actions = Action.sortedApplicableActions(for: actionContext)
 

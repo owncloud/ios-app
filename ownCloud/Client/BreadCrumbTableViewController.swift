@@ -55,7 +55,7 @@ class BreadCrumbTableViewController: StaticTableViewController {
 		for (_, currentPath) in pathComp.enumerated().reversed() {
 			let stackIndex = stackViewControllers.count - currentViewContollerIndex
 			var pathTitle = currentPath
-			if currentPath == "/", let shortName = self.bookmarkShortName {
+			if currentPath.isRootPath, let shortName = self.bookmarkShortName {
 				pathTitle = shortName
 			}
 			let aRow = StaticTableViewRow(rowWithAction: { (_, _) in
