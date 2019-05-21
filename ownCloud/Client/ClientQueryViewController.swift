@@ -88,10 +88,10 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			}
 			return false
 		}
-		if folders.count == 0 {
-			return false
+		if folders.count > 0 {
+			return true
 		}
-		return true
+		return false
 	}
 
 	var inRootPath : Bool {
