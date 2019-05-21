@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import MobileCoreServices
 
 typealias ClientActionVieDidAppearHandler = () -> Void
@@ -103,6 +104,9 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		super.init(style: .plain)
 
+		NotificationCenter.default.addObserver(self, selector: #selector(ClientQueryViewController.displaySettingsChanged), name: .DisplaySettingsChanged, object: nil)
+		self.displaySettingsChanged()
+
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 
 		if query.sortComparator == nil {
@@ -112,11 +116,12 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		query.delegate = self
 
 		query.addObserver(self, forKeyPath: "state", options: .initial, context: nil)
+
 		core?.start(query)
 
 		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
 
-		if lastPathComponent == "/", let shortName = core?.bookmark.shortName {
+		if lastPathComponent.isRootPath, let shortName = core?.bookmark.shortName {
 			self.navigationItem.title = shortName
 		} else {
 			let titleButton = UIButton()
@@ -135,7 +140,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			self.navigationItem.titleView = titleButton
 		}
 
-		if lastPathComponent == "/" {
+		if lastPathComponent.isRootPath {
 			quotaObservation = core?.observe(\OCCore.rootQuotaBytesUsed, options: [.initial], changeHandler: { [weak self, core] (_, _) in
 				let quotaUsed = core?.rootQuotaBytesUsed?.int64Value ?? 0
 
@@ -169,6 +174,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	}
 
 	deinit {
+		NotificationCenter.default.removeObserver(self, name: .DisplaySettingsChanged, object: nil)
+
 		query.removeObserver(self, forKeyPath: "state", context: nil)
 
 		core?.stop(query)
@@ -182,6 +189,11 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		self.queryProgressSummary = nil
 
 		quotaObservation = nil
+	}
+
+	// MARK: - Display settings
+	@objc func displaySettingsChanged() {
+		DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 	}
 
 	// MARK: - Actions

@@ -43,13 +43,23 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DCC085632293F1FD008CC05C"
+               BuildableName = "ownCloudAppTests.xctest"
+               BlueprintName = "ownCloudAppTests"
+               ReferencedContainer = "container:ownCloud.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DCC6565620C9B7E400110A97"
-            BuildableName = "ownCloud File ProviderUI.appex"
-            BlueprintName = "ownCloud File ProviderUI"
+            BlueprintIdentifier = "233BDE9B204FEFE500C06732"
+            BuildableName = "ownCloud.app"
+            BlueprintName = "ownCloud"
             ReferencedContainer = "container:ownCloud.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

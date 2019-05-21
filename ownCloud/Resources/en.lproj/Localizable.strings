@@ -205,6 +205,10 @@
 "Really reset log file?" = "Really reset log file?";
 "This action can't be undone." = "This action can't be undone.";
 
+/* Display settings */
+"Display settings" = "Display settings";
+"Show hidden files and folders" = "Show hidden files and folders";
+
 /* Passcode Messages */
 
 "Enter code" = "Enter code";
@@ -276,13 +280,13 @@
 "Convert videos to MP4" = "Convert videos to MP4";
 
 /* Progress summarizer */
-"Creating %ld of %ld folders…" = "Creating %ld of %ld folders…";
-"Moving %ld of %ld items…" = "Moving %ld of %ld items…";
-"Copying %ld of %ld items…" = "Copying %ld of %ld items…";
-"Deleting %ld of %ld items…" = "Deleting %ld of %ld items…";
-"Uploading %ld of %ld files…" = "Uploading %ld of %ld files…";
-"Downloading %ld of %ld files…" = "Downloading %ld of %ld files…";
-"Updating %ld of %ld items…" = "Updating %ld of %ld items…";
+"Creating %ld folders…" = "Creating %ld folders…";
+"Moving %ld items…" = "Moving %ld items…";
+"Copying %ld items…" = "Copying %ld items…";
+"Deleting %ld items…" = "Deleting %ld items…";
+"Uploading %ld files…" = "Uploading %ld files…";
+"Downloading %ld files…" = "Downloading %ld files…";
+"Updating %ld items…" = "Updating %ld items…";
 
 /* Offline storage management */
 "Free on %@" = "Free on %@";
