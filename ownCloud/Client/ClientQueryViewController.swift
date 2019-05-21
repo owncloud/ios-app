@@ -126,8 +126,11 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			titleButton.sizeToFit()
 			titleButton.accessibilityLabel = "Show parent paths".localized
 			titleButton.accessibilityIdentifier = "show-paths-button"
+			titleButton.semanticContentAttribute = (titleButton.effectiveUserInterfaceLayoutDirection == .leftToRight) ? .forceRightToLeft : .forceLeftToRight
+			titleButton.setImage(UIImage(named: "chevron-small-light"), for: .normal)
 			messageThemeApplierToken = Theme.shared.add(applier: { (_, collection, _) in
 				titleButton.setTitleColor(collection.navigationBarColors.labelColor, for: .normal)
+				titleButton.tintColor = collection.navigationBarColors.labelColor
 			})
 			self.navigationItem.titleView = titleButton
 		}
