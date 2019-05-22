@@ -73,7 +73,8 @@ class PendingSharesTableViewController: StaticTableViewController {
 							itemName = (share.itemPath as NSString).lastPathComponent
 						}
 
-						let row = StaticTableViewRow(rowWithAction: { (_, _) in
+						let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+							guard let self = self else { return }
 							var presentationStyle: UIAlertController.Style = .actionSheet
 							if UIDevice.current.isIpad() {
 								presentationStyle = .alert
@@ -84,10 +85,10 @@ class PendingSharesTableViewController: StaticTableViewController {
 																	preferredStyle: presentationStyle)
 							alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
-							alertController.addAction(UIAlertAction(title: "Accept".localized, style: .default, handler: { (_) in
-								if let core = self.core {
-
-									core.makeDecision(on: share, accept: true, completionHandler: { (error) in
+							alertController.addAction(UIAlertAction(title: "Accept".localized, style: .default, handler: { [weak self] (_) in
+								if let self = self, let core = self.core {
+									core.makeDecision(on: share, accept: true, completionHandler: { [weak self] (error) in
+										guard let self = self else { return }
 										OnMainThread {
 											if error == nil {
 												self.navigationController?.popViewController(animated: true)
@@ -102,10 +103,10 @@ class PendingSharesTableViewController: StaticTableViewController {
 								}
 							}))
 
-							alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { (_) in
-								if let core = self.core {
-
-									core.makeDecision(on: share, accept: false, completionHandler: { (error) in
+							alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
+								if let self = self, let core = self.core {
+									core.makeDecision(on: share, accept: false, completionHandler: { [weak self] (error) in
+										guard let self = self else { return }
 										OnMainThread {
 											if error == nil {
 												self.navigationController?.popViewController(animated: true)
@@ -148,10 +149,10 @@ class PendingSharesTableViewController: StaticTableViewController {
 			let share = shares[indexPath.row]
 			return [
 
-				UITableViewRowAction(style: .normal, title: "Accept".localized, handler: { (_, _) in
-					if let core = self.core {
-
-						core.makeDecision(on: share, accept: true, completionHandler: { (error) in
+				UITableViewRowAction(style: .normal, title: "Accept".localized, handler: { [weak self] (_, _) in
+					if let self = self, let core = self.core {
+						core.makeDecision(on: share, accept: true, completionHandler: { [weak self] (error) in
+							guard let self = self else { return }
 							OnMainThread {
 								if error == nil {
 									self.navigationController?.popViewController(animated: true)
@@ -165,7 +166,8 @@ class PendingSharesTableViewController: StaticTableViewController {
 						})
 					}
 				}),
-				UITableViewRowAction(style: .destructive, title: "Decline".localized, handler: { (_, _) in
+				UITableViewRowAction(style: .destructive, title: "Decline".localized, handler: { [weak self] (_, _) in
+					guard let self = self else { return }
 					var presentationStyle: UIAlertController.Style = .actionSheet
 					if UIDevice.current.isIpad() {
 						presentationStyle = .alert
@@ -176,10 +178,10 @@ class PendingSharesTableViewController: StaticTableViewController {
 															preferredStyle: presentationStyle)
 					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
-					alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { (_) in
-						if let core = self.core {
-
-							core.makeDecision(on: share, accept: false, completionHandler: { (error) in
+					alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
+						if let self = self, let core = self.core {
+							core.makeDecision(on: share, accept: false, completionHandler: { [weak self] (error) in
+								guard let self = self else { return }
 								OnMainThread {
 									if error == nil {
 										self.navigationController?.popViewController(animated: true)

@@ -169,7 +169,8 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 						progressView.startAnimating()
 
 						row.cell?.accessoryView = progressView
-						self.core?.makeDecision(on: share, accept: false, completionHandler: { (error) in
+						self.core?.makeDecision(on: share, accept: false, completionHandler: { [weak self] (error) in
+							guard let self = self else { return }
 							OnMainThread {
 								if error == nil {
 									self.dismissView()
@@ -212,7 +213,8 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 				}
 				if let recipient = share.recipient {
 					if canEdit(share: share) {
-						shareRows.append( StaticTableViewRow(rowWithAction: { (_, _) in
+						shareRows.append( StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+							guard let self = self else { return }
 							let editSharingViewController = GroupSharingEditUserGroupsTableViewController(style: .grouped)
 							editSharingViewController.share = share
 							editSharingViewController.reshares = resharedUsers
@@ -286,8 +288,8 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		}
 
 		if type != nil {
-			let shares = self.shares.filter { (OCShare) -> Bool in
-				if OCShare.type == type {
+			let shares = self.shares.filter { (share) -> Bool in
+				if share.type == type {
 					return true
 				}
 				return false
@@ -356,7 +358,8 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 				}
 
 				rows.append(
-					StaticTableViewRow(rowWithAction: { (_, _) in
+					StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+						guard let self = self else { return }
 						var defaultPermissions : OCSharePermissionsMask = .read
 						if let capabilitiesDefaultPermission = self.core?.connection.capabilities?.sharingDefaultPermissions {
 							defaultPermissions = capabilitiesDefaultPermission

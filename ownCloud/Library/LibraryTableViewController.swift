@@ -43,6 +43,13 @@ class LibraryTableViewController: StaticTableViewController {
 			pendingSharesCounter = pendingCloudSharesCounter + pendingLocalSharesCounter
 		}
 	}
+	var queries : [OCCoreQuery] = []
+
+	deinit {
+		for query in queries {
+			core?.stop(query)
+		}
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -57,50 +64,57 @@ class LibraryTableViewController: StaticTableViewController {
 	}
 
 	func updateLibrary() {
-		let shareQueryWithUser = OCShareQuery(scope: .sharedWithUser, item: nil)
-		let shareQueryByUser = OCShareQuery(scope: .sharedByUser, item: nil)
-		let shareQueryPendingCloudShares = OCShareQuery(scope: .pendingCloudShares, item: nil)
-		let shareQueryAcceptedCloudShares = OCShareQuery(scope: .acceptedCloudShares, item: nil)
-		shareQueryWithUser?.refreshInterval = 60
-		shareQueryByUser?.refreshInterval = 60
-		shareQueryPendingCloudShares?.refreshInterval = 60
-		shareQueryAcceptedCloudShares?.refreshInterval = 60
+		if let shareQueryWithUser = OCShareQuery(scope: .sharedWithUser, item: nil) {
+			queries.append(shareQueryWithUser)
+			shareQueryWithUser.refreshInterval = 60
 
-		core?.start(shareQueryWithUser!)
-		shareQueryWithUser?.initialPopulationHandler = { query in
-			var sharedWithUser = query.queryResults
+			shareQueryWithUser.initialPopulationHandler = { query in
+				var sharedWithUser = query.queryResults
 
-			self.core?.start(shareQueryAcceptedCloudShares!)
-			shareQueryAcceptedCloudShares?.initialPopulationHandler = { query in
-				sharedWithUser.append(contentsOf: query.queryResults)
-				let shares = sharedWithUser.unique { $0.itemPath }
+				if let shareQueryAcceptedCloudShares = OCShareQuery(scope: .acceptedCloudShares, item: nil) {
+					self.queries.append(shareQueryAcceptedCloudShares)
+					shareQueryAcceptedCloudShares.refreshInterval = 60
+					shareQueryAcceptedCloudShares.initialPopulationHandler = { query in
+						sharedWithUser.append(contentsOf: query.queryResults)
+						let shares = sharedWithUser.unique { $0.itemPath }
+						self.handleSharedWithUser(shares: shares)
+					}
+					self.core?.start(shareQueryAcceptedCloudShares)
+				}
+			}
+			shareQueryWithUser.changesAvailableNotificationHandler = { query in
+				let shares = query.queryResults.unique { $0.itemPath }
 				self.handleSharedWithUser(shares: shares)
 			}
+			core?.start(shareQueryWithUser)
 		}
-		shareQueryWithUser?.changesAvailableNotificationHandler = { query in
-			let shares = query.queryResults.unique { $0.itemPath }
-			self.handleSharedWithUser(shares: shares)
+		if let shareQueryByUser = OCShareQuery(scope: .sharedByUser, item: nil) {
+			queries.append(shareQueryByUser)
+			shareQueryByUser.refreshInterval = 60
+			shareQueryByUser.initialPopulationHandler = { query in
+				let shares = query.queryResults.unique { $0.itemPath }
+				self.handleSharedByUser(shares: shares)
+			}
+			shareQueryByUser.changesAvailableNotificationHandler = { query in
+				let shares = query.queryResults.unique { $0.itemPath }
+				self.handleSharedByUser(shares: shares)
+			}
+			core?.start(shareQueryByUser)
+		}
+		if let shareQueryPendingCloudShares = OCShareQuery(scope: .pendingCloudShares, item: nil) {
+			queries.append(shareQueryPendingCloudShares)
+			shareQueryPendingCloudShares.refreshInterval = 60
+			shareQueryPendingCloudShares.initialPopulationHandler = { query in
+				self.pendingCloudSharesCounter = query.queryResults.count
+				self.updatePendingShareRow(shares: query.queryResults, title: "Pending Cloud Shares".localized)
+			}
+			shareQueryPendingCloudShares.changesAvailableNotificationHandler = { query in
+				self.pendingCloudSharesCounter = query.queryResults.count
+				self.updatePendingShareRow(shares: query.queryResults, title: "Pending Cloud Shares".localized)
+			}
+			core?.start(shareQueryPendingCloudShares)
 		}
 
-		core?.start(shareQueryPendingCloudShares!)
-		shareQueryPendingCloudShares?.initialPopulationHandler = { query in
-			self.pendingCloudSharesCounter = query.queryResults.count
-			self.updatePendingShareRow(shares: query.queryResults, title: "Pending Cloud Shares".localized)
-		}
-		shareQueryPendingCloudShares?.changesAvailableNotificationHandler = { query in
-			self.pendingCloudSharesCounter = query.queryResults.count
-			self.updatePendingShareRow(shares: query.queryResults, title: "Pending Cloud Shares".localized)
-		}
-
-		core?.start(shareQueryByUser!)
-		shareQueryByUser?.initialPopulationHandler = { query in
-			let shares = query.queryResults.unique { $0.itemPath }
-			self.handleSharedByUser(shares: shares)
-		}
-		shareQueryByUser?.changesAvailableNotificationHandler = { query in
-			let shares = query.queryResults.unique { $0.itemPath }
-			self.handleSharedByUser(shares: shares)
-		}
 		addCollectionSection()
 	}
 
@@ -225,41 +239,41 @@ class LibraryTableViewController: StaticTableViewController {
 			self.addSection(section)
 
 			let lastWeekDate = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date())!
-			let query = OCQuery(condition: .require([
+			let recentsQuery = OCQuery(condition: .require([
 				.where(.lastUsed, isGreaterThan: lastWeekDate),
 				.where(.name, isNotEqualTo: "/")
 				]), inputFilter:nil)
-			addCollectionRow(to: section, title: "Recents".localized, image: UIImage(named: "recents")!, query: query, actionHandler: nil)
+			addCollectionRow(to: section, title: "Recents".localized, image: UIImage(named: "recents")!, query: recentsQuery, actionHandler: nil)
+			queries.append(recentsQuery)
 
-			let favoriteQuery = OCQuery(condition: .require([
-				.where(.isFavorite, isEqualTo: true)
-				]), inputFilter:nil)
+			let favoriteQuery = OCQuery(condition: .where(.isFavorite, isEqualTo: true), inputFilter:nil)
 			addCollectionRow(to: section, title: "Favorites".localized, image: UIImage(named: "star")!, query: favoriteQuery, actionHandler: {
 				self.core?.refreshFavorites(completionHandler: { (_, _) in
 				})
 			})
+			queries.append(favoriteQuery)
 
-			let imageQuery = OCQuery(condition: .require([
-				.where(.mimeType, contains: "image")
-				]), inputFilter:nil)
+			let imageQuery = OCQuery(condition: .where(.mimeType, contains: "image"), inputFilter:nil)
 			addCollectionRow(to: section, title: "Images".localized, image: Theme.shared.image(for: "image", size: CGSize(width: 25, height: 25))!, query: imageQuery, actionHandler: nil)
+			queries.append(imageQuery)
 
-			let pdfQuery = OCQuery(condition: .require([
-				.where(.mimeType, contains: "pdf")
-				]), inputFilter:nil)
+			let pdfQuery = OCQuery(condition: .where(.mimeType, contains: "pdf"), inputFilter:nil)
 			addCollectionRow(to: section, title: "PDF Documents".localized, image: Theme.shared.image(for: "application-pdf", size: CGSize(width: 25, height: 25))!, query: pdfQuery, actionHandler: nil)
+			queries.append(pdfQuery)
 		}
 	}
 
-	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage, query: OCQuery, actionHandler: (() -> Void)?) {
+	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage, query: OCQuery?, actionHandler: (() -> Void)?) {
 		let identifier = String(format:"%@-collection-row", title)
 		if section.row(withIdentifier: identifier) == nil, let core = core {
 			let row = StaticTableViewRow(rowWithAction: { (_, _) in
 
-				let customFileListController = CustomFilelistTableViewController(core: core, query: query)
-				customFileListController.title = title
-				customFileListController.refreshActionHandler = actionHandler
-				self.navigationController?.pushViewController(customFileListController, animated: true)
+				if let query = query {
+					let customFileListController = CustomFilelistTableViewController(core: core, query: query)
+					customFileListController.title = title
+					customFileListController.refreshActionHandler = actionHandler
+					self.navigationController?.pushViewController(customFileListController, animated: true)
+				}
 
 				actionHandler?()
 			}, title: title, image: image, accessoryType: .disclosureIndicator, identifier: identifier)

@@ -34,7 +34,7 @@ extension OCQueryState {
 	}
 }
 
-class ClientQueryViewController: UITableViewController, Themeable, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
+class ClientQueryViewController: ClientFilelistTableViewController, Themeable, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
 	weak var core : OCCore?
 	var query : OCQuery
 
@@ -57,7 +57,6 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			}
 		}
 	}
-	var progressSummarizer : ProgressSummarizer?
 	var queryRefreshControl: UIRefreshControl?
 
 	var queryRefreshRateLimiter : OCRateLimiter = OCRateLimiter(minimumTime: 0.2)
@@ -77,24 +76,9 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	var quotaLabel = UILabel()
 	var quotaObservation : NSKeyValueObservation?
 	var messageView : MessageView?
+	var messageThemeApplierToken : ThemeApplierToken?
 
 	var shallShowSortBar = true
-
-	private var _actionProgressHandler : ActionProgressHandler?
-
-	func makeActionProgressHandler() -> ActionProgressHandler {
-		if _actionProgressHandler == nil {
-			_actionProgressHandler = { [weak self] (progress, publish) in
-				if publish {
-					self?.progressSummarizer?.startTracking(progress: progress)
-				} else {
-					self?.progressSummarizer?.stopTracking(progress: progress)
-				}
-			}
-		}
-
-		return _actionProgressHandler!
-	}
 
 	// MARK: - Init & Deinit
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -128,6 +112,9 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			titleButton.accessibilityLabel = "Show parent paths".localized
 			titleButton.accessibilityIdentifier = "show-paths-button"
 			titleButton.setTitleColor(Theme.shared.activeCollection.navigationBarColors.labelColor, for: .normal)
+			messageThemeApplierToken = Theme.shared.add(applier: { (_, collection, _) in
+				titleButton.setTitleColor(collection.navigationBarColors.labelColor, for: .normal)
+			})
 			self.navigationItem.titleView = titleButton
 		}
 
@@ -172,6 +159,10 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		self.queryProgressSummary = nil
 
 		quotaObservation = nil
+		if messageThemeApplierToken != nil {
+			Theme.shared.remove(applierForToken: messageThemeApplierToken)
+			messageThemeApplierToken = nil
+		}
 	}
 
 	// MARK: - Actions

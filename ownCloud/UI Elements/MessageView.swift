@@ -47,6 +47,10 @@ class MessageView: UIView {
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
 		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+		if messageThemeApplierToken != nil {
+			Theme.shared.remove(applierForToken: messageThemeApplierToken)
+			messageThemeApplierToken = nil
+		}
 	}
 
 	func message(show: Bool, imageName : String? = nil, title : String? = nil, message : String? = nil) {

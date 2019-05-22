@@ -60,20 +60,17 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 			canEdit = true
 		}
 
-		section.add(row: StaticTableViewRow(toggleItemWithAction: { (row, _) in
-
+		section.add(row: StaticTableViewRow(toggleItemWithAction: { [weak self] (row, _) in
 			if let selected = row.value as? Bool {
-				self.changePermissions(enabled: selected, permissions: [.share], completionHandler: {(_) in
-
+				self?.changePermissions(enabled: selected, permissions: [.share], completionHandler: {(_) in
 				})
 			}
 		}, title: "Share".localized, subtitle: "", selected: share.canShare, identifier: "permission-section-share"))
 
-		section.add(row: StaticTableViewRow(toggleItemWithAction: { (row, _) in
-
+		section.add(row: StaticTableViewRow(toggleItemWithAction: { [weak self] (row, _) in
+			guard let self = self else { return }
 			if let selected = row.value as? Bool {
 				if share.itemType == .collection {
-
 					self.changePermissions(enabled: selected, permissions: [.create, .update, .delete], completionHandler: { (_) in
 						if selected {
 							self.addPermissionEditSection(animated: true)
@@ -81,13 +78,10 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 							if let section = self.sectionForIdentifier("permission-edit-section") {
 								self.removeSection(section, animated: true)
 							}
-
 						}
 					})
 				} else {
-
 					self.changePermissions(enabled: selected, permissions: [.update], completionHandler: { (_) in
-
 					})
 				}
 			}
@@ -103,33 +97,23 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 		self.insertSection(section, at: 0, animated: false)
 	}
 
+	private func addPermissionRow(to section: StaticTableViewSection, with title: String, permission: OCSharePermissionsMask, selected: Bool, identifier: String) {
+		section.add(row: StaticTableViewRow(toggleItemWithAction: { [weak self] (row, _) in
+			if let self = self, let selected = row.value as? Bool {
+				self.changePermissions(enabled: selected, permissions: [ permission ], completionHandler: {(_) in
+					self.hidePermissionsIfNeeded()
+				})
+			}
+		}, title: title.localized, subtitle: "", selected: selected, identifier: identifier))
+	}
+
 	func addPermissionEditSection(animated : Bool = false) {
 		let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "permission-edit-section")
 		guard let share = share else { return }
 
-		section.add(row: StaticTableViewRow(toggleItemWithAction: { (row, _) in
-			if let selected = row.value as? Bool {
-				self.changePermissions(enabled: selected, permissions: [.create], completionHandler: {(_) in
-					self.hidePermissionsIfNeeded()
-				})
-			}
-		}, title: "Create".localized, subtitle: "", selected: share.canCreate, identifier: "permission-section-edit-create"))
-
-		section.add(row: StaticTableViewRow(toggleItemWithAction: { (row, _) in
-			if let selected = row.value as? Bool {
-				self.changePermissions(enabled: selected, permissions: [.update], completionHandler: {(_) in
-					self.hidePermissionsIfNeeded()
-				})
-			}
-		}, title: "Change".localized, subtitle: "", selected: share.canUpdate, identifier: "permission-section-edit-change"))
-
-		section.add(row: StaticTableViewRow(toggleItemWithAction: { (row, _) in
-			if let selected = row.value as? Bool {
-				self.changePermissions(enabled: selected, permissions: [.delete], completionHandler: { (_) in
-					self.hidePermissionsIfNeeded()
-				})
-			}
-		}, title: "Delete".localized, subtitle: "", selected: share.canDelete, identifier: "permission-section-edit-delete"))
+		self.addPermissionRow(to: section, with: "Create", permission: .create, selected: share.canCreate, identifier: "permission-section-edit-create")
+		self.addPermissionRow(to: section, with: "Change", permission: .update, selected: share.canUpdate, identifier: "permission-section-edit-change")
+		self.addPermissionRow(to: section, with: "Delete", permission: .delete, selected: share.canDelete, identifier: "permission-section-edit-delete")
 
 		let subtitles = [
 			"Allows the users you share with to create new files and add them to the share".localized,
@@ -192,10 +176,10 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 
 		if let reshares = reshares, reshares.count > 0 {
 			for share in reshares {
-				shareRows.append( StaticTableViewRow(rowWithAction: { (_, _) in
+				shareRows.append( StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 					let editSharingViewController = GroupSharingEditUserGroupsTableViewController(style: .grouped)
 					editSharingViewController.share = share
-					self.navigationController?.pushViewController(editSharingViewController, animated: true)
+					self?.navigationController?.pushViewController(editSharingViewController, animated: true)
 				}, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: .disclosureIndicator) )
 			}
 

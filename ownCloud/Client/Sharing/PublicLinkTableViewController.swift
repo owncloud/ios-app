@@ -36,8 +36,8 @@ class PublicLinkTableViewController: SharingTableViewController {
 		addHeaderView()
 		addPrivateLinkSection()
 
-		shareQuery = core?.sharesWithReshares(for: item, initialPopulationHandler: { (sharesWithReshares) in
-			if sharesWithReshares.count > 0 {
+		shareQuery = core?.sharesWithReshares(for: item, initialPopulationHandler: { [weak self] (sharesWithReshares) in
+			if let self = self, sharesWithReshares.count > 0 {
 				self.shares = sharesWithReshares.filter { (share) -> Bool in
 					if share.type == .link {
 						return true
@@ -48,7 +48,8 @@ class PublicLinkTableViewController: SharingTableViewController {
 					self.addShareSections()
 				}
 			}
-		}, changesAvailableNotificationHandler: { (sharesWithReshares) in
+		}, changesAvailableNotificationHandler: { [weak self] (sharesWithReshares) in
+			guard let self = self else { return }
 			let sharesWithReshares = sharesWithReshares.filter { (share) -> Bool in
 				if share.type == .link {
 					return true
@@ -75,8 +76,8 @@ class PublicLinkTableViewController: SharingTableViewController {
 	func addSectionFor(type: OCShareType, with title: String) {
 		var shareRows: [StaticTableViewRow] = []
 
-		let user = shares.filter { (OCShare) -> Bool in
-			if OCShare.type == type {
+		let user = shares.filter { (share) -> Bool in
+			if share.type == type {
 				return true
 			}
 			return false
@@ -85,7 +86,8 @@ class PublicLinkTableViewController: SharingTableViewController {
 		if user.count > 0 {
 			for share in user {
 				if canEdit(share: share) {
-					shareRows.append( StaticTableViewRow(rowWithAction: { (_, _) in
+					shareRows.append( StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+						guard let self = self else { return }
 						let editPublicLinkViewController = PublicLinkEditTableViewController(style: .grouped)
 						editPublicLinkViewController.share = share
 						editPublicLinkViewController.core = self.core
@@ -97,8 +99,8 @@ class PublicLinkTableViewController: SharingTableViewController {
 				}
 			}
 		} else {
-			shareRows.append( StaticTableViewRow(buttonWithAction: { (_, _) in
-				self.addPublicLink()
+			shareRows.append( StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+				self?.addPublicLink()
 			}, title: "Create Public Link".localized, style: StaticTableViewRowButtonStyle.plain))
 		}
 
@@ -163,7 +165,8 @@ class PublicLinkTableViewController: SharingTableViewController {
 				guard let url = url else { return }
 				if error == nil {
 					OnMainThread {
-						let privateLinkRow = StaticTableViewRow(headerRowWithAction: { (row, _) in
+						let privateLinkRow = StaticTableViewRow(headerRowWithAction: { [weak self] (row, _) in
+							guard let self = self else { return }
 							self.retrievePrivateLink(for: self.item, in: row)
 						}, headerTitle: String(format:"%@", url.absoluteString), title: "Copy Private Link".localized, accessoryView: nil)
 						rows.append(privateLinkRow)

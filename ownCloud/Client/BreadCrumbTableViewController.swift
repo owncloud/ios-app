@@ -61,7 +61,8 @@ class BreadCrumbTableViewController: StaticTableViewController {
 			if currentPath == "/", let shortName = self.bookmarkShortName {
 				pathTitle = shortName
 			}
-			let aRow = StaticTableViewRow(rowWithAction: { (_, _) in
+			let aRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+				guard let self = self else { return }
 				if stackViewControllers.indices.contains(stackIndex) {
 					self.parentNavigationController?.popToViewController((stackViewControllers[stackIndex]), animated: true)
 				}

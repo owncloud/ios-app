@@ -47,6 +47,8 @@ class ClientItemCell: ThemeTableViewCell {
 	var progressView : ProgressView?
 
 	var moreButtonWidthConstraint : NSLayoutConstraint?
+	var sharedStatusIconViewWidthConstraint : NSLayoutConstraint?
+	var publicLinkStatusIconViewWidthConstraint : NSLayoutConstraint?
 
 	var activeThumbnailRequestProgress : Progress?
 
@@ -150,6 +152,8 @@ class ClientItemCell: ThemeTableViewCell {
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
 		moreButtonWidthConstraint = moreButton.widthAnchor.constraint(equalToConstant: moreButtonWidth)
+		sharedStatusIconViewWidthConstraint = sharedStatusIconView.widthAnchor.constraint(equalToConstant: 0)
+		publicLinkStatusIconViewWidthConstraint = publicLinkStatusIconView.widthAnchor.constraint(equalToConstant: 0)
 
 		NSLayoutConstraint.activate([
 			iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: horizontalMargin),
@@ -160,6 +164,8 @@ class ClientItemCell: ThemeTableViewCell {
 			iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
 
 			titleLabel.rightAnchor.constraint(equalTo: sharedStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
+			sharedStatusIconView.rightAnchor.constraint(equalTo: publicLinkStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
+			publicLinkStatusIconView.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
 			sharedStatusIconView.rightAnchor.constraint(equalTo: publicLinkStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
 			publicLinkStatusIconView.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
 			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -horizontalMargin),
@@ -247,13 +253,17 @@ class ClientItemCell: ThemeTableViewCell {
 
 		if item.isSharedWithUser || item.sharedByUserOrGroup {
 			sharedStatusIconView.image = UIImage(named: "group")
+			sharedStatusIconViewWidthConstraint?.constant = sharedStatusIconView.image?.size.width ?? 0
 		} else {
 			sharedStatusIconView.image = nil
+			sharedStatusIconViewWidthConstraint?.constant = 0
 		}
 		if item.sharedByPublicLink {
 			publicLinkStatusIconView.image = UIImage(named: "link")
+			publicLinkStatusIconViewWidthConstraint?.constant = publicLinkStatusIconView.image?.size.width ?? 0
 		} else {
 			publicLinkStatusIconView.image = nil
+			publicLinkStatusIconViewWidthConstraint?.constant = 0
 		}
 
 		if item.type == .file {

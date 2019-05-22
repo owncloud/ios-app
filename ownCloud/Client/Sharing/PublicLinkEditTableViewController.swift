@@ -57,8 +57,8 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 	func addNameSection() {
 		let section = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "name-section")
-		let nameRow = StaticTableViewRow(textFieldWithAction: { (row, _) in
-			if let core = self.core {
+		let nameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (row, _) in
+			if let self = self, let core = self.core {
 				guard let share = self.share, let name = row.textField?.text else { return }
 				core.update(share, afterPerformingChanges: {(share) in
 					share.name = name
@@ -102,8 +102,8 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				["Upload only (File Drop)".localized : 2]
 			]
 
-			section.add(radioGroupWithArrayOfLabelValueDictionaries: values, radioAction: { (row, _) in
-				if let core = self.core {
+			section.add(radioGroupWithArrayOfLabelValueDictionaries: values, radioAction: { [weak self] (row, _) in
+				if let self = self, let core = self.core {
 					guard let share = self.share, let selectedValueFromSection = row.section?.selectedValue(forGroupIdentifier: "permission-group") as? Int else { return }
 
 					if self.canPerformPermissionChange(for: selectedValueFromSection) {
@@ -121,7 +121,8 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							default:
 								break
 							}
-						}, completionHandler: { (error, share) in
+						}, completionHandler: { [weak self] (error, share) in
+							guard let self = self else { return }
 							if error == nil {
 								guard let changedShare = share else { return }
 								self.share?.permissions = changedShare.permissions
@@ -214,15 +215,15 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	}
 
 	func passwordSwitchRow(_ hasPassword : Bool, _ passwordSection : StaticTableViewSection) {
-		let passwordRow = StaticTableViewRow(switchWithAction: { (_, sender) in
-			if let passwordSwitch = sender as? UISwitch {
+		let passwordRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
+			if let self = self, let passwordSwitch = sender as? UISwitch {
 				if passwordSwitch.isOn == false, let passwordFieldRow = passwordSection.row(withIdentifier: "password-field-row") {
 					passwordSection.remove(rows: [passwordFieldRow], animated: true)
 
 					// delete password
 					if let core = self.core {
 						guard let share = self.share else { return }
-						core.update(share, afterPerformingChanges: {(share) in
+						core.update(share, afterPerformingChanges: { (share) in
 							share.protectedByPassword = false
 						}, completionHandler: { (error, share) in
 							if error == nil {
@@ -252,14 +253,14 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			passwordValue = password
 		}
 
-		let expireDateRow = StaticTableViewRow(secureTextFieldWithAction: { (_, sender) in
-
-			if let core = self.core {
+		let expireDateRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (_, sender) in
+			if let self = self, let core = self.core {
 				guard let share = self.share, let textField = sender as? UITextField else { return }
 				core.update(share, afterPerformingChanges: {(share) in
 					share.password = textField.text
 					share.protectedByPassword = true
-				}, completionHandler: { (error, share) in
+				}, completionHandler: { [weak self] (error, share) in
+					guard let self = self else { return }
 					if error == nil {
 						guard let changedShare = share else { return }
 						self.share?.password = changedShare.password
@@ -295,8 +296,8 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 		if needsExpireDate == false {
 
-			let expireDateRow = StaticTableViewRow(switchWithAction: { (_, sender) in
-				if let expireDateSwitch = sender as? UISwitch {
+			let expireDateRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
+				if let self = self, let expireDateSwitch = sender as? UISwitch {
 					if expireDateSwitch.isOn == false, let expireDateRow = expireSection.row(withIdentifier: "expire-date-row") {
 						var rows : [StaticTableViewRow] = [expireDateRow]
 						if let expireDatePickerRow = expireSection.row(withIdentifier: "date-picker-row") {
@@ -316,7 +317,8 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 								share.expirationDate = nil
 							}
 
-						}, completionHandler: { (error, share) in
+						}, completionHandler: { [weak self] (error, share) in
+							guard let self = self else { return }
 							if error == nil {
 								guard let changedShare = share else { return }
 								self.share?.expirationDate = changedShare.expirationDate
@@ -366,13 +368,14 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		let expireDateRow = StaticTableViewRow(buttonWithAction: { (_, _) in
 			if expireSection.row(withIdentifier: "date-picker-row") == nil {
 
-				let datePickerRow = StaticTableViewRow(datePickerWithAction: { (row, sender) in
+				let datePickerRow = StaticTableViewRow(datePickerWithAction: { [weak self] (row, sender) in
 
-					if let core = self.core {
+					if let self = self, let core = self.core {
 						guard let share = self.share, let datePicker = sender as? UIDatePicker else { return }
-						core.update(share, afterPerformingChanges: {(share) in
+						core.update(share, afterPerformingChanges: { (share) in
 							share.expirationDate = datePicker.date
-						}, completionHandler: { (error, share) in
+						}, completionHandler: { [weak self] (error, share) in
+							guard let self = self else { return }
 							if error == nil {
 								guard let changedShare = share else { return }
 								self.share?.expirationDate = changedShare.expirationDate
@@ -426,13 +429,14 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		}
 
 		deleteSection.add(rows: [
-			StaticTableViewRow(buttonWithAction: { (row, _) in
+			StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
 				let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 				progressView.startAnimating()
 
 				row.cell?.accessoryView = progressView
-				if let core = self.core, let share = self.share {
-					core.delete(share, completionHandler: { (error) in
+				if let self = self, let core = self.core, let share = self.share {
+					core.delete(share, completionHandler: { [weak self] (error) in
+						guard let self = self else { return }
 						OnMainThread {
 							if error == nil {
 								self.navigationController?.popViewController(animated: true)

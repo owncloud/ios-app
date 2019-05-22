@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class SharesFilelistTableViewController: UITableViewController, Themeable {
+class SharesFilelistTableViewController: ClientFilelistTableViewController, Themeable {
 
 	weak var core : OCCore?
 	var itemTracker : OCCoreItemTracking?
@@ -31,22 +31,6 @@ class SharesFilelistTableViewController: UITableViewController, Themeable {
 				self.tableView.reloadData()
 			}
 		}
-	}
-	var progressSummarizer : ProgressSummarizer?
-	private var _actionProgressHandler : ActionProgressHandler?
-
-	func makeActionProgressHandler() -> ActionProgressHandler {
-		if _actionProgressHandler == nil {
-			_actionProgressHandler = { [weak self] (progress, publish) in
-				if publish {
-					self?.progressSummarizer?.startTracking(progress: progress)
-				} else {
-					self?.progressSummarizer?.stopTracking(progress: progress)
-				}
-			}
-		}
-
-		return _actionProgressHandler!
 	}
 
 	// MARK: - View controller events

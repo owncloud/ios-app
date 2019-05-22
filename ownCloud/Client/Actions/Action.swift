@@ -193,9 +193,7 @@ class Action : NSObject {
 					if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context) {
 						shareRows.append(publicLinkRow)
 					}
-					tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: shareRows), at: 0, animated: false, completionHandler: { (_) in
-						updatePreferredContenSize(for: moreViewController)
-					})
+					tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: shareRows), at: 0, animated: false)
 				}
 			}
 		}
@@ -205,8 +203,8 @@ class Action : NSObject {
 		let actions = Action.sortedApplicableActions(for: context)
 
 		actions.forEach({
-			$0.actionWillRunHandler = {
-				moreViewController.dismiss(animated: true)
+			$0.actionWillRunHandler = { [weak moreViewController] in
+				moreViewController?.dismiss(animated: true)
 			}
 
 			$0.progressHandler = progressHandler
@@ -341,8 +339,8 @@ private extension Action {
 
 			if item.isSharedWithUser == false {
 				// find Shares by me
-				let privateShares = shares.filter { (OCShare) -> Bool in
-					if OCShare.type != .link {
+				let privateShares = shares.filter { (share) -> Bool in
+					if share.type != .link {
 						return true
 					}
 					return false
@@ -368,8 +366,8 @@ private extension Action {
 			}
 
 			// find Public link shares
-			let linkShares = shares.filter { (OCShare) -> Bool in
-				if OCShare.type == .link {
+			let linkShares = shares.filter { (share) -> Bool in
+				if share.type == .link {
 					return true
 				}
 				return false
@@ -385,13 +383,11 @@ private extension Action {
 
 			if hasUserGroupSharing {
 				let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
-					presentingController.dismiss(animated: true)
-
-					if let viewController = context.viewController, let core = context.core {
+					if let core = context.core {
 						let sharingViewController = GroupSharingTableViewController(core: core, item: item)
 						sharingViewController.shares = shares
-						let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
-						viewController.present(navigationController, animated: true, completion: nil)
+
+						self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
 					}
 				}, title: userTitle, subtitle: nil, image: UIImage(named: "group"), alignment: .left, accessoryType: .disclosureIndicator)
 				shareRows.append(addGroupRow)
@@ -401,13 +397,11 @@ private extension Action {
 
 			if hasLinkSharing {
 				let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
-					presentingController.dismiss(animated: true)
-
-					if let viewController = context.viewController, let core = context.core {
+					if let core = context.core {
 						let sharingViewController = PublicLinkTableViewController(core: core, item: item)
 						sharingViewController.shares = shares
-						let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
-						viewController.present(navigationController, animated: true, completion: nil)
+
+						self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
 					}
 				}, title: linkTitle, subtitle: nil, image: UIImage(named: "link"), alignment: .left, accessoryType: .disclosureIndicator)
 				shareRows.append(addGroupRow)
@@ -429,9 +423,7 @@ private extension Action {
 			tableViewController.removeSection(section)
 		}
 		if rows.count > 0 {
-			tableViewController.insertSection(MoreStaticTableViewSection(identifier: "share-section", rows: rows), at: 0, animated: false, completionHandler: { (_) in
-				updatePreferredContenSize(for: contentViewController)
-			})
+			tableViewController.insertSection(MoreStaticTableViewSection(identifier: "share-section", rows: rows), at: 0, animated: false)
 		}
 	}
 
@@ -442,14 +434,10 @@ private extension Action {
 		}
 
 		let addGroupRow = StaticTableViewRow(buttonWithAction: { (_, _) in
-			presentingController.dismiss(animated: true)
-
-			if let viewController = context.viewController, let core = context.core {
-				let sharingViewController = GroupSharingTableViewController(core: core, item: item)
-				sharingViewController.shouldStartSearch = true
-				let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
-
-				viewController.present(navigationController, animated: true, completion: nil)
+			if let core = context.core {
+				self.dismiss(presentingController: presentingController,
+							 andPresent: GroupSharingTableViewController(core: core, item: item),
+							 on: context.viewController)
 			}
 		}, title: title, style: .plain, image: UIImage(named: "group"), alignment: .left, identifier: "share-add-group")
 
@@ -459,13 +447,10 @@ private extension Action {
 	private class func shareAsPublicLinkRow(item : OCItem, presentingController: UIViewController, context: ActionContext) -> StaticTableViewRow? {
 		if let core = context.core, core.connection.capabilities?.publicSharingEnabled == true, !item.sharedByPublicLink, item.isShareable {
 			let addGroupRow = StaticTableViewRow(buttonWithAction: { (_, _) in
-				presentingController.dismiss(animated: true)
-
-				if let viewController = context.viewController {
-					let sharingViewController = PublicLinkTableViewController(core: core, item: item)
-					let navigationController = ThemeNavigationController(rootViewController: sharingViewController)
-
-					viewController.present(navigationController, animated: true, completion: nil)
+				if let core = context.core {
+					self.dismiss(presentingController: presentingController,
+								 andPresent: PublicLinkTableViewController(core: core, item: item),
+								 on: context.viewController)
 				}
 			}, title: "Create Public Link".localized, style: .plain, image: UIImage(named: "link"), alignment: .left, identifier: "share-add-group")
 
@@ -475,12 +460,13 @@ private extension Action {
 		return nil
 	}
 
-	private class func updatePreferredContenSize(for contentViewController: MoreViewController) {
-		if let scrollView = contentViewController.view as? UIScrollView {
-			var contentSize = scrollView.contentSize
-			let safeBottom = contentViewController.view?.window?.safeAreaInsets.bottom ?? 0
-			contentSize.height += safeBottom
-			contentViewController.preferredContentSize = contentSize
-		}
+	private class func dismiss(presentingController: UIViewController, andPresent viewController: UIViewController, on hostViewController: UIViewController?) {
+		presentingController.dismiss(animated: true)
+
+		guard let hostViewController = hostViewController else { return }
+
+		let navigationController = ThemeNavigationController(rootViewController: viewController)
+
+		hostViewController.present(navigationController, animated: true, completion: nil)
 	}
 }
