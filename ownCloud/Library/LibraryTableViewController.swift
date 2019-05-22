@@ -56,6 +56,7 @@ class LibraryTableViewController: StaticTableViewController {
 
 		self.title = "Quick Access".localized
 		self.navigationController?.navigationBar.prefersLargeTitles = true
+		self.tableView.isScrollEnabled = false
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
