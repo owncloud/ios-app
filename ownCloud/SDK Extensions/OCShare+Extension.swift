@@ -26,8 +26,7 @@ extension OCShare {
 
 		if self.type == .link {
 			if self.canRead {
-				permissionsDescription.append("Download".localized)
-				permissionsDescription.append("View".localized)
+				permissionsDescription.append("Download / View".localized)
 			}
 			if self.canReadWrite {
 				permissionsDescription.append("Create".localized)

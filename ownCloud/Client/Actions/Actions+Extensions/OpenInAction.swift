@@ -133,6 +133,14 @@ class OpenInAction: Action {
 			context.viewController?.present(activityController, animated: true, completion: nil)
 		}
 	}
+
+	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+		if location == .moreItem {
+			return UIImage(named: "open-in")
+		}
+
+		return nil
+	}
 }
 
 extension OpenInAction: UIDocumentInteractionControllerDelegate {

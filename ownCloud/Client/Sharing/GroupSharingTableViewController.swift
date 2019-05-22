@@ -154,9 +154,9 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			let dateFormatter = DateFormatter()
 			dateFormatter.dateStyle = .medium
 			dateFormatter.timeStyle = .short
-			var footer = "This link is unique for this resource, but grants no additional permissions. Only collaborators can use this link. Use it as a permanent link to point to this resource".localized
+			var footer : String?
 			if let date = share.creationDate {
-				footer = footer.appendingFormat("\n\nShared since: %@".localized, dateFormatter.string(from: date))
+				footer = String(format: "Shared since: %@".localized, dateFormatter.string(from: date))
 			}
 
 			OnMainThread {
@@ -219,6 +219,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 							editSharingViewController.share = share
 							editSharingViewController.reshares = resharedUsers
 							editSharingViewController.core = self.core
+							editSharingViewController.item = self.item
 							self.navigationController?.pushViewController(editSharingViewController, animated: true)
 						}, title: recipient.displayName!, subtitle: share.permissionDescription(), image: recipient.user?.avatar, accessoryType: .disclosureIndicator) )
 					} else {
@@ -268,6 +269,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		}
 		if shares.count > 0 && showShares {
 			self.addShareSections()
+			addActionShareSection()
 		}
 	}
 
@@ -369,28 +371,16 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 						OnMainThread {
 							self.searchController?.searchBar.text = ""
 							self.searchController?.dismiss(animated: true, completion: nil)
-						}
-						self.core?.createShare(share, options: nil, completionHandler: { (error, newShare) in
-							if error == nil, let share = newShare {
-								OnMainThread {
-									self.shares.append(share)
-									self.resetTable(showShares: true)
+							self.resetTable(showShares: true)
 
-									let editSharingViewController = GroupSharingEditUserGroupsTableViewController(style: .grouped)
-									editSharingViewController.share = share
-									editSharingViewController.core = self.core
-									self.navigationController?.pushViewController(editSharingViewController, animated: true)
-								}
-							} else {
-								if let shareError = error {
-									OnMainThread {
-										self.resetTable(showShares: true)
-										let alertController = UIAlertController(with: "Adding User to Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-										self.present(alertController, animated: true)
-									}
-								}
-							}
-						})
+							let editSharingViewController = GroupSharingEditUserGroupsTableViewController(style: .grouped)
+							editSharingViewController.share = share
+							editSharingViewController.core = self.core
+							editSharingViewController.createShare = true
+							editSharingViewController.item = self.item
+							let navigationController = ThemeNavigationController(rootViewController: editSharingViewController)
+							self.navigationController?.present(navigationController, animated: true, completion: nil)
+						}
 					}, title: title, image: image)
 				)
 			}
@@ -400,7 +390,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			}
 
 			self.addSection(
-				StaticTableViewSection(headerTitle: "Invite Collaborators".localized, footerTitle: nil, identifier: "search-results", rows: rows)
+				StaticTableViewSection(headerTitle: "Invite Collaborator".localized, footerTitle: nil, identifier: "search-results", rows: rows)
 			)
 		}
 	}

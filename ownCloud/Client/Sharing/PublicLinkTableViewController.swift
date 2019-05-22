@@ -29,7 +29,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 
 		messageView = MessageView(add: self.view)
 
-		self.navigationItem.title = "Public Links".localized
+		self.navigationItem.title = "Links".localized
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
 		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPublicLink))
 
@@ -154,7 +154,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 			self.removeSection(section)
 		}
 
-		let footer = "This link is unique for this resource, but grants no additional permissions. Only collaborators can use this link. Use it as a permanent link to point to this resource".localized
+		let footer = "Only collaborators can use this link. Use it as a permanent link to point to this resource".localized
 
 		OnMainThread {
 			let section = StaticTableViewSection(headerTitle: nil, footerTitle: footer, identifier: "private-link-section")
@@ -265,28 +265,13 @@ class PublicLinkTableViewController: SharingTableViewController {
 			}
 
 			let share = OCShare(publicLinkToPath: path, linkName: linkName, permissions: permissions, password: nil, expiration: nil)
-			self.core?.createShare(share, options: nil, completionHandler: { (error, newShare) in
-				if error == nil, let share = newShare {
-					OnMainThread {
-						self.shares.append(share)
-						self.resetTable(showShares: true)
-
-						let editPublicLinkViewController = PublicLinkEditTableViewController(style: .grouped)
-						editPublicLinkViewController.share = share
-						editPublicLinkViewController.core = self.core
-						editPublicLinkViewController.item = self.item
-						self.navigationController?.pushViewController(editPublicLinkViewController, animated: true)
-					}
-				} else {
-					if let shareError = error {
-						OnMainThread {
-							self.resetTable(showShares: true)
-							let alertController = UIAlertController(with: "Creating public link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-							self.present(alertController, animated: true)
-						}
-					}
-				}
-			})
+			let editPublicLinkViewController = PublicLinkEditTableViewController(style: .grouped)
+			editPublicLinkViewController.share = share
+			editPublicLinkViewController.core = self.core
+			editPublicLinkViewController.item = self.item
+			editPublicLinkViewController.createLink = true
+			let navigationController = ThemeNavigationController(rootViewController: editPublicLinkViewController)
+			self.navigationController?.present(navigationController, animated: true, completion: nil)
 		}
 	}
 }

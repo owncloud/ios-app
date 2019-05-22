@@ -277,7 +277,7 @@
 "Public Link" = "Public Link";
 "Public Links" = "Public Links";
 "Shared by %@" = "Shared by %@";
-"Invite Collaborators" = "Invite Collaborators";
+"Invite Collaborator" = "Invite Collaborator";
 "Collaborators" = "Collaborators";
 "Add email or name" = "Add email or name";
 "Sharing" = "Sharing";
@@ -297,8 +297,6 @@
 "Shared to" = "Shared to";
 "Delete Collaborator failed" = "Delete Collaborator failed";
 "Delete Collaborator" = "Delete Collaborator";
-"View" = "View";
-"Download" = "Download";
 "Create" = "Create";
 "Change" = "Change";
 "Recipients can view or download contents." = "Recipients can view or download contents.";
@@ -328,7 +326,7 @@
 "Shared with others" = "Shared with others";
 "Shares" = "Shares";
 "Copy Private Link" = "Copy Private Link";
-"This link is unique for this resource, but grants no additional permissions. Only collaborators can use this link. Use it as a permanent link to point to this resource" = "This link is unique for this resource, but grants no additional permissions. Only collaborators can use this link. Use it as a permanent link to point to this resource";
+"Only collaborators can use this link. Use it as a permanent link to point to this resource" = "Only collaborators can use this link. Use it as a permanent link to point to this resource";
 "Accept Share failed" = "Accept Share failed";
 "Decline Share failed" = "Decline Share failed";
 "Accept" = "Accept";

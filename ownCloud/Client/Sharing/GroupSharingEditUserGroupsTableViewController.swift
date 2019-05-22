@@ -23,9 +23,12 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 
 	// MARK: - Instance Variables
 	var share : OCShare?
+	var item : OCItem?
 	var reshares : [OCShare]?
 	weak var core : OCCore?
 	var showSubtitles : Bool = false
+	var createShare : Bool = false
+	var permissionMask : OCSharePermissionsMask?
 
 	// MARK: - Init
 
@@ -37,7 +40,9 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 		let infoButton = UIButton(type: .infoLight)
 		infoButton.addTarget(self, action: #selector(showInfoSubtitles), for: .touchUpInside)
 		let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
-		navigationItem.rightBarButtonItem = infoBarButtonItem
+		toolbarItems = [ UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), infoBarButtonItem]
+		navigationController?.toolbar.isTranslucent = false
+		navigationController?.isToolbarHidden = false
 
 		addPermissionSection()
 
@@ -46,7 +51,42 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 			addPermissionEditSection()
 		}
 		addResharesSection()
-		addActionSection()
+
+		if createShare {
+			let cancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissAnimated))
+			self.navigationItem.leftBarButtonItem = cancel
+
+			let save = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(createShareAndDismiss))
+			self.navigationItem.rightBarButtonItem = save
+
+			permissionMask = OCSharePermissionsMask.read
+		} else {
+			addActionSection()
+		}
+	}
+
+	// MARK: Create Share
+
+	@objc func createShareAndDismiss() {
+		guard let share = share else { return }
+
+		if let recipient = share.recipient, let permissionMask = permissionMask {
+			let newShare = OCShare(recipient: recipient, path: share.itemPath, permissions: permissionMask, expiration: nil)
+			self.core?.createShare(newShare, options: nil, completionHandler: { (error, _) in
+				if error == nil {
+					OnMainThread {
+						self.dismissAnimated()
+					}
+				} else {
+					if let shareError = error {
+						OnMainThread {
+							let alertController = UIAlertController(with: "Adding User to Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+							self.present(alertController, animated: true)
+						}
+					}
+				}
+			})
+		}
 	}
 
 	// MARK: Permission Section
@@ -56,8 +96,12 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 		guard let share = share else { return }
 
 		var canEdit = false
-		if share.canUpdate || share.canCreate || share.canDelete {
+		if !createShare, share.canUpdate || share.canCreate || share.canDelete {
 			canEdit = true
+		}
+		var canShare = false
+		if !createShare, share.canShare {
+			canShare = true
 		}
 
 		section.add(row: StaticTableViewRow(toggleItemWithAction: { [weak self] (row, _) in
@@ -65,27 +109,26 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 				self?.changePermissions(enabled: selected, permissions: [.share], completionHandler: {(_) in
 				})
 			}
-		}, title: "Can Share".localized, subtitle: "", selected: share.canShare, identifier: "permission-section-share"))
+		}, title: "Can Share".localized, subtitle: "", selected: canShare, identifier: "permission-section-share"))
 
 		section.add(row: StaticTableViewRow(toggleItemWithAction: { [weak self] (row, _) in
-			guard let self = self else { return }
+			guard let self = self, let item = self.item else { return }
 			if let selected = row.value as? Bool {
-				if share.itemType == .collection {
-					self.changePermissions(enabled: selected, permissions: [.create, .update, .delete], completionHandler: { (_) in
-						if selected {
-							self.addPermissionEditSection(animated: true)
-						} else {
-							if let section = self.sectionForIdentifier("permission-edit-section") {
-								self.removeSection(section, animated: true)
-							}
+				if item.type == .collection {
+					if selected {
+						self.addPermissionEditSection(animated: true)
+					} else {
+						if let section = self.sectionForIdentifier("permission-edit-section") {
+							self.removeSection(section, animated: true)
 						}
+					}
+					self.changePermissions(enabled: selected, permissions: [.create, .update, .delete], completionHandler: { (_) in
 					})
 				} else {
 					self.changePermissions(enabled: selected, permissions: [.update], completionHandler: { (_) in
 					})
 				}
 			}
-
 		}, title: share.itemType == .collection ? "Can Edit".localized : "Can Edit and Change".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
 
 		let subtitles = [
@@ -142,30 +185,41 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 
 	func changePermissions(enabled: Bool, permissions : [OCSharePermissionsMask], completionHandler: @escaping (_ error : Error?) -> Void ) {
 		guard let share = share else { return }
-		if let core = self.core {
-			core.update(share, afterPerformingChanges: {(share) in
-				for permissionValue in permissions {
-					if enabled {
-						share.permissions.insert(permissionValue)
-					} else {
-						share.permissions.remove(permissionValue)
-					}
-				}
-			}, completionHandler: { (error, share) in
-				if error == nil {
-					guard let changedShare = share else { return }
-					self.share?.permissions = changedShare.permissions
-					completionHandler(nil)
+
+		if createShare {
+			for permissionValue in permissions {
+				if enabled {
+					permissionMask?.insert(permissionValue)
 				} else {
-					if let shareError = error {
-						OnMainThread {
-							let alertController = UIAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-							self.present(alertController, animated: true)
-							completionHandler(shareError)
+					permissionMask?.remove(permissionValue)
+				}
+			}
+		} else {
+			if let core = self.core {
+				core.update(share, afterPerformingChanges: {(share) in
+					for permissionValue in permissions {
+						if enabled {
+							share.permissions.insert(permissionValue)
+						} else {
+							share.permissions.remove(permissionValue)
 						}
 					}
-				}
-			})
+				}, completionHandler: { (error, share) in
+					if error == nil {
+						guard let changedShare = share else { return }
+						self.share?.permissions = changedShare.permissions
+						completionHandler(nil)
+					} else {
+						if let shareError = error {
+							OnMainThread {
+								let alertController = UIAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+								self.present(alertController, animated: true)
+								completionHandler(shareError)
+							}
+						}
+					}
+				})
+			}
 		}
 	}
 
