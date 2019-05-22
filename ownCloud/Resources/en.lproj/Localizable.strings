@@ -272,23 +272,20 @@
 
 /* Sharing */
 "Searching Shares…" = "Searching Shares…";
-"Recipient" = "Recipient";
-"Recipients" = "Recipients";
+"Collaborator" = "Collaborator";
+"Collaborators" = "Collaborators";
 "Public Link" = "Public Link";
 "Public Links" = "Public Links";
 "Shared by %@" = "Shared by %@";
-"Share this file" = "Share this file";
-"Share this folder" = "Share this folder";
-"Search User, Group, Remote" = "Search User, Group, Remote";
+"Invite Collaborators" = "Invite Collaborators";
+"Collaborators" = "Collaborators";
+"Add email or name" = "Add email or name";
 "Sharing" = "Sharing";
 "Users" = "Users";
 "Groups" = "Groups";
-"Remote Users" = "Remote Users";
-"Search Recipients" = "Search Recipients";
 "Start typing to search users, groups and remote users." = "Start typing to search users, groups and remote users.";
 "(Group)" = "(Group)";
 "Adding User to Share failed" = "Adding User to Share failed";
-"Select Share Recipient" = "Select Share Recipient";
 "Permissions" = "Permissions";
 "Shared since: %@" = "Shared since: %@";
 "Allows the users you share with to re-share" = "Allows the users you share with to re-share";
@@ -298,8 +295,8 @@
 "Allows the users you share with to delete shared files" = "Allows the users you share with to delete shared files";
 "Setting permission failed" = "Setting permission failed";
 "Shared to" = "Shared to";
-"Delete Recipient failed" = "Delete Recipient failed";
-"Delete Recipient" = "Delete Recipient";
+"Delete Collaborator failed" = "Delete Collaborator failed";
+"Delete Collaborator" = "Delete Collaborator";
 "View" = "View";
 "Download" = "Download";
 "Create" = "Create";
@@ -312,15 +309,14 @@
 "Upload only (File Drop)" = "Upload only (File Drop)";
 "Creating public link failed" = "Creating public link failed";
 "Create Public Link" = "Create Public Link";
+"Links" = "Links";
 "Link" = "Link";
-"Expire Date" = "Expire Date";
 "Setting expiration date failed" = "Setting expiration date failed";
-"Link has expire date" = "Link has expire date";
-"Copy Public Link URL" = "Copy Public Link URL";
+"Expiration date" = "Expiration date";
+"Copy Public Link" = "Copy Public Link";
 "Delete Public Link" = "Delete Public Link";
 "Deleting Public Link failed" = "Deleting Public Link failed";
 "Deleting password failed" = "Deleting password failed";
-"Protected by password" = "Protected by password";
 "Setting password failed" = "Setting password failed";
 "Type to update password" = "Type to update password";
 "Cannot change permission" = "Cannot change permission";
@@ -332,12 +328,20 @@
 "Shared with others" = "Shared with others";
 "Shares" = "Shares";
 "Copy Private Link" = "Copy Private Link";
-"This link is unique for this resource, but grants no additional permissions. Recipients can request permissions from the owner." = "This link is unique for this resource, but grants no additional permissions. Recipients can request permissions from the owner.";
+"This link is unique for this resource, but grants no additional permissions. Only collaborators can use this link. Use it as a permanent link to point to this resource" = "This link is unique for this resource, but grants no additional permissions. Only collaborators can use this link. Use it as a permanent link to point to this resource";
 "Accept Share failed" = "Accept Share failed";
 "Decline Share failed" = "Decline Share failed";
 "Accept" = "Accept";
 "Decline" = "Decline";
 "Decline Share" = "Decline Share";
+"Share" = "Share";
+"Read" = "Read";
+"Can Share" = "Can Share";
+"Can Edit" = "Can Edit";
+"Can Edit and Change" = "Can Edit and Change";
+"Can Create" = "Can Create";
+"Can Change" = "Can Change";
+"Can Delete" = "Can Delete";
 
 /* Quick Access view */
 "Quick Access" = "Quick Access";

@@ -347,9 +347,9 @@ private extension Action {
 				}
 
 				if privateShares.count > 0 {
-					var title = "Recipient".localized
+					var title = "Collaborator".localized
 					if privateShares.count > 1 {
-						title = "Recipients".localized
+						title = "Collaborators".localized
 					}
 					userTitle = "\(privateShares.count) \(title)"
 					hasUserGroupSharing = true
@@ -373,9 +373,9 @@ private extension Action {
 				return false
 			}
 			if linkShares.count > 0 {
-				var title = "Public Link".localized
+				var title = "Link".localized
 				if linkShares.count > 1 {
-					title = "Public Links".localized
+					title = "Links".localized
 				}
 				linkTitle.append("\(linkShares.count) \(title)")
 				hasLinkSharing = true
@@ -428,18 +428,13 @@ private extension Action {
 	}
 
 	private class func shareAsGroupRow(item : OCItem, presentingController: UIViewController, context: ActionContext) -> StaticTableViewRow {
-		var title = "Share this file".localized
-		if item.type == .collection {
-			title = "Share this folder".localized
-		}
-
 		let addGroupRow = StaticTableViewRow(buttonWithAction: { (_, _) in
 			if let core = context.core {
 				self.dismiss(presentingController: presentingController,
 							 andPresent: GroupSharingTableViewController(core: core, item: item),
 							 on: context.viewController)
 			}
-		}, title: title, style: .plain, image: UIImage(named: "group"), alignment: .left, identifier: "share-add-group")
+		}, title: "Invite Collaborators".localized, style: .plain, image: UIImage(named: "group"), alignment: .left, identifier: "share-add-group")
 
 		return addGroupRow
 	}
@@ -452,7 +447,7 @@ private extension Action {
 								 andPresent: PublicLinkTableViewController(core: core, item: item),
 								 on: context.viewController)
 				}
-			}, title: "Create Public Link".localized, style: .plain, image: UIImage(named: "link"), alignment: .left, identifier: "share-add-group")
+			}, title: "Links".localized, style: .plain, image: UIImage(named: "link"), alignment: .left, identifier: "share-add-group")
 
 			return addGroupRow
 		}

@@ -26,8 +26,8 @@ extension OCShare {
 
 		if self.type == .link {
 			if self.canRead {
-				permissionsDescription.append("View".localized)
 				permissionsDescription.append("Download".localized)
+				permissionsDescription.append("View".localized)
 			}
 			if self.canReadWrite {
 				permissionsDescription.append("Create".localized)
@@ -43,10 +43,10 @@ extension OCShare {
 				permissionsDescription.append("Upload (File Drop)".localized)
 			}
 			if self.expirationDate != nil {
-				permissionsDescription.append("Expire Date".localized)
+				permissionsDescription.append("Expiration date".localized)
 			}
 			if self.protectedByPassword {
-				permissionsDescription.append("Password Protected".localized)
+				permissionsDescription.append("Password".localized)
 			}
 		} else {
 			if self.canRead {

@@ -68,7 +68,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			searchController?.searchResultsUpdater = self
 			searchController?.hidesNavigationBarDuringPresentation = true
 			searchController?.dimsBackgroundDuringPresentation = false
-			searchController?.searchBar.placeholder = "Search User, Group, Remote".localized
+			searchController?.searchBar.placeholder = "Add email or name".localized
 			searchController?.searchBar.delegate = self
 			navigationItem.hidesSearchBarWhenScrolling = false
 			navigationItem.searchController = searchController
@@ -154,7 +154,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			let dateFormatter = DateFormatter()
 			dateFormatter.dateStyle = .medium
 			dateFormatter.timeStyle = .short
-			var footer = "This link is unique for this resource, but grants no additional permissions. Recipients can request permissions from the owner.".localized
+			var footer = "This link is unique for this resource, but grants no additional permissions. Only collaborators can use this link. Use it as a permanent link to point to this resource".localized
 			if let date = share.creationDate {
 				footer = footer.appendingFormat("\n\nShared since: %@".localized, dateFormatter.string(from: date))
 			}
@@ -193,11 +193,11 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	// MARK: - Sharing UI
 
-	func addSectionFor(type: OCShareType, with title: String) {
+	func addSectionFor(types: [OCShareType], with title: String, identifier: OCShareType) {
 		var shareRows: [StaticTableViewRow] = []
 
-		let user = shares.filter { (OCShare) -> Bool in
-			if OCShare.type == type {
+		let user = shares.filter { (share) -> Bool in
+			if types.contains(share.type) {
 				return true
 			}
 			return false
@@ -205,8 +205,8 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 		if user.count > 0 {
 			for share in user {
-				let resharedUsers = shares.filter { (OCShare) -> Bool in
-					if OCShare.owner == share.recipient?.user {
+				let resharedUsers = shares.filter { (share) -> Bool in
+					if share.owner == share.recipient?.user {
 						return true
 					}
 					return false
@@ -226,7 +226,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 					}
 				}
 			}
-			let sectionType = "share-section-\(String(type.rawValue))"
+			let sectionType = "share-section-\(String(identifier.rawValue))"
 			if let section = self.sectionForIdentifier(sectionType) {
 				self.removeSection(section)
 			}
@@ -238,15 +238,14 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	func addShareSections() {
 		OnMainThread {
-			self.addSectionFor(type: .userShare, with: "Users".localized)
-			self.addSectionFor(type: .groupShare, with: "Groups".localized)
-			self.addSectionFor(type: .remote, with: "Remote Users".localized)
+			self.addSectionFor(types: [.userShare, .remote], with: "Users".localized, identifier: .userShare)
+			self.addSectionFor(types: [.groupShare], with: "Groups".localized, identifier: .groupShare)
 		}
 	}
 
 	func removeShareSections() {
 		OnMainThread {
-			let types : [OCShareType] = [.userShare, .groupShare, .remote]
+			let types : [OCShareType] = [.userShare, .groupShare]
 			for type in types {
 				let identifier = "share-section-\(String(type.rawValue))"
 				if let section = self.sectionForIdentifier(identifier) {
@@ -401,7 +400,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			}
 
 			self.addSection(
-				StaticTableViewSection(headerTitle: "Select Share Recipient".localized, footerTitle: nil, identifier: "search-results", rows: rows)
+				StaticTableViewSection(headerTitle: "Invite Collaborators".localized, footerTitle: nil, identifier: "search-results", rows: rows)
 			)
 		}
 	}
@@ -430,7 +429,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 						presentationStyle = .alert
 					}
 
-					let alertController = UIAlertController(title: "Delete Recipient".localized,
+					let alertController = UIAlertController(title: "Delete Collaborator".localized,
 															message: nil,
 															preferredStyle: presentationStyle)
 					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
@@ -442,7 +441,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 										self.navigationController?.popViewController(animated: true)
 									} else {
 										if let shareError = error {
-											let alertController = UIAlertController(with: "Delete Recipient failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+											let alertController = UIAlertController(with: "Delete Collaborator failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 											self.present(alertController, animated: true)
 										}
 									}

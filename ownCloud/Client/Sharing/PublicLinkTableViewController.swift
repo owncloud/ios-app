@@ -154,7 +154,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 			self.removeSection(section)
 		}
 
-		let footer = "This link is unique for this resource, but grants no additional permissions. Recipients can request permissions from the owner.".localized
+		let footer = "This link is unique for this resource, but grants no additional permissions. Only collaborators can use this link. Use it as a permanent link to point to this resource".localized
 
 		OnMainThread {
 			let section = StaticTableViewSection(headerTitle: nil, footerTitle: footer, identifier: "private-link-section")

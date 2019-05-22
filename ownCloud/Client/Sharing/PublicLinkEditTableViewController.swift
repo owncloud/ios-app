@@ -174,7 +174,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			hasPassword = true
 		}
 
-		let passwordSection = StaticTableViewSection(headerTitle: "Password".localized, footerTitle: nil, identifier: "password-section")
+		let passwordSection = StaticTableViewSection(headerTitle: "Options".localized, footerTitle: nil, identifier: "password-section")
 		passwordSwitchRow(hasPassword, passwordSection)
 		if hasPassword {
 			self.passwordRow(passwordSection)
@@ -243,7 +243,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					self.passwordRow(passwordSection)
 				}
 			}
-		}, title: "Protected by password".localized, value: hasPassword, identifier: "password-switch-row")
+		}, title: "Password".localized, value: hasPassword, identifier: "password-switch-row")
 		passwordSection.insert(row: passwordRow, at: 0, animated: true)
 	}
 
@@ -292,7 +292,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			needsExpireDate = true
 		}
 
-		let expireSection = StaticTableViewSection(headerTitle: "Expire Date".localized, footerTitle: nil, identifier: "expire-section")
+		let expireSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "expire-section")
 
 		if needsExpireDate == false {
 
@@ -342,7 +342,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						})
 					}
 				}
-			}, title: "Link has expire date".localized, value: hasExpireDate, identifier: "expire-row")
+			}, title: "Expiration date".localized, value: hasExpireDate, identifier: "expire-row")
 			expireSection.add(row: expireDateRow)
 		}
 
@@ -424,7 +424,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			deleteSection.add(rows: [
 				StaticTableViewRow(headerRowWithAction: { (_, _) in
 					UIPasteboard.general.url = shareURL
-				}, headerTitle: String(format:"%@", shareURL.absoluteString), title: "Copy Public Link URL".localized, accessoryView: .none)
+				}, headerTitle: String(format:"%@", shareURL.absoluteString), title: "Copy Public Link".localized, accessoryView: .none)
 				])
 		}
 

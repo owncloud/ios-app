@@ -65,7 +65,7 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 				self?.changePermissions(enabled: selected, permissions: [.share], completionHandler: {(_) in
 				})
 			}
-		}, title: "Share".localized, subtitle: "", selected: share.canShare, identifier: "permission-section-share"))
+		}, title: "Can Share".localized, subtitle: "", selected: share.canShare, identifier: "permission-section-share"))
 
 		section.add(row: StaticTableViewRow(toggleItemWithAction: { [weak self] (row, _) in
 			guard let self = self else { return }
@@ -86,7 +86,7 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 				}
 			}
 
-		}, title: share.itemType == .collection ? "Edit".localized : "Edit and Change".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
+		}, title: share.itemType == .collection ? "Can Edit".localized : "Can Edit and Change".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
 
 		let subtitles = [
 			"Allows the users you share with to re-share".localized,
@@ -111,9 +111,9 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 		let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "permission-edit-section")
 		guard let share = share else { return }
 
-		self.addPermissionRow(to: section, with: "Create", permission: .create, selected: share.canCreate, identifier: "permission-section-edit-create")
-		self.addPermissionRow(to: section, with: "Change", permission: .update, selected: share.canUpdate, identifier: "permission-section-edit-change")
-		self.addPermissionRow(to: section, with: "Delete", permission: .delete, selected: share.canDelete, identifier: "permission-section-edit-delete")
+		self.addPermissionRow(to: section, with: "Can Create", permission: .create, selected: share.canCreate, identifier: "permission-section-edit-create")
+		self.addPermissionRow(to: section, with: "Can Change", permission: .update, selected: share.canUpdate, identifier: "permission-section-edit-change")
+		self.addPermissionRow(to: section, with: "Can Delete", permission: .delete, selected: share.canDelete, identifier: "permission-section-edit-delete")
 
 		let subtitles = [
 			"Allows the users you share with to create new files and add them to the share".localized,
@@ -213,14 +213,14 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 								self.navigationController?.popViewController(animated: true)
 							} else {
 								if let shareError = error {
-									let alertController = UIAlertController(with: "Delete Recipient failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+									let alertController = UIAlertController(with: "Delete Collaborator failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 									self.present(alertController, animated: true)
 								}
 							}
 						}
 					})
 				}
-			}, title: "Delete Recipient".localized, style: StaticTableViewRowButtonStyle.destructive)
+			}, title: "Delete Collaborator".localized, style: StaticTableViewRowButtonStyle.destructive)
 			])
 		self.addSection(section)
 	}
