@@ -111,9 +111,11 @@ class ClientQueryViewController: ClientFilelistTableViewController, Themeable, U
 			titleButton.sizeToFit()
 			titleButton.accessibilityLabel = "Show parent paths".localized
 			titleButton.accessibilityIdentifier = "show-paths-button"
-			titleButton.setTitleColor(Theme.shared.activeCollection.navigationBarColors.labelColor, for: .normal)
+			titleButton.semanticContentAttribute = (titleButton.effectiveUserInterfaceLayoutDirection == .leftToRight) ? .forceRightToLeft : .forceLeftToRight
+			titleButton.setImage(UIImage(named: "chevron-small-light"), for: .normal)
 			messageThemeApplierToken = Theme.shared.add(applier: { (_, collection, _) in
 				titleButton.setTitleColor(collection.navigationBarColors.labelColor, for: .normal)
+				titleButton.tintColor = collection.navigationBarColors.labelColor
 			})
 			self.navigationItem.titleView = titleButton
 		}
@@ -231,6 +233,7 @@ class ClientQueryViewController: ClientFilelistTableViewController, Themeable, U
 		plusBarButton?.accessibilityIdentifier = "client.file-add"
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
 		selectBarButton?.isEnabled = false
+    selectBarButton?.accessibilityIdentifier = "select-button"
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
 
 		selectDeselectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
