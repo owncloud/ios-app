@@ -296,4 +296,31 @@ extension OCItem {
 
 		return parentItem
 	}
+
+	func displaysDifferent(than item: OCItem?) -> Bool {
+		if item == nil {
+			return true
+		}
+
+		return (
+			// Different item
+			(item?.localID != localID) ||
+
+				// File contents (and therefore likely metadata) differs
+				(item?.itemVersionIdentifier != itemVersionIdentifier) ||
+
+				// File name differs
+				(item?.name != name) ||
+
+				// Upload/Download status differs
+				(item?.syncActivity != syncActivity) ||
+
+				// Cloud status differs
+				(item?.cloudStatus != cloudStatus) ||
+
+				// Sharing attributes differ
+				(item?.shareTypesMask != shareTypesMask) ||
+				(item?.permissions != permissions) // these contain sharing info, too
+		)
+	}
 }

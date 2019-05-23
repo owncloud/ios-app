@@ -57,6 +57,8 @@ class LibraryTableViewController: StaticTableViewController {
 		self.title = "Quick Access".localized
 		self.navigationController?.navigationBar.prefersLargeTitles = true
 		self.tableView.isScrollEnabled = false
+		self.addThemableBackgroundView()
+		self.navigationController?.view.backgroundColor = Theme.shared.activeCollection.navigationBarColors.backgroundColor
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -93,12 +95,10 @@ class LibraryTableViewController: StaticTableViewController {
 			queries.append(shareQueryByUser)
 			shareQueryByUser.refreshInterval = 60
 			shareQueryByUser.initialPopulationHandler = { query in
-				let shares = query.queryResults.unique { $0.itemPath }
-				self.handleSharedByUser(shares: shares)
+				self.handleSharedByUser(shares: query.queryResults)
 			}
 			shareQueryByUser.changesAvailableNotificationHandler = { query in
-				let shares = query.queryResults.unique { $0.itemPath }
-				self.handleSharedByUser(shares: shares)
+				self.handleSharedByUser(shares: query.queryResults)
 			}
 			core?.start(shareQueryByUser)
 		}
@@ -107,11 +107,11 @@ class LibraryTableViewController: StaticTableViewController {
 			shareQueryPendingCloudShares.refreshInterval = 60
 			shareQueryPendingCloudShares.initialPopulationHandler = { query in
 				self.pendingCloudSharesCounter = query.queryResults.count
-				self.updatePendingShareRow(shares: query.queryResults, title: "Pending Cloud Shares".localized)
+				self.updatePendingShareRow(shares: query.queryResults, title: "Pending Federated Invites".localized, pendingCounter: self.pendingCloudSharesCounter)
 			}
 			shareQueryPendingCloudShares.changesAvailableNotificationHandler = { query in
 				self.pendingCloudSharesCounter = query.queryResults.count
-				self.updatePendingShareRow(shares: query.queryResults, title: "Pending Cloud Shares".localized)
+				self.updatePendingShareRow(shares: query.queryResults, title: "Pending Federated Invites".localized, pendingCounter: self.pendingCloudSharesCounter)
 			}
 			core?.start(shareQueryPendingCloudShares)
 		}
@@ -121,12 +121,17 @@ class LibraryTableViewController: StaticTableViewController {
 
 	func handleSharedWithUser(shares: [OCShare]) {
 		let sharedWithUserPending = shares.filter({ (share) -> Bool in
-			if share.state == .pending {
+			if share.state == .pending || share.state == .rejected {
 				return true
 			}
 			return false
 		})
-		pendingCloudSharesCounter = sharedWithUserPending.count
+		pendingLocalSharesCounter = sharedWithUserPending.filter({ (share) -> Bool in
+			if share.state == .pending {
+				return true
+			}
+			return false
+		}).count
 
 		let sharedWithUserAccepted = shares.filter({ (share) -> Bool in
 			if share.state == .accepted || share.type == .remote {
@@ -136,7 +141,7 @@ class LibraryTableViewController: StaticTableViewController {
 		})
 
 		OnMainThread {
-			self.updatePendingShareRow(shares: sharedWithUserPending, title: "Pending Shares".localized)
+			self.updatePendingShareRow(shares: sharedWithUserPending, title: "Pending Invites".localized, pendingCounter: self.pendingLocalSharesCounter)
 			self.updateGenericShareRow(shares: sharedWithUserAccepted, title: "Shared with you".localized, image: UIImage(named: "group")!)
 		}
 	}
@@ -157,8 +162,8 @@ class LibraryTableViewController: StaticTableViewController {
 		})
 
 		OnMainThread {
-			self.updateGenericShareRow(shares: sharedByUser, title: "Shared with others".localized, image: UIImage(named: "group")!)
-			self.updateGenericShareRow(shares: sharedByUserLinks, title: "Public Links".localized, image: UIImage(named: "link")!)
+			self.updateGenericShareRow(shares: sharedByUser.unique { $0.itemPath }, title: "Shared with others".localized, image: UIImage(named: "group")!)
+			self.updateGenericShareRow(shares: sharedByUserLinks.unique { $0.itemPath }, title: "Public Links".localized, image: UIImage(named: "link")!)
 		}
 	}
 
@@ -171,13 +176,13 @@ class LibraryTableViewController: StaticTableViewController {
 		}
 	}
 
-	func updatePendingShareRow(shares: [OCShare], title: String) {
+	func updatePendingShareRow(shares: [OCShare], title: String, pendingCounter: Int) {
 		OnMainThread {
 			let rowIdentifier = String(format: "%@-share-row", title)
 			let section = self.sectionForIdentifier("share-section")
 			if shares.count > 0 {
 				self.addShareSection()
-				let shareCounter = String(shares.count)
+				let shareCounter = String(pendingCounter)
 
 				if section?.row(withIdentifier: rowIdentifier) == nil {
 					let pendingLabel = RoundedLabel()

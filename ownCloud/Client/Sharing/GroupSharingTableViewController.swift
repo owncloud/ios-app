@@ -80,7 +80,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 		messageView = MessageView(add: self.view)
 
-		self.navigationItem.title = "Sharing".localized
+		self.navigationItem.title = "Sharing Collaborators".localized
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
 
 		addHeaderView()
@@ -130,6 +130,11 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 				}
 			}, keepRunning: true)
 		shareQuery?.refreshInterval = 2
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		navigationController?.isToolbarHidden = true
 	}
 
 	override func viewDidAppear(_ animated: Bool) {

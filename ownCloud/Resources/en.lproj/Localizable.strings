@@ -280,7 +280,7 @@
 "Invite Collaborator" = "Invite Collaborator";
 "Collaborators" = "Collaborators";
 "Add email or name" = "Add email or name";
-"Sharing" = "Sharing";
+"Sharing Collaborators" = "Sharing Collaborators";
 "Users" = "Users";
 "Groups" = "Groups";
 "Start typing to search users, groups and remote users." = "Start typing to search users, groups and remote users.";
@@ -320,8 +320,8 @@
 "Cannot change permission" = "Cannot change permission";
 "Before you can set the permission\n%@,\n you must enter a password." = "Before you can set the permission\n%@,\n you must enter a password.";
 "Password Protected" = "Password Protected";
-"Pending Cloud Shares" = "Pending Cloud Shares";
-"Pending Shares" = "Pending Shares";
+"Pending Federated Invites" = "Pending Federated Invites";
+"Pending Invites" = "Pending Invites";
 "Shared with you" = "Shared with you";
 "Shared with others" = "Shared with others";
 "Shares" = "Shares";
@@ -340,6 +340,7 @@
 "Can Create" = "Can Create";
 "Can Change" = "Can Change";
 "Can Delete" = "Can Delete";
+"Accept Invite %@" = "Accept Invite %@";
 
 /* Quick Access view */
 "Quick Access" = "Quick Access";

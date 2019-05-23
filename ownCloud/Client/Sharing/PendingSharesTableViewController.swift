@@ -37,19 +37,40 @@ class PendingSharesTableViewController: StaticTableViewController {
 
 		self.navigationController?.navigationBar.prefersLargeTitles = false
 		self.tableView.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
-		prepareItems()
+
+		guard let shares = shares else { return }
+		let pendingShares = shares.filter { (share) -> Bool in
+			if share.state == .pending || share.state == nil {
+				return true
+			}
+
+			return false
+		}
+		if pendingShares.count > 0 {
+			addSection(for: pendingShares, title: "Pending".localized, dimView: false)
+		}
+		let rejectedShares = shares.filter { (share) -> Bool in
+			if share.state == .rejected {
+				return true
+			}
+
+			return false
+		}
+		if rejectedShares.count > 0 {
+			addSection(for: rejectedShares, title: "Declined".localized, dimView: true)
+		}
 	}
 
-	func prepareItems() {
-		if self.sectionForIdentifier("pending-section") == nil {
-			let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "pending-section")
-			self.insertSection(section, at: 0, animated: false)
+	func addSection(for shares: [OCShare], title: String, dimView: Bool) {
+		let identifier = String(format:"%@-section", title)
+		if self.sectionForIdentifier(identifier) == nil {
+			let section = StaticTableViewSection(headerTitle: title, footerTitle: nil, identifier: identifier)
+			self.addSection(section)
 
 			let dateFormatter = DateFormatter()
 			dateFormatter.dateStyle = .medium
 			dateFormatter.timeStyle = .short
 
-			if let shares = shares {
 				for share in shares {
 					var ownerName : String?
 					if share.itemOwner?.displayName != nil {
@@ -80,7 +101,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 								presentationStyle = .alert
 							}
 
-							let alertController = UIAlertController(title: self.title,
+							let alertController = UIAlertController(title: String(format: "Accept Invite %@".localized, itemName ?? ""),
 																	message: nil,
 																	preferredStyle: presentationStyle)
 							alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
@@ -124,6 +145,9 @@ class PendingSharesTableViewController: StaticTableViewController {
 							self.present(alertController, animated: true, completion: nil)
 
 						}, title: itemName ?? "Share".localized, subtitle: footer, image: Theme.shared.image(for: itemImageType, size: CGSize(width: imageWidth, height: imageHeight)), identifier: "row")
+						if dimView {
+							row.cell?.contentView.alpha = 0.8
+						}
 						section.add(row: row)
 
 						if share.itemPath.count > 0 {
@@ -138,7 +162,6 @@ class PendingSharesTableViewController: StaticTableViewController {
 					}
 				}
 			}
-		}
 
 	}
 

@@ -167,7 +167,7 @@ class CustomFilelistTableViewController: ClientFilelistTableViewController, Them
 
 		// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
 		// Make sure we don't request the thumbnail multiple times in that case.
-		if (cell?.item?.itemVersionIdentifier != newItem.itemVersionIdentifier) || (cell?.item?.name != newItem.name) || (cell?.item?.syncActivity != newItem.syncActivity) || (cell?.item?.cloudStatus != newItem.cloudStatus) {
+		if newItem.displaysDifferent(than: cell?.item) {
 			cell?.item = newItem
 		}
 
