@@ -71,47 +71,51 @@ class LibraryTableViewController: StaticTableViewController {
 			queries.append(shareQueryWithUser)
 			shareQueryWithUser.refreshInterval = 60
 
-			shareQueryWithUser.initialPopulationHandler = { query in
+			shareQueryWithUser.initialPopulationHandler = { [weak self] (query) in
 				var sharedWithUser = query.queryResults
 
 				if let shareQueryAcceptedCloudShares = OCShareQuery(scope: .acceptedCloudShares, item: nil) {
-					self.queries.append(shareQueryAcceptedCloudShares)
+					self?.queries.append(shareQueryAcceptedCloudShares)
 					shareQueryAcceptedCloudShares.refreshInterval = 60
-					shareQueryAcceptedCloudShares.initialPopulationHandler = { query in
+					shareQueryAcceptedCloudShares.initialPopulationHandler = { [weak self] (query) in
 						sharedWithUser.append(contentsOf: query.queryResults)
 						let shares = sharedWithUser.unique { $0.itemPath }
-						self.handleSharedWithUser(shares: shares)
+						self?.handleSharedWithUser(shares: shares)
 					}
-					self.core?.start(shareQueryAcceptedCloudShares)
+					self?.core?.start(shareQueryAcceptedCloudShares)
 				}
 			}
-			shareQueryWithUser.changesAvailableNotificationHandler = { query in
+			shareQueryWithUser.changesAvailableNotificationHandler = { [weak self] (query) in
 				let shares = query.queryResults.unique { $0.itemPath }
-				self.handleSharedWithUser(shares: shares)
+				self?.handleSharedWithUser(shares: shares)
 			}
 			core?.start(shareQueryWithUser)
 		}
 		if let shareQueryByUser = OCShareQuery(scope: .sharedByUser, item: nil) {
 			queries.append(shareQueryByUser)
 			shareQueryByUser.refreshInterval = 60
-			shareQueryByUser.initialPopulationHandler = { query in
-				self.handleSharedByUser(shares: query.queryResults)
+			shareQueryByUser.initialPopulationHandler = { [weak self] (query) in
+				self?.handleSharedByUser(shares: query.queryResults)
 			}
-			shareQueryByUser.changesAvailableNotificationHandler = { query in
-				self.handleSharedByUser(shares: query.queryResults)
+			shareQueryByUser.changesAvailableNotificationHandler = { [weak self] (query) in
+				self?.handleSharedByUser(shares: query.queryResults)
 			}
 			core?.start(shareQueryByUser)
 		}
 		if let shareQueryPendingCloudShares = OCShareQuery(scope: .pendingCloudShares, item: nil) {
 			queries.append(shareQueryPendingCloudShares)
 			shareQueryPendingCloudShares.refreshInterval = 60
-			shareQueryPendingCloudShares.initialPopulationHandler = { query in
-				self.pendingCloudSharesCounter = query.queryResults.count
-				self.updatePendingShareRow(shares: query.queryResults, title: "Pending Federated Invites".localized, pendingCounter: self.pendingCloudSharesCounter)
+			shareQueryPendingCloudShares.initialPopulationHandler = { [weak self] (query) in
+				if let library = self {
+					library.pendingCloudSharesCounter = query.queryResults.count
+					library.updatePendingShareRow(shares: query.queryResults, title: "Pending Federated Invites".localized, pendingCounter: library.pendingCloudSharesCounter)
+				}
 			}
-			shareQueryPendingCloudShares.changesAvailableNotificationHandler = { query in
-				self.pendingCloudSharesCounter = query.queryResults.count
-				self.updatePendingShareRow(shares: query.queryResults, title: "Pending Federated Invites".localized, pendingCounter: self.pendingCloudSharesCounter)
+			shareQueryPendingCloudShares.changesAvailableNotificationHandler = { [weak self] (query) in
+				if let library = self {
+					library.pendingCloudSharesCounter = query.queryResults.count
+					library.updatePendingShareRow(shares: query.queryResults, title: "Pending Federated Invites".localized, pendingCounter: library.pendingCloudSharesCounter)
+				}
 			}
 			core?.start(shareQueryPendingCloudShares)
 		}
@@ -188,12 +192,12 @@ class LibraryTableViewController: StaticTableViewController {
 					let pendingLabel = RoundedLabel()
 					pendingLabel.update(text: shareCounter, textColor: UIColor.white, backgroundColor: UIColor.red)
 
-					let row = StaticTableViewRow(rowWithAction: { (_, _) in
+					let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 						let pendingSharesController = PendingSharesTableViewController()
 						pendingSharesController.shares = shares
 						pendingSharesController.title = title
-						pendingSharesController.core = self.core
-						self.navigationController?.pushViewController(pendingSharesController, animated: true)
+						pendingSharesController.core = self?.core
+						self?.navigationController?.pushViewController(pendingSharesController, animated: true)
 					}, title: title, image: UIImage(named: "group"), accessoryType: .disclosureIndicator, accessoryView: pendingLabel, identifier: rowIdentifier)
 					section?.insert(row: row, at: 0, animated: true)
 				} else if let row = section?.row(withIdentifier: rowIdentifier) {
@@ -217,12 +221,12 @@ class LibraryTableViewController: StaticTableViewController {
 			}
 
 			if section?.row(withIdentifier: rowIdentifier) == nil, let core = core {
-				let row = StaticTableViewRow(rowWithAction: { (row, _) in
+				let row = StaticTableViewRow(rowWithAction: { [weak self] (row, _) in
 
 					let sharesFileListController = SharesFilelistTableViewController(core: core)
 					sharesFileListController.shares = shares
 					sharesFileListController.title = title
-					self.navigationController?.pushViewController(sharesFileListController, animated: true)
+					self?.navigationController?.pushViewController(sharesFileListController, animated: true)
 
 					row.representedObject = sharesFileListController
 				}, title: title, image: image, accessoryType: .disclosureIndicator, identifier: rowIdentifier)
@@ -253,8 +257,8 @@ class LibraryTableViewController: StaticTableViewController {
 			queries.append(recentsQuery)
 
 			let favoriteQuery = OCQuery(condition: .where(.isFavorite, isEqualTo: true), inputFilter:nil)
-			addCollectionRow(to: section, title: "Favorites".localized, image: UIImage(named: "star")!, query: favoriteQuery, actionHandler: {
-				self.core?.refreshFavorites(completionHandler: { (_, _) in
+			addCollectionRow(to: section, title: "Favorites".localized, image: UIImage(named: "star")!, query: favoriteQuery, actionHandler: { [weak self] in
+				self?.core?.refreshFavorites(completionHandler: { (_, _) in
 				})
 			})
 			queries.append(favoriteQuery)
@@ -272,13 +276,13 @@ class LibraryTableViewController: StaticTableViewController {
 	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage, query: OCQuery?, actionHandler: (() -> Void)?) {
 		let identifier = String(format:"%@-collection-row", title)
 		if section.row(withIdentifier: identifier) == nil, let core = core {
-			let row = StaticTableViewRow(rowWithAction: { (_, _) in
+			let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 
 				if let query = query {
 					let customFileListController = CustomFilelistTableViewController(core: core, query: query)
 					customFileListController.title = title
 					customFileListController.refreshActionHandler = actionHandler
-					self.navigationController?.pushViewController(customFileListController, animated: true)
+					self?.navigationController?.pushViewController(customFileListController, animated: true)
 				}
 
 				actionHandler?()

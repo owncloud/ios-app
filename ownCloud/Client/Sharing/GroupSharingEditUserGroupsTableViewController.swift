@@ -256,20 +256,20 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 
 		let section = StaticTableViewSection(headerTitle: nil, footerTitle: footer)
 		section.add(rows: [
-			StaticTableViewRow(buttonWithAction: { (row, _) in
+			StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
 				let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 				progressView.startAnimating()
 
 				row.cell?.accessoryView = progressView
-				if let core = self.core, let share = self.share {
+				if let core = self?.core, let share = self?.share {
 					core.delete(share, completionHandler: { (error) in
 						OnMainThread {
 							if error == nil {
-								self.navigationController?.popViewController(animated: true)
+								self?.navigationController?.popViewController(animated: true)
 							} else {
 								if let shareError = error {
 									let alertController = UIAlertController(with: "Delete Collaborator failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-									self.present(alertController, animated: true)
+									self?.present(alertController, animated: true)
 								}
 							}
 						}

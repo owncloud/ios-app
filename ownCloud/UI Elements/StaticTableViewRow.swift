@@ -376,13 +376,13 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.action = { (row, sender) in
 
-			guard let value = self.value as? Bool else { return }
+			guard let value = row.value as? Bool else { return }
 			if value {
 				row.cell?.accessoryType = UITableViewCell.AccessoryType.none
-				self.value = false
+				row.value = false
 			} else {
 				row.cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
-				self.value = true
+				row.value = true
 			}
 
 			toggleItemWithAction?(row, sender)

@@ -382,8 +382,8 @@ private extension Action {
 			}
 
 			if hasUserGroupSharing {
-				let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
-					if let core = context.core {
+				let addGroupRow = StaticTableViewRow(rowWithAction: { [weak presentingController, weak context] (_, _) in
+					if let context = context, let presentingController = presentingController, let core = context.core {
 						let sharingViewController = GroupSharingTableViewController(core: core, item: item)
 						sharingViewController.shares = shares
 
@@ -396,8 +396,8 @@ private extension Action {
 			}
 
 			if hasLinkSharing {
-				let addGroupRow = StaticTableViewRow(rowWithAction: { (_, _) in
-					if let core = context.core {
+				let addGroupRow = StaticTableViewRow(rowWithAction: { [weak presentingController, weak context] (_, _) in
+					if let context = context, let presentingController = presentingController, let core = context.core {
 						let sharingViewController = PublicLinkTableViewController(core: core, item: item)
 						sharingViewController.shares = shares
 
@@ -428,8 +428,8 @@ private extension Action {
 	}
 
 	private class func shareAsGroupRow(item : OCItem, presentingController: UIViewController, context: ActionContext) -> StaticTableViewRow {
-		let addGroupRow = StaticTableViewRow(buttonWithAction: { (_, _) in
-			if let core = context.core {
+		let addGroupRow = StaticTableViewRow(buttonWithAction: { [weak presentingController, weak context] (_, _) in
+			if let context = context, let presentingController = presentingController, let core = context.core {
 				self.dismiss(presentingController: presentingController,
 							 andPresent: GroupSharingTableViewController(core: core, item: item),
 							 on: context.viewController)
@@ -441,8 +441,8 @@ private extension Action {
 
 	private class func shareAsPublicLinkRow(item : OCItem, presentingController: UIViewController, context: ActionContext) -> StaticTableViewRow? {
 		if let core = context.core, core.connection.capabilities?.publicSharingEnabled == true, !item.sharedByPublicLink, item.isShareable {
-			let addGroupRow = StaticTableViewRow(buttonWithAction: { (_, _) in
-				if let core = context.core {
+			let addGroupRow = StaticTableViewRow(buttonWithAction: { [weak presentingController, weak context] (_, _) in
+				if let context = context, let presentingController = presentingController, let core = context.core {
 					self.dismiss(presentingController: presentingController,
 								 andPresent: PublicLinkTableViewController(core: core, item: item),
 								 on: context.viewController)
