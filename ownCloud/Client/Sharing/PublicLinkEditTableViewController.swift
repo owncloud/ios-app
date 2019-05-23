@@ -41,8 +41,13 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			let infoButton = UIButton(type: .infoLight)
 			infoButton.addTarget(self, action: #selector(showInfoSubtitles), for: .touchUpInside)
 			let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
-			self.toolbarItems = [shareBarButtonItem, UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil), infoBarButtonItem]
-		} else {
+			let flexibleSpaceBarButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+			if createLink {
+				self.toolbarItems = [flexibleSpaceBarButtonItem, infoBarButtonItem]
+			} else {
+				self.toolbarItems = [shareBarButtonItem, flexibleSpaceBarButtonItem, infoBarButtonItem]
+			}
+		} else if !createLink {
 			self.toolbarItems = [shareBarButtonItem]
 		}
 
