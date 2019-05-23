@@ -66,11 +66,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			let save = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(createPublicLink))
 			self.navigationItem.rightBarButtonItem = save
 
-			if item?.type == .collection {
-				permissionMask = OCSharePermissionsMask(rawValue: 0)
-			} else {
-				permissionMask = OCSharePermissionsMask.read
-			}
+			permissionMask = OCSharePermissionsMask.read
 		} else {
 			addActionSection()
 		}
@@ -121,7 +117,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			}
 
 			if createLink {
-				currentPermission = -1
+				currentPermission = 0
 			}
 
 			let values = [

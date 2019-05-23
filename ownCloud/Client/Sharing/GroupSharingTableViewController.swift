@@ -80,7 +80,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 		messageView = MessageView(add: self.view)
 
-		self.navigationItem.title = "Sharing Collaborators".localized
+		self.navigationItem.title = "Collaborators".localized
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
 
 		addHeaderView()
@@ -218,13 +218,20 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 				}
 				if let recipient = share.recipient {
 					if canEdit(share: share) {
-						shareRows.append( StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+						shareRows.append( StaticTableViewRow(rowWithAction: { [weak self] (row, _) in
 							guard let self = self else { return }
 							let editSharingViewController = GroupSharingEditUserGroupsTableViewController(style: .grouped)
 							editSharingViewController.share = share
 							editSharingViewController.reshares = resharedUsers
 							editSharingViewController.core = self.core
 							editSharingViewController.item = self.item
+
+							if share.recipient?.type == .user {
+								editSharingViewController.title = row.cell?.textLabel?.text
+							} else {
+								editSharingViewController.title = String(format:"%@ %@", row.cell?.textLabel?.text ?? "", "(Group)".localized)
+							}
+
 							self.navigationController?.pushViewController(editSharingViewController, animated: true)
 						}, title: recipient.displayName!, subtitle: share.permissionDescription(), image: recipient.user?.avatar, accessoryType: .disclosureIndicator) )
 					} else {
@@ -364,7 +371,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 				}
 
 				rows.append(
-					StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+					StaticTableViewRow(rowWithAction: { [weak self] (row, _) in
 						guard let self = self else { return }
 						var defaultPermissions : OCSharePermissionsMask = .read
 						if let capabilitiesDefaultPermission = self.core?.connection.capabilities?.sharingDefaultPermissions {
@@ -383,6 +390,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 							editSharingViewController.core = self.core
 							editSharingViewController.createShare = true
 							editSharingViewController.item = self.item
+							editSharingViewController.title = row.cell?.textLabel?.text
 							let navigationController = ThemeNavigationController(rootViewController: editSharingViewController)
 							self.navigationController?.present(navigationController, animated: true, completion: nil)
 						}

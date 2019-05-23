@@ -280,7 +280,6 @@
 "Invite Collaborator" = "Invite Collaborator";
 "Collaborators" = "Collaborators";
 "Add email or name" = "Add email or name";
-"Sharing Collaborators" = "Sharing Collaborators";
 "Users" = "Users";
 "Groups" = "Groups";
 "Start typing to search users, groups and remote users." = "Start typing to search users, groups and remote users.";
@@ -336,7 +335,6 @@
 "Read" = "Read";
 "Can Share" = "Can Share";
 "Can Edit" = "Can Edit";
-"Can Edit and Change" = "Can Edit and Change";
 "Can Create" = "Can Create";
 "Can Change" = "Can Change";
 "Can Delete" = "Can Delete";

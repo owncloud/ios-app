@@ -124,23 +124,25 @@ class PendingSharesTableViewController: StaticTableViewController {
 								}
 							}))
 
-							alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
-								if let self = self, let core = self.core {
-									core.makeDecision(on: share, accept: false, completionHandler: { [weak self] (error) in
-										guard let self = self else { return }
-										OnMainThread {
-											if error == nil {
-												self.navigationController?.popViewController(animated: true)
-											} else {
-												if let shareError = error {
-													let alertController = UIAlertController(with: "Decline Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-													self.present(alertController, animated: true)
+							if share.state != .rejected {
+								alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
+									if let self = self, let core = self.core {
+										core.makeDecision(on: share, accept: false, completionHandler: { [weak self] (error) in
+											guard let self = self else { return }
+											OnMainThread {
+												if error == nil {
+													self.navigationController?.popViewController(animated: true)
+												} else {
+													if let shareError = error {
+														let alertController = UIAlertController(with: "Decline Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+														self.present(alertController, animated: true)
+													}
 												}
 											}
-										}
-									})
-								}
-							}))
+										})
+									}
+								}))
+							}
 
 							self.present(alertController, animated: true, completion: nil)
 
@@ -148,6 +150,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 						if dimView {
 							row.cell?.contentView.alpha = 0.8
 						}
+						row.representedObject = share
 						section.add(row: row)
 
 						if share.itemPath.count > 0 {
@@ -168,62 +171,60 @@ class PendingSharesTableViewController: StaticTableViewController {
 	// MARK: TableView Delegate
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		if let shares = shares {
-			let share = shares[indexPath.row]
-			return [
+		let row = self.staticRowForIndexPath(indexPath)
+		guard let share = row.representedObject as? OCShare else { return [] }
 
-				UITableViewRowAction(style: .normal, title: "Accept".localized, handler: { [weak self] (_, _) in
-					if let self = self, let core = self.core {
-						core.makeDecision(on: share, accept: true, completionHandler: { [weak self] (error) in
-							guard let self = self else { return }
-							OnMainThread {
-								if error == nil {
-									self.navigationController?.popViewController(animated: true)
-								} else {
-									if let shareError = error {
-										let alertController = UIAlertController(with: "Accept Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-										self.present(alertController, animated: true)
-									}
+		let acceptAction = UITableViewRowAction(style: .normal, title: "Accept".localized, handler: { [weak self] (_, _) in
+			if let self = self, let core = self.core {
+				core.makeDecision(on: share, accept: true, completionHandler: { [weak self] (error) in
+					guard let self = self else { return }
+					OnMainThread {
+						if error == nil {
+							self.navigationController?.popViewController(animated: true)
+						} else {
+							if let shareError = error {
+								let alertController = UIAlertController(with: "Accept Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+								self.present(alertController, animated: true)
+							}
+						}
+					}
+				})
+			}
+		})
+		let declineAction = UITableViewRowAction(style: .destructive, title: "Decline".localized, handler: { [weak self] (_, _) in
+			guard let self = self else { return }
+			var presentationStyle: UIAlertController.Style = .actionSheet
+			if UIDevice.current.isIpad() {
+				presentationStyle = .alert
+			}
+			let alertController = UIAlertController(title: "Decline Share".localized,
+													message: nil,
+													preferredStyle: presentationStyle)
+			alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
+			alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
+				if let self = self, let core = self.core {
+					core.makeDecision(on: share, accept: false, completionHandler: { [weak self] (error) in
+						guard let self = self else { return }
+						OnMainThread {
+							if error == nil {
+								self.navigationController?.popViewController(animated: true)
+							} else {
+								if let shareError = error {
+									let alertController = UIAlertController(with: "Decline Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+									self.present(alertController, animated: true)
 								}
 							}
-						})
-					}
-				}),
-				UITableViewRowAction(style: .destructive, title: "Decline".localized, handler: { [weak self] (_, _) in
-					guard let self = self else { return }
-					var presentationStyle: UIAlertController.Style = .actionSheet
-					if UIDevice.current.isIpad() {
-						presentationStyle = .alert
-					}
-
-					let alertController = UIAlertController(title: "Decline Share".localized,
-															message: nil,
-															preferredStyle: presentationStyle)
-					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
-
-					alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
-						if let self = self, let core = self.core {
-							core.makeDecision(on: share, accept: false, completionHandler: { [weak self] (error) in
-								guard let self = self else { return }
-								OnMainThread {
-									if error == nil {
-										self.navigationController?.popViewController(animated: true)
-									} else {
-										if let shareError = error {
-											let alertController = UIAlertController(with: "Decline Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-											self.present(alertController, animated: true)
-										}
-									}
-								}
-							})
 						}
-					}))
+					})
+				}
+			}))
+			self.present(alertController, animated: true, completion: nil)
+		})
 
-					self.present(alertController, animated: true, completion: nil)
-				})
-			]
+		if share.state != .rejected {
+			return [acceptAction, declineAction]
+		} else {
+			return [acceptAction]
 		}
-
-		return []
 	}
 }

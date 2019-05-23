@@ -35,8 +35,6 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.navigationItem.title = share?.recipient!.displayName!
-
 		let infoButton = UIButton(type: .infoLight)
 		infoButton.addTarget(self, action: #selector(showInfoSubtitles), for: .touchUpInside)
 		let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
@@ -60,6 +58,9 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 			self.navigationItem.rightBarButtonItem = save
 
 			permissionMask = OCSharePermissionsMask.read
+			if let capabilitiesDefaultPermission = self.core?.connection.capabilities?.sharingDefaultPermissions {
+				permissionMask = capabilitiesDefaultPermission
+			}
 		} else {
 			addActionSection()
 		}
@@ -129,7 +130,7 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 					})
 				}
 			}
-		}, title: share.itemType == .collection ? "Can Edit".localized : "Can Edit and Change".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
+		}, title: share.itemType == .collection ? "Can Edit".localized : "Can Edit".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
 
 		let subtitles = [
 			"Allows the users you share with to re-share".localized,
