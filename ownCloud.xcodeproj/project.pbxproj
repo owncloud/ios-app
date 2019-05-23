@@ -496,7 +496,7 @@
 		DC7DBA32207F84BF00E7337D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
+			dstPath = "/usr/share/man/man1/";
 			dstSubfolderSpec = 0;
 			files = (
 			);
@@ -2038,7 +2038,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DCC085622293F1FD008CC05C /* Resources */ = {
 		59056CA822414F3C00A18A22 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
