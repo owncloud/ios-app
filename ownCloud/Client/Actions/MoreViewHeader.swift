@@ -128,7 +128,11 @@ class MoreViewHeader: UIView {
 
 		let byteCountFormatter = ByteCountFormatter()
 		byteCountFormatter.countStyle = .file
-		let size = byteCountFormatter.string(fromByteCount: Int64(item.size))
+		var size = byteCountFormatter.string(fromByteCount: Int64(item.size))
+
+		if item.size < 0 {
+			size = "Pending".localized
+		}
 
 		let dateString = item.lastModifiedLocalized
 
