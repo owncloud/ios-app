@@ -11,7 +11,7 @@ yarn antora
 
 ## Previewing the Generated Docs
 
-Assuming that there are no build errors, the next thing to do is to view the result in your browser. In case you have already installed a web server, you need to configure a virtual host (or similar) which points to the directory `public/`, located in the `docs/` directory of this repository. This directory contains the generated documentation. Alternatively, use the simple server bundled with the current package.json, just execute the following command to serve the documentation at [http://localhost:8080/ios/](http://localhost:8080/ios-app/):
+Assuming that there are no build errors, the next thing to do is to view the result in your browser. In case you have already installed a web server, you need to configure a virtual host (or similar) which points to the directory `public/`, located in the `docs/` directory of this repository. This directory contains the generated documentation. Alternatively, use the simple server bundled with the current package.json, just execute the following command to serve the documentation at [http://localhost:8080/ios-app/](http://localhost:8080/ios-app/):
 
 ```
 yarn serve
