@@ -39,20 +39,6 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	var actions : [Action]?
 
-	var queryProgressSummary : ProgressSummary? {
-		willSet {
-			if newValue != nil {
-				progressSummarizer?.pushFallbackSummary(summary: newValue!)
-			}
-		}
-
-		didSet {
-			if oldValue != nil {
-				progressSummarizer?.popFallbackSummary(summary: oldValue!)
-			}
-		}
-	}
-
 	let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 	var deleteMultipleBarButtonItem: UIBarButtonItem?
 	var moveMultipleBarButtonItem: UIBarButtonItem?
@@ -69,15 +55,9 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	var quotaObservation : NSKeyValueObservation?
 	var titleButtonThemeApplierToken : ThemeApplierToken?
 
-	var queryStateObservation : NSKeyValueObservation?
-
 	// MARK: - Init & Deinit
 	public override init(core inCore: OCCore, query inQuery: OCQuery) {
 		super.init(core: inCore, query: inQuery)
-
-		queryStateObservation = query.observe(\OCQuery.state, options: .initial, changeHandler: { [weak self] (_, _) in
-			self?.updateQueryProgressSummary()
-		})
 
 		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
 
@@ -137,8 +117,6 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		queryStateObservation = nil
 		quotaObservation = nil
 
-		self.queryProgressSummary = nil
-
 		if titleButtonThemeApplierToken != nil {
 			Theme.shared.remove(applierForToken: titleButtonThemeApplierToken)
 			titleButtonThemeApplierToken = nil
@@ -190,17 +168,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
-		self.queryProgressSummary = nil
-
 		leaveMultipleSelection()
-	}
-
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-
-		updateQueryProgressSummary()
-
-		self.reloadTableData(ifNeeded: true)
 	}
 
 	private func updateFooter(text:String?) {
@@ -216,54 +184,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		self.tableView.tableFooterView = quotaLabel
 	}
 
-	func updateQueryProgressSummary() {
-		var summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
-
-		switch query.state {
-			case .stopped:
-				summary.message = "Stopped".localized
-
-			case .started:
-				summary.message = "Started…".localized
-
-			case .contentsFromCache:
-				summary.message = "Contents from cache.".localized
-
-			case .waitingForServerReply:
-				summary.message = "Waiting for server response…".localized
-
-			case .targetRemoved:
-				summary.message = "This folder no longer exists.".localized
-
-			case .idle:
-				summary.message = "Everything up-to-date.".localized
-				summary.progressCount = 0
-
-			default:
-				summary.message = "Please wait…".localized
-		}
-
-		if let refreshControl = self.queryRefreshControl {
-			if query.state == .idle {
-				OnMainThread {
-					if refreshControl.isRefreshing {
-						refreshControl.beginRefreshing()
-					}
-				}
-			} else if query.state.isFinal {
-				OnMainThread {
-					if refreshControl.isRefreshing {
-						refreshControl.endRefreshing()
-					}
-				}
-			}
-		}
-
-		self.queryProgressSummary = summary
-	}
-
 	// MARK: - Theme support
-
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 

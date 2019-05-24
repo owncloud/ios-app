@@ -55,6 +55,9 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 		// Force disable sorting options
 		self.shallShowSortBar = false
+
+		// Disable pull to refresh
+		allowPullToRefresh = false
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -65,8 +68,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		// Remove pull to refresh
-		queryRefreshControl?.removeFromSuperview()
+		// Adapt to disabled pull-to-refresh
 		self.tableView.alwaysBounceVertical = false
 
 		// Select button creation

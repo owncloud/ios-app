@@ -21,18 +21,19 @@ import ownCloudSDK
 
 class QueryFileListTableViewController: FileListTableViewController, SortBarDelegate, OCQueryDelegate, UISearchResultsUpdating {
 	var query : OCQuery
-	var queryRefreshControl: UIRefreshControl?
+
 	var queryRefreshRateLimiter : OCRateLimiter = OCRateLimiter(minimumTime: 0.2)
 
 	var messageView : MessageView?
 
 	var items : [OCItem] = []
 
-	var refreshActionHandler: (() -> Void)?
-
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 		query = inQuery
+
 		super.init(core: inCore)
+
+		allowPullToRefresh = true
 
 		query.delegate = self
 
@@ -41,6 +42,10 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		}
 
 		core?.start(query)
+
+		queryStateObservation = query.observe(\OCQuery.state, options: .initial, changeHandler: { [weak self] (_, _) in
+			self?.updateQueryProgressSummary()
+		})
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -48,6 +53,8 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	deinit {
+		queryProgressSummary = nil
+
 		core?.stop(query)
 	}
 
@@ -94,17 +101,71 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		}
 	}
 
-	// MARK: - Actions
-	@objc func refreshQuery() {
-		if core?.connectionStatus == OCCoreConnectionStatus.online {
-			UIImpactFeedbackGenerator().impactOccurred()
-			refreshActionHandler?()
-			core?.reload(query)
-		} else {
-			if self.queryRefreshControl?.isRefreshing == true {
-				self.queryRefreshControl?.endRefreshing()
+	// MARK: - Query progress reporting
+	var showQueryProgress : Bool = true
+
+	var queryProgressSummary : ProgressSummary? {
+		willSet {
+			if newValue != nil, showQueryProgress {
+				progressSummarizer?.pushFallbackSummary(summary: newValue!)
 			}
 		}
+
+		didSet {
+			if oldValue != nil, showQueryProgress {
+				progressSummarizer?.popFallbackSummary(summary: oldValue!)
+			}
+		}
+	}
+
+	var queryStateObservation : NSKeyValueObservation?
+
+	// MARK: - Pull-to-refresh handling
+	override var pullToRefreshVerticalOffset: CGFloat {
+		return searchController?.searchBar.frame.height ?? 0
+	}
+
+	override func performPullToRefreshAction() {
+		super.performPullToRefreshAction()
+		core?.reload(query)
+	}
+
+	func updateQueryProgressSummary() {
+		var summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
+
+		switch query.state {
+			case .stopped:
+				summary.message = "Stopped".localized
+
+			case .started:
+				summary.message = "Started…".localized
+
+			case .contentsFromCache:
+				summary.message = "Contents from cache.".localized
+
+			case .waitingForServerReply:
+				summary.message = "Waiting for server response…".localized
+
+			case .targetRemoved:
+				summary.message = "This folder no longer exists.".localized
+
+			case .idle:
+				summary.message = "Everything up-to-date.".localized
+				summary.progressCount = 0
+
+			default:
+				summary.message = "Please wait…".localized
+		}
+
+		if pullToRefreshControl != nil {
+			if query.state == .idle {
+				self.pullToRefreshBegan()
+			} else if query.state.isFinal {
+				self.pullToRefreshEnded()
+			}
+		}
+
+		self.queryProgressSummary = summary
 	}
 
 	// MARK: - SortBarDelegate
@@ -130,8 +191,8 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 				OnMainThread {
 					if query.state.isFinal {
 						OnMainThread {
-							if self.queryRefreshControl!.isRefreshing {
-								self.queryRefreshControl?.endRefreshing()
+							if self.pullToRefreshControl?.isRefreshing == true {
+								self.pullToRefreshControl?.endRefreshing()
 							}
 						}
 					}
@@ -204,37 +265,35 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 			tableView.tableHeaderView = sortBar
 		}
 
-		queryRefreshControl = UIRefreshControl()
-		queryRefreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
-		self.tableView.insertSubview(queryRefreshControl!, at: 0)
-		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
-		tableView.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
-
 		messageView = MessageView(add: self.view)
+	}
 
-		self.addThemableBackgroundView()
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		updateQueryProgressSummary()
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
+		queryProgressSummary = nil
+
 		searchController?.searchBar.text = ""
 		searchController?.dismiss(animated: true, completion: nil)
 	}
 
-	// MARK: - Table view data source
+	// MARK: - Item retrieval
 	override func itemAt(indexPath : IndexPath) -> OCItem? {
 		return items[indexPath.row]
 	}
 
+	// MARK: - Single item query creation
 	override func query(forItem: OCItem) -> OCQuery? {
 		return query
 	}
 
-	override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
-	}
-
+	// MARK: - Table view data source
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return self.items.count
 	}

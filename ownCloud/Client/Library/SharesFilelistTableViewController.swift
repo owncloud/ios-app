@@ -38,10 +38,6 @@ class SharesFilelistTableViewController: FileListTableViewController {
 		return shares[indexPath.row]
 	}
 
-	override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
-	}
-
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return self.shares.count
 	}

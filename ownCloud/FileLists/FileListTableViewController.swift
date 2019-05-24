@@ -79,15 +79,6 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 	}
 
-	// MARK: - Themable
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.tableView.applyThemeCollection(collection)
-
-		if event == .update {
-			self.reloadTableData()
-		}
-	}
-
 	// MARK: - Visibility handling
 	private var viewControllerVisible : Bool = false
 
@@ -113,10 +104,69 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		self.tableView.estimatedRowHeight = estimatedTableRowHeight
 
 		self.registerCellClasses()
+
+		if allowPullToRefresh {
+			pullToRefreshControl = UIRefreshControl()
+			pullToRefreshControl?.addTarget(self, action: #selector(self.pullToRefreshTriggered), for: .valueChanged)
+			self.tableView.insertSubview(pullToRefreshControl!, at: 0)
+			tableView.contentOffset = CGPoint(x: 0, y: self.pullToRefreshVerticalOffset)
+			tableView.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
+		}
+
+		self.addThemableBackgroundView()
 	}
 
 	func registerCellClasses() {
 		self.tableView.register(ClientItemCell.self, forCellReuseIdentifier: "itemCell")
+	}
+
+	// MARK: - Pull-to-refresh handling
+	var allowPullToRefresh : Bool = false
+
+	var pullToRefreshControl: UIRefreshControl?
+	var pullToRefreshAction: ((_ completion: @escaping () -> Void) -> Void)?
+
+	var pullToRefreshVerticalOffset : CGFloat {
+		return 0
+	}
+
+	@objc func pullToRefreshTriggered() {
+		if core?.connectionStatus == OCCoreConnectionStatus.online {
+			UIImpactFeedbackGenerator().impactOccurred()
+			performPullToRefreshAction()
+		} else {
+			pullToRefreshEnded()
+		}
+	}
+
+	func performPullToRefreshAction() {
+		if pullToRefreshAction != nil {
+			pullToRefreshBegan()
+
+			pullToRefreshAction?({ [weak self] in
+				self?.pullToRefreshEnded()
+			})
+		}
+	}
+
+	func pullToRefreshBegan() {
+		if let refreshControl = pullToRefreshControl {
+			OnMainThread {
+				if refreshControl.isRefreshing {
+					refreshControl.beginRefreshing()
+				}
+			}
+		}
+	}
+
+	func pullToRefreshEnded() {
+		if let refreshControl = pullToRefreshControl {
+			OnMainThread {
+				if refreshControl.isRefreshing == true {
+					refreshControl.endRefreshing()
+				}
+			}
+		}
 	}
 
 	// MARK: - Reload Data
@@ -148,9 +198,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	func restoreSelectionAfterTableReload() {
 	}
 
-	// MARK: - Table view delegate
-	var lastTappedItemLocalID : String?
-
+	// MARK: - Single item query creation
 	func query(forItem: OCItem) -> OCQuery? {
 		if let path = forItem.path {
 			return OCQuery(forPath: path)
@@ -158,6 +206,14 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 
 		return nil
 	}
+
+	// MARK: - Table view data source
+	override func numberOfSections(in tableView: UITableView) -> Int {
+		return 1
+	}
+
+	// MARK: - Table view delegate
+	var lastTappedItemLocalID : String?
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if !self.tableView.isEditing {
@@ -207,6 +263,15 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 			}
 
 			tableView.deselectRow(at: indexPath, animated: true)
+		}
+	}
+
+	// MARK: - Themable
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.tableView.applyThemeCollection(collection)
+
+		if event == .update {
+			self.reloadTableData()
 		}
 	}
 }

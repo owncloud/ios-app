@@ -57,8 +57,6 @@ class LibraryTableViewController: StaticTableViewController {
 		self.title = "Quick Access".localized
 		self.navigationController?.navigationBar.prefersLargeTitles = true
 		self.tableView.isScrollEnabled = false
-		self.addThemableBackgroundView()
-		self.navigationController?.view.backgroundColor = Theme.shared.activeCollection.navigationBarColors.backgroundColor
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -257,8 +255,9 @@ class LibraryTableViewController: StaticTableViewController {
 			queries.append(recentsQuery)
 
 			let favoriteQuery = OCQuery(condition: .where(.isFavorite, isEqualTo: true), inputFilter:nil)
-			addCollectionRow(to: section, title: "Favorites".localized, image: UIImage(named: "star")!, query: favoriteQuery, actionHandler: { [weak self] in
+			addCollectionRow(to: section, title: "Favorites".localized, image: UIImage(named: "star")!, query: favoriteQuery, actionHandler: { [weak self] (completion) in
 				self?.core?.refreshFavorites(completionHandler: { (_, _) in
+					completion()
 				})
 			})
 			queries.append(favoriteQuery)
@@ -273,7 +272,7 @@ class LibraryTableViewController: StaticTableViewController {
 		}
 	}
 
-	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage, query: OCQuery?, actionHandler: (() -> Void)?) {
+	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage, query: OCQuery?, actionHandler: ((_ completion: @escaping () -> Void) -> Void)?) {
 		let identifier = String(format:"%@-collection-row", title)
 		if section.row(withIdentifier: identifier) == nil, let core = core {
 			let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
@@ -281,14 +280,20 @@ class LibraryTableViewController: StaticTableViewController {
 				if let query = query {
 					let customFileListController = CustomFileListTableViewController(core: core, query: query)
 					customFileListController.title = title
-					customFileListController.refreshActionHandler = actionHandler
+					customFileListController.pullToRefreshAction = actionHandler
 					self?.navigationController?.pushViewController(customFileListController, animated: true)
 				}
 
-				actionHandler?()
+				actionHandler?({})
 			}, title: title, image: image, accessoryType: .disclosureIndicator, identifier: identifier)
 			section.add(row: row)
 		}
 	}
 
+	// MARK: - Theming
+	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		super.applyThemeCollection(theme: theme, collection: collection, event: event)
+
+		self.navigationController?.view.backgroundColor = theme.activeCollection.navigationBarColors.backgroundColor
+	}
 }
