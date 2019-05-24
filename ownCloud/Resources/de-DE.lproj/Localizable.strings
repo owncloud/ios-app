@@ -261,5 +261,6 @@
 "The entered page number doesn't exist" = "Die eingegebene Seitennummer existiert nicht";
 
 /* Photo upload settings */
-"Photo Upload" = "Fotos hochladen";
+"Media Upload" = "Medien hochladen";
 "Convert HEIC to JPEG" = "HEIC in JPEG konvertieren";
+"Convert videos to MP4" = "Videos in MP4 konvertieren";

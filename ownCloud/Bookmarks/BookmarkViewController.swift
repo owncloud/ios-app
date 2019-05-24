@@ -87,6 +87,10 @@ class BookmarkViewController: StaticTableViewController {
 		// Super init
 		super.init(style: .grouped)
 
+		// Accessibility Identifiers
+		continueBarButtonItem.accessibilityIdentifier = "continue-bar-button"
+		saveBarButtonItem.accessibilityIdentifier = "save-bar-button"
+
 		// Name section + row
 		nameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender) in
 			if let textField = sender as? UITextField {

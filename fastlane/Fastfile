@@ -45,6 +45,13 @@ platform :ios do
     )
   end
 
+  desc "Generate the screenshots for the AppStore"
+    lane :screenshots do
+      reset_simulators
+      snapshot
+      frameit(white: true, path: './fastlane/screenshots')
+    end
+
   desc "In-House Enterprise IPA generation"
    lane :build_ipa_enterprise_in_house do
 
