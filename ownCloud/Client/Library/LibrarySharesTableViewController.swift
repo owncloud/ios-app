@@ -1,5 +1,5 @@
 //
-//  SharesFilelistTableViewController.swift
+//  LibrarySharesTableViewController.swift
 //  ownCloud
 //
 //  Created by Matthias Hühne on 13.05.19.
@@ -19,7 +19,9 @@
 import UIKit
 import ownCloudSDK
 
-class SharesFilelistTableViewController: FileListTableViewController {
+class LibrarySharesTableViewController: FileListTableViewController {
+
+	var shareView : LibraryShareView?
 
 	var shares : [OCShare] = [] {
 		didSet {
@@ -55,5 +57,11 @@ class SharesFilelistTableViewController: FileListTableViewController {
 		}
 
 		return cell!
+	}
+}
+
+extension LibrarySharesTableViewController : LibraryShareList {
+	func updateWith(shares: [OCShare]) {
+		self.shares = shares
 	}
 }

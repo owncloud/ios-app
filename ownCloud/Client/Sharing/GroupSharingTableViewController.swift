@@ -25,12 +25,8 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 	var shares : [OCShare] = [] {
 		didSet {
 			let meShares = shares.filter { (share) -> Bool in
-				if share.recipient?.user?.userName == core?.connection.loggedInUser?.userName && share.canShare {
-					return true
-				} else if share.itemOwner?.userName == core?.connection.loggedInUser?.userName && share.canShare {
-					return true
-				}
-				return false
+				return (share.recipient?.user?.userName == core?.connection.loggedInUser?.userName && share.canShare) ||
+				       (share.itemOwner?.userName == core?.connection.loggedInUser?.userName && share.canShare)
 			}
 			if meShares.count > 0 {
 				meCanShareItem = true
@@ -90,10 +86,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 			if sharesWithReshares.count > 0 {
 				self?.shares = sharesWithReshares.filter { (share) -> Bool in
-					if share.type != .link {
-						return true
-					}
-					return false
+					return share.type != .link
 				}
 				OnMainThread {
 					self?.addShareSections()
@@ -114,21 +107,19 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 					self?.addActionShareSection()
 				}
 			})
-			}, changesAvailableNotificationHandler: { [weak self] (sharesWithReshares) in
-				let sharesWithReshares = sharesWithReshares.filter { (share) -> Bool in
-					if share.type != .link {
-						return true
-					}
-					return false
-				}
-				self?.shares = sharesWithReshares
-				OnMainThread {
-					self?.removeShareSections()
-					self?.addShareSections()
+		}, changesAvailableNotificationHandler: { [weak self] (sharesWithReshares) in
+			let sharesWithReshares = sharesWithReshares.filter { (share) -> Bool in
+				return share.type != .link
+			}
+			self?.shares = sharesWithReshares
+			OnMainThread {
+				self?.removeShareSections()
+				self?.addShareSections()
 
-					self?.addActionShareSection()
-				}
-			}, keepRunning: true)
+				self?.addActionShareSection()
+			}
+		}, keepRunning: true)
+
 		shareQuery?.refreshInterval = 2
 	}
 
@@ -178,16 +169,16 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 							guard let self = self else { return }
 							OnMainThread {
 								if error == nil {
-									self.dismissView()
+									self.dismissAnimated()
 								} else {
 									if let shareError = error {
-										let alertController = UIAlertController(with: "Decline Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = UIAlertController(with: "Unshare failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
 							}
 						})
-					}, title: "Decline Share".localized, style: StaticTableViewRowButtonStyle.destructive)
+					}, title: "Unshare".localized, style: StaticTableViewRowButtonStyle.destructive)
 					rows.append(declineRow)
 					section.add(rows: rows)
 					self.addSection(section)
@@ -202,19 +193,13 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		var shareRows: [StaticTableViewRow] = []
 
 		let user = shares.filter { (share) -> Bool in
-			if types.contains(share.type) {
-				return true
-			}
-			return false
+			return types.contains(share.type)
 		}
 
 		if user.count > 0 {
 			for share in user {
 				let resharedUsers = shares.filter { (share) -> Bool in
-					if share.owner == share.recipient?.user {
-						return true
-					}
-					return false
+					return share.owner == share.recipient?.user
 				}
 				if let recipient = share.recipient {
 					if canEdit(share: share) {
@@ -235,7 +220,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 							self.navigationController?.pushViewController(editSharingViewController, animated: true)
 						}, title: recipient.displayName!, subtitle: share.permissionDescription(), image: recipient.user?.avatar, accessoryType: .disclosureIndicator) )
 					} else {
-						shareRows.append( StaticTableViewRow(rowWithAction: nil, title: recipient.displayName!, subtitle: share.permissionDescription(), image: recipient.user?.avatar, accessoryType: .none) )
+						shareRows.append( StaticTableViewRow(rowWithAction: nil, title: recipient.displayName ?? recipient.identifier ?? "-", subtitle: share.permissionDescription(), image: recipient.user?.avatar, accessoryType: .none) )
 					}
 				}
 			}
@@ -302,10 +287,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 		if type != nil {
 			let shares = self.shares.filter { (share) -> Bool in
-				if share.type == type {
-					return true
-				}
-				return false
+				return share.type == type
 			}
 			if shares.indices.contains(indexPath.row) {
 				return shares[indexPath.row]

@@ -190,7 +190,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, image: UIImage? = nil, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, accessoryView: UIView, identifier: String? = nil) {
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, image: UIImage? = nil, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, accessoryView: UIView?, identifier: String? = nil) {
 		self.init()
 		type = .row
 
@@ -211,17 +211,19 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			self.cell?.selectionStyle = .none
 		}
 
-		additionalAccessoryView = accessoryView
-		guard let additionalAccessoryView = additionalAccessoryView else { return }
-		cell.contentView.addSubview(additionalAccessoryView)
-		additionalAccessoryView.translatesAutoresizingMaskIntoConstraints = false
+		if let accessoryView = accessoryView {
+			additionalAccessoryView = accessoryView
 
-		NSLayoutConstraint.activate([
-			additionalAccessoryView.trailingAnchor.constraint(equalTo: cell.accessoryView?.leadingAnchor ?? cell.contentView.trailingAnchor, constant: -5.0),
-			additionalAccessoryView.widthAnchor.constraint(greaterThanOrEqualToConstant: 0),
-			additionalAccessoryView.heightAnchor.constraint(equalToConstant: 24.0),
-			additionalAccessoryView.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor)
+			cell.contentView.addSubview(accessoryView)
+			accessoryView.translatesAutoresizingMaskIntoConstraints = false
+
+			NSLayoutConstraint.activate([
+				accessoryView.trailingAnchor.constraint(equalTo: cell.accessoryView?.leadingAnchor ?? cell.contentView.trailingAnchor, constant: -5.0),
+				accessoryView.widthAnchor.constraint(greaterThanOrEqualToConstant: 0),
+				accessoryView.heightAnchor.constraint(equalToConstant: 24.0),
+				accessoryView.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor)
 			])
+		}
 
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.labelColor

@@ -76,8 +76,8 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 	func addNameSection() {
 		let section = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "name-section")
-		let nameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (row, _) in
-			if let self = self, let core = self.core, !self.createLink {
+		let nameRow = StaticTableViewRow(textFieldWithAction: { [weak self, weak section] (row, _) in
+			if let self = self, let core = self.core, let section = section, !self.createLink {
 				guard let share = self.share, let name = row.textField?.text else { return }
 				core.update(share, afterPerformingChanges: {(share) in
 					share.name = name
@@ -246,9 +246,9 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	}
 
 	func passwordSwitchRow(_ hasPassword : Bool, _ passwordSection : StaticTableViewSection) {
-		let passwordRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
+		let passwordRow = StaticTableViewRow(switchWithAction: { [weak self, weak passwordSection] (_, sender) in
 			if let self = self, let passwordSwitch = sender as? UISwitch {
-				if passwordSwitch.isOn == false, let passwordFieldRow = passwordSection.row(withIdentifier: "password-field-row") {
+				if passwordSwitch.isOn == false, let passwordSection = passwordSection, let passwordFieldRow = passwordSection.row(withIdentifier: "password-field-row") {
 					passwordSection.remove(rows: [passwordFieldRow], animated: true)
 
 					// delete password
@@ -272,7 +272,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							})
 						}
 					}
-				} else if passwordSwitch.isOn {
+				} else if passwordSwitch.isOn, let passwordSection = passwordSection {
 					self.passwordRow(passwordSection)
 				}
 			}
@@ -331,8 +331,8 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 		if needsExpireDate == false {
 
-			let expireDateRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
-				if let self = self, let expireDateSwitch = sender as? UISwitch {
+			let expireDateRow = StaticTableViewRow(switchWithAction: { [weak self, weak expireSection] (_, sender) in
+				if let self = self, let expireSection = expireSection, let expireDateSwitch = sender as? UISwitch {
 					if expireDateSwitch.isOn == false, let expireDateRow = expireSection.row(withIdentifier: "expire-date-row") {
 						var rows : [StaticTableViewRow] = [expireDateRow]
 						if let expireDatePickerRow = expireSection.row(withIdentifier: "date-picker-row") {
@@ -400,7 +400,9 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateStyle = .long
 		dateFormatter.timeStyle = .none
-		let expireDateRow = StaticTableViewRow(buttonWithAction: { (_, _) in
+		let expireDateRow = StaticTableViewRow(buttonWithAction: { [weak self, weak expireSection] (_, _) in
+			guard let expireSection = expireSection else { return }
+
 			if expireSection.row(withIdentifier: "date-picker-row") == nil {
 
 				let datePickerRow = StaticTableViewRow(datePickerWithAction: { [weak self] (row, sender) in

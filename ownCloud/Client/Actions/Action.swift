@@ -331,31 +331,19 @@ private extension Action {
 	class func shareRows(shares: [OCShare], item: OCItem, presentingController: UIViewController, context: ActionContext) -> [StaticTableViewRow] {
 		var shareRows: [StaticTableViewRow] = []
 
-		if shares.count > 0 {
-			var userTitle = ""
-			var linkTitle = ""
-			var hasUserGroupSharing = false
-			var hasLinkSharing = false
+		var userTitle = ""
+		var linkTitle = ""
+		var hasUserGroupSharing = false
+		var hasLinkSharing = false
 
-			if item.isSharedWithUser == false {
-				// find Shares by me
-				let privateShares = shares.filter { (share) -> Bool in
-					if share.type != .link {
-						return true
-					}
-					return false
-				}
-
-				if privateShares.count > 0 {
-					var title = "Collaborator".localized
-					if privateShares.count > 1 {
-						title = "Collaborators".localized
-					}
-					userTitle = "\(privateShares.count) \(title)"
-					hasUserGroupSharing = true
-				}
+		if item.isSharedWithUser {
+			// find shares by others
+			if let itemOwner = item.owner, itemOwner.isRemote, let ownerName = itemOwner.displayName ?? itemOwner.userName {
+				// - remote shares
+				userTitle = String(format: "Shared by %@".localized, ownerName)
+				hasUserGroupSharing = true
 			} else {
-				// find shares by others
+				// - local shares
 				for share in shares {
 					if let ownerName = share.itemOwner?.displayName {
 						userTitle = String(format: "Shared by %@".localized, ownerName)
@@ -364,55 +352,61 @@ private extension Action {
 					}
 				}
 			}
+		} else {
+			// find Shares by me
+			let privateShares = shares.filter { (share) -> Bool in
+				return share.type != .link
+			}
 
-			// find Public link shares
-			let linkShares = shares.filter { (share) -> Bool in
-				if share.type == .link {
-					return true
+			if privateShares.count > 0 {
+				var title = "Collaborator".localized
+				if privateShares.count > 1 {
+					title = "Collaborators".localized
 				}
-				return false
+				userTitle = "\(privateShares.count) \(title)"
+				hasUserGroupSharing = true
 			}
-			if linkShares.count > 0 {
-				var title = "Link".localized
-				if linkShares.count > 1 {
-					title = "Links".localized
+		}
+
+		// find Public link shares
+		let linkShares = shares.filter { (share) -> Bool in
+			return share.type == .link
+		}
+		if linkShares.count > 0 {
+			var title = "Link".localized
+			if linkShares.count > 1 {
+				title = "Links".localized
+			}
+			linkTitle.append("\(linkShares.count) \(title)")
+			hasLinkSharing = true
+		}
+
+		if hasUserGroupSharing {
+			let addGroupRow = StaticTableViewRow(rowWithAction: { [weak presentingController, weak context] (_, _) in
+				if let context = context, let presentingController = presentingController, let core = context.core {
+					let sharingViewController = GroupSharingTableViewController(core: core, item: item)
+					sharingViewController.shares = shares
+
+					self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
 				}
-				linkTitle.append("\(linkShares.count) \(title)")
-				hasLinkSharing = true
-			}
-
-			if hasUserGroupSharing {
-				let addGroupRow = StaticTableViewRow(rowWithAction: { [weak presentingController, weak context] (_, _) in
-					if let context = context, let presentingController = presentingController, let core = context.core {
-						let sharingViewController = GroupSharingTableViewController(core: core, item: item)
-						sharingViewController.shares = shares
-
-						self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
-					}
-				}, title: userTitle, subtitle: nil, image: UIImage(named: "group"), alignment: .left, accessoryType: .disclosureIndicator)
-				shareRows.append(addGroupRow)
-			} else {
-				shareRows.append(self.shareAsGroupRow(item: item, presentingController: presentingController, context: context))
-			}
-
-			if hasLinkSharing {
-				let addGroupRow = StaticTableViewRow(rowWithAction: { [weak presentingController, weak context] (_, _) in
-					if let context = context, let presentingController = presentingController, let core = context.core {
-						let sharingViewController = PublicLinkTableViewController(core: core, item: item)
-						sharingViewController.shares = shares
-
-						self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
-					}
-				}, title: linkTitle, subtitle: nil, image: UIImage(named: "link"), alignment: .left, accessoryType: .disclosureIndicator)
-				shareRows.append(addGroupRow)
-			} else if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context) {
-				shareRows.append(publicLinkRow)
-			}
+			}, title: userTitle, subtitle: nil, image: UIImage(named: "group"), alignment: .left, accessoryType: .disclosureIndicator)
+			shareRows.append(addGroupRow)
 		} else if item.isShareable {
 			shareRows.append(self.shareAsGroupRow(item: item, presentingController: presentingController, context: context))
-			if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context) {
-				shareRows.append(publicLinkRow)
-			}
+		}
+
+		if hasLinkSharing {
+			let addGroupRow = StaticTableViewRow(rowWithAction: { [weak presentingController, weak context] (_, _) in
+				if let context = context, let presentingController = presentingController, let core = context.core {
+					let sharingViewController = PublicLinkTableViewController(core: core, item: item)
+					sharingViewController.shares = shares
+
+					self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
+				}
+			}, title: linkTitle, subtitle: nil, image: UIImage(named: "link"), alignment: .left, accessoryType: .disclosureIndicator)
+			shareRows.append(addGroupRow)
+		} else if item.isShareable, let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context) {
+			shareRows.append(publicLinkRow)
 		}
 
 		return shareRows

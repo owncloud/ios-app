@@ -39,10 +39,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 		shareQuery = core?.sharesWithReshares(for: item, initialPopulationHandler: { [weak self] (sharesWithReshares) in
 			if let self = self, sharesWithReshares.count > 0 {
 				self.shares = sharesWithReshares.filter { (share) -> Bool in
-					if share.type == .link {
-						return true
-					}
-					return false
+					return share.type == .link
 				}
 				OnMainThread {
 					self.addShareSections()
@@ -51,10 +48,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 		}, changesAvailableNotificationHandler: { [weak self] (sharesWithReshares) in
 			guard let self = self else { return }
 			let sharesWithReshares = sharesWithReshares.filter { (share) -> Bool in
-				if share.type == .link {
-					return true
-				}
-				return false
+				return share.type == .link
 			}
 			self.shares = sharesWithReshares
 			OnMainThread {
@@ -82,10 +76,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 		var shareRows: [StaticTableViewRow] = []
 
 		let user = shares.filter { (share) -> Bool in
-			if share.type == type {
-				return true
-			}
-			return false
+			return share.type == type
 		}
 
 		if user.count > 0 {

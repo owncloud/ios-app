@@ -166,7 +166,7 @@
 		DC297969226E52E600E01BC7 /* PushTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC297968226E52E600E01BC7 /* PushTransition.swift */; };
 		DC29F09022974AEA00F77349 /* QueryFileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29F08F22974AEA00F77349 /* QueryFileListTableViewController.swift */; };
 		DC29F09422976B9300F77349 /* CustomFileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29F09322976B9200F77349 /* CustomFileListTableViewController.swift */; };
-		DC29F09522976B9300F77349 /* SharesFilelistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29F09222976B9200F77349 /* SharesFilelistTableViewController.swift */; };
+		DC29F09522976B9300F77349 /* LibrarySharesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29F09222976B9200F77349 /* LibrarySharesTableViewController.swift */; };
 		DC321261207EB01B00DB171D /* ThemeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC321260207EB01B00DB171D /* ThemeImage.swift */; };
 		DC3317CE2084966700E36C8F /* ThemeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3317CD2084966700E36C8F /* ThemeTableViewCell.swift */; };
 		DC3BE0D72077BC5D002A0AC0 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2347445E2076138000859C93 /* openssl.framework */; };
@@ -694,7 +694,7 @@
 		DC297966226E4D3100E01BC7 /* PushPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushPresentationController.swift; sourceTree = "<group>"; };
 		DC297968226E52E600E01BC7 /* PushTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushTransition.swift; sourceTree = "<group>"; };
 		DC29F08F22974AEA00F77349 /* QueryFileListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryFileListTableViewController.swift; sourceTree = "<group>"; };
-		DC29F09222976B9200F77349 /* SharesFilelistTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SharesFilelistTableViewController.swift; path = ownCloud/Client/Library/SharesFilelistTableViewController.swift; sourceTree = SOURCE_ROOT; };
+		DC29F09222976B9200F77349 /* LibrarySharesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LibrarySharesTableViewController.swift; path = ownCloud/Client/Library/LibrarySharesTableViewController.swift; sourceTree = SOURCE_ROOT; };
 		DC29F09322976B9200F77349 /* CustomFileListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CustomFileListTableViewController.swift; path = ownCloud/Client/Library/CustomFileListTableViewController.swift; sourceTree = SOURCE_ROOT; };
 		DC321260207EB01B00DB171D /* ThemeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeImage.swift; sourceTree = "<group>"; };
 		DC3317CD2084966700E36C8F /* ThemeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewCell.swift; sourceTree = "<group>"; };
@@ -1045,7 +1045,7 @@
 			isa = PBXGroup;
 			children = (
 				3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */,
-				DC29F09222976B9200F77349 /* SharesFilelistTableViewController.swift */,
+				DC29F09222976B9200F77349 /* LibrarySharesTableViewController.swift */,
 				DC29F09322976B9200F77349 /* CustomFileListTableViewController.swift */,
 			);
 			path = Library;
@@ -2247,7 +2247,7 @@
 				23C56537212167BE00BD4B47 /* CardPresentationController.swift in Sources */,
 				39B289A8226F1EE000BE0E11 /* MessageView.swift in Sources */,
 				4C464BF22187AF1500D30602 /* PDFSearchViewController.swift in Sources */,
-				DC29F09522976B9300F77349 /* SharesFilelistTableViewController.swift in Sources */,
+				DC29F09522976B9300F77349 /* LibrarySharesTableViewController.swift in Sources */,
 				392557FE2278703300E83F60 /* UISearchBar+Extension.swift in Sources */,
 				DC7DBA2B207F71E400E7337D /* VectorImageView.swift in Sources */,
 				DCE974BC207EACA60069FC2B /* UIImage+Extension.swift in Sources */,

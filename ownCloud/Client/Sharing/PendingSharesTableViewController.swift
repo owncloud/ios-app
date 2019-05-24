@@ -21,16 +21,21 @@ import ownCloudSDK
 
 class PendingSharesTableViewController: StaticTableViewController {
 
-	var shares : [OCShare]?
+	var shares : [OCShare]? {
+		didSet {
+			OnMainThread {
+				self.handleSharesUpdate()
+			}
+		}
+	}
 	weak var core : OCCore?
 	var messageView : MessageView?
-	private let imageWidth : CGFloat = 50
-	private let imageHeight : CGFloat = 50
-	var itemTracker : OCCoreItemTracking?
+	private static let imageWidth : CGFloat = 50
+	private static let imageHeight : CGFloat = 50
 
-	deinit {
-		itemTracker = nil
-	}
+	private var didLoad : Bool = false
+
+	let dateFormatter = DateFormatter()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -38,187 +43,138 @@ class PendingSharesTableViewController: StaticTableViewController {
 		self.navigationController?.navigationBar.prefersLargeTitles = false
 		self.tableView.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 
-		guard let shares = shares else { return }
+		dateFormatter.dateStyle = .medium
+		dateFormatter.timeStyle = .short
+
+		didLoad = true
+		handleSharesUpdate()
+	}
+
+	func handleSharesUpdate() {
+		guard let shares = shares, didLoad else { return }
 		let pendingShares = shares.filter { (share) -> Bool in
-			if share.state == .pending || share.state == nil {
-				return true
-			}
+			return  ((share.type == .remote) && (share.accepted == false)) ||	// Federated share (pending)
+				((share.type != .remote) && (share.state == .pending))		// Local share (pending)
+		}
 
-			return false
-		}
-		if pendingShares.count > 0 {
-			addSection(for: pendingShares, title: "Pending".localized, dimView: false)
-		}
 		let rejectedShares = shares.filter { (share) -> Bool in
-			if share.state == .rejected {
-				return true
-			}
-
-			return false
+			return	((share.type != .remote) && (share.state == .rejected))		// Local share (rejected)
 		}
-		if rejectedShares.count > 0 {
-			addSection(for: rejectedShares, title: "Declined".localized, dimView: true)
+
+		updateSection(for: pendingShares, title: "Pending".localized, sectionID: "pending", placeAtTop: true)
+		updateSection(for: rejectedShares, title: "Rejected".localized, sectionID: "rejected", placeAtTop: false)
+
+		if (pendingShares.count == 0) && (rejectedShares.count == 0) && self.presentedViewController == nil {
+			// Pop back to the Library when there are no longer any shares to present and no alert is active
+			self.navigationController?.popViewController(animated: true)
 		}
 	}
 
-	func addSection(for shares: [OCShare], title: String, dimView: Bool) {
-		let identifier = String(format:"%@-section", title)
-		if self.sectionForIdentifier(identifier) == nil {
-			let section = StaticTableViewSection(headerTitle: title, footerTitle: nil, identifier: identifier)
-			self.addSection(section)
+	func updateSection(for shares: [OCShare], title: String, sectionID: String, placeAtTop: Bool) {
+		var section : StaticTableViewSection? = sectionForIdentifier(sectionID)
 
-			let dateFormatter = DateFormatter()
-			dateFormatter.dateStyle = .medium
-			dateFormatter.timeStyle = .short
+		if shares.count == 0 {
+			if let section = section {
+				removeSection(section, animated: true)
+			}
+			return
+		}
 
-				for share in shares {
-					var ownerName : String?
-					if share.itemOwner?.displayName != nil {
-						ownerName = share.itemOwner?.displayName
-					} else if share.owner?.userName != nil {
-						ownerName = share.owner?.userName
+		if section == nil {
+			section = StaticTableViewSection(headerTitle: title, footerTitle: nil, identifier: sectionID)
+		}
+
+		if let section = section {
+			// Clear existing rows
+			section.remove(rows: section.rows)
+
+			// Create new rows
+			for share in shares {
+				var ownerName : String?
+				if share.itemOwner?.displayName != nil {
+					ownerName = share.itemOwner?.displayName
+				} else if share.owner?.userName != nil {
+					ownerName = share.owner?.userName
+				}
+
+				if let displayName = ownerName {
+					var itemImageType = "file"
+					if share.itemType == .collection {
+						itemImageType = "folder"
+					}
+					var footer = String(format: "Shared by %@".localized, displayName)
+					if let date = share.creationDate {
+						footer = footer.appendingFormat("\n%@", dateFormatter.string(from: date))
 					}
 
-					if let displayName = ownerName {
-						var itemImageType = "file"
-						if share.itemType == .collection {
-							itemImageType = "folder"
-						}
-						var footer = String(format: "Shared by %@".localized, displayName)
-						if let date = share.creationDate {
-							footer = footer.appendingFormat("\n%@", dateFormatter.string(from: date))
-						}
+					var itemName = share.name
+					if share.itemPath.count > 0 {
+						itemName = (share.itemPath as NSString).lastPathComponent
+					}
 
-						var itemName = share.name
-						if share.itemPath.count > 0 {
-							itemName = (share.itemPath as NSString).lastPathComponent
+					let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+						guard let self = self else { return }
+						var presentationStyle: UIAlertController.Style = .actionSheet
+						if UIDevice.current.isIpad() {
+							presentationStyle = .alert
 						}
 
-						let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-							guard let self = self else { return }
-							var presentationStyle: UIAlertController.Style = .actionSheet
-							if UIDevice.current.isIpad() {
-								presentationStyle = .alert
-							}
+						let alertController = UIAlertController(title: String(format: "Accept Invite %@".localized, itemName ?? ""),
+											message: nil,
+											preferredStyle: presentationStyle)
+						alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
-							let alertController = UIAlertController(title: String(format: "Accept Invite %@".localized, itemName ?? ""),
-																	message: nil,
-																	preferredStyle: presentationStyle)
-							alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
+						alertController.addAction(UIAlertAction(title: "Accept".localized, style: .default, handler: { [weak self] (_) in
+							self?.handleDecision(on: share, accept: true)
+						}))
 
-							alertController.addAction(UIAlertAction(title: "Accept".localized, style: .default, handler: { [weak self] (_) in
-								if let self = self, let core = self.core {
-									core.makeDecision(on: share, accept: true, completionHandler: { [weak self] (error) in
-										guard let self = self else { return }
-										OnMainThread {
-											if error == nil {
-												self.navigationController?.popViewController(animated: true)
-											} else {
-												if let shareError = error {
-													let alertController = UIAlertController(with: "Accept Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-													self.present(alertController, animated: true)
-												}
-											}
-										}
-									})
-								}
+						if share.state != .rejected {
+							alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
+								self?.handleDecision(on: share, accept: false)
 							}))
-
-							if share.state != .rejected {
-								alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
-									if let self = self, let core = self.core {
-										core.makeDecision(on: share, accept: false, completionHandler: { [weak self] (error) in
-											guard let self = self else { return }
-											OnMainThread {
-												if error == nil {
-													self.navigationController?.popViewController(animated: true)
-												} else {
-													if let shareError = error {
-														let alertController = UIAlertController(with: "Decline Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-														self.present(alertController, animated: true)
-													}
-												}
-											}
-										})
-									}
-								}))
-							}
-
-							self.present(alertController, animated: true, completion: nil)
-
-						}, title: itemName ?? "Share".localized, subtitle: footer, image: Theme.shared.image(for: itemImageType, size: CGSize(width: imageWidth, height: imageHeight)), identifier: "row")
-						if dimView {
-							row.cell?.contentView.alpha = 0.8
 						}
-						row.representedObject = share
-						section.add(row: row)
 
-						if share.itemPath.count > 0 {
-							itemTracker = core?.trackItem(atPath: share.itemPath, trackingHandler: { (error, item, isInitial) in
-								if error == nil, isInitial {
-									OnMainThread {
-										row.cell?.imageView?.image = item?.icon(fitInSize: CGSize(width: self.imageWidth, height: self.imageHeight))
-									}
+						self.present(alertController, animated: true, completion: nil)
+					}, title: itemName ?? "Share".localized, subtitle: footer, image: Theme.shared.image(for: itemImageType, size: CGSize(width: PendingSharesTableViewController.imageWidth, height: PendingSharesTableViewController.imageHeight)), identifier: "row")
+
+					row.representedObject = share
+
+					section.add(row: row)
+
+					if share.itemPath.count > 0 {
+						if let itemTracker = core?.trackItem(atPath: share.itemPath, trackingHandler: { (error, item, isInitial) in
+							if error == nil, isInitial {
+								OnMainThread {
+									row.cell?.imageView?.image = item?.icon(fitInSize: CGSize(width: PendingSharesTableViewController.imageWidth, height: PendingSharesTableViewController.imageHeight))
 								}
-							})
+							}
+						}) {
+							row.representedObject = itemTracker // End tracking when the row is deallocated
 						}
 					}
 				}
 			}
+		}
 
+		if let section = section, !section.attached {
+			if placeAtTop {
+				insertSection(section, at: 0)
+			} else {
+				addSection(section)
+			}
+		}
 	}
 
-	// MARK: TableView Delegate
-
+	// MARK: - TableView Delegate
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let row = self.staticRowForIndexPath(indexPath)
 		guard let share = row.representedObject as? OCShare else { return [] }
 
 		let acceptAction = UITableViewRowAction(style: .normal, title: "Accept".localized, handler: { [weak self] (_, _) in
-			if let self = self, let core = self.core {
-				core.makeDecision(on: share, accept: true, completionHandler: { [weak self] (error) in
-					guard let self = self else { return }
-					OnMainThread {
-						if error == nil {
-							self.navigationController?.popViewController(animated: true)
-						} else {
-							if let shareError = error {
-								let alertController = UIAlertController(with: "Accept Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-								self.present(alertController, animated: true)
-							}
-						}
-					}
-				})
-			}
+			self?.handleDecision(on: share, accept: true)
 		})
 		let declineAction = UITableViewRowAction(style: .destructive, title: "Decline".localized, handler: { [weak self] (_, _) in
-			guard let self = self else { return }
-			var presentationStyle: UIAlertController.Style = .actionSheet
-			if UIDevice.current.isIpad() {
-				presentationStyle = .alert
-			}
-			let alertController = UIAlertController(title: "Decline Share".localized,
-													message: nil,
-													preferredStyle: presentationStyle)
-			alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
-			alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
-				if let self = self, let core = self.core {
-					core.makeDecision(on: share, accept: false, completionHandler: { [weak self] (error) in
-						guard let self = self else { return }
-						OnMainThread {
-							if error == nil {
-								self.navigationController?.popViewController(animated: true)
-							} else {
-								if let shareError = error {
-									let alertController = UIAlertController(with: "Decline Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-									self.present(alertController, animated: true)
-								}
-							}
-						}
-					})
-				}
-			}))
-			self.present(alertController, animated: true, completion: nil)
+			self?.handleDecision(on: share, accept: false)
 		})
 
 		if share.state != .rejected {
@@ -226,5 +182,48 @@ class PendingSharesTableViewController: StaticTableViewController {
 		} else {
 			return [acceptAction]
 		}
+	}
+
+	// MARK: - Decision handling
+	func makeDecision(on share: OCShare, accept: Bool) {
+		if let core = core {
+			core.makeDecision(on: share, accept: accept, completionHandler: { [weak self] (error) in
+				guard let strongSelf = self else { return }
+
+				OnMainThread {
+					if error != nil {
+						if let shareError = error {
+							let alertController = UIAlertController(with: (accept ? "Accept Share failed".localized : "Decline Share failed".localized), message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+							strongSelf.present(alertController, animated: true)
+						}
+					}
+				}
+			})
+		}
+	}
+
+	func handleDecision(on share: OCShare, accept: Bool) {
+		if accept {
+			makeDecision(on: share, accept: accept)
+		} else {
+			var presentationStyle: UIAlertController.Style = .actionSheet
+			if UIDevice.current.isIpad() {
+				presentationStyle = .alert
+			}
+			let alertController = UIAlertController(title: "Decline Share".localized,
+								message: nil,
+								preferredStyle: presentationStyle)
+			alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
+			alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
+				self?.makeDecision(on: share, accept: accept)
+			}))
+			self.present(alertController, animated: true, completion: nil)
+		}
+	}
+}
+
+extension PendingSharesTableViewController : LibraryShareList {
+	func updateWith(shares: [OCShare]) {
+		self.shares = shares
 	}
 }

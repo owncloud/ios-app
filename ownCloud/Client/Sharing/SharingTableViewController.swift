@@ -41,6 +41,12 @@ class SharingTableViewController : StaticTableViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	deinit {
+		if let shareQuery = shareQuery {
+			core?.stop(shareQuery)
+		}
+	}
+
 	// MARK: - Header View
 
 	func addHeaderView() {
@@ -59,12 +65,5 @@ class SharingTableViewController : StaticTableViewController {
 				self.tableView.layoutTableHeaderView()
 			}
 		}
-	}
-
-	@objc func dismissView() {
-		if let query = self.shareQuery {
-			self.core?.stop(query)
-		}
-		dismissAnimated()
 	}
 }

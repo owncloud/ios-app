@@ -22,32 +22,52 @@ import ownCloudSDK
 extension OCCore {
 
 	func unifiedShares(for item: OCItem, completionHandler: @escaping (_ shares: [OCShare]) -> Void) {
+		let combinedShares : NSMutableArray = NSMutableArray()
+		let dispatchGroup = DispatchGroup()
+
 		if let shareQuery = OCShareQuery(scope: .itemWithReshares, item: item) {
+			dispatchGroup.enter()
+
 			shareQuery.initialPopulationHandler = { [weak self] query in
-				let sharesWithReshares = query.queryResults
-				self?.stop(shareQuery)
-
-				if let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item) {
-					shareQuery.initialPopulationHandler = { query in
-						let sharesWithMe = query.queryResults.filter({ (share) -> Bool in
-							if share.itemPath == item.path {
-								return true
-							}
-							return false
-						})
-
-						var shares : [OCShare] = []
-						shares.append(contentsOf: sharesWithMe)
-						shares.append(contentsOf: sharesWithReshares)
-						self?.stop(shareQuery)
-
-						completionHandler(shares)
-					}
-					self?.start(shareQuery)
-				}
+				combinedShares.addObjects(from: query.queryResults)
+				dispatchGroup.leave()
+				self?.stop(query)
 			}
 			start(shareQuery)
 		}
+
+		if let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item) {
+			dispatchGroup.enter()
+
+			shareQuery.initialPopulationHandler = { [weak self] query in
+				let sharesWithMe = query.queryResults.filter({ (share) -> Bool in
+					if share.itemPath == item.path {
+						return true
+					}
+					return false
+				})
+
+				combinedShares.addObjects(from: sharesWithMe)
+				dispatchGroup.leave()
+				self?.stop(query)
+			}
+			start(shareQuery)
+		}
+
+		if let shareQuery = OCShareQuery(scope: .acceptedCloudShares, item: item) {
+			dispatchGroup.enter()
+
+			shareQuery.initialPopulationHandler = { [weak self] query in
+				combinedShares.addObjects(from: query.queryResults)
+				dispatchGroup.leave()
+				self?.stop(query)
+			}
+			start(shareQuery)
+		}
+
+		dispatchGroup.notify(queue: .main, execute: {
+			completionHandler((combinedShares as? [OCShare])!)
+		})
 	}
 
 	@discardableResult func sharesSharedWithMe(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, keepRunning: Bool = false) -> OCShareQuery? {
