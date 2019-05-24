@@ -242,7 +242,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 				}
 				self.activityViewController?.core = core
 				self.libraryViewController?.core = core
-				self.libraryViewController?.updateLibrary()
+				self.libraryViewController?.setupQueries()
 			}
 		}
 	}
