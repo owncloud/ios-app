@@ -7,14 +7,14 @@
 //
 
 /*
-* Copyright (C) 2019, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2019, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
 import UIKit
 import ownCloudSDK
@@ -22,28 +22,6 @@ import ownCloudSDK
 class LibraryTableViewController: StaticTableViewController {
 
 	weak var core : OCCore?
-	var pendingSharesCounter : Int = 0 {
-		didSet {
-			OnMainThread {
-				if self.pendingSharesCounter > 0 {
-					self.navigationController?.tabBarItem.badgeValue = String(self.pendingSharesCounter)
-				} else {
-					self.navigationController?.tabBarItem.badgeValue = nil
-				}
-			}
-		}
-	}
-	var pendingLocalSharesCounter : Int = 0 {
-		didSet {
-			pendingSharesCounter = pendingCloudSharesCounter + pendingLocalSharesCounter
-		}
-	}
-	var pendingCloudSharesCounter : Int = 0 {
-		didSet {
-			pendingSharesCounter = pendingCloudSharesCounter + pendingLocalSharesCounter
-		}
-	}
-	var startedQueries : [OCCoreQuery] = []
 
 	deinit {
 		for query in startedQueries {
@@ -56,13 +34,17 @@ class LibraryTableViewController: StaticTableViewController {
 
 		self.title = "Quick Access".localized
 		self.navigationController?.navigationBar.prefersLargeTitles = true
-		self.tableView.isScrollEnabled = false
+
+		shareSection = StaticTableViewSection(headerTitle: "Shares".localized, footerTitle: nil, identifier: "share-section")
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		self.navigationController?.navigationBar.prefersLargeTitles = true
 	}
+
+	// MARK: - Share setup
+	var startedQueries : [OCCoreQuery] = []
 
 	var shareQueryWithUser : OCShareQuery?
 	var shareQueryAcceptedCloudShares : OCShareQuery?
@@ -109,7 +91,9 @@ class LibraryTableViewController: StaticTableViewController {
 			shareQueryPendingCloudShares.initialPopulationHandler = { [weak self] (query) in
 				if let library = self {
 					library.pendingCloudSharesCounter = query.queryResults.count
-					library.updatePendingShareRow(shares: query.queryResults, title: "Pending Federated Invites".localized, pendingCounter: library.pendingCloudSharesCounter)
+					OnMainThread {
+						library.updatePendingShareRow(shares: query.queryResults, title: "Pending Federated Invites".localized, pendingCounter: library.pendingCloudSharesCounter)
+					}
 				}
 			}
 			shareQueryPendingCloudShares.changesAvailableNotificationHandler = shareQueryPendingCloudShares.initialPopulationHandler
@@ -133,7 +117,30 @@ class LibraryTableViewController: StaticTableViewController {
 			startedQueries.append(shareQueryByUser)
 		}
 
-		addCollectionSection()
+		setupCollectionSection()
+	}
+
+	// MARK: - Handle sharing updates
+	var pendingSharesCounter : Int = 0 {
+		didSet {
+			OnMainThread {
+				if self.pendingSharesCounter > 0 {
+					self.navigationController?.tabBarItem.badgeValue = String(self.pendingSharesCounter)
+				} else {
+					self.navigationController?.tabBarItem.badgeValue = nil
+				}
+			}
+		}
+	}
+	var pendingLocalSharesCounter : Int = 0 {
+		didSet {
+			pendingSharesCounter = pendingCloudSharesCounter + pendingLocalSharesCounter
+		}
+	}
+	var pendingCloudSharesCounter : Int = 0 {
+		didSet {
+			pendingSharesCounter = pendingCloudSharesCounter + pendingLocalSharesCounter
+		}
 	}
 
 	func handleSharedWithUserChanges() {
@@ -198,56 +205,57 @@ class LibraryTableViewController: StaticTableViewController {
 		}
 	}
 
-	// MARK: Sharing Section
+	// MARK: - Sharing Section Updates
+	var shareSection : StaticTableViewSection?
 
-	func addShareSection() {
-		if self.sectionForIdentifier("share-section") == nil {
-			let section = StaticTableViewSection(headerTitle: "Shares".localized, footerTitle: nil, identifier: "share-section")
-			self.insertSection(section, at: 0, animated: false)
+	func updateShareSectionVisibility() {
+		if let shareSection = shareSection {
+			if shareSection.rows.count > 0 {
+				if !shareSection.attached {
+					self.insertSection(shareSection, at: 0, animated: false)
+				}
+			} else {
+				if shareSection.attached {
+					self.removeSection(shareSection, animated: false)
+				}
+			}
 		}
 	}
 
 	func updatePendingShareRow(shares: [OCShare], title: String, pendingCounter: Int) {
-		OnMainThread {
-			let rowIdentifier = String(format: "%@-share-row", title)
-			let section = self.sectionForIdentifier("share-section")
-			if shares.count > 0 {
-				self.addShareSection()
-				let shareCounter = String(pendingCounter)
+		let rowIdentifier = String(format: "%@-share-row", title)
 
-				if section?.row(withIdentifier: rowIdentifier) == nil {
-					let pendingLabel = RoundedLabel()
-					pendingLabel.update(text: shareCounter, textColor: UIColor.white, backgroundColor: UIColor.red)
+		if shares.count > 0 {
+			let shareCounter = String(pendingCounter)
 
-					let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-						let pendingSharesController = PendingSharesTableViewController()
-						pendingSharesController.shares = shares
-						pendingSharesController.title = title
-						pendingSharesController.core = self?.core
-						self?.navigationController?.pushViewController(pendingSharesController, animated: true)
-					}, title: title, image: UIImage(named: "group"), accessoryType: .disclosureIndicator, accessoryView: pendingLabel, identifier: rowIdentifier)
-					section?.insert(row: row, at: 0, animated: true)
-				} else if let row = section?.row(withIdentifier: rowIdentifier) {
-					guard let accessoryView = row.additionalAccessoryView as? RoundedLabel else { return }
-					accessoryView.update(text: shareCounter, textColor: UIColor.white, backgroundColor: UIColor.red)
-				}
-			} else {
-				if let row = section?.row(withIdentifier: rowIdentifier) {
-					section?.remove(rows: [row], animated: true)
-				}
+			if shareSection?.row(withIdentifier: rowIdentifier) == nil {
+				let pendingLabel = RoundedLabel()
+				pendingLabel.update(text: shareCounter, textColor: UIColor.white, backgroundColor: UIColor.red)
+
+				let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+					let pendingSharesController = PendingSharesTableViewController()
+					pendingSharesController.shares = shares
+					pendingSharesController.title = title
+					pendingSharesController.core = self?.core
+					self?.navigationController?.pushViewController(pendingSharesController, animated: true)
+				}, title: title, image: UIImage(named: "group"), accessoryType: .disclosureIndicator, accessoryView: pendingLabel, identifier: rowIdentifier)
+				shareSection?.insert(row: row, at: 0, animated: true)
+			} else if let row = shareSection?.row(withIdentifier: rowIdentifier) {
+				guard let accessoryView = row.additionalAccessoryView as? RoundedLabel else { return }
+				accessoryView.update(text: shareCounter, textColor: UIColor.white, backgroundColor: UIColor.red)
 			}
+		} else {
+			shareSection?.remove(rowWithIdentifier: rowIdentifier, animated: true)
 		}
+
+		self.updateShareSectionVisibility()
 	}
 
 	func updateGenericShareRow(shares: [OCShare], title: String, image: UIImage) {
-		let section = self.sectionForIdentifier("share-section")
 		let rowIdentifier = String(format:"share-%@row", title)
-		if shares.count > 0 {
-			if self.sectionForIdentifier("share-section") == nil {
-				self.addShareSection()
-			}
 
-			if section?.row(withIdentifier: rowIdentifier) == nil, let core = core {
+		if shares.count > 0 {
+			if shareSection?.row(withIdentifier: rowIdentifier) == nil, let core = core {
 				let row = StaticTableViewRow(rowWithAction: { [weak self] (row, _) in
 
 					let sharesFileListController = SharesFilelistTableViewController(core: core)
@@ -257,20 +265,21 @@ class LibraryTableViewController: StaticTableViewController {
 
 					row.representedObject = sharesFileListController
 				}, title: title, image: image, accessoryType: .disclosureIndicator, identifier: rowIdentifier)
-				section?.add(row: row)
-			} else if let row = section?.row(withIdentifier: rowIdentifier) {
+
+				shareSection?.add(row: row)
+			} else if let row = shareSection?.row(withIdentifier: rowIdentifier) {
 				guard let sharesFileListController = row.representedObject as? SharesFilelistTableViewController else { return }
 				sharesFileListController.shares = shares
 			}
 		} else {
-			if let row = section?.row(withIdentifier: rowIdentifier) {
-				section?.remove(rows: [row], animated: true)
-			}
+			shareSection?.remove(rowWithIdentifier: rowIdentifier, animated: true)
 		}
-	}
-	// MARK: Collection Section
 
-	func addCollectionSection() {
+		self.updateShareSectionVisibility()
+	}
+
+	// MARK: - Collection Section
+	func setupCollectionSection() {
 		if self.sectionForIdentifier("collection-section") == nil {
 			let section = StaticTableViewSection(headerTitle: "Collection".localized, footerTitle: nil, identifier: "collection-section")
 			self.addSection(section)
@@ -279,7 +288,7 @@ class LibraryTableViewController: StaticTableViewController {
 			let recentsQuery = OCQuery(condition: .require([
 				.where(.lastUsed, isGreaterThan: lastWeekDate),
 				.where(.name, isNotEqualTo: "/")
-				]), inputFilter:nil)
+			]), inputFilter:nil)
 			addCollectionRow(to: section, title: "Recents".localized, image: UIImage(named: "recents")!, query: recentsQuery, actionHandler: nil)
 			startedQueries.append(recentsQuery)
 

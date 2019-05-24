@@ -147,6 +147,12 @@ class StaticTableViewSection: NSObject {
 		}
 	}
 
+	func remove(rowWithIdentifier identifier: String, animated : Bool = false) {
+		if let row = row(withIdentifier: identifier) {
+			self.remove(rows: [row], animated: animated)
+		}
+	}
+
 	// MARK: - Update Section Titles
 	func updateHeader(title: String?) {
 		self.headerTitle = title
