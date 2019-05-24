@@ -1,0 +1,40 @@
+= iOS App Settings
+:toc: right
+
+image:81_Settings-2.png[81_Settings-2.png]
+
+== Security
+
+=== Passcode / Biometrical Lock
+
+image:82_Settings_passcode.png[82_Settings_passcode.png]
+
+=== Lock delay
+
+=== Trusted Certificates
+
+* See a list of all previously approved certificates
+* Inspect details of previously approved certificates
+* Revoke previously approved certificates
+
+image:83_Settings_certs.png[83_Settings_certs.png]
+
+== Themes
+
+image:84_Settings_themes.png[84_Settings_themes.png]
+
+== Logging
+
+image:91_Logging.png[91_Logging.png]
+
+xref:ios_troubleshooting.adoc[Troubleshooting]
+
+== Media Upload (Conversion)
+
+=== Image
+
+* convert the very efficient HEIC images to more compatible JPEG images
+
+=== Video
+
+* convert the very efficient videos to more compatible MP4 videos

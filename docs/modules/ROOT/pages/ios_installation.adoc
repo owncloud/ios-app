@@ -1,0 +1,6 @@
+= iOS App Getting the ownCloud iOS App
+:toc: right
+
+Open Safari, or any Web browser, and point it to your ownCloud server. Log in and look on your Personal page for a link to the ownCloud app on iTunes.
+
+You’ll also find links and information at the ownCloud installation page.

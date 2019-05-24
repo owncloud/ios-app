@@ -1,0 +1,4 @@
+= iOS App  with Mobile Device Management (MDM)
+:toc: right
+
+[TODO] Add https://github.com/owncloud/ios-app/blob/master/MDM/AppConfig/README.md

@@ -1,0 +1,95 @@
+= iOS App Managing Your Files
+:toc: right
+
+image:21_File_list.png[21_File_list.png]
+
+* Thumbnails for supported images
+* Sort options
+* file list filter
+* Quota is shown on the end of the file list (root folder)
+
+== Navigate folders
+
+* tab on header allows you to direct navigate to any parent folder
+
+image:21_File_list_parent.png[21_File_list_parent.png]
+
+== View files
+
+=== Documents
+
+* All files types supported by iOS Safari can be displayed in the app
+
+=== PDF
+
+image:41_PDF.png[41_PDF.png]
+
+* toc	￼
+* thumbs	￼
+* search
+
+image:42_PDF_toc.png[42_PDF_toc.png]
+image:43_PDF_thumbs.png[43_PDF_thumbs.png]
+image:44_PDF_search.png[44_PDF_search.png]
+
+=== Images
+
+
+=== Video
+
+
+=== ASCII
+
+* Many types of text documents can be displayed
+
+== Add Data
+
+image:22_File_plus.png[22_File_plus.png]
+
+=== Create Folder
+
+=== Upload Files
+
+image:23_Upload_File.png[23_Upload_File.png]
+
+* Upload Files feature can access all data that other apps expose to the iOS files app
+
+=== Upload Photos with Multiselect
+
+image:24_Upload_Photo_multi.png[24_Upload_Photo_multi.png]
+
+* Upload Photos feature can access all Albums on the device
+
+== File Actions (individual files)
+
+image:27_File_Actions.png[27_File_Actions.png]
+
+* Open in
+
+image:28_File_Actions_open.png[28_File_Actions_open.png]
+
+* Move
+* Rename
+* Duplicate
+* Copy
+* Delete
+
+== Multiselect files and folders
+
+image:25_Files_multiselect.png[25_Files_multiselect.png]
+
+* File actions can be …
+
+== Drag & Drop (multiple) files and folders
+
+image:26_Files_multidragdrop.png[26_Files_multidragdrop.png]
+
+== Drag & Drop (multiple) files between apps (iPad only)
+
+image:26_Files_multidragdrop_iPad.png[26_Files_multidragdrop_iPad.png]
+
+* Drag & Drop (multiple) files from other apps to the ownCloud iOS app
+* Drag & Drop (multiple) files from the ownCloud iOS app to other apps
+
+More information:
+https://support.apple.com/en-us/HT207582

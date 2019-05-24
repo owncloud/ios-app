@@ -1,0 +1,23 @@
+= iOS App and iOS Files App Integration and 3rd party apps
+:toc: right
+
+== Enable in iOS Files app
+
+* Multiple Accounts
+
+== Work with your ownCloud data in iOS Files App
+
+* Open
+* Edit & Save
+* Delete
+
+Future versions:
+
+* Share (UI)
+* Offline (UI)
+* Favourites
+* Tags
+
+
+
+== Share from other apps (via iOS Files app)

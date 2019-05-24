@@ -1,0 +1,79 @@
+= iOS App Managing Accounts
+:toc: right
+
+image:01_account_add.png[01_account_add.png]
+
+* Multiple Accounts
+
+= Basic Auth
+
+* Login Credentials are stored on the device (secure in system keychain)
+* Password manager support
+
+image:02_basic_auth.png[02_basic_auth.png]
+
+=== Server URL
+
+=== Credentials
+
+= OAuth 2.0
+
+* Industry standard authorisation method
+* Username and password are not stored on the device
+
+(doc/SECURITY.md#oauth2-implementation <https://github.com/owncloud/ios-app/blob/master/doc/SECURITY.md#oauth2-implementation>)
+
+image:11_Account_OAuth.png[11_Account_OAuth.png]
+
+=== Server URL
+
+=== Safari Login Session
+
+image:12_OAuth_dialogue.png[12_OAuth_dialogue.png]
+
+=== Login in web UI
+
+image:13_OAuth_Web_view.png[13_OAuth_Web_view.png]
+
+=== Authorize
+
+image:14_OAuth_Web_view_authorize.png[14_OAuth_Web_view_authorize.png]
+
+= Security
+
+=== Inspect Certificate Details
+
+image:03_cert_pass.png[03_cert_pass.png]
+
+=== Certificate Warnings
+
+image:04_cert_error.png[04_cert_error.png]
+
+* Monitors connections for suspicious certificates
+* Inspect Certificate Details
+* Approve certificates
+
+=== More information
+
+==> doc/SECURITY.md <https://github.com/owncloud/ios-app/blob/master/doc/SECURITY.md> (Security)
+
+= Account List
+
+image:04_Account_1x.png[04_Account_1x.png]
+
+=== Account actions (swipe)	
+
+image:05_Account_swipe.png[05_Account_swipe.png]
+
+=== Manage Account
+
+image:06_Account_manage.png[06_Account_manage.png]
+
+* Viewed files get downloaded and stay on the device
+* this deletes all local files (except those that aren’t uploaded to the ownCloud server)
+
+=== Edit Authentication	
+
+image:07_Account_edit.png[07_Account_edit.png]
+
+* Logout and re-login

@@ -1,0 +1,38 @@
+= iOS App Quick access
+:toc: right
+
+image:51_Quick_access.png[51_Quick_access.png]
+
+== Shared with you
+
+* See a list of all resources you accepted from other users
+
+=== Pending
+
+* accept or devcline shares ( if enabled on oC server 10.0.9+ )
+
+== Shared with others
+
+* See a list of all resources where you invited collaborators
+
+== Links
+
+* See a list of all resources where you created links
+
+== Collections
+
+=== Recents
+
+ That view shows all items whose lastUsed date falls within a one week interval. (defined as: Date of last use: updated on local import, local update, download - and via lastModified if that date is more recent.)
+
+=== Favorites
+
+* See a list of all resources in your account set as favourite
+
+=== Images
+
+* See a list of all resources from type image
+
+=== PDF
+
+* See a list of all PDF in your account
