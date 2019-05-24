@@ -101,7 +101,10 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-		let item: OCItem = itemAtIndexPath(indexPath)
+		guard let item : OCItem = itemAt(indexPath: indexPath) else {
+			return nil
+		}
+
 		if item.type != OCItemType.collection {
 			return nil
 		} else {
@@ -110,7 +113,9 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let item: OCItem = itemAtIndexPath(indexPath)
+		guard let item : OCItem = itemAt(indexPath: indexPath) else {
+			return
+		}
 
 		guard item.type == OCItemType.collection, let core = self.core, let path = item.path else {
 			return

@@ -34,12 +34,7 @@ extension OCQueryState {
 	}
 }
 
-class ClientQueryViewController: ClientFilelistTableViewController, Themeable, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
-	weak var core : OCCore?
-	var query : OCQuery
-
-	var items : [OCItem] = []
-
+class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
 	var selectedItemIds = Set<OCLocalID>()
 
 	var actions : [Action]?
@@ -57,9 +52,6 @@ class ClientQueryViewController: ClientFilelistTableViewController, Themeable, U
 			}
 		}
 	}
-	var queryRefreshControl: UIRefreshControl?
-
-	var queryRefreshRateLimiter : OCRateLimiter = OCRateLimiter(minimumTime: 0.2)
 
 	let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 	var deleteMultipleBarButtonItem: UIBarButtonItem?
@@ -75,29 +67,17 @@ class ClientQueryViewController: ClientFilelistTableViewController, Themeable, U
 
 	var quotaLabel = UILabel()
 	var quotaObservation : NSKeyValueObservation?
-	var messageView : MessageView?
-	var messageThemeApplierToken : ThemeApplierToken?
+	var titleButtonThemeApplierToken : ThemeApplierToken?
 
-	var shallShowSortBar = true
+	var queryStateObservation : NSKeyValueObservation?
 
 	// MARK: - Init & Deinit
-	public init(core inCore: OCCore, query inQuery: OCQuery) {
+	public override init(core inCore: OCCore, query inQuery: OCQuery) {
+		super.init(core: inCore, query: inQuery)
 
-		core = inCore
-		query = inQuery
-
-		super.init(style: .plain)
-
-		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
-
-		if query.sortComparator == nil {
-			query.sortComparator = self.sortMethod.comparator()
-		}
-
-		query.delegate = self
-
-		query.addObserver(self, forKeyPath: "state", options: .initial, context: nil)
-		core?.start(query)
+		queryStateObservation = query.observe(\OCQuery.state, options: .initial, changeHandler: { [weak self] (_, _) in
+			self?.updateQueryProgressSummary()
+		})
 
 		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
 
@@ -113,7 +93,7 @@ class ClientQueryViewController: ClientFilelistTableViewController, Themeable, U
 			titleButton.accessibilityIdentifier = "show-paths-button"
 			titleButton.semanticContentAttribute = (titleButton.effectiveUserInterfaceLayoutDirection == .leftToRight) ? .forceRightToLeft : .forceLeftToRight
 			titleButton.setImage(UIImage(named: "chevron-small-light"), for: .normal)
-			messageThemeApplierToken = Theme.shared.add(applier: { (_, collection, _) in
+			titleButtonThemeApplierToken = Theme.shared.add(applier: { (_, collection, _) in
 				titleButton.setTitleColor(collection.navigationBarColors.labelColor, for: .normal)
 				titleButton.tintColor = collection.navigationBarColors.labelColor
 			})
@@ -154,86 +134,31 @@ class ClientQueryViewController: ClientFilelistTableViewController, Themeable, U
 	}
 
 	deinit {
-		query.removeObserver(self, forKeyPath: "state", context: nil)
+		queryStateObservation = nil
+		quotaObservation = nil
 
-		core?.stop(query)
-		Theme.shared.unregister(client: self)
 		self.queryProgressSummary = nil
 
-		quotaObservation = nil
-		if messageThemeApplierToken != nil {
-			Theme.shared.remove(applierForToken: messageThemeApplierToken)
-			messageThemeApplierToken = nil
+		if titleButtonThemeApplierToken != nil {
+			Theme.shared.remove(applierForToken: titleButtonThemeApplierToken)
+			titleButtonThemeApplierToken = nil
 		}
 	}
-
-	// MARK: - Actions
-	@objc func refreshQuery() {
-		if core?.connectionStatus == OCCoreConnectionStatus.online {
-			UIImpactFeedbackGenerator().impactOccurred()
-			core?.reload(query)
-		} else {
-			if self.queryRefreshControl?.isRefreshing == true {
-				self.queryRefreshControl?.endRefreshing()
-			}
-		}
-	}
-
-	// swiftlint:disable block_based_kvo
-	// Would love to use the block-based KVO, but it doesn't seem to work when used on the .state property of the query :-(
-	override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-		if (object as? OCQuery) === query {
-			self.updateQueryProgressSummary()
-		}
-	}
-	// swiftlint:enable block_based_kvo
 
 	// MARK: - View controller events
-	private let estimatedTableRowHeight : CGFloat = 80
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
-		self.tableView.register(ClientItemCell.self, forCellReuseIdentifier: "itemCell")
-		searchController = UISearchController(searchResultsController: nil)
-		searchController?.searchResultsUpdater = self
-		searchController?.obscuresBackgroundDuringPresentation = false
-		searchController?.hidesNavigationBarDuringPresentation = true
-		searchController?.searchBar.placeholder = "Search this folder".localized
-
-		navigationItem.searchController =  searchController
-		navigationItem.hidesSearchBarWhenScrolling = false
-
-		self.definesPresentationContext = true
-
-		if shallShowSortBar {
-			sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
-			sortBar?.delegate = self
-			sortBar?.sortMethod = self.sortMethod
-
-			tableView.tableHeaderView = sortBar
-		}
-
-		queryRefreshControl = UIRefreshControl()
-		queryRefreshControl?.addTarget(self, action: #selector(self.refreshQuery), for: .valueChanged)
-		self.tableView.insertSubview(queryRefreshControl!, at: 0)
-		tableView.contentOffset = CGPoint(x: 0, y: searchController!.searchBar.frame.height)
-		tableView.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
-
-		Theme.shared.register(client: self, applyImmediately: true)
 
 		self.tableView.dragDelegate = self
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
 		self.tableView.allowsMultipleSelectionDuringEditing = true
 
-		self.tableView.estimatedRowHeight = estimatedTableRowHeight
-
 		plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusBarButtonPressed))
 		plusBarButton?.accessibilityIdentifier = "client.file-add"
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
 		selectBarButton?.isEnabled = false
-    selectBarButton?.accessibilityIdentifier = "select-button"
+    		selectBarButton?.accessibilityIdentifier = "select-button"
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
 
 		selectDeselectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
@@ -255,13 +180,9 @@ class ClientQueryViewController: ClientFilelistTableViewController, Themeable, U
 		openMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "open-in"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: OpenInAction.identifier!)
 		openMultipleBarButtonItem?.isEnabled = false
 
-		self.addThemableBackgroundView()
-
 		quotaLabel.textAlignment = .center
 		quotaLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
 		quotaLabel.numberOfLines = 0
-
-		messageView = MessageView(add: self.view)
 	}
 
 	private var viewControllerVisible : Bool = false
@@ -270,10 +191,7 @@ class ClientQueryViewController: ClientFilelistTableViewController, Themeable, U
 		super.viewWillDisappear(animated)
 
 		self.queryProgressSummary = nil
-		searchController?.searchBar.text = ""
-		searchController?.dismiss(animated: true, completion: nil)
 
-		viewControllerVisible = false
 		leaveMultipleSelection()
 	}
 
@@ -281,8 +199,6 @@ class ClientQueryViewController: ClientFilelistTableViewController, Themeable, U
 		super.viewWillAppear(animated)
 
 		updateQueryProgressSummary()
-
-		viewControllerVisible = true
 
 		self.reloadTableData(ifNeeded: true)
 	}
@@ -348,93 +264,17 @@ class ClientQueryViewController: ClientFilelistTableViewController, Themeable, U
 
 	// MARK: - Theme support
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.tableView.applyThemeCollection(collection)
+	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		super.applyThemeCollection(theme: theme, collection: collection, event: event)
+
 		self.quotaLabel.textColor = collection.tableRowColors.secondaryLabelColor
-		self.searchController?.searchBar.applyThemeCollection(collection)
-		if event == .update {
-			self.reloadTableData()
-		}
 	}
 
-	// MARK: - Table view data source
-	func itemAtIndexPath(_ indexPath : IndexPath) -> OCItem {
-		return items[indexPath.row]
-	}
-
-	override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
-	}
-
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return self.items.count
-	}
-
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ClientItemCell
-		let newItem = itemAtIndexPath(indexPath)
-
-		cell?.accessibilityIdentifier = newItem.name
-		cell?.core = self.core
-
-		if cell?.delegate == nil {
-			cell?.delegate = self
-		}
-
-		// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
-		// Make sure we don't request the thumbnail multiple times in that case.
-		if newItem.displaysDifferent(than: cell?.item) {
-			cell?.item = newItem
-		}
-
-		return cell!
-	}
-
-	var lastTappedItemLocalID : String?
-
+	// MARK: - Table view delegate
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// If not in multiple-selection mode, just navigate to the file or folder (collection)
 		if !self.tableView.isEditing {
-			let rowItem : OCItem = itemAtIndexPath(indexPath)
-
-			if let core = self.core {
-				switch rowItem.type {
-					case .collection:
-						if let path = rowItem.path {
-							self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: path)), animated: true)
-						}
-
-					case .file:
-						if lastTappedItemLocalID != rowItem.localID {
-							lastTappedItemLocalID = rowItem.localID
-
-							if let progress = core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { [weak self, query] (error, core, item, _) in
-
-								guard let self = self else { return }
-								OnMainThread { [weak core] in
-									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
-										if let item = item, let core = core {
-											if item.localID == self.lastTappedItemLocalID {
-												let itemViewController = DisplayHostViewController(core: core, selectedItem: item, query: query)
-												itemViewController.hidesBottomBarWhenPushed = true
-												itemViewController.progressSummarizer = self.progressSummarizer
-												self.navigationController?.pushViewController(itemViewController, animated: true)
-											}
-										}
-									}
-
-									if self.lastTappedItemLocalID == item?.localID {
-										self.lastTappedItemLocalID = nil
-									}
-								}
-							}) {
-								progressSummarizer?.startTracking(progress: progress)
-							}
-						}
-				}
-			}
-
-			tableView.deselectRow(at: indexPath, animated: true)
+			super.tableView(tableView, didSelectRowAt: indexPath)
 		} else {
 			updateMultiSelectionUI()
 		}
@@ -468,7 +308,9 @@ class ClientQueryViewController: ClientFilelistTableViewController, Themeable, U
 			return nil
 		}
 
-		let item: OCItem = itemAtIndexPath(indexPath)
+		guard let item : OCItem = itemAt(indexPath: indexPath) else {
+			return nil
+		}
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .tableRow)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
@@ -561,60 +403,7 @@ class ClientQueryViewController: ClientFilelistTableViewController, Themeable, U
 		removeToolbar()
 	}
 
-	// MARK: - Sorting
-	private var sortBar: SortBar?
-	private var sortMethod: SortMethod {
-
-		set {
-			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
-		}
-
-		get {
-			let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabeticallyDescendant
-			return sort
-		}
-	}
-
-	// MARK: - Reload Data
-	private var tableReloadNeeded = false
-
-	func reloadTableData(ifNeeded: Bool = false) {
-		/*
-			This is a workaround to cope with the fact that:
-			- UITableView.reloadData() does nothing if the view controller is not currently visible (via viewWillDisappear/viewWillAppear), so cells may hold references to outdated OCItems
-			- OCQuery may signal updates at any time, including when the view controller is not currently visible
-
-			This workaround effectively makes sure reloadData() is called in viewWillAppear if a reload has been signalled to the tableView while it wasn't visible.
-		*/
-		if !viewControllerVisible {
-			tableReloadNeeded = true
-		}
-
-		if !ifNeeded || (ifNeeded && tableReloadNeeded) {
-			self.tableView.reloadData()
-
-			if viewControllerVisible {
-				tableReloadNeeded = false
-			}
-
-			// Restore previously selected items
-			if tableView.isEditing && selectedItemIds.count > 0 {
-				var selectedItems = [OCItem]()
-				for row in 0..<self.items.count {
-					if let itemLocalID = self.items[row].localID as OCLocalID? {
-						if selectedItemIds.contains(itemLocalID) {
-							selectedItems.append(self.items[row])
-							self.tableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
-						}
-					}
-				}
-			}
-		}
-	}
-
-	// MARK: - Search
-	var searchController: UISearchController?
-
+	// MARK: - Upload
 	func upload(itemURL: URL, name: String, completionHandler: ClientActionCompletionHandler? = nil) {
 		if let rootItem = query.rootItem,
 		   let progress = core?.importFileNamed(name, at: rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
@@ -693,10 +482,12 @@ class ClientQueryViewController: ClientFilelistTableViewController, Themeable, U
 				// Get array of OCItems from selected table view index paths
 				selectedItemIds.removeAll()
 				for indexPath in selectedIndexPaths {
-					let item = itemAtIndexPath(indexPath)
-					selectedItems.append(item)
-					if let localID = item.localID as OCLocalID? {
-						selectedItemIds.insert(localID)
+					if let item = itemAt(indexPath: indexPath) {
+						selectedItems.append(item)
+
+						if let localID = item.localID as OCLocalID? {
+							selectedItemIds.insert(localID)
+						}
 					}
 				}
 			}
@@ -830,130 +621,55 @@ class ClientQueryViewController: ClientFilelistTableViewController, Themeable, U
 		present(tableViewController, animated: true, completion: nil)
 	}
 
+	// MARK: - ClientItemCell item resolution
+	override func item(for cell: ClientItemCell) -> OCItem? {
+		guard let indexPath = self.tableView.indexPath(for: cell) else {
+			return nil
+		}
+
+		return self.itemAt(indexPath: indexPath)
+	}
+
+	// MARK: - Updates
+	override func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
+		switch query.state {
+			case .contentsFromCache, .idle, .waitingForServerReply:
+				self.selectBarButton?.isEnabled = (self.items.count == 0) ? false : true
+
+			default: break
+		}
+
+		if let rootItem = self.query.rootItem {
+			if query.queryPath != "/" {
+				let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
+				self.updateFooter(text: totalSize)
+			}
+		}
+	}
+
+	// MARK: - Reloads
+	override func restoreSelectionAfterTableReload() {
+		// Restore previously selected items
+		if tableView.isEditing && selectedItemIds.count > 0 {
+			var selectedItems = [OCItem]()
+			for row in 0..<self.items.count {
+				if let itemLocalID = self.items[row].localID as OCLocalID? {
+					if selectedItemIds.contains(itemLocalID) {
+						selectedItems.append(self.items[row])
+						self.tableView.selectRow(at: IndexPath(row: row, section: 0), animated: false, scrollPosition: .none)
+					}
+				}
+			}
+		}
+	}
+
 	// MARK: - UIPopoverPresentationControllerDelegate
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return .none
 	}
 }
 
-// MARK: - Query Delegate
-extension ClientQueryViewController : OCQueryDelegate {
-	func query(_ query: OCQuery, failedWithError error: Error) {
-		// Not applicable atm
-	}
-
-	func queryHasChangesAvailable(_ query: OCQuery) {
-		queryRefreshRateLimiter.runRateLimitedBlock {
-			query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
-				OnMainThread {
-					if query.state.isFinal {
-						OnMainThread {
-							if self.queryRefreshControl!.isRefreshing {
-								self.queryRefreshControl?.endRefreshing()
-							}
-						}
-					}
-
-					let previousItemCount = self.items.count
-
-					self.items = changeSet?.queryResult ?? []
-
-					switch query.state {
-					case .contentsFromCache, .idle, .waitingForServerReply:
-						if previousItemCount == 0, self.items.count == 0, query.state == .waitingForServerReply {
-							break
-						}
-
-						if self.items.count == 0 {
-							if self.searchController?.searchBar.text != "" {
-								self.messageView?.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There is no results for this search".localized)
-							} else {
-								self.messageView?.message(show: true, imageName: "folder", title: "Empty folder".localized, message: "This folder contains no files or folders.".localized)
-							}
-						} else {
-							self.messageView?.message(show: false)
-						}
-
-						self.selectBarButton?.isEnabled = (self.items.count == 0) ? false : true
-						self.reloadTableData()
-					case .targetRemoved:
-						self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
-						self.reloadTableData()
-
-					default:
-						self.messageView?.message(show: false)
-					}
-
-					if let rootItem = self.query.rootItem {
-						if query.queryPath != "/" {
-							let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
-							self.updateFooter(text: totalSize)
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-// MARK: - SortBar Delegate
-extension ClientQueryViewController : SortBarDelegate {
-	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
-		sortMethod = didUpdateSortMethod
-		query.sortComparator = sortMethod.comparator()
-	}
-
-	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
-		self.present(presentViewController, animated: animated, completion: completionHandler)
-	}
-}
-
-// MARK: - UISearchResultsUpdating Delegate
-extension ClientQueryViewController: UISearchResultsUpdating {
-	func updateSearchResults(for searchController: UISearchController) {
-		let searchText = searchController.searchBar.text!
-
-		let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
-			if let itemName = item?.name {
-				return itemName.localizedCaseInsensitiveContains(searchText)
-			}
-			return false
-		}
-
-		if searchText == "" {
-			if let filter = query.filter(withIdentifier: "text-search") {
-				query.removeFilter(filter)
-			}
-		} else {
-			if let filter = query.filter(withIdentifier: "text-search") {
-				query.updateFilter(filter, applyChanges: { filterToChange in
-					(filterToChange as? OCQueryFilter)?.filterHandler = filterHandler
-				})
-			} else {
-				query.addFilter(OCQueryFilter.init(handler: filterHandler), withIdentifier: "text-search")
-			}
-		}
-	}
-}
-
-// MARK: - ClientItemCell Delegate
-extension ClientQueryViewController: ClientItemCellDelegate {
-	func moreButtonTapped(cell: ClientItemCell) {
-		guard let indexPath = self.tableView.indexPath(for: cell), let core = self.core else {
-			return
-		}
-
-		let item = self.itemAtIndexPath(indexPath)
-
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
-		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
-
-		if let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: makeActionProgressHandler()) {
-			self.present(asCard: moreViewController, animated: true)
-		}
-	}
-}
-
+// MARK: - Drag & Drop delegates
 extension ClientQueryViewController: UITableViewDropDelegate {
 	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
 		guard let core = self.core else { return }
@@ -1025,7 +741,9 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
 			if selectedIndexPaths.count > 0 {
 				for indexPath in selectedIndexPaths {
-					selectedItems.append(itemAtIndexPath(indexPath))
+					if let selectedItem : OCItem = itemAt(indexPath: indexPath) {
+						selectedItems.append(selectedItem)
+					}
 				}
 			}
 		}
@@ -1034,12 +752,16 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 			selectedItems.append(item)
 		}
 
-		let item: OCItem = itemAtIndexPath(indexPath)
-		selectedItems.append(item)
-		updateToolbarItemsForDropping(selectedItems)
+		if let item: OCItem = itemAt(indexPath: indexPath) {
+			selectedItems.append(item)
 
-		guard let dragItem = itemForDragging(item: item) else { return [] }
-		return [dragItem]
+			updateToolbarItemsForDropping(selectedItems)
+
+			guard let dragItem = itemForDragging(item: item) else { return [] }
+			return [dragItem]
+		}
+
+		return []
 	}
 
 	func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
@@ -1049,12 +771,16 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 			selectedItems.append(item)
 		}
 
-		let item: OCItem = itemAtIndexPath(indexPath)
-		selectedItems.append(item)
-		updateToolbarItemsForDropping(selectedItems)
+		if let item: OCItem = itemAt(indexPath: indexPath) {
+			selectedItems.append(item)
 
-		guard let dragItem = itemForDragging(item: item) else { return [] }
-		return [dragItem]
+			updateToolbarItemsForDropping(selectedItems)
+
+			guard let dragItem = itemForDragging(item: item) else { return [] }
+			return [dragItem]
+		}
+
+		return []
 	}
 
 	func itemForDragging(item : OCItem) -> UIDragItem? {

@@ -279,7 +279,7 @@ class LibraryTableViewController: StaticTableViewController {
 			let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 
 				if let query = query {
-					let customFileListController = CustomFilelistTableViewController(core: core, query: query)
+					let customFileListController = CustomFileListTableViewController(core: core, query: query)
 					customFileListController.title = title
 					customFileListController.refreshActionHandler = actionHandler
 					self?.navigationController?.pushViewController(customFileListController, animated: true)

@@ -1,5 +1,5 @@
 //
-//  ClientFilelistTableViewController.swift
+//  FilelistTableViewController.swift
 //  ownCloud
 //
 //  Created by Matthias Hühne on 21.05.19.
@@ -9,7 +9,7 @@
 import UIKit
 import ownCloudSDK
 
-class ClientFilelistTableViewController: UITableViewController {
+class FilelistTableViewController: UITableViewController {
 
 	var progressSummarizer : ProgressSummarizer?
 	private var _actionProgressHandler : ActionProgressHandler?
@@ -26,5 +26,16 @@ class ClientFilelistTableViewController: UITableViewController {
 		}
 
 		return _actionProgressHandler!
+	}
+}
+
+extension FilelistTableViewController : SortBarDelegate {
+	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
+		sortMethod = didUpdateSortMethod
+		query.sortComparator = sortMethod.comparator()
+	}
+
+	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
+		self.present(presentViewController, animated: animated, completion: completionHandler)
 	}
 }
