@@ -287,11 +287,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
 	override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-		if tableView.isEditing {
-			return true
-		} else {
-			return true
-		}
+		return true
 	}
 
 	func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
@@ -304,11 +300,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
  	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		guard let core = self.core else {
-			return nil
-		}
-
-		guard let item : OCItem = itemAt(indexPath: indexPath) else {
+		guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath) else {
 			return nil
 		}
 
