@@ -22,8 +22,6 @@ import ownCloudSDK
 class PublicLinkTableViewController: SharingTableViewController {
 
 	// MARK: - Instance Variables
-	var shares : [OCShare] = []
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -60,38 +58,36 @@ class PublicLinkTableViewController: SharingTableViewController {
 		shareQuery?.refreshInterval = 2
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		navigationController?.isToolbarHidden = true
-	}
-
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		handleEmptyShares()
 	}
 
 	// MARK: - Sharing UI
-
-	func addSectionFor(type: OCShareType, with title: String) {
+	func addSectionFor(shares sharesOfType: [OCShare], with title: String, identifier: OCShareType) {
 		var shareRows: [StaticTableViewRow] = []
 
-		let user = shares.filter { (share) -> Bool in
-			return share.type == type
-		}
-
-		if user.count > 0 {
-			for share in user {
+		if sharesOfType.count > 0 {
+			for share in sharesOfType {
 				if canEdit(share: share) {
-					shareRows.append( StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+					let shareRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 						guard let self = self else { return }
 						let editPublicLinkViewController = PublicLinkEditTableViewController(style: .grouped)
 						editPublicLinkViewController.share = share
 						editPublicLinkViewController.core = self.core
 						editPublicLinkViewController.item = self.item
 						self.navigationController?.pushViewController(editPublicLinkViewController, animated: true)
-					}, title: share.name!, subtitle: share.permissionDescription(), accessoryType: .disclosureIndicator) )
+					}, title: share.name!, subtitle: share.permissionDescription, accessoryType: .disclosureIndicator)
+
+					shareRow.representedObject = share
+
+					shareRows.append(shareRow)
 				} else {
-					shareRows.append( StaticTableViewRow(rowWithAction: nil, title: share.name!, subtitle: share.permissionDescription(), accessoryType: .none) )
+					let shareRow = StaticTableViewRow(rowWithAction: nil, title: share.name!, subtitle: share.permissionDescription, accessoryType: .none)
+
+					shareRow.representedObject = share
+
+					shareRows.append(shareRow)
 				}
 			}
 		} else {
@@ -100,17 +96,17 @@ class PublicLinkTableViewController: SharingTableViewController {
 			}, title: "Create Public Link".localized, style: StaticTableViewRowButtonStyle.plain))
 		}
 
-		let sectionType = "share-section-\(String(type.rawValue))"
-		if let section = self.sectionForIdentifier(sectionType) {
+		let sectionIdentifier = "share-section-\(identifier.rawValue)"
+		if let section = self.sectionForIdentifier(sectionIdentifier) {
 			self.removeSection(section)
 		}
-		let section : StaticTableViewSection = StaticTableViewSection(headerTitle: title, footerTitle: nil, identifier: sectionType, rows: shareRows)
+		let section : StaticTableViewSection = StaticTableViewSection(headerTitle: title, footerTitle: nil, identifier: sectionIdentifier, rows: shareRows)
 		self.addSection(section, animated: false)
 	}
 
 	func addShareSections() {
 		OnMainThread {
-			self.addSectionFor(type: .link, with: "Public Links".localized)
+			self.addSectionFor(shares: self.shares(ofTypes: [.link]), with: "Public Links".localized, identifier: .link)
 		}
 	}
 
@@ -118,7 +114,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 		OnMainThread {
 			let types : [OCShareType] = [.link]
 			for type in types {
-				let identifier = "share-section-\(String(type.rawValue))"
+				let identifier = "share-section-\(type.rawValue)"
 				if let section = self.sectionForIdentifier(identifier) {
 					self.removeSection(section)
 				}
@@ -191,20 +187,10 @@ class PublicLinkTableViewController: SharingTableViewController {
 		})
 	}
 
-	// MARK: - Sharing Helper
-	func canEdit(share: OCShare) -> Bool {
-		if core?.connection.loggedInUser?.userName == share.owner?.userName || core?.connection.loggedInUser?.userName == share.itemOwner?.userName {
-			return true
-		}
-
-		return false
-	}
-
 	// MARK: TableView Delegate
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		let share = self.shares[indexPath.row]
-		if self.canEdit(share: share) {
+		if let share = share(at: indexPath), self.canEdit(share: share) {
 			return [
 				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, _) in
 					var presentationStyle: UIAlertController.Style = .actionSheet
@@ -213,23 +199,23 @@ class PublicLinkTableViewController: SharingTableViewController {
 					}
 
 					let alertController = UIAlertController(title: "Delete Public Link".localized,
-															message: nil,
-															preferredStyle: presentationStyle)
+										message: nil,
+										preferredStyle: presentationStyle)
 					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
 					alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
-							self.core?.delete(share, completionHandler: { (error) in
-								OnMainThread {
-									if error == nil {
-										self.navigationController?.popViewController(animated: true)
-									} else {
-										if let shareError = error {
-											let alertController = UIAlertController(with: "Delete Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-											self.present(alertController, animated: true)
-										}
+						self.core?.delete(share, completionHandler: { (error) in
+							OnMainThread {
+								if error == nil {
+									self.navigationController?.popViewController(animated: true)
+								} else {
+									if let shareError = error {
+										let alertController = UIAlertController(with: "Delete Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										self.present(alertController, animated: true)
 									}
 								}
-							})
+							}
+						})
 					}))
 
 					self.present(alertController, animated: true, completion: nil)
@@ -250,9 +236,9 @@ class PublicLinkTableViewController: SharingTableViewController {
 
 	@objc func addPublicLink() {
 		if let path = item.path, let name = item.name {
-			var permissions = OCSharePermissionsMask.create
+			var permissions : OCSharePermissionsMask = .create
 			if item.type == .file {
-				permissions = OCSharePermissionsMask.read
+				permissions = .read
 			}
 
 			var linkName = String(format:"%@ %@ (%ld)", name, "Link".localized, (shares.count + 1))

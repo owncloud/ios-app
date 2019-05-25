@@ -66,7 +66,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			let save = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(createPublicLink))
 			self.navigationItem.rightBarButtonItem = save
 
-			permissionMask = OCSharePermissionsMask.read
+			permissionMask = .read
 		} else {
 			addActionSection()
 		}
@@ -76,8 +76,9 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 	func addNameSection() {
 		let section = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "name-section")
-		let nameRow = StaticTableViewRow(textFieldWithAction: { [weak self, weak section] (row, _) in
-			if let self = self, let core = self.core, let section = section, !self.createLink {
+
+		let nameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (row, _) in
+			if let self = self, let core = self.core, !self.createLink {
 				guard let share = self.share, let name = row.textField?.text else { return }
 				core.update(share, afterPerformingChanges: {(share) in
 					share.name = name
@@ -130,14 +131,14 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				if let self = self, let core = self.core {
 					guard let share = self.share, let selectedValueFromSection = row.section?.selectedValue(forGroupIdentifier: "permission-group") as? Int else { return }
 
-					var newPermissions = OCSharePermissionsMask(rawValue: 0)
+					var newPermissions : OCSharePermissionsMask = OCSharePermissionsMask(rawValue: 0)
 					switch selectedValueFromSection {
 					case 0:
-						newPermissions = OCSharePermissionsMask.read
+						newPermissions = .read
 					case 1:
-						newPermissions = OCSharePermissionsMask(rawValue: OCSharePermissionsMask.read.rawValue + OCSharePermissionsMask.update.rawValue + OCSharePermissionsMask.create.rawValue + OCSharePermissionsMask.delete.rawValue)
+						newPermissions = [.read, .update, .create, .delete]
 					case 2:
-						newPermissions = OCSharePermissionsMask.create
+						newPermissions = .create
 					default:
 						break
 					}

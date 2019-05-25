@@ -1,5 +1,5 @@
 //
-//  QueryFileListTableViewController
+//  LibraryFilesTableViewController
 //  ownCloud
 //
 //  Created by Matthias Hühne on 13.05.19.
@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class CustomFileListTableViewController: QueryFileListTableViewController {
+class LibraryFilesTableViewController: QueryFileListTableViewController {
 
 	// MARK: - Theme support
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {

@@ -1,5 +1,5 @@
 //
-//  GroupSharingEditUserGroupsTableViewController.swift
+//  GroupSharingEditTableViewController.swift
 //  ownCloud
 //
 //  Created by Matthias Hühne on 10.04.19.
@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
+class GroupSharingEditTableViewController: StaticTableViewController {
 
 	// MARK: - Instance Variables
 	var share : OCShare?
@@ -57,7 +57,7 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 			let save = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(createShareAndDismiss))
 			self.navigationItem.rightBarButtonItem = save
 
-			permissionMask = OCSharePermissionsMask.read
+			permissionMask = .read
 			if let capabilitiesDefaultPermission = self.core?.connection.capabilities?.sharingDefaultPermissions {
 				permissionMask = capabilitiesDefaultPermission
 			}
@@ -232,10 +232,10 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 		if let reshares = reshares, reshares.count > 0 {
 			for share in reshares {
 				shareRows.append( StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-					let editSharingViewController = GroupSharingEditUserGroupsTableViewController(style: .grouped)
+					let editSharingViewController = GroupSharingEditTableViewController(style: .grouped)
 					editSharingViewController.share = share
 					self?.navigationController?.pushViewController(editSharingViewController, animated: true)
-				}, title: share.recipient!.displayName!, subtitle: share.permissionDescription(), accessoryType: .disclosureIndicator) )
+				}, title: share.recipient!.displayName!, subtitle: share.permissionDescription, accessoryType: .disclosureIndicator) )
 			}
 
 			let section = StaticTableViewSection(headerTitle: "Shared to".localized, footerTitle: nil, rows: shareRows)
@@ -275,7 +275,7 @@ class GroupSharingEditUserGroupsTableViewController: StaticTableViewController {
 						}
 					})
 				}
-			}, title: "Delete Collaborator".localized, style: StaticTableViewRowButtonStyle.destructive)
+			}, title: "Delete Collaborator".localized, style: .destructive)
 			])
 		self.addSection(section)
 	}

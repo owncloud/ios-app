@@ -22,11 +22,13 @@ import ownCloudSDK
 class SharingTableViewController : StaticTableViewController {
 
 	// MARK: - Instance Variables
-
 	weak var core : OCCore?
 	var item : OCItem
-	var messageView : MessageView?
+
 	var shareQuery : OCShareQuery?
+	var shares : [OCShare] = []
+
+	var messageView : MessageView?
 
 	// MARK: - Init & Deinit
 
@@ -47,8 +49,13 @@ class SharingTableViewController : StaticTableViewController {
 		}
 	}
 
-	// MARK: - Header View
+	// MARK: - View events
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		navigationController?.isToolbarHidden = true
+	}
 
+	// MARK: - Header View
 	func addHeaderView() {
 		guard let core = core else { return }
 
@@ -65,5 +72,24 @@ class SharingTableViewController : StaticTableViewController {
 				self.tableView.layoutTableHeaderView()
 			}
 		}
+	}
+
+	// MARK: - Sharing Helper
+	func canEdit(share: OCShare) -> Bool {
+		if core?.connection.loggedInUser?.userName == share.owner?.userName || core?.connection.loggedInUser?.userName == share.itemOwner?.userName {
+			return true
+		}
+
+		return false
+	}
+
+	func shares(ofTypes types: [OCShareType]) -> [OCShare] {
+		return shares.filter { (share) -> Bool in
+			return types.contains(share.type)
+		}
+	}
+
+	func share(at indexPath: IndexPath) -> OCShare? {
+		return staticRowForIndexPath(indexPath).representedObject as? OCShare
 	}
 }

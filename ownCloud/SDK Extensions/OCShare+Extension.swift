@@ -21,7 +21,7 @@ import ownCloudSDK
 
 extension OCShare {
 
-	func permissionDescription() -> String {
+	var permissionDescription : String {
 		var permissionsDescription : [String] = []
 
 		if self.type == .link {
