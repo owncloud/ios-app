@@ -46,14 +46,17 @@ class HeaderActionTableViewCell : UITableViewCell {
 		self.contentView.addSubview(headerLabel)
 		self.contentView.addSubview(actionLabel)
 
-		headerLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -15).isActive = true
-		actionLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -15).isActive = true
-		headerLabel.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 15).isActive = true
-		actionLabel.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 15).isActive = true
+		NSLayoutConstraint.activate([
+			headerLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -15),
+			actionLabel.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -15),
+			headerLabel.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 15),
+			actionLabel.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 15),
 
-		headerLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10).isActive = true
-		headerLabel.bottomAnchor.constraint(equalTo: actionLabel.topAnchor, constant: -10).isActive = true
-		actionLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10).isActive = true
+			headerLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10),
+			headerLabel.bottomAnchor.constraint(equalTo: actionLabel.topAnchor, constant: -10),
+			actionLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10)
+		])
+
 
 		headerLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
 		actionLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)

@@ -92,32 +92,34 @@ class MessageView: UIView {
 			containerView.addSubview(messageLabel)
 
 			containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageView]-(20)-[titleLabel]-[messageLabel]|",
-																		options: NSLayoutConstraint.FormatOptions(rawValue: 0),
-																		metrics: nil,
-																		views: ["imageView" : imageView, "titleLabel" : titleLabel, "messageLabel" : messageLabel])
+										    options: NSLayoutConstraint.FormatOptions(rawValue: 0),
+										    metrics: nil,
+										    views: ["imageView" : imageView, "titleLabel" : titleLabel, "messageLabel" : messageLabel])
 			)
-
-			imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
-			imageView.widthAnchor.constraint(equalToConstant: 96).isActive = true
-			imageView.heightAnchor.constraint(equalToConstant: 96).isActive = true
-
-			titleLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
-			titleLabel.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor).isActive = true
-			titleLabel.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor).isActive = true
-
-			messageLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor).isActive = true
-			messageLabel.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor).isActive = true
-			messageLabel.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor).isActive = true
 
 			rootView.addSubview(containerView)
 
-			containerView.centerXAnchor.constraint(equalTo: rootView.centerXAnchor).isActive = true
-			containerView.centerYAnchor.constraint(equalTo: rootView.centerYAnchor).isActive = true
+			NSLayoutConstraint.activate([
+				imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+				imageView.widthAnchor.constraint(equalToConstant: 96),
+				imageView.heightAnchor.constraint(equalToConstant: 96),
 
-			containerView.leftAnchor.constraint(greaterThanOrEqualTo: rootView.leftAnchor, constant: 20).isActive = true
-			containerView.rightAnchor.constraint(lessThanOrEqualTo: rootView.rightAnchor, constant: -20).isActive = true
-			containerView.topAnchor.constraint(greaterThanOrEqualTo: rootView.topAnchor, constant: 20).isActive = true
-			containerView.bottomAnchor.constraint(lessThanOrEqualTo: rootView.bottomAnchor, constant: -20).isActive = true
+				titleLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+				titleLabel.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor),
+				titleLabel.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor),
+
+				messageLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+				messageLabel.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor),
+				messageLabel.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor),
+
+				containerView.centerXAnchor.constraint(equalTo: rootView.centerXAnchor),
+				containerView.centerYAnchor.constraint(equalTo: rootView.centerYAnchor),
+
+				containerView.leftAnchor.constraint(greaterThanOrEqualTo: rootView.leftAnchor, constant: 20),
+				containerView.rightAnchor.constraint(lessThanOrEqualTo: rootView.rightAnchor, constant: -20),
+				containerView.topAnchor.constraint(greaterThanOrEqualTo: rootView.topAnchor, constant: 20),
+				containerView.bottomAnchor.constraint(lessThanOrEqualTo: rootView.bottomAnchor, constant: -20)
+			])
 
 			messageView = rootView
 			messageContainerView = containerView
@@ -142,14 +144,17 @@ class MessageView: UIView {
 
 				self.masterView.addSubview(rootView)
 
-				rootView.leftAnchor.constraint(equalTo: self.masterView.safeAreaLayoutGuide.leftAnchor).isActive = true
-				rootView.rightAnchor.constraint(equalTo: self.masterView.safeAreaLayoutGuide.rightAnchor).isActive = true
-				rootView.topAnchor.constraint(equalTo: self.masterView.safeAreaLayoutGuide.topAnchor).isActive = true
 				self.composeViewBottomConstraint = rootView.bottomAnchor.constraint(equalTo: self.masterView.safeAreaLayoutGuide.bottomAnchor)
 				if keyboardHeight > 0 {
 					self.composeViewBottomConstraint.constant = self.masterView.safeAreaInsets.bottom - keyboardHeight
 				}
-				self.composeViewBottomConstraint.isActive = true
+
+				NSLayoutConstraint.activate([
+					rootView.leftAnchor.constraint(equalTo: self.masterView.safeAreaLayoutGuide.leftAnchor),
+					rootView.rightAnchor.constraint(equalTo: self.masterView.safeAreaLayoutGuide.rightAnchor),
+					rootView.topAnchor.constraint(equalTo: self.masterView.safeAreaLayoutGuide.topAnchor),
+					self.composeViewBottomConstraint
+				])
 
 				UIView.animate(withDuration: 0.1, delay: 0.0, options: .curveEaseOut, animations: {
 					rootView.alpha = 1
