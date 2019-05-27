@@ -86,10 +86,16 @@ image:26_Files_multidragdrop.png[26_Files_multidragdrop.png]
 
 == Drag & Drop (multiple) files between apps (iPad only)
 
-image:26_Files_multidragdrop_iPad.png[26_Files_multidragdrop_iPad.png]
+* New ownCloud iOS app supports the multitasking features on iPad
+** Open ownCloud iOS app as a second app with Slide Over
+** Use two apps at the same time with Split View
+** Drag and drop between apps
+
+More information:
+https://support.apple.com/en-us/HT207582
+
 
 * Drag & Drop (multiple) files from other apps to the ownCloud iOS app
 * Drag & Drop (multiple) files from the ownCloud iOS app to other apps
 
-More information:
-https://support.apple.com/en-us/HT207582
+image:26_Files_multidragdrop_iPad.png[26_Files_multidragdrop_iPad.png]
