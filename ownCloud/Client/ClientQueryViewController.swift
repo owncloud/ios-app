@@ -542,7 +542,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			let uniqueItems = Array(Set(items))
 			// Get possible associated actions
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-			let actionContext = ActionContext(viewController: self, core: core, items: uniqueItems, location: actionsLocation)
+			let actionContext = ActionContext(viewController: self, core: core, query: query, items: uniqueItems, location: actionsLocation, preferences: ["containsFolders" : currentPathContainsFolders])
 			self.actions = Action.sortedApplicableActions(for: actionContext)
 
 			// Enable / disable tool-bar items depending on action availability
@@ -1116,7 +1116,7 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 		let item = self.itemAtIndexPath(indexPath)
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
-		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [item], location: actionsLocation, preferences: ["containsFolders" : currentPathContainsFolders])
 
 		let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: makeActionProgressHandler())
 
