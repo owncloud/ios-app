@@ -586,8 +586,6 @@
 		39104E0A223991C8002FC02F /* UIButton+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		3913213722946E5E00EF88F4 /* FileListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListTableViewController.swift; sourceTree = "<group>"; };
 		3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableViewController.swift; sourceTree = "<group>"; };
-		3922880F227335B200C36F81 /* public.tvg */ = {isa = PBXFileReference; lastKnownFileType = text; path = public.tvg; sourceTree = "<group>"; };
-		392288162273361200C36F81 /* public.tvg */ = {isa = PBXFileReference; lastKnownFileType = text; name = public.tvg; path = "img/filetypes-tvg/public.tvg"; sourceTree = "<group>"; };
 		392557FD2278703300E83F60 /* UISearchBar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchBar+Extension.swift"; sourceTree = "<group>"; };
 		394804D9225CBDBA00AA8183 /* BreadCrumbTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadCrumbTableViewController.swift; sourceTree = "<group>"; };
 		39607CBB2225D480007B386D /* UITableViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -946,8 +944,6 @@
 		233BDE93204FEFE500C06732 = {
 			isa = PBXGroup;
 			children = (
-				3922880F227335B200C36F81 /* public.tvg */,
-				392288162273361200C36F81 /* public.tvg */,
 				DC9BFBB220A19AF3007064B5 /* doc */,
 				DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */,
 				233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */,
