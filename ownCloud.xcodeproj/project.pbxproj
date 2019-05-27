@@ -44,6 +44,7 @@
 		3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D422411EDF00B66713 /* BorderedLabel.swift */; };
 		3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */; };
 		39CC8B01228C8A950020253B /* MediaUploadSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8B00228C8A950020253B /* MediaUploadSettingsSection.swift */; };
+		39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */; };
 		39E2FDED21FDEC7500F0117F /* ServerListTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */; };
 		39E2FE0021FF814A00F0117F /* ThemeRoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */; };
 		46B9D336BF7FE50321823888 /* Pods_ownCloudScreenshotsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54199937F74A129BC74DEB0A /* Pods_ownCloudScreenshotsTests.framework */; };
@@ -62,7 +63,6 @@
 		4C6B78102226B83300C5F3DB /* PhotoAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B780F2226B83300C5F3DB /* PhotoAlbumTableViewController.swift */; };
 		4C6B78122226B86300C5F3DB /* PhotoAlbumTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B78112226B86300C5F3DB /* PhotoAlbumTableViewCell.swift */; };
 		4C7295D8228C384E00FA4E68 /* LogFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7295D7228C384E00FA4E68 /* LogFilesViewController.swift */; };
-		4C80B1E62271BBB400252901 /* PhotoUploadSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C80B1E52271BBB400252901 /* PhotoUploadSection.swift */; };
 		4CAF783C2282FD40000C85CF /* FileManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CAF783B2282FD40000C85CF /* FileManager+Extension.swift */; };
 		4CC46D212284C677009E938F /* BookmarkInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */; };
 		4CF8CAB121F9B70600B8CA67 /* UIBarButtonItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */; };
@@ -91,7 +91,6 @@
 		59799F7F22415878007E8008 /* EarlGrey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; };
 		59799F80224158FD007E8008 /* EarlGrey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */; };
 		59799F8122415956007E8008 /* EarlGrey+Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCAEB06021F9FC510067E147 /* EarlGrey+Tools.swift */; };
-		59799F822241595C007E8008 /* XCTestsCase+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59BC2750221D552700548444 /* XCTestsCase+Extension.swift */; };
 		597A404920AD59EF00B028B2 /* AppLockWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597A404820AD59EF00B028B2 /* AppLockWindow.swift */; };
 		59B09E6421AD61DD007827B8 /* PropfindResponse.xml in Resources */ = {isa = PBXBuildFile; fileRef = 59B09E5C21AD61DD007827B8 /* PropfindResponse.xml */; };
 		59B09E6521AD61DD007827B8 /* test_certificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 59B09E5D21AD61DD007827B8 /* test_certificate.cer */; };
@@ -111,7 +110,6 @@
 		6E586CFE2199A75900F680C4 /* MoveAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E586CFD2199A75900F680C4 /* MoveAction.swift */; };
 		6E586D002199A78E00F680C4 /* DeleteAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E586CFF2199A78E00F680C4 /* DeleteAction.swift */; };
 		6E5FC172221590B000F60846 /* DisplayHostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E5FC171221590B000F60846 /* DisplayHostViewController.swift */; };
-		6E83C77E20A32C1B0066EC23 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */; };
 		6E83C78420A33C180066EC23 /* LAContext+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E83C78320A33C180066EC23 /* LAContext+Extension.swift */; };
 		6E91F37E21ECA6FD009436D2 /* CopyAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E91F37D21ECA6FD009436D2 /* CopyAction.swift */; };
 		6E938522220322F30049D676 /* SplashImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 6E93851C220322F30049D676 /* SplashImage.png */; };
@@ -205,6 +203,16 @@
 		DCB44D852186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */; };
 		DCB44D87218718BA00DAA4CC /* VendorServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB44D86218718BA00DAA4CC /* VendorServices.swift */; };
 		DCB504DD221EF07F007638BE /* status-flash.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCB504D7221EF07E007638BE /* status-flash.tvg */; };
+		DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */; };
+		DCC085652293F1FD008CC05C /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
+		DCC0856C2293F1FD008CC05C /* ownCloudAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC0856B2293F1FD008CC05C /* ownCloudAppTests.m */; };
+		DCC0856E2293F1FD008CC05C /* ownCloudApp.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC0855E2293F1FD008CC05C /* ownCloudApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCC085712293F1FD008CC05C /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
+		DCC085722293F1FD008CC05C /* ownCloudApp.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DCC0857B2293F29F008CC05C /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
+		DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC0857D2293F2D7008CC05C /* DisplaySettings.m */; };
+		DCC085802293F490008CC05C /* DisplaySettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC0857C2293F2D7008CC05C /* DisplaySettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCC085812293F66D008CC05C /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
 		DCC6564A20C9B7E400110A97 /* FileProviderExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6564920C9B7E400110A97 /* FileProviderExtension.m */; };
 		DCC6565020C9B7E400110A97 /* FileProviderEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6564F20C9B7E400110A97 /* FileProviderEnumerator.m */; };
 		DCC6565B20C9B7E400110A97 /* DocumentActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6565A20C9B7E400110A97 /* DocumentActionViewController.m */; };
@@ -402,6 +410,41 @@
 			remoteGlobalIDString = C79800BA1A21CB5300380860;
 			remoteInfo = "PocketSVG (iOS)";
 		};
+		DCC085662293F1FD008CC05C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC0855B2293F1FD008CC05C;
+			remoteInfo = ownCloudApp;
+		};
+		DCC085682293F1FD008CC05C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 233BDE9B204FEFE500C06732;
+			remoteInfo = ownCloud;
+		};
+		DCC0856F2293F1FD008CC05C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC0855B2293F1FD008CC05C;
+			remoteInfo = ownCloudApp;
+		};
+		DCC085792293F296008CC05C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC8F9AA202852A200EB6701;
+			remoteInfo = ownCloudSDK;
+		};
+		DCC085822293F671008CC05C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCC0855B2293F1FD008CC05C;
+			remoteInfo = ownCloudApp;
+		};
 		DCC6566020C9B7E400110A97 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
@@ -466,6 +509,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				DC63207E21FCA731007EC0A8 /* libzip.framework in Copy Frameworks */,
+				DCC085722293F1FD008CC05C /* ownCloudApp.framework in Copy Frameworks */,
 				DCFBAD0C21BE67A100943F76 /* ownCloudUI.framework in Copy Frameworks */,
 				DC7DBA20207F5A0400E7337D /* PocketSVG.framework in Copy Frameworks */,
 				DC3BE0D92077BC6B002A0AC0 /* openssl.framework in Copy Frameworks */,
@@ -531,6 +575,7 @@
 		3998F5D422411EDF00B66713 /* BorderedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedLabel.swift; sourceTree = "<group>"; };
 		3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCCertificate+Extension.swift"; sourceTree = "<group>"; };
 		39CC8B00228C8A950020253B /* MediaUploadSettingsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaUploadSettingsSection.swift; sourceTree = "<group>"; };
+		39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
 		39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableHeaderView.swift; sourceTree = "<group>"; };
 		39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeRoundedButton.swift; sourceTree = "<group>"; };
 		3D753147564B1E4F47826109 /* Pods-ownCloud Screenshots Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloud Screenshots Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloud Screenshots Tests/Pods-ownCloud Screenshots Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -550,7 +595,6 @@
 		4C6B780F2226B83300C5F3DB /* PhotoAlbumTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumTableViewController.swift; sourceTree = "<group>"; };
 		4C6B78112226B86300C5F3DB /* PhotoAlbumTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumTableViewCell.swift; sourceTree = "<group>"; };
 		4C7295D7228C384E00FA4E68 /* LogFilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogFilesViewController.swift; sourceTree = "<group>"; };
-		4C80B1E52271BBB400252901 /* PhotoUploadSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoUploadSection.swift; sourceTree = "<group>"; };
 		4CAF783B2282FD40000C85CF /* FileManager+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Extension.swift"; sourceTree = "<group>"; };
 		4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkInfoViewController.swift; sourceTree = "<group>"; };
 		4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Extension.swift"; sourceTree = "<group>"; };
@@ -558,7 +602,6 @@
 		59056CAA22414F3C00A18A22 /* ownCloudScreenshotsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ownCloudScreenshotsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		59056CAC22414F3C00A18A22 /* ownCloudScreenshotsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ownCloudScreenshotsTests.swift; sourceTree = "<group>"; };
 		59056CAE22414F3C00A18A22 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5911EB2C2240EA7500C73084 /* ownCloudTests copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "ownCloudTests copy-Info.plist"; path = "/Users/javi/Documents/workspace_ios/ownCloud/ios-app/ownCloudTests copy-Info.plist"; sourceTree = "<absolute>"; };
 		5917244D20D3DC2100809B38 /* BiometricalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricalTests.swift; sourceTree = "<group>"; };
 		59371D7B224103D300C6BC5B /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SnapshotHelper.swift; path = ownCloudScreenshotsTests/SnapshotHelper.swift; sourceTree = SOURCE_ROOT; };
 		593A821220C7D4C5000E2A90 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -713,6 +756,15 @@
 		DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeStyle+DefaultStyles.swift"; sourceTree = "<group>"; };
 		DCB44D86218718BA00DAA4CC /* VendorServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VendorServices.swift; sourceTree = "<group>"; };
 		DCB504D7221EF07E007638BE /* status-flash.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "status-flash.tvg"; path = "img/filetypes-tvg/status-flash.tvg"; sourceTree = SOURCE_ROOT; };
+		DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySettingsSection.swift; sourceTree = "<group>"; };
+		DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ownCloudApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCC0855E2293F1FD008CC05C /* ownCloudApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ownCloudApp.h; sourceTree = "<group>"; };
+		DCC0855F2293F1FD008CC05C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DCC085642293F1FD008CC05C /* ownCloudAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ownCloudAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCC0856B2293F1FD008CC05C /* ownCloudAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ownCloudAppTests.m; sourceTree = "<group>"; };
+		DCC0856D2293F1FD008CC05C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DCC0857C2293F2D7008CC05C /* DisplaySettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DisplaySettings.h; sourceTree = "<group>"; };
+		DCC0857D2293F2D7008CC05C /* DisplaySettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DisplaySettings.m; sourceTree = "<group>"; };
 		DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ownCloud File Provider.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC6564820C9B7E400110A97 /* FileProviderExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileProviderExtension.h; sourceTree = "<group>"; };
 		DCC6564920C9B7E400110A97 /* FileProviderExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileProviderExtension.m; sourceTree = "<group>"; };
@@ -755,7 +807,6 @@
 		DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewController.swift; sourceTree = "<group>"; };
 		DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewSection.swift; sourceTree = "<group>"; };
 		DCF4F17E2051A0D000189B9A /* StaticTableViewRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewRow.swift; sourceTree = "<group>"; };
-		DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingsViewController.swift; sourceTree = "<group>"; };
 		DCF4F18A2052BA4C00189B9A /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		DCFED971208095E200A2D984 /* ClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientItemCell.swift; sourceTree = "<group>"; };
 		DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTVGResource.swift; sourceTree = "<group>"; };
@@ -772,6 +823,7 @@
 				DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */,
 				DC3BE0D72077BC5D002A0AC0 /* openssl.framework in Frameworks */,
 				DC3BE0D82077BC5D002A0AC0 /* ownCloudSDK.framework in Frameworks */,
+				DCC085712293F1FD008CC05C /* ownCloudApp.framework in Frameworks */,
 				DCE0275E21F1DF7E00F2544E /* ownCloudUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -808,10 +860,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DCC085592293F1FD008CC05C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCC0857B2293F29F008CC05C /* ownCloudSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCC085612293F1FD008CC05C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCC085652293F1FD008CC05C /* ownCloudApp.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DCC6564320C9B7E300110A97 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCC085812293F66D008CC05C /* ownCloudApp.framework in Frameworks */,
 				DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */,
 				DC63207B21FCA712007EC0A8 /* libzip.framework in Frameworks */,
 				DC27A19120CAA0BA008ACB6C /* MobileCoreServices.framework in Frameworks */,
@@ -848,6 +917,8 @@
 				233BDE9E204FEFE500C06732 /* ownCloud */,
 				DC7DBA10207F59C500E7337D /* External */,
 				233BDEB3204FEFE500C06732 /* ownCloudTests */,
+				DCC0855D2293F1FD008CC05C /* ownCloudAppFramework */,
+				DCC0856A2293F1FD008CC05C /* ownCloudAppFrameworkTests */,
 				DC7DBA3B207F86E900E7337D /* Tools */,
 				DCC6564720C9B7E400110A97 /* ownCloud File Provider */,
 				DCC6565820C9B7E400110A97 /* ownCloud File ProviderUI */,
@@ -855,7 +926,7 @@
 				233BDE9D204FEFE500C06732 /* Products */,
 				DC85573220513CC700189B9A /* Frameworks */,
 				5EE06126BB49344475598790 /* Pods */,
-				5911EB2C2240EA7500C73084 /* ownCloudTests copy-Info.plist */,
+				39D06BE5229BE782000D7FC9 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -867,6 +938,8 @@
 				DC7DBA34207F84BF00E7337D /* MakeTVG */,
 				DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */,
 				DCC6565720C9B7E400110A97 /* ownCloud File ProviderUI.appex */,
+				DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */,
+				DCC085642293F1FD008CC05C /* ownCloudAppTests.xctest */,
 				59056CAA22414F3C00A18A22 /* ownCloudScreenshotsTests.xctest */,
 			);
 			name = Products;
@@ -983,6 +1056,14 @@
 				DCBF0A602280395F00465530 /* WebView */,
 			);
 			path = Viewer;
+			sourceTree = "<group>";
+		};
+		39D06BE5229BE782000D7FC9 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		59056CAB22414F3C00A18A22 /* ownCloudScreenshotsTests */ = {
@@ -1330,6 +1411,26 @@
 			path = WebView;
 			sourceTree = "<group>";
 		};
+		DCC0855D2293F1FD008CC05C /* ownCloudAppFramework */ = {
+			isa = PBXGroup;
+			children = (
+				DCC0855E2293F1FD008CC05C /* ownCloudApp.h */,
+				DCC0857D2293F2D7008CC05C /* DisplaySettings.m */,
+				DCC0857C2293F2D7008CC05C /* DisplaySettings.h */,
+				DCC0855F2293F1FD008CC05C /* Info.plist */,
+			);
+			path = ownCloudAppFramework;
+			sourceTree = "<group>";
+		};
+		DCC0856A2293F1FD008CC05C /* ownCloudAppFrameworkTests */ = {
+			isa = PBXGroup;
+			children = (
+				DCC0856B2293F1FD008CC05C /* ownCloudAppTests.m */,
+				DCC0856D2293F1FD008CC05C /* Info.plist */,
+			);
+			path = ownCloudAppFrameworkTests;
+			sourceTree = "<group>";
+		};
 		DCC6564720C9B7E400110A97 /* ownCloud File Provider */ = {
 			isa = PBXGroup;
 			children = (
@@ -1456,18 +1557,18 @@
 		DCF4F1802051A91500189B9A /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				39CC8B00228C8A950020253B /* MediaUploadSettingsSection.swift */,
-				6E83C77D20A32C1B0066EC23 /* SettingsSection.swift */,
-				233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */,
-				DC854935218331CF00782BA8 /* UserInterfaceSettingsSection.swift */,
-				232F7CAC2097140300EE22E4 /* UploadsSettingsSection.swift */,
-				23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */,
-				DCF4F1812051A94200189B9A /* GlobalSettingsViewController.swift */,
 				232F7CAE2097260400EE22E4 /* SettingsViewController.swift */,
-				DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */,
+				39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */,
 				4C7295D7228C384E00FA4E68 /* LogFilesViewController.swift */,
 				DC68056B212DF506006C3B1F /* Certificate Management */,
+				DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */,
+				DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */,
+				39CC8B00228C8A950020253B /* MediaUploadSettingsSection.swift */,
+				23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */,
 				593BAB3F209ADFB900023634 /* Passcode */,
+				233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */,
+				232F7CAC2097140300EE22E4 /* UploadsSettingsSection.swift */,
+				DC854935218331CF00782BA8 /* UserInterfaceSettingsSection.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1497,6 +1598,18 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		DCC085572293F1FD008CC05C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCC085802293F490008CC05C /* DisplaySettings.h in Headers */,
+				DCC0856E2293F1FD008CC05C /* ownCloudApp.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		233BDE9B204FEFE500C06732 /* ownCloud */ = {
 			isa = PBXNativeTarget;
@@ -1522,6 +1635,7 @@
 				DC3BE0D12077BC52002A0AC0 /* PBXTargetDependency */,
 				DCC6566120C9B7E400110A97 /* PBXTargetDependency */,
 				DCC6566420C9B7E400110A97 /* PBXTargetDependency */,
+				DCC085702293F1FD008CC05C /* PBXTargetDependency */,
 			);
 			name = ownCloud;
 			productName = ownCloud;
@@ -1590,6 +1704,43 @@
 			productReference = DC7DBA34207F84BF00E7337D /* MakeTVG */;
 			productType = "com.apple.product-type.tool";
 		};
+		DCC0855B2293F1FD008CC05C /* ownCloudApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCC085732293F1FD008CC05C /* Build configuration list for PBXNativeTarget "ownCloudApp" */;
+			buildPhases = (
+				DCC085572293F1FD008CC05C /* Headers */,
+				DCC085582293F1FD008CC05C /* Sources */,
+				DCC085592293F1FD008CC05C /* Frameworks */,
+				DCC0855A2293F1FD008CC05C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DCC0857A2293F296008CC05C /* PBXTargetDependency */,
+			);
+			name = ownCloudApp;
+			productName = ownCloudApp;
+			productReference = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		DCC085632293F1FD008CC05C /* ownCloudAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCC085762293F1FD008CC05C /* Build configuration list for PBXNativeTarget "ownCloudAppTests" */;
+			buildPhases = (
+				DCC085602293F1FD008CC05C /* Sources */,
+				DCC085612293F1FD008CC05C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DCC085672293F1FD008CC05C /* PBXTargetDependency */,
+				DCC085692293F1FD008CC05C /* PBXTargetDependency */,
+			);
+			name = ownCloudAppTests;
+			productName = ownCloudAppTests;
+			productReference = DCC085642293F1FD008CC05C /* ownCloudAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		DCC6564520C9B7E300110A97 /* ownCloud File Provider */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DCC6566F20C9B7E400110A97 /* Build configuration list for PBXNativeTarget "ownCloud File Provider" */;
@@ -1602,6 +1753,7 @@
 			);
 			dependencies = (
 				DC63207A21FCA70C007EC0A8 /* PBXTargetDependency */,
+				DCC085832293F671008CC05C /* PBXTargetDependency */,
 				DC27A19320CAA0C6008ACB6C /* PBXTargetDependency */,
 			);
 			name = "ownCloud File Provider";
@@ -1670,6 +1822,15 @@
 						CreatedOnToolsVersion = 9.3;
 						ProvisioningStyle = Automatic;
 					};
+					DCC0855B2293F1FD008CC05C = {
+						CreatedOnToolsVersion = 10.2.1;
+						ProvisioningStyle = Automatic;
+					};
+					DCC085632293F1FD008CC05C = {
+						CreatedOnToolsVersion = 10.2.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 233BDE9B204FEFE500C06732;
+					};
 					DCC6564520C9B7E300110A97 = {
 						CreatedOnToolsVersion = 9.4;
 						ProvisioningStyle = Manual;
@@ -1736,6 +1897,8 @@
 				DC7DBA33207F84BF00E7337D /* MakeTVG */,
 				DCC6564520C9B7E300110A97 /* ownCloud File Provider */,
 				DCC6565620C9B7E400110A97 /* ownCloud File ProviderUI */,
+				DCC0855B2293F1FD008CC05C /* ownCloudApp */,
+				DCC085632293F1FD008CC05C /* ownCloudAppTests */,
 				59056CA922414F3C00A18A22 /* ownCloudScreenshotsTests */,
 			);
 		};
@@ -1878,6 +2041,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		59056CA822414F3C00A18A22 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCC0855A2293F1FD008CC05C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2131,6 +2301,7 @@
 				4C235CEE21F88C0300A989A8 /* UIViewController+Extension.swift in Sources */,
 				23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */,
 				DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */,
+				DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */,
 				23EC77582137F3DD0032D4E6 /* PDFViewerViewController.swift in Sources */,
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
 				23EC775B2137F3DD0032D4E6 /* OCExtensionType+Extension.swift in Sources */,
@@ -2152,6 +2323,7 @@
 				DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */,
 				DC0B37972051681600189B9A /* ThemeButton.swift in Sources */,
 				DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */,
+				39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */,
 				23C56537212167BE00BD4B47 /* CardPresentationController.swift in Sources */,
 				4C464BF22187AF1500D30602 /* PDFSearchViewController.swift in Sources */,
 				DC7DBA2B207F71E400E7337D /* VectorImageView.swift in Sources */,
@@ -2175,7 +2347,6 @@
 				39E2FDED21FDEC7500F0117F /* ServerListTableHeaderView.swift in Sources */,
 				6E586D002199A78E00F680C4 /* DeleteAction.swift in Sources */,
 				DC3317CE2084966700E36C8F /* ThemeTableViewCell.swift in Sources */,
-				6E83C77E20A32C1B0066EC23 /* SettingsSection.swift in Sources */,
 				DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */,
 				4C6B78122226B86300C5F3DB /* PhotoAlbumTableViewCell.swift in Sources */,
 				39607CBC2225D480007B386D /* UITableViewController+Extension.swift in Sources */,
@@ -2215,7 +2386,6 @@
 			files = (
 				59056CAD22414F3C00A18A22 /* ownCloudScreenshotsTests.swift in Sources */,
 				59056CB422414F8000A18A22 /* SnapshotHelper.swift in Sources */,
-				59799F822241595C007E8008 /* XCTestsCase+Extension.swift in Sources */,
 				59296652224CD1DB0078F13D /* OCBookmarkManager+Tools.swift in Sources */,
 				59799F8122415956007E8008 /* EarlGrey+Tools.swift in Sources */,
 				59799F80224158FD007E8008 /* EarlGrey.swift in Sources */,
@@ -2227,6 +2397,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC7DBA37207F84BF00E7337D /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCC085582293F1FD008CC05C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DCC085602293F1FD008CC05C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCC0856C2293F1FD008CC05C /* ownCloudAppTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2316,6 +2502,31 @@
 			isa = PBXTargetDependency;
 			name = "PocketSVG (iOS)";
 			targetProxy = DC7DBA1D207F59F200E7337D /* PBXContainerItemProxy */;
+		};
+		DCC085672293F1FD008CC05C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCC0855B2293F1FD008CC05C /* ownCloudApp */;
+			targetProxy = DCC085662293F1FD008CC05C /* PBXContainerItemProxy */;
+		};
+		DCC085692293F1FD008CC05C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 233BDE9B204FEFE500C06732 /* ownCloud */;
+			targetProxy = DCC085682293F1FD008CC05C /* PBXContainerItemProxy */;
+		};
+		DCC085702293F1FD008CC05C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCC0855B2293F1FD008CC05C /* ownCloudApp */;
+			targetProxy = DCC0856F2293F1FD008CC05C /* PBXContainerItemProxy */;
+		};
+		DCC0857A2293F296008CC05C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ownCloudSDK;
+			targetProxy = DCC085792293F296008CC05C /* PBXContainerItemProxy */;
+		};
+		DCC085832293F671008CC05C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCC0855B2293F1FD008CC05C /* ownCloudApp */;
+			targetProxy = DCC085822293F671008CC05C /* PBXContainerItemProxy */;
 		};
 		DCC6566120C9B7E400110A97 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2614,6 +2825,7 @@
 			baseConfigurationReference = A80C5F83C59F9D52F8F64890 /* Pods-ownCloudScreenshotsTests.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2631,7 +2843,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudScreenshotsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0720808b-becc-4621-8839-347863375834";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = ownCloud;
@@ -2643,6 +2855,7 @@
 			baseConfigurationReference = 5AA495E19A4CA58CF2678112 /* Pods-ownCloudScreenshotsTests.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2655,7 +2868,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudScreenshotsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0720808b-becc-4621-8839-347863375834";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = ownCloud;
@@ -2687,6 +2900,110 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+		DCC085742293F1FD008CC05C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 9B5WD74GWJ;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = ownCloudAppFramework/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudApp;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		DCC085752293F1FD008CC05C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 9B5WD74GWJ;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = ownCloudAppFramework/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudApp;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		DCC085772293F1FD008CC05C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = ownCloudAppTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ownCloud.app/ownCloud";
+			};
+			name = Debug;
+		};
+		DCC085782293F1FD008CC05C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4AP2STM4H5;
+				INFOPLIST_FILE = ownCloudAppTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ownCloud.app/ownCloud";
 			};
 			name = Release;
 		};
@@ -2816,6 +3133,24 @@
 			buildConfigurations = (
 				DC7DBA39207F84BF00E7337D /* Debug */,
 				DC7DBA3A207F84BF00E7337D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DCC085732293F1FD008CC05C /* Build configuration list for PBXNativeTarget "ownCloudApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCC085742293F1FD008CC05C /* Debug */,
+				DCC085752293F1FD008CC05C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DCC085762293F1FD008CC05C /* Build configuration list for PBXNativeTarget "ownCloudAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCC085772293F1FD008CC05C /* Debug */,
+				DCC085782293F1FD008CC05C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

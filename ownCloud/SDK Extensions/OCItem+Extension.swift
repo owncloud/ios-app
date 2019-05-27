@@ -258,7 +258,7 @@ extension OCItem {
 			}
 
 			core.retrieveItemFromDatabase(forLocalID: parentItemLocalID) { (error, _, item) in
-				if parentItem == nil, let parentPath = self.path?.parentPath() {
+				if parentItem == nil, let parentPath = self.path?.parentPath {
 					parentItem = try? core.cachedItem(atPath: parentPath)
 				}
 
