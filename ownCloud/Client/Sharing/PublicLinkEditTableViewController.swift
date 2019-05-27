@@ -465,13 +465,16 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			footer = String(format: "Shared since: %@".localized, dateFormatter.string(from: date))
 		}
 
-		let deleteSection = StaticTableViewSection(headerTitle: nil, footerTitle: footer)
+		let deleteSection = StaticTableViewSection(headerTitle: "Public Link", footerTitle: footer)
 
 		if let share = self.share, let shareURL = share.url {
+
+			let borderedLabel = BorderedLabel()
+			borderedLabel.update(text: "Copy".localized, color: UIColor.red)
 			deleteSection.add(rows: [
-				StaticTableViewRow(headerRowWithAction: { (_, _) in
+				StaticTableViewRow(rowWithAction: { (_, _) in
 					UIPasteboard.general.url = shareURL
-				}, headerTitle: String(format:"%@", shareURL.absoluteString), title: "Copy Public Link".localized, accessoryView: .none)
+				}, title: String(format:"%@", shareURL.absoluteString), accessoryType: .none, accessoryView: borderedLabel)
 				])
 		}
 
@@ -496,7 +499,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						}
 					})
 				}
-			}, title: "Delete Public Link".localized, style: StaticTableViewRowButtonStyle.destructive)
+			}, title: "Delete".localized, style: StaticTableViewRowButtonStyle.destructive)
 			])
 
 		self.addSection(deleteSection)

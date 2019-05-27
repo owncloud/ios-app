@@ -212,6 +212,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 
 		if let accessoryView = accessoryView {
+			cell.textLabel?.numberOfLines = 0
 			additionalAccessoryView = accessoryView
 
 			cell.contentView.addSubview(accessoryView)
@@ -255,61 +256,6 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	convenience init(valueRowWithAction: StaticTableViewRowAction?, title: String, value: String, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
 		self.init(subtitleRowWithAction: valueRowWithAction, title: title, subtitle: value, style: .value1, accessoryType: accessoryType, identifier: identifier)
 		type = .valueRow
-	}
-
-	convenience init(headerRowWithAction: StaticTableViewRowAction?, headerTitle: String, headerAlignment: NSTextAlignment = .left, title: String, alignment: NSTextAlignment = .center, accessoryView: UIView? = nil, identifier : String? = nil) {
-		self.init()
-		type = .row
-
-		self.identifier = identifier
-
-		self.cell = HeaderActionTableViewCell(frame: .zero)
-		if let cell = self.cell as? HeaderActionTableViewCell {
-			cell.headerLabel.text = headerTitle
-			cell.headerLabel.textAlignment = headerAlignment
-			cell.headerLabel.numberOfLines = 0
-			cell.actionLabel.text = title
-			cell.actionLabel.textAlignment = alignment
-		}
-		self.cell?.accessoryView = accessoryView
-		self.cell?.accessibilityIdentifier = identifier
-
-		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
-			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor, headerTextColor : UIColor?
-
-			textColor = themeCollection.tintColor
-			headerTextColor = themeCollection.tableRowColors.secondaryLabelColor
-			backgroundColor = themeCollection.tableRowColors.backgroundColor
-
-			if let cell = self?.cell as? HeaderActionTableViewCell {
-
-				cell.actionLabel.textColor = textColor
-				cell.headerLabel.textColor = headerTextColor
-
-				if selectedTextColor != nil {
-					cell.actionLabel.highlightedTextColor = selectedTextColor
-				}
-			}
-
-			if backgroundColor != nil {
-
-				self?.cell?.backgroundColor = backgroundColor
-			}
-
-			if selectedBackgroundColor != nil {
-				let selectedBackgroundView = UIView()
-
-				selectedBackgroundView.backgroundColor = selectedBackgroundColor
-
-				self?.cell?.selectedBackgroundView? = selectedBackgroundView
-			}
-			}, applyImmediately: true)
-
-		if headerRowWithAction != nil {
-			self.action = headerRowWithAction
-		} else {
-			self.cell?.selectionStyle = .none
-		}
 	}
 
 	// MARK: - Radio Item

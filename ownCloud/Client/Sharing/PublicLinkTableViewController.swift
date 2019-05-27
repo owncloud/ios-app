@@ -90,11 +90,11 @@ class PublicLinkTableViewController: SharingTableViewController {
 					shareRows.append(shareRow)
 				}
 			}
-		} else {
-			shareRows.append( StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
-				self?.addPublicLink()
-			}, title: "Create Public Link".localized, style: StaticTableViewRowButtonStyle.plain))
 		}
+
+		shareRows.append( StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+			self?.addPublicLink()
+			}, title: "Create Public Link".localized, style: StaticTableViewRowButtonStyle.plain))
 
 		let sectionIdentifier = "share-section-\(identifier.rawValue)"
 		if let section = self.sectionForIdentifier(sectionIdentifier) {
@@ -149,7 +149,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 		let footer = "Only collaborators can use this link. Use it as a permanent link to point to this resource".localized
 
 		OnMainThread {
-			let section = StaticTableViewSection(headerTitle: nil, footerTitle: footer, identifier: "private-link-section")
+			let section = StaticTableViewSection(headerTitle: "Private Link".localized, footerTitle: footer, identifier: "private-link-section")
 			var rows : [StaticTableViewRow] = []
 
 			self.core?.retrievePrivateLink(for: self.item, completionHandler: { (error, url) in
@@ -157,10 +157,11 @@ class PublicLinkTableViewController: SharingTableViewController {
 				guard let url = url else { return }
 				if error == nil {
 					OnMainThread {
-						let privateLinkRow = StaticTableViewRow(headerRowWithAction: { [weak self] (row, _) in
-							guard let self = self else { return }
-							self.retrievePrivateLink(for: self.item, in: row)
-						}, headerTitle: String(format:"%@", url.absoluteString), title: "Copy Private Link".localized, accessoryView: nil)
+						let borderedLabel = BorderedLabel()
+						borderedLabel.update(text: "Copy".localized, color: UIColor.red)
+						let privateLinkRow = StaticTableViewRow(rowWithAction: { (_, _) in
+							UIPasteboard.general.url = url
+						}, title: String(format:"%@", url.absoluteString), accessoryType: .none, accessoryView: borderedLabel)
 						rows.append(privateLinkRow)
 
 						section.add(rows: rows)

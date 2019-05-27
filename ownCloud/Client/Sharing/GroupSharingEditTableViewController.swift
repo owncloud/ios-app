@@ -30,10 +30,30 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 	var createShare : Bool = false
 	var permissionMask : OCSharePermissionsMask?
 
-	// MARK: - Init
+	// MARK: - Init & Deinit
+
+	public init(core inCore: OCCore, item inItem: OCItem, share inShare: OCShare, reshares inReshares: [OCShare]? = nil) {
+		super.init(style: .grouped)
+
+		core = inCore
+		item = inItem
+		share = inShare
+		reshares = inReshares
+	}
+
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		if createShare {
+			permissionMask = .read
+			if let capabilitiesDefaultPermission = self.core?.connection.capabilities?.sharingDefaultPermissions {
+				permissionMask = capabilitiesDefaultPermission
+			}
+		}
 
 		let infoButton = UIButton(type: .infoLight)
 		infoButton.addTarget(self, action: #selector(showInfoSubtitles), for: .touchUpInside)
@@ -44,8 +64,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 
 		addPermissionSection()
 
-		guard let share = share else { return }
-		if share.itemType == .collection, (share.canDelete || share.canCreate || share.canUpdate) {
+		if item?.type == .collection, hasAtLeastPermission(of: [.update, .create, .delete]) {
 			addPermissionEditSection()
 		}
 		addResharesSection()
@@ -56,11 +75,6 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 
 			let save = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(createShareAndDismiss))
 			self.navigationItem.rightBarButtonItem = save
-
-			permissionMask = .read
-			if let capabilitiesDefaultPermission = self.core?.connection.capabilities?.sharingDefaultPermissions {
-				permissionMask = capabilitiesDefaultPermission
-			}
 		} else {
 			addActionSection()
 		}
@@ -94,14 +108,12 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 
 	func addPermissionSection() {
 		let section = StaticTableViewSection(headerTitle: "Permissions".localized, footerTitle: nil, identifier: "permission-section")
-		guard let share = share else { return }
-
 		var canEdit = false
-		if !createShare, share.canUpdate || share.canCreate || share.canDelete {
+		if hasAtLeastPermission(of: [.update, .create, .delete]) {
 			canEdit = true
 		}
 		var canShare = false
-		if !createShare, share.canShare {
+		if hasAtLeastPermission(of: [.share]) {
 			canShare = true
 		}
 
@@ -130,7 +142,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 					})
 				}
 			}
-		}, title: share.itemType == .collection ? "Can Edit".localized : "Can Edit".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
+		}, title: item?.type == .collection ? "Can Edit".localized : "Can Edit".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
 
 		let subtitles = [
 			"Allows the users you share with to re-share".localized,
@@ -184,6 +196,23 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 		}
 	}
 
+	func hasAtLeastPermission(of permissions: [OCSharePermissionsMask]) -> Bool {
+		guard let share = share else { return false }
+
+		var lookupPermissions = share.permissions
+		if createShare, let permissionMask = permissionMask {
+			lookupPermissions = permissionMask
+		}
+
+		for permission in permissions {
+			if lookupPermissions.contains(permission) {
+				return true
+			}
+		}
+
+		return false
+	}
+
 	func changePermissions(enabled: Bool, permissions : [OCSharePermissionsMask], completionHandler: @escaping (_ error : Error?) -> Void ) {
 		guard let share = share else { return }
 
@@ -227,13 +256,13 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 	// MARK: - Reshares Section
 
 	func addResharesSection() {
+		guard let core = core, let item = item else { return }
 		var shareRows: [StaticTableViewRow] = []
 
 		if let reshares = reshares, reshares.count > 0 {
 			for share in reshares {
 				shareRows.append( StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-					let editSharingViewController = GroupSharingEditTableViewController(style: .grouped)
-					editSharingViewController.share = share
+					let editSharingViewController = GroupSharingEditTableViewController(core: core, item: item, share: share)
 					self?.navigationController?.pushViewController(editSharingViewController, animated: true)
 				}, title: share.recipient!.displayName!, subtitle: share.permissionDescription, accessoryType: .disclosureIndicator) )
 			}

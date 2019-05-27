@@ -199,12 +199,8 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 				if let recipient = share.recipient {
 					if canEdit(share: share) {
 						let shareRow = StaticTableViewRow(rowWithAction: { [weak self] (row, _) in
-							guard let self = self else { return }
-							let editSharingViewController = GroupSharingEditTableViewController(style: .grouped)
-							editSharingViewController.share = share
-							editSharingViewController.reshares = resharedUsers
-							editSharingViewController.core = self.core
-							editSharingViewController.item = self.item
+							guard let self = self, let core = self.core else { return }
+							let editSharingViewController = GroupSharingEditTableViewController(core: core, item: self.item, share: share, reshares: resharedUsers)
 
 							if share.recipient?.type == .user {
 								editSharingViewController.title = row.cell?.textLabel?.text
@@ -296,7 +292,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	func searchControllerHasNewResults(_ searchController: OCRecipientSearchController, error: Error?) {
 		OnMainThread {
-			guard let recipients = searchController.recipients else {
+			guard let recipients = searchController.recipients, let core = self.core else {
 				self.messageView?.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There are no results for this search term".localized)
 				return
 			}
@@ -333,12 +329,8 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 							self.searchController?.searchBar.text = ""
 							self.searchController?.dismiss(animated: true, completion: nil)
 							self.resetTable(showShares: true)
-
-							let editSharingViewController = GroupSharingEditTableViewController(style: .grouped)
-							editSharingViewController.share = share
-							editSharingViewController.core = self.core
+							let editSharingViewController = GroupSharingEditTableViewController(core: core, item: self.item, share: share)
 							editSharingViewController.createShare = true
-							editSharingViewController.item = self.item
 							editSharingViewController.title = row.cell?.textLabel?.text
 							let navigationController = ThemeNavigationController(rootViewController: editSharingViewController)
 							self.navigationController?.present(navigationController, animated: true, completion: nil)
