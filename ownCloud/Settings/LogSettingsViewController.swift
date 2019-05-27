@@ -189,7 +189,7 @@ class LogSettingsViewController: StaticTableViewController {
 					let alert = UIAlertController(with: "Really reset log file?".localized, message: "This action can't be undone.".localized, destructiveLabel: "Reset log file".localized, preferredStyle: .alert, destructiveAction: {
 						OCLogger.shared.pauseWriters(intermittentBlock: {
 							if let logFileWriter = OCLogger.shared.writer(withIdentifier: .writerFile) as? OCLogFileWriter {
-								logFileWriter.eraseOrTruncate()
+//								logFileWriter.eraseOrTruncate()
 							}
 						})
 					})

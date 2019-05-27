@@ -273,11 +273,13 @@ class Action : NSObject {
 	}
 
 	// MARK: - Action UI elements
+	private static let staticRowImageWidth : CGFloat = 32
+
 	func provideStaticRow() -> StaticTableViewRow? {
 		return StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
 			self.willRun()
 			self.run()
-		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, image: self.icon, alignment: .left, identifier: actionExtension.identifier.rawValue)
+		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, image: self.icon, imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: actionExtension.identifier.rawValue)
 	}
 
 	func provideContextualAction() -> UIContextualAction? {
@@ -389,7 +391,7 @@ private extension Action {
 
 					self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
 				}
-			}, title: userTitle, subtitle: nil, image: UIImage(named: "group"), alignment: .left, accessoryType: .disclosureIndicator)
+			}, title: userTitle, subtitle: nil, image: UIImage(named: "group"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
 			shareRows.append(addGroupRow)
 		} else if item.isShareable {
 			shareRows.append(self.shareAsGroupRow(item: item, presentingController: presentingController, context: context))
@@ -403,7 +405,7 @@ private extension Action {
 
 					self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
 				}
-			}, title: linkTitle, subtitle: nil, image: UIImage(named: "link"), alignment: .left, accessoryType: .disclosureIndicator)
+			}, title: linkTitle, subtitle: nil, image: UIImage(named: "link"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
 			shareRows.append(addGroupRow)
 		} else if item.isShareable, let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context) {
 			shareRows.append(publicLinkRow)
@@ -428,7 +430,7 @@ private extension Action {
 							 andPresent: GroupSharingTableViewController(core: core, item: item),
 							 on: context.viewController)
 			}
-		}, title: "Invite Collaborators".localized, style: .plain, image: UIImage(named: "group"), alignment: .left, identifier: "share-add-group")
+		}, title: "Invite Collaborators".localized, style: .plain, image: UIImage(named: "group"), imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: "share-add-group")
 
 		return addGroupRow
 	}
@@ -441,7 +443,7 @@ private extension Action {
 								 andPresent: PublicLinkTableViewController(core: core, item: item),
 								 on: context.viewController)
 				}
-			}, title: "Links".localized, style: .plain, image: UIImage(named: "link"), alignment: .left, identifier: "share-add-group")
+			}, title: "Links".localized, style: .plain, image: UIImage(named: "link"), imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: "share-add-group")
 
 			return addGroupRow
 		}
