@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 class QueryFileListTableViewController: FileListTableViewController, SortBarDelegate, OCQueryDelegate, UISearchResultsUpdating {
 	var query : OCQuery
@@ -34,6 +35,9 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		super.init(core: inCore)
 
 		allowPullToRefresh = true
+
+		NotificationCenter.default.addObserver(self, selector: #selector(QueryFileListTableViewController.displaySettingsChanged), name: .DisplaySettingsChanged, object: nil)
+		self.displaySettingsChanged()
 
 		query.delegate = self
 
@@ -53,9 +57,16 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	deinit {
+		NotificationCenter.default.removeObserver(self, name: .DisplaySettingsChanged, object: nil)
+
 		queryProgressSummary = nil
 
 		core?.stop(query)
+	}
+
+	// MARK: - Display settings
+	@objc func displaySettingsChanged() {
+		DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 	}
 
 	// MARK: - Sorting

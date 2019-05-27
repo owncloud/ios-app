@@ -61,7 +61,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
 
-		if lastPathComponent == "/", let shortName = core?.bookmark.shortName {
+		if lastPathComponent.isRootPath, let shortName = core?.bookmark.shortName {
 			self.navigationItem.title = shortName
 		} else {
 			let titleButton = UIButton()
@@ -80,7 +80,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 			self.navigationItem.titleView = titleButton
 		}
 
-		if lastPathComponent == "/" {
+		if lastPathComponent.isRootPath {
 			quotaObservation = core?.observe(\OCCore.rootQuotaBytesUsed, options: [.initial], changeHandler: { [weak self, core] (_, _) in
 				let quotaUsed = core?.rootQuotaBytesUsed?.int64Value ?? 0
 

@@ -178,6 +178,12 @@
 "ownCloud Classic" = "ownCloud Classic";
 
 /* Log settings */
+"Log Files" = "Log Files";
+"Browse log files" = "Browse log files";
+"Share" = "Share";
+"Delete all log files?" = "Delete all log files?";
+"Delete all" = "Delete all";
+
 "Log Level" = "Log Level";
 "Log Destinations" = "Log Destinations";
 "Privacy" = "Privacy";
@@ -195,6 +201,10 @@
 "Share log file" = "Share log file";
 "Reset log file" = "Reset log file";
 
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to ownCloud servers. Sharing logs with others is sole user responsibility." = "When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to ownCloud servers. Sharing logs with others is sole user responsibility.";
+
+"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.";
+
 "Mask private data" = "Mask private data";
 "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.";
 
@@ -204,6 +214,10 @@
 
 "Really reset log file?" = "Really reset log file?";
 "This action can't be undone." = "This action can't be undone.";
+
+/* Display settings */
+"Display settings" = "Display settings";
+"Show hidden files and folders" = "Show hidden files and folders";
 
 /* Passcode Messages */
 
@@ -355,13 +369,13 @@
 "Convert videos to MP4" = "Convert videos to MP4";
 
 /* Progress summarizer */
-"Creating %ld of %ld folders…" = "Creating %ld of %ld folders…";
-"Moving %ld of %ld items…" = "Moving %ld of %ld items…";
-"Copying %ld of %ld items…" = "Copying %ld of %ld items…";
-"Deleting %ld of %ld items…" = "Deleting %ld of %ld items…";
-"Uploading %ld of %ld files…" = "Uploading %ld of %ld files…";
-"Downloading %ld of %ld files…" = "Downloading %ld of %ld files…";
-"Updating %ld of %ld items…" = "Updating %ld of %ld items…";
+"Creating %ld folders…" = "Creating %ld folders…";
+"Moving %ld items…" = "Moving %ld items…";
+"Copying %ld items…" = "Copying %ld items…";
+"Deleting %ld items…" = "Deleting %ld items…";
+"Uploading %ld files…" = "Uploading %ld files…";
+"Downloading %ld files…" = "Downloading %ld files…";
+"Updating %ld items…" = "Updating %ld items…";
 
 /* Offline storage management */
 "Free on %@" = "Free on %@";

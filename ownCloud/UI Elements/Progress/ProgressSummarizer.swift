@@ -349,28 +349,28 @@ class ProgressSummarizer: NSObject {
 								if sameTypeCount > 1 {
 									switch progress.eventType {
 										case .createFolder:
-											multiMessage = NSString(format:"Creating %ld of %ld folders…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+											multiMessage = NSString(format:"Creating %ld folders…".localized as NSString, sameTypeCount) as String
 
 										case .move:
-											multiMessage = NSString(format:"Moving %ld of %ld items…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+											multiMessage = NSString(format:"Moving %ld items…".localized as NSString, sameTypeCount) as String
 
 										case .copy:
-											multiMessage = NSString(format:"Copying %ld of %ld items…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+											multiMessage = NSString(format:"Copying %ld items…".localized as NSString, sameTypeCount) as String
 
 										case .delete:
-											multiMessage = NSString(format:"Deleting %ld of %ld items…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+											multiMessage = NSString(format:"Deleting %ld items…".localized as NSString, sameTypeCount) as String
 
 										case .upload:
-											multiMessage = NSString(format:"Uploading %ld of %ld files…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+											multiMessage = NSString(format:"Uploading %ld files…".localized as NSString, sameTypeCount) as String
 
 										case .download:
-											multiMessage = NSString(format:"Downloading %ld of %ld files…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+											multiMessage = NSString(format:"Downloading %ld files…".localized as NSString, sameTypeCount) as String
 
 										case .update:
-											multiMessage = NSString(format:"Updating %ld of %ld items…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+											multiMessage = NSString(format:"Updating %ld items…".localized as NSString, sameTypeCount) as String
 
-										case .createShare, .updateShare, .deleteShare, .decideOnShare, .filterFiles: break
-										case .none, .retrieveThumbnail, .retrieveItemList, .retrieveShares, .issueResponse: break
+										case .createShare, .updateShare, .deleteShare, .decideOnShare: break
+										case .none, .retrieveThumbnail, .retrieveItemList, .retrieveShares, .issueResponse, .filterFiles: break
 									}
 
 									if multiMessage != nil {
