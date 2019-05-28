@@ -108,9 +108,14 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		super.init()
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil, accessoryView: UIView? = nil) {
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = .none, identifier : String? = nil, accessoryView: UIView? = nil) {
 		self.init()
 		type = .row
+
+		var image = image
+		if image != nil, imageWidth != nil {
+			image = image?.paddedTo(width: imageWidth)
+		}
 
 		self.identifier = identifier
 		var cellStyle = UITableViewCell.CellStyle.default
@@ -486,11 +491,16 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	// MARK: - Buttons
 
-	convenience init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = StaticTableViewRowButtonStyle.proceed, image: UIImage? = nil, alignment: NSTextAlignment = NSTextAlignment.center, identifier : String? = nil, accessoryView: UIView? = nil) {
+	convenience init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = .proceed, image: UIImage? = nil, imageWidth : CGFloat? = nil, alignment: NSTextAlignment = .center, identifier : String? = nil, accessoryView: UIView? = nil) {
 		self.init()
 		type = .button
 
 		self.identifier = identifier
+
+		var image = image
+		if image != nil, imageWidth != nil {
+			image = image?.paddedTo(width: imageWidth)
+		}
 
 		self.cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
