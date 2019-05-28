@@ -166,7 +166,7 @@ class Action : NSObject {
 	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ActionProgressHandler? = nil, completionHandler: ((Action, Error?) -> Void)? = nil) -> UIViewController? {
 		guard let core = context.core else { return nil }
 
-		let tableViewController = MoreStaticTableViewController(style: .plain)
+		let tableViewController = MoreStaticTableViewController(style: .grouped)
 		let header = MoreViewHeader(for: item, with: core)
 		let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
 

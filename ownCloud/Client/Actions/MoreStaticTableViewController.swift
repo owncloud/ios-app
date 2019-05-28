@@ -71,6 +71,14 @@ class MoreStaticTableViewController: StaticTableViewController {
 		return 0.0
 	}
 
+	override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+		return CGFloat.leastNormalMagnitude
+	}
+
+	override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+		return nil
+	}
+
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 		self.tableView.separatorColor = self.tableView.backgroundColor
