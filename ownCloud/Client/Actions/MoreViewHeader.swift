@@ -98,12 +98,13 @@ class MoreViewHeader: UIView {
 
 			iconView.leftAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leftAnchor, constant: 20),
 			iconView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
-			iconView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20).with(priority: .defaultHigh),
+			iconView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20),
+			iconView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
 
 			labelContainerView.leftAnchor.constraint(equalTo: iconView.rightAnchor, constant: 15),
 			labelContainerView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-			labelContainerView.topAnchor.constraint(greaterThanOrEqualTo: self.safeAreaLayoutGuide.topAnchor, constant: 20),
-			labelContainerView.bottomAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+			labelContainerView.topAnchor.constraint(greaterThanOrEqualTo: self.topAnchor, constant: 20),
+			labelContainerView.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -20)
 		])
 
 		if showFavoriteButton {
