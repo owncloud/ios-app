@@ -15,3 +15,16 @@ source_file = ownCloud/Resources/en.lproj/InfoPlist.strings
 source_lang = en
 type = STRINGS
 
+[owncloud.mobile-ios-app-screenshots-keyword]
+file_filter = fastlane/screenshots/<lang>/keyword.strings
+lang_map = cs_CZ: cs, de_DE: de-DE, en_GB: en-GB, nb_NO: nb-NO, nn_NO: nn-NO, pt_PT: pt-PT, pt_BR: pt-BR, zh_CN: zh-Hans, th_TH: th-TH
+source_file = fastlane/screenshots/en/keyword.strings
+source_lang = en
+type = STRINGS
+
+[owncloud.mobile-ios-app-screenshots-title]
+file_filter = fastlane/screenshots/<lang>/title.strings
+lang_map = cs_CZ: cs, de_DE: de-DE, en_GB: en-GB, nb_NO: nb-NO, nn_NO: nn-NO, pt_PT: pt-PT, pt_BR: pt-BR, zh_CN: zh-Hans, th_TH: th-TH
+source_file = fastlane/screenshots/en/title.strings
+source_lang = en
+type = STRINGS

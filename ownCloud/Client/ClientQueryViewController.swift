@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import MobileCoreServices
 
 typealias ClientActionVieDidAppearHandler = () -> Void
@@ -94,13 +95,6 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		return false
 	}
 
-	var inRootPath : Bool {
-		if let path = query.queryPath, path.isRootPath {
-			return true
-		}
-		return false
-	}
-
 	func makeActionProgressHandler() -> ActionProgressHandler {
 		if _actionProgressHandler == nil {
 			_actionProgressHandler = { [weak self] (progress, publish) in
@@ -123,6 +117,9 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 		super.init(style: .plain)
 
+		NotificationCenter.default.addObserver(self, selector: #selector(ClientQueryViewController.displaySettingsChanged), name: .DisplaySettingsChanged, object: nil)
+		self.displaySettingsChanged()
+
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 
 		if query.sortComparator == nil {
@@ -132,11 +129,12 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		query.delegate = self
 
 		query.addObserver(self, forKeyPath: "state", options: .initial, context: nil)
+
 		core?.start(query)
 
 		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
 
-		if inRootPath, let shortName = core?.bookmark.shortName {
+		if lastPathComponent.isRootPath, let shortName = core?.bookmark.shortName {
 			self.navigationItem.title = shortName
 		} else {
 			let titleButton = UIButton()
@@ -155,7 +153,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			self.navigationItem.titleView = titleButton
 		}
 
-		if inRootPath {
+		if lastPathComponent.isRootPath {
 			quotaObservation = core?.observe(\OCCore.rootQuotaBytesUsed, options: [.initial], changeHandler: { [weak self, core] (_, _) in
 				let quotaUsed = core?.rootQuotaBytesUsed?.int64Value ?? 0
 
@@ -189,6 +187,8 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 	}
 
 	deinit {
+		NotificationCenter.default.removeObserver(self, name: .DisplaySettingsChanged, object: nil)
+
 		query.removeObserver(self, forKeyPath: "state", context: nil)
 
 		core?.stop(query)
@@ -202,6 +202,11 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		self.queryProgressSummary = nil
 
 		quotaObservation = nil
+	}
+
+	// MARK: - Display settings
+	@objc func displaySettingsChanged() {
+		DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 	}
 
 	// MARK: - Actions
@@ -270,6 +275,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		plusBarButton?.accessibilityIdentifier = "client.file-add"
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
 		selectBarButton?.isEnabled = false
+    selectBarButton?.accessibilityIdentifier = "select-button"
 		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
 
 		selectDeselectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))

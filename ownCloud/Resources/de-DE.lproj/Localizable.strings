@@ -171,6 +171,12 @@
 "ownCloud Classic" = "ownCloud Klassik";
 
 /* Log settings */
+"Log Files" = "Protokolle";
+"Browse log files" = "Protokolle einsehen";
+"Share" = "Teilen";
+"Delete all log files?" = "Alle Protokolle entfernen?";
+"Delete all" = "Alle entfernen";
+
 "Log Level" = "Protokollierungsstufe";
 "Log Destinations" = "Protokollierungsausgabe";
 "Privacy" = "Datenschutz";
