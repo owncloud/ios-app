@@ -26,6 +26,11 @@ class MoveAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
+		if forContext.items.contains(where: {$0.type == .file}),
+			let path = forContext.query?.queryPath, path.isRootPath,
+			let containsFolder = forContext.preferences?["containsFolders"] as? Bool, !containsFolder {
+			return .none
+		}
 		// Examine items in context
 		return .middle
 	}

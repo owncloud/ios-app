@@ -82,6 +82,19 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 
 	private var _actionProgressHandler : ActionProgressHandler?
 
+	var currentPathContainsFolders : Bool {
+		let folders = items.filter { (item) -> Bool in
+			if item.type == .collection {
+				return true
+			}
+			return false
+		}
+		if folders.count > 0 {
+			return true
+		}
+		return false
+	}
+
 	func makeActionProgressHandler() -> ActionProgressHandler {
 		if _actionProgressHandler == nil {
 			_actionProgressHandler = { [weak self] (progress, publish) in
@@ -535,7 +548,7 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 			let uniqueItems = Array(Set(items))
 			// Get possible associated actions
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-			let actionContext = ActionContext(viewController: self, core: core, items: uniqueItems, location: actionsLocation)
+			let actionContext = ActionContext(viewController: self, core: core, query: query, items: uniqueItems, location: actionsLocation, preferences: ["containsFolders" : currentPathContainsFolders])
 			self.actions = Action.sortedApplicableActions(for: actionContext)
 
 			// Enable / disable tool-bar items depending on action availability
@@ -813,12 +826,13 @@ class ClientQueryViewController: UITableViewController, Themeable, UIDropInterac
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
 
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
+		let containsFolders = currentPathContainsFolders
 
 		if selectedItems.count > 0 {
 			if let core = self.core {
 				// Get possible associated actions
 				let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-				let actionContext = ActionContext(viewController: self, core: core, items: selectedItems, location: actionsLocation)
+				let actionContext = ActionContext(viewController: self, core: core, query: query, items: selectedItems, location: actionsLocation, preferences: ["containsFolders" : containsFolders])
 
 				self.actions = Action.sortedApplicableActions(for: actionContext)
 
@@ -1108,7 +1122,7 @@ extension ClientQueryViewController: ClientItemCellDelegate {
 		let item = self.itemAtIndexPath(indexPath)
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
-		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [item], location: actionsLocation, preferences: ["containsFolders" : currentPathContainsFolders])
 
 		let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: makeActionProgressHandler())
 
