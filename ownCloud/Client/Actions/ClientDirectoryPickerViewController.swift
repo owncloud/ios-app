@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-typealias ClientDirectoryPickerAllowedPathFilter = (_ path: String) -> Bool
+typealias ClientDirectoryPickerPathFilter = (_ path: String) -> Bool
 typealias ClientDirectoryPickerChoiceHandler = (_ chosenItem: OCItem?) -> Void
 
 class ClientDirectoryPickerViewController: ClientQueryViewController {
@@ -34,10 +34,37 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	var directoryPath : String?
 
 	var choiceHandler: ClientDirectoryPickerChoiceHandler?
-	var allowedPathFilter : ClientDirectoryPickerAllowedPathFilter?
+	var allowedPathFilter : ClientDirectoryPickerPathFilter?
+	var navigationPathFilter : ClientDirectoryPickerPathFilter?
 
 	// MARK: - Init & deinit
-	init(core inCore: OCCore, path: String, selectButtonTitle: String, allowedPathFilter: ClientDirectoryPickerAllowedPathFilter? = nil, choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
+	convenience init(core inCore: OCCore, path: String, selectButtonTitle: String, avoidConflictsWith items: [OCItem], choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
+		let folderItemPaths = items.filter({ (item) -> Bool in
+			return item.type == .collection && item.path != nil && !item.isRoot
+		}).map { (item) -> String in
+			return item.path!
+		}
+		let itemParentPaths = items.filter({ (item) -> Bool in
+			return item.path?.parentPath != nil
+		}).map { (item) -> String in
+			return item.path!.parentPath
+		}
+
+		var navigationPathFilter : ClientDirectoryPickerPathFilter?
+
+		if folderItemPaths.count > 0 {
+			navigationPathFilter = { (targetPath) in
+				return !folderItemPaths.contains(targetPath)
+			}
+		}
+
+		self.init(core: inCore, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: { (targetPath) in
+			// Disallow all paths as target that are parent of any of the items
+			return !itemParentPaths.contains(targetPath)
+		}, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler)
+	}
+
+	init(core inCore: OCCore, path: String, selectButtonTitle: String, allowedPathFilter: ClientDirectoryPickerPathFilter? = nil, navigationPathFilter: ClientDirectoryPickerPathFilter? = nil, choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
 		let targetDirectoryQuery = OCQuery(forPath: path)
 
 		// Sort folders first
@@ -63,6 +90,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 		self.selectButtonTitle = selectButtonTitle
 		self.allowedPathFilter = allowedPathFilter
+		self.navigationPathFilter = navigationPathFilter
 
 		// Force disable sorting options
 		self.shallShowSortBar = false
@@ -109,27 +137,43 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		}
 	}
 
+	private func allowNavigationFor(item: OCItem?) -> Bool {
+		guard let item = item else { return false }
+
+		var allowNavigation = item.type == .collection
+
+		if allowNavigation, let navigationPathFilter = navigationPathFilter, let itemPath = item.path {
+			allowNavigation = navigationPathFilter(itemPath)
+		}
+
+		return allowNavigation
+	}
+
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = super.tableView(tableView, cellForRowAt: indexPath)
 
 		if let clientItemCell = cell as? ClientItemCell {
 			clientItemCell.isMoreButtonPermanentlyHidden = true
-			clientItemCell.isActive = (clientItemCell.item?.type == OCItemType.collection) ? true : false
+			clientItemCell.isActive = self.allowNavigationFor(item: clientItemCell.item)
 		}
 
 		return cell
 	}
 
-	override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-		guard let item : OCItem = itemAt(indexPath: indexPath) else {
-			return nil
+	override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+		if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
+			return true
 		}
 
-		if item.type != OCItemType.collection {
-			return nil
-		} else {
+		return false
+	}
+
+	override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+		if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
 			return indexPath
 		}
+
+		return nil
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -137,7 +181,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 			return
 		}
 
-		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, choiceHandler: choiceHandler), animated: true)
+		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler), animated: true)
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

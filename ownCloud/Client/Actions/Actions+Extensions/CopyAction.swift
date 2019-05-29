@@ -34,12 +34,7 @@ class CopyAction : Action {
 
 		let items = context.items
 
-		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Copy here".localized, allowedPathFilter: { (targetPath) in
-			// Disallow all paths as target that are parent of any of the items to copy
-			return !items.contains(where: { (item) -> Bool in
-				return item.path?.parentPath == targetPath
-			})
-		}, choiceHandler: { (selectedDirectory) in
+		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Copy here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory) in
 			if let targetDirectory = selectedDirectory {
 				items.forEach({ (item) in
 
