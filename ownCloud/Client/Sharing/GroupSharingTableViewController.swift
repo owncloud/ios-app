@@ -297,56 +297,63 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 				return
 			}
 
-			self.messageView?.message(show: false)
 			var rows : [StaticTableViewRow] = []
 			for recipient in recipients {
+				if !(self.shares.map { $0.recipient?.identifier == recipient.identifier }).contains(true) {
 
-				guard let itemPath = self.item.path else { continue }
-				var title = ""
-				var image: UIImage?
-				if recipient.type == .user {
-					guard let displayName = recipient.displayName else { continue }
-					title = displayName
-					image = UIImage(named: "person")
-				} else {
-					guard let displayName = recipient.displayName else { continue }
-					let groupTitle = "(Group)".localized
-					title = "\(displayName) \(groupTitle)"
-					image = UIImage(named: "group")
+					guard let itemPath = self.item.path else { continue }
+					var title = ""
+					var image: UIImage?
+					if recipient.type == .user {
+						guard let displayName = recipient.displayName else { continue }
+						title = displayName
+						image = UIImage(named: "person")
+					} else {
+						guard let displayName = recipient.displayName else { continue }
+						let groupTitle = "(Group)".localized
+						title = "\(displayName) \(groupTitle)"
+						image = UIImage(named: "group")
+					}
+
+					rows.append(
+						StaticTableViewRow(rowWithAction: { [weak self] (row, _) in
+							guard let self = self else { return }
+							var defaultPermissions : OCSharePermissionsMask = .read
+							if let capabilitiesDefaultPermission = self.core?.connection.capabilities?.sharingDefaultPermissions {
+								defaultPermissions = capabilitiesDefaultPermission
+							}
+
+							let share = OCShare(recipient: recipient, path: itemPath, permissions: defaultPermissions, expiration: nil)
+
+							OnMainThread {
+								self.searchController?.searchBar.text = ""
+								self.searchController?.dismiss(animated: true, completion: nil)
+								self.resetTable(showShares: true)
+								let editSharingViewController = GroupSharingEditTableViewController(core: core, item: self.item, share: share)
+								editSharingViewController.createShare = true
+								editSharingViewController.title = row.cell?.textLabel?.text
+								let navigationController = ThemeNavigationController(rootViewController: editSharingViewController)
+								self.navigationController?.present(navigationController, animated: true, completion: nil)
+							}
+							}, title: title, image: image)
+					)
 				}
-
-				rows.append(
-					StaticTableViewRow(rowWithAction: { [weak self] (row, _) in
-						guard let self = self else { return }
-						var defaultPermissions : OCSharePermissionsMask = .read
-						if let capabilitiesDefaultPermission = self.core?.connection.capabilities?.sharingDefaultPermissions {
-							defaultPermissions = capabilitiesDefaultPermission
-						}
-
-						let share = OCShare(recipient: recipient, path: itemPath, permissions: defaultPermissions, expiration: nil)
-
-						OnMainThread {
-							self.searchController?.searchBar.text = ""
-							self.searchController?.dismiss(animated: true, completion: nil)
-							self.resetTable(showShares: true)
-							let editSharingViewController = GroupSharingEditTableViewController(core: core, item: self.item, share: share)
-							editSharingViewController.createShare = true
-							editSharingViewController.title = row.cell?.textLabel?.text
-							let navigationController = ThemeNavigationController(rootViewController: editSharingViewController)
-							self.navigationController?.present(navigationController, animated: true, completion: nil)
-						}
-					}, title: title, image: image)
-				)
-			}
-			self.removeShareSections()
-			if let section = self.searchResultsSection {
-				self.removeSection(section)
 			}
 
-			let searchResultsSection = StaticTableViewSection(headerTitle: "Invite Collaborator".localized, footerTitle: nil, identifier: "search-results", rows: rows)
-			self.searchResultsSection = searchResultsSection
+			if rows.count > 0 {
+				self.messageView?.message(show: false)
+				
+				self.removeShareSections()
+				if let section = self.searchResultsSection {
+					self.removeSection(section)
+				}
+				let searchResultsSection = StaticTableViewSection(headerTitle: "Invite Collaborator".localized, footerTitle: nil, identifier: "search-results", rows: rows)
+				self.searchResultsSection = searchResultsSection
 
-			self.addSection(searchResultsSection)
+				self.addSection(searchResultsSection)
+			} else {
+				self.messageView?.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There are no results for this search term".localized)
+			}
 		}
 	}
 
