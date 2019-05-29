@@ -206,17 +206,21 @@ class PendingSharesTableViewController: StaticTableViewController {
 		if accept {
 			makeDecision(on: share, accept: accept)
 		} else {
-			var itemName = share.name
-			if share.itemPath.count > 0 {
-				itemName = (share.itemPath as NSString).lastPathComponent
-			}
+			if share.type == .remote {
+				var itemName = share.name
+				if share.itemPath.count > 0 {
+					itemName = (share.itemPath as NSString).lastPathComponent
+				}
 
-			let alertController = UIAlertController(title: String(format: "Decline Invite %@".localized, itemName ?? ""), message: "Decline cannot be undone.", preferredStyle: .alert)
-			alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
-			alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
-				self?.makeDecision(on: share, accept: accept)
-			}))
-			self.present(alertController, animated: true, completion: nil)
+				let alertController = UIAlertController(title: String(format: "Decline Invite %@".localized, itemName ?? ""), message: "Decline cannot be undone.", preferredStyle: .alert)
+				alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
+				alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
+					self?.makeDecision(on: share, accept: accept)
+				}))
+				self.present(alertController, animated: true, completion: nil)
+			} else {
+				makeDecision(on: share, accept: accept)
+			}
 		}
 	}
 }
