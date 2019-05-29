@@ -237,7 +237,14 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 				}, completionHandler: { (error, share) in
 					if error == nil {
 						guard let changedShare = share else { return }
-						self.share?.permissions = changedShare.permissions
+						// Only set changed permissions and not the complete permission mask, otherwise other permission may be lost (race condition)
+						for permissionValue in permissions {
+							if enabled, changedShare.permissions.contains(permissionValue) {
+								self.share?.permissions.insert(permissionValue)
+							} else if !enabled, !changedShare.permissions.contains(permissionValue) {
+								self.share?.permissions.remove(permissionValue)
+							}
+						}
 						completionHandler(nil)
 					} else {
 						if let shareError = error {
