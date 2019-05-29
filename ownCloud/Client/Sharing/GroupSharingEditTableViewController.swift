@@ -129,7 +129,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 			if let selected = row.value as? Bool {
 				if item.type == .collection {
 					if selected {
-						self.addPermissionEditSection(animated: true)
+						self.addPermissionEditSection(animated: true, selected: true)
 					} else {
 						if let section = self.sectionForIdentifier("permission-edit-section") {
 							self.removeSection(section, animated: true)
@@ -163,13 +163,12 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 		}, title: title.localized, subtitle: "", selected: selected, identifier: identifier))
 	}
 
-	func addPermissionEditSection(animated : Bool = false) {
+	func addPermissionEditSection(animated : Bool = false, selected : Bool = false) {
 		let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "permission-edit-section")
-		guard let share = share else { return }
 
-		self.addPermissionRow(to: section, with: "Can Create", permission: .create, selected: share.canCreate, identifier: "permission-section-edit-create")
-		self.addPermissionRow(to: section, with: "Can Change", permission: .update, selected: share.canUpdate, identifier: "permission-section-edit-change")
-		self.addPermissionRow(to: section, with: "Can Delete", permission: .delete, selected: share.canDelete, identifier: "permission-section-edit-delete")
+		self.addPermissionRow(to: section, with: "Can Create", permission: .create, selected: (selected ? selected : hasAtLeastPermission(of: [.create])), identifier: "permission-section-edit-create")
+		self.addPermissionRow(to: section, with: "Can Change", permission: .update, selected: (selected ? selected : hasAtLeastPermission(of: [.update])), identifier: "permission-section-edit-change")
+		self.addPermissionRow(to: section, with: "Can Delete", permission: .delete, selected: (selected ? selected : hasAtLeastPermission(of: [.delete])), identifier: "permission-section-edit-delete")
 
 		let subtitles = [
 			"Allows the users you share with to create new files and add them to the share".localized,
@@ -182,7 +181,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 	}
 
 	func hidePermissionsIfNeeded() {
-		if share?.canDelete == false, share?.canCreate == false, share?.canUpdate == false {
+		if !hasAtLeastPermission(of: [.update, .create, .delete]) {
 			OnMainThread {
 				let section = self.sectionForIdentifier("permission-section")
 				let newRow = section?.row(withIdentifier: "permission-section-edit")
@@ -224,6 +223,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 					permissionMask?.remove(permissionValue)
 				}
 			}
+			completionHandler(nil)
 		} else {
 			if let core = self.core {
 				core.update(share, afterPerformingChanges: {(share) in
