@@ -37,6 +37,22 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 	var recipientSearchController : OCRecipientSearchController?
 	var meCanShareItem : Bool = false
 	var shouldStartSearch : Bool = false
+	var defaultPermissions : OCSharePermissionsMask {
+		let meShares = shares.filter { (share) -> Bool in
+			return (share.recipient?.user?.userName == core?.connection.loggedInUser?.userName && share.canShare)
+		}
+		if let share = meShares.first {
+			return share.permissions
+		}
+
+		var defaultPermissions : OCSharePermissionsMask = .read
+
+		if let capabilitiesDefaultPermission = self.core?.connection.capabilities?.sharingDefaultPermissions {
+			defaultPermissions = capabilitiesDefaultPermission
+		}
+
+		return defaultPermissions
+	}
 
 	// MARK: - Init & Deinit
 
@@ -191,16 +207,17 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		var shareRows: [StaticTableViewRow] = []
 
 		if sharesOfType.count > 0 {
-			let resharedUsers = shares.filter { (share) -> Bool in
-				return share.owner == share.recipient?.user
-			}
 
 			for share in sharesOfType {
+				let resharedUsers = shares.filter { (filterShare) -> Bool in
+					return share.recipient?.user?.userName == filterShare.owner?.userName
+				}
+
 				if let recipient = share.recipient {
 					if canEdit(share: share) {
 						let shareRow = StaticTableViewRow(rowWithAction: { [weak self] (row, _) in
 							guard let self = self, let core = self.core else { return }
-							let editSharingViewController = GroupSharingEditTableViewController(core: core, item: self.item, share: share, reshares: resharedUsers)
+							let editSharingViewController = GroupSharingEditTableViewController(core: core, item: self.item, share: share, possiblePermissions: self.defaultPermissions, reshares: resharedUsers)
 
 							if share.recipient?.type == .user {
 								editSharingViewController.title = row.cell?.textLabel?.text
@@ -318,18 +335,13 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 					rows.append(
 						StaticTableViewRow(rowWithAction: { [weak self] (row, _) in
 							guard let self = self else { return }
-							var defaultPermissions : OCSharePermissionsMask = .read
-							if let capabilitiesDefaultPermission = self.core?.connection.capabilities?.sharingDefaultPermissions {
-								defaultPermissions = capabilitiesDefaultPermission
-							}
-
-							let share = OCShare(recipient: recipient, path: itemPath, permissions: defaultPermissions, expiration: nil)
+							let share = OCShare(recipient: recipient, path: itemPath, permissions: self.defaultPermissions, expiration: nil)
 
 							OnMainThread {
 								self.searchController?.searchBar.text = ""
 								self.searchController?.dismiss(animated: true, completion: nil)
 								self.resetTable(showShares: true)
-								let editSharingViewController = GroupSharingEditTableViewController(core: core, item: self.item, share: share)
+								let editSharingViewController = GroupSharingEditTableViewController(core: core, item: self.item, share: share, possiblePermissions: self.defaultPermissions)
 								editSharingViewController.createShare = true
 								editSharingViewController.title = row.cell?.textLabel?.text
 								let navigationController = ThemeNavigationController(rootViewController: editSharingViewController)
