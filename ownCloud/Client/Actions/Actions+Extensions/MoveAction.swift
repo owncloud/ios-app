@@ -24,17 +24,6 @@ class MoveAction : Action {
 	override class var name : String? { return "Move".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
 
-	// MARK: - Extension matching
-	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if forContext.items.contains(where: {$0.type == .file}),
-			let path = forContext.query?.queryPath, path.isRootPath,
-			let containsFolder = forContext.preferences?["rootPathContainsFolders"] as? Bool, !containsFolder {
-			return .none
-		}
-		// Examine items in context
-		return .middle
-	}
-
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
@@ -44,7 +33,12 @@ class MoveAction : Action {
 
 		let items = context.items
 
-		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", completion: { (selectedDirectory) in
+		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Move here".localized, allowedPathFilter: { (targetPath) in
+			// Disallow all paths as target that are parent of any of the items to copy
+			return !items.contains(where: { (item) -> Bool in
+				return item.path?.parentPath == targetPath
+			})
+		}, choiceHandler: { (selectedDirectory) in
 			guard let selectedDirectory = selectedDirectory else {
 				self.completed(with: NSError(ocError: OCError.cancelled))
 				return
@@ -57,7 +51,7 @@ class MoveAction : Action {
 
 				if let progress = self.core?.move(item, to: selectedDirectory, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
 					if error != nil {
-						Log.log("Error \(String(describing: error)) moving \(String(describing: itemName))")
+						Log.error("Error \(String(describing: error)) moving \(String(describing: itemName))")
 					}
 				}) {
 					self.publish(progress: progress)

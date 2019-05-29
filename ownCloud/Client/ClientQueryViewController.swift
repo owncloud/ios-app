@@ -265,7 +265,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 			let uniqueItems = Array(Set(items))
 			// Get possible associated actions
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-			let actionContext = ActionContext(viewController: self, core: core, query: query, items: uniqueItems, location: actionsLocation, preferences: ["rootPathContainsFolders" : rootPathContainsFolders])
+			let actionContext = ActionContext(viewController: self, core: core, query: query, items: uniqueItems, location: actionsLocation)
 			self.actions = Action.sortedApplicableActions(for: actionContext)
 
 			// Enable / disable tool-bar items depending on action availability
@@ -356,13 +356,12 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
 
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
-		let containsFolders = rootPathContainsFolders
 
 		if selectedItems.count > 0 {
 			if let core = self.core {
 				// Get possible associated actions
 				let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-				let actionContext = ActionContext(viewController: self, core: core, query: query, items: selectedItems, location: actionsLocation, preferences: ["rootPathContainsFolders" : containsFolders])
+				let actionContext = ActionContext(viewController: self, core: core, query: query, items: selectedItems, location: actionsLocation)
 
 				self.actions = Action.sortedApplicableActions(for: actionContext)
 

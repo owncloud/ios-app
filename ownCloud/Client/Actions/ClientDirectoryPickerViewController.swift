@@ -19,21 +19,25 @@
 import UIKit
 import ownCloudSDK
 
+typealias ClientDirectoryPickerAllowedPathFilter = (_ path: String) -> Bool
+typealias ClientDirectoryPickerChoiceHandler = (_ chosenItem: OCItem?) -> Void
+
 class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	private let SELECT_BUTTON_HEIGHT: CGFloat = 44.0
 
 	// MARK: - Instance Properties
-	private var selectButton: UIBarButtonItem!
-	private var selectButtonTitle: String
-	private var cancelBarButton: UIBarButtonItem!
-	private var completion: (OCItem?) -> Void
+	private var selectButton: UIBarButtonItem?
+	private var selectButtonTitle: String?
+	private var cancelBarButton: UIBarButtonItem?
+
+	var directoryPath : String?
+
+	var choiceHandler: ClientDirectoryPickerChoiceHandler?
+	var allowedPathFilter : ClientDirectoryPickerAllowedPathFilter?
 
 	// MARK: - Init & deinit
-	init(core inCore: OCCore, path: String, selectButtonTitle: String = "Move here".localized, completion: @escaping (OCItem?) -> Void) {
-		self.selectButtonTitle = selectButtonTitle
-		self.completion = completion
-
+	init(core inCore: OCCore, path: String, selectButtonTitle: String, allowedPathFilter: ClientDirectoryPickerAllowedPathFilter? = nil, choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
 		let targetDirectoryQuery = OCQuery(forPath: path)
 
 		// Sort folders first
@@ -52,6 +56,13 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		}
 
 		super.init(core: inCore, query: targetDirectoryQuery)
+
+		self.directoryPath = path
+
+		self.choiceHandler = choiceHandler
+
+		self.selectButtonTitle = selectButtonTitle
+		self.allowedPathFilter = allowedPathFilter
 
 		// Force disable sorting options
 		self.shallShowSortBar = false
@@ -73,7 +84,11 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 		// Select button creation
 		selectButton = UIBarButtonItem(title: selectButtonTitle, style: .plain, target: self, action: #selector(selectButtonPressed))
-		selectButton.title = selectButtonTitle
+		selectButton?.title = selectButtonTitle
+
+		if let allowedPathFilter = allowedPathFilter, let directoryPath = directoryPath {
+			selectButton?.isEnabled = allowedPathFilter(directoryPath)
+		}
 
 		// Cancel button creation
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
@@ -81,9 +96,12 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
-		navigationItem.rightBarButtonItems = [cancelBarButton]
 
-		if let navController = self.navigationController {
+		if let cancelBarButton = cancelBarButton {
+			navigationItem.rightBarButtonItems = [cancelBarButton]
+		}
+
+		if let navController = self.navigationController, let selectButton = selectButton {
 			navController.isToolbarHidden = false
 			navController.toolbar.isTranslucent = false
 			let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
@@ -115,15 +133,11 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		guard let item : OCItem = itemAt(indexPath: indexPath) else {
+		guard let item : OCItem = itemAt(indexPath: indexPath), item.type == OCItemType.collection, let core = self.core, let path = item.path, let selectButtonTitle = selectButtonTitle, let choiceHandler = choiceHandler else {
 			return
 		}
 
-		guard item.type == OCItemType.collection, let core = self.core, let path = item.path else {
-			return
-		}
-
-		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, completion: completion), animated: true)
+		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, choiceHandler: choiceHandler), animated: true)
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -135,15 +149,19 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	// MARK: - Actions
+	func userChose(item: OCItem?) {
+		self.choiceHandler?(item)
+	}
+
 	@objc private func cancelBarButtonPressed() {
-		self.dismiss(animated: true, completion: {
-			self.completion(nil)
+		dismiss(animated: true, completion: {
+			self.userChose(item: nil)
 		})
 	}
 
 	@objc private func selectButtonPressed() {
-		self.dismiss(animated: true, completion: {
-			self.completion(self.query.rootItem)
+		dismiss(animated: true, completion: {
+			self.userChose(item: self.query.rootItem)
 		})
 	}
 }
