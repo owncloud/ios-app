@@ -462,7 +462,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		dateFormatter.timeStyle = .short
 		var footer = ""
 		if let date = share?.creationDate {
-			footer = String(format: "Shared since: %@".localized, dateFormatter.string(from: date))
+			footer = String(format: "Created: %@".localized, dateFormatter.string(from: date))
 		}
 
 		let deleteSection = StaticTableViewSection(headerTitle: "Public Link", footerTitle: footer)

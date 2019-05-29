@@ -62,7 +62,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 		}
 
 		updateSection(for: pendingShares, title: "Pending".localized, sectionID: "pending", placeAtTop: true)
-		updateSection(for: rejectedShares, title: "Rejected".localized, sectionID: "rejected", placeAtTop: false)
+		updateSection(for: rejectedShares, title: "Declined".localized, sectionID: "declined", placeAtTop: false)
 
 		if (pendingShares.count == 0) && (rejectedShares.count == 0) && self.presentedViewController == nil {
 			// Pop back to the Library when there are no longer any shares to present and no alert is active
@@ -206,13 +206,12 @@ class PendingSharesTableViewController: StaticTableViewController {
 		if accept {
 			makeDecision(on: share, accept: accept)
 		} else {
-			var presentationStyle: UIAlertController.Style = .actionSheet
-			if UIDevice.current.isIpad() {
-				presentationStyle = .alert
+			var itemName = share.name
+			if share.itemPath.count > 0 {
+				itemName = (share.itemPath as NSString).lastPathComponent
 			}
-			let alertController = UIAlertController(title: "Decline Share".localized,
-								message: nil,
-								preferredStyle: presentationStyle)
+
+			let alertController = UIAlertController(title: String(format: "Decline Invite %@".localized, itemName ?? ""), message: "Decline cannot be undone.", preferredStyle: .alert)
 			alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 			alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
 				self?.makeDecision(on: share, accept: accept)

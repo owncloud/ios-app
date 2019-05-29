@@ -298,7 +298,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 		dateFormatter.timeStyle = .short
 		var footer = ""
 		if let date = share?.creationDate {
-			footer = String(format: "Shared since: %@".localized, dateFormatter.string(from: date))
+			footer = String(format: "Invited: %@".localized, dateFormatter.string(from: date))
 		}
 
 		let section = StaticTableViewSection(headerTitle: nil, footerTitle: footer)

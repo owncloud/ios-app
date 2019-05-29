@@ -158,17 +158,9 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 				self.removeSection(section)
 			}
 
-			let dateFormatter = DateFormatter()
-			dateFormatter.dateStyle = .medium
-			dateFormatter.timeStyle = .short
-			var footer : String?
-			if let date = share.creationDate {
-				footer = String(format: "Shared since: %@".localized, dateFormatter.string(from: date))
-			}
-
 			OnMainThread {
 				if self.item.isSharedWithUser {
-					let section = StaticTableViewSection(headerTitle: nil, footerTitle: footer, identifier: "action-section")
+					let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "action-section")
 					var rows : [StaticTableViewRow] = []
 
 					self.actionSection = section
@@ -196,6 +188,20 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 					section.add(rows: rows)
 					self.addSection(section)
 				}
+			}
+		} else {
+			OnMainThread {
+				let shareRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+					self?.activateRecipienSearch()
+					if let actionSection = self?.sectionForIdentifier("action-section") {
+						self?.removeSection(actionSection)
+					}
+					}, title: "Invite Collaborator".localized, style: StaticTableViewRowButtonStyle.plain)
+
+				let section : StaticTableViewSection = StaticTableViewSection(headerTitle: " ", footerTitle: nil, identifier: "action-section", rows: [shareRow])
+
+				self.actionSection = section
+				self.addSection(section, animated: true)
 			}
 		}
 	}
@@ -250,8 +256,26 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		}
 	}
 
+	func addOwnerSection() {
+		if let share = shares.first, let owner = share.itemOwner, let ownerName = owner.displayName, owner.userName != core?.connection.loggedInUser?.userName, self.sectionForIdentifier("owner-section") == nil {
+			let dateFormatter = DateFormatter()
+			dateFormatter.dateStyle = .medium
+			dateFormatter.timeStyle = .short
+			var footer : String?
+			if let date = share.creationDate {
+				footer = String(format: "Invited: %@".localized, dateFormatter.string(from: date))
+			}
+
+			let shareRow = StaticTableViewRow(rowWithAction: nil, title: String(format:"%@", ownerName), accessoryType: .none)
+
+			let section : StaticTableViewSection = StaticTableViewSection(headerTitle: "Owner".localized, footerTitle: footer, identifier: "owner-section", rows: [shareRow])
+			self.addSection(section, animated: true)
+		}
+	}
+
 	func addShareSections() {
 		OnMainThread {
+			self.addOwnerSection()
 			self.addSectionFor(shares: self.shares(ofTypes: [.userShare, .remote]), with: "Users".localized, identifier: .userShare)
 			self.addSectionFor(shares: self.shares(ofTypes: [.groupShare]), with: "Groups".localized, identifier: .groupShare)
 		}
@@ -267,6 +291,9 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 				}
 			}
 
+			if let section = self.sectionForIdentifier("owner-section") {
+				self.removeSection(section)
+			}
 			if let section = self.actionSection {
 				self.removeSection(section)
 			}
@@ -279,8 +306,10 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		if let section = searchResultsSection {
 			self.removeSection(section)
 		}
-		if shares.count > 0 && showShares {
-			self.addShareSections()
+		if showShares {
+			if shares.count > 0 {
+				self.addShareSections()
+			}
 			addActionShareSection()
 		}
 	}

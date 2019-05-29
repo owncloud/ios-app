@@ -300,7 +300,8 @@
 "(Group)" = "(Group)";
 "Adding User to Share failed" = "Adding User to Share failed";
 "Permissions" = "Permissions";
-"Shared since: %@" = "Shared since: %@";
+"Invited: %@" = "Invited: %@";
+"Created: %@" = "Created: %@";
 "Allows the users you share with to re-share" = "Allows the users you share with to re-share";
 "Allows the users you share with to edit your shared files, and to collaborate" = "Allows the users you share with to edit your shared files, and to collaborate";
 "Allows the users you share with to create new files and add them to the share" = "Allows the users you share with to create new files and add them to the share";
@@ -344,6 +345,7 @@
 "Decline Share failed" = "Decline Share failed";
 "Accept" = "Accept";
 "Decline" = "Decline";
+"Declined" = "Declined";
 "Decline Share" = "Decline Share";
 "Unshare" = "Unshare";
 "Share" = "Share";
@@ -354,6 +356,8 @@
 "Can Change" = "Can Change";
 "Can Delete" = "Can Delete";
 "Accept Invite %@" = "Accept Invite %@";
+"Decline Invite %@" = "Decline Invite %@";
+"Decline cannot be undone." = "Decline cannot be undone.";
 
 /* Quick Access view */
 "Quick Access" = "Quick Access";
