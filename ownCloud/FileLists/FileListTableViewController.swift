@@ -27,6 +27,30 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	var progressSummarizer : ProgressSummarizer?
 	private var _actionProgressHandler : ActionProgressHandler?
 
+	var rootPathContainsFolders : Bool {
+		let rootQuery = OCQuery(forPath: "/")
+		var hasFoldersInRootPath = false
+		let waitGroup = DispatchGroup()
+		waitGroup.enter()
+		rootQuery.changesAvailableNotificationHandler = { query in
+			let folders = query.queryResults?.filter({ (item) -> Bool in
+				if item.type == .collection {
+					return true
+				}
+				return false
+			})
+			if let folders = folders, folders.count > 0 {
+				hasFoldersInRootPath = true
+			}
+			waitGroup.leave()
+		}
+		core?.start(rootQuery)
+		waitGroup.wait()
+		core?.stop(rootQuery)
+
+		return hasFoldersInRootPath
+	}
+
 	public init(core inCore: OCCore) {
 		core = inCore
 		super.init(style: .plain)
@@ -67,12 +91,12 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 
 	// MARK: - ClientItemCellDelegate
 	func moreButtonTapped(cell: ClientItemCell) {
-		guard let item = self.item(for: cell), let core = core else {
+		guard let item = self.item(for: cell), let core = core, let query = query(forItem: item) else {
 			return
 		}
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
-		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [item], location: actionsLocation, preferences: ["rootPathContainsFolders" : rootPathContainsFolders])
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: makeActionProgressHandler()) {
 			self.present(asCard: moreViewController, animated: true)
