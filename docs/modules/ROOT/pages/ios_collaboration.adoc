@@ -1,21 +1,21 @@
-= iOS App Collaboration and Links
+= Collaboration and Links
 :toc: right
 
-== Collaborate with other users on folders and Files
+== Collaborate With Other Users on Folders and Files
 
-image:31_Collab.png[31_Collab.png]
+image:31_Collab.png[Collaborate With Other Users on Folders and Files]
 
-* add users and grant permissions
-* add groups and grant permissions
-* change permissions permissions
-* delete collaborators
+* Add users and grant permissions
+* Add groups and grant permissions
+* Change permissions permissions
+* Delete collaborators
 
-== Grant access with links
+== Grant Access With Links
 
-image:36_Links.png[36_Links.png]
+image:36_Links.png[grant access with links]
 
-* copy public link
-* create multiple private links
-* set password or expiration date
-* send private link URL to other apps (mail, messenger)
-* delete private link
+* Copy public link
+* Create multiple private links
+* Set password or expiration date
+* Send private link URL to other apps (mail, messenger)
+* Delete private link

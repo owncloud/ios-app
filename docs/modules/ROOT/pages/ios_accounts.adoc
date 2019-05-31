@@ -1,79 +1,91 @@
-= iOS App Managing Accounts
+= Managing User Accounts
 :toc: right
+:toclevels: 1
+:sfauthenticationsession-url: https://developer.apple.com/documentation/safariservices/sfauthenticationsession
+:rfc-8252-url: https://tools.ietf.org/html/rfc8252#appendix-B.1
 
-image:01_account_add.png[01_account_add.png]
+The iOS app supports four ways of authenticating user accounts. 
+These are:
 
-* Multiple Accounts
+* xref:basic-authentication[Basic Authentication]
+* xref:oauth-2-0[OAuth 2.0]
+* xref:safari-login-session[Safari Login Sessions]
+* xref:the-web-ui[The Web UI]
 
-= Basic Auth
+== Authentication Options
 
-* Login Credentials are stored on the device (secure in system keychain)
-* Password manager support
+=== Basic Authentication
 
-image:02_basic_auth.png[02_basic_auth.png]
+* Login Credentials are stored on the device (secure in system keychain).
+* Password manager support.
 
-=== Server URL
+image:02_basic_auth.png[basic authentication]
 
-=== Credentials
+=== OAuth 2.0
 
-= OAuth 2.0
+The OAuth2 implementation uses {sfauthenticationsession-url}[SFAuthenticationSession], which is described as a best practice by {rfc-8252-url}[RFC 8252]. 
+The benefits of using `SFAuthenticationSession` include:
 
-* Industry standard authorisation method
-* Username and password are not stored on the device
+* *Privilege separation:* Web content is run in a separate process.
+* *Trustworthiness:* Apps can't inject code into or access the contents of the web view.
+* *Convenience for the user:* Cookies from Safari are available to the web content inside the session.
 
-(doc/SECURITY.md#oauth2-implementation <https://github.com/owncloud/ios-app/blob/master/doc/SECURITY.md#oauth2-implementation>)
+Additionally, OAuth2 is the industry standard authorisation method, and the username and password are not stored on the device.
 
-image:11_Account_OAuth.png[11_Account_OAuth.png]
+== Add An Account
 
-=== Server URL
+image:04_Account_1x.png[]
 
-=== Safari Login Session
+To add one or more user accounts to the iOS app, when in the "*Accounts*" view, click the plus (+) icon in the top right-hand corner.
+This opens the "*Add Account*" dialog, where you can enter the URL of the ownCloud server. 
+After you enter it and click "Continue", the iOS app checks the authentication method and the validity of the SSL/TLS certificate (_if the server URL uses the HTTPS protocol_).
 
-image:12_OAuth_dialogue.png[12_OAuth_dialogue.png]
+If the certificate is deemed to be valid, you will see a green "*Passed*" symbol near the bottom of the page, next to "*Certificate Details*", and the text "*No issues found. Certificate passed validation.*"
 
-=== Login in web UI
+image:add-account-certificate-passed-validation.png[]
 
-image:13_OAuth_Web_view.png[13_OAuth_Web_view.png]
+Click btn:[Continue] and the app will prompt you if you want to use the supplied server URL to sign in to the app.
+You will then be redirected to the ownCloud server, where you can supply your username and password.
+After doing so, and submitting the form, you will then be asked if you want to give permission for the app to access your account. 
 
-=== Authorize
+image:14_OAuth_Web_view_authorize.png[]
 
-image:14_OAuth_Web_view_authorize.png[14_OAuth_Web_view_authorize.png]
+If so, click btn:[Authorize]. 
+If not, click btn:[Cancel].
+If you clicked btn:[Authorize], you will then be returned to the Accounts screen, where you will see your new account in the list.
 
-= Security
+=== Delete An Account
 
-=== Inspect Certificate Details
+If you want to delete an account, when viewing the Accounts list, swipe left on the account that you want to delete and click btn:[Delete].
 
-image:03_cert_pass.png[03_cert_pass.png]
+image:edit-or-delete-account.png[How to edit and delete an account in the ownCloud iOS app Accounts list]
 
-=== Certificate Warnings
+You will then be asked if you really want to delete that account. 
 
-image:04_cert_error.png[04_cert_error.png]
+image:confirm-account-deletion.png[Confirm account deletion in the ownCloud iOS app]
 
-* Monitors connections for suspicious certificates
-* Inspect Certificate Details
-* Approve certificates
-
-=== More information
-
-==> doc/SECURITY.md <https://github.com/owncloud/ios-app/blob/master/doc/SECURITY.md> (Security)
-
-= Account List
-
-image:04_Account_1x.png[04_Account_1x.png]
-
-=== Account actions (swipe)	
-
-image:05_Account_swipe.png[05_Account_swipe.png]
-
-=== Manage Account
-
-image:06_Account_manage.png[06_Account_manage.png]
-
-* Viewed files get downloaded and stay on the device
-* this deletes all local files (except those that aren’t uploaded to the ownCloud server)
+If you do, click btn:[Delete]. 
+Doing so deletes the account from the device, as well as all locally stored file copies.
+If you don’t want to delete the account, click btn:[Cancel].
 
 === Edit Authentication	
 
-image:07_Account_edit.png[07_Account_edit.png]
+If you want to edit an account, when viewing the Accounts list, swipe left on the account that you want to edit and click btn:[Edit].
 
-* Logout and re-login
+image:edit-or-delete-account.png[How to edit and delete an account in the ownCloud iOS app Accounts list]
+
+You will then be able to change the ownCloud server URL, and manage the authentication credentials.
+How the authentication credentials can be managed depends on the authentication type.
+
+[cols=",",options="header"]
+|===
+|Basic Authentication
+|OAuth2 Authentication
+
+|In the screenshot below, the user is authenticated using Basic Authentication.
+In this instance, they will be able to update their username and password, as well as delete their authentication data.
+image:07_Account_edit.png[07_Account_edit.png]
+|In the screenshot above, the user is authenticated using OAuth2 authentication.
+In this instance, they will only be able to delete their authentication data.
+image:edit-oauth2-authenticated-account.png[]
+|===

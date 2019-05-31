@@ -1,11 +1,11 @@
-= iOS App and iOS Files App Integration and 3rd party apps
+= iOS App and iOS Files App Integration and 3rd Party Apps
 :toc: right
 
-== Enable in iOS Files app
+== Enable in iOS Files App
 
 * Multiple Accounts
 
-== Work with your ownCloud data in iOS Files App
+== Work With Your ownCloud Data in iOS Files App
 
 * Open
 * Edit & Save
@@ -18,6 +18,4 @@ Future versions:
 * Favourites
 * Tags
 
-
-
-== Share from other apps (via iOS Files app)
+== Share From Other Apps (via iOS Files App)

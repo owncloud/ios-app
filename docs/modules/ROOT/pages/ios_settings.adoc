@@ -1,5 +1,6 @@
-= iOS App Settings
+= Settings
 :toc: right
+:toclevels: 1
 
 image:81_Settings-2.png[81_Settings-2.png]
 
@@ -9,7 +10,7 @@ image:81_Settings-2.png[81_Settings-2.png]
 
 image:82_Settings_passcode.png[82_Settings_passcode.png]
 
-=== Lock delay
+=== Lock Delay
 
 === Trusted Certificates
 
@@ -21,20 +22,27 @@ image:83_Settings_certs.png[83_Settings_certs.png]
 
 == Themes
 
+The iOS app comes with three themes: 
+
+* ownCloud Light
+* ownCloud Dark; and
+* ownCloud Classic
+
+To change the theme, navigate to menu:Settings[Theme], and pick the one that you want.
+
 image:84_Settings_themes.png[84_Settings_themes.png]
 
 == Logging
 
-image:91_Logging.png[91_Logging.png]
-
-xref:ios_troubleshooting.adoc[Troubleshooting]
+The ownCloud iOS app has built-in logging functionality, available under menu:Settings[Logging].
+To find out more, please refer to the xref:ios_troubleshooting.adoc#capturing-app-debug-logs[logging section of the Troubleshooting guide].
 
 == Media Upload (Conversion)
 
 === Image
 
-* convert the very efficient HEIC images to more compatible JPEG images
+* Convert the very efficient HEIC images to more compatible JPEG images
 
 === Video
 
-* convert the very efficient videos to more compatible MP4 videos
+* Convert the very efficient videos to more compatible MP4 videos

@@ -1,23 +1,23 @@
-= iOS App Quick access
+= Quick Access
 :toc: right
 
 image:51_Quick_access.png[51_Quick_access.png]
 
-== Shared with you
+== Shared With You
 
-* See a list of all resources you accepted from other users
+* See a list of all resources you accepted from other users.
 
 === Pending
 
-* accept or devcline shares ( if enabled on oC server 10.0.9+ )
+* Accept or decline shares (if enabled on oC server 10.0.9+)
 
 == Shared with others
 
-* See a list of all resources where you invited collaborators
+* See a list of all resources where you invited collaborators.
 
 == Links
 
-* See a list of all resources where you created links
+* See a list of all resources where you created links.
 
 == Collections
 
@@ -27,12 +27,12 @@ image:51_Quick_access.png[51_Quick_access.png]
 
 === Favorites
 
-* See a list of all resources in your account set as favourite
+* See a list of all resources in your account set as favourite.
 
 === Images
 
-* See a list of all resources from type image
+* See a list of all resources from type image.
 
 === PDF
 
-* See a list of all PDF in your account
+* See a list of all PDF in your account.

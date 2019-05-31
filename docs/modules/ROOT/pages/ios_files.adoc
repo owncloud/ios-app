@@ -1,101 +1,173 @@
-= iOS App Managing Your Files
+= Managing Files
 :toc: right
+:toclevels: 1
+:ios-safari-supported-filetypes-url: https://stackoverflow.com/a/46334049
+:icons: font
+:multitasking-on-ipad-url: https://support.apple.com/en-us/HT207582
 
-image:21_File_list.png[21_File_list.png]
+The app provides a number of features designed to make managing files as simple as possible.
+These are:
 
+* File list filter
+* File sort options
 * Thumbnails for supported images
-* Sort options
-* file list filter
-* Quota is shown on the end of the file list (root folder)
+* File quota (displayed in the root folder)
 
-== Navigate folders
+image:21_File_list_annotated.png[21_File_list.png]
 
-* tab on header allows you to direct navigate to any parent folder
+Click on a file to view it and click on a folder to view its contents.
+To view further actions available for a file or folder, click the “three dots” icon on the far right-hand side.
 
-image:21_File_list_parent.png[21_File_list_parent.png]
+== File Actions
 
-== View files
-
-=== Documents
-
-* All files types supported by iOS Safari can be displayed in the app
-
-=== PDF
-
-image:41_PDF.png[41_PDF.png]
-
-* toc	￼
-* thumbs	￼
-* search
-
-image:42_PDF_toc.png[42_PDF_toc.png]
-image:43_PDF_thumbs.png[43_PDF_thumbs.png]
-image:44_PDF_search.png[44_PDF_search.png]
-
-=== Images
-
-
-=== Video
-
-
-=== ASCII
-
-* Many types of text documents can be displayed
-
-== Add Data
-
-image:22_File_plus.png[22_File_plus.png]
-
-=== Create Folder
-
-=== Upload Files
-
-image:23_Upload_File.png[23_Upload_File.png]
-
-* Upload Files feature can access all data that other apps expose to the iOS files app
-
-=== Upload Photos with Multiselect
-
-image:24_Upload_Photo_multi.png[24_Upload_Photo_multi.png]
-
-* Upload Photos feature can access all Albums on the device
-
-== File Actions (individual files)
-
-image:27_File_Actions.png[27_File_Actions.png]
+The actions available for files are: 
 
 * Open in
-
-image:28_File_Actions_open.png[28_File_Actions_open.png]
-
 * Move
 * Rename
 * Duplicate
 * Copy
 * Delete
 
-== Multiselect files and folders
+However, file actions are handled slightly differently, depending on whether one or multiple files have been selected.
+You can see the differences in the two images below.
 
-image:25_Files_multiselect.png[25_Files_multiselect.png]
+The image below on the left, shows the file popup for actions for _individual_ files. 
+The image below on the right, shows the actions icon row for _multiple-selected_ files. 
 
-* File actions can be …
+[cols=","]
+|===
+|*Individual File Actions*
+image:file-actions-dialog.png[file-actions-dialog.png]
+|*Multiple-Selected File Actions*
+image:file-actions-multiple-files-selected.png[file-actions-multiple-files-selected.png]
+|===
 
-== Drag & Drop (multiple) files and folders
+== Navigate Folders
 
-image:26_Files_multidragdrop.png[26_Files_multidragdrop.png]
+There are two ways to navigate folders (outside of the root folder).
+To go back to the parent folder, tap btn:[Back] in the top left-hand corner.
+To navigate directly to *any* parent folder tap on the current folder's name.
+When you do, you will see the names of all the parent folders, right up to the root folder, as in the image below.
 
-== Drag & Drop (multiple) files between apps (iPad only)
+image:21_File_list_parent.png[21_File_list_parent.png]
 
-* New ownCloud iOS app supports the multitasking features on iPad
-** Open ownCloud iOS app as a second app with Slide Over
-** Use two apps at the same time with Split View
-** Drag and drop between apps
+== View Files
 
-More information:
-https://support.apple.com/en-us/HT207582
+To view a file, tap on its name in the file list.
+Any file type {ios-safari-supported-filetypes-url}[supported by iOS Safari] can be displayed in the app.
+Depending on the file type, the image will be able to viewed, or an icon for it, along with some file details, will be displayed.
 
+NOTE: If the file is not available locally on the device, you will see image:icon-not-available-locally.png[alt=A file is not downloaded locally on the ownCloud iOS app,width=25] next to the file.
+When you click on it, you will see image:icon-download.png[alt=A file is downloading on the ownCloud iOS app,width=20] next to it while it downloads.
 
-* Drag & Drop (multiple) files from other apps to the ownCloud iOS app
-* Drag & Drop (multiple) files from the ownCloud iOS app to other apps
+[cols=",,"]
+.Viewing different file types
+|===
+a|
+.An image file
+image:view-file-image.png[viewing an image file in the ownCloud iOS App]
+a|
+.A video file
+image:view-file-video.png[viewing a video file in the ownCloud iOS App]
+a|
+.A PDF file
+image:view-file-pdf.png[viewing a PDF file in the ownCloud iOS App]
+a|
+.A text file
+image:view-file-text-file.png[viewing a text file in the ownCloud iOS App]
+a|
+.An ODT file.
+image:view-file-odt.png[viewing an ODT file in the ownCloud iOS App]
+|
+|===
 
+=== PDF Files
+
+When viewing PDF files four UI options are available which make working with them easier; these are:
+
+* A page selector
+* Page thumbnails
+* A Table of Contents
+* File Search
+
+You can see an example of each in the images below.
+
+[cols=",,,"]
+.PDF file functionality
+|===
+a|
+.A page selector
+image:41_PDF.png[Page selector in PDF files in the ownCloud iOS App]
+a|
+.A table of contents
+image:42_PDF_toc.png[Table of contents in PDF files in the ownCloud iOS App]
+a|
+.Page thumbnails
+image:43_PDF_thumbs.png[Page thumbnails in PDF files in the ownCloud iOS App]
+a|
+.File search
+image:44_PDF_search.png[File search in PDF files in the ownCloud iOS App]
+a|
+|===
+
+=== Video Files
+
+Video files have the standard iOS video controls available, which include play, pause, AirPlay, volume, skip forward, skip back, close, and full screen.
+
+== Folder Actions
+
+When working with folders, click the plus icon near the top right-hand corner, and three actions become available; these are:
+
+* xref:create-folder[Create folder]
+* xref:upload-files[Upload files]
+* xref:upload-file-from-your-photo-library[Upload file from your photo library]
+
+image:directory-actions.png[]
+
+=== Create Folder
+
+To create a new folder, click btn:[Create folder], enter the name of the new folder, as in the image below, and click btn:[return].
+
+image:create-new-folder.png[]
+
+=== Upload Files
+
+To upload files or any time from your device to your ownCloud server, click btn:[Upload file].
+You will then be able to select one or more recent files, or browse through files from any app that exposes data to the iOS files app.
+
+=== Move Files and Folders
+
+Whether you are using the iPhone or iPad version of the ownCloud app, you can select and drag and drop one or more files and folders from one folder to another.
+To do so, you first press btn:[Select] in the top right-hand corner and select one or more files and/or folders.
+Then, you press and hold on any of the selected files and folders and:
+
+* Drag and drop them over a folder in the current directory
+* Drag and drop them over the "*Move to*" icon (or tap the icon), near the bottom left-hand side of the screen. You then navigate to the folder that you want to move them to and click btn:[Move here] at the bottom of the screen.
+
+image:26_Files_multidragdrop.png[Move multiple files (and folders) to another location in the ownCloud iOS App.]
+
+[NOTE] 
+====
+If a file or folder with the same name as one or more of those being moved, already exists in the destination directory, you will see a warning that the file or folder could not be moved.
+
+image:file-with-same-name-already-exists.png[ownCloud iOS App, file or folder with the same name already exists in the destination directory.]
+====
+
+== Drag & Drop Files Between Apps (iPad-only)
+
+The iOS app supports the multitasking features on iPad.
+If you open it as a second app with Slide Over, you can use two apps at the same time with Split View and drag and drop one or more files between the two apps.
+Refer to Apple's {multitasking-on-ipad-url}[Multitasking On Your iPad guide] for more information.
+
+.Drag and drop multiple files from ownCloud iOS App to macOS Notes
 image:26_Files_multidragdrop_iPad.png[26_Files_multidragdrop_iPad.png]
+
+=== Upload File From Your Photo Library
+
+To upload photos from your photo library, you first need to allow the iOS app access to your photos. 
+After that, you can browse through your photos, as you normally would 
+You can then select one or more photos by pressing them, or click btn:[Select All] in the bottom left-hand corner to select all photos in the current folder.
+When you're happy with your photo selection, click btn:[Upload] and the photo(s) will be uploaded.
+
+image:24_Upload_Photo_multi.png[Upload one or more photos from your Photo Library with the ownCloud iOS App.]
