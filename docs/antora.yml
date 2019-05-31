@@ -1,5 +1,5 @@
 name: ios-app
-title: Mobile app for iOS
+title: Mobile App for iOS
 version: master
 start_page: ROOT:index.adoc
 nav:
