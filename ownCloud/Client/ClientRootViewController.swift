@@ -210,9 +210,15 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		}
 	}
 
+	var closeClientCompletionHandler : (() -> Void)?
+
 	func closeClient(completion: (() -> Void)? = nil) {
 		self.dismiss(animated: true, completion: {
-			completion?()
+			if completion != nil {
+				OnMainThread { // Work-around to make sure the self.presentingViewController is ready to present something new. Immediately after .dismiss returns, it isn't, so we wait one runloop-cycle for it to complete
+					completion?()
+				}
+			}
 		})
 	}
 
@@ -294,10 +300,10 @@ extension ClientRootViewController : OCCoreDelegate {
 
 							queueCompletionHandler()
 
-							if let navigationController = self.navigationController {
+							if let navigationController = self.presentingViewController as? UINavigationController {
 								self.closeClient(completion: {
 									if let serverListTableViewController = navigationController.topViewController as? ServerListTableViewController {
-										serverListTableViewController.showBookmarkUI(edit: editBookmark)
+											serverListTableViewController.showBookmarkUI(edit: editBookmark)
 									}
 								})
 							}
