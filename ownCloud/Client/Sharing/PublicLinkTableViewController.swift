@@ -158,11 +158,10 @@ class PublicLinkTableViewController: SharingTableViewController {
 				guard let url = url else { return }
 				if error == nil {
 					OnMainThread {
-						let borderedLabel = BorderedLabel()
-						borderedLabel.update(text: "Copy".localized, color: UIColor.red)
-						let privateLinkRow = StaticTableViewRow(rowWithAction: { (_, _) in
+						let privateLinkRow = StaticTableViewRow(buttonWithAction: { (row, _) in
 							UIPasteboard.general.url = url
-						}, title: String(format:"%@", url.absoluteString), accessoryType: .none, accessoryView: borderedLabel)
+							row.cell?.textLabel?.text = url.absoluteString
+						}, title: "Copy Private Link", style: .plain)
 						rows.append(privateLinkRow)
 
 						section.add(rows: rows)
@@ -253,10 +252,11 @@ class PublicLinkTableViewController: SharingTableViewController {
 
 	func defaultLinkName() -> String {
 		guard let name = item.name else { return "" }
-		var linkName = String(format:"%@ %@ (%ld)", name, "Link".localized, (shares.count + 1))
+		var linkName = String(format:"%@ %@", name, "Link".localized)
 		if let defaultLinkName = core?.connection.capabilities?.publicSharingDefaultLinkName {
 			linkName = defaultLinkName
 		}
+		linkName = String(format:"%@ (%ld)", linkName, (shares.count + 1))
 
 		return linkName
 	}
