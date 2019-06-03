@@ -70,14 +70,15 @@ class PublicLinkTableViewController: SharingTableViewController {
 		if sharesOfType.count > 0 {
 			for share in sharesOfType {
 				if canEdit(share: share) {
+					var linkName = ""
+					if let shareName = share.name {
+						linkName = shareName
+					}
 					let shareRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 						guard let self = self else { return }
-						let editPublicLinkViewController = PublicLinkEditTableViewController(style: .grouped)
-						editPublicLinkViewController.share = share
-						editPublicLinkViewController.core = self.core
-						editPublicLinkViewController.item = self.item
+						let editPublicLinkViewController = PublicLinkEditTableViewController(share: share, core: self.core, item: self.item, defaultLinkName: self.defaultLinkName())
 						self.navigationController?.pushViewController(editPublicLinkViewController, animated: true)
-					}, title: share.name!, subtitle: share.permissionDescription, accessoryType: .disclosureIndicator)
+					}, title: linkName, subtitle: share.permissionDescription, accessoryType: .disclosureIndicator)
 
 					shareRow.representedObject = share
 
@@ -236,25 +237,27 @@ class PublicLinkTableViewController: SharingTableViewController {
 	// MARK: Add New Link Share
 
 	@objc func addPublicLink() {
-		if let path = item.path, let name = item.name {
+		if let path = item.path {
 			var permissions : OCSharePermissionsMask = .create
 			if item.type == .file {
 				permissions = .read
 			}
 
-			var linkName = String(format:"%@ %@ (%ld)", name, "Link".localized, (shares.count + 1))
-			if let defaultLinkName = core?.connection.capabilities?.publicSharingDefaultLinkName {
-				linkName = defaultLinkName
-			}
-
-			let share = OCShare(publicLinkToPath: path, linkName: linkName, permissions: permissions, password: nil, expiration: nil)
-			let editPublicLinkViewController = PublicLinkEditTableViewController(style: .grouped)
-			editPublicLinkViewController.share = share
-			editPublicLinkViewController.core = self.core
-			editPublicLinkViewController.item = self.item
+			let share = OCShare(publicLinkToPath: path, linkName: defaultLinkName(), permissions: permissions, password: nil, expiration: nil)
+			let editPublicLinkViewController = PublicLinkEditTableViewController(share: share, core: self.core, item: self.item, defaultLinkName: defaultLinkName())
 			editPublicLinkViewController.createLink = true
 			let navigationController = ThemeNavigationController(rootViewController: editPublicLinkViewController)
 			self.navigationController?.present(navigationController, animated: true, completion: nil)
 		}
+	}
+
+	func defaultLinkName() -> String {
+		guard let name = item.name else { return "" }
+		var linkName = String(format:"%@ %@ (%ld)", name, "Link".localized, (shares.count + 1))
+		if let defaultLinkName = core?.connection.capabilities?.publicSharingDefaultLinkName {
+			linkName = defaultLinkName
+		}
+
+		return linkName
 	}
 }

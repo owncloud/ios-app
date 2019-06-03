@@ -19,6 +19,7 @@
 import UIKit
 
 typealias StaticTableViewRowAction = (_ staticRow : StaticTableViewRow, _ sender: Any?) -> Void
+typealias StaticTableViewRowTextAction = (_ staticRow : StaticTableViewRow, _ sender: Any?, _ type: StaticTableViewRowActionType) -> Void
 typealias StaticTableViewRowEventHandler = (_ staticRow : StaticTableViewRow, _ event : StaticTableViewEvent) -> Void
 
 enum StaticTableViewRowButtonStyle {
@@ -41,6 +42,12 @@ enum StaticTableViewRowType {
 	case switchButton
 	case button
 	case datePicker
+}
+
+enum StaticTableViewRowActionType {
+	case changed
+	case didBegin
+	case didEnd
 }
 
 class StaticTableViewRow : NSObject, UITextFieldDelegate {
@@ -75,6 +82,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	public var action : StaticTableViewRowAction?
+	public var textFieldAction : StaticTableViewRowTextAction?
 	public var eventHandler : StaticTableViewRowEventHandler?
 
 	public var viewController: StaticTableViewController? {
@@ -345,7 +353,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	// MARK: - Text Field
 	public var textField : UITextField?
 
-	convenience init(textFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = UIControl.Event.editingChanged) {
+	convenience init(textFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = UIControl.Event.editingChanged) {
 		self.init()
 		type = .text
 
@@ -354,7 +362,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.selectionStyle = UITableViewCell.SelectionStyle.none
 
-		self.action = action
+		self.textFieldAction = action
 		self.value = textValue
 
 		let cellTextField : UITextField = UITextField()
@@ -369,6 +377,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cellTextField.autocapitalizationType = autocapitalizationType
 		cellTextField.enablesReturnKeyAutomatically = enablesReturnKeyAutomatically
 		cellTextField.returnKeyType = returnKeyType
+		cellTextField.inputAccessoryView = inputAccessoryView
 		cellTextField.text = textValue
 		cellTextField.accessibilityIdentifier = identifier
 
@@ -401,7 +410,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cellTextField.accessibilityLabel = accessibilityLabel
 	}
 
-	convenience init(secureTextFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = UIControl.Event.editingChanged) {
+	convenience init(secureTextFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = UIControl.Event.editingChanged) {
 		self.init(	textFieldWithAction: action,
 				placeholder: placeholderString,
 				value: textValue, secureTextEntry: true,
@@ -410,6 +419,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 				autocapitalizationType: autocapitalizationType,
 				enablesReturnKeyAutomatically: enablesReturnKeyAutomatically,
 				returnKeyType: returnKeyType,
+				inputAccessoryView: inputAccessoryView,
 				identifier : identifier,
 				accessibilityLabel: accessibilityLabel,
 				actionEvent: actionEvent)
@@ -419,7 +429,15 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	@objc func textFieldContentChanged(_ sender: UITextField) {
 		self.value = sender.text
 
-		self.action?(self, sender)
+		self.textFieldAction?(self, sender, .changed)
+	}
+
+	func textFieldDidBeginEditing(_ textField: UITextField) {
+		self.textFieldAction?(self, textField, .didBegin)
+	}
+
+	func textFieldDidEndEditing(_ textField: UITextField) {
+		self.textFieldAction?(self, textField, .didEnd)
 	}
 
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {

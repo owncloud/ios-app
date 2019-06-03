@@ -25,16 +25,45 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	var share : OCShare?
 	var core : OCCore?
 	var item : OCItem?
+	var defaultLinkName : String
+
 	var showSubtitles : Bool = false
 	var createLink : Bool = false
 	var permissionMask : OCSharePermissionsMask?
+	var activeTextField: UITextField?
+
+	lazy var inputToolbar: UIToolbar = {
+		var toolbar = UIToolbar()
+		toolbar.barStyle = .default
+		toolbar.isTranslucent = true
+		toolbar.sizeToFit()
+		let doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(resignTextField))
+		let flexibleSpaceBarButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+		toolbar.setItems([flexibleSpaceBarButtonItem, doneBarButtonItem], animated: false)
+		toolbar.isUserInteractionEnabled = true
+		return toolbar
+	}()
 
 	// MARK: - Init
+
+	internal init(share: OCShare?, core: OCCore?, item: OCItem?, defaultLinkName: String) {
+		self.share = share
+		self.core = core
+		self.item = item
+		self.defaultLinkName = defaultLinkName
+		super.init(style: .grouped)
+	}
+
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.navigationItem.title = share?.name!
+		if let linkName = share?.name {
+			self.navigationItem.title = linkName
+		}
 
 		let shareBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareLinkURL))
 		if item?.type == .collection {
@@ -77,11 +106,23 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	func addNameSection() {
 		let section = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "name-section")
 
-		let nameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (row, _) in
-			if let self = self, let core = self.core, !self.createLink {
-				guard let share = self.share, let name = row.textField?.text else { return }
+		guard let share = share else { return }
+
+		var linkName = ""
+		if let savedLinkName = share.name {
+			linkName = savedLinkName
+		}
+
+		let nameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (row, sender, action) in
+			if let self = self, let core = self.core, !self.createLink, action == .changed {
+				guard let newName = row.textField?.text else { return }
+				var linkName = newName
+				if linkName.count == 0 {
+					linkName = self.defaultLinkName
+					row.textField?.text = linkName
+				}
 				core.update(share, afterPerformingChanges: {(share) in
-					share.name = name
+					share.name = linkName
 				}, completionHandler: { (error, share) in
 					if error == nil {
 						guard let changedShare = share else { return }
@@ -96,8 +137,12 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						}
 					}
 				})
+			} else if action == .didBegin {
+				if let textField = sender as? UITextField {
+					self?.activeTextField = textField
+				}
 			}
-		}, placeholder: "Public Link".localized, value: (share?.name!)!, secureTextEntry: false, keyboardType: .default, autocorrectionType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "name-text-row", actionEvent: UIControl.Event.editingDidEnd)
+			}, placeholder: "Public Link".localized, value: linkName, secureTextEntry: false, keyboardType: .default, autocorrectionType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .done, inputAccessoryView: inputToolbar, identifier: "name-text-row", actionEvent: UIControl.Event.editingDidEnd)
 
 		section.add(row: nameRow)
 		self.addSection(section)
@@ -287,8 +332,8 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			passwordValue = password
 		}
 
-		let expireDateRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (_, sender) in
-			if let self = self, let core = self.core {
+		let expireDateRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (_, sender, action) in
+			if action == .changed, let self = self, let core = self.core {
 				guard let share = self.share, let textField = sender as? UITextField else { return }
 				if !self.createLink {
 					core.update(share, afterPerformingChanges: {(share) in
@@ -310,9 +355,13 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						}
 					})
 				}
+			} else if action == .didBegin {
+				if let textField = sender as? UITextField {
+					self?.activeTextField = textField
+				}
 			}
 
-		}, placeholder: "Type to update password".localized, value: passwordValue, keyboardType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "password-field-row", actionEvent: UIControl.Event.editingDidEnd)
+		}, placeholder: "Type to update password".localized, value: passwordValue, keyboardType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .done, inputAccessoryView: inputToolbar, identifier: "password-field-row", actionEvent: UIControl.Event.editingDidEnd)
 		passwordSection.add(row: expireDateRow)
 	}
 
@@ -589,5 +638,12 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				}
 			})
 		}
+	}
+
+	@objc func resignTextField (_ sender: UIBarButtonItem) {
+
+
+		//print("--> resignTextField \(sender.cont) ")
+		activeTextField?.resignFirstResponder()
 	}
 }
