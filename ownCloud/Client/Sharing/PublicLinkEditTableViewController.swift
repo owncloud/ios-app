@@ -190,6 +190,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 					if self.createLink {
 						self.permissionMask = newPermissions
+						self.preparePasswordSection(for: selectedValueFromSection)
 					} else {
 						if self.canPerformPermissionChange(for: selectedValueFromSection) {
 
