@@ -92,7 +92,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 		messageView = MessageView(add: self.view)
 
-		self.navigationItem.title = "Collaborators".localized
+		self.navigationItem.title = "Sharing".localized
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
 
 		addHeaderView()
@@ -196,7 +196,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 					if let actionSection = self?.sectionForIdentifier("action-section") {
 						self?.removeSection(actionSection)
 					}
-					}, title: "Invite Collaborator".localized, style: StaticTableViewRowButtonStyle.plain)
+					}, title: "Invite Recipient".localized, style: StaticTableViewRowButtonStyle.plain)
 
 				let section : StaticTableViewSection = StaticTableViewSection(headerTitle: " ", footerTitle: nil, identifier: "action-section", rows: [shareRow])
 
@@ -219,7 +219,11 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 					return share.recipient?.user?.userName == filterShare.owner?.userName
 				}
 
-				if let recipient = share.recipient {
+				if let recipient = share.recipient, var displayName = recipient.displayName {
+					if recipient.user?.userName == core?.connection.loggedInUser?.userName {
+						displayName = "You".localized
+					}
+
 					if canEdit(share: share) {
 						let shareRow = StaticTableViewRow(rowWithAction: { [weak self] (row, _) in
 							guard let self = self, let core = self.core else { return }
@@ -232,13 +236,13 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 							}
 
 							self.navigationController?.pushViewController(editSharingViewController, animated: true)
-						}, title: recipient.displayName!, subtitle: share.permissionDescription, image: recipient.user?.avatar, accessoryType: .disclosureIndicator)
+						}, title: displayName, subtitle: share.permissionDescription, image: recipient.user?.avatar, accessoryType: .disclosureIndicator)
 
 						shareRow.representedObject = share
 
 						shareRows.append(shareRow)
 					} else {
-						let shareRow = StaticTableViewRow(rowWithAction: nil, title: recipient.displayName ?? recipient.identifier ?? "-", subtitle: share.permissionDescription, image: recipient.user?.avatar, accessoryType: .none)
+						let shareRow = StaticTableViewRow(rowWithAction: nil, title: displayName, subtitle: share.permissionDescription, image: recipient.user?.avatar, accessoryType: .none)
 
 						shareRow.representedObject = share
 
@@ -388,7 +392,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 				if let section = self.searchResultsSection {
 					self.removeSection(section)
 				}
-				let searchResultsSection = StaticTableViewSection(headerTitle: "Invite Collaborator".localized, footerTitle: nil, identifier: "search-results", rows: rows)
+				let searchResultsSection = StaticTableViewSection(headerTitle: "Invite Recipient".localized, footerTitle: nil, identifier: "search-results", rows: rows)
 				self.searchResultsSection = searchResultsSection
 
 				self.addSection(searchResultsSection)
@@ -422,7 +426,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 						presentationStyle = .alert
 					}
 
-					let alertController = UIAlertController(title: "Delete Collaborator".localized, message: nil, preferredStyle: presentationStyle)
+					let alertController = UIAlertController(title: "Remove Recipient".localized, message: nil, preferredStyle: presentationStyle)
 
 					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 					alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
@@ -432,7 +436,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 									self.navigationController?.popViewController(animated: true)
 								} else {
 									if let shareError = error {
-										let alertController = UIAlertController(with: "Delete Collaborator failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = UIAlertController(with: "Remove Recipient failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}

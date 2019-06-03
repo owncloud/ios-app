@@ -361,9 +361,9 @@ private extension Action {
 			}
 
 			if privateShares.count > 0 {
-				var title = "Collaborator".localized
+				var title = "Recipient".localized
 				if privateShares.count > 1 {
-					title = "Collaborators".localized
+					title = "Recipients".localized
 				}
 				userTitle = "\(privateShares.count) \(title)"
 				hasUserGroupSharing = true
@@ -430,7 +430,7 @@ private extension Action {
 							 andPresent: GroupSharingTableViewController(core: core, item: item),
 							 on: context.viewController)
 			}
-		}, title: "Invite Collaborators".localized, style: .plain, image: UIImage(named: "group"), imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: "share-add-group")
+		}, title: "Invite Recipients".localized, style: .plain, image: UIImage(named: "group"), imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: "share-add-group")
 
 		return addGroupRow
 	}
