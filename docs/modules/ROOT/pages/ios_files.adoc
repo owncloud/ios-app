@@ -18,7 +18,7 @@ These are:
 image:21_File_list_annotated.png[Overview of the ownCloud iOS App's files view.]
 
 Click on a file to view it and click on a folder to view its contents.
-To view further actions available for a file or folder, click the “three dots” icon on the far right-hand side.
+To view further actions available for a file or folder, click the _More_ icon on the far right-hand side.
 
 == File Actions
 

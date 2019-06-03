@@ -52,7 +52,7 @@ We recommend that you set it to a verbose level such as either `debug` or `info`
 .Configuring logging in ownCloud server.
 image:owncloud-log-configuration.png[Configuring logging in ownCloud server.]
 
-=== Webserver Log Files
+=== Web Server Log Files
 
 It can be helpful to view your web server's error log file to isolate any ownCloud-related problems.
 Some helpful files include the following:
@@ -69,12 +69,9 @@ Below, you can find where the error logs are typically located, based on operati
 |File Location
 
 .3+|Linux
-|Apache
-|`/var/log/apache2`
-|NGINX
-|`/var/log/nginx`
-|Lighttpd
-|`/var/log/lighttpd`
+|Apache |`/var/log/apache2`
+|NGINX |`/var/log/nginx`
+|Lighttpd |`/var/log/lighttpd`
 
 .2+|Windows
 |Apache
