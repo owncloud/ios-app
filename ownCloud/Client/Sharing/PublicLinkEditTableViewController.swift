@@ -397,7 +397,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						guard let share = self.share, let datePicker = sender as? UIDatePicker else { return }
 						core.update(share, afterPerformingChanges: {(share) in
 							if expireDateSwitch.isEnabled {
-								share.expirationDate = Date()
+								share.expirationDate = self.defaultExpireDate()
 							} else {
 								share.expirationDate = nil
 							}
@@ -438,14 +438,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	}
 
 	func expireDateRow(_ expireSection : StaticTableViewSection) {
-		var expireDate = Date()
-		if let date = share?.expirationDate {
-			expireDate = date
-		} else if self.core?.connection.capabilities?.publicSharingExpireDateEnabled == true, let defaultDays = self.core?.connection.capabilities?.publicSharingDefaultExpireDateDays {
-			if let newDate = Calendar.current.date(byAdding: .day, value: defaultDays.intValue, to: expireDate) {
-				expireDate = newDate
-			}
-		}
+		let expireDate = defaultExpireDate()
 
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateStyle = .long
@@ -493,6 +486,9 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					}
 				}, date: expireDate, identifier: "date-picker-row")
 				expireSection.add(row: datePickerRow, animated: true)
+				if let indexPath = datePickerRow.indexPath {
+					self?.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+				}
 			} else {
 				if let datePickerRow = expireSection.row(withIdentifier: "date-picker-row") {
 					expireSection.remove(rows: [datePickerRow], animated: true)
@@ -641,9 +637,22 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	}
 
 	@objc func resignTextField (_ sender: UIBarButtonItem) {
-
-
-		//print("--> resignTextField \(sender.cont) ")
 		activeTextField?.resignFirstResponder()
+	}
+
+	func defaultExpireDate() -> Date {
+		var expireDate = Date()
+		if let newDate = Calendar.current.date(byAdding: .day, value: 7, to: expireDate) {
+			expireDate = newDate
+		}
+		if let date = share?.expirationDate {
+			expireDate = date
+		} else if self.core?.connection.capabilities?.publicSharingExpireDateEnabled == true, let defaultDays = self.core?.connection.capabilities?.publicSharingDefaultExpireDateDays {
+			if let newDate = Calendar.current.date(byAdding: .day, value: defaultDays.intValue, to: expireDate) {
+				expireDate = newDate
+			}
+		}
+
+		return expireDate
 	}
 }
