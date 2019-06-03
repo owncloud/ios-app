@@ -1,38 +1,34 @@
 = Quick Access
 :toc: right
+:keywords: shares, collection, recently access files, quick access, ownCloud, iOS, iPhone, iPad
+:description: This guide steps you through how to use the Quick Access functionality of ownCloud's Mobile App for iOS.
 
-image:51_Quick_access.png[51_Quick_access.png]
+The app allows you to quickly access the key aspects of the application, by clicking btn:[Quick Access], located in the footer of the application.
 
-== Shared With You
+image:quick-access-view.png[Get quick access to the most important parts of ownCloud's iOS App for iPhone and iPad.]
 
-* See a list of all resources you accepted from other users.
+Quick access is broken down into two sections: _Shares_ and _Collection_.
 
-=== Pending
+== Shares
 
-* Accept or decline shares (if enabled on oC server 10.0.9+)
+Shares, as the name implies, lets you quickly see all files that are:
 
-== Shared with others
+Shared with you:: See a list of all resources you accepted from other users.
+Shared with others:: See a list of all resources where you invited collaborators.
+Public links:: See a list of all resources where you created links.
 
-* See a list of all resources where you invited collaborators.
+== Collection
 
-== Links
+Collection gives you quick access to:
 
-* See a list of all resources where you created links.
+Recently accessed files::
+These are files that were used sometime within the previous week, where used covers when it was imported, locally update, or was download.
 
-== Collections
+Files marked as favorite::
+See a list of all resources in your account set as favourite.
 
-=== Recents
+Image files::
+See a list of all image files in your account.
 
- That view shows all items whose lastUsed date falls within a one week interval. (defined as: Date of last use: updated on local import, local update, download - and via lastModified if that date is more recent.)
-
-=== Favorites
-
-* See a list of all resources in your account set as favourite.
-
-=== Images
-
-* See a list of all resources from type image.
-
-=== PDF
-
-* See a list of all PDF in your account.
+PDF files::
+See a list of all PDF files in your account.
