@@ -380,7 +380,6 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		let expireSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "expire-section")
 
 		if needsExpireDate == false {
-
 			let expireDateRow = StaticTableViewRow(switchWithAction: { [weak self, weak expireSection] (_, sender) in
 				if let self = self, let expireSection = expireSection, let expireDateSwitch = sender as? UISwitch {
 					if expireDateSwitch.isOn == false, let expireDateRow = expireSection.row(withIdentifier: "expire-date-row") {
@@ -394,26 +393,29 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					}
 
 					if !self.createLink, let core = self.core {
-						guard let share = self.share, let datePicker = sender as? UIDatePicker else { return }
+						guard let share = self.share else { return }
 						core.update(share, afterPerformingChanges: {(share) in
-							if expireDateSwitch.isEnabled {
-								share.expirationDate = self.defaultExpireDate()
+							if expireDateSwitch.isOn {
+								if let datePicker = sender as? UIDatePicker {
+									share.expirationDate = datePicker.date
+								} else {
+									share.expirationDate = self.defaultExpireDate()
+								}
 							} else {
 								share.expirationDate = nil
 							}
-
 						}, completionHandler: { [weak self] (error, share) in
 							guard let self = self else { return }
 							if error == nil {
 								guard let changedShare = share else { return }
 								self.share?.expirationDate = changedShare.expirationDate
 
-								if let expireDateRow = expireSection.row(withIdentifier: "expire-date-row") {
+								if let expireDateRow = expireSection.row(withIdentifier: "expire-date-row"), let expirationDate = changedShare.expirationDate {
 									OnMainThread {
 										let dateFormatter = DateFormatter()
 										dateFormatter.dateStyle = .medium
 										dateFormatter.timeStyle = .none
-										expireDateRow.cell?.textLabel?.text = dateFormatter.string(from: datePicker.date)
+										expireDateRow.cell?.textLabel?.text = dateFormatter.string(from: expirationDate)
 									}
 								}
 							} else {
