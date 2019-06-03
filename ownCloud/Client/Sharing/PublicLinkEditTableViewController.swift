@@ -92,8 +92,8 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			let cancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissAnimated))
 			self.navigationItem.leftBarButtonItem = cancel
 
-			let save = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(createPublicLink))
-			self.navigationItem.rightBarButtonItem = save
+			let create = UIBarButtonItem(title: "Create".localized, style: .done, target: self, action: #selector(createPublicLink))
+			self.navigationItem.rightBarButtonItem = create
 
 			permissionMask = .read
 		} else {
