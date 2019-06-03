@@ -1,4 +1,6 @@
 = The Mobile App for iOS
+:keywords: ownCloud, iOS, iPhone, iPad
+:description: ownCloud's Mobile App for iOS offers several key advantages over the web interface. This guide steps you through how to install, configure, use, and troubleshoot it.
 
 Accessing your files on your ownCloud server via the Web interface is easy and convenient.
 You can use any web browser on any operating system without installing special client software.

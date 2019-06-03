@@ -1,5 +1,7 @@
 = Troubleshooting
 :toc: right
+:keywords: troubleshooting, logging, debugging, mitmproxy, charles for iOS, ownCloud, iOS, iPhone, iPad
+:description: This guide steps you through how to troubleshoot issues with ownCloud's iOS App for iPhone and iPad. Specifically, it shows how to configure logging, and troubleshoot using mitmproxy and Charles for iOS.
 :apache-logging-url: http://httpd.apache.org/docs/current/logs.html
 :charles-web-debugging-proxy-url: https://www.charlesproxy.com/documentation/ios/
 :create-screen-recording-url: https://support.apple.com/en-us/HT207935
