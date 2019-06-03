@@ -427,6 +427,10 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 								}
 							}
 						})
+					} else if self.createLink {
+						if let row = self.rowInSection(expireSection, rowIdentifier: "expire-date-row") {
+							row.representedObject = self.defaultExpireDate()
+						}
 					}
 				}
 			}, title: "Expiration date".localized, value: hasExpireDate, identifier: "expire-row")
