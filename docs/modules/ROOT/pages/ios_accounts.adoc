@@ -1,6 +1,8 @@
 = Managing User Accounts
 :toc: right
 :toclevels: 1
+:keywords: user accounts, OAuth2 authentication, basic authentication, ownCloud iOS App
+:description: This guide steps you through how to manage user accounts in ownCloud’s iOS app; including the authentication types, and how to add, update, remove, and delete user accounts.
 :sfauthenticationsession-url: https://developer.apple.com/documentation/safariservices/sfauthenticationsession
 :rfc-8252-url: https://tools.ietf.org/html/rfc8252#appendix-B.1
 
@@ -34,7 +36,7 @@ Additionally, OAuth2 is the industry standard authorisation method, and the user
 
 == Add An Account
 
-image:04_Account_1x.png[]
+image:04_Account_1x.png[Add a user account in the ownCloud iOS App.]
 
 To add one or more user accounts to the iOS app, when in the "*Accounts*" view, click the plus (+) icon in the top right-hand corner.
 This opens the "*Add Account*" dialog, where you can enter the URL of the ownCloud server. 
@@ -42,13 +44,13 @@ After you enter it and click "Continue", the iOS app checks the authentication m
 
 If the certificate is deemed to be valid, you will see a green "*Passed*" symbol near the bottom of the page, next to "*Certificate Details*", and the text "*No issues found. Certificate passed validation.*"
 
-image:add-account-certificate-passed-validation.png[]
+image:add-account-certificate-passed-validation.png[Authenticate a user account using OAuth2 in the ownCloud iOS App.]
 
 Click btn:[Continue] and the app will prompt you if you want to use the supplied server URL to sign in to the app.
 You will then be redirected to the ownCloud server, where you can supply your username and password.
 After doing so, and submitting the form, you will then be asked if you want to give permission for the app to access your account. 
 
-image:14_OAuth_Web_view_authorize.png[]
+image:14_OAuth_Web_view_authorize.png[Authorize a user account against an ownCloud server with the ownCloud iOS App.]
 
 If so, click btn:[Authorize]. 
 If not, click btn:[Cancel].
@@ -84,8 +86,8 @@ How the authentication credentials can be managed depends on the authentication 
 
 |In the screenshot below, the user is authenticated using Basic Authentication.
 In this instance, they will be able to update their username and password, as well as delete their authentication data.
-image:07_Account_edit.png[07_Account_edit.png]
+image:07_Account_edit.png[ownCloud iOS App - Authenticating users using Basic Authentication]
 |In the screenshot above, the user is authenticated using OAuth2 authentication.
 In this instance, they will only be able to delete their authentication data.
-image:edit-oauth2-authenticated-account.png[]
+image:edit-oauth2-authenticated-account.png[ownCloud iOS App - Authenticating users using OAuth2 Authentication]
 |===
