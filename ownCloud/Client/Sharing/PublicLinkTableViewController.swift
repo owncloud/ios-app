@@ -161,7 +161,16 @@ class PublicLinkTableViewController: SharingTableViewController {
 						let privateLinkRow = StaticTableViewRow(buttonWithAction: { (row, _) in
 							UIPasteboard.general.url = url
 							row.cell?.textLabel?.text = url.absoluteString
-						}, title: "Copy Private Link", style: .plain)
+							row.cell?.textLabel?.font = UIFont.systemFont(ofSize: 15.0)
+							row.cell?.textLabel?.textColor = Theme.shared.activeCollection.tableRowColors.secondaryLabelColor
+							row.cell?.textLabel?.numberOfLines = 0
+							DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+								row.cell?.textLabel?.text = "Copy Private Link".localized
+								row.cell?.textLabel?.font = UIFont.systemFont(ofSize: 17.0)
+								row.cell?.textLabel?.textColor = Theme.shared.activeCollection.tintColor
+								row.cell?.textLabel?.numberOfLines = 1
+							}
+						}, title: "Copy Private Link".localized, style: .plain)
 						rows.append(privateLinkRow)
 
 						section.add(rows: rows)
