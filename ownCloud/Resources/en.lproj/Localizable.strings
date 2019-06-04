@@ -348,6 +348,9 @@
 "Declined" = "Declined";
 "Decline Share" = "Decline Share";
 "Unshare" = "Unshare";
+"Unshare failed" = "Unshare failed";
+"Are you sure you want to unshare these items?" = "Are you sure you want to unshare these items?";
+"Are you sure you want to unshare this item?" = "Are you sure you want to unshare this item?";
 "Share" = "Share";
 "Read" = "Read";
 "Can Share" = "Can Share";

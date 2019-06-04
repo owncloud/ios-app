@@ -1,13 +1,13 @@
 //
-//  DeleteAction.swift
+//  UnshareAction.swift
 //  ownCloud
 //
-//  Created by Pablo Carrascal on 12/11/2018.
-//  Copyright © 2018 ownCloud GmbH. All rights reserved.
+//  Created by Matthias Hühne on 04/04/2019.
+//  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
+* Copyright (C) 2019, ownCloud GmbH.
 *
 * This code is covered by the GNU Public License Version 3.
 *
@@ -18,16 +18,16 @@
 
 import ownCloudSDK
 
-class DeleteAction : Action {
-	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.delete") }
+class UnshareAction : Action {
+	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.unshare") }
 	override class var category : ActionCategory? { return .destructive }
-	override class var name : String? { return "Delete".localized }
+	override class var name : String? { return "Unshare".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .tableRow, .moreFolder, .toolbar] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		let sharedItems = forContext.items.filter({ (item) -> Bool in
-			if !item.isSharedWithUser {
+			if item.isSharedWithUser {
 				return true
 			}
 			return false
@@ -50,9 +50,9 @@ class DeleteAction : Action {
 
 		let message: String
 		if items.count > 1 {
-			message = "Are you sure you want to delete these items from the server?".localized
+			message = "Are you sure you want to unshare these items?".localized
 		} else {
-			message = "Are you sure you want to delete this item from the server?".localized
+			message = "Are you sure you want to unshare this item?".localized
 		}
 
 		let itemDescripton: String?
@@ -67,15 +67,21 @@ class DeleteAction : Action {
 			return
 		}
 
-		let deleteItemAndPublishProgress = { (items: [OCItem]) in
+		let unshareItemAndPublishProgress = { (items: [OCItem]) in
 			for item in items {
-				if let progress = self.core?.delete(item, requireMatch: true, resultHandler: { (error, _, _, _) in
-					if error != nil {
-						Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
+				_ = self.core?.sharesSharedWithMe(for: item, initialPopulationHandler: { (shares) in
+					let userGroupShares = shares.filter { (share) -> Bool in
+						return share.type != .link
 					}
-				}) {
-					self.publish(progress: progress)
-				}
+					if let share = userGroupShares.first, let progress = self.core?.makeDecision(on: share, accept: false, completionHandler: { (error) in
+						if error != nil {
+							Log.log("Error \(String(describing: error)) unshare \(String(describing: item.path))")
+						}
+					}) {
+						self.publish(progress: progress)
+					}
+
+				}, keepRunning: false)
 			}
 
 			self.completed()
@@ -84,10 +90,10 @@ class DeleteAction : Action {
 		let alertController = UIAlertController(
 			with: name,
 			message: message,
-			destructiveLabel: "Delete".localized,
+			destructiveLabel: "Unshare".localized,
 			preferredStyle: UIDevice.current.isIpad() ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
 			destructiveAction: {
-				deleteItemAndPublishProgress(items)
+				unshareItemAndPublishProgress(items)
 		})
 
 		viewController.present(alertController, animated: true)
