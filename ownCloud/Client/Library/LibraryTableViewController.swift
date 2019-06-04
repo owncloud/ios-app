@@ -174,10 +174,9 @@ class LibraryTableViewController: StaticTableViewController {
 		self.add(view: LibraryShareView(identifier: .sharedWithYou, title: "Shared with you".localized, image: UIImage(named: "group")!))
 		self.add(view: LibraryShareView(identifier: .publicLinks, title: "Public Links".localized, image: UIImage(named: "link")!))
 		self.add(view: LibraryShareView(identifier: .pending, title: "Pending Invites".localized, image: UIImage(named: "group")!))
-
 	}
 
-	func updateView(identifier: LibraryShareView.Identifier, with shares: [OCShare]?) {
+	func updateView(identifier: LibraryShareView.Identifier, with shares: [OCShare]?, badge: Int? = 0) {
 		if let view = viewsByIdentifier[identifier] {
 			let shares = shares ?? []
 
@@ -188,9 +187,9 @@ class LibraryTableViewController: StaticTableViewController {
 				if view.row == nil, let core = core {
 					var badgeLabel : RoundedLabel?
 
-					if view.showBadge {
+					if view.showBadge, let badge = badge, badge > 0 {
 						badgeLabel = RoundedLabel()
-						badgeLabel?.update(text: "\(shares.count)", textColor: UIColor.white, backgroundColor: UIColor.red)
+						badgeLabel?.update(text: "\(badge)", textColor: UIColor.white, backgroundColor: UIColor.red)
 					}
 
 					view.row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
@@ -225,9 +224,9 @@ class LibraryTableViewController: StaticTableViewController {
 					if let row = view.row {
 						shareSection?.add(row: row, animated: true)
 					}
-				} else if view.showBadge {
+				} else if view.showBadge, let badge = badge, badge > 0 {
 					guard let accessoryView = view.row?.additionalAccessoryView as? RoundedLabel else { return }
-					accessoryView.update(text: "\(shares.count)", textColor: UIColor.white, backgroundColor: UIColor.red)
+					accessoryView.update(text: "\(badge)", textColor: UIColor.white, backgroundColor: UIColor.red)
 				}
 			} else {
 				if let row = view.row {
@@ -308,7 +307,7 @@ class LibraryTableViewController: StaticTableViewController {
 		}).count
 
 		OnMainThread {
-			self.updateView(identifier: .pending, with: sharedWithUserPending)
+			self.updateView(identifier: .pending, with: sharedWithUserPending, badge: self.pendingSharesCounter)
 		}
 	}
 

@@ -24,18 +24,26 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 	// MARK: - Instance Variables
 	override var shares : [OCShare] {
 		didSet {
-			let meShares = shares.filter { (share) -> Bool in
-				return (share.recipient?.user?.userName == core?.connection.loggedInUser?.userName && share.canShare) ||
-				       (share.itemOwner?.userName == core?.connection.loggedInUser?.userName && share.canShare)
+			let recipientShares = shares.filter { (share) -> Bool in
+				return (share.recipient?.user?.userName == core?.connection.loggedInUser?.userName && share.canShare)
 			}
-			if meShares.count > 0 {
-				meCanShareItem = true
+			 if recipientShares.count > 0, item.isShareable, core?.connection.capabilities?.sharingResharing == true {
+				recipientCanShare = true
 			}
 		}
 	}
+	var ownerCanShare : Bool {
+		if item.isShareable {
+			if item.isSharedWithUser == false {
+				return true
+			}
+		}
+
+		return false
+	}
 	var searchController : UISearchController?
 	var recipientSearchController : OCRecipientSearchController?
-	var meCanShareItem : Bool = false
+	var recipientCanShare : Bool = false
 	var shouldStartSearch : Bool = false
 	var defaultPermissions : OCSharePermissionsMask {
 		let meShares = shares.filter { (share) -> Bool in
@@ -58,14 +66,6 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	override public init(core inCore: OCCore, item inItem: OCItem) {
 		super.init(core: inCore, item: inItem)
-
-		if item.isShareable {
-			if item.isSharedWithUser == false {
-				meCanShareItem = true
-			} else if item.isSharedWithUser, core?.connection.capabilities?.sharingResharing == true {
-				meCanShareItem = true
-			}
-		}
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -75,7 +75,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		if meCanShareItem {
+		if ownerCanShare || recipientCanShare {
 			searchController = UISearchController(searchResultsController: nil)
 			searchController?.searchResultsUpdater = self
 			searchController?.hidesNavigationBarDuringPresentation = true

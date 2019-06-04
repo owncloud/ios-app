@@ -145,7 +145,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 						})
 					}
 				}
-				}, title: item?.type == .collection ? "Can Edit".localized : "Can Edit".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
+				}, title: item?.type == .collection ? "Can Edit".localized : "Can Edit and Change".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
 		}
 
 		let subtitles = [
