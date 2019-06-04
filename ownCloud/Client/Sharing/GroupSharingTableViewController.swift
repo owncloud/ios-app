@@ -191,12 +191,16 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			}
 		} else {
 			OnMainThread {
+				var title = "Share this file".localized
+				if self.item.type == .collection {
+					title = "Share this folder".localized
+				}
 				let shareRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
 					self?.activateRecipienSearch()
 					if let actionSection = self?.sectionForIdentifier("action-section") {
 						self?.removeSection(actionSection)
 					}
-					}, title: "Invite Recipient".localized, style: StaticTableViewRowButtonStyle.plain)
+					}, title: title, style: StaticTableViewRowButtonStyle.plain)
 
 				let section : StaticTableViewSection = StaticTableViewSection(headerTitle: " ", footerTitle: nil, identifier: "action-section", rows: [shareRow])
 

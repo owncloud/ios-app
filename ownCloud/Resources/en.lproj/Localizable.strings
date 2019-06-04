@@ -364,6 +364,8 @@
 "Decline cannot be undone." = "Decline cannot be undone.";
 "Sharing" = "Sharing";
 "You" = "You";
+"Share this file" = "Share this file";
+"Share this folder" = "Share this folder";
 
 /* Quick Access view */
 "Quick Access" = "Quick Access";

@@ -424,13 +424,17 @@ private extension Action {
 	}
 
 	private class func shareAsGroupRow(item : OCItem, presentingController: UIViewController, context: ActionContext) -> StaticTableViewRow {
+		var title = "Share this file".localized
+		if item.type == .collection {
+			title = "Share this folder".localized
+		}
 		let addGroupRow = StaticTableViewRow(buttonWithAction: { [weak presentingController, weak context] (_, _) in
 			if let context = context, let presentingController = presentingController, let core = context.core {
 				self.dismiss(presentingController: presentingController,
 							 andPresent: GroupSharingTableViewController(core: core, item: item),
 							 on: context.viewController)
 			}
-		}, title: "Invite Recipients".localized, style: .plain, image: UIImage(named: "group"), imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: "share-add-group")
+		}, title: title, style: .plain, image: UIImage(named: "group"), imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: "share-add-group")
 
 		return addGroupRow
 	}
