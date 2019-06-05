@@ -93,6 +93,29 @@ extension OCCore {
 		return nil
 	}
 
+	@discardableResult func acceptedCloudShares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, keepRunning: Bool = false) -> OCShareQuery? {
+		if let shareQuery = OCShareQuery(scope: .acceptedCloudShares, item: item) {
+			shareQuery.initialPopulationHandler = { [weak self] query in
+				let shares = query.queryResults.filter({ (share) -> Bool in
+					if share.itemPath == item.path {
+						return true
+					}
+					return false
+				})
+				initialPopulationHandler(shares)
+
+				if !keepRunning {
+					self?.stop(query)
+				}
+			}
+			start(shareQuery)
+
+			return keepRunning ? shareQuery : nil
+		}
+
+		return nil
+	}
+
 	@discardableResult func sharesWithReshares(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, changesAvailableNotificationHandler: @escaping (_ shares: [OCShare]) -> Void, keepRunning: Bool) -> OCShareQuery? {
 		if let shareQuery = OCShareQuery(scope: .itemWithReshares, item: item) {
 			shareQuery.initialPopulationHandler = { [weak self] query in
