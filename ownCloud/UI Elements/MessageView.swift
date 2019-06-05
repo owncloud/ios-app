@@ -28,6 +28,8 @@ class MessageView: UIView {
 	var messageMessageLabel : UILabel?
 	var messageThemeApplierToken : ThemeApplierToken?
 	var composeViewBottomConstraint: NSLayoutConstraint!
+	private var compactConstraints: [NSLayoutConstraint] = []
+	private var regularConstraints: [NSLayoutConstraint] = []
 	var keyboardHeight : CGFloat = 0
 
 	init(add to: UIView) {
@@ -37,6 +39,8 @@ class MessageView: UIView {
 		// Observe keyboard change
 		NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(self.rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
+
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -47,6 +51,7 @@ class MessageView: UIView {
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
 		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+		NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
 		if messageThemeApplierToken != nil {
 			Theme.shared.remove(applierForToken: messageThemeApplierToken)
 			messageThemeApplierToken = nil
@@ -91,26 +96,23 @@ class MessageView: UIView {
 			containerView.addSubview(titleLabel)
 			containerView.addSubview(messageLabel)
 
-			containerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[imageView]-(20)-[titleLabel]-[messageLabel]|",
-										    options: NSLayoutConstraint.FormatOptions(rawValue: 0),
-										    metrics: nil,
-										    views: ["imageView" : imageView, "titleLabel" : titleLabel, "messageLabel" : messageLabel])
-			)
-
 			rootView.addSubview(containerView)
 
-			NSLayoutConstraint.activate([
+			regularConstraints.append(contentsOf: [
 				imageView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+				imageView.bottomAnchor.constraint(equalTo: containerView.centerYAnchor),
 				imageView.widthAnchor.constraint(equalToConstant: 96),
 				imageView.heightAnchor.constraint(equalToConstant: 96),
 
 				titleLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
 				titleLabel.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor),
 				titleLabel.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor),
+				titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
 
 				messageLabel.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
 				messageLabel.leftAnchor.constraint(greaterThanOrEqualTo: containerView.leftAnchor),
 				messageLabel.rightAnchor.constraint(lessThanOrEqualTo: containerView.rightAnchor),
+				messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
 
 				containerView.centerXAnchor.constraint(equalTo: rootView.centerXAnchor),
 				containerView.centerYAnchor.constraint(equalTo: rootView.centerYAnchor),
@@ -119,7 +121,32 @@ class MessageView: UIView {
 				containerView.rightAnchor.constraint(lessThanOrEqualTo: rootView.rightAnchor, constant: -20),
 				containerView.topAnchor.constraint(greaterThanOrEqualTo: rootView.topAnchor, constant: 20),
 				containerView.bottomAnchor.constraint(lessThanOrEqualTo: rootView.bottomAnchor, constant: -20)
-			])
+				])
+
+			compactConstraints.append(contentsOf: [
+				imageView.leftAnchor.constraint(equalTo: containerView.leftAnchor),
+				imageView.widthAnchor.constraint(equalToConstant: 96),
+				imageView.heightAnchor.constraint(equalToConstant: 96),
+				imageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+
+				titleLabel.leftAnchor.constraint(equalTo: imageView.rightAnchor, constant: 20),
+				titleLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor),
+				titleLabel.topAnchor.constraint(equalTo: imageView.topAnchor),
+
+				messageLabel.leftAnchor.constraint(equalTo: titleLabel.leftAnchor),
+				messageLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor),
+				messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
+
+				containerView.centerXAnchor.constraint(equalTo: rootView.centerXAnchor),
+				containerView.centerYAnchor.constraint(equalTo: rootView.centerYAnchor),
+
+				containerView.leftAnchor.constraint(greaterThanOrEqualTo: rootView.leftAnchor, constant: 20),
+				containerView.rightAnchor.constraint(lessThanOrEqualTo: rootView.rightAnchor, constant: -20),
+				containerView.topAnchor.constraint(greaterThanOrEqualTo: rootView.topAnchor, constant: 20),
+				containerView.bottomAnchor.constraint(lessThanOrEqualTo: rootView.bottomAnchor, constant: -20)
+				])
+
+			render()
 
 			messageView = rootView
 			messageContainerView = containerView
@@ -175,6 +202,23 @@ class MessageView: UIView {
 		}
 		if message != nil {
 			messageMessageLabel?.text = message!
+		}
+	}
+
+	@objc func rotated() {
+		render()
+	}
+
+	func render() {
+		switch UIScreen.main.traitCollection.verticalSizeClass {
+		case .regular:
+			NSLayoutConstraint.deactivate(compactConstraints)
+			NSLayoutConstraint.activate(regularConstraints)
+		case .compact:
+			NSLayoutConstraint.deactivate(regularConstraints)
+			NSLayoutConstraint.activate(compactConstraints)
+		default:
+			break
 		}
 	}
 
