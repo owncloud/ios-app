@@ -80,13 +80,13 @@ class PublicLinkTableViewController: SharingTableViewController {
 						guard let self = self, let core = self.core else { return }
 						let editPublicLinkViewController = PublicLinkEditTableViewController(share: share, core: core, item: self.item, defaultLinkName: self.defaultLinkName())
 						self.navigationController?.pushViewController(editPublicLinkViewController, animated: true)
-					}, title: linkName, subtitle: share.permissionDescription, accessoryType: .disclosureIndicator)
+					}, title: linkName, subtitle: share.permissionDescription(for: core?.connection.capabilities), accessoryType: .disclosureIndicator)
 
 					shareRow.representedObject = share
 
 					shareRows.append(shareRow)
 				} else {
-					let shareRow = StaticTableViewRow(rowWithAction: nil, title: share.name!, subtitle: share.permissionDescription, accessoryType: .none)
+					let shareRow = StaticTableViewRow(rowWithAction: nil, title: share.name!, subtitle: share.permissionDescription(for: core?.connection.capabilities), accessoryType: .none)
 
 					shareRow.representedObject = share
 

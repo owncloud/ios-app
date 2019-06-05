@@ -21,7 +21,7 @@ import ownCloudSDK
 
 extension OCShare {
 
-	var permissionDescription : String {
+	func permissionDescription(for capabilities: OCCapabilities?) -> String {
 		var permissionsDescription : [String] = []
 
 		if self.type == .link {
@@ -51,7 +51,7 @@ extension OCShare {
 			if self.canRead {
 				permissionsDescription.append("Read".localized)
 			}
-			if self.canShare {
+			if self.canShare, capabilities?.sharingResharing == true, capabilities?.sharingAPIEnabled == true, capabilities?.sharingAllowed == true {
 				permissionsDescription.append("Share".localized)
 			}
 			if self.canCreate {

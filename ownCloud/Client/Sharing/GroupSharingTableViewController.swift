@@ -240,13 +240,13 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 							}
 
 							self.navigationController?.pushViewController(editSharingViewController, animated: true)
-						}, title: displayName, subtitle: share.permissionDescription, image: recipient.user?.avatar, accessoryType: .disclosureIndicator)
+						}, title: displayName, subtitle: share.permissionDescription(for: core?.connection.capabilities), image: recipient.user?.avatar, accessoryType: .disclosureIndicator)
 
 						shareRow.representedObject = share
 
 						shareRows.append(shareRow)
 					} else {
-						let shareRow = StaticTableViewRow(rowWithAction: nil, title: displayName, subtitle: share.permissionDescription, image: recipient.user?.avatar, accessoryType: .none)
+						let shareRow = StaticTableViewRow(rowWithAction: nil, title: displayName, subtitle: share.permissionDescription(for: core?.connection.capabilities), image: recipient.user?.avatar, accessoryType: .none)
 
 						shareRow.representedObject = share
 

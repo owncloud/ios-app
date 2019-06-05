@@ -282,7 +282,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 					guard let self = self else { return }
 					let editSharingViewController = GroupSharingEditTableViewController(core: core, item: item, share: share, possiblePermissions: self.possiblePermissionMask)
 					self.navigationController?.pushViewController(editSharingViewController, animated: true)
-				}, title: share.recipient!.displayName!, subtitle: share.permissionDescription, accessoryType: .disclosureIndicator) )
+				}, title: share.recipient!.displayName!, subtitle: share.permissionDescription(for: core.connection.capabilities), accessoryType: .disclosureIndicator) )
 			}
 
 			let section = StaticTableViewSection(headerTitle: "Shared with".localized, footerTitle: nil, rows: shareRows)
