@@ -29,6 +29,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 		}
 	}
 	weak var core : OCCore?
+	weak var libraryViewController : LibraryTableViewController?
 	var messageView : MessageView?
 	private static let imageWidth : CGFloat = 50
 	private static let imageHeight : CGFloat = 50
@@ -196,6 +197,8 @@ class PendingSharesTableViewController: StaticTableViewController {
 							let alertController = UIAlertController(with: (accept ? "Accept Share failed".localized : "Decline Share failed".localized), message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 							strongSelf.present(alertController, animated: true)
 						}
+					} else if let libraryViewController = strongSelf.libraryViewController {
+						libraryViewController.reloadQueries()
 					}
 				}
 			})

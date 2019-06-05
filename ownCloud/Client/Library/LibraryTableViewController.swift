@@ -89,6 +89,12 @@ class LibraryTableViewController: StaticTableViewController {
 		startedQueries.append(query)
 	}
 
+	func reloadQueries() {
+		for query in startedQueries {
+			core?.reload(query)
+		}
+	}
+
 	private func stopQueries() {
 		for query in startedQueries {
 			core?.stop(query)
@@ -201,6 +207,7 @@ class LibraryTableViewController: StaticTableViewController {
 
 								pendingSharesController.title = view.title
 								pendingSharesController.core = core
+								pendingSharesController.libraryViewController = self
 
 								viewController = pendingSharesController
 							} else {
