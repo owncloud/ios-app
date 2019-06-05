@@ -75,8 +75,8 @@ class PublicLinkTableViewController: SharingTableViewController {
 						linkName = shareName
 					}
 					let shareRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-						guard let self = self else { return }
-						let editPublicLinkViewController = PublicLinkEditTableViewController(share: share, core: self.core, item: self.item, defaultLinkName: self.defaultLinkName())
+						guard let self = self, let core = self.core else { return }
+						let editPublicLinkViewController = PublicLinkEditTableViewController(share: share, core: core, item: self.item, defaultLinkName: self.defaultLinkName())
 						self.navigationController?.pushViewController(editPublicLinkViewController, animated: true)
 					}, title: linkName, subtitle: share.permissionDescription, accessoryType: .disclosureIndicator)
 
@@ -245,14 +245,14 @@ class PublicLinkTableViewController: SharingTableViewController {
 	// MARK: Add New Link Share
 
 	@objc func addPublicLink() {
-		if let path = item.path {
+		if let path = item.path, let core = core {
 			var permissions : OCSharePermissionsMask = .create
 			if item.type == .file {
 				permissions = .read
 			}
 
 			let share = OCShare(publicLinkToPath: path, linkName: defaultLinkName(), permissions: permissions, password: nil, expiration: nil)
-			let editPublicLinkViewController = PublicLinkEditTableViewController(share: share, core: self.core, item: self.item, defaultLinkName: defaultLinkName())
+			let editPublicLinkViewController = PublicLinkEditTableViewController(share: share, core: core, item: self.item, defaultLinkName: defaultLinkName())
 			editPublicLinkViewController.createLink = true
 			let navigationController = ThemeNavigationController(rootViewController: editPublicLinkViewController)
 			self.navigationController?.present(navigationController, animated: true, completion: nil)

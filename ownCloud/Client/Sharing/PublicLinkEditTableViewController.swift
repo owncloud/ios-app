@@ -22,15 +22,27 @@ import ownCloudSDK
 class PublicLinkEditTableViewController: StaticTableViewController {
 
 	// MARK: - Instance Variables
-	var share : OCShare?
-	var core : OCCore?
-	var item : OCItem?
+	var share : OCShare
+	var core : OCCore
+	var item : OCItem
 	var defaultLinkName : String
 
 	var showSubtitles : Bool = false
 	var createLink : Bool = false
 	var permissionMask : OCSharePermissionsMask?
 	var activeTextField: UITextField?
+	var currentPermissionIndex: Int {
+		if createLink {
+			return 0
+		} else {
+			if share.canUpdate {
+				return 1
+			} else if share.canCreate, share.canUpdate == false {
+				return 2
+			}
+			return 0
+		}
+	}
 
 	lazy var inputToolbar: UIToolbar = {
 		var toolbar = UIToolbar()
@@ -46,7 +58,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 	// MARK: - Init
 
-	internal init(share: OCShare?, core: OCCore?, item: OCItem?, defaultLinkName: String) {
+	internal init(share: OCShare, core: OCCore, item: OCItem, defaultLinkName: String) {
 		self.share = share
 		self.core = core
 		self.item = item
@@ -61,12 +73,12 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		if let linkName = share?.name {
+		if let linkName = share.name {
 			self.navigationItem.title = linkName
 		}
 
 		let shareBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareLinkURL))
-		if item?.type == .collection {
+		if item.type == .collection {
 			let infoButton = UIButton(type: .infoLight)
 			infoButton.addTarget(self, action: #selector(showInfoSubtitles), for: .touchUpInside)
 			let infoBarButtonItem = UIBarButtonItem(customView: infoButton)
@@ -85,7 +97,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 		addNameSection()
 		addPermissionsSection()
-		addPasswordSection()
+		preparePasswordSection(for: currentPermissionIndex)
 		addExpireDateSection()
 
 		if createLink {
@@ -106,27 +118,25 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	func addNameSection() {
 		let section = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "name-section")
 
-		guard let share = share else { return }
-
 		var linkName = ""
 		if let savedLinkName = share.name {
 			linkName = savedLinkName
 		}
 
 		let nameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (row, sender, action) in
-			if let self = self, let core = self.core, !self.createLink, action == .changed {
+			if let self = self, !self.createLink, action == .changed {
 				guard let newName = row.textField?.text else { return }
 				var linkName = newName
 				if linkName.count == 0 {
 					linkName = self.defaultLinkName
 					row.textField?.text = linkName
 				}
-				core.update(share, afterPerformingChanges: {(share) in
+				self.core.update(self.share, afterPerformingChanges: {(share) in
 					share.name = linkName
 				}, completionHandler: { (error, share) in
 					if error == nil {
 						guard let changedShare = share else { return }
-						self.share?.name = changedShare.name
+						self.share.name = changedShare.name
 						self.title = changedShare.name
 					} else {
 						if let shareError = error {
@@ -152,19 +162,8 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 	func addPermissionsSection() {
 		let section = StaticTableViewSection(headerTitle: "Permissions".localized, footerTitle: nil, identifier: "permission-section")
-		guard let share = share, let item = item else { return }
 
 		if item.type == .collection {
-			var currentPermission = 0
-			if share.canUpdate {
-				currentPermission = 1
-			} else if share.canCreate, share.canUpdate == false {
-				currentPermission = 2
-			}
-
-			if createLink {
-				currentPermission = 0
-			}
 
 			let values = [
 				["Download / View".localized : 0],
@@ -173,8 +172,8 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			]
 
 			section.add(radioGroupWithArrayOfLabelValueDictionaries: values, radioAction: { [weak self] (row, _) in
-				if let self = self, let core = self.core {
-					guard let share = self.share, let selectedValueFromSection = row.section?.selectedValue(forGroupIdentifier: "permission-group") as? Int else { return }
+				if let self = self {
+					guard let selectedValueFromSection = row.section?.selectedValue(forGroupIdentifier: "permission-group") as? Int else { return }
 
 					var newPermissions : OCSharePermissionsMask = OCSharePermissionsMask(rawValue: 0)
 					switch selectedValueFromSection {
@@ -196,13 +195,13 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 							self.preparePasswordSection(for: selectedValueFromSection)
 
-							core.update(share, afterPerformingChanges: {(share) in
+							self.core.update(self.share, afterPerformingChanges: {(share) in
 								share.permissions = newPermissions
 							}, completionHandler: { [weak self] (error, share) in
 								guard let self = self else { return }
 								if error == nil {
 									guard let changedShare = share else { return }
-									self.share?.permissions = changedShare.permissions
+									self.share.permissions = changedShare.permissions
 								} else {
 									if let shareError = error {
 										OnMainThread {
@@ -214,7 +213,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							})
 						} else {
 							// set selection back to previous selected value
-							row.section?.setSelected(currentPermission, groupIdentifier: "permission-group")
+							row.section?.setSelected(self.currentPermissionIndex, groupIdentifier: "permission-group")
 							let permissionName = Array(values[selectedValueFromSection])[0].key
 
 							let alertController = UIAlertController(with: "Cannot change permission".localized, message: String(format: "Before you can set the permission\n%@,\n you must enter a password.".localized, permissionName), okLabel: "OK".localized, action: nil)
@@ -222,7 +221,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						}
 					}
 				}
-				}, groupIdentifier: "permission-group", selectedValue: currentPermission)
+				}, groupIdentifier: "permission-group", selectedValue: currentPermissionIndex)
 
 			let subtitles = [
 				"Recipients can view or download contents.".localized,
@@ -246,25 +245,16 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 	// MARK: - Password Section
 
-	func addPasswordSection() {
-		var hasPassword = false
-		if share?.protectedByPassword == true {
-			hasPassword = true
-		}
-
-		let passwordSection = StaticTableViewSection(headerTitle: "Options".localized, footerTitle: nil, identifier: "password-section")
-		passwordSwitchRow(hasPassword, passwordSection)
-		if hasPassword {
-			self.passwordRow(passwordSection)
-		}
-		self.addSection(passwordSection)
-	}
-
 	func preparePasswordSection(for selectionIndex : Int) {
 		let needsPassword = passwordRequired(for: selectionIndex)
 		var hasPassword = false
-		if share?.protectedByPassword ?? false {
+		if share.protectedByPassword {
 			hasPassword = true
+		}
+
+		if self.sectionForIdentifier("password-section") == nil {
+			let passwordSection = StaticTableViewSection(headerTitle: "Options".localized, footerTitle: nil, identifier: "password-section")
+			self.addSection(passwordSection)
 		}
 
 		if let passwordSection = self.sectionForIdentifier("password-section") {
@@ -300,24 +290,21 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 					// delete password
 					if !self.createLink {
-						if let core = self.core {
-							guard let share = self.share else { return }
-							core.update(share, afterPerformingChanges: { (share) in
-								share.protectedByPassword = false
-							}, completionHandler: { (error, share) in
-								if error == nil {
-									guard let changedShare = share else { return }
-									self.share?.protectedByPassword = changedShare.protectedByPassword
-								} else {
-									if let shareError = error {
-										OnMainThread {
-											let alertController = UIAlertController(with: "Deleting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
-											self.present(alertController, animated: true)
-										}
+						self.core.update(self.share, afterPerformingChanges: { (share) in
+							share.protectedByPassword = false
+						}, completionHandler: { (error, share) in
+							if error == nil {
+								guard let changedShare = share else { return }
+								self.share.protectedByPassword = changedShare.protectedByPassword
+							} else {
+								if let shareError = error {
+									OnMainThread {
+										let alertController = UIAlertController(with: "Deleting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										self.present(alertController, animated: true)
 									}
 								}
-							})
-						}
+							}
+						})
 					}
 				} else if passwordSwitch.isOn, let passwordSection = passwordSection {
 					self.passwordRow(passwordSection)
@@ -329,23 +316,23 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 	func passwordRow(_ passwordSection : StaticTableViewSection) {
 		var passwordValue = ""
-		if let password = share?.password {
+		if let password = share.password {
 			passwordValue = password
 		}
 
 		let expireDateRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (_, sender, action) in
-			if action == .changed, let self = self, let core = self.core {
-				guard let share = self.share, let textField = sender as? UITextField else { return }
+			if action == .changed, let self = self {
+				guard let textField = sender as? UITextField else { return }
 				if !self.createLink {
-					core.update(share, afterPerformingChanges: {(share) in
+					self.core.update(self.share, afterPerformingChanges: {(share) in
 						share.password = textField.text
 						share.protectedByPassword = true
 					}, completionHandler: { [weak self] (error, share) in
 						guard let self = self else { return }
 						if error == nil {
 							guard let changedShare = share else { return }
-							self.share?.password = changedShare.password
-							self.share?.protectedByPassword = changedShare.protectedByPassword
+							self.share.password = changedShare.password
+							self.share.protectedByPassword = changedShare.protectedByPassword
 						} else {
 							if let shareError = error {
 								OnMainThread {
@@ -370,11 +357,11 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 	func addExpireDateSection() {
 		var hasExpireDate = false
-		if share?.expirationDate != nil || core?.connection.capabilities?.publicSharingExpireDateEnforced == true {
+		if share.expirationDate != nil || core.connection.capabilities?.publicSharingExpireDateEnforced == true {
 			hasExpireDate = true
 		}
 		var needsExpireDate = false
-		if self.core?.connection.capabilities?.publicSharingExpireDateEnforced == true {
+		if self.core.connection.capabilities?.publicSharingExpireDateEnforced == true {
 			needsExpireDate = true
 		}
 
@@ -393,9 +380,8 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						self.expireDateRow(expireSection)
 					}
 
-					if !self.createLink, let core = self.core {
-						guard let share = self.share else { return }
-						core.update(share, afterPerformingChanges: {(share) in
+					if !self.createLink {
+						self.core.update(self.share, afterPerformingChanges: {(share) in
 							if expireDateSwitch.isOn {
 								if let datePicker = sender as? UIDatePicker {
 									share.expirationDate = datePicker.date
@@ -409,7 +395,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							guard let self = self else { return }
 							if error == nil {
 								guard let changedShare = share else { return }
-								self.share?.expirationDate = changedShare.expirationDate
+								self.share.expirationDate = changedShare.expirationDate
 
 								if let expireDateRow = expireSection.row(withIdentifier: "expire-date-row"), let expirationDate = changedShare.expirationDate {
 									OnMainThread {
@@ -465,15 +451,14 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						}
 					}
 
-					if let self = self, let core = self.core, !self.createLink {
-						guard let share = self.share else { return }
-						core.update(share, afterPerformingChanges: { (share) in
+					if let self = self, !self.createLink {
+						self.core.update(self.share, afterPerformingChanges: { (share) in
 							share.expirationDate = datePicker.date
 						}, completionHandler: { [weak self] (error, share) in
 							guard let self = self else { return }
 							if error == nil {
 								guard let changedShare = share else { return }
-								self.share?.expirationDate = changedShare.expirationDate
+								self.share.expirationDate = changedShare.expirationDate
 
 								if let expireDateRow = expireSection.row(withIdentifier: "expire-date-row") {
 									OnMainThread {
@@ -513,13 +498,13 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		dateFormatter.dateStyle = .medium
 		dateFormatter.timeStyle = .short
 		var footer = ""
-		if let date = share?.creationDate {
+		if let date = share.creationDate {
 			footer = String(format: "Created: %@".localized, dateFormatter.string(from: date))
 		}
 
 		let deleteSection = StaticTableViewSection(headerTitle: "Public Link".localized, footerTitle: footer)
 
-		if let share = self.share, let shareURL = share.url {
+		if let shareURL = share.url {
 			deleteSection.add(rows: [
 				StaticTableViewRow(buttonWithAction: { (row, _) in
 					UIPasteboard.general.url = shareURL
@@ -543,8 +528,8 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				progressView.startAnimating()
 
 				row.cell?.accessoryView = progressView
-				if let self = self, let core = self.core, let share = self.share {
-					core.delete(share, completionHandler: { [weak self] (error) in
+				if let self = self {
+					self.core.delete(self.share, completionHandler: { [weak self] (error) in
 						guard let self = self else { return }
 						OnMainThread {
 							if error == nil {
@@ -574,7 +559,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	}
 
 	@objc func shareLinkURL() {
-		guard let share = self.share, let shareURL = share.url, let capabilities = self.core?.connection.capabilities else { return }
+		guard let shareURL = share.url, let capabilities = self.core.connection.capabilities else { return }
 
 		let activityViewController = UIActivityViewController(activityItems: [shareURL], applicationActivities: nil)
 		if capabilities.publicSharingSocialShare == false {
@@ -595,7 +580,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	// MARK: - Permission Helper
 
 	func canPerformPermissionChange(for selectionIndex : Int) -> Bool {
-		if share?.protectedByPassword == false, passwordRequired(for: selectionIndex) {
+		if share.protectedByPassword == false, passwordRequired(for: selectionIndex) {
 			return false
 		}
 
@@ -605,7 +590,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	// MARK: - Password Helper
 
 	func passwordRequired(for selectionIndex: Int) -> Bool {
-		guard let capabilities = self.core?.connection.capabilities else { return false }
+		guard let capabilities = self.core.connection.capabilities else { return false }
 
 		if selectionIndex == 0, capabilities.publicSharingPasswordEnforcedForReadOnly == true {
 			return true
@@ -631,9 +616,9 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			expiration = date
 		}
 
-		if let share = share, let permissionMask = permissionMask {
-			let share = OCShare(publicLinkToPath: share.itemPath, linkName: shareName, permissions: permissionMask, password: password, expiration: expiration)
-			self.core?.createShare(share, options: nil, completionHandler: { (error, _) in
+		if let permissionMask = permissionMask {
+			let share = OCShare(publicLinkToPath: self.share.itemPath, linkName: shareName, permissions: permissionMask, password: password, expiration: expiration)
+			self.core.createShare(share, options: nil, completionHandler: { (error, _) in
 				if error == nil {
 					OnMainThread {
 						self.dismissAnimated()
@@ -659,9 +644,9 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		if let newDate = Calendar.current.date(byAdding: .day, value: 7, to: expireDate) {
 			expireDate = newDate
 		}
-		if let date = share?.expirationDate {
+		if let date = share.expirationDate {
 			expireDate = date
-		} else if self.core?.connection.capabilities?.publicSharingExpireDateEnabled == true, let defaultDays = self.core?.connection.capabilities?.publicSharingDefaultExpireDateDays {
+		} else if self.core.connection.capabilities?.publicSharingExpireDateEnabled == true, let defaultDays = self.core.connection.capabilities?.publicSharingDefaultExpireDateDays {
 			if let newDate = Calendar.current.date(byAdding: .day, value: defaultDays.intValue, to: expireDate) {
 				expireDate = newDate
 			}
