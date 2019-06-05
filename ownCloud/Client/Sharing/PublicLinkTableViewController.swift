@@ -73,6 +73,8 @@ class PublicLinkTableViewController: SharingTableViewController {
 					var linkName = ""
 					if let shareName = share.name {
 						linkName = shareName
+					} else if let token = share.token {
+						linkName = token
 					}
 					let shareRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 						guard let self = self, let core = self.core else { return }
