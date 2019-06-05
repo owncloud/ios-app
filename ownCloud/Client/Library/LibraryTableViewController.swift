@@ -69,11 +69,17 @@ class LibraryTableViewController: StaticTableViewController {
 		self.navigationController?.navigationBar.prefersLargeTitles = true
 
 		shareSection = StaticTableViewSection(headerTitle: "Shares".localized, footerTitle: nil, identifier: "share-section")
+		self.addThemableBackgroundView()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		self.navigationController?.navigationBar.prefersLargeTitles = true
+	}
+
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		self.navigationController?.navigationBar.prefersLargeTitles = false
 	}
 
 	// MARK: - Share setup
