@@ -265,7 +265,9 @@ class PublicLinkTableViewController: SharingTableViewController {
 		if let defaultLinkName = core?.connection.capabilities?.publicSharingDefaultLinkName {
 			linkName = defaultLinkName
 		}
-		linkName = String(format:"%@ (%ld)", linkName, (shares.count + 1))
+		if shares.count >= 1 {
+			linkName = String(format:"%@ (%ld)", linkName, shares.count)
+		}
 
 		return linkName
 	}
