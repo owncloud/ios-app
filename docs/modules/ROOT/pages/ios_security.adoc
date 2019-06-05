@@ -1,6 +1,8 @@
 = Security
 :toc: right
 :toclevels: 1
+:keywords: ownCloud, security, encryption, mdm, ssl, tls, oauth2, authentication, ios, iphone, ipad
+:description: This guide steps you through the security features of of ownCloud's Mobile App for iOS.
 :apple-completeuntilfirstuserauthentication-url: https://developer.apple.com/documentation/foundation/nsfileprotectioncompleteuntilfirstuserauthentication
 :apple-security-accessibleafterfirstunlock-url: https://developer.apple.com/documentation/security/ksecattraccessibleafterfirstunlock
 :apple-sfauthenticationsession-url: https://developer.apple.com/documentation/safariservices/sfauthenticationsession
@@ -130,9 +132,10 @@ The {ios-sdk-sync-strategies-url}[Sync Strategies], planned to be used in the ap
 HTML and Microsoft Office document content is viewed using {apple-wkwebview-url}[`WKWebView`], which renders the content in a separate process. 
 Additional hardening is achieved by disabling JavaScript and blocking all network requests, which protects against lesser known, non-obvious attacks like {css-keylogging-url}[CSS Keylogging].
 
-=== PIN Code
+=== Passcode
 
-Users can set a PIN code to control access to the app.
+Users can set a Passcode to control access to the app.
+Find out more about this in xref:ios_settings.adoc#passcode[the Passcode section of the Settings documentation].
 
 == Miscellaneous
 

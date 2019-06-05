@@ -1,17 +1,18 @@
 = iOS App and iOS Files App Integration and 3rd Party Apps
 :toc: right
-
-== Enable in iOS Files App
-
-* Multiple Accounts
+:keywords: Files App, iOS, iPhone, iPad, ownCloud
+:description: This guide steps you through ownCloud's Mobile App for iOS’s integration with the iOS Files App.
 
 == Work With Your ownCloud Data in iOS Files App
 
-* Open
-* Edit & Save
-* Delete
+The Mobile App for iOS integrates with the iOS Files App. 
+When enabled, you can open, edit, save, and delete files and folders.
 
-Future versions:
+However, the functionality needs to first be enabled.
+To do so, click btn:[Browse], then btn:[Edit].
+Next, in the list of apps under Locations, enable the ownCloud app for your account.
+
+In future versions, it is expected that the following functionality will also be supported:
 
 * Share (UI)
 * Offline (UI)

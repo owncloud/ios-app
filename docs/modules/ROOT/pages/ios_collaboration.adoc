@@ -12,10 +12,54 @@ image:31_Collab.png[Collaborate With Other Users on Folders and Files]
 
 == Grant Access With Links
 
-image:36_Links.png[grant access with links]
+Just as with the web interface, the iOS app lets you grant access to both files and folders with links.
+Specifically, you can do the following:
 
-* Copy public link
+* Copy public links
 * Create multiple private links
-* Set password or expiration date
-* Send private link URL to other apps (mail, messenger)
-* Delete private link
+* Set passwords and expiration dates
+* Send private link URLs to other apps (mail, messenger)
+* Delete private links
+
+=== Copy Public Links
+
+To copy a public link to a file or folder, click the more icon on the far right-hand side of the file, and then click btn:[Links].
+As in the example below, you will then see the private link to the file.
+Clicking btn:[copy] on the far right-hand side will copy the link to the iOS clipboard.
+
+=== Create Private Links
+
+To create private links to a file or folder, click the more icon on the far right-hand side of the file, and then click btn:[Links].
+Then, under Private Links, click btn:[Create Public Link] in the Public Links section.
+You will then see the links for the option, as in the image below.
+
+As with the web interface, you can:
+
+* Set a link name
+* Set permissions
+* Set a password
+* Set a link expiration date
+
+image:manage-public-link-settings.png[Manage public links in ownCloud's Mobile App for iOS]
+
+TIP: To see more details about each option, click the info icon in the bottom right-hand corner.
+
+=== Set Passwords and Expiration Dates
+
+image:public-link-set-password.png[Set a password for a public link in ownCloud's Mobile App for iOS]
+
+To set a password on a public link, under "_Options_", enable btn:[Password].
+Then, type a password in the field that appears below the Password option.
+
+image:public-link-set-expiration-date.png[Set an expiration date for a public link in ownCloud's Mobile App for iOS]
+
+To set an expiration date on a public link, under "_Options_", enable btn:[Expiration date].
+Then, pick the date that the link should expire with the date picker that appears below the Expiration date option.
+
+=== Send private link URLs to other apps (mail, messenger)
+
+
+
+=== Delete private links
+
+

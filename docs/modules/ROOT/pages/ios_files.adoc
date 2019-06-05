@@ -138,6 +138,15 @@ image:create-new-folder.png[How to create a new folder in ownCloud's iOS App.]
 To upload files or any time from your device to your ownCloud server, click btn:[Upload file].
 You will then be able to select one or more recent files, or browse through files from any app that exposes data to the iOS files app.
 
+==== Upload File From Your Photo Library
+
+To upload photos from your photo library, you first need to allow the iOS app access to your photos. 
+After that, you can browse through your photos, as you normally would 
+You can then select one or more photos by pressing them, or click btn:[Select All] in the bottom left-hand corner to select all photos in the current folder.
+When you're happy with your photo selection, click btn:[Upload] and the photo(s) will be uploaded.
+
+image:24_Upload_Photo_multi.png[Upload one or more photos from your Photo Library with the ownCloud iOS App.]
+
 === Move Files and Folders
 
 Whether you are using the iPhone or iPad version of the ownCloud app, you can select and drag and drop one or more files and folders from one folder to another.
@@ -164,12 +173,3 @@ Refer to Apple's {multitasking-on-ipad-url}[Multitasking On Your iPad guide] for
 
 .Drag and drop multiple files from ownCloud iOS App to macOS Notes
 image:26_Files_multidragdrop_iPad.png[Drag and Drop Files Between Apps (iPad-only) in ownCloud's iOS App.]
-
-=== Upload File From Your Photo Library
-
-To upload photos from your photo library, you first need to allow the iOS app access to your photos. 
-After that, you can browse through your photos, as you normally would 
-You can then select one or more photos by pressing them, or click btn:[Select All] in the bottom left-hand corner to select all photos in the current folder.
-When you're happy with your photo selection, click btn:[Upload] and the photo(s) will be uploaded.
-
-image:24_Upload_Photo_multi.png[Upload one or more photos from your Photo Library with the ownCloud iOS App.]

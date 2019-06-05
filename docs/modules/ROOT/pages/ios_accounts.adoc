@@ -6,13 +6,11 @@
 :sfauthenticationsession-url: https://developer.apple.com/documentation/safariservices/sfauthenticationsession
 :rfc-8252-url: https://tools.ietf.org/html/rfc8252#appendix-B.1
 
-The iOS app supports four ways of authenticating user accounts. 
+The iOS app supports two ways of authenticating user accounts. 
 These are:
 
 * xref:basic-authentication[Basic Authentication]
 * xref:oauth-2-0[OAuth 2.0]
-* xref:safari-login-session[Safari Login Sessions]
-* xref:the-web-ui[The Web UI]
 
 == Authentication Options
 
