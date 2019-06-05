@@ -262,6 +262,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		searchController?.obscuresBackgroundDuringPresentation = false
 		searchController?.hidesNavigationBarDuringPresentation = true
 		searchController?.searchBar.placeholder = "Search this folder".localized
+		searchController?.searchBar.applyThemeCollection(Theme.shared.activeCollection)
 
 		navigationItem.searchController =  searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
