@@ -304,14 +304,11 @@ class LibraryTableViewController: StaticTableViewController {
 		if let queryResults = shareQueryWithUser?.queryResults {
 			shareResults.append(contentsOf: queryResults)
 		}
-
 		if let queryResults = shareQueryPendingCloudShares?.queryResults {
 			shareResults.append(contentsOf: queryResults)
 		}
 
-		let uniqueShares = shareResults.unique { $0.itemPath }
-
-		let sharedWithUserPending = uniqueShares.filter({ (share) -> Bool in
+		let sharedWithUserPending = shareResults.filter({ (share) -> Bool in
 			return ((share.type == .remote) && (share.accepted == false)) ||
 			       ((share.type != .remote) && (share.state != .accepted))
 		})
