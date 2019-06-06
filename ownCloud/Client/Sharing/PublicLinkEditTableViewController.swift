@@ -647,7 +647,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		if let date = share.expirationDate {
 			expireDate = date
 		} else if self.core.connection.capabilities?.publicSharingExpireDateEnabled == true, let defaultDays = self.core.connection.capabilities?.publicSharingDefaultExpireDateDays {
-			if let newDate = Calendar.current.date(byAdding: .day, value: defaultDays.intValue, to: expireDate) {
+			if let newDate = Calendar.current.date(byAdding: .day, value: defaultDays.intValue, to: Date()) {
 				expireDate = newDate
 			}
 		}
