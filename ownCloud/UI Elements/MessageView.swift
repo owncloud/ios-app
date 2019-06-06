@@ -40,7 +40,6 @@ class MessageView: UIView {
 		NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(self.rotated), name: UIDevice.orientationDidChangeNotification, object: nil)
-
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -177,8 +176,8 @@ class MessageView: UIView {
 				}
 
 				NSLayoutConstraint.activate([
-					rootView.leftAnchor.constraint(equalTo: self.masterView.safeAreaLayoutGuide.leftAnchor),
-					rootView.rightAnchor.constraint(equalTo: self.masterView.safeAreaLayoutGuide.rightAnchor),
+					rootView.leftAnchor.constraint(equalTo: self.masterView.leftAnchor),
+					rootView.widthAnchor.constraint(equalTo: self.masterView.widthAnchor),
 					rootView.topAnchor.constraint(equalTo: self.masterView.safeAreaLayoutGuide.topAnchor),
 					self.composeViewBottomConstraint
 				])
