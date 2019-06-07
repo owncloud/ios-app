@@ -170,34 +170,31 @@ class Action : NSObject {
 		let header = MoreViewHeader(for: item, with: core)
 		let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
 
-		if core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1 {
-			OnMainThread {
-				if item.isSharedWithUser || item.isShared {
+		if core.connectionStatus == .online {
+			if core.connection.capabilities?.sharingAPIEnabled == 1 {
+				OnMainThread {
+					if item.isSharedWithUser || item.isShared {
+						let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+						progressView.startAnimating()
 
-					let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
-					progressView.startAnimating()
+						let row = StaticTableViewRow(rowWithAction: nil, title: "Searching Shares…".localized, alignment: .left, accessoryView: progressView, identifier: "share-searching")
+						let placeholderRow = StaticTableViewRow(rowWithAction: nil, title: "", alignment: .left, identifier: "share-empty-searching")
+						self.updateSharingSection(sectionIdentifier: "share-section", rows: [placeholderRow, row], tableViewController: tableViewController, contentViewController: moreViewController)
 
-					let row = StaticTableViewRow(rowWithAction: nil, title: "Searching Shares…".localized, alignment: .left, accessoryView: progressView, identifier: "share-searching")
-					let placeholderRow = StaticTableViewRow(rowWithAction: nil, title: "", alignment: .left, identifier: "share-empty-searching")
-					self.updateSharingSection(sectionIdentifier: "share-section", rows: [placeholderRow, row], tableViewController: tableViewController, contentViewController: moreViewController)
-
-					core.unifiedShares(for: item, completionHandler: { (shares) in
-						OnMainThread {
-							let shareRows = self.shareRows(shares: shares, item: item, presentingController: moreViewController, context: context)
-							self.updateSharingSection(sectionIdentifier: "share-section", rows: shareRows, tableViewController: tableViewController, contentViewController: moreViewController)
-						}
-					})
+						core.unifiedShares(for: item, completionHandler: { (shares) in
+							OnMainThread {
+								let shareRows = self.shareRows(shares: shares, item: item, presentingController: moreViewController, context: context)
+								self.updateSharingSection(sectionIdentifier: "share-section", rows: shareRows, tableViewController: tableViewController, contentViewController: moreViewController)
+							}
+						})
+					}
+				}
+			} else {
+				if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context) {
+					tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: [publicLinkRow]), at: 0, animated: false)
 				}
 			}
-		} else {
-			var shareRows : [StaticTableViewRow] = []
-			shareRows.append(self.shareAsGroupRow(item: item, presentingController: moreViewController, context: context))
-			if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context) {
-				shareRows.append(publicLinkRow)
-			}
-			tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: shareRows), at: 0, animated: false)
 		}
-
 
 		let title = NSAttributedString(string: "Actions".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
