@@ -21,6 +21,11 @@ import ownCloudSDK
 
 class PublicLinkTableViewController: SharingTableViewController {
 
+	var publicLinkSharingEnabled : Bool {
+		if let core = core, core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == true, core.connection.capabilities?.publicSharingEnabled == true, item.isShareable { return true }
+		return false
+	}
+
 	// MARK: - Instance Variables
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -29,33 +34,35 @@ class PublicLinkTableViewController: SharingTableViewController {
 
 		self.navigationItem.title = "Links".localized
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
-		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPublicLink))
 
 		addHeaderView()
 		addPrivateLinkSection()
 
-		shareQuery = core?.sharesWithReshares(for: item, initialPopulationHandler: { [weak self] (sharesWithReshares) in
-			if let self = self, sharesWithReshares.count > 0 {
-				self.shares = sharesWithReshares.filter { (share) -> Bool in
-					return share.type == .link
+		if publicLinkSharingEnabled {
+			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPublicLink))
+			shareQuery = core?.sharesWithReshares(for: item, initialPopulationHandler: { [weak self] (sharesWithReshares) in
+				if let self = self, sharesWithReshares.count > 0 {
+					self.shares = sharesWithReshares.filter { (share) -> Bool in
+						return share.type == .link
+					}
+					OnMainThread {
+						self.addShareSections()
+					}
 				}
-				OnMainThread {
-					self.addShareSections()
-				}
-			}
-		}, changesAvailableNotificationHandler: { [weak self] (sharesWithReshares) in
-			guard let self = self else { return }
-			let sharesWithReshares = sharesWithReshares.filter { (share) -> Bool in
-				return share.type == .link
-			}
-			self.shares = sharesWithReshares
-			OnMainThread {
-				self.removeShareSections()
-				self.addShareSections()
-				self.handleEmptyShares()
-			}
-		}, keepRunning: true)
-		shareQuery?.refreshInterval = 2
+				}, changesAvailableNotificationHandler: { [weak self] (sharesWithReshares) in
+					guard let self = self else { return }
+					let sharesWithReshares = sharesWithReshares.filter { (share) -> Bool in
+						return share.type == .link
+					}
+					self.shares = sharesWithReshares
+					OnMainThread {
+						self.removeShareSections()
+						self.addShareSections()
+						self.handleEmptyShares()
+					}
+				}, keepRunning: true)
+			shareQuery?.refreshInterval = 2
+		}
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -108,8 +115,10 @@ class PublicLinkTableViewController: SharingTableViewController {
 	}
 
 	func addShareSections() {
-		OnMainThread {
-			self.addSectionFor(shares: self.shares(ofTypes: [.link]), with: "Public Links".localized, identifier: .link)
+		if publicLinkSharingEnabled {
+			OnMainThread {
+				self.addSectionFor(shares: self.shares(ofTypes: [.link]), with: "Public Links".localized, identifier: .link)
+			}
 		}
 	}
 

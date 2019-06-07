@@ -187,16 +187,17 @@ class Action : NSObject {
 							self.updateSharingSection(sectionIdentifier: "share-section", rows: shareRows, tableViewController: tableViewController, contentViewController: moreViewController)
 						}
 					})
-				} else if item.isShareable {
-					var shareRows : [StaticTableViewRow] = []
-					shareRows.append(self.shareAsGroupRow(item: item, presentingController: moreViewController, context: context))
-					if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context) {
-						shareRows.append(publicLinkRow)
-					}
-					tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: shareRows), at: 0, animated: false)
 				}
 			}
+		} else {
+			var shareRows : [StaticTableViewRow] = []
+			shareRows.append(self.shareAsGroupRow(item: item, presentingController: moreViewController, context: context))
+			if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context) {
+				shareRows.append(publicLinkRow)
+			}
+			tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: shareRows), at: 0, animated: false)
 		}
+
 
 		let title = NSAttributedString(string: "Actions".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
@@ -393,9 +394,9 @@ private extension Action {
 			shareRows.append(self.shareAsGroupRow(item: item, presentingController: presentingController, context: context))
 		}
 
-		if hasLinkSharing {
+		if hasLinkSharing, let core = context.core, core.connection.capabilities?.publicSharingEnabled == true {
 			let addGroupRow = StaticTableViewRow(rowWithAction: { [weak presentingController, weak context] (_, _) in
-				if let context = context, let presentingController = presentingController, let core = context.core {
+				if let context = context, let presentingController = presentingController {
 					let sharingViewController = PublicLinkTableViewController(core: core, item: item)
 					sharingViewController.shares = shares
 
@@ -403,7 +404,7 @@ private extension Action {
 				}
 			}, title: linkTitle, subtitle: nil, image: UIImage(named: "link"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
 			shareRows.append(addGroupRow)
-		} else if item.isShareable, let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context) {
+		} else if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context) {
 			shareRows.append(publicLinkRow)
 		}
 
@@ -434,19 +435,15 @@ private extension Action {
 	}
 
 	private class func shareAsPublicLinkRow(item : OCItem, presentingController: UIViewController, context: ActionContext) -> StaticTableViewRow? {
-		if let core = context.core, core.connection.capabilities?.publicSharingEnabled == true, !item.sharedByPublicLink, item.isShareable {
-			let addGroupRow = StaticTableViewRow(buttonWithAction: { [weak presentingController, weak context] (_, _) in
-				if let context = context, let presentingController = presentingController, let core = context.core {
-					self.dismiss(presentingController: presentingController,
-								 andPresent: PublicLinkTableViewController(core: core, item: item),
-								 on: context.viewController)
-				}
+		let addGroupRow = StaticTableViewRow(buttonWithAction: { [weak presentingController, weak context] (_, _) in
+			if let context = context, let presentingController = presentingController, let core = context.core {
+				self.dismiss(presentingController: presentingController,
+							 andPresent: PublicLinkTableViewController(core: core, item: item),
+							 on: context.viewController)
+			}
 			}, title: "Links".localized, style: .plain, image: UIImage(named: "link"), imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: "share-add-group")
 
-			return addGroupRow
-		}
-
-		return nil
+		return addGroupRow
 	}
 
 	private class func dismiss(presentingController: UIViewController, andPresent viewController: UIViewController, on hostViewController: UIViewController?) {
