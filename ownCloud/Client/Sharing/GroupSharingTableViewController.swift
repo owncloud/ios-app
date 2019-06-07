@@ -47,7 +47,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 	var shouldStartSearch : Bool = false
 	var defaultPermissions : OCSharePermissionsMask {
 		let meShares = shares.filter { (share) -> Bool in
-			return (share.recipient?.user?.userName == core?.connection.loggedInUser?.userName && share.canShare)
+			return (share.recipient?.user?.userName == core?.connection.loggedInUser?.userName) && share.canShare
 		}
 		if let share = meShares.first {
 			return share.permissions
@@ -191,10 +191,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			}
 		} else {
 			OnMainThread {
-				var title = "Share this file".localized
-				if self.item.type == .collection {
-					title = "Share this folder".localized
-				}
+				let title = ((self.item.type == .collection) ? "Share this folder" : "Share this file").localized
 				let shareRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
 					self?.activateRecipienSearch()
 					if let actionSection = self?.sectionForIdentifier("action-section") {
@@ -231,7 +228,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 					if canEdit(share: share) {
 						let shareRow = StaticTableViewRow(rowWithAction: { [weak self] (row, _) in
 							guard let self = self, let core = self.core else { return }
-							let editSharingViewController = GroupSharingEditTableViewController(core: core, item: self.item, share: share, possiblePermissions: self.defaultPermissions, reshares: resharedUsers)
+							let editSharingViewController = GroupSharingEditTableViewController(core: core, item: self.item, share: share, defaultPermissions: self.defaultPermissions, reshares: resharedUsers)
 
 							if share.recipient?.type == .user {
 								editSharingViewController.title = row.cell?.textLabel?.text
@@ -271,7 +268,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			dateFormatter.timeStyle = .short
 			var footer : String?
 			if let date = share.creationDate {
-				footer = String(format: "Invited: %@".localized, dateFormatter.string(from: date))
+				footer = String(format: "Invited by: %@".localized, dateFormatter.string(from: date))
 			}
 
 			let shareRow = StaticTableViewRow(rowWithAction: nil, title: String(format:"%@", ownerName), accessoryType: .none)
@@ -378,7 +375,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 								self.searchController?.searchBar.text = ""
 								self.searchController?.dismiss(animated: true, completion: nil)
 								self.resetTable(showShares: true)
-								let editSharingViewController = GroupSharingEditTableViewController(core: core, item: self.item, share: share, possiblePermissions: self.defaultPermissions)
+								let editSharingViewController = GroupSharingEditTableViewController(core: core, item: self.item, share: share, defaultPermissions: self.defaultPermissions)
 								editSharingViewController.createShare = true
 								editSharingViewController.title = row.cell?.textLabel?.text
 								let navigationController = ThemeNavigationController(rootViewController: editSharingViewController)
@@ -391,7 +388,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 			if rows.count > 0 {
 				self.messageView?.message(show: false)
-				
+
 				self.removeShareSections()
 				if let section = self.searchResultsSection {
 					self.removeSection(section)

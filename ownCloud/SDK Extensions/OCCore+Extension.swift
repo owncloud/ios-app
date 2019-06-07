@@ -41,10 +41,7 @@ extension OCCore {
 
 			shareQuery.initialPopulationHandler = { [weak self] query in
 				let sharesWithMe = query.queryResults.filter({ (share) -> Bool in
-					if share.itemPath == item.path {
-						return true
-					}
-					return false
+					return share.itemPath == item.path
 				})
 
 				combinedShares.addObjects(from: sharesWithMe)
@@ -74,10 +71,7 @@ extension OCCore {
 		if let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item) {
 			shareQuery.initialPopulationHandler = { [weak self] query in
 				let shares = query.queryResults.filter({ (share) -> Bool in
-					if share.itemPath == item.path {
-						return true
-					}
-					return false
+					return share.itemPath == item.path
 				})
 				initialPopulationHandler(shares)
 
@@ -97,10 +91,7 @@ extension OCCore {
 		if let shareQuery = OCShareQuery(scope: .acceptedCloudShares, item: item) {
 			shareQuery.initialPopulationHandler = { [weak self] query in
 				let shares = query.queryResults.filter({ (share) -> Bool in
-					if share.itemPath == item.path {
-						return true
-					}
-					return false
+					return share.itemPath == item.path
 				})
 				initialPopulationHandler(shares)
 

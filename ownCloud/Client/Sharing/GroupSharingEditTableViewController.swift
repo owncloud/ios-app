@@ -29,17 +29,17 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 	var showSubtitles : Bool = false
 	var createShare : Bool = false
 	var permissionMask : OCSharePermissionsMask?
-	var possiblePermissionMask : OCSharePermissionsMask
+	var defaultPermissionMask : OCSharePermissionsMask
 
 	// MARK: - Init & Deinit
 
-	public init(core inCore: OCCore, item inItem: OCItem, share inShare: OCShare, possiblePermissions inPossiblePermissions: OCSharePermissionsMask, reshares inReshares: [OCShare]? = nil) {
+	public init(core inCore: OCCore, item inItem: OCItem, share inShare: OCShare, defaultPermissions: OCSharePermissionsMask, reshares inReshares: [OCShare]? = nil) {
 
 		core = inCore
 		item = inItem
 		share = inShare
 		reshares = inReshares
-		possiblePermissionMask = inPossiblePermissions
+		defaultPermissionMask = defaultPermissions
 
 		super.init(style: .grouped)
 	}
@@ -52,7 +52,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 		super.viewDidLoad()
 
 		if createShare {
-			permissionMask = possiblePermissionMask
+			permissionMask = defaultPermissionMask
 		}
 
 		let infoButton = UIButton(type: .infoLight)
@@ -64,7 +64,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 
 		addPermissionSection()
 
-		if item?.type == .collection, hasAtLeastPermission(of: [.update, .create, .delete]) {
+		if item?.type == .collection, hasAnyPermission(of: [.update, .create, .delete]) {
 			addPermissionEditSection()
 		}
 		addResharesSection()
@@ -109,15 +109,15 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 	func addPermissionSection() {
 		let section = StaticTableViewSection(headerTitle: "Permissions".localized, footerTitle: nil, identifier: "permission-section")
 		var canEdit = false
-		if hasAtLeastPermission(of: [.update, .create, .delete]) {
+		if hasAnyPermission(of: [.update, .create, .delete]) {
 			canEdit = true
 		}
 		var canShare = false
-		if hasAtLeastPermission(of: [.share]) {
+		if hasAnyPermission(of: [.share]) {
 			canShare = true
 		}
 
-		if possiblePermissionMask.contains(.share), core?.connection.capabilities?.sharingResharing == true {
+		if defaultPermissionMask.contains(.share), core?.connection.capabilities?.sharingResharing == true {
 			section.add(row: StaticTableViewRow(toggleItemWithAction: { [weak self] (row, _) in
 				if let selected = row.value as? Bool {
 					self?.changePermissions(enabled: selected, permissions: [.share], completionHandler: {(_) in
@@ -126,7 +126,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 				}, title: "Can Share".localized, subtitle: "", selected: canShare, identifier: "permission-section-share"))
 		}
 
-		if possiblePermissionMask.contains(.create) || possiblePermissionMask.contains(.delete) || possiblePermissionMask.contains(.update) {
+		if defaultPermissionMask.contains(.create) || defaultPermissionMask.contains(.delete) || defaultPermissionMask.contains(.update) {
 			section.add(row: StaticTableViewRow(toggleItemWithAction: { [weak self] (row, _) in
 				guard let self = self, let item = self.item else { return }
 				if let selected = row.value as? Bool {
@@ -170,14 +170,14 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 	func addPermissionEditSection(animated : Bool = false, selected : Bool = false) {
 		let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "permission-edit-section")
 
-		if possiblePermissionMask.contains(.create) {
-			self.addPermissionRow(to: section, with: "Can Create", permission: .create, selected: (selected ? selected : hasAtLeastPermission(of: [.create])), identifier: "permission-section-edit-create")
+		if defaultPermissionMask.contains(.create) {
+			self.addPermissionRow(to: section, with: "Can Create", permission: .create, selected: (selected ? selected : hasAnyPermission(of: [.create])), identifier: "permission-section-edit-create")
 		}
-		if possiblePermissionMask.contains(.update) {
-			self.addPermissionRow(to: section, with: "Can Change", permission: .update, selected: (selected ? selected : hasAtLeastPermission(of: [.update])), identifier: "permission-section-edit-change")
+		if defaultPermissionMask.contains(.update) {
+			self.addPermissionRow(to: section, with: "Can Change", permission: .update, selected: (selected ? selected : hasAnyPermission(of: [.update])), identifier: "permission-section-edit-change")
 		}
-		if possiblePermissionMask.contains(.delete) {
-			self.addPermissionRow(to: section, with: "Can Delete", permission: .delete, selected: (selected ? selected : hasAtLeastPermission(of: [.delete])), identifier: "permission-section-edit-delete")
+		if defaultPermissionMask.contains(.delete) {
+			self.addPermissionRow(to: section, with: "Can Delete", permission: .delete, selected: (selected ? selected : hasAnyPermission(of: [.delete])), identifier: "permission-section-edit-delete")
 		}
 
 		let subtitles = [
@@ -191,7 +191,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 	}
 
 	func hidePermissionsIfNeeded() {
-		if !hasAtLeastPermission(of: [.update, .create, .delete]) {
+		if !hasAnyPermission(of: [.update, .create, .delete]) {
 			OnMainThread {
 				let section = self.sectionForIdentifier("permission-section")
 				let newRow = section?.row(withIdentifier: "permission-section-edit")
@@ -205,7 +205,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 		}
 	}
 
-	func hasAtLeastPermission(of permissions: [OCSharePermissionsMask]) -> Bool {
+	func hasAnyPermission(of permissions: OCSharePermissionsMask) -> Bool {
 		guard let share = share else { return false }
 
 		var lookupPermissions = share.permissions
@@ -213,13 +213,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 			lookupPermissions = permissionMask
 		}
 
-		for permission in permissions {
-			if lookupPermissions.contains(permission) {
-				return true
-			}
-		}
-
-		return false
+		return !permissions.isDisjoint(with: lookupPermissions)
 	}
 
 	func changePermissions(enabled: Bool, permissions : [OCSharePermissionsMask], completionHandler: @escaping (_ error : Error?) -> Void ) {
@@ -280,7 +274,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 			for share in reshares {
 				shareRows.append( StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 					guard let self = self else { return }
-					let editSharingViewController = GroupSharingEditTableViewController(core: core, item: item, share: share, possiblePermissions: self.possiblePermissionMask)
+					let editSharingViewController = GroupSharingEditTableViewController(core: core, item: item, share: share, defaultPermissions: self.defaultPermissionMask)
 					self.navigationController?.pushViewController(editSharingViewController, animated: true)
 				}, title: share.recipient!.displayName!, subtitle: share.permissionDescription(for: core.connection.capabilities), accessoryType: .disclosureIndicator) )
 			}
@@ -323,7 +317,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 					})
 				}
 			}, title: "Remove Recipient".localized, style: .destructive)
-			])
+		])
 		self.addSection(section)
 	}
 

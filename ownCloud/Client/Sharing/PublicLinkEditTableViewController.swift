@@ -386,7 +386,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 								if let datePicker = sender as? UIDatePicker {
 									share.expirationDate = datePicker.date
 								} else {
-									share.expirationDate = self.defaultExpireDate()
+									share.expirationDate = self.defaultExpireDate
 								}
 							} else {
 								share.expirationDate = nil
@@ -416,7 +416,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						})
 					} else if self.createLink {
 						if let row = self.rowInSection(expireSection, rowIdentifier: "expire-date-row") {
-							row.representedObject = self.defaultExpireDate()
+							row.representedObject = self.defaultExpireDate
 						}
 					}
 				}
@@ -431,7 +431,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	}
 
 	func expireDateRow(_ expireSection : StaticTableViewSection) {
-		let expireDate = defaultExpireDate()
+		let expireDate = defaultExpireDate
 
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateStyle = .long
@@ -639,7 +639,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		activeTextField?.resignFirstResponder()
 	}
 
-	func defaultExpireDate() -> Date {
+	var defaultExpireDate : Date {
 		var expireDate = Date()
 		if let newDate = Calendar.current.date(byAdding: .day, value: 7, to: expireDate) {
 			expireDate = newDate

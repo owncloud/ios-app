@@ -204,7 +204,9 @@ class LibraryTableViewController: StaticTableViewController {
 						badgeLabel?.update(text: "\(badge)", textColor: UIColor.white, backgroundColor: UIColor.red)
 					}
 
-					view.row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+					view.row = StaticTableViewRow(rowWithAction: { [weak self, weak view] (_, _) in
+						guard let view = view else { return }
+
 						var viewController : LibraryShareList? = view.viewController
 
 						if viewController == nil {

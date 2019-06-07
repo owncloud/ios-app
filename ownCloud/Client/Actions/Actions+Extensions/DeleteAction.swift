@@ -26,17 +26,7 @@ class DeleteAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		let sharedItems = forContext.items.filter({ (item) -> Bool in
-			if !item.isSharedWithUser {
-				return true
-			}
-			return false
-		})
-		if sharedItems.count != forContext.items.count {
-			return .none
-		}
-
-		return .last
+		return (forContext.items.sharedWithUser.count != 0) ? .none : .last
 	}
 
 	// MARK: - Action implementation

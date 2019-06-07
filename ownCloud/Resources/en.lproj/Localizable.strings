@@ -300,7 +300,7 @@
 "(Group)" = "(Group)";
 "Adding User to Share failed" = "Adding User to Share failed";
 "Permissions" = "Permissions";
-"Invited: %@" = "Invited: %@";
+"Invited by: %@" = "Invited by: %@";
 "Created: %@" = "Created: %@";
 "Allows the users you share with to re-share" = "Allows the users you share with to re-share";
 "Allows the users you share with to edit your shared files, and to collaborate" = "Allows the users you share with to edit your shared files, and to collaborate";

@@ -361,10 +361,8 @@ private extension Action {
 			}
 
 			if privateShares.count > 0 {
-				var title = "Recipient".localized
-				if privateShares.count > 1 {
-					title = "Recipients".localized
-				}
+				let title = ((privateShares.count > 1) ? "Recipients" : "Recipient").localized
+
 				userTitle = "\(privateShares.count) \(title)"
 				hasUserGroupSharing = true
 			}
@@ -375,10 +373,8 @@ private extension Action {
 			return share.type == .link
 		}
 		if linkShares.count > 0 {
-			var title = "Link".localized
-			if linkShares.count > 1 {
-				title = "Links".localized
-			}
+			let title = ((linkShares.count > 1) ? "Links" : "Link").localized
+
 			linkTitle.append("\(linkShares.count) \(title)")
 			hasLinkSharing = true
 		}
@@ -424,10 +420,8 @@ private extension Action {
 	}
 
 	private class func shareAsGroupRow(item : OCItem, presentingController: UIViewController, context: ActionContext) -> StaticTableViewRow {
-		var title = "Share this file".localized
-		if item.type == .collection {
-			title = "Share this folder".localized
-		}
+		let title = ((item.type == .collection) ? "Share this folder" : "Share this file").localized
+
 		let addGroupRow = StaticTableViewRow(buttonWithAction: { [weak presentingController, weak context] (_, _) in
 			if let context = context, let presentingController = presentingController, let core = context.core {
 				self.dismiss(presentingController: presentingController,

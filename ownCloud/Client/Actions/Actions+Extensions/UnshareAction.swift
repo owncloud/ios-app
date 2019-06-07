@@ -18,6 +18,12 @@
 
 import ownCloudSDK
 
+extension Array where Element: OCItem {
+	var sharedWithUser : [OCItem] {
+		return self.filter({ (item) -> Bool in return item.isSharedWithUser })
+	}
+}
+
 class UnshareAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.unshare") }
 	override class var category : ActionCategory? { return .destructive }
@@ -26,17 +32,7 @@ class UnshareAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		let sharedItems = forContext.items.filter({ (item) -> Bool in
-			if item.isSharedWithUser {
-				return true
-			}
-			return false
-		})
-		if sharedItems.count != forContext.items.count {
-			return .none
-		}
-
-		return .last
+		return (forContext.items.sharedWithUser.count != forContext.items.count) ? .none : .last
 	}
 
 	// MARK: - Action implementation
