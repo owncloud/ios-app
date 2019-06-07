@@ -262,13 +262,17 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 	}
 
 	func addOwnerSection() {
-		if let share = shares.first, let owner = share.itemOwner, let ownerName = owner.displayName, owner.userName != core?.connection.loggedInUser?.userName, self.sectionForIdentifier("owner-section") == nil {
+		if let share = shares.first, let owner = share.itemOwner, var ownerName = owner.displayName, self.sectionForIdentifier("owner-section") == nil {
+			if owner.displayName == core?.connection.loggedInUser?.userName {
+				ownerName = "You".localized
+			}
+
 			let dateFormatter = DateFormatter()
 			dateFormatter.dateStyle = .medium
 			dateFormatter.timeStyle = .short
 			var footer : String?
 			if let date = share.creationDate {
-				footer = String(format: "Invited by: %@".localized, dateFormatter.string(from: date))
+				footer = String(format: "Invited: %@".localized, dateFormatter.string(from: date))
 			}
 
 			let shareRow = StaticTableViewRow(rowWithAction: nil, title: String(format:"%@", ownerName), accessoryType: .none)

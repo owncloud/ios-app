@@ -117,7 +117,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 			canShare = true
 		}
 
-		if defaultPermissionMask.contains(.share), core?.connection.capabilities?.sharingResharing == true {
+		if core?.connection.capabilities?.sharingResharing == true {
 			section.add(row: StaticTableViewRow(toggleItemWithAction: { [weak self] (row, _) in
 				if let selected = row.value as? Bool {
 					self?.changePermissions(enabled: selected, permissions: [.share], completionHandler: {(_) in
@@ -126,27 +126,25 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 				}, title: "Can Share".localized, subtitle: "", selected: canShare, identifier: "permission-section-share"))
 		}
 
-		if defaultPermissionMask.contains(.create) || defaultPermissionMask.contains(.delete) || defaultPermissionMask.contains(.update) {
-			section.add(row: StaticTableViewRow(toggleItemWithAction: { [weak self] (row, _) in
-				guard let self = self, let item = self.item else { return }
-				if let selected = row.value as? Bool {
-					if item.type == .collection {
-						if selected {
-							self.addPermissionEditSection(animated: true, selected: true)
-						} else {
-							if let section = self.sectionForIdentifier("permission-edit-section") {
-								self.removeSection(section, animated: true)
-							}
-						}
-						self.changePermissions(enabled: selected, permissions: [.create, .update, .delete], completionHandler: { (_) in
-						})
+		section.add(row: StaticTableViewRow(toggleItemWithAction: { [weak self] (row, _) in
+			guard let self = self, let item = self.item else { return }
+			if let selected = row.value as? Bool {
+				if item.type == .collection {
+					if selected {
+						self.addPermissionEditSection(animated: true, selected: true)
 					} else {
-						self.changePermissions(enabled: selected, permissions: [.update], completionHandler: { (_) in
-						})
+						if let section = self.sectionForIdentifier("permission-edit-section") {
+							self.removeSection(section, animated: true)
+						}
 					}
+					self.changePermissions(enabled: selected, permissions: [.create, .update, .delete], completionHandler: { (_) in
+					})
+				} else {
+					self.changePermissions(enabled: selected, permissions: [.update], completionHandler: { (_) in
+					})
 				}
-				}, title: item?.type == .collection ? "Can Edit".localized : "Can Edit and Change".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
-		}
+			}
+			}, title: item?.type == .collection ? "Can Edit".localized : "Can Edit and Change".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
 
 		let subtitles = [
 			"Allows the users you share with to re-share".localized,
@@ -170,15 +168,9 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 	func addPermissionEditSection(animated : Bool = false, selected : Bool = false) {
 		let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "permission-edit-section")
 
-		if defaultPermissionMask.contains(.create) {
-			self.addPermissionRow(to: section, with: "Can Create", permission: .create, selected: (selected ? selected : hasAnyPermission(of: [.create])), identifier: "permission-section-edit-create")
-		}
-		if defaultPermissionMask.contains(.update) {
-			self.addPermissionRow(to: section, with: "Can Change", permission: .update, selected: (selected ? selected : hasAnyPermission(of: [.update])), identifier: "permission-section-edit-change")
-		}
-		if defaultPermissionMask.contains(.delete) {
-			self.addPermissionRow(to: section, with: "Can Delete", permission: .delete, selected: (selected ? selected : hasAnyPermission(of: [.delete])), identifier: "permission-section-edit-delete")
-		}
+		self.addPermissionRow(to: section, with: "Can Create", permission: .create, selected: (selected ? selected : hasAnyPermission(of: [.create])), identifier: "permission-section-edit-create")
+		self.addPermissionRow(to: section, with: "Can Change", permission: .update, selected: (selected ? selected : hasAnyPermission(of: [.update])), identifier: "permission-section-edit-change")
+		self.addPermissionRow(to: section, with: "Can Delete", permission: .delete, selected: (selected ? selected : hasAnyPermission(of: [.delete])), identifier: "permission-section-edit-delete")
 
 		let subtitles = [
 			"Allows the users you share with to create new files and add them to the share".localized,
