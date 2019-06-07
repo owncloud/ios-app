@@ -191,7 +191,7 @@ extension OCItem {
 		return iconName
 	}
 
-	func iconName() -> String? {
+	var iconName : String? {
 		var iconName = OCItem.iconName(for: self.mimeType)
 
 		if iconName == nil {
@@ -206,7 +206,7 @@ extension OCItem {
 	}
 
 	func icon(fitInSize: CGSize) -> UIImage? {
-		if let iconName = self.iconName() {
+		if let iconName = self.iconName {
 			return Theme.shared.image(for: iconName, size: fitInSize)
 		}
 
@@ -264,6 +264,34 @@ extension OCItem {
 		if self.shareTypesMask.contains(.userShare) || self.shareTypesMask.contains(.groupShare) || self.shareTypesMask.contains(.remote) {
 			return true
 		}
+		return false
+	}
+
+	func shareRootItem(from core: OCCore) -> OCItem? {
+		var shareRootItem : OCItem?
+
+		if self.isSharedWithUser {
+			var parentItem : OCItem? = self
+
+			shareRootItem = self
+
+			repeat {
+				parentItem = parentItem?.parentItem(from: core)
+
+				if parentItem != nil, parentItem?.isSharedWithUser == true {
+					shareRootItem = parentItem
+				}
+			} while ((parentItem != nil) && (parentItem?.isSharedWithUser == true))
+		}
+
+		return shareRootItem
+	}
+
+	func isShareRootItem(from core: OCCore) -> Bool {
+		if let shareRootItem = shareRootItem(from: core) {
+			return shareRootItem.localID == localID
+		}
+
 		return false
 	}
 
