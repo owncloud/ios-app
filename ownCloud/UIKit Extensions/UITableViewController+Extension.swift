@@ -33,6 +33,7 @@ extension UITableViewController {
 
 		NSLayoutConstraint.activate([
 			coloredView.topAnchor.constraint(equalTo: self.tableView.topAnchor, constant: -self.view.frame.size.height),
+			coloredView.leftAnchor.constraint(equalTo: self.tableView.leftAnchor),
 			coloredView.widthAnchor.constraint(equalTo: self.tableView.widthAnchor),
 			coloredView.heightAnchor.constraint(equalToConstant: self.view.frame.size.height + 1)
 			])

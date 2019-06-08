@@ -192,12 +192,18 @@ final class CardPresentationController: UIPresentationController {
 	// MARK: - Layout
 	private var animationOnGoing = false
 
+	override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
+		cachedFittingSize = nil
+	}
+
 	override func containerViewWillLayoutSubviews() {
 		if cardPanGestureRecognizer?.state != .began, cardPanGestureRecognizer?.state != .changed, !animationOnGoing {
 			let presentedViewFrame = frameOfPresentedViewInContainerView
 
-			presentedView?.frame = presentedViewFrame
-			dimmingView.frame = windowFrame
+			UIView.animate(withDuration: 0.15, animations: {
+				self.presentedView?.frame = presentedViewFrame
+			})
+			self.dimmingView.frame = self.windowFrame
 
 			if let moreViewController = presentedViewController as? MoreViewController,
 			   let fittingSize = presentedViewFittingSize {

@@ -89,7 +89,7 @@ class StaticTableViewSection: NSObject {
 
 				if let selectedValueObject = selectedValue as? NSObject, let valueObject = value as? NSObject, (selectedValueObject == valueObject) { selected = true }
 
-				radioGroupRows.append(StaticTableViewRow(radioItemWithAction: radioAction, groupIdentifier: groupIdentifier, value: value, title: label, selected: selected))
+				radioGroupRows.append(StaticTableViewRow(radioItemWithAction: radioAction, groupIdentifier: groupIdentifier, value: value, title: label, subtitle: "", selected: selected))
 			}
 		}
 
@@ -144,6 +144,12 @@ class StaticTableViewSection: NSObject {
 		// Update view controller
 		if sectionIndex != nil, self.viewController?.needsLiveUpdates == true {
 			self.viewController?.tableView.deleteRows(at: indexPaths, with: animated ? .fade : .none)
+		}
+	}
+
+	func remove(rowWithIdentifier identifier: String, animated : Bool = false) {
+		if let row = row(withIdentifier: identifier) {
+			self.remove(rows: [row], animated: animated)
 		}
 	}
 

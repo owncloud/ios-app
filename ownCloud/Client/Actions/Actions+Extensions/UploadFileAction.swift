@@ -47,6 +47,15 @@ class UploadFileAction: UploadBaseAction {
 
 		viewController.present(documentPickerViewController, animated: true)
 	}
+
+	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+		if location == .plusButton {
+			Theme.shared.add(tvgResourceFor: "text")
+			return Theme.shared.image(for: "text", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
+		}
+
+		return nil
+	}
 }
 
 // MARK: - UIDocumentPickerDelegate

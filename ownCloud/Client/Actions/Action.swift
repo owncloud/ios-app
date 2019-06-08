@@ -162,19 +162,47 @@ class Action : NSObject {
 	}
 
 	// MARK: - Provide Card view controller
-	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ActionProgressHandler? = nil, completionHandler: ((Action, Error?) -> Void)? = nil) -> UIViewController {
+
+	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ActionProgressHandler? = nil, completionHandler: ((Action, Error?) -> Void)? = nil) -> UIViewController? {
+		guard let core = context.core else { return nil }
 
 		let tableViewController = MoreStaticTableViewController(style: .grouped)
-		let header = MoreViewHeader(for: item, with: context.core!)
-		let moreViewController = MoreViewController(item: item, core: context.core!, header: header, viewController: tableViewController)
+		let header = MoreViewHeader(for: item, with: core)
+		let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
+
+		if core.connectionStatus == .online {
+			if core.connection.capabilities?.sharingAPIEnabled == 1 {
+				OnMainThread {
+					if item.isSharedWithUser || item.isShared {
+						let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+						progressView.startAnimating()
+
+						let row = StaticTableViewRow(rowWithAction: nil, title: "Searching Shares…".localized, alignment: .left, accessoryView: progressView, identifier: "share-searching")
+						let placeholderRow = StaticTableViewRow(rowWithAction: nil, title: "", alignment: .left, identifier: "share-empty-searching")
+						self.updateSharingSection(sectionIdentifier: "share-section", rows: [placeholderRow, row], tableViewController: tableViewController, contentViewController: moreViewController)
+
+						core.unifiedShares(for: item, completionHandler: { (shares) in
+							OnMainThread {
+								let shareRows = self.shareRows(shares: shares, item: item, presentingController: moreViewController, context: context)
+								self.updateSharingSection(sectionIdentifier: "share-section", rows: shareRows, tableViewController: tableViewController, contentViewController: moreViewController)
+							}
+						})
+					}
+				}
+			} else {
+				if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context) {
+					tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: [publicLinkRow]), at: 0, animated: false)
+				}
+			}
+		}
 
 		let title = NSAttributedString(string: "Actions".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
 		let actions = Action.sortedApplicableActions(for: context)
 
 		actions.forEach({
-			$0.actionWillRunHandler = {
-				moreViewController.dismiss(animated: true)
+			$0.actionWillRunHandler = { [weak moreViewController] in
+				moreViewController?.dismiss(animated: true)
 			}
 
 			$0.progressHandler = progressHandler
@@ -243,11 +271,13 @@ class Action : NSObject {
 	}
 
 	// MARK: - Action UI elements
+	private static let staticRowImageWidth : CGFloat = 32
+
 	func provideStaticRow() -> StaticTableViewRow? {
 		return StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
 			self.willRun()
 			self.run()
-		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, identifier: actionExtension.identifier.rawValue)
+		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, image: self.icon, imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: actionExtension.identifier.rawValue)
 	}
 
 	func provideContextualAction() -> UIContextualAction? {
@@ -259,10 +289,20 @@ class Action : NSObject {
 	}
 
 	func provideAlertAction() -> UIAlertAction? {
-		return UIAlertAction(title: self.actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .default, handler: { (_ alertAction) in
+		let alertAction = UIAlertAction(title: self.actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .default, handler: { (_ alertAction) in
 			self.willRun()
 			self.run()
 		})
+
+		let image = self.icon
+		if alertAction.responds(to: NSSelectorFromString("setImage:")) {
+			alertAction.setValue(image, forKey: "image")
+		}
+		if alertAction.responds(to: NSSelectorFromString("_setTitleTextAlignment:")) {
+			alertAction.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+		}
+
+		return alertAction
 	}
 
 	// MARK: - Action metadata
@@ -272,7 +312,7 @@ class Action : NSObject {
 
 	var icon : UIImage? {
 		if let locationIdentifier = context.location?.identifier {
-			return Action.iconForLocation(locationIdentifier)
+			return type(of: self).iconForLocation(locationIdentifier)
 		}
 
 		return nil
@@ -280,5 +320,136 @@ class Action : NSObject {
 
 	var position : ActionPosition {
 		return type(of: self).applicablePosition(forContext: context)
+	}
+
+}
+
+// MARK: - Sharing
+
+private extension Action {
+
+	class func shareRows(shares: [OCShare], item: OCItem, presentingController: UIViewController, context: ActionContext) -> [StaticTableViewRow] {
+		var shareRows: [StaticTableViewRow] = []
+
+		var userTitle = ""
+		var linkTitle = ""
+		var hasUserGroupSharing = false
+		var hasLinkSharing = false
+
+		if item.isSharedWithUser {
+			// find shares by others
+			if let itemOwner = item.owner, itemOwner.isRemote, let ownerName = itemOwner.displayName ?? itemOwner.userName {
+				// - remote shares
+				userTitle = String(format: "Shared by %@".localized, ownerName)
+				hasUserGroupSharing = true
+			} else {
+				// - local shares
+				for share in shares {
+					if let ownerName = share.itemOwner?.displayName {
+						userTitle = String(format: "Shared by %@".localized, ownerName)
+						hasUserGroupSharing = true
+						break
+					}
+				}
+			}
+		} else {
+			// find Shares by me
+			let privateShares = shares.filter { (share) -> Bool in
+				return share.type != .link
+			}
+
+			if privateShares.count > 0 {
+				let title = ((privateShares.count > 1) ? "Recipients" : "Recipient").localized
+
+				userTitle = "\(privateShares.count) \(title)"
+				hasUserGroupSharing = true
+			}
+		}
+
+		// find Public link shares
+		let linkShares = shares.filter { (share) -> Bool in
+			return share.type == .link
+		}
+		if linkShares.count > 0 {
+			let title = ((linkShares.count > 1) ? "Links" : "Link").localized
+
+			linkTitle.append("\(linkShares.count) \(title)")
+			hasLinkSharing = true
+		}
+
+		if hasUserGroupSharing {
+			let addGroupRow = StaticTableViewRow(rowWithAction: { [weak presentingController, weak context] (_, _) in
+				if let context = context, let presentingController = presentingController, let core = context.core {
+					let sharingViewController = GroupSharingTableViewController(core: core, item: item)
+					sharingViewController.shares = shares
+
+					self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
+				}
+			}, title: userTitle, subtitle: nil, image: UIImage(named: "group"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
+			shareRows.append(addGroupRow)
+		} else if item.isShareable {
+			shareRows.append(self.shareAsGroupRow(item: item, presentingController: presentingController, context: context))
+		}
+
+		if hasLinkSharing, let core = context.core, core.connection.capabilities?.publicSharingEnabled == true {
+			let addGroupRow = StaticTableViewRow(rowWithAction: { [weak presentingController, weak context] (_, _) in
+				if let context = context, let presentingController = presentingController {
+					let sharingViewController = PublicLinkTableViewController(core: core, item: item)
+					sharingViewController.shares = shares
+
+					self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
+				}
+			}, title: linkTitle, subtitle: nil, image: UIImage(named: "link"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
+			shareRows.append(addGroupRow)
+		} else if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context) {
+			shareRows.append(publicLinkRow)
+		}
+
+		return shareRows
+	}
+
+	private class func updateSharingSection(sectionIdentifier: String, rows: [StaticTableViewRow], tableViewController: MoreStaticTableViewController, contentViewController: MoreViewController) {
+		if let section = tableViewController.sectionForIdentifier(sectionIdentifier) {
+			tableViewController.removeSection(section)
+		}
+		if rows.count > 0 {
+			tableViewController.insertSection(MoreStaticTableViewSection(identifier: "share-section", rows: rows), at: 0, animated: false)
+		}
+	}
+
+	private class func shareAsGroupRow(item : OCItem, presentingController: UIViewController, context: ActionContext) -> StaticTableViewRow {
+		let title = ((item.type == .collection) ? "Share this folder" : "Share this file").localized
+
+		let addGroupRow = StaticTableViewRow(buttonWithAction: { [weak presentingController, weak context] (_, _) in
+			if let context = context, let presentingController = presentingController, let core = context.core {
+				self.dismiss(presentingController: presentingController,
+							 andPresent: GroupSharingTableViewController(core: core, item: item),
+							 on: context.viewController)
+			}
+		}, title: title, style: .plain, image: UIImage(named: "group"), imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: "share-add-group")
+
+		return addGroupRow
+	}
+
+	private class func shareAsPublicLinkRow(item : OCItem, presentingController: UIViewController, context: ActionContext) -> StaticTableViewRow? {
+		let addGroupRow = StaticTableViewRow(buttonWithAction: { [weak presentingController, weak context] (_, _) in
+			if let context = context, let presentingController = presentingController, let core = context.core {
+				self.dismiss(presentingController: presentingController,
+							 andPresent: PublicLinkTableViewController(core: core, item: item),
+							 on: context.viewController)
+			}
+			}, title: "Links".localized, style: .plain, image: UIImage(named: "link"), imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: "share-add-group")
+
+		return addGroupRow
+	}
+
+	private class func dismiss(presentingController: UIViewController, andPresent viewController: UIViewController, on hostViewController: UIViewController?) {
+		presentingController.dismiss(animated: true)
+
+		guard let hostViewController = hostViewController else { return }
+
+		let navigationController = ThemeNavigationController(rootViewController: viewController)
+
+		hostViewController.present(navigationController, animated: true, completion: nil)
 	}
 }
