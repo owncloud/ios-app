@@ -24,6 +24,14 @@ struct ProgressSummary : Equatable {
 	var progress : Double
 	var message : String?
 	var progressCount : Int
+
+	func update(progressView: UIProgressView) {
+		if indeterminate {
+			progressView.progress = 1.0
+		} else {
+			progressView.progress = Float(progress)
+		}
+	}
 }
 
 typealias ProgressSummarizerNotificationBlock =  (_ summarizer : ProgressSummarizer, _ summary : ProgressSummary) -> Void

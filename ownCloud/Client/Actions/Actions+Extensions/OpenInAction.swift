@@ -31,107 +31,49 @@ class OpenInAction: Action {
 		return .first
 	}
 
-	private var interactionController: UIDocumentInteractionController?
-	private var downloadProgressController: DownloadFileProgressHUDViewController?
-	private var downloadedFiles: [OCFile] = [OCFile]()
-	var downloadError: Error?
-
 	override func run() {
-		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
+		guard context.items.count > 0, let hostViewController = context.viewController, let core = self.core else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
-		var itemsToDownload : [OCItem] = []
-		for item in context.items {
-			if core.localCopy(of: item) != nil {
-				if let file = item.file(with: core) {
-					downloadedFiles.append(file)
+		let hudViewController = DownloadItemsHUDViewController(core: core, downloadItems: context.items) { [weak hostViewController] (error, files) in
+			if let error = error {
+				if (error as NSError).isOCError(withCode: .cancelled) {
+					return
 				}
+
+				let appName = OCAppIdentity.shared.appName ?? "ownCloud"
+				let alertController = UIAlertController(with: "Cannot connect to ".localized + appName, message: appName + " couldn't download file(s)".localized, okLabel: "OK".localized, action: nil)
+
+				hostViewController?.present(alertController, animated: true)
 			} else {
-				itemsToDownload.append(item)
-			}
-		}
+				guard let files = files, files.count > 0, let viewController = hostViewController else { return }
 
-		if itemsToDownload.count == 0 {
-			self.presentSharingViewController()
-			self.completed()
-			return
-		}
-
-		downloadProgressController = DownloadFileProgressHUDViewController()
-
-		downloadProgressController?.present(on: viewController) { [weak self] in
-
-			let downloadGroup = DispatchGroup()
-
-			for item in itemsToDownload {
-				downloadGroup.enter()
-				if let progress = core.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, _, _, file) in
-					if error != nil {
-						Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
-						self?.downloadError = error
-					} else {
-						self?.downloadedFiles.append(file!)
+				// UIDocumentInteractionController can only be used with a single file
+				if files.count == 1 {
+					if let fileURL = files.first?.url {
+						UIDocumentInteractionController(url: fileURL).presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
 					}
-					downloadGroup.leave()
-				}) {
-					self?.downloadProgressController?.attach(progress: progress)
-					self?.publish(progress: progress)
-				}
+				} else {
+					// Handle multiple files with a fallback solution
+					let urls = files.map { (file) -> URL in
+						return file.url!
+					}
+					let activityController = UIActivityViewController(activityItems: urls, applicationActivities: nil)
 
-				if self?.downloadError != nil {
-					break
+					if UIDevice.current.isIpad() {
+						activityController.popoverPresentationController?.sourceView = viewController.view
+					}
+
+					viewController.present(activityController, animated: true, completion: nil)
 				}
 			}
-
-			downloadGroup.notify(queue: .main) { [weak self] in
-				self?.downloadProgressController?.dismiss(animated: true, completion: {
-					if let error = self?.downloadError {
-						self?.showDownloadError()
-						self?.completed(with: error)
-					} else {
-						self?.presentSharingViewController()
-						self?.completed()
-					}
-				})
-			}
 		}
-	}
 
-	fileprivate func showDownloadError() {
+		hudViewController.presentHUDOn(viewController: hostViewController)
 
-		guard let viewController = context.viewController else { return }
-
-		let appName = OCAppIdentity.shared.appName ?? "ownCloud"
-		let alertController = UIAlertController(with: "Cannot connect to ".localized + appName, message: appName + " couldn't download file(s)".localized, okLabel: "OK".localized, action: nil)
-		viewController.present(alertController, animated: true)
-	}
-
-	fileprivate func presentSharingViewController() {
-		guard downloadedFiles.count > 0, let viewController = context.viewController else { return }
-
-		// UIDocumentInteractionController can deal only with single file
-		if downloadedFiles.count == 1 {
-			if let fileURL = self.downloadedFiles.first?.url {
-				self.interactionController = UIDocumentInteractionController(url: fileURL)
-				self.interactionController?.delegate = self
-				self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
-			}
-
-		} else {
-			// Handle multiple files with a fallback solution
-			let urls = downloadedFiles.map { (file) -> URL in
-				return file.url!
-			}
-			let activityController = UIActivityViewController(activityItems: urls, applicationActivities: nil)
-
-			if UIDevice.current.isIpad() {
-				activityController.popoverPresentationController?.sourceView = viewController.view
-			}
-
-			context.viewController?.present(activityController, animated: true, completion: nil)
-		}
+		self.completed()
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
@@ -140,12 +82,5 @@ class OpenInAction: Action {
 		}
 
 		return nil
-	}
-}
-
-extension OpenInAction: UIDocumentInteractionControllerDelegate {
-
-	func documentInteractionControllerDidDismissOptionsMenu(_ controller: UIDocumentInteractionController) {
-		self.interactionController = nil
 	}
 }
