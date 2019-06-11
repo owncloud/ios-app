@@ -82,6 +82,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
+	var shallDisplayMoreButtonInToolbar = true
+
 	private var state: DisplayViewState = .hasNetworkConnection {
 		didSet {
 			OnMainThread(inline: true) {
@@ -254,9 +256,11 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		if let parent = parent, let itemName = item?.name {
 			parent.navigationItem.title = itemName
 
-			let actionsBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
-			actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
-			parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
+			if shallDisplayMoreButtonInToolbar {
+				let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+				actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
+				parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
+			}
 		}
 	}
 
@@ -434,10 +438,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 					}
 				}
 
-				if let parent = parent {
-					parent.navigationItem.title = item.name
-					parent.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "•••", style: .plain, target: self, action: #selector(optionsBarButtonPressed))
-				}
+				updateNavigationBarItems()
 		}
 	}
 }
