@@ -109,6 +109,10 @@ class MoreViewController: UIViewController {
 
 		return size
 	}
+
+	override func viewDidLayoutSubviews() {
+		self.preferredContentSize = moreLayoutSizeFitting(CGSize(width: UIView.layoutFittingExpandedSize.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
+	}
 }
 
 extension MoreViewController: Themeable {

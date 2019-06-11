@@ -45,6 +45,13 @@ platform :ios do
     )
   end
 
+  desc "Generate the screenshots for the AppStore"
+    lane :screenshots do
+      reset_simulators
+      snapshot
+      frameit(white: true, path: './fastlane/screenshots')
+    end
+
   desc "In-House Enterprise IPA generation"
    lane :build_ipa_enterprise_in_house do
 
@@ -54,6 +61,7 @@ platform :ios do
     ENTERPRISE_FP_PROFILE = "Enterprise Distribution iOS Neo File Provider"
     ENTERPRISE_FP_UI_ID = "com.owncloud.enterprise.ios-app.ownCloud-File-ProviderUI"
     ENTERPRISE_FP_UI_PROFILE = "Enterprise Distribution iOS Neo File ProviderUI"
+    ENTERPRISE_APP_FW_ID = "com.owncloud.enterprise.ownCloudApp"
     ENTERPRISE_TEAM = "5QNK8L2PSC"
     ENTERPRISE_IDENTITY = "iPhone Distribution: ownCloud GmbH"
 
@@ -73,6 +81,12 @@ platform :ios do
       xcodeproj: "ownCloud.xcodeproj",
       plist_path: "ownCloud File ProviderUI/Info.plist",
       app_identifier: ENTERPRISE_FP_UI_ID
+    )
+
+    update_app_identifier(
+      xcodeproj: "ownCloud.xcodeproj",
+      plist_path: "ownCloudAppFramework/Info.plist",
+      app_identifier: ENTERPRISE_APP_FW_ID
     )
 
     update_app_group_identifiers(
@@ -117,6 +131,15 @@ platform :ios do
       profile_name: ENTERPRISE_FP_UI_PROFILE,
       bundle_identifier: ENTERPRISE_FP_UI_ID,
       targets: ["ownCloud File ProviderUI"]
+    )
+
+    automatic_code_signing(
+      path: "ownCloud.xcodeproj",
+      use_automatic_signing: false,
+      team_id: ENTERPRISE_TEAM,
+      code_sign_identity: ENTERPRISE_IDENTITY,
+      bundle_identifier: ENTERPRISE_APP_FW_ID,
+      targets: ["ownCloudApp"]
     )
 
     #Create the build

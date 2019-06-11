@@ -352,13 +352,13 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
-		let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: { [weak self] (action, _) in
+		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: { [weak self] (action, _) in
 			if !(action is OpenInAction) {
 				self?.navigationController?.popViewController(animated: true)
 			}
-		})
-
-		self.present(asCard: moreViewController, animated: true)
+		}) {
+			self.present(asCard: moreViewController, animated: true)
+		}
 	}
 
 	// MARK: - Query management

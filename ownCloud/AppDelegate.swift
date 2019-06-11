@@ -69,11 +69,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(CopyAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
+		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
 		// Licenses
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: Theme.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
+
+		// TODO: Remove before official release!!! Removing legacy logs which might be left over in beta versions where there was no log rotation and log could have grown significantly in size
+		if let legacyLogURL = OCAppIdentity.shared.appGroupContainerURL?.appendingPathComponent("ownCloud.log") {
+			try? FileManager.default.removeItem(at: legacyLogURL)
+		}
+
+		//Disable UI Animation for UITesting (screenshots)
+		if let enableUIAnimations = VendorServices.classSetting(forOCClassSettingsKey: .enableUIAnimations) as? Bool {
+			UIView.setAnimationsEnabled(enableUIAnimations)
+		}
 
 		return true
 	}

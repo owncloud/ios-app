@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>119</string>
+	<string>120</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
@@ -45,10 +45,10 @@
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>OCAppIdentifierPrefix</key>
 	<string>$(AppIdentifierPrefix)</string>
-	<key>OCKeychainAccessGroupIdentifier</key>
-	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>OCHasFileProvider</key>
 	<true/>
+	<key>OCKeychainAccessGroupIdentifier</key>
+	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

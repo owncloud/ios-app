@@ -19,15 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
-	<string>119</string>
-	<key>OCAppGroupIdentifier</key>
-	<string>group.com.owncloud.ios-app</string>
-	<key>OCAppIdentifierPrefix</key>
-	<string>$(AppIdentifierPrefix)</string>
-	<key>OCKeychainAccessGroupIdentifier</key>
-	<string>group.com.owncloud.ios-app</string>
-	<key>OCHasFileProvider</key>
-	<true/>
+	<string>120</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionFileProviderDocumentGroup</key>
@@ -39,5 +31,13 @@
 		<key>NSExtensionPrincipalClass</key>
 		<string>FileProviderExtension</string>
 	</dict>
+	<key>OCAppGroupIdentifier</key>
+	<string>group.com.owncloud.ios-app</string>
+	<key>OCAppIdentifierPrefix</key>
+	<string>$(AppIdentifierPrefix)</string>
+	<key>OCHasFileProvider</key>
+	<true/>
+	<key>OCKeychainAccessGroupIdentifier</key>
+	<string>group.com.owncloud.ios-app</string>
 </dict>
 </plist>
