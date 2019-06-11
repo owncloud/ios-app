@@ -1,4 +1,4 @@
-#Dark Color Scheme Guide
+# Dark Color Scheme Guide
 
 [TOC]
 
@@ -17,9 +17,9 @@
 
 ## Progress
 
-| Name           | Type           | Sample | Value |
-| -------------- | -------------- | ------ | ----- |
-| progressColors | ThemeColorPair |        |       |
+| Name           | Type                                              | Sample | Value |
+| -------------- | ------------------------------------------------- | ------ | ----- |
+| progressColors | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |        |       |
 
 
 
@@ -37,37 +37,37 @@
 
 ## Table view
 
-| Name                      | Type                 | Sample | Value                                            |
-| ------------------------- | -------------------- | ------ | ------------------------------------------------ |
-| tableBackgroundColor      | UIColor              |        | navigationBarColors.backgroundColor!.darker(0.1) |
-| tableGroupBackgroundColor | UIColor              |        | navigationBarColors.backgroundColor!.darker(0.3) |
-| tableSeparatorColor       | UIColor              |        | UIColor.darkGray                                 |
-| tableRowBorderColor       | UIColor              |        | UIColor.white.withAlphaComponent(0.1)            |
-| tableRowColors            | ThemeColorCollection |        |                                                  |
-| tableRowHighlightColors   | ThemeColorCollection |        |                                                  |
+| Name                      | Type                                                         | Sample | Value                                            |
+| ------------------------- | ------------------------------------------------------------ | ------ | ------------------------------------------------ |
+| tableBackgroundColor      | UIColor                                                      |        | navigationBarColors.backgroundColor!.darker(0.1) |
+| tableGroupBackgroundColor | UIColor                                                      |        | navigationBarColors.backgroundColor!.darker(0.3) |
+| tableSeparatorColor       | UIColor                                                      |        | UIColor.darkGray                                 |
+| tableRowBorderColor       | UIColor                                                      |        | UIColor.white.withAlphaComponent(0.1)            |
+| tableRowColors            | [ThemeColorCollection](./Colorscheme.md#ThemeColorCollection) |        |                                                  |
+| tableRowHighlightColors   | [ThemeColorCollection](./Colorscheme.md#ThemeColorCollection) |        |                                                  |
 
 
 
 ### TableView.tableRowColors
 
-| Name                      | Type                     | Sample | Value                                   |
-| ------------------------- | ------------------------ | ------ | --------------------------------------- |
-| backgroundColor           | UIColor                  |        | tableBackgroundColor                    |
-| labelColor                | UIColor                  |        | navigationBarColors.labelColor          |
-| secondaryLabelColor       | UIColor                  |        | navigationBarColors.secondaryLabelColor |
-| symbolColor               | UIColor                  |        | 468CC8                                  |
-| tintColor                 | UIColor                  |        | navigationBarColors.tintColor           |
-| filledColorPairCollection | ThemeColorPairCollection |        |                                         |
+| Name                      | Type                                                         | Sample | Value                                   |
+| ------------------------- | ------------------------------------------------------------ | ------ | --------------------------------------- |
+| backgroundColor           | UIColor                                                      |        | tableBackgroundColor                    |
+| labelColor                | UIColor                                                      |        | navigationBarColors.labelColor          |
+| secondaryLabelColor       | UIColor                                                      |        | navigationBarColors.secondaryLabelColor |
+| symbolColor               | UIColor                                                      |        | 468CC8                                  |
+| tintColor                 | UIColor                                                      |        | navigationBarColors.tintColor           |
+| filledColorPairCollection | [ThemeColorPairCollection](./Colorscheme.md#ThemeColorPairCollection) |        |                                         |
 
 
 
 #### TableView.tableRowColor.filledColorPairCollection
 
-| Name        | Type           | Sample | Value         |
-| ----------- | -------------- | ------ | ------------- |
-| normal      | ThemeColorPair |        | UIColor.white |
-| highlighted | ThemeColorPair |        |               |
-| disabled    | ThemeColorPair |        |               |
+| Name        | Type                                              | Sample | Value         |
+| ----------- | ------------------------------------------------- | ------ | ------------- |
+| normal      | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |        | UIColor.white |
+| highlighted | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |        |               |
+| disabled    | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |        |               |
 
 
 

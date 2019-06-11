@@ -1,4 +1,4 @@
-#Color Scheme Guide
+# Color Scheme Guide
 
 [TOC]
 
@@ -27,11 +27,11 @@ Used for  *Button / Fill color collections* like: approvalColors, neutralColors,
 
 Used for  *Button / Fill color collections* like: approvalColors, neutralColors, destructiveColors
 
-| Name        | Type           |
-| ----------- | -------------- |
-| normal      | ThemeColorPair |
-| highlighted | ThemeColorPair |
-| disabled    | ThemeColorPair |
+| Name        | Type                                              |
+| ----------- | ------------------------------------------------- |
+| normal      | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
+| highlighted | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
+| disabled    | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
 
 
 
@@ -63,52 +63,52 @@ This colors and color collections are not branded and always the same, regardles
 
 ### Brand color collection
 
-| Name             | Type                 | Sample | Value |
-| ---------------- | -------------------- | ------ | ----- |
-| darkBrandColors  | ThemeColorCollection |        |       |
-| lightBrandColors | ThemeColorCollection |        |       |
+| Name             | Type                                                         | Sample | Value |
+| ---------------- | ------------------------------------------------------------ | ------ | ----- |
+| darkBrandColors  | [ThemeColorCollection](./Colorscheme.md#ThemeColorCollection) |        |       |
+| lightBrandColors | [ThemeColorCollection](./Colorscheme.md#ThemeColorCollection) |        |       |
 
 
 
 #### darkBrandColors
 
-| Name                      | Type                     | Sample | Value               |
-| ------------------------- | ------------------------ | ------ | ------------------- |
-| backgroundColor           | UIColor                  |        | 1D293B              |
-| labelColor                | UIColor                  |        | UIColor.white       |
-| secondaryLabelColor       | UIColor                  |        | UIColor.lightGray   |
-| symbolColor               | UIColor                  |        | UIColor.white       |
-| tintColor                 | UIColor                  |        | 468CC8.lighter(0.2) |
-| filledColorPairCollection | ThemeColorPairCollection |        |                     |
+| Name                      | Type                                                         | Sample | Value               |
+| ------------------------- | ------------------------------------------------------------ | ------ | ------------------- |
+| backgroundColor           | UIColor                                                      |        | 1D293B              |
+| labelColor                | UIColor                                                      |        | UIColor.white       |
+| secondaryLabelColor       | UIColor                                                      |        | UIColor.lightGray   |
+| symbolColor               | UIColor                                                      |        | UIColor.white       |
+| tintColor                 | UIColor                                                      |        | 468CC8.lighter(0.2) |
+| filledColorPairCollection | [ThemeColorPairCollection](./Colorscheme.md#ThemeColorPairCollection) |        |                     |
 
 ##### filledColorPairCollection
 
-| Name        | Type           | Sample | Value |
-| ----------- | -------------- | ------ | ----- |
-| normal      | ThemeColorPair |        |       |
-| highlighted | ThemeColorPair |        |       |
-| disabled    | ThemeColorPair |        |       |
+| Name        | Type                                              | Sample | Value |
+| ----------- | ------------------------------------------------- | ------ | ----- |
+| normal      | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |        |       |
+| highlighted | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |        |       |
+| disabled    | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |        |       |
 
 
 
 #### lightBrandColors
 
-| Name                      | Type                     | Sample | Value               |
-| ------------------------- | ------------------------ | ------ | ------------------- |
-| backgroundColor           | UIColor                  |        | 1D293B              |
-| labelColor                | UIColor                  |        | UIColor.white       |
-| secondaryLabelColor       | UIColor                  |        | UIColor.lightGray   |
-| symbolColor               | UIColor                  |        | UIColor.white       |
-| tintColor                 | UIColor                  |        | 468CC8.lighter(0.2) |
-| filledColorPairCollection | ThemeColorPairCollection |        |                     |
+| Name                      | Type                                                         | Sample | Value               |
+| ------------------------- | ------------------------------------------------------------ | ------ | ------------------- |
+| backgroundColor           | UIColor                                                      |        | 1D293B              |
+| labelColor                | UIColor                                                      |        | UIColor.white       |
+| secondaryLabelColor       | UIColor                                                      |        | UIColor.lightGray   |
+| symbolColor               | UIColor                                                      |        | UIColor.white       |
+| tintColor                 | UIColor                                                      |        | 468CC8.lighter(0.2) |
+| filledColorPairCollection | [ThemeColorPairCollection](./Colorscheme.md#ThemeColorPairCollection) |        |                     |
 
 ##### filledColorPairCollection
 
-| Name        | Type           | Sample | Value |
-| ----------- | -------------- | ------ | ----- |
-| normal      | ThemeColorPair |        |       |
-| highlighted | ThemeColorPair |        |       |
-| disabled    | ThemeColorPair |        |       |
+| Name        | Type                                              | Sample | Value |
+| ----------- | ------------------------------------------------- | ------ | ----- |
+| normal      | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |        |       |
+| highlighted | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |        |       |
+| disabled    | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |        |       |
 
 
 
@@ -125,11 +125,11 @@ This colors and color collections are not branded and always the same, regardles
 
 ### Button / Fill color collections
 
-| Name              | Type                     | Sample | Value |
-| ----------------- | ------------------------ | ------ | ----- |
-| approvalColors    | ThemeColorPairCollection |        |       |
-| neutralColors     | ThemeColorPairCollection |        |       |
-| destructiveColors | ThemeColorPairCollection |        |       |
+| Name              | Type                                                         | Sample | Value |
+| ----------------- | ------------------------------------------------------------ | ------ | ----- |
+| approvalColors    | [ThemeColorPairCollection](./Colorscheme.md#ThemeColorPairCollection) |        |       |
+| neutralColors     | [ThemeColorPairCollection](./Colorscheme.md#ThemeColorPairCollection) |        |       |
+| destructiveColors | [ThemeColorPairCollection](./Colorscheme.md#ThemeColorPairCollection) |        |       |
 
 
 
