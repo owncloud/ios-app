@@ -187,6 +187,17 @@ class Action : NSObject {
 								self.updateSharingSection(sectionIdentifier: "share-section", rows: shareRows, tableViewController: tableViewController, contentViewController: moreViewController)
 							}
 						})
+					} else {
+						var shareRows : [StaticTableViewRow] = []
+						if item.isShareable {
+							shareRows.append(self.shareAsGroupRow(item: item, presentingController: moreViewController, context: context))
+						}
+						if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context) {
+							shareRows.append(publicLinkRow)
+						}
+						if shareRows.count > 0 {
+							tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: shareRows), at: 0, animated: false)
+						}
 					}
 				}
 			} else {
