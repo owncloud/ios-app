@@ -51,6 +51,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
+		_ = ScheduledTaskManager.shared
+
 		// Set up background refresh
 		application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum + 10)
 
