@@ -334,6 +334,10 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		gotoButtonItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_go_to_page"), style: .plain, target: self, action: #selector(goToPage))
 		outlineItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_outline"), style: .plain, target: self, action: #selector(showOutline))
 
+		searchButtonItem?.accessibilityLabel = "Search PDF".localized
+		gotoButtonItem?.accessibilityLabel = "Go to page".localized
+		outlineItem?.accessibilityLabel = "Outline".localized
+
 		self.parent?.navigationItem.rightBarButtonItems = [
 			gotoButtonItem!,
 			searchButtonItem!,
