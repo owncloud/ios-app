@@ -257,6 +257,8 @@
 "Actions" = "Actions";
 "copy" = "copy";
 
+"Preparing…" = "Preparing…";
+
 /* Directory Picker Messages */
 "Move here" = "Move here";
 

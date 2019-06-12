@@ -66,7 +66,7 @@ class DownloadItemsHUDViewController: CardViewController {
 		cancelButton.setTitle("Cancel".localized, for: .normal)
 		cancelButton.addTarget(self, action: #selector(self.cancel), for: .touchUpInside)
 
-		messageLabel.text = " " // Needed so the messageLabel doesn't have a zero height after initial layout
+		messageLabel.text = "Preparing…".localized // Needed so the messageLabel doesn't have a zero height after initial layout
 		messageLabel.sizeToFit()
 
 		messageLabel.setContentHuggingPriority(.required, for: .vertical)
@@ -135,7 +135,7 @@ class DownloadItemsHUDViewController: CardViewController {
 			if items.count > 0 {
 				progressSummarizer.addObserver(self, notificationBlock: { [weak self] (_, summary) in
 					if let progressView = self?.progressView {
-						self?.messageLabel.text = summary.message ?? " "
+						self?.messageLabel.text = summary.message ?? "Preparing…".localized
 						summary.update(progressView: progressView)
 					}
 				})
@@ -147,7 +147,7 @@ class DownloadItemsHUDViewController: CardViewController {
 
 					if let progress = core.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, _, _, file) in
 						if error != nil {
-							Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
+							Log.error("DownloadItemsHUDViewController: error \(String(describing: error)) downloading \(String(describing: item.path))")
 							self.downloadError = error
 						} else {
 							self.downloadedFiles.append(file!)
