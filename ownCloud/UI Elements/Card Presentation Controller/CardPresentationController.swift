@@ -31,6 +31,12 @@ private enum CardPosition {
 	}
 }
 
+protocol CardPresentationSizing : UIViewController {
+	func cardPresentationSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize
+
+	var fitsOnScreen : Bool { get set }
+}
+
 final class CardPresentationController: UIPresentationController {
 
 	// MARK: - Instance Variables.
@@ -47,13 +53,15 @@ final class CardPresentationController: UIPresentationController {
 	private var cachedFittingSize : CGSize?
 	private var presentedViewFittingSize : CGSize? {
 		if cachedFittingSize == nil {
-			if let moreViewController = presentedViewController as? MoreViewController {
-				cachedFittingSize = moreViewController.moreLayoutSizeFitting(CGSize(width: self.windowFrame.size.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
+			if let cardViewController = presentedViewController as? CardPresentationSizing {
+				cachedFittingSize = cardViewController.cardPresentationSizeFitting(CGSize(width: self.windowFrame.size.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
 			} else {
 				cachedFittingSize = presentedView?.systemLayoutSizeFitting(self.windowFrame.size, withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
 			}
 
-			let safeBottom = presentingViewController.view?.window?.safeAreaInsets.bottom ?? 0
+			let safeBottom : CGFloat = presentingViewController.view?.window?.safeAreaInsets.bottom ?? 0
+
+			Log.log("safeBottom=\(safeBottom)")
 
 			cachedFittingSize?.height += safeBottom
 		}
@@ -84,6 +92,15 @@ final class CardPresentationController: UIPresentationController {
 		let presentedFrame = CGRect(origin: CGPoint(x: originX, y: self.offset(for: cardPosition)), size: CGSize(width: presentedWidth, height: presentedHeight))
 
 		return presentedFrame
+	}
+
+	var withHandle : Bool
+	var dismissable : Bool
+
+	init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?, withHandle : Bool, dismissable: Bool) {
+		self.withHandle = withHandle
+		self.dismissable = dismissable
+		super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
 	}
 
 	private func offset(for position: CardPosition, translatedBy: CGFloat = 0, allowOverStretch: Bool = false) -> CGFloat {
@@ -122,7 +139,7 @@ final class CardPresentationController: UIPresentationController {
 			}
 
 			// Add drag view to presentedView as presentedView is not yet part of the view hierarchy, so we can't yet attach to it via Auto Layout
-			if let hostView = presentedView, dragHandleView.superview == nil {
+			if let hostView = presentedView, dragHandleView.superview == nil, withHandle {
 				dragHandleView.translatesAutoresizingMaskIntoConstraints = false
 				hostView.addSubview(dragHandleView)
 
@@ -153,8 +170,10 @@ final class CardPresentationController: UIPresentationController {
 
 		containerView?.addGestureRecognizer(cardPanGestureRecognizer!)
 
-		dimmingViewGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissView))
-		dimmingView.addGestureRecognizer(dimmingViewGestureRecognizer!)
+		if dismissable {
+			dimmingViewGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissView))
+			dimmingView.addGestureRecognizer(dimmingViewGestureRecognizer!)
+		}
 
 		if let presentedView = presentedView,
 		   let containerView = containerView {
@@ -205,13 +224,13 @@ final class CardPresentationController: UIPresentationController {
 			})
 			self.dimmingView.frame = self.windowFrame
 
-			if let moreViewController = presentedViewController as? MoreViewController,
+			if let cardViewController = presentedViewController as? CardPresentationSizing,
 			   let fittingSize = presentedViewFittingSize {
 				var fitsOnScreen : Bool = false
 
 				fitsOnScreen = fittingSize.height < (windowFrame.size.height * CardPosition.open.heightMultiplier)
 
-			   	moreViewController.fitsOnScreen = fitsOnScreen
+			   	cardViewController.fitsOnScreen = fitsOnScreen
 			}
 		}
 	}
@@ -343,12 +362,12 @@ extension CardPresentationController: UIGestureRecognizerDelegate {
 
 // MARK: - Convenience addition to UIViewController
 extension UIViewController {
-	func present(asCard viewController: UIViewController, animated: Bool) {
-		let animator = CardTransitionDelegate(viewControllerToPresent: viewController, presentingViewController: self)
+	func present(asCard viewController: UIViewController, animated: Bool, withHandle: Bool = true, dismissable: Bool = true, completion: (() -> Void)? = nil) {
+		let animator = CardTransitionDelegate(viewControllerToPresent: viewController, presentingViewController: self, withHandle: withHandle, dismissable: dismissable)
 
 		viewController.transitioningDelegate = animator
 		viewController.modalPresentationStyle = .custom
 
-		present(viewController, animated: animated)
+		present(viewController, animated: animated, completion: completion)
 	}
 }

@@ -257,6 +257,8 @@
 "Actions" = "Actions";
 "copy" = "copy";
 
+"Preparing…" = "Preparing…";
+
 /* Directory Picker Messages */
 "Move here" = "Move here";
 
@@ -275,6 +277,8 @@
 "%@ of %@" = "%@ of %@";
 "Invalid Page" = "Invalid Page";
 "The entered page number doesn't exist" = "The entered page number doesn't exist";
+"Search PDF" = "Search PDF";
+"Outline" = "Outline";
 
 /* Photo Upload */
 "Upload" = "Upload";

@@ -24,6 +24,14 @@ struct ProgressSummary : Equatable {
 	var progress : Double
 	var message : String?
 	var progressCount : Int
+
+	func update(progressView: UIProgressView) {
+		if indeterminate {
+			progressView.progress = 1.0
+		} else {
+			progressView.progress = Float(progress)
+		}
+	}
 }
 
 typealias ProgressSummarizerNotificationBlock =  (_ summarizer : ProgressSummarizer, _ summary : ProgressSummary) -> Void
@@ -86,7 +94,9 @@ class ProgressSummarizer: NSObject {
 	// MARK: - Start/Stop tracking of progress objects
 	func startTracking(progress: Progress) {
 		OCSynchronized(self) {
-			if !trackedProgress.contains(progress) {
+			Log.debug("Start tracking progress \(String(describing: progress))")
+
+			if !trackedProgress.contains(progress), !progress.isFinished {
 				trackedProgress.insert(progress, at: 0)
 
 				if progress.eventType != .none {
@@ -112,6 +122,8 @@ class ProgressSummarizer: NSObject {
 
 	func stopTracking(progress: Progress, remove: Bool = true) {
 		OCSynchronized(self) {
+			Log.debug("Stop tracking progress \(String(describing: progress)) (remove=\(remove))")
+
 			if let trackedProgressIndex = trackedProgress.index(of: progress) {
 				progress.removeObserver(self, forKeyPath: "fractionCompleted", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "isFinished", context: observerContext)
@@ -138,6 +150,16 @@ class ProgressSummarizer: NSObject {
 
 					self.setNeedsUpdate()
 				}
+			}
+		}
+	}
+
+	func reset() {
+		OCSynchronized(self) {
+			let existingTrackedProgress = trackedProgress
+
+			for progress in existingTrackedProgress {
+				self.stopTracking(progress: progress)
 			}
 		}
 	}
@@ -221,6 +243,8 @@ class ProgressSummarizer: NSObject {
 
 	func pushFallbackSummary(summary : ProgressSummary) {
 		OCSynchronized(self) {
+			Log.debug("Push fallback summary \(String(describing: summary))")
+
 			fallbackSummaries.append(summary)
 
 			if fallbackSummaries.count == 1 {
@@ -231,6 +255,8 @@ class ProgressSummarizer: NSObject {
 
 	func popFallbackSummary(summary : ProgressSummary) {
 		OCSynchronized(self) {
+			Log.debug("Pop fallback summary \(String(describing: summary))")
+
 			if let index = fallbackSummaries.index(of: summary) {
 				fallbackSummaries.remove(at: index)
 
@@ -265,6 +291,8 @@ class ProgressSummarizer: NSObject {
 
 	func pushPrioritySummary(summary : ProgressSummary) {
 		OCSynchronized(self) {
+			Log.debug("Push priority summary \(String(describing: summary))")
+
 			prioritySummaries.append(summary)
 
 			self.prioritySummary = summary
@@ -273,6 +301,8 @@ class ProgressSummarizer: NSObject {
 
 	func popPrioritySummary(summary : ProgressSummary) {
 		OCSynchronized(self) {
+			Log.debug("Pop priority summary \(String(describing: summary))")
+
 			if let index = prioritySummaries.index(of: summary) {
 				prioritySummaries.remove(at: index)
 
