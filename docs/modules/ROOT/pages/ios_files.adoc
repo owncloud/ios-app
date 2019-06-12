@@ -35,7 +35,7 @@ However, file actions are handled slightly differently, depending on whether one
 You can see the differences in the two images below.
 
 The image below on the left, shows the file popup for actions for _individual_ files. 
-The image below on the right, shows the actions icon row for _multiple-selected_ files. 
+The image below on the right, shows the move icon row for _multiple-selected_ files. 
 
 [cols=","]
 |===
@@ -136,7 +136,7 @@ image:create-new-folder.png[How to create a new folder in ownCloud's iOS App.]
 === Upload Files
 
 To upload files or any time from your device to your ownCloud server, click btn:[Upload file].
-You will then be able to select one or more recent files, or browse through files from any app that exposes data to the iOS files app.
+You will then be able to select or browse through files from any app that exposes data to the iOS files app.
 
 ==== Upload File From Your Photo Library
 

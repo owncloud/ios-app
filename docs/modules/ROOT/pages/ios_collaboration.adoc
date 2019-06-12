@@ -1,25 +1,29 @@
 = Collaboration and Links
 :toc: right
 
-== Collaborate With Other Users on Folders and Files
+This section shows how to collaborate with other users and how to work with links.
+
+== Collaborate With Other Users on Files and Folders
 
 image:31_Collab.png[Collaborate With Other Users on Folders and Files]
 
-* Add users and grant permissions
-* Add groups and grant permissions
-* Change permissions permissions
-* Delete collaborators
+The Mobile App for iOS supports the following collaboration functionality:
+
+* Adding users and grant permissions
+* Adding groups and grant permissions
+* Changing permissions permissions
+* Deleting collaborators
 
 == Grant Access With Links
 
 Just as with the web interface, the iOS app lets you grant access to both files and folders with links.
 Specifically, you can do the following:
 
-* Copy public links
-* Create multiple private links
-* Set passwords and expiration dates
-* Send private link URLs to other apps (mail, messenger)
-* Delete private links
+* xref:copy-public-links[Copy public links]
+* xref:create-private-links[Create private links]
+* xref:set-passwords-and-expiration-dates[Set passwords and expiration dates]
+* xref:send-private-link-urls-to-other-apps[Send private link URLs to other apps (mail, messenger)]
+* xref:delete-private-links[Delete private links]
 
 === Copy Public Links
 
@@ -33,18 +37,17 @@ To create private links to a file or folder, click the more icon on the far righ
 Then, under Private Links, click btn:[Create Public Link] in the Public Links section.
 You will then see the links for the option, as in the image below.
 
-As with the web interface, you can:
+As with the web interface, you can set:
 
-* Set a link name
-* Set permissions
-* Set a password
-* Set a link expiration date
+* A link name
+* Link permissions
+* xref:set-passwords-and-expiration-dates[A link password and expiration date]
 
 image:manage-public-link-settings.png[Manage public links in ownCloud's Mobile App for iOS]
 
 TIP: To see more details about each option, click the info icon in the bottom right-hand corner.
 
-=== Set Passwords and Expiration Dates
+==== Set Passwords and Expiration Dates
 
 image:public-link-set-password.png[Set a password for a public link in ownCloud's Mobile App for iOS]
 
@@ -56,10 +59,10 @@ image:public-link-set-expiration-date.png[Set an expiration date for a public li
 To set an expiration date on a public link, under "_Options_", enable btn:[Expiration date].
 Then, pick the date that the link should expire with the date picker that appears below the Expiration date option.
 
-=== Send private link URLs to other apps (mail, messenger)
+=== Send Private Link URLs to Other Apps
 
 
 
-=== Delete private links
+=== Delete Private Links
 
 

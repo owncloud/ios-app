@@ -7,16 +7,18 @@
 
 The Mobile App for iOS integrates with the iOS Files App. 
 When enabled, you can open, edit, save, and delete files and folders.
-
 However, the functionality needs to first be enabled.
 To do so, click btn:[Browse], then btn:[Edit].
 Next, in the list of apps under Locations, enable the ownCloud app for your account.
 
+[NOTE]
+====
 In future versions, it is expected that the following functionality will also be supported:
 
 * Share (UI)
 * Offline (UI)
 * Favourites
 * Tags
+====
 
 == Share From Other Apps (via iOS Files App)
