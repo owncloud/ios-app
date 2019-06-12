@@ -56,10 +56,10 @@ This colors and color collections are not branded and always the same, regardles
 
 ### Brand colors
 
-| Name            | Type    | Mapping Name | Value  |
-| --------------- | ------- | ------------ | ------ |
-| darkBrandColor  | UIColor |              | 1D293B |
-| lightBrandColor | UIColor |              | 468CC8 |
+| Name            | Type    | Mapping Name | Value      |
+| --------------- | ------- | ------------ | ---------- |
+| darkBrandColor  | UIColor |              | **1d293b** |
+| lightBrandColor | UIColor |              | **468cc8** |
 
 ### Brand color collection
 
@@ -72,54 +72,54 @@ This colors and color collections are not branded and always the same, regardles
 
 #### darkBrandColors
 
-| Name                      | Type                                                         | Mapping Name | Value               |
-| ------------------------- | ------------------------------------------------------------ | ------------ | ------------------- |
-| backgroundColor           | UIColor                                                      |              | 1D293B              |
-| labelColor                | UIColor                                                      |              | UIColor.white       |
-| secondaryLabelColor       | UIColor                                                      |              | UIColor.lightGray   |
-| symbolColor               | UIColor                                                      |              | UIColor.white       |
-| tintColor                 | UIColor                                                      |              | 468CC8.lighter(0.2) |
-| filledColorPairCollection | [ThemeColorPairCollection](./Colorscheme.md#ThemeColorPairCollection) | -            |                     |
+| Name                      | Type                                                         | Mapping Name | Value      |
+| ------------------------- | ------------------------------------------------------------ | ------------ | ---------- |
+| backgroundColor           | UIColor                                                      |              | **1d293b** |
+| labelColor                | UIColor                                                      |              | **ffffff** |
+| secondaryLabelColor       | UIColor                                                      |              | **aaaaaa** |
+| symbolColor               | UIColor                                                      |              | **ffffff** |
+| tintColor                 | UIColor                                                      |              | **6ba3d3** |
+| filledColorPairCollection | [ThemeColorPairCollection](./Colorscheme.md#ThemeColorPairCollection) | -            |            |
 
 ##### darkBrandColors.filledColorPairCollection
 
-| Name        | Type                                              | Mapping Name | Value |
-| ----------- | ------------------------------------------------- | ------------ | ----- |
-| normal      | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |              |       |
-| highlighted | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |              |       |
-| disabled    | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |              |       |
+| Name        | Type                                              |
+| ----------- | ------------------------------------------------- |
+| normal      | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
+| highlighted | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
+| disabled    | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
 
 darkBrandColors.filledColorPairCollection.normal
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **1d293b** |
 
 darkBrandColors.filledColorPairCollection.highlighted
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **555e6c** |
 
 darkBrandColors.filledColorPairCollection.disabled
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **555e6c** |
 
 #### lightBrandColors
 
-| Name                      | Type                                                         | Mapping Name | Value               |
-| ------------------------- | ------------------------------------------------------------ | ------------ | ------------------- |
-| backgroundColor           | UIColor                                                      |              | 1D293B              |
-| labelColor                | UIColor                                                      |              | UIColor.white       |
-| secondaryLabelColor       | UIColor                                                      |              | UIColor.lightGray   |
-| symbolColor               | UIColor                                                      |              | UIColor.white       |
-| tintColor                 | UIColor                                                      |              | 468CC8.lighter(0.2) |
-| filledColorPairCollection | [ThemeColorPairCollection](./Colorscheme.md#ThemeColorPairCollection) | -            |                     |
+| Name                      | Type                                                         | Mapping Name | Value      |
+| ------------------------- | ------------------------------------------------------------ | ------------ | ---------- |
+| backgroundColor           | UIColor                                                      |              | **468cc8** |
+| labelColor                | UIColor                                                      |              | **ffffff** |
+| secondaryLabelColor       | UIColor                                                      |              | **aaaaaa** |
+| symbolColor               | UIColor                                                      |              | **ffffff** |
+| tintColor                 | UIColor                                                      |              | **ffffff** |
+| filledColorPairCollection | [ThemeColorPairCollection](./Colorscheme.md#ThemeColorPairCollection) | -            |            |
 
 ##### lightBrandColors,filledColorPairCollection
 
@@ -131,35 +131,35 @@ darkBrandColors.filledColorPairCollection.disabled
 
 lightBrandColors.filledColorPairCollection.normal
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **468cc8** |
 
 lightBrandColors.filledColorPairCollection.highlighted
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **74a8d5** |
 
 lightBrandColors.filledColorPairCollection.disabled
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **74a8d5** |
 
 #### 
 
 ### Label colors
 
-| Name             | Type    | Mapping Name | Value            |
-| ---------------- | ------- | ------------ | ---------------- |
-| informativeColor | UIColor |              | UIColor.darkGray |
-| successColor     | UIColor |              | 27AE60           |
-| warningColor     | UIColor |              | F2994A           |
-| errorColor       | UIColor |              | EB5757           |
+| Name             | Type    | Mapping Name | Value      |
+| ---------------- | ------- | ------------ | ---------- |
+| informativeColor | UIColor |              | **555555** |
+| successColor     | UIColor |              | **27ae60** |
+| warningColor     | UIColor |              | **f2994a** |
+| errorColor       | UIColor |              | **eb5757** |
 
 
 
@@ -175,111 +175,111 @@ lightBrandColors.filledColorPairCollection.disabled
 
 #### approvalColors
 
-| Name        | Type                                              | Mapping Name | Value |
-| ----------- | ------------------------------------------------- | ------------ | ----- |
-| normal      | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |              |       |
-| highlighted | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |              |       |
-| disabled    | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |              |       |
+| Name        | Type                                              |
+| ----------- | ------------------------------------------------- |
+| normal      | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
+| highlighted | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
+| disabled    | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
 
 ##### approvalColors.normal
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **1ac763** |
 
 ##### approvalColors.highlighted
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **53d58a** |
 
 ##### approvalColors.disabled
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **53d58a** |
 
 
 
 #### neutralColors
 
-| Name        | Type                                              | Mapping Name | Value |
-| ----------- | ------------------------------------------------- | ------------ | ----- |
-| normal      | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |              |       |
-| highlighted | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |              |       |
-| disabled    | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |              |       |
+| Name        | Type                                              |
+| ----------- | ------------------------------------------------- |
+| normal      | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
+| highlighted | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
+| disabled    | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
 
 ##### neutralColors.normal
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **468cc8** |
 
 ##### neutralColors.highlighted
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **74a8d5** |
 
 ##### neutralColors.disabled
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **74a8d5** |
 
 
 
 #### destructiveColors
 
-| Name        | Type                                              | Mapping Name | Value |
-| ----------- | ------------------------------------------------- | ------------ | ----- |
-| normal      | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |              |       |
-| highlighted | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |              |       |
-| disabled    | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |              |       |
+| Name        | Type                                              |
+| ----------- | ------------------------------------------------- |
+| normal      | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
+| highlighted | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
+| disabled    | [ThemeColorPair](./Colorscheme.md#ThemeColorPair) |
 
 ##### destructiveColors.normal
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **ff0000** |
 
 ##### destructiveColors.highlighted
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **ff3f3f** |
 
 ##### destructiveColors.disabled
 
-| Name       | Type    | Mapping Name | Value |
-| ---------- | ------- | ------------ | ----- |
-| foreground | UIColor |              |       |
-| background | UIColor |              |       |
+| Name       | Type    | Mapping Name | Value      |
+| ---------- | ------- | ------------ | ---------- |
+| foreground | UIColor |              | **ffffff** |
+| background | UIColor |              | **ff3f3f** |
 
 #### 
 
 ### Tint Color
 
-| Name      | Type    | Mapping Name | Value           |
-| --------- | ------- | ------------ | --------------- |
-| tintColor | UIColor |              | lightBrandColor |
+| Name      | Type    | Mapping Name | Value      |
+| --------- | ------- | ------------ | ---------- |
+| tintColor | UIColor |              | **468cc8** |
 
 
 
 ### Favorite Color
 
-| Name                  | Type    | Mapping Name | Value  |
-| --------------------- | ------- | ------------ | ------ |
-| favoriteEnabledColor  | UIColor |              | FFCC00 |
-| favoriteDisabledColor | UIColor |              | 7C7C7C |
+| Name                  | Type    | Mapping Name | Value      |
+| --------------------- | ------- | ------------ | ---------- |
+| favoriteEnabledColor  | UIColor |              | **ffcc00** |
+| favoriteDisabledColor | UIColor |              | **7c7c7c** |
 
 ------
 
