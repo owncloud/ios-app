@@ -31,6 +31,9 @@ class OpenInAction: Action {
 		return .first
 	}
 
+	var interactionControllerDispatchGroup : DispatchGroup?
+	var interactionController : UIDocumentInteractionController?
+
 	override func run() {
 		guard context.items.count > 0, let hostViewController = context.viewController, let core = self.core else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
@@ -53,7 +56,19 @@ class OpenInAction: Action {
 				// UIDocumentInteractionController can only be used with a single file
 				if files.count == 1 {
 					if let fileURL = files.first?.url {
-						UIDocumentInteractionController(url: fileURL).presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
+						// Make sure self is around until interactionControllerDispatchGroup.leave() is called by the documentInteractionControllerDidDismissOptionsMenu delegate method implementation
+						self.interactionControllerDispatchGroup = DispatchGroup()
+						self.interactionControllerDispatchGroup?.enter()
+
+						self.interactionControllerDispatchGroup?.notify(queue: .main, execute: {
+							self.interactionController?.delegate = nil
+							self.interactionController = nil
+						})
+
+						// Present UIDocumentInteractionController
+						self.interactionController = UIDocumentInteractionController(url: fileURL)
+						self.interactionController?.delegate = self
+						self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
 					}
 				} else {
 					// Handle multiple files with a fallback solution
@@ -82,5 +97,11 @@ class OpenInAction: Action {
 		}
 
 		return nil
+	}
+}
+
+extension OpenInAction : UIDocumentInteractionControllerDelegate {
+	func documentInteractionControllerDidDismissOptionsMenu(_ controller: UIDocumentInteractionController) {
+		interactionControllerDispatchGroup?.leave() // We're done! Trigger notify block and then release last reference to self.
 	}
 }
