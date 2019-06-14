@@ -63,11 +63,10 @@
 		4C6B78102226B83300C5F3DB /* PhotoAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B780F2226B83300C5F3DB /* PhotoAlbumTableViewController.swift */; };
 		4C6B78122226B86300C5F3DB /* PhotoAlbumTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B78112226B86300C5F3DB /* PhotoAlbumTableViewCell.swift */; };
 		4C7295D8228C384E00FA4E68 /* LogFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7295D7228C384E00FA4E68 /* LogFilesViewController.swift */; };
-		4C7B8ED322A985D400805A31 /* ScheduledTaskExtensionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7B8ED222A985D400805A31 /* ScheduledTaskExtensionContext.swift */; };
 		4C99FCB4229D6FDE008908AB /* ScheduledTaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C99FCB3229D6FDE008908AB /* ScheduledTaskManager.swift */; };
 		4C99FCB6229D701B008908AB /* ScheduledTaskExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C99FCB5229D701B008908AB /* ScheduledTaskExtension.swift */; };
-		4C99FCB8229D7081008908AB /* ScheduledTaskAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C99FCB7229D7081008908AB /* ScheduledTaskAction.swift */; };
 		4CAF783C2282FD40000C85CF /* FileManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CAF783B2282FD40000C85CF /* FileManager+Extension.swift */; };
+		4CB502F522B27F60005655B8 /* DummyBackgroundTaskAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB502F422B27F60005655B8 /* DummyBackgroundTaskAction.swift */; };
 		4CC46D212284C677009E938F /* BookmarkInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */; };
 		4CF8CAB121F9B70600B8CA67 /* UIBarButtonItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */; };
 		57E3880E6B8E521D27539509 /* Pods_ownCloudTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */; };
@@ -599,11 +598,10 @@
 		4C6B780F2226B83300C5F3DB /* PhotoAlbumTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumTableViewController.swift; sourceTree = "<group>"; };
 		4C6B78112226B86300C5F3DB /* PhotoAlbumTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumTableViewCell.swift; sourceTree = "<group>"; };
 		4C7295D7228C384E00FA4E68 /* LogFilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogFilesViewController.swift; sourceTree = "<group>"; };
-		4C7B8ED222A985D400805A31 /* ScheduledTaskExtensionContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledTaskExtensionContext.swift; sourceTree = "<group>"; };
 		4C99FCB3229D6FDE008908AB /* ScheduledTaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledTaskManager.swift; sourceTree = "<group>"; };
 		4C99FCB5229D701B008908AB /* ScheduledTaskExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledTaskExtension.swift; sourceTree = "<group>"; };
-		4C99FCB7229D7081008908AB /* ScheduledTaskAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledTaskAction.swift; sourceTree = "<group>"; };
 		4CAF783B2282FD40000C85CF /* FileManager+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Extension.swift"; sourceTree = "<group>"; };
+		4CB502F422B27F60005655B8 /* DummyBackgroundTaskAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyBackgroundTaskAction.swift; sourceTree = "<group>"; };
 		4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkInfoViewController.swift; sourceTree = "<group>"; };
 		4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Extension.swift"; sourceTree = "<group>"; };
 		54199937F74A129BC74DEB0A /* Pods_ownCloudScreenshotsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ownCloudScreenshotsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1079,8 +1077,7 @@
 			children = (
 				4C99FCB3229D6FDE008908AB /* ScheduledTaskManager.swift */,
 				4C99FCB5229D701B008908AB /* ScheduledTaskExtension.swift */,
-				4C99FCB7229D7081008908AB /* ScheduledTaskAction.swift */,
-				4C7B8ED222A985D400805A31 /* ScheduledTaskExtensionContext.swift */,
+				4CB502F422B27F60005655B8 /* DummyBackgroundTaskAction.swift */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -2291,7 +2288,6 @@
 				DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */,
 				23D5241521491C670002C566 /* DisplayViewController.swift in Sources */,
 				DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */,
-				4C99FCB8229D7081008908AB /* ScheduledTaskAction.swift in Sources */,
 				DC297965226E4D1100E01BC7 /* PushTransitionDelegate.swift in Sources */,
 				233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */,
 				DCF4F18B2052BA4C00189B9A /* Log.swift in Sources */,
@@ -2300,7 +2296,6 @@
 				DCE974B2207E3AF80069FC2B /* ThemeNavigationController.swift in Sources */,
 				DC89C45D20860B5D0044BCAE /* ProgressSummarizer.swift in Sources */,
 				232F7CAF2097260400EE22E4 /* SettingsViewController.swift in Sources */,
-				4C7B8ED322A985D400805A31 /* ScheduledTaskExtensionContext.swift in Sources */,
 				4C464BF32187AF1500D30602 /* PDFOutlineViewController.swift in Sources */,
 				6EADE9372192E235006821B3 /* UIImagePickerController+Extension.swift in Sources */,
 				DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */,
@@ -2316,6 +2311,7 @@
 				4CC46D212284C677009E938F /* BookmarkInfoViewController.swift in Sources */,
 				6E5FC172221590B000F60846 /* DisplayHostViewController.swift in Sources */,
 				4C99FCB4229D6FDE008908AB /* ScheduledTaskManager.swift in Sources */,
+				4CB502F522B27F60005655B8 /* DummyBackgroundTaskAction.swift in Sources */,
 				DC85493421831B0B00782BA8 /* Tools.swift in Sources */,
 				DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */,
 				3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */,

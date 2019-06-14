@@ -6,15 +6,39 @@
 //  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
 
+/*
+* Copyright (C) 2018, ownCloud GmbH.
+*
+* This code is covered by the GNU Public License Version 3.
+*
+* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+*
+*/
+
 import Foundation
 import UIKit
 import Network
 import Photos
+import ownCloudSDK
 
 class ScheduledTaskManager : NSObject, PHPhotoLibraryChangeObserver {
 
 	enum State {
 		case launched, foreground, background, backgroundFetch
+
+		func locationIdentifier() -> OCExtensionLocationIdentifier {
+			switch self {
+			case .launched:
+				return .appLaunch
+			case .foreground:
+				return .appDidComeToForeground
+			case .background:
+				return .appDidBecomeBackgrounded
+			case .backgroundFetch:
+				return .appBackgroundFetch
+			}
+		}
 	}
 
 	static let shared = ScheduledTaskManager()
@@ -103,11 +127,24 @@ class ScheduledTaskManager : NSObject, PHPhotoLibraryChangeObserver {
 
 	private func scheduleTasks() {
 		OnMainThread {
-			// TODO Build a context
-
-			// TODO Find matching extensions
-
+			// Build a context
+			let location = OCExtensionLocation(ofType: .scheduledTask, identifier: self.state.locationIdentifier())
+			let context = ScheduledTaskExtensionContext(location: location, requirements: nil, preferences: nil)
+			
 			// TODO Find a task to run
+			if let matches = try? OCExtensionManager.shared.provideExtensions(for: context) {
+				for match in matches {
+					if let task = match.extension.provideObject(for: context) as? ScheduledTaskAction {
+						let backgroundExecution = self.state == .background
+						if backgroundExecution {
+							task.runUntil = Date().addingTimeInterval(UIApplication.shared.backgroundTimeRemaining)
+						}
+						DispatchQueue.global(qos: .background).async {
+							task.run(background: backgroundExecution)
+						}
+					}
+				}
+			}
 		}
 	}
 
