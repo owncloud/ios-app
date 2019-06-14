@@ -129,9 +129,11 @@ class ScheduledTaskManager : NSObject, PHPhotoLibraryChangeObserver {
 		OnMainThread {
 			// Build a context
 			let location = OCExtensionLocation(ofType: .scheduledTask, identifier: self.state.locationIdentifier())
+
+			// TODO Add requirements
 			let context = ScheduledTaskExtensionContext(location: location, requirements: nil, preferences: nil)
 			
-			// TODO Find a task to run
+			// Find a task to run
 			if let matches = try? OCExtensionManager.shared.provideExtensions(for: context) {
 				for match in matches {
 					if let task = match.extension.provideObject(for: context) as? ScheduledTaskAction {
