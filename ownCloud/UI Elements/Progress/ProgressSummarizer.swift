@@ -96,7 +96,7 @@ class ProgressSummarizer: NSObject {
 		OCSynchronized(self) {
 			Log.debug("Start tracking progress \(String(describing: progress))")
 
-			if !trackedProgress.contains(progress), !progress.isFinished {
+			if !trackedProgress.contains(progress), !progress.isFinished, !progress.isCancelled {
 				trackedProgress.insert(progress, at: 0)
 
 				if progress.eventType != .none {
@@ -112,6 +112,7 @@ class ProgressSummarizer: NSObject {
 
 				progress.addObserver(self, forKeyPath: "fractionCompleted", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 				progress.addObserver(self, forKeyPath: "isFinished", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
+				progress.addObserver(self, forKeyPath: "isCancelled", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 				progress.addObserver(self, forKeyPath: "isIndeterminate", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 				progress.addObserver(self, forKeyPath: "localizedDescription", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 
@@ -127,6 +128,7 @@ class ProgressSummarizer: NSObject {
 			if let trackedProgressIndex = trackedProgress.index(of: progress) {
 				progress.removeObserver(self, forKeyPath: "fractionCompleted", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "isFinished", context: observerContext)
+				progress.removeObserver(self, forKeyPath: "isCancelled", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "isIndeterminate", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "localizedDescription", context: observerContext)
 
@@ -354,7 +356,7 @@ class ProgressSummarizer: NSObject {
 							summary.indeterminate = true
 						}
 
-						if progress.isFinished {
+						if progress.isFinished || progress.isCancelled {
 							if completedProgress == nil {
 								completedProgress = []
 							}
@@ -371,7 +373,7 @@ class ProgressSummarizer: NSObject {
 								let totalSameTypeCount = trackedProgressByTypeCount[progress.eventType] ?? sameTypeCount
 
 								for progress in progressOfSameType {
-									if !progress.isIndeterminate, progress.isFinished {
+									if !progress.isIndeterminate, (progress.isFinished || progress.isCancelled) {
 										sameTypeCount -= 1
 									}
 								}
@@ -411,7 +413,7 @@ class ProgressSummarizer: NSObject {
 										summary.message = multiMessage
 
 										for progress in progressOfSameType {
-											if !progress.isIndeterminate, !progress.isFinished {
+											if !progress.isIndeterminate, !progress.isFinished, !progress.isCancelled {
 												multiProgress += (progress.fractionCompleted / Double(totalSameTypeCount))
 											}
 										}

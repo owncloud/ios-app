@@ -70,7 +70,8 @@ class LogSettingsViewController: StaticTableViewController {
 			}
 		}, title: "Enable logging".localized, value: LogSettingsViewController.loggingEnabled, identifier: "enable-logging"))
 
-		loggingSection.footerTitle = "When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to ownCloud servers. Sharing logs with others is sole user responsibility.".localized
+		let footerTitle = "When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility.".localized
+		loggingSection.footerTitle = footerTitle.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")
 
 		// Update section visibility
 		self.addSection(loggingSection)
