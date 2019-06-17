@@ -165,9 +165,9 @@
 "You need to configure an email account first to be able to send emails." = "Sie müssen zuerst ein E-Mail Konto konfigurieren, um Mails zu versenden";
 "Do you want to open the following URL?" = "Möchten Sie die folgende URL öffnen?";
 
-"%@ %@ version %@ build %@ (%@)" = "%@%@ Version %@ build %@ (%@)";
+"%@ %@ version %@ build %@ (%@)" = "%@ %@ Version %@ build %@ (%@)";
 "beta" = "Beta";
-"release" = "Veröffentlichung";
+"release" = "Release";
 
 
 /* User Interface Settings */
@@ -370,6 +370,7 @@
 "You" = "Du";
 "Share this file" = "Diese Datei freigeben";
 "Share this folder" = "Diesen Ordner freigeben";
+"shared" = "Geteilt";
 
 /* Quick Access view */
 "Quick Access" = "Schnellzugriff";
