@@ -148,9 +148,9 @@
 /* User Interface Settings */
 "Theme" = "ธีม";
 "User Interface" = "หน้าจอผู้ใช้";
-"ownCloud Dark" = "ownCloud แบบมืด";
-"ownCloud Light" = "ownCloud แบบสว่าง";
-"ownCloud Classic" = "ownCloud แบบคลาสสิก";
+"Dark" = "แบบมืด";
+"Light" = "แบบสว่าง";
+"Classic" = "แบบคลาสสิก";
 
 /* Log settings */
 "Log Level" = "ระดับ log";

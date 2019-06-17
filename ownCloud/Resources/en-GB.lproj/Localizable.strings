@@ -157,9 +157,9 @@
 /* User Interface Settings */
 "Theme" = "Theme";
 "User Interface" = "User Interface";
-"ownCloud Dark" = "ownCloud Dark";
-"ownCloud Light" = "ownCloud Light";
-"ownCloud Classic" = "ownCloud Classic";
+"Dark" = "Dark";
+"Light" = "Light";
+"Classic" = "Classic";
 
 /* Log settings */
 "Log Files" = "Log Files";

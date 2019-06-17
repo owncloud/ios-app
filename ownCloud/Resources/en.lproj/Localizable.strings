@@ -173,9 +173,9 @@
 /* User Interface Settings */
 "Theme" = "Theme";
 "User Interface" = "User Interface";
-"ownCloud Dark" = "ownCloud Dark";
-"ownCloud Light" = "ownCloud Light";
-"ownCloud Classic" = "ownCloud Classic";
+"Dark" = "Dark";
+"Light" = "Light";
+"Classic" = "Classic";
 
 /* Log settings */
 "Log Files" = "Log Files";
@@ -201,7 +201,7 @@
 "Share log file" = "Share log file";
 "Reset log file" = "Reset log file";
 
-"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to ownCloud servers. Sharing logs with others is sole user responsibility." = "When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to ownCloud servers. Sharing logs with others is sole user responsibility.";
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility.";
 
 "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.";
 

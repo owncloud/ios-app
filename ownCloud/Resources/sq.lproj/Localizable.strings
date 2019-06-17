@@ -148,9 +148,9 @@
 /* User Interface Settings */
 "Theme" = "Temë";
 "User Interface" = "Ndërfaqe Përdoruesi";
-"ownCloud Dark" = "ownCloud e Errët";
-"ownCloud Light" = "ownCloud e Çelët";
-"ownCloud Classic" = "ownCloud Klasike";
+"Dark" = "e Errët";
+"Light" = "e Çelët";
+"Classic" = "Klasike";
 
 /* Log settings */
 "Log Level" = "Nivel Regjistrimi";
