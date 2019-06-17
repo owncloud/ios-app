@@ -201,7 +201,7 @@
 "Share log file" = "แชร์ไฟล์ log";
 "Reset log file" = "รีเซ็ตไฟล์ log";
 
-"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to ownCloud servers. Sharing logs with others is sole user responsibility." = "เมื่อเปิดใช้งาน log อาจส่งผลต่อประสิทธิภาพและรวมถึงข้อมูลที่ละเอียดอ่อน อย่างไรก็ตาม log จะไม่ถูกส่งไปยังเซิร์ฟเวอร์ ownCloud โดยอัตโนมัติ การแชร์ log กับผู้อื่นถือเป็นความรับผิดชอบของผู้ใช้แต่เพียงผู้เดียว";
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "เมื่อเปิดใช้งาน log อาจส่งผลต่อประสิทธิภาพและรวมถึงข้อมูลที่ละเอียดอ่อน อย่างไรก็ตาม log จะไม่ถูกส่งไปยังเซิร์ฟเวอร์ %@ โดยอัตโนมัติ การแชร์ log กับผู้อื่นถือเป็นความรับผิดชอบของผู้ใช้แต่เพียงผู้เดียว";
 
 "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "log 10 ไฟล์ล่าสุดถูกเก็บไว้ในอุปกรณ์ - โดยแต่ละ log ครอบคลุมการใช้งานสูงสุด 24 ชั่วโมง เมื่อทำการแชร์โปรดจำไว้ว่า log อาจมีข้อมูลที่ละเอียดอ่อนเช่น URL เซิร์ฟเวอร์และข้อมูลเฉพาะของผู้ใช้";
 

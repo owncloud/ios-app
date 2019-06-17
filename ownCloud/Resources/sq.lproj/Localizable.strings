@@ -201,7 +201,7 @@
 "Share log file" = "Ndajeni kartelën e regjistrimit me dikë";
 "Reset log file" = "Zeroje kartelën e regjistrimit";
 
-"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to ownCloud servers. Sharing logs with others is sole user responsibility." = "Kur aktivizohen, regjistrat mund të kenë ndikim në funksionim dhe përfshijnë të dhëna rezervat. Sidoqoftë, regjistrat nuk janë subjekt parashtrimi të automatizuar te shërbyesit ownCloud. Ndarja e regjistrave me të tjerë është përgjegjësi vetëm e përdoruesit.";
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Kur aktivizohen, regjistrat mund të kenë ndikim në funksionim dhe përfshijnë të dhëna rezervat. Sidoqoftë, regjistrat nuk janë subjekt parashtrimi të automatizuar te shërbyesit %@. Ndarja e regjistrave me të tjerë është përgjegjësi vetëm e përdoruesit.";
 
 "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "10 regjistrat e fundit të arkivuar mbahen në pajisje - ku çdo regjistër mbulon deri në 24 orë përdorim. Kur bëhet ndarje e tyre, ju lutemi, kini parasysh se regjistrat mund të përmbajnë të dhëna rezervat, të tilla si URL shërbyesi dhe të dhëna që lidhen me përdoruesin.";
 

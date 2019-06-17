@@ -201,7 +201,7 @@
 "Share log file" = "Поделиться файлом журнала";
 "Reset log file" = "Сброс файла журнала";
 
-"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to ownCloud servers. Sharing logs with others is sole user responsibility." = "Активная запись лог файлов может влиять на расход ресурсов. Также они могут содержать конфиденциальную информацию. Обмен лог-файлами подлежит исключительно ответственности пользователя. Автоматическая загрузка лог-файлов на серверы ownCloud исключена.";
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Активная запись лог файлов может влиять на расход ресурсов. Также они могут содержать конфиденциальную информацию. Обмен лог-файлами подлежит исключительно ответственности пользователя. Автоматическая загрузка лог-файлов на серверы %@ исключена.";
 
 "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "В памяти устройства архивируются последние 10 лог-файлов. Каждый из них может содержать до 24 часов информации о использовании приложения. При обмене лог-файлами, помните, что они могут содержать конфиденциальную информацию, такую как URL серверов или данные о пользователе.";
 

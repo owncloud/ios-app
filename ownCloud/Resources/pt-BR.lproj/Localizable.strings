@@ -201,7 +201,7 @@
 "Share log file" = "Compartilhar arquivo Log";
 "Reset log file" = "Redefinir arquivo de Log";
 
-"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to ownCloud servers. Sharing logs with others is sole user responsibility." = "Quando ativado, os registros podem afetar o desempenho e incluir informações confidenciais. No entanto, os logs não estão sujeitos a envio automático aos servidores do OwnCloud. Compartilhar registros com outras pessoas é responsabilidade exclusiva do usuário.";
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Quando ativado, os registros podem afetar o desempenho e incluir informações confidenciais. No entanto, os logs não estão sujeitos a envio automático aos servidores do %@. Compartilhar registros com outras pessoas é responsabilidade exclusiva do usuário.";
 
 "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "Os últimos 10 logs arquivados são mantidos no dispositivo - com cada log cobrindo até 24 horas de uso. Ao compartilhar, lembre-se de que os registros podem conter informações confidenciais, como URLs do servidor e informações específicas do usuário.";
 
