@@ -343,7 +343,7 @@
 "Shared with you" = "Mit Ihnen geteilt";
 "Shared with others" = "Mit anderen geteilt";
 "Shares" = "Geteiltes";
-"Copy Private Link" = "Öffentlichen Link kopieren";
+"Copy Private Link" = "Privaten Link kopieren";
 "Only recipients can use this link. Use it as a permanent link to point to this resource" = "Nur Empfänger können diesen Link verwenden. Verwenden Sie diesen als permanenten Link, um auf diese Ressource zu verweisen.";
 "Accept Share failed" = "Freigabe annehmen fehlgeschlagen";
 "Decline Share failed" = "Freigabe ablehnen fehlgeschlagen";
@@ -372,6 +372,7 @@
 "Share this folder" = "Diesen Ordner freigeben";
 "shared" = "Geteilt";
 "Owner" = "Eigentümer";
+"Private Link" = "Privater Link";
 
 /* Quick Access view */
 "Quick Access" = "Schnellzugriff";
