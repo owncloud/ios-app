@@ -37,9 +37,23 @@
 "Review Connection" = "Rever conexão";
 "Authenticated via" = "Autenticado via";
 "Authenticated as %@ via %@" = "Autenticado como %@ via %@";
+"Edit" = "Editar";
+"Credentials" = "Credenciais";
+"Rejected" = "Rejeitado";
+"Passed" = "Passado";
+"Accepted" = "Aceito";
+"Validation Error" = "Erro de Validação";
+"Certificate was rejected by user." = "O certificado foi rejeitado pelo usuário.";
+"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "O certificado tem problemas.\nAbra \"Detalhes do certificado\" para mais informações.";
+"No issues found. Certificate passed validation." = "Nenhum problema encontrado. Certificado passou pela validação.";
+"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "O certificado pode ter problemas, mas foi aceito pelo usuário.\nAbra \"Detalhes do certificado\" para mais informações.";
+"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "Se você 'Continuar', você será solicitado a permitir que o '%@' App para abrir o login do OAuth2, onde você pode inserir suas credenciais.";
 
 "Contacting server…" = "Conectando ao servidor...";
 "Authenticating…" = "Autenticando...";
+
+"Fetching user information…" = "Buscando informações do usuário...";
+"Updating connection…" = "Atualizando conexão...";
 
 "Missing hostname" = "Nome do host ausente";
 "The entered URL does not include a hostname." = "O URL inserida não inclui um nome de host.";
@@ -53,6 +67,8 @@
 "Disconnect" = "Desconectar";
 "Connecting…" = "Conectando...";
 "Connected." = "Conectado.";
+"Select" = "Selecionar";
+"Done" = "Concluída";
 
 "Folder" = "Pasta";
 
@@ -63,7 +79,7 @@
 "This folder no longer exists." = "Este diretório não existe mais.";
 "Everything up-to-date." = "Tudo atualizado.";
 "Please wait…" = "Por favor aguarde...";
-"Sort by %@" = "Ordenado por %@";
+"Sort by %@" = "Ordenar por %@";
 "Sort by" = "Classificar por";
 
 "name (A-Z)" = "nome (A-Z)";
@@ -73,6 +89,10 @@
 "date" = "data";
 "Search this folder" = "Procurar no diretório atual";
 "Pending" = "Pendente";
+"Show parent paths" = "Mostrar caminhos pai";
+
+"%@ of %@ used" = "%@ de %@ usados";
+"Total: %@" = "Total: %@";
 
 /* Client Messages */
 "Empty folder" = "Pasta vazia";
@@ -91,7 +111,11 @@
 "Not now" = "Agora não";
 "Upload file" = "Enviar arquivo";
 "Upload files" = "Enviar arquivos";
-
+"Ignore" = "Ignore";
+"Authorization failed" = "Falha na autorização";
+"The server declined access with the credentials stored for this connection." = "O servidor recusou o acesso com as credenciais armazenadas para esta conexão.";
+"No matches" = "Não coincidem";
+"There are no results for this search term" = "Não há resultados para este termo de pesquisa";
 "Status" = "Status";
 
 /* Server List*/
@@ -104,6 +128,7 @@
 "This will also delete all locally stored file copies." = "Isto também irá excluir todas as cópias locais do arquivo.";
 "Delete" = "Excluir";
 "Deletion of '%@' failed" = "A exclusão de '%@' falhou";
+"Accounts" = "Contas";
 
 "Help" = "Ajuda";
 "Feedback" = "Comentários";
@@ -153,12 +178,19 @@
 "Classic" = "Clássico";
 
 /* Log settings */
+"Log Files" = "Arquivos de log";
+"Browse log files" = "Navegar pelos arquivos de log";
+"Share" = "Compartilhar";
+"Delete all log files?" = "Excluir todos os arquivos de log?";
+"Delete all" = "Excluir Tudo";
+
 "Log Level" = "Nível do Log";
 "Log Destinations" = "Destinos de Log";
 "Privacy" = "Privacidade";
 
 "Logging" = "Gravando no Log";
 "Enable logging" = "Habilitar escrita no Log";
+"Options" = "Opções";
 
 "Off" = "Desligado";
 "Info" = "Informação";
@@ -169,6 +201,10 @@
 "Share log file" = "Compartilhar arquivo Log";
 "Reset log file" = "Redefinir arquivo de Log";
 
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Quando ativado, os registros podem afetar o desempenho e incluir informações confidenciais. No entanto, os logs não estão sujeitos a envio automático aos servidores do %@. Compartilhar registros com outras pessoas é responsabilidade exclusiva do usuário.";
+
+"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "Os últimos 10 logs arquivados são mantidos no dispositivo - com cada log cobrindo até 24 horas de uso. Ao compartilhar, lembre-se de que os registros podem conter informações confidenciais, como URLs do servidor e informações específicas do usuário.";
+
 "Mask private data" = "Mascarar dados privados";
 "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "A ativação desta opção tentará mascarar dados privados, portanto, não se tornará parte de nenhum log. Como o registro em log é um recurso de desenvolvimento e depuração, não podemos garantir que o arquivo de log esteja livre de dados privados, mesmo com essa opção ativada. Portanto, por favor, olhe através de qualquer arquivo de log e verifique se ele está livre de qualquer dado que você não esteja confortável em compartilhar antes de compartilhá-lo com alguém.";
 
@@ -178,6 +214,10 @@
 
 "Really reset log file?" = "Realmente redefinir o arquivo de log?";
 "This action can't be undone." = "Essa ação não poderá ser desfeita";
+
+/* Display settings */
+"Display settings" = "Configurações do Visor";
+"Show hidden files and folders" = "Mostrar arquivos e pastas escondidos";
 
 /* Passcode Messages */
 
@@ -196,6 +236,7 @@
 "User-approved certificates" = "Certificados Aprovados pelo Usuário";
 
 "Approved" = "Aprovado";
+"Auto-approved" = "Aprovação-automática";
 "Revoke approval" =  "Revogar aprovação";
 
 /* Actions */
@@ -212,15 +253,18 @@
 "Copy" = "Copiar";
 "Copy here" = "Copiar aqui";
 "Cannot connect to " = "Não foi possível conectar a";
-" couldn't download this file" = "não foi possível baixar esse arquivo";
+" couldn't download file(s)" = "não foi possível baixar esse arquivo(s)";
 "Actions" = "Ações";
+"copy" = "copiar";
+
+"Preparing…" = "Preparando…";
 
 /* Directory Picker Messages */
 "Move here" = "Mova aqui";
 
 /* Preview */
 "Open file" = "Abrir arquivo";
-"There is no network" = "Não há rede";
+"Network unavailable" = "Rede indisponível";
 "Error" = "Erro";
 "Could not get the picture" = "Não foi possível obter a imagem";
 "Downloading" = "Baixando";
@@ -233,3 +277,127 @@
 "%@ of %@" = "%@ de %@";
 "Invalid Page" = "Página inválida";
 "The entered page number doesn't exist" = "A página inserida não existe";
+"Search PDF" = "Pesquisar PDF";
+"Outline" = "Esboço";
+
+/* Photo Upload */
+"Upload" = "Enviar";
+"Select All" = "Selecionar Todos";
+"Deselect All" = "Desmarcar Todos";
+"All Photos" = "Todas as fotos";
+"Albums" = "Albuns";
+"Importing from photo library" = "Importando da biblioteca de fotos";
+
+/* Sharing */
+"Searching Shares…" = "Pesquisando Compartilhamentos...";
+"Recipient" = "Destinatário";
+"Recipients" = "Destinatários";
+"Public Link" = "Linque Público";
+"Public Links" = "Linques Públicos";
+"Shared by %@" = "Compartilhado por %@";
+"Invite Recipient" = "Convidar Destinatário";
+"Recipients" = "Destinatários";
+"Add email or name" = "Adicionar email ou nome";
+"Users" = "Usuários";
+"Groups" = "Grupos";
+"Start typing to search users, groups and remote users." = "Comece a digitar para pesquisar usuários, grupos e usuários remotos.";
+"(Group)" = "(Grupo)";
+"Adding User to Share failed" = "Adição de usuário ao compartilhamento falhou";
+"Permissions" = "Permissões";
+"Invited: %@" = "Convidados: %@";
+"Created: %@" = "Criado: %@";
+"Allows the users you share with to re-share" = "Permite que os usuários com quem você compartilha compartilhem novamente";
+"Allows the users you share with to edit your shared files, and to collaborate" = "Permitir que os usuários com quem você compartilha edite seus arquivos compartilhados e colabore";
+"Allows the users you share with to create new files and add them to the share" = "Permite que os usuários com quem você compartilha crie novos arquivos e os adicione ao compartilhamento";
+"Allows uploading a new version of a shared file and replacing it" = "Permite fazer o upload de uma nova versão de um arquivo compartilhado e substituí-lo";
+"Allows the users you share with to delete shared files" = "Permite que os usuários com os quais você compartilha exclua arquivos compartilhados";
+"Setting permission failed" = "A configuração de permissão falhou";
+"Shared with" = "Compartilhado com";
+"Remove Recipient failed" = "Falha na Remoção de Destinatário";
+"Remove Recipient" = "Remover Destinatário";
+"Create" = "Criar";
+"Change" = "Modificar ";
+"Recipients can view or download contents." = "Os destinatários podem visualizar ou baixar o conteúdo.";
+"Recipients can view, download, edit, delete and upload contents." = "Os destinatários podem visualizar, baixar, editar, excluir e enviar conteúdos.";
+"Receive files from multiple recipients without revealing the contents of the folder." = "Receber arquivos de vários destinatários sem revelar o conteúdo da pasta.";
+"Download / View" = "Baixar / Visualizar";
+"Download / View / Upload" = "Baixar / Visualizar / Enviar";
+"Upload only (File Drop)" = "Apenas enviar (Deixar um Arquivo)";
+"Creating public link failed" = "A criação do linque público falhou";
+"Create Public Link" = "Criar Linque Público";
+"Links" = "Linques";
+"Link" = "Linque";
+"Setting expiration date failed" = "A configuração da data de expiração falhou";
+"Expiration date" = "Data de expiração";
+"Copy Public Link" = "Copiar Linque Público";
+"Delete Public Link" = "Excluir Linque Público";
+"Deleting Public Link failed" = "A exclusão do linque público falhou";
+"Deleting password failed" = "A exclusão da senha falhou";
+"Setting password failed" = "Falha na configuração da senha";
+"Type to update password" = "Digite para atualizar a senha";
+"Cannot change permission" = "Não é possível alterar a permissão";
+"Before you can set the permission\n%@,\n you must enter a password." = "Antes de poder definir a permissão\n%@,\nvocê deve digitar uma senha.";
+"Password Protected" = "Protegido por Senha";
+"Pending Federated Invites" = "Convites Federados Pendentes";
+"Pending Invites" = "Convites Pendentes";
+"Shared with you" = "Compartilhado com você";
+"Shared with others" = "Compartilhado com outros";
+"Shares" = "Compartilhamentos";
+"Copy Private Link" = "Copiar Linque Privado";
+"Only recipients can use this link. Use it as a permanent link to point to this resource" = "Somente destinatários podem usar este linque. Use-o como um linque permanente para apontar para este recurso";
+"Accept Share failed" = "Aceitar compartilhamento falhou";
+"Decline Share failed" = "Recusa de compartilhamento falhou";
+"Accept" = "Aceitar";
+"Decline" = "Rejeitar";
+"Declined" = "Rejeitado";
+"Decline Share" = "Recusar Compartilhamento";
+"Unshare" = "Descompartilhar";
+"Unshare failed" = "Falha do descompartilhamento";
+"Are you sure you want to unshare these items?" = "Tem certeza de que deseja cancelar o compartilhamento desses itens?";
+"Are you sure you want to unshare this item?" = "Tem certeza de que deseja cancelar o compartilhamento deste item?";
+"Share" = "Compartilhar";
+"Read" = "Ler";
+"Can Share" = "Pode Compartilhar";
+"Can Edit" = "Pode Editar";
+"Can Edit and Change" = "Pode Editar e Alterar";
+"Can Create" = "Pode Criar";
+"Can Change" = "Pode Modificar";
+"Can Delete" = "Pode Excluir";
+"Accept Invite %@" = "Aceitar Convite %@";
+"Decline Invite %@" = "Recusar Convite %@";
+"Decline cannot be undone." = "O declínio não pode ser desfeito.";
+"Sharing" = "Compartilhamento";
+"You" = "Você";
+"Share this file" = "Compartilhar este arquivo";
+"Share this folder" = "Compartilhar essa pasta";
+
+/* Quick Access view */
+"Quick Access" = "Acesso Rápido";
+"Collection" = "Coleção";
+"Recents" = "Recentes";
+"Favorites"= "Favoritos";
+"Images" = "Imagens";
+"PDF Documents" = "Documentos PDF";
+
+/* Photo upload settings */
+"Media Upload" = "Envio de mídia";
+"Convert HEIC to JPEG" = "Converter HEIC para JPEG";
+"Convert videos to MP4" = "Converta vídeos para MP4";
+
+/* Progress summarizer */
+"Creating %ld folders…" = "Criando %ld pastas…";
+"Moving %ld items…" = "Movendo %ld itens…";
+"Copying %ld items…" = "Copiando %ld itens…";
+"Deleting %ld items…" = "Excluindo %ld itens…";
+"Uploading %ld files…" = "Enviar %ld arquivos…";
+"Downloading %ld files…" = "Baixar %ld arquivos…";
+"Updating %ld items…" = "Enviando %ld itens…";
+
+/* Offline storage management */
+"Free on %@" = "Livre em %@";
+"unknown" = "desconhecido";
+"Offline files use" = "Uso de arquivos off-line";
+"Compacting of '%@' failed" = "Compactação de '%@' falhou";
+"Delete Offline Copies" = "Excluir cópias off-line";
+"Manage" = "Gerenciar";
+"Storage" = "Armazenamento";

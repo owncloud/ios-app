@@ -37,9 +37,23 @@
 "Review Connection" = "Shqyrtoni Lidhjen";
 "Authenticated via" = "Mirëfilltësuar përmes";
 "Authenticated as %@ via %@" = "Mirëfilltësuar si %@ përmes %@";
+"Edit" = "Përpunoni";
+"Credentials" = "Kredenciale";
+"Rejected" = "Hedhur poshtë";
+"Passed" = "Vleftësuar";
+"Accepted" = "Pranuar";
+"Validation Error" = "Gabim Vleftësim";
+"Certificate was rejected by user." = "Dëshmia u hodh poshtë nga përdoruesi.";
+"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Dëshmia ka probleme.\nPër më tepër të dhëna, hapni 'Hollësi Dëshmie'.";
+"No issues found. Certificate passed validation." = "S’u gjetën probleme. Dëshmia e mori vleftësimin.";
+"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Dëshmia mund të ketë probleme, por u pranua nga përdoruesi.\nPër më tepër hollësi, hapni 'Hollësi Dëshmie'.";
+"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "Nëse 'Vazhdoni', do t’ju shfaqet kërkesa për të lejuar aplikacionin '%@' të hapë hyrjet me OAuth2, prej nga mund të jepni kredencialet tuaja.";
 
 "Contacting server…" = "Po kontaktohet shërbyesi…";
 "Authenticating…" = "Po bëhet mirëfilltësimi…";
+
+"Fetching user information…" = "Po sillen të dhëna përdoruesi…";
+"Updating connection…" = "Po përditësohet lidhja…";
 
 "Missing hostname" = "Mungon strehëemër";
 "The entered URL does not include a hostname." = "URL-ja e dhënë nuk përmban një strehëemër.";
@@ -53,6 +67,8 @@
 "Disconnect" = "Shkëputu";
 "Connecting…" = "Po lidhet…";
 "Connected." = "U lidh.";
+"Select" = "Përzgjidhe";
+"Done" = "U bë";
 
 "Folder" = "Dosje";
 
@@ -63,7 +79,7 @@
 "This folder no longer exists." = "Kjo dosje s’ekziston më.";
 "Everything up-to-date." = "Gjithçka është e përditësuar.";
 "Please wait…" = "Ju lutemi, prisni…";
-"Sort by %@" = "Renditur sipas %@";
+"Sort by %@" = "Renditi sipas %@";
 "Sort by" = "Renditi sipas";
 
 "name (A-Z)" = "emër (A-Z)";
@@ -73,6 +89,10 @@
 "date" = "datë";
 "Search this folder" = "Kërko në këtë dosje";
 "Pending" = "Në pritje";
+"Show parent paths" = "Shfaq shtigjet mëmë";
+
+"%@ of %@ used" = "%@ nga %@ të përdorur";
+"Total: %@" = "Gjithsej: %@";
 
 /* Client Messages */
 "Empty folder" = "Dosje e zbrazët";
@@ -91,7 +111,11 @@
 "Not now" = "Jo tani";
 "Upload file" = "Ngarkoni kartelë";
 "Upload files" = "Ngarko kartela";
-
+"Ignore" = "Shpërfille";
+"Authorization failed" = "Autorizimi dështoi";
+"The server declined access with the credentials stored for this connection." = "Shërbyesi nuk pranoi hyrje me kredencialet e depozituara për këtë lidhje.";
+"No matches" = "S’ka përputhje";
+"There are no results for this search term" = "S’ka përfundime për këtë term kërkimi";
 "Status" = "Gjendje";
 
 /* Server List*/
@@ -104,6 +128,7 @@
 "This will also delete all locally stored file copies." = "Kjo do të shkaktojë fshirjen edhe të krejt kopjeve të kartelës të depozituara lokalisht.";
 "Delete" = "Fshije";
 "Deletion of '%@' failed" = "Fshirja e '%@' dështoi";
+"Accounts" = "Llogari";
 
 "Help" = "Ndihmë";
 "Feedback" = "Përshtypje";
@@ -153,12 +178,19 @@
 "Classic" = "Klasike";
 
 /* Log settings */
+"Log Files" = "Kartela Regjistër";
+"Browse log files" = "Shfletoni kartela regjistër";
+"Share" = "Ndaje me të tjerë";
+"Delete all log files?" = "Të fshihen krejt kartelat regjistër?";
+"Delete all" = "Fshiji krejt";
+
 "Log Level" = "Nivel Regjistrimi";
 "Log Destinations" = "Destinacione Regjistri";
 "Privacy" = "Privatësi";
 
 "Logging" = "Regjistrim";
 "Enable logging" = "Aktivizo regjistrimet";
+"Options" = "Mundësi";
 
 "Off" = "Off";
 "Info" = "Të dhëna";
@@ -169,6 +201,10 @@
 "Share log file" = "Ndajeni kartelën e regjistrimit me dikë";
 "Reset log file" = "Zeroje kartelën e regjistrimit";
 
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Kur aktivizohen, regjistrat mund të kenë ndikim në funksionim dhe përfshijnë të dhëna rezervat. Sidoqoftë, regjistrat nuk janë subjekt parashtrimi të automatizuar te shërbyesit %@. Ndarja e regjistrave me të tjerë është përgjegjësi vetëm e përdoruesit.";
+
+"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "10 regjistrat e fundit të arkivuar mbahen në pajisje - ku çdo regjistër mbulon deri në 24 orë përdorim. Kur bëhet ndarje e tyre, ju lutemi, kini parasysh se regjistrat mund të përmbajnë të dhëna rezervat, të tilla si URL shërbyesi dhe të dhëna që lidhen me përdoruesin.";
+
 "Mask private data" = "Masko të dhëna private";
 "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Me aktivizimin e kësaj mundësie programi do të rreket të maskojë të dhëna private, që të mos jenë pjesë e ndonjë regjistrimi. Por, ngaqë regjistrimi është një veçori e lidhur me zhvillimin dhe diagnostikimet, s’mund të garantojmë që kartela regjistër do të jetë pa ndonjë të dhënë private, edhe pse kjo mundësi është e aktivizuar. Ndaj, ju lutemi, hidhini një sy cilësdo kartele regjistër dhe verifikoni se është pa ndonjë të dhënë për të cilën s’ndiheni rehat ta ndani me të tjerë, përpara se ta ndani me dikë.";
 
@@ -178,6 +214,10 @@
 
 "Really reset log file?" = "Të zerohet vërtet kartela regjistër?";
 "This action can't be undone." = "Ky veprim s’mund të zhbëhet.";
+
+/* Display settings */
+"Display settings" = "Rregullime shfaqjeje";
+"Show hidden files and folders" = "Shfaq kartela dhe dosje të fshehura";
 
 /* Passcode Messages */
 
@@ -196,6 +236,7 @@
 "User-approved certificates" = "Dëshmi të miratuara nga përdorues";
 
 "Approved" = "Të miratuara";
+"Auto-approved" = "E vetëmiratuar";
 "Revoke approval" =  "Shfuqizoji miratimin";
 
 /* Actions */
@@ -204,7 +245,7 @@
 "File name cannot contain / or \\" = "Emri i kartelës s’mund të përmbajë / ose \\";
 "New Folder" = "Dosje e Re";
 "Folder name" = "Emër dosjeje";
-"Rename" ="Riemërtoje";
+"Rename" ="RiemÃ«rtoje";
 "Create folder" ="Krijo dosje";
 "Duplicate" = "Përsëdyte";
 "Move" = "Zhvendose";
@@ -212,15 +253,18 @@
 "Copy" = "Kopjoje";
 "Copy here" = "Kopjoje këtu";
 "Cannot connect to " = "S’lidhet dot te";
-" couldn't download this file" = "s’u arrit të shkarkohej kjo kartelë";
+" couldn't download file(s)" = "s’u shkarkua dot kartelë(a)";
 "Actions" = "Veprime";
+"copy" = "kopjoje";
+
+"Preparing…" = "Po përgatitet…";
 
 /* Directory Picker Messages */
 "Move here" = "Shpjere këtu";
 
 /* Preview */
 "Open file" = "Hap kartelë";
-"There is no network" = "S’ka rrjet";
+"Network unavailable" = "Rrjet i pakapshëm";
 "Error" = "Gabim";
 "Could not get the picture" = "S’u mor dot figura";
 "Downloading" = "Shkarkim";
@@ -233,3 +277,127 @@
 "%@ of %@" = "%@ nga %@";
 "Invalid Page" = "Faqe e Pavlefshme";
 "The entered page number doesn't exist" = "Numri i dhënë për faqen nuk ekziston";
+"Search PDF" = "Kërko në PDF";
+"Outline" = "Përvijoje";
+
+/* Photo Upload */
+"Upload" = "Ngarkoje";
+"Select All" = "Përzgjidhi Krejt";
+"Deselect All" = "Shpërzgjidhi Krejt";
+"All Photos" = "Krejt Fotot";
+"Albums" = "Albume";
+"Importing from photo library" = "Importim nga fototekë";
+
+/* Sharing */
+"Searching Shares…" = "Po kërkohet në Ndarje…";
+"Recipient" = "Marrës";
+"Recipients" = "Marrëss";
+"Public Link" = "Lidhje Publike";
+"Public Links" = "Lidhje Publike";
+"Shared by %@" = "Ndarë nga %@";
+"Invite Recipient" = "Ftoni Marrës";
+"Recipients" = "Marrëss";
+"Add email or name" = "Shtoni email ose emër";
+"Users" = "PÃ«rdorues";
+"Groups" = "Grupe";
+"Start typing to search users, groups and remote users." = "Filloni të shtypni që të kërkohet për përdorues, grupe dhe përdorues të largët.";
+"(Group)" = "(Grup)";
+"Adding User to Share failed" = "Dështoi shtim Përdoruesi te Ndarje";
+"Permissions" = "Leje";
+"Invited: %@" = "U ftua: %@";
+"Created: %@" = "U krijua: %@";
+"Allows the users you share with to re-share" = "Lejon që përdoruesit me të cilët ndani të rindajnë";
+"Allows the users you share with to edit your shared files, and to collaborate" = "U lejon përdoruesve me të cilët ndani gjëra të përpunojnë kartelat tuaja që ndani, dhe të bashkëpunojnë";
+"Allows the users you share with to create new files and add them to the share" = "U lejon përdoruesve me të cilët ndani gjëra të krijojnë kartela të reja dhe t’i shtojnë ato te ndarja";
+"Allows uploading a new version of a shared file and replacing it" = "Lejon ngarkimin e një versioni të ri të një kartelë të ndarë, si dhe zëvendësim të saj";
+"Allows the users you share with to delete shared files" = "U lejon përdoruesve me të cilët ndani gjëra të fshijnë kartela të ndara";
+"Setting permission failed" = "Dështoi dhënia e lejes";
+"Shared with" = "Ndarë me:";
+"Remove Recipient failed" = "Dështoi Heqje Marrësi";
+"Remove Recipient" = "Hiqe Marrësin";
+"Create" = "Krijoje";
+"Change" = "Ndryshoje";
+"Recipients can view or download contents." = "Marrësit mund të shohin dhe shkarkojnë lëndë.";
+"Recipients can view, download, edit, delete and upload contents." = "Marrësit mund të shohin shkarkojnë, përpunojnë, fshijnë dhe ngarkojnë lëndë.";
+"Receive files from multiple recipients without revealing the contents of the folder." = "Merr kartela prej të tjerësh pa e zbuluar lëndën e dosjes.";
+"Download / View" = "Të shkarkojë / Të shohë";
+"Download / View / Upload" = "Të shkarkojë / Të shohë / Të ngarkojë";
+"Upload only (File Drop)" = "Vetëm ngarkim (Lënie Kartele)";
+"Creating public link failed" = "Dështoi krijimi i lidhjes publike";
+"Create Public Link" = "Krijoni Lidhje Publike";
+"Links" = "Lidhje";
+"Link" = "Lidhje";
+"Setting expiration date failed" = "Dështoi caktimi i datës së skadimit";
+"Expiration date" = "Datë skadimi";
+"Copy Public Link" = "Kopjo Lidhje Publike";
+"Delete Public Link" = "Fshi Lidhje Publike";
+"Deleting Public Link failed" = "Dështoi fshirja e Lidhjes Publike";
+"Deleting password failed" = "Dështoi fshirja e fjalëkalimit";
+"Setting password failed" = "Dështoi caktimi i fjalëkalimit";
+"Type to update password" = "Shtypni që të përditësohet fjalëkalimi";
+"Cannot change permission" = "S’ndryshohet dot leje";
+"Before you can set the permission\n%@,\n you must enter a password." = "Përpara se të caktoni lejen\n%@,\n duhet të jepni një fjalëkalim.";
+"Password Protected" = "Mbrojtur me Fjalëkalim";
+"Pending Federated Invites" = "Ftesa të Federuara Pezull";
+"Pending Invites" = "Ftesa Pezull";
+"Shared with you" = "Të ndara me ju";
+"Shared with others" = "Të ndara me të tjerët";
+"Shares" = "Ndarje";
+"Copy Private Link" = "Kopjo Lidhje Private";
+"Only recipients can use this link. Use it as a permanent link to point to this resource" = "Vetëm marrësit mund ta përdorin këtë lidhje. Përdoreni si një lidhje të përhershme që shpie te ky burim";
+"Accept Share failed" = "Dështoi Pranimi i Ndarjes";
+"Decline Share failed" = "Dështoi Hedhja Tej e Ndarjes";
+"Accept" = "Pranoje";
+"Decline" = "Hidhe poshtë";
+"Declined" = "Hedhur Poshtë";
+"Decline Share" = "Hidhe Poshtë Ndarjen";
+"Unshare" = "Hiqi ndarjen me të tjerë";
+"Unshare failed" = "Dështoi heqja e ndarjes";
+"Are you sure you want to unshare these items?" = "Jeni i sigurt se doni të hiqet ndarja e këtyre objekteve?";
+"Are you sure you want to unshare this item?" = "Jeni i sigurt se doni të hiqet ndarja e këtij objekti?";
+"Share" = "Ndaje me të tjerë";
+"Read" = "Lexoni";
+"Can Share" = "Mund të Ndajë";
+"Can Edit" = "Mund të Përpunojë";
+"Can Edit and Change" = "Mund të Përpunojë dhe Ndryshojë";
+"Can Create" = "Mund të Krijojë";
+"Can Change" = "Mund të Ndryshojë";
+"Can Delete" = "Mund të Fshijë";
+"Accept Invite %@" = "Pranoni Ftesën %@";
+"Decline Invite %@" = "Hidheni Tej Ftesën %@";
+"Decline cannot be undone." = "Hedhja tej s’mund të zhbëhet.";
+"Sharing" = "Ndarje me të tjerët";
+"You" = "Ju";
+"Share this file" = "Ndajeni këtë kartelë";
+"Share this folder" = "Ndajeni këtë dosje";
+
+/* Quick Access view */
+"Quick Access" = "Hyrje e Shpejtë";
+"Collection" = "Koleksion";
+"Recents" = "Tani së fundi";
+"Favorites"= "Të parapëlqyera";
+"Images" = "Foto";
+"PDF Documents" = "Dokumente PDF";
+
+/* Photo upload settings */
+"Media Upload" = "Ngarkim Media";
+"Convert HEIC to JPEG" = "Shndërroje HEIC në JPEG";
+"Convert videos to MP4" = "Shndërroji videot në MP4";
+
+/* Progress summarizer */
+"Creating %ld folders…" = "Po krijohen %ld dosje…";
+"Moving %ld items…" = "Po lëziven %ld objekte…";
+"Copying %ld items…" = "Po kopjohen %ld objekte…";
+"Deleting %ld items…" = "Po fshihen %ld objekte…";
+"Uploading %ld files…" = "Po ngarkohen %ld kartela…";
+"Downloading %ld files…" = "Po shkarkohen %ld kartela…";
+"Updating %ld items…" = "Po përditësohen %ld objekte…";
+
+/* Offline storage management */
+"Free on %@" = "Falas në %@";
+"unknown" = "i panjohur";
+"Offline files use" = "Përdorim kartelash pa internet";
+"Compacting of '%@' failed" = "Dështoi ngjeshja e '%@'";
+"Delete Offline Copies" = "Fshi Kopjet <em>Offline</em>";
+"Manage" = "Administroni";
+"Storage" = "Depozitë";

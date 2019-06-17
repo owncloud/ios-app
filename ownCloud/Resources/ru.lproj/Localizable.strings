@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   ownCloud
 
@@ -24,22 +24,36 @@
 "Continue" = "Продолжить";
 "Name" = "Название";
 "Example Server" = "Сервер для примера";
-"Show Certificate Details" = "Показать Детали Сертификата";
+"Show Certificate Details" = "Показать детали сертификата";
 "Connect" = "Подключиться";
-"Delete Authentication Data" = "Удалить Данные Аутентификации";
+"Delete Authentication Data" = "Удалить данные аутентификации";
 "Authentication" = "Авторизация";
 "Username" = "Имя пользователя";
 "Password" = "Пароль";
-"Certificate Details" = "Детали Сертификата";
+"Certificate Details" = "Детали сертификата";
 "Cancel" = "Отмена";
 "Approve" = "Подтвердить";
 "Error" = "Ошибка";
 "Review Connection" = "Обзор соединения";
 "Authenticated via" = "Аутентифицрован через";
 "Authenticated as %@ via %@" = "Аутентификация как %@ через %@";
+"Edit" = "Редактировать";
+"Credentials" = "Учётные данные";
+"Rejected" = "Отклонено";
+"Passed" = "Прошло";
+"Accepted" = "Принято";
+"Validation Error" = "Ошибка проверки";
+"Certificate was rejected by user." = "Сертификат был отклонён пользователем.";
+"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Есть проблемы с сертификатом. Для получения подробностей откройте ‘Детали сертификата'.";
+"No issues found. Certificate passed validation." = "Не выявлено проблем. Сертификат прошёл проверку.";
+"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "С сертификатом возможно есть проблемы, но он был принят пользователем\nДля получения подробностей откройте 'Детали сертификата'.";
+"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "Если вы нажмёте 'Продолжить', то у вас попросят разрешить приложению '%@' войти через OAuth2, и при входе вам понадобится ввести свои учётные данные.";
 
-"Contacting server…" = "Соединяюсь с сервером…";
+"Contacting server…" = "Соединение с сервером…";
 "Authenticating…" = "Авторизация…";
+
+"Fetching user information…" = "Получение информации о пользователе…";
+"Updating connection…" = "Соединение обновляется…";
 
 "Missing hostname" = "Отсутствует имя сервера";
 "The entered URL does not include a hostname." = "Введённый адрес URL не содержит в себе имя сервера.";
@@ -53,6 +67,8 @@
 "Disconnect" = "Отключить";
 "Connecting…" = "Соединение…\n";
 "Connected." = "Соединено.";
+"Select" = "Выбрать";
+"Done" = "Выполнено";
 
 "Folder" = "Папка";
 
@@ -73,6 +89,10 @@
 "date" = "дате";
 "Search this folder" = "Поиск в этой папке";
 "Pending" = "Ожидается";
+"Show parent paths" = "Показать вышестоящие пути";
+
+"%@ of %@ used" = "Использовано %@ из %@";
+"Total: %@" = "Всего: %@";
 
 /* Client Messages */
 "Empty folder" = "Пустая папка";
@@ -91,7 +111,11 @@
 "Not now" = "Не сейчас";
 "Upload file" = "Загрузить файл";
 "Upload files" = "Закачать файлы";
-
+"Ignore" = "Игнорировать";
+"Authorization failed" = "Авторизация не прошла";
+"The server declined access with the credentials stored for this connection." = "Сервер отказал в доступе с учётными данными, сохранёнными для данного соединения.";
+"No matches" = "Нет соответствий";
+"There are no results for this search term" = "По данному запросу ничего не найдено";
 "Status" = "Статус";
 
 /* Server List*/
@@ -104,6 +128,7 @@
 "This will also delete all locally stored file copies." = "Это так же удалит все локально сохранённые копии файла.";
 "Delete" = "Удалить";
 "Deletion of '%@' failed" = "Не удалось удалить '%@'";
+"Accounts" = "Учётные записи";
 
 "Help" = "Помощь";
 "Feedback" = "Обратная связь";
@@ -153,10 +178,10 @@
 "Classic" = "Классическая";
 
 /* Log settings */
-"Log Files" = "Журналы";
-"Browse log files" = "Просмотреть журналы";
-"Share" = "Поделиться";
-"Delete all log files?" = "Удалить все журналы?";
+"Log Files" = "Лог-файлы";
+"Browse log files" = "Просмотр лог файлов";
+"Share" = "Общий доступ";
+"Delete all log files?" = "Удалить все лог-файлы?";
 "Delete all" = "Удалить все";
 
 "Log Level" = "Уровень журнала";
@@ -165,6 +190,7 @@
 
 "Logging" = "Журналирование";
 "Enable logging" = "Включить журналирование";
+"Options" = "Опции";
 
 "Off" = "Выключено";
 "Info" = "Инфо";
@@ -175,6 +201,10 @@
 "Share log file" = "Поделиться файлом журнала";
 "Reset log file" = "Сброс файла журнала";
 
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Активная запись лог файлов может влиять на расход ресурсов. Также они могут содержать конфиденциальную информацию. Обмен лог-файлами подлежит исключительно ответственности пользователя. Автоматическая загрузка лог-файлов на серверы %@ исключена.";
+
+"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "В памяти устройства архивируются последние 10 лог-файлов. Каждый из них может содержать до 24 часов информации о использовании приложения. При обмене лог-файлами, помните, что они могут содержать конфиденциальную информацию, такую как URL серверов или данные о пользователе.";
+
 "Mask private data" = "Замаскировать конфиденциальные данные";
 "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Включение этой настройки приведёт к попытке замаскировать конфиденциальные данные, чтобы они не попали ни в один журнал. Однако поскольку журналирование — это средство для разработки и отладки, мы не можем гарантировать, что  включение этой настройки исключит любое появление конфиденциальной информации в файле журнала. Таким образом, если вы сомневаетесь, то прежде чем делиться файлом с кем-либо, просмотрите его и убедитесь, что в нём нет данных, которые вам не хотелось бы распространять.";
 
@@ -184,6 +214,10 @@
 
 "Really reset log file?" = "Действительно сбросить файл журнала?";
 "This action can't be undone." = "Это действие невозможно отменить.";
+
+/* Display settings */
+"Display settings" = "Установки отображения";
+"Show hidden files and folders" = "Показывать скрытые файлы и папки";
 
 /* Passcode Messages */
 
@@ -202,6 +236,7 @@
 "User-approved certificates" = "Сертификаты, подтверждённые пользователем";
 
 "Approved" = "Подтвержденное";
+"Auto-approved" = "Подтверждено автоматически";
 "Revoke approval" =  "Отменить подтверждение";
 
 /* Actions */
@@ -218,15 +253,18 @@
 "Copy" = "Копировать";
 "Copy here" = "Копировать сюда";
 "Cannot connect to " = "Не удалось подключиться к ";
-" couldn't download this file" = "не удалось скачать этот файл";
+" couldn't download file(s)" = "не удалось скачать файл(ы)";
 "Actions" = "Действия";
+"copy" = "копия";
+
+"Preparing…" = "Подготовка";
 
 /* Directory Picker Messages */
 "Move here" = "Поместить сюда";
 
 /* Preview */
 "Open file" = "Открыть файл";
-"There is no network" = "Нет сети";
+"Network unavailable" = "Сеть недоступна";
 "Error" = "Ошибка";
 "Could not get the picture" = "Не удалось получить изображение";
 "Downloading" = "Скачивание";
@@ -239,8 +277,127 @@
 "%@ of %@" = "%@ из %@";
 "Invalid Page" = "Неверная страница";
 "The entered page number doesn't exist" = "Введённый номер страницы не существует";
+"Search PDF" = "Поиск PDF";
+"Outline" = "Оглавление";
+
+/* Photo Upload */
+"Upload" = "Загрузить";
+"Select All" = "Выбрать всё";
+"Deselect All" = "Снять весь выбор";
+"All Photos" = "Все фотографии";
+"Albums" = "Альбомы";
+"Importing from photo library" = "Импорт из фото-библиотеки";
+
+/* Sharing */
+"Searching Shares…" = "Поиск по общим ресурсам";
+"Recipient" = "Получатель";
+"Recipients" = "Получатели";
+"Public Link" = "Общедоступная ссылка";
+"Public Links" = "Общедоступные ссылки";
+"Shared by %@" = "Поделился %@";
+"Invite Recipient" = "Пригласить получателя";
+"Recipients" = "Получатели";
+"Add email or name" = "Добавьте e-mail или имя";
+"Users" = "Пользователи";
+"Groups" = "Группы";
+"Start typing to search users, groups and remote users." = "Начните ввод для начала поиска пользователей, групп и удаленных пользователей";
+"(Group)" = "(Группа)";
+"Adding User to Share failed" = "Ошибка добавления пользователя к ресурсу";
+"Permissions" = "Права доступа";
+"Invited: %@" = "Приглашены: %@";
+"Created: %@" = "Созданы: %@";
+"Allows the users you share with to re-share" = "Разрешить пользователям в совместном доступе, открывать доступ другим пользователям";
+"Allows the users you share with to edit your shared files, and to collaborate" = "Разрешить пользователям в совместном доступе редактировать опубликованные файлы и совместно над ними работать";
+"Allows the users you share with to create new files and add them to the share" = "Разрешить пользователям в совместном доступе создавать новые файлы и добавлять их к общему ресурсу";
+"Allows uploading a new version of a shared file and replacing it" = "Разрешить обновление и замещение новой версии файла, находящегося в совместном доступе";
+"Allows the users you share with to delete shared files" = "Разрешить пользователям в совместном доступе удалять находящиеся в нем файлы";
+"Setting permission failed" = "Ошибка установки прав доступа";
+"Shared with" = "Опубликован для";
+"Remove Recipient failed" = "Ошибка удаления получателя";
+"Remove Recipient" = "Удалить получателя";
+"Create" = "Создать";
+"Change" = "Изменения";
+"Recipients can view or download contents." = "Получатели могут просматривать или скачивать содержимое.";
+"Recipients can view, download, edit, delete and upload contents." = "Получатели могут просматривать, скачивать, править, удалять и закачивать содержимое.";
+"Receive files from multiple recipients without revealing the contents of the folder." = "Получение файлов от многих получателей без раскрытия содержимого каталога.";
+"Download / View" = "Скачивание / Просмотр";
+"Download / View / Upload" = "Скачивание / Просмотр / Закачка";
+"Upload only (File Drop)" = "Только закачка (закинуть файл)";
+"Creating public link failed" = "Ошибка создание общедоступной ссылки";
+"Create Public Link" = "Создать общедоступную ссылку";
+"Links" = "Ссылки";
+"Link" = "Ссылка";
+"Setting expiration date failed" = "Ошибка установки срока действия";
+"Expiration date" = "Дата окончания";
+"Copy Public Link" = "Скопировать общедоступную ссылку";
+"Delete Public Link" = "Удалить общедоступную ссылку";
+"Deleting Public Link failed" = "Ошибка удаления общедоступной ссылки";
+"Deleting password failed" = "Ошибка удаления пароля";
+"Setting password failed" = "Ошибка установки пароля";
+"Type to update password" = "Начните ввод для обновления пароля";
+"Cannot change permission" = "Невозможно изменить права";
+"Before you can set the permission\n%@,\n you must enter a password." = "Чтобы изменить права доступа\n%@,\nвведите пароль";
+"Password Protected" = "Защищено Паролем";
+"Pending Federated Invites" = "Неподтвержденные федеративные приглашения";
+"Pending Invites" = "Неподтвержденные приглашения";
+"Shared with you" = "Поделились с вами";
+"Shared with others" = "Доступные для других";
+"Shares" = "События обмена файлами";
+"Copy Private Link" = "Копировать приватную ссылку";
+"Only recipients can use this link. Use it as a permanent link to point to this resource" = "Только получатели смогут воспользоваться этой ссылкой. Используйте постоянную ссылку для этого ресурса.";
+"Accept Share failed" = "Ошибка подтверждения совместного доступа";
+"Decline Share failed" = "Ошибка отклонения совместного доступа";
+"Accept" = "Принять";
+"Decline" = "Отклонить";
+"Declined" = "Отклонено";
+"Decline Share" = "Отклонить совместный доступ";
+"Unshare" = "Закрыть доступ";
+"Unshare failed" = "Ошибка отмены совместного доступа";
+"Are you sure you want to unshare these items?" = "Вы уверены, что больше не хотите предоставлять доступ к данным элементам?";
+"Are you sure you want to unshare this item?" = "Вы уверены, что больше не хотите предоставлять доступ к этому элементу?";
+"Share" = "Общий доступ";
+"Read" = "Читать";
+"Can Share" = "Может делиться";
+"Can Edit" = "Может редактировать";
+"Can Edit and Change" = "Может изменять и редактировать";
+"Can Create" = "Может создавать";
+"Can Change" = "Может изменять";
+"Can Delete" = "Может удалять";
+"Accept Invite %@" = "Принять приглашение %@";
+"Decline Invite %@" = "Отклонить приглашение %@";
+"Decline cannot be undone." = "Отклонение не может быть отменено";
+"Sharing" = "Общий доступ";
+"You" = "Вы";
+"Share this file" = "Поделиться файлом";
+"Share this folder" = "Поделиться папкой";
+
+/* Quick Access view */
+"Quick Access" = "Быстрый доступ";
+"Collection" = "Коллекция";
+"Recents" = "Недавно";
+"Favorites"= "Избранное";
+"Images" = "Изображения";
+"PDF Documents" = "Документы PDF";
 
 /* Photo upload settings */
 "Media Upload" = "Загрузка фото и видео";
-"Convert HEIC to JPEG" = "Конвертировать HEIC в JPEG";
-"Convert videos to MP4" = "Конвертировать видео в MP4";
+"Convert HEIC to JPEG" = "Преобразовать HEIC в JPEG";
+"Convert videos to MP4" = "Преобразовать видео в MP4";
+
+/* Progress summarizer */
+"Creating %ld folders…" = "Создание %ld папок…";
+"Moving %ld items…" = "Перемещение %ld элементов…";
+"Copying %ld items…" = "Копирование %ld элементов…";
+"Deleting %ld items…" = "Удаление %ld элементов…";
+"Uploading %ld files…" = "Загрузка %ld файлов…";
+"Downloading %ld files…" = "Скачивание %ld файлов…";
+"Updating %ld items…" = "Обновление %ld элементов…";
+
+/* Offline storage management */
+"Free on %@" = "Свободно на %@";
+"unknown" = "неизвестно";
+"Offline files use" = "Использование автономных файлов";
+"Compacting of '%@' failed" = "Сжатие '%@' не удалось";
+"Delete Offline Copies" = "Удалить автономные копии";
+"Manage" = "Управление";
+"Storage" = "Хранилище";

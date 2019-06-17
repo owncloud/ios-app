@@ -28,3 +28,4 @@ lang_map = cs_CZ: cs, de_DE: de-DE, en_GB: en-GB, nb_NO: nb-NO, nn_NO: nn-NO, pt
 source_file = fastlane/screenshots/en/title.strings
 source_lang = en
 type = STRINGS
+
