@@ -334,7 +334,7 @@
 "Deleting Public Link failed" = "Öffentlichen Link löschen fehlgeschlagen";
 "Deleting password failed" = "Passwort löschen fehlgeschlagen";
 "Setting password failed" = "Passwort speichern fehlgeschlagen";
-"Type to update password" = "Zum Aktualisieren des Passworts eingeben";
+"Type to update password" = "Zum Aktualisieren neues Passwort eingeben";
 "Cannot change permission" = "Berechtigungen können nicht geändert werden";
 "Before you can set the permission\n%@,\n you must enter a password." = "Bevor Sie die Berechtigung festlegen können\n%@,\nmüssen Sie ein Passwort eingeben.";
 "Password Protected" = "passwortgeschützt";
@@ -371,6 +371,7 @@
 "Share this file" = "Diese Datei freigeben";
 "Share this folder" = "Diesen Ordner freigeben";
 "shared" = "Geteilt";
+"Owner" = "Eigentümer";
 
 /* Quick Access view */
 "Quick Access" = "Schnellzugriff";
