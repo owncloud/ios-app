@@ -277,6 +277,8 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 				if hasPassword == false, let passwordFieldRow = passwordSection.row(withIdentifier: "password-field-row") {
 					passwordSection.remove(rows: [passwordFieldRow], animated: false)
+				} else if hasPassword, passwordSection.row(withIdentifier: "password-field-row") == nil {
+					self.passwordRow(passwordSection)
 				}
 			}
 		}
