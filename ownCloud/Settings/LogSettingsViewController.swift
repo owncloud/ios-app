@@ -41,6 +41,7 @@ class LogSettingsViewController: StaticTableViewController {
 	private let loggingSection = StaticTableViewSection(headerTitle: "Logging".localized)
 	private var logLevelSection : StaticTableViewSection?
 	private var logOutputSection : StaticTableViewSection?
+	private var logBrowseSection : StaticTableViewSection?
 	private var logTogglesSection : StaticTableViewSection?
 	private var logPrivacySection : StaticTableViewSection?
 
@@ -67,6 +68,14 @@ class LogSettingsViewController: StaticTableViewController {
 			if let enabled = row.value as? Bool {
 				LogSettingsViewController.loggingEnabled = enabled
 				self?.updateSectionVisibility(animated: true)
+
+				if enabled == false {
+					for writer in OCLogger.shared.writers {
+						if let fileWriter = writer as? OCLogFileWriter {
+							fileWriter.rotate()
+						}
+					}
+				}
 			}
 		}, title: "Enable logging".localized, value: LogSettingsViewController.loggingEnabled, identifier: "enable-logging"))
 
@@ -80,8 +89,74 @@ class LogSettingsViewController: StaticTableViewController {
 	}
 
 	private func updateSectionVisibility(animated: Bool) {
+
+		var addSections : [StaticTableViewSection] = []
+
+		func createRequiredSections() {
+			if logBrowseSection == nil {
+				logBrowseSection = StaticTableViewSection(headerTitle: "Log Files".localized)
+
+				// Creation of the frequency row.
+				let logsRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
+					let logFilesViewController = LogFilesViewController(style: .plain)
+					self?.navigationController?.pushViewController(logFilesViewController, animated: true)
+					}, title: "Browse".localized, accessoryType: .disclosureIndicator, identifier: "viewLogs")
+				logBrowseSection?.add(row: logsRow)
+				logBrowseSection?.footerTitle = "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.".localized
+
+				addSections.append(logBrowseSection!)
+			}
+
+			// Privacy
+			// TODO: Reactivate the below code when the code base is reviewed in terms of correct masking of private data
+			#if false
+			if logPrivacySection == nil {
+				logPrivacySection = StaticTableViewSection(headerTitle: "Privacy".localized)
+
+				logPrivacySection?.add(row: StaticTableViewRow(switchWithAction: { (row, _) in
+					if let maskPrivateData = row.value as? Bool {
+						OCLogger.maskPrivateData = maskPrivateData
+					}
+				}, title: "Mask private data".localized, value: OCLogger.maskPrivateData, identifier: "mask-private-data"))
+				logPrivacySection?.footerTitle = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.".localized
+
+				addSections.append(logPrivacySection!)
+			}
+			#endif
+		}
+
+		func removeAllSections() {
+			var removeSections : [StaticTableViewSection] = []
+
+			if logLevelSection != nil {
+				removeSections.append(logLevelSection!)
+				logLevelSection = nil
+			}
+			if logTogglesSection != nil {
+				removeSections.append(logTogglesSection!)
+				logTogglesSection = nil
+			}
+			if logOutputSection != nil {
+				removeSections.append(logOutputSection!)
+				logOutputSection = nil
+			}
+
+			if logBrowseSection != nil {
+				removeSections.append(logBrowseSection!)
+				logBrowseSection = nil
+			}
+
+			if logPrivacySection != nil {
+				removeSections.append(logPrivacySection!)
+				logPrivacySection = nil
+			}
+
+			self.removeSections(removeSections, animated: animated)
+		}
+
 		if LogSettingsViewController.loggingEnabled {
-			var addSections : [StaticTableViewSection] = []
+
+			removeAllSections()
 
 			// Log level
 			if logLevelSection == nil {
@@ -136,58 +211,17 @@ class LogSettingsViewController: StaticTableViewController {
 					logOutputSection?.add(row: row)
 				}
 
-				// Creation of the frequency row.
-				let logsRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
-						let logFilesViewController = LogFilesViewController(style: .plain)
-						self?.navigationController?.pushViewController(logFilesViewController, animated: true)
-					}, title: "Browse log files".localized, accessoryType: .disclosureIndicator, identifier: "viewLogs")
-				logOutputSection?.add(row: logsRow)
-				logOutputSection?.footerTitle = "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.".localized
-
 				addSections.append(logOutputSection!)
 			}
 
-			// Privacy
-			// TODO: Reactivate the below code when the code base is reviewed in terms of correct masking of private data
-			#if false
-			if logPrivacySection == nil {
-				logPrivacySection = StaticTableViewSection(headerTitle: "Privacy".localized)
-
-				logPrivacySection?.add(row: StaticTableViewRow(switchWithAction: { (row, _) in
-					if let maskPrivateData = row.value as? Bool {
-						OCLogger.maskPrivateData = maskPrivateData
-					}
-				}, title: "Mask private data".localized, value: OCLogger.maskPrivateData, identifier: "mask-private-data"))
-				logPrivacySection?.footerTitle = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.".localized
-
-				addSections.append(logPrivacySection!)
-			}
-			#endif
-
-			if addSections.count > 0 {
-				self.addSections(addSections, animated: animated)
-			}
 		} else {
-			var removeSections : [StaticTableViewSection] = []
+			removeAllSections()
+		}
 
-			if logLevelSection != nil {
-				removeSections.append(logLevelSection!)
-				logLevelSection = nil
-			}
-			if logTogglesSection != nil {
-				removeSections.append(logTogglesSection!)
-				logTogglesSection = nil
-			}
-			if logOutputSection != nil {
-				removeSections.append(logOutputSection!)
-				logOutputSection = nil
-			}
-			if logPrivacySection != nil {
-				removeSections.append(logPrivacySection!)
-				logPrivacySection = nil
-			}
+		createRequiredSections()
 
-			self.removeSections(removeSections, animated: animated)
+		if addSections.count > 0 {
+			self.addSections(addSections, animated: animated)
 		}
 	}
 }
