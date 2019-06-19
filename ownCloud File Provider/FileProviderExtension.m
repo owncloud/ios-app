@@ -856,6 +856,24 @@
 #pragma mark - Enumeration
 - (nullable id<NSFileProviderEnumerator>)enumeratorForContainerItemIdentifier:(NSFileProviderItemIdentifier)containerItemIdentifier error:(NSError **)error
 {
+	NSUserDefaults *userDefaults = [[OCAppIdentity sharedAppIdentity] userDefaults];
+	if ([userDefaults boolForKey:@"applock-lock-enabled"])
+	{
+		NSData *data = [[[OCAppIdentity sharedAppIdentity] keychain] readDataFromKeychainItemForAccount:@"app.passcode" path:@"lockedDate"];
+		if (data != nil && [userDefaults objectForKey:@"applock-lock-delay"] != nil)
+		{
+			NSInteger lockDelay = [userDefaults integerForKey:@"applock-lock-delay"];
+			NSDate *lockDate = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+
+			if ([[lockDate dateByAddingTimeInterval:lockDelay] compare:[NSDate date]] == NSOrderedAscending)
+			{
+				*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
+
+				return (nil);
+			}
+		}
+	}
+
 	if (self.domain.identifier == nil)
 	{
 		if (error != NULL)

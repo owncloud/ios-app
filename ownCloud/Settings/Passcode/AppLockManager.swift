@@ -29,7 +29,16 @@ class AppLockManager: NSObject {
 	private var userDefaults: UserDefaults
 
 	// MARK: - State
-	var lastApplicationBackgroundedDate : Date?
+	var lastApplicationBackgroundedDate : Date? {
+		didSet {
+			if let date = lastApplicationBackgroundedDate {
+				let archivedDate = NSKeyedArchiver.archivedData(withRootObject: date)
+				OCAppIdentity.shared.keychain?.write(archivedDate, toKeychainItemForAccount: keychainAccount, path: keychainLockedDate)
+			} else {
+				_ = self.keychain?.removeItem(forAccount: keychainAccount, path: keychainLockedDate)
+			}
+		}
+	}
 
 	private var failedPasscodeAttempts: Int {
 		get {
@@ -56,6 +65,7 @@ class AppLockManager: NSObject {
 	private let keychainAccount = "app.passcode"
 	private let keychainPasscodePath = "passcode"
 	private let keychainLockEnabledPath = "lockEnabled"
+	private let keychainLockedDate = "lockedDate"
 
 	private var keychain : OCKeychain? {
 		return OCAppIdentity.shared.keychain
