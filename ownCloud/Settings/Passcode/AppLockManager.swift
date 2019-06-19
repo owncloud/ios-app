@@ -29,7 +29,7 @@ class AppLockManager: NSObject {
 	private var userDefaults: UserDefaults
 
 	// MARK: - State
-	var lastApplicationBackgroundedDate : Date? {
+	private var lastApplicationBackgroundedDate : Date? {
 		didSet {
 			if let date = lastApplicationBackgroundedDate {
 				let archivedDate = NSKeyedArchiver.archivedData(withRootObject: date)
@@ -37,6 +37,13 @@ class AppLockManager: NSObject {
 			} else {
 				_ = self.keychain?.removeItem(forAccount: keychainAccount, path: keychainLockedDate)
 			}
+		}
+	}
+
+	private var unlocked: Bool = false {
+		didSet {
+			let archivedDate = NSKeyedArchiver.archivedData(withRootObject: unlocked)
+			OCAppIdentity.shared.keychain?.write(archivedDate, toKeychainItemForAccount: keychainAccount, path: keychainUnlocked)
 		}
 	}
 
@@ -66,6 +73,7 @@ class AppLockManager: NSObject {
 	private let keychainPasscodePath = "passcode"
 	private let keychainLockEnabledPath = "lockEnabled"
 	private let keychainLockedDate = "lockedDate"
+	private let keychainUnlocked = "unlocked"
 
 	private var keychain : OCKeychain? {
 		return OCAppIdentity.shared.keychain
@@ -209,10 +217,12 @@ class AppLockManager: NSObject {
 	// MARK: - Unlock
 	func attemptUnlock(with testPasscode: String?, customErrorMessage: String? = nil) {
 		if testPasscode == self.passcode {
+			unlocked = true
 			lastApplicationBackgroundedDate = nil
 			failedPasscodeAttempts = 0
 			dismissLockscreen(animated: true)
 		} else {
+			unlocked = false
 			passcodeViewController?.errorMessage = (customErrorMessage != nil) ? customErrorMessage! : "Incorrect code".localized
 
 			failedPasscodeAttempts += 1
@@ -234,14 +244,14 @@ class AppLockManager: NSObject {
 			return false
 		}
 
-		if !self.shouldDisplayCountdown {
+		if unlocked, !self.shouldDisplayCountdown {
 			if let date = self.lastApplicationBackgroundedDate {
 				if Int(-date.timeIntervalSinceNow) < self.lockDelay {
 					return false
 				}
 			}
 		}
-
+		unlocked = false
 		return true
 	}
 

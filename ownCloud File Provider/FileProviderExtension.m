@@ -859,18 +859,24 @@
 	NSUserDefaults *userDefaults = [[OCAppIdentity sharedAppIdentity] userDefaults];
 	if ([userDefaults boolForKey:@"applock-lock-enabled"])
 	{
-		NSData *data = [[[OCAppIdentity sharedAppIdentity] keychain] readDataFromKeychainItemForAccount:@"app.passcode" path:@"lockedDate"];
-		if (data != nil && [userDefaults objectForKey:@"applock-lock-delay"] != nil)
+		NSData *lockedDateData = [[[OCAppIdentity sharedAppIdentity] keychain] readDataFromKeychainItemForAccount:@"app.passcode" path:@"lockedDate"];
+		NSData *unlockData = [[[OCAppIdentity sharedAppIdentity] keychain] readDataFromKeychainItemForAccount:@"app.passcode" path:@"unlocked"];
+		if (lockedDateData != nil && unlockData != nil && [userDefaults objectForKey:@"applock-lock-delay"] != nil)
 		{
 			NSInteger lockDelay = [userDefaults integerForKey:@"applock-lock-delay"];
-			NSDate *lockDate = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+			NSDate *lockDate = [NSKeyedUnarchiver unarchiveObjectWithData:lockedDateData];
+			BOOL unlocked = [[NSKeyedUnarchiver unarchiveObjectWithData:unlockData] boolValue];
 
-			if ([[lockDate dateByAddingTimeInterval:lockDelay] compare:[NSDate date]] == NSOrderedAscending)
+			if ( !unlocked || (unlocked == true && [[lockDate dateByAddingTimeInterval:lockDelay] compare:[NSDate date]] == NSOrderedAscending))
 			{
 				*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
 
 				return (nil);
 			}
+		} else {
+			*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
+
+			return (nil);
 		}
 	}
 
