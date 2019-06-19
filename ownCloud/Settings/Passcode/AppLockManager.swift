@@ -32,18 +32,18 @@ class AppLockManager: NSObject {
 	private var lastApplicationBackgroundedDate : Date? {
 		didSet {
 			if let date = lastApplicationBackgroundedDate {
-				let archivedDate = NSKeyedArchiver.archivedData(withRootObject: date)
-				OCAppIdentity.shared.keychain?.write(archivedDate, toKeychainItemForAccount: keychainAccount, path: keychainLockedDate)
+				let archivedData = NSKeyedArchiver.archivedData(withRootObject: date)
+				OCAppIdentity.shared.keychain?.write(archivedData, toKeychainItemForAccount: keychainAccount, path: keychainLockedDate)
 			} else {
 				_ = self.keychain?.removeItem(forAccount: keychainAccount, path: keychainLockedDate)
 			}
 		}
 	}
 
-	private var unlocked: Bool = false {
+	var unlocked: Bool = false {
 		didSet {
-			let archivedDate = NSKeyedArchiver.archivedData(withRootObject: unlocked)
-			OCAppIdentity.shared.keychain?.write(archivedDate, toKeychainItemForAccount: keychainAccount, path: keychainUnlocked)
+			let archivedData = NSKeyedArchiver.archivedData(withRootObject: unlocked)
+			OCAppIdentity.shared.keychain?.write(archivedData, toKeychainItemForAccount: keychainAccount, path: keychainUnlocked)
 		}
 	}
 

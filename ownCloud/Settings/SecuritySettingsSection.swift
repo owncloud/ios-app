@@ -153,6 +153,7 @@ class SecuritySettingsSection: SettingsSection {
 							if passcode == AppLockManager.shared.passcode {
 								// Success
 								AppLockManager.shared.passcode = nil
+								AppLockManager.shared.unlocked = false
 								passcodeViewController.dismiss(animated: true, completion: {
 									self?.isPasscodeSecurityEnabled = passcodeSwitch.isOn
 									self?.updateUI()
@@ -176,6 +177,7 @@ class SecuritySettingsSection: SettingsSection {
 									// Passcode right
 									// Save to keychain
 									AppLockManager.shared.passcode = passcode
+									AppLockManager.shared.unlocked = true
 									passcodeViewController.dismiss(animated: true, completion: {
 										self?.isPasscodeSecurityEnabled = passcodeSwitch.isOn
 										self?.updateUI()
