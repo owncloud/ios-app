@@ -30,7 +30,7 @@ import ownCloudSDK
 	func toString() -> String {
 		switch self {
 		case .always:
-			return "Always".localized
+			return "Immediately".localized
 		case .oneMinute:
 			return "After 1 minute".localized
 		case .fiveMinutes:
