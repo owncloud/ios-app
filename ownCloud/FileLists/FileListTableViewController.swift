@@ -216,8 +216,15 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	var lastTappedItemLocalID : String?
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+		tableView.deselectRow(at: indexPath, animated: true)
+
 		if !self.tableView.isEditing {
 			guard let rowItem : OCItem = itemAt(indexPath: indexPath) else {
+				return
+			}
+
+			guard rowItem.isPlaceholder == false else {
 				return
 			}
 
@@ -261,8 +268,6 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 						}
 				}
 			}
-
-			tableView.deselectRow(at: indexPath, animated: true)
 		}
 	}
 
