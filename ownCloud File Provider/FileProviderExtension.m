@@ -862,6 +862,9 @@
 		NSLog(@"--> applock-lock-enabled");
 		NSData *lockedDateData = [[[OCAppIdentity sharedAppIdentity] keychain] readDataFromKeychainItemForAccount:@"app.passcode" path:@"lockedDate"];
 		NSData *unlockData = [[[OCAppIdentity sharedAppIdentity] keychain] readDataFromKeychainItemForAccount:@"app.passcode" path:@"unlocked"];
+
+		NSLog(@"--> data: %ld %ld %@", [lockedDateData length], [lockedDateData length], [userDefaults objectForKey:@"applock-lock-delay"]);
+
 		if (lockedDateData != nil && unlockData != nil && [userDefaults objectForKey:@"applock-lock-delay"] != nil)
 		{
 			NSInteger lockDelay = [userDefaults integerForKey:@"applock-lock-delay"];
