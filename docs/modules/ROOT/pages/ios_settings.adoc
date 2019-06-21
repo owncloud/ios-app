@@ -37,6 +37,8 @@ image:authorise-access-with-passcode-or-biometric-data.png[Authorise access with
 
 ==== View Previously Approved Certificates
 
+To view previously approved certificates, navigate to menu:Settings[Certificates] (for any one of your registered accounts), and you will see them listed in the "_User-Approved Certificates_" section.
+
 ==== Inspect Previously Approved Certificates Details
 
 To view previously approved certificates, swipe left on any of the accounts in the accounts list and click btn:[Edit].
@@ -46,6 +48,9 @@ You will then be able to see all of the certificate's details.
 ==== Revoke Previously Approved Certificates
 
 image:83_Settings_certs.png[83_Settings_certs.png]
+
+To revoke one or more previously approved certificates, first navigate to menu:Settings[Certificates] (for any one of your registered accounts).
+Then, in the "_User-Approved Certificates_" section, swipe left on the certificate(s) that you wish to revoke and press btn:[Revoke approval].
 
 == Themes
 
