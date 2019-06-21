@@ -35,9 +35,15 @@ image:authorise-access-with-passcode-or-biometric-data.png[Authorise access with
 
 === Trusted Certificates
 
-* See a list of all previously approved certificates
-* Inspect details of previously approved certificates
-* Revoke previously approved certificates
+==== View Previously Approved Certificates
+
+==== Inspect Previously Approved Certificates Details
+
+To view previously approved certificates, swipe left on any of the accounts in the accounts list and click btn:[Edit].
+Then, under "_SERVER URL_", click btn:[Certificate Details].
+You will then be able to see all of the certificate's details.
+
+==== Revoke Previously Approved Certificates
 
 image:83_Settings_certs.png[83_Settings_certs.png]
 

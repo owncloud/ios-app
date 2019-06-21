@@ -59,10 +59,25 @@ image:public-link-set-expiration-date.png[Set an expiration date for a public li
 To set an expiration date on a public link, under "_Options_", enable btn:[Expiration date].
 Then, pick the date that the link should expire with the date picker that appears below the Expiration date option.
 
-=== Send Private Link URLs to Other Apps
+=== Send Public Link URLs to Other Apps
 
+To share a public link URL via other apps: 
 
+. Open the Public Link's details.
+. Click the share button at the bottom left-hand corner, which opens the iOS Share Sheet. 
+. Share the link through the app of your choice.
 
-=== Delete Private Links
+=== Delete Public Links
 
+There are two ways to delete a public link.
 
+. When viewing the list of links for a file or folder, swipe left on the link that you want to delete, and click btn:[Delete].
+  image:swipe-and-delete-public-link.png[]
+. When viewing the Public Link, click btn:[Delete] at the bottom of the page, under btn:[Copy Public Link].
+  image:delete-public-link.png[Delete a Public Link in ownCloud’s iOS app, by clicking Delete at the bottom of the Public Link details page]
+
+=== View Public Links
+
+The quickest way to view Public Links is by navigating to menu:Quick Access[Shares > Public Links].
+There, you will see a list of files and folders that have Public Links. 
+For any of the files and folders, click the More icon, where you will see the number of links for that file or folder.
