@@ -161,6 +161,7 @@
 "After 1 minute" = "nach 1 Minute";
 "After 5 minutes" = "nach 5 Minuten";
 "After 30 minutes" = "nach 30 Minuten";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "Wenn Sie \"Sofort\" auswählen, wird die App gesperrt, sobald diese nicht mehr im Vordergrund ist.\n\nZugriff über die Dateien.app is nicht möglich, wenn das Sperrinterval \"Sofort\" ausgewählt ist.\nBitte eine andere Verzögerung auswählen, wenn auf die Dateien in der Dateien.app oder über einen Dokumenten-Picker zugegriffen werden soll.";
 "Please configure an email account" = "Bitte ein E-Mail Konto konfigurieren";
 "You need to configure an email account first to be able to send emails." = "Sie müssen zuerst ein E-Mail Konto konfigurieren, um Mails zu versenden";
 "Do you want to open the following URL?" = "Möchten Sie die folgende URL öffnen?";
