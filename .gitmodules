@@ -4,6 +4,3 @@
 [submodule "PocketSVG"]
 	path = external/PocketSVG
 	url = https://github.com/pocketsvg/PocketSVG.git
-[submodule "external/PocketSVG"]
-	path = external/PocketSVG
-	url = https://github.com/pocketsvg/PocketSVG.git
