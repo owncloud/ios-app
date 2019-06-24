@@ -136,6 +136,10 @@
 		DC018F8C20A1060A00135198 /* ProgressHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC018F8B20A1060A00135198 /* ProgressHUDViewController.swift */; };
 		DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */; };
 		DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */; };
+		DC09F3DF22C0C59E004F5E6D /* AppLock.h in Headers */ = {isa = PBXBuildFile; fileRef = DC09F3DD22C0C59E004F5E6D /* AppLock.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC09F3E022C0C59E004F5E6D /* AppLock.m in Sources */ = {isa = PBXBuildFile; fileRef = DC09F3DE22C0C59E004F5E6D /* AppLock.m */; };
+		DC09F3E822C0C5F8004F5E6D /* AppLockMethod.h in Headers */ = {isa = PBXBuildFile; fileRef = DC09F3E622C0C5F8004F5E6D /* AppLockMethod.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC09F3E922C0C5F8004F5E6D /* AppLockMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = DC09F3E722C0C5F8004F5E6D /* AppLockMethod.m */; };
 		DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */; };
 		DC0B37972051681600189B9A /* ThemeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B37962051681600189B9A /* ThemeButton.swift */; };
 		DC136582208223F000FC0F60 /* OCBookmark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */; };
@@ -145,6 +149,8 @@
 		DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B2705209CF0D3004715E1 /* CertificateViewController.swift */; };
 		DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B2706209CF0D3004715E1 /* ConnectionIssueViewController.swift */; };
 		DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */; };
+		DC1ED93722C3628D00A38C53 /* NSError+AppLock.m in Sources */ = {isa = PBXBuildFile; fileRef = DC1ED93522C3628A00A38C53 /* NSError+AppLock.m */; };
+		DC1ED93822C3629400A38C53 /* NSError+AppLock.h in Headers */ = {isa = PBXBuildFile; fileRef = DC1ED93422C3628A00A38C53 /* NSError+AppLock.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC20DE5C21C01A3D0096000B /* ownCloudMocking.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
 		DC20DE6A21C01B210096000B /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
 		DC20DE6B21C01B210096000B /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; };
@@ -710,6 +716,10 @@
 		DC018F8220A0F56300135198 /* UIView+Animation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Animation.swift"; sourceTree = "<group>"; };
 		DC018F8B20A1060A00135198 /* ProgressHUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUDViewController.swift; sourceTree = "<group>"; };
 		DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
+		DC09F3DD22C0C59E004F5E6D /* AppLock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppLock.h; sourceTree = "<group>"; };
+		DC09F3DE22C0C59E004F5E6D /* AppLock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppLock.m; sourceTree = "<group>"; };
+		DC09F3E622C0C5F8004F5E6D /* AppLockMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppLockMethod.h; sourceTree = "<group>"; };
+		DC09F3E722C0C5F8004F5E6D /* AppLockMethod.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppLockMethod.m; sourceTree = "<group>"; };
 		DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListBookmarkCell.swift; sourceTree = "<group>"; };
 		DC0B37952051541C00189B9A /* ownCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ownCloud.entitlements; sourceTree = "<group>"; };
 		DC0B37962051681600189B9A /* ThemeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeButton.swift; sourceTree = "<group>"; };
@@ -719,6 +729,8 @@
 		DC1B2705209CF0D3004715E1 /* CertificateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertificateViewController.swift; sourceTree = "<group>"; };
 		DC1B2706209CF0D3004715E1 /* ConnectionIssueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionIssueViewController.swift; sourceTree = "<group>"; };
 		DC1B270B209CF34B004715E1 /* BookmarkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewController.swift; sourceTree = "<group>"; };
+		DC1ED93422C3628A00A38C53 /* NSError+AppLock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSError+AppLock.h"; sourceTree = "<group>"; };
+		DC1ED93522C3628A00A38C53 /* NSError+AppLock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSError+AppLock.m"; sourceTree = "<group>"; };
 		DC248C66213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extension.swift"; sourceTree = "<group>"; };
 		DC2565E8225F5A1900828AA5 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		DC27A18C20CA9F66008ACB6C /* OCItem+FileProviderItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCItem+FileProviderItem.h"; sourceTree = "<group>"; };
@@ -1223,6 +1235,28 @@
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
 		};
+		DC09F3EA22C0C600004F5E6D /* App Lock */ = {
+			isa = PBXGroup;
+			children = (
+				DC09F3DE22C0C59E004F5E6D /* AppLock.m */,
+				DC09F3DD22C0C59E004F5E6D /* AppLock.h */,
+				DC09F3E722C0C5F8004F5E6D /* AppLockMethod.m */,
+				DC09F3E622C0C5F8004F5E6D /* AppLockMethod.h */,
+				DC1ED93522C3628A00A38C53 /* NSError+AppLock.m */,
+				DC1ED93422C3628A00A38C53 /* NSError+AppLock.h */,
+			);
+			path = "App Lock";
+			sourceTree = "<group>";
+		};
+		DC09F3EB22C0C617004F5E6D /* Display Settings */ = {
+			isa = PBXGroup;
+			children = (
+				DCC0857D2293F2D7008CC05C /* DisplaySettings.m */,
+				DCC0857C2293F2D7008CC05C /* DisplaySettings.h */,
+			);
+			path = "Display Settings";
+			sourceTree = "<group>";
+		};
 		DC1B26FD209CF0D2004715E1 /* Issues Animators */ = {
 			isa = PBXGroup;
 			children = (
@@ -1482,8 +1516,8 @@
 			isa = PBXGroup;
 			children = (
 				DCC0855E2293F1FD008CC05C /* ownCloudApp.h */,
-				DCC0857D2293F2D7008CC05C /* DisplaySettings.m */,
-				DCC0857C2293F2D7008CC05C /* DisplaySettings.h */,
+				DC09F3EA22C0C600004F5E6D /* App Lock */,
+				DC09F3EB22C0C617004F5E6D /* Display Settings */,
 				DCC0855F2293F1FD008CC05C /* Info.plist */,
 			);
 			path = ownCloudAppFramework;
@@ -1674,6 +1708,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC09F3E822C0C5F8004F5E6D /* AppLockMethod.h in Headers */,
+				DC09F3DF22C0C59E004F5E6D /* AppLock.h in Headers */,
+				DC1ED93822C3629400A38C53 /* NSError+AppLock.h in Headers */,
 				DCC085802293F490008CC05C /* DisplaySettings.h in Headers */,
 				DCC0856E2293F1FD008CC05C /* ownCloudApp.h in Headers */,
 			);
@@ -2494,6 +2531,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC1ED93722C3628D00A38C53 /* NSError+AppLock.m in Sources */,
+				DC09F3E022C0C59E004F5E6D /* AppLock.m in Sources */,
+				DC09F3E922C0C5F8004F5E6D /* AppLockMethod.m in Sources */,
 				DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
