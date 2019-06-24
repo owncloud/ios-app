@@ -117,6 +117,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 			ProgressSummarizer.shared(forBookmark: bookmark).popPrioritySummary(summary: statusSummary)
 		}
 		ProgressSummarizer.shared(forBookmark: bookmark).removeObserver(self)
+		ProgressSummarizer.shared(forBookmark: bookmark).reset()
 
 		if core?.delegate === self {
 			core?.delegate = nil

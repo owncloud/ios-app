@@ -66,6 +66,9 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	override public init(core inCore: OCCore, item inItem: OCItem) {
 		super.init(core: inCore, item: inItem)
+		if inItem.isSharedWithUser, inItem.isShareable, core?.connection.capabilities?.sharingResharing == true {
+			recipientCanShare = true
+		}
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -96,6 +99,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
 
 		addHeaderView()
+		addOwnerSection()
 
 		shareQuery = core?.sharesWithReshares(for: item, initialPopulationHandler: { [weak self] (sharesWithReshares) in
 			guard let item = self?.item else { return }
@@ -189,20 +193,22 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 					self.addSection(section)
 				}
 			}
-		} else {
+		} else if recipientCanShare {
 			OnMainThread {
-				let title = ((self.item.type == .collection) ? "Share this folder" : "Share this file").localized
-				let shareRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
-					self?.activateRecipienSearch()
-					if let actionSection = self?.sectionForIdentifier("action-section") {
-						self?.removeSection(actionSection)
-					}
-					}, title: title, style: StaticTableViewRowButtonStyle.plain)
+				if self.sectionForIdentifier("action-section") == nil {
+					let title = ((self.item.type == .collection) ? "Share this folder" : "Share this file").localized
+					let shareRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+						self?.activateRecipienSearch()
+						if let actionSection = self?.sectionForIdentifier("action-section") {
+							self?.removeSection(actionSection)
+						}
+						}, title: title, style: StaticTableViewRowButtonStyle.plain)
 
-				let section : StaticTableViewSection = StaticTableViewSection(headerTitle: " ", footerTitle: nil, identifier: "action-section", rows: [shareRow])
+					let section : StaticTableViewSection = StaticTableViewSection(headerTitle: " ", footerTitle: nil, identifier: "action-section", rows: [shareRow])
 
-				self.actionSection = section
-				self.addSection(section, animated: true)
+					self.actionSection = section
+					self.addSection(section, animated: true)
+				}
 			}
 		}
 	}
@@ -261,18 +267,30 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		}
 	}
 
+	func itemOwner() -> OCUser? {
+		if let share = shares.first, let owner = share.itemOwner {
+			return owner
+		} else if let owner = item.owner {
+			return owner
+		}
+
+		return nil
+	}
+
 	func addOwnerSection() {
-		if let share = shares.first, let owner = share.itemOwner, var ownerName = owner.displayName, self.sectionForIdentifier("owner-section") == nil {
-			if owner.displayName == core?.connection.loggedInUser?.userName {
+		if let owner = itemOwner(), var ownerName = owner.displayName, self.sectionForIdentifier("owner-section") == nil {
+			var footerTitle = "Invited: %@".localized
+			if owner.userName == core?.connection.loggedInUser?.userName {
 				ownerName = "You".localized
+				footerTitle = "Created: %@".localized
 			}
 
 			let dateFormatter = DateFormatter()
 			dateFormatter.dateStyle = .medium
 			dateFormatter.timeStyle = .short
 			var footer : String?
-			if let date = share.creationDate {
-				footer = String(format: "Invited: %@".localized, dateFormatter.string(from: date))
+			if let share = shares.first, let date = share.creationDate {
+				footer = String(format: footerTitle, dateFormatter.string(from: date))
 			}
 
 			let shareRow = StaticTableViewRow(rowWithAction: nil, title: String(format:"%@", ownerName), accessoryType: .none)
@@ -318,6 +336,8 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		if showShares {
 			if shares.count > 0 {
 				self.addShareSections()
+			} else {
+				addOwnerSection()
 			}
 			addActionShareSection()
 		}
@@ -416,7 +436,6 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 	}
 
 	func activateRecipienSearch() {
-		self.searchController?.isActive = true
 		self.searchController?.searchBar.becomeFirstResponder()
 	}
 

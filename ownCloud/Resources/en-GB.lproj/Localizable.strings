@@ -37,6 +37,8 @@
 "Review Connection" = "Review Connection";
 "Authenticated via" = "Authenticated via";
 "Authenticated as %@ via %@" = "Authenticated as %@ via %@";
+"Edit" = "Edit";
+"Credentials" = "Credentials";
 "Rejected" = "Rejected";
 "Passed" = "Passed";
 "Accepted" = "Accepted";
@@ -50,6 +52,9 @@
 "Contacting server…" = "Contacting server…";
 "Authenticating…" = "Authenticating…";
 
+"Fetching user information…" = "Fetching user information…";
+"Updating connection…" = "Updating connection…";
+
 "Missing hostname" = "Missing hostname";
 "The entered URL does not include a hostname." = "The entered URL does not include a hostname.";
 "Add account" = "Add account";
@@ -62,6 +67,8 @@
 "Disconnect" = "Disconnect";
 "Connecting…" = "Connecting…";
 "Connected." = "Connected.";
+"Select" = "Select";
+"Done" = "Done";
 
 "Folder" = "Folder";
 
@@ -82,6 +89,10 @@
 "date" = "date";
 "Search this folder" = "Search this folder";
 "Pending" = "Pending";
+"Show parent paths" = "Show parent paths";
+
+"%@ of %@ used" = "%@ of %@ used";
+"Total: %@" = "Total: %@";
 
 /* Client Messages */
 "Empty folder" = "Empty folder";
@@ -100,7 +111,11 @@
 "Not now" = "Not now";
 "Upload file" = "Upload file";
 "Upload files" = "Upload files";
-
+"Ignore" = "Ignore";
+"Authorization failed" = "Authorization failed";
+"The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+"No matches" = "No matches";
+"There is no results for this search" = "There is no results for this search";
 "Status" = "Status";
 
 /* Server List*/
@@ -113,6 +128,7 @@
 "This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
 "Delete" = "Delete";
 "Deletion of '%@' failed" = "Deletion of '%@' failed";
+"Accounts" = "Accounts";
 
 "Help" = "Help";
 "Feedback" = "Feedback";
@@ -157,9 +173,9 @@
 /* User Interface Settings */
 "Theme" = "Theme";
 "User Interface" = "User Interface";
-"ownCloud Dark" = "ownCloud Dark";
-"ownCloud Light" = "ownCloud Light";
-"ownCloud Classic" = "ownCloud Classic";
+"Dark" = "Dark";
+"Light" = "Light";
+"Classic" = "Classic";
 
 /* Log settings */
 "Log Files" = "Log Files";
@@ -174,6 +190,7 @@
 
 "Logging" = "Logging";
 "Enable logging" = "Enable logging";
+"Options" = "Options";
 
 "Off" = "Off";
 "Info" = "Info";
@@ -213,6 +230,7 @@
 "User-approved certificates" = "User-approved certificates";
 
 "Approved" = "Approved";
+"Auto-approved" = "Auto-approved";
 "Revoke approval" =  "Revoke approval";
 
 /* Actions */
@@ -229,7 +247,7 @@
 "Copy" = "Copy";
 "Copy here" = "Copy here";
 "Cannot connect to " = "Cannot connect to ";
-" couldn't download this file" = " couldn't download this file";
+" couldn't download file(s)" = " couldn't download file(s)";
 "Actions" = "Actions";
 "copy" = "copy";
 
@@ -238,7 +256,7 @@
 
 /* Preview */
 "Open file" = "Open file";
-"There is no network" = "There is no network";
+"Network unavailable" = "Network unavailable";
 "Error" = "Error";
 "Could not get the picture" = "Could not get the picture";
 "Downloading" = "Downloading";
@@ -251,3 +269,33 @@
 "%@ of %@" = "%@ of %@";
 "Invalid Page" = "Invalid Page";
 "The entered page number doesn't exist" = "The entered page number doesn't exist";
+
+/* Photo Upload */
+"Upload" = "Upload";
+"Select All" = "Select All";
+"Deselect All" = "Deselect All";
+"All Photos" = "All Photos";
+"Albums" = "Albums";
+"Importing from photo library" = "Importing from photo library";
+
+/* Photo upload settings */
+"Media Upload" = "Media Upload";
+"Convert HEIC to JPEG" = "Convert HEIC to JPEG";
+"Convert videos to MP4" = "Convert videos to MP4";
+
+/* Progress summarizer */
+"Creating %ld of %ld folders…" = "Creating %ld of %ld folders…";
+"Moving %ld of %ld items…" = "Moving %ld of %ld items…";
+"Copying %ld of %ld items…" = "Copying %ld of %ld items…";
+"Deleting %ld of %ld items…" = "Deleting %ld of %ld items…";
+"Uploading %ld of %ld files…" = "Uploading %ld of %ld files…";
+"Downloading %ld of %ld files…" = "Downloading %ld of %ld files…";
+"Updating %ld of %ld items…" = "Updating %ld of %ld items…";
+
+/* Offline storage management */
+"Free on %@" = "Free on %@";
+"unknown" = "unknown";
+"Offline files use" = "Offline files use";
+"Compacting of '%@' failed" = "Compacting of '%@' failed";
+"Delete Offline Copies" = "Delete Offline Copies";
+"Manage" = "Manage";

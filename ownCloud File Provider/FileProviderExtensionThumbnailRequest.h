@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^FileProviderExtensionThumbnailRequestPerThumbnailCompletionHandler)(NSFileProviderItemIdentifier identifier, NSData * _Nullable imageData, NSError * _Nullable error);
 typedef void (^FileProviderExtensionThumbnailRequestCompletionHandler)(NSError * _Nullable error);
 
-@interface FileProviderExtensionThumbnailRequest : NSObject
+@interface FileProviderExtensionThumbnailRequest : NSObject <OCLogTagging>
 {
 	BOOL _isDone;
 }

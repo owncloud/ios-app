@@ -47,7 +47,7 @@ enum ActionPosition : Int {
 
 typealias ActionCompletionHandler = ((Action, Error?) -> Void)
 typealias ActionProgressHandler = ((Progress, Bool) -> Void)
-typealias ActionWillRunHandler = () -> Void
+typealias ActionWillRunHandler = ((@escaping () -> Void) -> Void)
 
 extension OCExtensionType {
 	static let action: OCExtensionType  =  OCExtensionType("app.action")
@@ -172,21 +172,30 @@ class Action : NSObject {
 
 		if core.connectionStatus == .online {
 			if core.connection.capabilities?.sharingAPIEnabled == 1 {
-				OnMainThread {
-					if item.isSharedWithUser || item.isShared {
-						let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
-						progressView.startAnimating()
+				if item.isSharedWithUser || item.isShared {
+					let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+					progressView.startAnimating()
 
-						let row = StaticTableViewRow(rowWithAction: nil, title: "Searching Shares…".localized, alignment: .left, accessoryView: progressView, identifier: "share-searching")
-						let placeholderRow = StaticTableViewRow(rowWithAction: nil, title: "", alignment: .left, identifier: "share-empty-searching")
-						self.updateSharingSection(sectionIdentifier: "share-section", rows: [placeholderRow, row], tableViewController: tableViewController, contentViewController: moreViewController)
+					let row = StaticTableViewRow(rowWithAction: nil, title: "Searching Shares…".localized, alignment: .left, accessoryView: progressView, identifier: "share-searching")
+					let placeholderRow = StaticTableViewRow(rowWithAction: nil, title: "", alignment: .left, identifier: "share-empty-searching")
+					self.updateSharingSection(sectionIdentifier: "share-section", rows: [placeholderRow, row], tableViewController: tableViewController, contentViewController: moreViewController)
 
-						core.unifiedShares(for: item, completionHandler: { (shares) in
-							OnMainThread {
-								let shareRows = self.shareRows(shares: shares, item: item, presentingController: moreViewController, context: context)
-								self.updateSharingSection(sectionIdentifier: "share-section", rows: shareRows, tableViewController: tableViewController, contentViewController: moreViewController)
-							}
-						})
+					core.unifiedShares(for: item, completionHandler: { (shares) in
+						OnMainThread {
+							let shareRows = self.shareRows(shares: shares, item: item, presentingController: moreViewController, context: context)
+							self.updateSharingSection(sectionIdentifier: "share-section", rows: shareRows, tableViewController: tableViewController, contentViewController: moreViewController)
+						}
+					})
+				} else {
+					var shareRows : [StaticTableViewRow] = []
+					if item.isShareable {
+						shareRows.append(self.shareAsGroupRow(item: item, presentingController: moreViewController, context: context))
+					}
+					if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: moreViewController, context: context) {
+						shareRows.append(publicLinkRow)
+					}
+					if shareRows.count > 0 {
+						tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: shareRows), at: 0, animated: false)
 					}
 				}
 			} else {
@@ -201,8 +210,8 @@ class Action : NSObject {
 		let actions = Action.sortedApplicableActions(for: context)
 
 		actions.forEach({
-			$0.actionWillRunHandler = { [weak moreViewController] in
-				moreViewController?.dismiss(animated: true)
+			$0.actionWillRunHandler = { [weak moreViewController] (_ donePreparing: @escaping () -> Void) in
+				moreViewController?.dismiss(animated: true, completion: donePreparing)
 			}
 
 			$0.progressHandler = progressHandler
@@ -237,14 +246,24 @@ class Action : NSObject {
 	var actionWillRunHandler: ActionWillRunHandler? // to be filled before calling run(), provideStaticRow(), provideContextualAction(), etc. if desired
 
 	// MARK: - Action implementation
-	func willRun() {
+	func perform() {
+		self.willRun({
+			OnMainThread {
+				self.run()
+			}
+		})
+	}
+
+	func willRun(_ donePreparing: @escaping () -> Void) {
 
 		if Thread.isMainThread == false {
 			Log.warning("The Run method of the action \(Action.identifier!.rawValue) is not called inside the main thread")
 		}
 
 		if actionWillRunHandler != nil {
-			actionWillRunHandler!()
+			actionWillRunHandler!(donePreparing)
+		} else {
+			donePreparing()
 		}
 	}
 
@@ -275,23 +294,20 @@ class Action : NSObject {
 
 	func provideStaticRow() -> StaticTableViewRow? {
 		return StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
-			self.willRun()
-			self.run()
+			self.perform()
 		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, image: self.icon, imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: actionExtension.identifier.rawValue)
 	}
 
 	func provideContextualAction() -> UIContextualAction? {
 		return UIContextualAction(style: actionExtension.category == .destructive ? .destructive : .normal, title: self.actionExtension.name, handler: { (_ action, _ view, _ uiCompletionHandler) in
 			uiCompletionHandler(false)
-			self.willRun()
-			self.run()
+			self.perform()
 		})
 	}
 
 	func provideAlertAction() -> UIAlertAction? {
 		let alertAction = UIAlertAction(title: self.actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .default, handler: { (_ alertAction) in
-			self.willRun()
-			self.run()
+			self.perform()
 		})
 
 		let image = self.icon
