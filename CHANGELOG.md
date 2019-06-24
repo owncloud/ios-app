@@ -1,11 +1,20 @@
-## TestFlight Build 123 (June 2018)
+# ChangeLog
+
+## Release version 1.0.1 (June 2019)
+- Passcode lock for iOS Files.app
+- Access log files after log session ended
+- Translation fixed
+- Sharing bug fixed
+- Fixed bug when creating a new folder
+
+## TestFlight Build 123 (June 2019)
 - Finally: Sharing !! (#275, #292, #351, #358)
 - Option to convert HEIF/HEVC to JPEG/MP4 before upload (#363)
 - Option to show/hide hidden files in the file list (#390)
 - Debugging: log rotation (#382)
 - Clear cached local files (#376)
 
-## TestFlight Build 119 (May 2018)
+## TestFlight Build 119 (May 2019)
 - Drag and drop between apps (iPad Split View) (#48)
 - Drag directly to file actions (#250)
 - Multi-select: more file actions (#250)
@@ -13,12 +22,12 @@
 - Display quota (#337)
 - Navigation to any parent folder (#354)
 
-## TestFlight Build 111 (March 2018)
+## TestFlight Build 111 (March 2019)
 - Upload multiple images and videos in the app (Select all!!!) (#173 )
 - "Open in…" with offline files (#227)
 - Basic appconfig.org implementation (#272)
 
-## TestFlight Build 103 (February 2018)
+## TestFlight Build 103 (February 2019)
 - Multi-select files/folders for move and delete (#234)
 - Copy file/folder to another location (#207)
 - Accessibility improvements (#239)
