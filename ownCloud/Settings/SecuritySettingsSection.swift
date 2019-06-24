@@ -45,7 +45,11 @@ class SecuritySettingsSection: SettingsSection {
 
 	var frequency: SecurityAskFrequency {
 		get {
-			return SecurityAskFrequency.init(rawValue: AppLockManager.shared.lockDelay) ?? .always
+			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
+				return .always
+			} else {
+				return SecurityAskFrequency.init(rawValue: AppLockManager.shared.lockDelay) ?? .always
+			}
 		}
 		set(newValue) {
 			AppLockManager.shared.lockDelay = newValue.rawValue
@@ -54,7 +58,11 @@ class SecuritySettingsSection: SettingsSection {
 
 	var isPasscodeSecurityEnabled: Bool {
 		get {
-			return AppLockManager.shared.lockEnabled
+			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
+				return true
+			} else {
+				return AppLockManager.shared.lockEnabled
+			}
 		}
 		set(newValue) {
 			AppLockManager.shared.lockEnabled = newValue
@@ -63,7 +71,11 @@ class SecuritySettingsSection: SettingsSection {
 	}
 	var isBiometricalSecurityEnabled: Bool {
 		get {
-			return AppLockManager.shared.biometricalSecurityEnabled
+			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
+				return true
+			} else {
+				return AppLockManager.shared.biometricalSecurityEnabled
+			}
 		}
 		set(newValue) {
 			AppLockManager.shared.biometricalSecurityEnabled = newValue

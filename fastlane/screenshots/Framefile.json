@@ -5,7 +5,7 @@
       "fonts": [
         {
           "font": "./fonts/OpenSans-Regular.ttf",
-          "supported": ["de-DE", "en", "es", "fr-FR", "it-IT", "nl-NL", "sv-SE", "pt-BR"]
+          "supported": ["en"]
         }
       ],
       "color": "#182a3b"
@@ -14,14 +14,14 @@
       "fonts": [
         {
           "font": "./fonts/OpenSans-Regular.ttf",
-          "supported": ["de-DE", "en", "es", "fr-FR", "it-IT", "nl-NL", "sv-SE", "pt-BR"]
+          "supported": ["en"]
         }
       ],
       "color": "#182a3b"
     },
     "background": "./background.jpg",
     "padding": "50x40",
-    "show_complete_frame": false,
+    "show_complete_frame": true,
     "stack_title" : true,
     "title_below_image": false,
     "frame": "WHITE"
@@ -30,7 +30,7 @@
 
   "data": [
     {
-      "filter": "01_screenshot",
+      "filter": "10_ios_accounts_welcome_demo",
       "keyword": {
         "font_scale_factor" : 0.1
       },
@@ -39,7 +39,7 @@
       }
     },
     {
-      "filter": "02_screenshot",
+      "filter": "11_ios_accounts_list_demo",
       "keyword": {
         "font_scale_factor" : 0.1
       },
@@ -48,7 +48,7 @@
       }
     },
     {
-      "filter": "03_screenshot",
+      "filter": "20_ios_files_list_demo",
       "keyword": {
         "font_scale_factor" : 0.1
       },
@@ -57,7 +57,7 @@
       }
     },
     {
-      "filter": "04_screenshot",
+      "filter": "21_ios_files_actions_demo",
       "keyword": {
         "font_scale_factor" : 0.1
       },
@@ -66,7 +66,25 @@
       }
     },
     {
-      "filter": "05_screenshot",
+      "filter": "22_ios_files_preview_pdf_demo",
+      "keyword": {
+        "font_scale_factor" : 0.1
+      },
+      "title": {
+        "font_scale_factor" : 0.15
+      }
+    },
+    {
+      "filter": "40_ios_quick_access_demo",
+      "keyword": {
+        "font_scale_factor" : 0.1
+      },
+      "title": {
+        "font_scale_factor" : 0.15
+      }
+    },
+    {
+      "filter": "60_ios_settings_demo",
       "keyword": {
         "font_scale_factor" : 0.1
       },
