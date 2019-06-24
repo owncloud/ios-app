@@ -30,7 +30,7 @@ import ownCloudSDK
 	func toString() -> String {
 		switch self {
 		case .always:
-			return "Always".localized
+			return "Immediately".localized
 		case .oneMinute:
 			return "After 1 minute".localized
 		case .fiveMinutes:
@@ -45,7 +45,11 @@ class SecuritySettingsSection: SettingsSection {
 
 	var frequency: SecurityAskFrequency {
 		get {
-			return SecurityAskFrequency.init(rawValue: AppLockManager.shared.lockDelay) ?? .always
+			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
+				return .always
+			} else {
+				return SecurityAskFrequency.init(rawValue: AppLockManager.shared.lockDelay) ?? .always
+			}
 		}
 		set(newValue) {
 			AppLockManager.shared.lockDelay = newValue.rawValue
@@ -54,7 +58,11 @@ class SecuritySettingsSection: SettingsSection {
 
 	var isPasscodeSecurityEnabled: Bool {
 		get {
-			return AppLockManager.shared.lockEnabled
+			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
+				return true
+			} else {
+				return AppLockManager.shared.lockEnabled
+			}
 		}
 		set(newValue) {
 			AppLockManager.shared.lockEnabled = newValue
@@ -63,7 +71,11 @@ class SecuritySettingsSection: SettingsSection {
 	}
 	var isBiometricalSecurityEnabled: Bool {
 		get {
-			return AppLockManager.shared.biometricalSecurityEnabled
+			if ProcessInfo.processInfo.arguments.contains("UI-Testing") {
+				return true
+			} else {
+				return AppLockManager.shared.biometricalSecurityEnabled
+			}
 		}
 		set(newValue) {
 			AppLockManager.shared.biometricalSecurityEnabled = newValue
@@ -104,7 +116,7 @@ class SecuritySettingsSection: SettingsSection {
 
 				let newVC = StaticTableViewController(style: .grouped)
 				newVC.title = "Lock application".localized
-				let frequencySection = StaticTableViewSection(headerTitle: "Lock application".localized, footerTitle: nil)
+				let frequencySection = StaticTableViewSection(headerTitle: "Lock application".localized, footerTitle: "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker.".localized)
 
 				var radioButtons: [[String : Any]] = []
 
@@ -153,6 +165,7 @@ class SecuritySettingsSection: SettingsSection {
 							if passcode == AppLockManager.shared.passcode {
 								// Success
 								AppLockManager.shared.passcode = nil
+								AppLockManager.shared.unlocked = false
 								passcodeViewController.dismiss(animated: true, completion: {
 									self?.isPasscodeSecurityEnabled = passcodeSwitch.isOn
 									self?.updateUI()
@@ -176,6 +189,7 @@ class SecuritySettingsSection: SettingsSection {
 									// Passcode right
 									// Save to keychain
 									AppLockManager.shared.passcode = passcode
+									AppLockManager.shared.unlocked = true
 									passcodeViewController.dismiss(animated: true, completion: {
 										self?.isPasscodeSecurityEnabled = passcodeSwitch.isOn
 										self?.updateUI()

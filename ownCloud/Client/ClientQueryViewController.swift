@@ -307,8 +307,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 			}
 
 			// Execute the action
-			action.willRun()
-			action.run()
+			action.perform()
 		}
 	}
 
@@ -446,8 +445,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 			}
 
 			// Execute the action
-			action.willRun()
-			action.run()
+			action.perform()
 		}
 	}
 
