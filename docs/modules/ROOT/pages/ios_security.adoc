@@ -19,13 +19,13 @@
 :ios-sdk-sync-strategies-url: https://github.com/owncloud/ios-sdk/blob/master/doc/SYNC.md
 :oauth2-url: https://oauth.net/2/
 :owncloud-ios-app: https://github.com/owncloud/ios-app
-:owncloud-ios-sdk-2018: https://github.com/owncloud/ios-sdk
+:owncloud-ios-sdk: https://github.com/owncloud/ios-sdk
 :ios-filesystem-encryption-url: https://developer.apple.com/library/archive/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/StrategiesforImplementingYourApp/StrategiesforImplementingYourApp.html#//apple_ref/doc/uid/TP40007072-CH5-SW21
 :security-information-url: https://github.com/owncloud/ios-app/blob/master/doc/SECURITY.md
 
 == Introduction
 
-This document provides an overview of the security considerations and features in the {owncloud-ios-sdk-2018}[ownCloud iOS SDK (2018)] and {owncloud-ios-app}[ownCloud iOS App (2018)].
+This document provides an overview of the security considerations and features in the new {owncloud-ios-sdk}[ownCloud iOS SDK] and new {owncloud-ios-app}[ownCloud iOS App].
 
 == Authentication
 
@@ -74,7 +74,7 @@ Using xref:ios_mdm.adoc[MDM Configuration], server URLs can be pre-filled or "ha
 
 === Redirects
 
-Redirects are not followed silently. 
+Redirects during login are not followed silently. 
 Instead, they are reported to the user and must be explicitly approved.
 
 === SSL/TLS Certificates
@@ -159,6 +159,8 @@ NOTE: OpenSSL is used solely to provide detailed summaries of SSL/TLS certificat
 === Planned Logging Feature (not included in released yet!!)
 
 When logging information, parts of the log message can be tagged as private. 
-If "*Mask private data*" is enabled, under menu:Settings[Logging] (it is by default), these parts will be replaced with `«private»` before the log message is written.
+If "*Mask private data*" is enabled, under menu:Settings[Logging] (it is by default), these parts will be - before the log message is written - either replaced with `«private»` or a trimmed version that doesn't contain privacy-sensitive information.
+
+ An example for the latter would be an `NSError` object's error message containing the names of the item it is about. If masked, only the error's error domain and error code are written to the log, but not the error message.
 
 image:masking-private-data.png[]
