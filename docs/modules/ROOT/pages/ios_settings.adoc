@@ -21,7 +21,7 @@ image:settings-security-passcode-enabled.png[Enable a Passcode lock in ownCloud'
 === Lock Delay
 
 When a Passcode is enabled, the app will be locked every time you change to another application.
-However, under menu:Settings[Security > Lock application], you can choose to only lock the application after 1, 5, or 30 minutes, instead of "_always_", which is the default.
+However, under menu:Settings[Security > Lock application], you can choose to only lock the application after 1, 5, or 30 minutes, instead of "_immediately_", which is the default.
 
 image:settings-lock-application-duration.png[Set the application lock duration in ownCloud's iOS App for iPhone and iPad.]
 
