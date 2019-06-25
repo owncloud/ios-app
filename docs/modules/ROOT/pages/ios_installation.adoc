@@ -1,0 +1,13 @@
+= Getting the ownCloud iOS App
+:toc: right
+:keywords: ownCloud, download, install, iOS, iPhone, iPad
+:description: This guide steps you through how to install the ownCloud iOS app for iPhone and iPad.
+
+To get the ownCloud iOS App, point Safari, or your favorite web browser, to your ownCloud server.
+Next, log in and navigate to menu:Settings[General (Personal)].
+At the bottom of that page, you will see a link to the ownCloud app on iTunes.
+
+.Links to ownCloud's mobile apps.
+image:owncloud-server-mobile-apps.png[Links to ownCloud's mobile apps for Desktop, and in the Google Play and iOS App Stores.]
+
+TIP: You'll also find links and information on the ownCloud installation page.
