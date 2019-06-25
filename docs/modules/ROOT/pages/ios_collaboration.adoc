@@ -11,7 +11,7 @@ The Mobile App for iOS supports the following collaboration functionality:
 
 * Adding users and grant permissions
 * Adding groups and grant permissions
-* Changing permissions permissions
+* Changing permissions
 * Deleting collaborators
 
 == Grant Access With Links
