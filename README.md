@@ -1,7 +1,8 @@
 # [ownCloud](https://owncloud.org) iOS app
 
-Not available in store yet. Current iOS app:
-[![](https://owncloud.org/wp-content/themes/owncloudorgnew/assets/img/clients/buttons/appstore.png)](https://itunes.apple.com/app/owncloud/id543672169)
+Available in the Apple App Store:
+
+[![](https://owncloud.org/wp-content/themes/owncloudorgnew/assets/img/clients/buttons/appstore.png)](https://apps.apple.com/app/id1359583808)
 
 
 ## Join development!
