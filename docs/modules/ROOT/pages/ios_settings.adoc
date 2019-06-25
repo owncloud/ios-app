@@ -56,9 +56,9 @@ Then, in the "_User-Approved Certificates_" section, swipe left on the certifica
 
 The iOS app comes with three themes: 
 
-* ownCloud Light
-* ownCloud Dark; and
-* ownCloud Classic
+* Light
+* Dark; and
+* Classic
 
 To change the theme, navigate to menu:Settings[Theme], and pick the one that you want.
 
