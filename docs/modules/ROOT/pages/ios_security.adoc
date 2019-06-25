@@ -155,7 +155,7 @@ The build script that created the {ios-sdk-openssl-lib-url}[OpenSSL binaries] us
 
 NOTE: OpenSSL is used solely to provide detailed summaries of SSL/TLS certificates - functionality that iOS is currently missing.
 
-=== Logging
+=== Planned Logging Feature (not included in released yet!!)
 
 When logging information, parts of the log message can be tagged as private. 
 If "*Mask private data*" is enabled, under menu:Settings[Logging] (it is by default), these parts will be replaced with `«private»` before the log message is written.
