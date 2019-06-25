@@ -5,7 +5,9 @@
 :description: This guide steps you through the security features of of ownCloud's Mobile App for iOS.
 :apple-completeuntilfirstuserauthentication-url: https://developer.apple.com/documentation/foundation/nsfileprotectioncompleteuntilfirstuserauthentication
 :apple-security-accessibleafterfirstunlock-url: https://developer.apple.com/documentation/security/ksecattraccessibleafterfirstunlock
-:apple-sfauthenticationsession-url: https://developer.apple.com/documentation/safariservices/sfauthenticationsession
+:sfauthenticationsession-url: https://developer.apple.com/documentation/safariservices/sfauthenticationsession
+:aswebauthenticationsession-url: https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession
+:rfc-8252-url: https://tools.ietf.org/html/rfc8252#appendix-B.1
 :apple-wkwebview-url: https://developer.apple.com/documentation/webkit/wkwebview
 :basic-authentication-url: https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#Basic_authentication_scheme
 :css-keylogging-url: https://github.com/maxchehab/CSS-Keylogging
@@ -58,8 +60,7 @@ This, for example, allows making OAuth2 the only possible authentication method,
 
 === OAuth2 Implementation
 
-The OAuth2 implementation uses {apple-sfauthenticationsession-url}[`SFAuthenticationSession`], which is described as best practice by https://tools.ietf.org/html/rfc8252=appendix-B.1[RFC 8252]. 
-The benefits of using `SFAuthenticationSession` include:
+The OAuth2 implementation uses {sfauthenticationsession-url}[`SFAuthenticationSession`], which is described as a best practice by {rfc-8252-url}[`RFC 8252`] - when running under iOS 11. Under iOS 12, the OAuth2 implementation uses {aswebauthenticationsession-url}[`ASWebAuthenticationSession`], which is the successor of `SFAuthenticationSession`. Benefits of using these APIs include:
 
 * *Privilege separation:* web content is run in a separate process
 * *Trustworthiness:* apps can't inject code into or access the contents of the web view

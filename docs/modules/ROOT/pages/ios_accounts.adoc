@@ -4,6 +4,7 @@
 :keywords: user accounts, OAuth2 authentication, basic authentication, ownCloud iOS App
 :description: This guide steps you through how to manage user accounts in ownCloud’s iOS app; including the authentication types, and how to add, update, remove, and delete user accounts.
 :sfauthenticationsession-url: https://developer.apple.com/documentation/safariservices/sfauthenticationsession
+:aswebauthenticationsession-url: https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession
 :rfc-8252-url: https://tools.ietf.org/html/rfc8252#appendix-B.1
 
 The iOS app supports two ways of authenticating user accounts. 
@@ -23,8 +24,7 @@ image:02_basic_auth.png[basic authentication]
 
 === OAuth 2.0
 
-The OAuth2 implementation uses {sfauthenticationsession-url}[SFAuthenticationSession], which is described as a best practice by {rfc-8252-url}[RFC 8252]. 
-The benefits of using `SFAuthenticationSession` include:
+The OAuth2 implementation uses {sfauthenticationsession-url}[`SFAuthenticationSession`], which is described as a best practice by {rfc-8252-url}[`RFC 8252`] - when running under iOS 11. Under iOS 12, the OAuth2 implementation uses {aswebauthenticationsession-url}[`ASWebAuthenticationSession`], which is the successor of `SFAuthenticationSession`. Benefits of using these APIs include:
 
 * *Privilege separation:* Web content is run in a separate process.
 * *Trustworthiness:* Apps can't inject code into or access the contents of the web view.
