@@ -1,0 +1,34 @@
+= Mobile Device Management (MDM)
+:toc: right
+:keywords: ownCloud, MDM, Mobile Device Management, iOS, iPhone, iPad
+:description: This guide steps you through how to manage the application configuration of ownCloud’s Mobile App for iOS using Mobile Device Management (MDM).
+:appconfig-xml-format-url: https://www.appconfig.org/ios/
+:mdm-protocol-ref-url: https://developer.apple.com/business/documentation/MDM-Protocol-Reference.pdf
+
+== Managed App Config
+
+Starting with iOS 7, Apple added support for {mdm-protocol-ref-url}[managed application configuration]. 
+An MDM server can push a configuration to the iOS App. 
+The app can access the configuration using the `NSUserDefaults` class. 
+The configuration is basically a key-value dictionary provided as a `.plist` file.
+
+== AppConfig XML Schema
+
+{appconfig-xml-format-url}[The XML format], developed by AppConfig community, makes it easy for developers to define and deploy an app configuration. 
+It not only supports configuration variables having default values, but also provides a configuration UI description, which can be interpreted by the tool and which generates a plist file. 
+Moreover, specfile XML is consistently supported by major EMM vendors.
+
+== Example: Deployment with MobileIron
+
+1. Open https://appconfig.jamfresearch.com[AppConfig Generator].
+2. Upload a specfile.xml.
+3. Change the configuration options.
+4. Download the generated plist file (ManagedAppConfig).
+5. Open MobileIron Core.
+6. Navigate to menu:Policies and Configs[Add New > Apple > iOS/tvOS > Managed App Config]
+7. Upload the generated plist and specify name, bundle ID, and description
+
+== References
+
+* <https://www.appconfig.org>
+* <https://developer.apple.com/business/documentation/MDM-Protocol-Reference.pdf>
