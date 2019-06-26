@@ -125,18 +125,37 @@ class ScheduledTaskManager : NSObject, PHPhotoLibraryChangeObserver {
 		//TODO:
 	}
 
-	private func scheduleTasks() {
+	func backgroundFetch(completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+		self.state = .backgroundFetch
+		scheduleTasks(fetchCompletion: completionHandler)
+	}
+
+	private func scheduleTasks(fetchCompletion:((UIBackgroundFetchResult) -> Void)? = nil) {
 		OnMainThread {
 			// Build a context
 			let location = OCExtensionLocation(ofType: .scheduledTask, identifier: self.state.locationIdentifier())
 
-			// TODO Add requirements
-			let context = ScheduledTaskExtensionContext(location: location, requirements: nil, preferences: nil)
-			
+			// Add requirements
+			var requirements = [String : Bool]()
+			if self.wifiDetected {
+				requirements[ScheduledTaskAction.FeatureKeys.runOnWifi] = true
+			}
+			if self.lowBatteryDetected {
+				requirements[ScheduledTaskAction.FeatureKeys.runOnLowBattery] = true
+			}
+			if self.externalPowerConnected {
+				requirements[ScheduledTaskAction.FeatureKeys.runOnExternalPower] = true
+			}
+
+			let context = ScheduledTaskExtensionContext(location: location, requirements: requirements, preferences: nil)
+
 			// Find a task to run
 			if let matches = try? OCExtensionManager.shared.provideExtensions(for: context) {
 				for match in matches {
 					if let task = match.extension.provideObject(for: context) as? ScheduledTaskAction {
+						if self.state == .backgroundFetch {
+							task.backgroundFetchCompletion = fetchCompletion
+						}
 						let backgroundExecution = self.state == .background
 						if backgroundExecution {
 							task.runUntil = Date().addingTimeInterval(UIApplication.shared.backgroundTimeRemaining)
@@ -151,7 +170,11 @@ class ScheduledTaskManager : NSObject, PHPhotoLibraryChangeObserver {
 	}
 
 	private func checkPowerState() {
-		lowBatteryDetected = (UIDevice.current.batteryLevel <= ScheduledTaskManager.lowBatteryThreshold)
-		externalPowerConnected = (UIDevice.current.batteryState != .unplugged)
+		if UIDevice.current.batteryLevel >= 0 {
+			lowBatteryDetected = (UIDevice.current.batteryLevel <= ScheduledTaskManager.lowBatteryThreshold)
+		}
+		if UIDevice.current.batteryState != .unknown {
+			externalPowerConnected = (UIDevice.current.batteryState != .unplugged)
+		}
 	}
 }

@@ -11,7 +11,7 @@ import ownCloudSDK
 
 class DummyBackgroundTaskAction : ScheduledTaskAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.copy") }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.appDidBecomeBackgrounded] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.appBackgroundFetch] }
 	override class var features : [String : Any]? { return [ FeatureKeys.runOnWifi : true] }
 
 	override func run(background:Bool) {

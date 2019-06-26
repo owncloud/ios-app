@@ -85,15 +85,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			UIView.setAnimationsEnabled(enableUIAnimations)
 		}
 
+		UIApplication.shared.setMinimumBackgroundFetchInterval(
+			UIApplication.backgroundFetchIntervalMinimum)
+
 		return true
 	}
 
 	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-		Log.debug("AppDelegate: performFetchWithCompletionHandler")
-
-		OnMainThread(after: 2.0) {
-			completionHandler(.noData)
-		}
+		ScheduledTaskManager.shared.backgroundFetch(completionHandler: completionHandler)
 	}
 
 	func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {

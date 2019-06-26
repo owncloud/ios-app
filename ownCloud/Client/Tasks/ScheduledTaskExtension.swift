@@ -52,6 +52,7 @@ class ScheduledTaskAction {
 	class var features : [String : Any]? { return nil }
 
 	var backgroundTaskIdentifier: UIBackgroundTaskIdentifier = .invalid
+	var backgroundFetchCompletion: ((UIBackgroundFetchResult) -> Void)?
 
 	var result : ActionResult?
 	var completion : ActionHandler?
@@ -81,6 +82,20 @@ class ScheduledTaskAction {
 	func completed() {
 		OnMainThread {
 			self.completion?(self)
+
+			if self.backgroundFetchCompletion != nil {
+				if let result = self.result {
+					switch result {
+					case .success(_):
+						self.backgroundFetchCompletion!(.newData)
+					case .failure(_):
+						self.backgroundFetchCompletion!(.failed)
+					}
+				} else {
+					self.backgroundFetchCompletion!(.noData)
+				}
+			}
+
 			if self.backgroundTaskIdentifier != .invalid {
 				UIApplication.shared.endBackgroundTask(self.backgroundTaskIdentifier)
 			}
