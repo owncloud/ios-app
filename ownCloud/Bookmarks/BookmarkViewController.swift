@@ -92,8 +92,8 @@ class BookmarkViewController: StaticTableViewController {
 		saveBarButtonItem.accessibilityIdentifier = "save-bar-button"
 
 		// Name section + row
-		nameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender) in
-			if let textField = sender as? UITextField {
+		nameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender, action) in
+			if let textField = sender as? UITextField, action == .changed {
 				self?.bookmark?.name = (textField.text?.count == 0) ? nil : textField.text
 			}
 		}, placeholder: "Name".localized, identifier: "row-name-name", accessibilityLabel: "Server name".localized)
@@ -101,8 +101,8 @@ class BookmarkViewController: StaticTableViewController {
 		nameSection = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "section-name", rows: [ nameRow! ])
 
 		// URL section + row
-		urlRow = StaticTableViewRow(textFieldWithAction: { [weak self]  (_, sender) in
-			if let textField = sender as? UITextField {
+		urlRow = StaticTableViewRow(textFieldWithAction: { [weak self]  (_, sender, action) in
+			if let textField = sender as? UITextField, action == .changed {
 				var placeholderString = "Name".localized
 				var changedBookmark = false
 
@@ -161,15 +161,15 @@ class BookmarkViewController: StaticTableViewController {
 		urlSection = StaticTableViewSection(headerTitle: "Server URL".localized, footerTitle: nil, identifier: "section-url", rows: [ urlRow! ])
 
 		// Credentials section + rows
-		usernameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender) in
-			if (sender as? UITextField) != nil, self?.bookmark?.authenticationData != nil {
+		usernameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender, action) in
+			if (sender as? UITextField) != nil, self?.bookmark?.authenticationData != nil, action == .changed {
 				self?.bookmark?.authenticationData = nil
 				self?.composeSectionsAndRows(animated: true)
 			}
 		}, placeholder: "Username".localized, autocorrectionType: .no, identifier: "row-credentials-username", accessibilityLabel: "Server Username".localized)
 
-		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (_, sender) in
-			if (sender as? UITextField) != nil, self?.bookmark?.authenticationData != nil {
+		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (_, sender, action) in
+			if (sender as? UITextField) != nil, self?.bookmark?.authenticationData != nil, action == .changed {
 				self?.bookmark?.authenticationData = nil
 				self?.composeSectionsAndRows(animated: true)
 			}

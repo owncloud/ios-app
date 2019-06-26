@@ -20,12 +20,18 @@ import UIKit
 
 final class CardTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
 	private weak var viewControllerToPresent: UIViewController?
+	var withHandle : Bool
+	var dismissable : Bool
 
-	init(viewControllerToPresent: UIViewController, presentingViewController: UIViewController) {
+	init(viewControllerToPresent: UIViewController, presentingViewController: UIViewController, withHandle: Bool = true, dismissable : Bool = true) {
+		self.withHandle = withHandle
+		self.dismissable = dismissable
 		self.viewControllerToPresent = viewControllerToPresent
+
+		super.init()
 	}
 
 	func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-		return CardPresentationController(presentedViewController: presented, presenting: presenting)
+		return CardPresentationController(presentedViewController: presented, presenting: presenting, withHandle: withHandle, dismissable: dismissable)
 	}
 }

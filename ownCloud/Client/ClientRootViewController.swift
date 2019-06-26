@@ -31,6 +31,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	let emptyViewController = UIViewController()
 	var activityNavigationController : ThemeNavigationController?
 	var activityViewController : ClientActivityViewController?
+	var libraryNavigationController : ThemeNavigationController?
+	var libraryViewController : LibraryTableViewController?
 	var progressBar : CollapsibleProgressBar?
 	var progressBarHeightConstraint: NSLayoutConstraint?
 	var progressSummarizer : ProgressSummarizer?
@@ -115,6 +117,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 			ProgressSummarizer.shared(forBookmark: bookmark).popPrioritySummary(summary: statusSummary)
 		}
 		ProgressSummarizer.shared(forBookmark: bookmark).removeObserver(self)
+		ProgressSummarizer.shared(forBookmark: bookmark).reset()
 
 		if core?.delegate === self {
 			core?.delegate = nil
@@ -171,6 +174,11 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		activityNavigationController?.tabBarItem.title = "Status".localized
 		activityNavigationController?.tabBarItem.image = Theme.shared.image(for: "status-flash", size: CGSize(width: 25, height: 25))
 
+		libraryViewController = LibraryTableViewController(style: .grouped)
+		libraryNavigationController = ThemeNavigationController(rootViewController: libraryViewController!)
+		libraryNavigationController?.tabBarItem.title = "Quick Access".localized
+		libraryNavigationController?.tabBarItem.image = Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25))
+
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false
 
@@ -198,14 +206,20 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		Theme.shared.register(client: self, applyImmediately: true)
 
 		if let filesNavigationController = filesNavigationController,
-		   let activityNavigationController = activityNavigationController {
-			self.viewControllers = [ filesNavigationController, activityNavigationController ]
+		   let activityNavigationController = activityNavigationController, let libraryNavigationController = libraryNavigationController {
+			self.viewControllers = [ filesNavigationController, libraryNavigationController, activityNavigationController ]
 		}
 	}
 
+	var closeClientCompletionHandler : (() -> Void)?
+
 	func closeClient(completion: (() -> Void)? = nil) {
 		self.dismiss(animated: true, completion: {
-			completion?()
+			if completion != nil {
+				OnMainThread { // Work-around to make sure the self.presentingViewController is ready to present something new. Immediately after .dismiss returns, it isn't, so we wait one runloop-cycle for it to complete
+					completion?()
+				}
+			}
 		})
 	}
 
@@ -234,6 +248,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 					return (viewController != emptyViewController)
 				}
 				self.activityViewController?.core = core
+				self.libraryViewController?.core = core
+				self.libraryViewController?.setupQueries()
 			}
 		}
 	}
@@ -285,10 +301,10 @@ extension ClientRootViewController : OCCoreDelegate {
 
 							queueCompletionHandler()
 
-							if let navigationController = self.navigationController {
+							if let navigationController = self.presentingViewController as? UINavigationController {
 								self.closeClient(completion: {
 									if let serverListTableViewController = navigationController.topViewController as? ServerListTableViewController {
-										serverListTableViewController.showBookmarkUI(edit: editBookmark)
+											serverListTableViewController.showBookmarkUI(edit: editBookmark)
 									}
 								})
 							}

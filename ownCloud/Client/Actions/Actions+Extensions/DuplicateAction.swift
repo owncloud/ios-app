@@ -25,7 +25,6 @@ class DuplicateAction : Action {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Duplicate".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
-	var remainingItems : [OCItem] = []
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -105,5 +104,13 @@ class DuplicateAction : Action {
 		}
 
 		self.completed()
+	}
+
+	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+		if location == .moreItem {
+			return UIImage(named: "duplicate-file")
+		}
+
+		return nil
 	}
 }

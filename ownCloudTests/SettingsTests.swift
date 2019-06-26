@@ -136,9 +136,9 @@ class SettingsTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("theme")).perform(grey_tap())
 
 		//Assert
-		EarlGrey.select(elementWithMatcher: grey_text("ownCloud Dark".localized)).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_text("ownCloud Light".localized)).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_text("ownCloud Classic".localized)).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_text("Dark".localized)).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_text("Light".localized)).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_text("Classic".localized)).assert(grey_sufficientlyVisible())
 
 		//Reset status
 		EarlGrey.select(elementWithMatcher: grey_text("Settings".localized)).perform(grey_tap())

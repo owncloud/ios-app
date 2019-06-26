@@ -47,9 +47,20 @@ platform :ios do
 
   desc "Generate the screenshots for the AppStore"
     lane :screenshots do
-      reset_simulators
-      snapshot
-      frameit(white: true, path: './fastlane/screenshots')
+      #reset_simulators
+      #snapshot
+      frameit(white: false, path: './fastlane/screenshots')
+      deliver(
+        skip_screenshots: false,
+        skip_metadata: true,
+        submit_for_review: false,
+        ignore_language_directory_validation: true,
+        skip_binary_upload: true,
+        force: true,
+        overwrite_screenshots: true,
+        app_identifier: "com.owncloud.ios-app",
+        skip_app_version_update: true
+      )
     end
 
   desc "In-House Enterprise IPA generation"

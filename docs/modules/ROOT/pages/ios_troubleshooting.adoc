@@ -1,0 +1,110 @@
+= Troubleshooting
+:toc: right
+:keywords: troubleshooting, logging, debugging, mitmproxy, charles for iOS, ownCloud, iOS, iPhone, iPad
+:description: This guide steps you through how to troubleshoot issues with ownCloud's iOS App for iPhone and iPad. Specifically, it shows how to configure logging, and troubleshoot using mitmproxy and Charles for iOS.
+:apache-logging-url: http://httpd.apache.org/docs/current/logs.html
+:charles-web-debugging-proxy-url: https://www.charlesproxy.com/documentation/ios/
+:create-screen-recording-url: https://support.apple.com/en-us/HT207935
+:mitmproxy-url: https://mitmproxy.org/
+:owncloud-logging-url: https://doc.owncloud.com/server/10.0/admin_manual/configuration/server/logging_configuration.html
+
+If you experience problems while using the iOS app, you can use this guide to help find the solution.
+
+== Logging
+
+=== Capturing App Debug Logs
+
+Effectively debugging software requires as much relevant information as possible.
+Log output can help with tracking down problems and, if you report a bug, log output can help to resolve an issue more quickly.
+To assist the ownCloud support personnel, please try to provide as many relevant logs as possible.
+You can do this by enabling and fully configuring the iOS app’s logging functionality via:
+
+* Enabling logging, _if it is not already enabled_.
+* Setting the log level to "_Debug_" or "_Info_".
+* Then, enabling:
+** Log HTTP requests and responses.
+** Standard error output.
+** Log file.
+
+Once these have been enabled:
+
+* Click btn:[Reset log file].
+* Perform the steps to reproduce the error
+* Go back to the Logging settings and click btn:[Share log file].
+
+.All iOS App logging settings enabled and set
+image:ios-app-settings-logging.png[ios-app-settings-logging]
+
+=== Locating iPhone & iPad App Crash Logs
+
+In the worst case scenario, when the app either isn't responding or is crashing, iOS saves a crash log on the device.
+You can find it under menu:Settings[Privacy > Analytics > Analytics Data].
+On iOS 12, the log entries are sorted alphabetically with the app name and date and time. 
+Tap the name to open and export with the share button on the top right-hand side.
+
+=== ownCloud's Log File
+
+ownCloud server maintains an {owncloud-logging-url}[ownCloud-specific log file].
+You can view the file using either the web interface or you can open it directly from the file system in your ownCloud server's data directory.
+
+You can check if it is enabled through the Log configuration panel, which is available under menu:Settings[General (Admin)].
+On that page, you can adjust the log level.
+We recommend that you set it to a verbose level such as either `debug` or `info`.
+
+.Configuring logging in ownCloud server.
+image:owncloud-log-configuration.png[Configuring logging in ownCloud server.]
+
+=== Web Server Log Files
+
+It can be helpful to view your web server's error log file to isolate any ownCloud-related problems.
+Some helpful files include the following:
+
+error_logx:: Maintains errors associated with PHP code.
+access_log:: Typically records all requests handled by the server; handy as a debugging tool, because the log line contains information specific to each request and its result.
+
+Below, you can find where the error logs are typically located, based on operating system and web server.
+
+[cols=",,",options="header"]
+|===
+|Operating System
+|Web Server
+|File Location
+
+.3+|Linux
+|Apache |`/var/log/apache2`
+|NGINX |`/var/log/nginx`
+|Lighttpd |`/var/log/lighttpd`
+
+.2+|Windows
+|Apache
+|The Windows Event Log or in the `logs` directory relative to the Apache installation directory.
+|NGINX
+|Commonly in the `logs` directory relative to the NGINX installation directory.
+|===
+
+TIP: You can always check your web server's configuration to know where the log files are located.
+
+=== Recording the Screen
+
+In iOS 11 or later, you can create a screen recording to better illustrate an error.
+If you are not familiar with creating one, {create-screen-recording-url}[follow these instructions].
+
+== Debugging Tools
+
+If you need to check the traffic between ownCloud and the iOS App, we recommend two tools:
+
+* xref:mitmproxy[mitmproxy]
+* xref:charles-for-ios[Charles for iOS]
+
+=== mitmproxy
+
+{mitmproxy-url}[mitmproxy] is an interactive man-in-the-middle proxy for HTTP and HTTPS with a console interface.
+At ownCloud, we use it a lot to investigate every detail of HTTP requests and responses.
+
+image:https://mitmproxy.org/screenshot.png[mitmproxy sample output]
+
+=== Charles for iOS
+
+{charles-web-debugging-proxy-url}[The Charles proxy for iOS] works similarly to mitmproxy.
+However, it's more user-friendly, runs on the iOS device, _and_ has a beautiful UI.
+It also supports split view on iPads so that you can work with the ownCloud iOS app and Charles side-by-side.
