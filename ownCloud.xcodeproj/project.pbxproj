@@ -82,7 +82,7 @@
 		4C99FCB4229D6FDE008908AB /* ScheduledTaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C99FCB3229D6FDE008908AB /* ScheduledTaskManager.swift */; };
 		4C99FCB6229D701B008908AB /* ScheduledTaskExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C99FCB5229D701B008908AB /* ScheduledTaskExtension.swift */; };
 		4CAF783C2282FD40000C85CF /* FileManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CAF783B2282FD40000C85CF /* FileManager+Extension.swift */; };
-		4CB502F522B27F60005655B8 /* DummyBackgroundTaskAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB502F422B27F60005655B8 /* DummyBackgroundTaskAction.swift */; };
+		4CB502F522B27F60005655B8 /* BackgroundFetchUpdateTaskAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB502F422B27F60005655B8 /* BackgroundFetchUpdateTaskAction.swift */; };
 		4CC46D212284C677009E938F /* BookmarkInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */; };
 		4CF8CAB121F9B70600B8CA67 /* UIBarButtonItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */; };
 		59056CAD22414F3C00A18A22 /* ownCloudScreenshotsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59056CAC22414F3C00A18A22 /* ownCloudScreenshotsTests.swift */; };
@@ -636,7 +636,7 @@
 		4C99FCB3229D6FDE008908AB /* ScheduledTaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledTaskManager.swift; sourceTree = "<group>"; };
 		4C99FCB5229D701B008908AB /* ScheduledTaskExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduledTaskExtension.swift; sourceTree = "<group>"; };
 		4CAF783B2282FD40000C85CF /* FileManager+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Extension.swift"; sourceTree = "<group>"; };
-		4CB502F422B27F60005655B8 /* DummyBackgroundTaskAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyBackgroundTaskAction.swift; sourceTree = "<group>"; };
+		4CB502F422B27F60005655B8 /* BackgroundFetchUpdateTaskAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundFetchUpdateTaskAction.swift; sourceTree = "<group>"; };
 		4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkInfoViewController.swift; sourceTree = "<group>"; };
 		4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Extension.swift"; sourceTree = "<group>"; };
 		54199937F74A129BC74DEB0A /* Pods_ownCloudScreenshotsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ownCloudScreenshotsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1133,7 +1133,7 @@
 			children = (
 				4C99FCB3229D6FDE008908AB /* ScheduledTaskManager.swift */,
 				4C99FCB5229D701B008908AB /* ScheduledTaskExtension.swift */,
-				4CB502F422B27F60005655B8 /* DummyBackgroundTaskAction.swift */,
+				4CB502F422B27F60005655B8 /* BackgroundFetchUpdateTaskAction.swift */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -2393,7 +2393,7 @@
 				4CC46D212284C677009E938F /* BookmarkInfoViewController.swift in Sources */,
 				6E5FC172221590B000F60846 /* DisplayHostViewController.swift in Sources */,
 				4C99FCB4229D6FDE008908AB /* ScheduledTaskManager.swift in Sources */,
-				4CB502F522B27F60005655B8 /* DummyBackgroundTaskAction.swift in Sources */,
+				4CB502F522B27F60005655B8 /* BackgroundFetchUpdateTaskAction.swift in Sources */,
 				DC85493421831B0B00782BA8 /* Tools.swift in Sources */,
 				DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */,
 				39E98B452279ACF5009911F1 /* PublicLinkEditTableViewController.swift in Sources */,

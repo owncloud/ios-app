@@ -34,7 +34,7 @@ class ScheduledTaskExtensionContext : OCExtensionContext {
 
 }
 
-class ScheduledTaskAction {
+class ScheduledTaskAction : NSObject {
 
 	struct FeatureKeys {
 		static let runOnLowBattery: String = "runOnLowBattery"
@@ -42,7 +42,7 @@ class ScheduledTaskAction {
 		static let runOnWifi: String = "runOnWifi"
 	}
 
-	typealias ActionResult = Result<Any, Error>
+	typealias ActionResult = Result<Any?, Error>
 	typealias ActionHandler = (ScheduledTaskAction) -> Void
 
 	let gracePeriod: TimeInterval = 0.1
@@ -70,7 +70,8 @@ class ScheduledTaskAction {
 		return ScheduledTaskExtension(identifier: identifier!, locations: locations, features: features, objectProvider: objectProvider)
 	}
 
-	required init() {
+	required override init() {
+		super.init()
 	}
 
 	func run(background:Bool) {
@@ -94,6 +95,7 @@ class ScheduledTaskAction {
 				} else {
 					self.backgroundFetchCompletion!(.noData)
 				}
+				self.backgroundFetchCompletion = nil
 			}
 
 			if self.backgroundTaskIdentifier != .invalid {
