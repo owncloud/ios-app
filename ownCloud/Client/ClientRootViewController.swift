@@ -214,6 +214,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	var closeClientCompletionHandler : (() -> Void)?
 
 	func closeClient(completion: (() -> Void)? = nil) {
+		OCBookmarkManager.lastBookmarkSelectedForConnection = nil
+
 		self.dismiss(animated: true, completion: {
 			if completion != nil {
 				OnMainThread { // Work-around to make sure the self.presentingViewController is ready to present something new. Immediately after .dismiss returns, it isn't, so we wait one runloop-cycle for it to complete
