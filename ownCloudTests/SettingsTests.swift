@@ -31,6 +31,32 @@ class SettingsTests: XCTestCase {
 		//Reset status
 		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
 	}
+	
+	/*
+	* PASSED if: Show hidden files and folders are displayed as part of the "Display Settings" section of Settings
+	*/
+	func testCheckDisplaySettings () {
+		
+		//Assert
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("show-hidden-files-switch")).assert(grey_sufficientlyVisible())
+		
+		//Reset status
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
+	}
+	
+	/*
+	* PASSED if: Media upload options are displayed as part of the "Media Upload" section of Settings
+	*/
+	func testCheckMediaUploadSettings () {
+		
+		//Assert
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("convert_heic_to_mp4")).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("convert_to_mp4")).assert(grey_sufficientlyVisible())
+		
+		//Reset status
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
+	}
+
 
 	/*
 	* PASSED if: "More" options "are displayed
