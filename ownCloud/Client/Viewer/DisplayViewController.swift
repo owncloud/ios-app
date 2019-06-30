@@ -357,7 +357,12 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: { [weak self] (action, _) in
-			if !(action is OpenInAction) {
+
+			if action is RenameAction {
+				self?.updateNavigationBarItems()
+			}
+
+			if action.actionExtension.category == .destructive {
 				self?.navigationController?.popViewController(animated: true)
 			}
 		}) {
