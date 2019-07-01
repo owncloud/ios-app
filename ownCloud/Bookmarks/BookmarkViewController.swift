@@ -509,7 +509,7 @@ class BookmarkViewController: StaticTableViewController {
 
 			let connection = OCConnection(bookmark: bookmark)
 
-			connection.connect { [weak self] (error, _) in
+			connection.connect { [weak self] (error, issue) in
 				if let weakSelf = self {
 					if error == nil {
 						bookmark.displayName = connection.loggedInUser?.displayName
@@ -536,7 +536,26 @@ class BookmarkViewController: StaticTableViewController {
 					} else {
 						OnMainThread {
 							hudCompletion({
-								weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+								if issue != nil {
+									self?.bookmark?.authenticationData = nil
+
+									let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
+										switch response {
+											case .cancel:
+												issue?.reject()
+
+											case .approve:
+												issue?.approve()
+												self?.handleContinue()
+
+											case .dismiss: break
+										}
+									})
+
+									weakSelf.present(issuesViewController, animated: true, completion: nil)
+								} else {
+									weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+								}
 							})
 						}
 					}
