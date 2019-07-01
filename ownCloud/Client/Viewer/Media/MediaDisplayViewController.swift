@@ -22,6 +22,16 @@ import ownCloudSDK
 
 class MediaDisplayViewController : DisplayViewController {
 
+	private var playerStatusObservation: NSKeyValueObservation?
+	private var playerItemStatusObservation: NSKeyValueObservation?
+	private var playerItem: AVPlayerItem?
+	private var player: AVPlayer?
+
+	deinit {
+		playerStatusObservation?.invalidate()
+		playerItemStatusObservation?.invalidate()
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.requiresLocalItemCopy = false
@@ -31,16 +41,42 @@ class MediaDisplayViewController : DisplayViewController {
 		if source != nil {
 
 			let asset = AVURLAsset(url: source!, options: self.httpAuthHeaders != nil ? ["AVURLAssetHTTPHeaderFieldsKey" : self.httpAuthHeaders!] : nil )
-			let playerItem = AVPlayerItem(asset: asset)
+			playerItem = AVPlayerItem(asset: asset)
 
-			let player = AVPlayer(playerItem: playerItem)
+			player = AVPlayer(playerItem: playerItem)
+			player?.allowsExternalPlayback = true
 			let playerViewController = AVPlayerViewController()
 			playerViewController.player = player
 
 			addChild(playerViewController)
 			self.view.addSubview(playerViewController.view)
 			playerViewController.didMove(toParent: self)
-			playerViewController.player?.play()
+
+			playerItemStatusObservation = playerItem?.observe(\AVPlayerItem.status, options: [.initial, .new], changeHandler: { [weak self] (item, _) in
+				if item.status == .failed {
+					self?.present(error: item.error)
+				}
+			})
+
+			playerStatusObservation = player!.observe(\AVPlayer.status, options: [.initial, .new], changeHandler: { [weak self] (player, _) in
+				if player.status == .readyToPlay {
+					self?.player?.play()
+				} else if player.status == .failed {
+					self?.present(error: self?.player?.error)
+				}
+			})
+		}
+	}
+
+	private func present(error:Error?) {
+		guard let error = error else { return }
+
+		OnMainThread { [weak self] in
+			let alert = UIAlertController(with: "Error".localized, message: error.localizedDescription, okLabel: "OK".localized, action: {
+				self?.navigationController?.popViewController(animated: true)
+			})
+
+			self?.parent?.present(alert, animated: true)
 		}
 	}
 }
@@ -64,7 +100,7 @@ extension MediaDisplayViewController: DisplayExtension {
 			return OCExtensionPriority.noMatch
 		}
 	}
-	static var displayExtensionIdentifier: String = "org.owncloud.image"
+	static var displayExtensionIdentifier: String = "org.owncloud.media"
 	static var supportedMimeTypes: [String]?
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 }

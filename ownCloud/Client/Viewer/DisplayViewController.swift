@@ -72,6 +72,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
+	// This shall be set to false if DisplayViewController sublass is able to handle streamed data (e.g. audio, video)
 	var requiresLocalItemCopy: Bool = true
 
 	var source: URL? {
