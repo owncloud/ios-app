@@ -47,8 +47,8 @@ platform :ios do
 
   desc "Generate the screenshots for the AppStore"
     lane :screenshots do
-      #reset_simulators
-      #snapshot
+      reset_simulators
+      snapshot
       frameit(white: false, path: './fastlane/screenshots')
       deliver(
         skip_screenshots: false,
