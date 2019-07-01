@@ -510,11 +510,11 @@ class BookmarkViewController: StaticTableViewController {
 			let connection = OCConnection(bookmark: bookmark)
 
 			connection.connect { [weak self] (error, issue) in
-				if let weakSelf = self {
+				if let strongSelf = self {
 					if error == nil {
 						bookmark.displayName = connection.loggedInUser?.displayName
 						connection.disconnect(completionHandler: {
-							switch weakSelf.mode {
+							switch strongSelf.mode {
 							case .create:
 								// Add bookmark
 								OCBookmarkManager.shared.addBookmark(bookmark)
@@ -528,7 +528,7 @@ class BookmarkViewController: StaticTableViewController {
 							}
 							OnMainThread {
 								hudCompletion({
-									weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
 								})
 							}
 
@@ -552,9 +552,9 @@ class BookmarkViewController: StaticTableViewController {
 										}
 									})
 
-									weakSelf.present(issuesViewController, animated: true, completion: nil)
+									strongSelf.present(issuesViewController, animated: true, completion: nil)
 								} else {
-									weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
 								}
 							})
 						}
@@ -563,8 +563,8 @@ class BookmarkViewController: StaticTableViewController {
 			}
 		} else {
 			hudCompletion({ [weak self] in
-				if let weakSelf = self {
-					weakSelf.handleContinue()
+				if let strongSelf = self {
+					strongSelf.handleContinue()
 				}
 			})
 		}
