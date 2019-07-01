@@ -22,9 +22,18 @@ import ownCloudSDK
 
 class MediaDisplayViewController : DisplayViewController {
 
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		self.requiresLocalItemCopy = false
+	}
+
 	override func renderSpecificView() {
 		if source != nil {
-			let player = AVPlayer(url: source!)
+
+			let asset = AVURLAsset(url: source!, options: self.httpAuthHeaders != nil ? ["AVURLAssetHTTPHeaderFieldsKey" : self.httpAuthHeaders!] : nil )
+			let playerItem = AVPlayerItem(asset: asset)
+
+			let player = AVPlayer(playerItem: playerItem)
 			let playerViewController = AVPlayerViewController()
 			playerViewController.player = player
 
