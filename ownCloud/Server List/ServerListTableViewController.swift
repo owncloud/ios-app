@@ -224,7 +224,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		showBookmarkUI()
 	}
 
-	func showBookmarkUI(edit bookmark: OCBookmark? = nil) {
+	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false) {
 		let viewController : BookmarkViewController = BookmarkViewController(bookmark)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
 
@@ -238,7 +238,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			_ = target.perform(action, with: self)
 		}
 
-		self.present(navigationController, animated: true, completion: nil)
+		self.present(navigationController, animated: true, completion: {
+			if performContinue {
+				viewController.handleContinue()
+			}
+		})
 	}
 
 	func showBookmarkInfoUI(_ bookmark: OCBookmark) {
