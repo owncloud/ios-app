@@ -38,9 +38,9 @@ class MediaDisplayViewController : DisplayViewController {
 	}
 
 	override func renderSpecificView() {
-		if source != nil {
+		if let sourceURL = source {
 
-			let asset = AVURLAsset(url: source!, options: self.httpAuthHeaders != nil ? ["AVURLAssetHTTPHeaderFieldsKey" : self.httpAuthHeaders!] : nil )
+			let asset = AVURLAsset(url: sourceURL, options: self.httpAuthHeaders != nil ? ["AVURLAssetHTTPHeaderFieldsKey" : self.httpAuthHeaders!] : nil )
 			playerItem = AVPlayerItem(asset: asset)
 
 			player = AVPlayer(playerItem: playerItem)
