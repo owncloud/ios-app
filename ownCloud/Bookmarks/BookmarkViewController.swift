@@ -509,12 +509,12 @@ class BookmarkViewController: StaticTableViewController {
 
 			let connection = OCConnection(bookmark: bookmark)
 
-			connection.connect { [weak self] (error, _) in
-				if let weakSelf = self {
+			connection.connect { [weak self] (error, issue) in
+				if let strongSelf = self {
 					if error == nil {
 						bookmark.displayName = connection.loggedInUser?.displayName
 						connection.disconnect(completionHandler: {
-							switch weakSelf.mode {
+							switch strongSelf.mode {
 							case .create:
 								// Add bookmark
 								OCBookmarkManager.shared.addBookmark(bookmark)
@@ -528,7 +528,7 @@ class BookmarkViewController: StaticTableViewController {
 							}
 							OnMainThread {
 								hudCompletion({
-									weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
 								})
 							}
 
@@ -536,7 +536,26 @@ class BookmarkViewController: StaticTableViewController {
 					} else {
 						OnMainThread {
 							hudCompletion({
-								weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+								if issue != nil {
+									self?.bookmark?.authenticationData = nil
+
+									let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
+										switch response {
+											case .cancel:
+												issue?.reject()
+
+											case .approve:
+												issue?.approve()
+												self?.handleContinue()
+
+											case .dismiss: break
+										}
+									})
+
+									strongSelf.present(issuesViewController, animated: true, completion: nil)
+								} else {
+									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+								}
 							})
 						}
 					}
@@ -544,8 +563,8 @@ class BookmarkViewController: StaticTableViewController {
 			}
 		} else {
 			hudCompletion({ [weak self] in
-				if let weakSelf = self {
-					weakSelf.handleContinue()
+				if let strongSelf = self {
+					strongSelf.handleContinue()
 				}
 			})
 		}
