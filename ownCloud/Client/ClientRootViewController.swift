@@ -214,6 +214,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	var closeClientCompletionHandler : (() -> Void)?
 
 	func closeClient(completion: (() -> Void)? = nil) {
+		OCBookmarkManager.lastBookmarkSelectedForConnection = nil
+
 		self.dismiss(animated: true, completion: {
 			if completion != nil {
 				OnMainThread { // Work-around to make sure the self.presentingViewController is ready to present something new. Immediately after .dismiss returns, it isn't, so we wait one runloop-cycle for it to complete
@@ -238,6 +240,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 				self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
 
 				let emptyViewController = self.emptyViewController
+				emptyViewController.navigationItem.title = "Accounts".localized
+
 				self.filesNavigationController?.popLastHandler = { [weak self] (viewController) in
 					if viewController == emptyViewController {
 						OnMainThread {
