@@ -38,6 +38,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	var progressSummarizer : ProgressSummarizer?
 	var toolbar : UIToolbar?
 
+	var ignoreAuthorizationFailure : Bool = false
+
 	var connectionStatusObservation : NSKeyValueObservation?
 	var connectionStatusSummary : ProgressSummary? {
 		willSet {
@@ -290,13 +292,15 @@ extension ClientRootViewController : OCCoreDelegate {
 			var queueCompletionHandlerScheduled : Bool = false
 
 			if error != nil {
-				if let nsError : NSError = error as NSError? {
-					if nsError.isOCError(withCode: .authorizationFailed) {
+				if let error : NSError = error as NSError?, !self.ignoreAuthorizationFailure {
+					if error.isOCError(withCode: .authorizationFailed) {
 						let alertController = UIAlertController(title: "Authorization failed".localized,
 											message: "The server declined access with the credentials stored for this connection.".localized,
 											preferredStyle: .alert)
 
 						alertController.addAction(UIAlertAction(title: "Ignore".localized, style: .destructive, handler: { (_) in
+							self.ignoreAuthorizationFailure = true
+
 							queueCompletionHandler()
 						}))
 
@@ -308,7 +312,16 @@ extension ClientRootViewController : OCCoreDelegate {
 							if let navigationController = self.presentingViewController as? UINavigationController {
 								self.closeClient(completion: {
 									if let serverListTableViewController = navigationController.topViewController as? ServerListTableViewController {
-											serverListTableViewController.showBookmarkUI(edit: editBookmark)
+										var performContinue : Bool = false
+
+										// Reset auth data for token-based methods
+										if let authenticationMethodIdentifier = editBookmark.authenticationMethodIdentifier, let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier), authenticationMethodClass.type == .token {
+											editBookmark.authenticationData = nil
+											performContinue = true
+										}
+
+										// Bring up bookmark editing UI
+										serverListTableViewController.showBookmarkUI(edit: editBookmark, performContinue: performContinue)
 									}
 								})
 							}

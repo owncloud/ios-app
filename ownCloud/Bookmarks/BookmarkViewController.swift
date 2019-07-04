@@ -628,7 +628,7 @@ class BookmarkViewController: StaticTableViewController {
 			if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
 				// Remove unwanted rows
 				var removeRows : [StaticTableViewRow] = []
-				let authMethodType = authenticationMethodClass.type()
+				let authMethodType = authenticationMethodClass.type as OCAuthenticationMethodType
 
 				switch authMethodType {
 					case .passphrase:
@@ -679,9 +679,9 @@ class BookmarkViewController: StaticTableViewController {
 
 					case .token:
 						if let authData = self.bookmark?.authenticationData, let userName = authenticationMethodClass.userName(fromAuthenticationData: authData) {
-							tokenInfoRow?.value = NSString(format:"Authenticated as %@ via %@".localized as NSString, userName, authenticationMethodClass.name())
+							tokenInfoRow?.value = NSString(format:"Authenticated as %@ via %@".localized as NSString, userName, authenticationMethodClass.name)
 						} else {
-							tokenInfoRow?.value = "Authenticated via".localized + " " + authenticationMethodClass.name()
+							tokenInfoRow?.value = "Authenticated via".localized + " " + authenticationMethodClass.name
 						}
 
 						if self.bookmark?.authenticationData != nil {
@@ -840,7 +840,7 @@ class BookmarkViewController: StaticTableViewController {
 
 	func authenticationMethodTypeForIdentifier(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> OCAuthenticationMethodType? {
 		if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
-			return authenticationMethodClass.type()
+			return authenticationMethodClass.type
 		}
 
 		return nil
