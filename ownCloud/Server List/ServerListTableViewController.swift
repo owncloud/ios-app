@@ -21,7 +21,7 @@ import ownCloudSDK
 import PocketSVG
 
 class ServerListTableViewController: UITableViewController, Themeable {
-
+	// MARK: - Views
 	@IBOutlet var welcomeOverlayView: UIView!
 	@IBOutlet var welcomeTitleLabel : UILabel!
 	@IBOutlet var welcomeMessageLabel : UILabel!
@@ -30,8 +30,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	@IBOutlet var welcomeLogoTVGView : VectorImageView!
 	// @IBOutlet var welcomeLogoSVGView : SVGImageView!
 
+	// MARK: - Internals
 	var lockedBookmarks : [OCBookmark] = []
+	var shownFirstTime = true
 
+	// MARK: - Init
 	override init(style: UITableView.Style) {
 		super.init(style: style)
 
@@ -62,6 +65,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 	*/
 
+	// MARK: - View controller events
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -102,6 +106,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
+		var showBetaWarning = true
+
 		super.viewDidAppear(animated)
 
 		updateNoServerMessageVisibility()
@@ -118,7 +124,18 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			settingsBarButtonItem
 		]
 
-		considerBetaWarning()
+		if shownFirstTime {
+			shownFirstTime = false
+			
+			if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
+				connect(to: bookmark)
+				showBetaWarning = false
+			}
+		}
+
+		if showBetaWarning {
+			considerBetaWarning()
+		}
 	}
 
 	func considerBetaWarning() {
@@ -224,7 +241,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		showBookmarkUI()
 	}
 
-	func showBookmarkUI(edit bookmark: OCBookmark? = nil) {
+	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false) {
 		let viewController : BookmarkViewController = BookmarkViewController(bookmark)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
 
@@ -238,7 +255,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			_ = target.perform(action, with: self)
 		}
 
-		self.present(navigationController, animated: true, completion: nil)
+		self.present(navigationController, animated: true, completion: {
+			if performContinue {
+				viewController.handleContinue()
+			}
+		})
 	}
 
 	func showBookmarkInfoUI(_ bookmark: OCBookmark) {
@@ -281,6 +302,78 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 	}
 
+	// MARK: - Connect and locking
+	func isLocked(bookmark: OCBookmark, presentAlert: Bool = true) -> Bool {
+		if lockedBookmarks.contains(bookmark) {
+			if presentAlert {
+				let alertController = UIAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName as NSString) as String,
+									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
+									preferredStyle: .alert)
+
+				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
+					// There was an error erasing the vault => re-add bookmark to give user another chance to delete its contents
+					OCBookmarkManager.shared.addBookmark(bookmark)
+					self.updateNoServerMessageVisibility()
+				}))
+
+				self.present(alertController, animated: true, completion: nil)
+			}
+
+			return true
+		}
+
+		return false
+	}
+
+	func connect(to bookmark: OCBookmark) {
+		if isLocked(bookmark: bookmark) {
+			return
+		}
+
+		guard let indexPath = indexPath(for: bookmark) else {
+			return
+		}
+
+		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+
+		let bookmarkRow = self.tableView.cellForRow(at: indexPath)
+		let activityIndicator = UIActivityIndicatorView(style: .white)
+
+		var bookmarkRowAccessoryView : UIView?
+
+		if bookmarkRow != nil {
+			bookmarkRowAccessoryView = bookmarkRow?.accessoryView
+			bookmarkRow?.accessoryView = activityIndicator
+
+			activityIndicator.startAnimating()
+		}
+
+		self.setLastSelectedBookmark(bookmark, openedBlock: {
+			activityIndicator.stopAnimating()
+			bookmarkRow?.accessoryView = bookmarkRowAccessoryView
+		})
+
+		clientRootViewController.afterCoreStart {
+			// Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
+			if self.lastSelectedBookmark?.uuid == bookmark.uuid {
+				OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
+
+				// Set up custom push transition for presentation
+				if let navigationController = self.navigationController {
+					let transitionDelegate = PushTransitionDelegate()
+
+					clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
+					clientRootViewController.transitioningDelegate = transitionDelegate
+					clientRootViewController.modalPresentationStyle = .custom
+
+					navigationController.present(clientRootViewController, animated: true, completion: {
+						self.resetPreviousBookmarkSelection(bookmark)
+					})
+				}
+			}
+		}
+	}
+
 	// MARK: - Table view delegate
 	var lastSelectedBookmark : OCBookmark?
 	var lastSelectedBookmarkOpenedBlock : (() -> Void)?
@@ -305,66 +398,33 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-			if lockedBookmarks.contains(bookmark) {
-				let alertController = UIAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName as NSString) as String,
-									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
-									preferredStyle: .alert)
-
-				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
-					// There was an error erasing the vault => re-add bookmark to give user another chance to delete its contents
-					OCBookmarkManager.shared.addBookmark(bookmark)
-					self.updateNoServerMessageVisibility()
-				}))
-
-				self.present(alertController, animated: true, completion: nil)
-
+			if self.isLocked(bookmark: bookmark) {
 				return
 			}
 
 			if tableView.isEditing {
 				self.showBookmarkUI(edit: bookmark)
 			} else {
-				let clientRootViewController = ClientRootViewController(bookmark: bookmark)
-
-				let bookmarkRow = self.tableView.cellForRow(at: indexPath)
-				let activityIndicator = UIActivityIndicatorView(style: .white)
-
-				var bookmarkRowAccessoryView : UIView?
-
-				if bookmarkRow != nil {
-					bookmarkRowAccessoryView = bookmarkRow?.accessoryView
-					bookmarkRow?.accessoryView = activityIndicator
-
-					activityIndicator.startAnimating()
-				}
-
-				self.setLastSelectedBookmark(bookmark, openedBlock: {
-					activityIndicator.stopAnimating()
-					bookmarkRow?.accessoryView = bookmarkRowAccessoryView
-				})
-
-				clientRootViewController.afterCoreStart {
-					// Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
-					if self.lastSelectedBookmark?.uuid == bookmark.uuid {
-						// Set up custom push transition for presentation
-						if let navigationController = self.navigationController {
-							let transitionDelegate = PushTransitionDelegate()
-
-							clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
-							clientRootViewController.transitioningDelegate = transitionDelegate
-							clientRootViewController.modalPresentationStyle = .custom
-
-							navigationController.present(clientRootViewController, animated: true, completion: {
-								self.resetPreviousBookmarkSelection(bookmark)
-							})
-						}
-					}
-				}
+				self.connect(to: bookmark)
 			}
 		}
 	}
 
 	// MARK: - Table view data source
+	func indexPath(for bookmark: OCBookmark) -> IndexPath? {
+		var index = 0
+
+		for otherBookmark in OCBookmarkManager.shared.bookmarks {
+			if bookmark.uuid == otherBookmark.uuid {
+				return IndexPath(item: index, section: 0)
+			}
+
+			index += 1
+		}
+
+		return nil
+	}
+
 	override func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
@@ -469,5 +529,24 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		OCBookmarkManager.shared.moveBookmark(from: UInt(fromIndexPath.row), to: UInt(to.row))
+	}
+}
+
+extension OCBookmarkManager {
+	static private let lastConnectedBookmarkUUIDDefaultsKey = "last-connected-bookmark-uuid"
+
+	// MARK: - Defaults Keys
+	static var lastBookmarkSelectedForConnection : OCBookmark? {
+		get {
+			if let bookmarkUUIDString = OCAppIdentity.shared.userDefaults?.string(forKey: OCBookmarkManager.lastConnectedBookmarkUUIDDefaultsKey), let bookmarkUUID = UUID(uuidString: bookmarkUUIDString) {
+				return OCBookmarkManager.shared.bookmark(for: bookmarkUUID)
+			}
+
+			return nil
+		}
+
+		set {
+			OCAppIdentity.shared.userDefaults?.set(newValue?.uuid.uuidString, forKey: OCBookmarkManager.lastConnectedBookmarkUUIDDefaultsKey)
+		}
 	}
 }

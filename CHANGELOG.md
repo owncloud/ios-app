@@ -1,5 +1,12 @@
 # ChangeLog
 
+## Release version 1.0.2 (July 2019)
+
+- Favorites crash fixed (#423)
+- Account Auto-Connect
+- Add support for server setting version.hide (#426)
+- OAuth2 improvements (#293)
+
 ## Release version 1.0.1 (June 2019)
 - Passcode lock for iOS Files.app
 - Access log files after log session ended

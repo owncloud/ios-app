@@ -8,16 +8,16 @@
           "supported": ["en"]
         }
       ],
-      "color": "#182a3b"
+      "color": "#1d2d44"
     },
     "keyword": {
       "fonts": [
         {
-          "font": "./fonts/OpenSans-Regular.ttf",
+          "font": "./fonts/OpenSans-Semibold.ttf",
           "supported": ["en"]
         }
       ],
-      "color": "#182a3b"
+      "color": "#ffffff"
     },
     "background": "./background.jpg",
     "padding": "50x40",
@@ -31,66 +31,31 @@
   "data": [
     {
       "filter": "10_ios_accounts_welcome_demo",
-      "keyword": {
-        "font_scale_factor" : 0.1
-      },
-      "title": {
-        "font_scale_factor" : 0.15
-      }
+        "font_scale_factor" : 0.06
     },
     {
       "filter": "11_ios_accounts_list_demo",
-      "keyword": {
-        "font_scale_factor" : 0.1
-      },
-      "title": {
-        "font_scale_factor" : 0.15
-      }
+        "font_scale_factor" : 0.06
     },
     {
       "filter": "20_ios_files_list_demo",
-      "keyword": {
-        "font_scale_factor" : 0.1
-      },
-      "title": {
-        "font_scale_factor" : 0.15
-      }
+        "font_scale_factor" : 0.06
     },
     {
       "filter": "21_ios_files_actions_demo",
-      "keyword": {
-        "font_scale_factor" : 0.1
-      },
-      "title": {
-        "font_scale_factor" : 0.15
-      }
+        "font_scale_factor" : 0.06
     },
     {
       "filter": "22_ios_files_preview_pdf_demo",
-      "keyword": {
-        "font_scale_factor" : 0.1
-      },
-      "title": {
-        "font_scale_factor" : 0.15
-      }
+        "font_scale_factor" : 0.06
     },
     {
       "filter": "40_ios_quick_access_demo",
-      "keyword": {
-        "font_scale_factor" : 0.1
-      },
-      "title": {
-        "font_scale_factor" : 0.15
-      }
+        "font_scale_factor" : 0.06
     },
     {
       "filter": "60_ios_settings_demo",
-      "keyword": {
-        "font_scale_factor" : 0.1
-      },
-      "title": {
-        "font_scale_factor" : 0.15
-      }
+        "font_scale_factor" : 0.06
     }
   ]
 }
