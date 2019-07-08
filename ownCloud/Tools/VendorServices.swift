@@ -84,7 +84,7 @@ class VendorServices : NSObject {
 			let appName = OCAppIdentity.shared.appName else {
 				return
 		}
-		self.sendMail(to: feedbackEmail, subject: "\(appName) \(buildType) (\(self.appVersion) (\(self.appBuildNumber)))", message: nil, from: viewController)
+		self.sendMail(to: feedbackEmail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(appName)", message: nil, from: viewController)
 	}
 
 	func sendMail(to: String?, subject: String?, message: String?, from viewController: UIViewController) {
