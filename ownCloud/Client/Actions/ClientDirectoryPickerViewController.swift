@@ -125,6 +125,12 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
 
+		let leftButtonImage = Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
+
+		let createFolderBarButton = UIBarButtonItem(image: leftButtonImage, style: .plain, target: self, action: #selector(createFolderButtonPressed))
+		createFolderBarButton.accessibilityIdentifier = "client.folder-create"
+			navigationItem.leftBarButtonItem = createFolderBarButton
+
 		if let cancelBarButton = cancelBarButton {
 			navigationItem.rightBarButtonItems = [cancelBarButton]
 		}
@@ -207,5 +213,36 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		dismiss(animated: true, completion: {
 			self.userChose(item: self.query.rootItem)
 		})
+	}
+
+	@objc func createFolderButtonPressed(_ sender: UIBarButtonItem) {
+		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+		// Actions for Create Folder
+		if let core = self.core, let rootItem = query.rootItem {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .plusButton)
+			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
+
+			let actions = Action.sortedApplicableActions(for: actionContext).filter { (action) -> Bool in
+				if action.actionExtension.identifier == OCExtensionIdentifier("com.owncloud.action.createFolder") {
+					return true
+				}
+
+				return false
+			}
+
+			let createFolderAction = actions.first
+			createFolderAction?.progressHandler = makeActionProgressHandler()
+			createFolderAction?.run()
+		}
+
+		// Cancel button
+		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
+		controller.addAction(cancelAction)
+
+		if let popoverController = controller.popoverPresentationController {
+			popoverController.barButtonItem = sender
+		}
+		self.present(controller, animated: true)
 	}
 }
