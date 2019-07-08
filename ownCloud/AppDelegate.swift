@@ -94,7 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 			for (bookmark) in bookmarks {
 				alertController.addAction(UIAlertAction(title: bookmark.name, style: .default, handler: { [weak self] (_) in
-					self?.importItem(with: url, into: bookmark)
+					self?.importItemWithDirectoryPicker(with: url, into: bookmark)
 				}))
 			}
 
@@ -108,12 +108,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 				} else {
 					vc?.present(alertController, animated: true)
 				}
+
+				return true
 			}
 		} else if bookmarks.count == 1, let bookmark = bookmarks.first {
-			self.importItem(with: url, into: bookmark)
+			self.importItemWithDirectoryPicker(with: url, into: bookmark)
+
+			return true
 		}
 
-		return true
+		return false
 	}
 
 	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -139,18 +143,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 }
 
-
 extension AppDelegate {
 
-	func importItem(with url : URL, into bookmark: OCBookmark) {
+	func importItemWithDirectoryPicker(with url : URL, into bookmark: OCBookmark) {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (_, _) in
 		}, completionHandler: { (core, error) in
 			if error == nil {
 				OnMainThread {
-					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core!, path: "/", selectButtonTitle: "Copy here".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory) in
+					let directoryPickerViewController = ClientDirectoryPickerViewController(core: core!, path: "/", selectButtonTitle: "Save here".localized, avoidConflictsWith: [], choiceHandler: { [weak self] (selectedDirectory) in
 
 						if let targetDirectory = selectedDirectory {
-							self.importFile(url: url, to: targetDirectory, core: core)
+							self?.importFile(url: url, to: targetDirectory, core: core)
 						}
 					})
 
@@ -171,7 +174,7 @@ extension AppDelegate {
 
 	func importFile(url : URL, to targetDirectory : OCItem, core : OCCore?) {
 		let name = url.lastPathComponent
-		if let _ = core?.importFileNamed(name,
+		if let progress = core?.importFileNamed(name,
 										 at: targetDirectory,
 										 from: url,
 										 isSecurityScoped: false,
