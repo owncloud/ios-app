@@ -26,6 +26,7 @@ class MediaDisplayViewController : DisplayViewController {
 	private var playerItemStatusObservation: NSKeyValueObservation?
 	private var playerItem: AVPlayerItem?
 	private var player: AVPlayer?
+	private var playerViewController: AVPlayerViewController?
 
 	deinit {
 		playerStatusObservation?.invalidate()
@@ -37,6 +38,25 @@ class MediaDisplayViewController : DisplayViewController {
 		self.requiresLocalItemCopy = false
 	}
 
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+	}
+
+	override func viewSafeAreaInsetsDidChange() {
+		super.viewSafeAreaInsetsDidChange()
+
+		playerViewController!.view.translatesAutoresizingMaskIntoConstraints = false
+
+		NSLayoutConstraint.activate([
+			playerViewController!.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+			playerViewController!.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+			playerViewController!.view.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+			playerViewController!.view.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
+		])
+
+		self.view.layoutIfNeeded()
+	}
+
 	override func renderSpecificView() {
 		if let sourceURL = source {
 
@@ -45,12 +65,13 @@ class MediaDisplayViewController : DisplayViewController {
 
 			player = AVPlayer(playerItem: playerItem)
 			player?.allowsExternalPlayback = true
-			let playerViewController = AVPlayerViewController()
-			playerViewController.player = player
+			playerViewController = AVPlayerViewController()
+			playerViewController!.player = player
 
-			addChild(playerViewController)
-			self.view.addSubview(playerViewController.view)
-			playerViewController.didMove(toParent: self)
+			addChild(playerViewController!)
+			playerViewController!.view.frame = self.view.bounds
+			self.view.addSubview(playerViewController!.view)
+			playerViewController!.didMove(toParent: self)
 
 			playerItemStatusObservation = playerItem?.observe(\AVPlayerItem.status, options: [.initial, .new], changeHandler: { [weak self] (item, _) in
 				if item.status == .failed {
