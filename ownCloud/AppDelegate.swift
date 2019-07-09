@@ -88,33 +88,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		let bookmarks : [OCBookmark] = OCBookmarkManager.shared.bookmarks as [OCBookmark]
 
 		if bookmarks.count > 1 {
-			let alertController = UIAlertController(title: "Save\n\(url.lastPathComponent)".localized,
-													message: "Select an account where to import the file and choose a destination directory.".localized,
-													preferredStyle: .alert)
-
-			for (bookmark) in bookmarks {
-				alertController.addAction(UIAlertAction(title: bookmark.shortName, style: .default, handler: { [weak self] (_) in
-					self?.importItemWithDirectoryPicker(with: url, into: bookmark)
-				}))
-			}
-
-			alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { (_) in
-			}))
-
-			if let wd = UIApplication.shared.delegate?.window {
-				let vc = wd!.rootViewController
-				if let navCon = vc as? UINavigationController, let topVC = navCon.visibleViewController {
-					OnMainThread {
-						topVC.present(alertController, animated: true)
+			let moreViewController = self.cardViewController(for: url)
+				if let wd = UIApplication.shared.delegate?.window {
+					let vc = wd!.rootViewController
+					if let navCon = vc as? UINavigationController, let topVC = navCon.visibleViewController {
+						OnMainThread {
+							topVC.present(asCard: moreViewController, animated: true)
+						}
+					} else {
+						OnMainThread {
+							vc?.present(asCard: moreViewController, animated: true)
+						}
 					}
-				} else {
-					OnMainThread {
-						vc?.present(alertController, animated: true)
-					}
+
+					return true
 				}
-
-				return true
-			}
 		} else if bookmarks.count == 1, let bookmark = bookmarks.first {
 			self.importItemWithDirectoryPicker(with: url, into: bookmark)
 
@@ -201,5 +189,34 @@ extension AppDelegate {
 		} else {
 			Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
 		}
+	}
+
+	func cardViewController(for url: URL) -> UIViewController {
+		let tableViewController = MoreStaticTableViewController(style: .grouped)
+		let header = MoreViewHeader(url: url)
+		let moreViewController = MoreViewController(header: header, viewController: tableViewController)
+
+		let title = NSAttributedString(string: "Select Import Account".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
+
+		var actionsRows: [StaticTableViewRow] = []
+
+		let bookmarks : [OCBookmark] = OCBookmarkManager.shared.bookmarks as [OCBookmark]
+
+		for (bookmark) in bookmarks {
+			let row = StaticTableViewRow(buttonWithAction: { [weak self] (_ row, _ sender) in
+				moreViewController.dismiss(animated: true, completion: nil)
+				self?.importItemWithDirectoryPicker(with: url, into: bookmark)
+			}, title: bookmark.shortName, style: .plain, image: Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25)), imageWidth: 25, alignment: .left, identifier: "bookmark.uuid")
+			actionsRows.append(row)
+		}
+
+		let row = StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
+			moreViewController.dismiss(animated: true, completion: nil)
+		}, title: "Cancel".localized, style: .destructive, alignment: .center, identifier: "bookmark.uuid")
+		actionsRows.append(row)
+
+		tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
+
+		return moreViewController
 	}
 }
