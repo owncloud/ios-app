@@ -361,10 +361,6 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			if action is RenameAction {
 				self?.updateNavigationBarItems()
 			}
-
-			if action.actionExtension.category == .destructive {
-				self?.navigationController?.popViewController(animated: true)
-			}
 		}) {
 			self.present(asCard: moreViewController, animated: true)
 		}
