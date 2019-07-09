@@ -93,7 +93,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 													preferredStyle: .alert)
 
 			for (bookmark) in bookmarks {
-				alertController.addAction(UIAlertAction(title: bookmark.name, style: .default, handler: { [weak self] (_) in
+				alertController.addAction(UIAlertAction(title: bookmark.shortName, style: .default, handler: { [weak self] (_) in
 					self?.importItemWithDirectoryPicker(with: url, into: bookmark)
 				}))
 			}
@@ -104,9 +104,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			if let wd = UIApplication.shared.delegate?.window {
 				let vc = wd!.rootViewController
 				if let navCon = vc as? UINavigationController, let topVC = navCon.visibleViewController {
-					topVC.present(alertController, animated: true)
+					OnMainThread {
+						topVC.present(alertController, animated: true)
+					}
 				} else {
-					vc?.present(alertController, animated: true)
+					OnMainThread {
+						vc?.present(alertController, animated: true)
+					}
 				}
 
 				return true
