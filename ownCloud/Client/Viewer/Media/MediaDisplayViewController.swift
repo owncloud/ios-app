@@ -50,8 +50,8 @@ class MediaDisplayViewController : DisplayViewController {
 		NSLayoutConstraint.activate([
 			playerViewController!.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
 			playerViewController!.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-			playerViewController!.view.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-			playerViewController!.view.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
+			playerViewController!.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+			playerViewController!.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
 		])
 
 		self.view.layoutIfNeeded()
