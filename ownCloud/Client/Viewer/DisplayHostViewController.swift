@@ -30,6 +30,33 @@ class DisplayHostViewController: UIPageViewController {
 	private var selectedItem: OCItem
 
 	private var items: [OCItem]? {
+		willSet {
+			if let oldItems = self.items, let newItems = newValue {
+				if newItems.count > 0 {
+					if oldItems.count != newItems.count {
+						if !newItems.contains(selectedItem) {
+							if let deletedIndex = oldItems.index(of: selectedItem) {
+								if deletedIndex < newItems.count {
+									self.selectedItem = newItems[deletedIndex]
+								} else {
+									self.selectedItem = newItems.last!
+								}
+							}
+						}
+
+						OnMainThread { [weak self] in
+							self?.updateDataSource(animated: true)
+						}
+					}
+
+				} else {
+					OnMainThread {  [weak self] in
+						self?.navigationController?.popViewController(animated: true)
+					}
+				}
+
+			}
+		}
 		didSet {
 			OnMainThread { [weak self] in
 				self?.configureScrolling()
@@ -85,23 +112,7 @@ class DisplayHostViewController: UIPageViewController {
 	// MARK: - ViewController lifecycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		dataSource = self
-		delegate = self
-
-		// Display first item
-		guard let mimeType = self.selectedItem.mimeType else { return }
-
-		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: mimeType)
-		let configuration = self.configurationFor(self.selectedItem, viewController: viewController)
-
-		viewController.configure(configuration)
-		self.addChild(viewController)
-		viewController.didMove(toParent: self)
-
-		self.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
-
-		viewController.present(item: self.selectedItem)
-		viewController.updateNavigationBarItems()
+		updateDataSource()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -151,6 +162,27 @@ class DisplayHostViewController: UIPageViewController {
 	}
 
 	// MARK: - Helper methods
+
+	private func updateDataSource(animated:Bool = false) {
+		// First reset data source, to make sure that when it is again set, the page view controller does actually reload
+		self.dataSource = nil
+		self.dataSource = self
+		self.delegate = self
+
+		// Display first item
+		guard let mimeType = self.selectedItem.mimeType else { return }
+
+		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: mimeType)
+		let configuration = self.configurationFor(self.selectedItem, viewController: viewController)
+
+		viewController.configure(configuration)
+
+		self.setViewControllers([viewController], direction: .forward, animated: animated, completion: nil)
+
+		viewController.present(item: self.selectedItem)
+		viewController.updateNavigationBarItems()
+	}
+
 	private func viewControllerAtIndex(index: Int) -> UIViewController? {
 		guard let items = items else { return nil }
 

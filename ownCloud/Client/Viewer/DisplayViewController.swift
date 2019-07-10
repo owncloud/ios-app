@@ -357,8 +357,9 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: { [weak self] (action, _) in
-			if !(action is OpenInAction) {
-				self?.navigationController?.popViewController(animated: true)
+
+			if action is RenameAction {
+				self?.updateNavigationBarItems()
 			}
 		}) {
 			self.present(asCard: moreViewController, animated: true)
