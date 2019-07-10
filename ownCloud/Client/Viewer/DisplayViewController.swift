@@ -80,7 +80,13 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			OnMainThread(inline: true) {
 				self.iconImageView?.isHidden = true
 				self.hideItemMetadataUIElements()
-				self.renderSpecificView()
+				self.renderSpecificView(completion: { (success) in
+					if !success {
+						self.iconImageView?.isHidden = false
+						self.infoLabel?.text = "File couldn't be opened".localized
+						self.infoLabel?.isHidden = false
+					}
+				})
 			}
 		}
 	}
@@ -116,7 +122,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	private var cancelButton : ThemeButton?
 	private var metadataInfoLabel: UILabel?
 	private var showPreviewButton: ThemeButton?
-	private var noNetworkLabel : UILabel?
+	private var infoLabel : UILabel?
 
 	// MARK: - Delegate
 	weak var editingDelegate: DisplayViewEditingDelegate?
@@ -146,10 +152,10 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		metadataInfoLabel = UILabel()
 		cancelButton = ThemeButton(type: .custom)
 		showPreviewButton = ThemeButton(type: .custom)
-		noNetworkLabel = UILabel()
+		infoLabel = UILabel()
 		progressView = UIProgressView(progressViewStyle: .bar)
 
-		guard let iconImageView = iconImageView, let metadataInfoLabel = metadataInfoLabel, let progressView = progressView, let cancelButton = cancelButton, let showPreviewButton = showPreviewButton, let noNetworkLabel = noNetworkLabel else {
+		guard let iconImageView = iconImageView, let metadataInfoLabel = metadataInfoLabel, let progressView = progressView, let cancelButton = cancelButton, let showPreviewButton = showPreviewButton, let noNetworkLabel = infoLabel else {
 			return
 		}
 
@@ -302,7 +308,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
-	func renderSpecificView() {
+	func renderSpecificView(completion: @escaping  (_ success:Bool)->Void) {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the source property.s
 	}
 
@@ -312,7 +318,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		cancelButton?.isHidden = true
 		metadataInfoLabel?.isHidden = true
 		showPreviewButton?.isHidden = true
-		noNetworkLabel?.isHidden = true
+		infoLabel?.isHidden = true
 	}
 
 	private func render() {
@@ -323,7 +329,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		case .noNetworkConnection:
 			self.progressView?.isHidden = true
 			self.cancelButton?.isHidden = true
-			self.noNetworkLabel?.isHidden = false
+			self.infoLabel?.isHidden = false
 			self.showPreviewButton?.isHidden = true
 
 		case .errorDownloading, .canceledDownload:
@@ -334,13 +340,13 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		case .downloading(_):
 			self.progressView?.isHidden = false
 			self.cancelButton?.isHidden = false
-			self.noNetworkLabel?.isHidden = true
+			self.infoLabel?.isHidden = true
 			self.showPreviewButton?.isHidden = true
 
 		case .notSupportedMimeType:
 			self.progressView?.isHidden = true
 			self.cancelButton?.isHidden = true
-			self.noNetworkLabel?.isHidden = true
+			self.infoLabel?.isHidden = true
 			self.showPreviewButton?.isHidden = true
 		}
 	}
@@ -349,7 +355,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		self.progressView?.progress = 0.0
 		self.progressView?.isHidden = true
 		self.cancelButton?.isHidden = true
-		self.noNetworkLabel?.isHidden = true
+		self.infoLabel?.isHidden = true
 		self.showPreviewButton?.isHidden = false
 	}
 
@@ -474,7 +480,7 @@ extension DisplayViewController : Themeable {
 		cancelButton?.applyThemeCollection(collection)
 		metadataInfoLabel?.applyThemeCollection(collection)
 		showPreviewButton?.applyThemeCollection(collection)
-		noNetworkLabel?.applyThemeCollection(collection)
+		infoLabel?.applyThemeCollection(collection)
 		self.view.backgroundColor = collection.tableBackgroundColor
 	}
 }
