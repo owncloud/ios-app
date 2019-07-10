@@ -43,6 +43,7 @@
 		396BE4C32288A84C00B254A9 /* PendingSharesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396BE4C22288A84C00B254A9 /* PendingSharesTableViewController.swift */; };
 		396BE4CA2289500E00B254A9 /* RoundedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396BE4C92289500E00B254A9 /* RoundedLabel.swift */; };
 		3971B48F221B23FE006FB441 /* ThemeableColoredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */; };
+		397328EF22D606AC006CFAA4 /* ImportFilesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397328EE22D606AC006CFAA4 /* ImportFilesController.swift */; };
 		39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */; };
 		3998F5CC2240CD8300B66713 /* RoundedInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */; };
 		3998F5D3224102FE00B66713 /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D2224102FE00B66713 /* UITableView+Extension.swift */; };
@@ -594,6 +595,7 @@
 		396BE4C22288A84C00B254A9 /* PendingSharesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingSharesTableViewController.swift; sourceTree = "<group>"; };
 		396BE4C92289500E00B254A9 /* RoundedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedLabel.swift; sourceTree = "<group>"; };
 		3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableColoredView.swift; sourceTree = "<group>"; };
+		397328EE22D606AC006CFAA4 /* ImportFilesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportFilesController.swift; sourceTree = "<group>"; };
 		39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extension.swift"; sourceTree = "<group>"; };
 		3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedInfoView.swift; sourceTree = "<group>"; };
 		3998F5D2224102FE00B66713 /* UITableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
@@ -985,6 +987,7 @@
 			isa = PBXGroup;
 			children = (
 				233BDE9F204FEFE500C06732 /* AppDelegate.swift */,
+				397328E822D6067B006CFAA4 /* Import */,
 				DCF4F1612051925A00189B9A /* Bookmarks */,
 				DC29F09122974F8000F77349 /* FileLists */,
 				DC3BE0DB2077CC13002A0AC0 /* Client */,
@@ -1120,6 +1123,14 @@
 				DC29F09322976B9200F77349 /* LibraryFilesTableViewController.swift */,
 			);
 			path = Library;
+			sourceTree = "<group>";
+		};
+		397328E822D6067B006CFAA4 /* Import */ = {
+			isa = PBXGroup;
+			children = (
+				397328EE22D606AC006CFAA4 /* ImportFilesController.swift */,
+			);
+			path = Import;
 			sourceTree = "<group>";
 		};
 		59056CAB22414F3C00A18A22 /* ownCloudScreenshotsTests */ = {
@@ -2344,6 +2355,7 @@
 				39CC8AE6228C12100020253B /* Array+Extension.swift in Sources */,
 				6E83C78420A33C180066EC23 /* LAContext+Extension.swift in Sources */,
 				593BAB46209AE1BC00023634 /* PasscodeViewController.swift in Sources */,
+				397328EF22D606AC006CFAA4 /* ImportFilesController.swift in Sources */,
 				DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */,
 				DCB44D87218718BA00DAA4CC /* VendorServices.swift in Sources */,
 				39E98B3E22797D1B009911F1 /* PublicLinkTableViewController.swift in Sources */,

@@ -405,3 +405,6 @@
 "Delete Offline Copies" = "Delete Offline Copies";
 "Manage" = "Manage";
 "Storage" = "Storage";
+
+/* Import File */
+"Select Import Account" = "Select Import Account";
