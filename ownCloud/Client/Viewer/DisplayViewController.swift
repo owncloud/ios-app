@@ -72,6 +72,9 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
+	// This shall be set to false if DisplayViewController sublass is able to handle streamed data (e.g. audio, video)
+	var requiresLocalItemCopy: Bool = true
+
 	var source: URL? {
 		didSet {
 			OnMainThread(inline: true) {
@@ -81,6 +84,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			}
 		}
 	}
+
+	var httpAuthHeaders: [String : String]?
 
 	var shallDisplayMoreButtonInToolbar = true
 
@@ -431,12 +436,21 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				self.stopQuery()
 				self.startQuery()
 
-				if core?.localCopy(of: item) == nil {
-					self.downloadItem(sender: nil)
-				} else {
-					if let core = core, let file = item.file(with: core) {
-						self.source = file.url
+				if requiresLocalItemCopy {
+					if core?.localCopy(of: item) == nil {
+						self.downloadItem(sender: nil)
+					} else {
+						if let core = core, let file = item.file(with: core) {
+							self.source = file.url
+						}
 					}
+				} else {
+					core?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (error, url, authHeaders) in
+						if error == nil {
+							self.httpAuthHeaders = authHeaders
+							self.source = url
+						}
+					})
 				}
 
 				updateNavigationBarItems()
