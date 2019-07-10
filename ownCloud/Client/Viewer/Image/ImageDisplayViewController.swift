@@ -57,18 +57,28 @@ class ImageDisplayViewController : DisplayViewController {
 			let size: CGSize = self.view.bounds.size
 			let scale: CGFloat = UIScreen.main.scale
 			let imageSourceOptions = [kCGImageSourceShouldCache: true] as CFDictionary
-			let imageSource = CGImageSourceCreateWithURL(source as CFURL, imageSourceOptions)!
-			let maxDimensionInPixels = max(size.width, size.height) * scale
-			let downsampleOptions =  [kCGImageSourceCreateThumbnailFromImageAlways: true,
-									  kCGImageSourceShouldCacheImmediately: true,
-									  kCGImageSourceCreateThumbnailWithTransform: true,
-									  kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels] as CFDictionary
-			serialQueue.async {
-				let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions)
-				completion(downsampledImage)
+
+			if let imageSource = CGImageSourceCreateWithURL(source as CFURL, imageSourceOptions) {
+				let maxDimensionInPixels = max(size.width, size.height) * scale
+				let downsampleOptions =  [kCGImageSourceCreateThumbnailFromImageAlways: true,
+										  kCGImageSourceShouldCacheImmediately: true,
+										  kCGImageSourceCreateThumbnailWithTransform: true,
+										  kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels] as CFDictionary
+				serialQueue.async {
+					if let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) {
+						let image = UIImage(cgImage: downsampledImage)
+						OnMainThread {
+							self.activityIndicatorView.stopAnimating()
+							self.scrollView?.display(image: image, inSize: self.view.bounds.size)
+						}
+					} else {
+						OnMainThread {
+							self.activityIndicatorView.stopAnimating()
+						}
+					}
+				}
 			}
 		}
-
 	}
 
 	// MARK: - Specific view
