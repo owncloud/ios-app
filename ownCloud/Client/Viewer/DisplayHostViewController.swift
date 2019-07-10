@@ -164,6 +164,7 @@ class DisplayHostViewController: UIPageViewController {
 	// MARK: - Helper methods
 
 	private func updateDataSource(animated:Bool = false) {
+		// First reset data source, to make sure that when it is again set, the page view controller does actually reload
 		self.dataSource = nil
 		self.dataSource = self
 		self.delegate = self
@@ -175,8 +176,6 @@ class DisplayHostViewController: UIPageViewController {
 		let configuration = self.configurationFor(self.selectedItem, viewController: viewController)
 
 		viewController.configure(configuration)
-		//self.addChild(viewController)
-		//viewController.didMove(toParent: self)
 
 		self.setViewControllers([viewController], direction: .forward, animated: animated, completion: nil)
 
