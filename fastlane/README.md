@@ -30,7 +30,7 @@ Register new devices to Apple portal
 ```
 fastlane ios build_ipa_ad_hoc
 ```
-Ad-Hoc Distribution IPA geneation
+Ad-Hoc Distribution IPA generation
 ### ios screenshots
 ```
 fastlane ios screenshots

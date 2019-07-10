@@ -509,12 +509,12 @@ class BookmarkViewController: StaticTableViewController {
 
 			let connection = OCConnection(bookmark: bookmark)
 
-			connection.connect { [weak self] (error, _) in
-				if let weakSelf = self {
+			connection.connect { [weak self] (error, issue) in
+				if let strongSelf = self {
 					if error == nil {
 						bookmark.displayName = connection.loggedInUser?.displayName
 						connection.disconnect(completionHandler: {
-							switch weakSelf.mode {
+							switch strongSelf.mode {
 							case .create:
 								// Add bookmark
 								OCBookmarkManager.shared.addBookmark(bookmark)
@@ -528,7 +528,7 @@ class BookmarkViewController: StaticTableViewController {
 							}
 							OnMainThread {
 								hudCompletion({
-									weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
 								})
 							}
 
@@ -536,7 +536,26 @@ class BookmarkViewController: StaticTableViewController {
 					} else {
 						OnMainThread {
 							hudCompletion({
-								weakSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+								if issue != nil {
+									self?.bookmark?.authenticationData = nil
+
+									let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
+										switch response {
+											case .cancel:
+												issue?.reject()
+
+											case .approve:
+												issue?.approve()
+												self?.handleContinue()
+
+											case .dismiss: break
+										}
+									})
+
+									strongSelf.present(issuesViewController, animated: true, completion: nil)
+								} else {
+									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+								}
 							})
 						}
 					}
@@ -544,8 +563,8 @@ class BookmarkViewController: StaticTableViewController {
 			}
 		} else {
 			hudCompletion({ [weak self] in
-				if let weakSelf = self {
-					weakSelf.handleContinue()
+				if let strongSelf = self {
+					strongSelf.handleContinue()
 				}
 			})
 		}
@@ -609,7 +628,7 @@ class BookmarkViewController: StaticTableViewController {
 			if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
 				// Remove unwanted rows
 				var removeRows : [StaticTableViewRow] = []
-				let authMethodType = authenticationMethodClass.type()
+				let authMethodType = authenticationMethodClass.type as OCAuthenticationMethodType
 
 				switch authMethodType {
 					case .passphrase:
@@ -660,9 +679,9 @@ class BookmarkViewController: StaticTableViewController {
 
 					case .token:
 						if let authData = self.bookmark?.authenticationData, let userName = authenticationMethodClass.userName(fromAuthenticationData: authData) {
-							tokenInfoRow?.value = NSString(format:"Authenticated as %@ via %@".localized as NSString, userName, authenticationMethodClass.name())
+							tokenInfoRow?.value = NSString(format:"Authenticated as %@ via %@".localized as NSString, userName, authenticationMethodClass.name)
 						} else {
-							tokenInfoRow?.value = "Authenticated via".localized + " " + authenticationMethodClass.name()
+							tokenInfoRow?.value = "Authenticated via".localized + " " + authenticationMethodClass.name
 						}
 
 						if self.bookmark?.authenticationData != nil {
@@ -821,7 +840,7 @@ class BookmarkViewController: StaticTableViewController {
 
 	func authenticationMethodTypeForIdentifier(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> OCAuthenticationMethodType? {
 		if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
-			return authenticationMethodClass.type()
+			return authenticationMethodClass.type
 		}
 
 		return nil

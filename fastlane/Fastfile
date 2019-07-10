@@ -24,9 +24,8 @@ platform :ios do
      match(force_for_new_devices: true) # Creates all required certificates & provisioning profile
   end
 
-  desc "Ad-Hoc Distribution IPA geneation"
+  desc "Ad-Hoc Distribution IPA generation"
    lane :build_ipa_ad_hoc do
-
     #Create the build
     gym(
       workspace: "ownCloud.xcworkspace",
@@ -47,8 +46,8 @@ platform :ios do
 
   desc "Generate the screenshots for the AppStore"
     lane :screenshots do
-      #reset_simulators
-      #snapshot
+      reset_simulators
+      snapshot
       frameit(white: false, path: './fastlane/screenshots')
       deliver(
         skip_screenshots: false,
@@ -152,6 +151,11 @@ platform :ios do
       bundle_identifier: ENTERPRISE_APP_FW_ID,
       targets: ["ownCloudApp"]
     )
+
+    # Add a badge with the latest short commit hash to the app icon
+    commit = last_git_commit
+    short_hash = commit[:abbreviated_commit_hash] # short sha of commit
+    add_badge(shield: "Bitrise-" + short_hash + "-blue", no_badge: true)
 
     #Create the build
     gym(
