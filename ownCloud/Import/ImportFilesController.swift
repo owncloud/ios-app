@@ -94,7 +94,8 @@ extension ImportFilesController {
 												at: targetDirectory,
 												from: url,
 												isSecurityScoped: false,
-												options: [OCCoreOption.importByCopying : true],
+												options: [OCCoreOption.importByCopying : true,
+														  OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue],
 												placeholderCompletionHandler: { (error, item) in
 													if error != nil {
 														Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
