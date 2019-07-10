@@ -57,7 +57,7 @@ class MediaDisplayViewController : DisplayViewController {
 		self.view.layoutIfNeeded()
 	}
 
-	override func renderSpecificView() {
+	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
 		if let sourceURL = source {
 
 			let asset = AVURLAsset(url: sourceURL, options: self.httpAuthHeaders != nil ? ["AVURLAssetHTTPHeaderFieldsKey" : self.httpAuthHeaders!] : nil )
@@ -86,6 +86,10 @@ class MediaDisplayViewController : DisplayViewController {
 					self?.present(error: self?.player?.error)
 				}
 			})
+
+			completion(true)
+		} else {
+			completion(false)
 		}
 	}
 
