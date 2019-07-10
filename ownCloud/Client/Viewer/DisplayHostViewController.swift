@@ -45,7 +45,7 @@ class DisplayHostViewController: UIPageViewController {
 						}
 
 						OnMainThread { [weak self] in
-							self?.updateDataSource()
+							self?.updateDataSource(animated: true)
 						}
 					}
 
@@ -163,7 +163,7 @@ class DisplayHostViewController: UIPageViewController {
 
 	// MARK: - Helper methods
 
-	private func updateDataSource() {
+	private func updateDataSource(animated:Bool = false) {
 		self.dataSource = nil
 		self.dataSource = self
 		self.delegate = self
@@ -175,10 +175,10 @@ class DisplayHostViewController: UIPageViewController {
 		let configuration = self.configurationFor(self.selectedItem, viewController: viewController)
 
 		viewController.configure(configuration)
-		self.addChild(viewController)
-		viewController.didMove(toParent: self)
+		//self.addChild(viewController)
+		//viewController.didMove(toParent: self)
 
-		self.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
+		self.setViewControllers([viewController], direction: .forward, animated: animated, completion: nil)
 
 		viewController.present(item: self.selectedItem)
 		viewController.updateNavigationBarItems()
