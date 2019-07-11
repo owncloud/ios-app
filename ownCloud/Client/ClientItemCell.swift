@@ -199,6 +199,28 @@ class ClientItemCell: ThemeTableViewCell {
 		}
 	}
 
+	func titleLabelString(for item: OCItem?) -> String {
+		if let item = item, let itemName = item.name {
+			return itemName
+		}
+
+		return ""
+	}
+
+	func detailLabelString(for item: OCItem?) -> String {
+		if let item = item {
+			var size: String = item.sizeLocalized
+
+			if item.size < 0 {
+				size = "Pending".localized
+			}
+
+			return size + " - " + item.lastModifiedLocalized
+		}
+
+		return ""
+	}
+
 	func updateWith(_ item: OCItem) {
 		let iconSize : CGSize = CGSize(width: 40, height: 40)
 		let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
@@ -210,14 +232,6 @@ class ClientItemCell: ThemeTableViewCell {
 		}
 
 		iconImage = item.icon(fitInSize: iconSize)
-
-		var size: String = item.sizeLocalized
-
-		if item.size < 0 {
-			size = "Pending".localized
-		}
-
-		self.detailLabel.text = size + " - " + item.lastModifiedLocalized
 
 		self.accessoryType = .none
 
@@ -268,7 +282,7 @@ class ClientItemCell: ThemeTableViewCell {
 				cloudStatusIconView.image = UIImage(named: "cloud-only")
 
 			case .localCopy:
-				cloudStatusIconView.image = nil
+				cloudStatusIconView.image = (item.downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? UIImage(named: "cloud-available-offline") : nil
 
 			case .locallyModified, .localOnly:
 				cloudStatusIconView.image = UIImage(named: "cloud-local-only")
@@ -278,7 +292,8 @@ class ClientItemCell: ThemeTableViewCell {
 		}
 
 		self.iconView.image = iconImage
-		self.titleLabel.text = item.name
+
+		self.updateLabels(with: item)
 
 		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
 		self.moreButton.isHidden = (item.isPlaceholder || (progressView != nil)) ? true : false
@@ -286,6 +301,11 @@ class ClientItemCell: ThemeTableViewCell {
 		self.moreButton.accessibilityLabel = (item.name != nil) ? (item.name! + " " + "Actions".localized) : "Actions".localized
 
 		self.updateProgress()
+	}
+
+	func updateLabels(with item: OCItem?) {
+		self.titleLabel.text = titleLabelString(for: item)
+		self.detailLabel.text = detailLabelString(for: item)
 	}
 
 	// MARK: - Progress

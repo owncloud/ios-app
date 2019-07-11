@@ -142,7 +142,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	func updateQueryProgressSummary() {
-		var summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
+		let summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
 
 		switch query.state {
 			case .stopped:
