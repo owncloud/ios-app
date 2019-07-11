@@ -407,4 +407,5 @@
 "Storage" = "Storage";
 
 /* Import File */
-"Select Import Account" = "Select Import Account";
+"Save File" = "Save File";
+"Select an account where to import the file and choose a destination directory." = "Select an account where to import the file and choose a destination directory.";

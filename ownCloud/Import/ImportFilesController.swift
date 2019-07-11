@@ -125,11 +125,13 @@ extension ImportFilesController {
 		let header = MoreViewHeader(url: url)
 		let moreViewController = MoreViewController(header: header, viewController: tableViewController)
 
-		let title = NSAttributedString(string: "Select Import Account".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
+		let title = NSAttributedString(string: "Save File".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
 		var actionsRows: [StaticTableViewRow] = []
-
 		let bookmarks : [OCBookmark] = OCBookmarkManager.shared.bookmarks as [OCBookmark]
+
+		let rowDescription = StaticTableViewRow(label: "Select an account where to import the file and choose a destination directory.".localized, alignment: .center)
+		actionsRows.append(rowDescription)
 
 		for (bookmark) in bookmarks {
 			let row = StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
