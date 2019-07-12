@@ -166,7 +166,7 @@
 "You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
 "Do you want to open the following URL?" = "Do you want to open the following URL?";
 
-"%@ %@ version %@ build %@ (%@)" = "%@ %@ version %@ build %@ (%@)";
+"%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@ %@ version %@ build %@ (app: %@, sdk: %@)";
 "beta" = "beta";
 "release" = "release";
 
@@ -269,6 +269,7 @@
 "Error" = "Error";
 "Could not get the picture" = "Could not get the picture";
 "Downloading" = "Downloading";
+"File couldn't be opened" = "File couldn't be opened";
 
 /* PDF Viewer */
 "Resume" = "Resume";
