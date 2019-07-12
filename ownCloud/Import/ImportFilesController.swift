@@ -135,8 +135,9 @@ extension ImportFilesController {
 
 		for (bookmark) in bookmarks {
 			let row = StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
-				moreViewController.dismiss(animated: true, completion: nil)
-				self.importItemWithDirectoryPicker(with: url, into: bookmark)
+				moreViewController.dismiss(animated: true, completion: {
+					self.importItemWithDirectoryPicker(with: url, into: bookmark)
+				})
 				}, title: bookmark.shortName, style: .plain, image: Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25)), imageWidth: 25, alignment: .left)
 			actionsRows.append(row)
 		}
