@@ -406,3 +406,7 @@
 "Delete Offline Copies" = "Delete Offline Copies";
 "Manage" = "Manage";
 "Storage" = "Storage";
+
+/* Import File */
+"Save File" = "Save File";
+"Choose an account and folder to import the file into." = "Choose an account and folder to import the file into.";
