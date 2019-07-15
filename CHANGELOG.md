@@ -1,5 +1,21 @@
 # ChangeLog
 
+
+
+## TestFlight Build 129 (July 2019)
+
+- Import files from Share Sheet (#76
+- Create Folder in Directory Picker (#443)
+
+## TestFlight Build 126 (July 2019)
+
+- Native Media Player, with support for streaming (#395)
+- Name Conflict Detection (#377)
+- Activity Indicator for deleting offline copies (#393)
+- Improved Log File (#446)
+- Image Gallery improvement (#322)
+- Error handling for corrupted files (#357)
+
 ## Release version 1.0.2 (July 2019)
 
 - Favorites crash fixed (#423)
