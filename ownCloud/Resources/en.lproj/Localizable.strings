@@ -409,4 +409,4 @@
 
 /* Import File */
 "Save File" = "Save File";
-"Select an account where to import the file and choose a destination directory." = "Select an account where to import the file and choose a destination directory.";
+"Choose an account and folder to import the file into." = "Choose an account and folder to import the file into.";

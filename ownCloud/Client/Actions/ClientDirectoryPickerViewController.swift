@@ -125,12 +125,6 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
 
-		let leftButtonImage = Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
-
-		let createFolderBarButton = UIBarButtonItem(image: leftButtonImage, style: .plain, target: self, action: #selector(createFolderButtonPressed))
-		createFolderBarButton.accessibilityIdentifier = "client.folder-create"
-			navigationItem.leftBarButtonItem = createFolderBarButton
-
 		if let cancelBarButton = cancelBarButton {
 			navigationItem.rightBarButtonItems = [cancelBarButton]
 		}
@@ -139,7 +133,13 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 			navController.isToolbarHidden = false
 			navController.toolbar.isTranslucent = false
 			let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-			self.setToolbarItems([flexibleSpaceBarButton, selectButton, flexibleSpaceBarButton], animated: false)
+
+			let leftButtonImage = Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
+
+			let createFolderBarButton = UIBarButtonItem(image: leftButtonImage, style: .plain, target: self, action: #selector(createFolderButtonPressed))
+			createFolderBarButton.accessibilityIdentifier = "client.folder-create"
+
+			self.setToolbarItems([createFolderBarButton, flexibleSpaceBarButton, selectButton, flexibleSpaceBarButton], animated: false)
 		}
 	}
 
@@ -216,8 +216,6 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	}
 
 	@objc func createFolderButtonPressed(_ sender: UIBarButtonItem) {
-		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-
 		// Actions for Create Folder
 		if let core = self.core, let rootItem = query.rootItem {
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .plusButton)
@@ -235,14 +233,5 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 			createFolderAction?.progressHandler = makeActionProgressHandler()
 			createFolderAction?.run()
 		}
-
-		// Cancel button
-		let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil)
-		controller.addAction(cancelAction)
-
-		if let popoverController = controller.popoverPresentationController {
-			popoverController.barButtonItem = sender
-		}
-		self.present(controller, animated: true)
 	}
 }
