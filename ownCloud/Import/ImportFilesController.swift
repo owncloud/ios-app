@@ -23,6 +23,8 @@ class ImportFilesController: NSObject {
 
 	// MARK: - Instance variables
 	var url: URL
+	var localCopyContainerURL: URL?
+	var localCopyURL: URL?
 	var fileIsLocalCopy: Bool
 
 	// MARK: - Init & Deinit
@@ -44,7 +46,7 @@ extension ImportFilesController {
 			if let appGroupURL = OCAppIdentity.shared.appGroupContainerURL {
 				let fileManager = FileManager.default
 
-				var inboxUrl = URL(fileURLWithPath: appGroupURL.appendingPathComponent("File-Import").path)
+				var inboxUrl = appGroupURL.appendingPathComponent("File-Import")
 				if !fileManager.fileExists(atPath: inboxUrl.path) {
 					do {
 						try fileManager.createDirectory(at: inboxUrl, withIntermediateDirectories: false, attributes: nil)
@@ -64,11 +66,13 @@ extension ImportFilesController {
 						return false
 					}
 				}
+				self.localCopyContainerURL = inboxUrl
 
 				inboxUrl = inboxUrl.appendingPathComponent(url.lastPathComponent)
 				do {
 					try fileManager.copyItem(at: url, to: inboxUrl)
 					self.url = inboxUrl
+					self.localCopyURL = inboxUrl
 				} catch let error as NSError {
 					Log.debug("Error creating directory \(inboxUrl) \(error.localizedDescription)")
 					return false
@@ -85,9 +89,9 @@ extension ImportFilesController {
 
 			if bookmarks.count > 1 {
 				let moreViewController = self.cardViewController(for: url)
-				if let window = UIApplication.shared.delegate?.window {
-					let viewController = window!.rootViewController
-					if let navCon = viewController as? UINavigationController, let viewController = navCon.visibleViewController {
+				if let delegateWindow = UIApplication.shared.delegate?.window, let window = delegateWindow {
+					let viewController = window.rootViewController
+					if let navigationController = viewController as? UINavigationController, let viewController = navigationController.visibleViewController {
 						OnMainThread {
 							viewController.present(asCard: moreViewController, animated: true)
 						}
@@ -137,29 +141,32 @@ extension ImportFilesController {
 
 	func importFile(url : URL, to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?) {
 		let name = url.lastPathComponent
-		if let progress = core?.importFileNamed(name,
-												at: targetDirectory,
-												from: url,
-												isSecurityScoped: false,
-												options: [OCCoreOption.importByCopying : true,
-														  OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue],
-												placeholderCompletionHandler: { (error, item) in
-													if error != nil {
-														Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
-													}
-													// Return OCCore
-													OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
-		},
-												resultHandler: { (error, _ core, _ item, _) in
-													if error != nil {
-														Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
-													} else {
-														Log.debug("Success uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
+		if core?.importFileNamed(name,
+					 at: targetDirectory,
+					 from: url,
+					 isSecurityScoped: false,
+					 options: [OCCoreOption.importByCopying : true,
+						   OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue],
+					 placeholderCompletionHandler: { (error, item) in
+						if error != nil {
+							Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
+						}
 
-														self.removeLocalCopy()
-													}
-		}) {
-		} else {
+						OnBackgroundQueue(after: 2) {
+							// Return OCCore after 2 seconds, giving the core a chance to schedule the upload with a NSURLSession
+							OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+						}
+					 },
+					 resultHandler: { (error, _ core, _ item, _) in
+						if error != nil {
+							Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
+						} else {
+							Log.debug("Success uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
+
+							self.removeLocalCopy()
+						}
+					}
+		) == nil {
 			Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
 		}
 	}
@@ -199,11 +206,22 @@ extension ImportFilesController {
 	func removeLocalCopy() {
 		if fileIsLocalCopy {
 			let fileManager = FileManager.default
-			if fileManager.fileExists(atPath: url.path) {
-				do {
-					try fileManager.removeItem(at: url)
-				} catch {
 
+			if let localCopyURL = localCopyURL {
+				if fileManager.fileExists(atPath: localCopyURL.path) {
+					do {
+						try fileManager.removeItem(at: localCopyURL)
+					} catch {
+					}
+				}
+			}
+
+			if let localCopyContainerURL = localCopyContainerURL {
+				if fileManager.fileExists(atPath: localCopyContainerURL.path) {
+					do {
+						try fileManager.removeItem(at: localCopyContainerURL)
+					} catch {
+					}
 				}
 			}
 		}
