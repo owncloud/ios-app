@@ -125,6 +125,7 @@ extension ImportFilesController {
 					})
 
 					let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)
+					pickerNavigationController.modalPresentationStyle = .formSheet
 
 					if let window = UIApplication.shared.delegate?.window {
 						let viewController = window!.rootViewController

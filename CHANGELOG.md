@@ -4,7 +4,7 @@
 
 ## TestFlight Build 129 (July 2019)
 
-- Import files from Share Sheet (#76
+- Import files from Share Sheet (#76)
 - Create Folder in Directory Picker (#443)
 
 ## TestFlight Build 126 (July 2019)
