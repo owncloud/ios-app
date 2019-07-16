@@ -21,7 +21,7 @@ import ownCloudSDK
 
 class MoreViewController: UIViewController, CardPresentationSizing {
 
-	private var item: OCItem
+	private var item: OCItem?
 	private weak var core: OCCore?
 
 	private var headerView: UIView
@@ -38,6 +38,13 @@ class MoreViewController: UIViewController, CardPresentationSizing {
 	init(item: OCItem, core: OCCore, header: UIView, viewController: UIViewController) {
 		self.item = item
 		self.core = core
+		self.headerView = header
+		self.viewController = viewController
+
+		super.init(nibName: nil, bundle: nil)
+	}
+
+	init(header: UIView, viewController: UIViewController) {
 		self.headerView = header
 		self.viewController = viewController
 

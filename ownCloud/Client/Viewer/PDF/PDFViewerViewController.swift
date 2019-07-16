@@ -101,7 +101,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		}
 	}
 
-	override func renderSpecificView() {
+	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
 		if let source = source, let document = PDFDocument(url: source) {
 			setupToolbar()
 
@@ -160,6 +160,10 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 			adjustThumbnailsSize()
 
+			completion(true)
+
+		} else {
+			completion(false)
 		}
 	}
 
