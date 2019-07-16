@@ -30,10 +30,6 @@ extension OCExtensionLocationIdentifier {
 	static let appBackgroundFetch: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("appBackgroundFetch") //!< Application woke up to peform background fetch
 }
 
-class ScheduledTaskExtensionContext : OCExtensionContext {
-
-}
-
 class ScheduledTaskAction : NSObject {
 
 	struct FeatureKeys {
@@ -60,7 +56,7 @@ class ScheduledTaskAction : NSObject {
 
 	class var taskExtension : ScheduledTaskExtension {
 		let objectProvider : OCExtensionObjectProvider = { (_ rawExtension, _ context, _ error) -> Any? in
-			if let _ = rawExtension as? ScheduledTaskExtension {
+			if (rawExtension as? ScheduledTaskExtension) != nil {
 				return self.init()
 			}
 

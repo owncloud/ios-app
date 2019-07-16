@@ -22,7 +22,7 @@ import Network
 import Photos
 import ownCloudSDK
 
-class ScheduledTaskManager : NSObject, PHPhotoLibraryChangeObserver {
+class ScheduledTaskManager : NSObject {
 
 	enum State {
 		case launched, foreground, background, backgroundFetch
@@ -73,8 +73,6 @@ class ScheduledTaskManager : NSObject, PHPhotoLibraryChangeObserver {
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationStateChange), name: UIApplication.didEnterBackgroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationStateChange), name: UIApplication.didBecomeActiveNotification, object: nil)
 
-		PHPhotoLibrary.shared().register(self)
-
 		// In iOS12 or later, activate Wifi monitoring
 		if #available(iOS 12, *) {
 			wifiMonitorQueue = DispatchQueue(label: "com.owncloud.scheduled_task_mgr.wifi_monitor")
@@ -94,7 +92,6 @@ class ScheduledTaskManager : NSObject, PHPhotoLibraryChangeObserver {
 	}
 
 	deinit {
-		PHPhotoLibrary.shared().unregisterChangeObserver(self)
 		NotificationCenter.default.removeObserver(self)
 		if #available(iOS 12, *) {
 			(wifiMonitor as? NWPathMonitor)?.cancel()
@@ -121,10 +118,6 @@ class ScheduledTaskManager : NSObject, PHPhotoLibraryChangeObserver {
 		}
 	}
 
-	func photoLibraryDidChange(_ changeInstance: PHChange) {
-		//TODO:
-	}
-
 	func backgroundFetch(completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 		self.state = .backgroundFetch
 		scheduleTasks(fetchCompletion: completionHandler)
@@ -147,7 +140,7 @@ class ScheduledTaskManager : NSObject, PHPhotoLibraryChangeObserver {
 				requirements[ScheduledTaskAction.FeatureKeys.runOnExternalPower] = true
 			}
 
-			let context = ScheduledTaskExtensionContext(location: location, requirements: requirements, preferences: nil)
+			let context = OCExtensionContext(location: location, requirements: requirements, preferences: nil)
 
 			// Find a task to run
 			if let matches = try? OCExtensionManager.shared.provideExtensions(for: context) {
