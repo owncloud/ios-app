@@ -308,7 +308,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
-	func renderSpecificView(completion: @escaping  (_ success:Bool)->Void) {
+	func renderSpecificView(completion: @escaping  (_ success:Bool) -> Void) {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the source property.s
 	}
 

@@ -126,7 +126,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		if shownFirstTime {
 			shownFirstTime = false
-			
+
 			if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
 				connect(to: bookmark)
 				showBetaWarning = false

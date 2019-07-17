@@ -52,7 +52,7 @@ class ImageDisplayViewController : DisplayViewController {
 		scrollView?.updateScaleForRotation(size: self.view!.bounds.size)
 	}
 
-	func downSampleImage(completion:@escaping (_ downsampledImage:CGImage?)->Void) {
+	func downSampleImage(completion:@escaping (_ downsampledImage:CGImage?) -> Void) {
 		if let source = source {
 			let size: CGSize = self.view.bounds.size
 			let scale: CGFloat = UIScreen.main.scale
