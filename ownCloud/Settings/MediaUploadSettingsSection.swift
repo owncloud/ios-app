@@ -17,12 +17,15 @@
 */
 
 import UIKit
+import Photos
 
 extension UserDefaults {
 
 	enum MediaUploadKeys : String {
 		case ConvertHEICtoJPEGKey = "convert-heic-to-jpeg"
 		case ConvertVideosToMP4Key = "convert-videos-to-mp4"
+		case InstantUploadPhotos = "instant-upload-photos"
+		case InstantUploadVideos = "instant-upload-videos"
 	}
 
 	public var convertHeic: Bool {
@@ -44,12 +47,34 @@ extension UserDefaults {
 			return self.bool(forKey: MediaUploadKeys.ConvertVideosToMP4Key.rawValue)
 		}
 	}
+
+	public var instantUploadPhotos: Bool {
+		set {
+			self.set(newValue, forKey: MediaUploadKeys.InstantUploadPhotos.rawValue)
+		}
+
+		get {
+			return self.bool(forKey: MediaUploadKeys.InstantUploadPhotos.rawValue)
+		}
+	}
+
+	public var instantUploadVideos: Bool {
+		set {
+			self.set(newValue, forKey: MediaUploadKeys.InstantUploadVideos.rawValue)
+		}
+
+		get {
+			return self.bool(forKey: MediaUploadKeys.InstantUploadVideos.rawValue)
+		}
+	}
 }
 
 class MediaUploadSettingsSection: SettingsSection {
 
 	private var convertPhotosSwitchRow: StaticTableViewRow?
 	private var convertVideosSwitchRow: StaticTableViewRow?
+	private var instantUploadPhotosRow: StaticTableViewRow?
+	private var instantUploadVideosRow: StaticTableViewRow?
 
 	override init(userDefaults: UserDefaults) {
 
@@ -70,8 +95,42 @@ class MediaUploadSettingsSection: SettingsSection {
 			}
 			}, title: "Convert videos to MP4".localized, value: self.userDefaults.convertVideosToMP4)
 
+		instantUploadPhotosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
+			if let convertSwitch = sender as? UISwitch {
+				self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (value) in
+					self?.userDefaults.instantUploadPhotos = value
+				})
+			}
+			}, title: "Instant Upload Photos".localized, value: self.userDefaults.instantUploadPhotos)
+
+		instantUploadVideosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
+			if let convertSwitch = sender as? UISwitch {
+				self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (value) in
+					self?.userDefaults.instantUploadVideos = value
+				})
+			}
+			}, title: "Instant Upload Videos".localized, value: self.userDefaults.instantUploadVideos)
+
 		self.add(row: convertPhotosSwitchRow!)
 		self.add(row: convertVideosSwitchRow!)
+		self.add(row: instantUploadPhotosRow!)
+		self.add(row: instantUploadVideosRow!)
 	}
 
+	private func changeAndRequestPhotoLibraryAccessForOption(optionSwitch:UISwitch, completion:@escaping (_ value:Bool) -> Void) {
+		if optionSwitch.isOn {
+			PHPhotoLibrary.requestAccess(completion: { (granted) in
+				optionSwitch.isOn = granted
+
+				if !granted {
+					let alert = UIAlertController.alertControllerForPhotoLibraryAuthorizationInSettings()
+					self.viewController?.present(alert, animated: true)
+				}
+
+				completion(granted)
+			})
+		} else {
+			completion(false)
+		}
+	}
 }

@@ -32,8 +32,6 @@ class UploadMediaAction: UploadBaseAction {
 		static var actionKey = "action"
 	}
 
-	private enum OutputImageFormat { case HEIF, JPEG}
-
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count == 1, context.items.first?.type == .collection, let viewController = context.viewController else {
@@ -41,41 +39,14 @@ class UploadMediaAction: UploadBaseAction {
 			return
 		}
 
-		let permisson = PHPhotoLibrary.authorizationStatus()
-
-		switch permisson {
-			case .authorized:
-				presentImageGalleryPicker()
-
-			case .notDetermined:
-				PHPhotoLibrary.requestAuthorization({ newStatus in
-					if newStatus == .authorized {
-						self.presentImageGalleryPicker()
-					} else {
-						self.completed()
-					}
-				})
-
-			default:
-				PHPhotoLibrary.requestAuthorization({ newStatus in
-					if newStatus == .denied {
-						let alert = UIAlertController(title: "Missing permissions".localized, message: "This permission is needed to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
-
-						let settingAction = UIAlertAction(title: "Settings".localized, style: .default, handler: { _ in
-							UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
-						})
-						let notNowAction = UIAlertAction(title: "Not now".localized, style: .cancel)
-
-						alert.addAction(settingAction)
-						alert.addAction(notNowAction)
-
-						OnMainThread {
-							viewController.present(alert, animated: true)
-
-							self.completed()
-						}
-					}
-				})
+		PHPhotoLibrary.requestAccess { [weak self] (granted) in
+			if granted {
+				self?.presentImageGalleryPicker()
+			} else {
+				let alert = UIAlertController.alertControllerForPhotoLibraryAuthorizationInSettings()
+				viewController.present(alert, animated: true)
+				self?.completed()
+			}
 		}
 	}
 
@@ -130,69 +101,6 @@ class UploadMediaAction: UploadBaseAction {
 			} else {
 				self.completed(with: NSError(ocError: .internal))
 			}
-		}
-	}
-
-	private func convertImage(_ sourceURL:URL, targetURL:URL, outputFormat:OutputImageFormat) -> Bool {
-		// Conversion to JPEG required
-		let colorSpace = CGColorSpaceCreateDeviceRGB()
-		var ciContext = CIContext()
-		var imageData : Data?
-
-		var image = CIImage(contentsOf: sourceURL)
-
-		func cleanUpCoreImageRessources() {
-			// Release memory consuming resources
-			imageData = nil
-			image = nil
-			ciContext.clearCaches()
-		}
-
-		if image != nil {
-			switch outputFormat {
-			case .JPEG:
-				imageData = ciContext.jpegRepresentation(of: image!, colorSpace: colorSpace)
-			case .HEIF:
-				imageData = ciContext.heifRepresentation(of: image!, format: CIFormat.RGBA8, colorSpace: colorSpace)
-			}
-
-			if imageData != nil {
-				do {
-					// First write an image to a file stored in temporary directory
-					try imageData!.write(to: targetURL)
-					cleanUpCoreImageRessources()
-					return true
-				} catch {
-					cleanUpCoreImageRessources()
-				}
-			}
-		}
-
-		return false
-	}
-
-	private func exportVideoAsset(_ asset:AVAsset, targetURL:URL, type:AVFileType, completion:@escaping (_ success:Bool) -> Void) {
-		if asset.isExportable {
-
-			let preset = AVAssetExportPresetHighestQuality
-
-			AVAssetExportSession.determineCompatibility(ofExportPreset: preset, with: asset, outputFileType: type, completionHandler: { (isCompatible) in
-				if !isCompatible {
-					completion(false)
-				}})
-
-			guard let export = AVAssetExportSession(asset: asset, presetName: preset) else {
-				completion(false)
-				return
-			}
-
-			export.outputFileType = type
-			export.outputURL = targetURL
-			export.exportAsynchronously {
-				completion( export.status == .completed )
-			}
-		} else {
-			completion(false)
 		}
 	}
 
@@ -259,7 +167,12 @@ class UploadMediaAction: UploadBaseAction {
 							let fileName = url.lastPathComponent
 							let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("jpg")
 							// Convert to JPEG
-							if self.convertImage(url, targetURL: localURL, outputFormat: .JPEG) {
+							var imageConverted = false
+							if let image = CIImage(contentsOf: url) {
+								imageConverted = image.convert(targetURL: localURL, outputFormat: .JPEG)
+							}
+
+							if imageConverted {
 								// Upload to the cloud
 								performUpload(sourceURL: localURL, copySource: false)
 							} else {
@@ -270,13 +183,17 @@ class UploadMediaAction: UploadBaseAction {
 						if userDefaults.convertVideosToMP4 {
 							let fileName = url.lastPathComponent
 							let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("mp4")
-							self.exportVideoAsset(input.audiovisualAsset!, targetURL: localURL, type: .mp4, completion: { (exportSuccess) in
-								if exportSuccess {
-									performUpload(sourceURL: localURL, copySource: false)
-								} else {
-									completion(false)
-								}
-							})
+							if let asset = input.audiovisualAsset {
+								asset.exportVideo(targetURL: localURL, type: .mp4, completion: { (exportSuccess) in
+									if exportSuccess {
+										performUpload(sourceURL: localURL, copySource: false)
+									} else {
+										completion(false)
+									}
+								})
+							} else {
+								completion(false)
+							}
 
 						} else {
 							performUpload(sourceURL: url, copySource: true)
