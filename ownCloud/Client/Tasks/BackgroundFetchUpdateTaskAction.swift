@@ -68,16 +68,23 @@ class BackgroundFetchUpdateTaskAction : ScheduledTaskAction, OCCoreDelegate {
 		var lastError: Error = NSError(ocError: .internal)
 		if cores.count > 0 {
 			for core in cores {
-				core.fetchUpdates { (error, success) in
+				core.fetchUpdates { (error, foundChanges) in
 					coresUpdated += 1
-					if success {
+
+					if foundChanges {
+						Log.log("Found changes in core \(core)")
+					}
+
+					if error == nil {
 						successfulUpdates += 1
 						Log.log("Fetched updates for core \(core)")
 					}
+
 					if error != nil {
 						lastError = error!
 						Log.error("fetchUpdates() for \(core) returned with error \(error!)")
 					}
+					
 					if self.cores.count == coresUpdated {
 						if successfulUpdates == coresUpdated {
 							self.result = .success(nil)
