@@ -24,8 +24,10 @@ extension UserDefaults {
 	enum MediaUploadKeys : String {
 		case ConvertHEICtoJPEGKey = "convert-heic-to-jpeg"
 		case ConvertVideosToMP4Key = "convert-videos-to-mp4"
-		case InstantUploadPhotos = "instant-upload-photos"
-		case InstantUploadVideos = "instant-upload-videos"
+		case InstantUploadPhotosKey = "instant-upload-photos"
+		case InstantUploadVideosKey = "instant-upload-videos"
+		case InstantUploadBookmarkUUIDKey = "instant-upload-bookmark-uuid"
+		case InstantUploadPathKey = "instant-upload-path"
 	}
 
 	public var convertHeic: Bool {
@@ -50,21 +52,46 @@ extension UserDefaults {
 
 	public var instantUploadPhotos: Bool {
 		set {
-			self.set(newValue, forKey: MediaUploadKeys.InstantUploadPhotos.rawValue)
+			self.set(newValue, forKey: MediaUploadKeys.InstantUploadPhotosKey.rawValue)
 		}
 
 		get {
-			return self.bool(forKey: MediaUploadKeys.InstantUploadPhotos.rawValue)
+			return self.bool(forKey: MediaUploadKeys.InstantUploadPhotosKey.rawValue)
 		}
 	}
 
 	public var instantUploadVideos: Bool {
 		set {
-			self.set(newValue, forKey: MediaUploadKeys.InstantUploadVideos.rawValue)
+			self.set(newValue, forKey: MediaUploadKeys.InstantUploadVideosKey.rawValue)
 		}
 
 		get {
-			return self.bool(forKey: MediaUploadKeys.InstantUploadVideos.rawValue)
+			return self.bool(forKey: MediaUploadKeys.InstantUploadVideosKey.rawValue)
+		}
+	}
+
+	public var instantUploadBookmarkUUID: NSUUID? {
+		set {
+			self.set(newValue?.uuidString, forKey: MediaUploadKeys.InstantUploadBookmarkUUIDKey.rawValue)
+		}
+
+		get {
+			if let uuidString = self.string(forKey: MediaUploadKeys.InstantUploadBookmarkUUIDKey.rawValue) {
+				return NSUUID(uuidString: uuidString)
+			} else {
+				return nil
+			}
+		}
+	}
+
+	public var instantUploadPath: String? {
+
+		set {
+			self.set(newValue, forKey: MediaUploadKeys.InstantUploadPathKey.rawValue)
+		}
+
+		get {
+			return self.string(forKey: MediaUploadKeys.InstantUploadPathKey.rawValue)
 		}
 	}
 }

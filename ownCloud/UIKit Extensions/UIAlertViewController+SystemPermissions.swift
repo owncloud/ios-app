@@ -6,7 +6,6 @@
 //  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
 
-
 /*
 * Copyright (C) 2018, ownCloud GmbH.
 *

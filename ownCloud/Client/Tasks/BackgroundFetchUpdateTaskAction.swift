@@ -84,7 +84,7 @@ class BackgroundFetchUpdateTaskAction : ScheduledTaskAction, OCCoreDelegate {
 						lastError = error!
 						Log.error("fetchUpdates() for \(core) returned with error \(error!)")
 					}
-					
+
 					if self.cores.count == coresUpdated {
 						if successfulUpdates == coresUpdated {
 							self.result = .success(nil)
