@@ -347,7 +347,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	func updateSearchResults(for searchController: UISearchController) {
 		guard let text = searchController.searchBar.text else { return }
-		if text.count >= core?.connection.capabilities?.sharingSearchMinLength?.intValue ?? 2 {
+		if text.count >= core?.connection.capabilities?.sharingSearchMinLength?.intValue ?? OCCapabilities.defaultSharingSearchMinLength {
 			if let recipients = recipientSearchController?.recipients, recipients.count > 0,
 				recipientSearchController?.searchTerm == text,
 				searchResultsSection == nil {
