@@ -111,12 +111,17 @@
 "Not now" = "Not now";
 "Upload file" = "Upload file";
 "Upload files" = "Upload files";
-"Ignore" = "Ignore";
-"Authorization failed" = "Authorization failed";
-"The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+
 "No matches" = "No matches";
 "There are no results for this search term" = "There are no results for this search term";
 "Status" = "Status";
+
+"Authorization failed" = "Authorization failed";
+"The account has been disabled." = "The account has been disabled.";
+"The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+"No authentication data has been found for this connection." = "No authentication data has been found for this connection.";
+"Ignore" = "Ignore";
+"Continue offline" = "Continue offline";
 
 /* Server List*/
 "Cancel" = "Cancel";
