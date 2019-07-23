@@ -241,9 +241,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		showBookmarkUI()
 	}
 
-	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false) {
-		let viewController : BookmarkViewController = BookmarkViewController(bookmark)
-		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
+	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false) {
+		let bookmarkViewController : BookmarkViewController = BookmarkViewController(bookmark)
+		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: bookmarkViewController)
 
 		// Prevent any in-progress connection from being shown
 		resetPreviousBookmarkSelection()
@@ -255,9 +255,17 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			_ = target.perform(action, with: self)
 		}
 
+		if attemptLoginOnSuccess {
+			bookmarkViewController.userActionCompletionHandler = { [weak self] (bookmark, success) in
+				if success, let bookmark = bookmark, let self = self {
+					self.connect(to: bookmark)
+				}
+			}
+		}
+
 		self.present(navigationController, animated: true, completion: {
 			if performContinue {
-				viewController.handleContinue()
+				bookmarkViewController.handleContinue()
 			}
 		})
 	}

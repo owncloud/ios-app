@@ -20,6 +20,8 @@ import UIKit
 import ownCloudSDK
 import ownCloudUI
 
+typealias BookmarkViewControllerUserActionCompletionHandler = (_ bookmark : OCBookmark?, _ savedValidBookmark: Bool) -> Void
+
 class BookmarkViewController: StaticTableViewController {
 	// MARK: - UI elements
 	var nameSection : StaticTableViewSection?
@@ -38,6 +40,8 @@ class BookmarkViewController: StaticTableViewController {
 	var showOAuthInfoHeader = false
 	var showedOAuthInfoHeader : Bool = false
 	var activeTextField: UITextField?
+
+	var userActionCompletionHandler : BookmarkViewControllerUserActionCompletionHandler?
 
 	lazy var continueBarButtonItem: UIBarButtonItem = UIBarButtonItem(title: "Continue".localized, style: .done, target: self, action: #selector(handleContinue))
 	lazy var saveBarButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
@@ -480,7 +484,14 @@ class BookmarkViewController: StaticTableViewController {
 
 	// MARK: - User actions
 	@objc func userActionCancel() {
-		self.presentingViewController?.dismiss(animated: true, completion: nil)
+		let userActionCompletionHandler = self.userActionCompletionHandler
+		self.userActionCompletionHandler = nil
+
+		self.presentingViewController?.dismiss(animated: true, completion: {
+			OnMainThread {
+				userActionCompletionHandler?(nil, false)
+			}
+		})
 	}
 
 	@objc func userActionSave() {
@@ -526,9 +537,17 @@ class BookmarkViewController: StaticTableViewController {
 								OCBookmarkManager.shared.saveBookmarks()
 								OCBookmarkManager.shared.postChangeNotification()
 							}
+
+							let userActionCompletionHandler = strongSelf.userActionCompletionHandler
+							strongSelf.userActionCompletionHandler = nil
+
 							OnMainThread {
 								hudCompletion({
-									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+									strongSelf.presentingViewController?.dismiss(animated: true, completion: {
+										OnMainThread {
+											userActionCompletionHandler?(bookmark, true)
+										}
+									})
 								})
 							}
 

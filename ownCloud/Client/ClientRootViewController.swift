@@ -347,7 +347,7 @@ extension ClientRootViewController : OCCoreDelegate {
 				}))
 
 				if authFailureHasEditOption {
-					alertController.addAction(UIAlertAction(title: "Edit".localized, style: .default, handler: { (_) in
+					alertController.addAction(UIAlertAction(title: "Sign in".localized, style: .default, handler: { (_) in
 						queueCompletionHandler()
 
 						if let navigationController = self?.presentingViewController as? UINavigationController {
@@ -362,7 +362,7 @@ extension ClientRootViewController : OCCoreDelegate {
 									}
 
 									// Bring up bookmark editing UI
-									serverListTableViewController.showBookmarkUI(edit: editBookmark, performContinue: performContinue)
+									serverListTableViewController.showBookmarkUI(edit: editBookmark, performContinue: performContinue, attemptLoginOnSuccess: true)
 								}
 							})
 						}
