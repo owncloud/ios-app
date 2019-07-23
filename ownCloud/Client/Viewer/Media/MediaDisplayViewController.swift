@@ -35,7 +35,7 @@ class MediaDisplayViewController : DisplayViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.requiresLocalItemCopy = false
+		self.requiresLocalItemCopy = !(OCAppIdentity.shared.userDefaults?.streamingEnabled ?? false)
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -45,14 +45,16 @@ class MediaDisplayViewController : DisplayViewController {
 	override func viewSafeAreaInsetsDidChange() {
 		super.viewSafeAreaInsetsDidChange()
 
-		playerViewController!.view.translatesAutoresizingMaskIntoConstraints = false
+		if let playerController = self.playerViewController {
+			playerController.view.translatesAutoresizingMaskIntoConstraints = false
 
-		NSLayoutConstraint.activate([
-			playerViewController!.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-			playerViewController!.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-			playerViewController!.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-			playerViewController!.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
-		])
+			NSLayoutConstraint.activate([
+				playerController.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+				playerController.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+				playerController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+				playerController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+				])
+		}
 
 		self.view.layoutIfNeeded()
 	}

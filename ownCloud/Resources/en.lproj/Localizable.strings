@@ -384,6 +384,10 @@
 "Images" = "Images";
 "PDF Documents" = "PDF Documents";
 
+/* Media files settings */
+"Media Files" = "Media Files";
+"Streaming Enabled" = "Streaming Enabled";
+
 /* Photo upload settings */
 "Media Upload" = "Media Upload";
 "Convert HEIC to JPEG" = "Convert HEIC to JPEG";
