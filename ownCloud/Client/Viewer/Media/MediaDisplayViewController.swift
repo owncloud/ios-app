@@ -59,19 +59,12 @@ class MediaDisplayViewController : DisplayViewController {
 
 	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
 		if let sourceURL = source {
+			playerItemStatusObservation?.invalidate()
+			playerItemStatusObservation = nil
+			player?.pause()
 
 			let asset = AVURLAsset(url: sourceURL, options: self.httpAuthHeaders != nil ? ["AVURLAssetHTTPHeaderFieldsKey" : self.httpAuthHeaders!] : nil )
 			playerItem = AVPlayerItem(asset: asset)
-
-			player = AVPlayer(playerItem: playerItem)
-			player?.allowsExternalPlayback = true
-			playerViewController = AVPlayerViewController()
-			playerViewController!.player = player
-
-			addChild(playerViewController!)
-			playerViewController!.view.frame = self.view.bounds
-			self.view.addSubview(playerViewController!.view)
-			playerViewController!.didMove(toParent: self)
 
 			playerItemStatusObservation = playerItem?.observe(\AVPlayerItem.status, options: [.initial, .new], changeHandler: { [weak self] (item, _) in
 				if item.status == .failed {
@@ -79,14 +72,27 @@ class MediaDisplayViewController : DisplayViewController {
 				}
 			})
 
-			playerStatusObservation = player!.observe(\AVPlayer.status, options: [.initial, .new], changeHandler: { [weak self] (player, _) in
-				if player.status == .readyToPlay {
-					self?.player?.play()
-				} else if player.status == .failed {
-					self?.present(error: self?.player?.error)
-				}
-			})
+			if player == nil {
+				player = AVPlayer(playerItem: playerItem)
+				player?.allowsExternalPlayback = true
+				playerViewController = AVPlayerViewController()
+				playerViewController!.player = player
 
+				addChild(playerViewController!)
+				playerViewController!.view.frame = self.view.bounds
+				self.view.addSubview(playerViewController!.view)
+				playerViewController!.didMove(toParent: self)
+
+				playerStatusObservation = player!.observe(\AVPlayer.status, options: [.initial, .new], changeHandler: { [weak self] (player, _) in
+					if player.status == .readyToPlay {
+						self?.player?.play()
+					} else if player.status == .failed {
+						self?.present(error: self?.player?.error)
+					}
+				})
+			} else {
+				player!.replaceCurrentItem(with: playerItem)
+			}
 			completion(true)
 		} else {
 			completion(false)
