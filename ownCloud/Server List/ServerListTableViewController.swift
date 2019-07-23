@@ -126,7 +126,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		if shownFirstTime {
 			shownFirstTime = false
-			
+
 			if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
 				connect(to: bookmark)
 				showBetaWarning = false
@@ -361,6 +361,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			bookmarkRow?.accessoryView = bookmarkRowAccessoryView
 		})
 
+		clientRootViewController.authDelegate = self
+
 		clientRootViewController.afterCoreStart {
 			// Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
 			if self.lastSelectedBookmark?.uuid == bookmark.uuid {
@@ -556,5 +558,24 @@ extension OCBookmarkManager {
 		set {
 			OCAppIdentity.shared.userDefaults?.set(newValue?.uuid.uuidString, forKey: OCBookmarkManager.lastConnectedBookmarkUUIDDefaultsKey)
 		}
+	}
+}
+
+extension ServerListTableViewController : ClientRootViewControllerAuthenticationDelegate {
+	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?) {
+		clientViewController.closeClient(completion: { [weak self] in
+			if let editBookmark = editBookmark {
+				var performContinue : Bool = false
+
+				// Reset auth data for token-based methods
+				if editBookmark.isTokenBased == true {
+					editBookmark.authenticationData = nil
+					performContinue = true
+				}
+
+				// Bring up bookmark editing UI
+				self?.showBookmarkUI(edit: editBookmark, performContinue: performContinue, attemptLoginOnSuccess: true)
+			}
+		})
 	}
 }

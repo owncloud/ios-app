@@ -19,6 +19,10 @@
 import UIKit
 import ownCloudSDK
 
+protocol ClientRootViewControllerAuthenticationDelegate : class {
+	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?)
+}
+
 class ClientRootViewController: UITabBarController, UINavigationControllerDelegate {
 
 	// MARK: - Constants
@@ -37,6 +41,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	var progressBarHeightConstraint: NSLayoutConstraint?
 	var progressSummarizer : ProgressSummarizer?
 	var toolbar : UIToolbar?
+
+	weak var authDelegate : ClientRootViewControllerAuthenticationDelegate?
 
 	var skipAuthorizationFailure : Bool = false
 
@@ -293,10 +299,11 @@ extension ClientRootViewController : OCCoreDelegate {
 		var authFailureIgnoreLabel = "Ignore".localized
 		var authFailureIgnoreStyle = UIAlertAction.Style.destructive
 		let editBookmark = self.bookmark
+		let nsError = error as NSError?
 
-		if let error : NSError = error as NSError? {
-			if error.isOCError(withCode: .authorizationFailed) {
-				if let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? NSError, underlyingError.isDAVException, underlyingError.davExceptionMessage == "User disabled" {
+		if let nsError = nsError {
+			if nsError.isOCError(withCode: .authorizationFailed) {
+				if let underlyingError = nsError.userInfo[NSUnderlyingErrorKey] as? NSError, underlyingError.isDAVException, underlyingError.davExceptionMessage == "User disabled" {
 					authFailureHasEditOption = false
 					authFailureIgnoreStyle = .cancel
 					authFailureIgnoreLabel = "Continue offline".localized
@@ -308,7 +315,7 @@ extension ClientRootViewController : OCCoreDelegate {
 				isAuthFailure = true
 			}
 
-			if error.isOCError(withCode: .authorizationNoMethodData) || error.isOCError(withCode: .authorizationMissingData) {
+			if nsError.isOCError(withCode: .authorizationNoMethodData) || nsError.isOCError(withCode: .authorizationMissingData) {
 				authFailureMessage = "No authentication data has been found for this connection.".localized
 
 				isAuthFailure = true
@@ -350,21 +357,8 @@ extension ClientRootViewController : OCCoreDelegate {
 					alertController.addAction(UIAlertAction(title: "Sign in".localized, style: .default, handler: { (_) in
 						queueCompletionHandler()
 
-						if let navigationController = self?.presentingViewController as? UINavigationController {
-							self?.closeClient(completion: {
-								if let serverListTableViewController = navigationController.topViewController as? ServerListTableViewController {
-									var performContinue : Bool = false
-
-									// Reset auth data for token-based methods
-									if let authenticationMethodIdentifier = editBookmark.authenticationMethodIdentifier, let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier), authenticationMethodClass.type == .token {
-										editBookmark.authenticationData = nil
-										performContinue = true
-									}
-
-									// Bring up bookmark editing UI
-									serverListTableViewController.showBookmarkUI(edit: editBookmark, performContinue: performContinue, attemptLoginOnSuccess: true)
-								}
-							})
+						if let authDelegate = self?.authDelegate, let self = self, let nsError = nsError {
+							authDelegate.handleAuthError(for: self, error: nsError, editBookmark: editBookmark)
 						}
 					}))
 				}
