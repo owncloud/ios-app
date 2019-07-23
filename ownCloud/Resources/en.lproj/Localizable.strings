@@ -119,6 +119,8 @@
 "Authorization failed" = "Authorization failed";
 "The account has been disabled." = "The account has been disabled.";
 "The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+"Access denied" = "Access denied"
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "The connection's access token has expired or become invalid. Sign in again to re-gain access.";
 "No authentication data has been found for this connection." = "No authentication data has been found for this connection.";
 "Sign in" = "Sign in";
 "Ignore" = "Ignore";

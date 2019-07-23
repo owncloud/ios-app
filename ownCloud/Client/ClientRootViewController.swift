@@ -295,6 +295,7 @@ extension ClientRootViewController : OCCoreDelegate {
 	func core(_ core: OCCore, handleError error: Error?, issue: OCIssue?) {
 		var isAuthFailure : Bool = false
 		var authFailureMessage : String?
+		var authFailureTitle : String = "Authorization failed".localized
 		var authFailureHasEditOption : Bool = true
 		var authFailureIgnoreLabel = "Ignore".localized
 		var authFailureIgnoreStyle = UIAlertAction.Style.destructive
@@ -309,7 +310,12 @@ extension ClientRootViewController : OCCoreDelegate {
 					authFailureIgnoreLabel = "Continue offline".localized
 					authFailureMessage = "The account has been disabled."
 				} else {
-					authFailureMessage = "The server declined access with the credentials stored for this connection.".localized
+					if bookmark.isTokenBased == true {
+						authFailureTitle = "Access denied".localized
+						authFailureMessage = "The connection's access token has expired or become invalid. Sign in again to re-gain access.".localized
+					} else {
+						authFailureMessage = "The server declined access with the credentials stored for this connection.".localized
+					}
 				}
 
 				isAuthFailure = true
@@ -345,7 +351,7 @@ extension ClientRootViewController : OCCoreDelegate {
 			var queueCompletionHandlerScheduled : Bool = false
 
 			if isAuthFailure {
-				let alertController = UIAlertController(title: "Authorization failed".localized,
+				let alertController = UIAlertController(title: authFailureTitle,
 									message: authFailureMessage,
 									preferredStyle: .alert)
 
