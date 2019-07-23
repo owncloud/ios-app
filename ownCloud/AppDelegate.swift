@@ -45,6 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.addSubview((navigationController?.view)!)
 		window?.makeKeyAndVisible()
 
+		ImportFilesController.removeImportDirectory()
+
 		AppLockManager.shared.showLockscreenIfNeeded()
 
 		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
@@ -58,6 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(MediaDisplayViewController.displayExtension)
 
 		// Action Extensions
 		OCExtensionManager.shared.addExtension(OpenInAction.actionExtension)
@@ -76,17 +79,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Licenses
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: Theme.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
 
-		// TODO: Remove before official release!!! Removing legacy logs which might be left over in beta versions where there was no log rotation and log could have grown significantly in size
-		if let legacyLogURL = OCAppIdentity.shared.appGroupContainerURL?.appendingPathComponent("ownCloud.log") {
-			try? FileManager.default.removeItem(at: legacyLogURL)
-		}
-
 		//Disable UI Animation for UITesting (screenshots)
 		if let enableUIAnimations = VendorServices.classSetting(forOCClassSettingsKey: .enableUIAnimations) as? Bool {
 			UIView.setAnimationsEnabled(enableUIAnimations)
 		}
 
 		return true
+	}
+
+	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+		var copyBeforeUsing = true
+		if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
+			copyBeforeUsing = !shouldOpenInPlace
+		}
+
+		return ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountOrImportUI()
 	}
 
 	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

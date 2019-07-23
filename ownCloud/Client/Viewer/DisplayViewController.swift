@@ -72,15 +72,26 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
+	// This shall be set to false if DisplayViewController sublass is able to handle streamed data (e.g. audio, video)
+	var requiresLocalItemCopy: Bool = true
+
 	var source: URL? {
 		didSet {
 			OnMainThread(inline: true) {
 				self.iconImageView?.isHidden = true
 				self.hideItemMetadataUIElements()
-				self.renderSpecificView()
+				self.renderSpecificView(completion: { (success) in
+					if !success {
+						self.iconImageView?.isHidden = false
+						self.infoLabel?.text = "File couldn't be opened".localized
+						self.infoLabel?.isHidden = false
+					}
+				})
 			}
 		}
 	}
+
+	var httpAuthHeaders: [String : String]?
 
 	var shallDisplayMoreButtonInToolbar = true
 
@@ -111,7 +122,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	private var cancelButton : ThemeButton?
 	private var metadataInfoLabel: UILabel?
 	private var showPreviewButton: ThemeButton?
-	private var noNetworkLabel : UILabel?
+	private var infoLabel : UILabel?
 
 	// MARK: - Delegate
 	weak var editingDelegate: DisplayViewEditingDelegate?
@@ -141,10 +152,10 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		metadataInfoLabel = UILabel()
 		cancelButton = ThemeButton(type: .custom)
 		showPreviewButton = ThemeButton(type: .custom)
-		noNetworkLabel = UILabel()
+		infoLabel = UILabel()
 		progressView = UIProgressView(progressViewStyle: .bar)
 
-		guard let iconImageView = iconImageView, let metadataInfoLabel = metadataInfoLabel, let progressView = progressView, let cancelButton = cancelButton, let showPreviewButton = showPreviewButton, let noNetworkLabel = noNetworkLabel else {
+		guard let iconImageView = iconImageView, let metadataInfoLabel = metadataInfoLabel, let progressView = progressView, let cancelButton = cancelButton, let showPreviewButton = showPreviewButton, let noNetworkLabel = infoLabel else {
 			return
 		}
 
@@ -297,7 +308,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
-	func renderSpecificView() {
+	func renderSpecificView(completion: @escaping  (_ success:Bool)->Void) {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the source property.s
 	}
 
@@ -307,7 +318,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		cancelButton?.isHidden = true
 		metadataInfoLabel?.isHidden = true
 		showPreviewButton?.isHidden = true
-		noNetworkLabel?.isHidden = true
+		infoLabel?.isHidden = true
 	}
 
 	private func render() {
@@ -318,7 +329,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		case .noNetworkConnection:
 			self.progressView?.isHidden = true
 			self.cancelButton?.isHidden = true
-			self.noNetworkLabel?.isHidden = false
+			self.infoLabel?.isHidden = false
 			self.showPreviewButton?.isHidden = true
 
 		case .errorDownloading, .canceledDownload:
@@ -329,13 +340,13 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		case .downloading(_):
 			self.progressView?.isHidden = false
 			self.cancelButton?.isHidden = false
-			self.noNetworkLabel?.isHidden = true
+			self.infoLabel?.isHidden = true
 			self.showPreviewButton?.isHidden = true
 
 		case .notSupportedMimeType:
 			self.progressView?.isHidden = true
 			self.cancelButton?.isHidden = true
-			self.noNetworkLabel?.isHidden = true
+			self.infoLabel?.isHidden = true
 			self.showPreviewButton?.isHidden = true
 		}
 	}
@@ -344,7 +355,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		self.progressView?.progress = 0.0
 		self.progressView?.isHidden = true
 		self.cancelButton?.isHidden = true
-		self.noNetworkLabel?.isHidden = true
+		self.infoLabel?.isHidden = true
 		self.showPreviewButton?.isHidden = false
 	}
 
@@ -357,8 +368,9 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: { [weak self] (action, _) in
-			if !(action is OpenInAction) {
-				self?.navigationController?.popViewController(animated: true)
+
+			if action is RenameAction {
+				self?.updateNavigationBarItems()
 			}
 		}) {
 			self.present(asCard: moreViewController, animated: true)
@@ -401,7 +413,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				switch query.state {
 					case .idle, .contentsFromCache, .waitingForServerReply:
 						if let firstItem = changeSet?.queryResult.first {
-							if (firstItem.itemVersionIdentifier != self.item?.itemVersionIdentifier) || (firstItem.name != self.item?.name) {
+							if (firstItem.syncActivity != .updating) && ((firstItem.itemVersionIdentifier != self.item?.itemVersionIdentifier) || (firstItem.name != self.item?.name)) {
 								self.present(item: firstItem)
 							}
 						}
@@ -430,12 +442,21 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				self.stopQuery()
 				self.startQuery()
 
-				if core?.localCopy(of: item) == nil {
-					self.downloadItem(sender: nil)
-				} else {
-					if let core = core, let file = item.file(with: core) {
-						self.source = file.url
+				if requiresLocalItemCopy {
+					if core?.localCopy(of: item) == nil {
+						self.downloadItem(sender: nil)
+					} else {
+						if let core = core, let file = item.file(with: core) {
+							self.source = file.url
+						}
 					}
+				} else {
+					core?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (error, url, authHeaders) in
+						if error == nil {
+							self.httpAuthHeaders = authHeaders
+							self.source = url
+						}
+					})
 				}
 
 				updateNavigationBarItems()
@@ -459,7 +480,7 @@ extension DisplayViewController : Themeable {
 		cancelButton?.applyThemeCollection(collection)
 		metadataInfoLabel?.applyThemeCollection(collection)
 		showPreviewButton?.applyThemeCollection(collection)
-		noNetworkLabel?.applyThemeCollection(collection)
+		infoLabel?.applyThemeCollection(collection)
 		self.view.backgroundColor = collection.tableBackgroundColor
 	}
 }

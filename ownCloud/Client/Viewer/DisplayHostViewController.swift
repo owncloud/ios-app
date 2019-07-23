@@ -27,15 +27,64 @@ class DisplayHostViewController: UIPageViewController {
 
 	// MARK: - Instance Variables
 	weak private var core: OCCore?
-	private var selectedItem: OCItem
+
+	private var lastSelectedLocalID: String?
+
+	private var selectedItem: OCItem {
+		willSet {
+			// Remember last selected local ID for the case the selected item disappears and reapears again (e.g. due to some failed action)
+			lastSelectedLocalID = self.selectedItem.localID
+		}
+	}
 
 	private var items: [OCItem]? {
+		willSet {
+			if let oldItems = self.items, let newItems = newValue {
+				if newItems.count > 0 {
+					if oldItems.count != newItems.count {
+
+						// Handle the case in which selected item disappears (move, delete)
+						if oldItems.count > newItems.count {
+							if newItems.first(where: { $0.localID == selectedItem.localID  }) == nil {
+								if let deletedIndex = oldItems.index(of: selectedItem) {
+									if deletedIndex < newItems.count {
+										self.selectedItem = newItems[deletedIndex]
+									} else {
+										self.selectedItem = newItems.last!
+									}
+								}
+							}
+						}
+
+						// Handle the case in which selected item does re-appear (e.g. upon failed move operation)
+						if oldItems.count < newItems.count && lastSelectedLocalID != nil {
+							if let reappearingItem = newItems.first(where: { $0.localID == lastSelectedLocalID }) {
+								self.selectedItem = reappearingItem
+							}
+						}
+
+						// Update data source in case number of items has changed
+						OnMainThread { [weak self] in
+							self?.updateDataSource(animated: true)
+						}
+					}
+
+				} else {
+					// If there is nothing to display, go back to the previous view in the navigation stack
+					OnMainThread {  [weak self] in
+						self?.navigationController?.popViewController(animated: true)
+					}
+				}
+
+			}
+		}
 		didSet {
 			OnMainThread { [weak self] in
 				self?.configureScrolling()
 			}
 		}
 	}
+
 	private var query: OCQuery
 	private var queryStarted : Bool = false
 	private weak var viewControllerToTansition: DisplayViewController?
@@ -85,23 +134,7 @@ class DisplayHostViewController: UIPageViewController {
 	// MARK: - ViewController lifecycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		dataSource = self
-		delegate = self
-
-		// Display first item
-		guard let mimeType = self.selectedItem.mimeType else { return }
-
-		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: mimeType)
-		let configuration = self.configurationFor(self.selectedItem, viewController: viewController)
-
-		viewController.configure(configuration)
-		self.addChild(viewController)
-		viewController.didMove(toParent: self)
-
-		self.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
-
-		viewController.present(item: self.selectedItem)
-		viewController.updateNavigationBarItems()
+		updateDataSource()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -151,6 +184,27 @@ class DisplayHostViewController: UIPageViewController {
 	}
 
 	// MARK: - Helper methods
+
+	private func updateDataSource(animated:Bool = false) {
+		// First reset data source, to make sure that when it is again set, the page view controller does actually reload
+		self.dataSource = nil
+		self.dataSource = self
+		self.delegate = self
+
+		// Display first item
+		guard let mimeType = self.selectedItem.mimeType else { return }
+
+		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: mimeType)
+		let configuration = self.configurationFor(self.selectedItem, viewController: viewController)
+
+		viewController.configure(configuration)
+
+		self.setViewControllers([viewController], direction: .forward, animated: animated, completion: nil)
+
+		viewController.present(item: self.selectedItem)
+		viewController.updateNavigationBarItems()
+	}
+
 	private func viewControllerAtIndex(index: Int) -> UIViewController? {
 		guard let items = items else { return nil }
 

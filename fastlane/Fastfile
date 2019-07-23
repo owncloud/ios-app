@@ -24,9 +24,8 @@ platform :ios do
      match(force_for_new_devices: true) # Creates all required certificates & provisioning profile
   end
 
-  desc "Ad-Hoc Distribution IPA geneation"
+  desc "Ad-Hoc Distribution IPA generation"
    lane :build_ipa_ad_hoc do
-
     #Create the build
     gym(
       workspace: "ownCloud.xcworkspace",
@@ -49,7 +48,18 @@ platform :ios do
     lane :screenshots do
       reset_simulators
       snapshot
-      frameit(white: true, path: './fastlane/screenshots')
+      frameit(white: false, path: './fastlane/screenshots')
+      deliver(
+        skip_screenshots: false,
+        skip_metadata: true,
+        submit_for_review: false,
+        ignore_language_directory_validation: true,
+        skip_binary_upload: true,
+        force: true,
+        overwrite_screenshots: true,
+        app_identifier: "com.owncloud.ios-app",
+        skip_app_version_update: true
+      )
     end
 
   desc "In-House Enterprise IPA generation"
@@ -141,6 +151,14 @@ platform :ios do
       bundle_identifier: ENTERPRISE_APP_FW_ID,
       targets: ["ownCloudApp"]
     )
+
+    # Add a badge with the latest short commit hash to the app icon
+    commit = last_git_commit
+    short_hash = commit[:abbreviated_commit_hash] # short sha of commit
+    sh "curl https://badgen.net/badge/Bitrise/" + short_hash + "/blue > badge.svg"
+    sh "brew install librsvg"
+    sh "rsvg-convert badge.svg > badge.png"
+    sh "badge --custom badge.png --glob /../**/*.appiconset/*.{png,PNG}"
 
     #Create the build
     gym(

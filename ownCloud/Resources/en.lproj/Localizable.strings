@@ -157,15 +157,16 @@
 "Acknowledgements" = "Acknowledgements";
 "Video upload path" = "Video upload path";
 "Photo upload path" = "Photo upload path";
-"Always" = "Always";
+"Immediately" = "Immediately";
 "After 1 minute" = "After 1 minute";
 "After 5 minutes" = "After 5 minutes";
 "After 30 minutes" = "After 30 minutes";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker.";
 "Please configure an email account" = "Please configure an email account";
 "You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
 "Do you want to open the following URL?" = "Do you want to open the following URL?";
 
-"%@ %@ version %@ build %@ (%@)" = "%@ %@ version %@ build %@ (%@)";
+"%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@ %@ version %@ build %@ (app: %@, sdk: %@)";
 "beta" = "beta";
 "release" = "release";
 
@@ -268,6 +269,7 @@
 "Error" = "Error";
 "Could not get the picture" = "Could not get the picture";
 "Downloading" = "Downloading";
+"File couldn't be opened" = "File couldn't be opened";
 
 /* PDF Viewer */
 "Resume" = "Resume";
@@ -370,6 +372,9 @@
 "You" = "You";
 "Share this file" = "Share this file";
 "Share this folder" = "Share this folder";
+"shared" = "shared";
+"Owner" = "Owner";
+"Private Link" = "Private Link";
 
 /* Quick Access view */
 "Quick Access" = "Quick Access";
@@ -401,3 +406,7 @@
 "Delete Offline Copies" = "Delete Offline Copies";
 "Manage" = "Manage";
 "Storage" = "Storage";
+
+/* Import File */
+"Save File" = "Save File";
+"Choose an account and folder to import the file into." = "Choose an account and folder to import the file into.";

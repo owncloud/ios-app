@@ -3,7 +3,7 @@
 If you have questions about how to use ownCloud, please direct these to the [mailing list][mailinglist] or our [forum][forum]. We are also available on [IRC][irc].
 
 ### Guidelines
-* [Report the issue](https://github.com/owncloud/ios/issues/new) using our [template][template], it includes all the informations we need to track down the issue.
+* [Report the issue](https://github.com/owncloud/ios-app/issues/new) using our [template][template], it includes all the informations we need to track down the issue.
 * This repository is *only* for issues within the ownCloud iOS app code. Issues in other components should be reported in their own repositores: 
   - [ownCloud core](https://github.com/owncloud/core/issues)
   - [Android client](https://github.com/owncloud/android/issues)
@@ -15,7 +15,7 @@ If your issue appears to be a bug, and hasn't been reported, open a new issue.
 
 Help us to maximize the effort we can spend fixing issues and adding new features, by not reporting duplicate issues.
 
-[template]: https://github.com/owncloud/ios/blob/master/.github/issue_template.md
+[template]: https://github.com/owncloud/ios-app/blob/master/.github/issue_template.md
 [mailinglist]: https://mailman.owncloud.org/mailman/listinfo/user
 [forum]: https://central.owncloud.org/
 [irc]: http://webchat.freenode.net/?channels=owncloud&uio=d4
