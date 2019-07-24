@@ -28,6 +28,7 @@ class SettingsViewController: StaticTableViewController {
 			self.addSection(SecuritySettingsSection(userDefaults: userDefaults))
 			self.addSection(UserInterfaceSettingsSection(userDefaults: userDefaults))
 			self.addSection(DisplaySettingsSection(userDefaults: userDefaults))
+			self.addSection(MediaFilesSettingsSection(userDefaults: userDefaults))
 			self.addSection(MediaUploadSettingsSection(userDefaults: userDefaults))
 			self.addSection(MoreSettingsSection(userDefaults: userDefaults))
 		}
