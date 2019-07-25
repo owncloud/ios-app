@@ -308,7 +308,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
-	func renderSpecificView(completion: @escaping  (_ success:Bool)->Void) {
+	func renderSpecificView(completion: @escaping  (_ success:Bool) -> Void) {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the source property.s
 	}
 
@@ -412,6 +412,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			OnMainThread {
 				switch query.state {
 					case .idle, .contentsFromCache, .waitingForServerReply:
+						Log.log("Presenting item (DisplayViewController.queryHasChangesAvailable): \(changeSet?.queryResult.description ?? "nil")")
+
 						if let firstItem = changeSet?.queryResult.first {
 							if (firstItem.syncActivity != .updating) && ((firstItem.itemVersionIdentifier != self.item?.itemVersionIdentifier) || (firstItem.name != self.item?.name)) {
 								self.present(item: firstItem)
@@ -434,6 +436,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		self.item = item
 
 		metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
+
+		Log.log("Presenting item (DisplayViewController.present): \(item.description)")
 
 		switch state {
 			case .notSupportedMimeType: break

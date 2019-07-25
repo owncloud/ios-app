@@ -109,6 +109,8 @@ class DisplayHostViewController: UIPageViewController {
 			query.requestChangeSet(withFlags: .onlyResults) { ( _, changeSet) in
 				guard let changeSet = changeSet  else { return }
 				if let queryResult = changeSet.queryResult, let items = self?.applyImageFilesFilter(items: queryResult) {
+					Log.log("Presenting items (DisplayHOSTViewController.queryObservation): \(items.description)")
+
 					self?.items = items
 				}
 			}
