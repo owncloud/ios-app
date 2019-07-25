@@ -42,11 +42,16 @@ class DisplayHostViewController: UIPageViewController {
 			if let oldItems = self.items, let newItems = newValue {
 				if newItems.count > 0 {
 					if oldItems.count != newItems.count {
+						let previouslySelectedItem = newItems.first(where: { $0.localID == selectedItem.localID  })
+
+						if previouslySelectedItem != nil {
+							self.selectedItem = previouslySelectedItem!
+						}
 
 						// Handle the case in which selected item disappears (move, delete)
 						if oldItems.count > newItems.count {
-							if newItems.first(where: { $0.localID == selectedItem.localID  }) == nil {
-								if let deletedIndex = oldItems.index(of: selectedItem) {
+							if previouslySelectedItem == nil, let deletedItem = oldItems.first(where: { $0.localID == selectedItem.localID }) {
+								if let deletedIndex = oldItems.index(of: deletedItem) {
 									if deletedIndex < newItems.count {
 										self.selectedItem = newItems[deletedIndex]
 									} else {
