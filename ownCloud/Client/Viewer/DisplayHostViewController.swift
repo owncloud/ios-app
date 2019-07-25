@@ -44,10 +44,6 @@ class DisplayHostViewController: UIPageViewController {
 					if oldItems.count != newItems.count {
 						let previouslySelectedItem = newItems.first(where: { $0.localID == selectedItem.localID  })
 
-						if previouslySelectedItem != nil {
-							self.selectedItem = previouslySelectedItem!
-						}
-
 						// Handle the case in which selected item disappears (move, delete)
 						if oldItems.count > newItems.count {
 							if previouslySelectedItem == nil, let deletedItem = oldItems.first(where: { $0.localID == selectedItem.localID }) {
