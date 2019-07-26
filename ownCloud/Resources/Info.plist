@@ -13,10 +13,13 @@
 			<array/>
 			<key>CFBundleTypeName</key>
 			<string>Import all file types</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.data</string>
 				<string>public.content</string>
+				<string>public.image</string>
 			</array>
 		</dict>
 	</array>
