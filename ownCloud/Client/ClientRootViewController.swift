@@ -292,7 +292,8 @@ extension ClientRootViewController : Themeable {
 }
 
 extension ClientRootViewController : OCCoreDelegate {
-	func core(_ core: OCCore, handleError error: Error?, issue: OCIssue?) {
+	func core(_ core: OCCore, handleError error: Error?, issue inIssue: OCIssue?) {
+		var issue = inIssue
 		var isAuthFailure : Bool = false
 		var authFailureMessage : String?
 		var authFailureTitle : String = "Authorization failed".localized
@@ -300,7 +301,17 @@ extension ClientRootViewController : OCCoreDelegate {
 		var authFailureIgnoreLabel = "Ignore".localized
 		var authFailureIgnoreStyle = UIAlertAction.Style.destructive
 		let editBookmark = self.bookmark
-		let nsError = error as NSError?
+		var nsError = error as NSError?
+
+		if nsError == nil, let issueNSError = issue?.error as NSError? {
+			// Turn issues that are just converted authorization errors back into errors and discard the issue
+			if issueNSError.isOCError(withCode: .authorizationFailed) ||
+			   issueNSError.isOCError(withCode: .authorizationNoMethodData) ||
+			   issueNSError.isOCError(withCode: .authorizationMissingData) {
+				nsError = issueNSError
+				issue = nil
+			}
+		}
 
 		if let nsError = nsError {
 			if nsError.isOCError(withCode: .authorizationFailed) {
