@@ -241,8 +241,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		showBookmarkUI()
 	}
 
-	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false) {
-		let bookmarkViewController : BookmarkViewController = BookmarkViewController(bookmark)
+	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, removeAuthDataFromCopy: Bool = true) {
+		let bookmarkViewController : BookmarkViewController = BookmarkViewController(bookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: bookmarkViewController)
 
 		// Prevent any in-progress connection from being shown
@@ -264,8 +264,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 
 		self.present(navigationController, animated: true, completion: {
-			if performContinue {
-				bookmarkViewController.handleContinue()
+			OnMainThread {
+				if performContinue {
+					bookmarkViewController.showedOAuthInfoHeader = true // needed for HTTP+OAuth2 connections to really continue on .handleContinue() call
+					bookmarkViewController.handleContinue()
+				}
 			}
 		})
 	}
@@ -565,16 +568,11 @@ extension ServerListTableViewController : ClientRootViewControllerAuthentication
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?) {
 		clientViewController.closeClient(completion: { [weak self] in
 			if let editBookmark = editBookmark {
-				var performContinue : Bool = false
-
-				// Reset auth data for token-based methods
-				if editBookmark.isTokenBased == true {
-					editBookmark.authenticationData = nil
-					performContinue = true
-				}
-
 				// Bring up bookmark editing UI
-				self?.showBookmarkUI(edit: editBookmark, performContinue: performContinue, attemptLoginOnSuccess: true)
+				self?.showBookmarkUI(edit: editBookmark,
+						     performContinue: (editBookmark.isTokenBased == true),
+						     attemptLoginOnSuccess: true,
+						     removeAuthDataFromCopy: true)
 			}
 		})
 	}

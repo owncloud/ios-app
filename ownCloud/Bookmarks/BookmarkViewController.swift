@@ -72,7 +72,7 @@ class BookmarkViewController: StaticTableViewController {
 	private var mode : BookmarkViewControllerMode
 
 	// MARK: - Init & Deinit
-	init(_ editBookmark: OCBookmark?) {
+	init(_ editBookmark: OCBookmark?, removeAuthDataFromCopy: Bool = false) {
 		// Determine mode
 		if editBookmark != nil {
 			mode = .edit
@@ -85,6 +85,10 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		bookmark?.authenticationDataStorage = .memory  // Disconnect bookmark from keychain
+
+		if bookmark?.isTokenBased == true, removeAuthDataFromCopy {
+			bookmark?.authenticationData = nil
+		}
 
 		originalBookmark = editBookmark // Save original bookmark (if any)
 
@@ -237,6 +241,11 @@ class BookmarkViewController: StaticTableViewController {
 				// Fill UI
 				if bookmark != nil {
 					updateUI(from: bookmark!) { (_) -> Bool in return(true) }
+
+					if bookmark?.isTokenBased == false, removeAuthDataFromCopy {
+						bookmark?.authenticationData = nil
+						self.passwordRow?.value = ""
+					}
 				}
 
 				self.usernameRow?.enabled = false
