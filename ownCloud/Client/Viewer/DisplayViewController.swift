@@ -271,13 +271,17 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	func updateNavigationBarItems() {
-		if let parent = parent, let itemName = item?.name {
+		if let parent = parent, let itemName = item?.name, let queryState = query?.state {
 			parent.navigationItem.title = itemName
 
 			if shallDisplayMoreButtonInToolbar {
-				let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(optionsBarButtonPressed))
-				actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
-				parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
+				if queryState != .targetRemoved {
+					let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+					actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
+					parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
+				} else {
+					parent.navigationItem.rightBarButtonItem = nil
+				}
 			}
 		}
 	}
@@ -416,19 +420,21 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	func queryHasChangesAvailable(_ query: OCQuery) {
-		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
+		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { [weak self] (query, changeSet) in
 			OnMainThread {
 				switch query.state {
 					case .idle, .contentsFromCache, .waitingForServerReply:
 						Log.log("Presenting item (DisplayViewController.queryHasChangesAvailable): \(changeSet?.queryResult.description ?? "nil")")
 
 						if let firstItem = changeSet?.queryResult.first {
-							if (firstItem.syncActivity != .updating) && ((firstItem.itemVersionIdentifier != self.item?.itemVersionIdentifier) || (firstItem.name != self.item?.name)) {
-								self.present(item: firstItem)
+							if (firstItem.syncActivity != .updating) && ((firstItem.itemVersionIdentifier != self?.item?.itemVersionIdentifier) || (firstItem.name != self?.item?.name)) {
+								self?.present(item: firstItem)
 							}
 						}
 
-					case .targetRemoved: break
+					case .targetRemoved:
+						self?.updateNavigationBarItems()
+						break
 
 					default: break
 				}
