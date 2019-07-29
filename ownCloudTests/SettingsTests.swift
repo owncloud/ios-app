@@ -112,10 +112,7 @@ class SettingsTests: XCTestCase {
 			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_accessibilityID("share-logfile"))
 			.assert(grey_sufficientlyVisible())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("Logging"))
-			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_accessibilityID("reset-logfile"))
-			.assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("Logging"))
-			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_accessibilityID("mask_private_data"))
+			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_text("Browse".localized))
 			.assert(grey_sufficientlyVisible())
 
 		//Reset status
