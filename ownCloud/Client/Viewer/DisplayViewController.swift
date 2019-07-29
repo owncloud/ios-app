@@ -124,6 +124,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	private var showPreviewButton: ThemeButton?
 	private var infoLabel : UILabel?
 
+	private var presenting = false
+
 	// MARK: - Delegate
 	weak var editingDelegate: DisplayViewEditingDelegate?
 
@@ -263,6 +265,11 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		self.render()
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		updateNavigationBarItems()
+	}
+
 	func updateNavigationBarItems() {
 		if let parent = parent, let itemName = item?.name {
 			parent.navigationItem.title = itemName
@@ -348,6 +355,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			self.cancelButton?.isHidden = true
 			self.infoLabel?.isHidden = true
 			self.showPreviewButton?.isHidden = true
+
 		}
 	}
 
@@ -429,20 +437,21 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	func present(item: OCItem) {
-		guard self.view != nil else {
+		guard self.view != nil, self.presenting == false else {
 			return
 		}
 
-		self.item = item
-
-		metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
-
-		Log.log("Presenting item (DisplayViewController.present): \(item.description)")
+		presenting = true
 
 		switch state {
 			case .notSupportedMimeType: break
 
 			default:
+				self.item = item
+				metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
+
+				Log.log("Presenting item (DisplayViewController.present): \(item.description)")
+
 				self.stopQuery()
 				self.startQuery()
 
@@ -462,8 +471,6 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 						}
 					})
 				}
-
-				updateNavigationBarItems()
 		}
 	}
 }
