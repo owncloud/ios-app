@@ -124,8 +124,6 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	private var showPreviewButton: ThemeButton?
 	private var infoLabel : UILabel?
 
-	private var presenting = false
-
 	// MARK: - Delegate
 	weak var editingDelegate: DisplayViewEditingDelegate?
 
@@ -379,12 +377,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
-		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: { [weak self] (action, _) in
-
-			if action is RenameAction {
-				self?.updateNavigationBarItems()
-			}
-		}) {
+		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: nil) {
 			self.present(asCard: moreViewController, animated: true)
 		}
 	}
@@ -443,11 +436,9 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	func present(item: OCItem) {
-		guard self.view != nil, self.presenting == false else {
+		guard self.view != nil else {
 			return
 		}
-
-		presenting = true
 
 		switch state {
 			case .notSupportedMimeType: break
@@ -477,6 +468,9 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 						}
 					})
 				}
+
+				self.updateNavigationBarItems()
+
 		}
 	}
 }
