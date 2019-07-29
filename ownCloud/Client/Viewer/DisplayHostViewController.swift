@@ -65,7 +65,6 @@ class DisplayHostViewController: UIPageViewController {
 				if let queryResult = changeSet.queryResult, let items = self?.applyImageFilesFilter(items: queryResult) {
 					self?.items = items
 				}
-				core.stop(query)
 			}
 		}
 
