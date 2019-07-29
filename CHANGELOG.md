@@ -1,5 +1,9 @@
 # ChangeLog
 
+## Release version 1.0.3 (July 2019)
+
+- Add support for local user names with @ inside in sharing (PR #453)
+
 ## Release version 1.0.2 (July 2019)
 
 - Favorites crash fixed (#423)
