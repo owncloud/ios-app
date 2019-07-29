@@ -427,8 +427,6 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 					case .targetRemoved:
 						self?.updateNavigationBarItems()
-						break
-
 					default: break
 				}
 			}
