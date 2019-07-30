@@ -39,14 +39,12 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 			if let bookmark = accountBookmark {
 				OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
 					if error == nil, let core = core {
-
 						self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
 							if let targetItem = item {
-
 								self.progress = core.importFileNamed(file.filename,
 											 at: targetItem,
 											 from: fileURL,
-											 isSecurityScoped: false,
+											 isSecurityScoped: true,
 											 options: [OCCoreOption.importByCopying : true],
 											 placeholderCompletionHandler: { (error, item) in
 												if error != nil {
