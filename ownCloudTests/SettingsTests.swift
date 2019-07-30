@@ -50,7 +50,7 @@ class SettingsTests: XCTestCase {
 	func testCheckMediaUploadSettings () {
 		
 		//Assert
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("convert_heic_to_mp4")).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("convert_heic_to_jpeg")).assert(grey_sufficientlyVisible())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("convert_to_mp4")).assert(grey_sufficientlyVisible())
 		
 		//Reset status
@@ -109,14 +109,28 @@ class SettingsTests: XCTestCase {
 			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_text("Log file".localized))
 			.assert(grey_sufficientlyVisible())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("Logging"))
-			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_accessibilityID("share-logfile"))
-			.assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("Logging"))
 			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_text("Browse".localized))
 			.assert(grey_sufficientlyVisible())
 
 		//Reset status
 		EarlGrey.select(elementWithMatcher: grey_text("Settings".localized)).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
+	}
+
+	/*
+	* PASSED if: Log level is changed to "Warning".
+	*/
+	func testSwitchLogLevel () {
+
+		//Actions
+		EarlGrey.select(elementWithMatcher: grey_accessibilityID("logging")).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text("Warning".localized)).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text("Settings".localized)).perform(grey_tap())
+
+		//Assert
+		EarlGrey.select(elementWithMatcher: grey_text("Warning".localized)).assert(grey_sufficientlyVisible())
+
+		//Reset status
 		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
 	}
 
@@ -139,10 +153,6 @@ class SettingsTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_text("OCLogOptionLogRequestsAndResponses")).assert(grey_notVisible())
 		EarlGrey.select(elementWithMatcher: grey_text("Standard error output".localized)).assert(grey_notVisible())
 		EarlGrey.select(elementWithMatcher: grey_text("Log file".localized)).assert(grey_notVisible())
-
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("share-logfile")).assert(grey_notVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("reset-logfile")).assert(grey_notVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("mask-private-data")).assert(grey_notVisible())
 
 		//Reset status
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("enable-logging")).perform(grey_turnSwitchOn(true))
