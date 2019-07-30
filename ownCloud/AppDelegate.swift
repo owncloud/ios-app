@@ -45,6 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.addSubview((navigationController?.view)!)
 		window?.makeKeyAndVisible()
 
+		ImportFilesController.removeImportDirectory()
+
 		AppLockManager.shared.showLockscreenIfNeeded()
 
 		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
@@ -58,6 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(MediaDisplayViewController.displayExtension)
 
 		// Action Extensions
 		OCExtensionManager.shared.addExtension(OpenInAction.actionExtension)
@@ -84,6 +87,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 
 		return true
+	}
+
+	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+		var copyBeforeUsing = true
+		if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
+			copyBeforeUsing = !shouldOpenInPlace
+		}
+
+		return ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountOrImportUI()
 	}
 
 	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

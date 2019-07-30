@@ -447,7 +447,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Labels
-	convenience init(label: String, identifier: String? = nil) {
+	convenience init(label: String, alignment: NSTextAlignment = .left, identifier: String? = nil) {
 		self.init()
 		type = .label
 
@@ -456,6 +456,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = label
 		self.cell?.isUserInteractionEnabled = false
+		self.cell?.textLabel?.numberOfLines = 0
+		self.cell?.textLabel?.textAlignment = alignment
 
 		self.value = label
 		self.selectable = false

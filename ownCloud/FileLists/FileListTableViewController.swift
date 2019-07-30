@@ -213,9 +213,9 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	}
 
 	// MARK: - Table view delegate
-	var lastTappedItemLocalID : String?
-
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: true)
+
 		if !self.tableView.isEditing {
 			guard let rowItem : OCItem = itemAt(indexPath: indexPath) else {
 				return
@@ -233,43 +233,13 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 							return
 						}
 
-						if lastTappedItemLocalID != rowItem.localID {
-							lastTappedItemLocalID = rowItem.localID
-
-							if let progress = core.downloadItem(rowItem, options: [
-								.returnImmediatelyIfOfflineOrUnavailable : true,
-								.addTemporaryClaimForPurpose 		 : OCCoreClaimPurpose.view.rawValue
-							], resultHandler: { [weak self, query] (error, core, item, file) in
-								guard let self = self else { return }
-								OnMainThread { [weak core] in
-									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
-										if let item = item, let core = core {
-											if item.localID == self.lastTappedItemLocalID {
-												let displayViewController = DisplayHostViewController(core: core, selectedItem: item, query: query)
-												displayViewController.hidesBottomBarWhenPushed = true
-												displayViewController.progressSummarizer = self.progressSummarizer
-
-												if let claim = file?.claim {
-													self.core?.remove(claim, on: item, afterDeallocationOf: [ displayViewController ])
-												}
-
-												self.navigationController?.pushViewController(displayViewController, animated: true)
-											}
-										}
-									}
-
-									if self.lastTappedItemLocalID == item?.localID {
-										self.lastTappedItemLocalID = nil
-									}
-								}
-							}) {
-								progressSummarizer?.startTracking(progress: progress)
-							}
-						}
+						let itemViewController = DisplayHostViewController(core: core, selectedItem: rowItem, query: query)
+						itemViewController.hidesBottomBarWhenPushed = true
+						itemViewController.progressSummarizer = self.progressSummarizer
+						self.navigationController?.pushViewController(itemViewController, animated: true)
 				}
 			}
 
-			tableView.deselectRow(at: indexPath, animated: true)
 		}
 	}
 

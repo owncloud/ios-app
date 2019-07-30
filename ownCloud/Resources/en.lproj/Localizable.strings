@@ -275,6 +275,7 @@
 "Error" = "Error";
 "Could not get the picture" = "Could not get the picture";
 "Downloading" = "Downloading";
+"File couldn't be opened" = "File couldn't be opened";
 
 /* PDF Viewer */
 "Resume" = "Resume";
@@ -389,6 +390,10 @@
 "Images" = "Images";
 "PDF Documents" = "PDF Documents";
 
+/* Media files settings */
+"Media Files" = "Media Files";
+"Streaming Enabled" = "Streaming Enabled";
+
 /* Photo upload settings */
 "Media Upload" = "Media Upload";
 "Convert HEIC to JPEG" = "Convert HEIC to JPEG";
@@ -411,3 +416,7 @@
 "Delete Local Copies" = "Delete Local Copies";
 "Manage" = "Manage";
 "Storage" = "Storage";
+
+/* Import File */
+"Save File" = "Save File";
+"Choose an account and folder to import the file into." = "Choose an account and folder to import the file into.";

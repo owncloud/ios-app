@@ -308,7 +308,8 @@ class ClientItemCell: ThemeTableViewCell {
 			if item.type == .file {
 				switch item.cloudStatus {
 				case .cloudOnly:
-					cloudStatusIcon = (availableOfflineCoverage != .none) ? UIImage(named: "cloud-available-offline") : UIImage(named: "cloud-only")
+					cloudStatusIcon = UIImage(named: "cloud-only")
+					cloudStatusIconAlpha = 1.0
 
 				case .localCopy:
 					cloudStatusIcon = (item.downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? UIImage(named: "cloud-available-offline") : nil
