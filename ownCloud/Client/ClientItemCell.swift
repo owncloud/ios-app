@@ -83,6 +83,8 @@ class ClientItemCell: ThemeTableViewCell {
 			blankView.layer.masksToBounds = true
 			return blankView
 		}()
+
+		NotificationCenter.default.addObserver(self, selector: #selector(updateAvailableOfflineStatus(_:)), name: .OCCoreItemPoliciesChanged, object: OCItemPolicyKind.availableOffline)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -90,6 +92,7 @@ class ClientItemCell: ThemeTableViewCell {
 	}
 
 	deinit {
+		NotificationCenter.default.removeObserver(self, name: .OCCoreItemPoliciesChanged, object: OCItemPolicyKind.availableOffline)
 		self.localID = nil
 	}
 
@@ -276,20 +279,7 @@ class ClientItemCell: ThemeTableViewCell {
 			publicLinkStatusIconViewRightMarginConstraint?.constant = 0
 		}
 
-		if item.type == .file {
-			switch item.cloudStatus {
-			case .cloudOnly:
-				cloudStatusIconView.image = UIImage(named: "cloud-only")
-
-			case .localCopy:
-				cloudStatusIconView.image = (item.downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? UIImage(named: "cloud-available-offline") : nil
-
-			case .locallyModified, .localOnly:
-				cloudStatusIconView.image = UIImage(named: "cloud-local-only")
-			}
-		} else {
-			cloudStatusIconView.image = nil
-		}
+		self.updateCloudStatusIcon(with: item)
 
 		self.iconView.image = iconImage
 
@@ -303,9 +293,55 @@ class ClientItemCell: ThemeTableViewCell {
 		self.updateProgress()
 	}
 
+	func updateCloudStatusIcon(with item: OCItem?) {
+		var cloudStatusIcon : UIImage?
+		var cloudStatusIconAlpha : CGFloat = 1.0
+
+		if let item = item {
+			let availableOfflineCoverage : OCCoreAvailableOfflineCoverage = core?.availableOfflinePolicyCoverage(of: item) ?? .none
+
+			switch availableOfflineCoverage {
+				case .direct, .none: cloudStatusIconAlpha = 1.0
+				case .indirect: cloudStatusIconAlpha = 0.5
+			}
+
+			if item.type == .file {
+				switch item.cloudStatus {
+				case .cloudOnly:
+					cloudStatusIcon = (availableOfflineCoverage != .none) ? UIImage(named: "cloud-available-offline") : UIImage(named: "cloud-only")
+
+				case .localCopy:
+					cloudStatusIcon = (item.downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? UIImage(named: "cloud-available-offline") : nil
+
+				case .locallyModified, .localOnly:
+					cloudStatusIcon = UIImage(named: "cloud-local-only")
+					cloudStatusIconAlpha = 1.0
+				}
+			} else {
+				if availableOfflineCoverage == .none {
+					cloudStatusIcon = nil
+				} else {
+					cloudStatusIcon = UIImage(named: "cloud-available-offline")
+				}
+			}
+		}
+
+		cloudStatusIconView.image = cloudStatusIcon
+		cloudStatusIconView.alpha = cloudStatusIconAlpha
+
+		cloudStatusIconView.invalidateIntrinsicContentSize()
+	}
+
 	func updateLabels(with item: OCItem?) {
 		self.titleLabel.text = titleLabelString(for: item)
 		self.detailLabel.text = detailLabelString(for: item)
+	}
+
+	// MARK: - Available offline tracking
+	@objc func updateAvailableOfflineStatus(_ notification: Notification) {
+		OnMainThread { [weak self] in
+			self?.updateCloudStatusIcon(with: self?.item)
+		}
 	}
 
 	// MARK: - Progress

@@ -216,6 +216,12 @@
 "Really reset log file?" = "Really reset log file?";
 "This action can't be undone." = "This action can't be undone.";
 
+/* Storage settings */
+"Delete unused local copies" = "Delete unused local copies";
+"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app.";
+"never" = "never";
+"after %@" = "after %@";
+
 /* Display settings */
 "Display settings" = "Display settings";
 "Show hidden files and folders" = "Show hidden files and folders";
@@ -402,6 +408,6 @@
 "unknown" = "unknown";
 "Offline files use" = "Offline files use";
 "Compacting of '%@' failed" = "Compacting of '%@' failed";
-"Delete Offline Copies" = "Delete Offline Copies";
+"Delete Local Copies" = "Delete Local Copies";
 "Manage" = "Manage";
 "Storage" = "Storage";

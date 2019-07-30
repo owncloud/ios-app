@@ -223,7 +223,11 @@
 		 {
 			FPLogCmdBegin(@"StartProviding", @"Downloading %@", item);
 
-			[self.core downloadItem:(OCItem *)item options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, OCFile *file) {
+			[self.core downloadItem:(OCItem *)item options:@{
+
+				OCCoreOptionAddFileClaim : [OCClaim claimForLifetimeOfCore:core explicitIdentifier:OCClaimExplicitIdentifierFileProvider]
+
+			} resultHandler:^(NSError *error, OCCore *core, OCItem *item, OCFile *file) {
 				OCLogDebug(@"Starting to provide file:\nPAU: %@\nFURL: %@\nID: %@\nErr: %@\nlocalRelativePath: %@", provideAtURL, file.url, item.itemIdentifier, error, item.localRelativePath);
 
 				if ([error isOCErrorWithCode:OCErrorCancelled])
@@ -330,6 +334,9 @@
 			}
 
 			FPLogCmd(@"Item %@ is downloading %d: %@", item, item.isDownloading, downloadProgress);
+
+			// Remove temporary FileProvider claim
+			[core removeClaimsWithExplicitIdentifier:OCClaimExplicitIdentifierFileProvider onItem:(OCItem *)item refreshItem:YES completionHandler:nil];
 		 }
 	}
 
@@ -1037,3 +1044,5 @@
 }
 
 @end
+
+OCClaimExplicitIdentifier OCClaimExplicitIdentifierFileProvider = @"fileProvider";

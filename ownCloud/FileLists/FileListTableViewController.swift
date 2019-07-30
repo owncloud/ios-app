@@ -236,17 +236,24 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 						if lastTappedItemLocalID != rowItem.localID {
 							lastTappedItemLocalID = rowItem.localID
 
-							if let progress = core.downloadItem(rowItem, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { [weak self, query] (error, core, item, _) in
-
+							if let progress = core.downloadItem(rowItem, options: [
+								.returnImmediatelyIfOfflineOrUnavailable : true,
+								.addTemporaryClaimForPurpose 		 : OCCoreClaimPurpose.view.rawValue
+							], resultHandler: { [weak self, query] (error, core, item, file) in
 								guard let self = self else { return }
 								OnMainThread { [weak core] in
 									if (error == nil) || (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
 										if let item = item, let core = core {
 											if item.localID == self.lastTappedItemLocalID {
-												let itemViewController = DisplayHostViewController(core: core, selectedItem: item, query: query)
-												itemViewController.hidesBottomBarWhenPushed = true
-												itemViewController.progressSummarizer = self.progressSummarizer
-												self.navigationController?.pushViewController(itemViewController, animated: true)
+												let displayViewController = DisplayHostViewController(core: core, selectedItem: item, query: query)
+												displayViewController.hidesBottomBarWhenPushed = true
+												displayViewController.progressSummarizer = self.progressSummarizer
+
+												if let claim = file?.claim {
+													self.core?.remove(claim, on: item, afterDeallocationOf: [ displayViewController ])
+												}
+
+												self.navigationController?.pushViewController(displayViewController, animated: true)
 											}
 										}
 									}

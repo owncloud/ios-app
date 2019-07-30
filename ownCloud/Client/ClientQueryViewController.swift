@@ -47,7 +47,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	var openMultipleBarButtonItem: UIBarButtonItem?
 
 	var selectBarButton: UIBarButtonItem?
-	var plusBarButton: UIBarButtonItem?
+	var folderActionBarButton: UIBarButtonItem?
 	var selectDeselectAllButtonItem: UIBarButtonItem?
 	var exitMultipleSelectionBarButtonItem: UIBarButtonItem?
 
@@ -134,12 +134,12 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		self.tableView.dragInteractionEnabled = true
 		self.tableView.allowsMultipleSelectionDuringEditing = true
 
-		plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusBarButtonPressed))
-		plusBarButton?.accessibilityIdentifier = "client.file-add"
+		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(plusBarButtonPressed))
+		folderActionBarButton?.accessibilityIdentifier = "client.folder-action"
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
 		selectBarButton?.isEnabled = false
     		selectBarButton?.accessibilityIdentifier = "select-button"
-		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
+		self.navigationItem.rightBarButtonItems = [selectBarButton!, folderActionBarButton!]
 
 		selectDeselectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
 		exitMultipleSelectionBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(exitMultipleSelection))
@@ -413,7 +413,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	func leaveMultipleSelection() {
 		self.tableView.setEditing(false, animated: true)
 		selectBarButton?.title = "Select".localized
-		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
+		self.navigationItem.rightBarButtonItems = [selectBarButton!, folderActionBarButton!]
 		self.navigationItem.leftBarButtonItem = nil
 		selectedItemIds.removeAll()
 		removeToolbar()
@@ -490,9 +490,9 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-		// Actions for plusButton
+		// Actions for folderAction
 		if let core = self.core, let rootItem = query.rootItem {
-			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .plusButton)
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .folderAction)
 			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
 
 			let actions = Action.sortedApplicableActions(for: actionContext)

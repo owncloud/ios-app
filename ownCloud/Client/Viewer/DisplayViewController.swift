@@ -277,7 +277,10 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			return
 		}
 
-		if let downloadProgress = core.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { [weak self] (error, _, latestItem, file) in
+		if let downloadProgress = core.downloadItem(item, options: [
+			.returnImmediatelyIfOfflineOrUnavailable : true,
+			.addTemporaryClaimForPurpose 		 : OCCoreClaimPurpose.view.rawValue
+		], resultHandler: { [weak self] (error, _, latestItem, file) in
 			guard error == nil else {
 				OnMainThread {
 					if (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
@@ -290,6 +293,10 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			}
 			self?.item = latestItem
 			self?.source = file?.url
+
+			if let claim = file?.claim, let item = latestItem, let self = self {
+				self.core?.remove(claim, on: item, afterDeallocationOf: [self])
+			}
 		}) {
 			self.state = .downloading(progress: downloadProgress)
 

@@ -23,7 +23,7 @@ class MakeUnavailableOfflineAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.makeUnavailableOffline") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Make unavailable offline".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .plusButton] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .folderAction] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext context: ActionContext) -> ActionPosition {
@@ -68,7 +68,7 @@ class MakeUnavailableOfflineAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .plusButton {
+		if location == .moreItem || location == .folderAction {
 			return UIImage(named: "unavailable-offline")
 		}
 

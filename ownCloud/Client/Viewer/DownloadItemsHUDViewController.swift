@@ -145,12 +145,21 @@ class DownloadItemsHUDViewController: CardViewController {
 				for item in items {
 					downloadGroup.enter()
 
-					if let progress = core.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, _, _, file) in
+					if let progress = core.downloadItem(item, options: [
+						.returnImmediatelyIfOfflineOrUnavailable : true,
+						.addTemporaryClaimForPurpose 		 : OCCoreClaimPurpose.view.rawValue
+					], resultHandler: { (error, _, _, file) in
 						if error != nil {
 							Log.error("DownloadItemsHUDViewController: error \(String(describing: error)) downloading \(String(describing: item.path))")
 							self.downloadError = error
 						} else {
-							self.downloadedFiles.append(file!)
+							if let file = file {
+								self.downloadedFiles.append(file)
+
+								if let claim = file.claim {
+									self.core?.remove(claim, on: item, afterDeallocationOf: [self])
+								}
+							}
 						}
 						downloadGroup.leave()
 					}) {

@@ -40,9 +40,9 @@ class BookmarkInfoViewController: StaticTableViewController {
 		super.init(style: .grouped)
 		self.bookmark = bookmark
 
-		offlineStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: "Offline files use".localized, value: "uknown".localized)
+		offlineStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: "Offline files use".localized, value: "unknown".localized)
 		let deviceFreeTitle = String(format: "Free on %@".localized, UIDevice.current.name)
-		deviceAvailableStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: deviceFreeTitle, value: "uknown".localized)
+		deviceAvailableStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: deviceFreeTitle, value: "unknown".localized)
 
 		deleteLocalFilesRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
 			if let bookmark  = self?.bookmark {
@@ -70,7 +70,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 					})
 				}, for: bookmark)
 			}
-			}, title: "Delete Offline Copies".localized, style: .destructive, identifier: "row-offline-copies-delete")
+		}, title: "Delete Local Copies".localized, style: .destructive, identifier: "row-offline-copies-delete")
 
 		storageSection = StaticTableViewSection(headerTitle: "Storage".localized, footerTitle: nil, identifier: "section-credentials", rows: [ offlineStorageInfoRow!, deviceAvailableStorageInfoRow!, deleteLocalFilesRow! ])
 

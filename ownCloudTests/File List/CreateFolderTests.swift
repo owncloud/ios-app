@@ -28,7 +28,7 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.folder-action")).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
 
 			//Asserts
@@ -59,7 +59,7 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.folder-action")).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
@@ -107,7 +107,7 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.folder-action")).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
@@ -146,7 +146,7 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.folder-action")).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
@@ -185,7 +185,7 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.folder-action")).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
@@ -231,7 +231,7 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark, issue: issue)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.folder-action")).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
 
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
