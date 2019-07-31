@@ -41,7 +41,6 @@ class EditBookmarkTests: XCTestCase {
 
 			//Assert
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-auth-data-delete")).assert(grey_sufficientlyVisible())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible())
 
@@ -69,8 +68,7 @@ class EditBookmarkTests: XCTestCase {
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible())
-			EarlGrey.select(elementWithMatcher: grey_text("Authenticated via OAuth2".localized)).assert(grey_sufficientlyVisible())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-auth-data-delete")).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_text("If you 'Continue', you will be prompted to allow the 'ownCloud' App to open OAuth2 login where you can enter your credentials.".localized)).assert(grey_sufficientlyVisible())
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
@@ -147,7 +145,7 @@ class EditBookmarkTests: XCTestCase {
 			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
 			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-name-name")).perform(grey_replaceText(expectedServerName))
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("account-save")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("continue-bar-button")).perform(grey_tap())
 
 			//Assert
 			EarlGrey.select(elementWithMatcher: grey_text(expectedServerName)).assert(grey_sufficientlyVisible())
@@ -199,11 +197,10 @@ class EditBookmarkTests: XCTestCase {
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
 			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-auth-data-delete")).perform(grey_tap())
 
 			//Assert
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_notVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible())
 
 			//Reset status
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
@@ -224,7 +221,6 @@ class EditBookmarkTests: XCTestCase {
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
 			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-auth-data-delete")).perform(grey_tap())
 
 			//Assert
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-username")).assert(grey_notVisible())
@@ -249,7 +245,6 @@ class EditBookmarkTests: XCTestCase {
 			//Actions
 			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityID("server-bookmark-cell"), grey_sufficientlyVisible()])).perform(grey_swipeFastInDirection(.left))
 			EarlGrey.select(elementWithMatcher: grey_text("Edit".localized)).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-credentials-auth-data-delete")).perform(grey_tap())
 
 			let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
 				var error: NSError?
