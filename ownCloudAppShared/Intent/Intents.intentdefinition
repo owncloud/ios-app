@@ -427,7 +427,7 @@
 			<key>INIntentKeyParameter</key>
 			<string>file</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>5</integer>
+			<integer>6</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
 				<key>path,accountUUID,file</key>
@@ -455,8 +455,23 @@
 					<integer>1</integer>
 					<key>INIntentParameterMetadata</key>
 					<dict>
+						<key>INIntentParameterMetadataCustomUTIs</key>
+						<array>
+							<dict>
+								<key>UTI</key>
+								<string>public.data</string>
+							</dict>
+							<dict>
+								<key>UTI</key>
+								<string>public.image</string>
+							</dict>
+							<dict>
+								<key>UTI</key>
+								<string>public.content</string>
+							</dict>
+						</array>
 						<key>INIntentParameterMetadataType</key>
-						<string>PlainText</string>
+						<string>Custom</string>
 					</dict>
 					<key>INIntentParameterName</key>
 					<string>file</string>
