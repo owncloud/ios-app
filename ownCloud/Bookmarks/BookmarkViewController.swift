@@ -251,8 +251,6 @@ class BookmarkViewController: StaticTableViewController {
 				self.usernameRow?.enabled = false
 
 				self.navigationItem.title = "Edit account".localized
-
-				saveBarButtonItem.accessibilityIdentifier = "account-save"
 				self.navigationItem.rightBarButtonItem = saveBarButtonItem
 		}
 
