@@ -201,7 +201,6 @@ class DisplayHostViewController: UIPageViewController {
 			if currentIndex > 0 {
 				return currentIndex - 1
 			}
-			break
 		}
 
 		return nil

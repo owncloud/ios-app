@@ -415,17 +415,21 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	func queryHasChangesAvailable(_ query: OCQuery) {
-		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { [weak self] (query, changeSet) in
+		query.requestChangeSet(withFlags: .onlyResults) { [weak self] (query, changeSet) in
 			OnMainThread {
+				Log.log("Presenting item (DisplayViewController.queryHasChangesAvailable): \(changeSet?.queryResult.description ?? "nil") - state: \(String(describing: query.state.rawValue))")
+
 				switch query.state {
 					case .idle, .contentsFromCache, .waitingForServerReply:
-						Log.log("Presenting item (DisplayViewController.queryHasChangesAvailable): \(changeSet?.queryResult.description ?? "nil")")
-
 						if let firstItem = changeSet?.queryResult.first {
 							if (firstItem.syncActivity != .updating) && ((firstItem.itemVersionIdentifier != self?.item?.itemVersionIdentifier) || (firstItem.name != self?.item?.name)) {
 								self?.present(item: firstItem)
+							} else {
+								self?.item = firstItem
 							}
 						}
+
+						self?.updateNavigationBarItems()
 
 					case .targetRemoved:
 						self?.updateNavigationBarItems()
@@ -449,7 +453,6 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 				Log.log("Presenting item (DisplayViewController.present): \(item.description)")
 
-				self.stopQuery()
 				self.startQuery()
 
 				if source == nil {
