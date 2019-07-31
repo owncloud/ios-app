@@ -49,6 +49,7 @@
 		394A0B0A22EEFCF500603813 /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
 		395E16FA22F03CAF00DE89A1 /* GetFileIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395E16F922F03CAF00DE89A1 /* GetFileIntentHandler.swift */; };
 		395E16FD22F06A7300DE89A1 /* SaveFileIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395E16FC22F06A7300DE89A1 /* SaveFileIntentHandler.swift */; };
+		395E16FF22F172C900DE89A1 /* CreateFolderIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395E16FE22F172C900DE89A1 /* CreateFolderIntentHandler.swift */; };
 		39607CBC2225D480007B386D /* UITableViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39607CBB2225D480007B386D /* UITableViewController+Extension.swift */; };
 		396BE4C32288A84C00B254A9 /* PendingSharesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396BE4C22288A84C00B254A9 /* PendingSharesTableViewController.swift */; };
 		396BE4CA2289500E00B254A9 /* RoundedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396BE4C92289500E00B254A9 /* RoundedLabel.swift */; };
@@ -655,6 +656,7 @@
 		394A0AFC22EEFC2C00603813 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		395E16F922F03CAF00DE89A1 /* GetFileIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFileIntentHandler.swift; sourceTree = "<group>"; };
 		395E16FC22F06A7300DE89A1 /* SaveFileIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveFileIntentHandler.swift; sourceTree = "<group>"; };
+		395E16FE22F172C900DE89A1 /* CreateFolderIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFolderIntentHandler.swift; sourceTree = "<group>"; };
 		39607CBB2225D480007B386D /* UITableViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewController+Extension.swift"; sourceTree = "<group>"; };
 		396BE4C22288A84C00B254A9 /* PendingSharesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingSharesTableViewController.swift; sourceTree = "<group>"; };
 		396BE4C92289500E00B254A9 /* RoundedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedLabel.swift; sourceTree = "<group>"; };
@@ -1051,8 +1053,8 @@
 				DCC6564720C9B7E400110A97 /* ownCloud File Provider */,
 				DCC6565820C9B7E400110A97 /* ownCloud File ProviderUI */,
 				39A7138122E79C6700089423 /* ownCloud Intents */,
-				59056CAB22414F3C00A18A22 /* ownCloudScreenshotsTests */,
 				394A0AFA22EEFC2C00603813 /* ownCloudAppShared */,
+				59056CAB22414F3C00A18A22 /* ownCloudScreenshotsTests */,
 				233BDE9D204FEFE500C06732 /* Products */,
 				DC85573220513CC700189B9A /* Frameworks */,
 				5EE06126BB49344475598790 /* Pods */,
@@ -1237,6 +1239,7 @@
 				39F689AA22F018C100E63429 /* GetDirectoryListingIntentHandler.swift */,
 				395E16F922F03CAF00DE89A1 /* GetFileIntentHandler.swift */,
 				395E16FC22F06A7300DE89A1 /* SaveFileIntentHandler.swift */,
+				395E16FE22F172C900DE89A1 /* CreateFolderIntentHandler.swift */,
 			);
 			path = Intent;
 			sourceTree = "<group>";
@@ -2701,6 +2704,7 @@
 				395E16FA22F03CAF00DE89A1 /* GetFileIntentHandler.swift in Sources */,
 				394A0B0622EEFCB000603813 /* Intents.intentdefinition in Sources */,
 				39F689AC22F0206900E63429 /* OCBookmark+Extension.swift in Sources */,
+				395E16FF22F172C900DE89A1 /* CreateFolderIntentHandler.swift in Sources */,
 				395E16FD22F06A7300DE89A1 /* SaveFileIntentHandler.swift in Sources */,
 				394A0B0522EEFCA300603813 /* GetAccountsIntentHandler.swift in Sources */,
 				39F689AB22F018C100E63429 /* GetDirectoryListingIntentHandler.swift in Sources */,

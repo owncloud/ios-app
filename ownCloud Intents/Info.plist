@@ -30,6 +30,7 @@
 			<array/>
 			<key>IntentsSupported</key>
 			<array>
+				<string>CreateFolderIntent</string>
 				<string>GetAccounts</string>
 				<string>GetAccountsIntent</string>
 				<string>GetDirectoryListingIntent</string>

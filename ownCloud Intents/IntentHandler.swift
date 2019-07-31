@@ -22,8 +22,6 @@ import ownCloudAppShared
 class IntentHandler: INExtension {
 
 	override func handler(for intent: INIntent) -> Any {
-		print(">>> internt \(intent)")
-
 		if intent is GetAccountsIntent {
 			return GetAccountsIntentHandler()
 		} else if intent is GetDirectoryListingIntent {
@@ -32,6 +30,8 @@ class IntentHandler: INExtension {
 			return GetFileIntentHandler()
 		} else if intent is SaveFileIntent {
 			return SaveFileIntentHandler()
+		} else if intent is CreateFolderIntent {
+			return CreateFolderIntentHandler()
 		}
 
 		fatalError("Unhandled intent type: \(intent)")
