@@ -49,6 +49,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	// MARK: - Configuration
 	var item: OCItem?
+	var itemIndex: Int?
+
 	private var coreConnectionStatusObservation : NSKeyValueObservation?
 	weak var core: OCCore? {
 		willSet {
@@ -434,7 +436,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	func present(item: OCItem) {
-		guard self.view != nil else {
+		guard self.view != nil, item.removed == false else {
 			return
 		}
 
@@ -450,21 +452,23 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				self.stopQuery()
 				self.startQuery()
 
-				if requiresLocalItemCopy {
-					if core?.localCopy(of: item) == nil {
-						self.downloadItem(sender: nil)
+				if source == nil {
+					if requiresLocalItemCopy {
+						if core?.localCopy(of: item) == nil {
+							self.downloadItem(sender: nil)
+						} else {
+							if let core = core, let file = item.file(with: core) {
+								self.source = file.url
+							}
+						}
 					} else {
-						if let core = core, let file = item.file(with: core) {
-							self.source = file.url
-						}
+						core?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (error, url, authHeaders) in
+							if error == nil {
+								self.httpAuthHeaders = authHeaders
+								self.source = url
+							}
+						})
 					}
-				} else {
-					core?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (error, url, authHeaders) in
-						if error == nil {
-							self.httpAuthHeaders = authHeaders
-							self.source = url
-						}
-					})
 				}
 
 				self.updateNavigationBarItems()
