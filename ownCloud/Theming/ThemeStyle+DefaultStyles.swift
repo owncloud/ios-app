@@ -38,3 +38,5 @@ extension ThemeStyle {
 		return (ThemeStyle(identifier: "com.owncloud.classic", localizedName: "ownCloud Classic".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .contrast))
 	}
 }
+
+

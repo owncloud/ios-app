@@ -43,6 +43,8 @@
 		3998F5D3224102FE00B66713 /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D2224102FE00B66713 /* UITableView+Extension.swift */; };
 		3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D422411EDF00B66713 /* BorderedLabel.swift */; };
 		3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */; };
+		39C31F9522F1A52A0023923D /* Themes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 39C31F9422F1A52A0023923D /* Themes.plist */; };
+		39C31F9722F1C52C0023923D /* ThemeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C31F9622F1C52C0023923D /* ThemeProvider.swift */; };
 		39E2FDED21FDEC7500F0117F /* ServerListTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */; };
 		39E2FE0021FF814A00F0117F /* ThemeRoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */; };
 		4C1561E8222321E0009C4EF3 /* PhotoSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1561E7222321E0009C4EF3 /* PhotoSelectionViewController.swift */; };
@@ -492,6 +494,8 @@
 		3998F5D2224102FE00B66713 /* UITableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		3998F5D422411EDF00B66713 /* BorderedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedLabel.swift; sourceTree = "<group>"; };
 		3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCCertificate+Extension.swift"; sourceTree = "<group>"; };
+		39C31F9422F1A52A0023923D /* Themes.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Themes.plist; path = Theming/Themes.plist; sourceTree = "<group>"; };
+		39C31F9622F1C52C0023923D /* ThemeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeProvider.swift; sourceTree = "<group>"; };
 		39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableHeaderView.swift; sourceTree = "<group>"; };
 		39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeRoundedButton.swift; sourceTree = "<group>"; };
 		4C1561E7222321E0009C4EF3 /* PhotoSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSelectionViewController.swift; sourceTree = "<group>"; };
@@ -914,6 +918,14 @@
 			path = Viewer;
 			sourceTree = "<group>";
 		};
+		39C31F8E22F1A4F50023923D /* Theming */ = {
+			isa = PBXGroup;
+			children = (
+				39C31F9422F1A52A0023923D /* Themes.plist */,
+			);
+			name = Theming;
+			sourceTree = "<group>";
+		};
 		5917244820D3DB1F00809B38 /* Security */ = {
 			isa = PBXGroup;
 			children = (
@@ -1067,6 +1079,7 @@
 				DC8549372183B4CD00782BA8 /* ThemeStyle+Extensions.swift */,
 				DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */,
 				DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */,
+				39C31F9622F1C52C0023923D /* ThemeProvider.swift */,
 				DC7DBA27207F6DFD00E7337D /* UI */,
 				DC7DBA26207F6DEE00E7337D /* Resources */,
 				DC7DBA21207F672700E7337D /* TVG */,
@@ -1166,6 +1179,7 @@
 		DC85573120513C7500189B9A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				39C31F8E22F1A4F50023923D /* Theming */,
 				6E93851C220322F30049D676 /* SplashImage.png */,
 				6EE97DC42204703C0062CCBC /* BackgroundImage.png */,
 				DCCE54092080175B00067D1D /* TVGs */,
@@ -1728,6 +1742,7 @@
 				DCE5E8AA2080D781005F60CE /* owncloud-logo.tvg in Resources */,
 				595E2CA821EE501400F0E95D /* PropfindResponseNewFolder.xml in Resources */,
 				DC9BFBB920A1AF2C007064B5 /* icon-locked.tvg in Resources */,
+				39C31F9522F1A52A0023923D /* Themes.plist in Resources */,
 				59B09E6521AD61DD007827B8 /* test_certificate.cer in Resources */,
 				DCE5E8B32080D781005F60CE /* text-vcard.tvg in Resources */,
 				595E2CA721EE4FC400F0E95D /* PropfindResponse.xml in Resources */,
@@ -1919,6 +1934,7 @@
 				593BAB46209AE1BC00023634 /* PasscodeViewController.swift in Sources */,
 				DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */,
 				DCB44D87218718BA00DAA4CC /* VendorServices.swift in Sources */,
+				39C31F9722F1C52C0023923D /* ThemeProvider.swift in Sources */,
 				DC63208521FCEBE9007EC0A8 /* ClientActivityCell.swift in Sources */,
 				DC62514A225CEB4300736874 /* UploadPhotosAction.swift in Sources */,
 				DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */,

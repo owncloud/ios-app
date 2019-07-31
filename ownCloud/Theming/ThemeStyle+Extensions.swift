@@ -104,6 +104,8 @@ extension ThemeStyle {
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension())
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension(isDefault: true))
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudClassic.themeStyleExtension())
+
+		ThemeProvider(plist: "Themes")
 	}
 }
 
