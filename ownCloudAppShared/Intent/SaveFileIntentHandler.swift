@@ -23,11 +23,9 @@ import ownCloudSDK
 public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 
 	var itemTracking : OCCoreItemTracking?
-	var progress : Progress?
 
 	public func handle(intent: SaveFileIntent, completion: @escaping (SaveFileIntentResponse) -> Void) {
 		if let path = intent.path, let uuid = intent.accountUUID, let file = intent.file, let fileURL = file.fileURL {
-
 			var accountBookmark : OCBookmark?
 			for bookmark in OCBookmarkManager.shared.bookmarks {
 				if bookmark.uuid.uuidString == uuid {
@@ -41,7 +39,7 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 					if error == nil, let core = core {
 						self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
 							if let targetItem = item {
-								self.progress = core.importFileNamed(file.filename,
+								if core.importFileNamed(file.filename,
 											 at: targetItem,
 											 from: fileURL,
 											 isSecurityScoped: true,
@@ -58,7 +56,9 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 													completion(SaveFileIntentResponse(code: .success, userActivity: nil))
 												}
 											}
-								)
+									) == nil {
+										completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+								}
 							}
 
 							if isInitial {
@@ -68,7 +68,11 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 
 					}
 				})
+			} else {
+				completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
 			}
+		} else {
+			completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
 		}
 	}
 
