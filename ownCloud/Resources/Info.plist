@@ -13,13 +13,18 @@
 			<array/>
 			<key>CFBundleTypeName</key>
 			<string>Import all file types</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.data</string>
 				<string>public.content</string>
+				<string>public.image</string>
 			</array>
 		</dict>
 	</array>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -33,7 +38,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(APP_SHORT_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>131</string>
+	<string>132</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>

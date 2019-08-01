@@ -150,6 +150,7 @@ class MoreViewHeader: UIView {
 
 			do {
 				let attr = try FileManager.default.attributesOfItem(atPath: url.path)
+
 				if let fileSize = attr[FileAttributeKey.size] as? UInt64 {
 					let byteCountFormatter = ByteCountFormatter()
 					byteCountFormatter.countStyle = .file

@@ -91,6 +91,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			searchController?.searchBar.applyThemeCollection(Theme.shared.activeCollection)
 			recipientSearchController = core?.recipientSearchController(for: item)
 			recipientSearchController?.delegate = self
+			recipientSearchController?.minimumSearchTermLength = core?.connection.capabilities?.sharingSearchMinLength?.uintValue ?? OCCapabilities.defaultSharingSearchMinLength.magnitude
 		}
 
 		messageView = MessageView(add: self.view)
@@ -347,14 +348,13 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	func updateSearchResults(for searchController: UISearchController) {
 		guard let text = searchController.searchBar.text else { return }
-		if text.count >= core?.connection.capabilities?.sharingSearchMinLength?.intValue ?? OCCapabilities.defaultSharingSearchMinLength {
+		recipientSearchController?.searchTerm = text
+		if text.count > 0 {
 			if let recipients = recipientSearchController?.recipients, recipients.count > 0,
-				recipientSearchController?.searchTerm == text,
 				searchResultsSection == nil {
 				self.searchControllerHasNewResults(recipientSearchController!, error: nil)
 			}
 
-			recipientSearchController?.searchTerm = text
 		} else if searchController.isActive {
 			resetTable(showShares: false)
 		}
