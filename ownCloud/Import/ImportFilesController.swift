@@ -141,7 +141,7 @@ extension ImportFilesController {
 		if core?.importFileNamed(name,
 					 at: targetDirectory,
 					 from: url,
-					 isSecurityScoped: false,
+					 isSecurityScoped: true,
 					 options: [OCCoreOption.importByCopying : true,
 						   OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue],
 					 placeholderCompletionHandler: { (error, item) in
