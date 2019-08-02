@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 class ImportFilesController: NSObject {
 
@@ -138,7 +139,7 @@ extension ImportFilesController {
 
 	func importFile(url : URL, to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?) {
 		let name = url.lastPathComponent
-		if core?.importFileNamed(name,
+		if core?.importItemNamed(name,
 					 at: targetDirectory,
 					 from: url,
 					 isSecurityScoped: true,
