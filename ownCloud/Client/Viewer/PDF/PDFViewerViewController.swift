@@ -133,6 +133,10 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 			pdfView.usePageViewController(true, withViewOptions: nil)
 			containerView.addArrangedSubview(pdfView)
 
+			let tapToZoomGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.doubleTapToZoom))
+			tapToZoomGestureRecognizer.numberOfTapsRequired = 2
+			pdfView.addGestureRecognizer(tapToZoomGestureRecognizer)
+
 			let pageCountContainerView = UIView()
 			pageCountContainerView.backgroundColor = UIColor.gray
 			pageCountContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -197,6 +201,35 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	@objc func handlePageChanged() {
 		updatePageLabel()
+	}
+
+	@objc func doubleTapToZoom(recognizer: UITapGestureRecognizer) {
+		guard let currentPage = pdfView.currentPage else { return }
+		if pdfView.scaleFactor <= pdfView.scaleFactorForSizeToFit {
+			let newScaleFactor = self.pdfView.maxScaleFactor
+
+			var tapPoint = recognizer.location(in: self.pdfView)
+			tapPoint = self.pdfView.convert(tapPoint, to: currentPage)
+
+			let pdfViewSize = self.pdfView.frame.size
+			let size = CGSize(width: pdfViewSize.width / newScaleFactor, height: pdfViewSize.height / newScaleFactor)
+			let origin = CGPoint(x: tapPoint.x - size.width / 2.0, y: tapPoint.y - size.height / 2.0)
+			let zoomRect = CGRect(origin: origin, size: size)
+
+
+			UIView.animate(withDuration: 0.25, animations: {
+				self.pdfView.scaleFactor = newScaleFactor
+			}) { (completed) in
+				if completed {
+					self.pdfView.go(to: zoomRect, on: currentPage)
+				}
+			}
+
+		} else {
+			UIView.animate(withDuration: 0.25) {
+				self.pdfView.scaleFactor = self.pdfView.scaleFactorForSizeToFit
+			}
+		}
 	}
 
 	// MARK: - Toolbar actions
