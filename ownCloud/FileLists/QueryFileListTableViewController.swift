@@ -251,6 +251,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
 		self.searchController?.searchBar.applyThemeCollection(collection)
+		tableView.sectionIndexColor = collection.tintColor
 	}
 
 	// MARK: - Events
@@ -329,5 +330,38 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		}
 
 		return cell!
+	}
+
+	// MARK: - Table view delegate
+
+	override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+		if sortMethod == .alphabeticallyAscendant || sortMethod == .alphabeticallyDescendant {
+			let indexTitles = Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
+			if #available(iOS 12.0, *) {
+				if Int(tableView.estimatedRowHeight) * self.items.count > Int(tableView.visibleSize.height), indexTitles.count > 1 {
+					return indexTitles
+				}
+			} else {
+				if indexTitles.count > 1 {
+					return indexTitles
+				}
+			}
+		}
+
+		return []
+	}
+
+	override open func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+		let firstItem = self.items.filter { (( $0.name?.uppercased().hasPrefix(title) ?? nil)! ) }.first
+
+		if let firstItem = firstItem {
+			if let itemIndex = self.items.index(of: firstItem) {
+				OnMainThread {
+					tableView.scrollToRow(at: IndexPath(row: itemIndex, section: 0), at: UITableView.ScrollPosition.top, animated: false)
+				}
+			}
+		}
+
+		return 0
 	}
 }
