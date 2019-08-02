@@ -126,7 +126,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		if shownFirstTime {
 			shownFirstTime = false
-			
+
 			if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
 				connect(to: bookmark)
 				showBetaWarning = false
@@ -241,9 +241,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		showBookmarkUI()
 	}
 
-	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false) {
-		let viewController : BookmarkViewController = BookmarkViewController(bookmark)
-		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
+	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, removeAuthDataFromCopy: Bool = true) {
+		let bookmarkViewController : BookmarkViewController = BookmarkViewController(bookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
+		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: bookmarkViewController)
 
 		// Prevent any in-progress connection from being shown
 		resetPreviousBookmarkSelection()
@@ -255,9 +255,20 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			_ = target.perform(action, with: self)
 		}
 
+		if attemptLoginOnSuccess {
+			bookmarkViewController.userActionCompletionHandler = { [weak self] (bookmark, success) in
+				if success, let bookmark = bookmark, let self = self {
+					self.connect(to: bookmark)
+				}
+			}
+		}
+
 		self.present(navigationController, animated: true, completion: {
-			if performContinue {
-				viewController.handleContinue()
+			OnMainThread {
+				if performContinue {
+					bookmarkViewController.showedOAuthInfoHeader = true // needed for HTTP+OAuth2 connections to really continue on .handleContinue() call
+					bookmarkViewController.handleContinue()
+				}
 			}
 		})
 	}
@@ -352,6 +363,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			activityIndicator.stopAnimating()
 			bookmarkRow?.accessoryView = bookmarkRowAccessoryView
 		})
+
+		clientRootViewController.authDelegate = self
 
 		clientRootViewController.afterCoreStart {
 			// Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
@@ -548,5 +561,19 @@ extension OCBookmarkManager {
 		set {
 			OCAppIdentity.shared.userDefaults?.set(newValue?.uuid.uuidString, forKey: OCBookmarkManager.lastConnectedBookmarkUUIDDefaultsKey)
 		}
+	}
+}
+
+extension ServerListTableViewController : ClientRootViewControllerAuthenticationDelegate {
+	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?) {
+		clientViewController.closeClient(completion: { [weak self] in
+			if let editBookmark = editBookmark {
+				// Bring up bookmark editing UI
+				self?.showBookmarkUI(edit: editBookmark,
+						     performContinue: (editBookmark.isTokenBased == true),
+						     attemptLoginOnSuccess: true,
+						     removeAuthDataFromCopy: true)
+			}
+		})
 	}
 }
