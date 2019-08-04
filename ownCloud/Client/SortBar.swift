@@ -18,7 +18,23 @@
 
 import UIKit
 
+class SegmentedControl: UISegmentedControl {
+
+	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		let currentIndex = selectedSegmentIndex
+		super.touchesBegan(touches, with: event)
+
+		if currentIndex == selectedSegmentIndex {
+			sendActions(for: UIControl.Event.valueChanged)
+		}
+	}
+}
+
 protocol SortBarDelegate: class {
+
+	var sortDirection: SortDirection { get set }
+	var sortMethod: SortMethod { get set }
+
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod)
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?)
@@ -26,7 +42,11 @@ protocol SortBarDelegate: class {
 
 class SortBar: UIView, Themeable {
 
-	weak var delegate: SortBarDelegate?
+	weak var delegate: SortBarDelegate? {
+		didSet {
+			updateSortDirectionImage()
+		}
+	}
 
 	// MARK: - Constants
 	let sideButtonsSize: CGSize = CGSize(width: 30.0, height: 30.0)
@@ -37,11 +57,19 @@ class SortBar: UIView, Themeable {
 
 	// MARK: - Instance variables.
 
-	var sortSegmentedControl: UISegmentedControl?
+	var sortSegmentedControl: SegmentedControl?
 	var sortButton: UIButton?
 
 	var sortMethod: SortMethod {
 		didSet {
+			if oldValue == sortMethod {
+				if delegate?.sortDirection == .ascendant {
+					delegate?.sortDirection = .descendant
+				} else {
+					delegate?.sortDirection = .ascendant
+				}
+				updateSortDirectionImage()
+			}
 
 			let title = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName()) as String
 			sortButton?.setTitle(title, for: .normal)
@@ -59,7 +87,7 @@ class SortBar: UIView, Themeable {
 	// MARK: - Init & Deinit
 
 	init(frame: CGRect, sortMethod: SortMethod) {
-		sortSegmentedControl = UISegmentedControl()
+		sortSegmentedControl = SegmentedControl()
 
 		sortButton = UIButton(type: .system)
 
@@ -98,7 +126,8 @@ class SortBar: UIView, Themeable {
 			sortButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
 			sortButton.titleLabel?.adjustsFontForContentSizeCategory = true
 			sortButton.semanticContentAttribute = (sortButton.effectiveUserInterfaceLayoutDirection == .leftToRight) ? .forceRightToLeft : .forceLeftToRight
-			sortButton.setImage(UIImage(named: "chevron-small-light"), for: .normal)
+
+			updateSortDirectionImage()
 
 			sortButton.setContentHuggingPriority(.required, for: .horizontal)
 
@@ -147,6 +176,16 @@ class SortBar: UIView, Themeable {
 		}
 	}
 
+	// MARK: - Sort Direction Image
+
+	func updateSortDirectionImage() {
+		if delegate?.sortDirection == .descendant {
+			sortButton?.setImage(UIImage(named: "chevron-small-light-up"), for: .normal)
+		} else {
+			sortButton?.setImage(UIImage(named: "chevron-small-light"), for: .normal)
+		}
+	}
+
 	// MARK: - Actions
 	@objc private func presentSortButtonOptions() {
 		let controller = UIAlertController(title: "Sort by".localized, message: nil, preferredStyle: .actionSheet)
@@ -155,6 +194,13 @@ class SortBar: UIView, Themeable {
 			let action = UIAlertAction(title: method.localizedName(), style: .default, handler: {(_) in
 				self.sortMethod = method
 			})
+			if delegate?.sortMethod == method, action.responds(to: NSSelectorFromString("setImage:")) {
+				if delegate?.sortDirection == .descendant {
+					action.setValue(UIImage(named: "chevron-small-light-up"), forKey: "image")
+				} else {
+					action.setValue(UIImage(named: "chevron-small-light"), forKey: "image")
+				}
+			}
 			controller.addAction(action)
 		}
 

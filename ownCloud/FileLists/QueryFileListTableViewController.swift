@@ -42,7 +42,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		query.delegate = self
 
 		if query.sortComparator == nil {
-			query.sortComparator = self.sortMethod.comparator()
+			query.sortComparator = self.sortMethod.comparator(direction: sortDirection)
 		}
 
 		core?.start(query)
@@ -72,13 +72,22 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	// MARK: - Sorting
 	var sortBar: SortBar?
 	var sortMethod: SortMethod {
-
 		set {
 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
 		}
 
 		get {
-			let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabeticallyDescendant
+			let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabetically
+			return sort
+		}
+	}
+	var sortDirection: SortDirection {
+		set {
+			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-direction")
+		}
+
+		get {
+			let sort = SortDirection(rawValue: UserDefaults.standard.integer(forKey: "sort-direction")) ?? SortDirection.ascendant
 			return sort
 		}
 	}
@@ -184,7 +193,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
-		query.sortComparator = sortMethod.comparator()
+		query.sortComparator = sortMethod.comparator(direction: sortDirection)
 	}
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {

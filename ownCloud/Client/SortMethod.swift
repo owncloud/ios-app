@@ -21,25 +21,35 @@ import ownCloudSDK
 
 typealias OCSort = Comparator
 
+public enum SortDirection: Int {
+	case ascendant = 0
+	case descendant = 1
+}
+
 public enum SortMethod: Int {
 
-	case alphabeticallyAscendant = 0
-	case alphabeticallyDescendant = 1
-	case type = 2
-	case size = 3
-	case date = 4
-	case shared = 5
+	//case alphabeticallyAscendant = 0
+	//case alphabeticallyDescendant = 1
+	case alphabetically = 0
+	case type = 1
+	case size = 2
+	case date = 3
+	case shared = 4
 
-	static var all: [SortMethod] = [alphabeticallyAscendant, alphabeticallyDescendant, type, size, date, shared]
+	//static var all: [SortMethod] = [alphabeticallyAscendant, alphabeticallyDescendant, type, size, date, shared]
+	static var all: [SortMethod] = [alphabetically, type, size, date, shared]
 
 	func localizedName() -> String {
 		var name = ""
 
 		switch self {
+			/*
 		case .alphabeticallyAscendant:
 			name = "name (A-Z)".localized
 		case .alphabeticallyDescendant:
-			name = "name (Z-A)".localized
+			name = "name (Z-A)".localized*/
+		case .alphabetically:
+			name = "name".localized
 		case .type:
 			name = "type".localized
 		case .size:
@@ -53,7 +63,7 @@ public enum SortMethod: Int {
 		return name
 	}
 
-	func comparator() -> OCSort {
+	func comparator(direction: SortDirection) -> OCSort {
 		var comparator: OCSort
 
 		switch self {
@@ -64,10 +74,13 @@ public enum SortMethod: Int {
 
 				let leftSize = leftItem!.size as NSNumber
 				let rightSize = rightItem!.size as NSNumber
+				if direction == .descendant {
+					return (leftSize.compare(rightSize))
+				}
 
 				return (rightSize.compare(leftSize))
 			}
-
+/*
 		case .alphabeticallyAscendant:
 			comparator = { (left, right) in
 				guard let leftName  = (left as? OCItem)?.name, let rightName = (right as? OCItem)?.name else {
@@ -85,7 +98,19 @@ public enum SortMethod: Int {
 
 				return (rightName.caseInsensitiveCompare(leftName))
 			}
+*/
 
+		case .alphabetically:
+			comparator = { (left, right) in
+				guard let leftName  = (left as? OCItem)?.name, let rightName = (right as? OCItem)?.name else {
+					return .orderedSame
+				}
+				if direction == .descendant {
+					return (rightName.caseInsensitiveCompare(leftName))
+				}
+
+				return (leftName.caseInsensitiveCompare(rightName))
+			}
 		case .type:
 			comparator = { (left, right) in
 				let leftItem = left as? OCItem
@@ -108,6 +133,9 @@ public enum SortMethod: Int {
 
 				if rightMimeType == nil {
 					rightMimeType = "various"
+				}
+				if direction == .descendant {
+					return rightMimeType!.compare(leftMimeType!)
 				}
 
 				return leftMimeType!.compare(rightMimeType!)
@@ -132,6 +160,9 @@ public enum SortMethod: Int {
 
 				guard let leftLastModified  = (left as? OCItem)?.lastModified, let rightLastModified = (right as? OCItem)?.lastModified else {
 					return .orderedSame
+				}
+				if direction == .descendant {
+					return (leftLastModified.compare(rightLastModified))
 				}
 
 				return (rightLastModified.compare(leftLastModified))
