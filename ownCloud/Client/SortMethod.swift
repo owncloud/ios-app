@@ -28,26 +28,18 @@ public enum SortDirection: Int {
 
 public enum SortMethod: Int {
 
-	//case alphabeticallyAscendant = 0
-	//case alphabeticallyDescendant = 1
 	case alphabetically = 0
 	case type = 1
 	case size = 2
 	case date = 3
 	case shared = 4
 
-	//static var all: [SortMethod] = [alphabeticallyAscendant, alphabeticallyDescendant, type, size, date, shared]
 	static var all: [SortMethod] = [alphabetically, type, size, date, shared]
 
 	func localizedName() -> String {
 		var name = ""
 
 		switch self {
-			/*
-		case .alphabeticallyAscendant:
-			name = "name (A-Z)".localized
-		case .alphabeticallyDescendant:
-			name = "name (Z-A)".localized*/
 		case .alphabetically:
 			name = "name".localized
 		case .type:
@@ -80,26 +72,6 @@ public enum SortMethod: Int {
 
 				return (rightSize.compare(leftSize))
 			}
-/*
-		case .alphabeticallyAscendant:
-			comparator = { (left, right) in
-				guard let leftName  = (left as? OCItem)?.name, let rightName = (right as? OCItem)?.name else {
-					return .orderedSame
-				}
-
-				return (leftName.caseInsensitiveCompare(rightName))
-			}
-
-		case .alphabeticallyDescendant:
-			comparator = { (left, right) in
-				guard let leftName  = (left as? OCItem)?.name, let rightName = (right as? OCItem)?.name else {
-					return .orderedSame
-				}
-
-				return (rightName.caseInsensitiveCompare(leftName))
-			}
-*/
-
 		case .alphabetically:
 			comparator = { (left, right) in
 				guard let leftName  = (left as? OCItem)?.name, let rightName = (right as? OCItem)?.name else {
