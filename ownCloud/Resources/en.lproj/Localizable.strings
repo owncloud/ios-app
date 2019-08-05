@@ -417,6 +417,20 @@
 "Manage" = "Manage";
 "Storage" = "Storage";
 
+/* Available offline */
+"Root folder" = "Root folder";
+"at" = "at";
+"(no match)" = "(no match)";
+
+"Make available offline" = "Make available offline";
+"Make unavailable offline" = "Make unavailable offline";
+
+"Available Offline" = "Available Offline";
+"No items have been selected for offline availability." = "No items have been selected for offline availability.";
+
+"Overview" = "Overview";
+"All Files" = "All Files";
+
 /* Import File */
 "Save File" = "Save File";
 "Choose an account and folder to import the file into." = "Choose an account and folder to import the file into.";

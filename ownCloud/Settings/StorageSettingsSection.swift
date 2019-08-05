@@ -105,26 +105,18 @@ class StorageSettingsSection: SettingsSection {
 
 		localCopyExpirationViewController.navigationItem.title = "Storage".localized
 
-		if let availableStyles = ThemeStyle.availableStyles {
-			var themeIdentifiersByName : [[String:Any]] = []
-
-			for style in availableStyles {
-				themeIdentifiersByName.append([style.localizedName : style.identifier ])
-			}
-
-			localCopyExpirationSelectionSection.add(radioGroupWithArrayOfLabelValueDictionaries: timeIntervalsByID, radioAction: { [weak self] (row, _) in
-				if let timeInterval = row.value as? Int {
-					if timeInterval == -1 {
-						self?.localCopyExpirationEnabled = false
-					} else {
-						self?.localCopyExpirationEnabled = true
-						self?.localCopyExpiration = timeInterval
-					}
-
-					self?.localCopyExpirationRow?.cell?.detailTextLabel?.text = self?.localCopyExpirationSummary
+		localCopyExpirationSelectionSection.add(radioGroupWithArrayOfLabelValueDictionaries: timeIntervalsByID, radioAction: { [weak self] (row, _) in
+			if let timeInterval = row.value as? Int {
+				if timeInterval == -1 {
+					self?.localCopyExpirationEnabled = false
+				} else {
+					self?.localCopyExpirationEnabled = true
+					self?.localCopyExpiration = timeInterval
 				}
-			}, groupIdentifier: "local-copy-expiration-duration", selectedValue: self.localCopyExpirationEnabled ? self.localCopyExpiration : -1)
-		}
+
+				self?.localCopyExpirationRow?.cell?.detailTextLabel?.text = self?.localCopyExpirationSummary
+			}
+		}, groupIdentifier: "local-copy-expiration-duration", selectedValue: self.localCopyExpirationEnabled ? self.localCopyExpiration : -1)
 
 		localCopyExpirationViewController.addSection(localCopyExpirationSelectionSection)
 
