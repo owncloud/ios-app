@@ -101,11 +101,18 @@ extension ThemeStyle {
 	}
 
 	static func registerDefaultStyles() {
+		/*
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension())
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension(isDefault: true))
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudClassic.themeStyleExtension())
+*/
 
-		ThemeProvider(plist: "Themes")
+		let themeProvider = ThemeProvider(plist: "Themes")
+
+			for theme in themeProvider.themes {
+				let themeExtension = theme.themeStyleExtension(isDefault: true)
+				OCExtensionManager.shared.addExtension(themeExtension)
+			}
 	}
 }
 

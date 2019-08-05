@@ -27,8 +27,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	@IBOutlet var welcomeMessageLabel : UILabel!
 	@IBOutlet var welcomeAddServerButton : ThemeButton!
 	@IBOutlet var welcomeLogoImageView : UIImageView!
-	@IBOutlet var welcomeLogoTVGView : VectorImageView!
-	// @IBOutlet var welcomeLogoSVGView : SVGImageView!
 
 	var lockedBookmarks : [OCBookmark] = []
 
@@ -80,9 +78,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.navigationItem.rightBarButtonItem = addServerBarButtonItem
 
 		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
-
-		Theme.shared.add(tvgResourceFor: "owncloud-logo")
-		welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
 
 		self.navigationItem.title = OCAppIdentity.shared.appName
 	}
