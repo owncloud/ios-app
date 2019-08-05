@@ -122,10 +122,21 @@ public enum SortMethod: Int {
 
 				if leftShared == rightShared {
 					return .orderedSame
-				} else if leftShared {
-					return .orderedAscending
 				}
-				return .orderedDescending
+
+				if direction == .descendant {
+					 if rightShared {
+						return .orderedAscending
+					}
+
+					return .orderedDescending
+				} else {
+					if leftShared {
+						return .orderedAscending
+					}
+
+					return .orderedDescending
+				}
 			}
 		case .date:
 			comparator = { (left, right) in
