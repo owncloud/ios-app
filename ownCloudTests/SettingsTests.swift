@@ -41,7 +41,7 @@ class SettingsTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("show-hidden-files-switch")).assert(grey_sufficientlyVisible())
 		
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text(OCAppIdentity.shared.appName!)).perform(grey_tap())
 	}
 	
 	/*
@@ -54,7 +54,7 @@ class SettingsTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("convert_to_mp4")).assert(grey_sufficientlyVisible())
 		
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text(OCAppIdentity.shared.appName!)).perform(grey_tap())
 	}
 
 
@@ -131,7 +131,7 @@ class SettingsTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_text("Warning".localized)).assert(grey_sufficientlyVisible())
 
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
+		EarlGrey.select(elementWithMatcher: grey_text(OCAppIdentity.shared.appName!)).perform(grey_tap())
 	}
 
 	/*
