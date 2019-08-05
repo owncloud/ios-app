@@ -180,9 +180,9 @@ class SortBar: UIView, Themeable {
 
 	func updateSortDirectionImage() {
 		if delegate?.sortDirection == .descendant {
-			sortButton?.setImage(UIImage(named: "chevron-small-light-up"), for: .normal)
-		} else {
 			sortButton?.setImage(UIImage(named: "chevron-small-light"), for: .normal)
+		} else {
+			sortButton?.setImage(UIImage(named: "chevron-small-light-up"), for: .normal)
 		}
 	}
 
@@ -196,9 +196,9 @@ class SortBar: UIView, Themeable {
 			})
 			if delegate?.sortMethod == method, action.responds(to: NSSelectorFromString("setImage:")) {
 				if delegate?.sortDirection == .descendant {
-					action.setValue(UIImage(named: "chevron-small-light-up"), forKey: "image")
-				} else {
 					action.setValue(UIImage(named: "chevron-small-light"), forKey: "image")
+				} else {
+					action.setValue(UIImage(named: "chevron-small-light-up"), forKey: "image")
 				}
 			}
 			controller.addAction(action)
