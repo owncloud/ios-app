@@ -83,11 +83,11 @@ extension ImportFilesController {
 		return true
 	}
 
-	func accountOrImportUI() -> Bool {
+	func accountUI() -> Bool {
 		if localCopyForImportFile() {
 			let bookmarks : [OCBookmark] = OCBookmarkManager.shared.bookmarks as [OCBookmark]
 
-			if bookmarks.count > 1 {
+			if bookmarks.count > 0 {
 				let moreViewController = self.cardViewController(for: url)
 				if let delegateWindow = UIApplication.shared.delegate?.window, let window = delegateWindow {
 					let viewController = window.rootViewController
@@ -103,10 +103,6 @@ extension ImportFilesController {
 
 					return true
 				}
-			} else if bookmarks.count == 1, let bookmark = bookmarks.first {
-				self.importItemWithDirectoryPicker(with: url, into: bookmark)
-
-				return true
 			}
 		}
 
@@ -145,7 +141,7 @@ extension ImportFilesController {
 		if core?.importFileNamed(name,
 					 at: targetDirectory,
 					 from: url,
-					 isSecurityScoped: false,
+					 isSecurityScoped: true,
 					 options: [OCCoreOption.importByCopying : true,
 						   OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue],
 					 placeholderCompletionHandler: { (error, item) in
@@ -182,7 +178,7 @@ extension ImportFilesController {
 		var actionsRows: [StaticTableViewRow] = []
 		let bookmarks : [OCBookmark] = OCBookmarkManager.shared.bookmarks as [OCBookmark]
 
-		let rowDescription = StaticTableViewRow(label: "Choose an account and folder to import the file into.".localized, alignment: .center)
+		let rowDescription = StaticTableViewRow(label: "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once.".localized, alignment: .center)
 		actionsRows.append(rowDescription)
 
 		for (bookmark) in bookmarks {

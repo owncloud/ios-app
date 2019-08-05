@@ -95,7 +95,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			copyBeforeUsing = !shouldOpenInPlace
 		}
 
-		return ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountOrImportUI()
+		return ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountUI()
 	}
 
 	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
