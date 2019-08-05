@@ -77,3 +77,13 @@ class Log {
 		return OCLogger.applyPrivacyMask(obj) ?? "(null)"
 	}
 }
+
+extension OCLogger : OCLogIntroFormat {
+	public func logIntroFormat() -> String {
+		return "{{stdIntro}}; Log options: \(Log.logOptionStatus)"
+	}
+
+	public func logHostCommit() -> String? {
+		return LastGitCommit()
+	}
+}

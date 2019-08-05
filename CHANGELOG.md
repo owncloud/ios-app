@@ -1,5 +1,11 @@
 # ChangeLog
 
+## Release version 1.0.4 (August 2019)
+
+- Authentication improvements (PR #459)
+- Fixed background crash (PR #462)
+- Log file improvements (#444)
+
 ## Release version 1.0.3 (July 2019)
 
 - Add support for local user names with @ inside in sharing (PR #453)
