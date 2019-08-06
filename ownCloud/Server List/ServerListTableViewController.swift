@@ -78,6 +78,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.tableView.rowHeight = UITableView.automaticDimension
 		self.tableView.estimatedRowHeight = 80
 		self.tableView.allowsSelectionDuringEditing = true
+		self.tableView.dragDelegate = self
 
 		let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
 		addServerBarButtonItem.accessibilityLabel = "Add account".localized
@@ -549,4 +550,37 @@ extension OCBookmarkManager {
 			OCAppIdentity.shared.userDefaults?.set(newValue?.uuid.uuidString, forKey: OCBookmarkManager.lastConnectedBookmarkUUIDDefaultsKey)
 		}
 	}
+}
+
+let ownCloudOpenAccountActivityType       = "com.owncloud.ios-app.openAccount"
+let ownCloudOpenAccountPath               = "openAccount"
+let ownCloudOpenAccountAccountUuidKey         = "accountUuid"
+
+extension OCBookmark {
+	var openAccountUserActivity: NSUserActivity {
+		let userActivity = NSUserActivity(activityType: ownCloudOpenAccountActivityType)
+		userActivity.title = ownCloudOpenAccountPath
+		userActivity.userInfo = [ownCloudOpenAccountAccountUuidKey: uuid]
+		return userActivity
+	}
+
+}
+
+extension ServerListTableViewController: UITableViewDragDelegate {
+
+	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+			let userActivity = bookmark.openAccountUserActivity
+			let itemProvider = NSItemProvider(item: bookmark, typeIdentifier: "com.owncloud.ios-app.ocbookmark")
+			itemProvider.registerObject(userActivity, visibility: .all)
+
+			let dragItem = UIDragItem(itemProvider: itemProvider)
+			dragItem.localObject = bookmark
+
+			return [dragItem]
+		}
+
+		return []
+	}
+
 }
