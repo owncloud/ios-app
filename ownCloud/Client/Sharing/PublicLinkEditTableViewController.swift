@@ -359,7 +359,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 	func addExpireDateSection() {
 		var hasExpireDate = false
-		if share.expirationDate != nil || core.connection.capabilities?.publicSharingExpireDateEnforced == true {
+		if share.expirationDate != nil || core.connection.capabilities?.publicSharingExpireDateEnforced == true || self.core.connection.capabilities?.publicSharingDefaultExpireDateDays != nil {
 			hasExpireDate = true
 		}
 		var needsExpireDate = false
