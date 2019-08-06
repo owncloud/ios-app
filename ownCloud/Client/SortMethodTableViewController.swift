@@ -21,7 +21,7 @@ import UIKit
 class SortMethodTableViewController: StaticTableViewController {
 
 	// MARK: - Constants
-	private let maxContentWidth : CGFloat = 500
+	private let maxContentWidth : CGFloat = 150
 	private let rowHeight : CGFloat = 44
 	private let imageWidth : CGFloat = 30
 	private let imageHeight : CGFloat = 30
