@@ -80,7 +80,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
 
-		self.iconView.image = theme.image(for: "owncloud-logo", size: CGSize(width: 40, height: 40))
+		self.iconView.image = theme.image(for: "owncloud-logo", size: CGSize(width: 40, height: 40))?.tinted(with: Theme.shared.activeCollection.tableRowColors.symbolColor)
 	}
 
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
