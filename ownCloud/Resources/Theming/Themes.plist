@@ -5,9 +5,9 @@
 	<key>Generic</key>
 	<dict>
 		<key>darkBrandColor</key>
-		<string>057C2D</string>
+		<string>7353CA</string>
 		<key>lightBrandColor</key>
-		<string>84BD96</string>
+		<string>FFFFFF</string>
 		<key>tintColor</key>
 		<string>468cc8</string>
 		<key>Label</key>
