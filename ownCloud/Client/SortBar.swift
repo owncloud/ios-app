@@ -125,7 +125,7 @@ class SortBar: UIView, Themeable {
 
 			NSLayoutConstraint.activate([
 				selectButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-				selectButton.rightAnchor.constraint(lessThanOrEqualTo: self.rightAnchor, constant: -rightPadding),
+				selectButton.rightAnchor.constraint(lessThanOrEqualTo: self.safeAreaLayoutGuide.rightAnchor, constant: -rightPadding),
 				selectButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
 				selectButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
 				])
