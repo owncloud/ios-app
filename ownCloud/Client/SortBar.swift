@@ -74,8 +74,12 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 			sortButton?.accessibilityLabel = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName()) as String
 			sortButton?.sizeToFit()
 
+			if let oldSementIndex = SortMethod.all.index(of: oldValue) {
+				sortSegmentedControl?.setTitle(oldValue.localizedName(), forSegmentAt: oldSementIndex)
+			}
 			if let segmentIndex = SortMethod.all.index(of: sortMethod) {
 				sortSegmentedControl?.selectedSegmentIndex = segmentIndex
+				sortSegmentedControl?.setTitle(sortDirectionTitle(sortMethod.localizedName()), forSegmentAt: segmentIndex)
 			}
 
 			delegate?.sortBar(self, didUpdateSortMethod: sortMethod)
@@ -174,17 +178,19 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 		}
 	}
 
-	// MARK: - Sort Direction Image
+	// MARK: - Sort Direction Title
 
 	func updateSortButtonTitle() {
-		var title = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName()) as String
+		let title = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName()) as String
+		sortButton?.setTitle(sortDirectionTitle(title), for: .normal)
+	}
 
+	func sortDirectionTitle(_ title: String) -> String {
 		if delegate?.sortDirection == .descendant {
-			title = String(format: "%@ ↓", title)
+			return String(format: "%@ ↓", title)
 		} else {
-			title = String(format: "%@ ↑", title)
+			return String(format: "%@ ↑", title)
 		}
-		sortButton?.setTitle(title, for: .normal)
 	}
 
 	// MARK: - Actions
