@@ -191,6 +191,10 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		self.present(presentViewController, animated: animated, completion: completionHandler)
 	}
 
+	func toggleSelectMode() {
+		tableView.setEditing(!tableView.isEditing, animated: true)
+	}
+
 	// MARK: - Query Delegate
 	func query(_ query: OCQuery, failedWithError error: Error) {
 		// Not applicable atm

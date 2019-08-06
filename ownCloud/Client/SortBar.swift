@@ -22,6 +22,8 @@ protocol SortBarDelegate: class {
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod)
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?)
+
+	func toggleSelectMode()
 }
 
 class SortBar: UIView, Themeable {
@@ -29,7 +31,7 @@ class SortBar: UIView, Themeable {
 	weak var delegate: SortBarDelegate?
 
 	// MARK: - Constants
-	let sideButtonsSize: CGSize = CGSize(width: 30.0, height: 30.0)
+	let sideButtonsSize: CGSize = CGSize(width: 22.0, height: 22.0)
 	let leftPadding: CGFloat = 20.0
 	let rightPadding: CGFloat = 20.0
 	let topPadding: CGFloat = 10.0
@@ -39,6 +41,7 @@ class SortBar: UIView, Themeable {
 
 	var sortSegmentedControl: UISegmentedControl?
 	var sortButton: UIButton?
+	var selectButton: UIButton?
 
 	var sortMethod: SortMethod {
 		didSet {
@@ -61,21 +64,25 @@ class SortBar: UIView, Themeable {
 	init(frame: CGRect, sortMethod: SortMethod) {
 		sortSegmentedControl = UISegmentedControl()
 
+		selectButton = UIButton()
+
 		sortButton = UIButton(type: .system)
 
 		self.sortMethod = sortMethod
 
 		super.init(frame: frame)
 
-		if let sortButton = sortButton, let sortSegmentedControl = sortSegmentedControl {
+		if let sortButton = sortButton, let sortSegmentedControl = sortSegmentedControl, let selectButton = selectButton {
 			sortButton.translatesAutoresizingMaskIntoConstraints = false
 			sortSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
+			selectButton.translatesAutoresizingMaskIntoConstraints = false
 
 			sortButton.accessibilityIdentifier = "sort-bar.sortButton"
 			sortSegmentedControl.accessibilityIdentifier = "sort-bar.segmentedControl"
 
 			self.addSubview(sortSegmentedControl)
 			self.addSubview(sortButton)
+			self.addSubview(selectButton)
 
 			// Sort segmented control
 			NSLayoutConstraint.activate([
@@ -111,6 +118,17 @@ class SortBar: UIView, Themeable {
 
 			sortButton.isHidden = true
 			sortButton.addTarget(self, action: #selector(presentSortButtonOptions), for: .touchUpInside)
+
+			selectButton.setImage(UIImage(named: "select"), for: .normal)
+			selectButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
+			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .touchUpInside)
+
+			NSLayoutConstraint.activate([
+				selectButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+				selectButton.rightAnchor.constraint(lessThanOrEqualTo: self.rightAnchor, constant: -rightPadding),
+				selectButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
+				selectButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
+				])
 		}
 
 		// Finalize view setup
@@ -130,6 +148,7 @@ class SortBar: UIView, Themeable {
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.sortButton?.applyThemeCollection(collection)
+		self.selectButton?.applyThemeCollection(collection)
 		self.sortSegmentedControl?.applyThemeCollection(collection)
 		self.backgroundColor = collection.navigationBarColors.backgroundColor
 	}
@@ -168,5 +187,9 @@ class SortBar: UIView, Themeable {
 			self.sortMethod = SortMethod.all[selectedIndex]
 			delegate?.sortBar(self, didUpdateSortMethod: self.sortMethod)
 		}
+	}
+
+	@objc private func toggleSelectMode() {
+		delegate?.toggleSelectMode()
 	}
 }

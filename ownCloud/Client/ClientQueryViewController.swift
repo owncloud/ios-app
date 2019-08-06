@@ -46,8 +46,8 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	var copyMultipleBarButtonItem: UIBarButtonItem?
 	var openMultipleBarButtonItem: UIBarButtonItem?
 
-	var selectBarButton: UIBarButtonItem?
 	var folderActionBarButton: UIBarButtonItem?
+	var plusBarButton: UIBarButtonItem?
 	var selectDeselectAllButtonItem: UIBarButtonItem?
 	var exitMultipleSelectionBarButtonItem: UIBarButtonItem?
 
@@ -134,12 +134,12 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		self.tableView.dragInteractionEnabled = true
 		self.tableView.allowsMultipleSelectionDuringEditing = true
 
-		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(plusBarButtonPressed))
+		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(moreBarButtonPressed))
 		folderActionBarButton?.accessibilityIdentifier = "client.folder-action"
-		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
-		selectBarButton?.isEnabled = false
-    		selectBarButton?.accessibilityIdentifier = "select-button"
-		self.navigationItem.rightBarButtonItems = [selectBarButton!, folderActionBarButton!]
+		plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusBarButtonPressed))
+		plusBarButton?.accessibilityIdentifier = "client.file-add"
+
+		self.navigationItem.rightBarButtonItems = [folderActionBarButton!, plusBarButton!]
 
 		selectDeselectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
 		exitMultipleSelectionBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(exitMultipleSelection))
@@ -412,8 +412,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	func leaveMultipleSelection() {
 		self.tableView.setEditing(false, animated: true)
-		selectBarButton?.title = "Select".localized
-		self.navigationItem.rightBarButtonItems = [selectBarButton!, folderActionBarButton!]
+		self.navigationItem.rightBarButtonItems = [folderActionBarButton!, plusBarButton!]
 		self.navigationItem.leftBarButtonItem = nil
 		selectedItemIds.removeAll()
 		removeToolbar()
@@ -516,6 +515,19 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		self.present(controller, animated: true)
 	}
 
+	@objc func moreBarButtonPressed(_ sender: UIBarButtonItem) {
+		guard let core = core, let rootItem = self.query.rootItem else {
+			return
+		}
+
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
+		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [rootItem], location: actionsLocation)
+
+		if let moreViewController = Action.cardViewController(for: rootItem, with: actionContext, progressHandler: makeActionProgressHandler()) {
+			self.present(asCard: moreViewController, animated: true)
+		}
+	}
+
 	// MARK: - Path Bread Crumb Action
 	@objc func showPathBreadCrumb(_ sender: UIButton) {
 		let tableViewController = BreadCrumbTableViewController()
@@ -545,13 +557,6 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	// MARK: - Updates
 	override func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
-		switch query.state {
-			case .contentsFromCache, .idle, .waitingForServerReply:
-				self.selectBarButton?.isEnabled = (self.items.count == 0) ? false : true
-
-			default: break
-		}
-
 		if let rootItem = self.query.rootItem {
 			if query.queryPath != "/" {
 				let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
