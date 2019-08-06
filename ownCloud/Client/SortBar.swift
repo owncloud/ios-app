@@ -40,11 +40,11 @@ protocol SortBarDelegate: class {
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?)
 }
 
-class SortBar: UIView, Themeable {
+class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 
 	weak var delegate: SortBarDelegate? {
 		didSet {
-			updateSortDirectionImage()
+			updateSortButtonTitle()
 		}
 	}
 
@@ -68,11 +68,9 @@ class SortBar: UIView, Themeable {
 				} else {
 					delegate?.sortDirection = .ascendant
 				}
-				updateSortDirectionImage()
 			}
+			updateSortButtonTitle()
 
-			let title = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName()) as String
-			sortButton?.setTitle(title, for: .normal)
 			sortButton?.accessibilityLabel = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName()) as String
 			sortButton?.sizeToFit()
 
@@ -127,7 +125,7 @@ class SortBar: UIView, Themeable {
 			sortButton.titleLabel?.adjustsFontForContentSizeCategory = true
 			sortButton.semanticContentAttribute = (sortButton.effectiveUserInterfaceLayoutDirection == .leftToRight) ? .forceRightToLeft : .forceLeftToRight
 
-			updateSortDirectionImage()
+			sortButton.setImage(UIImage(named: "chevron-small-light"), for: .normal)
 
 			sortButton.setContentHuggingPriority(.required, for: .horizontal)
 
@@ -139,7 +137,7 @@ class SortBar: UIView, Themeable {
 			])
 
 			sortButton.isHidden = true
-			sortButton.addTarget(self, action: #selector(presentSortButtonOptions), for: .touchUpInside)
+			sortButton.addTarget(self, action: #selector(presentSortButtonOptions(_:)), for: .touchUpInside)
 		}
 
 		// Finalize view setup
@@ -178,35 +176,30 @@ class SortBar: UIView, Themeable {
 
 	// MARK: - Sort Direction Image
 
-	func updateSortDirectionImage() {
+	func updateSortButtonTitle() {
+		var title = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName()) as String
+
 		if delegate?.sortDirection == .descendant {
-			sortButton?.setImage(UIImage(named: "chevron-small-light"), for: .normal)
+			title = String(format: "%@ ↓", title)
 		} else {
-			sortButton?.setImage(UIImage(named: "chevron-small-light-up"), for: .normal)
+			title = String(format: "%@ ↑", title)
 		}
+		sortButton?.setTitle(title, for: .normal)
 	}
 
 	// MARK: - Actions
-	@objc private func presentSortButtonOptions() {
-		let controller = UIAlertController(title: "Sort by".localized, message: nil, preferredStyle: .actionSheet)
+	@objc private func presentSortButtonOptions(_ sender : UIButton) {
+		let tableViewController = SortMethodTableViewController()
+		tableViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+		tableViewController.sortBarDelegate = self.delegate
+		tableViewController.sortBar = self
 
-		for method in SortMethod.all {
-			let action = UIAlertAction(title: method.localizedName(), style: .default, handler: {(_) in
-				self.sortMethod = method
-			})
-			if delegate?.sortMethod == method, action.responds(to: NSSelectorFromString("setImage:")) {
-				if delegate?.sortDirection == .descendant {
-					action.setValue(UIImage(named: "chevron-small-light"), forKey: "image")
-				} else {
-					action.setValue(UIImage(named: "chevron-small-light-up"), forKey: "image")
-				}
-			}
-			controller.addAction(action)
-		}
+		let popoverPresentationController = tableViewController.popoverPresentationController
+		popoverPresentationController?.sourceView = sender
+		popoverPresentationController?.delegate = self
+		popoverPresentationController?.sourceRect = CGRect(x: 0, y: 0, width: sender.frame.size.width, height: sender.frame.size.height)
 
-		let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel)
-		controller.addAction(cancel)
-		delegate?.sortBar(self, presentViewController: controller, animated: true, completionHandler: nil)
+		delegate?.sortBar(self, presentViewController: tableViewController, animated: true, completionHandler: nil)
 	}
 
 	@objc private func sortSegmentedControllerValueChanged() {
@@ -214,5 +207,10 @@ class SortBar: UIView, Themeable {
 			self.sortMethod = SortMethod.all[selectedIndex]
 			delegate?.sortBar(self, didUpdateSortMethod: self.sortMethod)
 		}
+	}
+
+	// MARK: - UIPopoverPresentationControllerDelegate
+	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+		return .none
 	}
 }
