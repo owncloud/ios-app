@@ -93,6 +93,8 @@
 		4CB8ADE622DF6C2B00F1FEBC /* CIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB8ADE522DF6C2B00F1FEBC /* CIImage+Extensions.swift */; };
 		4CB8ADE922DF6DE200F1FEBC /* AVAsset+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB8ADE822DF6DE200F1FEBC /* AVAsset+Extension.swift */; };
 		4CC46D212284C677009E938F /* BookmarkInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */; };
+		4CC4A21222FA20AD00AE7E2C /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC4A21122FA20AD00AE7E2C /* URL+Extensions.swift */; };
+		4CC4A21922FB4F4C00AE7E2C /* MeidaUploadQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC4A21822FB4F4C00AE7E2C /* MeidaUploadQueue.swift */; };
 		4CF8CAB121F9B70600B8CA67 /* UIBarButtonItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */; };
 		59056CAD22414F3C00A18A22 /* ownCloudScreenshotsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59056CAC22414F3C00A18A22 /* ownCloudScreenshotsTests.swift */; };
 		59056CB422414F8000A18A22 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59371D7B224103D300C6BC5B /* SnapshotHelper.swift */; };
@@ -656,6 +658,8 @@
 		4CB8ADE522DF6C2B00F1FEBC /* CIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CIImage+Extensions.swift"; sourceTree = "<group>"; };
 		4CB8ADE822DF6DE200F1FEBC /* AVAsset+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVAsset+Extension.swift"; sourceTree = "<group>"; };
 		4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkInfoViewController.swift; sourceTree = "<group>"; };
+		4CC4A21122FA20AD00AE7E2C /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
+		4CC4A21822FB4F4C00AE7E2C /* MeidaUploadQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeidaUploadQueue.swift; sourceTree = "<group>"; };
 		4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Extension.swift"; sourceTree = "<group>"; };
 		54199937F74A129BC74DEB0A /* Pods_ownCloudScreenshotsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ownCloudScreenshotsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		59056CAA22414F3C00A18A22 /* ownCloudScreenshotsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ownCloudScreenshotsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1184,6 +1188,7 @@
 			children = (
 				4CB8ADDD22DF5D3700F1FEBC /* PHPhotoLibrary+Extension.swift */,
 				4CB8ADE222DF6BA700F1FEBC /* PHAsset+Upload.swift */,
+				4CC4A21822FB4F4C00AE7E2C /* MeidaUploadQueue.swift */,
 			);
 			path = "PhotKit Extensions";
 			sourceTree = "<group>";
@@ -1740,6 +1745,7 @@
 				DCB44D86218718BA00DAA4CC /* VendorServices.swift */,
 				4CAF783B2282FD40000C85CF /* FileManager+Extension.swift */,
 				DC3DEC7C22AFFE8E00F3352D /* KVOWaiter.swift */,
+				4CC4A21122FA20AD00AE7E2C /* URL+Extensions.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -2408,6 +2414,7 @@
 				39A513AC22674E56002CF1AA /* OCCore+Extension.swift in Sources */,
 				DC018F8320A0F56300135198 /* UIView+Animation.swift in Sources */,
 				4CF8CAB121F9B70600B8CA67 /* UIBarButtonItem+Extension.swift in Sources */,
+				4CC4A21222FA20AD00AE7E2C /* URL+Extensions.swift in Sources */,
 				DC42244A207CAFAA0006A2A6 /* Theme.swift in Sources */,
 				4C464BF52187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift in Sources */,
 				4C464BF02187AF1500D30602 /* PDFTocTableViewController.swift in Sources */,
@@ -2464,6 +2471,7 @@
 				4C464BEF2187AF1500D30602 /* PDFThumbnailCollectionViewCell.swift in Sources */,
 				232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */,
 				6E91F37E21ECA6FD009436D2 /* CopyAction.swift in Sources */,
+				4CC4A21922FB4F4C00AE7E2C /* MeidaUploadQueue.swift in Sources */,
 				593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */,
 				4CC46D212284C677009E938F /* BookmarkInfoViewController.swift in Sources */,
 				6E5FC172221590B000F60846 /* DisplayHostViewController.swift in Sources */,

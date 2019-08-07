@@ -21,9 +21,6 @@ import ownCloudSDK
 
 class UploadBaseAction: Action {
 
-	typealias UploadCompletionHandler = (_ success: Bool, _ item:OCItem?) -> Void
-	typealias UploadPlaceholderCompletionHandler = (_ item:OCItem?, _ error:Error?) -> Void
-
 	// MARK: - Action Matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		// Only available for a single item ..
@@ -37,38 +34,5 @@ class UploadBaseAction: Action {
 		}
 
 		return .middle
-	}
-
-	// MARK: - Upload
-	func upload(itemURL: URL, to rootItem: OCItem, name: String, completionHandler: UploadCompletionHandler? = nil, placeholderHandler:UploadPlaceholderCompletionHandler? = nil, importByCopy:Bool = false) {
-		if let progress = core?.importFileNamed(name,
-							at: rootItem,
-							from: itemURL,
-							isSecurityScoped: false,
-							options: [
-								OCCoreOption.importByCopying : importByCopy,
-								OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue
-							],
-							placeholderCompletionHandler: { (error, item) in
-								if error != nil {
-									Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
-								}
-								placeholderHandler?(item, error)
-							},
-							resultHandler: { (error, _ core, _ item, _) in
-								if error != nil {
-									Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
-									completionHandler?(false, item)
-								} else {
-									Log.debug("Success uploading \(Log.mask(name)) to \(Log.mask(rootItem.path))")
-									completionHandler?(true, item)
-								}
-							}
-		) {
-			self.publish(progress: progress)
-		} else {
-			Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(rootItem.path))")
-			completionHandler?(false, nil)
-		}
 	}
 }
