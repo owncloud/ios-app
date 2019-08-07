@@ -62,11 +62,15 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 
 	var sortMethod: SortMethod {
 		didSet {
-			if oldValue == sortMethod {
-				if delegate?.sortDirection == .ascendant {
-					delegate?.sortDirection = .descendant
+			if self.superview != nil { // Only toggle direction if the view is already in the view hierarchy (i.e. not during initial setup)
+				if oldValue == sortMethod {
+					if delegate?.sortDirection == .ascendant {
+						delegate?.sortDirection = .descendant
+					} else {
+						delegate?.sortDirection = .ascendant
+					}
 				} else {
-					delegate?.sortDirection = .ascendant
+					delegate?.sortDirection = .ascendant // Reset sort direction when switching sort methods
 				}
 			}
 			updateSortButtonTitle()
@@ -219,5 +223,9 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 	// MARK: - UIPopoverPresentationControllerDelegate
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return .none
+	}
+
+	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+		popoverPresentationController.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 }

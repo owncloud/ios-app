@@ -23,8 +23,6 @@ class SortMethodTableViewController: StaticTableViewController {
 	// MARK: - Constants
 	private let maxContentWidth : CGFloat = 150
 	private let rowHeight : CGFloat = 44
-	private let imageWidth : CGFloat = 30
-	private let imageHeight : CGFloat = 30
 
 	// MARK: - Instance Variables
 	weak var sortBarDelegate: SortBarDelegate?
@@ -34,9 +32,10 @@ class SortMethodTableViewController: StaticTableViewController {
 		super.viewDidLoad()
 
 		self.tableView.isScrollEnabled = false
+		self.tableView.rowHeight = rowHeight
 
 		var rows : [StaticTableViewRow] = []
-		let contentHeight : CGFloat = rowHeight * CGFloat(SortMethod.all.count)
+		let contentHeight : CGFloat = rowHeight * CGFloat(SortMethod.all.count) - 1
 		let contentWidth : CGFloat = (view.frame.size.width < maxContentWidth) ? view.frame.size.width : maxContentWidth
 		self.preferredContentSize = CGSize(width: contentWidth, height: contentHeight)
 
@@ -44,7 +43,7 @@ class SortMethodTableViewController: StaticTableViewController {
 			var title = method.localizedName()
 
 			if sortBarDelegate?.sortMethod == method {
-				if sortBarDelegate?.sortDirection == .descendant {
+				if sortBarDelegate?.sortDirection == .ascendant { // Show arrows opposite to the current sort direction to show what choosing them will lead to
 					title = String(format: "%@ ↓", method.localizedName())
 				} else {
 					title = String(format: "%@ ↑", method.localizedName())

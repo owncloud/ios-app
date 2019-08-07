@@ -580,6 +580,10 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return .none
 	}
+
+	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+		popoverPresentationController.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+	}
 }
 
 // MARK: - Drag & Drop delegates
