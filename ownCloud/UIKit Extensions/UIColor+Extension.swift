@@ -33,23 +33,6 @@ extension UIColor {
 		self.init(red: (rgbHex >> 16) & 0xFF, green: (rgbHex >> 8) & 0xFF, blue: (rgbHex & 0xFF), alpha: alpha)
 	}
 
-	convenience init(hex hexString: String, alpha: CGFloat = 1.0) {
-		var cString:String = hexString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-
-		if (cString.hasPrefix("#")) {
-			cString.remove(at: cString.startIndex)
-		}
-
-		if ((cString.count) != 6) {
-			self.init(red: 0, green: 0, blue: 0, alpha: alpha)
-		}
-
-		var rgbValue:UInt32 = 0
-		Scanner(string: cString).scanHexInt32(&rgbValue)
-
-		self.init(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0, green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0, blue: CGFloat(rgbValue & 0x0000FF) / 255.0, alpha: alpha)
-	}
-
 	public func blended(withFraction fraction: Double, ofColor blendColor: UIColor) -> UIColor {
 		var selfRed : CGFloat = 0, selfGreen : CGFloat  = 0, selfBlue : CGFloat  = 0, selfAlpha : CGFloat = 0
 		var blendRed : CGFloat = 0, blendGreen : CGFloat  = 0, blendBlue : CGFloat  = 0, blendAlpha : CGFloat = 0

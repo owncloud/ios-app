@@ -27,14 +27,16 @@ class ThemeStyle : NSObject {
 	var themeStyle: ThemeCollectionStyle
 
 	var customizedColorsByPath : [String:String]?
+	var customColors : NSDictionary?
 
-	init(identifier idtfr: String, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customizedColorsByPath customizations: [String:String]? = nil) {
+	init(identifier idtfr: String, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customizedColorsByPath customizations: [String:String]? = nil, customColors: NSDictionary? = nil) {
 		self.identifier = idtfr
 		self.localizedName = name
 		self.lightColor = lColor
 		self.darkColor = dColor
 		self.themeStyle = style
 		self.customizedColorsByPath = customizations
+		self.customColors = customColors
 	}
 
 	var parsedCustomizedColorsByPath : [String:UIColor]? {
@@ -62,14 +64,15 @@ class ThemeStyle : NSObject {
 
 extension String {
 	var colorFromHex : UIColor? {
-		if self.hasPrefix("#") {
-			switch self.count {
-				case 7:
-					// Format: #RRGGBB
-					if let hexRGB = UInt(self.replacingOccurrences(of: "#", with: ""), radix: 16) {
-						return UIColor(hex: hexRGB)
-					}
-				default: break
+		if self.hasPrefix("#"), self.count == 7 {
+			// Format: #RRGGBB
+			if let hexRGB = UInt(self.replacingOccurrences(of: "#", with: ""), radix: 16) {
+				return UIColor(hex: hexRGB)
+			}
+		} else if self.count == 6 {
+			// Format: RRGGBB
+			if let hexRGB = UInt(self, radix: 16) {
+				return UIColor(hex: hexRGB)
 			}
 		}
 
@@ -79,8 +82,7 @@ extension String {
 
 extension ThemeCollection {
 	convenience init(with style: ThemeStyle) {
-		self.init(darkBrandColor: style.darkColor, lightBrandColor: style.lightColor, style: style.themeStyle)
-
+		self.init(darkBrandColor: style.darkColor, lightBrandColor: style.lightColor, style: style.themeStyle, customColors: style.customColors)
 		if let customizationColors = style.parsedCustomizedColorsByPath {
 			for (keyPath, color) in customizationColors {
 				self.setValue(color, forKeyPath: keyPath)

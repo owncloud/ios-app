@@ -35,8 +35,8 @@ class ThemeProvider: NSObject {
 
 				if let darkBrandColor = generic["darkBrandColor"] as? String, let lightBrandColor = generic["lightBrandColor"] as? String {
 					for theme in themes {
-						if let identifier = theme["Identifier"] as? String, let name = theme["Name"] as? String, let style = theme["ThemeStyle"] as? String, let themeStyle = ThemeCollectionStyle(rawValue: style) {
-							let newTheme = ThemeStyle(identifier: identifier, localizedName: name.localized, lightColor: UIColor.init(hex: lightBrandColor), darkColor: UIColor.init(hex: darkBrandColor), themeStyle: themeStyle)
+						if let identifier = theme["Identifier"] as? String, let name = theme["Name"] as? String, let style = theme["ThemeStyle"] as? String, let themeStyle = ThemeCollectionStyle(rawValue: style), let colors = theme["Colors"] as? NSDictionary {
+							let newTheme = ThemeStyle(identifier: identifier, localizedName: name.localized, lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, customizedColorsByPath: nil, customColors: colors)
 							self.themes.append(newTheme)
 						}
 					}
