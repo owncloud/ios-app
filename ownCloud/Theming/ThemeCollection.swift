@@ -323,12 +323,10 @@ extension NSDictionary {
 	}
 
 	func resolveThemeColorPair(_ forKeyPath: String, _ colorPair : ThemeColorPair) -> ThemeColorPair {
-		let newColorPair = colorPair
+		let pair = ThemeColorPair(foreground: self.resolveColor(forKeyPath.appending(".foreground"), colorPair.foreground),
+								  background: self.resolveColor(forKeyPath.appending(".background"), colorPair.background))
 
-		newColorPair.background = self.resolveColor(forKeyPath.appending(".background"), colorPair.background)
-		newColorPair.foreground = self.resolveColor(forKeyPath.appending(".foreground"), colorPair.background)
-
-		return newColorPair
+		return pair
 	}
 
 	func resolveThemeColorCollection(_ forKeyPath: String, _ colorCollection : ThemeColorCollection) -> ThemeColorCollection {
