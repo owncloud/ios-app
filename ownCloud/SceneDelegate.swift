@@ -49,6 +49,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // Utilities
 
     func configure(window: UIWindow?, with activity: NSUserActivity) -> Bool {
+		print("-->> \(activity.title) \(window?.rootViewController)")
+        if activity.title == ownCloudOpenAccountPath {
+			print("-->> \(activity.userInfo) \(window?.rootViewController)")
+            if let accountUuid = activity.userInfo?[ownCloudOpenAccountAccountUuidKey] as? String {
+				print("-->accountUuid \(accountUuid) \(self.window?.rootViewController)")
+				return true
+			}
+		}
 		/*
         if activity.title == GalleryOpenDetailPath {
             if let photoID = activity.userInfo?[GalleryOpenDetailPhotoIdKey] as? String {

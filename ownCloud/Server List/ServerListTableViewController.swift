@@ -525,7 +525,20 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			}
 		})
 
-		return [deleteRowAction, editRowAction, manageRowAction]
+		let openAccountAction = UITableViewRowAction(style: .normal,
+												   title: "Open in Window".localized,
+												   handler: { [weak self] (_, indexPath) in
+													if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+														let activity = bookmark.openAccountUserActivity
+														if #available(iOS 13.0, *) {
+															UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: nil)
+														} else {
+															// Fallback on earlier versions
+														}
+													}
+		})
+
+		return [deleteRowAction, editRowAction, manageRowAction, openAccountAction]
 	}
 
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
