@@ -54,7 +54,7 @@ extension PHAsset {
 											}
 											completionHandler(item, error)
 
-			}, completionHandler: { (item, error) in
+			}, completionHandler: { (_, _) in
 				if uploadProgress != nil {
 					progressHandler?(uploadProgress!)
 				}
