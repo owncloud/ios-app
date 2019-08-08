@@ -132,6 +132,7 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 			sortSegmentedControl.selectedSegmentIndex = SortMethod.all.index(of: sortMethod)!
 			sortSegmentedControl.isHidden = true
 			sortSegmentedControl.addTarget(self, action: #selector(sortSegmentedControllerValueChanged), for: .valueChanged)
+			sortSegmentedControl.apportionsSegmentWidthsByContent = true
 
 			// Sort Button
 			sortButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
