@@ -19,12 +19,17 @@
 import UIKit
 
 class SegmentedControl: UISegmentedControl {
+	var oldValue : Int!
 
-	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-		let currentIndex = selectedSegmentIndex
+	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent? ) {
+		self.oldValue = self.selectedSegmentIndex
 		super.touchesBegan(touches, with: event)
+	}
 
-		if currentIndex == selectedSegmentIndex {
+	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent? ) {
+		super.touchesEnded(touches, with: event )
+
+		if self.oldValue == self.selectedSegmentIndex {
 			sendActions(for: UIControl.Event.valueChanged)
 		}
 	}
