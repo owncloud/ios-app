@@ -19,6 +19,10 @@
 import UIKit
 import ownCloudSDK
 
+let ownCloudItemDetailActivityType       = "com.owncloud.ios-app.itemDetail"
+let ownCloudItemDetailPath               = "itemDetail"
+let ownCloudItemDetailItemUuidKey         = "itemUuid"
+
 extension OCItem {
 	static private let iconNamesByMIMEType : [String:String] = {
 		var mimeTypeToIconMap :  [String:String] = [
@@ -265,6 +269,13 @@ extension OCItem {
 			return true
 		}
 		return false
+	}
+
+	var itemDetailUserActivity: NSUserActivity {
+		let userActivity = NSUserActivity(activityType: ownCloudItemDetailActivityType)
+		userActivity.title = ownCloudItemDetailPath
+		//userActivity.userInfo = [ownCloudItemDetailItemUuidKey: uuid]
+		return userActivity
 	}
 
 	func shareRootItem(from core: OCCore) -> OCItem? {

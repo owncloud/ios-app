@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 @available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -26,11 +27,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // UIWindowScene delegate
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        if let userActivity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
-            if !configure(window: window, with: userActivity) {
-                print("Failed to restore from \(userActivity)")
-            }
-        }
 		if let windowScene = scene as? UIWindowScene {
 			window = UIWindow(windowScene: windowScene)
 			let serverListTableViewController = ServerListTableViewController(style: UITableView.Style.plain)
@@ -40,6 +36,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			window?.addSubview((navigationController.view)!)
 			window?.makeKeyAndVisible()
 		}
+        if let userActivity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
+            if !configure(window: window, with: userActivity) {
+                print("Failed to restore from \(userActivity)")
+            }
+        }
     }
 
     func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
@@ -49,28 +50,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // Utilities
 
     func configure(window: UIWindow?, with activity: NSUserActivity) -> Bool {
-		print("-->> \(activity.title) \(window?.rootViewController)")
         if activity.title == ownCloudOpenAccountPath {
-			print("-->> \(activity.userInfo) \(window?.rootViewController)")
-            if let accountUuid = activity.userInfo?[ownCloudOpenAccountAccountUuidKey] as? String {
-				print("-->accountUuid \(accountUuid) \(self.window?.rootViewController)")
-				return true
+            if let accountUuid = activity.userInfo?[ownCloudOpenAccountAccountUuidKey] as? OCBookmarkUUID {
+				if let navigationController = window?.rootViewController as? ThemeNavigationController, let serverListController = navigationController.topViewController as? ServerListTableViewController {
+					var accountBookmark : OCBookmark?
+					for bookmark in OCBookmarkManager.shared.bookmarks {
+						if bookmark.uuid == accountUuid as UUID {
+							accountBookmark = bookmark
+							break
+						}
+					}
+					if let bookmark = accountBookmark {
+						serverListController.connect(to: bookmark)
+						return true
+					}
+
+				}
 			}
+		} else if activity.title == ownCloudOpenAccountPath {
 		}
-		/*
-        if activity.title == GalleryOpenDetailPath {
-            if let photoID = activity.userInfo?[GalleryOpenDetailPhotoIdKey] as? String {
-                
-                if let photoDetailViewController = PhotoDetailViewController.loadFromStoryboard() {
-                    photoDetailViewController.photo = Photo(name: photoID)
-                    
-                    if let navigationController = window?.rootViewController as? UINavigationController {
-                        navigationController.pushViewController(photoDetailViewController, animated: false)
-                        return true
-                    }
-                }
-            }
-        }*/
+
         return false
     }
 

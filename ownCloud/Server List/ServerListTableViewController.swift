@@ -127,7 +127,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		if shownFirstTime {
 			shownFirstTime = false
-			
 			if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
 				connect(to: bookmark)
 				showBetaWarning = false
@@ -273,6 +272,56 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.present(navigationController, animated: true, completion: nil)
 	}
 
+	@available(iOS 13.0, *)
+	func openAccountInWindow(at indexPath: IndexPath) {
+		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+			let activity = bookmark.openAccountUserActivity
+			UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: nil)
+		}
+	}
+
+	func delete(bookmark: OCBookmark, at indexPath: IndexPath) {
+		self.lockedBookmarks.append(bookmark)
+
+		OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
+			let vault : OCVault = OCVault(bookmark: bookmark)
+
+			vault.erase(completionHandler: { (_, error) in
+				OnMainThread {
+					if error != nil {
+						// Inform user if vault couldn't be erased
+						let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+																message: error?.localizedDescription,
+																preferredStyle: .alert)
+
+						alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+
+						self.present(alertController, animated: true, completion: nil)
+					} else {
+						// Success! We can now remove the bookmark
+						self.ignoreServerListChanges = true
+
+						OCBookmarkManager.shared.removeBookmark(bookmark)
+
+						self.tableView.performBatchUpdates({
+							self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+						}, completion: { (_) in
+							self.ignoreServerListChanges = false
+						})
+
+						self.updateNoServerMessageVisibility()
+					}
+
+					if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
+						self.lockedBookmarks.remove(at: removeIndex)
+					}
+
+					completionHandler()
+				}
+			})
+		}, for: bookmark)
+	}
+
 	var themeCounter : Int = 0
 
 	@IBAction func help() {
@@ -411,6 +460,37 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 	}
 
+	@available(iOS 13.0, *)
+	override func tableView(_ tableView: UITableView,
+	contextMenuConfigurationForRowAt indexPath: IndexPath,
+	point: CGPoint) -> UIContextMenuConfiguration? {
+		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+			return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+				return self.makeContextMenu(for: indexPath, with: bookmark)
+			})
+		}
+
+		return nil
+	}
+
+	@available(iOS 13.0, *)
+	func makeContextMenu(for indexPath: IndexPath, with bookmark: OCBookmark) -> UIMenu {
+		let openWindow = UIAction(title: "Open in new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+			self.openAccountInWindow(at: indexPath)
+		}
+		let edit = UIAction(title: "Edit", image: UIImage(systemName: "gear")) { _ in
+			self.showBookmarkUI(edit: bookmark)
+		}
+		let manage = UIAction(title: "Manage", image: UIImage(systemName: "arrow.3.trianglepath")) { _ in
+			self.showBookmarkInfoUI(bookmark)
+		}
+		let delete = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+			self.delete(bookmark: bookmark, at: indexPath)
+		}
+
+		return UIMenu(title: "Account", children: [openWindow, edit, manage, delete])
+	}
+
 	// MARK: - Table view data source
 	func indexPath(for bookmark: OCBookmark) -> IndexPath? {
 		var index = 0
@@ -464,46 +544,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
 				alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
-
-					self.lockedBookmarks.append(bookmark)
-
-					OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
-						let vault : OCVault = OCVault(bookmark: bookmark)
-
-						vault.erase(completionHandler: { (_, error) in
-							OnMainThread {
-								if error != nil {
-									// Inform user if vault couldn't be erased
-									let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
-																			message: error?.localizedDescription,
-																			preferredStyle: .alert)
-
-									alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
-
-									self.present(alertController, animated: true, completion: nil)
-								} else {
-									// Success! We can now remove the bookmark
-									self.ignoreServerListChanges = true
-
-									OCBookmarkManager.shared.removeBookmark(bookmark)
-
-									tableView.performBatchUpdates({
-										tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-									}, completion: { (_) in
-										self.ignoreServerListChanges = false
-									})
-
-									self.updateNoServerMessageVisibility()
-								}
-
-								if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
-									self.lockedBookmarks.remove(at: removeIndex)
-								}
-
-								completionHandler()
-							}
-						})
-					}, for: bookmark)
+					self.delete(bookmark: bookmark, at: indexPath)
 				}))
 
 				self.present(alertController, animated: true, completion: nil)
@@ -525,20 +566,18 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			}
 		})
 
-		let openAccountAction = UITableViewRowAction(style: .normal,
-												   title: "Open in Window".localized,
-												   handler: { [weak self] (_, indexPath) in
-													if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-														let activity = bookmark.openAccountUserActivity
-														if #available(iOS 13.0, *) {
-															UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: nil)
-														} else {
-															// Fallback on earlier versions
-														}
-													}
-		})
+		if #available(iOS 13.0, *) {
+			let openAccountAction = UITableViewRowAction(style: .normal,
+														 title: "Open in Window".localized,
+														 handler: { (_, indexPath) in
+															self.openAccountInWindow(at: indexPath)
+			})
+			openAccountAction.backgroundColor = .orange
 
-		return [deleteRowAction, editRowAction, manageRowAction, openAccountAction]
+			return [deleteRowAction, editRowAction, manageRowAction, openAccountAction]
+		}
+
+		return [deleteRowAction, editRowAction, manageRowAction]
 	}
 
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
