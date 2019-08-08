@@ -359,9 +359,14 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 	func addExpireDateSection() {
 		var hasExpireDate = false
-		if share.expirationDate != nil || core.connection.capabilities?.publicSharingExpireDateEnforced == true || self.core.connection.capabilities?.publicSharingDefaultExpireDateDays != nil {
+		if share.expirationDate != nil || core.connection.capabilities?.publicSharingExpireDateEnforced == true {
 			hasExpireDate = true
 		}
+
+		if self.createLink && self.core.connection.capabilities?.publicSharingDefaultExpireDateDays != nil {
+			hasExpireDate = true
+		}
+
 		var needsExpireDate = false
 		if self.core.connection.capabilities?.publicSharingExpireDateEnforced == true {
 			needsExpireDate = true
@@ -490,6 +495,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			}
 		}, title: dateFormatter.string(from: expireDate), style: .plain, alignment: .left, identifier: "expire-date-row")
 
+		expireDateRow.representedObject = expireDate
 		expireSection.add(row: expireDateRow)
 	}
 
