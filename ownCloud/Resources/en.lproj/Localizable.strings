@@ -82,8 +82,7 @@
 "Sort by %@" = "Sort by %@";
 "Sort by" = "Sort by";
 
-"name (A-Z)" = "name (A-Z)";
-"name (Z-A)" = "name (Z-A)";
+"name" = "name";
 "type" = "type";
 "size" = "size";
 "date" = "date";
