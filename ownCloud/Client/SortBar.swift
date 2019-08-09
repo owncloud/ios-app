@@ -18,15 +18,40 @@
 
 import UIKit
 
+class SegmentedControl: UISegmentedControl {
+	var oldValue : Int!
+
+	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent? ) {
+		self.oldValue = self.selectedSegmentIndex
+		super.touchesBegan(touches, with: event)
+	}
+
+	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent? ) {
+		super.touchesEnded(touches, with: event )
+
+		if self.oldValue == self.selectedSegmentIndex {
+			sendActions(for: UIControl.Event.valueChanged)
+		}
+	}
+}
+
 protocol SortBarDelegate: class {
+
+	var sortDirection: SortDirection { get set }
+	var sortMethod: SortMethod { get set }
+
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod)
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?)
 }
 
-class SortBar: UIView, Themeable {
+class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 
-	weak var delegate: SortBarDelegate?
+	weak var delegate: SortBarDelegate? {
+		didSet {
+			updateSortButtonTitle()
+		}
+	}
 
 	// MARK: - Constants
 	let sideButtonsSize: CGSize = CGSize(width: 30.0, height: 30.0)
@@ -37,19 +62,33 @@ class SortBar: UIView, Themeable {
 
 	// MARK: - Instance variables.
 
-	var sortSegmentedControl: UISegmentedControl?
+	var sortSegmentedControl: SegmentedControl?
 	var sortButton: UIButton?
 
 	var sortMethod: SortMethod {
 		didSet {
+			if self.superview != nil { // Only toggle direction if the view is already in the view hierarchy (i.e. not during initial setup)
+				if oldValue == sortMethod {
+					if delegate?.sortDirection == .ascendant {
+						delegate?.sortDirection = .descendant
+					} else {
+						delegate?.sortDirection = .ascendant
+					}
+				} else {
+					delegate?.sortDirection = .ascendant // Reset sort direction when switching sort methods
+				}
+			}
+			updateSortButtonTitle()
 
-			let title = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName()) as String
-			sortButton?.setTitle(title, for: .normal)
 			sortButton?.accessibilityLabel = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName()) as String
 			sortButton?.sizeToFit()
 
+			if let oldSementIndex = SortMethod.all.index(of: oldValue) {
+				sortSegmentedControl?.setTitle(oldValue.localizedName(), forSegmentAt: oldSementIndex)
+			}
 			if let segmentIndex = SortMethod.all.index(of: sortMethod) {
 				sortSegmentedControl?.selectedSegmentIndex = segmentIndex
+				sortSegmentedControl?.setTitle(sortDirectionTitle(sortMethod.localizedName()), forSegmentAt: segmentIndex)
 			}
 
 			delegate?.sortBar(self, didUpdateSortMethod: sortMethod)
@@ -59,7 +98,7 @@ class SortBar: UIView, Themeable {
 	// MARK: - Init & Deinit
 
 	init(frame: CGRect, sortMethod: SortMethod) {
-		sortSegmentedControl = UISegmentedControl()
+		sortSegmentedControl = SegmentedControl()
 
 		sortButton = UIButton(type: .system)
 
@@ -86,8 +125,19 @@ class SortBar: UIView, Themeable {
 				sortSegmentedControl.rightAnchor.constraint(lessThanOrEqualTo: self.rightAnchor, constant: -rightPadding)
 			])
 
+			var longestTitleWidth : CGFloat = 0.0
 			for method in SortMethod.all {
 				sortSegmentedControl.insertSegment(withTitle: method.localizedName(), at: SortMethod.all.index(of: method)!, animated: false)
+				let titleWidth = method.localizedName().appending(" ↓").width(withConstrainedHeight: sortSegmentedControl.frame.size.height, font: UIFont.systemFont(ofSize: 16.0))
+				if titleWidth > longestTitleWidth {
+					longestTitleWidth = titleWidth
+				}
+			}
+
+			var currentIndex = 0
+			for _ in SortMethod.all {
+				sortSegmentedControl.setWidth(longestTitleWidth, forSegmentAt: currentIndex)
+				currentIndex += 1
 			}
 
 			sortSegmentedControl.selectedSegmentIndex = SortMethod.all.index(of: sortMethod)!
@@ -98,6 +148,7 @@ class SortBar: UIView, Themeable {
 			sortButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
 			sortButton.titleLabel?.adjustsFontForContentSizeCategory = true
 			sortButton.semanticContentAttribute = (sortButton.effectiveUserInterfaceLayoutDirection == .leftToRight) ? .forceRightToLeft : .forceLeftToRight
+
 			sortButton.setImage(UIImage(named: "chevron-small-light"), for: .normal)
 
 			sortButton.setContentHuggingPriority(.required, for: .horizontal)
@@ -110,7 +161,7 @@ class SortBar: UIView, Themeable {
 			])
 
 			sortButton.isHidden = true
-			sortButton.addTarget(self, action: #selector(presentSortButtonOptions), for: .touchUpInside)
+			sortButton.addTarget(self, action: #selector(presentSortButtonOptions(_:)), for: .touchUpInside)
 		}
 
 		// Finalize view setup
@@ -147,20 +198,35 @@ class SortBar: UIView, Themeable {
 		}
 	}
 
-	// MARK: - Actions
-	@objc private func presentSortButtonOptions() {
-		let controller = UIAlertController(title: "Sort by".localized, message: nil, preferredStyle: .actionSheet)
+	// MARK: - Sort Direction Title
 
-		for method in SortMethod.all {
-			let action = UIAlertAction(title: method.localizedName(), style: .default, handler: {(_) in
-				self.sortMethod = method
-			})
-			controller.addAction(action)
+	func updateSortButtonTitle() {
+		let title = NSString(format: "Sort by %@".localized as NSString, sortMethod.localizedName()) as String
+		sortButton?.setTitle(sortDirectionTitle(title), for: .normal)
+	}
+
+	func sortDirectionTitle(_ title: String) -> String {
+		if delegate?.sortDirection == .descendant {
+			return String(format: "%@ ↓", title)
+		} else {
+			return String(format: "%@ ↑", title)
 		}
+	}
 
-		let cancel = UIAlertAction(title: "Cancel".localized, style: .cancel)
-		controller.addAction(cancel)
-		delegate?.sortBar(self, presentViewController: controller, animated: true, completionHandler: nil)
+	// MARK: - Actions
+	@objc private func presentSortButtonOptions(_ sender : UIButton) {
+		let tableViewController = SortMethodTableViewController()
+		tableViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+		tableViewController.sortBarDelegate = self.delegate
+		tableViewController.sortBar = self
+
+		let popoverPresentationController = tableViewController.popoverPresentationController
+		popoverPresentationController?.sourceView = sender
+		popoverPresentationController?.delegate = self
+		popoverPresentationController?.sourceRect = CGRect(x: 0, y: 0, width: sender.frame.size.width, height: sender.frame.size.height)
+		popoverPresentationController?.permittedArrowDirections = .up
+
+		delegate?.sortBar(self, presentViewController: tableViewController, animated: true, completionHandler: nil)
 	}
 
 	@objc private func sortSegmentedControllerValueChanged() {
@@ -168,5 +234,14 @@ class SortBar: UIView, Themeable {
 			self.sortMethod = SortMethod.all[selectedIndex]
 			delegate?.sortBar(self, didUpdateSortMethod: self.sortMethod)
 		}
+	}
+
+	// MARK: - UIPopoverPresentationControllerDelegate
+	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+		return .none
+	}
+
+	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+		popoverPresentationController.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 }

@@ -60,6 +60,7 @@
 		39CC8B01228C8A950020253B /* MediaUploadSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8B00228C8A950020253B /* MediaUploadSettingsSection.swift */; };
 		39CC8B37228D5B890020253B /* ShareClientItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8B36228D5B890020253B /* ShareClientItemCell.swift */; };
 		39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */; };
+		39DE75CD22F960CF0064C1E2 /* SortMethodTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39DE75C722F960CF0064C1E2 /* SortMethodTableViewController.swift */; };
 		39E2FDED21FDEC7500F0117F /* ServerListTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */; };
 		39E2FE0021FF814A00F0117F /* ThemeRoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */; };
 		39E98B3E22797D1B009911F1 /* PublicLinkTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E98B3D22797D1B009911F1 /* PublicLinkTableViewController.swift */; };
@@ -189,7 +190,6 @@
 		DC625148225CEB2C00736874 /* UploadFileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC625147225CEB2C00736874 /* UploadFileAction.swift */; };
 		DC62514A225CEB4300736874 /* UploadMediaAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC625149225CEB4300736874 /* UploadMediaAction.swift */; };
 		DC62514C225D254500736874 /* UploadBaseAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC62514B225D254500736874 /* UploadBaseAction.swift */; };
-		DC63207B21FCA712007EC0A8 /* libzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE93FF321FCA434000E14F2 /* libzip.framework */; };
 		DC63207E21FCA731007EC0A8 /* libzip.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = DCE93FF321FCA434000E14F2 /* libzip.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC63208321FCAC1E007EC0A8 /* ClientActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63208221FCAC1E007EC0A8 /* ClientActivityViewController.swift */; };
 		DC63208521FCEBE9007EC0A8 /* ClientActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63208421FCEBE9007EC0A8 /* ClientActivityCell.swift */; };
@@ -198,6 +198,11 @@
 		DC680576212DF548006C3B1F /* CertificateManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */; };
 		DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */; };
 		DC6CF7FB219446050013B9F9 /* LogSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */; };
+		DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = DC774E5D22F44E4A000B11A1 /* ZIPArchive.m */; };
+		DC774E6022F44E57000B11A1 /* ZIPArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = DC774E5C22F44E4A000B11A1 /* ZIPArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC774E6322F44E6D000B11A1 /* OCCore+BundleImport.h in Headers */ = {isa = PBXBuildFile; fileRef = DC774E6122F44E6D000B11A1 /* OCCore+BundleImport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC774E6422F44E6D000B11A1 /* OCCore+BundleImport.m in Sources */ = {isa = PBXBuildFile; fileRef = DC774E6222F44E6D000B11A1 /* OCCore+BundleImport.m */; };
+		DC774E6822F44F6A000B11A1 /* libzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE93FF321FCA434000E14F2 /* libzip.framework */; };
 		DC7DBA1F207F59F800E7337D /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; };
 		DC7DBA20207F5A0400E7337D /* PocketSVG.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = DC7DBA18207F59D200E7337D /* PocketSVG.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC7DBA25207F684700E7337D /* ThemeResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA24207F684700E7337D /* ThemeResource.swift */; };
@@ -389,14 +394,14 @@
 			remoteGlobalIDString = DC3094832057358800189B9A;
 			remoteInfo = ownCloudUI;
 		};
-		DC63207921FCA70C007EC0A8 /* PBXContainerItemProxy */ = {
+		DC63207C21FCA71B007EC0A8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = DCE93FE221FCA42C000E14F2;
 			remoteInfo = libzip;
 		};
-		DC63207C21FCA71B007EC0A8 /* PBXContainerItemProxy */ = {
+		DC774E6622F44F65000B11A1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */;
 			proxyType = 1;
@@ -612,6 +617,7 @@
 		39CC8B00228C8A950020253B /* MediaUploadSettingsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaUploadSettingsSection.swift; sourceTree = "<group>"; };
 		39CC8B36228D5B890020253B /* ShareClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareClientItemCell.swift; sourceTree = "<group>"; };
 		39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
+		39DE75C722F960CF0064C1E2 /* SortMethodTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortMethodTableViewController.swift; sourceTree = "<group>"; };
 		39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableHeaderView.swift; sourceTree = "<group>"; };
 		39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeRoundedButton.swift; sourceTree = "<group>"; };
 		39E98B3D22797D1B009911F1 /* PublicLinkTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicLinkTableViewController.swift; sourceTree = "<group>"; };
@@ -769,6 +775,10 @@
 		DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateManagementViewController.swift; sourceTree = "<group>"; };
 		DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCertificateViewController.swift; sourceTree = "<group>"; };
 		DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSettingsViewController.swift; sourceTree = "<group>"; };
+		DC774E5C22F44E4A000B11A1 /* ZIPArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZIPArchive.h; sourceTree = "<group>"; };
+		DC774E5D22F44E4A000B11A1 /* ZIPArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZIPArchive.m; sourceTree = "<group>"; };
+		DC774E6122F44E6D000B11A1 /* OCCore+BundleImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCCore+BundleImport.h"; sourceTree = "<group>"; };
+		DC774E6222F44E6D000B11A1 /* OCCore+BundleImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OCCore+BundleImport.m"; sourceTree = "<group>"; };
 		DC7DBA11207F59D200E7337D /* PocketSVG.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PocketSVG.xcodeproj; path = external/PocketSVG/PocketSVG.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DC7DBA24207F684700E7337D /* ThemeResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeResource.swift; sourceTree = "<group>"; };
 		DC7DBA28207F71D600E7337D /* VectorImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorImage.swift; sourceTree = "<group>"; };
@@ -905,6 +915,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC774E6822F44F6A000B11A1 /* libzip.framework in Frameworks */,
 				DCC0857B2293F29F008CC05C /* ownCloudSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -923,7 +934,6 @@
 			files = (
 				DCC085812293F66D008CC05C /* ownCloudApp.framework in Frameworks */,
 				DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */,
-				DC63207B21FCA712007EC0A8 /* libzip.framework in Frameworks */,
 				DC27A19120CAA0BA008ACB6C /* MobileCoreServices.framework in Frameworks */,
 				DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */,
 			);
@@ -1309,6 +1319,7 @@
 				4C1561E7222321E0009C4EF3 /* PhotoSelectionViewController.swift */,
 				4C1561EE22232357009C4EF3 /* PhotoSelectionViewCell.swift */,
 				394804D9225CBDBA00AA8183 /* BreadCrumbTableViewController.swift */,
+				39DE75C722F960CF0064C1E2 /* SortMethodTableViewController.swift */,
 			);
 			path = Client;
 			sourceTree = "<group>";
@@ -1335,6 +1346,41 @@
 				DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */,
 			);
 			path = "Certificate Management";
+			sourceTree = "<group>";
+		};
+		DC774E5422F44DF6000B11A1 /* SDK Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				DC774E6222F44E6D000B11A1 /* OCCore+BundleImport.m */,
+				DC774E6122F44E6D000B11A1 /* OCCore+BundleImport.h */,
+			);
+			path = "SDK Extensions";
+			sourceTree = "<group>";
+		};
+		DC774E5A22F44E2A000B11A1 /* Display Settings */ = {
+			isa = PBXGroup;
+			children = (
+				DCC0857D2293F2D7008CC05C /* DisplaySettings.m */,
+				DCC0857C2293F2D7008CC05C /* DisplaySettings.h */,
+			);
+			path = "Display Settings";
+			sourceTree = "<group>";
+		};
+		DC774E5B22F44E4A000B11A1 /* ZIP Archive */ = {
+			isa = PBXGroup;
+			children = (
+				DC774E5D22F44E4A000B11A1 /* ZIPArchive.m */,
+				DC774E5C22F44E4A000B11A1 /* ZIPArchive.h */,
+			);
+			path = "ZIP Archive";
+			sourceTree = "<group>";
+		};
+		DC774E6522F44EA7000B11A1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DCC0855F2293F1FD008CC05C /* Info.plist */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		DC7DBA10207F59C500E7337D /* External */ = {
@@ -1504,9 +1550,10 @@
 			isa = PBXGroup;
 			children = (
 				DCC0855E2293F1FD008CC05C /* ownCloudApp.h */,
-				DCC0857D2293F2D7008CC05C /* DisplaySettings.m */,
-				DCC0857C2293F2D7008CC05C /* DisplaySettings.h */,
-				DCC0855F2293F1FD008CC05C /* Info.plist */,
+				DC774E5A22F44E2A000B11A1 /* Display Settings */,
+				DC774E5422F44DF6000B11A1 /* SDK Extensions */,
+				DC774E5B22F44E4A000B11A1 /* ZIP Archive */,
+				DC774E6522F44EA7000B11A1 /* Resources */,
 			);
 			path = ownCloudAppFramework;
 			sourceTree = "<group>";
@@ -1697,7 +1744,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC774E6022F44E57000B11A1 /* ZIPArchive.h in Headers */,
 				DCC085802293F490008CC05C /* DisplaySettings.h in Headers */,
+				DC774E6322F44E6D000B11A1 /* OCCore+BundleImport.h in Headers */,
 				DCC0856E2293F1FD008CC05C /* ownCloudApp.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1810,6 +1859,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DC774E6722F44F65000B11A1 /* PBXTargetDependency */,
 				DCC0857A2293F296008CC05C /* PBXTargetDependency */,
 			);
 			name = ownCloudApp;
@@ -1846,7 +1896,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				DC63207A21FCA70C007EC0A8 /* PBXTargetDependency */,
 				DCC085832293F671008CC05C /* PBXTargetDependency */,
 				DC27A19320CAA0C6008ACB6C /* PBXTargetDependency */,
 			);
@@ -2439,6 +2488,7 @@
 				DC29F09522976B9300F77349 /* LibrarySharesTableViewController.swift in Sources */,
 				392557FE2278703300E83F60 /* UISearchBar+Extension.swift in Sources */,
 				DC7DBA2B207F71E400E7337D /* VectorImageView.swift in Sources */,
+				39DE75CD22F960CF0064C1E2 /* SortMethodTableViewController.swift in Sources */,
 				DCE974BC207EACA60069FC2B /* UIImage+Extension.swift in Sources */,
 				DC1B2707209CF0D3004715E1 /* IssuesDismissalAnimator.swift in Sources */,
 				23BEF1182076667F00DD2E6F /* IssuesViewController.swift in Sources */,
@@ -2520,6 +2570,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC774E6422F44E6D000B11A1 /* OCCore+BundleImport.m in Sources */,
+				DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */,
 				DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2604,15 +2656,15 @@
 			name = ownCloudUI;
 			targetProxy = DC3BE0D02077BC52002A0AC0 /* PBXContainerItemProxy */;
 		};
-		DC63207A21FCA70C007EC0A8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = libzip;
-			targetProxy = DC63207921FCA70C007EC0A8 /* PBXContainerItemProxy */;
-		};
 		DC63207D21FCA71B007EC0A8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = libzip;
 			targetProxy = DC63207C21FCA71B007EC0A8 /* PBXContainerItemProxy */;
+		};
+		DC774E6722F44F65000B11A1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libzip;
+			targetProxy = DC774E6622F44F65000B11A1 /* PBXContainerItemProxy */;
 		};
 		DC7DBA1E207F59F200E7337D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2855,7 +2907,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 132;
+				CURRENT_PROJECT_VERSION = 133;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}";
 				GCC_WARN_UNUSED_LABEL = YES;
@@ -2883,7 +2935,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 132;
+				CURRENT_PROJECT_VERSION = 133;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}";
 				GCC_WARN_UNUSED_LABEL = YES;
@@ -3029,17 +3081,17 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 132;
+				CURRENT_PROJECT_VERSION = 133;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 132;
+				DYLIB_CURRENT_VERSION = 133;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = ownCloudAppFramework/Info.plist;
+				INFOPLIST_FILE = ownCloudAppFramework/Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -3062,13 +3114,13 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 132;
+				CURRENT_PROJECT_VERSION = 133;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 132;
+				DYLIB_CURRENT_VERSION = 133;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = ownCloudAppFramework/Info.plist;
+				INFOPLIST_FILE = ownCloudAppFramework/Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
