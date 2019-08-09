@@ -166,7 +166,6 @@
 		DC297967226E4D3100E01BC7 /* PushPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC297966226E4D3100E01BC7 /* PushPresentationController.swift */; };
 		DC297969226E52E600E01BC7 /* PushTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC297968226E52E600E01BC7 /* PushTransition.swift */; };
 		DC29F09022974AEA00F77349 /* QueryFileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29F08F22974AEA00F77349 /* QueryFileListTableViewController.swift */; };
-		DC29F09422976B9300F77349 /* LibraryFilesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29F09322976B9200F77349 /* LibraryFilesTableViewController.swift */; };
 		DC29F09522976B9300F77349 /* LibrarySharesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC29F09222976B9200F77349 /* LibrarySharesTableViewController.swift */; };
 		DC321261207EB01B00DB171D /* ThemeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC321260207EB01B00DB171D /* ThemeImage.swift */; };
 		DC3317CE2084966700E36C8F /* ThemeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3317CD2084966700E36C8F /* ThemeTableViewCell.swift */; };
@@ -749,7 +748,6 @@
 		DC297968226E52E600E01BC7 /* PushTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushTransition.swift; sourceTree = "<group>"; };
 		DC29F08F22974AEA00F77349 /* QueryFileListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryFileListTableViewController.swift; sourceTree = "<group>"; };
 		DC29F09222976B9200F77349 /* LibrarySharesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LibrarySharesTableViewController.swift; path = ownCloud/Client/Library/LibrarySharesTableViewController.swift; sourceTree = SOURCE_ROOT; };
-		DC29F09322976B9200F77349 /* LibraryFilesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LibraryFilesTableViewController.swift; path = ownCloud/Client/Library/LibraryFilesTableViewController.swift; sourceTree = SOURCE_ROOT; };
 		DC321260207EB01B00DB171D /* ThemeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeImage.swift; sourceTree = "<group>"; };
 		DC3317CD2084966700E36C8F /* ThemeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewCell.swift; sourceTree = "<group>"; };
 		DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientQueryViewController.swift; sourceTree = "<group>"; };
@@ -1135,7 +1133,6 @@
 			children = (
 				3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */,
 				DC29F09222976B9200F77349 /* LibrarySharesTableViewController.swift */,
-				DC29F09322976B9200F77349 /* LibraryFilesTableViewController.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -2463,7 +2460,6 @@
 				DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */,
 				DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */,
 				23EC77582137F3DD0032D4E6 /* PDFViewerViewController.swift in Sources */,
-				DC29F09422976B9300F77349 /* LibraryFilesTableViewController.swift in Sources */,
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
 				23EC775B2137F3DD0032D4E6 /* OCExtensionType+Extension.swift in Sources */,
 				4C88041822E78D790016CBA9 /* MediaFilesSettings.swift in Sources */,
