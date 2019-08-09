@@ -344,8 +344,11 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	// MARK: - Table view delegate
 
 	override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-		if sortMethod == .alphabeticallyAscendant || sortMethod == .alphabeticallyDescendant {
-			let indexTitles = Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
+		if sortMethod == .alphabetically {
+			var indexTitles = Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
+			if sortDirection == .descendant {
+				indexTitles.reverse()
+			}
 			if #available(iOS 12.0, *) {
 				if Int(tableView.estimatedRowHeight) * self.items.count > Int(tableView.visibleSize.height), indexTitles.count > 1 {
 					return indexTitles
