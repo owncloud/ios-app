@@ -323,7 +323,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 			// UITableView can call this method several times for the same cell, and .dequeueReusableCell will then return the same cell again.
 			// Make sure we don't request the thumbnail multiple times in that case.
-			if newItem.displaysDifferent(than: cell?.item) {
+			if newItem.displaysDifferent(than: cell?.item, in: core) {
 				cell?.item = newItem
 			}
 		}
