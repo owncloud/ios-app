@@ -125,14 +125,24 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 				sortSegmentedControl.rightAnchor.constraint(lessThanOrEqualTo: self.rightAnchor, constant: -rightPadding)
 			])
 
+			var longestTitleWidth : CGFloat = 0.0
 			for method in SortMethod.all {
 				sortSegmentedControl.insertSegment(withTitle: method.localizedName(), at: SortMethod.all.index(of: method)!, animated: false)
+				let titleWidth = method.localizedName().appending(" ↓").width(withConstrainedHeight: sortSegmentedControl.frame.size.height, font: UIFont.systemFont(ofSize: 16.0))
+				if titleWidth > longestTitleWidth {
+					longestTitleWidth = titleWidth
+				}
+			}
+
+			var currentIndex = 0
+			for _ in SortMethod.all {
+				sortSegmentedControl.setWidth(longestTitleWidth, forSegmentAt: currentIndex)
+				currentIndex += 1
 			}
 
 			sortSegmentedControl.selectedSegmentIndex = SortMethod.all.index(of: sortMethod)!
 			sortSegmentedControl.isHidden = true
 			sortSegmentedControl.addTarget(self, action: #selector(sortSegmentedControllerValueChanged), for: .valueChanged)
-			sortSegmentedControl.apportionsSegmentWidthsByContent = true
 
 			// Sort Button
 			sortButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
