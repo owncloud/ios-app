@@ -402,7 +402,7 @@ class LibraryTableViewController: StaticTableViewController {
 			let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 
 				if let query = query {
-					let customFileListController = LibraryFilesTableViewController(core: core, query: query)
+					let customFileListController = QueryFileListTableViewController(core: core, query: query)
 					customFileListController.title = title
 					customFileListController.pullToRefreshAction = actionHandler
 					self?.navigationController?.pushViewController(customFileListController, animated: true)

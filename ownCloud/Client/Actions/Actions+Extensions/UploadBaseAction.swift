@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 class UploadBaseAction: Action {
 
@@ -41,7 +42,7 @@ class UploadBaseAction: Action {
 
 	// MARK: - Upload
 	func upload(itemURL: URL, to rootItem: OCItem, name: String, completionHandler: UploadCompletionHandler? = nil, placeholderHandler:UploadPlaceholderCompletionHandler? = nil, importByCopy:Bool = false) {
-		if let progress = core?.importFileNamed(name,
+		if let progress = core?.importItemNamed(name,
 							at: rootItem,
 							from: itemURL,
 							isSecurityScoped: false,

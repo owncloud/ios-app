@@ -194,7 +194,7 @@ class ItemPolicyTableViewController : FileListTableViewController {
 			}
 
 			if let core = core, let query = query {
-				let customFileListController = LibraryFilesTableViewController(core: core, query: query)
+				let customFileListController = QueryFileListTableViewController(core: core, query: query)
 				customFileListController.title = title
 				customFileListController.pullToRefreshAction = nil
 				self.navigationController?.pushViewController(customFileListController, animated: true)
