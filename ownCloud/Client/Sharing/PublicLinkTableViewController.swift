@@ -257,7 +257,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 
 	@objc func addPublicLink() {
 		if let path = item.path, let core = core {
-			var permissions : OCSharePermissionsMask = [.create, .read]
+			let permissions : OCSharePermissionsMask = [.create, .read]
 			let share = OCShare(publicLinkToPath: path, linkName: defaultLinkName(), permissions: permissions, password: nil, expiration: nil)
 			let editPublicLinkViewController = PublicLinkEditTableViewController(share: share, core: core, item: self.item, defaultLinkName: defaultLinkName())
 			editPublicLinkViewController.createLink = true
