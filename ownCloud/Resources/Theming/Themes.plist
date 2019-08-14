@@ -118,25 +118,25 @@
 				<key>Table</key>
 				<dict>
 					<key>tableBackgroundColor</key>
-					<string>ffff00</string>
+					<string>FFFFFF</string>
 					<key>tableGroupBackgroundColor</key>
-					<string>efeff4</string>
+					<string>000000</string>
 					<key>tableSeparatorColor</key>
-					<string></string>
+					<string>E3DDF4</string>
 					<key>tableRowBorderColor</key>
 					<string>000000</string>
 					<key>tableRowColors</key>
 					<dict>
 						<key>backgroundColor</key>
-						<string>ff00ff</string>
+						<string>FFFFFF</string>
 						<key>labelColor</key>
-						<string>000000</string>
+						<string>2E2350</string>
 						<key>secondaryLabelColor</key>
-						<string>7f7f7f</string>
+						<string>827B96</string>
 						<key>symbolColor</key>
-						<string>1d293b</string>
+						<string>7357C7</string>
 						<key>tintColor</key>
-						<string></string>
+						<string>7357C7</string>
 						<key>filledColorPairCollection</key>
 						<dict>
 							<key>normal</key>
@@ -165,11 +165,11 @@
 					<key>tableRowHighlightColors</key>
 					<dict>
 						<key>backgroundColor</key>
-						<string>440099</string>
+						<string>e3e3e3</string>
 						<key>labelColor</key>
 						<string>000000</string>
 						<key>secondaryLabelColor</key>
-						<string>7f7f7f</string>
+						<string>827B96</string>
 						<key>symbolColor</key>
 						<string>1d293b</string>
 						<key>tintColor</key>
@@ -203,35 +203,35 @@
 				<key>Icon</key>
 				<dict>
 					<key>folderFillColor</key>
-					<string>1d293b</string>
+					<string>7357C7</string>
 					<key>fileFillColor</key>
-					<string>1d293b</string>
+					<string>7357C7</string>
 					<key>logoFillColor</key>
-					<string>aaaaaa</string>
+					<string>7357C7</string>
 					<key>iconFillColor</key>
-					<string>1d293b</string>
+					<string>7357C7</string>
 					<key>symbolFillColor</key>
-					<string>1d293b</string>
+					<string>7357C7</string>
 				</dict>
 				<key>Progress</key>
 				<dict>
 					<key>foreground</key>
-					<string>468cc8</string>
+					<string>000000</string>
 					<key>background</key>
-					<string>aaaaaa</string>
+					<string>000000</string>
 				</dict>
 				<key>Toolbar</key>
 				<dict>
 					<key>backgroundColor</key>
-					<string>ffffff</string>
+					<string>7357C7</string>
 					<key>labelColor</key>
 					<string>ffffff</string>
 					<key>secondaryLabelColor</key>
-					<string>aaaaaa</string>
+					<string>AB9ADD</string>
 					<key>symbolColor</key>
 					<string>ffffff</string>
 					<key>tintColor</key>
-					<string>6ba3d3</string>
+					<string>ffffff</string>
 					<key>filledColorPairCollection</key>
 					<dict>
 						<key>normal</key>
@@ -260,15 +260,15 @@
 				<key>NavigationBar</key>
 				<dict>
 					<key>backgroundColor</key>
-					<string>ff9900</string>
+					<string>7357C7</string>
 					<key>labelColor</key>
 					<string>ffffff</string>
 					<key>secondaryLabelColor</key>
-					<string>aaaaaa</string>
+					<string>ffffff</string>
 					<key>symbolColor</key>
 					<string>ffffff</string>
 					<key>tintColor</key>
-					<string>6ba3d3</string>
+					<string>E3DDF4</string>
 					<key>filledColorPairCollection</key>
 					<dict>
 						<key>normal</key>
