@@ -5,9 +5,9 @@
 	<key>Generic</key>
 	<dict>
 		<key>darkBrandColor</key>
-		<string>FF0000</string>
+		<string>6849BF</string>
 		<key>lightBrandColor</key>
-		<string>FFFFFF</string>
+		<string>5C469F</string>
 	</dict>
 	<key>Themes</key>
 	<array>
@@ -120,7 +120,7 @@
 					<key>tableBackgroundColor</key>
 					<string>FFFFFF</string>
 					<key>tableGroupBackgroundColor</key>
-					<string>000000</string>
+					<string>f5f5f5</string>
 					<key>tableSeparatorColor</key>
 					<string>E3DDF4</string>
 					<key>tableRowBorderColor</key>
