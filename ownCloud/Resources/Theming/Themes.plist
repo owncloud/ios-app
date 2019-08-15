@@ -5,9 +5,9 @@
 	<key>Generic</key>
 	<dict>
 		<key>darkBrandColor</key>
-		<string>6849BF</string>
+		<string>ED6B06</string>
 		<key>lightBrandColor</key>
-		<string>5C469F</string>
+		<string>ED6B06</string>
 	</dict>
 	<key>Themes</key>
 	<array>
@@ -21,7 +21,7 @@
 			<key>Colors</key>
 			<dict>
 				<key>tintColor</key>
-				<string>468cc8</string>
+				<string>FFCF87</string>
 				<key>Label</key>
 				<dict>
 					<key>informativeColor</key>
@@ -130,13 +130,13 @@
 						<key>backgroundColor</key>
 						<string>FFFFFF</string>
 						<key>labelColor</key>
-						<string>2E2350</string>
+						<string>000000</string>
 						<key>secondaryLabelColor</key>
-						<string>827B96</string>
+						<string>6c6c6c</string>
 						<key>symbolColor</key>
-						<string>7357C7</string>
+						<string>ED6B06</string>
 						<key>tintColor</key>
-						<string>7357C7</string>
+						<string>ED6B06</string>
 						<key>filledColorPairCollection</key>
 						<dict>
 							<key>normal</key>
@@ -169,9 +169,9 @@
 						<key>labelColor</key>
 						<string>000000</string>
 						<key>secondaryLabelColor</key>
-						<string>827B96</string>
+						<string>6c6c6c</string>
 						<key>symbolColor</key>
-						<string>1d293b</string>
+						<string>2d2d2d</string>
 						<key>tintColor</key>
 						<string></string>
 						<key>filledColorPairCollection</key>
@@ -203,15 +203,15 @@
 				<key>Icon</key>
 				<dict>
 					<key>folderFillColor</key>
-					<string>7357C7</string>
+					<string>ED6B06</string>
 					<key>fileFillColor</key>
-					<string>7357C7</string>
+					<string>ED6B06</string>
 					<key>logoFillColor</key>
-					<string>7357C7</string>
+					<string>ED6B06</string>
 					<key>iconFillColor</key>
-					<string>7357C7</string>
+					<string>ED6B06</string>
 					<key>symbolFillColor</key>
-					<string>7357C7</string>
+					<string>ED6B06</string>
 				</dict>
 				<key>Progress</key>
 				<dict>
@@ -223,7 +223,7 @@
 				<key>Toolbar</key>
 				<dict>
 					<key>backgroundColor</key>
-					<string>7357C7</string>
+					<string>ED6B06</string>
 					<key>labelColor</key>
 					<string>ffffff</string>
 					<key>secondaryLabelColor</key>
@@ -260,7 +260,7 @@
 				<key>NavigationBar</key>
 				<dict>
 					<key>backgroundColor</key>
-					<string>7357C7</string>
+					<string>ED6B06</string>
 					<key>labelColor</key>
 					<string>ffffff</string>
 					<key>secondaryLabelColor</key>
