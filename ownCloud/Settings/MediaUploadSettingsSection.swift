@@ -29,7 +29,11 @@ extension UserDefaults {
 		case InstantUploadVideosKey = "instant-upload-videos"
 		case InstantUploadBookmarkUUIDKey = "instant-upload-bookmark-uuid"
 		case InstantUploadPathKey = "instant-upload-path"
+		case InstantUploadPhotosAfterDateKey = "instant-upload-photos-after-date"
+		case InstatnUploadVideosAfterDateKey = "instant-upload-videos-after-date"
 	}
+
+	static let MediaUploadSettingsChangedNotification = NSNotification.Name("settings.media-upload-settings-changed")
 
 	public var convertHeic: Bool {
 		set {
@@ -95,6 +99,26 @@ extension UserDefaults {
 			return self.string(forKey: MediaUploadKeys.InstantUploadPathKey.rawValue)
 		}
 	}
+
+	public var instantUploadPhotosAfter: Date? {
+		set {
+			self.set(newValue, forKey: MediaUploadKeys.InstantUploadPhotosAfterDateKey.rawValue)
+		}
+
+		get {
+			return self.value(forKey: MediaUploadKeys.InstantUploadPhotosAfterDateKey.rawValue) as? Date
+		}
+	}
+
+	public var instantUploaVideosAfter: Date? {
+		set {
+			self.set(newValue, forKey: MediaUploadKeys.InstatnUploadVideosAfterDateKey.rawValue)
+		}
+
+		get {
+			return self.value(forKey: MediaUploadKeys.InstatnUploadVideosAfterDateKey.rawValue) as? Date
+		}
+	}
 }
 
 class MediaUploadSettingsSection: SettingsSection {
@@ -131,18 +155,26 @@ class MediaUploadSettingsSection: SettingsSection {
 
 		instantUploadPhotosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 			if let convertSwitch = sender as? UISwitch {
-				self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (value) in
-					self?.userDefaults.instantUploadPhotos = value
+				self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (switchState) in
+					self?.userDefaults.instantUploadPhotos = switchState
 					self?.updateDynamicUI()
+
+					self?.userDefaults.instantUploadPhotosAfter = switchState ? Date() : nil
+
+					NotificationCenter.default.post(name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
 				})
 			}
 			}, title: "Instant Upload Photos".localized, value: self.userDefaults.instantUploadPhotos)
 
 		instantUploadVideosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 			if let convertSwitch = sender as? UISwitch {
-				self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (value) in
-					self?.userDefaults.instantUploadVideos = value
+				self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (switchState) in
+					self?.userDefaults.instantUploadVideos = switchState
 					self?.updateDynamicUI()
+
+					self?.userDefaults.instantUploaVideosAfter = switchState ? Date() : nil
+
+					NotificationCenter.default.post(name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
 				})
 			}
 			}, title: "Instant Upload Videos".localized, value: self.userDefaults.instantUploadVideos)
@@ -244,11 +276,13 @@ class MediaUploadSettingsSection: SettingsSection {
 				// Reflect user selection in the UI
 				let selectedBookmark = bookmarkDictionary[row]
 				self?.userDefaults.instantUploadBookmarkUUID = selectedBookmark?.uuid
-				self?.updateBookmarkSelectionRow()
 
 				// Remove eventually existing path selection when account is switched
 				self?.userDefaults.instantUploadPath = nil
-				self?.updateUploadPathSelectionRow()
+
+				self?.updateDynamicUI()
+
+				NotificationCenter.default.post(name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
 
 			}, title: bookmark.shortName, style: .plain, image: Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25)), imageWidth: 25, alignment: .left)
 
@@ -279,6 +313,8 @@ class MediaUploadSettingsSection: SettingsSection {
 														if selectedDirectory != nil {
 															self?.userDefaults.instantUploadPath = selectedDirectory?.path
 															self?.updateUploadPathSelectionRow()
+
+															NotificationCenter.default.post(name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
 														}
 													})
 													let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)

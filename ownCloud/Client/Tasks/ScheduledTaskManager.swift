@@ -23,7 +23,6 @@ import Photos
 import ownCloudSDK
 
 class ScheduledTaskManager : NSObject {
-
 	enum State {
 		case launched, foreground, background, backgroundFetch
 
@@ -50,6 +49,8 @@ class ScheduledTaskManager : NSObject {
 	private var wifiDetected = false
 	private var wifiMonitorQueue: DispatchQueue?
 	private var wifiMonitor : Any?
+	private var monitoringPhotoLibrary = false
+	private var photoLibraryChangeDetected = false
 
 	var considerLowBattery : Bool {
 		get {
@@ -73,6 +74,9 @@ class ScheduledTaskManager : NSObject {
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationStateChange), name: UIApplication.didEnterBackgroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationStateChange), name: UIApplication.didBecomeActiveNotification, object: nil)
 
+		// Monitor media upload settings changes
+		NotificationCenter.default.addObserver(self, selector: #selector(mediaUploadSettingsDidChange), name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
+
 		// In iOS12 or later, activate Wifi monitoring
 		if #available(iOS 12, *) {
 			wifiMonitorQueue = DispatchQueue(label: "com.owncloud.scheduled_task_mgr.wifi_monitor")
@@ -89,6 +93,8 @@ class ScheduledTaskManager : NSObject {
 		}
 
 		checkPowerState()
+
+		startMonitoringPhotoLibraryChangesIfNecessary()
 	}
 
 	deinit {
@@ -96,7 +102,10 @@ class ScheduledTaskManager : NSObject {
 		if #available(iOS 12, *) {
 			(wifiMonitor as? NWPathMonitor)?.cancel()
 		}
+		stopMonitoringPhotoLibraryChanges()
 	}
+
+	// MARK: - Notifications handling
 
 	@objc private func applicationStateChange(notificaton:Notification) {
 		switch notificaton.name {
@@ -118,12 +127,24 @@ class ScheduledTaskManager : NSObject {
 		}
 	}
 
+	@objc private func mediaUploadSettingsDidChange(notification:Notification) {
+		if shallMonitorPhotoLibraryChanges() {
+			startMonitoringPhotoLibraryChangesIfNecessary()
+		} else {
+			stopMonitoringPhotoLibraryChanges()
+		}
+	}
+
+	// MARK: - Background fetching
+
 	func backgroundFetch(completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 		self.state = .backgroundFetch
 		scheduleTasks(fetchCompletion: completionHandler)
 	}
 
-	private func scheduleTasks(fetchCompletion:((UIBackgroundFetchResult) -> Void)? = nil) {
+	// MARK: - Private methods
+
+	private func scheduleTasks(fetchCompletion:((UIBackgroundFetchResult) -> Void)? = nil, completion:((_ scheduledTaskCount:Int)->Void)? = nil) {
 		OnMainThread {
 			// Build a context
 			let location = OCExtensionLocation(ofType: .scheduledTask, identifier: self.state.locationIdentifier())
@@ -138,6 +159,9 @@ class ScheduledTaskManager : NSObject {
 			}
 			if self.externalPowerConnected {
 				requirements[ScheduledTaskAction.FeatureKeys.runOnExternalPower] = true
+			}
+			if self.photoLibraryChangeDetected {
+				requirements[ScheduledTaskAction.FeatureKeys.photoLibraryChanged] = true
 			}
 
 			let context = OCExtensionContext(location: location, requirements: requirements, preferences: nil)
@@ -158,6 +182,10 @@ class ScheduledTaskManager : NSObject {
 						}
 					}
 				}
+
+				completion?(matches.count)
+			} else {
+				completion?(0)
 			}
 		}
 	}
@@ -168,6 +196,48 @@ class ScheduledTaskManager : NSObject {
 		}
 		if UIDevice.current.batteryState != .unknown {
 			externalPowerConnected = (UIDevice.current.batteryState != .unplugged)
+		}
+	}
+}
+
+extension ScheduledTaskManager : PHPhotoLibraryChangeObserver {
+
+	// MARK: - PHPhotoLibraryChangeObserver
+
+	func photoLibraryDidChange(_ changeInstance: PHChange) {
+		if !photoLibraryChangeDetected {
+			photoLibraryChangeDetected = true
+			scheduleTasks( completion:{ [weak self] (taskCount) in
+				if taskCount > 0 {
+					self?.photoLibraryChangeDetected = false
+				}
+			})
+		}
+	}
+
+	// MARK: - Helper methods
+
+	private func shallMonitorPhotoLibraryChanges() -> Bool {
+		guard PHPhotoLibrary.authorizationStatus() == .authorized else { return false }
+
+		guard let settings = OCAppIdentity.shared.userDefaults else { return false }
+
+		guard settings.instantUploaVideosAfter != nil || settings.instantUploadPhotosAfter != nil else { return false }
+
+		return true
+	}
+
+	private func startMonitoringPhotoLibraryChangesIfNecessary() {
+		if !monitoringPhotoLibrary && shallMonitorPhotoLibraryChanges() {
+			PHPhotoLibrary.shared().register(self)
+			monitoringPhotoLibrary = true
+		}
+	}
+
+	private func stopMonitoringPhotoLibraryChanges() {
+		if monitoringPhotoLibrary {
+			PHPhotoLibrary.shared().unregisterChangeObserver(self)
+			monitoringPhotoLibrary = false
 		}
 	}
 }

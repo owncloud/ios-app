@@ -21,9 +21,14 @@ import ownCloudSDK
 import Photos
 
 class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
+
+	enum MediaType {
+		case images, videos, imagesAndVideos
+	}
+
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.instant_media_upload") }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.appBackgroundFetch] }
-	override class var features : [String : Any]? { return [ FeatureKeys.runOnWifi : true] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.appDidComeToForeground] }
+	override class var features : [String : Any]? { return [ FeatureKeys.photoLibraryChanged : true, FeatureKeys.runOnWifi : true] }
 
 	override func run(background:Bool) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
@@ -39,19 +44,55 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 			OCCoreManager.shared.requestCore(for: bookmark, setup:nil, completionHandler: { (core, _) in
 				if let core = core {
 					core.delegate = self
-					// TODO:
+
+					let pathQuery = OCQuery(forPath: path)
+					pathQuery.changesAvailableNotificationHandler = { query in
+						if query.state == .idle {
+							core.stop(query)
+
+							if let rootItem = query.rootItem {
+								// Upload new photos
+								if let uploadPhotosAfter = userDefaults.instantUploadPhotosAfter {
+									if let photoFetchResult = self.fetchAssetsFromCameraRoll(.images, createdAfter: uploadPhotosAfter) {
+										var assets = [PHAsset]()
+										photoFetchResult.enumerateObjects({ (asset, _, _) in
+											assets.append(asset)
+										})
+										MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { asset in
+											userDefaults.instantUploadPhotosAfter = asset.modificationDate
+										})
+									}
+								}
+
+								// Upload new videos
+								if let uploadVideosAfter = userDefaults.instantUploaVideosAfter {
+									if let photoFetchResult = self.fetchAssetsFromCameraRoll(.videos, createdAfter: uploadVideosAfter) {
+										var assets = [PHAsset]()
+										photoFetchResult.enumerateObjects({ (asset, _, _) in
+											assets.append(asset)
+										})
+										MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { asset in
+											userDefaults.instantUploadPhotosAfter = asset.modificationDate
+										})									}
+								}
+							}
+						}
+					}
+					core.start(pathQuery)
 				}
 			})
 		}
-
-
 	}
 
 	func core(_ core: OCCore, handleError error: Error?, issue: OCIssue?) {
-		// TODO
+		if let error = error {
+			self.result = .failure(error)
+			Log.error("Error \(String(describing: error))")
+		}
+		completed()
 	}
 
-	func fetchAssetsFromCameraRoll(_ includeVideos:Bool, createdAfter:Date? = nil) -> PHFetchResult<PHAsset>? {
+	func fetchAssetsFromCameraRoll(_ mediaType:MediaType, createdAfter:Date? = nil) -> PHFetchResult<PHAsset>? {
 
 		guard PHPhotoLibrary.authorizationStatus() == .authorized else { return nil }
 
@@ -64,8 +105,14 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 			let videoTypePredicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
 
 			var typePredicatesArray = [NSPredicate]()
-			typePredicatesArray.append(imageTypePredicate)
-			if includeVideos {
+
+			switch mediaType {
+			case .images:
+				typePredicatesArray.append(imageTypePredicate)
+			case .videos:
+				typePredicatesArray.append(videoTypePredicate)
+			case .imagesAndVideos:
+				typePredicatesArray.append(imageTypePredicate)
 				typePredicatesArray.append(videoTypePredicate)
 			}
 
@@ -74,13 +121,13 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 			let fetchOptions = PHFetchOptions()
 
 			if let date = createdAfter {
-				let creationDatePredicate = NSPredicate(format: "creationDate > %@", date as NSDate)
+				let creationDatePredicate = NSPredicate(format: "modificationDate > %@", date as NSDate)
 				fetchOptions.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [mediaTypesPredicate, creationDatePredicate])
 			} else {
 				fetchOptions.predicate = mediaTypesPredicate
 			}
 
-			let sort = NSSortDescriptor(key: "creationDate", ascending: true)
+			let sort = NSSortDescriptor(key: "modificationDate", ascending: true)
 			fetchOptions.sortDescriptors = [sort]
 
 			return PHAsset.fetchAssets(in: cameraRoll, options: fetchOptions)

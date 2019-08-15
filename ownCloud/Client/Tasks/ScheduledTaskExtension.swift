@@ -36,6 +36,7 @@ class ScheduledTaskAction : NSObject {
 		static let runOnLowBattery: String = "runOnLowBattery"
 		static let runOnExternalPower: String = "runOnExternalPower"
 		static let runOnWifi: String = "runOnWifi"
+		static let photoLibraryChanged: String = "photoLibraryChanged"
 	}
 
 	typealias ActionResult = Result<Any?, Error>

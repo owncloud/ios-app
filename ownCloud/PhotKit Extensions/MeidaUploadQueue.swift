@@ -16,7 +16,7 @@ class MediaUploadQueue {
 
 	static let shared = MediaUploadQueue()
 
-	func uploadAssets(_ assets:[PHAsset], with core:OCCore, at rootItem:OCItem, progressHandler:((Progress)->Void)? = nil ) {
+	func uploadAssets(_ assets:[PHAsset], with core:OCCore, at rootItem:OCItem, progressHandler:((Progress)->Void)? = nil, assetUploadCompletion:((_ asset:PHAsset)->Void)? = nil ) {
 
 		let queue = DispatchQueue.global(qos: .userInitiated)
 
@@ -46,6 +46,8 @@ class MediaUploadQueue {
 							asset.upload(with: core, at: rootItem, preferredFormats: prefferedMediaOutputFormats, completionHandler: { (item, _) in
 								if item == nil {
 									uploadFailed = true
+								} else {
+									assetUploadCompletion?(asset)
 								}
 								uploadGroup.leave()
 							}, progressHandler: { (progress) in
