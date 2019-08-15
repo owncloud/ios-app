@@ -58,8 +58,13 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 										photoFetchResult.enumerateObjects({ (asset, _, _) in
 											assets.append(asset)
 										})
-										MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { asset in
-											userDefaults.instantUploadPhotosAfter = asset.modificationDate
+										MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
+											if let asset = asset {
+												userDefaults.instantUploadPhotosAfter = asset.modificationDate
+											}
+											if finished {
+												self.completed()
+											}
 										})
 									}
 								}
@@ -71,9 +76,15 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 										photoFetchResult.enumerateObjects({ (asset, _, _) in
 											assets.append(asset)
 										})
-										MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { asset in
-											userDefaults.instantUploadPhotosAfter = asset.modificationDate
-										})									}
+										MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
+											if let asset = asset {
+												userDefaults.instantUploadPhotosAfter = asset.modificationDate
+											}
+											if finished {
+												self.completed()
+											}
+										})
+									}
 								}
 							}
 						}
