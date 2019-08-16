@@ -180,7 +180,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				values.append(["Download / View / Upload".localized : 1])
 			}
 
-			if (share.permissions.isSuperset(of: [.read])) || canIncreasePemissions {
+			if (share.permissions.isSuperset(of: [.create])) || canIncreasePemissions {
 				values.append(["Upload only (File Drop)".localized : 2])
 			}
 
