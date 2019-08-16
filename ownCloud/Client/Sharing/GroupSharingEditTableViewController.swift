@@ -172,11 +172,14 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 	}
 
 	func addPermissionEditSection(animated : Bool = false, selected : Bool = false) {
+
+		guard let permissions = share?.permissions else { return }
+
 		let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "permission-edit-section")
 
-		let shallAddCreateRow = hasAnyPermission(of: [.create]) || canIncreasePermissions
-		let shallAddChangeRow = hasAnyPermission(of: [.update]) || canIncreasePermissions
-		let shallAddDeleteRow = hasAnyPermission(of: [.delete]) || canIncreasePermissions
+		let shallAddCreateRow = permissions.isSuperset(of: [.create]) || canIncreasePermissions
+		let shallAddChangeRow = permissions.isSuperset(of: [.update])  || canIncreasePermissions
+		let shallAddDeleteRow = permissions.isSuperset(of: [.delete]) || canIncreasePermissions
 
 		if shallAddCreateRow {
 			self.addPermissionRow(to: section, with: "Can Create", permission: .create, selected: (selected ? selected : hasAnyPermission(of: [.create])), identifier: "permission-section-edit-create")
