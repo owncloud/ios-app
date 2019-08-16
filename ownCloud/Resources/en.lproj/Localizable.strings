@@ -420,9 +420,13 @@
 "unknown" = "unknown";
 "Offline files use" = "Offline files use";
 "Compacting of '%@' failed" = "Compacting of '%@' failed";
+"Include available offline files" = "Include available offline files";
 "Delete Local Copies" = "Delete Local Copies";
 "Manage" = "Manage";
 "Storage" = "Storage";
+
+"Really include available offline files?" = "Really include available offline files?";
+"Files and folders marked as Available Offline will be re-downloaded next time you log into your account." = "Files and folders marked as Available Offline will be re-downloaded next time you log into your account.";
 
 /* Available offline */
 "Root folder" = "Root folder";
