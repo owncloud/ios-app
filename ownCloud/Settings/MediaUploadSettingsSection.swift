@@ -62,13 +62,13 @@ class MediaUploadSettingsSection: SettingsSection {
 			if let convertSwitch = sender as? UISwitch {
 				self?.userDefaults.convertHeic = convertSwitch.isOn
 			}
-			}, title: "Convert HEIC to JPEG".localized, value: self.userDefaults.convertHeic)
+			}, title: "Convert HEIC to JPEG".localized, value: self.userDefaults.convertHeic, identifier: "convert_heic_to_jpeg")
 
 		convertVideosSwitchRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 			if let convertSwitch = sender as? UISwitch {
 				self?.userDefaults.convertVideosToMP4 = convertSwitch.isOn
 			}
-			}, title: "Convert videos to MP4".localized, value: self.userDefaults.convertVideosToMP4)
+			}, title: "Convert videos to MP4".localized, value: self.userDefaults.convertVideosToMP4, identifier: "convert_to_mp4")
 
 		self.add(row: convertPhotosSwitchRow!)
 		self.add(row: convertVideosSwitchRow!)

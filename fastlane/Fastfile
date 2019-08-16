@@ -95,7 +95,7 @@ platform :ios do
 
     update_app_identifier(
       xcodeproj: "ownCloud.xcodeproj",
-      plist_path: "ownCloudAppFramework/Info.plist",
+      plist_path: "ownCloudAppFramework/Resources/Info.plist",
       app_identifier: ENTERPRISE_APP_FW_ID
     )
 

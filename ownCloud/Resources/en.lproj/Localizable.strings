@@ -82,8 +82,7 @@
 "Sort by %@" = "Sort by %@";
 "Sort by" = "Sort by";
 
-"name (A-Z)" = "name (A-Z)";
-"name (Z-A)" = "name (Z-A)";
+"name" = "name";
 "type" = "type";
 "size" = "size";
 "date" = "date";
@@ -111,12 +110,20 @@
 "Not now" = "Not now";
 "Upload file" = "Upload file";
 "Upload files" = "Upload files";
-"Ignore" = "Ignore";
-"Authorization failed" = "Authorization failed";
-"The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+
 "No matches" = "No matches";
 "There are no results for this search term" = "There are no results for this search term";
 "Status" = "Status";
+
+"Authorization failed" = "Authorization failed";
+"The account has been disabled." = "The account has been disabled.";
+"The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+"Access denied" = "Access denied";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "The connection's access token has expired or become invalid. Sign in again to re-gain access.";
+"No authentication data has been found for this connection." = "No authentication data has been found for this connection.";
+"Sign in" = "Sign in";
+"Ignore" = "Ignore";
+"Continue offline" = "Continue offline";
 
 /* Server List*/
 "Cancel" = "Cancel";

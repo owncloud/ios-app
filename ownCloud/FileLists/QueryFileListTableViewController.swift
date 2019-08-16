@@ -42,7 +42,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		query.delegate = self
 
 		if query.sortComparator == nil {
-			query.sortComparator = self.sortMethod.comparator()
+			query.sortComparator = self.sortMethod.comparator(direction: sortDirection)
 		}
 
 		core?.start(query)
@@ -72,13 +72,22 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	// MARK: - Sorting
 	var sortBar: SortBar?
 	var sortMethod: SortMethod {
-
 		set {
 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
 		}
 
 		get {
-			let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabeticallyDescendant
+			let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabetically
+			return sort
+		}
+	}
+	var sortDirection: SortDirection {
+		set {
+			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-direction")
+		}
+
+		get {
+			let sort = SortDirection(rawValue: UserDefaults.standard.integer(forKey: "sort-direction")) ?? SortDirection.ascendant
 			return sort
 		}
 	}
@@ -184,7 +193,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
 		sortMethod = didUpdateSortMethod
-		query.sortComparator = sortMethod.comparator()
+		query.sortComparator = sortMethod.comparator(direction: sortDirection)
 	}
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?) {
@@ -251,6 +260,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
 		self.searchController?.searchBar.applyThemeCollection(collection)
+		tableView.sectionIndexColor = collection.tintColor
 	}
 
 	// MARK: - Events
@@ -329,5 +339,41 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		}
 
 		return cell!
+	}
+
+	// MARK: - Table view delegate
+
+	override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+		if sortMethod == .alphabetically {
+			var indexTitles = Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
+			if sortDirection == .descendant {
+				indexTitles.reverse()
+			}
+			if #available(iOS 12.0, *) {
+				if Int(tableView.estimatedRowHeight) * self.items.count > Int(tableView.visibleSize.height), indexTitles.count > 1 {
+					return indexTitles
+				}
+			} else {
+				if indexTitles.count > 1 {
+					return indexTitles
+				}
+			}
+		}
+
+		return []
+	}
+
+	override open func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+		let firstItem = self.items.filter { (( $0.name?.uppercased().hasPrefix(title) ?? nil)! ) }.first
+
+		if let firstItem = firstItem {
+			if let itemIndex = self.items.index(of: firstItem) {
+				OnMainThread {
+					tableView.scrollToRow(at: IndexPath(row: itemIndex, section: 0), at: UITableView.ScrollPosition.top, animated: false)
+				}
+			}
+		}
+
+		return 0
 	}
 }
