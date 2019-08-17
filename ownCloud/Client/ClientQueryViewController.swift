@@ -163,6 +163,8 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		quotaLabel.textAlignment = .center
 		quotaLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
 		quotaLabel.numberOfLines = 0
+
+		sortBar?.showSelectButton = true
 	}
 
 	private var viewControllerVisible : Bool = false
@@ -416,6 +418,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		self.navigationItem.leftBarButtonItem = nil
 		selectedItemIds.removeAll()
 		removeToolbar()
+		sortBar?.showSelectButton = true
 	}
 
 	func populateToolbar() {
@@ -462,6 +465,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		if !self.tableView.isEditing {
 			updateMultiSelectionUI()
 			self.tableView.setEditing(true, animated: true)
+			sortBar?.showSelectButton = false
 
 			populateToolbar()
 

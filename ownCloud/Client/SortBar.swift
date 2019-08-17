@@ -42,6 +42,11 @@ class SortBar: UIView, Themeable {
 	var sortSegmentedControl: UISegmentedControl?
 	var sortButton: UIButton?
 	var selectButton: UIButton?
+	var showSelectButton: Bool = false {
+		didSet {
+			selectButton?.isHidden = !showSelectButton
+		}
+	}
 
 	var sortMethod: SortMethod {
 		didSet {
@@ -63,9 +68,7 @@ class SortBar: UIView, Themeable {
 
 	init(frame: CGRect, sortMethod: SortMethod) {
 		sortSegmentedControl = UISegmentedControl()
-
 		selectButton = UIButton()
-
 		sortButton = UIButton(type: .system)
 
 		self.sortMethod = sortMethod
@@ -134,6 +137,8 @@ class SortBar: UIView, Themeable {
 		// Finalize view setup
 		self.accessibilityIdentifier = "sort-bar"
 		Theme.shared.register(client: self)
+
+		selectButton?.isHidden = !showSelectButton
 	}
 
 	required init?(coder aDecoder: NSCoder) {
