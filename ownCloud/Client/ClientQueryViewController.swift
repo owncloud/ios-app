@@ -448,8 +448,16 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		}
 	}
 
+	override func toggleSelectMode() {
+		if !tableView.isEditing {
+			multipleSelectionButtonPressed()
+		} else {
+			exitMultipleSelection()
+		}
+	}
+
 	// MARK: - Navigation Bar Actions
-	@objc func multipleSelectionButtonPressed(_ sender: UIBarButtonItem) {
+	@objc func multipleSelectionButtonPressed() {
 
 		if !self.tableView.isEditing {
 			updateMultiSelectionUI()
@@ -464,7 +472,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		}
 	}
 
-	@objc func exitMultipleSelection(_ sender: UIBarButtonItem) {
+	@objc func exitMultipleSelection() {
 		leaveMultipleSelection()
 	}
 
