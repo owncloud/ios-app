@@ -27,7 +27,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	private let SELECT_BUTTON_HEIGHT: CGFloat = 44.0
 
 	// MARK: - Instance Properties
-	private var selectButton: UIBarButtonItem?
+	var selectButton: UIBarButtonItem?
 	private var selectButtonTitle: String?
 	private var cancelBarButton: UIBarButtonItem?
 

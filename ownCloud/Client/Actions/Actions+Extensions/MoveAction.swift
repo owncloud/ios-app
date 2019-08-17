@@ -23,6 +23,7 @@ class MoveAction : Action {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Move".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
+	override class var keyCommand : String? { return "V" }
 
 	// MARK: - Action implementation
 	override func run() {

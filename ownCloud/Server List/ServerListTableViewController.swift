@@ -532,6 +532,313 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 }
 
+extension ServerListTableViewController {
+	override var keyCommands: [UIKeyCommand]? {
+		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Next Item".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Previous Item".localized)
+		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Select Item".localized)
+		let addAccountCommand = UIKeyCommand(input: "A", modifierFlags: [.command], action: #selector(addBookmark), discoverabilityTitle: "Add account".localized.localized)
+		let openSettingsCommand = UIKeyCommand(input: ",", modifierFlags: [.command], action: #selector(settings), discoverabilityTitle: "Settings".localized.localized)
+
+		var shortcuts = [UIKeyCommand]()
+		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
+
+			if selectedRow < OCBookmarkManager.shared.bookmarks.count - 1 {
+				shortcuts.append(nextObjectCommand)
+			}
+			if selectedRow > 0 {
+				shortcuts.append(previousObjectCommand)
+			}
+			shortcuts.append(selectObjectCommand)
+		} else {
+			shortcuts.append(nextObjectCommand)
+		}
+		shortcuts.append(addAccountCommand)
+		shortcuts.append(openSettingsCommand)
+
+		return shortcuts
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+}
+
+extension BookmarkViewController {
+	override var keyCommands: [UIKeyCommand]? {
+		return [
+			UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
+		]
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+}
+
+extension ThemeNavigationController {
+	override var keyCommands: [UIKeyCommand]? {
+		if self.viewControllers.count > 1 {
+			return [
+				UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [.command], action: #selector(backCommand), discoverabilityTitle: "Back".localized)
+			]
+		}
+
+		return []
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+
+	@objc func backCommand() {
+		_ = popViewController(animated: true)
+	}
+}
+
+class TabBarShortcutController: UITabBarController {
+	override var keyCommands: Array<UIKeyCommand>? {
+		return self.tabBar.items?.enumerated().map { (index, item) -> UIKeyCommand in
+			let tabIndex = String(index + 1)
+			return UIKeyCommand(input: tabIndex, modifierFlags: .command, action:#selector(selectTab), discoverabilityTitle: item.title ?? "Tab \(tabIndex)")
+		}
+	}
+
+	@objc func selectTab(sender: UIKeyCommand) {
+		if let newIndex = Int(sender.input!), newIndex >= 1 && newIndex <= (self.tabBar.items?.count ?? 0) {
+			self.selectedIndex = newIndex - 1;
+		}
+	}
+}
+
+extension UITableViewController {
+
+	@objc func selectNext(sender: UIKeyCommand) {
+		if let selectedIP = self.tableView?.indexPathForSelectedRow {
+			self.tableView.selectRow(at: NSIndexPath(row: selectedIP.row + 1, section: selectedIP.section) as IndexPath, animated: true, scrollPosition: .middle)
+		} else {
+			self.tableView.selectRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, animated: true, scrollPosition: .top)
+		}
+	}
+
+	@objc func selectPrev(sender: UIKeyCommand) {
+		if let selectedIP = self.tableView?.indexPathForSelectedRow {
+			self.tableView.selectRow(at: NSIndexPath(row: selectedIP.row - 1, section: selectedIP.section) as IndexPath, animated: true, scrollPosition: .middle)
+		}
+	}
+
+	@objc func selectCurrent(sender: UIKeyCommand) {
+		if let delegate = tableView.delegate, let tableView = tableView, let indexPathForSelectedRow = tableView.indexPathForSelectedRow {
+			delegate.tableView!(tableView, didSelectRowAt: indexPathForSelectedRow)
+		}
+	}
+}
+
+extension StaticTableViewController {
+	override var keyCommands: [UIKeyCommand]? {
+
+		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Next Item".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Previous Item".localized)
+		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Select Item".localized)
+
+		print("--> row \(self.tableView?.indexPathForSelectedRow?.row)")
+		print("--> \(self.tableView?.indexPathForSelectedRow?.section)")
+
+		var shortcuts = [UIKeyCommand]()
+		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row, let selectedSection = self.tableView?.indexPathForSelectedRow?.section {
+			print(sections[selectedSection].rows)
+			if selectedRow < sections[selectedSection].rows.count - 1 || sections.count > selectedSection {
+				shortcuts.append(nextObjectCommand)
+			}
+			if selectedRow > 0 {
+				shortcuts.append(previousObjectCommand)
+			}
+			shortcuts.append(selectObjectCommand)
+		} else {
+			shortcuts.append(nextObjectCommand)
+		}
+
+		return shortcuts
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+
+	@objc override func selectNext(sender: UIKeyCommand) {
+		if let selectedIP = self.tableView?.indexPathForSelectedRow {
+			self.tableView.selectRow(at: NSIndexPath(row: selectedIP.row + 1, section: selectedIP.section) as IndexPath, animated: true, scrollPosition: .middle)
+		} else {
+			self.tableView.selectRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, animated: true, scrollPosition: .top)
+		}
+	}
+
+	@objc override func selectPrev(sender: UIKeyCommand) {
+		if let selectedIP = self.tableView?.indexPathForSelectedRow {
+			self.tableView.selectRow(at: NSIndexPath(row: selectedIP.row - 1, section: selectedIP.section) as IndexPath, animated: true, scrollPosition: .middle)
+		}
+	}
+
+	@objc override func selectCurrent(sender: UIKeyCommand) {
+		if let delegate = tableView.delegate, let tableView = tableView, let indexPathForSelectedRow = tableView.indexPathForSelectedRow {
+			delegate.tableView!(tableView, didSelectRowAt: indexPathForSelectedRow)
+		}
+	}
+}
+
+extension ClientQueryViewController {
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+
+	override var keyCommands: [UIKeyCommand]? {
+		var shortcuts = [UIKeyCommand]()
+		if let superKeyCommands = super.keyCommands {
+			shortcuts.append(contentsOf: superKeyCommands)
+		}
+
+		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Next Item".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Previous Item".localized)
+		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Select Item".localized)
+
+		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
+			if selectedRow < self.items.count - 1 {
+				shortcuts.append(nextObjectCommand)
+			}
+			if selectedRow > 0 {
+				shortcuts.append(previousObjectCommand)
+			}
+			shortcuts.append(selectObjectCommand)
+		} else {
+			shortcuts.append(nextObjectCommand)
+		}
+
+		return shortcuts
+	}
+}
+
+extension QueryFileListTableViewController {
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+
+	override var keyCommands: [UIKeyCommand]? {
+
+		var shortcuts = [UIKeyCommand]()
+
+		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Next Item".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Previous Item".localized)
+		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Select Item".localized)
+		let toggleSortCommand = UIKeyCommand(input: "S", modifierFlags: [.command, .shift], action: #selector(toggleSortOrder), discoverabilityTitle: "Change Sort Order".localized)
+		let searchCommand = UIKeyCommand(input: "F", modifierFlags: [.command], action: #selector(enableSearch), discoverabilityTitle: "Search".localized)
+
+		if let core = core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath) {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
+			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+			let actions = Action.sortedApplicableActions(for: actionContext)
+
+			actions.forEach({
+				if let keyCommand = $0.actionExtension.keyCommand {
+					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: [.command], action: #selector(performExtensionAction), discoverabilityTitle: $0.actionExtension.name)
+				shortcuts.append(actionCommand)
+				}
+			})
+		}
+
+		shortcuts.append(searchCommand)
+		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
+			if selectedRow < self.items.count - 1 {
+				shortcuts.append(nextObjectCommand)
+			}
+			if selectedRow > 0 {
+				shortcuts.append(previousObjectCommand)
+			}
+			shortcuts.append(selectObjectCommand)
+		} else {
+			shortcuts.append(nextObjectCommand)
+		}
+		shortcuts.append(toggleSortCommand)
+
+		for (index, method) in SortMethod.all.enumerated() {
+			let sortTitle = String(format: "%@ %@", "Sort by".localized, method.localizedName())
+			let sortCommand = UIKeyCommand(input: String(index + 1), modifierFlags: [.command, .shift], action: #selector(changeSortMethod), discoverabilityTitle: sortTitle)
+			shortcuts.append(sortCommand)
+		}
+
+		return shortcuts
+	}
+
+	@objc func performExtensionAction(_ command : UIKeyCommand) {
+		if let core = core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath) {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
+			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+			let actions = Action.sortedApplicableActions(for: actionContext)
+		actions.forEach({
+			if command.discoverabilityTitle == $0.actionExtension.name {
+				$0.perform()
+			}
+		})
+		}
+	}
+
+	@objc func enableSearch() {
+		self.searchController?.isActive = true
+		self.searchController?.searchBar.becomeFirstResponder()
+	}
+
+	@objc func toggleSortOrder() {
+		self.sortBar?.sortMethod = self.sortMethod
+	}
+
+	@objc func changeSortMethod(_ command : UIKeyCommand) {
+		for (_, method) in SortMethod.all.enumerated() {
+			let sortTitle = String(format: "%@ %@", "Sort by".localized, method.localizedName())
+			if command.discoverabilityTitle == sortTitle {
+				self.sortBar?.sortMethod = method
+				break
+			}
+		}
+	}
+}
+
+extension DisplayViewController {
+	override var keyCommands: [UIKeyCommand]? {
+		return [
+			UIKeyCommand(input: "M", modifierFlags: [.command], action: #selector(optionsBarButtonPressed), discoverabilityTitle: "More Menu".localized)
+		]
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+}
+
+extension ClientDirectoryPickerViewController {
+	override var keyCommands: [UIKeyCommand]? {
+		var shortcuts = [UIKeyCommand]()
+		if let superKeyCommands = super.keyCommands {
+			shortcuts.append(contentsOf: superKeyCommands)
+		}
+		if let selectButtonTitle = selectBarButton?.title, let selector = selectBarButton?.action {
+			let doCommand = UIKeyCommand(input: "\r", modifierFlags: [.command], action: selector, discoverabilityTitle: selectButtonTitle)
+			shortcuts.append(doCommand)
+		}
+
+		let createFolder = UIKeyCommand(input: "N", modifierFlags: [.command], action: #selector(createFolderButtonPressed), discoverabilityTitle: "Create Folder".localized)
+		shortcuts.append(createFolder)
+		let dismissCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
+		shortcuts.append(dismissCommand)
+
+		return shortcuts
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+}
+
 extension OCBookmarkManager {
 	static private let lastConnectedBookmarkUUIDDefaultsKey = "last-connected-bookmark-uuid"
 

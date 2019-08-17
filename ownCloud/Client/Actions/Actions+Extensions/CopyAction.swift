@@ -24,6 +24,7 @@ class CopyAction : Action {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Copy".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
+	override class var keyCommand : String? { return "C" }
 
 	// MARK: - Action implementation
 	override func run() {
