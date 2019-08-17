@@ -153,44 +153,49 @@ class MediaUploadSettingsSection: SettingsSection {
 			}
 			}, title: "Convert videos to MP4".localized, value: self.userDefaults.convertVideosToMP4, identifier: "convert_to_mp4")
 
-		instantUploadPhotosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
-			if let convertSwitch = sender as? UISwitch {
-				self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (switchState) in
-					self?.userDefaults.instantUploadPhotos = switchState
-					self?.updateDynamicUI()
-
-					self?.userDefaults.instantUploadPhotosAfter = switchState ? Date() : nil
-
-					NotificationCenter.default.post(name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
-				})
-			}
-			}, title: "Instant Upload Photos".localized, value: self.userDefaults.instantUploadPhotos)
-
-		instantUploadVideosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
-			if let convertSwitch = sender as? UISwitch {
-				self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (switchState) in
-					self?.userDefaults.instantUploadVideos = switchState
-					self?.updateDynamicUI()
-
-					self?.userDefaults.instantUploaVideosAfter = switchState ? Date() : nil
-
-					NotificationCenter.default.post(name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
-				})
-			}
-			}, title: "Instant Upload Videos".localized, value: self.userDefaults.instantUploadVideos)
-
-		bookmarkSelectionRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
-			self?.showAccountSelectionViewController()
-			}, title: "Account".localized, value: "", accessoryType: .disclosureIndicator, identifier: MediaUploadSettingsSection.bookmarkSelectionRowIdentifier)
-
-		uploadPathSelectionRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
-			self?.showUploadPathSelectionViewController()
-			}, title: "Upload Path".localized, value: "", accessoryType: .disclosureIndicator, identifier: MediaUploadSettingsSection.pathSelectionRowIdentifier)
-
 		self.add(row: convertPhotosSwitchRow!)
 		self.add(row: convertVideosSwitchRow!)
-		self.add(row: instantUploadPhotosRow!)
-		self.add(row: instantUploadVideosRow!)
+
+		// Instant upload requires at least one configured account
+		OCBookmarkManager.shared.loadBookmarks()
+		if OCBookmarkManager.shared.bookmarks.count > 0 {
+			instantUploadPhotosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
+				if let convertSwitch = sender as? UISwitch {
+					self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (switchState) in
+						self?.userDefaults.instantUploadPhotos = switchState
+						self?.updateDynamicUI()
+
+						self?.userDefaults.instantUploadPhotosAfter = switchState ? Date() : nil
+
+						NotificationCenter.default.post(name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
+					})
+				}
+				}, title: "Instant Upload Photos".localized, value: self.userDefaults.instantUploadPhotos)
+
+			instantUploadVideosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
+				if let convertSwitch = sender as? UISwitch {
+					self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (switchState) in
+						self?.userDefaults.instantUploadVideos = switchState
+						self?.updateDynamicUI()
+
+						self?.userDefaults.instantUploaVideosAfter = switchState ? Date() : nil
+
+						NotificationCenter.default.post(name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
+					})
+				}
+				}, title: "Instant Upload Videos".localized, value: self.userDefaults.instantUploadVideos)
+
+			bookmarkSelectionRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
+				self?.showAccountSelectionViewController()
+				}, title: "Account".localized, value: "", accessoryType: .disclosureIndicator, identifier: MediaUploadSettingsSection.bookmarkSelectionRowIdentifier)
+
+			uploadPathSelectionRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
+				self?.showUploadPathSelectionViewController()
+				}, title: "Upload Path".localized, value: "", accessoryType: .disclosureIndicator, identifier: MediaUploadSettingsSection.pathSelectionRowIdentifier)
+
+			self.add(row: instantUploadPhotosRow!)
+			self.add(row: instantUploadVideosRow!)
+		}
 
 		updateDynamicUI()
 	}
@@ -265,7 +270,9 @@ class MediaUploadSettingsSection: SettingsSection {
 		let accountsSection = StaticTableViewSection(headerTitle: "Select account".localized)
 
 		var bookmarkRows: [StaticTableViewRow] = []
-		let bookmarks : [OCBookmark] = OCBookmarkManager.shared.bookmarks as [OCBookmark]
+		let bookmarks = OCBookmarkManager.shared.bookmarks
+
+		guard bookmarks.count > 0 else { return }
 
 		var bookmarkDictionary = [StaticTableViewRow : OCBookmark]()
 
