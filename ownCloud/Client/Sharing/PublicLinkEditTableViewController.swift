@@ -165,11 +165,24 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 		if item.type == .collection {
 
-			let values = [
-				["Download / View".localized : 0],
-				["Download / View / Upload".localized : 1],
-				["Upload only (File Drop)".localized : 2]
-			]
+			var canIncreasePemissions = true
+			if item.isSharedWithUser && (item.owner?.userName != self.core.connection.loggedInUser?.userName) {
+				canIncreasePemissions = false
+			}
+
+			var values = [[String : Any]]()
+
+			if (share.permissions.isSuperset(of: [.read])) || canIncreasePemissions {
+				values.append(["Download / View".localized : 0])
+			}
+
+			if (share.permissions.isSuperset(of: [.read, .update, .create, .delete])) || canIncreasePemissions {
+				values.append(["Download / View / Upload".localized : 1])
+			}
+
+			if (share.permissions.isSuperset(of: [.create])) || canIncreasePemissions {
+				values.append(["Upload only (File Drop)".localized : 2])
+			}
 
 			section.add(radioGroupWithArrayOfLabelValueDictionaries: values, radioAction: { [weak self] (row, _) in
 				if let self = self {
