@@ -132,13 +132,13 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 			let fetchOptions = PHFetchOptions()
 
 			if let date = createdAfter {
-				let creationDatePredicate = NSPredicate(format: "modificationDate > %@", date as NSDate)
+				let creationDatePredicate = NSPredicate(format: "creationDate > %@", date as NSDate)
 				fetchOptions.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [mediaTypesPredicate, creationDatePredicate])
 			} else {
 				fetchOptions.predicate = mediaTypesPredicate
 			}
 
-			let sort = NSSortDescriptor(key: "modificationDate", ascending: true)
+			let sort = NSSortDescriptor(key: "creationDate", ascending: true)
 			fetchOptions.sortDescriptors = [sort]
 
 			return PHAsset.fetchAssets(in: cameraRoll, options: fetchOptions)
