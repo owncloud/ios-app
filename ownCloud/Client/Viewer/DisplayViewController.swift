@@ -467,6 +467,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 						if core?.localCopy(of: item) == nil {
 							self.downloadItem(sender: nil)
 						} else {
+							core?.registerUsage(of: item, completionHandler: nil)
 							if let core = core, let file = item.file(with: core) {
 								self.source = file.url
 							}

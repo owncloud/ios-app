@@ -1,5 +1,11 @@
 # ChangeLog
 
+## Release version 1.0.4 (August 2019)
+
+- Authentication improvements (PR #459)
+- Fixed background crash (PR #462)
+- Log file improvements (#444)
+
 ## TestFlight Build 129 (July 2019)
 
 - Import files from Share Sheet (#76)

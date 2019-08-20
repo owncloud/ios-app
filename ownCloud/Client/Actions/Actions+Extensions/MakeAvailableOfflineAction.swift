@@ -54,7 +54,7 @@ class MakeAvailableOfflineAction: Action {
 		}
 
 		for item in context.items {
-			core.makeAvailableOffline(item, options: [.skipRedundancyChecks : true], completionHandler: nil)
+			core.makeAvailableOffline(item, options: [.skipRedundancyChecks : true, .convertExistingLocalDownloads : true], completionHandler: nil)
 		}
 
 		self.completed()

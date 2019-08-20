@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import MobileCoreServices
 
 typealias ClientActionVieDidAppearHandler = () -> Void
@@ -322,7 +323,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	// MARK: - Upload
 	func upload(itemURL: URL, name: String, completionHandler: ClientActionCompletionHandler? = nil) {
 		if let rootItem = query.rootItem,
-		   let progress = core?.importFileNamed(name, at: rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+		   let progress = core?.importItemNamed(name, at: rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
 			if error != nil {
 				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(rootItem.path))")
 				completionHandler?(false)
@@ -596,6 +597,10 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	// MARK: - UIPopoverPresentationControllerDelegate
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return .none
+	}
+
+	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+		popoverPresentationController.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 }
 

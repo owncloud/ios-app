@@ -194,7 +194,7 @@ class ItemPolicyTableViewController : FileListTableViewController {
 			}
 
 			if let core = core, let query = query {
-				let customFileListController = LibraryFilesTableViewController(core: core, query: query)
+				let customFileListController = QueryFileListTableViewController(core: core, query: query)
 				customFileListController.title = title
 				customFileListController.pullToRefreshAction = nil
 				self.navigationController?.pushViewController(customFileListController, animated: true)
@@ -204,7 +204,7 @@ class ItemPolicyTableViewController : FileListTableViewController {
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		if let section = ItemPolicySectionIndex(rawValue: indexPath.section), section == .policies {
-			return UISwipeActionsConfiguration(actions: [UIContextualAction(style: .destructive, title: "Remove".localized, handler: { [weak self] (_, _, completionHandler) in
+			return UISwipeActionsConfiguration(actions: [UIContextualAction(style: .destructive, title: "Make unavailable offline".localized, handler: { [weak self] (_, _, completionHandler) in
 				if let core = self?.core, let itemPolicy = self?.itemPolicyAt(indexPath) {
 					core.removeAvailableOfflinePolicy(itemPolicy, completionHandler: nil)
 				}

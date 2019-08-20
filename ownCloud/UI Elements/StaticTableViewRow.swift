@@ -624,6 +624,41 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.action?(self, sender)
 	}
 
+	// MARK: - Slider
+
+	convenience init(sliderWithAction action: StaticTableViewRowAction?, minimumValue: Float, maximumValue: Float, value: Float, identifier: String? = nil) {
+		self.init()
+
+		let slider = UISlider()
+		slider.translatesAutoresizingMaskIntoConstraints = false
+		slider.minimumValue = minimumValue
+		slider.maximumValue = maximumValue
+		slider.value = value
+		slider.accessibilityIdentifier = identifier
+		slider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
+		slider.tintColor = Theme.shared.activeCollection.tintColor
+
+		cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
+		cell?.selectionStyle = .none
+		cell?.addSubview(slider)
+
+		self.value = value
+		self.action = action
+
+		if let cell = self.cell {
+			NSLayoutConstraint.activate([
+				slider.leftAnchor.constraint(equalTo: cell.safeAreaLayoutGuide.leftAnchor, constant: 20),
+				slider.rightAnchor.constraint(equalTo: cell.safeAreaLayoutGuide.rightAnchor, constant: -20),
+				slider.topAnchor.constraint(equalTo: cell.topAnchor),
+				slider.bottomAnchor.constraint(equalTo: cell.bottomAnchor)
+			])
+		}
+	}
+
+	@objc func sliderValueChanged(_ sender: UISlider) {
+		action?(self, sender)
+	}
+
 	// MARK: - Deinit
 
 	deinit {

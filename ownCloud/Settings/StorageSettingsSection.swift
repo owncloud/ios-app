@@ -72,7 +72,7 @@ class StorageSettingsSection: SettingsSection {
 		let localCopyExpirationViewController = StaticTableViewController(style: .grouped)
 		let localCopyExpirationSelectionSection = StaticTableViewSection(headerTitle: "Delete unused local copies".localized, footerTitle: "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app.".localized)
 
-		let timeIntervals : [Int] = [
+		var timeIntervals : [Int] = [
 			-1, // Off
 			60, // 1 minute
 			60 * 15, // 15 minutes
@@ -89,34 +89,64 @@ class StorageSettingsSection: SettingsSection {
 			60 * 60 * 24 * 365 // 1 year
 		]
 
-		var timeIntervalsByID : [[String:Int]] = []
+		if !timeIntervals.contains(self.localCopyExpiration) {
+			timeIntervals.append(self.localCopyExpiration)
+			timeIntervals.sort()
+		}
 
-		for timeInterval in timeIntervals {
-			var label : String?
-
+		let labelForTimeInterval : (Int) -> String = { (timeInterval) in
 			if timeInterval == -1 {
-				label = "never".localized
+				return "never".localized
 			} else {
-				label = NSString(format: ("after %@".localized as NSString), formatted(timeInterval: timeInterval)) as String
+				return NSString(format: ("after %@".localized as NSString), self.formatted(timeInterval: timeInterval)) as String
+			}
+		}
+
+		let labelForOffset : (Int) -> String = { (offset) in
+			return labelForTimeInterval(timeIntervals[offset])
+		}
+
+		let offsetForTimeInterval : (Int) -> Int = { (timeInterval) in
+			if let offset = timeIntervals.index(of: timeInterval) {
+				return offset
 			}
 
-			timeIntervalsByID.append([label! : timeInterval])
+			return 0
 		}
 
 		localCopyExpirationViewController.navigationItem.title = "Storage".localized
 
-		localCopyExpirationSelectionSection.add(radioGroupWithArrayOfLabelValueDictionaries: timeIntervalsByID, radioAction: { [weak self] (row, _) in
-			if let timeInterval = row.value as? Int {
-				if timeInterval == -1 {
-					self?.localCopyExpirationEnabled = false
-				} else {
-					self?.localCopyExpirationEnabled = true
-					self?.localCopyExpiration = timeInterval
-				}
+		let timeIntervalRow = StaticTableViewRow(valueRowWithAction: nil, title: "Delete unused local copies".localized, value: labelForTimeInterval(self.localCopyExpirationEnabled ? self.localCopyExpiration : -1))
 
-				self?.localCopyExpirationRow?.cell?.detailTextLabel?.text = self?.localCopyExpirationSummary
+		localCopyExpirationSelectionSection.add(row: StaticTableViewRow(sliderWithAction: { [weak self] (_, sender) in
+			guard let newValue = (sender as? UISlider)?.value else { return }
+
+			var sliderValue = Int(newValue)
+
+			if newValue > (Float(timeIntervals.count) / 2) {
+				sliderValue = Int(newValue + 0.6)
 			}
-		}, groupIdentifier: "local-copy-expiration-duration", selectedValue: self.localCopyExpirationEnabled ? self.localCopyExpiration : -1)
+
+			if sliderValue < 0 { sliderValue = 0 }
+			if sliderValue > timeIntervals.count { sliderValue = timeIntervals.count-1 }
+
+			(sender as? UISlider)?.value = Float(sliderValue)
+
+			let timeInterval = timeIntervals[sliderValue]
+
+			if timeInterval == -1 {
+				self?.localCopyExpirationEnabled = false
+			} else {
+				self?.localCopyExpirationEnabled = true
+				self?.localCopyExpiration = timeInterval
+			}
+
+			timeIntervalRow.cell?.detailTextLabel?.text = labelForOffset(sliderValue)
+
+			self?.localCopyExpirationRow?.cell?.detailTextLabel?.text = self?.localCopyExpirationSummary
+		}, minimumValue: 0, maximumValue: Float(timeIntervals.count-1)+0.01, value: Float(offsetForTimeInterval(self.localCopyExpirationEnabled ? self.localCopyExpiration : -1))))
+
+		localCopyExpirationSelectionSection.add(row: timeIntervalRow)
 
 		localCopyExpirationViewController.addSection(localCopyExpirationSelectionSection)
 

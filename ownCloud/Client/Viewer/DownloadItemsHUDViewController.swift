@@ -122,6 +122,7 @@ class DownloadItemsHUDViewController: CardViewController {
 			items = items.filter({ (item) -> Bool in
 				if core.localCopy(of: item) != nil {
 					if let file = item.file(with: core) {
+						core.registerUsage(of: item, completionHandler: nil)
 						downloadedFiles.append(file)
 
 						return false
