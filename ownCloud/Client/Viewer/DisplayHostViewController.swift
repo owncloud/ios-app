@@ -7,35 +7,35 @@
 //
 
 /*
- * Copyright (C) 2019, ownCloud GmbH.
- *
- * This code is covered by the GNU Public License Version 3.
- *
- * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
- * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
- *
- */
+* Copyright (C) 2019, ownCloud GmbH.
+*
+* This code is covered by the GNU Public License Version 3.
+*
+* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+*
+*/
 
 import UIKit
 import ownCloudSDK
 
 class DisplayHostViewController: UIPageViewController {
 
+	enum PagePosition {
+		case before, after
+	}
+
 	// MARK: - Constants
-	let hasChangesAvailableKeyPath: String = "hasChangesAvailable"
 	let imageFilterRegexp: String = "\\A((image/*))" // Filters all the mime types that are images (incluiding gif and svg)
 
 	// MARK: - Instance Variables
 	weak private var core: OCCore?
-	private var selectedItem: OCItem
 
-	private var items: [OCItem]? {
-		didSet {
-			OnMainThread { [weak self] in
-				self?.configureScrolling()
-			}
-		}
-	}
+	private var initialItem: OCItem
+	private var displayedIndex: Int?
+
+	private var items: [OCItem]?
+
 	private var query: OCQuery
 	private var queryStarted : Bool = false
 	private weak var viewControllerToTansition: DisplayViewController?
@@ -46,21 +46,28 @@ class DisplayHostViewController: UIPageViewController {
 	// MARK: - Init & deinit
 	init(core: OCCore, selectedItem: OCItem, query: OCQuery) {
 		self.core = core
-		self.selectedItem = selectedItem
+		self.initialItem = selectedItem
 		self.query = query
 
 		super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
 
 		if query.state == .stopped {
-			core.start(query)
+			self.core?.start(query)
 			queryStarted = true
 		}
 
 		queryObservation = query.observe(\OCQuery.hasChangesAvailable, options: [.initial, .new]) { [weak self] (query, _) in
+			//guard self?.items == nil else { return }
+
 			query.requestChangeSet(withFlags: .onlyResults) { ( _, changeSet) in
 				guard let changeSet = changeSet  else { return }
-				if let queryResult = changeSet.queryResult, let items = self?.applyImageFilesFilter(items: queryResult) {
-					self?.items = items
+				if let queryResult = changeSet.queryResult, let newItems = self?.applyImageFilesFilter(items: queryResult) {
+					let shallUpdateDatasource = self?.items?.count != newItems.count ? true : false
+
+					self?.items = newItems
+					if shallUpdateDatasource {
+						self?.updateDatasource()
+					}
 				}
 			}
 		}
@@ -85,28 +92,19 @@ class DisplayHostViewController: UIPageViewController {
 	// MARK: - ViewController lifecycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		dataSource = self
-		delegate = self
 
-		// Display first item
-		guard let mimeType = self.selectedItem.mimeType else { return }
+		self.dataSource = self
+		self.delegate = self
 
-		let viewController = self.selectDisplayViewControllerBasedOn(mimeType: mimeType)
-		let configuration = self.configurationFor(self.selectedItem, viewController: viewController)
+		if let initialViewController = viewController(for: self.initialItem) {
+			self.setViewControllers([initialViewController], direction: .forward, animated: false, completion: nil)
 
-		viewController.configure(configuration)
-		self.addChild(viewController)
-		viewController.didMove(toParent: self)
-
-		self.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
-
-		viewController.present(item: self.selectedItem)
-		viewController.updateNavigationBarItems()
-	}
-
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		configureScrolling()
+			if let displayController = initialViewController as? DisplayViewController, let items = self.items, let initialID = self.initialItem.localID,
+				let currentIndex = items.firstIndex(where: {$0.localID == initialID}) {
+				self.displayedIndex = currentIndex
+				displayController.itemIndex = currentIndex
+			}
+		}
 	}
 
 	override var childForHomeIndicatorAutoHidden : UIViewController? {
@@ -151,6 +149,63 @@ class DisplayHostViewController: UIPageViewController {
 	}
 
 	// MARK: - Helper methods
+
+	private func updateDatasource() {
+		OnMainThread { [weak self] in
+			self?.dataSource = nil
+			if let itemCount = self?.items?.count {
+				if itemCount > 0 {
+
+					if let currentDisplayViewController = self?.viewControllers?.first as? DisplayViewController,
+						let item = currentDisplayViewController.item,
+						let index = currentDisplayViewController.itemIndex {
+
+						let foundIndex = self?.items?.firstIndex(where: {$0.localID == item.localID})
+
+						if foundIndex == nil {
+							if index < itemCount {
+								if let newIndex = self?.computeNewIndex(for: index, itemCount: itemCount, position: .after, indexFound: false),
+									let newViewController = self?.viewControllerAtIndex(index: newIndex) {
+									self?.setViewControllers([newViewController], direction: .forward, animated: false, completion: nil)
+								}
+							} else {
+								if let newIndex = self?.computeNewIndex(for: index, itemCount: itemCount, position: .before, indexFound: false),
+									let newViewController = self?.viewControllerAtIndex(index: newIndex) {
+									self?.setViewControllers([newViewController], direction: .reverse, animated: false, completion: nil)
+								}
+							}
+						}
+					}
+
+					self?.dataSource = self
+				}
+			}
+		}
+	}
+
+	func computeNewIndex(for currentIndex:Int, itemCount:Int, position:PagePosition, indexFound:Bool = true) -> Int? {
+		switch position {
+		case .after:
+			if indexFound {
+				if currentIndex < (itemCount - 1) {
+					return currentIndex + 1
+				}
+			} else {
+				// If current index was moved, next element in the list will assume it's position
+				if currentIndex < itemCount {
+					return currentIndex
+				}
+			}
+
+		case .before:
+			if currentIndex > 0 {
+				return currentIndex - 1
+			}
+		}
+
+		return nil
+	}
+
 	private func viewControllerAtIndex(index: Int) -> UIViewController? {
 		guard let items = items else { return nil }
 
@@ -158,11 +213,22 @@ class DisplayHostViewController: UIPageViewController {
 
 		let item = items[index]
 
-		let newViewController = selectDisplayViewControllerBasedOn(mimeType: item.mimeType!)
+		let viewController = self.viewController(for: item)
+		(viewController as? DisplayViewController)?.itemIndex = index
+
+		return viewController
+	}
+
+	private func viewController(for item:OCItem) -> UIViewController? {
+
+		guard let mimeType = item.mimeType else { return nil }
+
+		let newViewController = selectDisplayViewControllerBasedOn(mimeType: mimeType)
 		let configuration = configurationFor(item, viewController: newViewController)
 
 		newViewController.configure(configuration)
 		newViewController.present(item: item)
+
 		return newViewController
 	}
 
@@ -179,37 +245,49 @@ class DisplayHostViewController: UIPageViewController {
 
 	// MARK: - Filters
 	private func applyImageFilesFilter(items: [OCItem]) -> [OCItem] {
-		if selectedItem.mimeType?.matches(regExp: imageFilterRegexp) ?? false {
+		if initialItem.mimeType?.matches(regExp: imageFilterRegexp) ?? false {
 			let filteredItems = items.filter({$0.type != .collection && $0.mimeType?.matches(regExp: self.imageFilterRegexp) ?? false})
 			return filteredItems
 		} else {
-			let filteredItems = items.filter({$0.type != .collection && $0.fileID == self.selectedItem.fileID})
+			let filteredItems = items.filter({$0.type != .collection && $0.fileID == self.initialItem.fileID})
 			return filteredItems
 		}
 	}
 }
 
 extension DisplayHostViewController: UIPageViewControllerDataSource {
-	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-		if let displayViewController = viewControllers?.first as? DisplayViewController,
-			let item = displayViewController.item,
-			let index = items?.firstIndex(where: {$0.fileID == item.fileID}) {
-			return viewControllerAtIndex(index: index + 1)
+
+	private func vendNewViewController(from viewController:UIViewController, _ position:PagePosition) -> UIViewController? {
+		guard let displayViewController = viewControllers?.first as? DisplayViewController else { return nil }
+		guard let item = displayViewController.item, let items = self.items else { return nil }
+
+		// Is the item assigned to the currently visible view controller still available?
+		let index = items.firstIndex(where: {$0.localID == item.localID})
+
+		if index != nil {
+			// If so, then vend view controller with the item next to the current item
+			if let nextIndex = computeNewIndex(for: index!, itemCount:items.count, position: position) {
+				return viewControllerAtIndex(index: nextIndex)
+			}
+
+		} else {
+			// Currently visible item was deleted or moved, use it's old index to find a new one
+			if let index = displayViewController.itemIndex {
+				if let nextIndex = computeNewIndex(for: index, itemCount:items.count, position: position, indexFound: false) {
+					return viewControllerAtIndex(index: nextIndex)
+				}
+			}
 		}
 
 		return nil
+	}
 
+	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+		return vendNewViewController(from: viewController, .after)
 	}
 
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-
-		if let displayViewController = viewControllers?.first as? DisplayViewController,
-			let item = displayViewController.item,
-			let index = items?.firstIndex(where: {$0.fileID == item.fileID}) {
-			return viewControllerAtIndex(index: index - 1)
-		}
-
-		return nil
+		return vendNewViewController(from: viewController, .before)
 	}
 }
 
@@ -234,11 +312,6 @@ extension DisplayHostViewController: UIPageViewControllerDelegate {
 		if let viewControllerToTransition = pendingViewControllers[0] as? DisplayViewController {
 			self.viewControllerToTansition = viewControllerToTransition
 		}
-	}
-
-	private func configureScrolling() {
-		guard let items = self.items else { return }
-		self.dataSource = items.count > 1 ? self : nil
 	}
 }
 

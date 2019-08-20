@@ -447,7 +447,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Labels
-	convenience init(label: String, identifier: String? = nil) {
+	convenience init(label: String, alignment: NSTextAlignment = .left, identifier: String? = nil) {
 		self.init()
 		type = .label
 
@@ -456,6 +456,8 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = label
 		self.cell?.isUserInteractionEnabled = false
+		self.cell?.textLabel?.numberOfLines = 0
+		self.cell?.textLabel?.textAlignment = alignment
 
 		self.value = label
 		self.selectable = false
@@ -586,7 +588,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	// MARK: - Date Picker
 
-	convenience init(datePickerWithAction action: StaticTableViewRowAction?, date dateValue: Date, identifier: String? = nil) {
+	convenience init(datePickerWithAction action: StaticTableViewRowAction?, date dateValue: Date, maximumDate:Date? = nil, identifier: String? = nil) {
 		self.init()
 		type = .datePicker
 
@@ -596,6 +598,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		datePickerView.date = dateValue
 		datePickerView.datePickerMode = .date
 		datePickerView.minimumDate = Date()
+		datePickerView.maximumDate = maximumDate
 		datePickerView.accessibilityIdentifier = identifier
 		datePickerView.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: UIControl.Event.valueChanged)
 		datePickerView.translatesAutoresizingMaskIntoConstraints = false

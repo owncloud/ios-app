@@ -44,14 +44,21 @@ class BookmarkInfoViewController: StaticTableViewController {
 		let deviceFreeTitle = String(format: "Free on %@".localized, UIDevice.current.name)
 		deviceAvailableStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: deviceFreeTitle, value: "uknown".localized)
 
-		deleteLocalFilesRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+		deleteLocalFilesRow = StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
 			if let bookmark  = self?.bookmark {
 
 				OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
 					let vault : OCVault = OCVault(bookmark: bookmark)
 
+					OnMainThread {
+						let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+						progressView.startAnimating()
+						row.cell?.accessoryView = progressView
+					}
+
 					vault.compact(completionHandler: { (_, error) in
 						OnMainThread {
+							row.cell?.accessoryView = nil
 							if error != nil {
 								// Inform user if vault couldn't be comp acted
 								let alertController = UIAlertController(title: NSString(format: "Compacting of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,

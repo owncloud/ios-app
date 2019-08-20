@@ -6,6 +6,20 @@
 - Fixed background crash (PR #462)
 - Log file improvements (#444)
 
+## TestFlight Build 129 (July 2019)
+
+- Import files from Share Sheet (#76)
+- Create Folder in Directory Picker (#443)
+
+## TestFlight Build 126 (July 2019)
+
+- Native Media Player, with support for streaming (#395)
+- Name Conflict Detection (#377)
+- Activity Indicator for deleting offline copies (#393)
+- Improved Log File (#446)
+- Image Gallery improvement (#322)
+- Error handling for corrupted files (#357)
+
 ## Release version 1.0.3 (July 2019)
 
 - Add support for local user names with @ inside in sharing (PR #453)
