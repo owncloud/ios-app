@@ -53,10 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
-		_ = ScheduledTaskManager.shared
-
-		// Set up background refresh
-		application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum + 10)
+		ScheduledTaskManager.shared.setup()
 
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
@@ -89,6 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			UIView.setAnimationsEnabled(enableUIAnimations)
 		}
 
+		// Set background refresh interval
 		UIApplication.shared.setMinimumBackgroundFetchInterval(
 			UIApplication.backgroundFetchIntervalMinimum)
 

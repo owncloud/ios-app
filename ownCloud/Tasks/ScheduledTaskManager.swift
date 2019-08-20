@@ -70,6 +70,17 @@ class ScheduledTaskManager : NSObject {
 
 	private override init() {
 		super.init()
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+		if #available(iOS 12, *) {
+			(wifiMonitor as? NWPathMonitor)?.cancel()
+		}
+		stopMonitoringPhotoLibraryChanges()
+	}
+
+	func setup() {
 		// Monitor app states
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationStateChange), name: UIApplication.didEnterBackgroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationStateChange), name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -95,14 +106,6 @@ class ScheduledTaskManager : NSObject {
 		checkPowerState()
 
 		startMonitoringPhotoLibraryChangesIfNecessary()
-	}
-
-	deinit {
-		NotificationCenter.default.removeObserver(self)
-		if #available(iOS 12, *) {
-			(wifiMonitor as? NWPathMonitor)?.cancel()
-		}
-		stopMonitoringPhotoLibraryChanges()
 	}
 
 	// MARK: - Notifications handling
