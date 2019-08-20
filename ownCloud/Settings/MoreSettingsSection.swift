@@ -41,8 +41,8 @@ class MoreSettingsSection: SettingsSection {
 			buildType = "beta".localized
 		}
 
-		let localizedFooter = "%@ %@ version %@ build %@ (%@)".localized
-		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName!, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit)
+		let localizedFooter = "%@ %@ version %@ build %@ (app: %@, sdk: %@)".localized
+		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName ?? "App", buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit, OCAppIdentity.shared.sdkCommit ?? "unknown")
 
 		self.footerTitle = footerTitle
 

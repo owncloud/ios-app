@@ -77,4 +77,12 @@ class RenameAction : Action {
 
 		viewController.present(navigationController, animated: true)
 	}
+
+	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+		if location == .moreItem {
+			return UIImage(named: "folder")
+		}
+
+		return nil
+	}
 }

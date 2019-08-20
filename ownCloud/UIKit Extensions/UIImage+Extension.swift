@@ -44,4 +44,18 @@ extension UIImage {
 			UIRectFillUsingBlendMode(contentRect, operation)
 		})
 	}
+
+	func paddedTo(width: CGFloat? = nil, height : CGFloat? = nil) -> UIImage? {
+		let origSize = size
+		let newSize : CGSize = CGSize(width: width ?? origSize.width, height: height ?? origSize.height)
+		var image : UIImage? = UIImage.imageWithSize(size: newSize, scale: scale, { (contentRect) in
+			self.draw(at: CGPoint(x: Int((contentRect.size.width - origSize.width) / 2), y: Int((contentRect.size.height - origSize.height) / 2)))
+		})
+
+		if image != nil, image?.renderingMode != self.renderingMode {
+			image = image?.withRenderingMode(self.renderingMode)
+		}
+
+		return image
+	}
 }

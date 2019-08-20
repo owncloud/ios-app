@@ -37,6 +37,7 @@ class DisplayHostViewController: UIPageViewController {
 		}
 	}
 	private var query: OCQuery
+	private var queryStarted : Bool = false
 	private weak var viewControllerToTansition: DisplayViewController?
 	private var queryObservation : NSKeyValueObservation?
 
@@ -50,12 +51,20 @@ class DisplayHostViewController: UIPageViewController {
 
 		super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
 
+		if query.state == .stopped {
+			core.start(query)
+			queryStarted = true
+		}
+
 		queryObservation = query.observe(\OCQuery.hasChangesAvailable, options: [.initial, .new]) { [weak self] (query, _) in
 			query.requestChangeSet(withFlags: .onlyResults) { ( _, changeSet) in
 				guard let changeSet = changeSet  else { return }
-				self?.items = self?.applyImageFilesFilter(items: changeSet.queryResult)
+				if let queryResult = changeSet.queryResult, let items = self?.applyImageFilesFilter(items: queryResult) {
+					self?.items = items
+				}
 			}
 		}
+
 		Theme.shared.register(client: self)
 	}
 
@@ -64,6 +73,11 @@ class DisplayHostViewController: UIPageViewController {
 	}
 
 	deinit {
+		if queryStarted {
+			core?.stop(query)
+			queryStarted = false
+		}
+
 		queryObservation?.invalidate()
 		Theme.shared.unregister(client: self)
 	}
