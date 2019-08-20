@@ -1,5 +1,5 @@
 //
-//  MeidaUploadQueue.swift
+//  MediaUploadQueue.swift
 //  ownCloud
 //
 //  Created by Michael Neuwert on 07.08.2019.
