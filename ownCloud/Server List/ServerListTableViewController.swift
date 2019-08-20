@@ -641,16 +641,12 @@ extension StaticTableViewController {
 		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Previous Item".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Select Item".localized)
 
-		print("--> row \(self.tableView?.indexPathForSelectedRow?.row)")
-		print("--> \(self.tableView?.indexPathForSelectedRow?.section)")
-
 		var shortcuts = [UIKeyCommand]()
 		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row, let selectedSection = self.tableView?.indexPathForSelectedRow?.section {
-			print(sections[selectedSection].rows)
 			if selectedRow < sections[selectedSection].rows.count - 1 || sections.count > selectedSection {
 				shortcuts.append(nextObjectCommand)
 			}
-			if selectedRow > 0 {
+			if selectedRow > 0 || selectedSection > 0 {
 				shortcuts.append(previousObjectCommand)
 			}
 			shortcuts.append(selectObjectCommand)
@@ -667,20 +663,60 @@ extension StaticTableViewController {
 
 	@objc override func selectNext(sender: UIKeyCommand) {
 		if let selectedIP = self.tableView?.indexPathForSelectedRow {
-			self.tableView.selectRow(at: NSIndexPath(row: selectedIP.row + 1, section: selectedIP.section) as IndexPath, animated: true, scrollPosition: .middle)
+			if let row = sections[selectedIP.section].rows[selectedIP.row] as? StaticTableViewRow, row.type == .switchButton, let switchButon = row.cell?.accessoryView as? UISwitch {
+				switchButon.tintColor = .white
+			}
+
+			if (selectedIP.row + 1) < sections[selectedIP.section].rows.count {
+				self.tableView.selectRow(at: NSIndexPath(row: selectedIP.row + 1, section: selectedIP.section) as IndexPath, animated: true, scrollPosition: .middle)
+			} else if (selectedIP.section + 1) < sections.count {
+// New Section
+				self.tableView.selectRow(at: NSIndexPath(row: 0, section: (selectedIP.section + 1)) as IndexPath, animated: true, scrollPosition: .middle)
+			}
 		} else {
 			self.tableView.selectRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, animated: true, scrollPosition: .top)
+		}
+
+		if let selectedIP = self.tableView?.indexPathForSelectedRow, let row = sections[selectedIP.section].rows[selectedIP.row] as? StaticTableViewRow, row.type == .switchButton, let switchButon = row.cell?.accessoryView as? UISwitch {
+			switchButon.tintColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
 		}
 	}
 
 	@objc override func selectPrev(sender: UIKeyCommand) {
 		if let selectedIP = self.tableView?.indexPathForSelectedRow {
-			self.tableView.selectRow(at: NSIndexPath(row: selectedIP.row - 1, section: selectedIP.section) as IndexPath, animated: true, scrollPosition: .middle)
+
+			if let row = sections[selectedIP.section].rows[selectedIP.row] as? StaticTableViewRow, row.type == .switchButton, let switchButon = row.cell?.accessoryView as? UISwitch {
+				switchButon.tintColor = .white
+			}
+
+			if selectedIP.row == 0, selectedIP.section > 0 {
+				let sectionRows = sections[selectedIP.section - 1]
+				self.tableView.selectRow(at: NSIndexPath(row: sectionRows.rows.count - 1, section: selectedIP.section - 1) as IndexPath, animated: true, scrollPosition: .middle)
+			} else {
+				self.tableView.selectRow(at: NSIndexPath(row: selectedIP.row - 1, section: selectedIP.section) as IndexPath, animated: true, scrollPosition: .middle)
+			}
+
+			if let indexPath = self.tableView?.indexPathForSelectedRow, let row = sections[indexPath.section].rows[indexPath.row] as? StaticTableViewRow, row.type == .switchButton, let switchButon = row.cell?.accessoryView as? UISwitch {
+				switchButon.tintColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
+			}
 		}
 	}
 
 	@objc override func selectCurrent(sender: UIKeyCommand) {
-		if let delegate = tableView.delegate, let tableView = tableView, let indexPathForSelectedRow = tableView.indexPathForSelectedRow {
+		if let indexPath = self.tableView?.indexPathForSelectedRow, let row = sections[indexPath.section].rows[indexPath.row] as? StaticTableViewRow, row.type == .switchButton, let switchButon = row.cell?.accessoryView as? UISwitch {
+				if switchButon.isOn {
+					switchButon.setOn(false, animated: true)
+				} else {
+					switchButon.setOn(true, animated: true)
+				}
+
+			let staticRow : StaticTableViewRow = staticRowForIndexPath(indexPath)
+
+			if let action = staticRow.action {
+				print("--> action \(action)")
+				action(staticRow, self)
+			}
+		} else if let delegate = tableView.delegate, let tableView = tableView, let indexPathForSelectedRow = tableView.indexPathForSelectedRow {
 			delegate.tableView!(tableView, didSelectRowAt: indexPathForSelectedRow)
 		}
 	}
