@@ -42,11 +42,38 @@ class ScheduledTaskManager : NSObject {
 
 	static let shared = ScheduledTaskManager()
 
-	private var state: State = .launched
+	private var state: State = .launched {
+		willSet {
+			if state != newValue {
+				scheduleTasks()
+			}
+		}
+	}
 	private static let lowBatteryThreshold : Float = 0.2
-	private var lowBatteryDetected = false
-	private var externalPowerConnected = false
-	private var wifiDetected = false
+
+	private var lowBatteryDetected = false {
+		willSet {
+			if self.lowBatteryDetected != newValue {
+				scheduleTasks()
+			}
+		}
+	}
+
+	private var externalPowerConnected = false {
+		willSet {
+			if self.externalPowerConnected != newValue {
+				scheduleTasks()
+			}
+		}
+	}
+
+	private var wifiDetected = false {
+		willSet {
+			if self.wifiDetected != newValue {
+				scheduleTasks()
+			}
+		}
+	}
 	private var wifiMonitorQueue: DispatchQueue?
 	private var wifiMonitor : Any?
 	private var monitoringPhotoLibrary = false
@@ -94,11 +121,7 @@ class ScheduledTaskManager : NSObject {
 			wifiMonitor = NWPathMonitor(requiredInterfaceType: .wifi)
 			(wifiMonitor as? NWPathMonitor)?.pathUpdateHandler = { [weak self] path in
 				// Use "inexpensive" WiFi only (not behind a cellular hot-spot)
-				let wifiAvailable =  (path.status == .satisfied && !path.isExpensive)
-				self?.wifiDetected = wifiAvailable
-				if wifiAvailable {
-					self?.scheduleTasks()
-				}
+				self?.wifiDetected = (path.status == .satisfied && !path.isExpensive)
 			}
 			(wifiMonitor as? NWPathMonitor)?.start(queue: wifiMonitorQueue!)
 		}
@@ -119,15 +142,10 @@ class ScheduledTaskManager : NSObject {
 		default:
 			break
 		}
-
-		scheduleTasks()
 	}
 
 	@objc private func batteryLevelDidChange(notification:Notification) {
 		checkPowerState()
-		if lowBatteryDetected || externalPowerConnected {
-			scheduleTasks()
-		}
 	}
 
 	@objc private func mediaUploadSettingsDidChange(notification:Notification) {
@@ -169,26 +187,60 @@ class ScheduledTaskManager : NSObject {
 		return OCExtensionContext(location: location, requirements: requirements, preferences: nil)
 	}
 
-	private func scheduleTasks(fetchCompletion:((UIBackgroundFetchResult) -> Void)? = nil, completion:((_ scheduledTaskCount:Int)->Void)? = nil) {
+	private func scheduleTasks(fetchCompletion:((UIBackgroundFetchResult) -> Void)? = nil, completion:((_ scheduledTaskCount:Int) -> Void)? = nil) {
 		OnMainThread {
 
+			let state = self.state
 			let context = self.getCurrentContext()
 
 			// Find a task to run
 			if let matches = try? OCExtensionManager.shared.provideExtensions(for: context) {
+				var bgFetchedNewDataTasks = 0
+				var bgFailedTasks = 0
+				let bgFetchGroup = DispatchGroup()
+				let queue = DispatchQueue.global(qos: .background)
+
 				for match in matches {
 					if let task = match.extension.provideObject(for: context) as? ScheduledTaskAction {
-						if self.state == .backgroundFetch {
-							task.backgroundFetchCompletion = fetchCompletion
+						// Set completion handler for the task performing background fetch
+						if state == .backgroundFetch {
+							task.backgroundFetchCompletion = { result in
+								switch result {
+								case .newData :
+									bgFetchedNewDataTasks += 1
+								case .failed:
+									bgFailedTasks += 1
+								default:
+									break
+								}
+								bgFetchGroup.leave()
+							}
 						}
-						let backgroundExecution = self.state == .background
+
+						let backgroundExecution = state == .background
 						if backgroundExecution {
 							task.runUntil = Date().addingTimeInterval(UIApplication.shared.backgroundTimeRemaining)
 						}
-						DispatchQueue.global(qos: .background).async {
+						if state == .backgroundFetch {
+							bgFetchGroup.enter()
+						}
+						queue.async {
 							task.run(background: backgroundExecution)
 						}
 					}
+				}
+
+				// Report background fetch result back to the OS
+				if state == .backgroundFetch {
+					bgFetchGroup.notify(queue: queue, execute: {
+						if bgFetchedNewDataTasks > 0 {
+							fetchCompletion?(.newData)
+						} else if bgFailedTasks > 0 {
+							fetchCompletion?(.failed)
+						} else {
+							fetchCompletion?(.noData)
+						}
+					})
 				}
 
 				completion?(matches.count)
@@ -215,7 +267,7 @@ extension ScheduledTaskManager : PHPhotoLibraryChangeObserver {
 	func photoLibraryDidChange(_ changeInstance: PHChange) {
 		if !photoLibraryChangeDetected {
 			photoLibraryChangeDetected = true
-			scheduleTasks( completion:{ [weak self] (taskCount) in
+			scheduleTasks(completion: { [weak self] (taskCount) in
 				if taskCount > 0 {
 					self?.photoLibraryChangeDetected = false
 				}

@@ -93,7 +93,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 		completed()
 	}
 
-	private func uploadMedia(with core:OCCore, of type:MediaType, at rootItem:OCItem, modified after:Date?, completion:@escaping (_ successfulUpload:Date?)->Void) {
+	private func uploadMedia(with core:OCCore, of type:MediaType, at rootItem:OCItem, modified after:Date?, completion:@escaping (_ successfulUpload:Date?) -> Void) {
 		if let mediaFetchResult = self.fetchAssetsFromCameraRoll(type, createdAfter: after) {
 			var assets = [PHAsset]()
 			mediaFetchResult.enumerateObjects({ (asset, _, _) in

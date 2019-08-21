@@ -29,7 +29,7 @@ extension PHAsset {
 	 - parameter completionHandler: Completion handler called after the media file is imported into the core and placeholder item is created.
 	 - parameter progressHandler: Receives progress of the at the moment running activity
 	*/
-	func upload(with core:OCCore, at rootItem:OCItem, preferredFormats:[String]? = nil, completionHandler:@escaping (_ item:OCItem?, _ error:Error?) -> Void, progressHandler:((_ progress:Progress)->Void)? = nil) {
+	func upload(with core:OCCore, at rootItem:OCItem, preferredFormats:[String]? = nil, completionHandler:@escaping (_ item:OCItem?, _ error:Error?) -> Void, progressHandler:((_ progress:Progress) -> Void)? = nil) {
 
 		func performUpload(sourceURL:URL, copySource:Bool) {
 

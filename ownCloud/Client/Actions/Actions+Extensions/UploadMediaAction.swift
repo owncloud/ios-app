@@ -53,7 +53,7 @@ class UploadMediaAction: UploadBaseAction {
 		if let viewController = self.context.viewController {
 			let photoAlbumViewController = PhotoAlbumTableViewController()
 			photoAlbumViewController.selectionCallback = { (assets) in
-				
+
 				self.completed()
 
 				guard let core = self.core else { return }

@@ -27,7 +27,6 @@ extension URL {
 												}
 												placeholderHandler?(item, error)
 
-
 		}) { (error, _, item, _) in
 			if error != nil {
 				Log.error("Error uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
@@ -40,4 +39,3 @@ extension URL {
 		return progress
 	}
 }
-
