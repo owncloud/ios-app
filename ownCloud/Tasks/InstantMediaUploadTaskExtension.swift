@@ -55,6 +55,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 							if let rootItem = query.rootItem {
 								// Upload new photos
 								if let uploadPhotosAfter = userDefaults.instantUploadPhotosAfter {
+									uploadGroup.enter()
 									self.uploadMedia(with: core, of: .images, at: rootItem, modified: uploadPhotosAfter, completion: { (uploadedDate) in
 										userDefaults.instantUploadPhotosAfter = uploadedDate
 										uploadGroup.leave()
@@ -63,18 +64,19 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 
 								// Upload new videos
 								if let uploadVideosAfter = userDefaults.instantUploaVideosAfter {
+									uploadGroup.enter()
 									self.uploadMedia(with: core, of: .videos, at: rootItem, modified: uploadVideosAfter, completion: { (uploadedDate) in
 										userDefaults.instantUploaVideosAfter = uploadedDate
 										uploadGroup.leave()
 									})
 								}
-
-								uploadGroup.notify(queue: DispatchQueue.main, execute: {
-									OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
-										self.completed()
-									})
-								})
 							}
+
+							uploadGroup.notify(queue: DispatchQueue.main, execute: {
+								OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+									self.completed()
+								})
+							})
 						}
 					}
 					core.start(pathQuery)

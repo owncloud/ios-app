@@ -323,14 +323,12 @@ class MediaUploadSettingsSection: SettingsSection {
 
 															NotificationCenter.default.post(name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
 														}
-													})
-													let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)
-													self?.viewController?.present(pickerNavigationController, animated: true, completion: {
 														OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 													})
+													let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)
+													self?.viewController?.present(pickerNavigationController, animated: true)
 												}
 											}
-
 		})
 	}
 }
