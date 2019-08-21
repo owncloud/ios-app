@@ -195,9 +195,9 @@ class MediaUploadSettingsSection: SettingsSection {
 
 			self.add(row: instantUploadPhotosRow!)
 			self.add(row: instantUploadVideosRow!)
-		}
 
-		updateDynamicUI()
+			updateDynamicUI()
+		}
 	}
 
 	private func getSelectedBookmark() -> OCBookmark? {
@@ -312,7 +312,6 @@ class MediaUploadSettingsSection: SettingsSection {
 
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (_, _) in },
 										 completionHandler: { [weak self] (core, error) in
-
 
 											if let core = core, error == nil {
 
