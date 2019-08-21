@@ -30,7 +30,7 @@ extension UserDefaults {
 		case InstantUploadBookmarkUUIDKey = "instant-upload-bookmark-uuid"
 		case InstantUploadPathKey = "instant-upload-path"
 		case InstantUploadPhotosAfterDateKey = "instant-upload-photos-after-date"
-		case InstatnUploadVideosAfterDateKey = "instant-upload-videos-after-date"
+		case InstantUploadVideosAfterDateKey = "instant-upload-videos-after-date"
 	}
 
 	static let MediaUploadSettingsChangedNotification = NSNotification.Name("settings.media-upload-settings-changed")
@@ -112,11 +112,11 @@ extension UserDefaults {
 
 	public var instantUploaVideosAfter: Date? {
 		set {
-			self.set(newValue, forKey: MediaUploadKeys.InstatnUploadVideosAfterDateKey.rawValue)
+			self.set(newValue, forKey: MediaUploadKeys.InstantUploadVideosAfterDateKey.rawValue)
 		}
 
 		get {
-			return self.value(forKey: MediaUploadKeys.InstatnUploadVideosAfterDateKey.rawValue) as? Date
+			return self.value(forKey: MediaUploadKeys.InstantUploadVideosAfterDateKey.rawValue) as? Date
 		}
 	}
 }
