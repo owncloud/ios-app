@@ -50,6 +50,8 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 						if query.state == .idle {
 							core.stop(query)
 
+							let uploadGroup = DispatchGroup()
+
 							if let rootItem = query.rootItem {
 								// Upload new photos
 								if let uploadPhotosAfter = userDefaults.instantUploadPhotosAfter {
@@ -58,34 +60,45 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 										photoFetchResult.enumerateObjects({ (asset, _, _) in
 											assets.append(asset)
 										})
-										MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
-											if let asset = asset {
-												userDefaults.instantUploadPhotosAfter = asset.modificationDate
-											}
-											if finished {
-												self.completed()
-											}
-										})
+										if assets.count > 0 {
+											uploadGroup.enter()
+											MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
+												if let asset = asset {
+													userDefaults.instantUploadPhotosAfter = asset.modificationDate
+												}
+												if finished {
+													uploadGroup.leave()
+												}
+											})
+										}
 									}
 								}
 
 								// Upload new videos
 								if let uploadVideosAfter = userDefaults.instantUploaVideosAfter {
-									if let photoFetchResult = self.fetchAssetsFromCameraRoll(.videos, createdAfter: uploadVideosAfter) {
+									if let videosFetchResult = self.fetchAssetsFromCameraRoll(.videos, createdAfter: uploadVideosAfter) {
 										var assets = [PHAsset]()
-										photoFetchResult.enumerateObjects({ (asset, _, _) in
+										videosFetchResult.enumerateObjects({ (asset, _, _) in
 											assets.append(asset)
 										})
-										MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
-											if let asset = asset {
-												userDefaults.instantUploadPhotosAfter = asset.modificationDate
-											}
-											if finished {
-												self.completed()
-											}
-										})
+										if assets.count > 0 {
+											MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
+												if let asset = asset {
+													userDefaults.instantUploaVideosAfter = asset.modificationDate
+												}
+												if finished {
+													uploadGroup.leave()
+												}
+											})
+										}
 									}
 								}
+
+								uploadGroup.notify(queue: DispatchQueue.main, execute: {
+									OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+										self.completed()
+									})
+								})
 							}
 						}
 					}
@@ -113,7 +126,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 
 		if let cameraRoll = collectionResult.firstObject {
 			let imageTypePredicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
-			let videoTypePredicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
+			let videoTypePredicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.video.rawValue)
 
 			var typePredicatesArray = [NSPredicate]()
 
@@ -132,13 +145,13 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 			let fetchOptions = PHFetchOptions()
 
 			if let date = createdAfter {
-				let creationDatePredicate = NSPredicate(format: "creationDate > %@", date as NSDate)
+				let creationDatePredicate = NSPredicate(format: "modificationDate > %@", date as NSDate)
 				fetchOptions.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [mediaTypesPredicate, creationDatePredicate])
 			} else {
 				fetchOptions.predicate = mediaTypesPredicate
 			}
 
-			let sort = NSSortDescriptor(key: "creationDate", ascending: true)
+			let sort = NSSortDescriptor(key: "modificationDate", ascending: true)
 			fetchOptions.sortDescriptors = [sort]
 
 			return PHAsset.fetchAssets(in: cameraRoll, options: fetchOptions)
