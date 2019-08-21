@@ -27,23 +27,15 @@ class BackgroundFetchUpdateTaskAction : ScheduledTaskAction, OCCoreDelegate {
 
 	override func run(background:Bool) {
 
-		var cores = [OCCore]()
-
 		self.completion = { (task) in
-
-			// Return cores synchronously
-			for bookmark in OCBookmarkManager.shared.bookmarks {
-				let waitForCoreSemaphore = DispatchSemaphore(value: 0)
-				OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
-					waitForCoreSemaphore.signal()
-				})
-				_ = waitForCoreSemaphore.wait()
-			}
-
 			Log.log("Background fetch of updates finished with result \(String(describing: task.result))")
 		}
 
 		super.run(background: background)
+
+		var errorCount = 0
+		var lastError: Error = NSError(ocError: .internal)
+		let coreUpdateGroup = DispatchGroup()
 
 		// Iterate through bookmarks
 		OCBookmarkManager.shared.loadBookmarks()
@@ -51,53 +43,43 @@ class BackgroundFetchUpdateTaskAction : ScheduledTaskAction, OCCoreDelegate {
 		for bookmark in OCBookmarkManager.shared.bookmarks {
 
 			// Request cores for the bookmarks and add them to the list
-			let waitForCoreSemaphore = DispatchSemaphore(value: 0)
+			coreUpdateGroup.enter()
 			OCCoreManager.shared.requestCore(for: bookmark, setup:nil, completionHandler: { (core, _) in
 				if let core = core {
 					core.delegate = self
-					cores.append(core)
+
+					// Fetch updates from the backend
+					core.fetchUpdates(completionHandler: { (error, foundChanges) in
+
+						if foundChanges {
+							Log.log("Found changes in core \(core)")
+						}
+
+						if error != nil {
+							lastError = error!
+							errorCount += 1
+							Log.error("fetchUpdates() for \(core) returned with error \(error!)")
+						} else {
+							Log.log("Fetched updates for core \(core)")
+						}
+
+						// Give up the core ASAP to minimize traffic
+						OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+							coreUpdateGroup.leave()
+						})
+					})
 				}
-				waitForCoreSemaphore.signal()
 			})
-			_ = waitForCoreSemaphore.wait()
 		}
 
-		// Start fetching updates for requested cores
-		var coresUpdated = 0
-		var successfulUpdates = 0
-		var lastError: Error = NSError(ocError: .internal)
-		if cores.count > 0 {
-			for core in cores {
-				core.fetchUpdates { (error, foundChanges) in
-					coresUpdated += 1
-
-					if foundChanges {
-						Log.log("Found changes in core \(core)")
-					}
-
-					if error == nil {
-						successfulUpdates += 1
-						Log.log("Fetched updates for core \(core)")
-					}
-
-					if error != nil {
-						lastError = error!
-						Log.error("fetchUpdates() for \(core) returned with error \(error!)")
-					}
-
-					if cores.count == coresUpdated {
-						if successfulUpdates == coresUpdated {
-							self.result = .success(nil)
-						} else {
-							self.result = .failure(lastError)
-						}
-						self.completed()
-					}
-				}
+		// Handle update completion
+		coreUpdateGroup.notify(queue: DispatchQueue.main) {
+			if errorCount == 0 {
+				self.result = .success(nil)
+			} else {
+				self.result = .failure(lastError)
 			}
-
-		} else {
-			completed()
+			self.completed()
 		}
 	}
 
