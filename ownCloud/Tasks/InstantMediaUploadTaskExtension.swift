@@ -55,43 +55,18 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 							if let rootItem = query.rootItem {
 								// Upload new photos
 								if let uploadPhotosAfter = userDefaults.instantUploadPhotosAfter {
-									if let photoFetchResult = self.fetchAssetsFromCameraRoll(.images, createdAfter: uploadPhotosAfter) {
-										var assets = [PHAsset]()
-										photoFetchResult.enumerateObjects({ (asset, _, _) in
-											assets.append(asset)
-										})
-										if assets.count > 0 {
-											uploadGroup.enter()
-											MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
-												if let asset = asset {
-													userDefaults.instantUploadPhotosAfter = asset.modificationDate
-												}
-												if finished {
-													uploadGroup.leave()
-												}
-											})
-										}
-									}
+									self.uploadMedia(with: core, of: .images, at: rootItem, modified: uploadPhotosAfter, completion: { (uploadedDate) in
+										userDefaults.instantUploadPhotosAfter = uploadedDate
+										uploadGroup.leave()
+									})
 								}
 
 								// Upload new videos
 								if let uploadVideosAfter = userDefaults.instantUploaVideosAfter {
-									if let videosFetchResult = self.fetchAssetsFromCameraRoll(.videos, createdAfter: uploadVideosAfter) {
-										var assets = [PHAsset]()
-										videosFetchResult.enumerateObjects({ (asset, _, _) in
-											assets.append(asset)
-										})
-										if assets.count > 0 {
-											MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
-												if let asset = asset {
-													userDefaults.instantUploaVideosAfter = asset.modificationDate
-												}
-												if finished {
-													uploadGroup.leave()
-												}
-											})
-										}
-									}
+									self.uploadMedia(with: core, of: .videos, at: rootItem, modified: uploadVideosAfter, completion: { (uploadedDate) in
+										userDefaults.instantUploaVideosAfter = uploadedDate
+										uploadGroup.leave()
+									})
 								}
 
 								uploadGroup.notify(queue: DispatchQueue.main, execute: {
@@ -116,7 +91,27 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 		completed()
 	}
 
-	func fetchAssetsFromCameraRoll(_ mediaType:MediaType, createdAfter:Date? = nil) -> PHFetchResult<PHAsset>? {
+	private func uploadMedia(with core:OCCore, of type:MediaType, at rootItem:OCItem, modified after:Date?, completion:@escaping (_ successfulUpload:Date?)->Void) {
+		if let mediaFetchResult = self.fetchAssetsFromCameraRoll(type, createdAfter: after) {
+			var assets = [PHAsset]()
+			mediaFetchResult.enumerateObjects({ (asset, _, _) in
+				assets.append(asset)
+			})
+			var uploaded:Date?
+			if assets.count > 0 {
+				MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
+					if let asset = asset {
+						uploaded = asset.modificationDate
+					}
+					if finished {
+						completion(uploaded)
+					}
+				})
+			}
+		}
+	}
+
+	private func fetchAssetsFromCameraRoll(_ mediaType:MediaType, createdAfter:Date? = nil) -> PHFetchResult<PHAsset>? {
 
 		guard PHPhotoLibrary.authorizationStatus() == .authorized else { return nil }
 
