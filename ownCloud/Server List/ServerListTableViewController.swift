@@ -321,11 +321,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
 									preferredStyle: .alert)
 
-				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
-					// There was an error erasing the vault => re-add bookmark to give user another chance to delete its contents
-					OCBookmarkManager.shared.addBookmark(bookmark)
-					self.updateNoServerMessageVisibility()
-				}))
+				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default))
 
 				self.present(alertController, animated: true, completion: nil)
 			}
