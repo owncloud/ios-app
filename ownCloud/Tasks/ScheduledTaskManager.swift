@@ -147,27 +147,32 @@ class ScheduledTaskManager : NSObject {
 
 	// MARK: - Private methods
 
+	private func getCurrentContext() -> OCExtensionContext {
+		// Build a context
+		let location = OCExtensionLocation(ofType: .scheduledTask, identifier: self.state.locationIdentifier())
+
+		// Add requirements
+		var requirements = [String : Bool]()
+		if self.wifiDetected {
+			requirements[ScheduledTaskAction.FeatureKeys.runOnWifi] = true
+		}
+		if self.lowBatteryDetected {
+			requirements[ScheduledTaskAction.FeatureKeys.runOnLowBattery] = true
+		}
+		if self.externalPowerConnected {
+			requirements[ScheduledTaskAction.FeatureKeys.runOnExternalPower] = true
+		}
+		if self.photoLibraryChangeDetected {
+			requirements[ScheduledTaskAction.FeatureKeys.photoLibraryChanged] = true
+		}
+
+		return OCExtensionContext(location: location, requirements: requirements, preferences: nil)
+	}
+
 	private func scheduleTasks(fetchCompletion:((UIBackgroundFetchResult) -> Void)? = nil, completion:((_ scheduledTaskCount:Int)->Void)? = nil) {
 		OnMainThread {
-			// Build a context
-			let location = OCExtensionLocation(ofType: .scheduledTask, identifier: self.state.locationIdentifier())
 
-			// Add requirements
-			var requirements = [String : Bool]()
-			if self.wifiDetected {
-				requirements[ScheduledTaskAction.FeatureKeys.runOnWifi] = true
-			}
-			if self.lowBatteryDetected {
-				requirements[ScheduledTaskAction.FeatureKeys.runOnLowBattery] = true
-			}
-			if self.externalPowerConnected {
-				requirements[ScheduledTaskAction.FeatureKeys.runOnExternalPower] = true
-			}
-			if self.photoLibraryChangeDetected {
-				requirements[ScheduledTaskAction.FeatureKeys.photoLibraryChanged] = true
-			}
-
-			let context = OCExtensionContext(location: location, requirements: requirements, preferences: nil)
+			let context = self.getCurrentContext()
 
 			// Find a task to run
 			if let matches = try? OCExtensionManager.shared.provideExtensions(for: context) {

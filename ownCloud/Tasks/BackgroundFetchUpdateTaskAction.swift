@@ -25,9 +25,9 @@ class BackgroundFetchUpdateTaskAction : ScheduledTaskAction, OCCoreDelegate {
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.appBackgroundFetch] }
 	override class var features : [String : Any]? { return [ FeatureKeys.runOnWifi : true] }
 
-	var cores = [OCCore]()
-
 	override func run(background:Bool) {
+
+		var cores = [OCCore]()
 
 		self.completion = { (task) in
 
@@ -55,7 +55,7 @@ class BackgroundFetchUpdateTaskAction : ScheduledTaskAction, OCCoreDelegate {
 			OCCoreManager.shared.requestCore(for: bookmark, setup:nil, completionHandler: { (core, _) in
 				if let core = core {
 					core.delegate = self
-					self.cores.append(core)
+					cores.append(core)
 				}
 				waitForCoreSemaphore.signal()
 			})
@@ -85,7 +85,7 @@ class BackgroundFetchUpdateTaskAction : ScheduledTaskAction, OCCoreDelegate {
 						Log.error("fetchUpdates() for \(core) returned with error \(error!)")
 					}
 
-					if self.cores.count == coresUpdated {
+					if cores.count == coresUpdated {
 						if successfulUpdates == coresUpdated {
 							self.result = .success(nil)
 						} else {

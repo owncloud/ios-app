@@ -101,7 +101,7 @@ class ScheduledTaskAction : NSObject {
 		}
 	}
 
-	func allowedToRun() -> Bool {
+	var allowedToRun : Bool {
 		if let deadline = runUntil {
 			if (deadline.timeIntervalSince1970 + gracePeriod) >= Date().timeIntervalSince1970 {
 				return false
