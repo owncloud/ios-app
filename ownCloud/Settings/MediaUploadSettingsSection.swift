@@ -313,6 +313,7 @@ class MediaUploadSettingsSection: SettingsSection {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (_, _) in },
 										 completionHandler: { [weak self] (core, error) in
 
+
 											if let core = core, error == nil {
 
 												OnMainThread {
@@ -325,7 +326,9 @@ class MediaUploadSettingsSection: SettingsSection {
 														}
 													})
 													let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)
-													self?.viewController?.present(pickerNavigationController, animated: true)
+													self?.viewController?.present(pickerNavigationController, animated: true, completion: {
+														OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+													})
 												}
 											}
 
