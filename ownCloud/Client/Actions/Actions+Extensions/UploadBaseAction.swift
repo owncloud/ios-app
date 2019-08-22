@@ -36,4 +36,17 @@ class UploadBaseAction: Action {
 
 		return .middle
 	}
+
+	internal func upload(itemURL: URL, to rootItem: OCItem, name: String) -> Bool {
+
+		guard let core = self.core else { return false }
+
+		if let progress = itemURL.upload(with: core, at: rootItem) {
+			self.publish(progress: progress)
+			return true
+		} else {
+			Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(rootItem.path))")
+			return false
+		}
+	}
 }
