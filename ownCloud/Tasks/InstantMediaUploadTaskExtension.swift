@@ -45,50 +45,24 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 				if let core = core {
 					core.delegate = self
 
+					func finalize() {
+						OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+							self.completed()
+						})
+					}
+
 					let pathQuery = OCQuery(forPath: path)
 					pathQuery.changesAvailableNotificationHandler = { query in
 						if query.state == .idle {
 							core.stop(query)
 
-							let uploadGroup = DispatchGroup()
-
 							if let rootItem = query.rootItem {
-
-								var assets = [PHAsset]()
-
-								// Add photo assets
-								if let uploadPhotosAfter = userDefaults.instantUploadPhotosAfter {
-									let fetchResult = self.fetchAssetsFromCameraRoll(.images, createdAfter: uploadPhotosAfter)
-									if fetchResult != nil {
-										fetchResult!.enumerateObjects({ (asset, _, _) in
-											assets.append(asset)
-										})
-									}
-								}
-
-								// Add video assets
-								if let uploadVideosAfter = userDefaults.instantUploaVideosAfter {
-									let fetchResult = self.fetchAssetsFromCameraRoll(.videos, createdAfter: uploadVideosAfter)
-									if fetchResult != nil {
-										fetchResult!.enumerateObjects({ (asset, _, _) in
-											assets.append(asset)
-										})
-									}
-								}
-
-								if assets.count > 0 {
-									uploadGroup.enter()
-									self.upload(assets: assets, with: core, at: rootItem, completion: { () in
-										uploadGroup.leave()
-									})
-								}
-							}
-
-							uploadGroup.notify(queue: DispatchQueue.main, execute: {
-								OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
-									self.completed()
+								self.uploadMediaAssets(with: core, at: rootItem, completion: {
+									finalize()
 								})
-							})
+							} else {
+								finalize()
+							}
 						}
 					}
 					core.start(pathQuery)
@@ -105,8 +79,48 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 		completed()
 	}
 
+	private func uploadMediaAssets(with core:OCCore, at item:OCItem, completion:@escaping () -> Void) {
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
+
+		let uploadGroup = DispatchGroup()
+		var assets = [PHAsset]()
+
+		// Add photo assets
+		if let uploadPhotosAfter = userDefaults.instantUploadPhotosAfter {
+			let fetchResult = self.fetchAssetsFromCameraRoll(.images, createdAfter: uploadPhotosAfter)
+			if fetchResult != nil {
+				fetchResult!.enumerateObjects({ (asset, _, _) in
+					assets.append(asset)
+				})
+			}
+		}
+
+		// Add video assets
+		if let uploadVideosAfter = userDefaults.instantUploaVideosAfter {
+			let fetchResult = self.fetchAssetsFromCameraRoll(.videos, createdAfter: uploadVideosAfter)
+			if fetchResult != nil {
+				fetchResult!.enumerateObjects({ (asset, _, _) in
+					assets.append(asset)
+				})
+			}
+		}
+
+		// Perform actual upload operation
+		if assets.count > 0 {
+			uploadGroup.enter()
+			self.upload(assets: assets, with: core, at: item, completion: { () in
+				uploadGroup.leave()
+			})
+		}
+
+		// Finalize upload
+		uploadGroup.notify(queue: DispatchQueue.main, execute: {
+			completion()
+		})
+	}
+
 	private func upload(assets:[PHAsset], with core:OCCore, at rootItem:OCItem, completion:@escaping () -> Void) {
-		
+
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
 		if assets.count > 0 {
