@@ -53,20 +53,32 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 							let uploadGroup = DispatchGroup()
 
 							if let rootItem = query.rootItem {
-								// Upload new photos
+
+								var assets = [PHAsset]()
+
+								// Add photo assets
 								if let uploadPhotosAfter = userDefaults.instantUploadPhotosAfter {
-									uploadGroup.enter()
-									self.uploadMedia(with: core, of: .images, at: rootItem, modified: uploadPhotosAfter, completion: { (uploadedDate) in
-										userDefaults.instantUploadPhotosAfter = uploadedDate
-										uploadGroup.leave()
-									})
+									let fetchResult = self.fetchAssetsFromCameraRoll(.images, createdAfter: uploadPhotosAfter)
+									if fetchResult != nil {
+										fetchResult!.enumerateObjects({ (asset, _, _) in
+											assets.append(asset)
+										})
+									}
 								}
 
-								// Upload new videos
+								// Add video assets
 								if let uploadVideosAfter = userDefaults.instantUploaVideosAfter {
+									let fetchResult = self.fetchAssetsFromCameraRoll(.videos, createdAfter: uploadVideosAfter)
+									if fetchResult != nil {
+										fetchResult!.enumerateObjects({ (asset, _, _) in
+											assets.append(asset)
+										})
+									}
+								}
+
+								if assets.count > 0 {
 									uploadGroup.enter()
-									self.uploadMedia(with: core, of: .videos, at: rootItem, modified: uploadVideosAfter, completion: { (uploadedDate) in
-										userDefaults.instantUploaVideosAfter = uploadedDate
+									self.upload(assets: assets, with: core, at: rootItem, completion: { () in
 										uploadGroup.leave()
 									})
 								}
@@ -93,23 +105,26 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 		completed()
 	}
 
-	private func uploadMedia(with core:OCCore, of type:MediaType, at rootItem:OCItem, modified after:Date?, completion:@escaping (_ successfulUpload:Date?) -> Void) {
-		if let mediaFetchResult = self.fetchAssetsFromCameraRoll(type, createdAfter: after) {
-			var assets = [PHAsset]()
-			mediaFetchResult.enumerateObjects({ (asset, _, _) in
-				assets.append(asset)
+	private func upload(assets:[PHAsset], with core:OCCore, at rootItem:OCItem, completion:@escaping () -> Void) {
+		
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
+
+		if assets.count > 0 {
+			MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
+				if let asset = asset {
+					switch asset.mediaType {
+					case .image:
+						userDefaults.instantUploadPhotosAfter = asset.modificationDate
+					case .video:
+						userDefaults.instantUploaVideosAfter = asset.modificationDate
+					default:
+						break
+					}
+				}
+				if finished {
+					completion()
+				}
 			})
-			var uploaded:Date?
-			if assets.count > 0 {
-				MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
-					if let asset = asset {
-						uploaded = asset.modificationDate
-					}
-					if finished {
-						completion(uploaded)
-					}
-				})
-			}
 		}
 	}
 
@@ -122,8 +137,8 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 																	   options: nil)
 
 		if let cameraRoll = collectionResult.firstObject {
-			let imageTypePredicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
-			let videoTypePredicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.video.rawValue)
+			let imageTypePredicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
+			let videoTypePredicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.video.rawValue)
 
 			var typePredicatesArray = [NSPredicate]()
 

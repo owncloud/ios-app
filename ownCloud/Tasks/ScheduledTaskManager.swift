@@ -74,10 +74,18 @@ class ScheduledTaskManager : NSObject {
 			}
 		}
 	}
+
+	private var photoLibraryChangeDetected = false {
+		willSet {
+			if self.photoLibraryChangeDetected != newValue && newValue == true {
+				scheduleTasks()
+			}
+		}
+	}
+
 	private var wifiMonitorQueue: DispatchQueue?
 	private var wifiMonitor : Any?
 	private var monitoringPhotoLibrary = false
-	private var photoLibraryChangeDetected = false
 
 	var considerLowBattery : Bool {
 		get {
@@ -139,6 +147,8 @@ class ScheduledTaskManager : NSObject {
 			state = .foreground
 		case UIApplication.didEnterBackgroundNotification:
 			state = .background
+			// TODO: Find a better way how to prevent multiple invocation of instant upload tasks
+			photoLibraryChangeDetected = false
 		default:
 			break
 		}
@@ -265,14 +275,7 @@ extension ScheduledTaskManager : PHPhotoLibraryChangeObserver {
 	// MARK: - PHPhotoLibraryChangeObserver
 
 	func photoLibraryDidChange(_ changeInstance: PHChange) {
-		if !photoLibraryChangeDetected {
-			photoLibraryChangeDetected = true
-			scheduleTasks(completion: { [weak self] (taskCount) in
-				if taskCount > 0 {
-					self?.photoLibraryChangeDetected = false
-				}
-			})
-		}
+		photoLibraryChangeDetected = true
 	}
 
 	// MARK: - Helper methods

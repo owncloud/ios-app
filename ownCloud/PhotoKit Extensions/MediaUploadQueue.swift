@@ -29,7 +29,7 @@ class MediaUploadQueue {
 				prefferedMediaOutputFormats.append(String(kUTTypeJPEG))
 			}
 			if userDefaults.convertVideosToMP4 {
-				prefferedMediaOutputFormats.append(String(kUTTypeJPEG))
+				prefferedMediaOutputFormats.append(String(kUTTypeMPEG4))
 			}
 
 			core.perform(inRunningCore: { (runningCoreCompletion) in

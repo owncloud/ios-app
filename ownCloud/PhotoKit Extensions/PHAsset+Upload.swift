@@ -80,13 +80,16 @@ extension PHAsset {
 			if let input = contentInput {
 
 				// Determine the correct source URL based on media type
+				var assetUTI: String?
 				var assetURL: URL?
 				switch self.mediaType {
 				case .image:
 					assetURL = input.fullSizeImageURL
+					assetUTI = input.uniformTypeIdentifier
 					supportedConversionFormats.insert(String(kUTTypeJPEG))
 				case .video:
 					assetURL = (input.audiovisualAsset as? AVURLAsset)?.url
+					assetUTI = PHAssetResource.assetResources(for: self).first?.uniformTypeIdentifier
 					supportedConversionFormats.insert(String(kUTTypeMPEG4))
 				default:
 					break
@@ -94,13 +97,11 @@ extension PHAsset {
 
 				guard let url = assetURL else { return }
 
-				guard let assetUTI = input.uniformTypeIdentifier else { return }
-
 				let fileName = url.lastPathComponent
 
 				// Check if the conversion was requested and current media format is not found in the list of requested formats
-				if let formats = preferredFormats {
-					if !formats.contains(assetUTI) && formats.count > 0 {
+				if let formats = preferredFormats, formats.count > 0 {
+					if assetUTI != nil, !formats.contains(assetUTI!) {
 						// Conversion is required
 						if let outputFormat = formats.first(where: { supportedConversionFormats.contains($0) }) {
 
@@ -119,6 +120,7 @@ extension PHAsset {
 							case (.image, String(kUTTypeJPEG)):
 								let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("jpg")
 								var imageConverted = false
+
 								if let image = CIImage(contentsOf: assetURL!) {
 									imageConverted = image.convert(targetURL: localURL, outputFormat: .JPEG)
 								}
@@ -146,7 +148,6 @@ extension PHAsset {
 				// If no content was returned check request info dictionary
 				let error = requestInfo[PHContentEditingInputErrorKey] as? NSError
 				completionHandler(nil, error)
-
 			}
 		}
 
