@@ -123,16 +123,22 @@ extension UserDefaults {
 
 class MediaUploadSettingsSection: SettingsSection {
 
-	private static let bookmarkSelectionRowIdentifier = "bookmarkSelectionRowIdentifier"
-	private static let pathSelectionRowIdentifier = "pathSelectionRowIdentifier"
+	private static let bookmarkAndPathSelectionRowIdentifier = "bookmarkAndPathSelectionRowIdentifier"
 
 	private var convertPhotosSwitchRow: StaticTableViewRow?
 	private var convertVideosSwitchRow: StaticTableViewRow?
 	private var instantUploadPhotosRow: StaticTableViewRow?
 	private var instantUploadVideosRow: StaticTableViewRow?
 
-	private var bookmarkSelectionRow: StaticTableViewRow?
-	private var uploadPathSelectionRow: StaticTableViewRow?
+	private var bookmarkAndPathSelectionRow: StaticTableViewRow?
+
+	var uploadLocationSelected : Bool {
+		if self.userDefaults.instantUploadBookmarkUUID != nil && self.userDefaults.instantUploadPath != nil {
+			return true
+		} else {
+			return false
+		}
+	}
 
 	override init(userDefaults: UserDefaults) {
 
@@ -163,11 +169,14 @@ class MediaUploadSettingsSection: SettingsSection {
 				if let convertSwitch = sender as? UISwitch {
 					self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (switchState) in
 						self?.userDefaults.instantUploadPhotos = switchState
-						self?.updateDynamicUI()
-
 						self?.userDefaults.instantUploadPhotosAfter = switchState ? Date() : nil
 
-						NotificationCenter.default.post(name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
+						if switchState, let locationSelected = self?.uploadLocationSelected, locationSelected == false {
+							self?.showAccountSelectionViewController()
+						} else {
+							self?.postSettingsChangedNotification()
+						}
+
 					})
 				}
 				}, title: "Instant Upload Photos".localized, value: self.userDefaults.instantUploadPhotos)
@@ -176,22 +185,20 @@ class MediaUploadSettingsSection: SettingsSection {
 				if let convertSwitch = sender as? UISwitch {
 					self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (switchState) in
 						self?.userDefaults.instantUploadVideos = switchState
-						self?.updateDynamicUI()
-
 						self?.userDefaults.instantUploaVideosAfter = switchState ? Date() : nil
 
-						NotificationCenter.default.post(name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
+						if switchState, let locationSelected = self?.uploadLocationSelected, locationSelected == false {
+							self?.showAccountSelectionViewController()
+						} else {
+							self?.postSettingsChangedNotification()
+						}
 					})
 				}
 				}, title: "Instant Upload Videos".localized, value: self.userDefaults.instantUploadVideos)
 
-			bookmarkSelectionRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
+			bookmarkAndPathSelectionRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 				self?.showAccountSelectionViewController()
-				}, title: "Account".localized, value: "", accessoryType: .disclosureIndicator, identifier: MediaUploadSettingsSection.bookmarkSelectionRowIdentifier)
-
-			uploadPathSelectionRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
-				self?.showUploadPathSelectionViewController()
-				}, title: "Upload Path".localized, value: "", accessoryType: .disclosureIndicator, identifier: MediaUploadSettingsSection.pathSelectionRowIdentifier)
+				}, title: "Upload Path".localized, value: "", accessoryType: .disclosureIndicator, identifier: MediaUploadSettingsSection.bookmarkAndPathSelectionRowIdentifier)
 
 			self.add(row: instantUploadPhotosRow!)
 			self.add(row: instantUploadVideosRow!)
@@ -208,42 +215,19 @@ class MediaUploadSettingsSection: SettingsSection {
 		return nil
 	}
 
-	@discardableResult private func updateBookmarkSelectionRow() -> Bool {
-		var accountName = ""
-		var foundBookmark = false
-
-		if let selectedBookmark = getSelectedBookmark() {
-			accountName = selectedBookmark.shortName
-			foundBookmark = true
-		}
-
-		bookmarkSelectionRow?.value = accountName
-
-		return foundBookmark
-	}
-
-	private func updateUploadPathSelectionRow() {
-		var directory = ""
-		if let selectedPath = self.userDefaults.instantUploadPath {
-			let url = URL(fileURLWithPath: selectedPath)
-			directory = url.lastPathComponent
-		}
-
-		uploadPathSelectionRow?.value = directory
-	}
-
 	private func updateDynamicUI() {
 
-		self.remove(rowWithIdentifier: MediaUploadSettingsSection.bookmarkSelectionRowIdentifier)
-		self.remove(rowWithIdentifier: MediaUploadSettingsSection.pathSelectionRowIdentifier)
+		instantUploadPhotosRow?.value = self.userDefaults.instantUploadPhotos
+		instantUploadVideosRow?.value = self.userDefaults.instantUploadVideos
 
-		if self.userDefaults.instantUploadPhotos || self.userDefaults.instantUploadVideos {
-			self.add(row: bookmarkSelectionRow!)
-			if updateBookmarkSelectionRow() == true {
-				self.add(row: uploadPathSelectionRow!)
-				updateUploadPathSelectionRow()
-			}
-		}
+		self.remove(rowWithIdentifier: MediaUploadSettingsSection.bookmarkAndPathSelectionRowIdentifier)
+
+		guard let bookmark = getSelectedBookmark(), let path = self.userDefaults.instantUploadPath else { return }
+
+		self.add(row: bookmarkAndPathSelectionRow!)
+
+		let directory = URL(fileURLWithPath: path).lastPathComponent
+		bookmarkAndPathSelectionRow?.value = "\(bookmark.shortName)/\(directory)"
 	}
 
 	private func changeAndRequestPhotoLibraryAccessForOption(optionSwitch:UISwitch, completion:@escaping (_ value:Bool) -> Void) {
@@ -265,9 +249,10 @@ class MediaUploadSettingsSection: SettingsSection {
 
 	private func showAccountSelectionViewController() {
 		let accountSelectionViewController = StaticTableViewController(style: .grouped)
-		accountSelectionViewController.navigationItem.title = "Accounts".localized
+		accountSelectionViewController.navigationItem.title = "Select account".localized
+		let navigationController = ThemeNavigationController(rootViewController: accountSelectionViewController)
 
-		let accountsSection = StaticTableViewSection(headerTitle: "Select account".localized)
+		let accountsSection = StaticTableViewSection(headerTitle: "Accounts".localized)
 
 		var bookmarkRows: [StaticTableViewRow] = []
 		let bookmarks = OCBookmarkManager.shared.bookmarks
@@ -278,18 +263,22 @@ class MediaUploadSettingsSection: SettingsSection {
 
 		for bookmark in bookmarks {
 			let row = StaticTableViewRow(buttonWithAction: { [weak self] (_ row, _ sender) in
-				accountSelectionViewController.dismissAnimated()
 
-				// Reflect user selection in the UI
-				let selectedBookmark = bookmarkDictionary[row]
-				self?.userDefaults.instantUploadBookmarkUUID = selectedBookmark?.uuid
+				let selectedBookmark = bookmarkDictionary[row]!
+				self?.userDefaults.instantUploadBookmarkUUID = selectedBookmark.uuid
 
-				// Remove eventually existing path selection when account is switched
-				self?.userDefaults.instantUploadPath = nil
-
-				self?.updateDynamicUI()
-
-				NotificationCenter.default.post(name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
+				// Proceed with upload path selection
+				self?.selectUploadPath(for: selectedBookmark, pushIn: navigationController, completion: { (success) in
+					if !success && self?.userDefaults.instantUploadPath == nil {
+						self?.userDefaults.instantUploadBookmarkUUID = nil
+						self?.userDefaults.instantUploadPath = nil
+						self?.userDefaults.instantUploadPhotos = false
+						self?.userDefaults.instantUploadVideos = false
+					}
+					navigationController.dismiss(animated: true, completion: nil)
+					self?.postSettingsChangedNotification()
+					self?.updateDynamicUI()
+				})
 
 			}, title: bookmark.shortName, style: .plain, image: Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25)), imageWidth: 25, alignment: .left)
 
@@ -300,15 +289,10 @@ class MediaUploadSettingsSection: SettingsSection {
 		accountsSection.add(rows: bookmarkRows)
 		accountSelectionViewController.addSection(accountsSection)
 
-		let navigationController = ThemeNavigationController(rootViewController: accountSelectionViewController)
-
 		self.viewController?.present(navigationController, animated: true)
-
 	}
 
-	private func showUploadPathSelectionViewController() {
-
-		guard let bookmark = getSelectedBookmark() else { return }
+	private func selectUploadPath(for bookmark:OCBookmark, pushIn navigationController:UINavigationController, completion:@escaping (_ success:Bool) -> Void) {
 
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (_, _) in },
 										 completionHandler: { [weak self] (core, error) in
@@ -319,16 +303,18 @@ class MediaUploadSettingsSection: SettingsSection {
 													let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Select Upload Path".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory) in
 														if selectedDirectory != nil {
 															self?.userDefaults.instantUploadPath = selectedDirectory?.path
-															self?.updateUploadPathSelectionRow()
-
-															NotificationCenter.default.post(name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
 														}
 														OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+
+														completion(selectedDirectory != nil)
 													})
-													let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)
-													self?.viewController?.present(pickerNavigationController, animated: true)
+													navigationController.pushViewController(directoryPickerViewController, animated: true)
 												}
 											}
 		})
+	}
+
+	private func postSettingsChangedNotification() {
+		NotificationCenter.default.post(name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
 	}
 }
