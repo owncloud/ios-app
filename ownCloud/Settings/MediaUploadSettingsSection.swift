@@ -217,17 +217,19 @@ class MediaUploadSettingsSection: SettingsSection {
 
 	private func updateDynamicUI() {
 
-		instantUploadPhotosRow?.value = self.userDefaults.instantUploadPhotos
-		instantUploadVideosRow?.value = self.userDefaults.instantUploadVideos
-
 		self.remove(rowWithIdentifier: MediaUploadSettingsSection.bookmarkAndPathSelectionRowIdentifier)
 
-		guard let bookmark = getSelectedBookmark(), let path = self.userDefaults.instantUploadPath else { return }
+		if let bookmark = getSelectedBookmark(), let path = self.userDefaults.instantUploadPath {
+			self.add(row: bookmarkAndPathSelectionRow!)
 
-		self.add(row: bookmarkAndPathSelectionRow!)
+			let directory = URL(fileURLWithPath: path).lastPathComponent
+			bookmarkAndPathSelectionRow?.value = "\(bookmark.shortName)/\(directory)"
+		} else {
+			resetInstantUploadConfiguration()
+		}
 
-		let directory = URL(fileURLWithPath: path).lastPathComponent
-		bookmarkAndPathSelectionRow?.value = "\(bookmark.shortName)/\(directory)"
+		instantUploadPhotosRow?.value = self.userDefaults.instantUploadPhotos
+		instantUploadVideosRow?.value = self.userDefaults.instantUploadVideos
 	}
 
 	private func changeAndRequestPhotoLibraryAccessForOption(optionSwitch:UISwitch, completion:@escaping (_ value:Bool) -> Void) {
@@ -270,10 +272,7 @@ class MediaUploadSettingsSection: SettingsSection {
 				// Proceed with upload path selection
 				self?.selectUploadPath(for: selectedBookmark, pushIn: navigationController, completion: { (success) in
 					if !success && self?.userDefaults.instantUploadPath == nil {
-						self?.userDefaults.instantUploadBookmarkUUID = nil
-						self?.userDefaults.instantUploadPath = nil
-						self?.userDefaults.instantUploadPhotos = false
-						self?.userDefaults.instantUploadVideos = false
+						self?.resetInstantUploadConfiguration()
 					}
 					navigationController.dismiss(animated: true, completion: nil)
 					self?.postSettingsChangedNotification()
@@ -312,6 +311,13 @@ class MediaUploadSettingsSection: SettingsSection {
 												}
 											}
 		})
+	}
+
+	private func resetInstantUploadConfiguration() {
+		self.userDefaults.instantUploadBookmarkUUID = nil
+		self.userDefaults.instantUploadPath = nil
+		self.userDefaults.instantUploadPhotos = false
+		self.userDefaults.instantUploadVideos = false
 	}
 
 	private func postSettingsChangedNotification() {
