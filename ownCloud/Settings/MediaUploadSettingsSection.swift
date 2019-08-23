@@ -257,9 +257,14 @@ class MediaUploadSettingsSection: SettingsSection {
 	}
 
 	private func showAccountSelectionViewController() {
+
 		let accountSelectionViewController = StaticTableViewController(style: .grouped)
-		accountSelectionViewController.navigationItem.title = "Select account".localized
 		let navigationController = ThemeNavigationController(rootViewController: accountSelectionViewController)
+
+		accountSelectionViewController.navigationItem.title = "Select account".localized
+		accountSelectionViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
+																						   target: accountSelectionViewController,
+																						   action: #selector(accountSelectionViewController.dismissAnimated))
 
 		let accountsSection = StaticTableViewSection(headerTitle: "Accounts".localized)
 
