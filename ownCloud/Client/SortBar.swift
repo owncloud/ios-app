@@ -64,7 +64,7 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 
 	// MARK: - Instance variables.
 
-	var sortSegmentedControl: SegmentedControl?
+	var sortSegmentedControl: UISegmentedControl?
 	var sortButton: UIButton?
 	var selectButton: UIButton?
 	var showSelectButton: Bool = false {
