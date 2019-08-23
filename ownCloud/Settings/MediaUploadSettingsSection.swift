@@ -139,7 +139,7 @@ class MediaUploadSettingsSection: SettingsSection {
 
 	private var bookmarkAndPathSelectionRow: StaticTableViewRow?
 
-	var uploadLocationSelected : Bool {
+	private var uploadLocationSelected : Bool {
 		if self.userDefaults.instantUploadBookmarkUUID != nil && self.userDefaults.instantUploadPath != nil {
 			return true
 		} else {

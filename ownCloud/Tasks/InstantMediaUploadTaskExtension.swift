@@ -30,7 +30,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.appDidComeToForeground] }
 	override class var features : [String : Any]? { return [ FeatureKeys.photoLibraryChanged : true, FeatureKeys.runOnWifi : true] }
 
-	var uploadDirectoryTracking: OCCoreItemTracking?
+	private var uploadDirectoryTracking: OCCoreItemTracking?
 
 	override func run(background:Bool) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
