@@ -147,6 +147,8 @@ class MediaUploadSettingsSection: SettingsSection {
 		}
 	}
 
+	private var uploadPathTracking: OCCoreItemTracking?
+
 	override init(userDefaults: UserDefaults) {
 
 		super.init(userDefaults: userDefaults)
@@ -224,19 +226,40 @@ class MediaUploadSettingsSection: SettingsSection {
 
 	private func updateDynamicUI() {
 
+		func updateInstantUploadSwtches() {
+			OnMainThread {
+				self.instantUploadPhotosRow?.value = self.userDefaults.instantUploadPhotos
+				self.instantUploadVideosRow?.value = self.userDefaults.instantUploadVideos
+			}
+		}
+
 		self.remove(rowWithIdentifier: MediaUploadSettingsSection.bookmarkAndPathSelectionRowIdentifier)
 
 		if let bookmark = getSelectedBookmark(), let path = self.userDefaults.instantUploadPath {
-			self.add(row: bookmarkAndPathSelectionRow!)
 
-			let directory = URL(fileURLWithPath: path).lastPathComponent
-			bookmarkAndPathSelectionRow?.value = "\(bookmark.shortName)/\(directory)"
+			OCCoreManager.shared.requestCore(for: bookmark, setup: { (_, _) in },
+											 completionHandler: { (core, error) in
+												if let core = core, error == nil {
+													self.uploadPathTracking = core.trackItem(atPath: path, trackingHandler: { (_, pathItem, _) in
+														if pathItem != nil {
+															OnMainThread {
+																self.add(row: self.bookmarkAndPathSelectionRow!)
+																let directory = URL(fileURLWithPath: path).lastPathComponent
+																self.bookmarkAndPathSelectionRow?.value = "\(bookmark.shortName)/\(directory)"
+															}
+														} else {
+															self.userDefaults.resetInstantUploadConfiguration()
+														}
+														updateInstantUploadSwtches()
+														OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+													})
+												}
+			})
+
 		} else {
 			self.userDefaults.resetInstantUploadConfiguration()
+			updateInstantUploadSwtches()
 		}
-
-		instantUploadPhotosRow?.value = self.userDefaults.instantUploadPhotos
-		instantUploadVideosRow?.value = self.userDefaults.instantUploadVideos
 	}
 
 	private func changeAndRequestPhotoLibraryAccessForOption(optionSwitch:UISwitch, completion:@escaping (_ value:Bool) -> Void) {
