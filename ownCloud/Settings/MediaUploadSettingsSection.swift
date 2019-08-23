@@ -280,6 +280,7 @@ class MediaUploadSettingsSection: SettingsSection {
 
 				let selectedBookmark = bookmarkDictionary[row]!
 				self?.userDefaults.instantUploadBookmarkUUID = selectedBookmark.uuid
+				self?.userDefaults.instantUploadPath = nil
 
 				// Proceed with upload path selection
 				self?.selectUploadPath(for: selectedBookmark, pushIn: navigationController, completion: { (success) in
