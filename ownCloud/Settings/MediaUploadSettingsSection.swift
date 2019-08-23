@@ -119,6 +119,13 @@ extension UserDefaults {
 			return self.value(forKey: MediaUploadKeys.InstantUploadVideosAfterDateKey.rawValue) as? Date
 		}
 	}
+
+	public func resetInstantUploadConfiguration() {
+		self.instantUploadBookmarkUUID = nil
+		self.instantUploadPath = nil
+		self.instantUploadPhotos = false
+		self.instantUploadVideos = false
+	}
 }
 
 class MediaUploadSettingsSection: SettingsSection {
@@ -225,7 +232,7 @@ class MediaUploadSettingsSection: SettingsSection {
 			let directory = URL(fileURLWithPath: path).lastPathComponent
 			bookmarkAndPathSelectionRow?.value = "\(bookmark.shortName)/\(directory)"
 		} else {
-			resetInstantUploadConfiguration()
+			self.userDefaults.resetInstantUploadConfiguration()
 		}
 
 		instantUploadPhotosRow?.value = self.userDefaults.instantUploadPhotos
@@ -272,7 +279,7 @@ class MediaUploadSettingsSection: SettingsSection {
 				// Proceed with upload path selection
 				self?.selectUploadPath(for: selectedBookmark, pushIn: navigationController, completion: { (success) in
 					if !success && self?.userDefaults.instantUploadPath == nil {
-						self?.resetInstantUploadConfiguration()
+						self?.userDefaults.resetInstantUploadConfiguration()
 					}
 					navigationController.dismiss(animated: true, completion: nil)
 					self?.postSettingsChangedNotification()
@@ -311,13 +318,6 @@ class MediaUploadSettingsSection: SettingsSection {
 												}
 											}
 		})
-	}
-
-	private func resetInstantUploadConfiguration() {
-		self.userDefaults.instantUploadBookmarkUUID = nil
-		self.userDefaults.instantUploadPath = nil
-		self.userDefaults.instantUploadPhotos = false
-		self.userDefaults.instantUploadVideos = false
 	}
 
 	private func postSettingsChangedNotification() {
