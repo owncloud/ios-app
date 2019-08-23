@@ -30,6 +30,8 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.appDidComeToForeground] }
 	override class var features : [String : Any]? { return [ FeatureKeys.photoLibraryChanged : true, FeatureKeys.runOnWifi : true] }
 
+	var uploadDirectoryTracking: OCCoreItemTracking?
+
 	override func run(background:Bool) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
@@ -51,21 +53,22 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 						})
 					}
 
-					let pathQuery = OCQuery(forPath: path)
-					pathQuery.changesAvailableNotificationHandler = { query in
-						if query.state == .idle {
-							core.stop(query)
+					self.uploadDirectoryTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, _) in
 
-							if let rootItem = query.rootItem {
-								self.uploadMediaAssets(with: core, at: rootItem, completion: {
-									finalize()
-								})
-							} else {
-								finalize()
-							}
+						if error != nil {
+							Log.error("Error \(String(describing: error))")
 						}
-					}
-					core.start(pathQuery)
+
+						if item != nil {
+							self.uploadMediaAssets(with: core, at: item!, completion: {
+								finalize()
+							})
+						} else {
+							Log.warning("Instant upload directory not found")
+							userDefaults.resetInstantUploadConfiguration()
+							finalize()
+						}
+					})
 				}
 			})
 		}
@@ -124,6 +127,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
 		if assets.count > 0 {
+			Log.debug("Uploading \(assets.count) assets")
 			MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
 				if let asset = asset {
 					switch asset.mediaType {
