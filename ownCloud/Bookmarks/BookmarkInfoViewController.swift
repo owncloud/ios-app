@@ -48,7 +48,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 		let includeAvailableOfflineCopiesRow = StaticTableViewRow(switchWithAction: { [weak self] (row, _) in
 			if (row.value as? Bool) == true {
 				let alertController = UIAlertController(title: "Really include available offline files?".localized,
-									message: "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).",
+									message: "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).".localized,
 									preferredStyle: .alert)
 
 				alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { [weak row] (_) in
