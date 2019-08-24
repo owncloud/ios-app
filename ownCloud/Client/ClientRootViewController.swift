@@ -141,6 +141,9 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
 			self.core = core
 			core?.delegate = self
+
+			// Remove skip available offline when user opens the bookmark
+			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
 		}, completionHandler: { (core, error) in
 			if error == nil {
 				self.coreReady()

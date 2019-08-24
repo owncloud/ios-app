@@ -31,7 +31,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	// @IBOutlet var welcomeLogoSVGView : SVGImageView!
 
 	// MARK: - Internals
-	var lockedBookmarks : [OCBookmark] = []
 	var shownFirstTime = true
 
 	// MARK: - Init
@@ -315,25 +314,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	// MARK: - Connect and locking
 	func isLocked(bookmark: OCBookmark, presentAlert: Bool = true) -> Bool {
-		if lockedBookmarks.contains(bookmark) {
-			if presentAlert {
-				let alertController = UIAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName as NSString) as String,
-									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
-									preferredStyle: .alert)
-
-				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
-					// There was an error erasing the vault => re-add bookmark to give user another chance to delete its contents
-					OCBookmarkManager.shared.addBookmark(bookmark)
-					self.updateNoServerMessageVisibility()
-				}))
-
-				self.present(alertController, animated: true, completion: nil)
-			}
-
-			return true
-		}
-
-		return false
+		return OCBookmarkManager.isLocked(bookmark: bookmark, presentAlertOn: presentAlert ? self : nil)
 	}
 
 	func connect(to bookmark: OCBookmark) {
@@ -470,14 +451,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				}
 
 				let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
-														message: "This will also delete all locally stored file copies.".localized,
-														preferredStyle: presentationStyle)
+									message: "This will also delete all locally stored file copies.".localized,
+									preferredStyle: presentationStyle)
 
 				alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
 				alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
-
-					self.lockedBookmarks.append(bookmark)
+					OCBookmarkManager.lock(bookmark: bookmark)
 
 					OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
 						let vault : OCVault = OCVault(bookmark: bookmark)
@@ -487,8 +467,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 								if error != nil {
 									// Inform user if vault couldn't be erased
 									let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
-																			message: error?.localizedDescription,
-																			preferredStyle: .alert)
+														message: error?.localizedDescription,
+														preferredStyle: .alert)
 
 									alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
@@ -508,9 +488,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 									self.updateNoServerMessageVisibility()
 								}
 
-								if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
-									self.lockedBookmarks.remove(at: removeIndex)
-								}
+								OCBookmarkManager.unlock(bookmark: bookmark)
 
 								completionHandler()
 							}
@@ -530,8 +508,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		editRowAction.backgroundColor = .blue
 
 		let manageRowAction = UITableViewRowAction(style: .normal,
-												   title: "Manage".localized,
-												   handler: { [weak self] (_, indexPath) in
+							   title: "Manage".localized,
+							   handler: { [weak self] (_, indexPath) in
 			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 				self?.showBookmarkInfoUI(bookmark)
 			}
@@ -561,6 +539,44 @@ extension OCBookmarkManager {
 		set {
 			OCAppIdentity.shared.userDefaults?.set(newValue?.uuid.uuidString, forKey: OCBookmarkManager.lastConnectedBookmarkUUIDDefaultsKey)
 		}
+	}
+
+	static var lockedBookmarks : [OCBookmark] = []
+
+	static func lock(bookmark: OCBookmark) {
+		OCSynchronized(self) {
+			self.lockedBookmarks.append(bookmark)
+		}
+	}
+
+	static func unlock(bookmark: OCBookmark) {
+		OCSynchronized(self) {
+			if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
+				self.lockedBookmarks.remove(at: removeIndex)
+			}
+		}
+	}
+
+	static func isLocked(bookmark: OCBookmark, presentAlertOn viewController: UIViewController? = nil, completion: ((_ isLocked: Bool) -> Void)? = nil) -> Bool {
+		if self.lockedBookmarks.contains(bookmark) {
+			if viewController != nil {
+				let alertController = UIAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName as NSString) as String,
+									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
+									preferredStyle: .alert)
+
+				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
+					completion?(true)
+				}))
+
+				viewController?.present(alertController, animated: true, completion: nil)
+			}
+
+			return true
+		}
+
+		completion?(false)
+
+		return false
 	}
 }
 
