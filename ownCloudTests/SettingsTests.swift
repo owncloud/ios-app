@@ -23,6 +23,7 @@ class SettingsTests: XCTestCase {
 	* PASSED if: Theme and Logging are displayed as part of the "User Interface" section of Settings
 	*/
 	func testCheckUserInferfaceItems () {
+		EarlGrey.waitForElement(accessibilityID: "theme")
 
 		//Assert
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("theme")).assert(grey_sufficientlyVisible())
@@ -48,11 +49,10 @@ class SettingsTests: XCTestCase {
 	* PASSED if: Media upload options are displayed as part of the "Media Upload" section of Settings
 	*/
 	func testCheckMediaUploadSettings () {
-		
-		//Assert
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("convert_heic_to_jpeg")).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("convert_to_mp4")).assert(grey_sufficientlyVisible())
-		
+		// Scroll into view and apply assertions
+		EarlGrey.select(elementWithMatcher:grey_accessibilityID("convert_heic_to_jpeg")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 300), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher:grey_accessibilityID("convert_to_mp4")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 300), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
+
 		//Reset status
 		EarlGrey.select(elementWithMatcher: grey_text(OCAppIdentity.shared.appName!)).perform(grey_tap())
 	}
@@ -64,21 +64,11 @@ class SettingsTests: XCTestCase {
 	func testCheckMoreItems () {
 
 		//Assert
-		EarlGrey.select(elementWithMatcher: grey_text("SECURITY".localized))
-			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_accessibilityID("help".localized))
-			.assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_text("SECURITY".localized))
-			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_accessibilityID("send-feedback".localized))
-			.assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_text("SECURITY".localized))
-			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_accessibilityID("recommend-friend".localized))
-			.assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_text("SECURITY".localized))
-			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_accessibilityID("privacy-policy".localized))
-			.assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_text("SECURITY".localized))
-			.usingSearch(grey_scrollInDirection(GREYDirection.down, 100), onElementWith: grey_text("Acknowledgements".localized))
-			.assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher:grey_accessibilityID("help")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 500), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher:grey_accessibilityID("send-feedback")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 500), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher:grey_accessibilityID("recommend-friend")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 500), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher:grey_accessibilityID("privacy-policy")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 500), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher:grey_text("Acknowledgements".localized)).using(searchAction: grey_scrollInDirection(GREYDirection.down, 500), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
 
 		//Reset status
 		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
@@ -121,6 +111,7 @@ class SettingsTests: XCTestCase {
 	* PASSED if: Log level is changed to "Warning".
 	*/
 	func testSwitchLogLevel () {
+		EarlGrey.waitForElement(accessibilityID: "logging")
 
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("logging")).perform(grey_tap())
@@ -164,6 +155,7 @@ class SettingsTests: XCTestCase {
 	* PASSED if: All themes available are displayed
 	*/
 	func testCheckThemesAvailable () {
+		EarlGrey.waitForElement(accessibilityID: "theme")
 
 		//Actions
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("theme")).perform(grey_tap())
