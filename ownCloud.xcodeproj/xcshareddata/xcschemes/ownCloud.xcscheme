@@ -166,6 +166,11 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:log.log-only-tags"
+            value = "[Request,Response]"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:log.log-omit-tags"
             value = "[Request,Response]"
             isEnabled = "NO">
