@@ -38,6 +38,20 @@
                BlueprintName = "ownCloudTests"
                ReferencedContainer = "container:ownCloud.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "CreateBookmarkTests">
+               </Test>
+               <Test
+                  Identifier = "CreateFolderTests">
+               </Test>
+               <Test
+                  Identifier = "DeleteBookmarkTests">
+               </Test>
+               <Test
+                  Identifier = "FileListTests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "NO">
