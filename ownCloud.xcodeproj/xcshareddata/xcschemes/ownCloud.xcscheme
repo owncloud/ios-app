@@ -131,6 +131,11 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:core.cookie-support-enabled"
+            value = "true"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:core.override-reachability-signal"
             value = "true"
             isEnabled = "NO">
