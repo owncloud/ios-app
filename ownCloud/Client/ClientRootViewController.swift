@@ -240,11 +240,6 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		OnMainThread {
 			if let core = self.core {
 				let query = OCQuery(forPath: "/")
-//				let query = OCQuery(condition: OCQueryCondition.require([
-//					.where(.name, contains: "i"),
-//					.where(.type, isEqualTo: OCItemType.file.rawValue),
-//					.where(.size, isGreaterThan: 220000)
-//				]).sorted(by: .size, ascending: true), inputFilter:nil)
 
 				let queryViewController = ClientQueryViewController(core: core, query: query)
 				// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
@@ -264,8 +259,29 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 				}
 				self.activityViewController?.core = core
 				self.libraryViewController?.core = core
-				self.libraryViewController?.setupQueries()
+
+				self.connectionInitializedObservation = core.observe(\OCCore.connection.connectionInitializationPhaseCompleted, options: [.initial], changeHandler: { [weak self] (core, _) in
+					if core.connection.connectionInitializationPhaseCompleted {
+						self?.connectionInitialized()
+					}
+				})
 			}
+		}
+	}
+
+	private var connectionInitializedObservation : NSKeyValueObservation?
+
+	func connectionInitialized() {
+		OCSynchronized(self) {
+			if connectionInitializedObservation == nil {
+				return
+			}
+
+			connectionInitializedObservation = nil
+		}
+
+		OnMainThread {
+			self.libraryViewController?.setupQueries()
 		}
 	}
 
