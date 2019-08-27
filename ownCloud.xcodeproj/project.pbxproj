@@ -63,6 +63,7 @@
 		39DE75CD22F960CF0064C1E2 /* SortMethodTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39DE75C722F960CF0064C1E2 /* SortMethodTableViewController.swift */; };
 		39E2FDED21FDEC7500F0117F /* ServerListTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */; };
 		39E2FE0021FF814A00F0117F /* ThemeRoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */; };
+		39E42D1C2315288B00B82AC3 /* KeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E42D1B2315288B00B82AC3 /* KeyCommands.swift */; };
 		39E98B3E22797D1B009911F1 /* PublicLinkTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E98B3D22797D1B009911F1 /* PublicLinkTableViewController.swift */; };
 		39E98B452279ACF5009911F1 /* PublicLinkEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E98B442279ACF5009911F1 /* PublicLinkEditTableViewController.swift */; };
 		46B9D336BF7FE50321823888 /* Pods_ownCloudScreenshotsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54199937F74A129BC74DEB0A /* Pods_ownCloudScreenshotsTests.framework */; };
@@ -620,6 +621,7 @@
 		39DE75C722F960CF0064C1E2 /* SortMethodTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortMethodTableViewController.swift; sourceTree = "<group>"; };
 		39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableHeaderView.swift; sourceTree = "<group>"; };
 		39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeRoundedButton.swift; sourceTree = "<group>"; };
+		39E42D1B2315288B00B82AC3 /* KeyCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCommands.swift; sourceTree = "<group>"; };
 		39E98B3D22797D1B009911F1 /* PublicLinkTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicLinkTableViewController.swift; sourceTree = "<group>"; };
 		39E98B442279ACF5009911F1 /* PublicLinkEditTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicLinkEditTableViewController.swift; sourceTree = "<group>"; };
 		3D753147564B1E4F47826109 /* Pods-ownCloud Screenshots Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloud Screenshots Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloud Screenshots Tests/Pods-ownCloud Screenshots Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1005,6 +1007,7 @@
 				DC3BE0DB2077CC13002A0AC0 /* Client */,
 				DC7DF17C205140F400189B9A /* Server List */,
 				DCF4F1802051A91500189B9A /* Settings */,
+				39E42D152315286300B82AC3 /* Key Commands */,
 				DC422448207CAED60006A2A6 /* Theming */,
 				DCF4F1622051927200189B9A /* UI Elements */,
 				239F1314205A69240029F186 /* UIKit Extensions */,
@@ -1143,6 +1146,14 @@
 				397328EE22D606AC006CFAA4 /* ImportFilesController.swift */,
 			);
 			path = Import;
+			sourceTree = "<group>";
+		};
+		39E42D152315286300B82AC3 /* Key Commands */ = {
+			isa = PBXGroup;
+			children = (
+				39E42D1B2315288B00B82AC3 /* KeyCommands.swift */,
+			);
+			path = "Key Commands";
 			sourceTree = "<group>";
 		};
 		4C82D06E22C9384700835F0B /* Media */ = {
@@ -2424,6 +2435,7 @@
 				39AFC3D1225E72FB00A6D3AE /* GroupSharingTableViewController.swift in Sources */,
 				DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */,
 				39A5135322608836002CF1AA /* OCShare+Extension.swift in Sources */,
+				39E42D1C2315288B00B82AC3 /* KeyCommands.swift in Sources */,
 				23D5241521491C670002C566 /* DisplayViewController.swift in Sources */,
 				DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */,
 				DC297965226E4D1100E01BC7 /* PushTransitionDelegate.swift in Sources */,
