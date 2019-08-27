@@ -406,6 +406,7 @@
 "Select account" = "Select account";
 "Upload Path" = "Upload Path";
 "Select Upload Path" = "Select Upload Path";
+"Instant upload of media was disabled since configured account / folder was not found" = "Instant upload of media was disabled since configured account / folder was not found";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Creating %ld folders…";

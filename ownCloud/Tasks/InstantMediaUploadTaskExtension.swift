@@ -67,6 +67,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 							Log.warning("Instant upload directory not found")
 							userDefaults.resetInstantUploadConfiguration()
 							finalize()
+							self.showFeatureDisabledAlert()
 						}
 					})
 				}
@@ -188,5 +189,13 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 		}
 
 		return nil
+	}
+
+	private func showFeatureDisabledAlert() {
+		OnMainThread {
+			let alertController = UIAlertController(with: "Instant upload disabled".localized,
+																	message: "Instant upload of media was disabled since configured account / folder was not found".localized)
+			UIApplication.shared.delegate?.window??.rootViewController?.present(alertController, animated: true, completion: nil)
+		}
 	}
 }
