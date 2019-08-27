@@ -63,6 +63,7 @@
 		399DD7C722A691BC00B45EB2 /* UnshareAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399DD7C122A691BC00B45EB2 /* UnshareAction.swift */; };
 		39A5135322608836002CF1AA /* OCShare+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A5135222608836002CF1AA /* OCShare+Extension.swift */; };
 		39A513AC22674E56002CF1AA /* OCCore+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A513AB22674E56002CF1AA /* OCCore+Extension.swift */; };
+		39A5C3A1231566D9009D9EE3 /* GetFileInfoIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A5C3A0231566D9009D9EE3 /* GetFileInfoIntentHandler.swift */; };
 		39A7138722E79C6700089423 /* ownCloud Intents.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 39A7138022E79C6700089423 /* ownCloud Intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		39A7138F22E79EF700089423 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39A7138E22E79EF700089423 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
 		39A7139022E79EF700089423 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39A7138E22E79EF700089423 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
@@ -670,6 +671,7 @@
 		399DD7C122A691BC00B45EB2 /* UnshareAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnshareAction.swift; sourceTree = "<group>"; };
 		39A5135222608836002CF1AA /* OCShare+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCShare+Extension.swift"; sourceTree = "<group>"; };
 		39A513AB22674E56002CF1AA /* OCCore+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCCore+Extension.swift"; sourceTree = "<group>"; };
+		39A5C3A0231566D9009D9EE3 /* GetFileInfoIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFileInfoIntentHandler.swift; sourceTree = "<group>"; };
 		39A7138022E79C6700089423 /* ownCloud Intents.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ownCloud Intents.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		39A7138222E79C6700089423 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
 		39A7138422E79C6700089423 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1240,6 +1242,7 @@
 				395E16F922F03CAF00DE89A1 /* GetFileIntentHandler.swift */,
 				395E16FC22F06A7300DE89A1 /* SaveFileIntentHandler.swift */,
 				395E16FE22F172C900DE89A1 /* CreateFolderIntentHandler.swift */,
+				39A5C3A0231566D9009D9EE3 /* GetFileInfoIntentHandler.swift */,
 			);
 			path = Intent;
 			sourceTree = "<group>";
@@ -2706,6 +2709,7 @@
 				39F689AC22F0206900E63429 /* OCBookmark+Extension.swift in Sources */,
 				395E16FF22F172C900DE89A1 /* CreateFolderIntentHandler.swift in Sources */,
 				395E16FD22F06A7300DE89A1 /* SaveFileIntentHandler.swift in Sources */,
+				39A5C3A1231566D9009D9EE3 /* GetFileInfoIntentHandler.swift in Sources */,
 				394A0B0522EEFCA300603813 /* GetAccountsIntentHandler.swift in Sources */,
 				39F689AB22F018C100E63429 /* GetDirectoryListingIntentHandler.swift in Sources */,
 			);

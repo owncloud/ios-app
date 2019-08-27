@@ -34,6 +34,7 @@
 				<string>GetAccounts</string>
 				<string>GetAccountsIntent</string>
 				<string>GetDirectoryListingIntent</string>
+				<string>GetFileInfoIntent</string>
 				<string>GetFileIntent</string>
 				<string>SaveFileIntent</string>
 			</array>

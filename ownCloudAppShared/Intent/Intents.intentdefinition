@@ -9,7 +9,7 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>K5U8aR</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>18F203</string>
+	<string>18G95</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
 	<string>11M382q</string>
 	<key>INIntentDefinitionToolsVersion</key>
@@ -70,6 +70,14 @@
 						<string>successList</string>
 						<key>INIntentResponseCodeSuccess</key>
 						<true/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationRequired</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -231,6 +239,14 @@
 						<key>INIntentResponseCodeName</key>
 						<string>failure</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationRequired</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>2</integer>
@@ -380,6 +396,22 @@
 					<dict>
 						<key>INIntentResponseCodeName</key>
 						<string>failure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationRequired</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Path does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>WDPKZp</string>
+						<key>INIntentResponseCodeName</key>
+						<string>pathFailure</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -578,6 +610,14 @@
 						<key>INIntentResponseCodeName</key>
 						<string>failure</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationRequired</string>
+					</dict>
 				</array>
 			</dict>
 			<key>INIntentTitle</key>
@@ -739,6 +779,14 @@
 						<key>INIntentResponseCodeName</key>
 						<string>failure</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationRequired</string>
+					</dict>
 				</array>
 			</dict>
 			<key>INIntentTitle</key>
@@ -749,6 +797,166 @@
 			<string>Custom</string>
 			<key>INIntentVerb</key>
 			<string>Do</string>
+		</dict>
+		<dict>
+			<key>INIntentCategory</key>
+			<string>download</string>
+			<key>INIntentConfigurable</key>
+			<true/>
+			<key>INIntentDescriptionID</key>
+			<string>LdHBeL</string>
+			<key>INIntentIneligibleForSuggestions</key>
+			<true/>
+			<key>INIntentInput</key>
+			<string>path</string>
+			<key>INIntentKeyParameter</key>
+			<string>path</string>
+			<key>INIntentLastParameterTag</key>
+			<integer>2</integer>
+			<key>INIntentManagedParameterCombinations</key>
+			<dict>
+				<key>path,accountUUID</key>
+				<dict>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Get File Info</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>7Rco9W</string>
+					<key>INIntentParameterCombinationUpdatesLinked</key>
+					<true/>
+				</dict>
+			</dict>
+			<key>INIntentName</key>
+			<string>GetFileInfo</string>
+			<key>INIntentParameters</key>
+			<array>
+				<dict>
+					<key>INIntentParameterDisplayName</key>
+					<string>Path</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>unxhTD</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>1</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>path</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>For which path you want the file info?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>3uG0po</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>1</integer>
+					<key>INIntentParameterType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterDisplayName</key>
+					<string>Account UUID</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>dMBDq7</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>2</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>accountUUID</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Tell me the account UUID</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>WuzGkj</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>2</integer>
+					<key>INIntentParameterType</key>
+					<string>String</string>
+				</dict>
+			</array>
+			<key>INIntentResponse</key>
+			<dict>
+				<key>INIntentResponseCodes</key>
+				<array>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>success</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>failure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationRequired</string>
+					</dict>
+				</array>
+				<key>INIntentResponseLastParameterTag</key>
+				<integer>3</integer>
+				<key>INIntentResponseOutput</key>
+				<string>fileInfo</string>
+				<key>INIntentResponseParameters</key>
+				<array>
+					<dict>
+						<key>INIntentResponseParameterDisplayName</key>
+						<string>File Info</string>
+						<key>INIntentResponseParameterDisplayNameID</key>
+						<string>4HFDB7</string>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>1</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>fileInfo</string>
+						<key>INIntentResponseParameterObjectType</key>
+						<string>FileInfo</string>
+						<key>INIntentResponseParameterObjectTypeNamespace</key>
+						<string>K5U8aR</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>3</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>Object</string>
+					</dict>
+				</array>
+			</dict>
+			<key>INIntentTitle</key>
+			<string>Get File Info</string>
+			<key>INIntentTitleID</key>
+			<string>MGAYW2</string>
+			<key>INIntentType</key>
+			<string>Custom</string>
+			<key>INIntentVerb</key>
+			<string>Get</string>
 		</dict>
 	</array>
 	<key>INTypes</key>
@@ -855,6 +1063,214 @@
 					<integer>103</integer>
 					<key>INTypePropertyType</key>
 					<string>String</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>INTypeDisplayName</key>
+			<string>File Info</string>
+			<key>INTypeDisplayNameID</key>
+			<string>A3Pv0a</string>
+			<key>INTypeLastPropertyTag</key>
+			<integer>114</integer>
+			<key>INTypeName</key>
+			<string>FileInfo</string>
+			<key>INTypeProperties</key>
+			<array>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>1</integer>
+					<key>INTypePropertyName</key>
+					<string>identifier</string>
+					<key>INTypePropertyTag</key>
+					<integer>1</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>2</integer>
+					<key>INTypePropertyName</key>
+					<string>displayString</string>
+					<key>INTypePropertyTag</key>
+					<integer>2</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>3</integer>
+					<key>INTypePropertyName</key>
+					<string>pronunciationHint</string>
+					<key>INTypePropertyTag</key>
+					<integer>3</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>4</integer>
+					<key>INTypePropertyName</key>
+					<string>alternativeSpeakableMatches</string>
+					<key>INTypePropertySupportsMultipleValues</key>
+					<true/>
+					<key>INTypePropertyTag</key>
+					<integer>4</integer>
+					<key>INTypePropertyType</key>
+					<string>SpeakableString</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Last Modified</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>qD6IIc</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>5</integer>
+					<key>INTypePropertyMetadata</key>
+					<dict>
+						<key>INTypePropertyMetadataDateStyle</key>
+						<string>Full</string>
+						<key>INTypePropertyMetadataFormat</key>
+						<string>Relative</string>
+						<key>INTypePropertyMetadataTimeStyle</key>
+						<string>Full</string>
+						<key>INTypePropertyMetadataType</key>
+						<string>DateTime</string>
+					</dict>
+					<key>INTypePropertyName</key>
+					<string>lastModified</string>
+					<key>INTypePropertyTag</key>
+					<integer>110</integer>
+					<key>INTypePropertyType</key>
+					<string>DateComponents</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Is Favorite</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>lIGrzU</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>6</integer>
+					<key>INTypePropertyMetadata</key>
+					<dict>
+						<key>INTypePropertyMetadataFalseDisplayName</key>
+						<string>false</string>
+						<key>INTypePropertyMetadataFalseDisplayNameID</key>
+						<string>eg3e3D</string>
+						<key>INTypePropertyMetadataTrueDisplayName</key>
+						<string>true</string>
+						<key>INTypePropertyMetadataTrueDisplayNameID</key>
+						<string>KpcaUP</string>
+					</dict>
+					<key>INTypePropertyName</key>
+					<string>isFavorite</string>
+					<key>INTypePropertyTag</key>
+					<integer>109</integer>
+					<key>INTypePropertyType</key>
+					<string>Boolean</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Private Link</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>8TjYRj</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>7</integer>
+					<key>INTypePropertyName</key>
+					<string>privateLink</string>
+					<key>INTypePropertyTag</key>
+					<integer>108</integer>
+					<key>INTypePropertyType</key>
+					<string>URL</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Size</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>wbCXnN</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>8</integer>
+					<key>INTypePropertyName</key>
+					<string>size</string>
+					<key>INTypePropertyTag</key>
+					<integer>107</integer>
+					<key>INTypePropertyType</key>
+					<string>Integer</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Creation Date</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>38uTf2</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>9</integer>
+					<key>INTypePropertyMetadata</key>
+					<dict>
+						<key>INTypePropertyMetadataDateStyle</key>
+						<string>Full</string>
+						<key>INTypePropertyMetadataFormat</key>
+						<string>Relative</string>
+						<key>INTypePropertyMetadataTimeStyle</key>
+						<string>Full</string>
+						<key>INTypePropertyMetadataType</key>
+						<string>DateTime</string>
+					</dict>
+					<key>INTypePropertyName</key>
+					<string>creationDate</string>
+					<key>INTypePropertyTag</key>
+					<integer>106</integer>
+					<key>INTypePropertyType</key>
+					<string>DateComponents</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Mime Type</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>zKRAWH</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>10</integer>
+					<key>INTypePropertyName</key>
+					<string>mimeType</string>
+					<key>INTypePropertyTag</key>
+					<integer>105</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Last Modified Timestamp</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>lyQhRe</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>11</integer>
+					<key>INTypePropertyName</key>
+					<string>lastModifiedTimestamp</string>
+					<key>INTypePropertyTag</key>
+					<integer>112</integer>
+					<key>INTypePropertyType</key>
+					<string>Integer</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Creation Date Timestamp</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>MRTQ9c</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>12</integer>
+					<key>INTypePropertyName</key>
+					<string>creationDateTimestamp</string>
+					<key>INTypePropertyTag</key>
+					<integer>114</integer>
+					<key>INTypePropertyType</key>
+					<string>Integer</string>
 				</dict>
 			</array>
 		</dict>
