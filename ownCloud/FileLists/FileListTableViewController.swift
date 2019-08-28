@@ -18,9 +18,11 @@
 
 import UIKit
 import ownCloudSDK
+import QuickLook
 
 class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
 	weak var core : OCCore?
+	var previewItem : URL?
 
 	let estimatedTableRowHeight : CGFloat = 80
 
@@ -223,20 +225,30 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 
 			if let core = self.core {
 				switch rowItem.type {
-					case .collection:
-						if let path = rowItem.path {
-							self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: path)), animated: true)
-						}
+				case .collection:
+					if let path = rowItem.path {
+						self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: path)), animated: true)
+					}
 
-					case .file:
-						guard let query = self.query(forItem: rowItem) else {
-							return
-						}
+				case .file:
+					guard let query = self.query(forItem: rowItem) else {
+						return
+					}
 
+					if core.localCopy(of: rowItem) != nil, let file = rowItem.file(with: core) {
+						self.previewItem = file.url
+						let preview = QLPreviewController()
+						preview.dataSource = self
+						preview.delegate = self
+						self.navigationController?.pushViewController(preview, animated: true)
+						preview.refreshCurrentPreviewItem()
+
+					} else {
 						let itemViewController = DisplayHostViewController(core: core, selectedItem: rowItem, query: query)
 						itemViewController.hidesBottomBarWhenPushed = true
 						itemViewController.progressSummarizer = self.progressSummarizer
 						self.navigationController?.pushViewController(itemViewController, animated: true)
+					}
 				}
 			}
 
@@ -252,3 +264,23 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 	}
 }
+
+extension FileListTableViewController : QLPreviewControllerDataSource, QLPreviewControllerDelegate {
+
+	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+		return previewItem != nil ? 1 : 0
+	}
+
+	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+		return previewItem! as QLPreviewItem
+	}
+
+	/*
+	@available(iOS 13.0, *)
+	func previewController(_ controller: QLPreviewController, editingModeFor previewItem: QLPreviewItem) -> QLPreviewItemEditingMode {
+		// Return .updateContents so QLPreviewController takes care of updating the contents of the provided QLPreviewItems whenever users save changes.
+		return .updateContents
+	}
+*/
+}
+
