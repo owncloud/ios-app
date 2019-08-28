@@ -39,9 +39,12 @@ class DeleteBookmarkTests: XCTestCase {
 			EarlGrey.waitForElementMissing(accessibilityID: "addServer")
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_text(bookmarkName)).perform(grey_swipeFastInDirection(.left))
+			EarlGrey.select(elementWithMatcher: grey_text(bookmarkName)).perform(grey_swipeSlowInDirection(.left))
+
 			EarlGrey.select(elementWithMatcher: grey_text("Delete".localized)).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Delete".localized)).perform(grey_tap())
+			if !EarlGrey.waitForElementMissing(withMatcher: grey_text("Delete".localized), label: "Wait for deletion", timeout: 2.0) {
+				EarlGrey.select(elementWithMatcher: grey_text("Delete".localized)).perform(grey_tap())
+			}
 
 			let isBookmarkDeleted = GREYCondition(name: "Waiting for bookmark removal", block: {
 				var error: NSError?
@@ -51,7 +54,7 @@ class DeleteBookmarkTests: XCTestCase {
 				EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible(), error: &error)
 
 				return error == nil
-			}).wait(withTimeout: 2.0, pollInterval: 0.5)
+			}).wait(withTimeout: 10.0, pollInterval: 0.5)
 
 			GREYAssertTrue(isBookmarkDeleted, reason: "Failed bookmark removal")
 
@@ -76,8 +79,12 @@ class DeleteBookmarkTests: XCTestCase {
 				EarlGrey.waitForElementMissing(accessibilityID: "addServer")
 
 				//Actions
-				EarlGrey.select(elementWithMatcher: grey_text(bookmarkName1)).perform(grey_swipeFastInDirection(.left))
+				EarlGrey.select(elementWithMatcher: grey_text(bookmarkName1)).perform(grey_swipeSlowInDirection(.left))
+
 				EarlGrey.select(elementWithMatcher: grey_text("Delete".localized)).perform(grey_tap())
+				if !EarlGrey.waitForElementMissing(withMatcher: grey_text("Delete".localized), label: "Wait for deletion", timeout: 2.0) {
+					EarlGrey.select(elementWithMatcher: grey_text("Delete".localized)).perform(grey_tap())
+				}
 
 				let isBookmarkDeleted = GREYCondition(name: "Waiting for bookmark removal", block: {
 					var error: NSError?
@@ -87,7 +94,7 @@ class DeleteBookmarkTests: XCTestCase {
 					EarlGrey.select(elementWithMatcher: grey_text(bookmarkName2)).assert(grey_sufficientlyVisible(), error: &error)
 
 					return error == nil
-				}).wait(withTimeout: 4.0, pollInterval: 0.5)
+				}).wait(withTimeout: 10.0, pollInterval: 0.5)
 
 				GREYAssertTrue(isBookmarkDeleted, reason: "Failed bookmark removal")
 

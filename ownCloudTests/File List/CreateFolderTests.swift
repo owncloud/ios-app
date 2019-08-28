@@ -246,7 +246,7 @@ class CreateFolderTests: FileTests {
 			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).atIndex(0).perform(grey_tap())
 			dismissFileList()
 
 		} else {
