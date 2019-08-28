@@ -249,6 +249,11 @@ class MediaUploadSettingsSection: SettingsSection {
 															}
 														} else {
 															self.userDefaults.resetInstantUploadConfiguration()
+															OnMainThread {
+																let alertController = UIAlertController(with: "Instant upload disabled".localized,
+																										message: "Instant upload of media was disabled since configured account / folder was not found".localized)
+																self.viewController?.present(alertController, animated: true, completion: nil)
+															}
 														}
 														updateInstantUploadSwtches()
 														OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
