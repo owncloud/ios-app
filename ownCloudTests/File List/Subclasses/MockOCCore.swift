@@ -34,9 +34,9 @@ class MockOCCore: OCCore {
 		resultHandler(name, nil)
 	}
 
-	override var state: OCCoreState {
-		return .running
-	}
+//	override var state: OCCoreState {
+//		return .running
+//	}
 //
 //	override func classSetting(forOCClassSettingsKey key: OCClassSettingsKey) -> Any? {
 //		if key == .coreDisableItemPolicies {

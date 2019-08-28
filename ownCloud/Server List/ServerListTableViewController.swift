@@ -192,7 +192,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 				constraint = welcomeOverlayView.leftAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.leftAnchor, constant: 30)
 				constraint.isActive = true
-				constraint = welcomeOverlayView.rightAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.rightAnchor, constant: 30)
+				constraint = welcomeOverlayView.rightAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.rightAnchor, constant: -30)
 				constraint.isActive = true
 
 				self.tableView.tableHeaderView = nil
