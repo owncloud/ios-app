@@ -240,24 +240,27 @@ class MediaUploadSettingsSection: SettingsSection {
 			OCCoreManager.shared.requestCore(for: bookmark, setup: { (_, _) in },
 											 completionHandler: { (core, error) in
 												if let core = core, error == nil {
-													self.uploadPathTracking = core.trackItem(atPath: path, trackingHandler: { (_, pathItem, _) in
-														if pathItem != nil {
-															OnMainThread {
-																self.add(row: self.bookmarkAndPathSelectionRow!)
-																let directory = URL(fileURLWithPath: path).lastPathComponent
-																self.bookmarkAndPathSelectionRow?.value = "\(bookmark.shortName)/\(directory)"
+													core.fetchUpdates(completionHandler: { (_, _) in
+														self.uploadPathTracking = core.trackItem(atPath: path, trackingHandler: { (_, pathItem, _) in
+															if pathItem != nil {
+																OnMainThread {
+																	self.add(row: self.bookmarkAndPathSelectionRow!)
+																	let directory = URL(fileURLWithPath: path).lastPathComponent
+																	self.bookmarkAndPathSelectionRow?.value = "\(bookmark.shortName)/\(directory)"
+																}
+															} else {
+																self.userDefaults.resetInstantUploadConfiguration()
+																OnMainThread {
+																	let alertController = UIAlertController(with: "Instant upload disabled".localized,
+																											message: "Instant upload of media was disabled since configured account / folder was not found".localized)
+																	self.viewController?.present(alertController, animated: true, completion: nil)
+																}
 															}
-														} else {
-															self.userDefaults.resetInstantUploadConfiguration()
-															OnMainThread {
-																let alertController = UIAlertController(with: "Instant upload disabled".localized,
-																										message: "Instant upload of media was disabled since configured account / folder was not found".localized)
-																self.viewController?.present(alertController, animated: true, completion: nil)
-															}
-														}
-														updateInstantUploadSwtches()
-														OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+															updateInstantUploadSwtches()
+															OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+														})
 													})
+
 												}
 			})
 

@@ -53,22 +53,24 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 						})
 					}
 
-					self.uploadDirectoryTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, _) in
+					core.fetchUpdates(completionHandler: { (_, _) in
+						self.uploadDirectoryTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, _) in
 
-						if error != nil {
-							Log.error("Error \(String(describing: error))")
-						}
+							if error != nil {
+								Log.error("Error \(String(describing: error))")
+							}
 
-						if item != nil {
-							self.uploadMediaAssets(with: core, at: item!, completion: {
+							if item != nil {
+								self.uploadMediaAssets(with: core, at: item!, completion: {
+									finalize()
+								})
+							} else {
+								Log.warning("Instant upload directory not found")
+								userDefaults.resetInstantUploadConfiguration()
 								finalize()
-							})
-						} else {
-							Log.warning("Instant upload directory not found")
-							userDefaults.resetInstantUploadConfiguration()
-							finalize()
-							self.showFeatureDisabledAlert()
-						}
+								self.showFeatureDisabledAlert()
+							}
+						})
 					})
 				}
 			})
