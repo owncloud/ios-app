@@ -17,11 +17,13 @@ class DeleteBookmarkTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
+		OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 	}
 
 	override func tearDown() {
 		super.tearDown()
 		OCMockManager.shared.removeAllMockingBlocks()
+		OCBookmarkManager.deleteAllBookmarks(waitForServerlistRefresh: true)
 	}
 
 	/*
@@ -76,7 +78,6 @@ class DeleteBookmarkTests: XCTestCase {
 				//Actions
 				EarlGrey.select(elementWithMatcher: grey_text(bookmarkName1)).perform(grey_swipeFastInDirection(.left))
 				EarlGrey.select(elementWithMatcher: grey_text("Delete".localized)).perform(grey_tap())
-				EarlGrey.select(elementWithMatcher: grey_text("Delete".localized)).perform(grey_tap())
 
 				let isBookmarkDeleted = GREYCondition(name: "Waiting for bookmark removal", block: {
 					var error: NSError?
@@ -86,7 +87,7 @@ class DeleteBookmarkTests: XCTestCase {
 					EarlGrey.select(elementWithMatcher: grey_text(bookmarkName2)).assert(grey_sufficientlyVisible(), error: &error)
 
 					return error == nil
-				}).wait(withTimeout: 2.0, pollInterval: 0.5)
+				}).wait(withTimeout: 4.0, pollInterval: 0.5)
 
 				GREYAssertTrue(isBookmarkDeleted, reason: "Failed bookmark removal")
 
