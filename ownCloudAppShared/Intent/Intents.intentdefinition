@@ -72,10 +72,14 @@
 						<true/>
 					</dict>
 					<dict>
-						<key>INIntentResponseCodeName</key>
-						<string>authenticationFailure</string>
-					</dict>
-					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>DSSHvU</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>iDEwxe</string>
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationRequired</string>
 					</dict>
@@ -240,12 +244,28 @@
 						<string>failure</string>
 					</dict>
 					<dict>
-						<key>INIntentResponseCodeName</key>
-						<string>authenticationFailure</string>
-					</dict>
-					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>xZDy1P</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>JPFL0e</string>
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationRequired</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The given path does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>N181Er</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The given path does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>ZWoKzx</string>
+						<key>INIntentResponseCodeName</key>
+						<string>pathFailure</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -398,20 +418,28 @@
 						<string>failure</string>
 					</dict>
 					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The given path does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>WDPKZp</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The given path does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>NEiHz6</string>
 						<key>INIntentResponseCodeName</key>
-						<string>authenticationFailure</string>
-					</dict>
-					<dict>
-						<key>INIntentResponseCodeName</key>
-						<string>authenticationRequired</string>
+						<string>pathFailure</string>
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>Path does not exists</string>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
-						<string>WDPKZp</string>
+						<string>sf57GO</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>lrF7G0</string>
 						<key>INIntentResponseCodeName</key>
-						<string>pathFailure</string>
+						<string>authenticationRequired</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -611,10 +639,14 @@
 						<string>failure</string>
 					</dict>
 					<dict>
-						<key>INIntentResponseCodeName</key>
-						<string>authenticationFailure</string>
-					</dict>
-					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>P6Xeu7</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>6JcpPy</string>
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationRequired</string>
 					</dict>
@@ -780,10 +812,14 @@
 						<string>failure</string>
 					</dict>
 					<dict>
-						<key>INIntentResponseCodeName</key>
-						<string>authenticationFailure</string>
-					</dict>
-					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>ggYJ45</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>OBFBYf</string>
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationRequired</string>
 					</dict>
@@ -915,10 +951,14 @@
 						<string>failure</string>
 					</dict>
 					<dict>
-						<key>INIntentResponseCodeName</key>
-						<string>authenticationFailure</string>
-					</dict>
-					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>0xydIy</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>yeD8D7</string>
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationRequired</string>
 					</dict>

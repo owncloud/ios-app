@@ -60,6 +60,8 @@
 		3998F5D3224102FE00B66713 /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D2224102FE00B66713 /* UITableView+Extension.swift */; };
 		3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D422411EDF00B66713 /* BorderedLabel.swift */; };
 		3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */; };
+		399A4C002317CC460027DDD6 /* AppLockHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399A4BFF2317CC460027DDD6 /* AppLockHelper.swift */; };
+		399A4C032317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399A4C022317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift */; };
 		399DD7C722A691BC00B45EB2 /* UnshareAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399DD7C122A691BC00B45EB2 /* UnshareAction.swift */; };
 		39A5135322608836002CF1AA /* OCShare+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A5135222608836002CF1AA /* OCShare+Extension.swift */; };
 		39A513AC22674E56002CF1AA /* OCCore+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A513AB22674E56002CF1AA /* OCCore+Extension.swift */; };
@@ -668,6 +670,8 @@
 		3998F5D2224102FE00B66713 /* UITableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		3998F5D422411EDF00B66713 /* BorderedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedLabel.swift; sourceTree = "<group>"; };
 		3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCCertificate+Extension.swift"; sourceTree = "<group>"; };
+		399A4BFF2317CC460027DDD6 /* AppLockHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockHelper.swift; sourceTree = "<group>"; };
+		399A4C022317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCBookmarkManager+Extension.swift"; sourceTree = "<group>"; };
 		399DD7C122A691BC00B45EB2 /* UnshareAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnshareAction.swift; sourceTree = "<group>"; };
 		39A5135222608836002CF1AA /* OCShare+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCShare+Extension.swift"; sourceTree = "<group>"; };
 		39A513AB22674E56002CF1AA /* OCCore+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCCore+Extension.swift"; sourceTree = "<group>"; };
@@ -1226,6 +1230,7 @@
 		394A0AFA22EEFC2C00603813 /* ownCloudAppShared */ = {
 			isa = PBXGroup;
 			children = (
+				399A4BF92317CC300027DDD6 /* Tools */,
 				395E16FB22F0691F00DE89A1 /* Intent */,
 				394A0AFB22EEFC2C00603813 /* ownCloudAppShared.h */,
 				394A0AFC22EEFC2C00603813 /* Info.plist */,
@@ -1236,6 +1241,7 @@
 		395E16FB22F0691F00DE89A1 /* Intent */ = {
 			isa = PBXGroup;
 			children = (
+				399A4C012317D1BA0027DDD6 /* Extensions */,
 				39A7138E22E79EF700089423 /* Intents.intentdefinition */,
 				39A7139722E858E400089423 /* GetAccountsIntentHandler.swift */,
 				39F689AA22F018C100E63429 /* GetDirectoryListingIntentHandler.swift */,
@@ -1253,6 +1259,22 @@
 				397328EE22D606AC006CFAA4 /* ImportFilesController.swift */,
 			);
 			path = Import;
+			sourceTree = "<group>";
+		};
+		399A4BF92317CC300027DDD6 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				399A4BFF2317CC460027DDD6 /* AppLockHelper.swift */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
+		399A4C012317D1BA0027DDD6 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				399A4C022317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		39A7138122E79C6700089423 /* ownCloud Intents */ = {
@@ -2712,6 +2734,8 @@
 				39A5C3A1231566D9009D9EE3 /* GetFileInfoIntentHandler.swift in Sources */,
 				394A0B0522EEFCA300603813 /* GetAccountsIntentHandler.swift in Sources */,
 				39F689AB22F018C100E63429 /* GetDirectoryListingIntentHandler.swift in Sources */,
+				399A4C002317CC460027DDD6 /* AppLockHelper.swift in Sources */,
+				399A4C032317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

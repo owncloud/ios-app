@@ -56,46 +56,51 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 
 	@available(iOS 12.0, *)
 	public func handle(intent: GetDirectoryListingIntent, completion: @escaping (GetDirectoryListingIntentResponse) -> Void) {
-		if let path = intent.path, let uuid = intent.accountUUID {
 
-			var accountBookmark : OCBookmark?
-			for bookmark in OCBookmarkManager.shared.bookmarks {
-				if bookmark.uuid.uuidString == uuid {
-					accountBookmark = bookmark
-					break
-				}
-			}
+		if AppLockHelper().isPassCodeEnabled {
+			completion(GetDirectoryListingIntentResponse(code: .authenticationRequired, userActivity: nil))
+		} else {
+			if let path = intent.path, let uuid = intent.accountUUID {
+				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
 
-			if let bookmark = accountBookmark {
-				OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, error) in
-				}) { (core, error) in
-					if error == nil {
-						self.core = core
-						let targetDirectoryQuery = OCQuery(forPath: path)
-						targetDirectoryQuery.delegate = self
-						core?.start(targetDirectoryQuery)
-					} else {
-						self.completion?(GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
+				if let bookmark = accountBookmark {
+					OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, error) in
+					}) { (core, error) in
+						if error == nil {
+							self.core = core
+							let targetDirectoryQuery = OCQuery(forPath: path)
+							targetDirectoryQuery.delegate = self
+							core?.start(targetDirectoryQuery)
+						} else {
+							self.completion?(GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
+						}
 					}
 				}
 			}
-		}
 
-		self.completion = completion
+			self.completion = completion
+		}
 	}
 
 	public func queryHasChangesAvailable(_ query: OCQuery) {
-		var directoryListing : [String] = []
-		if let results = query.queryResults {
-			for item in results {
-				if let path = item.path {
-					directoryListing.append(path)
+
+		print("-->>> queryHasChangesAvailable \(query.state.rawValue)")
+
+		if query.state == .targetRemoved {
+			self.completion?(GetDirectoryListingIntentResponse(code: .pathFailure, userActivity: nil))
+		} else {
+			var directoryListing : [String] = []
+			if let results = query.queryResults {
+				for item in results {
+					if let path = item.path {
+						directoryListing.append(path)
+					}
 				}
 			}
-		}
 
-		self.completion?(GetDirectoryListingIntentResponse.success(directoryListing: directoryListing))
-		self.completion = nil
+			//self.completion?(GetDirectoryListingIntentResponse.success(directoryListing: directoryListing))
+		}
+	//	self.completion = nil
 	}
 
 	public func query(_ query: OCQuery, failedWithError error: Error) {

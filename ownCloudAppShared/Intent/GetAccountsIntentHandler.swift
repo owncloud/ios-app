@@ -24,17 +24,11 @@ public class GetAccountsIntentHandler: NSObject, GetAccountsIntentHandling {
 
 	@available(iOS 12.0, *)
 	public func handle(intent: GetAccountsIntent, completion: @escaping (GetAccountsIntentResponse) -> Void) {
-
-		var accountList : [Account] = []
-		for bookmark in OCBookmarkManager.shared.bookmarks {
-			let account = Account(identifier: bookmark.uuid.uuidString, display: bookmark.name ?? "")
-			account.name = bookmark.shortName
-			account.serverURL = bookmark.url
-			account.uuid = bookmark.uuid.uuidString
-			accountList.append(account)
+		if AppLockHelper().isPassCodeEnabled {
+			completion(GetAccountsIntentResponse(code: .authenticationRequired, userActivity: nil))
+		} else {
+			completion(GetAccountsIntentResponse.success(accountList: OCBookmarkManager.shared.accountList))
 		}
-
-        completion(GetAccountsIntentResponse.success(accountList: accountList))
 	}
 
 	@available(iOS 12.0, *)

@@ -26,13 +26,7 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 
 	public func handle(intent: SaveFileIntent, completion: @escaping (SaveFileIntentResponse) -> Void) {
 		if let path = intent.path, let uuid = intent.accountUUID, let file = intent.file, let fileURL = file.fileURL {
-			var accountBookmark : OCBookmark?
-			for bookmark in OCBookmarkManager.shared.bookmarks {
-				if bookmark.uuid.uuidString == uuid {
-					accountBookmark = bookmark
-					break
-				}
-			}
+			let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
 
 			if let bookmark = accountBookmark {
 				OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in

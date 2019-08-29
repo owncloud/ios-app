@@ -27,13 +27,7 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 	public func handle(intent: CreateFolderIntent, completion: @escaping (CreateFolderIntentResponse) -> Void) {
 		if let path = intent.path, let uuid = intent.accountUUID, let name = intent.name {
 
-			var accountBookmark : OCBookmark?
-			for bookmark in OCBookmarkManager.shared.bookmarks {
-				if bookmark.uuid.uuidString == uuid {
-					accountBookmark = bookmark
-					break
-				}
-			}
+			let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
 
 			if let bookmark = accountBookmark {
 				OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in

@@ -31,13 +31,7 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 	public func handle(intent: GetFileIntent, completion: @escaping (GetFileIntentResponse) -> Void) {
 		if let path = intent.path, let uuid = intent.accountUUID {
 
-			var accountBookmark : OCBookmark?
-			for bookmark in OCBookmarkManager.shared.bookmarks {
-				if bookmark.uuid.uuidString == uuid {
-					accountBookmark = bookmark
-					break
-				}
-			}
+			let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
 
 			if let bookmark = accountBookmark {
 				OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
