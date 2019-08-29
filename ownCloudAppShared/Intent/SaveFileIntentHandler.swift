@@ -7,14 +7,14 @@
 //
 
 /*
- * Copyright (C) 2019, ownCloud GmbH.
- *
- * This code is covered by the GNU Public License Version 3.
- *
- * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
- * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
- *
- */
+* Copyright (C) 2019, ownCloud GmbH.
+*
+* This code is covered by the GNU Public License Version 3.
+*
+* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+*
+*/
 
 import UIKit
 import Intents
@@ -25,48 +25,56 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 	var itemTracking : OCCoreItemTracking?
 
 	public func handle(intent: SaveFileIntent, completion: @escaping (SaveFileIntentResponse) -> Void) {
-		if let path = intent.path, let uuid = intent.accountUUID, let file = intent.file, let fileURL = file.fileURL {
-			let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
+		if AppLockHelper().isPassCodeEnabled {
+			completion(SaveFileIntentResponse(code: .authenticationRequired, userActivity: nil))
+		} else {
+			if let path = intent.path, let uuid = intent.accountUUID, let file = intent.file, let fileURL = file.fileURL {
+				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
 
-			if let bookmark = accountBookmark {
-				OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
-					if error == nil, let core = core {
-						self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
-							if let targetItem = item {
-								if core.importFileNamed(file.filename,
-											 at: targetItem,
-											 from: fileURL,
-											 isSecurityScoped: true,
-											 options: [OCCoreOption.importByCopying : true],
-											 placeholderCompletionHandler: { (error, item) in
-												if error != nil {
-													completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
-												}
-											 },
-											 resultHandler: { (error, _ core, _ item, _) in
-												if error != nil {
-													completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
-												} else {
-													completion(SaveFileIntentResponse(code: .success, userActivity: nil))
-												}
-											}
-									) == nil {
+				if let bookmark = accountBookmark {
+					OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
+						if error == nil, let core = core {
+							self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
+								if let targetItem = item {
+									if core.importFileNamed(file.filename,
+															at: targetItem,
+															from: fileURL,
+															isSecurityScoped: true,
+															options: [OCCoreOption.importByCopying : true],
+															placeholderCompletionHandler: { (error, item) in
+																if error != nil {
+																	completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+																}
+									},
+															resultHandler: { (error, _ core, _ item, _) in
+																if error != nil {
+																	completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+																} else {
+																	completion(SaveFileIntentResponse(code: .success, userActivity: nil))
+																}
+									}
+										) == nil {
 										completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+									}
+								} else {
+									completion(SaveFileIntentResponse(code: .pathFailure, userActivity: nil))
 								}
-							}
 
-							if isInitial {
-								self.itemTracking = nil
-							}
-						})
+								if isInitial {
+									self.itemTracking = nil
+								}
+							})
 
-					}
-				})
+						} else {
+							completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+						}
+					})
+				} else {
+					completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+				}
 			} else {
 				completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
 			}
-		} else {
-			completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
 		}
 	}
 

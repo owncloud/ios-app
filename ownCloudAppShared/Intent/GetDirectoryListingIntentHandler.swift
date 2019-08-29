@@ -64,8 +64,7 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
 
 				if let bookmark = accountBookmark {
-					OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, error) in
-					}) { (core, error) in
+					OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
 						if error == nil {
 							self.core = core
 							let targetDirectoryQuery = OCQuery(forPath: path)
@@ -74,7 +73,7 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 						} else {
 							self.completion?(GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
 						}
-					}
+					})
 				}
 			}
 

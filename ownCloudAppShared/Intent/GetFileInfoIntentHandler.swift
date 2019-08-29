@@ -25,50 +25,55 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 	var itemTracking : OCCoreItemTracking?
 
 	public func handle(intent: GetFileInfoIntent, completion: @escaping (GetFileInfoIntentResponse) -> Void) {
-		if let path = intent.path, let uuid = intent.accountUUID {
+		if AppLockHelper().isPassCodeEnabled {
+			completion(GetFileInfoIntentResponse(code: .authenticationRequired, userActivity: nil))
+		} else {
+			if let path = intent.path, let uuid = intent.accountUUID {
+				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
 
-			let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
+				if let bookmark = accountBookmark {
+					OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
+						if error == nil, let core = core {
+							self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
+								if error == nil, let targetItem = item {
+									let fileInfo = FileInfo(identifier: targetItem.localID, display: targetItem.name ?? "")
 
-			if let bookmark = accountBookmark {
-				OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
-					if error == nil, let core = core {
-						self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
-							if error == nil, let targetItem = item {
-								let fileInfo = FileInfo(identifier: targetItem.localID, display: targetItem.name ?? "")
+									if let creationDate = targetItem.creationDate {
+										let calendar = Calendar.current
+										let components = calendar.dateComponents([.day, .month, .year, .hour, .minute, .second], from: creationDate)
+										fileInfo.creationDate = components
+										fileInfo.creationDateTimestamp = NSNumber(value: creationDate.timeIntervalSince1970)
+									}
+									if let lastModified = targetItem.lastModified {
+										let calendar = Calendar.current
+										let components = calendar.dateComponents([.day, .month, .year, .hour, .minute, .second], from: lastModified)
+										fileInfo.lastModified = components
+										fileInfo.lastModifiedTimestamp = NSNumber(value: lastModified.timeIntervalSince1970)
+									}
+									fileInfo.isFavorite = targetItem.isFavorite
+									fileInfo.mimeType = targetItem.mimeType
+									fileInfo.privateLink = targetItem.privateLink
+									fileInfo.size = NSNumber(value: targetItem.size)
 
-								if let creationDate = targetItem.creationDate {
-									let calendar = Calendar.current
-									let components = calendar.dateComponents([.day, .month, .year, .hour, .minute, .second], from: creationDate)
-									fileInfo.creationDate = components
-									fileInfo.creationDateTimestamp = NSNumber(value: creationDate.timeIntervalSince1970)
+									completion(GetFileInfoIntentResponse.success(fileInfo: fileInfo))
+								} else {
+									completion(GetFileInfoIntentResponse(code: .pathFailure, userActivity: nil))
 								}
-								if let lastModified = targetItem.lastModified {
-									let calendar = Calendar.current
-									let components = calendar.dateComponents([.day, .month, .year, .hour, .minute, .second], from: lastModified)
-									fileInfo.lastModified = components
-									fileInfo.lastModifiedTimestamp = NSNumber(value: lastModified.timeIntervalSince1970)
+
+								if isInitial {
+									self.itemTracking = nil
 								}
-								fileInfo.isFavorite = targetItem.isFavorite
-								fileInfo.mimeType = targetItem.mimeType
-								fileInfo.privateLink = targetItem.privateLink
-								fileInfo.size = NSNumber(value: targetItem.size)
+							})
 
-								completion(GetFileInfoIntentResponse.success(fileInfo: fileInfo))
-							} else {
-								completion(GetFileInfoIntentResponse(code: .failure, userActivity: nil))
-							}
-
-							if isInitial {
-								self.itemTracking = nil
-							}
-						})
-
-					}
+						} else {
+							completion(GetFileInfoIntentResponse(code: .failure, userActivity: nil))
+						}
 				})
+				}
 			}
 		}
 	}
-	
+
 	public func resolveAccountUUID(for intent: GetFileInfoIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		if let accountUUID = intent.accountUUID {
 			completion(INStringResolutionResult.success(with: accountUUID))

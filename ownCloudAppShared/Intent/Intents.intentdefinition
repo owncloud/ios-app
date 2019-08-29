@@ -650,6 +650,18 @@
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationRequired</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The given path does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>xgwnia</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The given path does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>leB73e</string>
+						<key>INIntentResponseCodeName</key>
+						<string>pathFailure</string>
+					</dict>
 				</array>
 			</dict>
 			<key>INIntentTitle</key>
@@ -823,6 +835,18 @@
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationRequired</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The given path does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>ctet5s</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The given path does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>l1ScV6</string>
+						<key>INIntentResponseCodeName</key>
+						<string>pathFailure</string>
+					</dict>
 				</array>
 			</dict>
 			<key>INIntentTitle</key>
@@ -961,6 +985,18 @@
 						<string>yeD8D7</string>
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationRequired</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The given path does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>3dRWka</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The given path does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>sLw6L8</string>
+						<key>INIntentResponseCodeName</key>
+						<string>pathFailure</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>

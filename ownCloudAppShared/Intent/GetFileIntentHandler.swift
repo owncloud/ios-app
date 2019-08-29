@@ -29,57 +29,64 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 	var itemTracking : OCCoreItemTracking?
 
 	public func handle(intent: GetFileIntent, completion: @escaping (GetFileIntentResponse) -> Void) {
-		if let path = intent.path, let uuid = intent.accountUUID {
 
-			let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
+		if AppLockHelper().isPassCodeEnabled {
+			completion(GetFileIntentResponse(code: .authenticationRequired, userActivity: nil))
+		} else {
+			if let path = intent.path, let uuid = intent.accountUUID {
+				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
 
-			if let bookmark = accountBookmark {
-				OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
-					if error == nil {
-						self.core = core
+				if let bookmark = accountBookmark {
+					OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
+						if error == nil {
+							self.core = core
+							self.itemTracking = self.core?.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
+								if let item = item {
+									if core?.localCopy(of: item) == nil {
+										core?.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, core, item, file) in
+											if error == nil {
+												if let item = item, let file = item.file(with: core) {
+													if let url = file.url {
+														let file = INFile(fileURL: url, filename: item.name, typeIdentifier: item.mimeType)
 
-						self.itemTracking = self.core?.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
-							if let item = item {
-
-								if core?.localCopy(of: item) == nil {
-									core?.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, core, item, file) in
-										if error == nil {
-											if let item = item, let file = item.file(with: core) {
-												if let url = file.url {
-													let file = INFile(fileURL: url, filename: item.name, typeIdentifier: item.mimeType)
-
-													self.completion?(GetFileIntentResponse.success(file: file))
-													self.completion = nil
+														self.completion?(GetFileIntentResponse.success(file: file))
+														self.completion = nil
+													}
 												}
+											} else {
+												self.completion?(GetFileIntentResponse(code: .failure, userActivity: nil))
+												self.completion = nil
 											}
-										} else {
-											self.completion?(GetFileIntentResponse(code: .failure, userActivity: nil))
-											self.completion = nil
-										}
-									})
-								} else {
-									if let core = core, let file = item.file(with: core) {
-										if let url = file.url {
-											let file = INFile(fileURL: url, filename: item.name, typeIdentifier: item.mimeType)
+										})
+									} else {
+										if let core = core, let file = item.file(with: core) {
+											if let url = file.url {
+												let file = INFile(fileURL: url, filename: item.name, typeIdentifier: item.mimeType)
 
-											self.completion?(GetFileIntentResponse.success(file: file))
-											self.completion = nil
+												self.completion?(GetFileIntentResponse.success(file: file))
+												self.completion = nil
+											}
 										}
 									}
+
+								} else {
+									self.completion?(GetFileIntentResponse(code: .pathFailure, userActivity: nil))
+									self.completion = nil
 								}
 
-							}
-
-							if isInitial {
-								self.itemTracking = nil
-							}
-						})
-					}
-				})
+								if isInitial {
+									self.itemTracking = nil
+								}
+							})
+						} else {
+							self.completion?(GetFileIntentResponse(code: .failure, userActivity: nil))
+						}
+					})
+				}
 			}
-		}
 
-		self.completion = completion
+			self.completion = completion
+		}
 	}
 
 	public func resolveAccountUUID(for intent: GetFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
