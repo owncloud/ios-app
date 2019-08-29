@@ -49,6 +49,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	// MARK: - Configuration
 	var item: OCItem?
+	var itemIndex: Int?
+
 	private var coreConnectionStatusObservation : NSKeyValueObservation?
 	weak var core: OCCore? {
 		willSet {
@@ -263,14 +265,23 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		self.render()
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		updateNavigationBarItems()
+	}
+
 	func updateNavigationBarItems() {
-		if let parent = parent, let itemName = item?.name {
+		if let parent = parent, let itemName = item?.name, let queryState = query?.state {
 			parent.navigationItem.title = itemName
 
 			if shallDisplayMoreButtonInToolbar {
-				let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(optionsBarButtonPressed))
-				actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
-				parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
+				if queryState != .targetRemoved {
+					let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+					actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
+					parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
+				} else {
+					parent.navigationItem.rightBarButtonItem = nil
+				}
 			}
 		}
 	}
@@ -288,7 +299,10 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			return
 		}
 
-		if let downloadProgress = core.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { [weak self] (error, _, latestItem, file) in
+		if let downloadProgress = core.downloadItem(item, options: [
+			.returnImmediatelyIfOfflineOrUnavailable : true,
+			.addTemporaryClaimForPurpose 		 : OCCoreClaimPurpose.view.rawValue
+		], resultHandler: { [weak self] (error, _, latestItem, file) in
 			guard error == nil else {
 				OnMainThread {
 					if (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
@@ -301,6 +315,10 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			}
 			self?.item = latestItem
 			self?.source = file?.url
+
+			if let claim = file?.claim, let item = latestItem, let self = self {
+				self.core?.remove(claim, on: item, afterDeallocationOf: [self])
+			}
 		}) {
 			self.state = .downloading(progress: downloadProgress)
 
@@ -308,7 +326,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
-	func renderSpecificView(completion: @escaping  (_ success:Bool)->Void) {
+	func renderSpecificView(completion: @escaping  (_ success:Bool) -> Void) {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the source property.s
 	}
 
@@ -348,6 +366,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			self.cancelButton?.isHidden = true
 			self.infoLabel?.isHidden = true
 			self.showPreviewButton?.isHidden = true
+
 		}
 	}
 
@@ -367,12 +386,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 
-		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: { [weak self] (action, _) in
-
-			if action is RenameAction {
-				self?.updateNavigationBarItems()
-			}
-		}) {
+		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: nil) {
 			self.present(asCard: moreViewController, animated: true)
 		}
 	}
@@ -408,18 +422,24 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	func queryHasChangesAvailable(_ query: OCQuery) {
-		query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
+		query.requestChangeSet(withFlags: .onlyResults) { [weak self] (query, changeSet) in
 			OnMainThread {
+				Log.log("Presenting item (DisplayViewController.queryHasChangesAvailable): \(changeSet?.queryResult.description ?? "nil") - state: \(String(describing: query.state.rawValue))")
+
 				switch query.state {
 					case .idle, .contentsFromCache, .waitingForServerReply:
 						if let firstItem = changeSet?.queryResult.first {
-							if (firstItem.syncActivity != .updating) && ((firstItem.itemVersionIdentifier != self.item?.itemVersionIdentifier) || (firstItem.name != self.item?.name)) {
-								self.present(item: firstItem)
+							if (firstItem.syncActivity != .updating) && ((firstItem.itemVersionIdentifier != self?.item?.itemVersionIdentifier) || (firstItem.name != self?.item?.name)) {
+								self?.present(item: firstItem)
+							} else {
+								self?.item = firstItem
 							}
 						}
 
-					case .targetRemoved: break
+						self?.updateNavigationBarItems()
 
+					case .targetRemoved:
+						self?.updateNavigationBarItems()
 					default: break
 				}
 			}
@@ -427,39 +447,43 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	func present(item: OCItem) {
-		guard self.view != nil else {
+		guard self.view != nil, item.removed == false else {
 			return
 		}
-
-		self.item = item
-
-		metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
 
 		switch state {
 			case .notSupportedMimeType: break
 
 			default:
-				self.stopQuery()
+				self.item = item
+				metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
+
+				Log.log("Presenting item (DisplayViewController.present): \(item.description)")
+
 				self.startQuery()
 
-				if requiresLocalItemCopy {
-					if core?.localCopy(of: item) == nil {
-						self.downloadItem(sender: nil)
+				if source == nil {
+					if requiresLocalItemCopy {
+						if core?.localCopy(of: item) == nil {
+							self.downloadItem(sender: nil)
+						} else {
+							core?.registerUsage(of: item, completionHandler: nil)
+							if let core = core, let file = item.file(with: core) {
+								self.source = file.url
+							}
+						}
 					} else {
-						if let core = core, let file = item.file(with: core) {
-							self.source = file.url
-						}
+						core?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (error, url, authHeaders) in
+							if error == nil {
+								self.httpAuthHeaders = authHeaders
+								self.source = url
+							}
+						})
 					}
-				} else {
-					core?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (error, url, authHeaders) in
-						if error == nil {
-							self.httpAuthHeaders = authHeaders
-							self.source = url
-						}
-					})
 				}
 
-				updateNavigationBarItems()
+				self.updateNavigationBarItems()
+
 		}
 	}
 }

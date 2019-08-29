@@ -83,12 +83,10 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 	}
 
 	public func queryHasChangesAvailable(_ query: OCQuery) {
-
-		print("-->>> queryHasChangesAvailable \(query.state.rawValue)")
-
 		if query.state == .targetRemoved {
 			self.completion?(GetDirectoryListingIntentResponse(code: .pathFailure, userActivity: nil))
-		} else {
+			self.completion = nil
+		} else if query.state == .idle {
 			var directoryListing : [String] = []
 			if let results = query.queryResults {
 				for item in results {
@@ -98,9 +96,9 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 				}
 			}
 
-			//self.completion?(GetDirectoryListingIntentResponse.success(directoryListing: directoryListing))
+			self.completion?(GetDirectoryListingIntentResponse.success(directoryListing: directoryListing))
+			self.completion = nil
 		}
-	//	self.completion = nil
 	}
 
 	public func query(_ query: OCQuery, failedWithError error: Error) {

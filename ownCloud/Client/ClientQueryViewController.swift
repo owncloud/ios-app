@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import MobileCoreServices
 
 typealias ClientActionVieDidAppearHandler = () -> Void
@@ -47,7 +48,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	var openMultipleBarButtonItem: UIBarButtonItem?
 
 	var selectBarButton: UIBarButtonItem?
-	var plusBarButton: UIBarButtonItem?
+	var folderActionBarButton: UIBarButtonItem?
 	var selectDeselectAllButtonItem: UIBarButtonItem?
 	var exitMultipleSelectionBarButtonItem: UIBarButtonItem?
 
@@ -134,12 +135,12 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		self.tableView.dragInteractionEnabled = true
 		self.tableView.allowsMultipleSelectionDuringEditing = true
 
-		plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusBarButtonPressed))
-		plusBarButton?.accessibilityIdentifier = "client.file-add"
+		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(plusBarButtonPressed))
+		folderActionBarButton?.accessibilityIdentifier = "client.folder-action"
 		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
 		selectBarButton?.isEnabled = false
     		selectBarButton?.accessibilityIdentifier = "select-button"
-		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
+		self.navigationItem.rightBarButtonItems = [selectBarButton!, folderActionBarButton!]
 
 		selectDeselectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
 		exitMultipleSelectionBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(exitMultipleSelection))
@@ -320,7 +321,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	// MARK: - Upload
 	func upload(itemURL: URL, name: String, completionHandler: ClientActionCompletionHandler? = nil) {
 		if let rootItem = query.rootItem,
-		   let progress = core?.importFileNamed(name, at: rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+		   let progress = core?.importItemNamed(name, at: rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
 			if error != nil {
 				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(rootItem.path))")
 				completionHandler?(false)
@@ -413,7 +414,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	func leaveMultipleSelection() {
 		self.tableView.setEditing(false, animated: true)
 		selectBarButton?.title = "Select".localized
-		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
+		self.navigationItem.rightBarButtonItems = [selectBarButton!, folderActionBarButton!]
 		self.navigationItem.leftBarButtonItem = nil
 		selectedItemIds.removeAll()
 		removeToolbar()
@@ -490,9 +491,9 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-		// Actions for plusButton
+		// Actions for folderAction
 		if let core = self.core, let rootItem = query.rootItem {
-			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .plusButton)
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .folderAction)
 			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
 
 			let actions = Action.sortedApplicableActions(for: actionContext)
@@ -579,6 +580,10 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	// MARK: - UIPopoverPresentationControllerDelegate
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return .none
+	}
+
+	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+		popoverPresentationController.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 }
 

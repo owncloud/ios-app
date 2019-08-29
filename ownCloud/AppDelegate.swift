@@ -73,6 +73,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
@@ -93,7 +95,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			copyBeforeUsing = !shouldOpenInPlace
 		}
 
-		return ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountOrImportUI()
+		ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountUI()
+
+		return true
 	}
 
 	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

@@ -68,6 +68,8 @@ class LibraryTableViewController: StaticTableViewController {
 		self.title = "Quick Access".localized
 		self.navigationController?.navigationBar.prefersLargeTitles = true
 
+		Theme.shared.add(tvgResourceFor: "icon-available-offline")
+
 		shareSection = StaticTableViewSection(headerTitle: "Shares".localized, footerTitle: nil, identifier: "share-section")
 		self.addThemableBackgroundView()
 	}
@@ -377,6 +379,15 @@ class LibraryTableViewController: StaticTableViewController {
 				})
 			})
 
+			addCollectionRow(to: section, title: "Available Offline".localized, image: UIImage(named: "cloud-available-offline")!, query: nil, actionHandler: { [weak self] (completion) in
+				if let core = self?.core {
+					let availableOfflineListController = ItemPolicyTableViewController(core: core, policyKind: .availableOffline)
+
+					self?.navigationController?.pushViewController(availableOfflineListController, animated: true)
+				}
+				completion()
+			})
+
 			let imageQuery = OCQuery(condition: .where(.mimeType, contains: "image"), inputFilter:nil)
 			addCollectionRow(to: section, title: "Images".localized, image: Theme.shared.image(for: "image", size: CGSize(width: 25, height: 25))!, query: imageQuery, actionHandler: nil)
 
@@ -391,7 +402,7 @@ class LibraryTableViewController: StaticTableViewController {
 			let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 
 				if let query = query {
-					let customFileListController = LibraryFilesTableViewController(core: core, query: query)
+					let customFileListController = QueryFileListTableViewController(core: core, query: query)
 					customFileListController.title = title
 					customFileListController.pullToRefreshAction = actionHandler
 					self?.navigationController?.pushViewController(customFileListController, animated: true)

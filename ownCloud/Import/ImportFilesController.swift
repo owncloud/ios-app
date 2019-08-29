@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 class ImportFilesController: NSObject {
 
@@ -26,6 +27,8 @@ class ImportFilesController: NSObject {
 	var localCopyContainerURL: URL?
 	var localCopyURL: URL?
 	var fileIsLocalCopy: Bool
+
+	var fileCoordinator : NSFileCoordinator?
 
 	// MARK: - Init & Deinit
 	init(url: URL, copyBeforeUsing: Bool) {
@@ -41,54 +44,91 @@ class ImportFilesController: NSObject {
 
 extension ImportFilesController {
 
-	func localCopyForImportFile() -> Bool {
-		if fileIsLocalCopy {
-			if let appGroupURL = OCAppIdentity.shared.appGroupContainerURL {
-				let fileManager = FileManager.default
+	func makeLocalCopy(of itemURL: URL, completion: (_ error: Error?) -> Void) {
+		if let appGroupURL = OCAppIdentity.shared.appGroupContainerURL {
+			let fileManager = FileManager.default
 
-				var inboxUrl = appGroupURL.appendingPathComponent("File-Import")
-				if !fileManager.fileExists(atPath: inboxUrl.path) {
-					do {
-						try fileManager.createDirectory(at: inboxUrl, withIntermediateDirectories: false, attributes: nil)
-					} catch let error as NSError {
-						Log.debug("Error creating directory \(inboxUrl) \(error.localizedDescription)")
-						return false
-					}
-				}
-
-				let uuid = UUID().uuidString
-				inboxUrl = inboxUrl.appendingPathComponent(uuid)
-				if !fileManager.fileExists(atPath: inboxUrl.path) {
-					do {
-						try fileManager.createDirectory(at: inboxUrl, withIntermediateDirectories: false, attributes: nil)
-					} catch let error as NSError {
-						Log.debug("Error creating directory \(inboxUrl) \(error.localizedDescription)")
-						return false
-					}
-				}
-				self.localCopyContainerURL = inboxUrl
-
-				inboxUrl = inboxUrl.appendingPathComponent(url.lastPathComponent)
+			var inboxURL = appGroupURL.appendingPathComponent("File-Import")
+			if !fileManager.fileExists(atPath: inboxURL.path) {
 				do {
-					try fileManager.copyItem(at: url, to: inboxUrl)
-					self.url = inboxUrl
-					self.localCopyURL = inboxUrl
+					try fileManager.createDirectory(at: inboxURL, withIntermediateDirectories: false, attributes: nil)
 				} catch let error as NSError {
-					Log.debug("Error creating directory \(inboxUrl) \(error.localizedDescription)")
-					return false
+					Log.debug("Error creating directory \(inboxURL) \(error.localizedDescription)")
+
+					completion(error)
+					return
 				}
+			}
+
+			let uuid = UUID().uuidString
+			inboxURL = inboxURL.appendingPathComponent(uuid)
+			if !fileManager.fileExists(atPath: inboxURL.path) {
+				do {
+					try fileManager.createDirectory(at: inboxURL, withIntermediateDirectories: false, attributes: nil)
+				} catch let error as NSError {
+					Log.debug("Error creating directory \(inboxURL) \(error.localizedDescription)")
+
+					completion(error)
+					return
+				}
+			}
+			self.localCopyContainerURL = inboxURL
+
+			inboxURL = inboxURL.appendingPathComponent(itemURL.lastPathComponent)
+			do {
+				try fileManager.copyItem(at: itemURL, to: inboxURL)
+				self.url = inboxURL
+				self.localCopyURL = inboxURL
+				self.fileIsLocalCopy = true
+			} catch let error as NSError {
+				Log.debug("Error copying file \(inboxURL) \(error.localizedDescription)")
+
+				completion(error)
+				return
 			}
 		}
 
-		return true
+		completion(nil)
 	}
 
-	func accountOrImportUI() -> Bool {
-		if localCopyForImportFile() {
+	func prepareInputFileForImport(completion: @escaping (_ error: Error?) -> Void) {
+		let securityScopedURL = url
+		var isAccessingSecurityScopedResource = false
+
+		if !fileIsLocalCopy {
+			isAccessingSecurityScopedResource = securityScopedURL.startAccessingSecurityScopedResource()
+		}
+
+		let uploadIntent = NSFileAccessIntent.readingIntent(with: url, options: .forUploading)
+
+		fileCoordinator = NSFileCoordinator(filePresenter: nil)
+		fileCoordinator?.coordinate(with: [uploadIntent], queue: OperationQueue.main, byAccessor: { (error) in
+			let readURL = uploadIntent.url
+
+			Log.log("Read from \(readURL)")
+
+			self.makeLocalCopy(of: readURL, completion: { (error) in
+				if isAccessingSecurityScopedResource {
+					securityScopedURL.stopAccessingSecurityScopedResource()
+				}
+
+				completion(error)
+			})
+		})
+	}
+
+	func accountUI() {
+		prepareInputFileForImport(completion: { (error) in
+			guard error == nil else {
+				Log.error("Couldn't import file \(self.url.absoluteString) because of error: \(String(describing: error))")
+
+				return
+			}
+
 			let bookmarks : [OCBookmark] = OCBookmarkManager.shared.bookmarks as [OCBookmark]
 
-			if bookmarks.count > 1 {
-				let moreViewController = self.cardViewController(for: url)
+			if bookmarks.count > 0 {
+				let moreViewController = self.cardViewController(for: self.localCopyURL ?? self.url)
 				if let delegateWindow = UIApplication.shared.delegate?.window, let window = delegateWindow {
 					let viewController = window.rootViewController
 					if let navigationController = viewController as? UINavigationController, let viewController = navigationController.visibleViewController {
@@ -100,17 +140,9 @@ extension ImportFilesController {
 							viewController?.present(asCard: moreViewController, animated: true)
 						}
 					}
-
-					return true
 				}
-			} else if bookmarks.count == 1, let bookmark = bookmarks.first {
-				self.importItemWithDirectoryPicker(with: url, into: bookmark)
-
-				return true
 			}
-		}
-
-		return false
+		})
 	}
 
 	func importItemWithDirectoryPicker(with url : URL, into bookmark: OCBookmark) {
@@ -140,11 +172,11 @@ extension ImportFilesController {
 		})
 	}
 
-	func importFile(url : URL, to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?) {
-		let name = url.lastPathComponent
-		if core?.importFileNamed(name,
+	func importFile(url importItemURL: URL, to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?) {
+		let name = importItemURL.lastPathComponent
+		if core?.importItemNamed(name,
 					 at: targetDirectory,
-					 from: url,
+					 from: importItemURL,
 					 isSecurityScoped: false,
 					 options: [OCCoreOption.importByCopying : true,
 						   OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue],
@@ -182,7 +214,7 @@ extension ImportFilesController {
 		var actionsRows: [StaticTableViewRow] = []
 		let bookmarks : [OCBookmark] = OCBookmarkManager.shared.bookmarks as [OCBookmark]
 
-		let rowDescription = StaticTableViewRow(label: "Choose an account and folder to import the file into.".localized, alignment: .center)
+		let rowDescription = StaticTableViewRow(label: "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once.".localized, alignment: .center)
 		actionsRows.append(rowDescription)
 
 		for (bookmark) in bookmarks {

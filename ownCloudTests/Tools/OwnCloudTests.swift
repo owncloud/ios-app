@@ -27,18 +27,14 @@ class OwnCloudTests: XCTestCase {
      * Passed if: "Add account" button is enabled
      */
     func testAddServerButtonIsEnabled() {
+	EarlGrey.waitForElement(accessibilityID: "addServer")
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(with: grey_enabled())
     }
 
     func testClickOnTheButtonAndNothingHappens() {
+	EarlGrey.waitForElement(accessibilityID: "addServer")
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+	EarlGrey.waitForElement(accessibilityID: "cancel")
         EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
-    }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
     }
 }
