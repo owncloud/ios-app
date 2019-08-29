@@ -22,7 +22,7 @@ import ownCloudSDK
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-	var window: UIWindow?
+	var window: ThemeWindow?
 	var serverListTableViewController: ServerListTableViewController?
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
 
 		// Set up app
-		window = UIWindow(frame: UIScreen.main.bounds)
+		window = ThemeWindow(frame: UIScreen.main.bounds)
 
 		ThemeStyle.registerDefaultStyles()
 
@@ -80,6 +80,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		// Licenses
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: Theme.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
+
+		// Consider light / dark mode
+		ThemeStyle.considerAppearanceUpdate()
 
 		//Disable UI Animation for UITesting (screenshots)
 		if let enableUIAnimations = VendorServices.classSetting(forOCClassSettingsKey: .enableUIAnimations) as? Bool {

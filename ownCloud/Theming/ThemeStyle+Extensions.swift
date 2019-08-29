@@ -52,6 +52,8 @@ extension ThemeStyle {
 	static var preferredStyle : ThemeStyle {
 		set {
 			UserDefaults.standard.setValue(newValue.identifier, forKey: "preferred-theme-style")
+
+			considerAppearanceUpdate(animated: true)
 		}
 
 		get {
@@ -67,6 +69,56 @@ extension ThemeStyle {
 
 			return style!
 		}
+	}
+
+	static func considerAppearanceUpdate(animated: Bool = false) {
+		if #available(iOS 13, *) {
+			let themeWindow : ThemeWindow? = (UIApplication.shared.delegate as? AppDelegate)?.window
+			var applyStyle : ThemeStyle? = ThemeStyle.preferredStyle
+
+			if self.followSystemAppearance {
+				themeWindow?.overrideUserInterfaceStyle = .unspecified
+
+				if let themeWindow = themeWindow, themeWindow.traitCollection.userInterfaceStyle == .dark {
+					if let darkStyleIdentifier = ThemeStyle.preferredStyle.darkStyleIdentifier {
+						applyStyle = ThemeStyle.forIdentifier(darkStyleIdentifier)
+					}
+				}
+			} else {
+				themeWindow?.overrideUserInterfaceStyle = .light
+			}
+
+			if let applyStyle = applyStyle {
+				if animated {
+					Theme.shared.switchThemeCollection(ThemeCollection(with: applyStyle))
+				} else {
+					Theme.shared.activeCollection = ThemeCollection(with: applyStyle)
+				}
+			}
+		}
+	}
+
+	static var followSystemAppearance : Bool {
+		set {
+			UserDefaults.standard.setValue(newValue, forKey: "theme-style-follows-system-appearance")
+
+			considerAppearanceUpdate()
+		}
+
+		get {
+			var followSystemAppearance : Bool?
+
+			if let themeStyleFollowsSystemAppearance = UserDefaults.standard.object(forKey: "theme-style-follows-system-appearance") as? Bool {
+				followSystemAppearance = themeStyleFollowsSystemAppearance
+			}
+
+			if followSystemAppearance == nil {
+				followSystemAppearance = true
+			}
+
+			return followSystemAppearance!
+		}
+
 	}
 
 	static func forIdentifier(_ identifier: String) -> ThemeStyle? {

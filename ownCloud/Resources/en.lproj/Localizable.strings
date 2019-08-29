@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   ownCloud
 
@@ -184,6 +184,8 @@
 "Dark" = "Dark";
 "Light" = "Light";
 "Classic" = "Classic";
+
+"Follow system light / dark appearance" = "Follow system light / dark appearance";
 
 /* Log settings */
 "Log Files" = "Log Files";
