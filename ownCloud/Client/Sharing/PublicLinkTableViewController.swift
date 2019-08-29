@@ -257,16 +257,30 @@ class PublicLinkTableViewController: SharingTableViewController {
 
 	@objc func addPublicLink() {
 		if let path = item.path, let core = core {
-			var permissions : OCSharePermissionsMask = .create
-			if item.type == .file {
-				permissions = .read
+
+			func createLink(for itemPath:String, with permissions:OCSharePermissionsMask) {
+				let share = OCShare(publicLinkToPath: itemPath, linkName: defaultLinkName(), permissions: permissions, password: nil, expiration: nil)
+				let editPublicLinkViewController = PublicLinkEditTableViewController(share: share, core: core, item: self.item, defaultLinkName: defaultLinkName())
+				editPublicLinkViewController.createLink = true
+				let navigationController = ThemeNavigationController(rootViewController: editPublicLinkViewController)
+				self.navigationController?.present(navigationController, animated: true, completion: nil)
 			}
 
-			let share = OCShare(publicLinkToPath: path, linkName: defaultLinkName(), permissions: permissions, password: nil, expiration: nil)
-			let editPublicLinkViewController = PublicLinkEditTableViewController(share: share, core: core, item: self.item, defaultLinkName: defaultLinkName())
-			editPublicLinkViewController.createLink = true
-			let navigationController = ThemeNavigationController(rootViewController: editPublicLinkViewController)
-			self.navigationController?.present(navigationController, animated: true, completion: nil)
+			var permissions : OCSharePermissionsMask?
+
+			if item.isSharedWithUser {
+				core.sharesSharedWithMe(for: item, initialPopulationHandler: { shares in
+					OnMainThread {
+						if let share = shares.filter({ $0.itemPath == path}).first {
+							permissions = share.permissions
+							createLink(for: path, with: permissions!)
+						}
+					}
+				})
+			} else {
+				permissions = [.create, .read]
+				createLink(for: path, with: permissions!)
+			}
 		}
 	}
 

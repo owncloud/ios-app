@@ -106,7 +106,7 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 	// MARK: - Init & Deinit
 
 	init(frame: CGRect, sortMethod: SortMethod) {
-		sortSegmentedControl = UISegmentedControl()
+		sortSegmentedControl = SegmentedControl()
 		selectButton = UIButton()
 		sortButton = UIButton(type: .system)
 

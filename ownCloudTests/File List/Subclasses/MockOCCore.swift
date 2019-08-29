@@ -33,4 +33,16 @@ class MockOCCore: OCCore {
 	override func suggestUnusedNameBased(on name: String, atPath path: String, isDirectory: Bool, using nameStyle: OCCoreDuplicateNameStyle, filteredBy filter: OCCoreUnusedNameSuggestionFilter?, resultHandler: @escaping OCCoreUnusedNameSuggestionResultHandler) {
 		resultHandler(name, nil)
 	}
+
+//	override var state: OCCoreState {
+//		return .running
+//	}
+//
+//	override func classSetting(forOCClassSettingsKey key: OCClassSettingsKey) -> Any? {
+//		if key == .coreDisableItemPolicies {
+//			return true
+//		}
+//
+//		return super.classSetting(forOCClassSettingsKey: key)
+//	}
 }

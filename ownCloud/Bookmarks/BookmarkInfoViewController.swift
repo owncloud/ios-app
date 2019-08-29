@@ -48,7 +48,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 		let includeAvailableOfflineCopiesRow = StaticTableViewRow(switchWithAction: { [weak self] (row, _) in
 			if (row.value as? Bool) == true {
 				let alertController = UIAlertController(title: "Really include available offline files?".localized,
-									message: "Files and folders marked as Available Offline will be re-downloaded next time you log into your account.",
+									message: "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).".localized,
 									preferredStyle: .alert)
 
 				alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { [weak row] (_) in
@@ -72,9 +72,16 @@ class BookmarkInfoViewController: StaticTableViewController {
 						row.cell?.accessoryView = progressView
 					}
 
-					let compactingSelector : OCVaultCompactSelector? = ((includeAvailableOfflineCopiesRow.value as? Bool) == false) ? { (_, item) -> Bool in
+					let includeAvailableOfflineCopies : Bool = (includeAvailableOfflineCopiesRow.value as? Bool) ?? false
+
+					let compactingSelector : OCVaultCompactSelector? = (includeAvailableOfflineCopies == false) ? { (_, item) -> Bool in
 						return item.downloadTriggerIdentifier != .availableOffline
 					} : nil
+
+					if includeAvailableOfflineCopies {
+						// Skip available offline until user opens the bookmark again
+						vault.keyValueStore?.storeObject(true as NSNumber, forKey: .coreSkipAvailableOfflineKey)
+					}
 
 					vault.compact(selector: compactingSelector, completionHandler: { (_, error) in
 						OnMainThread {
