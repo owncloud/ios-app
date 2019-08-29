@@ -56,7 +56,7 @@ class MediaUploadQueue {
 						}
 
 						// Avoid submitting to many jobs simultaneously to reduce memory pressure
-						_ = uploadGroup.wait(timeout: .now() + 0.5)
+						_ = uploadGroup.wait(timeout: .now() + 1.5)
 
 					} else {
 						// Escape on first failed download

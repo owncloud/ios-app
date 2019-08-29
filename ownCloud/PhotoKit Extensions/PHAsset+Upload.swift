@@ -73,84 +73,85 @@ extension PHAsset {
 		let contentInputOptions = PHContentEditingInputRequestOptions()
 		contentInputOptions.isNetworkAccessAllowed = true
 
-		self.requestContentEditingInput(with: contentInputOptions) { (contentInput, requestInfo) in
+		autoreleasepool {
+			self.requestContentEditingInput(with: contentInputOptions) { (contentInput, requestInfo) in
 
-			var supportedConversionFormats = Set<String>()
+				var supportedConversionFormats = Set<String>()
 
-			if let input = contentInput {
+				if let input = contentInput {
 
-				// Determine the correct source URL based on media type
-				var assetUTI: String?
-				var assetURL: URL?
-				switch self.mediaType {
-				case .image:
-					assetURL = input.fullSizeImageURL
-					assetUTI = input.uniformTypeIdentifier
-					supportedConversionFormats.insert(String(kUTTypeJPEG))
-				case .video:
-					assetURL = (input.audiovisualAsset as? AVURLAsset)?.url
-					assetUTI = PHAssetResource.assetResources(for: self).first?.uniformTypeIdentifier
-					supportedConversionFormats.insert(String(kUTTypeMPEG4))
-				default:
-					break
-				}
+					// Determine the correct source URL based on media type
+					var assetUTI: String?
+					var assetURL: URL?
+					switch self.mediaType {
+					case .image:
+						assetURL = input.fullSizeImageURL
+						assetUTI = input.uniformTypeIdentifier
+						supportedConversionFormats.insert(String(kUTTypeJPEG))
+					case .video:
+						assetURL = (input.audiovisualAsset as? AVURLAsset)?.url
+						assetUTI = PHAssetResource.assetResources(for: self).first?.uniformTypeIdentifier
+						supportedConversionFormats.insert(String(kUTTypeMPEG4))
+					default:
+						break
+					}
 
-				guard let url = assetURL else { return }
+					guard let url = assetURL else { return }
 
-				let fileName = url.lastPathComponent
+					let fileName = url.lastPathComponent
 
-				// Check if the conversion was requested and current media format is not found in the list of requested formats
-				if let formats = preferredFormats, formats.count > 0 {
-					if assetUTI != nil, !formats.contains(assetUTI!) {
-						// Conversion is required
-						if let outputFormat = formats.first(where: { supportedConversionFormats.contains($0) }) {
+					// Check if the conversion was requested and current media format is not found in the list of requested formats
+					if let formats = preferredFormats, formats.count > 0 {
+						if assetUTI != nil, !formats.contains(assetUTI!) {
+							// Conversion is required
+							if let outputFormat = formats.first(where: { supportedConversionFormats.contains($0) }) {
 
-							switch (self.mediaType, outputFormat) {
-							case (.video, String(kUTTypeMPEG4)):
-								if let avAsset = input.audiovisualAsset {
-									let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("mp4")
-									avAsset.exportVideo(targetURL: localURL, type: .mp4, completion: { (exportSuccess) in
-										if exportSuccess {
-											performUpload(sourceURL: localURL, copySource: false)
-										} else {
-											completionHandler(nil, NSError(ocError: .internal))
-										}
-									})
+								switch (self.mediaType, outputFormat) {
+								case (.video, String(kUTTypeMPEG4)):
+									if let avAsset = input.audiovisualAsset {
+										let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("mp4")
+										avAsset.exportVideo(targetURL: localURL, type: .mp4, completion: { (exportSuccess) in
+											if exportSuccess {
+												performUpload(sourceURL: localURL, copySource: false)
+											} else {
+												completionHandler(nil, NSError(ocError: .internal))
+											}
+										})
+									}
+								case (.image, String(kUTTypeJPEG)):
+									let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("jpg")
+									var imageConverted = false
+
+									if let image = CIImage(contentsOf: assetURL!) {
+										imageConverted = image.convert(targetURL: localURL, outputFormat: .JPEG)
+									}
+
+									if imageConverted {
+										performUpload(sourceURL: localURL, copySource: false)
+									} else {
+										completionHandler(nil, NSError(ocError: .internal))
+									}
+								default:
+									break
 								}
-							case (.image, String(kUTTypeJPEG)):
-								let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("jpg")
-								var imageConverted = false
 
-								if let image = CIImage(contentsOf: assetURL!) {
-									imageConverted = image.convert(targetURL: localURL, outputFormat: .JPEG)
-								}
-
-								if imageConverted {
-									performUpload(sourceURL: localURL, copySource: false)
-								} else {
-									completionHandler(nil, NSError(ocError: .internal))
-								}
-							default:
-								break
+							} else {
+								completionHandler(nil, NSError(ocError: .internal))
 							}
-
 						} else {
-							completionHandler(nil, NSError(ocError: .internal))
+							performUpload(sourceURL: url, copySource: true)
 						}
 					} else {
 						performUpload(sourceURL: url, copySource: true)
 					}
-				} else {
-					performUpload(sourceURL: url, copySource: true)
-				}
 
-			} else {
-				// If no content was returned check request info dictionary
-				let error = requestInfo[PHContentEditingInputErrorKey] as? NSError
-				completionHandler(nil, error)
+				} else {
+					// If no content was returned check request info dictionary
+					let error = requestInfo[PHContentEditingInputErrorKey] as? NSError
+					completionHandler(nil, error)
+				}
 			}
 		}
-
 	}
 
 }
