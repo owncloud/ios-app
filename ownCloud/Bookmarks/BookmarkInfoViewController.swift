@@ -56,7 +56,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 						row.cell?.accessoryView = progressView
 					}
 
-					vault.compact(completionHandler: { (_, error) in
+					vault.compact(selector: nil, completionHandler: { (_, error) in
 						OnMainThread {
 							row.cell?.accessoryView = nil
 							if error != nil {
