@@ -68,6 +68,8 @@ class LibraryTableViewController: StaticTableViewController {
 		self.title = "Quick Access".localized
 		self.navigationController?.navigationBar.prefersLargeTitles = true
 
+		Theme.shared.add(tvgResourceFor: "icon-available-offline")
+
 		shareSection = StaticTableViewSection(headerTitle: "Shares".localized, footerTitle: nil, identifier: "share-section")
 		self.addThemableBackgroundView()
 	}
@@ -375,6 +377,15 @@ class LibraryTableViewController: StaticTableViewController {
 				self?.core?.refreshFavorites(completionHandler: { (_, _) in
 					completion()
 				})
+			})
+
+			addCollectionRow(to: section, title: "Available Offline".localized, image: UIImage(named: "cloud-available-offline")!, query: nil, actionHandler: { [weak self] (completion) in
+				if let core = self?.core {
+					let availableOfflineListController = ItemPolicyTableViewController(core: core, policyKind: .availableOffline)
+
+					self?.navigationController?.pushViewController(availableOfflineListController, animated: true)
+				}
+				completion()
 			})
 
 			let imageQuery = OCQuery(condition: .where(.mimeType, contains: "image"), inputFilter:nil)

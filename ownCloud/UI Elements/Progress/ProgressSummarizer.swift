@@ -19,11 +19,20 @@
 import UIKit
 import ownCloudSDK
 
-struct ProgressSummary : Equatable {
+class ProgressSummary : Equatable {
+	private let uuid = UUID()
+
 	var indeterminate : Bool
 	var progress : Double
 	var message : String?
 	var progressCount : Int
+
+	init(indeterminate: Bool, progress: Double, message: String? = nil, progressCount : Int) {
+		self.indeterminate = indeterminate
+		self.progress = progress
+		self.message = message
+		self.progressCount = progressCount
+	}
 
 	func update(progressView: UIProgressView) {
 		if indeterminate {
@@ -31,6 +40,10 @@ struct ProgressSummary : Equatable {
 		} else {
 			progressView.progress = Float(progress)
 		}
+	}
+
+	static func == (lhs: ProgressSummary, rhs: ProgressSummary) -> Bool {
+		return lhs.uuid == rhs.uuid
 	}
 }
 
@@ -337,7 +350,7 @@ class ProgressSummarizer: NSObject {
 
 	// MARK: - Summary computation
 	func summarize() -> ProgressSummary {
-		var summary : ProgressSummary = ProgressSummary(indeterminate: false, progress: 0, message: nil, progressCount: 0)
+		let summary : ProgressSummary = ProgressSummary(indeterminate: false, progress: 0, message: nil, progressCount: 0)
 		var totalUnitCount : Int64 = 0
 		var completedUnitCount : Int64 = 0
 		var completedFraction : Double = 0
