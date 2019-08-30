@@ -235,20 +235,10 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 						return
 					}
 
-					if core.localCopy(of: rowItem) != nil, let file = rowItem.file(with: core) {
-						self.previewItem = file.url
-						let preview = QLPreviewController()
-						preview.dataSource = self
-						preview.delegate = self
-						self.navigationController?.pushViewController(preview, animated: true)
-						preview.refreshCurrentPreviewItem()
-
-					} else {
-						let itemViewController = DisplayHostViewController(core: core, selectedItem: rowItem, query: query)
-						itemViewController.hidesBottomBarWhenPushed = true
-						itemViewController.progressSummarizer = self.progressSummarizer
-						self.navigationController?.pushViewController(itemViewController, animated: true)
-					}
+					let itemViewController = DisplayHostViewController(core: core, selectedItem: rowItem, query: query)
+					itemViewController.hidesBottomBarWhenPushed = true
+					itemViewController.progressSummarizer = self.progressSummarizer
+					self.navigationController?.pushViewController(itemViewController, animated: true)
 				}
 			}
 
@@ -275,12 +265,11 @@ extension FileListTableViewController : QLPreviewControllerDataSource, QLPreview
 		return previewItem! as QLPreviewItem
 	}
 
-	/*
+
 	@available(iOS 13.0, *)
 	func previewController(_ controller: QLPreviewController, editingModeFor previewItem: QLPreviewItem) -> QLPreviewItemEditingMode {
 		// Return .updateContents so QLPreviewController takes care of updating the contents of the provided QLPreviewItems whenever users save changes.
 		return .updateContents
 	}
-*/
 }
 

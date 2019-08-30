@@ -10,13 +10,29 @@ import UIKit
 import ownCloudSDK
 import QuickLook
 
-@available(iOS 13.0, *)
 class PreviewViewController : DisplayViewController, QLPreviewControllerDataSource, QLPreviewControllerDelegate {
 
 	private var qlPreviewController: QLPreviewController?
 
+	override func viewSafeAreaInsetsDidChange() {
+		super.viewSafeAreaInsetsDidChange()
+
+		if let qlPreviewController = self.qlPreviewController {
+			qlPreviewController.view.translatesAutoresizingMaskIntoConstraints = false
+
+			NSLayoutConstraint.activate([
+				qlPreviewController.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+				qlPreviewController.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+				qlPreviewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+				qlPreviewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+				])
+		}
+
+		self.view.layoutIfNeeded()
+	}
+
 	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
-		if let sourceURL = source {
+		if source != nil {
 			qlPreviewController = QLPreviewController()
 			addChild(qlPreviewController!)
 			qlPreviewController!.view.frame = self.view.bounds
@@ -24,6 +40,8 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 			qlPreviewController!.didMove(toParent: self)
 
 			qlPreviewController?.dataSource = self
+
+			qlPreviewController?.reloadData()
 
 			completion(true)
 		} else {
@@ -41,34 +59,20 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 		return source! as QLPreviewItem
 	}
 
-	/*
+	@available(iOS 13.0, *)
 	func previewController(_ controller: QLPreviewController, editingModeFor previewItem: QLPreviewItem) -> QLPreviewItemEditingMode {
 		// Return .updateContents so QLPreviewController takes care of updating the contents of the provided QLPreviewItems whenever users save changes.
 		return .updateContents
 	}
-*/
 }
 
 // MARK: - Display Extension.
-@available(iOS 13.0, *)
 extension PreviewViewController: DisplayExtension {
-	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
-		do {
-			if let mimeType = context.location?.identifier?.rawValue {
-				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((image/(?!(gif|svg*))))", options: .caseInsensitive)
-				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
-
-				if matches > 0 {
-					return OCExtensionPriority.locationMatch
-				}
-			}
-
-			return OCExtensionPriority.noMatch
-		} catch {
-			return OCExtensionPriority.noMatch
-		}
+	static var supportedMimeTypes: [String]? {
+		return ["application/pdf", "image/jpeg", "application/vnd.apple.keynote", "application/x-iwork-pages-sffpages", "application/x-iwork-numbers-sffnumbers", "application/x-iwork-keynote-sffkey"]
 	}
-	static var displayExtensionIdentifier: String = "org.owncloud.media"
-	static var supportedMimeTypes: [String]?
+
+	static var customMatcher: OCExtensionCustomContextMatcher?
+	static var displayExtensionIdentifier: String = "org.owncloud.ql_preview"
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 }
