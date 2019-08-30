@@ -121,31 +121,27 @@ extension NamingViewController {
 	}
 }
 
-/*
 extension ClientRootViewController {
-override var keyCommands: [UIKeyCommand]? {
-var shortcuts = [UIKeyCommand]()
-/*if let superKeyCommands = super.keyCommands {
-shortcuts.append(contentsOf: superKeyCommands)
-}*/
+	override var keyCommands: [UIKeyCommand]? {
+		var shortcuts = [UIKeyCommand]()
 
-let keyCommands = self.tabBar.items?.enumerated().map { (index, item) -> UIKeyCommand in
-let tabIndex = String(index + 1)
-return UIKeyCommand(input: tabIndex, modifierFlags: .command, action:#selector(selectTab), discoverabilityTitle: item.title ?? "Tab \(tabIndex)")
-}
-if let keyCommands = keyCommands {
-shortcuts.append(contentsOf: keyCommands)
-}
+		let keyCommands = self.tabBar.items?.enumerated().map { (index, item) -> UIKeyCommand in
+			let tabIndex = String(index + 1)
+			return UIKeyCommand(input: tabIndex, modifierFlags: .command, action:#selector(selectTab), discoverabilityTitle: item.title ?? String(format: "Tab %@".localized, tabIndex))
+		}
+		if let keyCommands = keyCommands {
+			shortcuts.append(contentsOf: keyCommands)
+		}
 
-return shortcuts
-}
+		return shortcuts
+	}
 
-@objc func selectTab(sender: UIKeyCommand) {
-if let newIndex = Int(sender.input!), newIndex >= 1 && newIndex <= (self.tabBar.items?.count ?? 0) {
-self.selectedIndex = newIndex - 1
+	@objc func selectTab(sender: UIKeyCommand) {
+		if let newIndex = Int(sender.input!), newIndex >= 1 && newIndex <= (self.tabBar.items?.count ?? 0) {
+			self.selectedIndex = newIndex - 1
+		}
+	}
 }
-}
-}*/
 
 extension UITableViewController {
 
@@ -406,6 +402,36 @@ extension ClientQueryViewController {
 	}
 }
 
+extension LibrarySharesTableViewController {
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+
+	override var keyCommands: [UIKeyCommand]? {
+
+		var shortcuts = [UIKeyCommand]()
+
+		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Next Item".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Previous Item".localized)
+		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Select Item".localized)
+
+		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
+			if selectedRow < self.shares.count - 1 {
+				shortcuts.append(nextObjectCommand)
+			}
+			if selectedRow > 0 {
+				shortcuts.append(previousObjectCommand)
+			}
+			shortcuts.append(selectObjectCommand)
+		} else {
+			shortcuts.append(nextObjectCommand)
+		}
+
+		return shortcuts
+	}
+}
+
 extension QueryFileListTableViewController {
 
 	override var canBecomeFirstResponder: Bool {
@@ -461,7 +487,7 @@ extension QueryFileListTableViewController {
 		shortcuts.append(toggleSortCommand)
 
 		for (index, method) in SortMethod.all.enumerated() {
-			let sortTitle = String(format: "%@ %@", "Sort by".localized, method.localizedName())
+			let sortTitle = String(format: "Sort by %@".localized, method.localizedName())
 			let sortCommand = UIKeyCommand(input: String(index + 1), modifierFlags: [.command, .shift], action: #selector(changeSortMethod), discoverabilityTitle: sortTitle)
 			shortcuts.append(sortCommand)
 		}
@@ -506,7 +532,7 @@ extension QueryFileListTableViewController {
 
 	@objc func changeSortMethod(_ command : UIKeyCommand) {
 		for (_, method) in SortMethod.all.enumerated() {
-			let sortTitle = String(format: "%@ %@", "Sort by".localized, method.localizedName())
+			let sortTitle = String(format: "Sort by %@".localized, method.localizedName())
 			if command.discoverabilityTitle == sortTitle {
 				self.sortBar?.sortMethod = method
 				break

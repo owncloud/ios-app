@@ -445,3 +445,14 @@
 /* Import File */
 "Save File" = "Save File";
 "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once.";
+
+/* Key Commands */
+"Next Item" = "Next Item";
+"Previous Item" = "Previous Item";
+"Select Item" = "Select Item";
+"Change Sort Order" = "Change Sort Order";
+"Search" = "Search";
+"Back" = "Back";
+"Save" = "Save";
+"Sort by %@" = "Sort by %@";
+"Tab %@" = "Tab %@";
