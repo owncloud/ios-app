@@ -73,7 +73,7 @@ extension PHAsset {
 		let contentInputOptions = PHContentEditingInputRequestOptions()
 		contentInputOptions.isNetworkAccessAllowed = true
 
-		autoreleasepool {
+		_ = autoreleasepool {
 			self.requestContentEditingInput(with: contentInputOptions) { (contentInput, requestInfo) in
 
 				var supportedConversionFormats = Set<String>()
