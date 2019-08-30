@@ -11,7 +11,7 @@
 	<key>INIntentDefinitionSystemVersion</key>
 	<string>18G95</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>11M382q</string>
+	<string>11M392r</string>
 	<key>INIntentDefinitionToolsVersion</key>
 	<string>11.0</string>
 	<key>INIntents</key>
@@ -1212,6 +1212,165 @@
 			<string>Path Exists</string>
 			<key>INIntentTitleID</key>
 			<string>ds6RJ5</string>
+			<key>INIntentType</key>
+			<string>Custom</string>
+			<key>INIntentVerb</key>
+			<string>Do</string>
+		</dict>
+		<dict>
+			<key>INIntentCategory</key>
+			<string>generic</string>
+			<key>INIntentConfigurable</key>
+			<true/>
+			<key>INIntentDescriptionID</key>
+			<string>jkLupt</string>
+			<key>INIntentLastParameterTag</key>
+			<integer>2</integer>
+			<key>INIntentManagedParameterCombinations</key>
+			<dict>
+				<key>path,accountUUID</key>
+				<dict>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Delete Item at Path</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>TjffcC</string>
+					<key>INIntentParameterCombinationUpdatesLinked</key>
+					<true/>
+				</dict>
+			</dict>
+			<key>INIntentName</key>
+			<string>DeletePathItem</string>
+			<key>INIntentParameterCombinations</key>
+			<dict>
+				<key>path,accountUUID</key>
+				<dict>
+					<key>INIntentParameterCombinationIsLinked</key>
+					<true/>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Delete Item at Path</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>L0T44d</string>
+				</dict>
+			</dict>
+			<key>INIntentParameters</key>
+			<array>
+				<dict>
+					<key>INIntentParameterDisplayName</key>
+					<string>Path</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>ZhFjkx</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>1</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>path</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>For which path you want the file info?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>qWXOGM</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>1</integer>
+					<key>INIntentParameterType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterDisplayName</key>
+					<string>Account UUID</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>aPOcli</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>2</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>accountUUID</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Tell me the account UUID</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>03LEh1</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>2</integer>
+					<key>INIntentParameterType</key>
+					<string>String</string>
+				</dict>
+			</array>
+			<key>INIntentResponse</key>
+			<dict>
+				<key>INIntentResponseCodes</key>
+				<array>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>success</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>failure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>R54XCc</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>Iq98sA</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationRequired</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The given path does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>Y87IjO</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The given path does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>1KMplM</string>
+						<key>INIntentResponseCodeName</key>
+						<string>pathFailure</string>
+					</dict>
+				</array>
+			</dict>
+			<key>INIntentTitle</key>
+			<string>Delete Path Item</string>
+			<key>INIntentTitleID</key>
+			<string>30uTS2</string>
 			<key>INIntentType</key>
 			<string>Custom</string>
 			<key>INIntentVerb</key>

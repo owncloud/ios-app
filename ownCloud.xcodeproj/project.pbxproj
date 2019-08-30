@@ -55,6 +55,7 @@
 		396BE4CA2289500E00B254A9 /* RoundedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396BE4C92289500E00B254A9 /* RoundedLabel.swift */; };
 		3971B48F221B23FE006FB441 /* ThemeableColoredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */; };
 		397328EF22D606AC006CFAA4 /* ImportFilesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397328EE22D606AC006CFAA4 /* ImportFilesController.swift */; };
+		3984F5712319202200DC2639 /* DeletePathItemIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3984F56B2319202200DC2639 /* DeletePathItemIntentHandler.swift */; };
 		39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */; };
 		3998F5CC2240CD8300B66713 /* RoundedInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */; };
 		3998F5D3224102FE00B66713 /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D2224102FE00B66713 /* UITableView+Extension.swift */; };
@@ -678,6 +679,7 @@
 		396BE4C92289500E00B254A9 /* RoundedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedLabel.swift; sourceTree = "<group>"; };
 		3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableColoredView.swift; sourceTree = "<group>"; };
 		397328EE22D606AC006CFAA4 /* ImportFilesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportFilesController.swift; sourceTree = "<group>"; };
+		3984F56B2319202200DC2639 /* DeletePathItemIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeletePathItemIntentHandler.swift; sourceTree = "<group>"; };
 		39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extension.swift"; sourceTree = "<group>"; };
 		3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedInfoView.swift; sourceTree = "<group>"; };
 		3998F5D2224102FE00B66713 /* UITableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
@@ -1277,6 +1279,7 @@
 				395E16FE22F172C900DE89A1 /* CreateFolderIntentHandler.swift */,
 				39A5C3A0231566D9009D9EE3 /* GetFileInfoIntentHandler.swift */,
 				399A4C0F23190ADF0027DDD6 /* PathExistsIntentHandler.swift */,
+				3984F56B2319202200DC2639 /* DeletePathItemIntentHandler.swift */,
 			);
 			path = Intent;
 			sourceTree = "<group>";
@@ -2816,6 +2819,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				395E16FA22F03CAF00DE89A1 /* GetFileIntentHandler.swift in Sources */,
+				3984F5712319202200DC2639 /* DeletePathItemIntentHandler.swift in Sources */,
 				394A0B0622EEFCB000603813 /* Intents.intentdefinition in Sources */,
 				39F689AC22F0206900E63429 /* OCBookmark+Extension.swift in Sources */,
 				395E16FF22F172C900DE89A1 /* CreateFolderIntentHandler.swift in Sources */,
