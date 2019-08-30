@@ -34,6 +34,8 @@ class IntentHandler: INExtension {
 			return CreateFolderIntentHandler()
 		} else if intent is GetFileInfoIntent {
 			return GetFileInfoIntentHandler()
+		} else if intent is PathExistsIntent {
+			return PathExistsIntentHandler()
 		}
 
 		fatalError("Unhandled intent type: \(intent)")

@@ -67,6 +67,7 @@
 		<string>GetDirectoryListingIntent</string>
 		<string>GetFileInfoIntent</string>
 		<string>GetFileIntent</string>
+		<string>PathExistsIntent</string>
 		<string>SaveFileIntent</string>
 	</array>
 	<key>OCAppGroupIdentifier</key>
