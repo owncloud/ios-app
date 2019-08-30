@@ -50,7 +50,7 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 																if error != nil {
 																	completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
 																} else {
-																	completion(SaveFileIntentResponse(code: .success, userActivity: nil))
+																	completion(SaveFileIntentResponse.success(filePath: item?.path ?? ""))
 																}
 									}
 										) == nil {
@@ -101,4 +101,14 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 			completion(INFileResolutionResult.needsValue())
 		}
 	}
+}
+
+extension SaveFileIntentResponse {
+
+    @available(iOS 13.0, watchOS 6.0, *)
+    public static func success(filePath: String) -> SaveFileIntentResponse {
+        let intentResponse = SaveFileIntentResponse(code: .success, userActivity: nil)
+        intentResponse.filePath = filePath
+        return intentResponse
+    }
 }

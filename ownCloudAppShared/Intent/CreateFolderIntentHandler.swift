@@ -36,11 +36,11 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 						if error == nil, let core = core {
 							self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
 								if let targetItem = item {
-									if core.createFolder(name, inside: targetItem, options: nil, resultHandler: { (error, _, _, _) in
+									if core.createFolder(name, inside: targetItem, options: nil, resultHandler: { (error, _, item, _) in
 										if error != nil {
 											completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
 										} else {
-											completion(CreateFolderIntentResponse(code: .success, userActivity: nil))
+											completion(CreateFolderIntentResponse.success(path: item?.path ?? ""))
 										}
 									}) == nil {
 										completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
@@ -86,4 +86,14 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 			completion(INStringResolutionResult.needsValue())
 		}
 	}
+}
+
+extension CreateFolderIntentResponse {
+
+    @available(iOS 13.0, watchOS 6.0, *)
+    public static func success(path: String) -> CreateFolderIntentResponse {
+        let intentResponse = CreateFolderIntentResponse(code: .success, userActivity: nil)
+        intentResponse.path = path
+        return intentResponse
+    }
 }
