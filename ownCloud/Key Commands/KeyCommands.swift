@@ -383,13 +383,26 @@ extension ClientQueryViewController {
 
 			actions.forEach({
 				if let keyCommand = $0.actionExtension.keyCommand {
-					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: [.command], action: #selector(performExtensionAction), discoverabilityTitle: $0.actionExtension.name)
+					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: [.command], action: #selector(performFolderAction), discoverabilityTitle: $0.actionExtension.name)
 					shortcuts.append(actionCommand)
 				}
 			})
 		}
 
 		return shortcuts
+	}
+
+	@objc func performFolderAction(_ command : UIKeyCommand) {
+		if let core = core, let rootItem = query.rootItem {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .folderAction)
+			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
+			let actions = Action.sortedApplicableActions(for: actionContext)
+			actions.forEach({
+				if command.discoverabilityTitle == $0.actionExtension.name {
+					$0.perform()
+				}
+			})
+		}
 	}
 }
 
@@ -416,7 +429,7 @@ extension QueryFileListTableViewController {
 
 			actions.forEach({
 				if let keyCommand = $0.actionExtension.keyCommand {
-					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: [.command], action: #selector(performExtensionAction), discoverabilityTitle: $0.actionExtension.name)
+					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: [.command], action: #selector(performMoreItemAction), discoverabilityTitle: $0.actionExtension.name)
 					shortcuts.append(actionCommand)
 				}
 			})
@@ -445,7 +458,7 @@ extension QueryFileListTableViewController {
 		return shortcuts
 	}
 
-	@objc func performExtensionAction(_ command : UIKeyCommand) {
+	@objc func performMoreItemAction(_ command : UIKeyCommand) {
 		if let core = core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath) {
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)

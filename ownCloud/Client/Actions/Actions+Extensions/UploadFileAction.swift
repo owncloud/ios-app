@@ -33,10 +33,14 @@ class UploadFileAction: UploadBaseAction {
 
 	// MARK: - Action implementation
 	override func run() {
+
+		print("--> run upload file")
 		guard context.items.count == 1, context.items.first?.type == .collection, let viewController = context.viewController else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
+
+		print("--> run upload file go")
 
 		let documentPickerViewController = UIDocumentPickerViewController(documentTypes: [kUTTypeData as String], in: .import)
 
@@ -45,6 +49,7 @@ class UploadFileAction: UploadBaseAction {
 
 		// The action is only held weakly as delegate. This makes sure the Action object sticks around as long as UIDocumentPickerViewController, so that UIDocumentPickerViewController can call the UIDocumentPickerDelegate method.
 		objc_setAssociatedObject(documentPickerViewController, &AssociatedKeys.actionKey, self, .OBJC_ASSOCIATION_RETAIN)
+		print("--> run upload file \(documentPickerViewController)")
 
 		viewController.present(documentPickerViewController, animated: true)
 	}
