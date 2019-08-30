@@ -481,7 +481,7 @@ extension ClientDirectoryPickerViewController {
 		if let superKeyCommands = super.keyCommands {
 			shortcuts.append(contentsOf: superKeyCommands)
 		}
-		if let selectButtonTitle = selectBarButton?.title, let selector = selectBarButton?.action {
+		if let selectButtonTitle = selectButton?.title, let selector = selectButton?.action {
 			let doCommand = UIKeyCommand(input: "\r", modifierFlags: [.command], action: selector, discoverabilityTitle: selectButtonTitle)
 			shortcuts.append(doCommand)
 		}
