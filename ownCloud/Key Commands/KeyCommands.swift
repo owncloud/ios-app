@@ -433,6 +433,17 @@ extension QueryFileListTableViewController {
 					shortcuts.append(actionCommand)
 				}
 			})
+
+			let actionsLocationCollaborate = OCExtensionLocation(ofType: .action, identifier: .collaborateItem)
+			let actionContextCollaborate = ActionContext(viewController: self, core: core, items: [item], location: actionsLocationCollaborate)
+			let actionsCollaborate = Action.sortedApplicableActions(for: actionContextCollaborate)
+
+			actionsCollaborate.forEach({
+				if let keyCommand = $0.actionExtension.keyCommand {
+					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: [.command], action: #selector(performCollaborteItemAction), discoverabilityTitle: $0.actionExtension.name)
+					shortcuts.append(actionCommand)
+				}
+			})
 		}
 
 		shortcuts.append(searchCommand)
@@ -461,6 +472,19 @@ extension QueryFileListTableViewController {
 	@objc func performMoreItemAction(_ command : UIKeyCommand) {
 		if let core = core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath) {
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
+			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+			let actions = Action.sortedApplicableActions(for: actionContext)
+			actions.forEach({
+				if command.discoverabilityTitle == $0.actionExtension.name {
+					$0.perform()
+				}
+			})
+		}
+	}
+
+	@objc func performCollaborteItemAction(_ command : UIKeyCommand) {
+		if let core = core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath) {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .collaborateItem)
 			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 			let actions = Action.sortedApplicableActions(for: actionContext)
 			actions.forEach({

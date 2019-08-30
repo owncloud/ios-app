@@ -59,6 +59,7 @@ extension OCExtensionLocationIdentifier {
 	static let moreFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreFolder") //!< Present in "more" options for a whole folder
 	static let toolbar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("toolbar") //!< Present in a toolbar
 	static let folderAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("folderAction") //!< Present in the alert sheet when the folder action bar button is pressed
+	static let collaborateItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("collaborateItem") //!< Currently used for UIKeyCommand, but may be used in "more" card view, instead of static implementation
 }
 
 class ActionExtension: OCExtension {
