@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import MobileCoreServices
 
 typealias ClientActionVieDidAppearHandler = () -> Void
@@ -46,7 +47,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	var copyMultipleBarButtonItem: UIBarButtonItem?
 	var openMultipleBarButtonItem: UIBarButtonItem?
 
-	var selectBarButton: UIBarButtonItem?
+	var folderActionBarButton: UIBarButtonItem?
 	var plusBarButton: UIBarButtonItem?
 	var selectDeselectAllButtonItem: UIBarButtonItem?
 	var exitMultipleSelectionBarButtonItem: UIBarButtonItem?
@@ -134,12 +135,12 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		self.tableView.dragInteractionEnabled = true
 		self.tableView.allowsMultipleSelectionDuringEditing = true
 
+		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(moreBarButtonPressed))
+		folderActionBarButton?.accessibilityIdentifier = "client.folder-action"
 		plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusBarButtonPressed))
 		plusBarButton?.accessibilityIdentifier = "client.file-add"
-		selectBarButton = UIBarButtonItem(title: "Select".localized, style: .done, target: self, action: #selector(multipleSelectionButtonPressed))
-		selectBarButton?.isEnabled = false
-    		selectBarButton?.accessibilityIdentifier = "select-button"
-		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
+
+		self.navigationItem.rightBarButtonItems = [folderActionBarButton!, plusBarButton!]
 
 		selectDeselectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
 		exitMultipleSelectionBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(exitMultipleSelection))
@@ -163,6 +164,8 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		quotaLabel.textAlignment = .center
 		quotaLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
 		quotaLabel.numberOfLines = 0
+
+		sortBar?.showSelectButton = true
 	}
 
 	private var viewControllerVisible : Bool = false
@@ -320,7 +323,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	// MARK: - Upload
 	func upload(itemURL: URL, name: String, completionHandler: ClientActionCompletionHandler? = nil) {
 		if let rootItem = query.rootItem,
-		   let progress = core?.importFileNamed(name, at: rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+		   let progress = core?.importItemNamed(name, at: rootItem, from: itemURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
 			if error != nil {
 				Log.debug("Error uploading \(Log.mask(name)) file to \(Log.mask(rootItem.path))")
 				completionHandler?(false)
@@ -412,11 +415,11 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	func leaveMultipleSelection() {
 		self.tableView.setEditing(false, animated: true)
-		selectBarButton?.title = "Select".localized
-		self.navigationItem.rightBarButtonItems = [selectBarButton!, plusBarButton!]
+		self.navigationItem.rightBarButtonItems = [folderActionBarButton!, plusBarButton!]
 		self.navigationItem.leftBarButtonItem = nil
 		selectedItemIds.removeAll()
 		removeToolbar()
+		sortBar?.showSelectButton = true
 	}
 
 	func populateToolbar() {
@@ -449,12 +452,21 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		}
 	}
 
+	override func toggleSelectMode() {
+		if !tableView.isEditing {
+			multipleSelectionButtonPressed()
+		} else {
+			exitMultipleSelection()
+		}
+	}
+
 	// MARK: - Navigation Bar Actions
-	@objc func multipleSelectionButtonPressed(_ sender: UIBarButtonItem) {
+	@objc func multipleSelectionButtonPressed() {
 
 		if !self.tableView.isEditing {
 			updateMultiSelectionUI()
 			self.tableView.setEditing(true, animated: true)
+			sortBar?.showSelectButton = false
 
 			populateToolbar()
 
@@ -465,7 +477,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		}
 	}
 
-	@objc func exitMultipleSelection(_ sender: UIBarButtonItem) {
+	@objc func exitMultipleSelection() {
 		leaveMultipleSelection()
 	}
 
@@ -490,9 +502,9 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-		// Actions for plusButton
+		// Actions for folderAction
 		if let core = self.core, let rootItem = query.rootItem {
-			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .plusButton)
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .folderAction)
 			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
 
 			let actions = Action.sortedApplicableActions(for: actionContext)
@@ -514,6 +526,19 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 			popoverController.barButtonItem = sender
 		}
 		self.present(controller, animated: true)
+	}
+
+	@objc func moreBarButtonPressed(_ sender: UIBarButtonItem) {
+		guard let core = core, let rootItem = self.query.rootItem else {
+			return
+		}
+
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
+		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [rootItem], location: actionsLocation)
+
+		if let moreViewController = Action.cardViewController(for: rootItem, with: actionContext, progressHandler: makeActionProgressHandler()) {
+			self.present(asCard: moreViewController, animated: true)
+		}
 	}
 
 	// MARK: - Path Bread Crumb Action
@@ -545,13 +570,6 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	// MARK: - Updates
 	override func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
-		switch query.state {
-			case .contentsFromCache, .idle, .waitingForServerReply:
-				self.selectBarButton?.isEnabled = (self.items.count == 0) ? false : true
-
-			default: break
-		}
-
 		if let rootItem = self.query.rootItem {
 			if query.queryPath != "/" {
 				let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
@@ -579,6 +597,10 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	// MARK: - UIPopoverPresentationControllerDelegate
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return .none
+	}
+
+	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+		popoverPresentationController.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 }
 

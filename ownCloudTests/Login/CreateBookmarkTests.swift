@@ -46,8 +46,9 @@ class CreateBookmarkTests: XCTestCase {
 	* PASSED if: Alert view with missing URL displayed if Continue is clicked with empty URL
 	*/
 	func testCheckURLEmptyBasicAuth () {
-		
+
 		//Actions
+		EarlGrey.waitForElement(accessibilityID: "addServer")
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 		
 		//Assert
@@ -107,6 +108,7 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 		
 		//Actions
+		EarlGrey.waitForElement(accessibilityID: "addServer")
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
 		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
@@ -281,7 +283,7 @@ class CreateBookmarkTests: XCTestCase {
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
 			EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Certificate".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("issue-row.0")).perform(grey_tap())
 
 			//Assert
 			EarlGrey.waitForElement(withMatcher: grey_text("Certificate Details".localized), label: "Certificate Details")
@@ -396,6 +398,7 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier as OCAuthenticationMethodIdentifier, dictionary: dictionary, error: error)
 		
 		//Actions
+		EarlGrey.waitForElement(accessibilityID: "addServer")
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
 		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
@@ -432,6 +435,7 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionPrepareForSetup(mockUrlServer: mockUrlServer, authMethods: authMethods, issue: issue)
 
 		//Actions
+		EarlGrey.waitForElement(accessibilityID: "addServer")
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
 		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
@@ -484,6 +488,7 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionDisconnectWithCompletionHandler()
 		
 		//Actions
+		EarlGrey.waitForElement(accessibilityID: "addServer")
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
 		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
@@ -524,6 +529,7 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionDisconnectWithCompletionHandler()
 		
 		//Actions
+		EarlGrey.waitForElement(accessibilityID: "addServer")
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
 		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
@@ -565,6 +571,7 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: errorCredentials)
 		
 		//Actions
+		EarlGrey.waitForElement(accessibilityID: "addServer")
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
 		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
@@ -609,6 +616,7 @@ class CreateBookmarkTests: XCTestCase {
 		UtilsTests.mockOCConnectionGenerateAuthenticationData(authenticationMethodIdentifier: authenticationMethodIdentifier, dictionary: dictionary, error: errorCredentials)
 		
 		//Actions
+		EarlGrey.waitForElement(accessibilityID: "addServer")
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_accessibilityID("row-url-url")).perform(grey_replaceText(mockUrlServer))
 		EarlGrey.select(elementWithMatcher: grey_text("Continue".localized)).perform(grey_tap())
