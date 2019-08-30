@@ -24,6 +24,16 @@ class MoveAction : Action {
 	override class var name : String? { return "Move".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
 
+	// MARK: - Extension matching
+	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
+		if forContext.items.filter({return $0.isRoot}).count > 0 {
+			return .none
+
+		}
+
+		return .middle
+	}
+
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {

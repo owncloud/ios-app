@@ -588,7 +588,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	// MARK: - Date Picker
 
-	convenience init(datePickerWithAction action: StaticTableViewRowAction?, date dateValue: Date, identifier: String? = nil) {
+	convenience init(datePickerWithAction action: StaticTableViewRowAction?, date dateValue: Date, maximumDate:Date? = nil, identifier: String? = nil) {
 		self.init()
 		type = .datePicker
 
@@ -598,6 +598,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		datePickerView.date = dateValue
 		datePickerView.datePickerMode = .date
 		datePickerView.minimumDate = Date()
+		datePickerView.maximumDate = maximumDate
 		datePickerView.accessibilityIdentifier = identifier
 		datePickerView.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: UIControl.Event.valueChanged)
 		datePickerView.translatesAutoresizingMaskIntoConstraints = false

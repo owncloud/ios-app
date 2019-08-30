@@ -36,6 +36,11 @@ class DeleteAction : Action {
 			}
 		}
 
+		if forContext.items.filter({return $0.isRoot}).count > 0 {
+			return .none
+
+		}
+
 		return .last
 	}
 
