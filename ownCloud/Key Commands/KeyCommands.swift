@@ -39,7 +39,7 @@ extension ServerListTableViewController {
 		} else {
 			shortcuts.append(nextObjectCommand)
 		}
-		
+
 		for (index, bookmark) in OCBookmarkManager.shared.bookmarks.enumerated() {
 			let accountIndex = String(index + 1)
 			let selectAccountCommand = UIKeyCommand(input: accountIndex, modifierFlags: [.command, .shift], action: #selector(selectBookmark), discoverabilityTitle: bookmark.shortName)
@@ -164,8 +164,9 @@ extension UITableViewController {
 	}
 
 	@objc func selectCurrent(sender: UIKeyCommand) {
-		if let delegate = tableView.delegate, let tableView = tableView, let indexPathForSelectedRow = tableView.indexPathForSelectedRow {
-			delegate.tableView!(tableView, didSelectRowAt: indexPathForSelectedRow)
+		if let delegate = tableView.delegate, let tableView = tableView, let indexPath = tableView.indexPathForSelectedRow {
+			tableView.deselectRow(at: indexPath, animated: true)
+			delegate.tableView!(tableView, didSelectRowAt: indexPath)
 		}
 	}
 }
@@ -340,6 +341,7 @@ extension StaticTableViewController {
 			} else if staticRow.type == .text || staticRow.type == .secureText, let textField = staticRow.textField {
 				textField.becomeFirstResponder()
 			} else if let delegate = tableView.delegate, let tableView = tableView {
+				tableView.deselectRow(at: indexPath, animated: true)
 				delegate.tableView!(tableView, didSelectRowAt: indexPath)
 			}
 		}
@@ -372,6 +374,19 @@ extension ClientQueryViewController {
 			shortcuts.append(selectObjectCommand)
 		} else {
 			shortcuts.append(nextObjectCommand)
+		}
+
+		if let core = core, let rootItem = query.rootItem {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .folderAction)
+			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
+			let actions = Action.sortedApplicableActions(for: actionContext)
+
+			actions.forEach({
+				if let keyCommand = $0.actionExtension.keyCommand {
+					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: [.command], action: #selector(performExtensionAction), discoverabilityTitle: $0.actionExtension.name)
+					shortcuts.append(actionCommand)
+				}
+			})
 		}
 
 		return shortcuts
@@ -463,18 +478,6 @@ extension QueryFileListTableViewController {
 	}
 }
 
-extension DisplayViewController {
-	override var keyCommands: [UIKeyCommand]? {
-		return [
-			UIKeyCommand(input: "M", modifierFlags: [.command], action: #selector(optionsBarButtonPressed), discoverabilityTitle: "More Menu".localized)
-		]
-	}
-
-	override var canBecomeFirstResponder: Bool {
-		return true
-	}
-}
-
 extension ClientDirectoryPickerViewController {
 	override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
@@ -497,4 +500,123 @@ extension ClientDirectoryPickerViewController {
 	override var canBecomeFirstResponder: Bool {
 		return true
 	}
+}
+
+extension PhotoAlbumTableViewController {
+	override var keyCommands: [UIKeyCommand]? {
+		var shortcuts = [UIKeyCommand]()
+		if let superKeyCommands = super.keyCommands {
+			shortcuts.append(contentsOf: superKeyCommands)
+		}
+
+		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Next Item".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Previous Item".localized)
+		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Select Item".localized)
+
+		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
+			if selectedRow < self.albums.count - 1 {
+				shortcuts.append(nextObjectCommand)
+			}
+			if selectedRow > 0 {
+				shortcuts.append(previousObjectCommand)
+			}
+			shortcuts.append(selectObjectCommand)
+		} else {
+			shortcuts.append(nextObjectCommand)
+		}
+
+		let dismissCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
+		shortcuts.append(dismissCommand)
+
+		return shortcuts
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+}
+
+extension PhotoSelectionViewController {
+
+	override var keyCommands: [UIKeyCommand]? {
+		var shortcuts = [UIKeyCommand]()
+		if let superKeyCommands = super.keyCommands {
+			shortcuts.append(contentsOf: superKeyCommands)
+		}
+
+		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Next Item".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Previous Item".localized)
+		let selectObjectCommand = UIKeyCommand(input: " ", modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Select Item".localized)
+		let selectAllCommand = UIKeyCommand(input: "A", modifierFlags: [.command], action: #selector(selectAllItems), discoverabilityTitle: "Select All".localized)
+		let deselectAllCommand = UIKeyCommand(input: "D", modifierFlags: [.command], action: #selector(deselectAllItems), discoverabilityTitle: "Deselect All".localized)
+		let uploadCommand = UIKeyCommand(input: "U", modifierFlags: [.command], action: #selector(upload), discoverabilityTitle: "Upload".localized)
+		let dismissCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
+
+		shortcuts.append(nextObjectCommand)
+		shortcuts.append(previousObjectCommand)
+		shortcuts.append(selectObjectCommand)
+		shortcuts.append(selectAllCommand)
+		if collectionView?.indexPathsForSelectedItems?.count ?? 0 > 0 {
+			shortcuts.append(deselectAllCommand)
+			shortcuts.append(uploadCommand)
+		}
+		shortcuts.append(dismissCommand)
+
+		return shortcuts
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+
+    @objc func selectCurrent() {
+        guard let focussedIndexPath = focussedIndexPath else { return }
+		if let isSelected = collectionView?.indexPathsForSelectedItems?.contains(focussedIndexPath), isSelected {
+			collectionView.deselectItem(at: focussedIndexPath, animated: true)
+		} else {
+			collectionView.selectItem(at: focussedIndexPath, animated: true, scrollPosition: .top)
+		}
+        collectionView.delegate?.collectionView?(collectionView, didSelectItemAt: focussedIndexPath)
+    }
+
+    @objc func selectNext() {
+        guard let focussedIndexPath = focussedIndexPath else {
+            self.focussedIndexPath = firstIndexPath
+            return
+        }
+
+        let numberOfItems = collectionView.numberOfItems(inSection: 0)
+        let focussedItem = focussedIndexPath.item
+
+        guard focussedItem != (numberOfItems - 1) else {
+            self.focussedIndexPath = firstIndexPath
+            return
+        }
+
+        self.focussedIndexPath = IndexPath(item: focussedItem + 1, section: 0)
+    }
+
+    @objc func selectPrev() {
+        guard let focussedIndexPath = focussedIndexPath else {
+            self.focussedIndexPath = lastIndexPath
+            return
+        }
+
+        let focussedItem = focussedIndexPath.item
+
+        guard focussedItem > 0 else {
+            self.focussedIndexPath = lastIndexPath
+            return
+        }
+
+        self.focussedIndexPath = IndexPath(item: focussedItem - 1, section: 0)
+    }
+
+    private var lastIndexPath: IndexPath {
+        return IndexPath(item: collectionView.numberOfItems(inSection: 0) - 1, section: 0)
+    }
+
+    private var firstIndexPath: IndexPath {
+        return IndexPath(item: 0, section: 0)
+    }
 }
