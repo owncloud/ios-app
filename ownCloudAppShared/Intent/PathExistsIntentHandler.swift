@@ -35,7 +35,7 @@ public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 					OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
 						if error == nil, let core = core {
 							self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
-								if error == nil, let targetItem = item {
+								if error == nil, item != nil {
 									completion(PathExistsIntentResponse.success(pathExists: true))
 								} else {
 									completion(PathExistsIntentResponse.success(pathExists: false))
