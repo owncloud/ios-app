@@ -58,7 +58,7 @@ extension OCExtensionLocationIdentifier {
 	static let moreItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreItem") //!< Present in "more" card view for a single item
 	static let moreFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreFolder") //!< Present in "more" options for a whole folder
 	static let toolbar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("toolbar") //!< Present in a toolbar
-	static let plusButton: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("plusButton") //!< Present in the alert sheet when the plus bar button is pressed
+	static let folderAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("folderAction") //!< Present in the alert sheet when the folder action bar button is pressed
 }
 
 class ActionExtension: OCExtension {
@@ -325,12 +325,13 @@ class Action : NSObject {
 			self.perform()
 		})
 
-		let image = self.icon
-		if alertAction.responds(to: NSSelectorFromString("setImage:")) {
-			alertAction.setValue(image, forKey: "image")
-		}
-		if alertAction.responds(to: NSSelectorFromString("_setTitleTextAlignment:")) {
-			alertAction.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+		if let image = self.icon?.paddedTo(width: 36, height: nil) {
+			if alertAction.responds(to: NSSelectorFromString("setImage:")) {
+				alertAction.setValue(image, forKey: "image")
+			}
+			if alertAction.responds(to: NSSelectorFromString("_setTitleTextAlignment:")) {
+				alertAction.setValue(CATextLayerAlignmentMode.left, forKey: "titleTextAlignment")
+			}
 		}
 
 		return alertAction

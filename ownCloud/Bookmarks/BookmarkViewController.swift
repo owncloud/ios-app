@@ -20,6 +20,8 @@ import UIKit
 import ownCloudSDK
 import ownCloudUI
 
+typealias BookmarkViewControllerUserActionCompletionHandler = (_ bookmark : OCBookmark?, _ savedValidBookmark: Bool) -> Void
+
 class BookmarkViewController: StaticTableViewController {
 	// MARK: - UI elements
 	var nameSection : StaticTableViewSection?
@@ -38,6 +40,8 @@ class BookmarkViewController: StaticTableViewController {
 	var showOAuthInfoHeader = false
 	var showedOAuthInfoHeader : Bool = false
 	var activeTextField: UITextField?
+
+	var userActionCompletionHandler : BookmarkViewControllerUserActionCompletionHandler?
 
 	lazy var continueBarButtonItem: UIBarButtonItem = UIBarButtonItem(title: "Continue".localized, style: .done, target: self, action: #selector(handleContinue))
 	lazy var saveBarButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
@@ -68,7 +72,7 @@ class BookmarkViewController: StaticTableViewController {
 	private var mode : BookmarkViewControllerMode
 
 	// MARK: - Init & Deinit
-	init(_ editBookmark: OCBookmark?) {
+	init(_ editBookmark: OCBookmark?, removeAuthDataFromCopy: Bool = false) {
 		// Determine mode
 		if editBookmark != nil {
 			mode = .edit
@@ -81,6 +85,10 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		bookmark?.authenticationDataStorage = .memory  // Disconnect bookmark from keychain
+
+		if bookmark?.isTokenBased == true, removeAuthDataFromCopy {
+			bookmark?.authenticationData = nil
+		}
 
 		originalBookmark = editBookmark // Save original bookmark (if any)
 
@@ -233,13 +241,16 @@ class BookmarkViewController: StaticTableViewController {
 				// Fill UI
 				if bookmark != nil {
 					updateUI(from: bookmark!) { (_) -> Bool in return(true) }
+
+					if bookmark?.isTokenBased == false, removeAuthDataFromCopy {
+						bookmark?.authenticationData = nil
+						self.passwordRow?.value = ""
+					}
 				}
 
 				self.usernameRow?.enabled = false
 
 				self.navigationItem.title = "Edit account".localized
-
-				saveBarButtonItem.accessibilityIdentifier = "account-save"
 				self.navigationItem.rightBarButtonItem = saveBarButtonItem
 		}
 
@@ -480,7 +491,14 @@ class BookmarkViewController: StaticTableViewController {
 
 	// MARK: - User actions
 	@objc func userActionCancel() {
-		self.presentingViewController?.dismiss(animated: true, completion: nil)
+		let userActionCompletionHandler = self.userActionCompletionHandler
+		self.userActionCompletionHandler = nil
+
+		self.presentingViewController?.dismiss(animated: true, completion: {
+			OnMainThread {
+				userActionCompletionHandler?(nil, false)
+			}
+		})
 	}
 
 	@objc func userActionSave() {
@@ -526,9 +544,17 @@ class BookmarkViewController: StaticTableViewController {
 								OCBookmarkManager.shared.saveBookmarks()
 								OCBookmarkManager.shared.postChangeNotification()
 							}
+
+							let userActionCompletionHandler = strongSelf.userActionCompletionHandler
+							strongSelf.userActionCompletionHandler = nil
+
 							OnMainThread {
 								hudCompletion({
-									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+									strongSelf.presentingViewController?.dismiss(animated: true, completion: {
+										OnMainThread {
+											userActionCompletionHandler?(bookmark, true)
+										}
+									})
 								})
 							}
 
