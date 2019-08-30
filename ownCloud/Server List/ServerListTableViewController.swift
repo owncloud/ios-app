@@ -46,6 +46,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: .OCBookmarkManagerListChanged, object: nil)
+		NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
 	}
 
 	// TODO: Rebuild welcomeOverlayView in code
@@ -89,6 +90,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		welcomeLogoTVGView.vectorImage = Theme.shared.tvgImage(for: "owncloud-logo")
 
 		self.navigationItem.title = OCAppIdentity.shared.appName
+
+		NotificationCenter.default.addObserver(self, selector: #selector(considerAutoLogin), name: UIApplication.didBecomeActiveNotification, object: nil)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -123,18 +126,26 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			settingsBarButtonItem
 		]
 
-		if shownFirstTime {
-			shownFirstTime = false
-
-			if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
-				connect(to: bookmark)
-				showBetaWarning = false
-			}
+		if showBetaWarning, shownFirstTime {
+			showBetaWarning = !considerAutoLogin()
 		}
 
 		if showBetaWarning {
 			considerBetaWarning()
 		}
+	}
+
+	@objc func considerAutoLogin() -> Bool {
+		if shownFirstTime, UIApplication.shared.applicationState != .background {
+			shownFirstTime = false
+
+			if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
+				connect(to: bookmark)
+				return true
+			}
+		}
+
+		return false
 	}
 
 	func considerBetaWarning() {

@@ -1148,7 +1148,6 @@
 			children = (
 				3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */,
 				DC29F09222976B9200F77349 /* LibrarySharesTableViewController.swift */,
-				DC29F09322976B9200F77349 /* LibraryFilesTableViewController.swift */,
 				DC33939E22E0A1A300DD3DA4 /* Item Policies */,
 			);
 			path = Library;
