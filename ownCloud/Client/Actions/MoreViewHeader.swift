@@ -179,25 +179,12 @@ class MoreViewHeader: UIView {
 			detailLabel.attributedText =  NSAttributedString(string: detail, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)])
 		}
 
-		self.iconView.image = item.icon(fitInSize: CGSize(width: thumbnailSize.width, height: thumbnailSize.height))
-
-		if item.thumbnailAvailability != .none {
-			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				_ = thumbnail?.requestImage(for: CGSize(width: self.thumbnailSize.width, height: self.thumbnailSize.height), scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
-					if error == nil,
-						image != nil,
-						self.item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
-						OnMainThread {
-							self.iconView.image = image
-						}
-					}
-				})
-			}
-
-			_ = core?.retrieveThumbnail(for: item, maximumSize: CGSize(width: self.thumbnailSize.width, height: self.thumbnailSize.height), scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
-				displayThumbnail(thumbnail)
-			})
+		let fileIconSize = CGSize(width: thumbnailSize.width, height: thumbnailSize.height)
+		self.iconView.image = item.icon(fitInSize: fileIconSize)
+		if let core = core {
+			self.iconView.setThumbnailImage(using: core, from: item, with: fileIconSize)
 		}
+
 		titleLabel.numberOfLines = 0
 	}
 

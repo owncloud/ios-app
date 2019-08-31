@@ -78,6 +78,7 @@
 		4C464BF42187AF1500D30602 /* PDFSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BEC2187AF1500D30602 /* PDFSearchTableViewCell.swift */; };
 		4C464BF52187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BED2187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift */; };
 		4C464BF62187AF1500D30602 /* PDFTocItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C464BEE2187AF1500D30602 /* PDFTocItem.swift */; };
+		4C63F0E5231A91230088E8CA /* UIImageView+Thumbnails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C63F0E4231A91230088E8CA /* UIImageView+Thumbnails.swift */; };
 		4C6B78102226B83300C5F3DB /* PhotoAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B780F2226B83300C5F3DB /* PhotoAlbumTableViewController.swift */; };
 		4C6B78122226B86300C5F3DB /* PhotoAlbumTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B78112226B86300C5F3DB /* PhotoAlbumTableViewCell.swift */; };
 		4C7295D8228C384E00FA4E68 /* LogFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7295D7228C384E00FA4E68 /* LogFilesViewController.swift */; };
@@ -637,6 +638,7 @@
 		4C464BEC2187AF1500D30602 /* PDFSearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFSearchTableViewCell.swift; sourceTree = "<group>"; };
 		4C464BED2187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFThumbnailsCollectionViewController.swift; sourceTree = "<group>"; };
 		4C464BEE2187AF1500D30602 /* PDFTocItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDFTocItem.swift; sourceTree = "<group>"; };
+		4C63F0E4231A91230088E8CA /* UIImageView+Thumbnails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Thumbnails.swift"; sourceTree = "<group>"; };
 		4C6B780F2226B83300C5F3DB /* PhotoAlbumTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumTableViewController.swift; sourceTree = "<group>"; };
 		4C6B78112226B86300C5F3DB /* PhotoAlbumTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumTableViewCell.swift; sourceTree = "<group>"; };
 		4C7295D7228C384E00FA4E68 /* LogFilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogFilesViewController.swift; sourceTree = "<group>"; };
@@ -1097,6 +1099,7 @@
 				3998F5D2224102FE00B66713 /* UITableView+Extension.swift */,
 				392557FD2278703300E83F60 /* UISearchBar+Extension.swift */,
 				39CC8AE5228C12100020253B /* Array+Extension.swift */,
+				4C63F0E4231A91230088E8CA /* UIImageView+Thumbnails.swift */,
 			);
 			path = "UIKit Extensions";
 			sourceTree = "<group>";
@@ -2455,6 +2458,7 @@
 				DC85493421831B0B00782BA8 /* Tools.swift in Sources */,
 				DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */,
 				39E98B452279ACF5009911F1 /* PublicLinkEditTableViewController.swift in Sources */,
+				4C63F0E5231A91230088E8CA /* UIImageView+Thumbnails.swift in Sources */,
 				3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */,
 				39CC8B37228D5B890020253B /* ShareClientItemCell.swift in Sources */,
 				23E22BB720C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
