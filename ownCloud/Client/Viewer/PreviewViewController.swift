@@ -13,6 +13,7 @@ import QuickLook
 class PreviewViewController : DisplayViewController, QLPreviewControllerDataSource, QLPreviewControllerDelegate {
 
 	private var qlPreviewController: QLPreviewController?
+	var tapToHideBarsGestureRecognizer: UITapGestureRecognizer!
 
 	override func viewSafeAreaInsetsDidChange() {
 		super.viewSafeAreaInsetsDidChange()
@@ -43,10 +44,27 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 
 			qlPreviewController?.reloadData()
 
+			self.tapToHideBarsGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.tapToHideBars))
+			self.qlPreviewController?.view?.addGestureRecognizer(self.tapToHideBarsGestureRecognizer)
+
 			completion(true)
 		} else {
 			completion(false)
 		}
+	}
+
+	@objc func tapToHideBars() {
+		guard let navigationController = navigationController else {
+			return
+		}
+
+		if !navigationController.isNavigationBarHidden {
+			navigationController.setNavigationBarHidden(true, animated: true)
+		} else {
+			navigationController.setNavigationBarHidden(false, animated: true)
+		}
+
+		setNeedsUpdateOfHomeIndicatorAutoHidden()
 	}
 
 	// MARK: - QLPreviewControllerDataSource
@@ -68,11 +86,25 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 
 // MARK: - Display Extension.
 extension PreviewViewController: DisplayExtension {
-	static var supportedMimeTypes: [String]? {
-		return ["application/pdf", "image/jpeg", "application/vnd.apple.keynote", "application/x-iwork-pages-sffpages", "application/x-iwork-numbers-sffnumbers", "application/x-iwork-keynote-sffkey"]
+
+	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
+		do {
+			if let mimeType = context.location?.identifier?.rawValue {
+				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/)|(application/octet-stream)|(model/(vnd|usd))|application/(rtf|x-rtf|doc)|(application/x-iwork*)|(image/(?!(gif|svg*)))|(application/(vnd.|ms))(?!(oasis|android))(ms|openxmlformats)?)", options: .caseInsensitive)
+				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
+
+				if matches > 0 {
+					return OCExtensionPriority.locationMatch
+				}
+			}
+
+			return OCExtensionPriority.noMatch
+		} catch {
+			return OCExtensionPriority.noMatch
+		}
 	}
 
-	static var customMatcher: OCExtensionCustomContextMatcher?
+	static var supportedMimeTypes: [String]?
 	static var displayExtensionIdentifier: String = "org.owncloud.ql_preview"
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 }
