@@ -39,5 +39,10 @@
 	<true/>
 	<key>OCKeychainAccessGroupIdentifier</key>
 	<string>group.com.owncloud.ios-app</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>
