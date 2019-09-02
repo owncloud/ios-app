@@ -42,6 +42,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	var progressSummarizer : ProgressSummarizer?
 	var toolbar : UIToolbar?
 
+	var pasteboardChangedCounter = 0
+
 	weak var authDelegate : ClientRootViewControllerAuthenticationDelegate?
 
 	var skipAuthorizationFailure : Bool = false

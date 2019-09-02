@@ -649,64 +649,65 @@ extension QueryFileListTableViewController {
 	}
 
 	@objc func importPasteboard() {
-		if let core = self.core, let rootItem = query.rootItem {
-			// Internal Pasteboard
-			if let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"), create: false) {
-				guard let data = pasteboard.data(forPasteboardType: "com.owncloud.uti.OCItem"), let object = NSKeyedUnarchiver.unarchiveObject(with: data) else { return }
-				if let item = object as? OCItem, let name = item.name {
-					core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
-						if error != nil {
-						} else {
-						}
-						UIPasteboard.remove(withName: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"))
-					})
-				}
-			}
-
-			// System-wide Pasteboard
+		if let core = self.core, let rootItem = query.rootItem, let tabBarController = self.tabBarController as? ClientRootViewController {
 			let pasteboard = UIPasteboard.general
 
-			for type in pasteboard.types {
-				guard let data = pasteboard.data(forPasteboardType: type) else { return }
-				if let extUTI = UTTypeCopyPreferredTagWithClass(type as CFString, kUTTagClassFilenameExtension)?.takeRetainedValue() {
-					let fileName = type
-					let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).appendingPathExtension(extUTI as String)
-					do {
-						try data.write(to: localURL)
-
-						core.importItemNamed(localURL.lastPathComponent,
-											 at: rootItem,
-											 from: localURL,
-											 isSecurityScoped: false,
-											 options: [
-												OCCoreOption.importByCopying : false,
-												OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue
-							],
-											 placeholderCompletionHandler: { (error, item) in
-												if error != nil {
-													Log.debug("Error uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
-												}
-						},
-											 resultHandler: { (error, _ core, _ item, _) in
-												if error != nil {
-													Log.debug("Error uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
-												} else {
-													Log.debug("Success uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path))")
-												}
-						}
-						)
-					} catch let error as NSError {
-						print(error)
+			// Determine, if the internal pasteboard is the current item and use it
+			if pasteboard.changeCount == tabBarController.pasteboardChangedCounter {
+				// Internal Pasteboard
+				if let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"), create: false) {
+					guard let data = pasteboard.data(forPasteboardType: "com.owncloud.uti.OCItem"), let object = NSKeyedUnarchiver.unarchiveObject(with: data) else { return }
+					if let item = object as? OCItem, let name = item.name {
+						core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
+							if error != nil {
+							} else {
+							}
+						})
 					}
+				}
+			} else {
+				// System-wide Pasteboard
+				for type in pasteboard.types {
+					guard let data = pasteboard.data(forPasteboardType: type) else { return }
+					if let extUTI = UTTypeCopyPreferredTagWithClass(type as CFString, kUTTagClassFilenameExtension)?.takeRetainedValue() {
+						let fileName = type
+						let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).appendingPathExtension(extUTI as String)
+						do {
+							try data.write(to: localURL)
 
+							core.importItemNamed(localURL.lastPathComponent,
+												 at: rootItem,
+												 from: localURL,
+												 isSecurityScoped: false,
+												 options: [
+													OCCoreOption.importByCopying : false,
+													OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue
+								],
+												 placeholderCompletionHandler: { (error, item) in
+													if error != nil {
+														Log.debug("Error uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
+													}
+							},
+												 resultHandler: { (error, _ core, _ item, _) in
+													if error != nil {
+														Log.debug("Error uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
+													} else {
+														Log.debug("Success uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path))")
+													}
+							}
+							)
+						} catch let error as NSError {
+							print(error)
+						}
+
+					}
 				}
 			}
-
 		}
 	}
 
 	@objc func copyToPasteboard() {
-		if let core = self.core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath) {
+		if let core = self.core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath), let tabBarController = self.tabBarController as? ClientRootViewController {
 
 			// Internal Pasteboard
 			if let fileData = item.serializedData() {
@@ -715,7 +716,10 @@ extension QueryFileListTableViewController {
 			}
 
 			// General system-wide Pasteboard
-			if item.type == .file {
+			if item.type == .collection {
+				let pasteboard = UIPasteboard.general
+				tabBarController.pasteboardChangedCounter = pasteboard.changeCount
+			} else if item.type == .file {
 				if let itemMimeType = item.mimeType {
 					let mimeTypeCF = itemMimeType as CFString
 					if let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() {
@@ -727,6 +731,7 @@ extension QueryFileListTableViewController {
 											let rawUtiString = rawUti as String
 											let pasteboard = UIPasteboard.general
 											pasteboard.setData(fileData as Data, forPasteboardType: rawUtiString)
+											tabBarController.pasteboardChangedCounter = pasteboard.changeCount
 										}
 
 									}
@@ -738,6 +743,7 @@ extension QueryFileListTableViewController {
 								let rawUtiString = rawUti as String
 								let pasteboard = UIPasteboard.general
 								pasteboard.setData(fileData as Data, forPasteboardType: rawUtiString)
+								tabBarController.pasteboardChangedCounter = pasteboard.changeCount
 							}
 						}
 					}
