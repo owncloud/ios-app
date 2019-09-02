@@ -447,7 +447,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Labels
-	convenience init(label: String, alignment: NSTextAlignment = .left, identifier: String? = nil) {
+	convenience init(label: String, alignment: NSTextAlignment = .left, accessoryView: UIView? = nil, identifier: String? = nil) {
 		self.init()
 		type = .label
 
@@ -455,9 +455,15 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = label
-		self.cell?.isUserInteractionEnabled = false
 		self.cell?.textLabel?.numberOfLines = 0
 		self.cell?.textLabel?.textAlignment = alignment
+
+		if accessoryView != nil {
+			self.cell?.accessoryView = accessoryView
+			self.cell?.selectionStyle = .none
+		} else {
+			self.cell?.isUserInteractionEnabled = false
+		}
 
 		self.value = label
 		self.selectable = false
@@ -657,6 +663,39 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	@objc func sliderValueChanged(_ sender: UISlider) {
 		action?(self, sender)
+	}
+
+	// MARK: - Custom view
+
+	convenience init(customView: UIView, withAction action: StaticTableViewRowAction? = nil, identifier: String? = nil, inset: UIEdgeInsets? = nil, fixedHeight: CGFloat? = nil) {
+		self.init()
+
+		cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
+		cell?.selectionStyle = .none
+		cell?.addSubview(customView)
+
+		self.action = action
+
+		if let cell = self.cell {
+			var constraints : [NSLayoutConstraint] = []
+
+			customView.translatesAutoresizingMaskIntoConstraints = false
+
+			// Insets
+			constraints = [
+				customView.leftAnchor.constraint(equalTo: cell.leftAnchor, constant: inset?.left ?? 0),
+				customView.rightAnchor.constraint(equalTo: cell.rightAnchor, constant: -(inset?.right ?? 0)),
+				customView.topAnchor.constraint(equalTo: cell.topAnchor, constant: inset?.top ?? 0),
+				customView.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -(inset?.bottom ?? 0))
+			]
+
+			// Fixed height
+			if fixedHeight != nil {
+				constraints.append(customView.heightAnchor.constraint(equalToConstant: fixedHeight!))
+			}
+
+			NSLayoutConstraint.activate(constraints)
+		}
 	}
 
 	// MARK: - Deinit
