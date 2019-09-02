@@ -28,8 +28,16 @@ extension ServerListTableViewController {
 		let addAccountCommand = UIKeyCommand(input: "A", modifierFlags: [.command], action: #selector(addBookmark), discoverabilityTitle: "Add account".localized.localized)
 		let openSettingsCommand = UIKeyCommand(input: ",", modifierFlags: [.command], action: #selector(settings), discoverabilityTitle: "Settings".localized.localized)
 
+		let editSettingsCommand = UIKeyCommand(input: ",", modifierFlags: [.command, .shift], action: #selector(editBookmark), discoverabilityTitle: "Edit".localized)
+		let manageSettingsCommand = UIKeyCommand(input: "M", modifierFlags: [.command, .shift], action: #selector(manageBookmark), discoverabilityTitle: "Manage".localized)
+		let deleteSettingsCommand = UIKeyCommand(input: "\u{08}", modifierFlags: [.command, .shift], action: #selector(deleteBookmarkCommand), discoverabilityTitle: "Delete".localized)
+
 		var shortcuts = [UIKeyCommand]()
 		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
+			shortcuts.append(editSettingsCommand)
+			shortcuts.append(manageSettingsCommand)
+			shortcuts.append(deleteSettingsCommand)
+
 			if selectedRow < OCBookmarkManager.shared.bookmarks.count - 1 {
 				shortcuts.append(nextObjectCommand)
 			}
@@ -65,6 +73,23 @@ extension ServerListTableViewController {
 		}
 	}
 
+	@objc func editBookmark() {
+		if let indexPath = self.tableView?.indexPathForSelectedRow, let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+			showBookmarkUI(edit: bookmark)
+		}
+	}
+
+	@objc func manageBookmark() {
+		if let indexPath = self.tableView?.indexPathForSelectedRow, let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+			showBookmarkInfoUI(bookmark)
+		}
+	}
+
+	@objc func deleteBookmarkCommand() {
+		if let indexPath = self.tableView?.indexPathForSelectedRow, let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+			deleteBookmark(bookmark, on: indexPath)
+		}
+	}
 }
 
 extension BookmarkViewController {
