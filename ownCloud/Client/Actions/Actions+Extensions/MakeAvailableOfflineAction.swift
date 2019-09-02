@@ -23,7 +23,7 @@ class MakeAvailableOfflineAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.makeAvailableOffline") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Make available offline".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .folderAction] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext context: ActionContext) -> ActionPosition {
