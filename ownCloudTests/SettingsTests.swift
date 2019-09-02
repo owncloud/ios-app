@@ -61,13 +61,14 @@ class SettingsTests: XCTestCase {
 	* PASSED if: "More" options "are displayed
 	*/
 	func testCheckMoreItems () {
+		EarlGrey.select(elementWithMatcher: grey_kindOfClass(UITableView.self)).perform(grey_scrollToContentEdge(.bottom))
 
 		//Assert
-		EarlGrey.select(elementWithMatcher:grey_accessibilityID("help")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 500), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher:grey_accessibilityID("send-feedback")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 500), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher:grey_accessibilityID("recommend-friend")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 500), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher:grey_accessibilityID("privacy-policy")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 500), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher:grey_text("Acknowledgements".localized)).using(searchAction: grey_scrollInDirection(GREYDirection.down, 500), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher:grey_accessibilityID("help")).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher:grey_accessibilityID("send-feedback")).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher:grey_accessibilityID("recommend-friend")).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher:grey_accessibilityID("privacy-policy")).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher:grey_accessibilityID("acknowledgements")).assert(grey_sufficientlyVisible())
 	}
 
 	/*
