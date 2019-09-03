@@ -51,7 +51,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	fileprivate let thumbnailViewHeightMultiplier: CGFloat = 0.1
 	fileprivate let thumbnailMargin: CGFloat = 32.0
 	fileprivate let filenameContainerTopMargin: CGFloat = 10.0
-	fileprivate let pdfView = PDFView()
+	public let pdfView = PDFView()
 	fileprivate let thumbnailView = PDFThumbnailView()
 
 	fileprivate let containerView = UIStackView()

@@ -23,9 +23,9 @@ import MobileCoreServices
 extension ServerListTableViewController {
 	override var keyCommands: [UIKeyCommand]? {
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Select Previous".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
-		let addAccountCommand = UIKeyCommand(input: "A", modifierFlags: [.command], action: #selector(addBookmark), discoverabilityTitle: "Add account".localized.localized)
+		let addAccountCommand = UIKeyCommand(input: "+", modifierFlags: [.command], action: #selector(addBookmark), discoverabilityTitle: "Add account".localized.localized)
 		let openSettingsCommand = UIKeyCommand(input: ",", modifierFlags: [.command], action: #selector(settings), discoverabilityTitle: "Settings".localized.localized)
 
 		let editSettingsCommand = UIKeyCommand(input: ",", modifierFlags: [.command, .shift], action: #selector(editBookmark), discoverabilityTitle: "Edit".localized)
@@ -183,7 +183,7 @@ extension UITableViewController {
 		}
 	}
 
-	@objc func selectPrev(sender: UIKeyCommand) {
+	@objc func selectPrevious(sender: UIKeyCommand) {
 		if let selectedIP = self.tableView?.indexPathForSelectedRow {
 			self.tableView.selectRow(at: NSIndexPath(row: selectedIP.row - 1, section: selectedIP.section) as IndexPath, animated: true, scrollPosition: .middle)
 		}
@@ -284,7 +284,7 @@ extension StaticTableViewController {
 
 	override var keyCommands: [UIKeyCommand]? {
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Select Previous".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
 
 		var shortcuts = [UIKeyCommand]()
@@ -339,7 +339,7 @@ extension StaticTableViewController {
 		}
 	}
 
-	@objc override func selectPrev(sender: UIKeyCommand) {
+	@objc override func selectPrevious(sender: UIKeyCommand) {
 		if let indexPath = self.tableView?.indexPathForSelectedRow {
 			let staticRow = staticRowForIndexPath(indexPath)
 			self.tableView.endEditing(true)
@@ -403,7 +403,7 @@ extension ClientQueryViewController {
 		}
 
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Select Previous".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
 
 		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
@@ -463,7 +463,7 @@ extension LibrarySharesTableViewController {
 		var shortcuts = [UIKeyCommand]()
 
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Select Previous".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
 
 		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
@@ -494,7 +494,7 @@ extension QueryFileListTableViewController {
 
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
 		let selectLastPageObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [.command], action: #selector(selectLastPageObject), discoverabilityTitle: "Select Last Item on Page".localized)
-		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Select Previous".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
 		let scrollTopCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [.command, .shift], action: #selector(scrollToFirstRow), discoverabilityTitle: "Scroll to Top".localized)
 		let scrollBottomCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [.command, .shift], action: #selector(scrollToLastRow), discoverabilityTitle: "Scroll to Bottom".localized)
@@ -502,6 +502,8 @@ extension QueryFileListTableViewController {
 		let searchCommand = UIKeyCommand(input: "F", modifierFlags: [.command], action: #selector(enableSearch), discoverabilityTitle: "Search".localized)
 		let copyCommand = UIKeyCommand(input: "C", modifierFlags: [.command, .shift], action: #selector(copyToPasteboard), discoverabilityTitle: "Copy to Pasteboard".localized)
 		let pasteCommand = UIKeyCommand(input: "V", modifierFlags: [.command, .shift], action: #selector(importPasteboard), discoverabilityTitle: "Paste from Pasteboard".localized)
+		let cutCommand = UIKeyCommand(input: "X", modifierFlags: [.command, .shift], action: #selector(cutItem), discoverabilityTitle: "Cut".localized)
+		let favoriteCommand = UIKeyCommand(input: "F", modifierFlags: [.command, .shift], action: #selector(toggleFavoriteItem), discoverabilityTitle: "Favorite".localized)
 		// Add key commands for file name letters
 		if sortMethod == .alphabetically {
 			let indexTitles = Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
@@ -522,6 +524,7 @@ extension QueryFileListTableViewController {
 					shortcuts.append(actionCommand)
 				}
 			})
+			shortcuts.append(favoriteCommand)
 
 			let actionsLocationCollaborate = OCExtensionLocation(ofType: .action, identifier: .collaborateItem)
 			let actionContextCollaborate = ActionContext(viewController: self, core: core, items: [item], location: actionsLocationCollaborate)
@@ -535,8 +538,9 @@ extension QueryFileListTableViewController {
 			})
 		}
 
-		if ((self.tableView?.indexPathForSelectedRow) != nil) {
+		if self.tableView?.indexPathForSelectedRow != nil {
 			shortcuts.append(copyCommand)
+			shortcuts.append(cutCommand)
 		}
 		shortcuts.append(pasteCommand)
 		shortcuts.append(searchCommand)
@@ -544,7 +548,7 @@ extension QueryFileListTableViewController {
 
 		for (index, method) in SortMethod.all.enumerated() {
 			let sortTitle = String(format: "Sort by %@".localized, method.localizedName())
-			let sortCommand = UIKeyCommand(input: String(index + 1), modifierFlags: [.command, .shift], action: #selector(changeSortMethod), discoverabilityTitle: sortTitle)
+			let sortCommand = UIKeyCommand(input: String(index + 1), modifierFlags: [.command, .alternate], action: #selector(changeSortMethod), discoverabilityTitle: sortTitle)
 			shortcuts.append(sortCommand)
 		}
 
@@ -617,6 +621,20 @@ extension QueryFileListTableViewController {
 		self.sortBar?.sortMethod = self.sortMethod
 	}
 
+	@objc func toggleFavoriteItem() {
+		if let core = core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath) {
+			if item.isFavorite == true {
+				item.isFavorite = false
+			} else {
+				item.isFavorite = true
+			}
+			core.update(item, properties: [OCItemPropertyName.isFavorite], options: nil, resultHandler: { (error, _, _, _) in
+				if error == nil {
+				}
+			})
+		}
+	}
+
 	@objc func changeSortMethod(_ command : UIKeyCommand) {
 		for (_, method) in SortMethod.all.enumerated() {
 			let sortTitle = String(format: "Sort by %@".localized, method.localizedName())
@@ -648,6 +666,16 @@ extension QueryFileListTableViewController {
 			}
 	}
 
+	@objc func cutItem() {
+		if let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath), let tabBarController = self.tabBarController as? ClientRootViewController {
+			if let fileData = item.serializedData() {
+				let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"), create: true)
+				pasteboard?.setData(fileData as Data, forPasteboardType: "com.owncloud.uti.OCItem.cut")
+				tabBarController.pasteboardChangedCounter = UIPasteboard.general.changeCount
+			}
+		}
+	}
+
 	@objc func importPasteboard() {
 		if let core = self.core, let rootItem = query.rootItem, let tabBarController = self.tabBarController as? ClientRootViewController {
 			let pasteboard = UIPasteboard.general
@@ -656,13 +684,24 @@ extension QueryFileListTableViewController {
 			if pasteboard.changeCount == tabBarController.pasteboardChangedCounter {
 				// Internal Pasteboard
 				if let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"), create: false) {
-					guard let data = pasteboard.data(forPasteboardType: "com.owncloud.uti.OCItem"), let object = NSKeyedUnarchiver.unarchiveObject(with: data) else { return }
-					if let item = object as? OCItem, let name = item.name {
-						core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
-							if error != nil {
-							} else {
-							}
-						})
+					if let data = pasteboard.data(forPasteboardType: "com.owncloud.uti.OCItem.copy"), let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
+						if let item = object as? OCItem, let name = item.name {
+							core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
+								if error != nil {
+								} else {
+								}
+							})
+						}
+					} else if let data = pasteboard.data(forPasteboardType: "com.owncloud.uti.OCItem.cut"), let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
+						if let item = object as? OCItem, let name = item.name {
+							core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
+								if error != nil {
+								} else {
+									core.delete(item, requireMatch: true) { (_, _, _, _) in
+									}
+								}
+							})
+						}
 					}
 				}
 			} else {
@@ -712,7 +751,7 @@ extension QueryFileListTableViewController {
 			// Internal Pasteboard
 			if let fileData = item.serializedData() {
 				let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"), create: true)
-				pasteboard?.setData(fileData as Data, forPasteboardType: "com.owncloud.uti.OCItem")
+				pasteboard?.setData(fileData as Data, forPasteboardType: "com.owncloud.uti.OCItem.copy")
 			}
 
 			// General system-wide Pasteboard
@@ -785,7 +824,7 @@ extension PhotoAlbumTableViewController {
 		}
 
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Select Previous".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
 
 		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
@@ -820,7 +859,7 @@ extension PhotoSelectionViewController {
 		}
 
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(selectPrev), discoverabilityTitle: "Select Previous".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: " ", modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Select".localized)
 		let selectAllCommand = UIKeyCommand(input: "A", modifierFlags: [.command], action: #selector(selectAllItems), discoverabilityTitle: "Select All".localized)
 		let deselectAllCommand = UIKeyCommand(input: "D", modifierFlags: [.command], action: #selector(deselectAllItems), discoverabilityTitle: "Deselect All".localized)
@@ -871,7 +910,7 @@ extension PhotoSelectionViewController {
         self.focussedIndexPath = IndexPath(item: focussedItem + 1, section: 0)
     }
 
-    @objc func selectPrev() {
+    @objc func selectPrevious() {
         guard let focussedIndexPath = focussedIndexPath else {
             self.focussedIndexPath = lastIndexPath
             return
@@ -947,5 +986,60 @@ extension PasscodeViewController {
             appendDigit(digit: key)
         }
 
+    }
+}
+
+extension DisplayHostViewController {
+
+	override var keyCommands: [UIKeyCommand]? {
+		var shortcuts = [UIKeyCommand]()
+		if let superKeyCommands = super.keyCommands {
+			shortcuts.append(contentsOf: superKeyCommands)
+		}
+
+		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Next".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Previous".localized)
+
+		var showCommands = false
+		if let firstViewController = self.viewControllers?.first, let pdfController = firstViewController as? PDFViewerViewController {
+			showCommands = true
+		} else if items?.count ?? 0 > 1 {
+			showCommands = true
+		}
+
+		if showCommands {
+			shortcuts.append(nextObjectCommand)
+			shortcuts.append(previousObjectCommand)
+		}
+
+		return shortcuts
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+
+    @objc func selectNext() {
+        guard let currentViewController = self.viewControllers?.first else { return }
+
+		if let pdfController = currentViewController as? PDFViewerViewController {
+			pdfController.pdfView.goToNextPage(self)
+		} else {
+			guard let nextViewController = dataSource?.pageViewController( self, viewControllerAfter: currentViewController ) else { return }
+
+			setViewControllers([nextViewController], direction: .forward, animated: false, completion: nil)
+		}
+    }
+
+    @objc func selectPrevious() {
+        guard let currentViewController = self.viewControllers?.first else { return }
+
+		if let pdfController = currentViewController as? PDFViewerViewController {
+			pdfController.pdfView.goToPreviousPage(self)
+		} else {
+			guard let previousViewController = dataSource?.pageViewController( self, viewControllerBefore: currentViewController ) else { return }
+
+			setViewControllers([previousViewController], direction: .reverse, animated: false, completion: nil)
+		}
     }
 }
