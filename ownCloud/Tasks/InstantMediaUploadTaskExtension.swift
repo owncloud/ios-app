@@ -43,18 +43,18 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 		if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
 
-			OCCoreManager.shared.requestCore(for: bookmark, setup:nil, completionHandler: { [weak self] (core, coreError) in
+			OCCoreManager.shared.requestCore(for: bookmark, setup:nil, completionHandler: {(core, coreError) in
 				if core != nil {
 
 					func finalize() {
 						OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
-							self?.completed()
+							self.completed()
 						})
 					}
 
 					core?.fetchUpdates(completionHandler: { (fetchError, _) in
 						if fetchError == nil {
-							self?.uploadDirectoryTracking = core?.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
+							self.uploadDirectoryTracking = core?.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
 
 								if isInitial {
 									if error != nil {
@@ -62,17 +62,17 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 									}
 
 									if item != nil {
-										self?.uploadMediaAssets(with: core, at: item!, completion: {
+										self.uploadMediaAssets(with: core, at: item!, completion: {
 											finalize()
 										})
 									} else {
 										Log.warning("Instant upload directory not found")
 										userDefaults.resetInstantUploadConfiguration()
 										finalize()
-										self?.showFeatureDisabledAlert()
+										self.showFeatureDisabledAlert()
 									}
 								} else {
-									self?.uploadDirectoryTracking = nil
+									self.uploadDirectoryTracking = nil
 								}
 							})
 						} else {
@@ -83,9 +83,9 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 				} else {
 					if coreError != nil {
 						Log.error("No core returned with error \(String(describing: coreError))")
-						self?.result = .failure(coreError!)
+						self.result = .failure(coreError!)
 					}
-					self?.completed()
+					self.completed()
 				}
 			})
 		}
