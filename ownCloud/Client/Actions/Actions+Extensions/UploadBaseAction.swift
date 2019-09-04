@@ -39,9 +39,7 @@ class UploadBaseAction: Action {
 
 	internal func upload(itemURL: URL, to rootItem: OCItem, name: String) -> Bool {
 
-		guard let core = self.core else { return false }
-
-		if let progress = itemURL.upload(with: core, at: rootItem) {
+		if core != nil, let progress = itemURL.upload(with: core, at: rootItem) {
 			self.publish(progress: progress)
 			return true
 		} else {

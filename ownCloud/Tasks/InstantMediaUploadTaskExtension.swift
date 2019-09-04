@@ -20,7 +20,7 @@ import Foundation
 import ownCloudSDK
 import Photos
 
-class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
+class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 	enum MediaType {
 		case images, videos, imagesAndVideos
@@ -43,52 +43,57 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 
 		if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
 
-			OCCoreManager.shared.requestCore(for: bookmark, setup:nil, completionHandler: { (core, _) in
-				if let core = core {
-					core.delegate = self
+			OCCoreManager.shared.requestCore(for: bookmark, setup:nil, completionHandler: { [weak self] (core, coreError) in
+				if core != nil {
 
 					func finalize() {
 						OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
-							self.completed()
+							self?.completed()
 						})
 					}
 
-					core.fetchUpdates(completionHandler: { (_, _) in
-						self.uploadDirectoryTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, _) in
+					core?.fetchUpdates(completionHandler: { (fetchError, _) in
+						if fetchError == nil {
+							self?.uploadDirectoryTracking = core?.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
 
-							if error != nil {
-								Log.error("Error \(String(describing: error))")
-							}
+								if isInitial {
+									if error != nil {
+										Log.error("Error \(String(describing: error))")
+									}
 
-							if item != nil {
-								self.uploadMediaAssets(with: core, at: item!, completion: {
-									finalize()
-								})
-							} else {
-								Log.warning("Instant upload directory not found")
-								userDefaults.resetInstantUploadConfiguration()
-								finalize()
-								self.showFeatureDisabledAlert()
-							}
-						})
+									if item != nil {
+										self?.uploadMediaAssets(with: core, at: item!, completion: {
+											finalize()
+										})
+									} else {
+										Log.warning("Instant upload directory not found")
+										userDefaults.resetInstantUploadConfiguration()
+										finalize()
+										self?.showFeatureDisabledAlert()
+									}
+								} else {
+									self?.uploadDirectoryTracking = nil
+								}
+							})
+						} else {
+							Log.error("Fetching bookmark update failed with \(String(describing: fetchError))")
+							finalize()
+						}
 					})
+				} else {
+					if coreError != nil {
+						Log.error("No core returned with error \(String(describing: coreError))")
+						self?.result = .failure(coreError!)
+					}
+					self?.completed()
 				}
 			})
 		}
 	}
 
-	func core(_ core: OCCore, handleError error: Error?, issue: OCIssue?) {
-		if let error = error {
-			self.result = .failure(error)
-			Log.error("Error \(String(describing: error))")
-		}
-		completed()
-	}
-
-	private func uploadMediaAssets(with core:OCCore, at item:OCItem, completion:@escaping () -> Void) {
+	private func uploadMediaAssets(with core:OCCore?, at item:OCItem, completion:@escaping () -> Void) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
-		let uploadGroup = DispatchGroup()
 		var assets = [PHAsset]()
 
 		// Add photo assets
@@ -102,7 +107,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 		}
 
 		// Add video assets
-		if let uploadVideosAfter = userDefaults.instantUploaVideosAfter {
+		if let uploadVideosAfter = userDefaults.instantUploadVideosAfter {
 			let fetchResult = self.fetchAssetsFromCameraRoll(.videos, createdAfter: uploadVideosAfter)
 			if fetchResult != nil {
 				fetchResult!.enumerateObjects({ (asset, _, _) in
@@ -113,19 +118,19 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 
 		// Perform actual upload operation
 		if assets.count > 0 {
-			uploadGroup.enter()
 			self.upload(assets: assets, with: core, at: item, completion: { () in
-				uploadGroup.leave()
+				OnMainThread {
+					completion()
+				}
 			})
+		} else {
+			OnMainThread {
+				completion()
+			}
 		}
-
-		// Finalize upload
-		uploadGroup.notify(queue: DispatchQueue.main, execute: {
-			completion()
-		})
 	}
 
-	private func upload(assets:[PHAsset], with core:OCCore, at rootItem:OCItem, completion:@escaping () -> Void) {
+	private func upload(assets:[PHAsset], with core:OCCore?, at rootItem:OCItem, completion:@escaping () -> Void) {
 
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
@@ -137,7 +142,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction, OCCoreDelegate {
 					case .image:
 						userDefaults.instantUploadPhotosAfter = asset.modificationDate
 					case .video:
-						userDefaults.instantUploaVideosAfter = asset.modificationDate
+						userDefaults.instantUploadVideosAfter = asset.modificationDate
 					default:
 						break
 					}

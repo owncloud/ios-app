@@ -110,7 +110,7 @@ extension UserDefaults {
 		}
 	}
 
-	public var instantUploaVideosAfter: Date? {
+	public var instantUploadVideosAfter: Date? {
 		set {
 			self.set(newValue, forKey: MediaUploadKeys.InstantUploadVideosAfterDateKey.rawValue)
 		}
@@ -172,7 +172,6 @@ class MediaUploadSettingsSection: SettingsSection {
 		self.add(row: convertVideosSwitchRow!)
 
 		// Instant upload requires at least one configured account
-		OCBookmarkManager.shared.loadBookmarks()
 		if OCBookmarkManager.shared.bookmarks.count > 0 {
 			instantUploadPhotosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 				if let convertSwitch = sender as? UISwitch {
@@ -194,7 +193,7 @@ class MediaUploadSettingsSection: SettingsSection {
 				if let convertSwitch = sender as? UISwitch {
 					self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (switchState) in
 						self?.userDefaults.instantUploadVideos = switchState
-						self?.userDefaults.instantUploaVideosAfter = switchState ? Date() : nil
+						self?.userDefaults.instantUploadVideosAfter = switchState ? Date() : nil
 
 						if switchState, let locationSelected = self?.uploadLocationSelected, locationSelected == false {
 							self?.showAccountSelectionViewController()
@@ -239,28 +238,36 @@ class MediaUploadSettingsSection: SettingsSection {
 
 			OCCoreManager.shared.requestCore(for: bookmark, setup: { (_, _) in },
 											 completionHandler: { (core, error) in
-												if let core = core, error == nil {
-													core.fetchUpdates(completionHandler: { (_, _) in
-														self.uploadPathTracking = core.trackItem(atPath: path, trackingHandler: { (_, pathItem, _) in
-															if pathItem != nil {
-																OnMainThread {
-																	self.add(row: self.bookmarkAndPathSelectionRow!)
-																	let directory = URL(fileURLWithPath: path).lastPathComponent
-																	self.bookmarkAndPathSelectionRow?.value = "\(bookmark.shortName)/\(directory)"
+												if core != nil, error == nil {
+													core?.fetchUpdates(completionHandler: { (fetchError, _) in
+														if fetchError == nil {
+															self.uploadPathTracking = core?.trackItem(atPath: path, trackingHandler: { (_, pathItem, isInitial) in
+																if isInitial {
+																	if pathItem != nil {
+																		OnMainThread {
+																			self.add(row: self.bookmarkAndPathSelectionRow!)
+																			let directory = URL(fileURLWithPath: path).lastPathComponent
+																			self.bookmarkAndPathSelectionRow?.value = "\(bookmark.shortName)/\(directory)"
+																		}
+																	} else {
+																		self.userDefaults.resetInstantUploadConfiguration()
+																		OnMainThread {
+																			let alertController = UIAlertController(with: "Instant upload disabled".localized,
+																													message: "Instant upload of media was disabled since configured account / folder was not found".localized)
+																			self.viewController?.present(alertController, animated: true, completion: nil)
+																		}
+																	}
+																	updateInstantUploadSwtches()
+																	OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+																} else {
+																	self.uploadPathTracking = nil
 																}
-															} else {
-																self.userDefaults.resetInstantUploadConfiguration()
-																OnMainThread {
-																	let alertController = UIAlertController(with: "Instant upload disabled".localized,
-																											message: "Instant upload of media was disabled since configured account / folder was not found".localized)
-																	self.viewController?.present(alertController, animated: true, completion: nil)
-																}
-															}
-															updateInstantUploadSwtches()
+															})
+														} else {
 															OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
-														})
-													})
 
+														}
+													})
 												}
 			})
 

@@ -52,19 +52,16 @@ class UploadMediaAction: UploadBaseAction {
 	private func presentImageGalleryPicker() {
 		if let viewController = self.context.viewController {
 			let photoAlbumViewController = PhotoAlbumTableViewController()
-			photoAlbumViewController.selectionCallback = { (assets) in
+			photoAlbumViewController.selectionCallback = { [weak self] (assets) in
+				self?.completed()
 
-				self.completed()
+				guard let rootItem = self?.context.items.first else { return }
 
-				guard let core = self.core else { return }
-
-				guard let rootItem = self.context.items.first else { return }
-
-				MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, progressHandler: { (progress) in
+				MediaUploadQueue.shared.uploadAssets(assets, with: self?.core, at: rootItem, progressHandler: { (progress) in
 					if progress.isFinished || progress.isCancelled {
-						self.unpublish(progress: progress)
+						self?.unpublish(progress: progress)
 					} else {
-						self.publish(progress: progress)
+						self?.publish(progress: progress)
 					}
 				})
 			}

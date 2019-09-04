@@ -16,9 +16,11 @@ class MediaUploadQueue {
 
 	static let shared = MediaUploadQueue()
 
-	func uploadAssets(_ assets:[PHAsset], with core:OCCore, at rootItem:OCItem, progressHandler:((Progress) -> Void)? = nil, assetUploadCompletion:((_ asset:PHAsset?, _ finished:Bool) -> Void)? = nil ) {
+	func uploadAssets(_ assets:[PHAsset], with core:OCCore?, at rootItem:OCItem, progressHandler:((Progress) -> Void)? = nil, assetUploadCompletion:((_ asset:PHAsset?, _ finished:Bool) -> Void)? = nil ) {
 
 		let queue = DispatchQueue.global(qos: .userInitiated)
+
+		weak var weakCore = core
 
 		queue.async {
 
@@ -32,44 +34,46 @@ class MediaUploadQueue {
 				prefferedMediaOutputFormats.append(String(kUTTypeMPEG4))
 			}
 
-			core.perform(inRunningCore: { (runningCoreCompletion) in
+			let uploadGroup = DispatchGroup()
+			var uploadFailed = false
 
-				let uploadGroup = DispatchGroup()
-				var uploadFailed = false
+			for asset in assets {
+				if uploadFailed == false {
+					self.uploadSerialQueue.async {
+						if weakCore != nil {
+							uploadGroup.enter()
+							weakCore!.perform(inRunningCore: { (runningCoreCompletion) in
+								asset.upload(with: weakCore!, at: rootItem, preferredFormats: prefferedMediaOutputFormats, completionHandler: { (item, _) in
+									if item == nil {
+										uploadFailed = true
+									} else {
+										assetUploadCompletion?(asset, false)
+									}
+									runningCoreCompletion()
+									uploadGroup.leave()
+								}, progressHandler: { (progress) in
+									progressHandler?(progress)
+								})
+							}, withDescription: "Uploading \(assets.count) photo assets")
 
-				for asset in assets {
-					if uploadFailed == false {
-						// Upload image on a background queue
-						uploadGroup.enter()
+							// Avoid submitting to many jobs simultaneously to reduce memory pressure
+							_ = uploadGroup.wait()
 
-						self.uploadSerialQueue.async {
-							asset.upload(with: core, at: rootItem, preferredFormats: prefferedMediaOutputFormats, completionHandler: { (item, _) in
-								if item == nil {
-									uploadFailed = true
-								} else {
-									assetUploadCompletion?(asset, false)
-								}
-								uploadGroup.leave()
-							}, progressHandler: { (progress) in
-								progressHandler?(progress)
-							})
+						} else {
+							// Core reference became nil
+							uploadFailed = true
 						}
-
-						// Avoid submitting to many jobs simultaneously to reduce memory pressure
-						_ = uploadGroup.wait(timeout: .now() + 1.5)
-
-					} else {
-						// Escape on first failed download
-						break
 					}
+
+				} else {
+					// Escape on first failed download
+					break
 				}
+			}
 
-				uploadGroup.notify(queue: queue, execute: {
-					runningCoreCompletion()
-					assetUploadCompletion?(nil, true)
-				})
-
-			}, withDescription: "Uploading \(assets.count) photo assets")
+			uploadGroup.notify(queue: queue, execute: {
+				assetUploadCompletion?(nil, true)
+			})
 		}
 	}
 

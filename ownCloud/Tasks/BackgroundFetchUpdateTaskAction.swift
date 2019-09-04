@@ -19,7 +19,7 @@
 import Foundation
 import ownCloudSDK
 
-class BackgroundFetchUpdateTaskAction : ScheduledTaskAction, OCCoreDelegate {
+class BackgroundFetchUpdateTaskAction : ScheduledTaskAction {
 
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.background_update") }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.appBackgroundFetch] }
@@ -38,29 +38,25 @@ class BackgroundFetchUpdateTaskAction : ScheduledTaskAction, OCCoreDelegate {
 		let coreUpdateGroup = DispatchGroup()
 
 		// Iterate through bookmarks
-		OCBookmarkManager.shared.loadBookmarks()
-
 		for bookmark in OCBookmarkManager.shared.bookmarks {
 
 			// Request cores for the bookmarks and add them to the list
 			coreUpdateGroup.enter()
-			OCCoreManager.shared.requestCore(for: bookmark, setup:nil, completionHandler: { (core, _) in
-				if let core = core {
-					core.delegate = self
-
+			OCCoreManager.shared.requestCore(for: bookmark, setup:nil, completionHandler: { (core, error) in
+				if core != nil {
 					// Fetch updates from the backend
-					core.fetchUpdates(completionHandler: { (error, foundChanges) in
+					core?.fetchUpdates(completionHandler: { (error, foundChanges) in
 
 						if foundChanges {
-							Log.log("Found changes in core \(core)")
+							Log.log("Found changes in core \(String(describing: core))")
 						}
 
 						if error != nil {
 							lastError = error!
 							errorCount += 1
-							Log.error("fetchUpdates() for \(core) returned with error \(error!)")
+							Log.error("fetchUpdates() for \(String(describing: core)) returned with error \(error!)")
 						} else {
-							Log.log("Fetched updates for core \(core)")
+							Log.log("Fetched updates for core \(String(describing: core))")
 						}
 
 						// Give up the core ASAP to minimize traffic
@@ -68,6 +64,11 @@ class BackgroundFetchUpdateTaskAction : ScheduledTaskAction, OCCoreDelegate {
 							coreUpdateGroup.leave()
 						})
 					})
+				} else {
+					Log.error("No core returned for bookmark \(bookmark), error: \(String(describing: error))")
+					errorCount += 1
+					// No core returned
+					coreUpdateGroup.leave()
 				}
 			})
 		}
@@ -81,13 +82,5 @@ class BackgroundFetchUpdateTaskAction : ScheduledTaskAction, OCCoreDelegate {
 			}
 			self.completed()
 		}
-	}
-
-	func core(_ core: OCCore, handleError error: Error?, issue: OCIssue?) {
-		if let error = error {
-			self.result = .failure(error)
-			Log.error("Error \(String(describing: error))")
-		}
-		completed()
 	}
 }

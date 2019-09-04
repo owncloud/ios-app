@@ -285,7 +285,7 @@ extension ScheduledTaskManager : PHPhotoLibraryChangeObserver {
 
 		guard let settings = OCAppIdentity.shared.userDefaults else { return false }
 
-		guard settings.instantUploaVideosAfter != nil || settings.instantUploadPhotosAfter != nil else { return false }
+		guard settings.instantUploadVideosAfter != nil || settings.instantUploadPhotosAfter != nil else { return false }
 
 		return true
 	}
