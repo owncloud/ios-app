@@ -97,7 +97,8 @@ extension NSObject {
 
 		if let tabBar = self as? UITabBar {
 			tabBar.barTintColor = collection.toolbarColors.backgroundColor
-			tabBar.tintColor = collection.toolbarColors.tintColor
+			tabBar.tintColor =  collection.toolbarColors.filledColorPairCollection.normal.foreground
+			tabBar.unselectedItemTintColor = collection.toolbarColors.filledColorPairCollection.disabled.foreground
 		}
 
 		if let tableView = self as? UITableView {
@@ -111,8 +112,14 @@ extension NSObject {
 		}
 
 		if let searchBar = self as? UISearchBar {
-
-			searchBar.tintColor = collection.tintColor
+			searchBar.tintColor = collection.searchbarColors.tintColor
+			searchBar.searchTextField.backgroundColor = collection.searchbarColors.backgroundColor
+			searchBar.searchTextField.textColor = collection.searchbarColors.labelColor
+			searchBar.searchTextField.tintColor = collection.searchbarColors.tintColor
+			if let glassIconView = searchBar.searchTextField.leftView as? UIImageView {
+				glassIconView.image?.withRenderingMode(.alwaysTemplate)
+				glassIconView.tintColor = collection.searchbarColors.tintColor
+			}
 			searchBar.barStyle = collection.barStyle
 		}
 

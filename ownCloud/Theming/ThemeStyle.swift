@@ -28,8 +28,9 @@ class ThemeStyle : NSObject {
 
 	var customizedColorsByPath : [String:String]?
 	var customColors : NSDictionary?
+	var genericColors : NSDictionary?
 
-	init(identifier idtfr: String, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customizedColorsByPath customizations: [String:String]? = nil, customColors: NSDictionary? = nil) {
+	init(identifier idtfr: String, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customizedColorsByPath customizations: [String:String]? = nil, customColors: NSDictionary? = nil, genericColors: NSDictionary? = nil) {
 		self.identifier = idtfr
 		self.localizedName = name
 		self.lightColor = lColor
@@ -37,6 +38,7 @@ class ThemeStyle : NSObject {
 		self.themeStyle = style
 		self.customizedColorsByPath = customizations
 		self.customColors = customColors
+		self.genericColors = genericColors
 	}
 
 	var parsedCustomizedColorsByPath : [String:UIColor]? {
@@ -82,7 +84,7 @@ extension String {
 
 extension ThemeCollection {
 	convenience init(with style: ThemeStyle) {
-		self.init(darkBrandColor: style.darkColor, lightBrandColor: style.lightColor, style: style.themeStyle, customColors: style.customColors)
+		self.init(darkBrandColor: style.darkColor, lightBrandColor: style.lightColor, style: style.themeStyle, customColors: style.customColors, genericColors: style.genericColors)
 		if let customizationColors = style.parsedCustomizedColorsByPath {
 			for (keyPath, color) in customizationColors {
 				self.setValue(color, forKeyPath: keyPath)

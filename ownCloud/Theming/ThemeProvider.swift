@@ -20,7 +20,7 @@ import UIKit
 
 class ThemeProvider: NSObject {
 
-	var genericColors : [String : Any]?
+	var genericColors : NSDictionary?
 	var themes : [ThemeStyle] = []
 
 	init(plist: String) {
@@ -30,15 +30,13 @@ class ThemeProvider: NSObject {
 
 	func loadThemes(plist: String) {
 		if let path = Bundle.main.path(forResource: plist, ofType: "plist") {
-			if let themingValues = NSDictionary(contentsOfFile: path), let generic = themingValues["Generic"] as? [String : Any], let themes = themingValues["Themes"] as? [[String : Any]] {
+			if let themingValues = NSDictionary(contentsOfFile: path), let generic = themingValues["Generic"] as? NSDictionary, let themes = themingValues["Themes"] as? [[String : Any]] {
 				self.genericColors = generic
 
-				if let darkBrandColor = generic["darkBrandColor"] as? String, let lightBrandColor = generic["lightBrandColor"] as? String {
-					for theme in themes {
-						if let identifier = theme["Identifier"] as? String, let name = theme["Name"] as? String, let style = theme["ThemeStyle"] as? String, let themeStyle = ThemeCollectionStyle(rawValue: style), let colors = theme["Colors"] as? NSDictionary {
-							let newTheme = ThemeStyle(identifier: identifier, localizedName: name.localized, lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, customizedColorsByPath: nil, customColors: colors)
-							self.themes.append(newTheme)
-						}
+				for theme in themes {
+					if let identifier = theme["Identifier"] as? String, let name = theme["Name"] as? String, let style = theme["ThemeStyle"] as? String, let themeStyle = ThemeCollectionStyle(rawValue: style), let colors = theme["Colors"] as? NSDictionary, let darkBrandColor = theme["darkBrandColor"] as? String, let lightBrandColor = theme["lightBrandColor"] as? String {
+						let newTheme = ThemeStyle(identifier: identifier, localizedName: name.localized, lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, customizedColorsByPath: nil, customColors: colors, genericColors: generic)
+						self.themes.append(newTheme)
 					}
 				}
 			}
