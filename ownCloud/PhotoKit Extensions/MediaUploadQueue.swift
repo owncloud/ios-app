@@ -18,6 +18,11 @@ class MediaUploadQueue {
 
 	func uploadAssets(_ assets:[PHAsset], with core:OCCore?, at rootItem:OCItem, progressHandler:((Progress) -> Void)? = nil, assetUploadCompletion:((_ asset:PHAsset?, _ finished:Bool) -> Void)? = nil ) {
 
+		let backgroundTask = OCBackgroundTask(name: "UploadMediaAction", expirationHandler: { (bgTask) in
+			Log.warning("UploadMediaAction background task expired")
+			bgTask.end()
+		}).start()
+
 		let queue = DispatchQueue.global(qos: .userInitiated)
 
 		weak var weakCore = core
@@ -72,6 +77,7 @@ class MediaUploadQueue {
 			}
 
 			uploadGroup.notify(queue: queue, execute: {
+				backgroundTask?.end()
 				assetUploadCompletion?(nil, true)
 			})
 		}
