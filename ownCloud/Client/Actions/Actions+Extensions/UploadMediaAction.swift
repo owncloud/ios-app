@@ -90,7 +90,7 @@ class UploadMediaAction: UploadBaseAction {
 					let backgroundTask = OCBackgroundTask(name: "UploadMediaAction", expirationHandler: { (bgTask) in
 						Log.warning("UploadMediaAction background task expired")
 						bgTask.end()
-					})
+					}).start()
 
 					let queue = DispatchQueue.global(qos: .userInitiated)
 
@@ -123,7 +123,7 @@ class UploadMediaAction: UploadBaseAction {
 							}
 
 							uploadGroup.notify(queue: queue, execute: {
-								backgroundTask.end()
+								backgroundTask?.end()
 								runningCoreCompletion()
 							})
 
