@@ -63,7 +63,7 @@
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>com.owncloud.ios-app.openAccount</string>
-		<string>com.owncloud.ios-app.itemDetail</string>
+		<string>com.owncloud.ios-app.openItem</string>
 	</array>
 	<key>OCAppGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>

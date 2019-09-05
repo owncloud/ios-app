@@ -271,13 +271,6 @@ extension OCItem {
 		return false
 	}
 
-	var itemDetailUserActivity: NSUserActivity {
-		let userActivity = NSUserActivity(activityType: ownCloudItemDetailActivityType)
-		userActivity.title = ownCloudItemDetailPath
-		//userActivity.userInfo = [ownCloudItemDetailItemUuidKey: uuid]
-		return userActivity
-	}
-
 	func shareRootItem(from core: OCCore) -> OCItem? {
 		var shareRootItem : OCItem?
 

@@ -30,44 +30,72 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		if let windowScene = scene as? UIWindowScene {
 			window = UIWindow(windowScene: windowScene)
 			let serverListTableViewController = ServerListTableViewController(style: UITableView.Style.plain)
+			serverListTableViewController.restorationIdentifier = "ServerListTableViewController"
 			let navigationController = ThemeNavigationController(rootViewController: serverListTableViewController)
+			navigationController.restorationIdentifier = "RootNC"
 
+			if let activity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
+				serverListTableViewController.continueFrom(activity: activity)
+			}
+/*
+			if let activity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
+				navigationController.restoreUserActivityState(activity)
+			}
+*/
 			window?.rootViewController = navigationController
 			window?.addSubview((navigationController.view)!)
 			window?.makeKeyAndVisible()
 		}
+		print("--> scene delegagte \(connectionOptions.userActivities.first) \(session.stateRestorationActivity)")
         if let userActivity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
+			print("--> scene delegagte userActivity")
             if !configure(window: window, with: userActivity) {
-                print("Failed to restore from \(userActivity)")
+                print("-->Failed to restore from \(userActivity)")
             }
         }
     }
-
+/*
     func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
         return scene.userActivity
+    }
+*/
+
+    func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
+        print("-->-->SceneDelegate stateRestorationActivity")
+/*
+        if let activity = window?.userActivity {
+            activity.userInfo = [:]
+            ((window?.rootViewController as? UINavigationController)?.viewControllers.first as? ClientRootViewController)?.updateUserActivityState(activity)
+
+            return activity
+        }*/
+		if let nc = self.window?.rootViewController as? ThemeNavigationController, let vc = nc.viewControllers.first as? ServerListTableViewController {
+			return vc.continuationActivity
+		}
+
+        return nil
     }
 
     // Utilities
 
     func configure(window: UIWindow?, with activity: NSUserActivity) -> Bool {
         if activity.title == ownCloudOpenAccountPath {
-            if let accountUuid = activity.userInfo?[ownCloudOpenAccountAccountUuidKey] as? OCBookmarkUUID {
-				if let navigationController = window?.rootViewController as? ThemeNavigationController, let serverListController = navigationController.topViewController as? ServerListTableViewController {
-					var accountBookmark : OCBookmark?
-					for bookmark in OCBookmarkManager.shared.bookmarks {
-						if bookmark.uuid == accountUuid as UUID {
-							accountBookmark = bookmark
-							break
-						}
-					}
-					if let bookmark = accountBookmark {
-						serverListController.connect(to: bookmark)
-						return true
-					}
+			print("-->--> configure activity.userInfo \(activity.userInfo)")
+            if let bookmarkUUIDString = activity.userInfo?[ownCloudOpenAccountAccountUuidKey] as? String, let bookmarkUUID = UUID(uuidString: bookmarkUUIDString), let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
+				print("-->--> configure \(bookmarkUUIDString)")
 
+
+				if let navigationController = window?.rootViewController as? ThemeNavigationController, let serverListController = navigationController.topViewController as? ServerListTableViewController {
+					serverListController.connect(to: bookmark)
+					return true
 				}
 			}
-		} else if activity.title == ownCloudOpenAccountPath {
+		} else if activity.title == ownCloudOpenItemPath {
+
+			if let navigationController = window?.rootViewController as? ThemeNavigationController {
+				print("-->-->>>> \(navigationController.topViewController)")
+
+			}
 		}
 
         return false
