@@ -354,9 +354,9 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 	@available(iOS 13.0, *)
 	func openItemInWindow(at indexPath: IndexPath) {
-		if let item = itemAt(indexPath: indexPath) {
-			let activity = item.openItemUserActivity
-			UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: nil)
+		if let item = itemAt(indexPath: indexPath), let tabBarController = self.tabBarController as? ClientRootViewController {
+			let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
+			UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
 		}
 	}
 }
@@ -365,11 +365,20 @@ let ownCloudOpenItemActivityType       = "com.owncloud.ios-app.openItem"
 let ownCloudOpenItemPath               = "openItem"
 let ownCloudOpenItemUuidKey         = "itemUuid"
 
-extension OCItem {
+class OpenItemUserActivity : NSObject {
+
+	var item : OCItem
+	var bookmark : OCBookmark
+
 	var openItemUserActivity: NSUserActivity {
 		let userActivity = NSUserActivity(activityType: ownCloudOpenItemActivityType)
 		userActivity.title = ownCloudOpenItemPath
-		userActivity.userInfo = [ownCloudOpenItemPath: localID]
+		userActivity.userInfo = [ownCloudOpenItemUuidKey: item.localID, ownCloudOpenAccountAccountUuidKey : bookmark.uuid.uuidString]
 		return userActivity
+	}
+
+	init(detailItem: OCItem, detailBookmark: OCBookmark) {
+		item = detailItem
+		bookmark = detailBookmark
 	}
 }
