@@ -23,8 +23,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<false/>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -47,6 +45,8 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<false/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -60,6 +60,17 @@
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>CreateFolderIntent</string>
+		<string>DeletePathItemIntent</string>
+		<string>GetAccountsIntent</string>
+		<string>GetDirectoryListingIntent</string>
+		<string>GetFileInfoIntent</string>
+		<string>GetFileIntent</string>
+		<string>PathExistsIntent</string>
+		<string>SaveFileIntent</string>
+	</array>
 	<key>OCAppGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>OCAppIdentifierPrefix</key>
