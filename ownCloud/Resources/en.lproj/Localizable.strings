@@ -454,3 +454,23 @@
 /* Import File */
 "Save File" = "Save File";
 "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once.";
+
+/* Key Commands */
+"Select Next" = "Select Next";
+"Select Previous" = "Select Previous";
+"Open Selected" = "Open Selected";
+"Change Sort Order" = "Change Sort Order";
+"Search" = "Search";
+"Back" = "Back";
+"Save" = "Save";
+"Sort by %@" = "Sort by %@";
+"Tab %@" = "Tab %@";
+"Select Last Item on Page" = "Select Last Item on Page";
+"Scroll to Top" = "Scroll to Top";
+"Scroll to Bottom" = "Scroll to Bottom";
+"Copy to Pasteboard" = "Copy to Pasteboard";
+"Paste from Pasteboard" = "Paste from Pasteboard";
+"Next" = "Next";
+"Previous" = "Previous";
+"Favorite" = "Favorite";
+"Cut" = "Cut";

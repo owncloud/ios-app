@@ -24,6 +24,7 @@ class MakeAvailableOfflineAction: Action {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Make available offline".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem] }
+	override class var keyCommand : String? { return "O" }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext context: ActionContext) -> ActionPosition {

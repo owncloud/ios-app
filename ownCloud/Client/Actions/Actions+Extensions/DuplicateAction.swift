@@ -25,6 +25,7 @@ class DuplicateAction : Action {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Duplicate".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
+	override class var keyCommand : String? { return "D" }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {

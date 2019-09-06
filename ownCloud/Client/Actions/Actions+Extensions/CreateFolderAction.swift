@@ -23,6 +23,7 @@ class CreateFolderAction : Action {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Create folder".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [ .folderAction ] }
+	override class var keyCommand : String? { return "N" }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {

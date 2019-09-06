@@ -26,6 +26,7 @@ class UploadMediaAction: UploadBaseAction {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Upload from your photo library".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction] }
+	override class var keyCommand : String? { return "M" }
 
 	private struct AssociatedKeys {
 		static var actionKey = "action"

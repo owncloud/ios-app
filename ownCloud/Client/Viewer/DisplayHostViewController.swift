@@ -34,7 +34,7 @@ class DisplayHostViewController: UIPageViewController {
 	private var initialItem: OCItem
 	private var displayedIndex: Int?
 
-	private var items: [OCItem]?
+	public var items: [OCItem]?
 
 	private var query: OCQuery
 	private var queryStarted : Bool = false

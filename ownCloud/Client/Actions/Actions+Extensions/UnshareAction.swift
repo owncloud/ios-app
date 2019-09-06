@@ -22,6 +22,9 @@ extension Array where Element: OCItem {
 	var sharedWithUser : [OCItem] {
 		return self.filter({ (item) -> Bool in return item.isSharedWithUser })
 	}
+	var isShared : [OCItem] {
+		return self.filter({ (item) -> Bool in return item.isShared })
+	}
 }
 
 class UnshareAction : Action {

@@ -25,6 +25,7 @@ class UploadFileAction: UploadBaseAction {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Upload file".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction] }
+	override class var keyCommand : String? { return "+" }
 
 	private struct AssociatedKeys {
 		static var actionKey = "action"
