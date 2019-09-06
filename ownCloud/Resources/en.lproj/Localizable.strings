@@ -405,6 +405,14 @@
 "Media Upload" = "Media Upload";
 "Convert HEIC to JPEG" = "Convert HEIC to JPEG";
 "Convert videos to MP4" = "Convert videos to MP4";
+"Instant Upload Photos" = "Instant Upload Photos";
+"Instant Upload Videos" = "Instant Upload Videos";
+"Account" = "Account";
+"Accounts" = "Accounts";
+"Select account" = "Select account";
+"Upload Path" = "Upload Path";
+"Select Upload Path" = "Select Upload Path";
+"Instant upload of media was disabled since configured account / folder was not found" = "Instant upload of media was disabled since configured account / folder was not found";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Creating %ld folders…";
