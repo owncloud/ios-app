@@ -78,6 +78,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.tableView.rowHeight = UITableView.automaticDimension
 		self.tableView.estimatedRowHeight = 80
 		self.tableView.allowsSelectionDuringEditing = true
+		self.tableView.dragDelegate = self
 
 		let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
 		addServerBarButtonItem.accessibilityLabel = "Add account".localized
@@ -138,10 +139,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	@objc func considerAutoLogin() -> Bool {
 		if shownFirstTime, UIApplication.shared.applicationState != .background {
 			shownFirstTime = false
-
-			if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
-				connect(to: bookmark)
-				return true
+			if #available(iOS 13.0, *) { /* this will be handled automatically by scene restoration */ } else {
+				if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
+					connect(to: bookmark, animated: true) { (completed, _) in }
+				}
 			}
 		}
 
@@ -346,6 +347,23 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			}))
 
 			self.present(alertController, animated: true, completion: nil)
+
+	}
+
+	@available(iOS 13.0, *)
+	func openAccountInWindow(at indexPath: IndexPath) {
+		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+			let activity = bookmark.openAccountUserActivity
+			UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity, options: nil)
+		}
+	}
+
+	@available(iOS 13.0, *)
+	func dismissWindow() {
+		if let scene = view.window?.windowScene {
+			UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil) { (error) in
+			}
+		}
 	}
 
 	var themeCounter : Int = 0
@@ -383,7 +401,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		return OCBookmarkManager.isLocked(bookmark: bookmark, presentAlertOn: presentAlert ? self : nil)
 	}
 
-	func connect(to bookmark: OCBookmark) {
+	func connect(to bookmark: OCBookmark, animated: Bool, completionHandler: @escaping (Bool, ClientRootViewController) -> Void) {
 		if isLocked(bookmark: bookmark) {
 			return
 		}
@@ -406,6 +424,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			activityIndicator.startAnimating()
 		}
 
+		if #available(iOS 13.0, *) {
+			view.window?.windowScene?.userActivity = bookmark.openAccountUserActivity
+		}
 		self.setLastSelectedBookmark(bookmark, openedBlock: {
 			activityIndicator.stopAnimating()
 			bookmarkRow?.accessoryView = bookmarkRowAccessoryView
@@ -426,8 +447,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 					clientRootViewController.transitioningDelegate = transitionDelegate
 					clientRootViewController.modalPresentationStyle = .custom
 
-					navigationController.present(clientRootViewController, animated: true, completion: {
+					navigationController.present(clientRootViewController, animated: animated, completion: {
 						self.resetPreviousBookmarkSelection(bookmark)
+						completionHandler(true, clientRootViewController)
 					})
 				}
 			}
@@ -465,9 +487,41 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			if tableView.isEditing {
 				self.showBookmarkUI(edit: bookmark)
 			} else {
-				self.connect(to: bookmark)
+				self.connect(to: bookmark, animated: true) { (_, _) in
+				}
 			}
 		}
+	}
+
+	@available(iOS 13.0, *)
+	override func tableView(_ tableView: UITableView,
+	contextMenuConfigurationForRowAt indexPath: IndexPath,
+	point: CGPoint) -> UIContextMenuConfiguration? {
+		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+			return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+				return self.makeContextMenu(for: indexPath, with: bookmark)
+			})
+		}
+
+		return nil
+	}
+
+	@available(iOS 13.0, *)
+	func makeContextMenu(for indexPath: IndexPath, with bookmark: OCBookmark) -> UIMenu {
+		let openWindow = UIAction(title: "Open in new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+			self.openAccountInWindow(at: indexPath)
+		}
+		let edit = UIAction(title: "Edit", image: UIImage(systemName: "gear")) { _ in
+			self.showBookmarkUI(edit: bookmark)
+		}
+		let manage = UIAction(title: "Manage", image: UIImage(systemName: "arrow.3.trianglepath")) { _ in
+			self.showBookmarkInfoUI(bookmark)
+		}
+		let delete = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+			self.delete(bookmark: bookmark, at: indexPath)
+		}
+
+		return UIMenu(title: bookmark.shortName, children: [openWindow, edit, manage, delete])
 	}
 
 	// MARK: - Table view data source
@@ -529,6 +583,17 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				self?.showBookmarkInfoUI(bookmark)
 			}
 		})
+
+		if #available(iOS 13.0, *) {
+			let openAccountAction = UITableViewRowAction(style: .normal,
+														 title: "Open in Window".localized,
+														 handler: { (_, indexPath) in
+															self.openAccountInWindow(at: indexPath)
+			})
+			openAccountAction.backgroundColor = .orange
+
+			return [deleteRowAction, editRowAction, manageRowAction, openAccountAction]
+		}
 
 		return [deleteRowAction, editRowAction, manageRowAction]
 	}
@@ -607,4 +672,36 @@ extension ServerListTableViewController : ClientRootViewControllerAuthentication
 			}
 		})
 	}
+}
+
+let ownCloudOpenAccountActivityType       = "com.owncloud.ios-app.openAccount"
+let ownCloudOpenAccountPath               = "openAccount"
+let ownCloudOpenAccountAccountUuidKey         = "accountUuid"
+
+extension OCBookmark {
+	var openAccountUserActivity: NSUserActivity {
+		let userActivity = NSUserActivity(activityType: ownCloudOpenAccountActivityType)
+		userActivity.title = ownCloudOpenAccountPath
+		userActivity.userInfo = [ownCloudOpenAccountAccountUuidKey: uuid.uuidString]
+		return userActivity
+	}
+}
+
+extension ServerListTableViewController: UITableViewDragDelegate {
+
+	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+		if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+			let userActivity = bookmark.openAccountUserActivity
+			let itemProvider = NSItemProvider(item: bookmark, typeIdentifier: "com.owncloud.ios-app.ocbookmark")
+			itemProvider.registerObject(userActivity, visibility: .all)
+
+			let dragItem = UIDragItem(itemProvider: itemProvider)
+			dragItem.localObject = bookmark
+
+			return [dragItem]
+		}
+
+		return []
+	}
+
 }

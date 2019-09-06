@@ -382,4 +382,55 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 		return 0
 	}
+
+	@available(iOS 13.0, *)
+	override func tableView(_ tableView: UITableView,
+	contextMenuConfigurationForRowAt indexPath: IndexPath,
+	point: CGPoint) -> UIContextMenuConfiguration? {
+		if let item = itemAt(indexPath: indexPath) {
+			return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+				return self.makeContextMenu(for: indexPath, with: item)
+			})
+		}
+
+		return nil
+	}
+
+	@available(iOS 13.0, *)
+	func makeContextMenu(for indexPath: IndexPath, with item: OCItem) -> UIMenu {
+		let openWindow = UIAction(title: "Open in new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+			self.openItemInWindow(at: indexPath)
+		}
+		return UIMenu(title: item.name ?? "", children: [openWindow])
+	}
+
+	@available(iOS 13.0, *)
+	func openItemInWindow(at indexPath: IndexPath) {
+		if let item = itemAt(indexPath: indexPath), let tabBarController = self.tabBarController as? ClientRootViewController {
+			let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
+			UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
+		}
+	}
+}
+
+let ownCloudOpenItemActivityType       = "com.owncloud.ios-app.openItem"
+let ownCloudOpenItemPath               = "openItem"
+let ownCloudOpenItemUuidKey         = "itemUuid"
+
+class OpenItemUserActivity : NSObject {
+
+	var item : OCItem
+	var bookmark : OCBookmark
+
+	var openItemUserActivity: NSUserActivity {
+		let userActivity = NSUserActivity(activityType: ownCloudOpenItemActivityType)
+		userActivity.title = ownCloudOpenItemPath
+		userActivity.userInfo = [ownCloudOpenItemUuidKey: item.localID, ownCloudOpenAccountAccountUuidKey : bookmark.uuid.uuidString]
+		return userActivity
+	}
+
+	init(detailItem: OCItem, detailBookmark: OCBookmark) {
+		item = detailItem
+		bookmark = detailBookmark
+	}
 }

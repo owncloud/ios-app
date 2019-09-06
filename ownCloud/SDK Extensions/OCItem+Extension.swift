@@ -19,6 +19,10 @@
 import UIKit
 import ownCloudSDK
 
+let ownCloudItemDetailActivityType       = "com.owncloud.ios-app.itemDetail"
+let ownCloudItemDetailPath               = "itemDetail"
+let ownCloudItemDetailItemUuidKey         = "itemUuid"
+
 extension OCItem {
 	static private let iconNamesByMIMEType : [String:String] = {
 		var mimeTypeToIconMap :  [String:String] = [
