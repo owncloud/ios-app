@@ -72,7 +72,6 @@ class BookmarkInfoViewController: StaticTableViewController {
 						row.cell?.accessoryView = progressView
 					}
 
-
 					let includeAvailableOfflineCopies : Bool = (includeAvailableOfflineCopiesRow.value as? Bool) ?? false
 
 					let compactingSelector : OCVaultCompactSelector? = (includeAvailableOfflineCopies == false) ? { (_, item) -> Bool in
