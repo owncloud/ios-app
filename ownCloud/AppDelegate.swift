@@ -73,6 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
+		OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
@@ -86,16 +87,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		return true
 	}
-
-	@available(iOS 13.0, *)
-	func application(_ application: UIApplication,
-                     configurationForConnecting connectingSceneSession: UISceneSession,
-                     options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-
-		print("--> appdelegetat \(options.userActivities)")
-
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
-    }
 
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
 		var copyBeforeUsing = true
@@ -128,74 +119,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
 	}
 
-    func application(_ application: UIApplication, viewControllerWithRestorationIdentifierPath identifierComponents: [String], coder: NSCoder) -> UIViewController? {
-        print("AppDelegate viewControllerWithRestorationIdentifierPath")
-
-        return nil // We don't want any UI hierarchy saved
-    }
-
-    func application(_ application: UIApplication, willEncodeRestorableStateWith coder: NSCoder) {
-        print("AppDelegate willEncodeRestorableStateWith")
-
-        if #available(iOS 13.0, *) {
-            // no-op
-        } else {
-            // This is the important link for iOS 12 and earlier
-            // If some view in your app sets a user activity on its window,
-            // here we give the view hierarchy a chance to update the user
-            // activity with whatever state info it needs to record so it can
-            // later be restored to restore the app to its previous state.
-            if let activity = window?.userActivity {
-                activity.userInfo = [:]
-                ((window?.rootViewController as? ThemeNavigationController)?.viewControllers.first as? ServerListTableViewController)?.updateUserActivityState(activity)
-
-                // Now save off the updated user activity
-                let wrap = NSUserActivityWrapper(activity)
-                coder.encode(wrap, forKey: "userActivity")
-            }
-        }
-    }
-
-    func application(_ application: UIApplication, didDecodeRestorableStateWith coder: NSCoder) {
-        print("-->AppDelegate didDecodeRestorableStateWith")
-
-        // If we find a stored user activity, load it and give it to the view
-        // hierarchy so the UI can be restored to its previous state
-        if let wrap = coder.decodeObject(forKey: "userActivity") as? NSUserActivityWrapper {
-            ((window?.rootViewController as? ThemeNavigationController)?.viewControllers.first as? ServerListTableViewController)?.restoreUserActivityState(wrap.userActivity)
-        }
-    }
-
-    func application(_ application: UIApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
-        print("AppDelegate shouldSaveApplicationState")
-
-        if #available(iOS 13.0, *) {
-            return false
-        } else {
-            // Enabled just so we can persist the NSUserActivity if there is one
-            return true
-        }
-    }
-
-    func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
-        print("AppDelegate shouldRestoreApplicationState")
-
-        if #available(iOS 13.0, *) {
-            return false
-        } else {
-            return true
-        }
-    }
-
     // MARK: UISceneSession Lifecycle
-/*
-    @available(iOS 13.0, *)
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        print("AppDelegate configurationForConnecting")
+@available(iOS 13.0, *)
+func application(_ application: UIApplication,
+				 configurationForConnecting connectingSceneSession: UISceneSession,
+				 options: UIScene.ConnectionOptions) -> UISceneConfiguration {
 
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
-    }
-*/
+	print("--> appdelegetat \(options.userActivities)")
+
+	return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+}
+
     @available(iOS 13.0, *)
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
         print("AppDelegate didDiscardSceneSessions")

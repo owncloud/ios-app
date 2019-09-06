@@ -124,14 +124,16 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
 			settingsBarButtonItem
 		]
-/*
+
 		if shownFirstTime {
 			shownFirstTime = false
-			if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
+			if #available(iOS 13.0, *) { /* this will be handled automatically by scene restoration */ } else {
+				if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
 				connect(to: bookmark)
 				showBetaWarning = false
+				}
 			}
-		}*/
+		}
 
 		if showBetaWarning {
 			considerBetaWarning()
@@ -280,6 +282,14 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 	}
 
+	@available(iOS 13.0, *)
+	func dismissWindow() {
+		if let scene = view.window?.windowScene {
+			UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil) { (error) in
+			}
+		}
+	}
+
 	func delete(bookmark: OCBookmark, at indexPath: IndexPath) {
 		self.lockedBookmarks.append(bookmark)
 
@@ -398,6 +408,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			activityIndicator.startAnimating()
 		}
 
+		if #available(iOS 13.0, *) {
+			view.window?.windowScene?.userActivity = bookmark.openAccountUserActivity
+		}
 		self.setLastSelectedBookmark(bookmark, openedBlock: {
 			activityIndicator.stopAnimating()
 			bookmarkRow?.accessoryView = bookmarkRowAccessoryView
@@ -488,7 +501,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			self.delete(bookmark: bookmark, at: indexPath)
 		}
 
-		return UIMenu(title: "Account", children: [openWindow, edit, manage, delete])
+		return UIMenu(title: bookmark.shortName, children: [openWindow, edit, manage, delete])
 	}
 
 	// MARK: - Table view data source
@@ -582,46 +595,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		OCBookmarkManager.shared.moveBookmark(from: UInt(fromIndexPath.row), to: UInt(to.row))
-	}
-
-    override func updateUserActivityState(_ activity: NSUserActivity) {
-        print("-->ViewController updateUserActivityState")
-        super.updateUserActivityState(activity)
-
-		if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
-		//	activity.addUserInfoEntries(from: [ownCloudOpenAccountAccountUuidKey: bookmark.uuid.uuidString])
-			activity.userInfo = [ownCloudOpenAccountAccountUuidKey: bookmark.uuid]
-		}
-
-    }
-
-    override func restoreUserActivityState(_ activity: NSUserActivity) {
-        print("-->ViewController restoreUserActivityState")
-        super.restoreUserActivityState(activity)
-
-		if let bookmarkUUIDString = activity.userInfo?[ownCloudOpenAccountAccountUuidKey] as? String, let bookmarkUUID = UUID(uuidString: bookmarkUUIDString), let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
-			connect(to: bookmark)
-		}
-    }
-
-	var continuationActivity: NSUserActivity {
-		let userActivity = NSUserActivity(activityType: ownCloudOpenAccountActivityType)
-		userActivity.title = ownCloudOpenAccountPath
-		if #available(iOS 12.0, *) {
-			userActivity.persistentIdentifier = UUID().uuidString
-		} else {
-			// Fallback on earlier versions
-		}
-		if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
-			userActivity.userInfo = [ownCloudOpenAccountAccountUuidKey: bookmark.uuid]
-		}
-		return userActivity
-	}
-
-	func continueFrom(activity: NSUserActivity) {
-		if let bookmarkUUIDString = activity.userInfo?[ownCloudOpenAccountAccountUuidKey] as? String, let bookmarkUUID = UUID(uuidString: bookmarkUUIDString), let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
-			connect(to: bookmark)
-		}
 	}
 }
 

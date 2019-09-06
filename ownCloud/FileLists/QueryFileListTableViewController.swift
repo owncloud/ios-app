@@ -349,7 +349,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		let openWindow = UIAction(title: "Open in new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
 			self.openItemInWindow(at: indexPath)
 		}
-		return UIMenu(title: "Window", children: [openWindow])
+		return UIMenu(title: item.name ?? "", children: [openWindow])
 	}
 
 	@available(iOS 13.0, *)
