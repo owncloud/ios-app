@@ -124,6 +124,7 @@
 "Sign in" = "Sign in";
 "Ignore" = "Ignore";
 "Continue offline" = "Continue offline";
+"Media upload in the previous session was incomplete since the application was terminated" = "Media upload in the previous session was incomplete since the application was terminated";
 
 /* Server List*/
 "Cancel" = "Cancel";

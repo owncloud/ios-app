@@ -22,9 +22,12 @@ import Photos
 import MobileCoreServices
 
 class MediaUploadQueue {
+
 	private let uploadSerialQueue = DispatchQueue(label: "com.owncloud.upload.queue", target: DispatchQueue.global(qos: .background))
 
 	static let shared = MediaUploadQueue()
+
+	static let UploadPendingKey = OCKeyValueStoreKey(rawValue: "com.owncloud.upload.queue.upload-pending-flag")
 
 	func uploadAssets(_ assets:[PHAsset], with core:OCCore?, at rootItem:OCItem, progressHandler:((Progress) -> Void)? = nil, assetUploadCompletion:((_ asset:PHAsset?, _ finished:Bool) -> Void)? = nil ) {
 
@@ -36,6 +39,12 @@ class MediaUploadQueue {
 		let queue = DispatchQueue.global(qos: .userInitiated)
 
 		weak var weakCore = core
+
+		if weakCore != nil {
+			let vault : OCVault = OCVault(bookmark: weakCore!.bookmark)
+			let flag = NSNumber(value: true)
+			vault.keyValueStore?.storeObject(flag, forKey: MediaUploadQueue.UploadPendingKey)
+		}
 
 		queue.async {
 
@@ -54,9 +63,9 @@ class MediaUploadQueue {
 
 			for asset in assets {
 				if uploadFailed == false {
+					uploadGroup.enter()
 					self.uploadSerialQueue.async {
 						if weakCore != nil {
-							uploadGroup.enter()
 							weakCore!.perform(inRunningCore: { (runningCoreCompletion) in
 								asset.upload(with: weakCore!, at: rootItem, preferredFormats: prefferedMediaOutputFormats, completionHandler: { (item, _) in
 									if item == nil {
@@ -71,14 +80,14 @@ class MediaUploadQueue {
 								})
 							}, withDescription: "Uploading \(assets.count) photo assets")
 
-							// Avoid submitting to many jobs simultaneously to reduce memory pressure
-							_ = uploadGroup.wait()
-
 						} else {
+							uploadGroup.leave()
 							// Core reference became nil
 							uploadFailed = true
 						}
 					}
+					// Avoid submitting to many jobs simultaneously to reduce memory pressure
+					_ = uploadGroup.wait()
 
 				} else {
 					// Escape on first failed download
@@ -87,10 +96,26 @@ class MediaUploadQueue {
 			}
 
 			uploadGroup.notify(queue: queue, execute: {
+				if weakCore != nil {
+					MediaUploadQueue.resetUploadPendingFlag(for:  weakCore!.bookmark)
+				}
 				backgroundTask?.end()
 				assetUploadCompletion?(nil, true)
 			})
 		}
 	}
 
+	class func isMediaUploadPendingFlagSet(for bookmark:OCBookmark) -> Bool {
+		let vault : OCVault = OCVault(bookmark: bookmark)
+		if vault.keyValueStore?.readObject(forKey: MediaUploadQueue.UploadPendingKey) != nil {
+			return true
+		} else {
+			return false
+		}
+	}
+
+	class func resetUploadPendingFlag(for bookmark:OCBookmark) {
+		let vault : OCVault = OCVault(bookmark: bookmark)
+		vault.keyValueStore?.storeObject(nil, forKey: MediaUploadQueue.UploadPendingKey)
+	}
 }
