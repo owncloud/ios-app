@@ -24,7 +24,7 @@ class DiscardSceneAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.discardscene") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Close Window".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.plusButton] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -54,7 +54,7 @@ class DiscardSceneAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .plusButton {
+		if location == .folderAction {
 			if #available(iOS 13.0, *) {
 				return UIImage(systemName: "xmark.square")
 			}

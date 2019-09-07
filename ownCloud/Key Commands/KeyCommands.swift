@@ -68,7 +68,8 @@ extension ServerListTableViewController {
 	@objc func selectBookmark(_ command : UIKeyCommand) {
 		for bookmark in OCBookmarkManager.shared.bookmarks {
 			if bookmark.shortName == command.discoverabilityTitle {
-				self.connect(to: bookmark)
+				self.connect(to: bookmark, animated: true) { (_, _) in
+				}
 			}
 		}
 	}
