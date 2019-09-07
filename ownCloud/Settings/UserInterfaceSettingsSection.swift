@@ -76,7 +76,6 @@ class UserInterfaceSettingsSection: SettingsSection {
 				if let styleIdentifier = row.value as? String,
 				   let style = ThemeStyle.forIdentifier(styleIdentifier) {
 					ThemeStyle.preferredStyle = style
-					Theme.shared.switchThemeCollection(ThemeCollection(with: style))
 
 					themeRow?.cell?.detailTextLabel?.text = style.localizedName
 				}
@@ -84,6 +83,16 @@ class UserInterfaceSettingsSection: SettingsSection {
 		}
 
 		styleSelectorViewController.addSection(styleSelectorSection)
+
+		if #available(iOS 13, *) {
+			styleSelectorViewController.addSection(StaticTableViewSection(headerTitle: nil, rows: [
+				StaticTableViewRow(switchWithAction: { (_, sender) in
+					if let followAppearanceSwitch = sender as? UISwitch {
+						ThemeStyle.followSystemAppearance = followAppearanceSwitch.isOn
+					}
+				}, title: "Follow system light / dark appearance".localized, value: ThemeStyle.followSystemAppearance, identifier: "theme-auto-dark-mode")
+			]))
+		}
 
 		self.viewController?.navigationController?.pushViewController(styleSelectorViewController, animated: true)
 	}
