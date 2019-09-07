@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import QuickLookThumbnailing
 
 protocol ClientItemCellDelegate: class {
 
@@ -238,30 +239,12 @@ class ClientItemCell: ThemeTableViewCell {
 
 		self.accessoryType = .none
 
-		if item.thumbnailAvailability != .none {
-			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				_ = thumbnail?.requestImage(for: thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
-					if error == nil,
-						image != nil,
-						self.item?.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
-						OnMainThread {
-							self.iconView.image = image
-						}
-					}
-				})
-			}
-
-			if let thumbnail = item.thumbnail {
-				displayThumbnail(thumbnail)
-			} else {
-				activeThumbnailRequestProgress = core?.retrieveThumbnail(for: item, maximumSize: thumbnailSize, scale: 0, retrieveHandler: { [weak self] (_, _, _, thumbnail, _, progress) in
-					displayThumbnail(thumbnail)
-
-					if self?.activeThumbnailRequestProgress === progress {
-						self?.activeThumbnailRequestProgress = nil
-					}
-				})
-			}
+		if let core = core {
+			activeThumbnailRequestProgress = self.iconView.setThumbnailImage(using: core, from: item, with: thumbnailSize, progressHandler: { [weak self] (progress) in
+				if self?.activeThumbnailRequestProgress === progress {
+					self?.activeThumbnailRequestProgress = nil
+				}
+			})
 		}
 
 		if item.isSharedWithUser || item.sharedByUserOrGroup {

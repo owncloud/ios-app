@@ -18,9 +18,11 @@
 
 import UIKit
 import ownCloudSDK
+import QuickLook
 
 class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
 	weak var core : OCCore?
+	var previewItem : URL?
 
 	let estimatedTableRowHeight : CGFloat = 80
 
@@ -267,3 +269,22 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 	}
 }
+
+extension FileListTableViewController : QLPreviewControllerDataSource, QLPreviewControllerDelegate {
+
+	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+		return previewItem != nil ? 1 : 0
+	}
+
+	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+		return previewItem! as QLPreviewItem
+	}
+
+
+	@available(iOS 13.0, *)
+	func previewController(_ controller: QLPreviewController, editingModeFor previewItem: QLPreviewItem) -> QLPreviewItemEditingMode {
+		// Return .updateContents so QLPreviewController takes care of updating the contents of the provided QLPreviewItems whenever users save changes.
+		return .updateContents
+	}
+}
+

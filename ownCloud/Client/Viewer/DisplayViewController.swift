@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import QuickLookThumbnailing
 
 struct DisplayViewConfiguration {
 	var item: OCItem?
@@ -234,32 +235,10 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 		Theme.shared.register(client: self)
 
-		if let item = item {
+		if let item = item, let core = self.core {
 			iconImageView?.image = item.icon(fitInSize:iconImageSize)
 
-			if item.thumbnailAvailability != .none {
-				let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-					_ = thumbnail?.requestImage(for: self.iconImageSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
-						if error == nil,
-							image != nil,
-							item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
-							OnMainThread {
-								if self.iconImageView?.isHidden == false {
-									self.iconImageView?.image = image
-								}
-							}
-						}
-					})
-				}
-
-				if let thumbnail = item.thumbnail {
-					displayThumbnail(thumbnail)
-				} else {
-					_ = core?.retrieveThumbnail(for: item, maximumSize: iconImageSize, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
-						displayThumbnail(thumbnail)
-					})
-				}
-			}
+			iconImageView?.setThumbnailImage(using: core, from: item, with: iconImageSize)
 		}
 
 		self.render()
