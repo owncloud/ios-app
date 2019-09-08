@@ -8,7 +8,10 @@
 
 import UIKit
 import ownCloudSDK
+
+#if canImport(QuickLookThumbnailing)
 import QuickLookThumbnailing
+#endif
 
 extension UIImageView {
 
@@ -54,6 +57,7 @@ extension UIImageView {
 					displayThumbnail(thumbnail)
 
 					// No thumbnail returned by the core, try QuickLook thumbnailing on iOS 13
+					#if canImport(QuickLookThumbnailing)
 					if thumbnail == nil, #available(iOS 13, *) {
 						core.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (_, url, _) in
 							if let url = url {
@@ -69,6 +73,7 @@ extension UIImageView {
 							}
 						})
 					}
+					#endif
 
 					if progress != nil {
 						progressHandler?(progress!)

@@ -18,7 +18,6 @@
 
 import UIKit
 import ownCloudSDK
-import QuickLookThumbnailing
 
 protocol ClientItemCellDelegate: class {
 
