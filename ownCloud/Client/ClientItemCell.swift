@@ -210,7 +210,17 @@ class ClientItemCell: ThemeTableViewCell {
 			activeThumbnailRequestProgress?.cancel()
 		}
 
+		// Set the icon and initiate thumbnail generation
 		iconImage = item.icon(fitInSize: iconSize)
+		self.iconView.image = iconImage
+
+		if let core = core {
+			activeThumbnailRequestProgress = self.iconView.setThumbnailImage(using: core, from: item, with: thumbnailSize, progressHandler: { [weak self] (progress) in
+				if self?.activeThumbnailRequestProgress === progress {
+					self?.activeThumbnailRequestProgress = nil
+				}
+			})
+		}
 
 		var size: String = item.sizeLocalized
 
@@ -221,14 +231,6 @@ class ClientItemCell: ThemeTableViewCell {
 		self.detailLabel.text = size + " - " + item.lastModifiedLocalized
 
 		self.accessoryType = .none
-
-		if let core = core {
-			activeThumbnailRequestProgress = self.iconView.setThumbnailImage(using: core, from: item, with: thumbnailSize, progressHandler: { [weak self] (progress) in
-				if self?.activeThumbnailRequestProgress === progress {
-					self?.activeThumbnailRequestProgress = nil
-				}
-			})
-		}
 
 		if item.isSharedWithUser || item.sharedByUserOrGroup {
 			sharedStatusIconView.image = UIImage(named: "group")
@@ -260,7 +262,6 @@ class ClientItemCell: ThemeTableViewCell {
 			cloudStatusIconView.image = nil
 		}
 
-		self.iconView.image = iconImage
 		self.titleLabel.text = item.name
 
 		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
