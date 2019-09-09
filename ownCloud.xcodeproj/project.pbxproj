@@ -38,6 +38,7 @@
 		3913213822946E5E00EF88F4 /* FileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913213722946E5E00EF88F4 /* FileListTableViewController.swift */; };
 		3913214D22956D5700EF88F4 /* LibraryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */; };
 		392557FE2278703300E83F60 /* UISearchBar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392557FD2278703300E83F60 /* UISearchBar+Extension.swift */; };
+		393120702326451900E8DFBA /* Themes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3931206A2326451900E8DFBA /* Themes.plist */; };
 		394804DA225CBDBA00AA8183 /* BreadCrumbTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394804D9225CBDBA00AA8183 /* BreadCrumbTableViewController.swift */; };
 		39607CBC2225D480007B386D /* UITableViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39607CBB2225D480007B386D /* UITableViewController+Extension.swift */; };
 		396BE4C32288A84C00B254A9 /* PendingSharesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396BE4C22288A84C00B254A9 /* PendingSharesTableViewController.swift */; };
@@ -48,10 +49,6 @@
 		3998F5D3224102FE00B66713 /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D2224102FE00B66713 /* UITableView+Extension.swift */; };
 		3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D422411EDF00B66713 /* BorderedLabel.swift */; };
 		3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */; };
-		39C31F9522F1A52A0023923D /* Themes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 39C31F9422F1A52A0023923D /* Themes.plist */; };
-		39C31F9722F1C52C0023923D /* ThemeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C31F9622F1C52C0023923D /* ThemeProvider.swift */; };
-		39DE75DA22F9B6AB0064C1E2 /* bookmark-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 39DE75D322F9B6AB0064C1E2 /* bookmark-icon.png */; };
-		39DE75DB22F9B6AB0064C1E2 /* bookmark-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 39DE75D922F9B6AB0064C1E2 /* bookmark-logo.png */; };
 		399DD7C722A691BC00B45EB2 /* UnshareAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399DD7C122A691BC00B45EB2 /* UnshareAction.swift */; };
 		39A5135322608836002CF1AA /* OCShare+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A5135222608836002CF1AA /* OCShare+Extension.swift */; };
 		39A513AC22674E56002CF1AA /* OCCore+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A513AB22674E56002CF1AA /* OCCore+Extension.swift */; };
@@ -59,10 +56,13 @@
 		39AFC3D8225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AFC3D7225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift */; };
 		39B289A8226F1EE000BE0E11 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B289A7226F1EE000BE0E11 /* MessageView.swift */; };
 		39B9675022BE0FBA0074DB22 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
+		39C31F9722F1C52C0023923D /* ThemeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C31F9622F1C52C0023923D /* ThemeProvider.swift */; };
 		39CC8AE6228C12100020253B /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8AE5228C12100020253B /* Array+Extension.swift */; };
 		39CC8B01228C8A950020253B /* MediaUploadSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8B00228C8A950020253B /* MediaUploadSettingsSection.swift */; };
 		39CC8B37228D5B890020253B /* ShareClientItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8B36228D5B890020253B /* ShareClientItemCell.swift */; };
 		39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */; };
+		39DE75DA22F9B6AB0064C1E2 /* bookmark-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 39DE75D322F9B6AB0064C1E2 /* bookmark-icon.png */; };
+		39DE75DB22F9B6AB0064C1E2 /* bookmark-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 39DE75D922F9B6AB0064C1E2 /* bookmark-logo.png */; };
 		39E2FDED21FDEC7500F0117F /* ServerListTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */; };
 		39E2FE0021FF814A00F0117F /* ThemeRoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */; };
 		39E98B3E22797D1B009911F1 /* PublicLinkTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E98B3D22797D1B009911F1 /* PublicLinkTableViewController.swift */; };
@@ -593,6 +593,7 @@
 		3913213722946E5E00EF88F4 /* FileListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListTableViewController.swift; sourceTree = "<group>"; };
 		3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableViewController.swift; sourceTree = "<group>"; };
 		392557FD2278703300E83F60 /* UISearchBar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchBar+Extension.swift"; sourceTree = "<group>"; };
+		3931206A2326451900E8DFBA /* Themes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Themes.plist; path = ownCloud/Resources/Theming/Themes.plist; sourceTree = SOURCE_ROOT; };
 		394804D9225CBDBA00AA8183 /* BreadCrumbTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadCrumbTableViewController.swift; sourceTree = "<group>"; };
 		39607CBB2225D480007B386D /* UITableViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewController+Extension.swift"; sourceTree = "<group>"; };
 		396BE4C22288A84C00B254A9 /* PendingSharesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingSharesTableViewController.swift; sourceTree = "<group>"; };
@@ -603,20 +604,19 @@
 		3998F5D2224102FE00B66713 /* UITableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		3998F5D422411EDF00B66713 /* BorderedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedLabel.swift; sourceTree = "<group>"; };
 		3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCCertificate+Extension.swift"; sourceTree = "<group>"; };
-		39C31F9422F1A52A0023923D /* Themes.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Themes.plist; path = Theming/Themes.plist; sourceTree = "<group>"; };
-		39C31F9622F1C52C0023923D /* ThemeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeProvider.swift; sourceTree = "<group>"; };
-		39DE75D322F9B6AB0064C1E2 /* bookmark-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bookmark-icon.png"; sourceTree = "<group>"; };
-		39DE75D922F9B6AB0064C1E2 /* bookmark-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bookmark-logo.png"; sourceTree = "<group>"; };
 		399DD7C122A691BC00B45EB2 /* UnshareAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnshareAction.swift; sourceTree = "<group>"; };
 		39A5135222608836002CF1AA /* OCShare+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCShare+Extension.swift"; sourceTree = "<group>"; };
 		39A513AB22674E56002CF1AA /* OCCore+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCCore+Extension.swift"; sourceTree = "<group>"; };
 		39AFC3D0225E72FB00A6D3AE /* GroupSharingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSharingTableViewController.swift; sourceTree = "<group>"; };
 		39AFC3D7225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSharingEditTableViewController.swift; sourceTree = "<group>"; };
 		39B289A7226F1EE000BE0E11 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		39C31F9622F1C52C0023923D /* ThemeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeProvider.swift; sourceTree = "<group>"; };
 		39CC8AE5228C12100020253B /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		39CC8B00228C8A950020253B /* MediaUploadSettingsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaUploadSettingsSection.swift; sourceTree = "<group>"; };
 		39CC8B36228D5B890020253B /* ShareClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareClientItemCell.swift; sourceTree = "<group>"; };
 		39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
+		39DE75D322F9B6AB0064C1E2 /* bookmark-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bookmark-icon.png"; sourceTree = "<group>"; };
+		39DE75D922F9B6AB0064C1E2 /* bookmark-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bookmark-logo.png"; sourceTree = "<group>"; };
 		39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableHeaderView.swift; sourceTree = "<group>"; };
 		39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeRoundedButton.swift; sourceTree = "<group>"; };
 		39E98B3D22797D1B009911F1 /* PublicLinkTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicLinkTableViewController.swift; sourceTree = "<group>"; };
@@ -1106,13 +1106,6 @@
 			path = Viewer;
 			sourceTree = "<group>";
 		};
-		39C31F8E22F1A4F50023923D /* Theming */ = {
-			isa = PBXGroup;
-			children = (
-				39C31F9422F1A52A0023923D /* Themes.plist */,
-			);
-			name = Theming;
-		};
 		3907CA6F225F5355001CFBD4 /* Sharing */ = {
 			isa = PBXGroup;
 			children = (
@@ -1136,6 +1129,14 @@
 			);
 			path = Library;
 			sourceTree = "<group>";
+		};
+		39C31F8E22F1A4F50023923D /* Theming */ = {
+			isa = PBXGroup;
+			children = (
+				3931206A2326451900E8DFBA /* Themes.plist */,
+			);
+			name = Theming;
+			sourceTree = "<unknown>";
 		};
 		59056CAB22414F3C00A18A22 /* ownCloudScreenshotsTests */ = {
 			isa = PBXGroup;
@@ -2104,11 +2105,11 @@
 				DC9BFBB320A19AF4007064B5 /* doc in Resources */,
 				233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */,
 				233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */,
+				393120702326451900E8DFBA /* Themes.plist in Resources */,
 				DCE5E8A72080D781005F60CE /* x-office-spreadsheet.tvg in Resources */,
 				DCE5E8AA2080D781005F60CE /* owncloud-logo.tvg in Resources */,
 				595E2CA821EE501400F0E95D /* PropfindResponseNewFolder.xml in Resources */,
 				DC9BFBB920A1AF2C007064B5 /* icon-locked.tvg in Resources */,
-				39C31F9522F1A52A0023923D /* Themes.plist in Resources */,
 				59B09E6521AD61DD007827B8 /* test_certificate.cer in Resources */,
 				DCE5E8B32080D781005F60CE /* text-vcard.tvg in Resources */,
 				595E2CA721EE4FC400F0E95D /* PropfindResponse.xml in Resources */,
