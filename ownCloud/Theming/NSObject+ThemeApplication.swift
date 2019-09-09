@@ -113,13 +113,6 @@ extension NSObject {
 
 		if let searchBar = self as? UISearchBar {
 			searchBar.tintColor = collection.searchbarColors.tintColor
-			searchBar.searchTextField.backgroundColor = collection.searchbarColors.backgroundColor
-			searchBar.searchTextField.textColor = collection.searchbarColors.labelColor
-			searchBar.searchTextField.tintColor = collection.searchbarColors.tintColor
-			if let glassIconView = searchBar.searchTextField.leftView as? UIImageView {
-				glassIconView.image?.withRenderingMode(.alwaysTemplate)
-				glassIconView.tintColor = collection.searchbarColors.tintColor
-			}
 			searchBar.barStyle = collection.barStyle
 		}
 
