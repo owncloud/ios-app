@@ -25,12 +25,6 @@ class CopyAction : Action {
 	override class var name : String? { return "Copy".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
 
-	// MARK: - Extension matching
-	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		// Examine items in context
-		return .middle
-	}
-
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
@@ -40,8 +34,7 @@ class CopyAction : Action {
 
 		let items = context.items
 
-		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Copy here", completion: { (selectedDirectory) in
-
+		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Copy here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory) in
 			if let targetDirectory = selectedDirectory {
 				items.forEach({ (item) in
 
@@ -62,5 +55,13 @@ class CopyAction : Action {
 
 		let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)
 		viewController.present(pickerNavigationController, animated: true)
+	}
+
+	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+		if location == .moreItem {
+			return UIImage(named: "copy-file")
+		}
+
+		return nil
 	}
 }

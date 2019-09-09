@@ -28,8 +28,9 @@ public enum SortMethod: Int {
 	case type = 2
 	case size = 3
 	case date = 4
+	case shared = 5
 
-	static var all: [SortMethod] = [alphabeticallyAscendant, alphabeticallyDescendant, type, size, date]
+	static var all: [SortMethod] = [alphabeticallyAscendant, alphabeticallyDescendant, type, size, date, shared]
 
 	func localizedName() -> String {
 		var name = ""
@@ -45,6 +46,8 @@ public enum SortMethod: Int {
 			name = "size".localized
 		case .date:
 			name = "date".localized
+		case .shared:
+			name = "shared".localized
 		}
 
 		return name
@@ -108,6 +111,21 @@ public enum SortMethod: Int {
 				}
 
 				return leftMimeType!.compare(rightMimeType!)
+			}
+		case .shared:
+			comparator = { (left, right) in
+				guard let leftItem = left as? OCItem else { return .orderedSame }
+				guard let rightItem = right as? OCItem else { return .orderedSame }
+
+				let leftShared = leftItem.isSharedWithUser || leftItem.isShared
+				let rightShared = rightItem.isSharedWithUser || rightItem.isShared
+
+				if leftShared == rightShared {
+					return .orderedSame
+				} else if leftShared {
+					return .orderedAscending
+				}
+				return .orderedDescending
 			}
 		case .date:
 			comparator = { (left, right) in

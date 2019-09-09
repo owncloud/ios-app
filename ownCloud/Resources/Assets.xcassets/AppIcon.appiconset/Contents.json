@@ -61,6 +61,18 @@
       "scale" : "3x"
     },
     {
+      "size" : "20x20",
+      "idiom" : "ipad",
+      "filename" : "ownCloud-ios-20.png",
+      "scale" : "1x"
+    },
+    {
+      "size" : "20x20",
+      "idiom" : "ipad",
+      "filename" : "ownCloud-ios-20@2x.png",
+      "scale" : "2x"
+    },
+    {
       "size" : "29x29",
       "idiom" : "ipad",
       "filename" : "icon-29.png",

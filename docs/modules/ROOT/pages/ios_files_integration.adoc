@@ -1,0 +1,42 @@
+= iOS App and iOS Files App Integration and 3rd Party Apps
+:toc: right
+:keywords: Files App, iOS, iPhone, iPad, ownCloud
+:description: This guide steps you through ownCloud's Mobile App for iOS’s integration with the iOS Files App.
+
+== Work With Your ownCloud Data in iOS Files App
+
+The Mobile App for iOS integrates with the iOS Files App. 
+When enabled, you can open, edit, save, and delete files and folders.
+However, the functionality needs to first be enabled.
+To do so, click btn:[Browse], then btn:[Edit].
+Next, in the list of apps under Locations, enable the ownCloud app for your account.
+
+[NOTE]
+====
+In future versions, it is expected that the following functionality will also be supported:
+
+* Share (UI)
+* Offline (UI)
+* Favourites
+* Tags
+====
+
+== Share From Other Apps (via iOS Files App)
+
+When the iOS app is installed and at least one account is properly configured, files on your iOS device can be shared with your ownCloud server. 
+To do so, first enable the location from the Locations list (step through how to do this).
+After that, when sharing a file, first click btn:[Save to Files], choose a location to store the file, and click btn:[Add].
+These steps are shown in the three images below.
+
+[cols=",,"]
+|===
+a|
+.Enable the ownCloud app as an iOS Files app location
+image:enable-location.png[Enable the ownCloud app as an iOS Files app location]
+a|
+.Pick a file to "Save to Files"
+image:share-files-from-other-apps-step-1.png[Pick a file to Save to Files]
+a|
+.Pick the location to save the file and click "Add"
+image:share-files-from-other-apps-step-2.png[Pick the location to save the file and click Add]
+|===

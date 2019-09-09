@@ -84,7 +84,7 @@ class VendorServices : NSObject {
 			let appName = OCAppIdentity.shared.appName else {
 				return
 		}
-		self.sendMail(to: feedbackEmail, subject: "\(appName) \(buildType) (\(self.appVersion) (\(self.appBuildNumber)))", message: nil, from: viewController)
+		self.sendMail(to: feedbackEmail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(appName)", message: nil, from: viewController)
 	}
 
 	func sendMail(to: String?, subject: String?, message: String?, from viewController: UIViewController) {
@@ -130,6 +130,7 @@ extension OCClassSettingsIdentifier {
 extension OCClassSettingsKey {
 	static let showBetaWarning = OCClassSettingsKey("show-beta-warning")
 	static let isBetaBuild = OCClassSettingsKey("is-beta-build")
+	static let enableUIAnimations = OCClassSettingsKey("enable-ui-animations")
 }
 
 extension VendorServices : OCClassSettingsSupport {
@@ -137,7 +138,7 @@ extension VendorServices : OCClassSettingsSupport {
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
-			return [ .isBetaBuild : false, .showBetaWarning : false ]
+			return [ .isBetaBuild : false, .showBetaWarning : false, .enableUIAnimations: true ]
 		}
 
 		return nil

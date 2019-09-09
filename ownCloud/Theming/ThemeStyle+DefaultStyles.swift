@@ -27,15 +27,15 @@ extension UIColor {
 
 extension ThemeStyle {
 	static public var ownCloudLight : ThemeStyle {
-		return (ThemeStyle(identifier: "com.owncloud.light", localizedName: "ownCloud Light".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .light))
+		return (ThemeStyle(identifier: "com.owncloud.light", localizedName: "Light".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .light))
 	}
 
 	static public var ownCloudDark : ThemeStyle {
-		return (ThemeStyle(identifier: "com.owncloud.dark", localizedName: "ownCloud Dark".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .dark))
+		return (ThemeStyle(identifier: "com.owncloud.dark", localizedName: "Dark".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .dark))
 	}
 
 	static public var ownCloudClassic : ThemeStyle {
-		return (ThemeStyle(identifier: "com.owncloud.classic", localizedName: "ownCloud Classic".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .contrast))
+		return (ThemeStyle(identifier: "com.owncloud.classic", localizedName: "Classic".localized, lightColor: .ownCloudLightColor, darkColor: .ownCloudDarkColor, themeStyle: .contrast))
 	}
 }
 

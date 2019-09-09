@@ -53,13 +53,19 @@ class BreadCrumbTableViewController: StaticTableViewController {
 		self.preferredContentSize = CGSize(width: contentWidth, height: contentHeight)
 
 		for (_, currentPath) in pathComp.enumerated().reversed() {
-			let stackIndex = stackViewControllers.count - currentViewContollerIndex
+			var stackIndex = stackViewControllers.count - currentViewContollerIndex
+			if stackIndex < 0 {
+				stackIndex = 0
+			}
 			var pathTitle = currentPath
-			if currentPath == "/", let shortName = self.bookmarkShortName {
+			if currentPath.isRootPath, let shortName = self.bookmarkShortName {
 				pathTitle = shortName
 			}
-			let aRow = StaticTableViewRow(rowWithAction: { (_, _) in
-				self.parentNavigationController?.popToViewController((stackViewControllers[stackIndex]), animated: true)
+			let aRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+				guard let self = self else { return }
+				if stackViewControllers.indices.contains(stackIndex) {
+					self.parentNavigationController?.popToViewController((stackViewControllers[stackIndex]), animated: true)
+				}
 				self.dismiss(animated: false, completion: nil)
 			}, title: pathTitle, image: Theme.shared.image(for: "folder", size: CGSize(width: imageWidth, height: imageHeight)))
 

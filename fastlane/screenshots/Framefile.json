@@ -1,0 +1,61 @@
+{
+  "default": {
+
+    "title": {
+      "fonts": [
+        {
+          "font": "./fonts/OpenSans-Regular.ttf",
+          "supported": ["en"]
+        }
+      ],
+      "color": "#1d2d44"
+    },
+    "keyword": {
+      "fonts": [
+        {
+          "font": "./fonts/OpenSans-Semibold.ttf",
+          "supported": ["en"]
+        }
+      ],
+      "color": "#ffffff"
+    },
+    "background": "./background.jpg",
+    "padding": "50x40",
+    "show_complete_frame": true,
+    "stack_title" : true,
+    "title_below_image": false,
+    "frame": "WHITE"
+  },
+
+
+  "data": [
+    {
+      "filter": "10_ios_accounts_welcome_demo",
+        "font_scale_factor" : 0.06
+    },
+    {
+      "filter": "11_ios_accounts_list_demo",
+        "font_scale_factor" : 0.06
+    },
+    {
+      "filter": "20_ios_files_list_demo",
+        "font_scale_factor" : 0.06
+    },
+    {
+      "filter": "21_ios_files_actions_demo",
+        "font_scale_factor" : 0.06
+    },
+    {
+      "filter": "22_ios_files_preview_pdf_demo",
+        "font_scale_factor" : 0.06
+    },
+    {
+      "filter": "40_ios_quick_access_demo",
+        "font_scale_factor" : 0.06
+    },
+    {
+      "filter": "60_ios_settings_demo",
+        "font_scale_factor" : 0.06
+    }
+  ]
+}

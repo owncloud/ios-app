@@ -6,33 +6,31 @@ NOTE: To compile the code you need Xcode 10.2, iOS11, cocoa pods and swiftlint.
 ### 1. Fork and download ios-app/master repository:
 
 * Navigate to https://github.com/owncloud/ios-app, click fork.
-* Clone your new repo:```git clone git@github.com:YOURGITHUBNAME/ios-app.git```
+* Clone your new repo: ```git clone git@github.com:YOURGITHUBNAME/ios-app.git```
 * Move to the project folder with ```cd ios-app```
-* Checkout remote develop branch:```git checkout -b master remotes/origin/master```
+* Checkout remote develop branch: ```git checkout -b master remotes/origin/master```
 * Pull changes from your develop branch: ```git pull origin master```
 * Make official ownCloud repo known as upstream: ```git remote add upstream git@github.com:owncloud/ios-app.git```
 * Make sure to get the latest changes from official ios-issues/master branch: ```git pull upstream master```
 
-### 2. Set up in your local
 
-## [Cocoa pods][cocoapods]
-
-## [Swiftlint][swiftlint]
-
-## [EarlGrey][earlGrey]
-
-[cocoapods]:https://cocoapods.org/
-[swiftlint]:https://github.com/realm/SwiftLint/blob/master/README.md
-[earlGrey]:https://github.com/google/EarlGrey/blob/master/docs/install-and-run.md#cocoapods-installation
-
-
-### 3. Add the ownCloud iOS SDK:
+### 2. Add the ownCloud iOS SDK:
 
 NOTE: This will connect with our ownCloud iOS Library repository at ```https://github.com/owncloud/ios-sdk```.
 
 * Inside the folder ios:
-  - Init the library submodule: "git submodule init"
-  - Update the library submodule: "git submodule update"
+  - Init the library submodule: ```git submodule init```
+  - Update the library submodule: ```git submodule update```
+
+### 3. Set up in your local
+
+* [Cocoa pods][cocoapods]
+* [Swiftlint][swiftlint]
+* [EarlGrey][earlGrey]
+
+[cocoapods]:https://cocoapods.org/
+[swiftlint]:https://github.com/realm/SwiftLint/blob/master/README.md
+[earlGrey]:https://github.com/google/EarlGrey/blob/master/docs/install-and-run.md#cocoapods-installation
 
 ### 4. Create your own certificates
 
@@ -52,9 +50,9 @@ NOTE: You must sign the [Contributor Agreement][1] or contribute your code under
 * Remove your own App Id from the project and set again the ownCloud ones:
   - Main app: com.owncloud.ios-app
 
-* Commit your changes locally: "git commit -a"
-* Push your changes to your Github repo: "git push"
-* Browse to https://github.com/YOURGITHUBNAME/ios/pulls and issue pull request
+* Commit your changes locally: ```git commit -a```
+* Push your changes to your Github repo: ```git push```
+* Browse to ```https://github.com/YOURGITHUBNAME/ios/pulls``` and issue pull request
 * Click "Edit" and set "base:master"
 * Again, click "Edit" and set "compare:master"
 * Enter description and send pull request.

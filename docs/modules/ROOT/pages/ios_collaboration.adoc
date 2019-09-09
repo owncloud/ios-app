@@ -1,0 +1,83 @@
+= Collaboration and Links
+:toc: right
+
+This section shows how to collaborate with other users and how to work with links.
+
+== Collaborate With Other Users on Files and Folders
+
+image:31_Collab.png[Collaborate With Other Users on Folders and Files]
+
+The Mobile App for iOS supports the following collaboration functionality:
+
+* Adding users and grant permissions
+* Adding groups and grant permissions
+* Changing permissions
+* Deleting collaborators
+
+== Grant Access With Links
+
+Just as with the web interface, the iOS app lets you grant access to both files and folders with links.
+Specifically, you can do the following:
+
+* xref:copy-private-links[Copy private links]
+* xref:create-public-links[Create public links]
+* xref:set-passwords-and-expiration-dates[Set passwords and expiration dates]
+* xref:send-public-link-urls-to-other-apps[Send public link URLs to other apps (mail, messenger)]
+* xref:delete-public-links[Delete public links]
+
+=== Copy Private Links
+
+To copy a private link to a file or folder, click the more icon on the far right-hand side of the file, and then click btn:[Links].
+As in the example below, you will then see the private link to the file.
+Clicking btn:[copy] on the far right-hand side will copy the link to the iOS clipboard.
+
+=== Create Public Links
+
+To create public links to a file or folder, click the more icon on the far right-hand side of the file, and then click btn:[Links].
+Then, under Public Links, click btn:[Create Public Link] in the Public Links section.
+You will then see the links for the option, as in the image below.
+
+As with the web interface, you can set:
+
+* A link name
+* Link permissions
+* xref:set-passwords-and-expiration-dates[A link password and expiration date]
+
+image:manage-public-link-settings.png[Manage public links in ownCloud's Mobile App for iOS]
+
+TIP: To see more details about each option, click the info icon in the bottom right-hand corner.
+
+==== Set Passwords and Expiration Dates
+
+image:public-link-set-password.png[Set a password for a public link in ownCloud's Mobile App for iOS]
+
+To set a password on a public link, under "_Options_", enable btn:[Password].
+Then, type a password in the field that appears below the Password option.
+
+image:public-link-set-expiration-date.png[Set an expiration date for a public link in ownCloud's Mobile App for iOS]
+
+To set an expiration date on a public link, under "_Options_", enable btn:[Expiration date].
+Then, pick the date that the link should expire with the date picker that appears below the Expiration date option.
+
+=== Send Public Link URLs to Other Apps
+
+To share a public link URL via other apps: 
+
+. Open the Public Link's details.
+. Click the share button at the bottom left-hand corner, which opens the iOS Share Sheet. 
+. Share the link through the app of your choice.
+
+=== Delete Public Links
+
+There are two ways to delete a public link.
+
+. When viewing the list of links for a file or folder, swipe left on the link that you want to delete, and click btn:[Delete].
+  image:swipe-and-delete-public-link.png[]
+. When viewing the Public Link, click btn:[Delete] at the bottom of the page, under btn:[Copy Public Link].
+  image:delete-public-link.png[Delete a Public Link in ownCloud’s iOS app, by clicking Delete at the bottom of the Public Link details page]
+
+=== View Public Links
+
+The quickest way to view Public Links is by navigating to menu:Quick Access[Shares > Public Links].
+There, you will see a list of files and folders that have Public Links. 
+For any of the files and folders, click the More icon, where you will see the number of links for that file or folder.

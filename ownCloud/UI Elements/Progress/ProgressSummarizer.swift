@@ -24,6 +24,14 @@ struct ProgressSummary : Equatable {
 	var progress : Double
 	var message : String?
 	var progressCount : Int
+
+	func update(progressView: UIProgressView) {
+		if indeterminate {
+			progressView.progress = 1.0
+		} else {
+			progressView.progress = Float(progress)
+		}
+	}
 }
 
 typealias ProgressSummarizerNotificationBlock =  (_ summarizer : ProgressSummarizer, _ summary : ProgressSummary) -> Void
@@ -86,7 +94,9 @@ class ProgressSummarizer: NSObject {
 	// MARK: - Start/Stop tracking of progress objects
 	func startTracking(progress: Progress) {
 		OCSynchronized(self) {
-			if !trackedProgress.contains(progress) {
+			Log.debug("Start tracking progress \(String(describing: progress))")
+
+			if !trackedProgress.contains(progress), !progress.isFinished, !progress.isCancelled {
 				trackedProgress.insert(progress, at: 0)
 
 				if progress.eventType != .none {
@@ -102,6 +112,7 @@ class ProgressSummarizer: NSObject {
 
 				progress.addObserver(self, forKeyPath: "fractionCompleted", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 				progress.addObserver(self, forKeyPath: "isFinished", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
+				progress.addObserver(self, forKeyPath: "isCancelled", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 				progress.addObserver(self, forKeyPath: "isIndeterminate", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 				progress.addObserver(self, forKeyPath: "localizedDescription", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 
@@ -112,9 +123,12 @@ class ProgressSummarizer: NSObject {
 
 	func stopTracking(progress: Progress, remove: Bool = true) {
 		OCSynchronized(self) {
+			Log.debug("Stop tracking progress \(String(describing: progress)) (remove=\(remove))")
+
 			if let trackedProgressIndex = trackedProgress.index(of: progress) {
 				progress.removeObserver(self, forKeyPath: "fractionCompleted", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "isFinished", context: observerContext)
+				progress.removeObserver(self, forKeyPath: "isCancelled", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "isIndeterminate", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "localizedDescription", context: observerContext)
 
@@ -138,6 +152,16 @@ class ProgressSummarizer: NSObject {
 
 					self.setNeedsUpdate()
 				}
+			}
+		}
+	}
+
+	func reset() {
+		OCSynchronized(self) {
+			let existingTrackedProgress = trackedProgress
+
+			for progress in existingTrackedProgress {
+				self.stopTracking(progress: progress)
 			}
 		}
 	}
@@ -221,6 +245,8 @@ class ProgressSummarizer: NSObject {
 
 	func pushFallbackSummary(summary : ProgressSummary) {
 		OCSynchronized(self) {
+			Log.debug("Push fallback summary \(String(describing: summary))")
+
 			fallbackSummaries.append(summary)
 
 			if fallbackSummaries.count == 1 {
@@ -231,6 +257,8 @@ class ProgressSummarizer: NSObject {
 
 	func popFallbackSummary(summary : ProgressSummary) {
 		OCSynchronized(self) {
+			Log.debug("Pop fallback summary \(String(describing: summary))")
+
 			if let index = fallbackSummaries.index(of: summary) {
 				fallbackSummaries.remove(at: index)
 
@@ -265,6 +293,8 @@ class ProgressSummarizer: NSObject {
 
 	func pushPrioritySummary(summary : ProgressSummary) {
 		OCSynchronized(self) {
+			Log.debug("Push priority summary \(String(describing: summary))")
+
 			prioritySummaries.append(summary)
 
 			self.prioritySummary = summary
@@ -273,6 +303,8 @@ class ProgressSummarizer: NSObject {
 
 	func popPrioritySummary(summary : ProgressSummary) {
 		OCSynchronized(self) {
+			Log.debug("Pop priority summary \(String(describing: summary))")
+
 			if let index = prioritySummaries.index(of: summary) {
 				prioritySummaries.remove(at: index)
 
@@ -324,7 +356,7 @@ class ProgressSummarizer: NSObject {
 							summary.indeterminate = true
 						}
 
-						if progress.isFinished {
+						if progress.isFinished || progress.isCancelled {
 							if completedProgress == nil {
 								completedProgress = []
 							}
@@ -341,7 +373,7 @@ class ProgressSummarizer: NSObject {
 								let totalSameTypeCount = trackedProgressByTypeCount[progress.eventType] ?? sameTypeCount
 
 								for progress in progressOfSameType {
-									if !progress.isIndeterminate, progress.isFinished {
+									if !progress.isIndeterminate, (progress.isFinished || progress.isCancelled) {
 										sameTypeCount -= 1
 									}
 								}
@@ -349,28 +381,28 @@ class ProgressSummarizer: NSObject {
 								if sameTypeCount > 1 {
 									switch progress.eventType {
 										case .createFolder:
-											multiMessage = NSString(format:"Creating %ld of %ld folders…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+											multiMessage = NSString(format:"Creating %ld folders…".localized as NSString, sameTypeCount) as String
 
 										case .move:
-											multiMessage = NSString(format:"Moving %ld of %ld items…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+											multiMessage = NSString(format:"Moving %ld items…".localized as NSString, sameTypeCount) as String
 
 										case .copy:
-											multiMessage = NSString(format:"Copying %ld of %ld items…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+											multiMessage = NSString(format:"Copying %ld items…".localized as NSString, sameTypeCount) as String
 
 										case .delete:
-											multiMessage = NSString(format:"Deleting %ld of %ld items…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+											multiMessage = NSString(format:"Deleting %ld items…".localized as NSString, sameTypeCount) as String
 
 										case .upload:
-											multiMessage = NSString(format:"Uploading %ld of %ld files…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+											multiMessage = NSString(format:"Uploading %ld files…".localized as NSString, sameTypeCount) as String
 
 										case .download:
-											multiMessage = NSString(format:"Downloading %ld of %ld files…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+											multiMessage = NSString(format:"Downloading %ld files…".localized as NSString, sameTypeCount) as String
 
 										case .update:
-											multiMessage = NSString(format:"Updating %ld of %ld items…".localized as NSString, sameTypeCount, totalSameTypeCount) as String
+											multiMessage = NSString(format:"Updating %ld items…".localized as NSString, sameTypeCount) as String
 
 										case .createShare, .updateShare, .deleteShare, .decideOnShare: break
-										case .none, .retrieveThumbnail, .retrieveItemList, .retrieveShares, .issueResponse: break
+										case .none, .retrieveThumbnail, .retrieveItemList, .retrieveShares, .issueResponse, .filterFiles: break
 									}
 
 									if multiMessage != nil {
@@ -381,7 +413,7 @@ class ProgressSummarizer: NSObject {
 										summary.message = multiMessage
 
 										for progress in progressOfSameType {
-											if !progress.isIndeterminate, !progress.isFinished {
+											if !progress.isIndeterminate, !progress.isFinished, !progress.isCancelled {
 												multiProgress += (progress.fractionCompleted / Double(totalSameTypeCount))
 											}
 										}

@@ -1,7 +1,7 @@
 # Security
 
 ## Introduction
-This document provides an overview over security considerations and features in the [ownCloud iOS SDK (2018)](https://github.com/owncloud/ios-sdk) and [ownCloud iOS App (2018)](https://github.com/owncloud/ios-app).
+This document provides an overview over security considerations and features in the new [ownCloud iOS SDK](https://github.com/owncloud/ios-sdk) and new [ownCloud iOS App](https://github.com/owncloud/ios-app).
 
 ## Authentication
 ### API
@@ -26,7 +26,7 @@ By default, all detected methods are considered and OAuth2 ranks higher than Bas
 Filtering and ranking can be customized by MDM Configuration. This, for example, allows making OAuth2 the only possible Authentication Method, so no credentials need to be stored on the device.
 
 ### OAuth2 implementation
-The OAuth2 implementation uses [`SFAuthenticationSession`](https://developer.apple.com/documentation/safariservices/sfauthenticationsession), which is described as best practice by [RFC 8252](https://tools.ietf.org/html/rfc8252#appendix-B.1). Benefits of using `SFAuthenticationSession` include:
+The OAuth2 implementation uses [`SFAuthenticationSession`](https://developer.apple.com/documentation/safariservices/sfauthenticationsession) - which is described as best practice by [RFC 8252](https://tools.ietf.org/html/rfc8252#appendix-B.1) - when running under iOS 11 and earlier. Under iOS 12, the OAuth2 implementation uses [`ASWebAuthenticationSession`](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession), which is the successor of `SFAuthenticationSession`. Benefits of using these APIs include:
 - privilege separation: web content is run in a separate process
 - trustworthiness: apps can't inject code into or access the contents of the web view
 - convenience for the user: cookies from Safari are available to the web content inside the session
@@ -37,7 +37,7 @@ The OAuth2 implementation uses [`SFAuthenticationSession`](https://developer.app
 Using MDM Configuration, server URLs can be pre-filled or "hard-coded" as the only allowed server URL.
 
 ### Redirects
-Redirects are not followed silently. Instead, they are reported to the user and must be explicitly approved.
+Redirects during login are not followed silently. Instead, they are reported to the user and must be explicitly approved.
 
 ### SSL/TLS certificates
 When adding servers, users have the opportunity to view a detailed summary of the server's SSL/TLS certificate before they are prompted for credentials or authentication via OAuth2.
@@ -83,4 +83,6 @@ The build script that created the [OpenSSL binaries](https://github.com/owncloud
 (OpenSSL is used solely to provide detailed summaries of SSL/TLS certificates - functionality that iOS is currently missing.)
 
 ### Logging
-When logging information, parts of the log message can be tagged as private. If Log Privacy is turned on (it will be by default), these parts will be replaced with `«private»` before the log message is written.
+When logging information, parts of the log message can be tagged as private. If Log Privacy is turned on, these parts will be - before the log message is written - either replaced with `«private»`  or a trimmed version that doesn't contain privacy-sensitive information.
+
+An example for the latter would be an `NSError` object's error message containing the names of the item it is about. If masked, only the error's error domain and error code are written to the log, but not the error message.

@@ -111,12 +111,20 @@
 "Not now" = "Not now";
 "Upload file" = "Upload file";
 "Upload files" = "Upload files";
-"Ignore" = "Ignore";
-"Authorization failed" = "Authorization failed";
-"The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+
 "No matches" = "No matches";
-"There is no results for this search" = "There is no results for this search";
+"There are no results for this search term" = "There are no results for this search term";
 "Status" = "Status";
+
+"Authorization failed" = "Authorization failed";
+"The account has been disabled." = "The account has been disabled.";
+"The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+"Access denied" = "Access denied";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "The connection's access token has expired or become invalid. Sign in again to re-gain access.";
+"No authentication data has been found for this connection." = "No authentication data has been found for this connection.";
+"Sign in" = "Sign in";
+"Ignore" = "Ignore";
+"Continue offline" = "Continue offline";
 
 /* Server List*/
 "Cancel" = "Cancel";
@@ -157,15 +165,16 @@
 "Acknowledgements" = "Acknowledgements";
 "Video upload path" = "Video upload path";
 "Photo upload path" = "Photo upload path";
-"Always" = "Always";
+"Immediately" = "Immediately";
 "After 1 minute" = "After 1 minute";
 "After 5 minutes" = "After 5 minutes";
 "After 30 minutes" = "After 30 minutes";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker.";
 "Please configure an email account" = "Please configure an email account";
 "You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
 "Do you want to open the following URL?" = "Do you want to open the following URL?";
 
-"%@ %@ version %@ build %@ (%@)" = "%@ %@ version %@ build %@ (%@)";
+"%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@ %@ version %@ build %@ (app: %@, sdk: %@)";
 "beta" = "beta";
 "release" = "release";
 
@@ -173,11 +182,17 @@
 /* User Interface Settings */
 "Theme" = "Theme";
 "User Interface" = "User Interface";
-"ownCloud Dark" = "ownCloud Dark";
-"ownCloud Light" = "ownCloud Light";
-"ownCloud Classic" = "ownCloud Classic";
+"Dark" = "Dark";
+"Light" = "Light";
+"Classic" = "Classic";
 
 /* Log settings */
+"Log Files" = "Log Files";
+"Browse log files" = "Browse log files";
+"Share" = "Share";
+"Delete all log files?" = "Delete all log files?";
+"Delete all" = "Delete all";
+
 "Log Level" = "Log Level";
 "Log Destinations" = "Log Destinations";
 "Privacy" = "Privacy";
@@ -195,6 +210,10 @@
 "Share log file" = "Share log file";
 "Reset log file" = "Reset log file";
 
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility.";
+
+"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.";
+
 "Mask private data" = "Mask private data";
 "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.";
 
@@ -204,6 +223,10 @@
 
 "Really reset log file?" = "Really reset log file?";
 "This action can't be undone." = "This action can't be undone.";
+
+/* Display settings */
+"Display settings" = "Display settings";
+"Show hidden files and folders" = "Show hidden files and folders";
 
 /* Passcode Messages */
 
@@ -231,7 +254,7 @@
 "File name cannot contain / or \\" = "File name cannot contain / or \\";
 "New Folder" = "New Folder";
 "Folder name" = "Folder name";
-"Rename" =" Rename";
+"Rename" ="Rename";
 "Create folder" =" Create folder";
 "Duplicate" = "Duplicate";
 "Move" = "Move";
@@ -242,6 +265,8 @@
 " couldn't download file(s)" = " couldn't download file(s)";
 "Actions" = "Actions";
 "copy" = "copy";
+
+"Preparing…" = "Preparing…";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";
@@ -261,6 +286,8 @@
 "%@ of %@" = "%@ of %@";
 "Invalid Page" = "Invalid Page";
 "The entered page number doesn't exist" = "The entered page number doesn't exist";
+"Search PDF" = "Search PDF";
+"Outline" = "Outline";
 
 /* Photo Upload */
 "Upload" = "Upload";
@@ -270,15 +297,119 @@
 "Albums" = "Albums";
 "Importing from photo library" = "Importing from photo library";
 
+/* Sharing */
+"Searching Shares…" = "Searching Shares…";
+"Recipient" = "Recipient";
+"Recipients" = "Recipients";
+"Public Link" = "Public Link";
+"Public Links" = "Public Links";
+"Shared by %@" = "Shared by %@";
+"Invite Recipient" = "Invite Recipient";
+"Recipients" = "Recipients";
+"Add email or name" = "Add email or name";
+"Users" = "Users";
+"Groups" = "Groups";
+"Start typing to search users, groups and remote users." = "Start typing to search users, groups and remote users.";
+"(Group)" = "(Group)";
+"Adding User to Share failed" = "Adding User to Share failed";
+"Permissions" = "Permissions";
+"Invited: %@" = "Invited: %@";
+"Created: %@" = "Created: %@";
+"Allows the users you share with to re-share" = "Allows the users you share with to re-share";
+"Allows the users you share with to edit your shared files, and to collaborate" = "Allows the users you share with to edit your shared files, and to collaborate";
+"Allows the users you share with to create new files and add them to the share" = "Allows the users you share with to create new files and add them to the share";
+"Allows uploading a new version of a shared file and replacing it" = "Allows uploading a new version of a shared file and replacing it";
+"Allows the users you share with to delete shared files" = "Allows the users you share with to delete shared files";
+"Setting permission failed" = "Setting permission failed";
+"Shared with" = "Shared with";
+"Remove Recipient failed" = "Remove Recipient failed";
+"Remove Recipient" = "Remove Recipient";
+"Create" = "Create";
+"Change" = "Change";
+"Recipients can view or download contents." = "Recipients can view or download contents.";
+"Recipients can view, download, edit, delete and upload contents." = "Recipients can view, download, edit, delete and upload contents.";
+"Receive files from multiple recipients without revealing the contents of the folder." = "Receive files from multiple recipients without revealing the contents of the folder.";
+"Download / View" = "Download / View";
+"Download / View / Upload" = "Download / View / Upload";
+"Upload only (File Drop)" = "Upload only (File Drop)";
+"Creating public link failed" = "Creating public link failed";
+"Create Public Link" = "Create Public Link";
+"Links" = "Links";
+"Link" = "Link";
+"Setting expiration date failed" = "Setting expiration date failed";
+"Expiration date" = "Expiration date";
+"Copy Public Link" = "Copy Public Link";
+"Delete Public Link" = "Delete Public Link";
+"Deleting Public Link failed" = "Deleting Public Link failed";
+"Deleting password failed" = "Deleting password failed";
+"Setting password failed" = "Setting password failed";
+"Type to update password" = "Type to update password";
+"Cannot change permission" = "Cannot change permission";
+"Before you can set the permission\n%@,\n you must enter a password." = "Before you can set the permission\n%@,\n you must enter a password.";
+"Password Protected" = "Password Protected";
+"Pending Federated Invites" = "Pending Federated Invites";
+"Pending Invites" = "Pending Invites";
+"Shared with you" = "Shared with you";
+"Shared with others" = "Shared with others";
+"Shares" = "Shares";
+"Copy Private Link" = "Copy Private Link";
+"Only recipients can use this link. Use it as a permanent link to point to this resource" = "Only recipients can use this link. Use it as a permanent link to point to this resource";
+"Accept Share failed" = "Accept Share failed";
+"Decline Share failed" = "Decline Share failed";
+"Accept" = "Accept";
+"Decline" = "Decline";
+"Declined" = "Declined";
+"Decline Share" = "Decline Share";
+"Unshare" = "Unshare";
+"Unshare failed" = "Unshare failed";
+"Are you sure you want to unshare these items?" = "Are you sure you want to unshare these items?";
+"Are you sure you want to unshare this item?" = "Are you sure you want to unshare this item?";
+"Share" = "Share";
+"Read" = "Read";
+"Can Share" = "Can Share";
+"Can Edit" = "Can Edit";
+"Can Edit and Change" = "Can Edit and Change";
+"Can Create" = "Can Create";
+"Can Change" = "Can Change";
+"Can Delete" = "Can Delete";
+"Accept Invite %@" = "Accept Invite %@";
+"Decline Invite %@" = "Decline Invite %@";
+"Decline cannot be undone." = "Decline cannot be undone.";
+"Sharing" = "Sharing";
+"You" = "You";
+"Share this file" = "Share this file";
+"Share this folder" = "Share this folder";
+"shared" = "shared";
+"Owner" = "Owner";
+"Private Link" = "Private Link";
+
+/* Quick Access view */
+"Quick Access" = "Quick Access";
+"Collection" = "Collection";
+"Recents" = "Recents";
+"Favorites"= "Favorites";
+"Images" = "Images";
+"PDF Documents" = "PDF Documents";
+
 /* Photo upload settings */
-"Photo Upload" = "Photo Upload";
+"Media Upload" = "Media Upload";
 "Convert HEIC to JPEG" = "Convert HEIC to JPEG";
+"Convert videos to MP4" = "Convert videos to MP4";
 
 /* Progress summarizer */
-"Creating %ld of %ld folders…" = "Creating %ld of %ld folders…";
-"Moving %ld of %ld items…" = "Moving %ld of %ld items…";
-"Copying %ld of %ld items…" = "Copying %ld of %ld items…";
-"Deleting %ld of %ld items…" = "Deleting %ld of %ld items…";
-"Uploading %ld of %ld files…" = "Uploading %ld of %ld files…";
-"Downloading %ld of %ld files…" = "Downloading %ld of %ld files…";
-"Updating %ld of %ld items…" = "Updating %ld of %ld items…";
+"Creating %ld folders…" = "Creating %ld folders…";
+"Moving %ld items…" = "Moving %ld items…";
+"Copying %ld items…" = "Copying %ld items…";
+"Deleting %ld items…" = "Deleting %ld items…";
+"Uploading %ld files…" = "Uploading %ld files…";
+"Downloading %ld files…" = "Downloading %ld files…";
+"Updating %ld items…" = "Updating %ld items…";
+
+/* Offline storage management */
+"Free on %@" = "Free on %@";
+"unknown" = "unknown";
+"Offline files use" = "Offline files use";
+"Compacting of '%@' failed" = "Compacting of '%@' failed";
+"Delete Offline Copies" = "Delete Offline Copies";
+"Manage" = "Manage";
+"Storage" = "Storage";
