@@ -38,6 +38,7 @@
 		3913213822946E5E00EF88F4 /* FileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913213722946E5E00EF88F4 /* FileListTableViewController.swift */; };
 		3913214D22956D5700EF88F4 /* LibraryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */; };
 		392557FE2278703300E83F60 /* UISearchBar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392557FD2278703300E83F60 /* UISearchBar+Extension.swift */; };
+		3940C4F02326985B008227AE /* GetAccountIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3940C4EF2326985B008227AE /* GetAccountIntentHandler.swift */; };
 		394804DA225CBDBA00AA8183 /* BreadCrumbTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394804D9225CBDBA00AA8183 /* BreadCrumbTableViewController.swift */; };
 		394A0AED22EEE32C00603813 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A7138222E79C6700089423 /* IntentHandler.swift */; };
 		394A0AFD22EEFC2C00603813 /* ownCloudAppShared.h in Headers */ = {isa = PBXBuildFile; fileRef = 394A0AFB22EEFC2C00603813 /* ownCloudAppShared.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -667,6 +668,7 @@
 		3913213722946E5E00EF88F4 /* FileListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListTableViewController.swift; sourceTree = "<group>"; };
 		3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableViewController.swift; sourceTree = "<group>"; };
 		392557FD2278703300E83F60 /* UISearchBar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchBar+Extension.swift"; sourceTree = "<group>"; };
+		3940C4EF2326985B008227AE /* GetAccountIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetAccountIntentHandler.swift; sourceTree = "<group>"; };
 		394804D9225CBDBA00AA8183 /* BreadCrumbTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadCrumbTableViewController.swift; sourceTree = "<group>"; };
 		394A0AF922EEFC2C00603813 /* ownCloudAppShared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ownCloudAppShared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		394A0AFB22EEFC2C00603813 /* ownCloudAppShared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ownCloudAppShared.h; sourceTree = "<group>"; };
@@ -1272,6 +1274,7 @@
 			children = (
 				399A4C012317D1BA0027DDD6 /* Extensions */,
 				39A7138E22E79EF700089423 /* Intents.intentdefinition */,
+				3940C4EF2326985B008227AE /* GetAccountIntentHandler.swift */,
 				39A7139722E858E400089423 /* GetAccountsIntentHandler.swift */,
 				39F689AA22F018C100E63429 /* GetDirectoryListingIntentHandler.swift */,
 				395E16F922F03CAF00DE89A1 /* GetFileIntentHandler.swift */,
@@ -2824,6 +2827,7 @@
 				39F689AC22F0206900E63429 /* OCBookmark+Extension.swift in Sources */,
 				395E16FF22F172C900DE89A1 /* CreateFolderIntentHandler.swift in Sources */,
 				395E16FD22F06A7300DE89A1 /* SaveFileIntentHandler.swift in Sources */,
+				3940C4F02326985B008227AE /* GetAccountIntentHandler.swift in Sources */,
 				39A5C3A1231566D9009D9EE3 /* GetFileInfoIntentHandler.swift in Sources */,
 				394A0B0522EEFCA300603813 /* GetAccountsIntentHandler.swift in Sources */,
 				399A4C1023190ADF0027DDD6 /* PathExistsIntentHandler.swift in Sources */,

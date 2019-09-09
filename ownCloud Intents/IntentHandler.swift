@@ -24,6 +24,8 @@ class IntentHandler: INExtension {
 	override func handler(for intent: INIntent) -> Any {
 		if intent is GetAccountsIntent {
 			return GetAccountsIntentHandler()
+		} else if intent is GetAccountIntent {
+			return GetAccountIntentHandler()
 		} else if intent is GetDirectoryListingIntent {
 			return GetDirectoryListingIntentHandler()
 		} else if intent is GetFileIntent {

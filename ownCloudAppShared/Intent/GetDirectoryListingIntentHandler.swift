@@ -27,23 +27,6 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 	var core : OCCore?
 	var completion : GetDirectoryListingCompletionHandler?
 
-	public func resolveAccountUUID(for intent: GetDirectoryListingIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
-		if let accountUUID = intent.accountUUID {
-			completion(INStringResolutionResult.success(with: accountUUID))
-		} else {
-			completion(INStringResolutionResult.needsValue())
-		}
-	}
-/*
-	public func resolveAccount(for intent: GetDirectoryListingIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
-
-		if let account = intent.account {
-			completion(AccountResolutionResult.success(with: account))
-		} else {
-			completion(AccountResolutionResult.needsValue())
-		}
-	}
-*/
 	public func resolvePath(for intent: GetDirectoryListingIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 
 		if let path = intent.path {
@@ -54,13 +37,25 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 
 	}
 
+	public func provideAccountOptions(for intent: GetDirectoryListingIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
+		completion(OCBookmarkManager.shared.accountList, nil)
+	}
+
+	public func resolveAccount(for intent: GetDirectoryListingIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
+		if let account = intent.account {
+			completion(AccountResolutionResult.success(with: account))
+		} else {
+			completion(AccountResolutionResult.needsValue())
+		}
+	}
+
 	@available(iOS 12.0, *)
 	public func handle(intent: GetDirectoryListingIntent, completion: @escaping (GetDirectoryListingIntentResponse) -> Void) {
 
 		if AppLockHelper().isPassCodeEnabled {
 			completion(GetDirectoryListingIntentResponse(code: .authenticationRequired, userActivity: nil))
 		} else {
-			if let path = intent.path, let uuid = intent.accountUUID {
+			if let path = intent.path, let uuid = intent.account?.uuid {
 				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
 
 				if let bookmark = accountBookmark {

@@ -28,7 +28,7 @@ public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling
 		if AppLockHelper().isPassCodeEnabled {
 			completion(DeletePathItemIntentResponse(code: .authenticationRequired, userActivity: nil))
 		} else {
-			if let path = intent.path, let uuid = intent.accountUUID {
+			if let path = intent.path, let uuid = intent.account?.uuid {
 				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
 
 				if let bookmark = accountBookmark {
@@ -63,12 +63,16 @@ public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling
 		}
 	}
 
-	public func resolveAccountUUID(for intent: DeletePathItemIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
-		if let accountUUID = intent.accountUUID {
-			completion(INStringResolutionResult.success(with: accountUUID))
+	public func resolveAccount(for intent: DeletePathItemIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
+		if let account = intent.account {
+			completion(AccountResolutionResult.success(with: account))
 		} else {
-			completion(INStringResolutionResult.needsValue())
+			completion(AccountResolutionResult.needsValue())
 		}
+	}
+
+	public func provideAccountOptions(for intent: DeletePathItemIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
+		completion(OCBookmarkManager.shared.accountList, nil)
 	}
 
 	public func resolvePath(for intent: DeletePathItemIntent, with completion: @escaping (INStringResolutionResult) -> Void) {

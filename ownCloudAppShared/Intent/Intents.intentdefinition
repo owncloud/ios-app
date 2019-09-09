@@ -22,7 +22,7 @@
 			<key>INIntentConfigurable</key>
 			<true/>
 			<key>INIntentDescription</key>
-			<string>Get a list of all accounts</string>
+			<string>Get a list of all stored accounts</string>
 			<key>INIntentDescriptionID</key>
 			<string>wK4bqS</string>
 			<key>INIntentIneligibleForSuggestions</key>
@@ -127,25 +127,21 @@
 			<key>INIntentConfigurable</key>
 			<true/>
 			<key>INIntentDescription</key>
-			<string>Get the directory listing for the given Account</string>
+			<string>Get a directory listing for the given account and path</string>
 			<key>INIntentDescriptionID</key>
 			<string>2IChwb</string>
 			<key>INIntentIneligibleForSuggestions</key>
 			<true/>
-			<key>INIntentInput</key>
-			<string>accountUUID</string>
-			<key>INIntentKeyParameter</key>
-			<string>accountUUID</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>4</integer>
+			<integer>6</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>path,accountUUID</key>
+				<key>path,account</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>Get Directory Listing</string>
+					<string>Get Directory Listing for ${path} from ${account}</string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>axuc4N</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>
@@ -157,6 +153,8 @@
 			<key>INIntentParameters</key>
 			<array>
 				<dict>
+					<key>INIntentParameterCustomDisambiguation</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
 					<string>Path</string>
 					<key>INIntentParameterDisplayNameID</key>
@@ -186,6 +184,30 @@
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Primary</string>
 						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${path}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>Czb1hO</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Which one?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>9eAgmm</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationSelection</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${path}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>wwyxxS</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
 					</array>
 					<key>INIntentParameterSupportsResolution</key>
 					<true/>
@@ -195,38 +217,69 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterCustomDisambiguation</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
-					<string>Account UUID</string>
+					<string>Account</string>
 					<key>INIntentParameterDisplayNameID</key>
-					<string>DCw01W</string>
+					<string>XVBTsw</string>
 					<key>INIntentParameterDisplayPriority</key>
 					<integer>2</integer>
-					<key>INIntentParameterMetadata</key>
-					<dict>
-						<key>INIntentParameterMetadataCapitalization</key>
-						<string>Sentences</string>
-					</dict>
 					<key>INIntentParameterName</key>
-					<string>accountUUID</string>
+					<string>account</string>
+					<key>INIntentParameterObjectType</key>
+					<string>Account</string>
+					<key>INIntentParameterObjectTypeNamespace</key>
+					<string>K5U8aR</string>
 					<key>INIntentParameterPromptDialogs</key>
 					<array>
 						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Tell me the account UUID</string>
+							<string>Select the account</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>3CjCvw</string>
+							<string>fotVdI</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Primary</string>
 						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${account}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>zAG76o</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Which one?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>iyefxU</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationSelection</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${account}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>dH8vD7</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
 					</array>
+					<key>INIntentParameterSupportsDynamicEnumeration</key>
+					<true/>
 					<key>INIntentParameterSupportsResolution</key>
 					<true/>
 					<key>INIntentParameterTag</key>
-					<integer>4</integer>
+					<integer>6</integer>
 					<key>INIntentParameterType</key>
-					<string>String</string>
+					<string>Object</string>
 				</dict>
 			</array>
 			<key>INIntentResponse</key>
@@ -306,24 +359,22 @@
 			<string>download</string>
 			<key>INIntentConfigurable</key>
 			<true/>
+			<key>INIntentDescription</key>
+			<string>Get file for the given path in account</string>
 			<key>INIntentDescriptionID</key>
 			<string>nvFl2W</string>
 			<key>INIntentIneligibleForSuggestions</key>
 			<true/>
-			<key>INIntentInput</key>
-			<string>path</string>
-			<key>INIntentKeyParameter</key>
-			<string>path</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>2</integer>
+			<integer>4</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>path,accountUUID</key>
+				<key>path,account</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>Get File</string>
+					<string>Get File ${path} from ${account}</string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>kfmZUU</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>
@@ -345,6 +396,8 @@
 					<dict>
 						<key>INIntentParameterMetadataCapitalization</key>
 						<string>Sentences</string>
+						<key>INIntentParameterMetadataDefaultValue</key>
+						<string>/</string>
 					</dict>
 					<key>INIntentParameterName</key>
 					<string>path</string>
@@ -369,38 +422,69 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterCustomDisambiguation</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
-					<string>Account UUID</string>
+					<string>Account</string>
 					<key>INIntentParameterDisplayNameID</key>
-					<string>cp2sq7</string>
+					<string>sxd9RH</string>
 					<key>INIntentParameterDisplayPriority</key>
 					<integer>2</integer>
-					<key>INIntentParameterMetadata</key>
-					<dict>
-						<key>INIntentParameterMetadataCapitalization</key>
-						<string>Sentences</string>
-					</dict>
 					<key>INIntentParameterName</key>
-					<string>accountUUID</string>
+					<string>account</string>
+					<key>INIntentParameterObjectType</key>
+					<string>Account</string>
+					<key>INIntentParameterObjectTypeNamespace</key>
+					<string>K5U8aR</string>
 					<key>INIntentParameterPromptDialogs</key>
 					<array>
 						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Tell me the account UUID</string>
+							<string>Select the account</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>YtXpqc</string>
+							<string>VHlRdG</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Primary</string>
 						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${account}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>9uzczk</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Which one?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>8xEyec</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationSelection</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${account}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>Ezlwwe</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
 					</array>
+					<key>INIntentParameterSupportsDynamicEnumeration</key>
+					<true/>
 					<key>INIntentParameterSupportsResolution</key>
 					<true/>
 					<key>INIntentParameterTag</key>
-					<integer>2</integer>
+					<integer>4</integer>
 					<key>INIntentParameterType</key>
-					<string>String</string>
+					<string>Object</string>
 				</dict>
 			</array>
 			<key>INIntentResponse</key>
@@ -478,6 +562,8 @@
 			<string>set</string>
 			<key>INIntentConfigurable</key>
 			<true/>
+			<key>INIntentDescription</key>
+			<string>Save a file into the path in account</string>
 			<key>INIntentDescriptionID</key>
 			<string>dtUvRf</string>
 			<key>INIntentIneligibleForSuggestions</key>
@@ -487,15 +573,15 @@
 			<key>INIntentKeyParameter</key>
 			<string>file</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>6</integer>
+			<integer>7</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>path,accountUUID,file</key>
+				<key>path,file,account</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>Save File</string>
+					<string>Save File ${file} to ${path} in ${account}</string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>6a3odp</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>
@@ -590,38 +676,69 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterCustomDisambiguation</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
-					<string>Account UUID</string>
+					<string>Account</string>
 					<key>INIntentParameterDisplayNameID</key>
-					<string>BRLzCv</string>
+					<string>tiHX6L</string>
 					<key>INIntentParameterDisplayPriority</key>
 					<integer>3</integer>
-					<key>INIntentParameterMetadata</key>
-					<dict>
-						<key>INIntentParameterMetadataCapitalization</key>
-						<string>Sentences</string>
-					</dict>
 					<key>INIntentParameterName</key>
-					<string>accountUUID</string>
+					<string>account</string>
+					<key>INIntentParameterObjectType</key>
+					<string>Account</string>
+					<key>INIntentParameterObjectTypeNamespace</key>
+					<string>K5U8aR</string>
 					<key>INIntentParameterPromptDialogs</key>
 					<array>
 						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Tell me the account UUID</string>
+							<string>Select the account</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>EXeedf</string>
+							<string>e5LXg2</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Primary</string>
 						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${account}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>ogx9ZM</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Which one?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>Q5StNV</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationSelection</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${account}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>o7aBS2</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
 					</array>
+					<key>INIntentParameterSupportsDynamicEnumeration</key>
+					<true/>
 					<key>INIntentParameterSupportsResolution</key>
 					<true/>
 					<key>INIntentParameterTag</key>
-					<integer>2</integer>
+					<integer>7</integer>
 					<key>INIntentParameterType</key>
-					<string>String</string>
+					<string>Object</string>
 				</dict>
 			</array>
 			<key>INIntentResponse</key>
@@ -699,6 +816,8 @@
 			<string>generic</string>
 			<key>INIntentConfigurable</key>
 			<true/>
+			<key>INIntentDescription</key>
+			<string>Create a folder with the given name into the path.</string>
 			<key>INIntentDescriptionID</key>
 			<string>XmX9YS</string>
 			<key>INIntentIneligibleForSuggestions</key>
@@ -708,15 +827,15 @@
 			<key>INIntentKeyParameter</key>
 			<string>name</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>3</integer>
+			<integer>4</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>name,path,accountUUID</key>
+				<key>name,path,account</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>Create Folder</string>
+					<string>Create Folder ${name} in ${path} for ${account}</string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>Rh6ICd</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>
@@ -796,38 +915,69 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterCustomDisambiguation</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
-					<string>Account UUID</string>
+					<string>Account</string>
 					<key>INIntentParameterDisplayNameID</key>
-					<string>X8AC9Y</string>
+					<string>mRWXIl</string>
 					<key>INIntentParameterDisplayPriority</key>
 					<integer>3</integer>
-					<key>INIntentParameterMetadata</key>
-					<dict>
-						<key>INIntentParameterMetadataCapitalization</key>
-						<string>Sentences</string>
-					</dict>
 					<key>INIntentParameterName</key>
-					<string>accountUUID</string>
+					<string>account</string>
+					<key>INIntentParameterObjectType</key>
+					<string>Account</string>
+					<key>INIntentParameterObjectTypeNamespace</key>
+					<string>K5U8aR</string>
 					<key>INIntentParameterPromptDialogs</key>
 					<array>
 						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Tell me the account UUID</string>
+							<string>Select the account</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>vaqTiJ</string>
+							<string>4BnO3u</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Primary</string>
 						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${account}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>Fe4YSc</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Which one?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>LiNwxr</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationSelection</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${account}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>Y16qbv</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
 					</array>
+					<key>INIntentParameterSupportsDynamicEnumeration</key>
+					<true/>
 					<key>INIntentParameterSupportsResolution</key>
 					<true/>
 					<key>INIntentParameterTag</key>
-					<integer>3</integer>
+					<integer>4</integer>
 					<key>INIntentParameterType</key>
-					<string>String</string>
+					<string>Object</string>
 				</dict>
 			</array>
 			<key>INIntentResponse</key>
@@ -905,6 +1055,8 @@
 			<string>download</string>
 			<key>INIntentConfigurable</key>
 			<true/>
+			<key>INIntentDescription</key>
+			<string>Retrieve file infos for the given path</string>
 			<key>INIntentDescriptionID</key>
 			<string>LdHBeL</string>
 			<key>INIntentIneligibleForSuggestions</key>
@@ -914,15 +1066,15 @@
 			<key>INIntentKeyParameter</key>
 			<string>path</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>2</integer>
+			<integer>3</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>path,accountUUID</key>
+				<key>path,account</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>Get File Info</string>
+					<string>Get File Info for ${path} in ${account}</string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>7Rco9W</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>
@@ -968,38 +1120,69 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterCustomDisambiguation</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
-					<string>Account UUID</string>
+					<string>Account</string>
 					<key>INIntentParameterDisplayNameID</key>
-					<string>dMBDq7</string>
+					<string>wPdYjH</string>
 					<key>INIntentParameterDisplayPriority</key>
 					<integer>2</integer>
-					<key>INIntentParameterMetadata</key>
-					<dict>
-						<key>INIntentParameterMetadataCapitalization</key>
-						<string>Sentences</string>
-					</dict>
 					<key>INIntentParameterName</key>
-					<string>accountUUID</string>
+					<string>account</string>
+					<key>INIntentParameterObjectType</key>
+					<string>Account</string>
+					<key>INIntentParameterObjectTypeNamespace</key>
+					<string>K5U8aR</string>
 					<key>INIntentParameterPromptDialogs</key>
 					<array>
 						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Tell me the account UUID</string>
+							<string>Select the account</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>WuzGkj</string>
+							<string>xaKzfr</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Primary</string>
 						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${account}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>q5bi2K</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Which one?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>upG52E</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationSelection</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${account}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>7NRaX2</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
 					</array>
+					<key>INIntentParameterSupportsDynamicEnumeration</key>
+					<true/>
 					<key>INIntentParameterSupportsResolution</key>
 					<true/>
 					<key>INIntentParameterTag</key>
-					<integer>2</integer>
+					<integer>3</integer>
 					<key>INIntentParameterType</key>
-					<string>String</string>
+					<string>Object</string>
 				</dict>
 			</array>
 			<key>INIntentResponse</key>
@@ -1081,6 +1264,8 @@
 			<string>generic</string>
 			<key>INIntentConfigurable</key>
 			<true/>
+			<key>INIntentDescription</key>
+			<string>Check if the given path exists</string>
 			<key>INIntentDescriptionID</key>
 			<string>PthGCb</string>
 			<key>INIntentInput</key>
@@ -1088,15 +1273,15 @@
 			<key>INIntentKeyParameter</key>
 			<string>path</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>2</integer>
+			<integer>3</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>path,accountUUID</key>
+				<key>path,account</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>Check if Path exists</string>
+					<string>Check if path ${path} exists in ${account}</string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>79FdrK</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>
@@ -1107,16 +1292,18 @@
 			<string>PathExists</string>
 			<key>INIntentParameterCombinations</key>
 			<dict>
-				<key>path,accountUUID</key>
+				<key>path,account</key>
 				<dict>
 					<key>INIntentParameterCombinationIsLinked</key>
+					<true/>
+					<key>INIntentParameterCombinationIsPrimary</key>
 					<true/>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>Check if Path exists</string>
+					<string>Check if path ${path} exists in ${account}</string>
 					<key>INIntentParameterCombinationTitleID</key>
-					<string>xCnKWn</string>
+					<string>0jWfGg</string>
 				</dict>
 			</dict>
 			<key>INIntentParameters</key>
@@ -1156,38 +1343,69 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterCustomDisambiguation</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
-					<string>Account UUID</string>
+					<string>Account</string>
 					<key>INIntentParameterDisplayNameID</key>
-					<string>RNEMsX</string>
+					<string>uP1q1e</string>
 					<key>INIntentParameterDisplayPriority</key>
 					<integer>2</integer>
-					<key>INIntentParameterMetadata</key>
-					<dict>
-						<key>INIntentParameterMetadataCapitalization</key>
-						<string>Sentences</string>
-					</dict>
 					<key>INIntentParameterName</key>
-					<string>accountUUID</string>
+					<string>account</string>
+					<key>INIntentParameterObjectType</key>
+					<string>Account</string>
+					<key>INIntentParameterObjectTypeNamespace</key>
+					<string>K5U8aR</string>
 					<key>INIntentParameterPromptDialogs</key>
 					<array>
 						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Tell me the account UUID</string>
+							<string>Select the account</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>Tba7bA</string>
+							<string>odUmdN</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Primary</string>
 						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${account}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>eJ8Zop</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Which one?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>c8L2xN</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationSelection</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${account}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>mJL3AY</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
 					</array>
+					<key>INIntentParameterSupportsDynamicEnumeration</key>
+					<true/>
 					<key>INIntentParameterSupportsResolution</key>
 					<true/>
 					<key>INIntentParameterTag</key>
-					<integer>2</integer>
+					<integer>3</integer>
 					<key>INIntentParameterType</key>
-					<string>String</string>
+					<string>Object</string>
 				</dict>
 			</array>
 			<key>INIntentResponse</key>
@@ -1264,18 +1482,20 @@
 			<string>generic</string>
 			<key>INIntentConfigurable</key>
 			<true/>
+			<key>INIntentDescription</key>
+			<string>Delete the given path in account</string>
 			<key>INIntentDescriptionID</key>
 			<string>jkLupt</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>2</integer>
+			<integer>3</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>path,accountUUID</key>
+				<key>path,account</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>Delete Item at Path</string>
+					<string>Delete Item at path ${path} in ${account}</string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>TjffcC</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>
@@ -1286,16 +1506,18 @@
 			<string>DeletePathItem</string>
 			<key>INIntentParameterCombinations</key>
 			<dict>
-				<key>path,accountUUID</key>
+				<key>path,account</key>
 				<dict>
 					<key>INIntentParameterCombinationIsLinked</key>
+					<true/>
+					<key>INIntentParameterCombinationIsPrimary</key>
 					<true/>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>Delete Item at Path</string>
+					<string>Delete Item at path ${path} in ${account}</string>
 					<key>INIntentParameterCombinationTitleID</key>
-					<string>L0T44d</string>
+					<string>gYCA4r</string>
 				</dict>
 			</dict>
 			<key>INIntentParameters</key>
@@ -1335,38 +1557,69 @@
 					<string>String</string>
 				</dict>
 				<dict>
+					<key>INIntentParameterCustomDisambiguation</key>
+					<true/>
 					<key>INIntentParameterDisplayName</key>
-					<string>Account UUID</string>
+					<string>Account</string>
 					<key>INIntentParameterDisplayNameID</key>
-					<string>aPOcli</string>
+					<string>Iej0wL</string>
 					<key>INIntentParameterDisplayPriority</key>
 					<integer>2</integer>
-					<key>INIntentParameterMetadata</key>
-					<dict>
-						<key>INIntentParameterMetadataCapitalization</key>
-						<string>Sentences</string>
-					</dict>
 					<key>INIntentParameterName</key>
-					<string>accountUUID</string>
+					<string>account</string>
+					<key>INIntentParameterObjectType</key>
+					<string>Account</string>
+					<key>INIntentParameterObjectTypeNamespace</key>
+					<string>K5U8aR</string>
 					<key>INIntentParameterPromptDialogs</key>
 					<array>
 						<dict>
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Tell me the account UUID</string>
+							<string>Select the account</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>03LEh1</string>
+							<string>YDTXfI</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Primary</string>
 						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${account}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>b4pgUO</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Which one?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>HTGZys</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationSelection</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${account}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>mqKEhg</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
 					</array>
+					<key>INIntentParameterSupportsDynamicEnumeration</key>
+					<true/>
 					<key>INIntentParameterSupportsResolution</key>
 					<true/>
 					<key>INIntentParameterTag</key>
-					<integer>2</integer>
+					<integer>3</integer>
 					<key>INIntentParameterType</key>
-					<string>String</string>
+					<string>Object</string>
 				</dict>
 			</array>
 			<key>INIntentResponse</key>
@@ -1417,6 +1670,162 @@
 			<string>Custom</string>
 			<key>INIntentVerb</key>
 			<string>Do</string>
+		</dict>
+		<dict>
+			<key>INIntentCategory</key>
+			<string>download</string>
+			<key>INIntentConfigurable</key>
+			<true/>
+			<key>INIntentDescription</key>
+			<string>Get the account for the given account UUID</string>
+			<key>INIntentDescriptionID</key>
+			<string>U3l2bk</string>
+			<key>INIntentInput</key>
+			<string>accountUUID</string>
+			<key>INIntentKeyParameter</key>
+			<string>accountUUID</string>
+			<key>INIntentLastParameterTag</key>
+			<integer>1</integer>
+			<key>INIntentManagedParameterCombinations</key>
+			<dict>
+				<key>accountUUID</key>
+				<dict>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Get Account with ${accountUUID}</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>D3oUHR</string>
+					<key>INIntentParameterCombinationUpdatesLinked</key>
+					<true/>
+				</dict>
+			</dict>
+			<key>INIntentName</key>
+			<string>GetAccount</string>
+			<key>INIntentParameterCombinations</key>
+			<dict>
+				<key>accountUUID</key>
+				<dict>
+					<key>INIntentParameterCombinationIsLinked</key>
+					<true/>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Get Account with ${accountUUID}</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>dCe7NY</string>
+				</dict>
+			</dict>
+			<key>INIntentParameters</key>
+			<array>
+				<dict>
+					<key>INIntentParameterDisplayName</key>
+					<string>Account UUID</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>Dt0MVQ</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>1</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>accountUUID</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Enter the UUID for the account you want</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>VYw9o4</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>1</integer>
+					<key>INIntentParameterType</key>
+					<string>String</string>
+				</dict>
+			</array>
+			<key>INIntentResponse</key>
+			<dict>
+				<key>INIntentResponseCodes</key>
+				<array>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>success</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>failure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>AG0qbP</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>Vg8Ky0</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationRequired</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>Kr0sps</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>UdyMQ5</string>
+						<key>INIntentResponseCodeName</key>
+						<string>accountFailure</string>
+					</dict>
+				</array>
+				<key>INIntentResponseLastParameterTag</key>
+				<integer>2</integer>
+				<key>INIntentResponseOutput</key>
+				<string>account</string>
+				<key>INIntentResponseParameters</key>
+				<array>
+					<dict>
+						<key>INIntentResponseParameterDisplayName</key>
+						<string>Account</string>
+						<key>INIntentResponseParameterDisplayNameID</key>
+						<string>GAhtDQ</string>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>1</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>account</string>
+						<key>INIntentResponseParameterObjectType</key>
+						<string>Account</string>
+						<key>INIntentResponseParameterObjectTypeNamespace</key>
+						<string>K5U8aR</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>2</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>Object</string>
+					</dict>
+				</array>
+			</dict>
+			<key>INIntentTitle</key>
+			<string>Get Account</string>
+			<key>INIntentTitleID</key>
+			<string>8ZZD23</string>
+			<key>INIntentType</key>
+			<string>Custom</string>
+			<key>INIntentVerb</key>
+			<string>Get</string>
 		</dict>
 	</array>
 	<key>INTypes</key>
