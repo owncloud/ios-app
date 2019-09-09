@@ -52,7 +52,6 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 									}
 									fileInfo.isFavorite = targetItem.isFavorite
 									fileInfo.mimeType = targetItem.mimeType
-									fileInfo.privateLink = targetItem.privateLink
 									fileInfo.size = NSNumber(value: targetItem.size)
 
 									completion(GetFileInfoIntentResponse.success(fileInfo: fileInfo))

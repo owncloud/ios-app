@@ -2048,25 +2048,11 @@
 				</dict>
 				<dict>
 					<key>INTypePropertyDisplayName</key>
-					<string>Private Link</string>
-					<key>INTypePropertyDisplayNameID</key>
-					<string>8TjYRj</string>
-					<key>INTypePropertyDisplayPriority</key>
-					<integer>7</integer>
-					<key>INTypePropertyName</key>
-					<string>privateLink</string>
-					<key>INTypePropertyTag</key>
-					<integer>108</integer>
-					<key>INTypePropertyType</key>
-					<string>URL</string>
-				</dict>
-				<dict>
-					<key>INTypePropertyDisplayName</key>
 					<string>Size</string>
 					<key>INTypePropertyDisplayNameID</key>
 					<string>wbCXnN</string>
 					<key>INTypePropertyDisplayPriority</key>
-					<integer>8</integer>
+					<integer>7</integer>
 					<key>INTypePropertyName</key>
 					<string>size</string>
 					<key>INTypePropertyTag</key>
@@ -2080,7 +2066,7 @@
 					<key>INTypePropertyDisplayNameID</key>
 					<string>38uTf2</string>
 					<key>INTypePropertyDisplayPriority</key>
-					<integer>9</integer>
+					<integer>8</integer>
 					<key>INTypePropertyMetadata</key>
 					<dict>
 						<key>INTypePropertyMetadataDateStyle</key>
@@ -2105,7 +2091,7 @@
 					<key>INTypePropertyDisplayNameID</key>
 					<string>zKRAWH</string>
 					<key>INTypePropertyDisplayPriority</key>
-					<integer>10</integer>
+					<integer>9</integer>
 					<key>INTypePropertyName</key>
 					<string>mimeType</string>
 					<key>INTypePropertyTag</key>
@@ -2119,7 +2105,7 @@
 					<key>INTypePropertyDisplayNameID</key>
 					<string>lyQhRe</string>
 					<key>INTypePropertyDisplayPriority</key>
-					<integer>11</integer>
+					<integer>10</integer>
 					<key>INTypePropertyName</key>
 					<string>lastModifiedTimestamp</string>
 					<key>INTypePropertyTag</key>
@@ -2133,7 +2119,7 @@
 					<key>INTypePropertyDisplayNameID</key>
 					<string>MRTQ9c</string>
 					<key>INTypePropertyDisplayPriority</key>
-					<integer>12</integer>
+					<integer>11</integer>
 					<key>INTypePropertyName</key>
 					<string>creationDateTimestamp</string>
 					<key>INTypePropertyTag</key>
