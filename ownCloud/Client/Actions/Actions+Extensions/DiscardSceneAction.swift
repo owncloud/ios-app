@@ -25,6 +25,7 @@ class DiscardSceneAction: Action {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Close Window".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder] }
+	override class var keyCommand : String? { return "W" }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
