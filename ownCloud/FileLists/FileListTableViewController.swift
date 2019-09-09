@@ -225,7 +225,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 	}
 
-	func open(item: OCItem, animated: Bool) -> ClientQueryViewController? {
+	func open(item: OCItem, animated: Bool, pushViewController: Bool = true) -> ClientQueryViewController? {
 		if let core = self.core {
 			if #available(iOS 13.0, *) {
 				if  let tabBarController = self.tabBarController as? ClientRootViewController {
@@ -238,8 +238,10 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 				case .collection:
 					if let path = item.path {
 						let clientQueryViewController = ClientQueryViewController(core: core, query: OCQuery(forPath: path))
-						self.navigationController?.pushViewController(clientQueryViewController, animated: animated)
-						
+						if pushViewController {
+							self.navigationController?.pushViewController(clientQueryViewController, animated: animated)
+						}
+
 						return clientQueryViewController
 					}
 

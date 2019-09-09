@@ -5,7 +5,6 @@
 //  Created by Matthias Hühne on 08/05/2018.
 //  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
-
 /*
  * Copyright (C) 2018, ownCloud GmbH.
  *
@@ -25,7 +24,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
 
 	// UIWindowScene delegate
-
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		if let windowScene = scene as? UIWindowScene {
 			window = UIWindow(windowScene: windowScene)
@@ -71,10 +69,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 											parentItems.removeFirst()
 										}
 										var subController = clientViewController
+										var newViewControllersStack : [ClientQueryViewController] = []
 										for item in parentItems {
 											if let controller = self.open(item: item, in: subController) {
 												subController = controller
+												newViewControllersStack.append(controller)
 											}
+										}
+										var currentControllers = clientViewController.navigationController?.viewControllers
+										currentControllers?.append(contentsOf: newViewControllersStack)
+										if let currentControllers = currentControllers {
+										clientViewController.navigationController?.viewControllers = currentControllers
 										}
 										subController.open(item: item, animated: false)
 									}
@@ -93,7 +98,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 
 	func open(item: OCItem, in controller: ClientQueryViewController) -> ClientQueryViewController? {
-		if let subController = controller.open(item: item, animated: false) {
+		if let subController = controller.open(item: item, animated: false, pushViewController: false) {
 			return subController
 		}
 

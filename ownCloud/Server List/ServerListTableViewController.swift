@@ -470,6 +470,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				self.showBookmarkUI(edit: bookmark)
 			} else {
 				self.connect(to: bookmark, animated: true) { (_, _) in
+					self.tableView.deselectRow(at: indexPath, animated: true)
 				}
 			}
 		}
@@ -490,20 +491,28 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	@available(iOS 13.0, *)
 	func makeContextMenu(for indexPath: IndexPath, with bookmark: OCBookmark) -> UIMenu {
-		let openWindow = UIAction(title: "Open in new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
-			self.openAccountInWindow(at: indexPath)
+		var menuItems : [UIAction] = []
+
+		if UIDevice.current.isIpad() {
+			let openWindow = UIAction(title: "Open in new Window".localized, image: UIImage(systemName: 	"uiwindow.split.2x1")) { _ in
+				self.openAccountInWindow(at: indexPath)
+			}
+			menuItems.append(openWindow)
 		}
 		let edit = UIAction(title: "Edit", image: UIImage(systemName: "gear")) { _ in
 			self.showBookmarkUI(edit: bookmark)
 		}
+		menuItems.append(edit)
 		let manage = UIAction(title: "Manage", image: UIImage(systemName: "arrow.3.trianglepath")) { _ in
 			self.showBookmarkInfoUI(bookmark)
 		}
+		menuItems.append(manage)
 		let delete = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
 			self.delete(bookmark: bookmark, at: indexPath)
 		}
+		menuItems.append(delete)
 
-		return UIMenu(title: bookmark.shortName, children: [openWindow, edit, manage, delete])
+		return UIMenu(title: bookmark.shortName, children: menuItems)
 	}
 
 	// MARK: - Table view data source
@@ -581,7 +590,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			}
 		})
 
-		if #available(iOS 13.0, *) {
+		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
 			let openAccountAction = UITableViewRowAction(style: .normal,
 														 title: "Open in Window".localized,
 														 handler: { (_, indexPath) in
