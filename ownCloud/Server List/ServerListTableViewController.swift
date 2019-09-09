@@ -78,6 +78,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.tableView.rowHeight = UITableView.automaticDimension
 		self.tableView.estimatedRowHeight = 80
 		self.tableView.allowsSelectionDuringEditing = true
+ 		extendedLayoutIncludesOpaqueBars = true
 
 		let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
 		addServerBarButtonItem.accessibilityLabel = "Add account".localized
