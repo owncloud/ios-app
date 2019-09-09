@@ -19,6 +19,7 @@
 import UIKit
 import AVKit
 import ownCloudSDK
+import MobileCoreServices
 
 class MediaDisplayViewController : DisplayViewController {
 
@@ -117,21 +118,13 @@ class MediaDisplayViewController : DisplayViewController {
 // MARK: - Display Extension.
 extension MediaDisplayViewController: DisplayExtension {
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
-		do {
-			if let mimeType = context.location?.identifier?.rawValue {
-				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((video/)|(audio/))",
-																	options: .caseInsensitive)
-				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
+		if let mimeType = context.location?.identifier?.rawValue {
 
-				if matches > 0 {
-					return OCExtensionPriority.locationMatch
-				}
+			if MediaDisplayViewController.mimeTypeConformsTo(mime: mimeType, utTypeClass: kUTTypeAudiovisualContent) {
+				return OCExtensionPriority.locationMatch
 			}
-
-			return OCExtensionPriority.noMatch
-		} catch {
-			return OCExtensionPriority.noMatch
 		}
+		return OCExtensionPriority.noMatch
 	}
 	static var displayExtensionIdentifier: String = "org.owncloud.media"
 	static var supportedMimeTypes: [String]?
