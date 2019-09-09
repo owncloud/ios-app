@@ -41,8 +41,8 @@ class MoreSettingsSection: SettingsSection {
 			buildType = "beta".localized
 		}
 
-		let localizedFooter = "%@ %@ version %@ build %@ (%@)".localized
-		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName!, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit)
+		let localizedFooter = "%@ %@ version %@ build %@ (app: %@, sdk: %@)".localized
+		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName ?? "App", buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit, OCAppIdentity.shared.sdkCommit ?? "unknown")
 
 		self.footerTitle = footerTitle
 
@@ -59,24 +59,24 @@ class MoreSettingsSection: SettingsSection {
 		helpRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			let url = URL(string: "https://www.owncloud.com/help")
 			self?.openSFWebViewWithConfirmation(for: url!)
-		}, title: "Help".localized, accessoryType: .disclosureIndicator)
+		}, title: "Help".localized, accessoryType: .disclosureIndicator, identifier: "help")
 
 		sendFeedbackRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let viewController = self?.viewController {
 				VendorServices.shared.sendFeedback(from: viewController)
 			}
-		}, title: "Send feedback".localized, accessoryType: .disclosureIndicator)
+			}, title: "Send feedback".localized, accessoryType: .disclosureIndicator, identifier: "send-feedback")
 
 		recommendRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let viewController = self?.viewController {
 				VendorServices.shared.recommendToFriend(from: viewController)
 			}
-		}, title: "Recommend to a friend".localized, accessoryType: .disclosureIndicator)
+		}, title: "Recommend to a friend".localized, accessoryType: .disclosureIndicator, identifier: "recommend-friend")
 
 		privacyPolicyRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			let url = URL(string: "https://owncloud.org/privacy-policy/")
 			self?.openSFWebViewWithConfirmation(for: url!)
-		}, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator)
+		}, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator, identifier: "privacy-policy")
 
 		acknowledgementsRow = StaticTableViewRow(rowWithAction: { (row, _) in
 			let context = OCExtensionContext(location: OCExtensionLocation(ofType: .license, identifier: nil), requirements: nil, preferences: nil)

@@ -1,0 +1,175 @@
+= Managing Files
+:toc: right
+:toclevels: 1
+:keywords: PDF, Drag & Drop, Photo Library, iPhone, iPad, ownCloud iOS App
+:description: This guide steps you through how to manage files and directories in ownCloud's iOS app; You will learn all about uploading, moving, dragging and dropping, and viewing files, file and folder actions, and navigating folders.
+:ios-safari-supported-filetypes-url: https://stackoverflow.com/a/46334049
+:icons: font
+:multitasking-on-ipad-url: https://support.apple.com/en-us/HT207582
+
+The app provides a number of features designed to make managing files as simple as possible.
+These are:
+
+* File list filter
+* File sort options
+* Thumbnails for supported images
+* File quota (displayed in the root folder)
+
+image:21_File_list_annotated.png[Overview of the ownCloud iOS App's files view.]
+
+Click on a file to view it and click on a folder to view its contents.
+To view further actions available for a file or folder, click the _More_ icon on the far right-hand side.
+
+== File Actions
+
+The actions available for files are: 
+
+* Open in
+* Move
+* Rename
+* Duplicate
+* Copy
+* Delete
+
+However, file actions are handled slightly differently, depending on whether one or multiple files have been selected.
+You can see the differences in the two images below.
+
+The image below on the left, shows the file popup for actions for _individual_ files. 
+The image below on the right, shows the move icon row for _multiple-selected_ files. 
+
+[cols=","]
+|===
+|*Individual File Actions*
+image:file-actions-dialog.png[File actions dialog for individual files in ownCloud's iOS App.]
+|*Multiple-Selected File Actions*
+image:file-actions-multiple-files-selected.png[File actions dialog for multiple-selected files in ownCloud's iOS App.]
+|===
+
+== Navigate Folders
+
+There are two ways to navigate folders (outside of the root folder).
+To go back to the parent folder, tap btn:[Back] in the top left-hand corner.
+To navigate directly to *any* parent folder tap on the current folder's name.
+When you do, you will see the names of all the parent folders, right up to the root folder, as in the image below.
+
+image:21_File_list_parent.png[Navigating folders in ownCloud's iOS app.]
+
+== View Files
+
+To view a file, tap on its name in the file list.
+Any file type {ios-safari-supported-filetypes-url}[supported by iOS Safari] can be displayed in the app.
+Depending on the file type, the image will be able to viewed, or an icon for it, along with some file details, will be displayed.
+
+NOTE: If the file is not available locally on the device, you will see image:icon-not-available-locally.png[alt=A file is not downloaded locally on the ownCloud iOS app,width=25] next to the file.
+When you click on it, you will see image:icon-download.png[alt=A file is downloading on the ownCloud iOS app,width=20] next to it while it downloads.
+
+[cols=",,"]
+.Viewing different file types
+|===
+a|
+.An image file
+image:view-file-image.png[Viewing an image file in the ownCloud iOS App]
+a|
+.A video file
+image:view-file-video.png[Viewing a video file in the ownCloud iOS App]
+a|
+.A PDF file
+image:view-file-pdf.png[Viewing a PDF file in the ownCloud iOS App]
+a|
+.A text file
+image:view-file-text-file.png[Viewing a text file in the ownCloud iOS App]
+a|
+.An ODT file.
+image:view-file-odt.png[Viewing an ODT file in the ownCloud iOS App]
+|
+|===
+
+=== PDF Files
+
+When viewing PDF files four UI options are available which make working with them easier; these are:
+
+* A page selector
+* Page thumbnails
+* A Table of Contents
+* File Search
+
+You can see an example of each in the images below.
+
+[cols=",,,"]
+.PDF file functionality
+|===
+a|
+.A page selector
+image:41_PDF.png[Page selector in PDF files in the ownCloud iOS App]
+a|
+.A table of contents
+image:42_PDF_toc.png[Table of contents in PDF files in the ownCloud iOS App]
+a|
+.Page thumbnails
+image:43_PDF_thumbs.png[Page thumbnails in PDF files in the ownCloud iOS App]
+a|
+.File search
+image:44_PDF_search.png[File search in PDF files in the ownCloud iOS App]
+a|
+|===
+
+=== Video Files
+
+Video files have the standard iOS video controls available, which include play, pause, AirPlay, volume, skip forward, skip back, close, and full screen.
+
+== Folder Actions
+
+When working with folders, click the plus icon near the top right-hand corner, and three actions become available; these are:
+
+* xref:create-folder[Create folder]
+* xref:upload-files[Upload files]
+* xref:upload-file-from-your-photo-library[Upload file from your photo library]
+
+image:directory-actions.png[Folder actions in ownCloud's iOS App.]
+
+=== Create Folder
+
+To create a new folder, click btn:[Create folder], enter the name of the new folder, as in the image below, and click btn:[return].
+
+image:create-new-folder.png[How to create a new folder in ownCloud's iOS App.]
+
+=== Upload Files
+
+To upload files or any time from your device to your ownCloud server, click btn:[Upload file].
+You will then be able to select or browse through files from any app that exposes data to the iOS files app.
+
+==== Upload File From Your Photo Library
+
+To upload photos from your photo library, you first need to allow the iOS app access to your photos. 
+After that, you can browse through your photos, as you normally would 
+You can then select one or more photos by pressing them, or click btn:[Select All] in the bottom left-hand corner to select all photos in the current folder.
+When you're happy with your photo selection, click btn:[Upload] and the photo(s) will be uploaded.
+
+image:24_Upload_Photo_multi.png[Upload one or more photos from your Photo Library with the ownCloud iOS App.]
+
+=== Move Files and Folders
+
+Whether you are using the iPhone or iPad version of the ownCloud app, you can select and drag and drop one or more files and folders from one folder to another.
+To do so, you first press btn:[Select] in the top right-hand corner and select one or more files and/or folders.
+Then, you press and hold on any of the selected files and folders and:
+
+* Drag and drop them over a folder in the current directory
+* Drag and drop them over the "*Move to*" icon (or tap the icon), near the bottom left-hand side of the screen. You then navigate to the folder that you want to move them to and click btn:[Move here] at the bottom of the screen.
+
+image:26_Files_multidragdrop.png[Move multiple files (and folders) to another location in the ownCloud iOS App.]
+
+[NOTE] 
+====
+If a file or folder with the same name as one or more of those being moved, already exists in the destination directory, you will see a warning that the file or folder could not be moved.
+
+image:file-with-same-name-already-exists.png[ownCloud iOS App, file or folder with the same name already exists in the destination directory.]
+====
+
+== Drag & Drop Files Between Apps (iPad-only)
+
+The iOS app supports the multitasking features on iPad.
+If you open it as a second app with Slide Over, you can use two apps at the same time with Split View and drag and drop one or more files between the two apps.
+Refer to Apple's {multitasking-on-ipad-url}[Multitasking On Your iPad guide] for more information.
+
+.Drag and drop multiple files from ownCloud iOS App to macOS Notes
+image:26_Files_multidragdrop_iPad.png[Drag and Drop Files Between Apps (iPad-only) in ownCloud's iOS App.]

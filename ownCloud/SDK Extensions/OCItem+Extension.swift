@@ -191,7 +191,7 @@ extension OCItem {
 		return iconName
 	}
 
-	func iconName() -> String? {
+	var iconName : String? {
 		var iconName = OCItem.iconName(for: self.mimeType)
 
 		if iconName == nil {
@@ -206,7 +206,7 @@ extension OCItem {
 	}
 
 	func icon(fitInSize: CGSize) -> UIImage? {
-		if let iconName = self.iconName() {
+		if let iconName = self.iconName {
 			return Theme.shared.image(for: iconName, size: fitInSize)
 		}
 
@@ -246,6 +246,55 @@ extension OCItem {
 		return dateFormatter
 	}()
 
+	var sharedByPublicLink : Bool {
+		if self.shareTypesMask.contains(.link) {
+			return true
+		}
+		return false
+	}
+
+	var isShared : Bool {
+		if self.shareTypesMask.isEmpty {
+			return false
+		}
+		return true
+	}
+
+	var sharedByUserOrGroup : Bool {
+		if self.shareTypesMask.contains(.userShare) || self.shareTypesMask.contains(.groupShare) || self.shareTypesMask.contains(.remote) {
+			return true
+		}
+		return false
+	}
+
+	func shareRootItem(from core: OCCore) -> OCItem? {
+		var shareRootItem : OCItem?
+
+		if self.isSharedWithUser {
+			var parentItem : OCItem? = self
+
+			shareRootItem = self
+
+			repeat {
+				parentItem = parentItem?.parentItem(from: core)
+
+				if parentItem != nil, parentItem?.isSharedWithUser == true {
+					shareRootItem = parentItem
+				}
+			} while ((parentItem != nil) && (parentItem?.isSharedWithUser == true))
+		}
+
+		return shareRootItem
+	}
+
+	func isShareRootItem(from core: OCCore) -> Bool {
+		if let shareRootItem = shareRootItem(from: core) {
+			return shareRootItem.localID == localID
+		}
+
+		return false
+	}
+
 	func parentItem(from core: OCCore, completionHandler: ((_ error: Error?, _ parentItem: OCItem?) -> Void)? = nil) -> OCItem? {
 		var parentItem : OCItem?
 
@@ -258,7 +307,7 @@ extension OCItem {
 			}
 
 			core.retrieveItemFromDatabase(forLocalID: parentItemLocalID) { (error, _, item) in
-				if parentItem == nil, let parentPath = self.path?.parentPath() {
+				if parentItem == nil, let parentPath = self.path?.parentPath {
 					parentItem = try? core.cachedItem(atPath: parentPath)
 				}
 
@@ -274,5 +323,32 @@ extension OCItem {
 		}
 
 		return parentItem
+	}
+
+	func displaysDifferent(than item: OCItem?) -> Bool {
+		if item == nil {
+			return true
+		}
+
+		return (
+			// Different item
+			(item?.localID != localID) ||
+
+				// File contents (and therefore likely metadata) differs
+				(item?.itemVersionIdentifier != itemVersionIdentifier) ||
+
+				// File name differs
+				(item?.name != name) ||
+
+				// Upload/Download status differs
+				(item?.syncActivity != syncActivity) ||
+
+				// Cloud status differs
+				(item?.cloudStatus != cloudStatus) ||
+
+				// Sharing attributes differ
+				(item?.shareTypesMask != shareTypesMask) ||
+				(item?.permissions != permissions) // these contain sharing info, too
+		)
 	}
 }

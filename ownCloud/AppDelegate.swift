@@ -68,12 +68,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(CreateFolderAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CopyAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
-		OCExtensionManager.shared.addExtension(UploadPhotosAction.actionExtension)
+		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
+		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
 		// Licenses
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: Theme.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
+
+		//Disable UI Animation for UITesting (screenshots)
+		if let enableUIAnimations = VendorServices.classSetting(forOCClassSettingsKey: .enableUIAnimations) as? Bool {
+			UIView.setAnimationsEnabled(enableUIAnimations)
+		}
 
 		return true
 	}

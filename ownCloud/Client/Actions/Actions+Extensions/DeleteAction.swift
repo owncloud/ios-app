@@ -26,7 +26,16 @@ class DeleteAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		// Examine items in context
+		let sharedWithUser = forContext.items.sharedWithUser
+
+		if let core = forContext.core {
+			for sharedItem in sharedWithUser {
+				if sharedItem.isShareRootItem(from: core) {
+					return .none
+				}
+			}
+		}
+
 		return .last
 	}
 
@@ -83,5 +92,13 @@ class DeleteAction : Action {
 
 		viewController.present(alertController, animated: true)
 
+	}
+
+	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+		if location == .moreItem {
+			return UIImage(named: "trash")
+		}
+
+		return nil
 	}
 }

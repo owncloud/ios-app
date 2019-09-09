@@ -37,9 +37,23 @@
 "Review Connection" = "ตรวจสอบการเชื่อมต่อ";
 "Authenticated via" = "ตรวจสอบแล้วผ่านทาง";
 "Authenticated as %@ via %@" = "รับรองความถูกต้องด้วย %@ ผ่านทาง %@";
+"Edit" = "แก้ไข";
+"Credentials" = "ข้อมูลส่วนตัวสำหรับเข้าระบบ";
+"Rejected" = "ปฏิเสธแล้ว";
+"Passed" = "ผ่านแล้ว";
+"Accepted" = "ยืนยันแล้ว";
+"Validation Error" = "ข้อผิดพลาดในการตรวจสอบ";
+"Certificate was rejected by user." = "หนังสือรับรองถูกปฏิเสธโดยผู้ใช้";
+"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "ใบรับรองมีปัญหา\nเปิด 'รายละเอียดใบรับรอง' สำหรับข้อมูลเพิ่มเติม";
+"No issues found. Certificate passed validation." = "ไม่พบปัญหา ผ่านการตรวจสอบใบรับรองแล้ว";
+"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "ใบรับรองอาจมีปัญหาแต่ได้รับการยอมรับจากผู้ใช้แล้ว\nเปิด 'รายละเอียดใบรับรอง' สำหรับข้อมูลเพิ่มเติม";
+"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "หากคุณ 'ดำเนินการต่อ' คุณจะได้รับแจ้งให้อนุญาตแอพ '%@' เพื่อเข้าสู่ระบบ OAuth2 ที่คุณสามารถป้อนหนังสือรับรองของคุณ";
 
 "Contacting server…" = "กำลังติดต่อเซิร์ฟเวอร์...";
 "Authenticating…" = "กำลังตรวจสอบสิทธิ์...";
+
+"Fetching user information…" = "กำลังเรียกข้อมูลผู้ใช้...";
+"Updating connection…" = "กำลังอัปเดตการเชื่อมต่อ ...";
 
 "Missing hostname" = "ไม่มีชื่อโฮสต์";
 "The entered URL does not include a hostname." = "ป้อน URL โดยไม่รวมชื่อโฮสต์";
@@ -53,6 +67,8 @@
 "Disconnect" = "ตัดการเชื่อมต่อ";
 "Connecting…" = "กำลังเชื่อมต่อ...";
 "Connected." = "เชื่อมต่อแล้ว";
+"Select" = "เลือก";
+"Done" = "เสร็จสิ้น";
 
 "Folder" = "แฟ้มเอกสาร";
 
@@ -63,7 +79,7 @@
 "This folder no longer exists." = "โฟลเดอร์นี้ไม่มีอยู่แล้ว";
 "Everything up-to-date." = "ทุกอย่างใหม่ล่าสุดแล้ว";
 "Please wait…" = "โปรดรอ…";
-"Sort by %@" = "จัดเรียงโดย %@";
+"Sort by %@" = "จัดเรียงตาม %@";
 "Sort by" = "เรียงตาม";
 
 "name (A-Z)" = "ชื่อ (A-Z)";
@@ -73,6 +89,10 @@
 "date" = "วันที่";
 "Search this folder" = "ค้นหาโฟลเดอร์นี้";
 "Pending" = "อยู่ระหว่างดำเนินการ";
+"Show parent paths" = "แสดงพาธ";
+
+"%@ of %@ used" = "มีทั้งหมด %@ ใช้ไปแล้ว%@";
+"Total: %@" = "ทั้งหมด: %@";
 
 /* Client Messages */
 "Empty folder" = "โฟลเดอร์ว่างเปล่า";
@@ -85,13 +105,17 @@
 "Multiple items" = "หลายรายการ";
 "Deleting '%@'" = "กำลังลบ '%@'";
 "Renaming to %@" = "กำลังเปลี่ยนฃื่อเป็น %@";
-"Upload from your photo library" = "อัพโหลดจากคลังรูปภาพของคุณ";
+"Upload from your photo library" = "อัปโหลดจากคลังรูปภาพของคุณ";
 "Missing permissions" = "ไม่มีสิทธิ์";
-"This permission is needed to upload photos and videos from your photo library." = "จำเป็นต้องได้รับอนุญาตเพื่ออัพโหลดรูปภาพและวิดีโอจากคลังรูปภาพของคุณ";
+"This permission is needed to upload photos and videos from your photo library." = "จำเป็นต้องได้รับอนุญาตเพื่ออัปโหลดรูปภาพและวิดีโอจากคลังรูปภาพของคุณ";
 "Not now" = "ไม่ใช่ตอนนี้";
-"Upload file" = "อัพโหลดไฟล์";
-"Upload files" = "อัพโหลดไฟล์";
-
+"Upload file" = "อัปโหลดไฟล์";
+"Upload files" = "อัปโหลดไฟล์";
+"Ignore" = "ไม่สนใจ";
+"Authorization failed" = "การอนุมัติล้มเหลว";
+"The server declined access with the credentials stored for this connection." = "เซิร์ฟเวอร์ปฏิเสธการเข้าถึงด้วยหนังสือรับรองที่เก็บไว้สำหรับการเชื่อมต่อนี้";
+"No matches" = "ไม่ตรงกัน";
+"There are no results for this search term" = "ไม่มีผลลัพธ์สำหรับคำค้นหานี้";
 "Status" = "สถานะ";
 
 /* Server List*/
@@ -104,6 +128,7 @@
 "This will also delete all locally stored file copies." = "นอกจากนี้จะลบไฟล์สำเนาที่เก็บไว้ในเครื่องทั้งหมด";
 "Delete" = "ลบ";
 "Deletion of '%@' failed" = "การลบ '%@' ล้มเหลว";
+"Accounts" = "บัญชี";
 
 "Help" = "ช่วยเหลือ";
 "Feedback" = "ข้อเสนอแนะ";
@@ -116,22 +141,22 @@
 "Passcode Lock" = "ล็อกรหัสผ่าน";
 "Face ID" = "ปลดล็อคด้วยใบหน้า";
 "Touch ID" = "ยืนยันตนด้วยลายนิ้วมือ";
-"Instant Uploads" = "อัพโหลดทันที";
+"Instant Uploads" = "อัปโหลดทันที";
 "Videos" = "วิดีโอ";
 "Photos" = "รูปภาพ";
-"Background uploads" = "อัพโหลดพื้นหลัง";
+"Background uploads" = "อัปโหลดพื้นหลัง";
 "Wifi only" = "Wifi เท่านั้น";
 "Settings" = "ตั้งค่า";
 "Lock application" = "ล็อกแอพพลิเคชัน";
-"Upload videos via WiFi only" = "อัพโหลดวีดีโอผ่านทาง WiFi เท่านั้น";
-"Upload pictures via WiFi only" = "อัพโหลดรูปภาพผ่านทาง WiFi เท่านั้น";
+"Upload videos via WiFi only" = "อัปโหลดวีดีโอผ่านทาง WiFi เท่านั้น";
+"Upload pictures via WiFi only" = "อัปโหลดรูปภาพผ่านทาง WiFi เท่านั้น";
 "More" = "ขยาย";
 "Send feedback" = "ส่งความคิดเห็น";
 "Recommend to a friend" = "แนะนำให้เพื่อน";
 "Privacy Policy" = "นโยบายส่วนบุคคล";
 "Acknowledgements" = "กิตติกรรมประกาศ";
-"Video upload path" = "เส้นทางการอัพโหลดวิดีโอ";
-"Photo upload path" = "เส้นทางการอัพโหลดภาพ";
+"Video upload path" = "เส้นทางการอัปโหลดวิดีโอ";
+"Photo upload path" = "เส้นทางการอัปโหลดภาพ";
 "Always" = "เสมอ";
 "After 1 minute" = "หลังจากผ่านไป 1 นาที";
 "After 5 minutes" = "หลังจากผ่านไป 5 นาที";
@@ -148,17 +173,24 @@
 /* User Interface Settings */
 "Theme" = "ธีม";
 "User Interface" = "หน้าจอผู้ใช้";
-"ownCloud Dark" = "ownCloud แบบมืด";
-"ownCloud Light" = "ownCloud แบบสว่าง";
-"ownCloud Classic" = "ownCloud แบบคลาสสิก";
+"Dark" = "แบบมืด";
+"Light" = "แบบสว่าง";
+"Classic" = "แบบคลาสสิก";
 
 /* Log settings */
+"Log Files" = "ไฟล์ log";
+"Browse log files" = "เรียกดูไฟล์ log";
+"Share" = "แชร์";
+"Delete all log files?" = "ลบไฟล์ log ทั้งหมด?";
+"Delete all" = "ลบทั้งหมด";
+
 "Log Level" = "ระดับ log";
 "Log Destinations" = "log ปลายทาง";
 "Privacy" = "ความเป็นส่วนตัว";
 
-"Logging" = "กำลังเก็บ log";
+"Logging" = "กำลังเก็บบันทึก";
 "Enable logging" = "เปิดใช้ระบบบันทึกข้อมูล";
+"Options" = "ตัวเลือก";
 
 "Off" = "ปิด";
 "Info" = "ข้อมูล";
@@ -169,8 +201,12 @@
 "Share log file" = "แชร์ไฟล์ log";
 "Reset log file" = "รีเซ็ตไฟล์ log";
 
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "เมื่อเปิดใช้งาน log อาจส่งผลต่อประสิทธิภาพและรวมถึงข้อมูลที่ละเอียดอ่อน อย่างไรก็ตาม log จะไม่ถูกส่งไปยังเซิร์ฟเวอร์ %@ โดยอัตโนมัติ การแชร์ log กับผู้อื่นถือเป็นความรับผิดชอบของผู้ใช้แต่เพียงผู้เดียว";
+
+"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "log 10 ไฟล์ล่าสุดถูกเก็บไว้ในอุปกรณ์ - โดยแต่ละ log ครอบคลุมการใช้งานสูงสุด 24 ชั่วโมง เมื่อทำการแชร์โปรดจำไว้ว่า log อาจมีข้อมูลที่ละเอียดอ่อนเช่น URL เซิร์ฟเวอร์และข้อมูลเฉพาะของผู้ใช้";
+
 "Mask private data" = "ซ่อนข้อมูลส่วนตัว";
-"Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "การเปิดใช้งานตัวเลือกนี้จะพยายามปกปิดข้อมูลส่วนตัวดังนั้นจึงไม่มีการเก็บ log ใดๆ เนื่องจาก log เป็นคุณลักษณะการพัฒนาและดีบัก แม้ว่าจะเปิดใช้งานตัวเลือกนี้เราไม่สามารถรับประกันได้ว่าไฟล์ log จะไม่มีข้อมูลส่วนตัวใดๆ  ดังนั้นโปรดดูไฟล์ log เพื่อความแน่ใจ";
+"Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "การเปิดใช้งานตัวเลือกนี้จะพยายามปกปิดข้อมูลส่วนตัวดังนั้นจึงไม่มีการเก็บบันทึกใดๆ เนื่องจาก log เป็นคุณลักษณะการพัฒนาและดีบัก แม้ว่าจะเปิดใช้งานตัวเลือกนี้เราไม่สามารถรับประกันได้ว่าไฟล์ log จะไม่มีข้อมูลส่วนตัวใดๆ  ดังนั้นโปรดดูไฟล์ log เพื่อความแน่ใจ";
 
 "No log file found" = "ไม่พบไฟล์ log";
 "The log file can't be shared because no log file could be found or the log file is empty." = "ไม่สามารถแชร์ไฟล์ log ได้เนื่องจากไม่พบไฟล์ log หรือไม่มีข้อมูล";
@@ -178,6 +214,10 @@
 
 "Really reset log file?" = "รีเซ็ตไฟล์ log?";
 "This action can't be undone." = "ไม่สามารถยกเลิกการดำเนินการนี้ได้";
+
+/* Display settings */
+"Display settings" = "แสดงการตั้งค่า";
+"Show hidden files and folders" = "แสดงไฟล์และโฟลเดอร์ที่ซ่อน";
 
 /* Passcode Messages */
 
@@ -196,6 +236,7 @@
 "User-approved certificates" = "ใบรับรองที่ได้รับอนุญาตจากผู้ใช้";
 
 "Approved" = "ได้รับการอนุมัติ";
+"Auto-approved" = "อนุมัติอัตโนมัติ";
 "Revoke approval" =  "เพิกถอนการอนุมัติ";
 
 /* Actions */
@@ -204,7 +245,7 @@
 "File name cannot contain / or \\" = "ชื่อไฟล์จะต้องไม่มี / หรือ \\";
 "New Folder" = "โฟลเดอร์ใหม่";
 "Folder name" = "ชื่อโฟลเดอร์";
-"Rename" ="ตั้งชื่อใหม่";
+"Rename" ="เปลี่ยนชื่อ";
 "Create folder" ="สร้างโฟลเดอร์";
 "Duplicate" = "ซ้ำ";
 "Move" = "ย้าย";
@@ -212,15 +253,18 @@
 "Copy" = "คัดลอก";
 "Copy here" = "ึคัดลอก";
 "Cannot connect to " = "ไม่สามารถเชื่อมต่อ";
-" couldn't download this file" = "ไม่สามารถดาวน์โหลดไฟล์นี้";
+" couldn't download file(s)" = "ไม่สามารถดาวน์โหลดไฟล์";
 "Actions" = "การกระทำ";
+"copy" = "คัดลอก";
+
+"Preparing…" = "กำลังจัดเตรียม…";
 
 /* Directory Picker Messages */
 "Move here" = "ย้ายมาที่นี่";
 
 /* Preview */
 "Open file" = "เปิดไฟล์";
-"There is no network" = "ไม่มีเครือข่าย";
+"Network unavailable" = "เครือข่ายใช้งานไม่ได้";
 "Error" = "ข้อผิดพลาด";
 "Could not get the picture" = "ไม่สามารถรับรูปภาพได้";
 "Downloading" = "กำลังดาวน์โหลด";
@@ -233,3 +277,127 @@
 "%@ of %@" = "%@ จาก %@";
 "Invalid Page" = "หน้าไม่ถูกต้อง";
 "The entered page number doesn't exist" = "ไม่มีหมายเลขหน้าที่ป้อน";
+"Search PDF" = "ค้นหา PDF";
+"Outline" = "เค้าโครง";
+
+/* Photo Upload */
+"Upload" = "อัปโหลด";
+"Select All" = "เลือกทั้งหมด";
+"Deselect All" = "ยกเลิกการเลือกทั้งหมด";
+"All Photos" = "รูปภาพทั้งหมด";
+"Albums" = "อัลบัม";
+"Importing from photo library" = "นำเข้าจากคลังรูปภาพ";
+
+/* Sharing */
+"Searching Shares…" = "กำลังค้นหาแชร์...";
+"Recipient" = "ผู้รับ";
+"Recipients" = "ผู้รับ";
+"Public Link" = "ลิงก์สาธารณะ";
+"Public Links" = "ลิงก์สาธารณะ";
+"Shared by %@" = "แชร์แล้วโดย %@";
+"Invite Recipient" = "คำเชิญผู้รับ";
+"Recipients" = "ผู้รับ";
+"Add email or name" = "เพิ่มอีเมลหรือชื่อ";
+"Users" = "ผู้ใช้งาน";
+"Groups" = "กลุ่ม";
+"Start typing to search users, groups and remote users." = "เริ่มพิมพ์เพื่อค้นหาผู้ใช้กลุ่มและผู้ใช้รีโมท";
+"(Group)" = "(กลุ่ม)";
+"Adding User to Share failed" = "เพิ่มผู้ใช้ไปยังแชร์ล้มเหลว";
+"Permissions" = "สิทธิ์การเข้าใช้งาน";
+"Invited: %@" = "เชิญแล้ว: %@";
+"Created: %@" = "สร้างแล้ว: %@";
+"Allows the users you share with to re-share" = "อนุญาตให้ผู้ใช้ที่คุณแชร์ด้วยแขร์อีกครั้ง";
+"Allows the users you share with to edit your shared files, and to collaborate" = "อนุญาตให้ผู้ใช้ให้สามารถแก้ไขข้อมูลที่คุณแชร์";
+"Allows the users you share with to create new files and add them to the share" = "อนุญาตให้ผู้ใช้สามารถเพิ่มไฟล์ไปยังแชร์ของคุณ";
+"Allows uploading a new version of a shared file and replacing it" = "อนุญาตให้อัปโหลดไฟล์แชร์เวอร์ชันใหม่และแทนที่ไฟล์เดิม";
+"Allows the users you share with to delete shared files" = "อนุญาตให้ผู้ใช้สามารถลบไฟล์ที่คุณแชร์";
+"Setting permission failed" = "ตั้งค่าการอนุญาตล้มเหลว";
+"Shared with" = "แชร์ด้วย";
+"Remove Recipient failed" = "ลบผู้รับล้มเหลว";
+"Remove Recipient" = "ลบผู้รับ";
+"Create" = "สร้าง";
+"Change" = "เปลี่ยนแปลง";
+"Recipients can view or download contents." = "ผู้รับสามารถดูหรือดาวน์โหลดเนื้อหา";
+"Recipients can view, download, edit, delete and upload contents." = "ผู้รับสามารถดู ดาวน์โหลด แก้ไข ลบและอัปโหลดเนื้อหาได้";
+"Receive files from multiple recipients without revealing the contents of the folder." = "รับไฟล์จากผู้รับหลายรายโดยไม่ต้องเปิดเผยเนื้อหาของโฟลเดอร์";
+"Download / View" = "ดาวน์โหลดหรือดู";
+"Download / View / Upload" = "ดาวน์โหลด ดู หรืออัปโหลด";
+"Upload only (File Drop)" = "เฉพาะอัปโหลด (วางไฟล์)";
+"Creating public link failed" = "สร้างลิงก์สาธารณะล้มเหลว";
+"Create Public Link" = "สร้างลิงก์สาธารณะ";
+"Links" = "ลิงก์";
+"Link" = "ลิงก์";
+"Setting expiration date failed" = "ตั้งค่าวันหมดอายุล้มเหลว";
+"Expiration date" = "วันที่หมดอายุ";
+"Copy Public Link" = "คัดลอกลิงก์สาธารณะ";
+"Delete Public Link" = "ลบลิงก์สาธารณะ";
+"Deleting Public Link failed" = "ลบลิงก์สาธารณะล้มเหลว";
+"Deleting password failed" = "ลบรหัสผ่านล้มเหลว";
+"Setting password failed" = "การตั้งรหัสผ่านล้มเหลว";
+"Type to update password" = "กรอกเพื่ออัปเดตรหัสผ่าน";
+"Cannot change permission" = "ไม่สามารถเปลี่ยนการอนุญาต";
+"Before you can set the permission\n%@,\n you must enter a password." = "ก่อนที่คุณจะสามารถตั้งค่าการอนุญาต\n%@\nคุณต้องใส่รหัสผ่าน";
+"Password Protected" = "รหัสผ่านถูกป้องกันแล้ว";
+"Pending Federated Invites" = "คำเชิญแบบรวมที่รอดำเนินการ";
+"Pending Invites" = "กำลังรอคำเชิญ";
+"Shared with you" = "แชร์กับคุณ";
+"Shared with others" = "แชร์กับผู้อื่น";
+"Shares" = "แชร์";
+"Copy Private Link" = "คัดลอกลิงก์ส่วนตัว";
+"Only recipients can use this link. Use it as a permanent link to point to this resource" = "ผู้รับเท่านั้นที่สามารถใช้ลิงก์นี้ ใช้เป็นลิงก์ถาวรเพื่อชี้ไปยังแหล่งข้อมูลนี้";
+"Accept Share failed" = "ยอมรับการแชร์ล้มเหลว";
+"Decline Share failed" = "ปฏิเสธการแชร์ล้มเหลว";
+"Accept" = "ยอมรับ";
+"Decline" = "ลดลง";
+"Declined" = "ปฏิเสธ";
+"Decline Share" = "ปฏิเสธแชร์";
+"Unshare" = "ยกเลิกการแชร์";
+"Unshare failed" = "ยกเลิกการแชร์ไม่สำเร็จ";
+"Are you sure you want to unshare these items?" = "คุณแน่ใจว่าต้องการยกเลิกการแชร์รายการเหล่านี้?";
+"Are you sure you want to unshare this item?" = "คุณแน่ใจว่าต้องการยกเลิกการแชร์รายการนี้?";
+"Share" = "แชร์";
+"Read" = "อ่าน";
+"Can Share" = "สามารถแชร์";
+"Can Edit" = "สามารถแก้ไข";
+"Can Edit and Change" = "สามารถแก้ไขและเปลี่ยนแปลง";
+"Can Create" = "สามารถสร้าง";
+"Can Change" = "สามารถเปลี่ยน";
+"Can Delete" = "สามารถลบ";
+"Accept Invite %@" = "ยอมรับคำเชิญ %@";
+"Decline Invite %@" = "ปฏิเสธคำเชิญของ %@";
+"Decline cannot be undone." = "ไม่สามารถยกเลิกได้";
+"Sharing" = "แชร์ข้อมูล";
+"You" = "คุณ";
+"Share this file" = "แชร์ไฟล์นี้";
+"Share this folder" = "แชร์โฟลเดอร์นี้";
+
+/* Quick Access view */
+"Quick Access" = "เข้าถึงด่วน";
+"Collection" = "รวบรวม";
+"Recents" = "ล่าสุด";
+"Favorites"= "รายการโปรด";
+"Images" = "รูปภาพ";
+"PDF Documents" = "เอกสาร PDF";
+
+/* Photo upload settings */
+"Media Upload" = "การอัปโหลดสื่อ";
+"Convert HEIC to JPEG" = "แปลง HEIC เป็น JPEG";
+"Convert videos to MP4" = "แปลงวิดีโอเป็น MP4";
+
+/* Progress summarizer */
+"Creating %ld folders…" = "กำลังสร้าง %ld โฟลเดอร์";
+"Moving %ld items…" = "กำลังย้าย %ld ไฟล์";
+"Copying %ld items…" = "กำลังคัดลอก %ld ไฟล์";
+"Deleting %ld items…" = "กำลังลบ %ld ไฟล์";
+"Uploading %ld files…" = "กำลังอัปโหลด %ld ไฟล์";
+"Downloading %ld files…" = "กำลังดาวน์โหลด  %ld ไฟล์";
+"Updating %ld items…" = "กำลังอัปเดต %ld ไฟล์";
+
+/* Offline storage management */
+"Free on %@" = "ฟรีบน %@";
+"unknown" = "ไม่รู้จัก";
+"Offline files use" = "ใช้ไฟล์ออฟไลน์";
+"Compacting of '%@' failed" = "กำลังย่อข้อมูลพบความล้มเหลว '%@'";
+"Delete Offline Copies" = "ลบสำเนาออฟไลน์";
+"Manage" = "การจัดการ";
+"Storage" = "พื้นที่จัดเก็บข้อมูล";

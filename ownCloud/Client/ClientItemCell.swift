@@ -7,14 +7,14 @@
 //
 
 /*
- * Copyright (C) 2018, ownCloud GmbH.
- *
- * This code is covered by the GNU Public License Version 3.
- *
- * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
- * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
- *
- */
+* Copyright (C) 2018, ownCloud GmbH.
+*
+* This code is covered by the GNU Public License Version 3.
+*
+* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+*
+*/
 
 import UIKit
 import ownCloudSDK
@@ -41,10 +41,14 @@ class ClientItemCell: ThemeTableViewCell {
 	var detailLabel : UILabel = UILabel()
 	var iconView : UIImageView = UIImageView()
 	var cloudStatusIconView : UIImageView = UIImageView()
+	var sharedStatusIconView : UIImageView = UIImageView()
+	var publicLinkStatusIconView : UIImageView = UIImageView()
 	var moreButton : UIButton = UIButton()
 	var progressView : ProgressView?
 
 	var moreButtonWidthConstraint : NSLayoutConstraint?
+	var sharedStatusIconViewRightMarginConstraint : NSLayoutConstraint?
+	var publicLinkStatusIconViewRightMarginConstraint : NSLayoutConstraint?
 
 	var activeThumbnailRequestProgress : Progress?
 
@@ -55,6 +59,16 @@ class ClientItemCell: ThemeTableViewCell {
 			} else {
 				moreButtonWidthConstraint?.constant = moreButtonWidth
 			}
+		}
+	}
+
+	var isActive = true {
+		didSet {
+			let alpha : CGFloat = self.isActive ? 1.0 : 0.5
+			titleLabel.alpha = alpha
+			detailLabel.alpha = alpha
+			iconView.alpha = alpha
+			cloudStatusIconView.alpha = alpha
 		}
 	}
 
@@ -92,6 +106,12 @@ class ClientItemCell: ThemeTableViewCell {
 		cloudStatusIconView.translatesAutoresizingMaskIntoConstraints = false
 		cloudStatusIconView.contentMode = .center
 
+		sharedStatusIconView.translatesAutoresizingMaskIntoConstraints = false
+		sharedStatusIconView.contentMode = .center
+
+		publicLinkStatusIconView.translatesAutoresizingMaskIntoConstraints = false
+		publicLinkStatusIconView.contentMode = .center
+
 		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
 		titleLabel.adjustsFontForContentSizeCategory = true
 
@@ -101,6 +121,8 @@ class ClientItemCell: ThemeTableViewCell {
 		self.contentView.addSubview(titleLabel)
 		self.contentView.addSubview(detailLabel)
 		self.contentView.addSubview(iconView)
+		self.contentView.addSubview(sharedStatusIconView)
+		self.contentView.addSubview(publicLinkStatusIconView)
 		self.contentView.addSubview(cloudStatusIconView)
 		self.contentView.addSubview(moreButton)
 
@@ -108,6 +130,16 @@ class ClientItemCell: ThemeTableViewCell {
 		moreButton.contentMode = .center
 
 		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
+
+		sharedStatusIconView.setContentHuggingPriority(.required, for: .vertical)
+		sharedStatusIconView.setContentHuggingPriority(.required, for: .horizontal)
+		sharedStatusIconView.setContentCompressionResistancePriority(.required, for: .vertical)
+		sharedStatusIconView.setContentCompressionResistancePriority(.required, for: .horizontal)
+
+		publicLinkStatusIconView.setContentHuggingPriority(.required, for: .vertical)
+		publicLinkStatusIconView.setContentHuggingPriority(.required, for: .horizontal)
+		publicLinkStatusIconView.setContentCompressionResistancePriority(.required, for: .vertical)
+		publicLinkStatusIconView.setContentCompressionResistancePriority(.required, for: .horizontal)
 
 		cloudStatusIconView.setContentHuggingPriority(.required, for: .vertical)
 		cloudStatusIconView.setContentHuggingPriority(.required, for: .horizontal)
@@ -120,6 +152,8 @@ class ClientItemCell: ThemeTableViewCell {
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
 		moreButtonWidthConstraint = moreButton.widthAnchor.constraint(equalToConstant: moreButtonWidth)
+		sharedStatusIconViewRightMarginConstraint = sharedStatusIconView.rightAnchor.constraint(equalTo: publicLinkStatusIconView.leftAnchor, constant: 0)
+		publicLinkStatusIconViewRightMarginConstraint = publicLinkStatusIconView.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: 0)
 
 		NSLayoutConstraint.activate([
 			iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: horizontalMargin),
@@ -129,7 +163,9 @@ class ClientItemCell: ThemeTableViewCell {
 			iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
 			iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
 
-			titleLabel.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
+			titleLabel.rightAnchor.constraint(equalTo: sharedStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
+			sharedStatusIconViewRightMarginConstraint!,
+			publicLinkStatusIconViewRightMarginConstraint!,
 			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -horizontalMargin),
 
 			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalLabelMargin),
@@ -143,9 +179,13 @@ class ClientItemCell: ThemeTableViewCell {
 			moreButtonWidthConstraint!,
 			moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
 
+			sharedStatusIconView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+
+			publicLinkStatusIconView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+
 			cloudStatusIconView.rightAnchor.constraint(lessThanOrEqualTo: moreButton.leftAnchor, constant: -horizontalSmallMargin),
 			cloudStatusIconView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor)
-		])
+			])
 	}
 
 	// MARK: - Present item
@@ -185,8 +225,8 @@ class ClientItemCell: ThemeTableViewCell {
 			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
 				_ = thumbnail?.requestImage(for: thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
 					if error == nil,
-					   image != nil,
-					   self.item?.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
+						image != nil,
+						self.item?.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
 						OnMainThread {
 							self.iconView.image = image
 						}
@@ -207,16 +247,31 @@ class ClientItemCell: ThemeTableViewCell {
 			}
 		}
 
+		if item.isSharedWithUser || item.sharedByUserOrGroup {
+			sharedStatusIconView.image = UIImage(named: "group")
+			sharedStatusIconViewRightMarginConstraint?.constant = -horizontalSmallMargin
+		} else {
+			sharedStatusIconView.image = nil
+			sharedStatusIconViewRightMarginConstraint?.constant = 0
+		}
+		if item.sharedByPublicLink {
+			publicLinkStatusIconView.image = UIImage(named: "link")
+			publicLinkStatusIconViewRightMarginConstraint?.constant = -horizontalSmallMargin
+		} else {
+			publicLinkStatusIconView.image = nil
+			publicLinkStatusIconViewRightMarginConstraint?.constant = 0
+		}
+
 		if item.type == .file {
 			switch item.cloudStatus {
-				case .cloudOnly:
-					cloudStatusIconView.image = UIImage(named: "cloud-only")
+			case .cloudOnly:
+				cloudStatusIconView.image = UIImage(named: "cloud-only")
 
-				case .localCopy:
-					cloudStatusIconView.image = nil
+			case .localCopy:
+				cloudStatusIconView.image = nil
 
-				case .locallyModified, .localOnly:
-					cloudStatusIconView.image = UIImage(named: "cloud-local-only")
+			case .locallyModified, .localOnly:
+				cloudStatusIconView.image = UIImage(named: "cloud-local-only")
 			}
 		} else {
 			cloudStatusIconView.image = nil
@@ -243,7 +298,7 @@ class ClientItemCell: ThemeTableViewCell {
 
 		didSet {
 			if localID != nil {
-			        NotificationCenter.default.addObserver(self, selector: #selector(progressChangedForItem(_:)), name: .OCCoreItemChangedProgress, object: nil)
+				NotificationCenter.default.addObserver(self, selector: #selector(progressChangedForItem(_:)), name: .OCCoreItemChangedProgress, object: nil)
 			}
 		}
 	}
@@ -279,7 +334,7 @@ class ClientItemCell: ThemeTableViewCell {
 					progressView.rightAnchor.constraint(equalTo: moreButton.rightAnchor),
 					progressView.topAnchor.constraint(equalTo: moreButton.topAnchor),
 					progressView.bottomAnchor.constraint(equalTo: moreButton.bottomAnchor)
-				])
+					])
 
 				self.progressView = progressView
 			}
@@ -301,6 +356,8 @@ class ClientItemCell: ThemeTableViewCell {
 		titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
 
+		sharedStatusIconView.tintColor = collection.tableRowColors.secondaryLabelColor
+		publicLinkStatusIconView.tintColor = collection.tableRowColors.secondaryLabelColor
 		cloudStatusIconView.tintColor = collection.tableRowColors.secondaryLabelColor
 		detailLabel.textColor = collection.tableRowColors.secondaryLabelColor
 

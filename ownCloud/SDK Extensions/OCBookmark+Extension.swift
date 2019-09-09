@@ -23,10 +23,10 @@ extension OCBookmark {
 	static let OCBookmarkDisplayName : NSString = "OCBookmarkDisplayName"
 
 	var userName : String? {
-		if self.authenticationData != nil,
-			self.authenticationMethodIdentifier != nil,
-			let authenticationMethod = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: self.authenticationMethodIdentifier),
-			let userName = authenticationMethod.userName(fromAuthenticationData: self.authenticationData) {
+		if let authenticationData = self.authenticationData,
+		   let authenticationMethodIdentifier = self.authenticationMethodIdentifier,
+		   let authenticationMethod = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier),
+		   let userName = authenticationMethod.userName(fromAuthenticationData: authenticationData) {
 			return userName
 		}
 
@@ -67,6 +67,14 @@ extension OCBookmark {
 		}
 
 		return "bookmark"
+	}
+
+	var isTokenBased : Bool? {
+		if let authenticationMethodIdentifier = self.authenticationMethodIdentifier, let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
+			return authenticationMethodClass.type == .token
+		}
+
+		return nil
 	}
 
 }

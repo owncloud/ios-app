@@ -24,12 +24,6 @@ class MoveAction : Action {
 	override class var name : String? { return "Move".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
 
-	// MARK: - Extension matching
-	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		// Examine items in context
-		return .middle
-	}
-
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
@@ -39,7 +33,7 @@ class MoveAction : Action {
 
 		let items = context.items
 
-		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", completion: { (selectedDirectory) in
+		let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Move here".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectory) in
 			guard let selectedDirectory = selectedDirectory else {
 				self.completed(with: NSError(ocError: OCError.cancelled))
 				return
@@ -52,7 +46,7 @@ class MoveAction : Action {
 
 				if let progress = self.core?.move(item, to: selectedDirectory, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
 					if error != nil {
-						Log.log("Error \(String(describing: error)) moving \(String(describing: itemName))")
+						Log.error("Error \(String(describing: error)) moving \(String(describing: itemName))")
 					}
 				}) {
 					self.publish(progress: progress)
@@ -64,5 +58,13 @@ class MoveAction : Action {
 
 		let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)
 		viewController.present(pickerNavigationController, animated: true)
+	}
+
+	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+		if location == .moreItem {
+			return UIImage(named: "folder")
+		}
+
+		return nil
 	}
 }

@@ -16,11 +16,18 @@
  *
  */
 
+#import <ownCloudApp/ownCloudApp.h>
+
 #import "FileProviderEnumerator.h"
 #import "FileProviderExtension.h"
 #import "OCCore+FileProviderTools.h"
 #import "OCItem+FileProviderItem.h"
 #import "NSNumber+OCSyncAnchorData.h"
+
+@interface OCVault (InternalSignal)
+- (void)signalEnumeratorForContainerItemIdentifier:(NSFileProviderItemIdentifier)changedDirectoryLocalID;
+@end
+
 
 @implementation FileProviderEnumerator
 
@@ -35,6 +42,8 @@
 
 		_enumerationObservers = [NSMutableArray new];
 		_changeObservers = [NSMutableArray new];
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_displaySettingsChanged:) name:DisplaySettingsChanged object:nil];
 	}
 
 	return (self);
@@ -43,6 +52,8 @@
 - (void)invalidate
 {
 	OCLogDebug(@"##### INVALIDATE %@", _query.queryPath);
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:DisplaySettingsChanged object:nil];
 
 	if (_core != nil)
 	{
@@ -55,6 +66,18 @@
 
 	_query.delegate = nil;
 	_query = nil;
+}
+
+- (void)_displaySettingsChanged:(NSNotification *)notification
+{
+	OCLogDebug(@"Received display settings update notification (enumerator for %@)", _enumeratedItemIdentifier);
+
+	[DisplaySettings.sharedDisplaySettings updateQueryWithDisplaySettings:_query];
+
+	if (_enumeratedItemIdentifier != nil)
+	{
+		[_core.vault signalEnumeratorForContainerItemIdentifier:_enumeratedItemIdentifier];
+	}
 }
 
 - (void)enumerateItemsForObserver:(id<NSFileProviderEnumerationObserver>)observer startingAtPage:(NSFileProviderPage)page
@@ -157,6 +180,8 @@
 					self->_query = [OCQuery queryForPath:queryPath];
 					self->_query.includeRootItem = YES;
 					self->_query.delegate = self;
+
+					[DisplaySettings.sharedDisplaySettings updateQueryWithDisplaySettings:self->_query];
 
 					@synchronized(self)
 					{
