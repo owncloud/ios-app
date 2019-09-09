@@ -28,7 +28,7 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 		if AppLockHelper().isPassCodeEnabled {
 			completion(SaveFileIntentResponse(code: .authenticationRequired, userActivity: nil))
 		} else {
-			if let path = intent.path, let uuid = intent.accountUUID, let file = intent.file, let fileURL = file.fileURL {
+			if let path = intent.path, let uuid = intent.account?.uuid, let file = intent.file, let fileURL = file.fileURL {
 				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
 
 				if let bookmark = accountBookmark {
@@ -78,11 +78,15 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 		}
 	}
 
-	public func resolveAccountUUID(for intent: SaveFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
-		if let accountUUID = intent.accountUUID {
-			completion(INStringResolutionResult.success(with: accountUUID))
+	public func provideAccountOptions(for intent: SaveFileIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
+		completion(OCBookmarkManager.shared.accountList, nil)
+	}
+
+	public func resolveAccount(for intent: SaveFileIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
+		if let account = intent.account {
+			completion(AccountResolutionResult.success(with: account))
 		} else {
-			completion(INStringResolutionResult.needsValue())
+			completion(AccountResolutionResult.needsValue())
 		}
 	}
 

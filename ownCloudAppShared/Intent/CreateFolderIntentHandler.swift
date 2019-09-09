@@ -28,7 +28,7 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 		if AppLockHelper().isPassCodeEnabled {
 			completion(CreateFolderIntentResponse(code: .authenticationRequired, userActivity: nil))
 		} else {
-			if let path = intent.path, let uuid = intent.accountUUID, let name = intent.name {
+			if let path = intent.path, let uuid = intent.account?.uuid, let name = intent.name {
 				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
 
 				if let bookmark = accountBookmark {
@@ -71,12 +71,16 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 		}
 	}
 
-	public func resolveAccountUUID(for intent: CreateFolderIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
-		if let accountUUID = intent.accountUUID {
-			completion(INStringResolutionResult.success(with: accountUUID))
+	public func resolveAccount(for intent: CreateFolderIntent, with completion: @escaping (AccountResolutionResult) -> Void) {
+		if let account = intent.account {
+			completion(AccountResolutionResult.success(with: account))
 		} else {
-			completion(INStringResolutionResult.needsValue())
+			completion(AccountResolutionResult.needsValue())
 		}
+	}
+
+	public func provideAccountOptions(for intent: CreateFolderIntent, with completion: @escaping ([Account]?, Error?) -> Void) {
+		completion(OCBookmarkManager.shared.accountList, nil)
 	}
 
 	public func resolvePath(for intent: CreateFolderIntent, with completion: @escaping (INStringResolutionResult) -> Void) {

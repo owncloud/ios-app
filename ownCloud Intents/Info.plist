@@ -32,6 +32,7 @@
 			<array>
 				<string>CreateFolderIntent</string>
 				<string>DeletePathItemIntent</string>
+				<string>GetAccountIntent</string>
 				<string>GetAccounts</string>
 				<string>GetAccountsIntent</string>
 				<string>GetDirectoryListingIntent</string>
