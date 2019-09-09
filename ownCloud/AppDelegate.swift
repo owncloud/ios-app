@@ -81,7 +81,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Licenses
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: Theme.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
 
-		// Consider light / dark mode
+		// Initially apply theme based on light / dark mode
 		ThemeStyle.considerAppearanceUpdate()
 
 		//Disable UI Animation for UITesting (screenshots)
