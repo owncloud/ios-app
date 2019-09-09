@@ -387,7 +387,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	override func tableView(_ tableView: UITableView,
 	contextMenuConfigurationForRowAt indexPath: IndexPath,
 	point: CGPoint) -> UIContextMenuConfiguration? {
-		if let item = itemAt(indexPath: indexPath) {
+		if let item = itemAt(indexPath: indexPath), UIDevice.current.isIpad() {
 			return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
 				return self.makeContextMenu(for: indexPath, with: item)
 			})

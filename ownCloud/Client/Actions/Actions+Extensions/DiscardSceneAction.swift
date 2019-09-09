@@ -24,12 +24,11 @@ class DiscardSceneAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.discardscene") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Close Window".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-
-		if #available(iOS 13.0, *) {
+		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
 			if let viewController = forContext.viewController, viewController.view.window?.windowScene?.userActivity != nil {
 				return .first
 			}
@@ -45,7 +44,7 @@ class DiscardSceneAction: Action {
 			return
 		}
 
-		if #available(iOS 13.0, *) {
+		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
 			if let scene = viewController.view.window?.windowScene {
 				UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil) { (error) in
 				}
@@ -54,10 +53,8 @@ class DiscardSceneAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .folderAction {
-			if #available(iOS 13.0, *) {
-				return UIImage(systemName: "xmark.square")
-			}
+		if #available(iOS 13.0, *) {
+			return UIImage(systemName: "xmark.square")
 		}
 
 		return nil

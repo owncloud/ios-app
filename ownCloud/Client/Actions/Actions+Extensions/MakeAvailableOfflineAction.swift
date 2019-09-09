@@ -23,7 +23,7 @@ class MakeAvailableOfflineAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.makeAvailableOffline") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Make available offline".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder] }
 	override class var keyCommand : String? { return "O" }
 
 	// MARK: - Extension matching
@@ -62,7 +62,7 @@ class MakeAvailableOfflineAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .folderAction {
+		if location == .moreItem || location == .moreFolder {
 			return UIImage(named: "available-offline")
 		}
 
