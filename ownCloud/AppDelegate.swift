@@ -53,8 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
-		// Set up background refresh
-		application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum + 10)
+		ScheduledTaskManager.shared.setup()
 
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
@@ -74,6 +73,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
+
+		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
+		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
@@ -84,6 +88,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		if let enableUIAnimations = VendorServices.classSetting(forOCClassSettingsKey: .enableUIAnimations) as? Bool {
 			UIView.setAnimationsEnabled(enableUIAnimations)
 		}
+
+		// Set background refresh interval
+		UIApplication.shared.setMinimumBackgroundFetchInterval(
+			UIApplication.backgroundFetchIntervalMinimum)
 
 		return true
 	}
@@ -100,11 +108,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-		Log.debug("AppDelegate: performFetchWithCompletionHandler")
-
-		OnMainThread(after: 2.0) {
-			completionHandler(.noData)
-		}
+		ScheduledTaskManager.shared.backgroundFetch(completionHandler: completionHandler)
 	}
 
 	func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
