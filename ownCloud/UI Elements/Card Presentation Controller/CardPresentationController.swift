@@ -70,8 +70,11 @@ final class CardPresentationController: UIPresentationController {
 	}
 
 	private var windowFrame: CGRect {
-		let window = UIApplication.shared.delegate!.window!!
-		return window.bounds
+		if let window = UIApplication.shared.delegate?.window as? UIWindow {
+			return window.bounds
+		} else {
+			return UIScreen.main.bounds
+		}
 	}
 
 	override var frameOfPresentedViewInContainerView: CGRect {

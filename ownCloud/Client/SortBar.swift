@@ -212,6 +212,11 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 	// MARK: - Sort UI
 
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
+		self.updateForCurrentTraitCollection()
+	}
+
+	func updateForCurrentTraitCollection() {
 		switch (traitCollection.horizontalSizeClass, traitCollection.verticalSizeClass) {
 		case (.compact, .regular):
 			sortSegmentedControl?.isHidden = true
