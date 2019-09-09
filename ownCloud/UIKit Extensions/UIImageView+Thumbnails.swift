@@ -49,17 +49,19 @@ extension UIImageView {
 				})
 			}
 
+			weak var weakCore = core
+
 			if let thumbnail = item.thumbnail {
 				displayThumbnail(thumbnail)
 			} else {
-				let activeThumbnailRequestProgress = core.retrieveThumbnail(for: item, maximumSize: size, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, progress) in
+				let activeThumbnailRequestProgress = weakCore?.retrieveThumbnail(for: item, maximumSize: size, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, progress) in
 					item.thumbnail = thumbnail
 					displayThumbnail(thumbnail)
 
 					// No thumbnail returned by the core, try QuickLook thumbnailing on iOS 13
 					#if canImport(QuickLookThumbnailing)
 					if thumbnail == nil, #available(iOS 13, *) {
-						core.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (_, url, _) in
+						weakCore?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (_, url, _) in
 							if let url = url {
 								let thumbnailRequest = QLThumbnailGenerator.Request(fileAt: url, size: size, scale: UIScreen.main.scale, representationTypes: .all)
 								QLThumbnailGenerator.shared.generateRepresentations(for: thumbnailRequest) { (representation, _, _) in
