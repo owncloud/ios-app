@@ -1112,6 +1112,7 @@
 				39C31F9422F1A52A0023923D /* Themes.plist */,
 			);
 			name = Theming;
+		};
 		3907CA6F225F5355001CFBD4 /* Sharing */ = {
 			isa = PBXGroup;
 			children = (
