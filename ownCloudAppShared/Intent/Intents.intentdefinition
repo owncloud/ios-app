@@ -6,13 +6,13 @@
 	<array>
 		<dict>
 			<key>INEnumDisplayName</key>
-			<string>Sort Type</string>
+			<string>Sorting Type</string>
 			<key>INEnumDisplayNameID</key>
 			<string>CwmgYp</string>
 			<key>INEnumGeneratesHeader</key>
 			<true/>
 			<key>INEnumName</key>
-			<string>SortType</string>
+			<string>SortingType</string>
 			<key>INEnumType</key>
 			<string>Regular</string>
 			<key>INEnumValues</key>
@@ -79,13 +79,13 @@
 		</dict>
 		<dict>
 			<key>INEnumDisplayName</key>
-			<string>Sort Direction</string>
+			<string>Sorting Direction</string>
 			<key>INEnumDisplayNameID</key>
 			<string>nZsCMf</string>
 			<key>INEnumGeneratesHeader</key>
 			<true/>
 			<key>INEnumName</key>
-			<string>SortDirection</string>
+			<string>SortingDirection</string>
 			<key>INEnumType</key>
 			<string>Regular</string>
 			<key>INEnumValues</key>
@@ -406,13 +406,13 @@
 					<key>INIntentParameterCustomDisambiguation</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
-					<string>Sort Type</string>
+					<string>Sort by</string>
 					<key>INIntentParameterDisplayNameID</key>
 					<string>IklOI3</string>
 					<key>INIntentParameterDisplayPriority</key>
 					<integer>3</integer>
 					<key>INIntentParameterEnumType</key>
-					<string>SortType</string>
+					<string>SortingType</string>
 					<key>INIntentParameterEnumTypeNamespace</key>
 					<string>K5U8aR</string>
 					<key>INIntentParameterName</key>
@@ -471,7 +471,7 @@
 					<key>INIntentParameterDisplayPriority</key>
 					<integer>4</integer>
 					<key>INIntentParameterEnumType</key>
-					<string>SortDirection</string>
+					<string>SortingDirection</string>
 					<key>INIntentParameterEnumTypeNamespace</key>
 					<string>K5U8aR</string>
 					<key>INIntentParameterName</key>

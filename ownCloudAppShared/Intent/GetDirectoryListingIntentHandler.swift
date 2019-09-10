@@ -49,12 +49,12 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 		}
 	}
 
-	public func resolveSortType(for intent: GetDirectoryListingIntent, with completion: @escaping (SortTypeResolutionResult) -> Void) {
-		completion(SortTypeResolutionResult.success(with: intent.sortType))
+	public func resolveSortType(for intent: GetDirectoryListingIntent, with completion: @escaping (SortingTypeResolutionResult) -> Void) {
+		completion(SortingTypeResolutionResult.success(with: intent.sortType))
 	}
 
-	public func resolveSortDirection(for intent: GetDirectoryListingIntent, with completion: @escaping (SortDirectionResolutionResult) -> Void) {
-		completion(SortDirectionResolutionResult.success(with: intent.sortDirection))
+	public func resolveSortDirection(for intent: GetDirectoryListingIntent, with completion: @escaping (SortingDirectionResolutionResult) -> Void) {
+		completion(SortingDirectionResolutionResult.success(with: intent.sortDirection))
 	}
 
 	@available(iOS 12.0, *)
@@ -73,11 +73,10 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 							let targetDirectoryQuery = OCQuery(forPath: path)
 							targetDirectoryQuery.delegate = self
 
-
 							if targetDirectoryQuery.sortComparator == nil {
-								let sort = SortMethod(rawValue: intent.sortType.rawValue) ?? SortMethod.alphabetically
+								let sort = SortMethod(rawValue: (intent.sortType.rawValue - 1)) ?? SortMethod.alphabetically
 
-								targetDirectoryQuery.sortComparator = sort.comparator(direction: SortDirection(rawValue: intent.sortDirection.rawValue))
+								targetDirectoryQuery.sortComparator = sort.comparator(direction: SortDirection(rawValue: (intent.sortDirection.rawValue - 1)) ?? SortDirection.ascendant)
 							}
 							core?.start(targetDirectoryQuery)
 						} else {
