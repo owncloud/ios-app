@@ -297,7 +297,11 @@ class ThemeCollection : NSObject {
 				self.toolbarColors = self.navigationBarColors
 
 				// Bar styles
-				self.statusBarStyle = .default
+				if #available(iOS 13, *) {
+					self.statusBarStyle = .darkContent
+				} else {
+					self.statusBarStyle = .default
+				}
 				self.barStyle = .default
 
 				// Progress
