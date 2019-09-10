@@ -29,6 +29,7 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 			completion(GetFileInfoIntentResponse(code: .authenticationRequired, userActivity: nil))
 		} else {
 			if let path = intent.path, let uuid = intent.account?.uuid {
+				print("--> intent.path \(intent.path)")
 				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
 
 				if let bookmark = accountBookmark {
@@ -68,7 +69,11 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 							completion(GetFileInfoIntentResponse(code: .failure, userActivity: nil))
 						}
 				})
+				} else {
+					completion(GetFileInfoIntentResponse(code: .accountFailure, userActivity: nil))
 				}
+			} else {
+				completion(GetFileInfoIntentResponse(code: .failure, userActivity: nil))
 			}
 		}
 	}

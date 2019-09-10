@@ -70,7 +70,7 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 						}
 					})
 				} else {
-					completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+					completion(SaveFileIntentResponse(code: .accountFailure, userActivity: nil))
 				}
 			} else {
 				completion(SaveFileIntentResponse(code: .failure, userActivity: nil))

@@ -3,7 +3,124 @@
 <plist version="1.0">
 <dict>
 	<key>INEnums</key>
-	<array/>
+	<array>
+		<dict>
+			<key>INEnumDisplayName</key>
+			<string>Sort Type</string>
+			<key>INEnumDisplayNameID</key>
+			<string>CwmgYp</string>
+			<key>INEnumGeneratesHeader</key>
+			<true/>
+			<key>INEnumName</key>
+			<string>SortType</string>
+			<key>INEnumType</key>
+			<string>Regular</string>
+			<key>INEnumValues</key>
+			<array>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>unknown</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>0w7gOP</string>
+					<key>INEnumValueName</key>
+					<string>unknown</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Name</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>8CnkN3</string>
+					<key>INEnumValueIndex</key>
+					<integer>1</integer>
+					<key>INEnumValueName</key>
+					<string>name</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Type</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>vY7pxV</string>
+					<key>INEnumValueIndex</key>
+					<integer>2</integer>
+					<key>INEnumValueName</key>
+					<string>type</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Size</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>eZdCum</string>
+					<key>INEnumValueIndex</key>
+					<integer>3</integer>
+					<key>INEnumValueName</key>
+					<string>size</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Date</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>lsb3bf</string>
+					<key>INEnumValueIndex</key>
+					<integer>4</integer>
+					<key>INEnumValueName</key>
+					<string>date</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Shared</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>E5BAmD</string>
+					<key>INEnumValueIndex</key>
+					<integer>5</integer>
+					<key>INEnumValueName</key>
+					<string>shared</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>INEnumDisplayName</key>
+			<string>Sort Direction</string>
+			<key>INEnumDisplayNameID</key>
+			<string>nZsCMf</string>
+			<key>INEnumGeneratesHeader</key>
+			<true/>
+			<key>INEnumName</key>
+			<string>SortDirection</string>
+			<key>INEnumType</key>
+			<string>Regular</string>
+			<key>INEnumValues</key>
+			<array>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>unknown</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>JRUplN</string>
+					<key>INEnumValueName</key>
+					<string>unknown</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Ascending</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>tHgDsi</string>
+					<key>INEnumValueIndex</key>
+					<integer>1</integer>
+					<key>INEnumValueName</key>
+					<string>ascending</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>Descending</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>ZB0VB7</string>
+					<key>INEnumValueIndex</key>
+					<integer>2</integer>
+					<key>INEnumValueName</key>
+					<string>descending</string>
+				</dict>
+			</array>
+		</dict>
+	</array>
 	<key>INIntentDefinitionModelVersion</key>
 	<string>1.1</string>
 	<key>INIntentDefinitionNamespace</key>
@@ -132,11 +249,15 @@
 			<string>2IChwb</string>
 			<key>INIntentIneligibleForSuggestions</key>
 			<true/>
+			<key>INIntentInput</key>
+			<string>path</string>
+			<key>INIntentKeyParameter</key>
+			<string>path</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>6</integer>
+			<integer>10</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>path,account</key>
+				<key>path,account,sortType,sortDirection</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
@@ -281,6 +402,124 @@
 					<key>INIntentParameterType</key>
 					<string>Object</string>
 				</dict>
+				<dict>
+					<key>INIntentParameterCustomDisambiguation</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Sort Type</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>IklOI3</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>3</integer>
+					<key>INIntentParameterEnumType</key>
+					<string>SortType</string>
+					<key>INIntentParameterEnumTypeNamespace</key>
+					<string>K5U8aR</string>
+					<key>INIntentParameterName</key>
+					<string>sortType</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${sortType}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>a5zbSk</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Which one?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>YkRxhp</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationSelection</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${sortType}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>2etfeF</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>8</integer>
+					<key>INIntentParameterType</key>
+					<string>Integer</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterCustomDisambiguation</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Sort Direction</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>gFiypL</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>4</integer>
+					<key>INIntentParameterEnumType</key>
+					<string>SortDirection</string>
+					<key>INIntentParameterEnumTypeNamespace</key>
+					<string>K5U8aR</string>
+					<key>INIntentParameterName</key>
+					<string>sortDirection</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${sortDirection}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>ZXvi1J</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Which one?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>d8ddSN</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationSelection</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${sortDirection}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>5tW7cP</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>10</integer>
+					<key>INIntentParameterType</key>
+					<string>Integer</string>
+				</dict>
 			</array>
 			<key>INIntentResponse</key>
 			<dict>
@@ -319,6 +558,18 @@
 						<string>ZWoKzx</string>
 						<key>INIntentResponseCodeName</key>
 						<string>pathFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>SP1wR2</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>QIKvUr</string>
+						<key>INIntentResponseCodeName</key>
+						<string>accountFailure</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -365,6 +616,10 @@
 			<string>nvFl2W</string>
 			<key>INIntentIneligibleForSuggestions</key>
 			<true/>
+			<key>INIntentInput</key>
+			<string>path</string>
+			<key>INIntentKeyParameter</key>
+			<string>path</string>
 			<key>INIntentLastParameterTag</key>
 			<integer>4</integer>
 			<key>INIntentManagedParameterCombinations</key>
@@ -524,6 +779,18 @@
 						<string>lrF7G0</string>
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationRequired</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>4eTrn2</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>61YuKy</string>
+						<key>INIntentResponseCodeName</key>
+						<string>accountFailure</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -779,6 +1046,18 @@
 						<key>INIntentResponseCodeName</key>
 						<string>pathFailure</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>xIWWfW</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>AtUMKl</string>
+						<key>INIntentResponseCodeName</key>
+						<string>accountFailure</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>1</integer>
@@ -1018,6 +1297,18 @@
 						<key>INIntentResponseCodeName</key>
 						<string>pathFailure</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>CtNzv7</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>dWm6eD</string>
+						<key>INIntentResponseCodeName</key>
+						<string>accountFailure</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>1</integer>
@@ -1222,6 +1513,18 @@
 						<string>sLw6L8</string>
 						<key>INIntentResponseCodeName</key>
 						<string>pathFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>lUzgvo</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>hLfV0h</string>
+						<key>INIntentResponseCodeName</key>
+						<string>accountFailure</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -1434,6 +1737,18 @@
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationRequired</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>g1Zin1</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>C4qdxp</string>
+						<key>INIntentResponseCodeName</key>
+						<string>accountFailure</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>2</integer>
@@ -1486,6 +1801,10 @@
 			<string>Delete the given path in account</string>
 			<key>INIntentDescriptionID</key>
 			<string>jkLupt</string>
+			<key>INIntentInput</key>
+			<string>path</string>
+			<key>INIntentKeyParameter</key>
+			<string>path</string>
 			<key>INIntentLastParameterTag</key>
 			<integer>3</integer>
 			<key>INIntentManagedParameterCombinations</key>
@@ -1659,6 +1978,18 @@
 						<string>1KMplM</string>
 						<key>INIntentResponseCodeName</key>
 						<string>pathFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>7leZJ9</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>ABZOUR</string>
+						<key>INIntentResponseCodeName</key>
+						<string>accountFailure</string>
 					</dict>
 				</array>
 			</dict>

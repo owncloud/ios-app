@@ -58,6 +58,8 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 							completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
 						}
 					})
+				} else {
+					completion(CreateFolderIntentResponse(code: .accountFailure, userActivity: nil))
 				}
 			}
 		}

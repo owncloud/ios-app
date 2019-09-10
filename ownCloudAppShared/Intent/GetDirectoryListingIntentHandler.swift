@@ -49,6 +49,14 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 		}
 	}
 
+	public func resolveSortType(for intent: GetDirectoryListingIntent, with completion: @escaping (SortTypeResolutionResult) -> Void) {
+		completion(SortTypeResolutionResult.success(with: intent.sortType))
+	}
+
+	public func resolveSortDirection(for intent: GetDirectoryListingIntent, with completion: @escaping (SortDirectionResolutionResult) -> Void) {
+		completion(SortDirectionResolutionResult.success(with: intent.sortDirection))
+	}
+
 	@available(iOS 12.0, *)
 	public func handle(intent: GetDirectoryListingIntent, completion: @escaping (GetDirectoryListingIntentResponse) -> Void) {
 
@@ -64,11 +72,20 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 							self.core = core
 							let targetDirectoryQuery = OCQuery(forPath: path)
 							targetDirectoryQuery.delegate = self
+
+
+							if targetDirectoryQuery.sortComparator == nil {
+								let sort = SortMethod(rawValue: intent.sortType.rawValue) ?? SortMethod.alphabetically
+
+								targetDirectoryQuery.sortComparator = sort.comparator(direction: SortDirection(rawValue: intent.sortDirection.rawValue))
+							}
 							core?.start(targetDirectoryQuery)
 						} else {
 							self.completion?(GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
 						}
 					})
+				} else {
+					completion(GetDirectoryListingIntentResponse(code: .accountFailure, userActivity: nil))
 				}
 			}
 
