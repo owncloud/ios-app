@@ -77,8 +77,6 @@ extension ThemeStyle {
 
 		if #available(iOS 13, *) {
 			if self.followSystemAppearance {
-				themeWindow?.overrideUserInterfaceStyle = .unspecified
-
 				if let themeWindow = themeWindow, themeWindow.traitCollection.userInterfaceStyle == .dark {
 					if let darkStyleIdentifier = ThemeStyle.preferredStyle.darkStyleIdentifier {
 						applyStyle = ThemeStyle.forIdentifier(darkStyleIdentifier)
@@ -91,7 +89,11 @@ extension ThemeStyle {
 			let themeCollection = ThemeCollection(with: applyStyle)
 
 			if #available(iOS 13, *) {
-				themeWindow?.overrideUserInterfaceStyle = themeCollection.interfaceStyle.userInterfaceStyle
+				if let themeWindowSubviews = themeWindow?.subviews {
+					for view in themeWindowSubviews {
+						view.overrideUserInterfaceStyle = themeCollection.interfaceStyle.userInterfaceStyle
+					}
+				}
 			}
 
 			if animated {
