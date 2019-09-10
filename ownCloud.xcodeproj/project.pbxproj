@@ -47,6 +47,7 @@
 		396D7C6523224A53002380C1 /* DiscardSceneAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */; };
 		3971B48F221B23FE006FB441 /* ThemeableColoredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */; };
 		397328EF22D606AC006CFAA4 /* ImportFilesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397328EE22D606AC006CFAA4 /* ImportFilesController.swift */; };
+		397754F82327A33500119FCB /* OpenSceneAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754F22327A33500119FCB /* OpenSceneAction.swift */; };
 		39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */; };
 		3998F5CC2240CD8300B66713 /* RoundedInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */; };
 		3998F5D3224102FE00B66713 /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D2224102FE00B66713 /* UITableView+Extension.swift */; };
@@ -604,6 +605,7 @@
 		396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscardSceneAction.swift; sourceTree = "<group>"; };
 		3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableColoredView.swift; sourceTree = "<group>"; };
 		397328EE22D606AC006CFAA4 /* ImportFilesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportFilesController.swift; sourceTree = "<group>"; };
+		397754F22327A33500119FCB /* OpenSceneAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenSceneAction.swift; sourceTree = "<group>"; };
 		39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extension.swift"; sourceTree = "<group>"; };
 		3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedInfoView.swift; sourceTree = "<group>"; };
 		3998F5D2224102FE00B66713 /* UITableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
@@ -1249,6 +1251,7 @@
 		6E586CF52199A70100F680C4 /* Actions+Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				397754F22327A33500119FCB /* OpenSceneAction.swift */,
 				396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */,
 				399DD7C122A691BC00B45EB2 /* UnshareAction.swift */,
 				6E91F37D21ECA6FD009436D2 /* CopyAction.swift */,
@@ -2452,6 +2455,7 @@
 				DC3BE0DE2077CC14002A0AC0 /* ClientQueryViewController.swift in Sources */,
 				4C1561EF22232357009C4EF3 /* PhotoSelectionViewCell.swift in Sources */,
 				23C56538212167BE00BD4B47 /* CardTransitionDelegate.swift in Sources */,
+				397754F82327A33500119FCB /* OpenSceneAction.swift in Sources */,
 				4CAF783C2282FD40000C85CF /* FileManager+Extension.swift in Sources */,
 				6E3A104D219D6F0100F90C96 /* DuplicateAction.swift in Sources */,
 				DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */,

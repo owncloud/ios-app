@@ -74,6 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
+		OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 

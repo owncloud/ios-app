@@ -1,8 +1,8 @@
 //
-//  DiscardSceneAction.swift
+//  OpenSceneAction.swift
 //  ownCloud
 //
-//  Created by Matthias Hühne on 06.09.19.
+//  Created by Matthias Hühne on 10.09.19.
 //  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
 
@@ -20,17 +20,17 @@ import UIKit
 import ownCloudSDK
 import MobileCoreServices
 
-class DiscardSceneAction: Action {
-	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.discardscene") }
+class OpenSceneAction: Action {
+	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openscene") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String { return "Close Window".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder] }
+	override class var name : String { return "Open in new Window".localized }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 
 		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
-			if let viewController = forContext.viewController, viewController.view.window?.windowScene?.userActivity != nil {
+			if forContext.items.count == 1 {
 				return .first
 			}
 		}
@@ -46,16 +46,16 @@ class DiscardSceneAction: Action {
 		}
 
 		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
-			if let scene = viewController.view.window?.windowScene {
-				UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil) { (error) in
-				}
+			if context.items.count == 1, let item = context.items.first, let tabBarController = viewController.tabBarController as? ClientRootViewController {
+				let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
+				UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
 			}
 		}
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if #available(iOS 13.0, *) {
-			return UIImage(systemName: "xmark.square")?.tinted(with: Theme.shared.activeCollection.tintColor)
+			return UIImage(systemName: "uiwindow.split.2x1")?.tinted(with: Theme.shared.activeCollection.tintColor)
 		}
 
 		return nil
