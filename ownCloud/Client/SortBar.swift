@@ -190,7 +190,6 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 		Theme.shared.register(client: self)
 
 		selectButton?.isHidden = !showSelectButton
-		toggleSortControls()
 	}
 
 	required init?(coder aDecoder: NSCoder) {
