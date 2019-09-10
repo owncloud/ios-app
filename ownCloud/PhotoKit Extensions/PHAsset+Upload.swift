@@ -52,6 +52,11 @@ extension PHAsset {
 												// Delete the temporary asset file in case of critical error
 												removeSourceFile()
 											}
+											if error != nil {
+												Log.error(tagged: ["MEDIA_UPLOAD"], "Sync engine import failed for asset ID \(self.localIdentifier)")
+											} else {
+												Log.debug(tagged: ["MEDIA_UPLOAD"], "Finished uploading asset ID \(self.localIdentifier)")
+											}
 											completionHandler(item, error)
 
 			}, completionHandler: { (_, _) in
@@ -64,6 +69,8 @@ extension PHAsset {
 				progressHandler?(uploadProgress!)
 			}
 		}
+
+		Log.debug(tagged: ["MEDIA_UPLOAD"], "Prepare uploading asset ID \(self.localIdentifier), type:\(self.mediaType), subtypes:\(self.mediaSubtypes), sourceType:\(self.sourceType), creationDate:\(String(describing: self.creationDate)), modificationDate:\(String(describing: self.modificationDate)), favorite:\(self.isFavorite), hidden:\(self.isHidden)")
 
 		// Prepare progress object for importing full size asset from photo library
 		let importProgress = Progress(totalUnitCount: 100)
@@ -96,6 +103,8 @@ extension PHAsset {
 						break
 					}
 
+					Log.debug(tagged: ["MEDIA_UPLOAD"], "Preparing to export asset ID \(self.localIdentifier), URL: \(String(describing: assetURL)), UTI: \(String(describing: assetUTI))")
+
 					guard let url = assetURL else { return }
 
 					let fileName = url.lastPathComponent
@@ -114,6 +123,7 @@ extension PHAsset {
 											if exportSuccess {
 												performUpload(sourceURL: localURL, copySource: false)
 											} else {
+												Log.error(tagged: ["MEDIA_UPLOAD"], "Video export failed for asset ID \(self.localIdentifier)")
 												completionHandler(nil, NSError(ocError: .internal))
 											}
 										})
@@ -129,6 +139,7 @@ extension PHAsset {
 									if imageConverted {
 										performUpload(sourceURL: localURL, copySource: false)
 									} else {
+										Log.error(tagged: ["MEDIA_UPLOAD"], "CIImage conversion failed for \(self.localIdentifier)")
 										completionHandler(nil, NSError(ocError: .internal))
 									}
 								default:
@@ -136,6 +147,7 @@ extension PHAsset {
 								}
 
 							} else {
+								Log.error(tagged: ["MEDIA_UPLOAD"], "Format mismatch for asset ID \(self.localIdentifier)")
 								completionHandler(nil, NSError(ocError: .internal))
 							}
 						} else {
@@ -148,6 +160,9 @@ extension PHAsset {
 				} else {
 					// If no content was returned check request info dictionary
 					let error = requestInfo[PHContentEditingInputErrorKey] as? NSError
+
+					Log.error(tagged: ["MEDIA_UPLOAD"], "Requesting content for asset ID \(self.localIdentifier) with error \(String(describing: error))")
+
 					completionHandler(nil, error)
 				}
 			}
