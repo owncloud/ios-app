@@ -5,7 +5,6 @@
 //  Created by Matthias Hühne on 08/05/2018.
 //  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
-
 /*
  * Copyright (C) 2018, ownCloud GmbH.
  *
@@ -25,7 +24,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	var window: UIWindow?
 
 	// UIWindowScene delegate
-
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		if let windowScene = scene as? UIWindowScene {
 			window = UIWindow(windowScene: windowScene)
