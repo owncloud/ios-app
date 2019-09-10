@@ -22,10 +22,7 @@ import ownCloudSDK
 typealias StringValidatorResult = (Bool, String?)
 typealias StringValidatorHandler = (String) -> StringValidatorResult
 
-class NamingViewController: UIViewController {
-
-	//TODO This view controller ideally should have Theme support.
-
+class NamingViewController: UIViewController, Themeable {
 	weak var item: OCItem?
 	weak var core: OCCore?
 	var completion: (String?, NamingViewController) -> Void
@@ -82,6 +79,8 @@ class NamingViewController: UIViewController {
 		thumbnailHeightAnchorConstraint = thumbnailImageView.heightAnchor.constraint(equalToConstant: 150)
 
 		super.init(nibName: nil, bundle: nil)
+
+		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	convenience init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
@@ -98,6 +97,12 @@ class NamingViewController: UIViewController {
 
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: nil)
+		Theme.shared.unregister(client: self)
+	}
+
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		nameTextField.backgroundColor = collection.tableBackgroundColor
+		nameTextField.textColor = collection.tableRowColors.labelColor
 	}
 
 	override func viewDidLoad() {
@@ -157,7 +162,6 @@ class NamingViewController: UIViewController {
 			nameTextField.rightAnchor.constraint(equalTo: nameContainer.rightAnchor, constant: -20)
 			])
 
-		nameTextField.backgroundColor = .white
 		nameTextField.delegate = self
 		nameTextField.textAlignment = .center
 		nameTextField.becomeFirstResponder()
@@ -253,6 +257,8 @@ class NamingViewController: UIViewController {
 	}
 
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
+
 		render(newTraitCollection: traitCollection)
 	}
 

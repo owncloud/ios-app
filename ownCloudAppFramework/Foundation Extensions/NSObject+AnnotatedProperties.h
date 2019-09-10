@@ -1,8 +1,8 @@
 //
-//  ThemeWindow.swift
+//  NSObject+AnnotatedProperties.h
 //  ownCloud
 //
-//  Created by Felix Schwarz on 28.08.19.
+//  Created by Felix Schwarz on 09.09.19.
 //  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
 
@@ -16,16 +16,15 @@
  *
  */
 
-import UIKit
+#import <Foundation/Foundation.h>
 
-class ThemeWindow : UIWindow {
-	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-		super.traitCollectionDidChange(previousTraitCollection)
+NS_ASSUME_NONNULL_BEGIN
 
-		if #available(iOS 13.0, *) {
-			if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-				//ThemeStyle.considerAppearanceUpdate()
-			}
-		}
-	}
-}
+@interface NSObject (AnnotatedProperties)
+
+- (nullable id)valueForAnnotatedProperty:(NSString *)annotatedPropertyName;
+- (void)setValue:(nullable id)value forAnnotatedProperty:(NSString *)annotatedPropertyName;
+
+@end
+
+NS_ASSUME_NONNULL_END

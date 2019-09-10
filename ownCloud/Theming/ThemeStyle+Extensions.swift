@@ -72,10 +72,10 @@ extension ThemeStyle {
 	}
 
 	static func considerAppearanceUpdate(animated: Bool = false) {
-		if #available(iOS 13, *) {
-			let themeWindow : ThemeWindow? = (UIApplication.shared.delegate as? AppDelegate)?.window
-			var applyStyle : ThemeStyle? = ThemeStyle.preferredStyle
+		let themeWindow : ThemeWindow? = (UIApplication.shared.delegate as? AppDelegate)?.window
+		var applyStyle : ThemeStyle? = ThemeStyle.preferredStyle
 
+		if #available(iOS 13, *) {
 			if self.followSystemAppearance {
 				themeWindow?.overrideUserInterfaceStyle = .unspecified
 
@@ -84,16 +84,20 @@ extension ThemeStyle {
 						applyStyle = ThemeStyle.forIdentifier(darkStyleIdentifier)
 					}
 				}
-			} else {
-				themeWindow?.overrideUserInterfaceStyle = .light
+			}
+		}
+
+		if let applyStyle = applyStyle {
+			let themeCollection = ThemeCollection(with: applyStyle)
+
+			if #available(iOS 13, *) {
+				themeWindow?.overrideUserInterfaceStyle = themeCollection.interfaceStyle.userInterfaceStyle
 			}
 
-			if let applyStyle = applyStyle {
-				if animated {
-					Theme.shared.switchThemeCollection(ThemeCollection(with: applyStyle))
-				} else {
-					Theme.shared.activeCollection = ThemeCollection(with: applyStyle)
-				}
+			if animated {
+				Theme.shared.switchThemeCollection(themeCollection)
+			} else {
+				Theme.shared.activeCollection = themeCollection
 			}
 		}
 	}

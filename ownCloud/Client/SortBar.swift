@@ -190,7 +190,6 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 		Theme.shared.register(client: self)
 
 		selectButton?.isHidden = !showSelectButton
-		toggleSortControls()
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -213,10 +212,11 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 	// MARK: - Sort UI
 
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-		toggleSortControls()
+		super.traitCollectionDidChange(previousTraitCollection)
+		self.updateForCurrentTraitCollection()
 	}
 
-	func toggleSortControls() {
+	func updateForCurrentTraitCollection() {
 		switch (traitCollection.horizontalSizeClass, traitCollection.verticalSizeClass) {
 		case (.compact, .regular):
 			sortSegmentedControl?.isHidden = true

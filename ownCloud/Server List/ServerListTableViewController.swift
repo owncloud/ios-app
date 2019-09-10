@@ -257,6 +257,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		let bookmarkViewController : BookmarkViewController = BookmarkViewController(bookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: bookmarkViewController)
 
+		navigationController.modalPresentationStyle = .fullScreen
+
 		// Prevent any in-progress connection from being shown
 		resetPreviousBookmarkSelection()
 
@@ -289,6 +291,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	func showBookmarkInfoUI(_ bookmark: OCBookmark) {
 		let viewController = BookmarkInfoViewController(bookmark)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
+
+		navigationController.modalPresentationStyle = .fullScreen
 
 		// Prevent any in-progress connection from being shown
 		resetPreviousBookmarkSelection()
@@ -492,6 +496,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		})
 
 		clientRootViewController.authDelegate = self
+		clientRootViewController.modalPresentationStyle = .fullScreen
 
 		clientRootViewController.afterCoreStart {
 			// Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
@@ -550,6 +555,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 					self.tableView.deselectRow(at: indexPath, animated: true)
 				}
 			}
+
+			self.tableView.deselectRow(at: indexPath, animated: true)
 		}
 	}
 

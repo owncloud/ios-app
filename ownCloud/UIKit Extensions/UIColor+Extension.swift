@@ -86,6 +86,8 @@ extension UIColor {
 
 		self.getRed(&selfRed, green:&selfGreen, blue:&selfBlue, alpha:&selfAlpha)
 
+		print("--> self \(self)")
+
 		return (String(format: "\(leadIn)%02x%02x%02x", Int(selfRed*255.0), Int(selfGreen*255.0), Int(selfBlue*255.0)))
 	}
 }
