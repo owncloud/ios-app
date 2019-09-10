@@ -140,9 +140,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	deinit {
 		coreConnectionStatusObservation?.invalidate()
-
 		Theme.shared.unregister(client: self)
-		self.downloadProgress?.cancel()
 		self.stopQuery()
 	}
 
