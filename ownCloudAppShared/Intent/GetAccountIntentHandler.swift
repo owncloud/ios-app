@@ -47,7 +47,7 @@ public class GetAccountIntentHandler: NSObject, GetAccountIntentHandling {
 	}
 
 	@available(iOS 12.0, *)
-	public func confirm(intent: GetAccountsIntent, completion: @escaping (GetAccountIntentResponse) -> Void) {
+	public func confirm(intent: GetAccountIntent, completion: @escaping (GetAccountIntentResponse) -> Void) {
         completion(GetAccountIntentResponse(code: .ready, userActivity: nil))
 	}
 }

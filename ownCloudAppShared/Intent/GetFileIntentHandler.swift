@@ -82,6 +82,8 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 							self.completion?(GetFileIntentResponse(code: .failure, userActivity: nil))
 						}
 					})
+				} else {
+					completion(GetFileIntentResponse(code: .accountFailure, userActivity: nil))
 				}
 			}
 

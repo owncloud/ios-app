@@ -62,6 +62,9 @@
 		396D7C6523224A53002380C1 /* DiscardSceneAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */; };
 		3971B48F221B23FE006FB441 /* ThemeableColoredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */; };
 		397328EF22D606AC006CFAA4 /* ImportFilesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397328EE22D606AC006CFAA4 /* ImportFilesController.swift */; };
+		397754CC23279B1F00119FCB /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F6238020B587EF004FDE8B /* SortMethod.swift */; };
+		397754DD23279E4600119FCB /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2347446920761BB700859C93 /* String+Extension.swift */; };
+		397754E223279EED00119FCB /* OCItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754E123279EED00119FCB /* OCItem+Extension.swift */; };
 		3984F5712319202200DC2639 /* DeletePathItemIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3984F56B2319202200DC2639 /* DeletePathItemIntentHandler.swift */; };
 		39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */; };
 		3998F5CC2240CD8300B66713 /* RoundedInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */; };
@@ -710,6 +713,7 @@
 		396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscardSceneAction.swift; sourceTree = "<group>"; };
 		3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableColoredView.swift; sourceTree = "<group>"; };
 		397328EE22D606AC006CFAA4 /* ImportFilesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportFilesController.swift; sourceTree = "<group>"; };
+		397754E123279EED00119FCB /* OCItem+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCItem+Extension.swift"; sourceTree = "<group>"; };
 		3984F56B2319202200DC2639 /* DeletePathItemIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeletePathItemIntentHandler.swift; sourceTree = "<group>"; };
 		39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extension.swift"; sourceTree = "<group>"; };
 		3998F5CB2240CD8300B66713 /* RoundedInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedInfoView.swift; sourceTree = "<group>"; };
@@ -1320,6 +1324,7 @@
 		394A0AFA22EEFC2C00603813 /* ownCloudAppShared */ = {
 			isa = PBXGroup;
 			children = (
+				397754E023279EC100119FCB /* SDK Extensions */,
 				399A4BF92317CC300027DDD6 /* Tools */,
 				395E16FB22F0691F00DE89A1 /* Intent */,
 				394A0AFB22EEFC2C00603813 /* ownCloudAppShared.h */,
@@ -1360,6 +1365,14 @@
 				397328EE22D606AC006CFAA4 /* ImportFilesController.swift */,
 			);
 			path = Import;
+			sourceTree = "<group>";
+		};
+		397754E023279EC100119FCB /* SDK Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				397754E123279EED00119FCB /* OCItem+Extension.swift */,
+			);
+			path = "SDK Extensions";
 			sourceTree = "<group>";
 		};
 		399A4BF92317CC300027DDD6 /* Tools */ = {
@@ -2981,6 +2994,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				395E16FA22F03CAF00DE89A1 /* GetFileIntentHandler.swift in Sources */,
+				397754E223279EED00119FCB /* OCItem+Extension.swift in Sources */,
 				3984F5712319202200DC2639 /* DeletePathItemIntentHandler.swift in Sources */,
 				394A0B0622EEFCB000603813 /* Intents.intentdefinition in Sources */,
 				39F689AC22F0206900E63429 /* OCBookmark+Extension.swift in Sources */,
@@ -2992,6 +3006,8 @@
 				399A4C1023190ADF0027DDD6 /* PathExistsIntentHandler.swift in Sources */,
 				39F689AB22F018C100E63429 /* GetDirectoryListingIntentHandler.swift in Sources */,
 				399A4C002317CC460027DDD6 /* AppLockHelper.swift in Sources */,
+				397754CC23279B1F00119FCB /* SortMethod.swift in Sources */,
+				397754DD23279E4600119FCB /* String+Extension.swift in Sources */,
 				399A4C032317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
