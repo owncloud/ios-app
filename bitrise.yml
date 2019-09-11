@@ -1,0 +1,72 @@
+---
+format_version: '5'
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: ios
+trigger_map:
+- push_branch: "*"
+  workflow: Testing
+- pull_request_source_branch: "*"
+  workflow: Testing
+workflows:
+  Testing:
+    steps:
+    - activate-ssh-key@3.1.1:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@4.0.14: {}
+    - cache-pull@2.0.1: {}
+    - certificate-and-profile-installer@1.9.3: {}
+    - install-bundler@1.0.0: {}
+    - cocoapods-install@1.7.2: {}
+    - fastlane@2.4.0:
+        inputs:
+        - lane: build_ipa_enterprise_in_house
+    - deploy-to-bitrise-io@1.3.19:
+        inputs:
+        - deploy_path: "/Users/vagrant/git/ownCloud.ipa"
+        - notify_user_groups: none
+    - xcode-test@2.1.1:
+        inputs:
+        - project_path: "$BITRISE_PROJECT_PATH"
+        - scheme: "$BITRISE_SCHEME_TESTS"
+        - output_tool: xcodebuild
+        - simulator_device: iPhone 8 Plus
+    - xcode-test@2.1.1:
+        inputs:
+        - project_path: "$BITRISE_PROJECT_PATH"
+        - scheme: "$BITRISE_SCHEME_TESTS"
+        - output_tool: xcodebuild
+        - simulator_device: iPad Air 2
+    - cache-push@2.0.5: {}
+    - codecov@1.1.5:
+        inputs:
+        - CODECOV_TOKEN: "$BITRISE_CODECOV_TOKEN"
+  Beta-Deploy:
+    steps:
+    - activate-ssh-key@3.1.1:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@4.0.11: {}
+    - cache-pull@2.0.1: {}
+    - certificate-and-profile-installer@1.9.3: {}
+    - cocoapods-install@1.7.2: {}
+    - fastlane@2.3.12:
+        inputs:
+        - lane: build_ipa_ad_hoc
+    - deploy-to-bitrise-io@1.3.12:
+        inputs:
+        - deploy_path: "$BITRISE_SOURCE_DIR"
+        - notify_email_list: ''
+    - cache-push@2.0.5: {}
+app:
+  envs:
+  - opts:
+      is_expand: false
+    BITRISE_PROJECT_PATH: ownCloud.xcworkspace
+  - opts:
+      is_expand: false
+    BITRISE_SCHEME: ownCloud
+  - opts:
+      is_expand: false
+    BITRISE_EXPORT_METHOD: development
+  - opts:
+      is_expand: false
+    BITRISE_SCHEME_TESTS: ownCloudTests
