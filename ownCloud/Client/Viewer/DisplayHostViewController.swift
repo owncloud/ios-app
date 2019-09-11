@@ -165,7 +165,7 @@ class DisplayHostViewController: UIPageViewController {
 						if foundIndex == nil {
 
 							currentDisplayViewController.removeFromParent()
-							
+
 							if index < itemCount {
 								if let newIndex = self?.computeNewIndex(for: index, itemCount: itemCount, position: .after, indexFound: false),
 									let newViewController = self?.viewControllerAtIndex(index: newIndex) {
