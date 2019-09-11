@@ -160,12 +160,38 @@ extension ClientRootViewController {
 			shortcuts.append(contentsOf: keyCommands)
 		}
 
+		if let core = core {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .window)
+			let actionContext = ActionContext(viewController: self, core: core, items: [], location: actionsLocation)
+			let actions = Action.sortedApplicableActions(for: actionContext)
+
+			actions.forEach({
+				if let keyCommand = $0.actionExtension.keyCommand {
+					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: [.command], action: #selector(performWindowItemAction), discoverabilityTitle: $0.actionExtension.name)
+					shortcuts.append(actionCommand)
+				}
+			})
+		}
+
 		return shortcuts
 	}
 
 	@objc func selectTab(sender: UIKeyCommand) {
 		if let newIndex = Int(sender.input!), newIndex >= 1 && newIndex <= (self.tabBar.items?.count ?? 0) {
 			self.selectedIndex = newIndex - 1
+		}
+	}
+
+	@objc func performWindowItemAction(_ command : UIKeyCommand) {
+		if let core = core {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .window)
+			let actionContext = ActionContext(viewController: self, core: core, items: [], location: actionsLocation)
+			let actions = Action.sortedApplicableActions(for: actionContext)
+			actions.forEach({
+				if command.discoverabilityTitle == $0.actionExtension.name {
+					$0.perform()
+				}
+			})
 		}
 	}
 

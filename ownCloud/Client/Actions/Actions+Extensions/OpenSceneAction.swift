@@ -25,6 +25,7 @@ class OpenSceneAction: Action {
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Open in new Window".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem] }
+	override class var keyCommand : String? { return "T" }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
