@@ -121,9 +121,18 @@ extension ServerListTableViewController {
 
 extension BookmarkViewController {
 	override var keyCommands: [UIKeyCommand]? {
-		return [
-			UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
-		]
+
+		var shortcuts = [UIKeyCommand]()
+		if let leftItem = self.navigationItem.leftBarButtonItem, let action = leftItem.action {
+			let dismissCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: action, discoverabilityTitle: "Cancel".localized)
+			shortcuts.append(dismissCommand)
+		}
+		if let rightItem = self.navigationItem.rightBarButtonItem, let action = rightItem.action {
+			let doneCommand = UIKeyCommand(input: "D", modifierFlags: [.command], action: action, discoverabilityTitle: "Continue".localized)
+			shortcuts.append(doneCommand)
+		}
+
+		return shortcuts
 	}
 
 	override var canBecomeFirstResponder: Bool {
