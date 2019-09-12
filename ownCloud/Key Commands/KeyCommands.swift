@@ -30,9 +30,25 @@ extension ServerListTableViewController {
 
 		let editSettingsCommand = UIKeyCommand(input: ",", modifierFlags: [.command, .shift], action: #selector(editBookmark), discoverabilityTitle: "Edit".localized)
 		let manageSettingsCommand = UIKeyCommand(input: "M", modifierFlags: [.command, .shift], action: #selector(manageBookmark), discoverabilityTitle: "Manage".localized)
-		let deleteSettingsCommand = UIKeyCommand(input: "\u{08}", modifierFlags: [.command, .shift], action: #selector(deleteBookmarkCommand), discoverabilityTitle: "Delete".localized)
+		let deleteSettingsCommand = UIKeyCommand(input: "\u{08}", modifierFlags: [.command, .shift], action: #selector(switchToWindow), discoverabilityTitle: "Delete".localized)
 
 		var shortcuts = [UIKeyCommand]()
+		/*
+		var index = 1
+		if #available(iOS 13.0, *) {
+		for sceneSession in UIApplication.shared.openSessions {
+				var title = "Switch to Window"
+
+			if let sceneTitle = sceneSession.scene?.title {
+					title = String(format: "Switch to Window %@", sceneTitle)
+				}
+
+				let switchWindowCommand = UIKeyCommand(input: String(index), modifierFlags: [.command], action: #selector(deleteBookmarkCommand), discoverabilityTitle: title)
+				shortcuts.append(switchWindowCommand)
+				index += 1
+			}
+		}*/
+
 		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
 			shortcuts.append(editSettingsCommand)
 			shortcuts.append(manageSettingsCommand)
@@ -64,6 +80,16 @@ extension ServerListTableViewController {
 	override var canBecomeFirstResponder: Bool {
 		return true
 	}
+/*
+	@objc func switchToWindow(_ command : UIKeyCommand) {
+		if #available(iOS 13.0, *) {
+			let sceneSession = Array(UIApplication.shared.openSessions)
+			UIApplication.shared.requestSceneSessionActivation(sceneSession.last, userActivity: nil, options: nil)
+			/*if let index = command.input, let scene = sceneSession[Int(index)] {
+
+			}*/
+		}
+	}*/
 
 	@objc func selectBookmark(_ command : UIKeyCommand) {
 		for bookmark in OCBookmarkManager.shared.bookmarks {

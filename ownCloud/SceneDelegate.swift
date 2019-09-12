@@ -52,6 +52,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 					serverListController.connect(to: bookmark, animated: false) { (_, _) in
 					}
 					window?.windowScene?.userActivity = bookmark.openAccountUserActivity
+					window?.windowScene?.title = serverListController.title
 					return true
 				}
 			}
@@ -82,6 +83,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 										clientViewController.navigationController?.viewControllers = currentControllers
 										}
 										subController.open(item: item, animated: false)
+										window?.windowScene?.title = subController.title
 									}
 								}
 							})
