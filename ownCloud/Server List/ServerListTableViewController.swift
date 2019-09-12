@@ -110,7 +110,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
-		var showBetaWarning = true
+		var showBetaWarning = false
 
 		super.viewDidAppear(animated)
 
