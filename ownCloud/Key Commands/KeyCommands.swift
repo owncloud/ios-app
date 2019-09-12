@@ -30,7 +30,7 @@ extension ServerListTableViewController {
 
 		let editSettingsCommand = UIKeyCommand(input: ",", modifierFlags: [.command, .shift], action: #selector(editBookmark), discoverabilityTitle: "Edit".localized)
 		let manageSettingsCommand = UIKeyCommand(input: "M", modifierFlags: [.command, .shift], action: #selector(manageBookmark), discoverabilityTitle: "Manage".localized)
-		let deleteSettingsCommand = UIKeyCommand(input: "\u{08}", modifierFlags: [.command, .shift], action: #selector(switchToWindow), discoverabilityTitle: "Delete".localized)
+		let deleteSettingsCommand = UIKeyCommand(input: "\u{08}", modifierFlags: [.command, .shift], action: #selector(deleteBookmarkCommand), discoverabilityTitle: "Delete".localized)
 
 		var shortcuts = [UIKeyCommand]()
 		/*
@@ -43,7 +43,7 @@ extension ServerListTableViewController {
 					title = String(format: "Switch to Window %@", sceneTitle)
 				}
 
-				let switchWindowCommand = UIKeyCommand(input: String(index), modifierFlags: [.command], action: #selector(deleteBookmarkCommand), discoverabilityTitle: title)
+				let switchWindowCommand = UIKeyCommand(input: String(index), modifierFlags: [.command], action: #selector(switchToWindow), discoverabilityTitle: title)
 				shortcuts.append(switchWindowCommand)
 				index += 1
 			}
