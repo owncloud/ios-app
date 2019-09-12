@@ -433,6 +433,7 @@
 "Delete Local Copies" = "Delete Local Copies";
 "Manage" = "Manage";
 "Storage" = "Storage";
+"Compacting" = "Compacting";
 
 "Really include available offline files?" = "Really include available offline files?";
 "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).";
