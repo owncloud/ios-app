@@ -16,7 +16,7 @@
 			<key>Inverse</key>
 			<string>#FFFFFF</string>
 			<key>Secondary</key>
-			<string>#827B96</string>
+			<string>#777777</string>
 		</dict>
 		<key>Text</key>
 		<dict>
@@ -36,9 +36,9 @@
 			<key>Standard</key>
 			<string>#FFFFFF</string>
 			<key>Light</key>
-			<string>#F2F4F7</string>
+			<string>#EEEEEE</string>
 			<key>Input-Form</key>
-			<string>#5C469F</string>
+			<string>#BE5605</string>
 			<key>Selected</key>
 			<string>#E5EFFF</string>
 			<key>Tooltip</key>
@@ -508,11 +508,11 @@
 			<key>darkBrandColor</key>
 			<string>Corporate.Color</string>
 			<key>lightBrandColor</key>
-			<string>5C469F</string>
+			<string>#1279C5</string>
 			<key>Colors</key>
 			<dict>
 				<key>tintColor</key>
-				<string>#FFFFFF</string>
+				<string>#1279C5</string>
 				<key>Label</key>
 				<dict>
 					<key>informativeColor</key>
