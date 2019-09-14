@@ -29,6 +29,8 @@ class MediaUploadQueue {
 
 	static let UploadPendingKey = OCKeyValueStoreKey(rawValue: "com.owncloud.upload.queue.upload-pending-flag")
 
+	private static var uploadStarted = false
+
 	func uploadAssets(_ assets:[PHAsset], with core:OCCore?, at rootItem:OCItem, progressHandler:((Progress) -> Void)? = nil, assetUploadCompletion:((_ asset:PHAsset?, _ finished:Bool) -> Void)? = nil ) {
 
 		let backgroundTask = OCBackgroundTask(name: "UploadMediaAction", expirationHandler: { (bgTask) in
@@ -44,6 +46,8 @@ class MediaUploadQueue {
 			let vault : OCVault = OCVault(bookmark: weakCore!.bookmark)
 			let flag = NSNumber(value: true)
 			vault.keyValueStore?.storeObject(flag, forKey: MediaUploadQueue.UploadPendingKey)
+
+			MediaUploadQueue.uploadStarted = true
 		}
 
 		queue.async {
@@ -99,6 +103,7 @@ class MediaUploadQueue {
 				if weakCore != nil {
 					MediaUploadQueue.resetUploadPendingFlag(for:  weakCore!.bookmark)
 				}
+				MediaUploadQueue.uploadStarted = false
 				backgroundTask?.end()
 				assetUploadCompletion?(nil, true)
 			})
@@ -117,5 +122,13 @@ class MediaUploadQueue {
 	class func resetUploadPendingFlag(for bookmark:OCBookmark) {
 		let vault : OCVault = OCVault(bookmark: bookmark)
 		vault.keyValueStore?.storeObject(nil, forKey: MediaUploadQueue.UploadPendingKey)
+	}
+
+	class func shallShowUploadUnfinishedWarning(for bookmark:OCBookmark) -> Bool {
+		if !MediaUploadQueue.uploadStarted && isMediaUploadPendingFlagSet(for: bookmark) {
+			return true
+		} else {
+			return false
+		}
 	}
 }
