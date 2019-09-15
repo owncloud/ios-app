@@ -26,6 +26,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	// UIWindowScene delegate
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		if let windowScene = scene as? UIWindowScene {
+            
+            #if targetEnvironment(macCatalyst)
+            windowScene.titlebar?.toolbar = createToolbar()
+            windowScene.titlebar?.titleVisibility = .hidden
+            #endif
+            
 			window = UIWindow(windowScene: windowScene)
 			let serverListTableViewController = ServerListTableViewController(style: UITableView.Style.plain)
 			serverListTableViewController.restorationIdentifier = "ServerListTableViewController"
@@ -106,5 +112,54 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 		return nil
 	}
+    
+    private func createToolbar() -> NSToolbar {
+        let toolbar = NSToolbar(identifier: "ownCloud.toolbar")
+        toolbar.delegate = self
+        return toolbar
+    }
+    
+    @objc func addAccountToolbarAction(sender: UIBarButtonItem) {
+        print("Add account pressed")
+    }
+    
+    @objc func editAccountsToolbarAction(sender: UIBarButtonItem) {
+        print("Edit Accounts pressed")
+    }
 
 }
+
+#if targetEnvironment(macCatalyst)
+private let EditAccountListToolbarIdentifier = NSToolbarItem.Identifier(rawValue: "EditAccounts")
+private let AddAccountToolbarIdentifier = NSToolbarItem.Identifier(rawValue: "AddAccount")
+
+extension SceneDelegate: NSToolbarDelegate {
+    
+    func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier
+        itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+        
+        if (itemIdentifier == EditAccountListToolbarIdentifier) {
+            let barButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editAccountsToolbarAction))
+            let button = NSToolbarItem(itemIdentifier: itemIdentifier, barButtonItem: barButton)
+            return button
+        }
+        
+        if (itemIdentifier == AddAccountToolbarIdentifier) {
+            let barButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addAccountToolbarAction))
+            let button = NSToolbarItem(itemIdentifier: itemIdentifier, barButtonItem: barButton)
+            return button
+        }
+        return nil
+    }
+    
+    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return [EditAccountListToolbarIdentifier,
+                NSToolbarItem.Identifier.flexibleSpace,
+                AddAccountToolbarIdentifier]
+    }
+    
+    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return toolbarDefaultItemIdentifiers(toolbar)
+    }
+}
+#endif
