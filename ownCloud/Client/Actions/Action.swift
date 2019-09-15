@@ -302,6 +302,12 @@ class Action : NSObject {
 			self.perform()
 		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, image: self.icon, imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: actionExtension.identifier.rawValue)
 	}
+    
+    func provideUiAction() -> UIAction? {
+        return UIAction(title: actionExtension.name, image: self.icon) { (action) in
+            self.perform()
+        }
+    }
 
 	func provideContextualAction() -> UIContextualAction? {
 		return UIContextualAction(style: actionExtension.category == .destructive ? .destructive : .normal, title: self.actionExtension.name, handler: { (_ action, _ view, _ uiCompletionHandler) in

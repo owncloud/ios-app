@@ -201,6 +201,30 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
 	// MARK: - Table view delegate
+    
+    override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath) else {
+            return nil
+        }
+
+        let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreFolder)
+        let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+        let actions = Action.sortedApplicableActions(for: actionContext)
+        actions.forEach({
+            $0.progressHandler = makeActionProgressHandler()
+        })
+
+        let uiActions: [UIAction] = actions.compactMap({$0.provideUiAction()})
+        
+        let actionProvider: ([UIMenuElement]) -> UIMenu? = { _ in
+            return UIMenu(title: "Actions", image: nil, identifier: nil, children: uiActions)
+            
+        }
+        
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: actionProvider)
+        
+    }
+    
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// If not in multiple-selection mode, just navigate to the file or folder (collection)
 		if !self.tableView.isEditing {
@@ -775,3 +799,4 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 
 // MARK: - UINavigationControllerDelegate
 extension ClientQueryViewController: UINavigationControllerDelegate {}
+

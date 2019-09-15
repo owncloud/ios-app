@@ -333,6 +333,10 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 			cell?.accessibilityIdentifier = newItem.name
 			cell?.core = self.core
+            
+            #if targetEnvironment(macCatalyst)
+            cell?.isMoreButtonPermanentlyHidden = true
+            #endif
 
 			if cell?.delegate == nil {
 				cell?.delegate = self
