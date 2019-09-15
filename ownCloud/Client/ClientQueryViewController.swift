@@ -57,6 +57,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	var titleButtonThemeApplierToken : ThemeApplierToken?
 
 	private var _actionProgressHandler : ActionProgressHandler?
+    
 
 	// MARK: - Init & Deinit
 	public override init(core inCore: OCCore, query inQuery: OCQuery) {
@@ -166,6 +167,9 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		quotaLabel.numberOfLines = 0
 
 		sortBar?.showSelectButton = true
+        
+        let hoverGestureRecognizer = UIHoverGestureRecognizer(target: self, action: #selector(mouseDidMove(with:)))
+        self.view.addGestureRecognizer(hoverGestureRecognizer)
 	}
 
 	private var viewControllerVisible : Bool = false
@@ -319,6 +323,21 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 						 didEndWith operation: UIDropOperation) {
 		removeToolbar()
 	}
+    
+    // MARK: - Hovering
+    
+    @objc func mouseDidMove(with recognizer:UIHoverGestureRecognizer) {
+        guard let tableView = recognizer.view as? UITableView else { return }
+        guard recognizer.state == .ended || recognizer.state == .changed else { return }
+        
+        let location = recognizer.location(in: tableView)
+        if let cell = tableView.visibleCells.filter({$0.frame.contains(location)}).first {
+            if let indexPath = self.tableView.indexPath(for: cell) {
+                let item = self.items[indexPath.row]
+                print("Hovered item mime type: \(item.mimeType)")
+            }
+        }
+    }
 
 	// MARK: - Upload
 	func upload(itemURL: URL, name: String, completionHandler: ClientActionCompletionHandler? = nil) {
