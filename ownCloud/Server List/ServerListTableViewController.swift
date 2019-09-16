@@ -94,6 +94,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.navigationItem.title = OCAppIdentity.shared.appName
 
 		NotificationCenter.default.addObserver(self, selector: #selector(considerAutoLogin), name: UIApplication.didBecomeActiveNotification, object: nil)
+        
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -109,33 +110,44 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.tableView.reloadData()
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
-		var showBetaWarning = false
-
-		super.viewDidAppear(animated)
-
-		updateNoServerMessageVisibility()
-
-		let helpBarButtonItem = UIBarButtonItem(title: "Feedback", style: UIBarButtonItem.Style.plain, target: self, action: #selector(help))
-		helpBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
-
-		let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
-		settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
-
-		self.toolbarItems = [
-			helpBarButtonItem,
-			UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
-			settingsBarButtonItem
-		]
-
-		if showBetaWarning, shownFirstTime {
-			showBetaWarning = !considerAutoLogin()
-		}
-
-		if showBetaWarning {
-			considerBetaWarning()
-		}
-	}
+    override func viewDidAppear(_ animated: Bool) {
+        var showBetaWarning = false
+        
+        super.viewDidAppear(animated)
+        updateNoServerMessageVisibility()
+        
+        #if targetEnvironment(macCatalyst)
+        if let scene = view.window?.windowScene {
+            scene.titlebar?.toolbar?.removeAllItems()
+            scene.titlebar?.toolbar?.delegate = self
+            scene.titlebar?.toolbar?.insertItem(withItemIdentifier: EditAccountListToolbarIdentifier, at: 0)
+            scene.titlebar?.toolbar?.insertItem(withItemIdentifier: NSToolbarItem.Identifier.flexibleSpace, at: 1)
+            scene.titlebar?.toolbar?.insertItem(withItemIdentifier: AddAccountToolbarIdentifier, at: 2)
+        }
+        self.navigationItem.leftBarButtonItem = nil
+        self.navigationItem.rightBarButtonItem = nil
+        #endif
+        
+        let helpBarButtonItem = UIBarButtonItem(title: "Feedback", style: UIBarButtonItem.Style.plain, target: self, action: #selector(help))
+        helpBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
+        
+        let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
+        settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
+        
+        self.toolbarItems = [
+            helpBarButtonItem,
+            UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
+            settingsBarButtonItem
+        ]
+        
+        if showBetaWarning, shownFirstTime {
+            showBetaWarning = !considerAutoLogin()
+        }
+        
+        if showBetaWarning {
+            considerBetaWarning()
+        }
+    }
 
 	@objc func considerAutoLogin() -> Bool {
 		if shownFirstTime, UIApplication.shared.applicationState != .background {
@@ -238,7 +250,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			if self.navigationItem.leftBarButtonItem == nil {
 				self.navigationItem.leftBarButtonItem = self.editButtonItem
 			}
-
+            
 			// Add Header View
 			self.tableView.tableHeaderView = ServerListTableHeaderView(frame: CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: 50.0))
 			self.navigationController?.navigationBar.shadowImage = UIImage()
@@ -777,5 +789,41 @@ extension ServerListTableViewController: UITableViewDragDelegate {
 
 		return []
 	}
-
 }
+
+#if targetEnvironment(macCatalyst)
+
+private let EditAccountListToolbarIdentifier = NSToolbarItem.Identifier(rawValue: "EditAccounts")
+private let AddAccountToolbarIdentifier = NSToolbarItem.Identifier(rawValue: "AddAccount")
+
+extension ServerListTableViewController: NSToolbarDelegate {
+    func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier
+        itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+        
+        if (itemIdentifier == EditAccountListToolbarIdentifier) {
+            let tbItem = NSToolbarItem(itemIdentifier: itemIdentifier, barButtonItem: self.editButtonItem)
+            tbItem.toolTip = "Edit list of accounts".localized
+            return tbItem
+        }
+        
+        if (itemIdentifier == AddAccountToolbarIdentifier) {
+            let barButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addBookmark))
+            let tbItem = NSToolbarItem(itemIdentifier: itemIdentifier, barButtonItem: barButtonItem)
+            tbItem.toolTip = "Add new account".localized
+            return tbItem
+        }
+        return nil
+    }
+    
+    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return [EditAccountListToolbarIdentifier,
+                NSToolbarItem.Identifier.flexibleSpace,
+                AddAccountToolbarIdentifier]
+    }
+    
+    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return toolbarDefaultItemIdentifiers(toolbar)
+    }
+}
+
+#endif

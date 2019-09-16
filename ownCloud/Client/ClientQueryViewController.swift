@@ -171,6 +171,24 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
         let hoverGestureRecognizer = UIHoverGestureRecognizer(target: self, action: #selector(mouseDidMove(with:)))
         self.view.addGestureRecognizer(hoverGestureRecognizer)
 	}
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        #if targetEnvironment(macCatalyst)
+        if let scene = view.window?.windowScene {
+            scene.titlebar?.toolbar?.removeAllItems()
+            scene.titlebar?.toolbar?.delegate = self
+            scene.titlebar?.toolbar?.insertItem(withItemIdentifier: NSToolbarItem.Identifier.flexibleSpace, at: 0)
+            scene.titlebar?.toolbar?.insertItem(withItemIdentifier: MoreActionsToolbarIdentifier, at: 1)
+            scene.titlebar?.toolbar?.insertItem(withItemIdentifier: AddItemToolbarIdentifier, at: 2)
+        }
+        self.navigationItem.rightBarButtonItems = nil
+        if let nsWindow = self.view.window?.nsWindow as? NSObject {
+            let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
+            nsWindow.perform(Selector("setTitleWithRepresentedFilename:"), with: lastPathComponent)
+        }
+        #endif
+    }
 
 	private var viewControllerVisible : Bool = false
 
@@ -201,7 +219,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
 	// MARK: - Table view delegate
-    
+    @available(iOS 13, macOS 10.15, *)
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath) else {
             return nil
@@ -214,10 +232,16 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
             $0.progressHandler = makeActionProgressHandler()
         })
 
-        let uiActions: [UIAction] = actions.compactMap({$0.provideUiAction()})
+        var uiActions: [UIAction] = actions.compactMap({$0.provideUiAction()})
+        
+        let openWindow = UIAction(title: "Open in new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+            self.openItemInWindow(at: indexPath)
+        }
+        
+        uiActions.append(openWindow)
         
         let actionProvider: ([UIMenuElement]) -> UIMenu? = { _ in
-            return UIMenu(title: "Actions", image: nil, identifier: nil, children: uiActions)
+            return UIMenu(title: "Actions", image: UIImage.init(systemName: "ellipsis"), identifier: nil, children: uiActions)
             
         }
         
@@ -358,7 +382,9 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
         if let cell = tableView.visibleCells.filter({$0.frame.contains(location)}).first {
             if let indexPath = self.tableView.indexPath(for: cell) {
                 let item = self.items[indexPath.row]
-                print("Hovered item mime type: \(item.mimeType)")
+                if let mimeType = item.mimeType {
+                    print("\(String(describing: item.baseName)) has MIME type: \(mimeType)")
+                }
             }
         }
     }
@@ -566,7 +592,11 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		controller.addAction(cancelAction)
 
 		if let popoverController = controller.popoverPresentationController {
-			popoverController.barButtonItem = sender
+            #if targetEnvironment(macCatalyst)
+            popoverController.sourceView = self.view
+            #else
+			popoverController.barButtonItem = plusBarButton
+            #endif
 		}
 		self.present(controller, animated: true)
 	}
@@ -580,7 +610,14 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [rootItem], location: actionsLocation)
 
 		if let moreViewController = Action.cardViewController(for: rootItem, with: actionContext, progressHandler: makeActionProgressHandler()) {
+            #if targetEnvironment(macCatalyst)
+            let nc = UINavigationController(rootViewController: moreViewController)
+            nc.navigationBar.barStyle = .default
+            nc.modalPresentationStyle = .automatic
+            self.present(nc, animated:true)
+            #else
 			self.present(asCard: moreViewController, animated: true)
+            #endif
 		}
 	}
 
@@ -800,3 +837,39 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 // MARK: - UINavigationControllerDelegate
 extension ClientQueryViewController: UINavigationControllerDelegate {}
 
+
+#if targetEnvironment(macCatalyst)
+
+private let MoreActionsToolbarIdentifier = NSToolbarItem.Identifier(rawValue: "MoreActions")
+private let AddItemToolbarIdentifier = NSToolbarItem.Identifier(rawValue: "AddItem")
+
+extension ClientQueryViewController: NSToolbarDelegate {
+    func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier
+        itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+        
+        if itemIdentifier == MoreActionsToolbarIdentifier, let barItem = folderActionBarButton {
+            let tbItem = NSToolbarItem(itemIdentifier: itemIdentifier, barButtonItem: barItem)
+            tbItem.toolTip = "Perform actions on the current folder".localized
+            return tbItem
+        }
+        
+        if itemIdentifier == AddItemToolbarIdentifier, let barItem = plusBarButton {
+            let tbItem = NSToolbarItem(itemIdentifier: itemIdentifier, barButtonItem: barItem)
+            tbItem.toolTip = "Add items by creating folder, uploading files etc.".localized
+            return tbItem
+        }
+        return nil
+    }
+    
+    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return [MoreActionsToolbarIdentifier,
+                NSToolbarItem.Identifier.flexibleSpace,
+                AddItemToolbarIdentifier]
+    }
+    
+    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return toolbarDefaultItemIdentifiers(toolbar)
+    }
+}
+
+#endif

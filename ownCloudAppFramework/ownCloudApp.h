@@ -31,3 +31,4 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 #import <ownCloudApp/OCCore+BundleImport.h>
 #import <ownCloudApp/NSObject+AnnotatedProperties.h>
 #import <ownCloudApp/ZIPArchive.h>
+#import <ownCloudApp/UIWindow+PSPDFAdditions.h>

@@ -106,6 +106,15 @@ class DisplayHostViewController: UIPageViewController {
 			}
 		}
 	}
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        #if targetEnvironment(macCatalyst)
+        if let scene = view.window?.windowScene {
+            scene.titlebar?.toolbar?.removeAllItems()
+        }
+        #endif
+    }
 
 	override var childForHomeIndicatorAutoHidden : UIViewController? {
 		if let childViewController = self.children.first {
