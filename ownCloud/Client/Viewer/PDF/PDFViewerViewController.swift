@@ -271,8 +271,13 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	// MARK: - Private helpers
 
 	fileprivate func adjustThumbnailsSize() {
-		let maxHeight = floor(self.view.bounds.height * thumbnailViewHeightMultiplier - thumbnailMargin)
-		let maxWidth = floor(self.view.bounds.width * thumbnailViewWidthMultiplier - thumbnailMargin)
+        #if targetEnvironment(macCatalyst)
+        let maxHeight = floor(self.thumbnailView.bounds.height * 0.95)
+		let maxWidth = maxHeight
+        #else
+        let maxHeight = floor(self.view.bounds.height * thumbnailViewHeightMultiplier - thumbnailMargin)
+        let maxWidth = floor(self.view.bounds.width * thumbnailViewWidthMultiplier - thumbnailMargin)
+        #endif
 		thumbnailView.thumbnailSize = CGSize(width: maxWidth, height: maxHeight)
 	}
 
