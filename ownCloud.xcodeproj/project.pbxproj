@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		02521614232FB3890045661D /* UWindow+PSPDFAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 02521612232FB1DF0045661D /* UWindow+PSPDFAdditions.m */; };
+		02521615232FB3BC0045661D /* UIWindow+PSPDFAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 02521610232FB1750045661D /* UIWindow+PSPDFAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2308F94321467F6200CF0B91 /* ClientDirectoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */; };
 		232B01F42126B0CE00366FA0 /* MoreViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */; };
 		232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */; };
@@ -658,6 +660,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		02521610232FB1750045661D /* UIWindow+PSPDFAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIWindow+PSPDFAdditions.h"; sourceTree = "<group>"; };
+		02521612232FB1DF0045661D /* UWindow+PSPDFAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UWindow+PSPDFAdditions.m"; sourceTree = "<group>"; };
 		03AE98EEF23B4F4F2C0FDD0F /* Pods-ownCloudTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientDirectoryPickerViewController.swift; sourceTree = "<group>"; };
 		232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreViewHeader.swift; sourceTree = "<group>"; };
@@ -1120,6 +1124,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0252160F232FB1500045661D /* Catalyst */ = {
+			isa = PBXGroup;
+			children = (
+				02521610232FB1750045661D /* UIWindow+PSPDFAdditions.h */,
+				02521612232FB1DF0045661D /* UWindow+PSPDFAdditions.m */,
+			);
+			path = Catalyst;
+			sourceTree = "<group>";
+		};
 		23031768205AA1DB006C4DAF /* Issues */ = {
 			isa = PBXGroup;
 			children = (
@@ -1880,6 +1893,7 @@
 			isa = PBXGroup;
 			children = (
 				DCC0855E2293F1FD008CC05C /* ownCloudApp.h */,
+				0252160F232FB1500045661D /* Catalyst */,
 				DC774E5A22F44E2A000B11A1 /* Display Settings */,
 				DCC5E443232654C1002E5B84 /* Foundation Extensions */,
 				DC774E5422F44DF6000B11A1 /* SDK Extensions */,
@@ -2109,6 +2123,7 @@
 				DCC085802293F490008CC05C /* DisplaySettings.h in Headers */,
 				DC774E6322F44E6D000B11A1 /* OCCore+BundleImport.h in Headers */,
 				DCCE9553231D402F00B84077 /* NSData+Encoding.h in Headers */,
+				02521615232FB3BC0045661D /* UIWindow+PSPDFAdditions.h in Headers */,
 				DCC0856E2293F1FD008CC05C /* ownCloudApp.h in Headers */,
 				DCC5E4472326564F002E5B84 /* NSObject+AnnotatedProperties.h in Headers */,
 			);
@@ -3026,6 +3041,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02521614232FB3890045661D /* UWindow+PSPDFAdditions.m in Sources */,
 				DC774E6422F44E6D000B11A1 /* OCCore+BundleImport.m in Sources */,
 				DCCE9554231D402F00B84077 /* NSData+Encoding.m in Sources */,
 				DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */,
