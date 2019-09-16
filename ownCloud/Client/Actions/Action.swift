@@ -304,7 +304,9 @@ class Action : NSObject {
 	}
     
     func provideUiAction() -> UIAction? {
-        return UIAction(title: actionExtension.name, image: self.icon) { (action) in
+        let attributes = actionExtension.category == .destructive ? UIMenuElement.Attributes.destructive :  UIMenuElement.Attributes.init()
+        let icon = self.icon?.paddedTo(width: 36.0, height: nil)
+        return UIAction(title: actionExtension.name, image: icon, attributes: attributes) { (action) in
             self.perform()
         }
     }

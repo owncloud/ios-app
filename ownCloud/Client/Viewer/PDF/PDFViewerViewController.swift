@@ -339,9 +339,9 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	}
 
 	fileprivate func setupToolbar() {
-		searchButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search))
-		gotoButtonItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_go_to_page"), style: .plain, target: self, action: #selector(goToPage))
-		outlineItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_outline"), style: .plain, target: self, action: #selector(showOutline))
+        searchButtonItem = UIBarButtonItem(image: UIImage.init(systemName: "doc.text.magnifyingglass"), style: .plain,target: self, action: #selector(search))
+        gotoButtonItem = UIBarButtonItem(image: UIImage.init(systemName: "arrow.up.right.square"), style: .plain, target: self, action: #selector(goToPage))
+        outlineItem = UIBarButtonItem(image: UIImage.init(systemName: "table"), style: .plain, target: self, action: #selector(showOutline))
 
 		searchButtonItem?.accessibilityLabel = "Search PDF".localized
 		gotoButtonItem?.accessibilityLabel = "Go to page".localized

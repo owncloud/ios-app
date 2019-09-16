@@ -72,8 +72,9 @@ class DuplicateAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder {
-			return UIImage(named: "duplicate-file")
+        if location == .moreItem || location == .moreFolder || location == .toolbar {
+            return UIImage.init(systemName: "plus.square.on.square")
+            //return UIImage(named: "duplicate-file")
 		}
 
 		return nil

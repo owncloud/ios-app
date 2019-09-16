@@ -147,19 +147,19 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		exitMultipleSelectionBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(exitMultipleSelection))
 
 		// Create bar button items for the toolbar
-		deleteMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"trash"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: DeleteAction.identifier!)
+        deleteMultipleBarButtonItem = UIBarButtonItem(image: DeleteAction.iconForLocation(.toolbar), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: DeleteAction.identifier!)
 		deleteMultipleBarButtonItem?.isEnabled = false
 
-		moveMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"folder"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: MoveAction.identifier!)
+        moveMultipleBarButtonItem = UIBarButtonItem(image: MoveAction.iconForLocation(.toolbar), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: MoveAction.identifier!)
 		moveMultipleBarButtonItem?.isEnabled = false
 
-		duplicateMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "duplicate-file"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: DuplicateAction.identifier!)
+        duplicateMultipleBarButtonItem = UIBarButtonItem(image: DuplicateAction.iconForLocation(.toolbar), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: DuplicateAction.identifier!)
 		duplicateMultipleBarButtonItem?.isEnabled = false
 
-		copyMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "copy-file"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: CopyAction.identifier!)
+        copyMultipleBarButtonItem = UIBarButtonItem(image: CopyAction.iconForLocation(.toolbar), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: CopyAction.identifier!)
 		copyMultipleBarButtonItem?.isEnabled = false
 
-		openMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "open-in"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: OpenInAction.identifier!)
+        openMultipleBarButtonItem = UIBarButtonItem(image: OpenInAction.iconForLocation(.toolbar), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: OpenInAction.identifier!)
 		openMultipleBarButtonItem?.isEnabled = false
 
 		quotaLabel.textAlignment = .center

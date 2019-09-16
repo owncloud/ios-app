@@ -69,8 +69,9 @@ class CopyAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder {
-			return UIImage(named: "copy-file")
+        if location == .moreItem || location == .moreFolder || location == .toolbar {
+            return UIImage.init(systemName: "square.on.square")
+			//return UIImage(named: "copy-file")
 		}
 
 		return nil

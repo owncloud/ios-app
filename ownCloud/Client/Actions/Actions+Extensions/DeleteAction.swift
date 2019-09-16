@@ -101,8 +101,10 @@ class DeleteAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder {
-			return UIImage(named: "trash")
+        if location == .moreItem || location == .moreFolder || location == .toolbar {
+            return UIImage.init(systemName: "trash")
+            //return UIImage(named: "trash")
+            
 		}
 
 		return nil

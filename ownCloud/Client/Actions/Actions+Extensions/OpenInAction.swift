@@ -93,8 +93,9 @@ class OpenInAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder {
-			return UIImage(named: "open-in")
+        if location == .moreItem || location == .moreFolder || location == .toolbar {
+            return UIImage.init(systemName: "square.and.arrow.up")
+			//return UIImage(named: "open-in")
 		}
 
 		return nil

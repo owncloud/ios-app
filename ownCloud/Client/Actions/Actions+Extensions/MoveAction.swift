@@ -72,8 +72,9 @@ class MoveAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder {
-			return UIImage(named: "folder")
+        if location == .moreItem || location == .moreFolder || location == .toolbar {
+            return UIImage.init(systemName: "folder")
+			//return UIImage(named: "folder")
 		}
 
 		return nil
