@@ -132,17 +132,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
 	}
-
+    
     // MARK: UISceneSession Lifecycle
-@available(iOS 13.0, macOS 10.15, *)
-func application(_ application: UIApplication,
-				 configurationForConnecting connectingSceneSession: UISceneSession,
-				 options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-	return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
-}
-
+    @available(iOS 13.0, macOS 10.15, *)
+    func application(_ application: UIApplication,
+                     configurationForConnecting connectingSceneSession: UISceneSession,
+                     options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    }
+    
     @available(iOS 13.0, macOS 10.15, *)
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
         print("AppDelegate didDiscardSceneSessions")
     }
+    
+    // MARK: Catalyst menu management
+    #if targetEnvironment(macCatalyst)
+    
+    @objc func openQuickAccess() {
+        print("Quick access opened")
+    }
+    
+    override func buildMenu(with builder: UIMenuBuilder) {
+        guard builder.system == .main else { return }
+        builder.remove(menu: .format)
+        
+        /*
+        let quickAccessCommand = UIKeyCommand(input: "Quick Access", modifierFlags: UIKeyModifierFlags.command, action: #selector(openQuickAccess))
+        
+        let identifier = UIMenu.Identifier("tabs")
+        let menu = UIMenu.init(title: "Quick Access", image: nil, identifier: identifier, options: [.displayInline], children: [quickAccessCommand]);
+        builder.insertSibling(menu, afterMenu: .window)
+ */
+    }
+    #endif
 }
