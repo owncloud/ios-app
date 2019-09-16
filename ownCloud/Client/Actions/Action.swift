@@ -227,8 +227,31 @@ class Action : NSObject {
 		let actionsRows: [StaticTableViewRow] = actions.compactMap({return $0.provideStaticRow()})
 
 		tableViewController.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
+        
+        #if targetEnvironment(macCatalyst)
+        //tableViewController.tableView.tableHeaderView = header
+        tableViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: tableViewController, action: #selector(MoreStaticTableViewController.dismissAnimated))
+        
 
+        let byteCountFormatter = ByteCountFormatter()
+        byteCountFormatter.countStyle = .file
+        var size = byteCountFormatter.string(fromByteCount: Int64(item.size))
+
+        if item.size < 0 {
+            size = "Pending".localized
+        }
+
+        let dateString = item.lastModifiedLocalized
+
+        let detail = size + " - " + dateString
+
+        
+        tableViewController.navigationItem.title = item.name ?? ""
+        tableViewController.navigationItem.prompt = detail
+        return tableViewController
+        #else
 		return moreViewController
+        #endif
 	}
 
 	// MARK: - Action metadata
@@ -305,8 +328,7 @@ class Action : NSObject {
     
     func provideUiAction() -> UIAction? {
         let attributes = actionExtension.category == .destructive ? UIMenuElement.Attributes.destructive :  UIMenuElement.Attributes.init()
-        let icon = self.icon?.paddedTo(width: 36.0, height: nil)
-        return UIAction(title: actionExtension.name, image: icon, attributes: attributes) { (action) in
+        return UIAction(title: actionExtension.name, image: self.icon, attributes: attributes) { (action) in
             self.perform()
         }
     }

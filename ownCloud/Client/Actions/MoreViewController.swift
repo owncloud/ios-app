@@ -119,6 +119,10 @@ class MoreViewController: UIViewController, CardPresentationSizing {
 		return size
 	}
 
+    @objc func dismissAnimated() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
 	override func viewDidLayoutSubviews() {
 		if self.view.superview != nil {
 			self.preferredContentSize = cardPresentationSizeFitting(CGSize(width: UIView.layoutFittingExpandedSize.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
