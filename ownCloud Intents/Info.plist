@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(APP_SHORT_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>140</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>
@@ -33,7 +33,6 @@
 				<string>CreateFolderIntent</string>
 				<string>DeletePathItemIntent</string>
 				<string>GetAccountIntent</string>
-				<string>GetAccounts</string>
 				<string>GetAccountsIntent</string>
 				<string>GetDirectoryListingIntent</string>
 				<string>GetFileInfoIntent</string>

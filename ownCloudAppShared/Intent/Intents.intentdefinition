@@ -128,7 +128,7 @@
 	<key>INIntentDefinitionSystemVersion</key>
 	<string>18G95</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>11M392r</string>
+	<string>11A419c</string>
 	<key>INIntentDefinitionToolsVersion</key>
 	<string>11.0</string>
 	<key>INIntents</key>
@@ -139,7 +139,7 @@
 			<key>INIntentConfigurable</key>
 			<true/>
 			<key>INIntentDescription</key>
-			<string>Get a list of all stored accounts</string>
+			<string>Get a list of all configured accounts</string>
 			<key>INIntentDescriptionID</key>
 			<string>wK4bqS</string>
 			<key>INIntentIneligibleForSuggestions</key>
