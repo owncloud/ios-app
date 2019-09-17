@@ -204,12 +204,13 @@ class ThemeCollection : NSObject {
 		self.tableBackgroundColor = UIColor.white
 		if #available(iOS 13, *) {
 			self.tableGroupBackgroundColor = UIColor.groupTableViewBackground.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
+			self.tableSeparatorColor = UIColor.separator
 		} else {
 			self.tableGroupBackgroundColor = UIColor.groupTableViewBackground
+			self.tableSeparatorColor = UIColor.lightGray
 		}
 		self.tableSectionHeaderColor = UIColor.gray
 		self.tableSectionFooterColor = UIColor.gray
-		self.tableSeparatorColor = nil
 		self.tableRowBorderColor = UIColor.black.withAlphaComponent(0.1)
 
 		self.tableRowColors = ThemeColorCollection(
