@@ -1,5 +1,5 @@
 //
-//  GetAccountsIntentHandler.swift
+//  GetDirectoryIntentHandler.swift
 //  ownCloud
 //
 //  Created by Matthias Hühne on 24.07.19.
