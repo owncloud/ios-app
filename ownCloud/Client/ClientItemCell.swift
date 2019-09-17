@@ -18,7 +18,6 @@
 
 import UIKit
 import ownCloudSDK
-import QuickLookThumbnailing
 
 protocol ClientItemCellDelegate: class {
 
@@ -235,9 +234,9 @@ class ClientItemCell: ThemeTableViewCell {
 			activeThumbnailRequestProgress?.cancel()
 		}
 
+		// Set the icon and initiate thumbnail generation
 		iconImage = item.icon(fitInSize: iconSize)
-
-		self.accessoryType = .none
+		self.iconView.image = iconImage
 
 		if let core = core {
 			activeThumbnailRequestProgress = self.iconView.setThumbnailImage(using: core, from: item, with: thumbnailSize, progressHandler: { [weak self] (progress) in
@@ -246,6 +245,8 @@ class ClientItemCell: ThemeTableViewCell {
 				}
 			})
 		}
+
+		self.accessoryType = .none
 
 		if item.isSharedWithUser || item.sharedByUserOrGroup {
 			sharedStatusIconView.image = UIImage(named: "group")
@@ -263,8 +264,6 @@ class ClientItemCell: ThemeTableViewCell {
 		}
 
 		self.updateCloudStatusIcon(with: item)
-
-		self.iconView.image = iconImage
 
 		self.updateLabels(with: item)
 

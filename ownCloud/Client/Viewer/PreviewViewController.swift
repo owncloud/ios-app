@@ -107,13 +107,6 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
 		return source! as QLPreviewItem
 	}
-
-	@available(iOS 13.0, *)
-	func previewController(_ controller: QLPreviewController, editingModeFor previewItem: QLPreviewItem) -> QLPreviewItemEditingMode {
-		// Return .updateContents so QLPreviewController takes care of updating the contents of the provided QLPreviewItems whenever users save changes.
-		return .updateContents
-	}
-
 }
 
 // MARK: - Gesture recognizer delegete.

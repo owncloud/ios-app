@@ -18,7 +18,6 @@
 
 import UIKit
 import ownCloudSDK
-import QuickLookThumbnailing
 
 struct DisplayViewConfiguration {
 	var item: OCItem?
