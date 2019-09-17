@@ -58,7 +58,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
-		OCExtensionManager.shared.addExtension(PreviewViewController.displayExtension)
+
+		if #available(iOS 13.0, *) {
+			OCExtensionManager.shared.addExtension(PreviewViewController.displayExtension)
+		}
 
 		OCExtensionManager.shared.addExtension(MediaDisplayViewController.displayExtension)
 
@@ -83,6 +86,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 		OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
 		OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
+		if #available(iOS 13.0, *) {
+			OCExtensionManager.shared.addExtension(MarkupAction.actionExtension)
+			OCExtensionManager.shared.addExtension(SaveMarkupAction.actionExtension)
+		}
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 

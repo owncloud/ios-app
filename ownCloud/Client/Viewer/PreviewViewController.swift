@@ -19,11 +19,15 @@
 import UIKit
 import ownCloudSDK
 import QuickLook
+import PencilKit
 
+@available(iOS 13.0, *)
 class PreviewViewController : DisplayViewController, QLPreviewControllerDataSource, QLPreviewControllerDelegate {
 
-	private var qlPreviewController: QLPreviewController?
+	var qlPreviewController: QLPreviewController?
 	var tapToHideBarsGestureRecognizer: UITapGestureRecognizer!
+
+	let canvasView = PKCanvasView(frame: .zero)
 
 	override func viewSafeAreaInsetsDidChange() {
 		super.viewSafeAreaInsetsDidChange()
@@ -38,6 +42,15 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 				qlPreviewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
 				])
 		}
+/*
+		if let previewController = self.qlPreviewController {
+			NSLayoutConstraint.activate([
+				canvasView.topAnchor.constraint(equalTo: previewController.view.topAnchor),
+				canvasView.bottomAnchor.constraint(equalTo: previewController.view.bottomAnchor),
+				canvasView.leadingAnchor.constraint(equalTo: previewController.view.leadingAnchor),
+				canvasView.trailingAnchor.constraint(equalTo: previewController.view.trailingAnchor)
+				])
+		}*/
 
 		self.view.layoutIfNeeded()
 	}
@@ -60,6 +73,11 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 			self.qlPreviewController?.view.gestureRecognizers?.forEach({ $0.delegate = self })
 			self.qlPreviewController?.view?.addGestureRecognizer(self.tapToHideBarsGestureRecognizer)
 
+			canvasView.translatesAutoresizingMaskIntoConstraints = false
+			canvasView.isOpaque = false
+			canvasView.backgroundColor = .clear
+			canvasView.overrideUserInterfaceStyle = .light
+			canvasView.allowsFingerDrawing = true
 			completion(true)
 		} else {
 			completion(false)
@@ -95,9 +113,12 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 		// Return .updateContents so QLPreviewController takes care of updating the contents of the provided QLPreviewItems whenever users save changes.
 		return .updateContents
 	}
+
 }
 
 // MARK: - Gesture recognizer delegete.
+
+@available(iOS 13.0, *)
 extension PreviewViewController: UIGestureRecognizerDelegate {
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
 						   shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -112,6 +133,8 @@ extension PreviewViewController: UIGestureRecognizerDelegate {
 }
 
 // MARK: - Display Extension.
+
+@available(iOS 13.0, *)
 extension PreviewViewController: DisplayExtension {
 
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
@@ -134,4 +157,25 @@ extension PreviewViewController: DisplayExtension {
 	static var supportedMimeTypes: [String]?
 	static var displayExtensionIdentifier: String = "org.owncloud.ql_preview"
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
+}
+
+extension UIPageViewController {
+    var isPagingEnabled: Bool {
+        get {
+            var isEnabled: Bool = true
+            for view in view.subviews {
+                if let subView = view as? UIScrollView {
+                    isEnabled = subView.isScrollEnabled
+                }
+            }
+            return isEnabled
+        }
+        set {
+            for view in view.subviews {
+                if let subView = view as? UIScrollView {
+                    subView.isScrollEnabled = newValue
+                }
+            }
+        }
+    }
 }
