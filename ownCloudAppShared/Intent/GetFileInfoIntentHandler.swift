@@ -20,6 +20,7 @@ import UIKit
 import Intents
 import ownCloudSDK
 
+@available(iOS 13.0, watchOS 6.0, *)
 public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 
 	var itemTracking : OCCoreItemTracking?
@@ -101,9 +102,9 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 
 }
 
+@available(iOS 13.0, watchOS 6.0, *)
 extension GetFileInfoIntentResponse {
 
-    @available(iOS 13.0, watchOS 6.0, *)
     public static func success(fileInfo: FileInfo) -> GetFileInfoIntentResponse {
         let intentResponse = GetFileInfoIntentResponse(code: .success, userActivity: nil)
         intentResponse.fileInfo = fileInfo

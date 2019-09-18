@@ -20,6 +20,7 @@ import UIKit
 import Intents
 import ownCloudSDK
 
+@available(iOS 13.0, watchOS 6.0, *)
 public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 
 	var itemTracking : OCCoreItemTracking?
@@ -76,9 +77,9 @@ public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 	}
 }
 
+@available(iOS 13.0, watchOS 6.0, *)
 extension PathExistsIntentResponse {
 
-    @available(iOS 13.0, watchOS 6.0, *)
     public static func success(pathExists: Bool) -> PathExistsIntentResponse {
         let intentResponse = PathExistsIntentResponse(code: .success, userActivity: nil)
         intentResponse.pathExists = NSNumber(value: pathExists)

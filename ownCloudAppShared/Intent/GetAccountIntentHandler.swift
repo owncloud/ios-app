@@ -20,9 +20,9 @@ import UIKit
 import Intents
 import ownCloudSDK
 
+@available(iOS 13.0, watchOS 6.0, *)
 public class GetAccountIntentHandler: NSObject, GetAccountIntentHandling {
 
-	@available(iOS 12.0, *)
 	public func handle(intent: GetAccountIntent, completion: @escaping (GetAccountIntentResponse) -> Void) {
 		if AppLockHelper().isPassCodeEnabled {
 			completion(GetAccountIntentResponse(code: .authenticationRequired, userActivity: nil))
@@ -37,7 +37,6 @@ public class GetAccountIntentHandler: NSObject, GetAccountIntentHandling {
 		}
 	}
 
-	@available(iOS 12.0, *)
 	public func resolveAccountUUID(for intent: GetAccountIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		if let account = intent.accountUUID {
 			completion(INStringResolutionResult.success(with: account))
@@ -46,12 +45,12 @@ public class GetAccountIntentHandler: NSObject, GetAccountIntentHandling {
 		}
 	}
 
-	@available(iOS 12.0, *)
 	public func confirm(intent: GetAccountIntent, completion: @escaping (GetAccountIntentResponse) -> Void) {
         completion(GetAccountIntentResponse(code: .ready, userActivity: nil))
 	}
 }
 
+@available(iOS 13.0, watchOS 6.0, *)
 extension GetAccountIntentResponse {
 
     @available(iOS 13.0, watchOS 6.0, *)

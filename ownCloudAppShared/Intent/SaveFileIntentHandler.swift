@@ -20,6 +20,7 @@ import UIKit
 import Intents
 import ownCloudSDK
 
+@available(iOS 13.0, watchOS 6.0, *)
 public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 
 	var itemTracking : OCCoreItemTracking?
@@ -107,9 +108,9 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 	}
 }
 
+@available(iOS 13.0, watchOS 6.0, *)
 extension SaveFileIntentResponse {
 
-    @available(iOS 13.0, watchOS 6.0, *)
     public static func success(filePath: String) -> SaveFileIntentResponse {
         let intentResponse = SaveFileIntentResponse(code: .success, userActivity: nil)
         intentResponse.filePath = filePath

@@ -20,6 +20,7 @@ import UIKit
 import Intents
 import ownCloudSDK
 
+@available(iOS 13.0, watchOS 6.0, *)
 public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling {
 
 	var itemTracking : OCCoreItemTracking?

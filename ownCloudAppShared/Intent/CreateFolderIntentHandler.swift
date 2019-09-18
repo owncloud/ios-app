@@ -20,6 +20,7 @@ import UIKit
 import Intents
 import ownCloudSDK
 
+@available(iOS 13.0, watchOS 6.0, *)
 public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 
 	var itemTracking : OCCoreItemTracking?
@@ -94,9 +95,9 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 	}
 }
 
+@available(iOS 13.0, watchOS 6.0, *)
 extension CreateFolderIntentResponse {
 
-    @available(iOS 13.0, watchOS 6.0, *)
     public static func success(path: String) -> CreateFolderIntentResponse {
         let intentResponse = CreateFolderIntentResponse(code: .success, userActivity: nil)
         intentResponse.path = path
