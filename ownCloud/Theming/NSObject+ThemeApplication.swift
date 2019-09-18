@@ -114,6 +114,13 @@ extension NSObject {
 		if let searchBar = self as? UISearchBar {
 			searchBar.tintColor = collection.searchbarColors.tintColor
 			searchBar.barStyle = collection.barStyle
+
+			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = collection.searchbarColors.backgroundColor
+			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+
+			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).attributedPlaceholder = NSAttributedString(string: "placeholder", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+
+
 		}
 
 		if let label = self as? UILabel {

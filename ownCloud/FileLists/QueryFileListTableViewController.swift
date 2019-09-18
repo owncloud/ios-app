@@ -264,8 +264,22 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		searchController?.searchBar.placeholder = "Search this folder".localized
 		searchController?.searchBar.applyThemeCollection(Theme.shared.activeCollection)
 
+
+
+
 		navigationItem.searchController = searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
+
+
+		let textFieldInsideSearchBar = searchController?.searchBar.value(forKey: "searchField") as? UITextField
+		//textFieldInsideSearchBar?.backgroundColor = .green
+		print("textFieldInsideSearchBar \(textFieldInsideSearchBar) \(textFieldInsideSearchBar?.leftView)")
+		let glassIconView = textFieldInsideSearchBar?.leftView as? UIImageView
+		print("-->glassIconView \(glassIconView)")
+		glassIconView?.image?.withRenderingMode(.alwaysTemplate)
+		glassIconView?.tintColor = .blue
+
+		searchController?.searchBar.changeSearchBarColor(fieldColor: .black, backColor: .clear, borderColor: .clear)
 
 		self.definesPresentationContext = true
 
