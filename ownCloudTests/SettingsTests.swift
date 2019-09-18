@@ -163,6 +163,7 @@ class SettingsTests: XCTestCase {
 	/*
 	* PASSED if: All themes available are displayed
 	*/
+	/*
 	func testCheckThemesAvailable () {
 
 		//Actions
@@ -177,5 +178,6 @@ class SettingsTests: XCTestCase {
 		EarlGrey.select(elementWithMatcher: grey_text("Settings".localized)).perform(grey_tap())
 		EarlGrey.select(elementWithMatcher: grey_text("ownCloud".localized)).perform(grey_tap())
 	}
+*/
 
 }
