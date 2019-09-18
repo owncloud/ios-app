@@ -149,21 +149,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: Catalyst menu management
     #if targetEnvironment(macCatalyst)
     
-    @objc func openQuickAccess() {
-        print("Quick access opened")
-    }
-    
     override func buildMenu(with builder: UIMenuBuilder) {
         guard builder.system == .main else { return }
         builder.remove(menu: .format)
         
-        /*
-        let quickAccessCommand = UIKeyCommand(input: "Quick Access", modifierFlags: UIKeyModifierFlags.command, action: #selector(openQuickAccess))
+       // Create a selector-based action to use as a menu element.
+        let keyCommand = UIKeyCommand(input: "R", modifierFlags: .command, action: Selector("refresh"))
+        keyCommand.title = "Refresh"
         
-        let identifier = UIMenu.Identifier("tabs")
-        let menu = UIMenu.init(title: "Quick Access", image: nil, identifier: identifier, options: [.displayInline], children: [quickAccessCommand]);
-        builder.insertSibling(menu, afterMenu: .window)
- */
+        let quickAccessCommand = UICommand(title: "Quick Access", action: Selector("openQuickAccess"))
+
+        // Use the .displayInline option to avoid displaying the menu as a submenu,
+        // and to separate it from the other menu elements using a line separator.
+        let refreshMenuItem = UIMenu(title: "", options: .displayInline, children: [keyCommand, quickAccessCommand])
+
+        // Insert the menu into the File menu before the Close menu.
+        builder.insertSibling(refreshMenuItem, beforeMenu: .close)
     }
     #endif
 }

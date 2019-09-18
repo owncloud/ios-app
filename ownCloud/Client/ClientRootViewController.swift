@@ -137,6 +137,17 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 	}
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        if action == Selector("openQuickAccess") {
+            return true
+        }
+        return super.canPerformAction(action, withSender: sender)
+    }
+    
+    @objc func openQuickAccess() {
+        self.selectedIndex = 1
+    }
 
 	// MARK: - Startup
 	func afterCoreStart(_ completionHandler: @escaping (() -> Void)) {

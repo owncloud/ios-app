@@ -149,6 +149,17 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		super.performPullToRefreshAction()
 		core?.reload(query)
 	}
+    
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        if action == Selector("refresh") {
+            return true
+        }
+        return super.canPerformAction(action, withSender: sender)
+    }
+    
+    @objc func refresh() {
+        performPullToRefreshAction()
+    }
 
 	func updateQueryProgressSummary() {
 		let summary : ProgressSummary = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
