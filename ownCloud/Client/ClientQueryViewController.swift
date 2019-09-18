@@ -376,10 +376,21 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
     
     @objc func mouseDidMove(with recognizer:UIHoverGestureRecognizer) {
         guard let tableView = recognizer.view as? UITableView else { return }
-        guard recognizer.state == .ended || recognizer.state == .changed else { return }
         
         let location = recognizer.location(in: tableView)
         if let cell = tableView.visibleCells.filter({$0.frame.contains(location)}).first {
+            if recognizer.state == .changed {
+                for cell in tableView.visibleCells {
+                    cell.isHighlighted = false
+                }
+                cell.isHighlighted = true
+            }
+            
+            if recognizer.state == .ended {
+                for cell in tableView.visibleCells {
+                    cell.isHighlighted = false
+                }
+            }
             if let indexPath = self.tableView.indexPath(for: cell) {
                 let item = self.items[indexPath.row]
                 if let mimeType = item.mimeType {
