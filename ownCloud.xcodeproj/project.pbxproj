@@ -1703,9 +1703,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		233BDE9B204FEFE500C06732 /* SURFdrive */ = {
+		233BDE9B204FEFE500C06732 /* ownCloud */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 233BDEB9204FEFE500C06732 /* Build configuration list for PBXNativeTarget "SURFdrive" */;
+			buildConfigurationList = 233BDEB9204FEFE500C06732 /* Build configuration list for PBXNativeTarget "ownCloud" */;
 			buildPhases = (
 				23813A32205286E100DB9488 /* Run SwiftLint */,
 				233BDE98204FEFE500C06732 /* Sources */,
@@ -1729,7 +1729,7 @@
 				DCC6566420C9B7E400110A97 /* PBXTargetDependency */,
 				DCC085702293F1FD008CC05C /* PBXTargetDependency */,
 			);
-			name = SURFdrive;
+			name = ownCloud;
 			productName = ownCloud;
 			productReference = 233BDE9C204FEFE500C06732 /* SURFdrive.app */;
 			productType = "com.apple.product-type.application";
@@ -1984,7 +1984,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				233BDE9B204FEFE500C06732 /* SURFdrive */,
+				233BDE9B204FEFE500C06732 /* ownCloud */,
 				233BDEAF204FEFE500C06732 /* ownCloudTests */,
 				DC7DBA33207F84BF00E7337D /* MakeTVG */,
 				DCC6564520C9B7E300110A97 /* ownCloud File Provider */,
@@ -2561,12 +2561,12 @@
 /* Begin PBXTargetDependency section */
 		233BDEB2204FEFE500C06732 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 233BDE9B204FEFE500C06732 /* SURFdrive */;
+			target = 233BDE9B204FEFE500C06732 /* ownCloud */;
 			targetProxy = 233BDEB1204FEFE500C06732 /* PBXContainerItemProxy */;
 		};
 		59056CB022414F3C00A18A22 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 233BDE9B204FEFE500C06732 /* SURFdrive */;
+			target = 233BDE9B204FEFE500C06732 /* ownCloud */;
 			targetProxy = 59056CAF22414F3C00A18A22 /* PBXContainerItemProxy */;
 		};
 		DC188987218A772900CFB3F9 /* PBXTargetDependency */ = {
@@ -2626,7 +2626,7 @@
 		};
 		DCC085692293F1FD008CC05C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 233BDE9B204FEFE500C06732 /* SURFdrive */;
+			target = 233BDE9B204FEFE500C06732 /* ownCloud */;
 			targetProxy = DCC085682293F1FD008CC05C /* PBXContainerItemProxy */;
 		};
 		DCC085702293F1FD008CC05C /* PBXTargetDependency */ = {
@@ -2864,7 +2864,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SURFdrive;
 				PROVISIONING_PROFILE = "3bae2090-bddc-4ba3-a301-9d8afbbed296";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -2892,7 +2892,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SURFdrive;
 				PROVISIONING_PROFILE = "0720808b-becc-4621-8839-347863375834";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -3219,7 +3219,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		233BDEB9204FEFE500C06732 /* Build configuration list for PBXNativeTarget "SURFdrive" */ = {
+		233BDEB9204FEFE500C06732 /* Build configuration list for PBXNativeTarget "ownCloud" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				233BDEBA204FEFE500C06732 /* Debug */,
