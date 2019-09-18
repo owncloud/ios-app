@@ -23,6 +23,12 @@ protocol LibraryShareList: UIViewController {
 	func updateWith(shares: [OCShare])
 }
 
+struct QuickAccessQuery {
+	var name : String
+	var mimeType : String
+	var imageName : String
+}
+
 class LibraryShareView {
 	enum Identifier : String {
 		case sharedWithYou
@@ -388,11 +394,18 @@ class LibraryTableViewController: StaticTableViewController {
 				completion()
 			})
 
-			let imageQuery = OCQuery(condition: .where(.mimeType, contains: "image"), inputFilter:nil)
-			addCollectionRow(to: section, title: "Images".localized, image: Theme.shared.image(for: "image", size: CGSize(width: 25, height: 25))!, query: imageQuery, actionHandler: nil)
+			let queries = [
+				QuickAccessQuery(name: "Images".localized, mimeType: "image", imageName: "image"),
+				QuickAccessQuery(name: "Videos".localized, mimeType: "video", imageName: "video"),
+				QuickAccessQuery(name: "PDF Documents".localized, mimeType: "pdf", imageName: "application-pdf"),
+				QuickAccessQuery(name: "Documents".localized, mimeType: "doc", imageName: "x-office-document"),
+				QuickAccessQuery(name: "Text".localized, mimeType: "text", imageName: "text")
+			]
 
-			let pdfQuery = OCQuery(condition: .where(.mimeType, contains: "pdf"), inputFilter:nil)
-			addCollectionRow(to: section, title: "PDF Documents".localized, image: Theme.shared.image(for: "application-pdf", size: CGSize(width: 25, height: 25))!, query: pdfQuery, actionHandler: nil)
+			for query in queries {
+				let customQuery = OCQuery(condition: .where(.mimeType, contains: query.mimeType), inputFilter:nil)
+				addCollectionRow(to: section, title: query.name, image: Theme.shared.image(for: query.imageName, size: CGSize(width: 25, height: 25))!, query: customQuery, actionHandler: nil)
+			}
 		}
 	}
 
