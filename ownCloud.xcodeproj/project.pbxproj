@@ -561,7 +561,7 @@
 		232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreStaticTableViewController.swift; sourceTree = "<group>"; };
 		232F7CAC2097140300EE22E4 /* UploadsSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadsSettingsSection.swift; sourceTree = "<group>"; };
 		232F7CAE2097260400EE22E4 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		233BDE9C204FEFE500C06732 /* ownCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ownCloud.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		233BDE9C204FEFE500C06732 /* SURFdrive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SURFdrive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		233BDE9F204FEFE500C06732 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		233BDEA6204FEFE500C06732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		233BDEA9204FEFE500C06732 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -977,7 +977,7 @@
 		233BDE9D204FEFE500C06732 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				233BDE9C204FEFE500C06732 /* ownCloud.app */,
+				233BDE9C204FEFE500C06732 /* SURFdrive.app */,
 				233BDEB0204FEFE500C06732 /* ownCloudTests.xctest */,
 				DC7DBA34207F84BF00E7337D /* MakeTVG */,
 				DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */,
@@ -1703,9 +1703,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		233BDE9B204FEFE500C06732 /* ownCloud */ = {
+		233BDE9B204FEFE500C06732 /* SURFdrive */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 233BDEB9204FEFE500C06732 /* Build configuration list for PBXNativeTarget "ownCloud" */;
+			buildConfigurationList = 233BDEB9204FEFE500C06732 /* Build configuration list for PBXNativeTarget "SURFdrive" */;
 			buildPhases = (
 				23813A32205286E100DB9488 /* Run SwiftLint */,
 				233BDE98204FEFE500C06732 /* Sources */,
@@ -1729,9 +1729,9 @@
 				DCC6566420C9B7E400110A97 /* PBXTargetDependency */,
 				DCC085702293F1FD008CC05C /* PBXTargetDependency */,
 			);
-			name = ownCloud;
+			name = SURFdrive;
 			productName = ownCloud;
-			productReference = 233BDE9C204FEFE500C06732 /* ownCloud.app */;
+			productReference = 233BDE9C204FEFE500C06732 /* SURFdrive.app */;
 			productType = "com.apple.product-type.application";
 		};
 		233BDEAF204FEFE500C06732 /* ownCloudTests */ = {
@@ -1984,7 +1984,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				233BDE9B204FEFE500C06732 /* ownCloud */,
+				233BDE9B204FEFE500C06732 /* SURFdrive */,
 				233BDEAF204FEFE500C06732 /* ownCloudTests */,
 				DC7DBA33207F84BF00E7337D /* MakeTVG */,
 				DCC6564520C9B7E300110A97 /* ownCloud File Provider */,
@@ -2561,12 +2561,12 @@
 /* Begin PBXTargetDependency section */
 		233BDEB2204FEFE500C06732 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 233BDE9B204FEFE500C06732 /* ownCloud */;
+			target = 233BDE9B204FEFE500C06732 /* SURFdrive */;
 			targetProxy = 233BDEB1204FEFE500C06732 /* PBXContainerItemProxy */;
 		};
 		59056CB022414F3C00A18A22 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 233BDE9B204FEFE500C06732 /* ownCloud */;
+			target = 233BDE9B204FEFE500C06732 /* SURFdrive */;
 			targetProxy = 59056CAF22414F3C00A18A22 /* PBXContainerItemProxy */;
 		};
 		DC188987218A772900CFB3F9 /* PBXTargetDependency */ = {
@@ -2626,7 +2626,7 @@
 		};
 		DCC085692293F1FD008CC05C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 233BDE9B204FEFE500C06732 /* ownCloud */;
+			target = 233BDE9B204FEFE500C06732 /* SURFdrive */;
 			targetProxy = DCC085682293F1FD008CC05C /* PBXContainerItemProxy */;
 		};
 		DCC085702293F1FD008CC05C /* PBXTargetDependency */ = {
@@ -3219,7 +3219,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		233BDEB9204FEFE500C06732 /* Build configuration list for PBXNativeTarget "ownCloud" */ = {
+		233BDEB9204FEFE500C06732 /* Build configuration list for PBXNativeTarget "SURFdrive" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				233BDEBA204FEFE500C06732 /* Debug */,

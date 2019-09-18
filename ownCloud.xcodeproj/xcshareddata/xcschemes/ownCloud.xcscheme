@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "233BDE9B204FEFE500C06732"
-               BuildableName = "ownCloud.app"
-               BlueprintName = "ownCloud"
+               BuildableName = "SURFdrive.app"
+               BlueprintName = "SURFdrive"
                ReferencedContainer = "container:ownCloud.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -74,8 +74,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "233BDE9B204FEFE500C06732"
-            BuildableName = "ownCloud.app"
-            BlueprintName = "ownCloud"
+            BuildableName = "SURFdrive.app"
+            BlueprintName = "SURFdrive"
             ReferencedContainer = "container:ownCloud.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -119,8 +119,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "233BDE9B204FEFE500C06732"
-            BuildableName = "ownCloud.app"
-            BlueprintName = "ownCloud"
+            BuildableName = "SURFdrive.app"
+            BlueprintName = "SURFdrive"
             ReferencedContainer = "container:ownCloud.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -205,8 +205,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "233BDE9B204FEFE500C06732"
-            BuildableName = "ownCloud.app"
-            BlueprintName = "ownCloud"
+            BuildableName = "SURFdrive.app"
+            BlueprintName = "SURFdrive"
             ReferencedContainer = "container:ownCloud.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
