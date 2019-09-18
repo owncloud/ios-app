@@ -89,10 +89,13 @@ class SaveMarkupAction : Action {
 			return
 		}
 
-		if let url = file.url, let nsdata = NSData(contentsOf: url), let parentItem = item.parentItem(from: core), let qlPreviewController = viewController.qlPreviewController {
+		if let url = file.url, let nsdata = NSData(contentsOf: url), let parentItem = item.parentItem(from: core), let displayViewController = viewController.parent as? DisplayHostViewController, let qlPreviewController = viewController.qlPreviewController {
 			let data = Data(referencing: nsdata)
-			if let orgImage = UIImage(data: data) {
-				let image = viewController.canvasView.drawing.image(from: qlPreviewController.view.bounds, scale: 1.0)
+			if let orgImage = UIImage(data: data), let scrollView = displayViewController.scrollView {
+				let visibleRect = scrollView.convert(scrollView.bounds, to: viewController.canvasView)
+				print("--> visibleRect \(visibleRect)")
+				let image = viewController.canvasView.drawing.image(from: qlPreviewController.view.bounds, scale: scrollView.zoomScale)
+				//let image = viewController.canvasView.drawing.image(from: visibleRect, scale: 1.0)
 				print("--> image \(image)")
 				let newImage = UIImage.imageByMergingImages(topImage: image, bottomImage: orgImage)
 				let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
