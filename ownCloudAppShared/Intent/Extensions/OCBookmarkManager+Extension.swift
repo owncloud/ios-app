@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 
+@available(iOS 13.0, *)
 extension OCBookmarkManager {
 
 	public var accountList : [Account] {

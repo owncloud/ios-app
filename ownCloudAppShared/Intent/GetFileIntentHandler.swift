@@ -20,8 +20,10 @@ import UIKit
 import Intents
 import ownCloudSDK
 
+@available(iOS 13.0, watchOS 6.0, *)
 typealias GetFileCompletionHandler = (GetFileIntentResponse) -> Void
 
+@available(iOS 13.0, watchOS 6.0, *)
 public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 
 	var core : OCCore?
@@ -113,9 +115,9 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 	}
 }
 
+@available(iOS 13.0, watchOS 6.0, *)
 extension GetFileIntentResponse {
 
-    @available(iOS 13.0, watchOS 6.0, *)
     public static func success(file: INFile) -> GetFileIntentResponse {
         let intentResponse = GetFileIntentResponse(code: .success, userActivity: nil)
         intentResponse.file = file

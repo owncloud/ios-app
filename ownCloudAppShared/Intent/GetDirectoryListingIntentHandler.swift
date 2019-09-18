@@ -20,8 +20,10 @@ import UIKit
 import Intents
 import ownCloudSDK
 
+@available(iOS 13.0, watchOS 6.0, *)
 typealias GetDirectoryListingCompletionHandler = (GetDirectoryListingIntentResponse) -> Void
 
+@available(iOS 13.0, watchOS 6.0, *)
 public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingIntentHandling, OCQueryDelegate {
 
 	var core : OCCore?
@@ -57,7 +59,6 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 		completion(SortingDirectionResolutionResult.success(with: intent.sortDirection))
 	}
 
-	@available(iOS 12.0, *)
 	public func handle(intent: GetDirectoryListingIntent, completion: @escaping (GetDirectoryListingIntentResponse) -> Void) {
 
 		if AppLockHelper().isPassCodeEnabled {
@@ -115,15 +116,14 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 		self.completion?(GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
 	}
 
-	@available(iOS 12.0, *)
 	public func confirm(intent: GetDirectoryListingIntent, completion: @escaping (GetDirectoryListingIntentResponse) -> Void) {
         completion(GetDirectoryListingIntentResponse(code: .ready, userActivity: nil))
 	}
 }
 
+@available(iOS 13.0, watchOS 6.0, *)
 extension GetDirectoryListingIntentResponse {
 
-    @available(iOS 13.0, watchOS 6.0, *)
     public static func success(directoryListing: [String]) -> GetDirectoryListingIntentResponse {
         let intentResponse = GetDirectoryListingIntentResponse(code: .success, userActivity: nil)
         intentResponse.directoryListing = directoryListing
