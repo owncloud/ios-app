@@ -512,7 +512,7 @@
 			<key>Colors</key>
 			<dict>
 				<key>tintColor</key>
-				<string>#ED6B06</string>
+				<string>#000000</string>
 				<key>Label</key>
 				<dict>
 					<key>informativeColor</key>
