@@ -508,11 +508,11 @@
 			<key>darkBrandColor</key>
 			<string>Corporate.Color</string>
 			<key>lightBrandColor</key>
-			<string>#1279C5</string>
+			<string>#676767</string>
 			<key>Colors</key>
 			<dict>
 				<key>tintColor</key>
-				<string>#1279C5</string>
+				<string>#000000</string>
 				<key>Label</key>
 				<dict>
 					<key>informativeColor</key>
@@ -656,7 +656,7 @@
 					<key>tableRowHighlightColors</key>
 					<dict>
 						<key>backgroundColor</key>
-						<string></string>
+						<string>#DCEBF6</string>
 						<key>labelColor</key>
 						<string></string>
 						<key>secondaryLabelColor</key>
