@@ -264,22 +264,21 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		searchController?.searchBar.placeholder = "Search this folder".localized
 		searchController?.searchBar.applyThemeCollection(Theme.shared.activeCollection)
 
-
-
-
 		navigationItem.searchController = searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
 
+		if let textFieldInsideSearchBar = searchController?.searchBar.getSubview(type: UITextField.self), let searchIconImageView = textFieldInsideSearchBar.leftView as? UIImageView {
+			let searchImage = searchIconImageView.image?.withRenderingMode(.alwaysTemplate)
+			searchController?.searchBar.setImage(searchImage, for: .search, state: .normal)
+			searchController?.searchBar.setImage(searchImage, for: .search, state: .highlighted)
+			searchIconImageView.tintColor = Theme.shared.activeCollection.searchbarColors.tintColor
+		}
+		UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).attributedPlaceholder = NSAttributedString(string: "Search this folder".localized, attributes: [NSAttributedString.Key.foregroundColor: Theme.shared.activeCollection.searchbarColors.tintColor!])
 
-		let textFieldInsideSearchBar = searchController?.searchBar.value(forKey: "searchField") as? UITextField
-		//textFieldInsideSearchBar?.backgroundColor = .green
-		print("textFieldInsideSearchBar \(textFieldInsideSearchBar) \(textFieldInsideSearchBar?.leftView)")
-		let glassIconView = textFieldInsideSearchBar?.leftView as? UIImageView
-		print("-->glassIconView \(glassIconView)")
-		glassIconView?.image?.withRenderingMode(.alwaysTemplate)
-		glassIconView?.tintColor = .blue
-
-		searchController?.searchBar.changeSearchBarColor(fieldColor: .black, backColor: .clear, borderColor: .clear)
+		if let textFieldInsideSearchBar = searchController?.searchBar.getSubview(type: UITextField.self) {
+			textFieldInsideSearchBar.layer.backgroundColor = Theme.shared.activeCollection.searchbarColors.backgroundColor?.cgColor
+			 textFieldInsideSearchBar.layer.cornerRadius = 10.0
+		}
 
 		self.definesPresentationContext = true
 

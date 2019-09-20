@@ -20,45 +20,6 @@ import Foundation
 import UIKit
 
 extension UISearchBar {
-func changeSearchBarColor(fieldColor: UIColor, backColor: UIColor, borderColor: UIColor?) {
-	UIGraphicsBeginImageContext(bounds.size)
-	backColor.setFill()
-	UIBezierPath(rect: bounds).fill()
-	setBackgroundImage(UIGraphicsGetImageFromCurrentImageContext()!, for: UIBarPosition.any, barMetrics: .default)
-
-	var newRect = bounds
-	newRect.size.height = 38.0
-	//let newBounds = bounds.insetBy(dx: 0, dy: 0)
-	//newBounds.height = 20
-	fieldColor.setFill()
-	let path = UIBezierPath(roundedRect: newRect, cornerRadius: 8.0)
-
-	if let borderColor = borderColor {
-		borderColor.setStroke()
-		path.lineWidth = 1 / UIScreen.main.scale
-		path.stroke()
-	}
-
-	path.fill()
-	setSearchFieldBackgroundImage(UIGraphicsGetImageFromCurrentImageContext()!, for: UIControl.State.normal)
-	searchTextPositionAdjustment = UIOffset(horizontal: 8.0, vertical: -8.0)
-	positionAdjustment(for: UISearchBar.Icon.Type) = UIOffset(horizontal: 8.0, vertical: -8.0)
-
-	UIGraphicsEndImageContext()
-	}
-}
-
-extension UISearchBar {
-
-    func changeSearchBarColor(color: UIColor) {
-        UIGraphicsBeginImageContext(self.frame.size)
-        color.setFill()
-        UIBezierPath(rect: self.frame).fill()
-        let bgImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-
-        self.setSearchFieldBackgroundImage(bgImage, for: .normal)
-    }
 
 	public var textField: UITextField? {
 		let subViews = self.subviews.flatMap { $0.subviews }
