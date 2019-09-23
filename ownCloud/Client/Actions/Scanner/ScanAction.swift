@@ -88,8 +88,11 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .folderAction {
-			Theme.shared.add(tvgResourceFor: "application-pdf")
-			return Theme.shared.image(for: "application-pdf", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
+			if #available(iOS 13.0, *) {
+				return UIImage(systemName: "doc.text.viewfinder", withConfiguration: UIImage.SymbolConfiguration(pointSize: 26, weight: .regular))
+			}
+//			Theme.shared.add(tvgResourceFor: "application-pdf")
+//			return Theme.shared.image(for: "application-pdf", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
 		}
 
 		return nil

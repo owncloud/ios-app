@@ -22,31 +22,6 @@ import ImageIO
 import ownCloudSDK
 import ownCloudApp
 
-class ScanImageView : UIImageView {
-	var aspectHeight : CGFloat? {
-		didSet {
-			self.invalidateIntrinsicContentSize()
-		}
-	}
-
-	override var intrinsicContentSize: CGSize {
-		if let aspectHeight = aspectHeight, let image = image {
-			let imageSize = image.size
-			var intrinsicSize : CGSize = CGSize(
-				width: imageSize.width * aspectHeight / imageSize.height,
-				height: aspectHeight
-			)
-
-			if intrinsicSize.width < 1 { intrinsicSize.width = 1 }
-			if intrinsicSize.height < 1 { intrinsicSize.height = 1 }
-
-			return intrinsicSize
-		}
-
-		return super.intrinsicContentSize
-	}
-}
-
 class ScanPage {
 	var image : UIImage
 
@@ -56,7 +31,7 @@ class ScanPage {
 }
 
 class ScanPageCell : UICollectionViewCell, Themeable {
-	private var imageView : ScanImageView?
+	private var imageView : FixedHeightImageView?
 
 	var page : ScanPage? {
 		didSet {
@@ -73,10 +48,14 @@ class ScanPageCell : UICollectionViewCell, Themeable {
 		}
 	}
 
+	private let cellShadowRadius : CGFloat = 6
+	private let cellShadowOpacity : Float = 0.2
+	private let cellShadowOffset : CGSize = CGSize(width: 0, height: 4)
+
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 
-		imageView = ScanImageView()
+		imageView = FixedHeightImageView()
 		imageView?.translatesAutoresizingMaskIntoConstraints = false
 		imageView?.contentMode = .scaleAspectFill
 		imageView?.setContentCompressionResistancePriority(.required, for: .horizontal)
@@ -94,9 +73,9 @@ class ScanPageCell : UICollectionViewCell, Themeable {
 		])
 
 		self.layer.shadowColor = UIColor.black.cgColor
-		self.layer.shadowRadius = 6
-		self.layer.shadowOpacity = 0.2
-		self.layer.shadowOffset = CGSize(width: 0, height: 4)
+		self.layer.shadowRadius = cellShadowRadius
+		self.layer.shadowOpacity = cellShadowOpacity
+		self.layer.shadowOffset = cellShadowOffset
 
 		Theme.shared.register(client: self, applyImmediately: true)
 	}
@@ -124,15 +103,16 @@ class ScanPagesCollectionViewController : UICollectionViewController, UICollecti
 	}
 
 	private var height : CGFloat
-	private var verticalPadding : CGFloat = 25
-	private var horizontalPadding : CGFloat = 20
+	private let verticalPadding : CGFloat = 25
+	private let horizontalPadding : CGFloat = 20
+	private let thumbnailAspectRatio : CGFloat = 0.6
 
 	init (height: CGFloat) {
 		self.height = height
 
 		flowLayout = UICollectionViewFlowLayout()
 		flowLayout.scrollDirection = .horizontal
-		flowLayout.estimatedItemSize = CGSize(width: floor(height * 0.6), height: height)
+		flowLayout.estimatedItemSize = CGSize(width: floor(height * thumbnailAspectRatio), height: height)
 		flowLayout.sectionInset = UIEdgeInsets(top: verticalPadding, left: horizontalPadding, bottom: verticalPadding, right: horizontalPadding)
 		flowLayout.minimumInteritemSpacing = 20
 
@@ -243,6 +223,9 @@ class ScanViewController: StaticTableViewController {
 	}
 
 	private static func exportAsPDF(pages: [ScanPage], to url: URL) -> Bool {
+		// Using Quartz here to store the exported images JPEG-compressed - something that PDFKit currently doesn't support
+		// (a naive PDFKit implementation using PDFDocument and PDFPage produces ~ 11x larger files (31 MB vs. 2.7 MB for a two page scan))
+
 		if let pdfContext = CGContext(url as CFURL, mediaBox: nil, nil) {
 			defer {
 				pdfContext.closePDF()
@@ -283,27 +266,6 @@ class ScanViewController: StaticTableViewController {
 				// Error writing
 				return nil
 			}
-
-			// PDFKit implementation (~ 11x larger files (31 MB vs. 2.7 MB for a two page scan)):
-			//
-			// let targetURL = baseURL.appendingPathComponent(UUID().uuidString)
-			// let pdfDocument = PDFDocument()
-			// var pageIndex : Int = 0
-			//
-			// for page in pages {
-			// 	if let pdfPage = PDFPage(image: page.image) {
-			// 		pdfDocument.insert(pdfPage, at: pageIndex)
-			// 		pageIndex += 1
-			// 	}
-			// }
-			//
-			// if pdfDocument.write(to: targetURL, withOptions: nil) {
-			// 	// Writing successful
-			// 	return [targetURL]
-			// } else {
-			// 	// Error writing
-			// 	return nil
-			// }
 		}),
 		ScanExportFormat(name: "JPEG", suffix: "jpg", exporter: { (baseURL, pages) in
 			return ScanViewController.exportAsImage(format: "jpeg", baseURL: baseURL, pages: pages)
@@ -500,7 +462,6 @@ class Scanner : NSObject, VNDocumentCameraViewControllerDelegate {
 		viewController.present(documentCameraViewController, animated: true)
 	}
 
-	@available(iOS 13.0, *)
 	func documentCameraViewControllerDidCancel(_ controller: VNDocumentCameraViewController) {
 		controller.presentingViewController?.dismiss(animated: true, completion: {
 			self.completionHandler?(self, nil, nil)
@@ -508,14 +469,12 @@ class Scanner : NSObject, VNDocumentCameraViewControllerDelegate {
 		})
 	}
 
-	@available(iOS 13.0, *)
 	func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFailWithError error: Error) {
 		Log.log("Failed with error=\(error)")
 		completionHandler?(self, error, nil)
 		completionHandler = nil
 	}
 
-	@available(iOS 13.0, *)
 	func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan) {
 		Log.log("Finished with scan=\(scan)")
 		controller.presentingViewController?.dismiss(animated: true, completion: {

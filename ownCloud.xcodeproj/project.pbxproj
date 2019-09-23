@@ -201,6 +201,7 @@
 		DC42244C207CAFBB0006A2A6 /* ThemeCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC42244B207CAFBB0006A2A6 /* ThemeCollection.swift */; };
 		DC422450207CB2500006A2A6 /* NSObject+ThemeApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */; };
 		DC434D1320D7A8F100740056 /* UIAlertController+OCIssue.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */; };
+		DC4C575D233958B70098BAE9 /* FixedHeightImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4C575C233958B70098BAE9 /* FixedHeightImageView.swift */; };
 		DC4FEAE7209E3A7700D4476B /* OCIssue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE6209E3A7700D4476B /* OCIssue+Extension.swift */; };
 		DC4FEAEA209E48E800D4476B /* DispatchQueueTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */; };
 		DC576EC022647A070087316D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DC576EC222647A070087316D /* Localizable.strings */; };
@@ -800,6 +801,7 @@
 		DC42244B207CAFBB0006A2A6 /* ThemeCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCollection.swift; sourceTree = "<group>"; };
 		DC42244F207CB2500006A2A6 /* NSObject+ThemeApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+ThemeApplication.swift"; sourceTree = "<group>"; };
 		DC434D1220D7A8F100740056 /* UIAlertController+OCIssue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+OCIssue.swift"; sourceTree = "<group>"; };
+		DC4C575C233958B70098BAE9 /* FixedHeightImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedHeightImageView.swift; sourceTree = "<group>"; };
 		DC4FEAE6209E3A7700D4476B /* OCIssue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCIssue+Extension.swift"; sourceTree = "<group>"; };
 		DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueTools.swift; sourceTree = "<group>"; };
 		DC576EC122647A070087316D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1184,7 +1186,6 @@
 			children = (
 				3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */,
 				DC29F09222976B9200F77349 /* LibrarySharesTableViewController.swift */,
-				DC29F09322976B9200F77349 /* LibraryFilesTableViewController.swift */,
 				DC33939E22E0A1A300DD3DA4 /* Item Policies */,
 			);
 			path = Library;
@@ -1370,6 +1371,7 @@
 			children = (
 				DC82D6F923171339001551C5 /* ScanAction.swift */,
 				DC1AC7CF2319ADAE002B7892 /* ScanViewController.swift */,
+				DC4C575C233958B70098BAE9 /* FixedHeightImageView.swift */,
 			);
 			path = Scanner;
 			sourceTree = "<group>";
@@ -2544,6 +2546,7 @@
 				23FA23E620BFD3D8009A6D73 /* SortBar.swift in Sources */,
 				3971B48F221B23FE006FB441 /* ThemeableColoredView.swift in Sources */,
 				390B51E02292DBB100935E24 /* SharingTableViewController.swift in Sources */,
+				DC4C575D233958B70098BAE9 /* FixedHeightImageView.swift in Sources */,
 				4C1561E8222321E0009C4EF3 /* PhotoSelectionViewController.swift in Sources */,
 				3998F5D3224102FE00B66713 /* UITableView+Extension.swift in Sources */,
 				39CC8AE6228C12100020253B /* Array+Extension.swift in Sources */,
