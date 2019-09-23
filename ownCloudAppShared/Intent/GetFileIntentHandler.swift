@@ -49,7 +49,7 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 											if error == nil {
 												if let item = item, let file = item.file(with: core) {
 													if let url = file.url {
-														let file = INFile(fileURL: url, filename: item.name, typeIdentifier: item.mimeType)
+														let file = INFile(fileURL: url, filename: item.name, typeIdentifier: nil)
 
 														self.completion?(GetFileIntentResponse.success(file: file))
 														self.completion = nil
@@ -63,7 +63,7 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 									} else {
 										if let core = core, let file = item.file(with: core) {
 											if let url = file.url {
-												let file = INFile(fileURL: url, filename: item.name, typeIdentifier: item.mimeType)
+												let file = INFile(fileURL: url, filename: item.name, typeIdentifier: nil)
 
 												self.completion?(GetFileIntentResponse.success(file: file))
 												self.completion = nil
