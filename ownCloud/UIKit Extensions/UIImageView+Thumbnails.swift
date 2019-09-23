@@ -66,9 +66,9 @@ extension UIImageView {
 								let thumbnailRequest = QLThumbnailGenerator.Request(fileAt: url, size: size, scale: UIScreen.main.scale, representationTypes: .all)
 								QLThumbnailGenerator.shared.generateRepresentations(for: thumbnailRequest) { (representation, _, _) in
 									if let representation = representation {
-										self.cacheThumbnail(imageName: representation.uiImage, size:size, for: item, in: core)
+										self.cacheThumbnail(image: representation.uiImage, size:size, for: item, in: core)
 										OnMainThread {
-											self.imageName = representation.uiImage
+											self.image = representation.uiImage
 										}
 									}
 								}
