@@ -321,11 +321,11 @@ class MediaUploadSettingsSection: SettingsSection {
 				self?.userDefaults.instantUploadPath = nil
 
 				// Proceed with upload path selection
-				self?.selectUploadPath(for: selectedBookmark, pushIn: navigationController, completion: { (success) in
+				self?.selectUploadPath(for: selectedBookmark, pushIn: navigationController, completion: { [weak navigationController] (success) in
 					if !success && self?.userDefaults.instantUploadPath == nil {
 						self?.userDefaults.resetInstantUploadConfiguration()
 					}
-					navigationController.dismiss(animated: true, completion: nil)
+					navigationController?.dismiss(animated: true, completion: nil)
 					self?.postSettingsChangedNotification()
 					self?.updateDynamicUI()
 				})
@@ -345,7 +345,7 @@ class MediaUploadSettingsSection: SettingsSection {
 	private func selectUploadPath(for bookmark:OCBookmark, pushIn navigationController:UINavigationController, completion:@escaping (_ success:Bool) -> Void) {
 
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (_, _) in },
-										 completionHandler: { [weak self] (core, error) in
+										 completionHandler: { [weak self, weak navigationController] (core, error) in
 
 											if let core = core, error == nil {
 
@@ -358,7 +358,7 @@ class MediaUploadSettingsSection: SettingsSection {
 
 														completion(selectedDirectory != nil)
 													})
-													navigationController.pushViewController(directoryPickerViewController, animated: true)
+													navigationController?.pushViewController(directoryPickerViewController, animated: true)
 												}
 											}
 		})
