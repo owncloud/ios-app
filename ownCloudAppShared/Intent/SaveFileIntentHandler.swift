@@ -37,7 +37,15 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 						if error == nil, let core = core {
 							self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
 								if let targetItem = item {
-									if core.importFileNamed(file.filename,
+									var newFilename = file.filename
+									if let filename = intent.filename as NSString?, filename.length > 0, let defaultFilename = file.filename as NSString? {
+										let pathExtention = defaultFilename.pathExtension
+										if let changedFilename = filename.appendingPathExtension(pathExtention) {
+											newFilename = changedFilename
+										}
+									}
+
+									if core.importFileNamed(newFilename,
 															at: targetItem,
 															from: fileURL,
 															isSecurityScoped: true,
@@ -104,6 +112,14 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 			completion(INFileResolutionResult.success(with: file))
 		} else {
 			completion(INFileResolutionResult.needsValue())
+		}
+	}
+
+	public func resolveFilename(for intent: SaveFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+		if let filename = intent.filename {
+			completion(INStringResolutionResult.success(with: filename))
+		} else {
+			completion(INStringResolutionResult.needsValue())
 		}
 	}
 }
