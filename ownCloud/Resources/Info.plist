@@ -54,6 +54,8 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>This permission is needed for uploading media files to your server.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This permission is needed to scan documents.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Unlock the app without entering the passcode.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
