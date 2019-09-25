@@ -128,7 +128,7 @@
 	<key>INIntentDefinitionSystemVersion</key>
 	<string>18G95</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>11A419c</string>
+	<string>11A420a</string>
 	<key>INIntentDefinitionToolsVersion</key>
 	<string>11.0</string>
 	<key>INIntents</key>
@@ -840,10 +840,10 @@
 			<key>INIntentKeyParameter</key>
 			<string>file</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>8</integer>
+			<integer>9</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>path,file,account,filename</key>
+				<key>path,file,account,filename,fileextension</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
@@ -1009,7 +1009,7 @@
 				</dict>
 				<dict>
 					<key>INIntentParameterDisplayName</key>
-					<string>File Name (without file extension)</string>
+					<string>File Name</string>
 					<key>INIntentParameterDisplayNameID</key>
 					<string>B1lmXQ</string>
 					<key>INIntentParameterDisplayPriority</key>
@@ -1027,7 +1027,7 @@
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Optinal file name for saving file</string>
+							<string>Optional file name for saving file</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
 							<string>b4VIz0</string>
 							<key>INIntentParameterPromptDialogType</key>
@@ -1038,6 +1038,40 @@
 					<true/>
 					<key>INIntentParameterTag</key>
 					<integer>8</integer>
+					<key>INIntentParameterType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterDisplayName</key>
+					<string>File Extension</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>cDQ3EQ</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>5</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>fileextension</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Optional file extension for saving file</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>dRSMFQ</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>9</integer>
 					<key>INIntentParameterType</key>
 					<string>String</string>
 				</dict>

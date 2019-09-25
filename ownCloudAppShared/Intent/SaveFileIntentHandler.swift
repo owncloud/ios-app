@@ -39,8 +39,16 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 								if let targetItem = item {
 									var newFilename = file.filename
 									if let filename = intent.filename as NSString?, filename.length > 0, let defaultFilename = file.filename as NSString? {
-										let pathExtention = defaultFilename.pathExtension
+										var pathExtention = defaultFilename.pathExtension
+										if let fileExtension = intent.fileextension, fileExtension.count > 0 {
+											pathExtention = fileExtension
+										}
 										if let changedFilename = filename.appendingPathExtension(pathExtention) {
+											newFilename = changedFilename
+										}
+									} else if let fileExtension = intent.fileextension, fileExtension.count > 0, let defaultFilename = file.filename as NSString? {
+										let filename = defaultFilename.deletingPathExtension as NSString
+										if let changedFilename = filename.appendingPathExtension(fileExtension) {
 											newFilename = changedFilename
 										}
 									}
@@ -118,6 +126,14 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 	public func resolveFilename(for intent: SaveFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		if let filename = intent.filename {
 			completion(INStringResolutionResult.success(with: filename))
+		} else {
+			completion(INStringResolutionResult.needsValue())
+		}
+	}
+
+	public func resolveFileextension(for intent: SaveFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+		if let fileExtension = intent.fileextension {
+			completion(INStringResolutionResult.success(with: fileExtension))
 		} else {
 			completion(INStringResolutionResult.needsValue())
 		}
