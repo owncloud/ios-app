@@ -33,6 +33,12 @@
 		23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */; };
 		23F6238120B587EF004FDE8B /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F6238020B587EF004FDE8B /* SortMethod.swift */; };
 		23FA23E620BFD3D8009A6D73 /* SortBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23FA23E520BFD3D8009A6D73 /* SortBar.swift */; };
+		39057AA3233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; };
+		39057AA4233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; };
+		39057AA5233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; };
+		39057AA6233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; };
+		39057AA7233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; };
+		39057AA8233BA7A60008E6C0 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; };
 		390B51E02292DBB100935E24 /* SharingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390B51DF2292DBB100935E24 /* SharingTableViewController.swift */; };
 		39104E10223991C8002FC02F /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39104E0A223991C8002FC02F /* UIButton+Extension.swift */; };
 		3913213822946E5E00EF88F4 /* FileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913213722946E5E00EF88F4 /* FileListTableViewController.swift */; };
@@ -45,7 +51,6 @@
 		394A0B0022EEFC2C00603813 /* ownCloudAppShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 394A0AF922EEFC2C00603813 /* ownCloudAppShared.framework */; };
 		394A0B0122EEFC2C00603813 /* ownCloudAppShared.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 394A0AF922EEFC2C00603813 /* ownCloudAppShared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		394A0B0522EEFCA300603813 /* GetAccountsIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A7139722E858E400089423 /* GetAccountsIntentHandler.swift */; };
-		394A0B0622EEFCB000603813 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39A7138E22E79EF700089423 /* Intents.intentdefinition */; };
 		394A0B0922EEFCE400603813 /* ownCloudAppShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 394A0AF922EEFC2C00603813 /* ownCloudAppShared.framework */; };
 		394A0B0A22EEFCF500603813 /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
 		395E16FA22F03CAF00DE89A1 /* GetFileIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395E16F922F03CAF00DE89A1 /* GetFileIntentHandler.swift */; };
@@ -73,11 +78,6 @@
 		39A513AC22674E56002CF1AA /* OCCore+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A513AB22674E56002CF1AA /* OCCore+Extension.swift */; };
 		39A5C3A1231566D9009D9EE3 /* GetFileInfoIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A5C3A0231566D9009D9EE3 /* GetFileInfoIntentHandler.swift */; };
 		39A7138722E79C6700089423 /* ownCloud Intents.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 39A7138022E79C6700089423 /* ownCloud Intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		39A7138F22E79EF700089423 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39A7138E22E79EF700089423 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
-		39A7139022E79EF700089423 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39A7138E22E79EF700089423 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
-		39A7139322E79EF700089423 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39A7138E22E79EF700089423 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
-		39A7139522E79EF700089423 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39A7138E22E79EF700089423 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
-		39A7139622E79EF700089423 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39A7138E22E79EF700089423 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
 		39AFC3D1225E72FB00A6D3AE /* GroupSharingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AFC3D0225E72FB00A6D3AE /* GroupSharingTableViewController.swift */; };
 		39AFC3D8225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AFC3D7225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift */; };
 		39B289A8226F1EE000BE0E11 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B289A7226F1EE000BE0E11 /* MessageView.swift */; };
@@ -666,6 +666,8 @@
 		23EC775C2137FB6B0032D4E6 /* WebViewDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDisplayViewController.swift; sourceTree = "<group>"; };
 		23F6238020B587EF004FDE8B /* SortMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortMethod.swift; sourceTree = "<group>"; };
 		23FA23E520BFD3D8009A6D73 /* SortBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortBar.swift; sourceTree = "<group>"; };
+		39057AA9233BA7A60008E6C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/Intents.intentdefinition; sourceTree = "<group>"; };
+		39057AB1233BA7AE0008E6C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Intents.strings; sourceTree = "<group>"; };
 		390B51DF2292DBB100935E24 /* SharingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingTableViewController.swift; sourceTree = "<group>"; };
 		39104E0A223991C8002FC02F /* UIButton+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		3913213722946E5E00EF88F4 /* FileListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListTableViewController.swift; sourceTree = "<group>"; };
@@ -701,7 +703,6 @@
 		39A7138022E79C6700089423 /* ownCloud Intents.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ownCloud Intents.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		39A7138222E79C6700089423 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
 		39A7138422E79C6700089423 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		39A7138E22E79EF700089423 /* Intents.intentdefinition */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.intentdefinition; path = Intents.intentdefinition; sourceTree = "<group>"; };
 		39A7139722E858E400089423 /* GetAccountsIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAccountsIntentHandler.swift; sourceTree = "<group>"; };
 		39AFC3D0225E72FB00A6D3AE /* GroupSharingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSharingTableViewController.swift; sourceTree = "<group>"; };
 		39AFC3D7225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSharingEditTableViewController.swift; sourceTree = "<group>"; };
@@ -1278,7 +1279,7 @@
 			isa = PBXGroup;
 			children = (
 				399A4C012317D1BA0027DDD6 /* Extensions */,
-				39A7138E22E79EF700089423 /* Intents.intentdefinition */,
+				39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */,
 				3940C4EF2326985B008227AE /* GetAccountIntentHandler.swift */,
 				39A7139722E858E400089423 /* GetAccountsIntentHandler.swift */,
 				39F689AA22F018C100E63429 /* GetDirectoryListingIntentHandler.swift */,
@@ -2786,7 +2787,7 @@
 				DC321261207EB01B00DB171D /* ThemeImage.swift in Sources */,
 				DC7DBA54207FA80C00E7337D /* TVGImage.swift in Sources */,
 				DC33939622E0747400DD3DA4 /* MakeAvailableOfflineAction.swift in Sources */,
-				39A7138F22E79EF700089423 /* Intents.intentdefinition in Sources */,
+				39057AA3233BA7A60008E6C0 /* Intents.intentdefinition in Sources */,
 				6E586CFE2199A75900F680C4 /* MoveAction.swift in Sources */,
 				DC625148225CEB2C00736874 /* UploadFileAction.swift in Sources */,
 				DC4FEAE7209E3A7700D4476B /* OCIssue+Extension.swift in Sources */,
@@ -2811,7 +2812,7 @@
 				233BDEB5204FEFE500C06732 /* OwnCloudTests.swift in Sources */,
 				59B09E6F21AD61F4007827B8 /* CreateBookmarkTests.swift in Sources */,
 				59B09E6E21AD61F4007827B8 /* EditBookmarkTests.swift in Sources */,
-				39A7139022E79EF700089423 /* Intents.intentdefinition in Sources */,
+				39057AA4233BA7A60008E6C0 /* Intents.intentdefinition in Sources */,
 				59538A0321E4A9C2005E543B /* CreateFolderTests.swift in Sources */,
 				DC869A592153B1F60088977E /* OCMockingManager+SwiftTools.swift in Sources */,
 				EA9337E32226DB070054971F /* SettingsTests.swift in Sources */,
@@ -2837,7 +2838,7 @@
 				395E16FA22F03CAF00DE89A1 /* GetFileIntentHandler.swift in Sources */,
 				397754E223279EED00119FCB /* OCItem+Extension.swift in Sources */,
 				3984F5712319202200DC2639 /* DeletePathItemIntentHandler.swift in Sources */,
-				394A0B0622EEFCB000603813 /* Intents.intentdefinition in Sources */,
+				39057AA6233BA7A60008E6C0 /* Intents.intentdefinition in Sources */,
 				39F689AC22F0206900E63429 /* OCBookmark+Extension.swift in Sources */,
 				395E16FF22F172C900DE89A1 /* CreateFolderIntentHandler.swift in Sources */,
 				395E16FD22F06A7300DE89A1 /* SaveFileIntentHandler.swift in Sources */,
@@ -2858,7 +2859,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				394A0AED22EEE32C00603813 /* IntentHandler.swift in Sources */,
-				39A7139322E79EF700089423 /* Intents.intentdefinition in Sources */,
+				39057AA5233BA7A60008E6C0 /* Intents.intentdefinition in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2866,7 +2867,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39A7139622E79EF700089423 /* Intents.intentdefinition in Sources */,
+				39057AA8233BA7A60008E6C0 /* Intents.intentdefinition in Sources */,
 				59056CAD22414F3C00A18A22 /* ownCloudScreenshotsTests.swift in Sources */,
 				59056CB422414F8000A18A22 /* SnapshotHelper.swift in Sources */,
 				59296652224CD1DB0078F13D /* OCBookmarkManager+Tools.swift in Sources */,
@@ -2897,7 +2898,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39A7139522E79EF700089423 /* Intents.intentdefinition in Sources */,
+				39057AA7233BA7A60008E6C0 /* Intents.intentdefinition in Sources */,
 				DCC0856C2293F1FD008CC05C /* ownCloudAppTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3053,6 +3054,15 @@
 				233BDEA9204FEFE500C06732 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */ = {
+			isa = PBXVariantGroup;
+			children = (
+				39057AA9233BA7A60008E6C0 /* Base */,
+				39057AB1233BA7AE0008E6C0 /* en */,
+			);
+			name = Intents.intentdefinition;
 			sourceTree = "<group>";
 		};
 		593A821320C7D4C5000E2A90 /* Localizable.strings */ = {
