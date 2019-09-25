@@ -54,6 +54,14 @@ class VendorServices : NSObject {
 		return false
 	}
 
+	var showBetaWarning: Bool {
+		if let showBetaWarning = self.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool {
+			return showBetaWarning
+		}
+
+		return false
+	}
+
 	static var shared : VendorServices = {
 		return VendorServices()
 	}()
@@ -138,7 +146,7 @@ extension VendorServices : OCClassSettingsSupport {
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
-			return [ .isBetaBuild : true, .showBetaWarning : true, .enableUIAnimations: true ]
+			return [ .isBetaBuild : false, .showBetaWarning : false, .enableUIAnimations: true ]
 		}
 
 		return nil

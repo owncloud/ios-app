@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1020"
+   LastUpgradeVersion = "1030"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -167,6 +167,11 @@
          <EnvironmentVariable
             key = "oc:log.log-level"
             value = "0"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.log-colored"
+            value = "true"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
