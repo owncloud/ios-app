@@ -21,8 +21,8 @@ import ownCloudSDK
 class CreateFolderAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.createFolder") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Create Folder".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [ .plusButton ] }
+	override class var name : String? { return "Create folder".localized }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [ .folderAction ] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -46,7 +46,7 @@ class CreateFolderAction : Action {
 
 		let item = context.items.first
 
-		guard item != nil else {
+		guard item != nil, let itemPath = item?.path else {
 			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
@@ -55,40 +55,45 @@ class CreateFolderAction : Action {
 			return
 		}
 
-		let createFolderVC = NamingViewController( with: core, defaultName: "New Folder".localized, stringValidator: { name in
-			if name.contains("/") || name.contains("\\") {
-				return (false, "File name cannot contain / or \\".localized)
-			} else {
-				return (true, nil)
-			}
-		}, completion: { newName, _ in
+		core?.suggestUnusedNameBased(on: "New Folder".localized, atPath: itemPath, isDirectory: true, using: .numbered, filteredBy: nil, resultHandler: { (suggestedName, _) in
+			guard let suggestedName = suggestedName else { return }
 
-			guard newName != nil else {
-				return
-			}
+			OnMainThread {
+				let createFolderVC = NamingViewController( with: self.core, defaultName: suggestedName, stringValidator: { name in
+					if name.contains("/") || name.contains("\\") {
+						return (false, "File name cannot contain / or \\".localized)
+					} else {
+						return (true, nil)
+					}
+				}, completion: { newName, _ in
+					guard newName != nil else {
+						return
+					}
 
-			if let progress = self.core?.createFolder(newName!, inside: item!, options: nil, resultHandler: { (error, _, _, _) in
-				if error != nil {
-					Log.error("Error \(String(describing: error)) creating folder \(String(describing: newName))")
-					self.completed(with: error)
-				} else {
-					self.completed()
-				}
-			}) {
-				self.publish(progress: progress)
+					if let progress = self.core?.createFolder(newName!, inside: item!, options: nil, resultHandler: { (error, _, _, _) in
+						if error != nil {
+							Log.error("Error \(String(describing: error)) creating folder \(String(describing: newName))")
+							self.completed(with: error)
+						} else {
+							self.completed()
+						}
+					}) {
+						self.publish(progress: progress)
+					}
+				})
+
+				createFolderVC.navigationItem.title = "Create folder".localized
+
+				let createFolderNavigationVC = ThemeNavigationController(rootViewController: createFolderVC)
+				createFolderNavigationVC.modalPresentationStyle = .overFullScreen
+
+				viewController.present(createFolderNavigationVC, animated: true)
 			}
 		})
-
-		createFolderVC.navigationItem.title = "Create folder".localized
-
-		let createFolderNavigationVC = ThemeNavigationController(rootViewController: createFolderVC)
-		createFolderNavigationVC.modalPresentationStyle = .overFullScreen
-
-		viewController.present(createFolderNavigationVC, animated: true)
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .toolbar || location == .plusButton {
+		if location == .toolbar || location == .folderAction {
 			return Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
 		}
 

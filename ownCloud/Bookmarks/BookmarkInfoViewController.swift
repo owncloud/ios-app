@@ -21,10 +21,8 @@ import ownCloudSDK
 import ownCloudUI
 
 class BookmarkInfoViewController: StaticTableViewController {
-	var storageSection : StaticTableViewSection?
 	var offlineStorageInfoRow: StaticTableViewRow?
 	var deviceAvailableStorageInfoRow: StaticTableViewRow?
-	var deleteLocalFilesRow : StaticTableViewRow?
 
 	var bookmark : OCBookmark?
 
@@ -36,22 +34,58 @@ class BookmarkInfoViewController: StaticTableViewController {
 
 	// MARK: - Init & Deinit
 	init(_ bookmark: OCBookmark?) {
-		// Super init
 		super.init(style: .grouped)
 		self.bookmark = bookmark
 
-		offlineStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: "Offline files use".localized, value: "uknown".localized)
+		// Storage
+		offlineStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: "Offline files use".localized, value: "unknown".localized)
 		let deviceFreeTitle = String(format: "Free on %@".localized, UIDevice.current.name)
-		deviceAvailableStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: deviceFreeTitle, value: "uknown".localized)
+		deviceAvailableStorageInfoRow = StaticTableViewRow(valueRowWithAction: nil, title: deviceFreeTitle, value: "unknown".localized)
 
-		deleteLocalFilesRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
+		addSection(StaticTableViewSection(headerTitle: "Storage".localized, footerTitle: nil, identifier: "section-storage", rows: [ offlineStorageInfoRow!, deviceAvailableStorageInfoRow! ]))
+
+		// Compacting
+		let includeAvailableOfflineCopiesRow = StaticTableViewRow(switchWithAction: { [weak self] (row, _) in
+			if (row.value as? Bool) == true {
+				let alertController = UIAlertController(title: "Really include available offline files?".localized,
+									message: "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).".localized,
+									preferredStyle: .alert)
+
+				alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { [weak row] (_) in
+					row?.value = false
+				}))
+				alertController.addAction(UIAlertAction(title: "Proceed".localized, style: .default, handler: nil))
+
+				self?.present(alertController, animated: true, completion: nil)
+			}
+		}, title: "Include available offline files".localized, value: false, identifier: "row-include-available-offline")
+
+		let deleteLocalFilesRow = StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
 			if let bookmark  = self?.bookmark {
 
 				OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
 					let vault : OCVault = OCVault(bookmark: bookmark)
 
-					vault.compact(completionHandler: { (_, error) in
+					OnMainThread {
+						let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
+						progressView.startAnimating()
+						row.cell?.accessoryView = progressView
+					}
+
+					let includeAvailableOfflineCopies : Bool = (includeAvailableOfflineCopiesRow.value as? Bool) ?? false
+
+					let compactingSelector : OCVaultCompactSelector? = (includeAvailableOfflineCopies == false) ? { (_, item) -> Bool in
+						return item.downloadTriggerIdentifier != .availableOffline
+					} : nil
+
+					if includeAvailableOfflineCopies {
+						// Skip available offline until user opens the bookmark again
+						vault.keyValueStore?.storeObject(true as NSNumber, forKey: .coreSkipAvailableOfflineKey)
+					}
+
+					vault.compact(selector: compactingSelector, completionHandler: { (_, error) in
 						OnMainThread {
+							row.cell?.accessoryView = nil
 							if error != nil {
 								// Inform user if vault couldn't be comp acted
 								let alertController = UIAlertController(title: NSString(format: "Compacting of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
@@ -70,11 +104,9 @@ class BookmarkInfoViewController: StaticTableViewController {
 					})
 				}, for: bookmark)
 			}
-			}, title: "Delete Offline Copies".localized, style: .destructive, identifier: "row-offline-copies-delete")
+		}, title: "Delete Local Copies".localized, style: .destructive, identifier: "row-offline-copies-delete")
 
-		storageSection = StaticTableViewSection(headerTitle: "Storage".localized, footerTitle: nil, identifier: "section-credentials", rows: [ offlineStorageInfoRow!, deviceAvailableStorageInfoRow!, deleteLocalFilesRow! ])
-
-		self.insertSection(storageSection!, at: 0, animated: false)
+		addSection(StaticTableViewSection(headerTitle: "Compacting".localized, footerTitle: nil, identifier: "section-compact", rows: [ includeAvailableOfflineCopiesRow, deleteLocalFilesRow ]))
 	}
 
 	required init?(coder aDecoder: NSCoder) {

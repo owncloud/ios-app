@@ -45,19 +45,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		window?.addSubview((navigationController?.view)!)
 		window?.makeKeyAndVisible()
 
+		ImportFilesController.removeImportDirectory()
+
 		AppLockManager.shared.showLockscreenIfNeeded()
 
 		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
 
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
-		// Set up background refresh
-		application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum + 10)
+		ScheduledTaskManager.shared.setup()
 
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(MediaDisplayViewController.displayExtension)
 
 		// Action Extensions
 		OCExtensionManager.shared.addExtension(OpenInAction.actionExtension)
@@ -70,6 +72,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
+
+		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
+		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
@@ -81,15 +88,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			UIView.setAnimationsEnabled(enableUIAnimations)
 		}
 
+		// Set background refresh interval
+		UIApplication.shared.setMinimumBackgroundFetchInterval(
+			UIApplication.backgroundFetchIntervalMinimum)
+
+		return true
+	}
+
+	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+		var copyBeforeUsing = true
+		if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
+			copyBeforeUsing = !shouldOpenInPlace
+		}
+
+		ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountUI()
+
 		return true
 	}
 
 	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-		Log.debug("AppDelegate: performFetchWithCompletionHandler")
-
-		OnMainThread(after: 2.0) {
-			completionHandler(.noData)
-		}
+		ScheduledTaskManager.shared.backgroundFetch(completionHandler: completionHandler)
 	}
 
 	func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {

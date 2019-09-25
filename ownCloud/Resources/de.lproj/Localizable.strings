@@ -82,8 +82,7 @@
 "Sort by %@" = "Sortieren nach %@";
 "Sort by" = "Sortieren nach";
 
-"name (A-Z)" = "Name (A-Z)";
-"name (Z-A)" = "Name (Z-A)";
+"name" = "Name";
 "type" = "Typ";
 "size" = "Größe";
 "date" = "Datum";
@@ -111,12 +110,20 @@
 "Not now" = "Nicht jetzt";
 "Upload file" = "Datei hochladen";
 "Upload files" = "Dateien hochladen";
-"Ignore" = "Ignorieren";
-"Authorization failed" = "Anmeldung fehlgeschlagen";
-"The server declined access with the credentials stored for this connection." = "Der Server verweigerte den Zugriff mit den für diese Verbindung gespeicherten Anmeldeinformationen.";
+
 "No matches" = "Keine Treffer";
 "There are no results for this search term" = "Es gibt keine Ergebnisse für diese Suche";
 "Status" = "Status";
+
+"Authorization failed" = "Anmeldung fehlgeschlagen";
+"The account has been disabled." = "Das Konto wurde deaktiviert.";
+"The server declined access with the credentials stored for this connection." = "Der Server verweigerte den Zugriff mit den für diese Verbindung gespeicherten Anmeldeinformationen.";
+"Access denied" = "Zugriff verweigert";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "Das Zugriffstoken der Verbindung ist abgelaufen oder ungültig geworden. Melden Sie sich erneut an, um wieder Zugang zu erhalten.";
+"No authentication data has been found for this connection." = "Für diese Verbindung wurden keine Authentifizierungsdaten gefunden.";
+"Sign in" = "Einloggen";
+"Ignore" = "Ignorieren";
+"Continue offline" = "Offline fortfahren";
 
 /* Server List*/
 "Cancel" = "Abbrechen";
@@ -161,12 +168,12 @@
 "After 1 minute" = "Nach 1 Minute";
 "After 5 minutes" = "Nach 5 Minuten";
 "After 30 minutes" = "Nach 30 Minuten";
-"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "Wenn Sie \"Sofort\" auswählen, wird die App gesperrt, sobald diese nicht mehr im Vordergrund ist.\n\nZugriff über die Dateien.app is nicht möglich, wenn das Sperrinterval \"Sofort\" ausgewählt ist.\nBitte eine andere Verzögerung auswählen, wenn auf die Dateien in der Dateien.app oder über einen Dokumenten-Picker zugegriffen werden soll.";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "Wenn du \"Sofort\" wählst, wird die App gesperrt, wenn sie nicht mehr im Vordergrund ist.\n\nDer Zugriff in Files.app ist nicht möglich, wenn du das Sperrintervall \"Sofort\" wählst.\nBitte wähle eine andere Verzögerung, wenn du auf deine Dateien in der Files.app oder über eine Dokumentauswahl, zugreifen möchtest.";
 "Please configure an email account" = "Bitte richten Sie ein E-Mail-Konto ein";
 "You need to configure an email account first to be able to send emails." = "Sie müssen zuerst ein E-Mail-Konto einrichten, um E-Mails senden zu können.";
 "Do you want to open the following URL?" = "Möchten Sie die folgende URL öffnen?";
 
-"%@ %@ version %@ build %@ (%@)" = "%@ %@ Version %@ build %@ (%@)";
+"%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@ %@ Version %@ Build %@ (App: %@, SDK: %@)";
 "beta" = "Beta";
 "release" = "Release";
 
@@ -216,9 +223,15 @@
 "Really reset log file?" = "Protokolldatei wirklich zurücksetzen?";
 "This action can't be undone." = "Diese Handlung kann nicht rückgängig gemacht werden.";
 
+/* Storage settings */
+"Delete unused local copies" = "Lösche ungenutzte lokale Kopien";
+"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Gemessene Zeit seit dem Hochladen, Bearbeiten, Herunterladen oder Anzeigen der jeweiligen Datei über dieses Gerät. Gilt nicht für Dateien, die über die Funktion Offline verfügbar heruntergeladen wurden. Lokale Kopien können vor Ablauf des angegebenen Zeitraums gelöscht werden, z.B. weil es eine neuere Version einer Datei auf dem Server gibt - oder durch das manuelle Löschen von Offline-Kopien. Außerdem dürfen lokale Kopien nach Ablauf der angegebenen Zeit nicht gelöscht werden, z.B. wenn eine Aktion an ihr durchgeführt wird, die Datei noch in Gebrauch ist - oder das Konto, das die Datei enthält, nicht in der App verwendet wurde.";
+"never" = "Niemals";
+"after %@" = "nach %@";
+
 /* Display settings */
 "Display settings" = "Anzeigeeinstellungen";
-"Show hidden files and folders" = "Versteckte Dateien und Ordner anzeigen";
+"Show hidden files and folders" = "Zeige versteckte Dateien und Ordner";
 
 /* Passcode Messages */
 
@@ -269,6 +282,7 @@
 "Error" = "Fehler";
 "Could not get the picture" = "Bild konnte nicht geladen werden";
 "Downloading" = "Lade herunter";
+"File couldn't be opened" = "Datei kann nicht geöffnet werden";
 
 /* PDF Viewer */
 "Resume" = "Fortsetzen";
@@ -344,7 +358,7 @@
 "Shared with you" = "Mit Dir geteilt";
 "Shared with others" = "Von Dir geteilt";
 "Shares" = "Freigaben";
-"Copy Private Link" = "Öffentlichen Link kopieren";
+"Copy Private Link" = "Privaten Link kopieren";
 "Only recipients can use this link. Use it as a permanent link to point to this resource" = "Nur Empfänger können diesen Link verwenden. Verwenden Sie diesen als permanenten Link, um auf diese Ressource zu verweisen.";
 "Accept Share failed" = "Freigabe annehmen fehlgeschlagen";
 "Decline Share failed" = "Freigabe ablehnen fehlgeschlagen";
@@ -357,7 +371,7 @@
 "Are you sure you want to unshare these items?" = "Sind Sie sicher, dass Sie die Freigabe für diese Objekte aufheben möchten?";
 "Are you sure you want to unshare this item?" = "Sind Sie sicher, dass Sie die Freigabe für dieses Objekt aufheben möchten?";
 "Share" = "Teilen";
-"Read" = "Gelesen";
+"Read" = "Lesen";
 "Can Share" = "Kann teilen";
 "Can Edit" = "Kann bearbeiten";
 "Can Edit and Change" = "Kann bearbeiten und ändern";
@@ -372,7 +386,7 @@
 "Share this file" = "Diese Datei freigeben";
 "Share this folder" = "Diesen Ordner freigeben";
 "shared" = "Geteilt";
-"Owner" = "Eigentümer";
+"Owner" = "Besitzer";
 "Private Link" = "Privater Link";
 
 /* Quick Access view */
@@ -381,7 +395,11 @@
 "Recents" = "Kürzlich";
 "Favorites"= "Favoriten";
 "Images" = "Bilder";
-"PDF Documents" = "PDF Dokumente";
+"PDF Documents" = "PDF-Dokumente";
+
+/* Media files settings */
+"Media Files" = "Medien Dateien";
+"Streaming Enabled" = "Streaming aktiviert";
 
 /* Photo upload settings */
 "Media Upload" = "Medienupload";
@@ -402,6 +420,31 @@
 "unknown" = "unbekannt";
 "Offline files use" = "Offline Dateien verwenden";
 "Compacting of '%@' failed" = "Freigeben von '%@' fehlgeschlagen";
-"Delete Offline Copies" = "Offlinekopien löschen";
+"Include available offline files" = "Offline-Dateien einbeziehen";
+"Delete Local Copies" = "Lösche lokale Kopien";
 "Manage" = "Verwalten";
 "Storage" = "Speicher";
+"Proceed" = "Fortfahren";
+"Compacting" = "Freigeben";
+
+"Really include available offline files?" = "Offline-Dateien wirklich einbeziehen?";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Dateien und Ordner, die als Offline Verfügbar markiert sind, werden nicht mehr verfübar sein. Sie werden beim nächsten Login in Ihr Konto erneut heruntergeladen (Konnektivität erforderlich).";
+
+/* Available offline */
+"Root folder" = "Hauptverzeichnis";
+"at" = "in";
+"(no match)" = "(kein Treffer) ";
+
+"Make available offline" = "Offline verfügbar machen";
+"Make unavailable offline" = "Offlineverfügbarkeit beenden";
+
+"Available Offline" = "Offline verfügbar";
+"No items have been selected for offline availability." = "Es wurden keine Objekte für die Offline-Verfügbarkeit ausgewählt.";
+
+"Overview" = "Übersicht";
+"All Files" = "Alle Dateien";
+"Locations" = "Speicherorte";
+
+/* Import File */
+"Save File" = "Datei speichern";
+"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Wählen Sie ein Konto und einen Ordner, in den die Datei importiert werden soll.\n\nEs kann nur eine Datei auf einmal importiert werden.";

@@ -173,6 +173,7 @@ extension ConnectionIssueViewController: UITableViewDataSource {
 			.font : UIFont.systemFont(ofSize: 15, weight: .regular)
 			])
 		cell.detailTextLabel?.numberOfLines = 0
+		cell.accessibilityIdentifier = "issue-row.\(indexPath.row)"
 		return cell
 	}
 }

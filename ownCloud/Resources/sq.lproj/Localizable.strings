@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   ownCloud
 
@@ -82,8 +82,7 @@
 "Sort by %@" = "Renditi sipas %@";
 "Sort by" = "Renditi sipas";
 
-"name (A-Z)" = "emër (A-Z)";
-"name (Z-A)" = "emër (Z-A)";
+"name" = "emër";
 "type" = "lloj";
 "size" = "madhësi";
 "date" = "datë";
@@ -111,12 +110,20 @@
 "Not now" = "Jo tani";
 "Upload file" = "Ngarkoni kartelë";
 "Upload files" = "Ngarko kartela";
-"Ignore" = "Shpërfille";
-"Authorization failed" = "Autorizimi dështoi";
-"The server declined access with the credentials stored for this connection." = "Shërbyesi nuk pranoi hyrje me kredencialet e depozituara për këtë lidhje.";
+
 "No matches" = "S’ka përputhje";
 "There are no results for this search term" = "S’ka përfundime për këtë term kërkimi";
 "Status" = "Gjendje";
+
+"Authorization failed" = "Autorizimi dështoi";
+"The account has been disabled." = "Llogaria është çaktivizuar.";
+"The server declined access with the credentials stored for this connection." = "Shërbyesi nuk pranoi hyrje me kredencialet e depozituara për këtë lidhje.";
+"Access denied" = "Hyrje e mohuar";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "Token-i i hyrjes për lidhjen ka skaduar ose është bërë i pavlefshëm. Ribëni hyrjen në llogari, që të rifitoni hyrje.";
+"No authentication data has been found for this connection." = "Për këtë lidhje s’u gjetën të dhëna mirëfilltësimi.";
+"Sign in" = "Hyni";
+"Ignore" = "Shpërfille";
+"Continue offline" = "Vazhdo pa qenë në linjë";
 
 /* Server List*/
 "Cancel" = "Anuloje";
@@ -157,15 +164,16 @@
 "Acknowledgements" = "Falënderime";
 "Video upload path" = "Shteg ngarkimesh videosh";
 "Photo upload path" = "Shteg ngarkimi fotosh";
-"Always" = "Përherë";
+"Immediately" = "Menjëherë";
 "After 1 minute" = "Pas 1 minute";
 "After 5 minutes" = "Pas 5 minutash";
 "After 30 minutes" = "Pas 30 minutash";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "Nëse zgjidhni \"Menjëherë\", Aplikacioni do të kyçet, kur të mos jetë më i dukshëm te pjesa e përparme.\n\nHyrja te Files.app s’është e mundur, nëse zgjidhni \"Menjëherë\" si interval kyçjeje.\nNëse doni të hyni te kartelat tuaja në Files.app ose përmes një zgjedhësi dokumentesh, ju lutemi, zgjidhni një tjetër vonesë.";
 "Please configure an email account" = "Ju lutemi, formësoni një llogari email";
 "You need to configure an email account first to be able to send emails." = "Së pari lypset të formësoni një llogari email, që të jeni në gjendje të dërgoni email-e.";
 "Do you want to open the following URL?" = "Doni të hapet URL-ja vijuese?";
 
-"%@ %@ version %@ build %@ (%@)" = "%@ %@ version %@ montimi %@ (%@)";
+"%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@ %@ version %@ montim %@ (aplikacion: %@, sdk: %@)";
 "beta" = "beta";
 "release" = "hedhje në qarkullim";
 
@@ -173,8 +181,8 @@
 /* User Interface Settings */
 "Theme" = "Temë";
 "User Interface" = "Ndërfaqe Përdoruesi";
-"Dark" = "e Errët";
-"Light" = "e Çelët";
+"Dark" = "E errët";
+"Light" = "E çelët";
 "Classic" = "Klasike";
 
 /* Log settings */
@@ -201,7 +209,7 @@
 "Share log file" = "Ndajeni kartelën e regjistrimit me dikë";
 "Reset log file" = "Zeroje kartelën e regjistrimit";
 
-"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Kur aktivizohen, regjistrat mund të kenë ndikim në funksionim dhe përfshijnë të dhëna rezervat. Sidoqoftë, regjistrat nuk janë subjekt parashtrimi të automatizuar te shërbyesit %@. Ndarja e regjistrave me të tjerë është përgjegjësi vetëm e përdoruesit.";
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Kur aktivizohen, regjistrat mund të kenë ndikim në funksionim dhe përfshijnë të dhëna rezervat. Sidoqoftë, regjistrat nuk janë subjekt parashtrimi të automatizuar te shërbyes %@. Ndarja e regjistrave me të tjerë është përgjegjësi vetëm e përdoruesit.";
 
 "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "10 regjistrat e fundit të arkivuar mbahen në pajisje - ku çdo regjistër mbulon deri në 24 orë përdorim. Kur bëhet ndarje e tyre, ju lutemi, kini parasysh se regjistrat mund të përmbajnë të dhëna rezervat, të tilla si URL shërbyesi dhe të dhëna që lidhen me përdoruesin.";
 
@@ -214,6 +222,12 @@
 
 "Really reset log file?" = "Të zerohet vërtet kartela regjistër?";
 "This action can't be undone." = "Ky veprim s’mund të zhbëhet.";
+
+/* Storage settings */
+"Delete unused local copies" = "Fshi kopje vendore të papërdorura";
+"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Kohë e matur që prej ngarkimit, përpunimit, shkarkimit apo parjes së kartelës përkatëse përmes kësaj pajisjeje. Nuk prek kartelat e shkarkuara përmes veçorisë E passhme Jo Në Linjë. Kopjet vendore mund të fshihen përpara se të ketë kaluar periudha kohore e dhënë, p.sh., ngaqë në shërbyes pati një version më të ri të kartelës - ose përmes fshirjes dorazi të kopjeve <em>offline</em>. Kopjet vendore mundet gjithashtu të mos fshihen pasi të ketë kaluar periudha kohore e dhënë, p.sh., nëse mbi të po kryhet një veprim, kartela është ende në përdorim - ose llogaria që përmban kartelën s’është përdorur në aplikacion.";
+"never" = "kurrë";
+"after %@" = "pas %@";
 
 /* Display settings */
 "Display settings" = "Rregullime shfaqjeje";
@@ -268,6 +282,7 @@
 "Error" = "Gabim";
 "Could not get the picture" = "S’u mor dot figura";
 "Downloading" = "Shkarkim";
+"File couldn't be opened" = "Kartela s’u hap dot";
 
 /* PDF Viewer */
 "Resume" = "Rimerre";
@@ -370,6 +385,9 @@
 "You" = "Ju";
 "Share this file" = "Ndajeni këtë kartelë";
 "Share this folder" = "Ndajeni këtë dosje";
+"shared" = "e ndarë me të tjerë";
+"Owner" = "I zoti";
+"Private Link" = "Lidhje Private";
 
 /* Quick Access view */
 "Quick Access" = "Hyrje e Shpejtë";
@@ -378,6 +396,10 @@
 "Favorites"= "Të parapëlqyera";
 "Images" = "Foto";
 "PDF Documents" = "Dokumente PDF";
+
+/* Media files settings */
+"Media Files" = "Kartela Media";
+"Streaming Enabled" = "Transmetim i Aktivizuar";
 
 /* Photo upload settings */
 "Media Upload" = "Ngarkim Media";
@@ -398,6 +420,28 @@
 "unknown" = "i panjohur";
 "Offline files use" = "Përdorim kartelash pa internet";
 "Compacting of '%@' failed" = "Dështoi ngjeshja e '%@'";
-"Delete Offline Copies" = "Fshi Kopjet <em>Offline</em>";
+"Include available offline files" = "Përfshi kartela të passhme jashtë linje";
+"Delete Local Copies" = "Fshi Kopje Vendore";
 "Manage" = "Administroni";
 "Storage" = "Depozitë";
+
+"Really include available offline files?" = "Të përfshihen vërtet kartela të passhme jashtë linje?";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Kartelat dhe dosjet me shenjë për Të Passhme Jashtë Linje s’do të mund të përdoren dot. Ato do të rishkarkohen herës pasuese që bëni hyrjen në llogarinë tuaj (lypset lidhje në internet).";
+
+/* Available offline */
+"Root folder" = "Dosje rrënjë";
+"at" = "në";
+"(no match)" = "(pa përputhje)";
+
+"Make available offline" = "Bëje të passhme jo në linjë";
+"Make unavailable offline" = "Bëje jo të passhme jashtë linje";
+
+"Available Offline" = "E passhme Jashtë Linje";
+"No items have been selected for offline availability." = "S’janë përzgjedhur objekte për t’i pasur jashtë linje.";
+
+"Overview" = "Përmbledhje";
+"All Files" = "Krejt Kartelat";
+
+/* Import File */
+"Save File" = "Ruaje Kartelën";
+"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Zgjidhni një llogari dhe dosje ku të importohet kartela.\n\nMund të importohet vetëm një kartelë në herë.";

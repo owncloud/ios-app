@@ -33,11 +33,32 @@ class MoreViewHeader: UIView {
 
 	var item: OCItem
 	weak var core: OCCore?
+	var url: URL?
 
 	init(for item: OCItem, with core: OCCore, favorite: Bool = true) {
 		self.item = item
 		self.core = core
 		self.showFavoriteButton = favorite
+
+		iconView = UIImageView()
+		titleLabel = UILabel()
+		detailLabel = UILabel()
+		labelContainerView = UIView()
+		favoriteButton = UIButton()
+
+		super.init(frame: .zero)
+
+		self.translatesAutoresizingMaskIntoConstraints = false
+
+		Theme.shared.register(client: self)
+
+		render()
+	}
+
+	init(url : URL) {
+		self.showFavoriteButton = false
+		self.item = OCItem()
+		self.url = url
 
 		iconView = UIImageView()
 		titleLabel = UILabel()
@@ -124,21 +145,39 @@ class MoreViewHeader: UIView {
 			])
 		}
 
-		titleLabel.attributedText = NSAttributedString(string: item.name ?? "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
+		if let url = url {
+			titleLabel.attributedText = NSAttributedString(string: url.lastPathComponent, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
 
-		let byteCountFormatter = ByteCountFormatter()
-		byteCountFormatter.countStyle = .file
-		var size = byteCountFormatter.string(fromByteCount: Int64(item.size))
+			do {
+				let attr = try FileManager.default.attributesOfItem(atPath: url.path)
 
-		if item.size < 0 {
-			size = "Pending".localized
+				if let fileSize = attr[FileAttributeKey.size] as? UInt64 {
+					let byteCountFormatter = ByteCountFormatter()
+					byteCountFormatter.countStyle = .file
+					let size = byteCountFormatter.string(fromByteCount: Int64(fileSize))
+
+					detailLabel.attributedText =  NSAttributedString(string: size, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)])
+				}
+			} catch {
+				print("Error: \(error)")
+			}
+		} else {
+			titleLabel.attributedText = NSAttributedString(string: item.name ?? "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
+
+			let byteCountFormatter = ByteCountFormatter()
+			byteCountFormatter.countStyle = .file
+			var size = byteCountFormatter.string(fromByteCount: Int64(item.size))
+
+			if item.size < 0 {
+				size = "Pending".localized
+			}
+
+			let dateString = item.lastModifiedLocalized
+
+			let detail = size + " - " + dateString
+
+			detailLabel.attributedText =  NSAttributedString(string: detail, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)])
 		}
-
-		let dateString = item.lastModifiedLocalized
-
-		let detail = size + " - " + dateString
-
-		detailLabel.attributedText =  NSAttributedString(string: detail, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14, weight: .regular)])
 
 		self.iconView.image = item.icon(fitInSize: CGSize(width: thumbnailSize.width, height: thumbnailSize.height))
 

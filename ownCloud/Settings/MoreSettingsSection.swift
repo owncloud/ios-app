@@ -118,7 +118,7 @@ class MoreSettingsSection: SettingsSection {
 					row.viewController?.navigationController?.pushViewController(textViewController, animated: true)
 				}
 			})
-		}, title: "Acknowledgements".localized, accessoryType: .disclosureIndicator)
+		}, title: "Acknowledgements".localized, accessoryType: .disclosureIndicator, identifier: "acknowledgements")
 	}
 
 	// MARK: - Update UI
