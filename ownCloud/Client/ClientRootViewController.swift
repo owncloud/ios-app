@@ -222,6 +222,16 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		}
 	}
 
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		if MediaUploadQueue.shallShowUploadUnfinishedWarning 	(for: self.bookmark) {
+			let unfinishedUploadAlert = UIAlertController(with: "Warning".localized,
+														  message: "Media upload in the previous session was incomplete since the application was terminated".localized)
+			self.present(unfinishedUploadAlert, animated: true, completion: nil)
+			MediaUploadQueue.resetUploadPendingFlag(for: self.bookmark)
+		}
+	}
+
 	var closeClientCompletionHandler : (() -> Void)?
 
 	func closeClient(completion: (() -> Void)? = nil) {

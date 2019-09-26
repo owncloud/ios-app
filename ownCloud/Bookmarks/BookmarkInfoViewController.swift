@@ -58,7 +58,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 
 				self?.present(alertController, animated: true, completion: nil)
 			}
-		}, title: "Include available offline files", value: false, identifier: "row-include-available-offline")
+		}, title: "Include available offline files".localized, value: false, identifier: "row-include-available-offline")
 
 		let deleteLocalFilesRow = StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
 			if let bookmark  = self?.bookmark {

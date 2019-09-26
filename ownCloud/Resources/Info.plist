@@ -23,6 +23,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<false/>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -36,7 +38,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(APP_SHORT_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>137</string>
+	<string>142</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
@@ -45,8 +47,6 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<false/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -54,26 +54,12 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>This permission is needed for uploading media files to your server.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>This permission is needed to scan documents.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Unlock the app without entering the passcode.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
-	<key>NSUserActivityTypes</key>
-	<array>
-		<string>CreateFolderIntent</string>
-		<string>DeletePathItemIntent</string>
-		<string>GetAccountIntent</string>
-		<string>GetAccountsIntent</string>
-		<string>GetDirectoryListingIntent</string>
-		<string>GetFileInfoIntent</string>
-		<string>GetFileIntent</string>
-		<string>PathExistsIntent</string>
-		<string>SaveFileIntent</string>
-	</array>
 	<key>OCAppGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>OCAppIdentifierPrefix</key>
