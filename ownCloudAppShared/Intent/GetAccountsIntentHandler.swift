@@ -20,15 +20,17 @@ import UIKit
 import Intents
 import ownCloudSDK
 
-@available(iOS 13.0, watchOS 6.0, *)
+@available(iOS 13.0, *)
 public class GetAccountsIntentHandler: NSObject, GetAccountsIntentHandling {
 
 	public func handle(intent: GetAccountsIntent, completion: @escaping (GetAccountsIntentResponse) -> Void) {
-		if AppLockHelper().isPassCodeEnabled {
+
+		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(GetAccountsIntentResponse(code: .authenticationRequired, userActivity: nil))
-		} else {
-			completion(GetAccountsIntentResponse.success(accountList: OCBookmarkManager.shared.accountList))
+			return
 		}
+
+		completion(GetAccountsIntentResponse.success(accountList: OCBookmarkManager.shared.accountList))
 	}
 
 	public func confirm(intent: GetAccountsIntent, completion: @escaping (GetAccountsIntentResponse) -> Void) {
@@ -36,7 +38,7 @@ public class GetAccountsIntentHandler: NSObject, GetAccountsIntentHandling {
 	}
 }
 
-@available(iOS 13.0, watchOS 6.0, *)
+@available(iOS 13.0, *)
 extension GetAccountsIntentResponse {
 
     public static func success(accountList: [Account]) -> GetAccountsIntentResponse {

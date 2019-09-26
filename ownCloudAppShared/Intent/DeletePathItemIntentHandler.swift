@@ -20,46 +20,41 @@ import UIKit
 import Intents
 import ownCloudSDK
 
-@available(iOS 13.0, watchOS 6.0, *)
+@available(iOS 13.0, *)
 public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling {
 
-	var itemTracking : OCCoreItemTracking?
-
 	public func handle(intent: DeletePathItemIntent, completion: @escaping (DeletePathItemIntentResponse) -> Void) {
-		if AppLockHelper().isPassCodeEnabled {
+
+		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(DeletePathItemIntentResponse(code: .authenticationRequired, userActivity: nil))
-		} else {
-			if let path = intent.path, let uuid = intent.account?.uuid {
-				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
+			return
+		}
 
-				if let bookmark = accountBookmark {
-					OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
-						if error == nil, let core = core {
-							self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
-								if let targetItem = item {
-									if core.delete(targetItem, requireMatch: true, resultHandler: { (error, _, _, _) in
-										if error != nil {
-												completion(DeletePathItemIntentResponse(code: .failure, userActivity: nil))
-											} else {
-												completion(DeletePathItemIntentResponse(code: .success, userActivity: nil))
-											}
-									}) == nil {
-										completion(DeletePathItemIntentResponse(code: .failure, userActivity: nil))
-									}
-								} else {
-									completion(DeletePathItemIntentResponse(code: .pathFailure, userActivity: nil))
-								}
+		guard let path = intent.path, let uuid = intent.account?.uuid else {
+			completion(DeletePathItemIntentResponse(code: .failure, userActivity: nil))
+			return
+		}
 
-								if isInitial {
-									self.itemTracking = nil
-								}
-							})
+		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+			completion(DeletePathItemIntentResponse(code: .accountFailure, userActivity: nil))
+			return
+		}
 
-						} else {
-							completion(DeletePathItemIntentResponse(code: .failure, userActivity: nil))
-						}
-					})
+		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
+			if error == nil, let targetItem = item {
+				if core?.delete(targetItem, requireMatch: true, resultHandler: { (error, _, _, _) in
+					if error != nil {
+						completion(DeletePathItemIntentResponse(code: .failure, userActivity: nil))
+					} else {
+						completion(DeletePathItemIntentResponse(code: .success, userActivity: nil))
+					}
+				}) == nil {
+					completion(DeletePathItemIntentResponse(code: .failure, userActivity: nil))
 				}
+			} else if core != nil {
+				completion(DeletePathItemIntentResponse(code: .pathFailure, userActivity: nil))
+			} else {
+				completion(DeletePathItemIntentResponse(code: .failure, userActivity: nil))
 			}
 		}
 	}

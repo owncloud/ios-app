@@ -20,59 +20,48 @@ import UIKit
 import Intents
 import ownCloudSDK
 
-@available(iOS 13.0, watchOS 6.0, *)
+@available(iOS 13.0, *)
 public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 
-	var itemTracking : OCCoreItemTracking?
-
 	public func handle(intent: GetFileInfoIntent, completion: @escaping (GetFileInfoIntentResponse) -> Void) {
-		if AppLockHelper().isPassCodeEnabled {
+
+		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(GetFileInfoIntentResponse(code: .authenticationRequired, userActivity: nil))
-		} else {
-			if let path = intent.path, let uuid = intent.account?.uuid {
-				print("--> intent.path \(intent.path)")
-				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
+			return
+		}
 
-				if let bookmark = accountBookmark {
-					OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
-						if error == nil, let core = core {
-							self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
-								if error == nil, let targetItem = item {
-									let fileInfo = FileInfo(identifier: targetItem.localID, display: targetItem.name ?? "")
+		guard let path = intent.path, let uuid = intent.account?.uuid else {
+			completion(GetFileInfoIntentResponse(code: .failure, userActivity: nil))
+			return
+		}
 
-									if let creationDate = targetItem.creationDate {
-										let calendar = Calendar.current
-										let components = calendar.dateComponents([.day, .month, .year, .hour, .minute, .second], from: creationDate)
-										fileInfo.creationDate = components
-										fileInfo.creationDateTimestamp = NSNumber(value: creationDate.timeIntervalSince1970)
-									}
-									if let lastModified = targetItem.lastModified {
-										let calendar = Calendar.current
-										let components = calendar.dateComponents([.day, .month, .year, .hour, .minute, .second], from: lastModified)
-										fileInfo.lastModified = components
-										fileInfo.lastModifiedTimestamp = NSNumber(value: lastModified.timeIntervalSince1970)
-									}
-									fileInfo.isFavorite = targetItem.isFavorite
-									fileInfo.mimeType = targetItem.mimeType
-									fileInfo.size = NSNumber(value: targetItem.size)
+		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+			completion(GetFileInfoIntentResponse(code: .accountFailure, userActivity: nil))
+			return
+		}
 
-									completion(GetFileInfoIntentResponse.success(fileInfo: fileInfo))
-								} else {
-									completion(GetFileInfoIntentResponse(code: .pathFailure, userActivity: nil))
-								}
+		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
+			if error == nil, let targetItem = item {
+				let fileInfo = FileInfo(identifier: targetItem.localID, display: targetItem.name ?? "")
 
-								if isInitial {
-									self.itemTracking = nil
-								}
-							})
-
-						} else {
-							completion(GetFileInfoIntentResponse(code: .failure, userActivity: nil))
-						}
-				})
-				} else {
-					completion(GetFileInfoIntentResponse(code: .accountFailure, userActivity: nil))
+				let calendar = Calendar.current
+				if let creationDate = targetItem.creationDate {
+					let components = calendar.dateComponents([.day, .month, .year, .hour, .minute, .second], from: creationDate)
+					fileInfo.creationDate = components
+					fileInfo.creationDateTimestamp = NSNumber(value: creationDate.timeIntervalSince1970)
 				}
+				if let lastModified = targetItem.lastModified {
+					let components = calendar.dateComponents([.day, .month, .year, .hour, .minute, .second], from: lastModified)
+					fileInfo.lastModified = components
+					fileInfo.lastModifiedTimestamp = NSNumber(value: lastModified.timeIntervalSince1970)
+				}
+				fileInfo.isFavorite = targetItem.isFavorite
+				fileInfo.mimeType = targetItem.mimeType
+				fileInfo.size = NSNumber(value: targetItem.size)
+
+				completion(GetFileInfoIntentResponse.success(fileInfo: fileInfo))
+			} else if core != nil {
+				completion(GetFileInfoIntentResponse(code: .pathFailure, userActivity: nil))
 			} else {
 				completion(GetFileInfoIntentResponse(code: .failure, userActivity: nil))
 			}
@@ -98,11 +87,10 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 			completion(INStringResolutionResult.needsValue())
 		}
 	}
-	
 
 }
 
-@available(iOS 13.0, watchOS 6.0, *)
+@available(iOS 13.0, *)
 extension GetFileInfoIntentResponse {
 
     public static func success(fileInfo: FileInfo) -> GetFileInfoIntentResponse {

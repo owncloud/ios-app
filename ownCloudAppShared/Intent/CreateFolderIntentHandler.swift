@@ -20,48 +20,41 @@ import UIKit
 import Intents
 import ownCloudSDK
 
-@available(iOS 13.0, watchOS 6.0, *)
+@available(iOS 13.0, *)
 public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 
-	var itemTracking : OCCoreItemTracking?
-
 	public func handle(intent: CreateFolderIntent, completion: @escaping (CreateFolderIntentResponse) -> Void) {
-		if AppLockHelper().isPassCodeEnabled {
+
+		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(CreateFolderIntentResponse(code: .authenticationRequired, userActivity: nil))
-		} else {
-			if let path = intent.path, let uuid = intent.account?.uuid, let name = intent.name {
-				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
+			return
+		}
 
-				if let bookmark = accountBookmark {
-					OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
-						if error == nil, let core = core {
-							self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
-								if let targetItem = item {
-									if core.createFolder(name, inside: targetItem, options: nil, resultHandler: { (error, _, item, _) in
-										if error != nil {
-											completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
-										} else {
-											completion(CreateFolderIntentResponse.success(path: item?.path ?? ""))
-										}
-									}) == nil {
-										completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
-									}
-								} else {
-									completion(CreateFolderIntentResponse(code: .pathFailure, userActivity: nil))
-								}
+		guard let path = intent.path, let uuid = intent.account?.uuid, let name = intent.name else {
+			completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
+			return
+		}
 
-								if isInitial {
-									self.itemTracking = nil
-								}
-							})
+		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+			completion(CreateFolderIntentResponse(code: .accountFailure, userActivity: nil))
+			return
+		}
 
-						} else {
-							completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
-						}
-					})
-				} else {
-					completion(CreateFolderIntentResponse(code: .accountFailure, userActivity: nil))
+		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
+			if error == nil, let targetItem = item {
+				if core?.createFolder(name, inside: targetItem, options: nil, resultHandler: { (error, _, item, _) in
+					if error != nil {
+						completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
+					} else {
+						completion(CreateFolderIntentResponse.success(path: item?.path ?? ""))
+					}
+				}) == nil {
+					completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
 				}
+			} else if core != nil {
+				completion(CreateFolderIntentResponse(code: .pathFailure, userActivity: nil))
+			} else {
+				completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
 			}
 		}
 	}
@@ -95,7 +88,7 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 	}
 }
 
-@available(iOS 13.0, watchOS 6.0, *)
+@available(iOS 13.0, *)
 extension CreateFolderIntentResponse {
 
     public static func success(path: String) -> CreateFolderIntentResponse {

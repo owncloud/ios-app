@@ -20,38 +20,33 @@ import UIKit
 import Intents
 import ownCloudSDK
 
-@available(iOS 13.0, watchOS 6.0, *)
+@available(iOS 13.0, *)
 public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 
-	var itemTracking : OCCoreItemTracking?
-
 	public func handle(intent: PathExistsIntent, completion: @escaping (PathExistsIntentResponse) -> Void) {
-		if AppLockHelper().isPassCodeEnabled {
+
+		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(PathExistsIntentResponse(code: .authenticationRequired, userActivity: nil))
-		} else {
-			if let path = intent.path, let uuid = intent.account?.uuid {
-				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
+			return
+		}
 
-				if let bookmark = accountBookmark {
-					OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
-						if error == nil, let core = core {
-							self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
-								if error == nil, item != nil {
-									completion(PathExistsIntentResponse.success(pathExists: true))
-								} else {
-									completion(PathExistsIntentResponse.success(pathExists: false))
-								}
+		guard let path = intent.path, let uuid = intent.account?.uuid else {
+			completion(PathExistsIntentResponse(code: .failure, userActivity: nil))
+			return
+		}
 
-								if isInitial {
-									self.itemTracking = nil
-								}
-							})
+		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+			completion(PathExistsIntentResponse(code: .accountFailure, userActivity: nil))
+			return
+		}
 
-						} else {
-							completion(PathExistsIntentResponse(code: .failure, userActivity: nil))
-						}
-				})
-				}
+		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
+			if error == nil, item != nil {
+				completion(PathExistsIntentResponse.success(pathExists: true))
+			} else if core != nil {
+				completion(PathExistsIntentResponse.success(pathExists: false))
+			} else {
+				completion(PathExistsIntentResponse(code: .failure, userActivity: nil))
 			}
 		}
 	}
@@ -77,7 +72,7 @@ public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 	}
 }
 
-@available(iOS 13.0, watchOS 6.0, *)
+@available(iOS 13.0, *)
 extension PathExistsIntentResponse {
 
     public static func success(pathExists: Bool) -> PathExistsIntentResponse {

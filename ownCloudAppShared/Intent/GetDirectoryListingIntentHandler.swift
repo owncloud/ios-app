@@ -20,13 +20,12 @@ import UIKit
 import Intents
 import ownCloudSDK
 
-@available(iOS 13.0, watchOS 6.0, *)
+@available(iOS 13.0, *)
 typealias GetDirectoryListingCompletionHandler = (GetDirectoryListingIntentResponse) -> Void
 
-@available(iOS 13.0, watchOS 6.0, *)
+@available(iOS 13.0, *)
 public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingIntentHandling, OCQueryDelegate {
 
-	var core : OCCore?
 	var completion : GetDirectoryListingCompletionHandler?
 
 	public func resolvePath(for intent: GetDirectoryListingIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
@@ -61,36 +60,37 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 
 	public func handle(intent: GetDirectoryListingIntent, completion: @escaping (GetDirectoryListingIntentResponse) -> Void) {
 
-		if AppLockHelper().isPassCodeEnabled {
+		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(GetDirectoryListingIntentResponse(code: .authenticationRequired, userActivity: nil))
-		} else {
-			if let path = intent.path, let uuid = intent.account?.uuid {
-				let accountBookmark = OCBookmarkManager.shared.bookmark(for: uuid)
-
-				if let bookmark = accountBookmark {
-					OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
-						if error == nil {
-							self.core = core
-							let targetDirectoryQuery = OCQuery(forPath: path)
-							targetDirectoryQuery.delegate = self
-
-							if targetDirectoryQuery.sortComparator == nil {
-								let sort = SortMethod(rawValue: (intent.sortType.rawValue - 1)) ?? SortMethod.alphabetically
-
-								targetDirectoryQuery.sortComparator = sort.comparator(direction: SortDirection(rawValue: (intent.sortDirection.rawValue - 1)) ?? SortDirection.ascendant)
-							}
-							core?.start(targetDirectoryQuery)
-						} else {
-							self.completion?(GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
-						}
-					})
-				} else {
-					completion(GetDirectoryListingIntentResponse(code: .accountFailure, userActivity: nil))
-				}
-			}
-
-			self.completion = completion
+			return
 		}
+
+		guard let path = intent.path, let uuid = intent.account?.uuid else {
+			completion(GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
+			return
+		}
+
+		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
+			completion(GetDirectoryListingIntentResponse(code: .accountFailure, userActivity: nil))
+			return
+		}
+		self.completion = completion
+
+		OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
+			if error == nil {
+				let targetDirectoryQuery = OCQuery(forPath: path)
+				targetDirectoryQuery.delegate = self
+
+				if targetDirectoryQuery.sortComparator == nil {
+					let sort = SortMethod(rawValue: (intent.sortType.rawValue - 1)) ?? SortMethod.alphabetically
+
+					targetDirectoryQuery.sortComparator = sort.comparator(direction: SortDirection(rawValue: (intent.sortDirection.rawValue - 1)) ?? SortDirection.ascendant)
+				}
+				core?.start(targetDirectoryQuery)
+			} else {
+				self.completion?(GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
+			}
+		})
 	}
 
 	public func queryHasChangesAvailable(_ query: OCQuery) {
@@ -100,11 +100,7 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 		} else if query.state == .idle {
 			var directoryListing : [String] = []
 			if let results = query.queryResults {
-				for item in results {
-					if let path = item.path {
-						directoryListing.append(path)
-					}
-				}
+				directoryListing = results.compactMap { return $0.path }
 			}
 
 			self.completion?(GetDirectoryListingIntentResponse.success(directoryListing: directoryListing))
@@ -121,7 +117,7 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 	}
 }
 
-@available(iOS 13.0, watchOS 6.0, *)
+@available(iOS 13.0, *)
 extension GetDirectoryListingIntentResponse {
 
     public static func success(directoryListing: [String]) -> GetDirectoryListingIntentResponse {
