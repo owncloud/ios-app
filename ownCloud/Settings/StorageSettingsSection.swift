@@ -116,7 +116,7 @@ class StorageSettingsSection: SettingsSection {
 
 		localCopyExpirationViewController.navigationItem.title = "Storage".localized
 
-		let timeIntervalRow = StaticTableViewRow(valueRowWithAction: nil, title: "Delete unused local copies".localized, value: labelForTimeInterval(self.localCopyExpirationEnabled ? self.localCopyExpiration : -1))
+		let timeIntervalRow = StaticTableViewRow(valueRowWithAction: nil, title: "", value: labelForTimeInterval(self.localCopyExpirationEnabled ? self.localCopyExpiration : -1))
 
 		localCopyExpirationSelectionSection.add(row: StaticTableViewRow(sliderWithAction: { [weak self] (_, sender) in
 			guard let newValue = (sender as? UISlider)?.value else { return }

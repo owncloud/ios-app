@@ -59,7 +59,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PreviewViewController.displayExtension)
-
 		OCExtensionManager.shared.addExtension(MediaDisplayViewController.displayExtension)
 
 		// Action Extensions

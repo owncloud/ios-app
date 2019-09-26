@@ -1,0 +1,14 @@
+Device ID	Device Name
+d7020f3a1b5186bbf4edf547a12d67008f453be5	Chris IPhoneSE (private)
+0fe11794a095eb7fd11e0e48213ea43cb9b146b6	SG iPhone 6S+
+5e2cc19d4f8c3175d4ff9a431cb8438adc6bb59a	SG iPhone X
+91d7956b8fd68a5b1c057dc30135cbd583563578	SG iPad Air2 (Orange cover)
+32a36144e5f1018b7d57c60e7188c033f3bddff9	SG iPad Air (Green cover)
+9e58db30c14eb92e45a29f423caaf8e85822be1e	Felix' iPhone
+30490f240afdf91f31775ffa450b6e2dde2a7f3f	Michaels iPhone X
+0d3bf3af3406437cd5e6a8f27942532cddf25910	Michaels iPad mini 2
+058ee8fa71f874244efecf9bd6c858fdfbfc635c	Michaels iPad Pro 10.5
+01e7cd60c2533dbb0d436449441614da5269e161	Michaels iPhone 7 Plus
+1a751505044c3bc8ac36b7ab6190f0769baa6fbd	Michaels iPhone 5s w
+c599061a30f13da838058602de106b7776d6ac37	Michaels iPhone 5s b
+8aa23aa29102a566b59c1aea16362ba30b652d19	GCX iPhone 5

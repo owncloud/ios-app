@@ -21,7 +21,6 @@ import ownCloudSDK
 
 class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
 	weak var core : OCCore?
-	var previewItem : URL?
 
 	let estimatedTableRowHeight : CGFloat = 80
 
@@ -224,20 +223,20 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 
 			if let core = self.core {
 				switch rowItem.type {
-				case .collection:
-					if let path = rowItem.path {
-						self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: path)), animated: true)
-					}
+					case .collection:
+						if let path = rowItem.path {
+							self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: path)), animated: true)
+						}
 
-				case .file:
-					guard let query = self.query(forItem: rowItem) else {
-						return
-					}
+					case .file:
+						guard let query = self.query(forItem: rowItem) else {
+							return
+						}
 
-					let itemViewController = DisplayHostViewController(core: core, selectedItem: rowItem, query: query)
-					itemViewController.hidesBottomBarWhenPushed = true
-					itemViewController.progressSummarizer = self.progressSummarizer
-					self.navigationController?.pushViewController(itemViewController, animated: true)
+						let itemViewController = DisplayHostViewController(core: core, selectedItem: rowItem, query: query)
+						itemViewController.hidesBottomBarWhenPushed = true
+						itemViewController.progressSummarizer = self.progressSummarizer
+						self.navigationController?.pushViewController(itemViewController, animated: true)
 				}
 			}
 

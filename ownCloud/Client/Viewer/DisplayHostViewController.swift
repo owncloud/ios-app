@@ -226,6 +226,9 @@ class DisplayHostViewController: UIPageViewController {
 		let newViewController = selectDisplayViewControllerBasedOn(mimeType: mimeType)
 		let configuration = configurationFor(item, viewController: newViewController)
 
+		self.addChild(newViewController)
+		newViewController.didMove(toParent: self)
+
 		newViewController.configure(configuration)
 		newViewController.present(item: item)
 
