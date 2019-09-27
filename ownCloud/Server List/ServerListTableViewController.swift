@@ -499,7 +499,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		var menuItems : [UIAction] = []
 
 		if UIDevice.current.isIpad() {
-			let openWindow = UIAction(title: "Open in new Window".localized, image: UIImage(systemName: 	"uiwindow.split.2x1")) { _ in
+			let openWindow = UIAction(title: "Open in a new Window".localized, image: UIImage(systemName: 	"uiwindow.split.2x1")) { _ in
 				self.openAccountInWindow(at: indexPath)
 			}
 			menuItems.append(openWindow)

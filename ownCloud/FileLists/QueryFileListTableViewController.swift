@@ -396,7 +396,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 	@available(iOS 13.0, *)
 	func makeContextMenu(for indexPath: IndexPath, with item: OCItem) -> UIMenu {
-		let openWindow = UIAction(title: "Open in new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+		let openWindow = UIAction(title: "Open in a new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
 			self.openItemInWindow(at: indexPath)
 		}
 		return UIMenu(title: item.name ?? "", children: [openWindow])
@@ -408,27 +408,5 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 			let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
 			UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
 		}
-	}
-}
-
-let ownCloudOpenItemActivityType       = "com.owncloud.ios-app.openItem"
-let ownCloudOpenItemPath               = "openItem"
-let ownCloudOpenItemUuidKey         = "itemUuid"
-
-class OpenItemUserActivity : NSObject {
-
-	var item : OCItem
-	var bookmark : OCBookmark
-
-	var openItemUserActivity: NSUserActivity {
-		let userActivity = NSUserActivity(activityType: ownCloudOpenItemActivityType)
-		userActivity.title = ownCloudOpenItemPath
-		userActivity.userInfo = [ownCloudOpenItemUuidKey: item.localID, ownCloudOpenAccountAccountUuidKey : bookmark.uuid.uuidString]
-		return userActivity
-	}
-
-	init(detailItem: OCItem, detailBookmark: OCBookmark) {
-		item = detailItem
-		bookmark = detailBookmark
 	}
 }

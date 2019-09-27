@@ -23,7 +23,7 @@ import MobileCoreServices
 class OpenSceneAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openscene") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String { return "Open in new Window".localized }
+	override class var name : String { return "Open in a new Window".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem] }
 
 	// MARK: - Extension matching
