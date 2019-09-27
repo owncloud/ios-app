@@ -105,14 +105,13 @@ class ImportPasteboardAction : Action {
 					} catch let error as NSError {
 						print(error)
 					}
-					
 				}
 			}
 		}
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreFolder {
 			return UIImage(named: "copy-file")
 		}
 

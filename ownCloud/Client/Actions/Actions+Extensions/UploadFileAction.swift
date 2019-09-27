@@ -65,7 +65,10 @@ extension UploadFileAction : UIDocumentPickerDelegate {
 	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
 		if let rootItem = context.items.first {
 			for url in urls {
-				self.upload(itemURL: url, to: rootItem, name: url.lastPathComponent)
+				if !self.upload(itemURL: url, to: rootItem, name: url.lastPathComponent) {
+					self.completed(with: NSError(ocError: .internal))
+					return
+				}
 			}
 		}
 

@@ -17,6 +17,10 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
+<<<<<<< HEAD
 	<string>138</string>
+=======
+	<string>142</string>
+>>>>>>> milestone/1.2
 </dict>
 </plist>

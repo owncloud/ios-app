@@ -163,6 +163,9 @@ class DisplayHostViewController: UIPageViewController {
 						let foundIndex = self?.items?.firstIndex(where: {$0.localID == item.localID})
 
 						if foundIndex == nil {
+
+							currentDisplayViewController.removeFromParent()
+
 							if index < itemCount {
 								if let newIndex = self?.computeNewIndex(for: index, itemCount: itemCount, position: .after, indexFound: false),
 									let newViewController = self?.viewControllerAtIndex(index: newIndex) {
@@ -225,6 +228,9 @@ class DisplayHostViewController: UIPageViewController {
 
 		let newViewController = selectDisplayViewControllerBasedOn(mimeType: mimeType)
 		let configuration = configurationFor(item, viewController: newViewController)
+
+		self.addChild(newViewController)
+		newViewController.didMove(toParent: self)
 
 		newViewController.configure(configuration)
 		newViewController.present(item: item)

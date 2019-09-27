@@ -22,8 +22,8 @@ import ownCloudSDK
 class MakeUnavailableOfflineAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.makeUnavailableOffline") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Make unavailable offline".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .keyboardShortcut] }
+	override class var name : String? { return "Available Offline".localized }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut] }
 	override class var keyCommand : String? { return "O" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -69,8 +69,17 @@ class MakeUnavailableOfflineAction: Action {
 		self.completed()
 	}
 
+	override func provideStaticRow() -> StaticTableViewRow? {
+		// Add checkmark
+		if let staticRow = super.provideStaticRow() {
+			staticRow.cell?.accessoryType = .checkmark
+			return staticRow
+		}
+		return nil
+	}
+
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .folderAction {
+		if location == .moreItem || location == .moreFolder {
 			return UIImage(named: "unavailable-offline")
 		}
 

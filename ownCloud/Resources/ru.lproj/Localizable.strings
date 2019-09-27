@@ -82,8 +82,7 @@
 "Sort by %@" = "Сортировка по %@";
 "Sort by" = "Упорядочить по";
 
-"name (A-Z)" = "имени (А-Я)";
-"name (Z-A)" = "имени (Я-А)";
+"name" = "имя";
 "type" = "типу";
 "size" = "размеру";
 "date" = "дате";
@@ -111,12 +110,20 @@
 "Not now" = "Не сейчас";
 "Upload file" = "Загрузить файл";
 "Upload files" = "Закачать файлы";
-"Ignore" = "Игнорировать";
-"Authorization failed" = "Авторизация не прошла";
-"The server declined access with the credentials stored for this connection." = "Сервер отказал в доступе с учётными данными, сохранёнными для данного соединения.";
+
 "No matches" = "Нет соответствий";
 "There are no results for this search term" = "По данному запросу ничего не найдено";
 "Status" = "Статус";
+
+"Authorization failed" = "Авторизация не прошла";
+"The account has been disabled." = "Учётная запись была отключена.";
+"The server declined access with the credentials stored for this connection." = "Сервер отказал в доступе с учётными данными, сохранёнными для данного соединения.";
+"Access denied" = "Доступ запрещен";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "Токен доступа данного соединения устарел или стал недействительным. Перевойдите, чтобы восстановить доступ.";
+"No authentication data has been found for this connection." = "Для данного соединения не найдены данные аутентификации.";
+"Sign in" = "Войти";
+"Ignore" = "Игнорировать";
+"Continue offline" = "Продолжить без сети";
 
 /* Server List*/
 "Cancel" = "Отмена";
@@ -157,15 +164,16 @@
 "Acknowledgements" = "Благодарности";
 "Video upload path" = "Путь загрузки видео";
 "Photo upload path" = "Путь загрузки фото";
-"Always" = "Всегда";
+"Immediately" = "Немедленно";
 "After 1 minute" = "Через 1 минуту";
 "After 5 minutes" = "Через 5 минут";
 "After 30 minutes" = "Через 30 минут";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "Если выбрать «Немедленно», то приложение будет заблокировано сразу же, как уйдёт с экрана.\n\nПри выбранном «Немедленно» невозможен доступ к Files.app.\nПожалуйста выберите другую задержку, если хотите иметь доступ к вашим файлам в Files.app или выборе документов.";
 "Please configure an email account" = "Пожалуйста, настройте учётную запись почты";
 "You need to configure an email account first to be able to send emails." = "Чтобы иметь возможность отправлять сообщения, вам нужно сначала настроить учётную запись почты.";
 "Do you want to open the following URL?" = "Вы хотите открыть следующую ссылку?";
 
-"%@ %@ version %@ build %@ (%@)" = "%@ %@ версия %@ сборка %@ (%@)";
+"%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@ %@ версия %@ сборка %@ (приложение: %@, sdk: %@)";
 "beta" = "бета";
 "release" = "выпуск";
 
@@ -201,7 +209,7 @@
 "Share log file" = "Поделиться файлом журнала";
 "Reset log file" = "Сброс файла журнала";
 
-"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Активная запись лог файлов может влиять на расход ресурсов. Также они могут содержать конфиденциальную информацию. Обмен лог-файлами подлежит исключительно ответственности пользователя. Автоматическая загрузка лог-файлов на серверы %@ исключена.";
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Если включить, то журналы могут ухудшить производительность и включать критичную информацию. Однако журналы не отправляются автоматически на сервера %@. Предоставление доступа к журналу другим — это целиком ответственность пользователя.";
 
 "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "В памяти устройства архивируются последние 10 лог-файлов. Каждый из них может содержать до 24 часов информации о использовании приложения. При обмене лог-файлами, помните, что они могут содержать конфиденциальную информацию, такую как URL серверов или данные о пользователе.";
 
@@ -214,6 +222,12 @@
 
 "Really reset log file?" = "Действительно сбросить файл журнала?";
 "This action can't be undone." = "Это действие невозможно отменить.";
+
+/* Storage settings */
+"Delete unused local copies" = "Удалить неиспользуемые локальные копии";
+"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Время, измеренное с момента закачки, правки, скачивания или просмотра соответствующего файла с помощью этого устройства. Не применяется к файлам, скачанным через возможность доступа без сети. Локальные копии могут удаляться до наступления заданного периода времени, например из-за более свежей версии файла на сервере, или через ручное удаление локальных копий. С другой стороны, локальные копии могут быть не удалены по истечении заданного времени, например из-за выполняемых над ними действий удерживающих файл, или учётная запись, в которой числится файл, не используется в приложении.";
+"never" = "никогда";
+"after %@" = "после %@";
 
 /* Display settings */
 "Display settings" = "Установки отображения";
@@ -268,6 +282,7 @@
 "Error" = "Ошибка";
 "Could not get the picture" = "Не удалось получить изображение";
 "Downloading" = "Скачивание";
+"File couldn't be opened" = "Не удалось открыть файл";
 
 /* PDF Viewer */
 "Resume" = "Возобновить";
@@ -370,6 +385,9 @@
 "You" = "Вы";
 "Share this file" = "Поделиться файлом";
 "Share this folder" = "Поделиться папкой";
+"shared" = "поделился";
+"Owner" = "Владелец";
+"Private Link" = "Личная ссылка";
 
 /* Quick Access view */
 "Quick Access" = "Быстрый доступ";
@@ -378,6 +396,10 @@
 "Favorites"= "Избранное";
 "Images" = "Изображения";
 "PDF Documents" = "Документы PDF";
+
+/* Media files settings */
+"Media Files" = "Мультимедийные файлы";
+"Streaming Enabled" = "Разрешена потоковая передача";
 
 /* Photo upload settings */
 "Media Upload" = "Загрузка фото и видео";
@@ -398,6 +420,28 @@
 "unknown" = "неизвестно";
 "Offline files use" = "Использование автономных файлов";
 "Compacting of '%@' failed" = "Сжатие '%@' не удалось";
-"Delete Offline Copies" = "Удалить автономные копии";
+"Include available offline files" = "Включить доступные автономные файлы";
+"Delete Local Copies" = "Удалить локальные копии";
 "Manage" = "Управление";
 "Storage" = "Хранилище";
+
+"Really include available offline files?" = "Действительно включить доступные автономные файлы?";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Файлы и папки, помеченные как доступные без сети, станут недоступными. При следующем входе в учётную запись они будут скачаны повторно (нужна связь).";
+
+/* Available offline */
+"Root folder" = "Корневая папка";
+"at" = "в";
+"(no match)" = "(нет соответствия)";
+
+"Make available offline" = "Сделать доступными без сети (автономно)";
+"Make unavailable offline" = "Сделать недоступными без сети";
+
+"Available Offline" = "Доступно без сети";
+"No items have been selected for offline availability." = "Для доступа без сети не выбрано ни одного элемента.";
+
+"Overview" = "Обзор";
+"All Files" = "Все файлы";
+
+/* Import File */
+"Save File" = "Сохранить файл";
+"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Выберите учётную запись и папку, куда импортировать файл.\n\nЗа раз можно импортировать только один файл.";

@@ -140,9 +140,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	deinit {
 		coreConnectionStatusObservation?.invalidate()
-
 		Theme.shared.unregister(client: self)
-		self.downloadProgress?.cancel()
 		self.stopQuery()
 	}
 
@@ -451,12 +449,13 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			return
 		}
 
+		self.item = item
+		metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
+
 		switch state {
 			case .notSupportedMimeType: break
 
 			default:
-				self.item = item
-				metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
 
 				Log.log("Presenting item (DisplayViewController.present): \(item.description)")
 

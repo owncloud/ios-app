@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1020"
+   LastUpgradeVersion = "1030"
    wasCreatedForAppExtension = "YES"
    version = "2.0">
    <BuildAction
@@ -98,9 +98,9 @@
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
       <RemoteRunnable
-         runnableDebuggingMode = "0"
+         runnableDebuggingMode = "1"
          BundleIdentifier = "com.owncloud.ios-app"
-         RemotePath = "/var/containers/Bundle/Application/5FF9AF8A-2171-4750-8C7B-7785079F446A/ownCloud.app">
+         RemotePath = "/Users/felix/Library/Developer/CoreSimulator/Devices/348A2D78-5A15-4E50-8EAF-1170115BC798/data/Containers/Bundle/Application/AD282E5C-E658-4707-8C08-A292831061C2/ownCloud.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
@@ -119,6 +119,11 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.log-synchronous"
+            value = "true"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.log-colored"
             value = "true"
             isEnabled = "YES">
          </EnvironmentVariable>
