@@ -271,6 +271,9 @@
 " couldn't download file(s)" = " couldn't download file(s)";
 "Actions" = "Actions";
 "copy" = "copy";
+"Close Window" = "Close Window";
+"Open in new Window" = "Open in new Window";
+"Open in Window" = "Open in Window";
 
 "Preparing…" = "Preparing…";
 

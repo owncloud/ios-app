@@ -43,7 +43,6 @@
 		3961281622F8730A0087BD3A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3961281522F8730A0087BD3A /* SceneDelegate.swift */; };
 		396BE4C32288A84C00B254A9 /* PendingSharesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396BE4C22288A84C00B254A9 /* PendingSharesTableViewController.swift */; };
 		396BE4CA2289500E00B254A9 /* RoundedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396BE4C92289500E00B254A9 /* RoundedLabel.swift */; };
-		396C8308231E5C4800938262 /* NSUserActivityWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396C8307231E5C4800938262 /* NSUserActivityWrapper.swift */; };
 		396D7C6523224A53002380C1 /* DiscardSceneAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */; };
 		3971B48F221B23FE006FB441 /* ThemeableColoredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */; };
 		397328EF22D606AC006CFAA4 /* ImportFilesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397328EE22D606AC006CFAA4 /* ImportFilesController.swift */; };
@@ -623,7 +622,6 @@
 		3961281522F8730A0087BD3A /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		396BE4C22288A84C00B254A9 /* PendingSharesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingSharesTableViewController.swift; sourceTree = "<group>"; };
 		396BE4C92289500E00B254A9 /* RoundedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedLabel.swift; sourceTree = "<group>"; };
-		396C8307231E5C4800938262 /* NSUserActivityWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSUserActivityWrapper.swift; sourceTree = "<group>"; };
 		396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscardSceneAction.swift; sourceTree = "<group>"; };
 		3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableColoredView.swift; sourceTree = "<group>"; };
 		397328EE22D606AC006CFAA4 /* ImportFilesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportFilesController.swift; sourceTree = "<group>"; };
@@ -1057,7 +1055,6 @@
 				DCF4F1622051927200189B9A /* UI Elements */,
 				239F1314205A69240029F186 /* UIKit Extensions */,
 				DCE5E8B62080D8B8005F60CE /* SDK Extensions */,
-				396C8301231E5C1500938262 /* System */,
 				4CB8ADE422DF6BE300F1FEBC /* CoreImage Extensions */,
 				4CB8ADE722DF6DC400F1FEBC /* AVFoundation Extensions */,
 				4CB8ADD722DF5CD100F1FEBC /* PhotoKit Extensions */,
@@ -1190,14 +1187,6 @@
 				DC33939E22E0A1A300DD3DA4 /* Item Policies */,
 			);
 			path = Library;
-			sourceTree = "<group>";
-		};
-		396C8301231E5C1500938262 /* System */ = {
-			isa = PBXGroup;
-			children = (
-				396C8307231E5C4800938262 /* NSUserActivityWrapper.swift */,
-			);
-			path = System;
 			sourceTree = "<group>";
 		};
 		397328E822D6067B006CFAA4 /* Import */ = {
@@ -2577,7 +2566,6 @@
 				593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */,
 				4CC46D212284C677009E938F /* BookmarkInfoViewController.swift in Sources */,
 				DC3393A022E0A1C000DD3DA4 /* ItemPolicyTableViewController.swift in Sources */,
-				396C8308231E5C4800938262 /* NSUserActivityWrapper.swift in Sources */,
 				6E5FC172221590B000F60846 /* DisplayHostViewController.swift in Sources */,
 				4C51727F22DE04BD001BC97F /* ScheduledTaskManager.swift in Sources */,
 				DC85493421831B0B00782BA8 /* Tools.swift in Sources */,
