@@ -24,8 +24,9 @@ class UploadFileAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadfile") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Upload file".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut] }
 	override class var keyCommand : String? { return "+" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	private struct AssociatedKeys {
 		static var actionKey = "action"

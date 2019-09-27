@@ -176,16 +176,16 @@ extension ClientRootViewController {
 extension UITableViewController {
 
 	@objc func selectNext(sender: UIKeyCommand) {
-		if let selectedIP = self.tableView?.indexPathForSelectedRow {
-			self.tableView.selectRow(at: NSIndexPath(row: selectedIP.row + 1, section: selectedIP.section) as IndexPath, animated: true, scrollPosition: .middle)
+		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, selectedIndexPath.row < self.tableView?.numberOfRows(inSection: selectedIndexPath.section) ?? 0 {
+			self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row + 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
 		} else {
 			self.tableView.selectRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, animated: true, scrollPosition: .top)
 		}
 	}
 
 	@objc func selectPrevious(sender: UIKeyCommand) {
-		if let selectedIP = self.tableView?.indexPathForSelectedRow {
-			self.tableView.selectRow(at: NSIndexPath(row: selectedIP.row - 1, section: selectedIP.section) as IndexPath, animated: true, scrollPosition: .middle)
+		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, selectedIndexPath.row >= 0 {
+			self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row - 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
 		}
 	}
 
@@ -308,8 +308,8 @@ extension StaticTableViewController {
 	}
 
 	@objc override func selectNext(sender: UIKeyCommand) {
-		if let indexPath = self.tableView?.indexPathForSelectedRow {
-			let staticRow = staticRowForIndexPath(indexPath)
+		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
+			let staticRow = staticRowForIndexPath(selectedIndexPath)
 			self.tableView.endEditing(true)
 			if staticRow.type == .switchButton, let switchButon = staticRow.cell?.accessoryView as? UISwitch {
 				switchButon.tintColor = .white
@@ -318,18 +318,18 @@ extension StaticTableViewController {
 				textField.textColor = Theme.shared.activeCollection.tableRowColors.labelColor
 			}
 
-			if (indexPath.row + 1) < sections[indexPath.section].rows.count {
-				self.tableView.selectRow(at: NSIndexPath(row: indexPath.row + 1, section: indexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
-			} else if (indexPath.section + 1) < sections.count {
+			if (selectedIndexPath.row + 1) < sections[selectedIndexPath.section].rows.count {
+				self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row + 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
+			} else if (selectedIndexPath.section + 1) < sections.count {
 				// New Section
-				self.tableView.selectRow(at: NSIndexPath(row: 0, section: (indexPath.section + 1)) as IndexPath, animated: true, scrollPosition: .middle)
+				self.tableView.selectRow(at: NSIndexPath(row: 0, section: (selectedIndexPath.section + 1)) as IndexPath, animated: true, scrollPosition: .middle)
 			}
 		} else {
 			self.tableView.selectRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, animated: true, scrollPosition: .top)
 		}
 
-		if let indexPath = self.tableView?.indexPathForSelectedRow {
-			let staticRow = staticRowForIndexPath(indexPath)
+		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
+			let staticRow = staticRowForIndexPath(selectedIndexPath)
 			if staticRow.type == .switchButton, let switchButon = staticRow.cell?.accessoryView as? UISwitch {
 				switchButon.tintColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
 				staticRow.cell?.textLabel?.textColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
@@ -419,13 +419,13 @@ extension ClientQueryViewController {
 		}
 
 		if let core = core, let rootItem = query.rootItem {
-			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .folderAction)
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreFolder)
 			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
 			let actions = Action.sortedApplicableActions(for: actionContext)
 
 			actions.forEach({
-				if let keyCommand = $0.actionExtension.keyCommand {
-					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: [.command], action: #selector(performFolderAction), discoverabilityTitle: $0.actionExtension.name)
+				if let keyCommand = $0.actionExtension.keyCommand, let keyModifierFlags = $0.actionExtension.keyModifierFlags {
+					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: keyModifierFlags, action: #selector(performFolderAction), discoverabilityTitle: $0.actionExtension.name)
 					shortcuts.append(actionCommand)
 				}
 			})
@@ -436,7 +436,7 @@ extension ClientQueryViewController {
 
 	@objc func performFolderAction(_ command : UIKeyCommand) {
 		if let core = core, let rootItem = query.rootItem {
-			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .folderAction)
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreFolder)
 			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
 			let actions = Action.sortedApplicableActions(for: actionContext)
 			actions.forEach({
@@ -500,10 +500,6 @@ extension QueryFileListTableViewController {
 		let scrollBottomCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [.command, .shift], action: #selector(scrollToLastRow), discoverabilityTitle: "Scroll to Bottom".localized)
 		let toggleSortCommand = UIKeyCommand(input: "S", modifierFlags: [.command, .shift], action: #selector(toggleSortOrder), discoverabilityTitle: "Change Sort Order".localized)
 		let searchCommand = UIKeyCommand(input: "F", modifierFlags: [.command], action: #selector(enableSearch), discoverabilityTitle: "Search".localized)
-		let copyCommand = UIKeyCommand(input: "C", modifierFlags: [.command, .shift], action: #selector(copyToPasteboard), discoverabilityTitle: "Copy to Pasteboard".localized)
-		let pasteCommand = UIKeyCommand(input: "V", modifierFlags: [.command, .shift], action: #selector(importPasteboard), discoverabilityTitle: "Paste from Pasteboard".localized)
-		let cutCommand = UIKeyCommand(input: "X", modifierFlags: [.command, .shift], action: #selector(cutItem), discoverabilityTitle: "Cut".localized)
-		let favoriteCommand = UIKeyCommand(input: "F", modifierFlags: [.command, .shift], action: #selector(toggleFavoriteItem), discoverabilityTitle: "Favorite".localized)
 		// Add key commands for file name letters
 		if sortMethod == .alphabetically {
 			let indexTitles = Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
@@ -514,35 +510,18 @@ extension QueryFileListTableViewController {
 		}
 
 		if let core = core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath) {
-			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
-			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
-			let actions = Action.sortedApplicableActions(for: actionContext)
-
-			actions.forEach({
-				if let keyCommand = $0.actionExtension.keyCommand {
-					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: [.command], action: #selector(performMoreItemAction), discoverabilityTitle: $0.actionExtension.name)
-					shortcuts.append(actionCommand)
-				}
-			})
-			shortcuts.append(favoriteCommand)
-
-			let actionsLocationCollaborate = OCExtensionLocation(ofType: .action, identifier: .collaborateItem)
+			let actionsLocationCollaborate = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
 			let actionContextCollaborate = ActionContext(viewController: self, core: core, items: [item], location: actionsLocationCollaborate)
 			let actionsCollaborate = Action.sortedApplicableActions(for: actionContextCollaborate)
 
 			actionsCollaborate.forEach({
 				if let keyCommand = $0.actionExtension.keyCommand {
-					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: [.command], action: #selector(performCollaborteItemAction), discoverabilityTitle: $0.actionExtension.name)
+					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: [.command], action: #selector(performMoreItemAction), discoverabilityTitle: $0.actionExtension.name)
 					shortcuts.append(actionCommand)
 				}
 			})
 		}
 
-		if self.tableView?.indexPathForSelectedRow != nil {
-			shortcuts.append(copyCommand)
-			shortcuts.append(cutCommand)
-		}
-		shortcuts.append(pasteCommand)
 		shortcuts.append(searchCommand)
 		shortcuts.append(toggleSortCommand)
 
@@ -588,20 +567,7 @@ extension QueryFileListTableViewController {
 
 	@objc func performMoreItemAction(_ command : UIKeyCommand) {
 		if let core = core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath) {
-			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
-			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
-			let actions = Action.sortedApplicableActions(for: actionContext)
-			actions.forEach({
-				if command.discoverabilityTitle == $0.actionExtension.name {
-					$0.perform()
-				}
-			})
-		}
-	}
-
-	@objc func performCollaborteItemAction(_ command : UIKeyCommand) {
-		if let core = core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath) {
-			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .collaborateItem)
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
 			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 			let actions = Action.sortedApplicableActions(for: actionContext)
 			actions.forEach({
@@ -619,20 +585,6 @@ extension QueryFileListTableViewController {
 
 	@objc func toggleSortOrder() {
 		self.sortBar?.sortMethod = self.sortMethod
-	}
-
-	@objc func toggleFavoriteItem() {
-		if let core = core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath) {
-			if item.isFavorite == true {
-				item.isFavorite = false
-			} else {
-				item.isFavorite = true
-			}
-			core.update(item, properties: [OCItemPropertyName.isFavorite], options: nil, resultHandler: { (error, _, _, _) in
-				if error == nil {
-				}
-			})
-		}
 	}
 
 	@objc func changeSortMethod(_ command : UIKeyCommand) {
@@ -664,131 +616,6 @@ extension QueryFileListTableViewController {
 				self.tableView.scrollToRow(at: IndexPath(row: self.items.count - 1, section: 0), at: .bottom, animated: true)
 				tableView.selectRow(at: IndexPath(row: self.items.count - 1, section: 0), animated: true, scrollPosition: .bottom)
 			}
-	}
-
-	@objc func cutItem() {
-		if let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath), let tabBarController = self.tabBarController as? ClientRootViewController {
-			if let fileData = item.serializedData() {
-				let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"), create: true)
-				pasteboard?.setData(fileData as Data, forPasteboardType: "com.owncloud.uti.OCItem.cut")
-				tabBarController.pasteboardChangedCounter = UIPasteboard.general.changeCount
-			}
-		}
-	}
-
-	@objc func importPasteboard() {
-		if let core = self.core, let rootItem = query.rootItem, let tabBarController = self.tabBarController as? ClientRootViewController {
-			let pasteboard = UIPasteboard.general
-
-			// Determine, if the internal pasteboard is the current item and use it
-			if pasteboard.changeCount == tabBarController.pasteboardChangedCounter {
-				// Internal Pasteboard
-				if let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"), create: false) {
-					if let data = pasteboard.data(forPasteboardType: "com.owncloud.uti.OCItem.copy"), let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
-						if let item = object as? OCItem, let name = item.name {
-							core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
-								if error != nil {
-								} else {
-								}
-							})
-						}
-					} else if let data = pasteboard.data(forPasteboardType: "com.owncloud.uti.OCItem.cut"), let object = NSKeyedUnarchiver.unarchiveObject(with: data) {
-						if let item = object as? OCItem, let name = item.name {
-							core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
-								if error != nil {
-								} else {
-									core.delete(item, requireMatch: true) { (_, _, _, _) in
-									}
-								}
-							})
-						}
-					}
-				}
-			} else {
-				// System-wide Pasteboard
-				for type in pasteboard.types {
-					guard let data = pasteboard.data(forPasteboardType: type) else { return }
-					if let extUTI = UTTypeCopyPreferredTagWithClass(type as CFString, kUTTagClassFilenameExtension)?.takeRetainedValue() {
-						let fileName = type
-						let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).appendingPathExtension(extUTI as String)
-						do {
-							try data.write(to: localURL)
-
-							core.importItemNamed(localURL.lastPathComponent,
-												 at: rootItem,
-												 from: localURL,
-												 isSecurityScoped: false,
-												 options: [
-													OCCoreOption.importByCopying : false,
-													OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue
-								],
-												 placeholderCompletionHandler: { (error, item) in
-													if error != nil {
-														Log.debug("Error uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
-													}
-							},
-												 resultHandler: { (error, _ core, _ item, _) in
-													if error != nil {
-														Log.debug("Error uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path)), error: \(error?.localizedDescription ?? "" )")
-													} else {
-														Log.debug("Success uploading \(Log.mask(fileName)) to \(Log.mask(rootItem.path))")
-													}
-							}
-							)
-						} catch let error as NSError {
-							print(error)
-						}
-
-					}
-				}
-			}
-		}
-	}
-
-	@objc func copyToPasteboard() {
-		if let core = self.core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath), let tabBarController = self.tabBarController as? ClientRootViewController {
-
-			// Internal Pasteboard
-			if let fileData = item.serializedData() {
-				let pasteboard = UIPasteboard(name: UIPasteboard.Name(rawValue: "com.owncloud.pasteboard"), create: true)
-				pasteboard?.setData(fileData as Data, forPasteboardType: "com.owncloud.uti.OCItem.copy")
-			}
-
-			// General system-wide Pasteboard
-			if item.type == .collection {
-				let pasteboard = UIPasteboard.general
-				tabBarController.pasteboardChangedCounter = pasteboard.changeCount
-			} else if item.type == .file {
-				if let itemMimeType = item.mimeType {
-					let mimeTypeCF = itemMimeType as CFString
-					if let rawUti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeTypeCF, nil)?.takeRetainedValue() {
-						if core.localCopy(of: item) == nil {
-							core.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, core, item, _) in
-								if error == nil {
-									if let item = item {
-										if let fileData = NSData(contentsOf: core.localURL(for: item)) {
-											let rawUtiString = rawUti as String
-											let pasteboard = UIPasteboard.general
-											pasteboard.setData(fileData as Data, forPasteboardType: rawUtiString)
-											tabBarController.pasteboardChangedCounter = pasteboard.changeCount
-										}
-
-									}
-								} else {
-								}
-							})
-						} else {
-							if let fileData = NSData(contentsOf: core.localURL(for: item)) {
-								let rawUtiString = rawUti as String
-								let pasteboard = UIPasteboard.general
-								pasteboard.setData(fileData as Data, forPasteboardType: rawUtiString)
-								tabBarController.pasteboardChangedCounter = pasteboard.changeCount
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 }
 
@@ -1001,7 +828,7 @@ extension DisplayHostViewController {
 		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Previous".localized)
 
 		var showCommands = false
-		if let firstViewController = self.viewControllers?.first, let pdfController = firstViewController as? PDFViewerViewController {
+		if (self.viewControllers?.first as? PDFViewerViewController) != nil {
 			showCommands = true
 		} else if items?.count ?? 0 > 1 {
 			showCommands = true

@@ -24,8 +24,9 @@ class UploadMediaAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadphotos") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Upload from your photo library".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut] }
 	override class var keyCommand : String? { return "M" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	private let uploadSerialQueue = DispatchQueue(label: "com.owncloud.upload.queue", target: DispatchQueue.global(qos: .background))
 

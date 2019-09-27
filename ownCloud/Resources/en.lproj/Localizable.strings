@@ -260,7 +260,7 @@
 "New Folder" = "New Folder";
 "Folder name" = "Folder name";
 "Rename" ="Rename";
-"Create folder" =" Create folder";
+"Create folder" ="Create folder";
 "Duplicate" = "Duplicate";
 "Move" = "Move";
 "Open in" = "Open in";
@@ -460,7 +460,7 @@
 "Scroll to Top" = "Scroll to Top";
 "Scroll to Bottom" = "Scroll to Bottom";
 "Copy to Pasteboard" = "Copy to Pasteboard";
-"Paste from Pasteboard" = "Paste from Pasteboard";
+"Import from Pasteboard" = "Import from Pasteboard";
 "Next" = "Next";
 "Previous" = "Previous";
 "Favorite" = "Favorite";

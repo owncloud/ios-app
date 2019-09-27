@@ -77,6 +77,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CollaborateAction.actionExtension)
 		OCExtensionManager.shared.addExtension(LinksAction.actionExtension)
+		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
+		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
+		OCExtensionManager.shared.addExtension(CopyToPasteboardAction.actionExtension)
+		OCExtensionManager.shared.addExtension(ImportPasteboardAction.actionExtension)
+		OCExtensionManager.shared.addExtension(CutAction.actionExtension)
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 

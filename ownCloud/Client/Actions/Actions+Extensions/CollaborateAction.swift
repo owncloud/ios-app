@@ -23,8 +23,9 @@ class CollaborateAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.collaborate") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Sharing".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.collaborateItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut] }
 	override class var keyCommand : String? { return "S" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {

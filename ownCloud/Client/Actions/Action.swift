@@ -59,7 +59,7 @@ extension OCExtensionLocationIdentifier {
 	static let moreFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreFolder") //!< Present in "more" options for a whole folder
 	static let toolbar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("toolbar") //!< Present in a toolbar
 	static let folderAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("folderAction") //!< Present in the alert sheet when the folder action bar button is pressed
-	static let collaborateItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("collaborateItem") //!< Currently used for UIKeyCommand, but may be used in "more" card view, instead of static implementation
+	static let keyboardShortcut: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("keyboardShortcut") //!< Currently used for UIKeyCommand
 }
 
 class ActionExtension: OCExtension {
@@ -67,13 +67,15 @@ class ActionExtension: OCExtension {
 	var name: String
 	var category: ActionCategory
 	var keyCommand: String?
+	var keyModifierFlags: UIKeyModifierFlags?
 
 	// MARK: - Init & Deinit
-	init(name: String, category: ActionCategory = .normal, identifier: OCExtensionIdentifier, locations: [OCExtensionLocationIdentifier]?, features: [String : Any]?, objectProvider: OCExtensionObjectProvider?, customMatcher: OCExtensionCustomContextMatcher?, keyCommand: String?) {
+	init(name: String, category: ActionCategory = .normal, identifier: OCExtensionIdentifier, locations: [OCExtensionLocationIdentifier]?, features: [String : Any]?, objectProvider: OCExtensionObjectProvider?, customMatcher: OCExtensionCustomContextMatcher?, keyCommand: String?, keyModifierFlags: UIKeyModifierFlags?) {
 
 		self.name = name
 		self.category = category
 		self.keyCommand = keyCommand
+		self.keyModifierFlags = keyModifierFlags
 
 		super.init(identifier: identifier, type: .action, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher)
 	}
@@ -108,6 +110,7 @@ class Action : NSObject {
 	class var category : ActionCategory? { return .normal }
 	class var name : String? { return nil }
 	class var keyCommand : String? { return nil }
+	class var keyModifierFlags : UIKeyModifierFlags? { return nil }
 	class var locations : [OCExtensionLocationIdentifier]? { return nil }
 	class var features : [String : Any]? { return nil }
 
@@ -138,7 +141,7 @@ class Action : NSObject {
 			// Additional filtering (f.ex. via OCClassSettings, Settings) goes here
 		}
 
-		return ActionExtension(name: name!, category: category!, identifier: identifier!, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher, keyCommand: keyCommand)
+		return ActionExtension(name: name!, category: category!, identifier: identifier!, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher, keyCommand: keyCommand, keyModifierFlags: keyModifierFlags)
 	}
 
 	// MARK: - Extension matching
@@ -307,18 +310,6 @@ class Action : NSObject {
 			uiCompletionHandler(false)
 			self.perform()
 		})
-	}
-
-	func provideKeyCommand() -> UIKeyCommand? {
-		if let keyCommand = self.actionExtension.keyCommand {
-			return UIKeyCommand(input: keyCommand, modifierFlags: [.command], action: #selector(self.run), discoverabilityTitle: self.actionExtension.name)
-		}
-
-		return nil
-	}
-
-	func test() {
-
 	}
 
 	func provideAlertAction() -> UIAlertAction? {

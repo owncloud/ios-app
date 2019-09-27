@@ -23,13 +23,14 @@ class LinksAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.links") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Links".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.collaborateItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut] }
 	override class var keyCommand : String? { return "L" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.count == 1, let core = forContext.core, core.connectionStatus == .online {
-			return .last
+			return .first
 		}
 
 		return .none
