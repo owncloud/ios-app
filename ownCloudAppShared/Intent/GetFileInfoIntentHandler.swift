@@ -46,12 +46,12 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 
 				let calendar = Calendar.current
 				if let creationDate = targetItem.creationDate {
-					let components = calendar.dateComponents([.day, .month, .year, .hour, .minute, .second], from: creationDate)
+					let components = calendar.dateTimeComponents(from: creationDate)
 					fileInfo.creationDate = components
 					fileInfo.creationDateTimestamp = NSNumber(value: creationDate.timeIntervalSince1970)
 				}
 				if let lastModified = targetItem.lastModified {
-					let components = calendar.dateComponents([.day, .month, .year, .hour, .minute, .second], from: lastModified)
+					let components = calendar.dateTimeComponents(from: lastModified)
 					fileInfo.lastModified = components
 					fileInfo.lastModifiedTimestamp = NSNumber(value: lastModified.timeIntervalSince1970)
 				}

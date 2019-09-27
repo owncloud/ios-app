@@ -41,14 +41,16 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 		}
 
 		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
-			if error == nil, let targetItem = item {
-				if core?.createFolder(name, inside: targetItem, options: nil, resultHandler: { (error, _, item, _) in
+			if error == nil, let targetItem = item, let core = core {
+				let progress = core.createFolder(name, inside: targetItem, options: nil, resultHandler: { (error, _, item, _) in
 					if error != nil {
 						completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
 					} else {
 						completion(CreateFolderIntentResponse.success(path: item?.path ?? ""))
 					}
-				}) == nil {
+				})
+
+				if progress == nil {
 					completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
 				}
 			} else if core != nil {

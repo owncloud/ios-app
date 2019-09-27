@@ -41,14 +41,16 @@ public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling
 		}
 
 		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
-			if error == nil, let targetItem = item {
-				if core?.delete(targetItem, requireMatch: true, resultHandler: { (error, _, _, _) in
+			if error == nil, let targetItem = item, let core = core {
+				let progress = core.delete(targetItem, requireMatch: true, resultHandler: { (error, _, _, _) in
 					if error != nil {
 						completion(DeletePathItemIntentResponse(code: .failure, userActivity: nil))
 					} else {
 						completion(DeletePathItemIntentResponse(code: .success, userActivity: nil))
 					}
-				}) == nil {
+				})
+
+				if progress == nil {
 					completion(DeletePathItemIntentResponse(code: .failure, userActivity: nil))
 				}
 			} else if core != nil {
