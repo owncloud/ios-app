@@ -19,6 +19,10 @@
 import UIKit
 import ownCloudSDK
 
+protocol ClientRootViewControllerAuthenticationDelegate : class {
+	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?)
+}
+
 class ClientRootViewController: UITabBarController, UINavigationControllerDelegate {
 
 	// MARK: - Constants
@@ -38,7 +42,9 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	var progressSummarizer : ProgressSummarizer?
 	var toolbar : UIToolbar?
 
-	var ignoreAuthorizationFailure : Bool = false
+	weak var authDelegate : ClientRootViewControllerAuthenticationDelegate?
+
+	var skipAuthorizationFailure : Bool = false
 
 	var connectionStatusObservation : NSKeyValueObservation?
 	var connectionStatusSummary : ProgressSummary? {
@@ -135,6 +141,9 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
 			self.core = core
 			core?.delegate = self
+
+			// Remove skip available offline when user opens the bookmark
+			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
 		}, completionHandler: { (core, error) in
 			if error == nil {
 				self.coreReady()
@@ -213,6 +222,16 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		}
 	}
 
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		if MediaUploadQueue.shallShowUploadUnfinishedWarning 	(for: self.bookmark) {
+			let unfinishedUploadAlert = UIAlertController(with: "Warning".localized,
+														  message: "Media upload in the previous session was incomplete since the application was terminated".localized)
+			self.present(unfinishedUploadAlert, animated: true, completion: nil)
+			MediaUploadQueue.resetUploadPendingFlag(for: self.bookmark)
+		}
+	}
+
 	var closeClientCompletionHandler : (() -> Void)?
 
 	func closeClient(completion: (() -> Void)? = nil) {
@@ -231,11 +250,6 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		OnMainThread {
 			if let core = self.core {
 				let query = OCQuery(forPath: "/")
-//				let query = OCQuery(condition: OCQueryCondition.require([
-//					.where(.name, contains: "i"),
-//					.where(.type, isEqualTo: OCItemType.file.rawValue),
-//					.where(.size, isGreaterThan: 220000)
-//				]).sorted(by: .size, ascending: true), inputFilter:nil)
 
 				let queryViewController = ClientQueryViewController(core: core, query: query)
 				// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
@@ -255,8 +269,29 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 				}
 				self.activityViewController?.core = core
 				self.libraryViewController?.core = core
-				self.libraryViewController?.setupQueries()
+
+				self.connectionInitializedObservation = core.observe(\OCCore.connection.connectionInitializationPhaseCompleted, options: [.initial], changeHandler: { [weak self] (core, _) in
+					if core.connection.connectionInitializationPhaseCompleted {
+						self?.connectionInitialized()
+					}
+				})
 			}
+		}
+	}
+
+	private var connectionInitializedObservation : NSKeyValueObservation?
+
+	func connectionInitialized() {
+		OCSynchronized(self) {
+			if connectionInitializedObservation == nil {
+				return
+			}
+
+			connectionInitializedObservation = nil
+		}
+
+		OnMainThread {
+			self.libraryViewController?.setupQueries()
 		}
 	}
 
@@ -286,53 +321,98 @@ extension ClientRootViewController : Themeable {
 }
 
 extension ClientRootViewController : OCCoreDelegate {
-	func core(_ core: OCCore, handleError error: Error?, issue: OCIssue?) {
-		alertQueue.async { (queueCompletionHandler) in
+	func core(_ core: OCCore, handleError error: Error?, issue inIssue: OCIssue?) {
+		var issue = inIssue
+		var isAuthFailure : Bool = false
+		var authFailureMessage : String?
+		var authFailureTitle : String = "Authorization failed".localized
+		var authFailureHasEditOption : Bool = true
+		var authFailureIgnoreLabel = "Ignore".localized
+		var authFailureIgnoreStyle = UIAlertAction.Style.destructive
+		let editBookmark = self.bookmark
+		var nsError = error as NSError?
+
+		if nsError == nil, let issueNSError = issue?.error as NSError? {
+			// Turn issues that are just converted authorization errors back into errors and discard the issue
+			if issueNSError.isOCError(withCode: .authorizationFailed) ||
+			   issueNSError.isOCError(withCode: .authorizationNoMethodData) ||
+			   issueNSError.isOCError(withCode: .authorizationMissingData) {
+				nsError = issueNSError
+				issue = nil
+			}
+		}
+
+		if let nsError = nsError {
+			if nsError.isOCError(withCode: .authorizationFailed) {
+				if let underlyingError = nsError.userInfo[NSUnderlyingErrorKey] as? NSError, underlyingError.isDAVException, underlyingError.davExceptionMessage == "User disabled" {
+					authFailureHasEditOption = false
+					authFailureIgnoreStyle = .cancel
+					authFailureIgnoreLabel = "Continue offline".localized
+					authFailureMessage = "The account has been disabled."
+				} else {
+					if bookmark.isTokenBased == true {
+						authFailureTitle = "Access denied".localized
+						authFailureMessage = "The connection's access token has expired or become invalid. Sign in again to re-gain access.".localized
+					} else {
+						authFailureMessage = "The server declined access with the credentials stored for this connection.".localized
+					}
+				}
+
+				isAuthFailure = true
+			}
+
+			if nsError.isOCError(withCode: .authorizationNoMethodData) || nsError.isOCError(withCode: .authorizationMissingData) {
+				authFailureMessage = "No authentication data has been found for this connection.".localized
+
+				isAuthFailure = true
+			}
+
+			if isAuthFailure {
+				// Make sure only the first auth failure will actually lead to an alert
+				// (otherwise alerts could keep getting enqueued while the first alert is being shown,
+				// and then be presented even though they're no longer relevant). It's ok to only show
+				// an alert for the first auth failure, because the options are "Ignore" (=> no longer show them)
+				// and "Edit" (=> log out, go to bookmark editing)
+				var doSkip = false
+
+				OCSynchronized(self) {
+					doSkip = skipAuthorizationFailure  // Keep in mind OCSynchronized() contents is running as a block, so "return" in here wouldn't have the desired effect
+					skipAuthorizationFailure = true
+				}
+
+				if doSkip {
+					return
+				}
+			}
+		}
+
+		alertQueue.async { [weak self] (queueCompletionHandler) in
 			var presentIssue : OCIssue? = issue
 			var queueCompletionHandlerScheduled : Bool = false
 
-			if error != nil {
-				if let error : NSError = error as NSError?, !self.ignoreAuthorizationFailure {
-					if error.isOCError(withCode: .authorizationFailed) {
-						let alertController = UIAlertController(title: "Authorization failed".localized,
-											message: "The server declined access with the credentials stored for this connection.".localized,
-											preferredStyle: .alert)
+			if isAuthFailure {
+				let alertController = UIAlertController(title: authFailureTitle,
+									message: authFailureMessage,
+									preferredStyle: .alert)
 
-						alertController.addAction(UIAlertAction(title: "Ignore".localized, style: .destructive, handler: { (_) in
-							self.ignoreAuthorizationFailure = true
+				alertController.addAction(UIAlertAction(title: authFailureIgnoreLabel, style: authFailureIgnoreStyle, handler: { (_) in
+					queueCompletionHandler()
+				}))
 
-							queueCompletionHandler()
-						}))
+				if authFailureHasEditOption {
+					alertController.addAction(UIAlertAction(title: "Sign in".localized, style: .default, handler: { (_) in
+						queueCompletionHandler()
 
-						alertController.addAction(UIAlertAction(title: "Edit".localized, style: .default, handler: { (_) in
-							let editBookmark = self.bookmark
-
-							queueCompletionHandler()
-
-							if let navigationController = self.presentingViewController as? UINavigationController {
-								self.closeClient(completion: {
-									if let serverListTableViewController = navigationController.topViewController as? ServerListTableViewController {
-										var performContinue : Bool = false
-
-										// Reset auth data for token-based methods
-										if let authenticationMethodIdentifier = editBookmark.authenticationMethodIdentifier, let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier), authenticationMethodClass.type == .token {
-											editBookmark.authenticationData = nil
-											performContinue = true
-										}
-
-										// Bring up bookmark editing UI
-										serverListTableViewController.showBookmarkUI(edit: editBookmark, performContinue: performContinue)
-									}
-								})
-							}
-						}))
-
-						self.present(alertController, animated: true, completion: nil)
-						queueCompletionHandlerScheduled = true
-
-						return
-					}
+						if let authDelegate = self?.authDelegate, let self = self, let nsError = nsError {
+							authDelegate.handleAuthError(for: self, error: nsError, editBookmark: editBookmark)
+						}
+					}))
 				}
+
+				self?.present(alertController, animated: true, completion: nil)
+				queueCompletionHandlerScheduled = true
+
+				return
 			}
 
 			if issue == nil, let error = error {
@@ -359,8 +439,8 @@ extension ClientRootViewController : OCCoreDelegate {
 					})
 				}
 
-				if presentViewController != nil {
-					var hostViewController : UIViewController = self
+				if presentViewController != nil, let startViewController = self {
+					var hostViewController : UIViewController = startViewController
 
 					while hostViewController.presentedViewController != nil,
 					      hostViewController.presentedViewController?.isBeingDismissed == false {

@@ -82,8 +82,7 @@
 "Sort by %@" = "Sort by %@";
 "Sort by" = "Sort by";
 
-"name (A-Z)" = "name (A-Z)";
-"name (Z-A)" = "name (Z-A)";
+"name" = "name";
 "type" = "type";
 "size" = "size";
 "date" = "date";
@@ -111,12 +110,21 @@
 "Not now" = "Not now";
 "Upload file" = "Upload file";
 "Upload files" = "Upload files";
-"Ignore" = "Ignore";
-"Authorization failed" = "Authorization failed";
-"The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+
 "No matches" = "No matches";
 "There are no results for this search term" = "There are no results for this search term";
 "Status" = "Status";
+
+"Authorization failed" = "Authorization failed";
+"The account has been disabled." = "The account has been disabled.";
+"The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+"Access denied" = "Access denied";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "The connection's access token has expired or become invalid. Sign in again to re-gain access.";
+"No authentication data has been found for this connection." = "No authentication data has been found for this connection.";
+"Sign in" = "Sign in";
+"Ignore" = "Ignore";
+"Continue offline" = "Continue offline";
+"Media upload in the previous session was incomplete since the application was terminated" = "Media upload in the previous session was incomplete since the application was terminated";
 
 /* Server List*/
 "Cancel" = "Cancel";
@@ -215,6 +223,12 @@
 
 "Really reset log file?" = "Really reset log file?";
 "This action can't be undone." = "This action can't be undone.";
+
+/* Storage settings */
+"Delete unused local copies" = "Delete unused local copies";
+"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app.";
+"never" = "never";
+"after %@" = "after %@";
 
 /* Display settings */
 "Display settings" = "Display settings";
@@ -392,6 +406,14 @@
 "Media Upload" = "Media Upload";
 "Convert HEIC to JPEG" = "Convert HEIC to JPEG";
 "Convert videos to MP4" = "Convert videos to MP4";
+"Instant Upload Photos" = "Instant Upload Photos";
+"Instant Upload Videos" = "Instant Upload Videos";
+"Account" = "Account";
+"Accounts" = "Accounts";
+"Select account" = "Select account";
+"Upload Path" = "Upload Path";
+"Select Upload Path" = "Select Upload Path";
+"Instant upload of media was disabled since configured account / folder was not found" = "Instant upload of media was disabled since configured account / folder was not found";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Creating %ld folders…";
@@ -407,9 +429,28 @@
 "unknown" = "unknown";
 "Offline files use" = "Offline files use";
 "Compacting of '%@' failed" = "Compacting of '%@' failed";
-"Delete Offline Copies" = "Delete Offline Copies";
+"Include available offline files" = "Include available offline files";
+"Delete Local Copies" = "Delete Local Copies";
 "Manage" = "Manage";
 "Storage" = "Storage";
+"Compacting" = "Compacting";
+
+"Really include available offline files?" = "Really include available offline files?";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).";
+
+/* Available offline */
+"Root folder" = "Root folder";
+"at" = "at";
+"(no match)" = "(no match)";
+
+"Make available offline" = "Make available offline";
+"Make unavailable offline" = "Make unavailable offline";
+
+"Available Offline" = "Available Offline";
+"No items have been selected for offline availability." = "No items have been selected for offline availability.";
+
+"Overview" = "Overview";
+"All Files" = "All Files";
 
 /* Import File */
 "Save File" = "Save File";

@@ -140,9 +140,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	deinit {
 		coreConnectionStatusObservation?.invalidate()
-
 		Theme.shared.unregister(client: self)
-		self.downloadProgress?.cancel()
 		self.stopQuery()
 	}
 
@@ -299,7 +297,10 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			return
 		}
 
-		if let downloadProgress = core.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { [weak self] (error, _, latestItem, file) in
+		if let downloadProgress = core.downloadItem(item, options: [
+			.returnImmediatelyIfOfflineOrUnavailable : true,
+			.addTemporaryClaimForPurpose 		 : OCCoreClaimPurpose.view.rawValue
+		], resultHandler: { [weak self] (error, _, latestItem, file) in
 			guard error == nil else {
 				OnMainThread {
 					if (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
@@ -312,6 +313,10 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			}
 			self?.item = latestItem
 			self?.source = file?.url
+
+			if let claim = file?.claim, let item = latestItem, let self = self {
+				self.core?.remove(claim, on: item, afterDeallocationOf: [self])
+			}
 		}) {
 			self.state = .downloading(progress: downloadProgress)
 
@@ -444,12 +449,13 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			return
 		}
 
+		self.item = item
+		metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
+
 		switch state {
 			case .notSupportedMimeType: break
 
 			default:
-				self.item = item
-				metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
 
 				Log.log("Presenting item (DisplayViewController.present): \(item.description)")
 
@@ -460,6 +466,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 						if core?.localCopy(of: item) == nil {
 							self.downloadItem(sender: nil)
 						} else {
+							core?.registerUsage(of: item, completionHandler: nil)
 							if let core = core, let file = item.file(with: core) {
 								self.source = file.url
 							}

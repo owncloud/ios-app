@@ -329,30 +329,34 @@ extension OCItem {
 		return parentItem
 	}
 
-	func displaysDifferent(than item: OCItem?) -> Bool {
-		if item == nil {
+	func displaysDifferent(than item: OCItem?, in core: OCCore? = nil) -> Bool {
+		guard let item = item else {
 			return true
 		}
 
 		return (
 			// Different item
-			(item?.localID != localID) ||
+			(item.localID != localID) ||
 
-				// File contents (and therefore likely metadata) differs
-				(item?.itemVersionIdentifier != itemVersionIdentifier) ||
+			// File contents (and therefore likely metadata) differs
+			(item.itemVersionIdentifier != itemVersionIdentifier) ||
 
-				// File name differs
-				(item?.name != name) ||
+			// File name differs
+			(item.name != name) ||
 
-				// Upload/Download status differs
-				(item?.syncActivity != syncActivity) ||
+			// Upload/Download status differs
+			(item.syncActivity != syncActivity) ||
 
-				// Cloud status differs
-				(item?.cloudStatus != cloudStatus) ||
+			// Cloud status differs
+			(item.cloudStatus != cloudStatus) ||
 
-				// Sharing attributes differ
-				(item?.shareTypesMask != shareTypesMask) ||
-				(item?.permissions != permissions) // these contain sharing info, too
+			// Available offline status differs
+			(item.downloadTriggerIdentifier != downloadTriggerIdentifier) ||
+			(core?.availableOfflinePolicyCoverage(of: item) != core?.availableOfflinePolicyCoverage(of: self)) ||
+
+			// Sharing attributes differ
+			(item.shareTypesMask != shareTypesMask) ||
+			(item.permissions != permissions) // these contain sharing info, too
 		)
 	}
 }

@@ -28,7 +28,11 @@ class DuplicateAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		// Examine items in context
+		if forContext.items.filter({return $0.isRoot}).count > 0 {
+			return .none
+
+		}
+
 		return .middle
 	}
 

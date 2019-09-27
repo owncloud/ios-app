@@ -27,9 +27,9 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	var progressSummarizer : ProgressSummarizer?
 	private var _actionProgressHandler : ActionProgressHandler?
 
-	public init(core inCore: OCCore) {
+	public init(core inCore: OCCore, style: UITableView.Style = .plain) {
 		core = inCore
-		super.init(style: .plain)
+		super.init(style: style)
 
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 	}

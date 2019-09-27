@@ -53,8 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
-		// Set up background refresh
-		application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum + 10)
+		ScheduledTaskManager.shared.setup()
 
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
@@ -73,6 +72,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
+
+		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
+		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 		OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
 		OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
 
@@ -86,6 +90,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			UIView.setAnimationsEnabled(enableUIAnimations)
 		}
 
+		// Set background refresh interval
+		UIApplication.shared.setMinimumBackgroundFetchInterval(
+			UIApplication.backgroundFetchIntervalMinimum)
+
 		return true
 	}
 
@@ -95,15 +103,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			copyBeforeUsing = !shouldOpenInPlace
 		}
 
-		return ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountUI()
+		ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountUI()
+
+		return true
 	}
 
 	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-		Log.debug("AppDelegate: performFetchWithCompletionHandler")
-
-		OnMainThread(after: 2.0) {
-			completionHandler(.noData)
-		}
+		ScheduledTaskManager.shared.backgroundFetch(completionHandler: completionHandler)
 	}
 
 	func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
@@ -120,16 +126,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
 	}
 
-    // MARK: UISceneSession Lifecycle
-@available(iOS 13.0, *)
-func application(_ application: UIApplication,
-				 configurationForConnecting connectingSceneSession: UISceneSession,
-				 options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-	return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
-}
+	// MARK: UISceneSession Lifecycle
+	@available(iOS 13.0, *)
+	func application(_ application: UIApplication,
+					 configurationForConnecting connectingSceneSession: UISceneSession,
+					 options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+		return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+	}
 
-    @available(iOS 13.0, *)
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-        print("AppDelegate didDiscardSceneSessions")
-    }
+	@available(iOS 13.0, *)
+	func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+	}
 }
