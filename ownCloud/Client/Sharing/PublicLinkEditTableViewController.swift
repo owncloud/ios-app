@@ -165,11 +165,24 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 		if item.type == .collection {
 
-			let values = [
-				["Download / View".localized : 0],
-				["Download / View / Upload".localized : 1],
-				["Upload only (File Drop)".localized : 2]
-			]
+			var canIncreasePemissions = true
+			if item.isSharedWithUser && (item.owner?.userName != self.core.connection.loggedInUser?.userName) {
+				canIncreasePemissions = false
+			}
+
+			var values = [[String : Any]]()
+
+			if (share.permissions.isSuperset(of: [.read])) || canIncreasePemissions {
+				values.append(["Download / View".localized : 0])
+			}
+
+			if (share.permissions.isSuperset(of: [.read, .update, .create, .delete])) || canIncreasePemissions {
+				values.append(["Download / View / Upload".localized : 1])
+			}
+
+			if (share.permissions.isSuperset(of: [.create])) || canIncreasePemissions {
+				values.append(["Upload only (File Drop)".localized : 2])
+			}
 
 			section.add(radioGroupWithArrayOfLabelValueDictionaries: values, radioAction: { [weak self] (row, _) in
 				if let self = self {
@@ -362,6 +375,11 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		if share.expirationDate != nil || core.connection.capabilities?.publicSharingExpireDateEnforced == true {
 			hasExpireDate = true
 		}
+
+		if self.createLink && self.core.connection.capabilities?.publicSharingDefaultExpireDateDays != nil {
+			hasExpireDate = true
+		}
+
 		var needsExpireDate = false
 		if self.core.connection.capabilities?.publicSharingExpireDateEnforced == true {
 			needsExpireDate = true
@@ -438,6 +456,13 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateStyle = .long
 		dateFormatter.timeStyle = .none
+
+		var maximumSelectableDate: Date?
+
+		if core.connection.capabilities?.publicSharingExpireDateEnforced == true, let defaultDays = self.core.connection.capabilities?.publicSharingDefaultExpireDateDays {
+			maximumSelectableDate = Calendar.current.date(byAdding: .day, value: defaultDays.intValue, to: Date())
+		}
+
 		let expireDateRow = StaticTableViewRow(buttonWithAction: { [weak self, weak expireSection] (_, _) in
 			guard let expireSection = expireSection else { return }
 
@@ -478,7 +503,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							}
 						})
 					}
-				}, date: expireDate, identifier: "date-picker-row")
+				}, date: expireDate, maximumDate: maximumSelectableDate, identifier: "date-picker-row")
 				expireSection.add(row: datePickerRow, animated: true)
 				if let indexPath = datePickerRow.indexPath {
 					self?.tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
@@ -490,6 +515,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			}
 		}, title: dateFormatter.string(from: expireDate), style: .plain, alignment: .left, identifier: "expire-date-row")
 
+		expireDateRow.representedObject = expireDate
 		expireSection.add(row: expireDateRow)
 	}
 

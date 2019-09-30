@@ -95,7 +95,7 @@ platform :ios do
 
     update_app_identifier(
       xcodeproj: "ownCloud.xcodeproj",
-      plist_path: "ownCloudAppFramework/Info.plist",
+      plist_path: "ownCloudAppFramework/Resources/Info.plist",
       app_identifier: ENTERPRISE_APP_FW_ID
     )
 
@@ -155,7 +155,10 @@ platform :ios do
     # Add a badge with the latest short commit hash to the app icon
     commit = last_git_commit
     short_hash = commit[:abbreviated_commit_hash] # short sha of commit
-    add_badge(shield: "Bitrise-" + short_hash + "-blue", no_badge: true)
+    sh "curl https://badgen.net/badge/Bitrise/" + short_hash + "/blue > badge.svg"
+    sh "brew install librsvg"
+    sh "rsvg-convert badge.svg > badge.png"
+    sh "badge --custom badge.png --glob /../**/*.appiconset/*.{png,PNG}"
 
     #Create the build
     gym(

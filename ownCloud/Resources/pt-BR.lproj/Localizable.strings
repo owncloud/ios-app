@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   ownCloud
 
@@ -82,8 +82,7 @@
 "Sort by %@" = "Ordenar por %@";
 "Sort by" = "Classificar por";
 
-"name (A-Z)" = "nome (A-Z)";
-"name (Z-A)" = "nome (Z-A)";
+"name" = "nome";
 "type" = "tipo";
 "size" = "tamanho";
 "date" = "data";
@@ -111,12 +110,20 @@
 "Not now" = "Agora não";
 "Upload file" = "Enviar arquivo";
 "Upload files" = "Enviar arquivos";
-"Ignore" = "Ignore";
-"Authorization failed" = "Falha na autorização";
-"The server declined access with the credentials stored for this connection." = "O servidor recusou o acesso com as credenciais armazenadas para esta conexão.";
+
 "No matches" = "Não coincidem";
 "There are no results for this search term" = "Não há resultados para este termo de pesquisa";
 "Status" = "Status";
+
+"Authorization failed" = "Falha na autorização";
+"The account has been disabled." = "Esta conta foi desabilitada.";
+"The server declined access with the credentials stored for this connection." = "O servidor recusou o acesso com as credenciais armazenadas para esta conexão.";
+"Access denied" = "Acesso negado";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = " O token de acesso da conexão expirou ou se tornou inválido. Faça login novamente para obter novamente acesso.";
+"No authentication data has been found for this connection." = "Nenhum dado de autenticação foi achado para esta conexão.";
+"Sign in" = "Entrar";
+"Ignore" = "Ignore";
+"Continue offline" = "Continuar offline";
 
 /* Server List*/
 "Cancel" = "Cancelar";
@@ -157,15 +164,16 @@
 "Acknowledgements" = "Agradecimentos";
 "Video upload path" = "Caminho para vídeos enviados";
 "Photo upload path" = "Caminho para envio de imagens";
-"Always" = "Sempre";
+"Immediately" = "Imediatamente";
 "After 1 minute" = "Após 1 minuto";
 "After 5 minutes" = "Após 5 minutos";
 "After 30 minutes" = "Após 30 minutos";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "Se você escolher \"Imediatamente\", o aplicativo será bloqueado quando não estiver mais em primeiro plano.\n\nO acesso a Files.app não é possível, se você escolher o intervalo de bloqueio \"Imediatamente\".\nPor favor, escolha um outro atraso, se você quiser acessar seus arquivos no Files.app ou através de um selecionador de documentos.";
 "Please configure an email account" = "Por favor, configure uma conta de email";
 "You need to configure an email account first to be able to send emails." = "Você precisa configurar uma conta de e-mail primeiro para poder enviar e-mails.";
 "Do you want to open the following URL?" = "Você deseja abrir o seguinte endereço URL?";
 
-"%@ %@ version %@ build %@ (%@)" = "%@ %@ versão %@ construida em %@ (%@)";
+"%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@ %@ versão %@construção %@ (app: %@, sdk: %@)";
 "beta" = "beta";
 "release" = "versão";
 
@@ -173,8 +181,8 @@
 /* User Interface Settings */
 "Theme" = "Tema";
 "User Interface" = "Interface de Usuário";
-"Dark" = "Dark";
-"Light" = "Light";
+"Dark" = "Escuro";
+"Light" = "Claro";
 "Classic" = "Clássico";
 
 /* Log settings */
@@ -201,7 +209,7 @@
 "Share log file" = "Compartilhar arquivo Log";
 "Reset log file" = "Redefinir arquivo de Log";
 
-"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Quando ativado, os registros podem afetar o desempenho e incluir informações confidenciais. No entanto, os logs não estão sujeitos a envio automático aos servidores do %@. Compartilhar registros com outras pessoas é responsabilidade exclusiva do usuário.";
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Quando ativado, os registros podem afetar o desempenho e incluir informações confidenciais. No entanto, os logs não estão sujeitos a envio automático para %@ servidores. Compartilhar registros com outras pessoas é responsabilidade exclusiva do usuário.";
 
 "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "Os últimos 10 logs arquivados são mantidos no dispositivo - com cada log cobrindo até 24 horas de uso. Ao compartilhar, lembre-se de que os registros podem conter informações confidenciais, como URLs do servidor e informações específicas do usuário.";
 
@@ -214,6 +222,12 @@
 
 "Really reset log file?" = "Realmente redefinir o arquivo de log?";
 "This action can't be undone." = "Essa ação não poderá ser desfeita";
+
+/* Storage settings */
+"Delete unused local copies" = "Excluir cópias locais não usadas";
+"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Tempo medido desde o envio, edição, baixa ou visualização do respectivo arquivo através deste dispositivo. Não se aplica a arquivos baixados pelo recurso Disponível Off-line. As cópias locais podem ser excluídas antes que o período de tempo tenha passado, por ex. porque há uma versão mais recente de um arquivo no servidor - ou através da exclusão manual de cópias offline. Além disso, as cópias locais não podem ser excluídas após o período de tempo especificado, por ex. se uma ação for executada, o arquivo ainda está em uso - ou a conta que o contém não foi usada no aplicativo. ";
+"never" = "nunca";
+"after %@" = "após %@";
 
 /* Display settings */
 "Display settings" = "Configurações do Visor";
@@ -268,6 +282,7 @@
 "Error" = "Erro";
 "Could not get the picture" = "Não foi possível obter a imagem";
 "Downloading" = "Baixando";
+"File couldn't be opened" = "O arquivo não pode ser aberto";
 
 /* PDF Viewer */
 "Resume" = "Resumir";
@@ -370,6 +385,9 @@
 "You" = "Você";
 "Share this file" = "Compartilhar este arquivo";
 "Share this folder" = "Compartilhar essa pasta";
+"shared" = "compartilhado";
+"Owner" = "Proprietário";
+"Private Link" = "Linque Privado";
 
 /* Quick Access view */
 "Quick Access" = "Acesso Rápido";
@@ -378,6 +396,10 @@
 "Favorites"= "Favoritos";
 "Images" = "Imagens";
 "PDF Documents" = "Documentos PDF";
+
+/* Media files settings */
+"Media Files" = "Arquivos de Mídia";
+"Streaming Enabled" = "Streaming Ativado";
 
 /* Photo upload settings */
 "Media Upload" = "Envio de mídia";
@@ -398,6 +420,28 @@
 "unknown" = "desconhecido";
 "Offline files use" = "Uso de arquivos off-line";
 "Compacting of '%@' failed" = "Compactação de '%@' falhou";
-"Delete Offline Copies" = "Excluir cópias off-line";
+"Include available offline files" = "Incluir arquivos disponíveis offline";
+"Delete Local Copies" = "Excluir Cópias Locais";
 "Manage" = "Gerenciar";
 "Storage" = "Armazenamento";
+
+"Really include available offline files?" = " Realmente incluir arquivos offline disponíveis?";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = " Arquivos e pastas marcados como Disponível offline ficarão indisponíveis. Eles serão baixados novamente na próxima vez que você fizer login na sua conta (é necessária conectividade).";
+
+/* Available offline */
+"Root folder" = "Pasta raiz";
+"at" = "em";
+"(no match)" = "(não coincide)";
+
+"Make available offline" = " Disponibilizar offline";
+"Make unavailable offline" = "Tornar offline indisponível";
+
+"Available Offline" = "Disponível Offline";
+"No items have been selected for offline availability." = "Nenhum item foi selecionado para disponibilidade offline.";
+
+"Overview" = "Visão Global";
+"All Files" = "Todos os Arquivos";
+
+/* Import File */
+"Save File" = "Salvar Arquivo";
+"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Escolha uma conta e uma pasta para importar o arquivo.\n\nApenas um arquivo pode ser importado de cada vez.";
