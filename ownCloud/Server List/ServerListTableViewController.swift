@@ -143,7 +143,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 			if #available(iOS 13.0, *) { /* this will be handled automatically by scene restoration */ } else {
 				if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
-					connect(to: bookmark, animated: true) { (_, _) in }
+					connect(to: bookmark, lastVisibleItemId: nil, animated: true)
 					return true
 				}
 			}
@@ -272,7 +272,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		if attemptLoginOnSuccess {
 			bookmarkViewController.userActionCompletionHandler = { [weak self] (bookmark, success) in
 				if success, let bookmark = bookmark, let self = self {
-					self.connect(to: bookmark, animated: true) { (_, _) in }
+					self.connect(to: bookmark, lastVisibleItemId: nil, animated: true)
 				}
 			}
 		}
@@ -388,7 +388,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		return OCBookmarkManager.isLocked(bookmark: bookmark, presentAlertOn: presentAlert ? self : nil)
 	}
 
-	func connect(to bookmark: OCBookmark, animated: Bool, completionHandler: @escaping (Bool, ClientRootViewController) -> Void) {
+	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool) {
 		if isLocked(bookmark: bookmark) {
 			return
 		}
@@ -421,7 +421,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		clientRootViewController.authDelegate = self
 
-		clientRootViewController.afterCoreStart {
+		clientRootViewController.afterCoreStart(lastVisibleItemId) {
 			// Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
 			if self.lastSelectedBookmark?.uuid == bookmark.uuid {
 				OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
@@ -436,7 +436,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 					navigationController.present(clientRootViewController, animated: animated, completion: {
 						self.resetPreviousBookmarkSelection(bookmark)
-						completionHandler(true, clientRootViewController)
 					})
 				}
 			}
@@ -474,9 +473,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			if tableView.isEditing {
 				self.showBookmarkUI(edit: bookmark)
 			} else {
-				self.connect(to: bookmark, animated: true) { (_, _) in
-					self.tableView.deselectRow(at: indexPath, animated: true)
-				}
+				self.connect(to: bookmark, lastVisibleItemId: nil, animated: true)
+				self.tableView.deselectRow(at: indexPath, animated: true)
 			}
 		}
 	}

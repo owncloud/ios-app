@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 import MobileCoreServices
 
+@available(iOS 13.0, *)
 class OpenSceneAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openscene") }
 	override class var category : ActionCategory? { return .normal }
@@ -29,7 +30,7 @@ class OpenSceneAction: Action {
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 
-		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad() {
 			if forContext.items.count == 1 {
 				return .first
 			}
@@ -45,7 +46,7 @@ class OpenSceneAction: Action {
 			return
 		}
 
-		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad() {
 			if context.items.count == 1, let item = context.items.first, let tabBarController = viewController.tabBarController as? ClientRootViewController {
 				let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
 				UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
@@ -54,10 +55,6 @@ class OpenSceneAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if #available(iOS 13.0, *) {
-			return UIImage(systemName: "uiwindow.split.2x1")?.tinted(with: Theme.shared.activeCollection.tintColor)
-		}
-
-		return nil
+		return UIImage(systemName: "uiwindow.split.2x1")?.tinted(with: Theme.shared.activeCollection.tintColor)
 	}
 }

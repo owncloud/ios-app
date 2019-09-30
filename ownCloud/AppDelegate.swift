@@ -77,8 +77,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
 		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
-		OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
-		OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
+		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
+			OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
+			OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
+		}
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 

@@ -50,8 +50,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		}
 
 		if activity.title == ownCloudOpenAccountPath {
-			serverListController.connect(to: bookmark, animated: false) { (_, _) in
-			}
+			serverListController.connect(to: bookmark, lastVisibleItemId: nil, animated: false)
 			window?.windowScene?.userActivity = bookmark.openAccountUserActivity
 
 			return true
@@ -59,40 +58,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			guard let itemLocalID = activity.userInfo?[ownCloudOpenItemUuidKey] as? String else {
 				return false
 			}
-			
+
 			// At first connect to the bookmark for the item
-			serverListController.connect(to: bookmark, animated: false) { (completed, clientRootViewController) in
-				if completed, let clientViewController = clientRootViewController.filesNavigationController?.topViewController as? ClientQueryViewController, let core = clientRootViewController.core {
-					// retrieve the item for the item id
-					core.retrieveItemFromDatabase(forLocalID: itemLocalID, completionHandler: { (error, _, item) in
-						if error == nil, let item = item {
-							OnMainThread {
-								// get all parent items for the item and rebuild all underlaying ClientQueryViewController for this items in the navigation stack
-								var parentItems = core.retrieveParentItems(for: item)
-								if parentItems.count > 0 {
-									parentItems.removeFirst()
-								}
-								var subController = clientViewController
-								var newViewControllersStack : [ClientQueryViewController] = []
-								for item in parentItems {
-									if let controller = self.open(item: item, in: subController) {
-										subController = controller
-										newViewControllersStack.append(controller)
-									}
-								}
-								var currentControllers = clientViewController.navigationController?.viewControllers
-								currentControllers?.append(contentsOf: newViewControllersStack)
-								if let currentControllers = currentControllers {
-									clientViewController.navigationController?.viewControllers = currentControllers
-								}
-								// open the controller for the item
-								subController.open(item: item, animated: false)
-								launchScreenController.dismiss(animated: false, completion: nil)
-							}
-						}
-					})
-				}
-			}
+			serverListController.connect(to: bookmark, lastVisibleItemId: itemLocalID, animated: false)
 			window?.windowScene?.userActivity = activity
 
 			return true
@@ -100,13 +68,4 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 		return false
 	}
-
-	func open(item: OCItem, in controller: ClientQueryViewController) -> ClientQueryViewController? {
-		if let subController = controller.open(item: item, animated: false, pushViewController: false) {
-			return subController
-		}
-
-		return nil
-	}
-
 }

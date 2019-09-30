@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 import MobileCoreServices
 
+@available(iOS 13.0, *)
 class DiscardSceneAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.discardscene") }
 	override class var category : ActionCategory? { return .normal }
@@ -29,7 +30,7 @@ class DiscardSceneAction: Action {
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 
-		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad() {
 			if let viewController = forContext.viewController, viewController.view.window?.windowScene?.userActivity != nil {
 				return .first
 			}
@@ -45,19 +46,15 @@ class DiscardSceneAction: Action {
 			return
 		}
 
-		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
+		if UIDevice.current.isIpad() {
 			if let scene = viewController.view.window?.windowScene {
-				UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil) { (error) in
+				UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil) { (_) in
 				}
 			}
 		}
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if #available(iOS 13.0, *) {
-			return UIImage(systemName: "xmark.square")?.tinted(with: Theme.shared.activeCollection.tintColor)
-		}
-
-		return nil
+		return UIImage(systemName: "xmark.square")?.tinted(with: Theme.shared.activeCollection.tintColor)
 	}
 }
