@@ -37,7 +37,7 @@ protocol CardPresentationSizing : UIViewController {
 	var fitsOnScreen : Bool { get set }
 }
 
-final class CardPresentationController: UIPresentationController {
+final class CardPresentationController: UIPresentationController, Themeable {
 
 	// MARK: - Instance Variables.
 	private var cardPosition: CardPosition = .open
@@ -104,6 +104,17 @@ final class CardPresentationController: UIPresentationController {
 		self.withHandle = withHandle
 		self.dismissable = dismissable
 		super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
+
+		Theme.shared.register(client: self, applyImmediately: true)
+	}
+
+	deinit {
+		Theme.shared.unregister(client: self)
+	}
+
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		overStretchView.backgroundColor = collection.tableGroupBackgroundColor
+		dragHandleView.backgroundColor = collection.tableSeparatorColor
 	}
 
 	private func offset(for position: CardPosition, translatedBy: CGFloat = 0, allowOverStretch: Bool = false) -> CGFloat {
@@ -157,8 +168,6 @@ final class CardPresentationController: UIPresentationController {
 					dragHandleView.widthAnchor.constraint(equalToConstant: 50),
 					dragHandleView.heightAnchor.constraint(equalToConstant: 5)
 				])
-
-				dragHandleView.backgroundColor = .lightGray
 			}
 		}
 	}
@@ -181,7 +190,6 @@ final class CardPresentationController: UIPresentationController {
 		if let presentedView = presentedView,
 		   let containerView = containerView {
 			overStretchView.translatesAutoresizingMaskIntoConstraints = false
-			overStretchView.backgroundColor = Theme.shared.activeCollection.tableGroupBackgroundColor
 			overStretchView.isUserInteractionEnabled = false
 
 			containerView.insertSubview(overStretchView, aboveSubview: dimmingView)

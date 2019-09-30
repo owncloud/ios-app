@@ -93,6 +93,8 @@ class ThemeCollection : NSObject {
 
 	// MARK: - Interface style
 	var interfaceStyle : ThemeCollectionInterfaceStyle
+	var keyboardAppearance : UIKeyboardAppearance
+	var backgroundBlurEffectStyle : UIBlurEffect.Style
 
 	// MARK: - Brand colors
 	@objc var darkBrandColor: UIColor
@@ -167,6 +169,8 @@ class ThemeCollection : NSObject {
 		var logoFillColor : UIColor?
 
 		self.interfaceStyle = .unspecified
+		self.keyboardAppearance = .default
+		self.backgroundBlurEffectStyle = .regular
 
 		self.darkBrandColor = darkColor
 		self.lightBrandColor = lightColor
@@ -223,7 +227,7 @@ class ThemeCollection : NSObject {
 		)
 
 		self.tableRowHighlightColors = ThemeColorCollection(
-			backgroundColor: nil,
+			backgroundColor: UIColor.white.darker(0.1),
 			tintColor: nil,
 			labelColor: UIColor.black,
 			secondaryLabelColor: UIColor.gray,
@@ -239,6 +243,8 @@ class ThemeCollection : NSObject {
 			case .dark:
 				// Interface style
 				self.interfaceStyle = .dark
+				self.keyboardAppearance = .dark
+				self.backgroundBlurEffectStyle = .dark
 
 				// Bars
 				self.navigationBarColors = self.darkBrandColors
@@ -284,6 +290,8 @@ class ThemeCollection : NSObject {
 			case .light:
 				// Interface style
 				self.interfaceStyle = .light
+				self.keyboardAppearance = .light
+				self.backgroundBlurEffectStyle = .light
 
 				// Bars
 				self.navigationBarColors = ThemeColorCollection(
@@ -318,6 +326,8 @@ class ThemeCollection : NSObject {
 			case .contrast:
 				// Interface style
 				self.interfaceStyle = .light
+				self.keyboardAppearance = .light
+				self.backgroundBlurEffectStyle = .light
 
 				// Bars
 				self.navigationBarColors = self.darkBrandColors

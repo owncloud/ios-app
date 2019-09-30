@@ -245,9 +245,15 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 	// MARK: - Actions
 	@objc private func presentSortButtonOptions(_ sender : UIButton) {
 		let tableViewController = SortMethodTableViewController()
-		tableViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+		tableViewController.modalPresentationStyle = .popover
 		tableViewController.sortBarDelegate = self.delegate
 		tableViewController.sortBar = self
+
+		if #available(iOS 13, *) {
+			tableViewController.tableView.contentInsetAdjustmentBehavior = .never
+			tableViewController.tableView.contentInset = UIEdgeInsets(top: 13, left: 0, bottom: 0, right: 0)
+			tableViewController.tableView.separatorInset = UIEdgeInsets()
+		}
 
 		let popoverPresentationController = tableViewController.popoverPresentationController
 		popoverPresentationController?.sourceView = sender

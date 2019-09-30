@@ -59,6 +59,10 @@ class LibraryTableViewController: StaticTableViewController {
 	weak var core : OCCore?
 
 	deinit {
+		for applierToken in applierTokens {
+			Theme.shared.remove(applierForToken: applierToken)
+		}
+
 		self.stopQueries()
 	}
 
@@ -91,6 +95,7 @@ class LibraryTableViewController: StaticTableViewController {
 	var shareQueryByUser : OCShareQuery?
 	var shareQueryAcceptedCloudShares : OCShareQuery?
 	var shareQueryPendingCloudShares : OCShareQuery?
+	private var applierTokens : [ThemeApplierToken] = []
 
 	private func start(query: OCCoreQuery) {
 		core?.start(query)
@@ -389,14 +394,14 @@ class LibraryTableViewController: StaticTableViewController {
 			})
 
 			let imageQuery = OCQuery(condition: .where(.mimeType, contains: "image"), inputFilter:nil)
-			addCollectionRow(to: section, title: "Images".localized, image: Theme.shared.image(for: "image", size: CGSize(width: 25, height: 25))!, query: imageQuery, actionHandler: nil)
+			addCollectionRow(to: section, title: "Images".localized, themeImageName: "image", query: imageQuery, actionHandler: nil)
 
 			let pdfQuery = OCQuery(condition: .where(.mimeType, contains: "pdf"), inputFilter:nil)
-			addCollectionRow(to: section, title: "PDF Documents".localized, image: Theme.shared.image(for: "application-pdf", size: CGSize(width: 25, height: 25))!, query: pdfQuery, actionHandler: nil)
+			addCollectionRow(to: section, title: "PDF Documents".localized, themeImageName: "application-pdf", query: pdfQuery, actionHandler: nil)
 		}
 	}
 
-	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage, query: OCQuery?, actionHandler: ((_ completion: @escaping () -> Void) -> Void)?) {
+	func addCollectionRow(to section: StaticTableViewSection, title: String, image: UIImage? = nil, themeImageName: String? = nil, query: OCQuery?, actionHandler: ((_ completion: @escaping () -> Void) -> Void)?) {
 		let identifier = String(format:"%@-collection-row", title)
 		if section.row(withIdentifier: identifier) == nil, let core = core {
 			let row = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
@@ -409,7 +414,18 @@ class LibraryTableViewController: StaticTableViewController {
 				}
 
 				actionHandler?({})
-			}, title: title, image: image, accessoryType: .disclosureIndicator, identifier: identifier)
+			}, title: title, image: image, imageTintColorKey: "secondaryLabelColor", accessoryType: .disclosureIndicator, identifier: identifier)
+
+			if themeImageName != nil {
+				let themeApplierToken = Theme.shared.add(applier: { [weak row] (theme, _, _) in
+					if let themeImageName = themeImageName {
+						row?.cell?.imageView?.image = theme.image(for: themeImageName, size: CGSize(width: 25, height: 25))
+					}
+				}, applyImmediately: true)
+
+				applierTokens.append(themeApplierToken)
+			}
+
 			section.add(row: row)
 		}
 	}

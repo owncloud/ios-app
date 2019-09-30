@@ -500,7 +500,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	@objc func plusBarButtonPressed(_ sender: UIBarButtonItem) {
 
-		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+		let controller = ThemedAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
 		// Actions for folderAction
 		if let core = self.core, let rootItem = query.rootItem {

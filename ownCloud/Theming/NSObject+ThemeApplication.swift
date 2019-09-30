@@ -137,6 +137,11 @@ extension NSObject {
 
 			searchBar.tintColor = collection.tintColor
 			searchBar.barStyle = collection.barStyle
+
+			if #available(iOS 13, *) {
+				// Ensure search bar icon color is correct
+				searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+			}
 		}
 
 		if let label = self as? UILabel {
@@ -208,6 +213,12 @@ extension NSObject {
 
 		if let segmentedControl = self as? UISegmentedControl {
 			segmentedControl.tintColor = collection.navigationBarColors.tintColor
+		}
+
+		if let visualEffectView = self as? UIVisualEffectView {
+			if #available(iOS 13, *) {
+				visualEffectView.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+			}
 		}
 	}
 }

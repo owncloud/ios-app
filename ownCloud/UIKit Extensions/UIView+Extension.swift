@@ -1,5 +1,5 @@
 //
-//  UIView+Animation.swift
+//  UIView+Extension.swift
 //  ownCloud
 //
 //  Created by Felix Schwarz on 07.05.18.
@@ -19,6 +19,7 @@
 import UIKit
 
 extension UIView {
+	// MARK: - Animation
 	func shakeHorizontally(amplitude : CGFloat = 20, duration : CFTimeInterval = 0.5) {
 		let animation : CAKeyframeAnimation = CAKeyframeAnimation(keyPath: "transform.translation.x")
 
@@ -27,5 +28,20 @@ extension UIView {
 		animation.values = [ 0, -amplitude, amplitude, -amplitude, amplitude, -amplitude, amplitude, 0 ]
 
 		self.layer.add(animation, forKey: "shakeHorizontally")
+	}
+
+	// MARK: - View hierarchy
+	func findSubviewInTree(where filter: (UIView) -> Bool) -> UIView? {
+		for subview in subviews {
+			if filter(subview) {
+				return subview
+			} else {
+				if let foundSubview = subview.findSubviewInTree(where: filter) {
+					return foundSubview
+				}
+			}
+		}
+
+		return nil
 	}
 }

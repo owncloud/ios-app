@@ -59,7 +59,7 @@ class NamingViewController: UIViewController, Themeable {
 		self.stringValidator = stringValidator
 		self.defaultName = defaultName
 
-		blurView = UIVisualEffectView.init(effect: UIBlurEffect(style: .regular))
+		blurView = UIVisualEffectView(effect: UIBlurEffect(style: Theme.shared.activeCollection.backgroundBlurEffectStyle))
 
 		stackView = UIStackView(frame: .zero)
 
@@ -103,6 +103,7 @@ class NamingViewController: UIViewController, Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		nameTextField.backgroundColor = collection.tableBackgroundColor
 		nameTextField.textColor = collection.tableRowColors.labelColor
+		nameTextField.keyboardAppearance = collection.keyboardAppearance
 	}
 
 	override func viewDidLoad() {
@@ -307,7 +308,7 @@ class NamingViewController: UIViewController, Themeable {
 						self.completion(self.nameTextField.text!, self)
 					}
 				} else {
-					let controller = UIAlertController(title: "Forbidden Characters".localized, message: validationErrorMessage, preferredStyle: .alert)
+					let controller = ThemedAlertController(title: "Forbidden Characters".localized, message: validationErrorMessage, preferredStyle: .alert)
 					controller.view.accessibilityIdentifier = "forbidden-characters-alert"
 					let okAction = UIAlertAction(title: "OK".localized, style: .default)
 					controller.addAction(okAction)

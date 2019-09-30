@@ -34,12 +34,15 @@ class ClientItemCell: ThemeTableViewCell {
 	private let iconViewWidth : CGFloat = 60
 	private let moreButtonWidth : CGFloat = 60
 	private let verticalLabelMarginFromCenter : CGFloat = 2
+	private let iconSize : CGSize = CGSize(width: 40, height: 40)
+	private let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
 
 	weak var delegate: ClientItemCellDelegate?
 
 	var titleLabel : UILabel = UILabel()
 	var detailLabel : UILabel = UILabel()
 	var iconView : UIImageView = UIImageView()
+	var showingIcon : Bool = false
 	var cloudStatusIconView : UIImageView = UIImageView()
 	var sharedStatusIconView : UIImageView = UIImageView()
 	var publicLinkStatusIconView : UIImageView = UIImageView()
@@ -225,8 +228,6 @@ class ClientItemCell: ThemeTableViewCell {
 	}
 
 	func updateWith(_ item: OCItem) {
-		let iconSize : CGSize = CGSize(width: 40, height: 40)
-		let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
 		var iconImage : UIImage?
 
 		// Cancel any already active request
@@ -235,16 +236,18 @@ class ClientItemCell: ThemeTableViewCell {
 		}
 
 		iconImage = item.icon(fitInSize: iconSize)
+		showingIcon = true
 
 		self.accessoryType = .none
 
 		if item.thumbnailAvailability != .none {
 			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				_ = thumbnail?.requestImage(for: thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
+				_ = thumbnail?.requestImage(for: self.thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
 					if error == nil,
 						image != nil,
 						self.item?.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
 						OnMainThread {
+							self.showingIcon = false
 							self.iconView.image = image
 						}
 					}
@@ -254,7 +257,7 @@ class ClientItemCell: ThemeTableViewCell {
 			if let thumbnail = item.thumbnail {
 				displayThumbnail(thumbnail)
 			} else {
-				activeThumbnailRequestProgress = core?.retrieveThumbnail(for: item, maximumSize: thumbnailSize, scale: 0, retrieveHandler: { [weak self] (_, _, _, thumbnail, _, progress) in
+				activeThumbnailRequestProgress = core?.retrieveThumbnail(for: item, maximumSize: self.thumbnailSize, scale: 0, retrieveHandler: { [weak self] (_, _, _, thumbnail, _, progress) in
 					displayThumbnail(thumbnail)
 
 					if self?.activeThumbnailRequestProgress === progress {
@@ -419,6 +422,10 @@ class ClientItemCell: ThemeTableViewCell {
 		detailLabel.textColor = collection.tableRowColors.secondaryLabelColor
 
 		moreButton.tintColor = collection.tableRowColors.labelColor
+
+		if showingIcon, let item = item {
+			iconView.image = item.icon(fitInSize: iconSize)
+		}
 	}
 
 	// MARK: - Editing mode
