@@ -533,7 +533,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 			return
 		}
 
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreFolder)
 		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [rootItem], location: actionsLocation)
 
 		if let moreViewController = Action.cardViewController(for: rootItem, with: actionContext, progressHandler: makeActionProgressHandler()) {
