@@ -37,7 +37,7 @@ class MoreViewHeader: UIView {
 	weak var core: OCCore?
 	var url: URL?
 
-	init(for item: OCItem, with core: OCCore, favorite: Bool = true, adaptBackgroundColor adaptBgCol: Bool = false) {
+	init(for item: OCItem, with core: OCCore, favorite: Bool = true, adaptBackgroundColor: Bool = false) {
 		self.item = item
 		self.core = core
 		self.showFavoriteButton = favorite
@@ -47,7 +47,7 @@ class MoreViewHeader: UIView {
 		detailLabel = UILabel()
 		labelContainerView = UIView()
 		favoriteButton = UIButton()
-		adaptBackgroundColor = adaptBgCol
+		self.adaptBackgroundColor = adaptBackgroundColor
 
 		super.init(frame: .zero)
 
