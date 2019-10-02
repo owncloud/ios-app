@@ -1009,7 +1009,7 @@
 				</dict>
 				<dict>
 					<key>INIntentParameterDisplayName</key>
-					<string>File Name</string>
+					<string>File Name (optional)</string>
 					<key>INIntentParameterDisplayNameID</key>
 					<string>B1lmXQ</string>
 					<key>INIntentParameterDisplayPriority</key>
@@ -1043,7 +1043,7 @@
 				</dict>
 				<dict>
 					<key>INIntentParameterDisplayName</key>
-					<string>File Extension</string>
+					<string>File Extension (optional)</string>
 					<key>INIntentParameterDisplayNameID</key>
 					<string>cDQ3EQ</string>
 					<key>INIntentParameterDisplayPriority</key>
@@ -1376,6 +1376,18 @@
 						<string>dWm6eD</string>
 						<key>INIntentResponseCodeName</key>
 						<string>accountFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>This folder already exists in the given path</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>0n7uf3</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>This folder already exists in the given path</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>Aviuqh</string>
+						<key>INIntentResponseCodeName</key>
+						<string>folderExistsFailure</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>

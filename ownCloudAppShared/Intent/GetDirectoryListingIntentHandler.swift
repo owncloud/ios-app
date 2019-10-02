@@ -65,7 +65,7 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 			return
 		}
 
-		guard let path = intent.path, let uuid = intent.account?.uuid else {
+		guard let path = intent.path?.pathRepresentation, let uuid = intent.account?.uuid else {
 			completion(GetDirectoryListingIntentResponse(code: .failure, userActivity: nil))
 			return
 		}

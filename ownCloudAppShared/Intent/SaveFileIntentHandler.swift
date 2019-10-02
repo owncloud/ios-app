@@ -30,7 +30,7 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 			return
 		}
 
-		guard let path = intent.path, let uuid = intent.account?.uuid, let file = intent.file, let fileURL = file.fileURL else {
+		guard let path = intent.path?.pathRepresentation, let uuid = intent.account?.uuid, let file = intent.file, let fileURL = file.fileURL else {
 			completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
 			return
 		}
@@ -115,19 +115,11 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 	}
 
 	public func resolveFilename(for intent: SaveFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
-		if let filename = intent.filename {
-			completion(INStringResolutionResult.success(with: filename))
-		} else {
-			completion(INStringResolutionResult.needsValue())
-		}
+		completion(INStringResolutionResult.success(with: intent.filename ?? ""))
 	}
 
 	public func resolveFileextension(for intent: SaveFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
-		if let fileExtension = intent.fileextension {
-			completion(INStringResolutionResult.success(with: fileExtension))
-		} else {
-			completion(INStringResolutionResult.needsValue())
-		}
+		completion(INStringResolutionResult.success(with: intent.fileextension ?? ""))
 	}
 }
 

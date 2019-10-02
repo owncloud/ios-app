@@ -30,7 +30,7 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 			return
 		}
 
-		guard let path = intent.path, let uuid = intent.account?.uuid, let name = intent.name else {
+		guard let path = intent.path?.pathRepresentation, let uuid = intent.account?.uuid, let name = intent.name else {
 			completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
 			return
 		}
@@ -41,17 +41,28 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 		}
 
 		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
-			if error == nil, let targetItem = item, let core = core {
-				let progress = core.createFolder(name, inside: targetItem, options: nil, resultHandler: { (error, _, item, _) in
-					if error != nil {
-						completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
-					} else {
-						completion(CreateFolderIntentResponse.success(path: item?.path ?? ""))
-					}
-				})
+			if error == nil, let targetItem = item {
+				let folderPath = String(format: "%@%@", path, name)
+				// Check, if the folder already exists in the given path
+				OCItemTracker().item(for: bookmark, at: folderPath) { (error, core, folderPathItem) in
+					if error == nil, folderPathItem == nil, let core = core {
 
-				if progress == nil {
-					completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
+						let progress = core.createFolder(name, inside: targetItem, options: nil, resultHandler: { (error, _, item, _) in
+							if error != nil {
+								completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
+							} else {
+								completion(CreateFolderIntentResponse.success(path: item?.path ?? ""))
+							}
+						})
+
+						if progress == nil {
+							completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
+						}
+					} else if core != nil {
+						completion(CreateFolderIntentResponse(code: .folderExistsFailure, userActivity: nil))
+					} else {
+						completion(CreateFolderIntentResponse(code: .failure, userActivity: nil))
+					}
 				}
 			} else if core != nil {
 				completion(CreateFolderIntentResponse(code: .pathFailure, userActivity: nil))
