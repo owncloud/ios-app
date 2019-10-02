@@ -213,6 +213,10 @@ extension NSObject {
 
 		if let segmentedControl = self as? UISegmentedControl {
 			segmentedControl.tintColor = collection.navigationBarColors.tintColor
+			if #available(iOS 13, *) {
+				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.navigationBarColors.labelColor], for: .normal)
+				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.tintColor], for: .selected)
+			}
 		}
 
 		if let visualEffectView = self as? UIVisualEffectView {
