@@ -29,8 +29,6 @@ class UploadMediaAction: UploadBaseAction {
 	override class var keyCommand : String? { return "M" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
-	private let uploadSerialQueue = DispatchQueue(label: "com.owncloud.upload.queue", target: DispatchQueue.global(qos: .background))
-
 	private struct AssociatedKeys {
 		static var actionKey = "action"
 	}

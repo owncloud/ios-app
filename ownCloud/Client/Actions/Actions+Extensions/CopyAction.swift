@@ -25,7 +25,7 @@ class CopyAction : Action {
 	override class var name : String? { return "Copy".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar, .keyboardShortcut] }
 	override class var keyCommand : String? { return "C" }
-	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {

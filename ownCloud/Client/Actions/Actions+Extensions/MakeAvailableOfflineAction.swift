@@ -25,7 +25,7 @@ class MakeAvailableOfflineAction: Action {
 	override class var name : String? { return "Make available offline".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut] }
 	override class var keyCommand : String? { return "O" }
-	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext context: ActionContext) -> ActionPosition {

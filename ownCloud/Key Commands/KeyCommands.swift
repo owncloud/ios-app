@@ -311,8 +311,8 @@ extension StaticTableViewController {
 		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
 			let staticRow = staticRowForIndexPath(selectedIndexPath)
 			self.tableView.endEditing(true)
-			if staticRow.type == .switchButton, let switchButon = staticRow.cell?.accessoryView as? UISwitch {
-				switchButon.tintColor = .white
+			if staticRow.type == .switchButton, let switchButton = staticRow.cell?.accessoryView as? UISwitch {
+				switchButton.tintColor = .white
 				staticRow.cell?.textLabel?.textColor = Theme.shared.activeCollection.tableRowColors.labelColor
 			} else if staticRow.type == .text || staticRow.type == .secureText, let textField = staticRow.textField {
 				textField.textColor = Theme.shared.activeCollection.tableRowColors.labelColor
