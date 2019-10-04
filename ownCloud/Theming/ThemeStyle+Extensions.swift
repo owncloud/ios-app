@@ -71,6 +71,14 @@ extension ThemeStyle {
 		}
 	}
 
+	static var displayName : String {
+		if #available(iOS 13, *), ThemeStyle.followSystemAppearance {
+			return "System".localized
+		}
+
+		return ThemeStyle.preferredStyle.localizedName
+	}
+
 	static func considerAppearanceUpdate(animated: Bool = false) {
 		let themeWindow : ThemeWindow? = (UIApplication.shared.delegate as? AppDelegate)?.window
 		var applyStyle : ThemeStyle? = ThemeStyle.preferredStyle
