@@ -551,6 +551,16 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 			tableViewController.bookmarkShortName = shortName
 		}
 
+		if #available(iOS 13, *) {
+ 			// On iOS 13.0/13.1, the table view's content needs to be inset by the height of the arrow
+ 			// (this can hopefully be removed again in the future, if/when Apple addresses the issue)
+ 			let popoverArrowHeight : CGFloat = 13
+
+  			tableViewController.tableView.contentInsetAdjustmentBehavior = .never
+ 			tableViewController.tableView.contentInset = UIEdgeInsets(top: popoverArrowHeight, left: 0, bottom: 0, right: 0)
+ 			tableViewController.tableView.separatorInset = UIEdgeInsets()
+ 		}
+
 		let popoverPresentationController = tableViewController.popoverPresentationController
 		popoverPresentationController?.sourceView = sender
 		popoverPresentationController?.delegate = self
