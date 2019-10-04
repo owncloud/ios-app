@@ -30,6 +30,7 @@ class ThemedAlertController: UIAlertController, Themeable {
 		if #available(iOS 13, *) {
 			self.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
 		}
+		view.tintColor = collection.navigationBarColors.tintColor
 	}
 
 	deinit {
