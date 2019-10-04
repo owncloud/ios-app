@@ -54,6 +54,14 @@ class VendorServices : NSObject {
 		return false
 	}
 
+	var showBetaWarning: Bool {
+		if let showBetaWarning = self.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool {
+			return showBetaWarning
+		}
+
+		return false
+	}
+
 	static var shared : VendorServices = {
 		return VendorServices()
 	}()
