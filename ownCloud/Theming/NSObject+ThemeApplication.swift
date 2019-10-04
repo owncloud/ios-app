@@ -204,6 +204,10 @@ extension NSObject {
 					cell.selectedBackgroundView = nil
 				}
 			}
+
+			if #available(iOS 13, *) {
+				cell.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
+			}
 		}
 
 		if let progressView = self as? UIProgressView {
