@@ -47,8 +47,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 		}
 
 		themeStyleNotificationObserverToken = NotificationCenter.default.addObserver(forName: ThemeStyle.themeStyleChangedNotificationName, object: nil, queue: OperationQueue.main) { (_) in
-			guard let styleSelectorViewController = self.styleSelectorViewController else { return }
-			self.updateThemeStyleSelectionUI(viewController: styleSelectorViewController)
+			self.updateThemeStyleSelectionUI()
 		}
 
 		self.add(row: loggingRow!)
@@ -71,7 +70,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 
 		if #available(iOS 13, *) {
 			styleSelectorViewController.addSection(StaticTableViewSection(headerTitle: "System light / dark appearance".localized, rows: [
-				StaticTableViewRow(switchWithAction: { [weak styleSelectorViewController, themeRow] (_, sender) in
+				StaticTableViewRow(switchWithAction: { [weak themeRow] (_, sender) in
 					if let followAppearanceSwitch = sender as? UISwitch {
 						ThemeStyle.followSystemAppearance = followAppearanceSwitch.isOn
 
@@ -88,20 +87,20 @@ class UserInterfaceSettingsSection: SettingsSection {
 						}
 
 						themeRow?.cell?.detailTextLabel?.text = ThemeStyle.displayName
-						if let styleSelectorViewController = styleSelectorViewController {
-							self.updateThemeStyleSelectionUI(viewController: styleSelectorViewController)
-						}
+						self.updateThemeStyleSelectionUI()
 					}
 					}, title: "Follow system appearance".localized, value: ThemeStyle.followSystemAppearance, identifier: "theme-auto-dark-mode")
 			]))
 		}
-		updateThemeStyleSelectionUI(viewController: styleSelectorViewController)
+		updateThemeStyleSelectionUI()
 		self.viewController?.navigationController?.pushViewController(styleSelectorViewController, animated: true)
 	}
 
-	func updateThemeStyleSelectionUI(viewController : StaticTableViewController) {
-		if let styleSelectorSection = viewController.sectionForIdentifier("theme-style-selection") {
-			viewController.removeSection(styleSelectorSection, animated: true)
+	func updateThemeStyleSelectionUI() {
+		guard let styleSelectorViewController = styleSelectorViewController else { return }
+
+		if let styleSelectorSection = styleSelectorViewController.sectionForIdentifier("theme-style-selection") {
+			styleSelectorViewController.removeSection(styleSelectorSection, animated: true)
 		}
 		let styleSelectorSection = StaticTableViewSection(headerTitle: "Theme".localized, footerTitle: nil, identifier: "theme-style-selection")
 
@@ -126,7 +125,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 				}
 				}, groupIdentifier: "theme-id", selectedValue: ThemeStyle.preferredStyle.identifier)
 		}
-		viewController.addSection(styleSelectorSection, animated: true)
+		styleSelectorViewController.addSection(styleSelectorSection, animated: true)
 	}
 
 	func pushLogSettings() {
