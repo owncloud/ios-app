@@ -362,7 +362,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
 		self.resetTable(showShares: true)
-		self.searchController?.searchBar.isLoading = false
+		self.messageView?.message(show: false)
 	}
 
 	func searchControllerHasNewResults(_ searchController: OCRecipientSearchController, error: Error?) {
@@ -428,10 +428,10 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 	}
 
 	func searchController(_ searchController: OCRecipientSearchController, isWaitingForResults isSearching: Bool) {
-		if isSearching {
-			self.searchController?.searchBar.isLoading = true
-		} else {
-			self.searchController?.searchBar.isLoading = false
+		OnMainThread {
+			if isSearching {
+				self.messageView?.message(show: true, imageName: "icon-search", title: "Searching".localized, message: "Search results will be loaded".localized)
+			}
 		}
 	}
 
