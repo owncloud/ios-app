@@ -120,6 +120,7 @@ class ClientItemCell: ThemeTableViewCell {
 
 		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
 		titleLabel.adjustsFontForContentSizeCategory = true
+		titleLabel.lineBreakMode = .byTruncatingMiddle
 
 		detailLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
 		detailLabel.adjustsFontForContentSizeCategory = true
