@@ -420,6 +420,10 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		selectedItemIds.removeAll()
 		removeToolbar()
 		sortBar?.showSelectButton = true
+
+		if #available(iOS 13, *) {
+			self.tableView.overrideUserInterfaceStyle = .unspecified
+		}
 	}
 
 	func populateToolbar() {
@@ -464,6 +468,10 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	@objc func multipleSelectionButtonPressed() {
 
 		if !self.tableView.isEditing {
+			if #available(iOS 13, *) {
+				self.tableView.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
+			}
+
 			updateMultiSelectionUI()
 			self.tableView.setEditing(true, animated: true)
 			sortBar?.showSelectButton = false
