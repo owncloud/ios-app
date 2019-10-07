@@ -94,14 +94,14 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 	private func uploadMediaAssets(with core:OCCore?, at item:OCItem, completion:@escaping () -> Void) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
-		var assets = [PHAsset]()
+		var assets = Set<PHAsset>()
 
 		// Add photo assets
 		if let uploadPhotosAfter = userDefaults.instantUploadPhotosAfter {
 			let fetchResult = self.fetchAssetsFromCameraRoll(.images, createdAfter: uploadPhotosAfter)
 			if fetchResult != nil {
 				fetchResult!.enumerateObjects({ (asset, _, _) in
-					assets.append(asset)
+					assets.insert(asset)
 				})
 			}
 		}
@@ -111,14 +111,22 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 			let fetchResult = self.fetchAssetsFromCameraRoll(.videos, createdAfter: uploadVideosAfter)
 			if fetchResult != nil {
 				fetchResult!.enumerateObjects({ (asset, _, _) in
-					assets.append(asset)
+					assets.insert(asset)
 				})
 			}
 		}
 
+		// Add assets which weren't yet uploaded
+		if let bookmark = core?.bookmark, let assetIds = MediaUploadQueue.pendingAssetLocalIdentifiers(for: bookmark) {
+			let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: assetIds, options: nil)
+			fetchResult.enumerateObjects({ (asset, _, _) in
+				assets.insert(asset)
+			})
+		}
+
 		// Perform actual upload operation
 		if assets.count > 0 {
-			self.upload(assets: assets, with: core, at: item, completion: { () in
+			self.upload(assets: Array(assets), with: core, at: item, completion: { () in
 				OnMainThread {
 					completion()
 				}
@@ -196,6 +204,10 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		}
 
 		return nil
+	}
+
+	private func fetchAssets(for identifiers:[String]) {
+
 	}
 
 	private func showFeatureDisabledAlert() {

@@ -28,6 +28,7 @@ class MediaUploadQueue {
 	static let shared = MediaUploadQueue()
 
 	static let UploadPendingKey = OCKeyValueStoreKey(rawValue: "com.owncloud.upload.queue.upload-pending-flag")
+	static let PendingAssetsKey = OCKeyValueStoreKey(rawValue: "com.owncloud.upload.queue.upload-pending-assets")
 
 	private static var uploadStarted = false
 
@@ -38,7 +39,7 @@ class MediaUploadQueue {
 			bgTask.end()
 		}).start()
 
-		let queue = DispatchQueue.global(qos: .userInitiated)
+		let queue = DispatchQueue.global(qos: .background)
 
 		weak var weakCore = core
 
@@ -67,6 +68,7 @@ class MediaUploadQueue {
 
 			for asset in assets {
 				if uploadFailed == false {
+					MediaUploadQueue.addPendingAsset(asset.localIdentifier, for: weakCore!.bookmark)
 					uploadGroup.enter()
 					self.uploadSerialQueue.async {
 						if weakCore != nil {
@@ -76,6 +78,7 @@ class MediaUploadQueue {
 										uploadFailed = true
 									} else {
 										assetUploadCompletion?(asset, false)
+										MediaUploadQueue.removePendingAsset(asset.localIdentifier, for: weakCore!.bookmark)
 									}
 									runningCoreCompletion()
 									uploadGroup.leave()
@@ -108,6 +111,33 @@ class MediaUploadQueue {
 				assetUploadCompletion?(nil, true)
 			})
 		}
+	}
+
+	class func addPendingAsset(_ identifier:String, for bookmark:OCBookmark) {
+		let vault : OCVault = OCVault(bookmark: bookmark)
+		var idArray = vault.keyValueStore?.readObject(forKey: MediaUploadQueue.PendingAssetsKey) as? [String]
+		if idArray == nil {
+			idArray = [String]()
+		}
+		idArray?.append(identifier)
+		vault.keyValueStore?.storeObject(idArray! as NSArray, forKey: MediaUploadQueue.PendingAssetsKey)
+	}
+
+	class func removePendingAsset(_ identifier:String, for bookmark:OCBookmark) {
+		let vault : OCVault = OCVault(bookmark: bookmark)
+		var idArray = vault.keyValueStore?.readObject(forKey: MediaUploadQueue.PendingAssetsKey) as? [String]
+		if idArray != nil {
+			if let index = idArray?.index(of: identifier) {
+				idArray?.remove(at: index)
+			}
+			vault.keyValueStore?.storeObject(idArray! as NSArray, forKey: MediaUploadQueue.PendingAssetsKey)
+		}
+	}
+
+	class func pendingAssetLocalIdentifiers(for bookmark:OCBookmark) -> [String]? {
+		let vault : OCVault = OCVault(bookmark: bookmark)
+		let idArray = vault.keyValueStore?.readObject(forKey: MediaUploadQueue.PendingAssetsKey) as? [String]
+		return idArray
 	}
 
 	class func isMediaUploadPendingFlagSet(for bookmark:OCBookmark) -> Bool {
