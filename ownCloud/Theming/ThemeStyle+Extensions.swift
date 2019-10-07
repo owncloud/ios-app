@@ -19,6 +19,17 @@
 import Foundation
 import ownCloudSDK
 
+@available(iOS 13.0, *)
+extension UIUserInterfaceStyle {
+	func themeCollectionStyles() -> [ThemeCollectionStyle] {
+		if self == .dark {
+			return [.dark]
+		}
+
+		return [.light, .contrast]
+	}
+}
+
 extension ThemeStyle {
 	func themeStyleExtension(isDefault: Bool = false, isBranding: Bool = false) -> OCExtension {
 		let features : [String:Any] = [
@@ -79,15 +90,30 @@ extension ThemeStyle {
 		return ThemeStyle.preferredStyle.localizedName
 	}
 
+	@available(iOS 13.0, *)
+	static func userInterfaceStyle() -> UIUserInterfaceStyle? {
+		if let themeWindow = (UIApplication.shared.delegate as? AppDelegate)?.window {
+			return themeWindow.traitCollection.userInterfaceStyle
+		}
+
+		return nil
+	}
+
 	static func considerAppearanceUpdate(animated: Bool = false) {
 		let themeWindow : ThemeWindow? = (UIApplication.shared.delegate as? AppDelegate)?.window
 		var applyStyle : ThemeStyle? = ThemeStyle.preferredStyle
 
 		if #available(iOS 13, *) {
 			if self.followSystemAppearance {
-				if let themeWindow = themeWindow, themeWindow.traitCollection.userInterfaceStyle == .dark {
-					if let darkStyleIdentifier = ThemeStyle.preferredStyle.darkStyleIdentifier {
-						applyStyle = ThemeStyle.forIdentifier(darkStyleIdentifier)
+				if ThemeStyle.userInterfaceStyle() == .dark {
+					if let darkStyleIdentifier = ThemeStyle.preferredStyle.darkStyleIdentifier, let style = ThemeStyle.forIdentifier(darkStyleIdentifier) {
+						ThemeStyle.preferredStyle = style
+						applyStyle = style
+					}
+				} else {
+					if ThemeStyle.preferredStyle.themeStyle == .dark, let style = ThemeStyle.availableStyles(for: [.light, .contrast])?.first {
+						ThemeStyle.preferredStyle = style
+						applyStyle = style
 					}
 				}
 			}
@@ -109,6 +135,7 @@ extension ThemeStyle {
 			} else {
 				Theme.shared.activeCollection = themeCollection
 			}
+			NotificationCenter.default.post(name: ThemeStyle.themeStyleChangedNotificationName, object: nil)
 		}
 	}
 
@@ -170,6 +197,18 @@ extension ThemeStyle {
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension())
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension(isDefault: true))
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudClassic.themeStyleExtension())
+	}
+
+	static func availableStyles(for styles: [ThemeCollectionStyle]) -> [ThemeStyle]? {
+		let styles = ThemeStyle.availableStyles?.filter { (theme) -> Bool in
+			if styles.contains(theme.themeStyle) {
+				return true
+			}
+
+			return false
+		}
+
+		return styles
 	}
 }
 

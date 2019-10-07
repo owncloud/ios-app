@@ -23,18 +23,14 @@ class UserInterfaceSettingsSection: SettingsSection {
 	var themeRow : StaticTableViewRow?
 	var loggingRow : StaticTableViewRow?
 	var loggingNotificationObserverToken : Any?
+	var themeStyleNotificationObserverToken : Any?
+	var styleSelectorViewController : StaticTableViewController?
 
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
 
 		self.headerTitle = "User Interface".localized
 		self.identifier = "ui-section"
-
-		var themeStylesByName : [[String:String]] = []
-
-		for themeStyle in ThemeCollectionStyle.allCases {
-			themeStylesByName.append([themeStyle.name : themeStyle.rawValue])
-		}
 
 		themeRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 			self?.pushThemeStyleSelector()
@@ -44,10 +40,15 @@ class UserInterfaceSettingsSection: SettingsSection {
 
 		loggingRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 			self?.pushLogSettings()
-		}, title: "Logging".localized, value: OCLogger.logLevel.label, accessoryType: .disclosureIndicator, identifier: "logging")
+			}, title: "Logging".localized, value: OCLogger.logLevel.label, accessoryType: .disclosureIndicator, identifier: "logging")
 
 		loggingNotificationObserverToken = NotificationCenter.default.addObserver(forName: LogSettingsViewController.logLevelChangedNotificationName, object: nil, queue: OperationQueue.main) { [weak loggingRow] (_) in
 			loggingRow?.cell?.detailTextLabel?.text = OCLogger.logLevel.label
+		}
+
+		themeStyleNotificationObserverToken = NotificationCenter.default.addObserver(forName: ThemeStyle.themeStyleChangedNotificationName, object: nil, queue: OperationQueue.main) { (_) in
+			guard let styleSelectorViewController = self.styleSelectorViewController else { return }
+			self.updateThemeStyleSelectionUI(viewController: styleSelectorViewController)
 		}
 
 		self.add(row: loggingRow!)
@@ -57,13 +58,16 @@ class UserInterfaceSettingsSection: SettingsSection {
 		if loggingNotificationObserverToken != nil {
 			NotificationCenter.default.removeObserver(loggingNotificationObserverToken!)
 		}
+		if themeStyleNotificationObserverToken != nil {
+			NotificationCenter.default.removeObserver(themeStyleNotificationObserverToken!)
+		}
 	}
 
 	func pushThemeStyleSelector() {
-		let styleSelectorViewController = StaticTableViewController(style: .grouped)
+		styleSelectorViewController = StaticTableViewController(style: .grouped)
+		guard let styleSelectorViewController = styleSelectorViewController else { return }
 
 		styleSelectorViewController.navigationItem.title = "Theme".localized
-		var showThemeStyleSelection = true
 
 		if #available(iOS 13, *) {
 			styleSelectorViewController.addSection(StaticTableViewSection(headerTitle: "System light / dark appearance".localized, rows: [
@@ -71,44 +75,58 @@ class UserInterfaceSettingsSection: SettingsSection {
 					if let followAppearanceSwitch = sender as? UISwitch {
 						ThemeStyle.followSystemAppearance = followAppearanceSwitch.isOn
 
+						if ThemeStyle.followSystemAppearance {
+							if ThemeStyle.userInterfaceStyle() == .dark {
+								if let darkStyleIdentifier = ThemeStyle.preferredStyle.darkStyleIdentifier, let style = ThemeStyle.forIdentifier(darkStyleIdentifier) {
+									ThemeStyle.preferredStyle = style
+								}
+							} else {
+								if ThemeStyle.preferredStyle.themeStyle == .dark, let lightStyle = ThemeStyle.availableStyles(for: [.light, .contrast])?.first {
+									ThemeStyle.preferredStyle = lightStyle
+								}
+							}
+						}
+
 						themeRow?.cell?.detailTextLabel?.text = ThemeStyle.displayName
 						if let styleSelectorViewController = styleSelectorViewController {
-							self.showThemeStyleSelectionUI(!ThemeStyle.followSystemAppearance, viewController: styleSelectorViewController)
+							self.updateThemeStyleSelectionUI(viewController: styleSelectorViewController)
 						}
 					}
-				}, title: "Follow system appearance".localized, value: ThemeStyle.followSystemAppearance, identifier: "theme-auto-dark-mode")
+					}, title: "Follow system appearance".localized, value: ThemeStyle.followSystemAppearance, identifier: "theme-auto-dark-mode")
 			]))
-			showThemeStyleSelection = !ThemeStyle.followSystemAppearance
 		}
-		showThemeStyleSelectionUI(showThemeStyleSelection, viewController: styleSelectorViewController)
+		updateThemeStyleSelectionUI(viewController: styleSelectorViewController)
 		self.viewController?.navigationController?.pushViewController(styleSelectorViewController, animated: true)
 	}
 
-	func showThemeStyleSelectionUI(_ showThemeStyleSelection : Bool, viewController : StaticTableViewController) {
-		if showThemeStyleSelection {
-			let styleSelectorSection = StaticTableViewSection(headerTitle: "Theme".localized, footerTitle: nil, identifier: "theme-style-selection")
-			if let availableStyles = ThemeStyle.availableStyles {
-				var themeIdentifiersByName : [[String:Any]] = []
-
-				for style in availableStyles {
-					themeIdentifiersByName.append([style.localizedName : style.identifier ])
-				}
-
-				styleSelectorSection.add(radioGroupWithArrayOfLabelValueDictionaries: themeIdentifiersByName, radioAction: { [weak themeRow] (row, _) in
-					if let styleIdentifier = row.value as? String,
-						let style = ThemeStyle.forIdentifier(styleIdentifier) {
-						ThemeStyle.preferredStyle = style
-
-						themeRow?.cell?.detailTextLabel?.text = ThemeStyle.displayName
-					}
-					}, groupIdentifier: "theme-id", selectedValue: ThemeStyle.preferredStyle.identifier)
-			}
-			viewController.addSection(styleSelectorSection, animated: true)
-		} else {
-			if let styleSelectorSection = viewController.sectionForIdentifier("theme-style-selection") {
-				viewController.removeSection(styleSelectorSection, animated: true)
-			}
+	func updateThemeStyleSelectionUI(viewController : StaticTableViewController) {
+		if let styleSelectorSection = viewController.sectionForIdentifier("theme-style-selection") {
+			viewController.removeSection(styleSelectorSection, animated: true)
 		}
+		let styleSelectorSection = StaticTableViewSection(headerTitle: "Theme".localized, footerTitle: nil, identifier: "theme-style-selection")
+
+		var availableStyles = ThemeStyle.availableStyles
+		if #available(iOS 13.0, *), ThemeStyle.followSystemAppearance, let currentStyles = ThemeStyle.userInterfaceStyle()?.themeCollectionStyles() {
+			availableStyles = ThemeStyle.availableStyles(for: currentStyles)
+		}
+
+		if let availableStyles = availableStyles {
+			var themeIdentifiersByName : [[String:Any]] = []
+
+			for style in availableStyles {
+				themeIdentifiersByName.append([style.localizedName : style.identifier ])
+			}
+
+			styleSelectorSection.add(radioGroupWithArrayOfLabelValueDictionaries: themeIdentifiersByName, radioAction: { [weak themeRow] (row, _) in
+				if let styleIdentifier = row.value as? String,
+					let style = ThemeStyle.forIdentifier(styleIdentifier) {
+					ThemeStyle.preferredStyle = style
+
+					themeRow?.cell?.detailTextLabel?.text = ThemeStyle.displayName
+				}
+				}, groupIdentifier: "theme-id", selectedValue: ThemeStyle.preferredStyle.identifier)
+		}
+		viewController.addSection(styleSelectorSection, animated: true)
 	}
 
 	func pushLogSettings() {
