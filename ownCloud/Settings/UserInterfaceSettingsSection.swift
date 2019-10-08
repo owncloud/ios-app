@@ -64,8 +64,12 @@ class UserInterfaceSettingsSection: SettingsSection {
 
 		if let availableStyles = ThemeStyle.availableStyles {
 			var themeIdentifiersByName : [[String:Any]] = []
+			var selectedValue = ThemeStyle.preferredStyle.identifier
 			if #available(iOS 13.0, *) {
 				themeIdentifiersByName = [["System Appeareance".localized : "com.owncloud.system"]]
+				if ThemeStyle.followSystemAppearance {
+					selectedValue = "com.owncloud.system"
+				}
 			}
 
 			for style in availableStyles {
@@ -75,6 +79,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 			styleSelectorSection.add(radioGroupWithArrayOfLabelValueDictionaries: themeIdentifiersByName, radioAction: { [weak themeRow] (row, _) in
 				if let styleIdentifier = row.value as? String, styleIdentifier == "com.owncloud.system" {
 					ThemeStyle.followSystemAppearance = true
+					themeRow?.cell?.detailTextLabel?.text = "System".localized
 				} else if let styleIdentifier = row.value as? String,
 					let style = ThemeStyle.forIdentifier(styleIdentifier), ThemeStyle.preferredStyle != style {
 						ThemeStyle.followSystemAppearance = false
@@ -82,7 +87,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 
 					themeRow?.cell?.detailTextLabel?.text = ThemeStyle.displayName
 				}
-				}, groupIdentifier: "theme-id", selectedValue: ThemeStyle.preferredStyle.identifier)
+				}, groupIdentifier: "theme-id", selectedValue: selectedValue)
 		}
 		styleSelectorViewController.addSection(styleSelectorSection, animated: true)
 
