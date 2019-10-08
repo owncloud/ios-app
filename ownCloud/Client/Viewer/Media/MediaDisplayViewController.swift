@@ -31,11 +31,16 @@ class MediaDisplayViewController : DisplayViewController {
 	deinit {
 		playerStatusObservation?.invalidate()
 		playerItemStatusObservation?.invalidate()
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.requiresLocalItemCopy = !(OCAppIdentity.shared.userDefaults?.streamingEnabled ?? false)
+
+		NotificationCenter.default.addObserver(self, selector: #selector(handleDidEnterBackgroundNotification), name: UIApplication.didEnterBackgroundNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(handleWillEnterForegroundNotification), name: UIApplication.willEnterForegroundNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(handleAVPlayerItem(notification:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -87,6 +92,10 @@ class MediaDisplayViewController : DisplayViewController {
 
 				playerStatusObservation = player!.observe(\AVPlayer.status, options: [.initial, .new], changeHandler: { [weak self] (player, _) in
 					if player.status == .readyToPlay {
+
+						try? AVAudioSession.sharedInstance().setCategory(.playback)
+						try? AVAudioSession.sharedInstance().setActive(true)
+
 						self?.player?.play()
 					} else if player.status == .failed {
 						self?.present(error: self?.player?.error)
@@ -111,6 +120,18 @@ class MediaDisplayViewController : DisplayViewController {
 
 			self?.parent?.present(alert, animated: true)
 		}
+	}
+
+	@objc private func handleDidEnterBackgroundNotification() {
+		playerViewController?.player = nil
+	}
+
+	@objc private func handleWillEnterForegroundNotification() {
+		playerViewController?.player = player
+	}
+
+	@objc private func handleAVPlayerItem(notification:Notification) {
+		try? AVAudioSession.sharedInstance().setActive(false)
 	}
 }
 
