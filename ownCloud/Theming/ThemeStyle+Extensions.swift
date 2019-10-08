@@ -111,7 +111,7 @@ extension ThemeStyle {
 						applyStyle = style
 					}
 				} else {
-					if ThemeStyle.preferredStyle.themeStyle == .dark, let style = ThemeStyle.availableStyles(for: [.light, .contrast])?.first {
+					if ThemeStyle.preferredStyle.themeStyle == .dark, let style = ThemeStyle.availableStyles(for: [.contrast])?.first {
 						ThemeStyle.preferredStyle = style
 						applyStyle = style
 					}

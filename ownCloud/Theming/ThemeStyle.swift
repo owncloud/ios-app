@@ -30,8 +30,6 @@ class ThemeStyle : NSObject {
 
 	var customizedColorsByPath : [String:String]?
 
-	static let themeStyleChangedNotificationName = NSNotification.Name("settings.theme-style-changed")
-
 	init(identifier idtfr: String, darkStyleIdentifier darkIdentifier: String? = nil, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customizedColorsByPath customizations: [String:String]? = nil) {
 		self.identifier = idtfr
 		self.darkStyleIdentifier = darkIdentifier

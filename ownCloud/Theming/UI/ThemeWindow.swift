@@ -25,7 +25,6 @@ class ThemeWindow : UIWindow {
 		if #available(iOS 13.0, *) {
 			if self.traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
 				ThemeStyle.considerAppearanceUpdate()
-				NotificationCenter.default.post(name: ThemeStyle.themeStyleChangedNotificationName, object: nil)
 			}
 		}
 	}

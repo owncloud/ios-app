@@ -186,8 +186,7 @@
 "Light" = "Light";
 "Classic" = "Classic";
 "System" = "System";
-"System light / dark appearance" = "System light / dark appearance";
-"Follow system appearance" = "Follow system appearance";
+"System Appeareance" = "System Appeareance";
 
 /* Log settings */
 "Log Files" = "Log Files";
