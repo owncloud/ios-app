@@ -118,7 +118,7 @@ class UserInterfaceSettingsSection: SettingsSection {
 
 			styleSelectorSection.add(radioGroupWithArrayOfLabelValueDictionaries: themeIdentifiersByName, radioAction: { [weak themeRow] (row, _) in
 				if let styleIdentifier = row.value as? String,
-					let style = ThemeStyle.forIdentifier(styleIdentifier) {
+					let style = ThemeStyle.forIdentifier(styleIdentifier), ThemeStyle.preferredStyle != style {
 					ThemeStyle.preferredStyle = style
 
 					themeRow?.cell?.detailTextLabel?.text = ThemeStyle.displayName

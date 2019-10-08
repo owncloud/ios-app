@@ -135,7 +135,6 @@ extension ThemeStyle {
 			} else {
 				Theme.shared.activeCollection = themeCollection
 			}
-			NotificationCenter.default.post(name: ThemeStyle.themeStyleChangedNotificationName, object: nil)
 		}
 	}
 
