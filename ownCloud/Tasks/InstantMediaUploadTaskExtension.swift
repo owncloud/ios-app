@@ -117,9 +117,9 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		}
 
 		// Add assets which weren't yet uploaded
-		if let bookmark = core?.bookmark, let assetIds = MediaUploadQueue.pendingAssetLocalIdentifiers(for: bookmark) {
-			let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: assetIds, options: nil)
-			fetchResult.enumerateObjects({ (asset, _, _) in
+		if let bookmark = core?.bookmark {
+			let pendingAssets = MediaUploadQueue.pendingAssets(for: bookmark)
+			pendingAssets?.forEach({(asset) in
 				assets.insert(asset)
 			})
 		}
@@ -204,10 +204,6 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		}
 
 		return nil
-	}
-
-	private func fetchAssets(for identifiers:[String]) {
-
 	}
 
 	private func showFeatureDisabledAlert() {
