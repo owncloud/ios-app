@@ -564,6 +564,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			self?.cell?.textLabel?.textColor = textColor
 			self?.cell?.imageView?.tintColor = (imageTintColorKey != nil) ? themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey!) as? UIColor : textColor
 			self?.cell?.accessoryView?.tintColor = textColor
+			self?.cell?.tintColor = themeCollection.tintColor
 
 			if selectedTextColor != nil {
 
