@@ -59,10 +59,9 @@ class SharingTableViewController : StaticTableViewController {
 	func addHeaderView() {
 		guard let core = core else { return }
 
-		let headerView = MoreViewHeader(for: item, with: core, favorite: false)
+		let headerView = MoreViewHeader(for: item, with: core, favorite: false, adaptBackgroundColor: true)
 		self.tableView.tableHeaderView = headerView
 		self.tableView.layoutTableHeaderView()
-		self.tableView.tableHeaderView?.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

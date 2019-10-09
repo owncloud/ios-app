@@ -223,7 +223,6 @@ class StaticTableViewController: UITableViewController, Themeable {
 
 	// MARK: - Theme support
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.tableView.backgroundColor = collection.tableGroupBackgroundColor
-		self.tableView.separatorColor = collection.tableSeparatorColor
+		self.tableView.applyThemeCollection(collection)
 	}
 }

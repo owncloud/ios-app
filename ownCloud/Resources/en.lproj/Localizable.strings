@@ -185,6 +185,8 @@
 "Dark" = "Dark";
 "Light" = "Light";
 "Classic" = "Classic";
+"System" = "System";
+"System Appeareance" = "System Appeareance";
 
 /* Log settings */
 "Log Files" = "Log Files";
@@ -306,6 +308,8 @@
 
 /* Sharing */
 "Searching Shares…" = "Searching Shares…";
+"Searching" = "Searching";
+"Search results will be loaded" = "Search results will be loaded";
 "Recipient" = "Recipient";
 "Recipients" = "Recipients";
 "Public Link" = "Public Link";

@@ -141,7 +141,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					} else {
 						if let shareError = error {
 							OnMainThread {
-								let alertController = UIAlertController(with: "Setting name failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+								let alertController = ThemedAlertController(with: "Setting name failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 								self.present(alertController, animated: true)
 							}
 						}
@@ -218,7 +218,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 								} else {
 									if let shareError = error {
 										OnMainThread {
-											let alertController = UIAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+											let alertController = ThemedAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 											self.present(alertController, animated: true)
 										}
 									}
@@ -229,7 +229,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							row.section?.setSelected(self.currentPermissionIndex, groupIdentifier: "permission-group")
 							let permissionName = Array(values[selectedValueFromSection])[0].key
 
-							let alertController = UIAlertController(with: "Cannot change permission".localized, message: String(format: "Before you can set the permission\n%@,\n you must enter a password.".localized, permissionName), okLabel: "OK".localized, action: nil)
+							let alertController = ThemedAlertController(with: "Cannot change permission".localized, message: String(format: "Before you can set the permission\n%@,\n you must enter a password.".localized, permissionName), okLabel: "OK".localized, action: nil)
 							self.present(alertController, animated: true)
 						}
 					}
@@ -314,7 +314,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							} else {
 								if let shareError = error {
 									OnMainThread {
-										let alertController = UIAlertController(with: "Deleting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Deleting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
@@ -351,7 +351,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 						} else {
 							if let shareError = error {
 								OnMainThread {
-									let alertController = UIAlertController(with: "Setting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+									let alertController = ThemedAlertController(with: "Setting password failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 									self.present(alertController, animated: true)
 								}
 							}
@@ -428,7 +428,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							} else {
 								if let shareError = error {
 									OnMainThread {
-										let alertController = UIAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
@@ -496,7 +496,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 							} else {
 								if let shareError = error {
 									OnMainThread {
-										let alertController = UIAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Setting expiration date failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
@@ -564,7 +564,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 								self.navigationController?.popViewController(animated: true)
 							} else {
 								if let shareError = error {
-									let alertController = UIAlertController(with: "Deleting Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+									let alertController = ThemedAlertController(with: "Deleting Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 									self.present(alertController, animated: true)
 								}
 							}
@@ -654,7 +654,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				} else {
 					if let shareError = error {
 						OnMainThread {
-							let alertController = UIAlertController(with: "Creating public link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+							let alertController = ThemedAlertController(with: "Creating public link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 							self.present(alertController, animated: true)
 						}
 					}

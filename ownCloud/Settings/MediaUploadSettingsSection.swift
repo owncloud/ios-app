@@ -252,7 +252,7 @@ class MediaUploadSettingsSection: SettingsSection {
 																	} else {
 																		self.userDefaults.resetInstantUploadConfiguration()
 																		OnMainThread {
-																			let alertController = UIAlertController(with: "Instant upload disabled".localized,
+																			let alertController = ThemedAlertController(with: "Instant upload disabled".localized,
 																													message: "Instant upload of media was disabled since configured account / folder was not found".localized)
 																			self.viewController?.present(alertController, animated: true, completion: nil)
 																		}
@@ -321,11 +321,11 @@ class MediaUploadSettingsSection: SettingsSection {
 				self?.userDefaults.instantUploadPath = nil
 
 				// Proceed with upload path selection
-				self?.selectUploadPath(for: selectedBookmark, pushIn: navigationController, completion: { [weak navigationController] (success) in
+				self?.selectUploadPath(for: selectedBookmark, pushIn: navigationController, completion: { (success) in
 					if !success && self?.userDefaults.instantUploadPath == nil {
 						self?.userDefaults.resetInstantUploadConfiguration()
 					}
-					navigationController?.dismiss(animated: true, completion: nil)
+					navigationController.dismiss(animated: true, completion: nil)
 					self?.postSettingsChangedNotification()
 					self?.updateDynamicUI()
 				})

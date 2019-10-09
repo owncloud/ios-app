@@ -52,6 +52,14 @@ enum ThemeItemState {
 	}
 }
 
+protocol ThemeableSectionHeader : class {
+	var sectionHeaderColor : UIColor? { get set }
+}
+
+protocol ThemeableSectionFooter : class {
+	var sectionFooterColor : UIColor? { get set }
+}
+
 extension NSObject {
 	func applyThemeCollection(_ collection: ThemeCollection, itemStyle: ThemeItemStyle = .defaultForItem, itemState: ThemeItemState = .normal) {
 		if let themeButton = self as? ThemeButton {
@@ -78,7 +86,7 @@ extension NSObject {
 
 		if let navigationController = self as? UINavigationController {
 			navigationController.navigationBar.applyThemeCollection(collection, itemStyle: itemStyle)
-			//navigationController.view.backgroundColor = collection.tableBackgroundColor
+			navigationController.view.backgroundColor = collection.tableBackgroundColor
 		}
 
 		if let navigationBar = self as? UINavigationBar {
@@ -88,6 +96,13 @@ extension NSObject {
 			navigationBar.titleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
 			navigationBar.largeTitleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
 			navigationBar.isTranslucent = false
+			if #available(iOS 13, *) {
+				let navigationBarAppearance = collection.navigationBarAppearance
+
+				navigationBar.standardAppearance = navigationBarAppearance
+				navigationBar.compactAppearance = navigationBarAppearance
+				navigationBar.scrollEdgeAppearance = navigationBarAppearance
+			}
 		}
 
 		if let toolbar = self as? UIToolbar {
@@ -101,8 +116,16 @@ extension NSObject {
 		}
 
 		if let tableView = self as? UITableView {
-			tableView.backgroundColor = collection.tableBackgroundColor
+			tableView.backgroundColor = tableView.style == .grouped ? collection.tableGroupBackgroundColor : collection.tableBackgroundColor
 			tableView.separatorColor = collection.tableSeparatorColor
+
+			if let themeableSectionHeaderTableView = tableView as? ThemeableSectionHeader {
+				themeableSectionHeaderTableView.sectionHeaderColor = collection.tableSectionHeaderColor
+			}
+
+			if let themeableSectionFooterTableView = tableView as? ThemeableSectionFooter {
+				themeableSectionFooterTableView.sectionFooterColor = collection.tableSectionFooterColor
+			}
 		}
 
 		if let collectionView = self as? UICollectionView {
@@ -114,6 +137,11 @@ extension NSObject {
 
 			searchBar.tintColor = collection.tintColor
 			searchBar.barStyle = collection.barStyle
+
+			if #available(iOS 13, *) {
+				// Ensure search bar icon color is correct
+				searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+			}
 		}
 
 		if let label = self as? UILabel {
@@ -164,6 +192,7 @@ extension NSObject {
 
 		if let cell = self as? UITableViewCell {
 			cell.backgroundColor = collection.tableRowColors.backgroundColor
+			cell.tintColor = collection.tintColor
 
 			if cell.selectionStyle != .none {
 				if collection.tableRowHighlightColors.backgroundColor != nil {
@@ -176,6 +205,10 @@ extension NSObject {
 					cell.selectedBackgroundView = nil
 				}
 			}
+
+			if #available(iOS 13, *) {
+				cell.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
+			}
 		}
 
 		if let progressView = self as? UIProgressView {
@@ -185,6 +218,50 @@ extension NSObject {
 
 		if let segmentedControl = self as? UISegmentedControl {
 			segmentedControl.tintColor = collection.navigationBarColors.tintColor
+			if #available(iOS 13, *) {
+				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.navigationBarColors.labelColor], for: .normal)
+				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.tintColor], for: .selected)
+			}
+		}
+
+		if let visualEffectView = self as? UIVisualEffectView {
+			if #available(iOS 13, *) {
+				visualEffectView.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+			}
+		}
+	}
+}
+
+extension UITableViewController : ThemeableSectionHeader, ThemeableSectionFooter {
+	var sectionHeaderColor: UIColor? {
+		get {
+			return self.value(forAnnotatedProperty: "sectionHeaderColor") as? UIColor
+		}
+
+		set {
+			self.setValue(newValue, forAnnotatedProperty: "sectionHeaderColor")
+		}
+	}
+
+	var sectionFooterColor: UIColor? {
+		get {
+			return self.value(forAnnotatedProperty: "sectionFooterColor") as? UIColor
+		}
+
+		set {
+			self.setValue(newValue, forAnnotatedProperty: "sectionFooterColor")
+		}
+	}
+
+	func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+		if let label = view as? UILabel, let sectionHeaderColor = sectionHeaderColor {
+			label.textColor = sectionHeaderColor
+		}
+	}
+
+	func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+		if let label = view as? UILabel, let sectionFooterColor = sectionFooterColor {
+			label.textColor = sectionFooterColor
 		}
 	}
 }

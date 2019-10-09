@@ -114,7 +114,7 @@ class MediaDisplayViewController : DisplayViewController {
 		guard let error = error else { return }
 
 		OnMainThread { [weak self] in
-			let alert = UIAlertController(with: "Error".localized, message: error.localizedDescription, okLabel: "OK".localized, action: {
+			let alert = ThemedAlertController(with: "Error".localized, message: error.localizedDescription, okLabel: "OK".localized, action: {
 				self?.navigationController?.popViewController(animated: true)
 			})
 

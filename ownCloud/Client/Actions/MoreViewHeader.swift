@@ -25,17 +25,19 @@ class MoreViewHeader: UIView {
 	private var titleLabel: UILabel
 	private var detailLabel: UILabel
 	private var favoriteButton: UIButton
+	private var showsIcon : Bool = true
 
 	var thumbnailSize = CGSize(width: 60, height: 60)
 	let favoriteSize = CGSize(width: 24, height: 24)
 
 	var showFavoriteButton: Bool
+	var adaptBackgroundColor : Bool
 
 	var item: OCItem
 	weak var core: OCCore?
 	var url: URL?
 
-	init(for item: OCItem, with core: OCCore, favorite: Bool = true) {
+	init(for item: OCItem, with core: OCCore, favorite: Bool = true, adaptBackgroundColor: Bool = false) {
 		self.item = item
 		self.core = core
 		self.showFavoriteButton = favorite
@@ -45,6 +47,7 @@ class MoreViewHeader: UIView {
 		detailLabel = UILabel()
 		labelContainerView = UIView()
 		favoriteButton = UIButton()
+		self.adaptBackgroundColor = adaptBackgroundColor
 
 		super.init(frame: .zero)
 
@@ -57,6 +60,7 @@ class MoreViewHeader: UIView {
 
 	init(url : URL) {
 		self.showFavoriteButton = false
+		self.adaptBackgroundColor = false
 		self.item = OCItem()
 		self.url = url
 
@@ -89,8 +93,6 @@ class MoreViewHeader: UIView {
 
 		titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
 		detailLabel.font = UIFont.systemFont(ofSize: 14)
-
-		detailLabel.textColor = UIColor.gray
 
 		labelContainerView.addSubview(titleLabel)
 		labelContainerView.addSubview(detailLabel)
@@ -188,6 +190,7 @@ class MoreViewHeader: UIView {
 						image != nil,
 						self.item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
 						OnMainThread {
+							self.showsIcon = false
 							self.iconView.image = image
 						}
 					}
@@ -234,7 +237,15 @@ class MoreViewHeader: UIView {
 
 extension MoreViewHeader: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.titleLabel.applyThemeCollection(collection)
-		self.detailLabel.applyThemeCollection(collection)
+		titleLabel.applyThemeCollection(collection)
+		detailLabel.applyThemeCollection(collection, itemStyle: .message)
+
+		if adaptBackgroundColor {
+			backgroundColor = collection.tableBackgroundColor
+		}
+
+		if showsIcon {
+			iconView.image = item.icon(fitInSize: CGSize(width: thumbnailSize.width, height: thumbnailSize.height))
+		}
 	}
 }

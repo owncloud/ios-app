@@ -200,7 +200,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 	private func showFeatureDisabledAlert() {
 		OnMainThread {
-			let alertController = UIAlertController(with: "Instant upload disabled".localized,
+			let alertController = ThemedAlertController(with: "Instant upload disabled".localized,
 																	message: "Instant upload of media was disabled since configured account / folder was not found".localized)
 			UIApplication.shared.delegate?.window??.rootViewController?.present(alertController, animated: true, completion: nil)
 		}
