@@ -93,6 +93,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.navigationItem.title = OCAppIdentity.shared.appName
 
 		NotificationCenter.default.addObserver(self, selector: #selector(considerAutoLogin), name: UIApplication.didBecomeActiveNotification, object: nil)
+
+		let releaseNotesController = ReleaseNotesTableViewController(style: .plain)
+		releaseNotesController.modalPresentationStyle = .formSheet
+		self.present(releaseNotesController, animated: true, completion: nil)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {

@@ -56,6 +56,7 @@
 		39AFC3D8225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AFC3D7225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift */; };
 		39B289A8226F1EE000BE0E11 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B289A7226F1EE000BE0E11 /* MessageView.swift */; };
 		39B9675022BE0FBA0074DB22 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
+		39C0CA32234DE30900C4A425 /* ReleaseNotesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C0CA31234DE30900C4A425 /* ReleaseNotesTableViewController.swift */; };
 		39CC8AE6228C12100020253B /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8AE5228C12100020253B /* Array+Extension.swift */; };
 		39CC8B01228C8A950020253B /* MediaUploadSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8B00228C8A950020253B /* MediaUploadSettingsSection.swift */; };
 		39CC8B37228D5B890020253B /* ShareClientItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8B36228D5B890020253B /* ShareClientItemCell.swift */; };
@@ -633,6 +634,7 @@
 		39AFC3D0225E72FB00A6D3AE /* GroupSharingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSharingTableViewController.swift; sourceTree = "<group>"; };
 		39AFC3D7225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSharingEditTableViewController.swift; sourceTree = "<group>"; };
 		39B289A7226F1EE000BE0E11 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		39C0CA31234DE30900C4A425 /* ReleaseNotesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReleaseNotesTableViewController.swift; sourceTree = "<group>"; };
 		39CC8AE5228C12100020253B /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
 		39CC8B00228C8A950020253B /* MediaUploadSettingsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaUploadSettingsSection.swift; sourceTree = "<group>"; };
 		39CC8B36228D5B890020253B /* ShareClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareClientItemCell.swift; sourceTree = "<group>"; };
@@ -1055,6 +1057,7 @@
 				DC27A19B20CAB5D7008ACB6C /* FileProvider Integration */,
 				DC85573120513C7500189B9A /* Resources */,
 				DC0B37952051541C00189B9A /* ownCloud.entitlements */,
+				39C0CA31234DE30900C4A425 /* ReleaseNotesTableViewController.swift */,
 			);
 			path = ownCloud;
 			sourceTree = "<group>";
@@ -2533,6 +2536,7 @@
 				DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */,
 				DC297965226E4D1100E01BC7 /* PushTransitionDelegate.swift in Sources */,
 				396BE4C32288A84C00B254A9 /* PendingSharesTableViewController.swift in Sources */,
+				39C0CA32234DE30900C4A425 /* ReleaseNotesTableViewController.swift in Sources */,
 				233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */,
 				DCF4F18B2052BA4C00189B9A /* Log.swift in Sources */,
 				DC8549382183B4CD00782BA8 /* ThemeStyle+Extensions.swift in Sources */,
