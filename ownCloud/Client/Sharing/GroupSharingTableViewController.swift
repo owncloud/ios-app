@@ -92,6 +92,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			recipientSearchController = core?.recipientSearchController(for: item)
 			recipientSearchController?.delegate = self
 			recipientSearchController?.minimumSearchTermLength = core?.connection.capabilities?.sharingSearchMinLength?.uintValue ?? OCCapabilities.defaultSharingSearchMinLength.magnitude
+			showActivityIndicator = true
 		}
 
 		messageView = MessageView(add: self.view)
@@ -363,10 +364,17 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 	func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
 		self.resetTable(showShares: true)
 		self.messageView?.message(show: false)
+
+		if let headerView = self.tableView.tableHeaderView as? MoreViewHeader {
+			headerView.activityIndicator.stopAnimating()
+		}
 	}
 
 	func searchControllerHasNewResults(_ searchController: OCRecipientSearchController, error: Error?) {
 		OnMainThread {
+			if let headerView = self.tableView.tableHeaderView as? MoreViewHeader {
+				headerView.activityIndicator.stopAnimating()
+			}
 			guard let recipients = searchController.recipients, let core = self.core else {
 				self.messageView?.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There are no results for this search term".localized)
 				return
@@ -430,7 +438,10 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 	func searchController(_ searchController: OCRecipientSearchController, isWaitingForResults isSearching: Bool) {
 		OnMainThread {
 			if isSearching {
-				self.messageView?.message(show: true, imageName: "icon-search", title: "Searching".localized, message: "Search results will be loaded".localized)
+
+				if let headerView = self.tableView.tableHeaderView as? MoreViewHeader {
+					headerView.activityIndicator.startAnimating()
+				}
 			}
 		}
 	}

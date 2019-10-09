@@ -139,6 +139,7 @@ extension NSObject {
 			searchBar.barStyle = collection.barStyle
 
 			if #available(iOS 13, *) {
+				searchBar.searchTextField.textColor = collection.navigationBarColors.labelColor
 				// Ensure search bar icon color is correct
 				searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
 			}

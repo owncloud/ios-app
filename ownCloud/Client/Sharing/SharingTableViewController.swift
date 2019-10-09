@@ -27,6 +27,7 @@ class SharingTableViewController : StaticTableViewController {
 
 	var shareQuery : OCShareQuery?
 	var shares : [OCShare] = []
+	var showActivityIndicator : Bool = false
 
 	var messageView : MessageView?
 
@@ -59,7 +60,7 @@ class SharingTableViewController : StaticTableViewController {
 	func addHeaderView() {
 		guard let core = core else { return }
 
-		let headerView = MoreViewHeader(for: item, with: core, favorite: false, adaptBackgroundColor: true)
+		let headerView = MoreViewHeader(for: item, with: core, favorite: false, adaptBackgroundColor: true, showActivityIndicator: showActivityIndicator)
 		self.tableView.tableHeaderView = headerView
 		self.tableView.layoutTableHeaderView()
 	}
