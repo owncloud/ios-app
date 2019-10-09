@@ -67,7 +67,7 @@ class MediaUploadQueue {
 			var uploadFailed = false
 
 			// Add pending assets
-			MediaUploadQueue.addPending(assets, for: weakCore!.bookmark)
+			MediaUploadQueue.addPending(assets, for: weakCore!.bookmark, at: rootItem)
 
 			for asset in assets {
 				if uploadFailed == false {
@@ -115,39 +115,41 @@ class MediaUploadQueue {
 		}
 	}
 
-	class func addPending(_ assets:[PHAsset], for bookmark:OCBookmark) {
+	class func addPending(_ assets:[PHAsset], for bookmark:OCBookmark, at rootItem:OCItem) {
 		let vault : OCVault = OCVault(bookmark: bookmark)
 		let assetIds : [String] = assets.map({ $0.localIdentifier })
 
-		var identifiers = vault.keyValueStore?.readObject(forKey: MediaUploadQueue.PendingAssetsKey) as? Set<String>
-		if identifiers == nil {
-			identifiers = Set<String>()
+		var uploads = vault.keyValueStore?.readObject(forKey: MediaUploadQueue.PendingAssetsKey) as? [String : String]
+		if uploads == nil {
+			uploads = [String : String]()
 		}
 		assetIds.forEach { (assetLocalId) in
-			identifiers!.insert(assetLocalId)
+			uploads![assetLocalId] = rootItem.path
 		}
-		vault.keyValueStore?.storeObject(identifiers! as NSSet, forKey: MediaUploadQueue.PendingAssetsKey)
+		vault.keyValueStore?.storeObject(uploads! as NSDictionary, forKey: MediaUploadQueue.PendingAssetsKey)
 	}
 
 	class func removePending(asset identifier:String, for bookmark:OCBookmark) {
 		let vault : OCVault = OCVault(bookmark: bookmark)
-		var identifiers = vault.keyValueStore?.readObject(forKey: MediaUploadQueue.PendingAssetsKey) as? Set<String>
-		if identifiers != nil {
-			identifiers?.remove(identifier)
-			vault.keyValueStore?.storeObject(identifiers! as NSSet, forKey: MediaUploadQueue.PendingAssetsKey)
+		var uploads = vault.keyValueStore?.readObject(forKey: MediaUploadQueue.PendingAssetsKey) as? [String : String]
+		if uploads != nil {
+			uploads?.removeValue(forKey: identifier)
+			vault.keyValueStore?.storeObject(uploads! as NSDictionary, forKey: MediaUploadQueue.PendingAssetsKey)
 		}
 	}
 
-	class func pendingAssets(for bookmark:OCBookmark) -> [PHAsset]? {
+	class func pendingAssetUploads(for bookmark:OCBookmark) -> [PHAsset : String]? {
 		let vault : OCVault = OCVault(bookmark: bookmark)
-		if let assetIds = vault.keyValueStore?.readObject(forKey: MediaUploadQueue.PendingAssetsKey) as? Set<String> {
+		if let uploads = vault.keyValueStore?.readObject(forKey: MediaUploadQueue.PendingAssetsKey) as? [String : String] {
+			let assetIds = uploads.keys
 			let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: Array(assetIds), options: nil)
 			if fetchResult.count > 0 {
-				var assets = [PHAsset]()
+				var assetUploads = [PHAsset : String]()
 				fetchResult.enumerateObjects({ (asset, _, _) in
-					assets.append(asset)
+					let path = uploads[asset.localIdentifier]
+					assetUploads[asset] = path
 				})
-				return assets
+				return assetUploads
 			}
 		}
 		return nil

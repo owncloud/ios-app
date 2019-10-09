@@ -58,7 +58,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 								if isInitial {
 									if error != nil {
-										Log.error("Error \(String(describing: error))")
+										Log.error(tagged: ["INSTANT_MEDIA_UPLOAD"], "Error tracking upload path: \(String(describing: error))")
 									}
 
 									if item != nil {
@@ -66,23 +66,24 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 											finalize()
 										})
 									} else {
-										Log.warning("Instant upload directory not found")
+										Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant upload directory not found")
 										userDefaults.resetInstantUploadConfiguration()
 										finalize()
 										self.showFeatureDisabledAlert()
 									}
 								} else {
 									self.uploadDirectoryTracking = nil
+									finalize()
 								}
 							})
 						} else {
-							Log.error("Fetching bookmark update failed with \(String(describing: fetchError))")
+							Log.error(tagged: ["INSTANT_MEDIA_UPLOAD"], "Fetching bookmark update failed with \(String(describing: fetchError))")
 							finalize()
 						}
 					})
 				} else {
 					if coreError != nil {
-						Log.error("No core returned with error \(String(describing: coreError))")
+						Log.error(tagged: ["INSTANT_MEDIA_UPLOAD"], "No core returned with error \(String(describing: coreError))")
 						self.result = .failure(coreError!)
 					}
 					self.completed()
@@ -116,14 +117,6 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 			}
 		}
 
-		// Add assets which weren't yet uploaded
-		if let bookmark = core?.bookmark {
-			let pendingAssets = MediaUploadQueue.pendingAssets(for: bookmark)
-			pendingAssets?.forEach({(asset) in
-				assets.insert(asset)
-			})
-		}
-
 		// Perform actual upload operation
 		if assets.count > 0 {
 			self.upload(assets: Array(assets), with: core, at: item, completion: { () in
@@ -143,7 +136,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
 		if assets.count > 0 {
-			Log.debug("Uploading \(assets.count) assets")
+			Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Uploading \(assets.count) assets")
 			MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
 				if let asset = asset {
 					switch asset.mediaType {
