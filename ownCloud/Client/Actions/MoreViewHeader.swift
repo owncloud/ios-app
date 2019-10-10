@@ -25,26 +25,33 @@ class MoreViewHeader: UIView {
 	private var titleLabel: UILabel
 	private var detailLabel: UILabel
 	private var favoriteButton: UIButton
+	var activityIndicator : UIActivityIndicatorView
+	private var showsIcon : Bool = true
 
 	var thumbnailSize = CGSize(width: 60, height: 60)
 	let favoriteSize = CGSize(width: 24, height: 24)
 
 	var showFavoriteButton: Bool
+	var showActivityIndicator: Bool
+	var adaptBackgroundColor : Bool
 
 	var item: OCItem
 	weak var core: OCCore?
 	var url: URL?
 
-	init(for item: OCItem, with core: OCCore, favorite: Bool = true) {
+	init(for item: OCItem, with core: OCCore, favorite: Bool = true, adaptBackgroundColor: Bool = false, showActivityIndicator: Bool = false) {
 		self.item = item
 		self.core = core
 		self.showFavoriteButton = favorite
+		self.showActivityIndicator = showActivityIndicator
 
 		iconView = UIImageView()
 		titleLabel = UILabel()
 		detailLabel = UILabel()
 		labelContainerView = UIView()
 		favoriteButton = UIButton()
+		activityIndicator = UIActivityIndicatorView(style: .white)
+		self.adaptBackgroundColor = adaptBackgroundColor
 
 		super.init(frame: .zero)
 
@@ -57,6 +64,8 @@ class MoreViewHeader: UIView {
 
 	init(url : URL) {
 		self.showFavoriteButton = false
+		self.showActivityIndicator = false
+		self.adaptBackgroundColor = false
 		self.item = OCItem()
 		self.url = url
 
@@ -65,6 +74,7 @@ class MoreViewHeader: UIView {
 		detailLabel = UILabel()
 		labelContainerView = UIView()
 		favoriteButton = UIButton()
+		activityIndicator = UIActivityIndicatorView(style: .white)
 
 		super.init(frame: .zero)
 
@@ -85,12 +95,11 @@ class MoreViewHeader: UIView {
 		iconView.translatesAutoresizingMaskIntoConstraints = false
 		labelContainerView.translatesAutoresizingMaskIntoConstraints = false
 		favoriteButton.translatesAutoresizingMaskIntoConstraints = false
+		activityIndicator.translatesAutoresizingMaskIntoConstraints = false
 		iconView.contentMode = .scaleAspectFit
 
 		titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
 		detailLabel.font = UIFont.systemFont(ofSize: 14)
-
-		detailLabel.textColor = UIColor.gray
 
 		labelContainerView.addSubview(titleLabel)
 		labelContainerView.addSubview(detailLabel)
@@ -138,6 +147,14 @@ class MoreViewHeader: UIView {
 				favoriteButton.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -15),
 				favoriteButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
 				favoriteButton.leftAnchor.constraint(equalTo: labelContainerView.rightAnchor, constant: 10)
+				])
+		} else if showActivityIndicator {
+			self.addSubview(activityIndicator)
+
+			NSLayoutConstraint.activate([
+				activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+				activityIndicator.rightAnchor.constraint(equalTo: self.safeAreaLayoutGuide.rightAnchor, constant: -15),
+				activityIndicator.leftAnchor.constraint(equalTo: labelContainerView.rightAnchor, constant: 10)
 				])
 		} else {
 			NSLayoutConstraint.activate([
@@ -188,6 +205,7 @@ class MoreViewHeader: UIView {
 						image != nil,
 						self.item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
 						OnMainThread {
+							self.showsIcon = false
 							self.iconView.image = image
 						}
 					}
@@ -234,7 +252,16 @@ class MoreViewHeader: UIView {
 
 extension MoreViewHeader: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.titleLabel.applyThemeCollection(collection)
-		self.detailLabel.applyThemeCollection(collection)
+		titleLabel.applyThemeCollection(collection)
+		detailLabel.applyThemeCollection(collection, itemStyle: .message)
+		activityIndicator.style = collection.activityIndicatorViewStyle
+
+		if adaptBackgroundColor {
+			backgroundColor = collection.tableBackgroundColor
+		}
+
+		if showsIcon {
+			iconView.image = item.icon(fitInSize: CGSize(width: thumbnailSize.width, height: thumbnailSize.height))
+		}
 	}
 }

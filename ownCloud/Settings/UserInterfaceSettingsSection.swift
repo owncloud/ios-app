@@ -30,21 +30,15 @@ class UserInterfaceSettingsSection: SettingsSection {
 		self.headerTitle = "User Interface".localized
 		self.identifier = "ui-section"
 
-		var themeStylesByName : [[String:String]] = []
-
-		for themeStyle in ThemeCollectionStyle.allCases {
-			themeStylesByName.append([themeStyle.name : themeStyle.rawValue])
-		}
-
 		themeRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 			self?.pushThemeStyleSelector()
-		}, title: "Theme".localized, value: ThemeStyle.preferredStyle.localizedName, accessoryType: .disclosureIndicator, identifier: "theme")
+			}, title: "Theme".localized, value: ThemeStyle.displayName, accessoryType: .disclosureIndicator, identifier: "theme")
 
 		self.add(row: themeRow!)
 
 		loggingRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 			self?.pushLogSettings()
-		}, title: "Logging".localized, value: OCLogger.logLevel.label, accessoryType: .disclosureIndicator, identifier: "logging")
+			}, title: "Logging".localized, value: OCLogger.logLevel.label, accessoryType: .disclosureIndicator, identifier: "logging")
 
 		loggingNotificationObserverToken = NotificationCenter.default.addObserver(forName: LogSettingsViewController.logLevelChangedNotificationName, object: nil, queue: OperationQueue.main) { [weak loggingRow] (_) in
 			loggingRow?.cell?.detailTextLabel?.text = OCLogger.logLevel.label
@@ -61,29 +55,41 @@ class UserInterfaceSettingsSection: SettingsSection {
 
 	func pushThemeStyleSelector() {
 		let styleSelectorViewController = StaticTableViewController(style: .grouped)
-		let styleSelectorSection = StaticTableViewSection(headerTitle: "Theme".localized)
-
 		styleSelectorViewController.navigationItem.title = "Theme".localized
+
+		if let styleSelectorSection = styleSelectorViewController.sectionForIdentifier("theme-style-selection") {
+			styleSelectorViewController.removeSection(styleSelectorSection, animated: true)
+		}
+		let styleSelectorSection = StaticTableViewSection(headerTitle: "Theme".localized, footerTitle: nil, identifier: "theme-style-selection")
 
 		if let availableStyles = ThemeStyle.availableStyles {
 			var themeIdentifiersByName : [[String:Any]] = []
+			var selectedValue = ThemeStyle.preferredStyle.identifier
+			if #available(iOS 13.0, *) {
+				themeIdentifiersByName = [["System Appeareance".localized : "com.owncloud.system"]]
+				if ThemeStyle.followSystemAppearance {
+					selectedValue = "com.owncloud.system"
+				}
+			}
 
 			for style in availableStyles {
 				themeIdentifiersByName.append([style.localizedName : style.identifier ])
 			}
 
 			styleSelectorSection.add(radioGroupWithArrayOfLabelValueDictionaries: themeIdentifiersByName, radioAction: { [weak themeRow] (row, _) in
-				if let styleIdentifier = row.value as? String,
-				   let style = ThemeStyle.forIdentifier(styleIdentifier) {
-					ThemeStyle.preferredStyle = style
-					Theme.shared.switchThemeCollection(ThemeCollection(with: style))
+				if let styleIdentifier = row.value as? String, styleIdentifier == "com.owncloud.system" {
+					ThemeStyle.followSystemAppearance = true
+					themeRow?.cell?.detailTextLabel?.text = "System".localized
+				} else if let styleIdentifier = row.value as? String,
+					let style = ThemeStyle.forIdentifier(styleIdentifier), ThemeStyle.preferredStyle != style {
+						ThemeStyle.followSystemAppearance = false
+						ThemeStyle.preferredStyle = style
 
-					themeRow?.cell?.detailTextLabel?.text = style.localizedName
+					themeRow?.cell?.detailTextLabel?.text = ThemeStyle.displayName
 				}
-			}, groupIdentifier: "theme-id", selectedValue: ThemeStyle.preferredStyle.identifier)
+				}, groupIdentifier: "theme-id", selectedValue: selectedValue)
 		}
-
-		styleSelectorViewController.addSection(styleSelectorSection)
+		styleSelectorViewController.addSection(styleSelectorSection, animated: true)
 
 		self.viewController?.navigationController?.pushViewController(styleSelectorViewController, animated: true)
 	}

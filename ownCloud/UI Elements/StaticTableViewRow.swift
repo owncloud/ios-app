@@ -116,7 +116,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		super.init()
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = .none, identifier : String? = nil, accessoryView: UIView? = nil) {
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, imageTintColorKey : String = "labelColor", alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = .none, identifier : String? = nil, accessoryView: UIView? = nil) {
 		self.init()
 		type = .row
 
@@ -145,7 +145,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
-			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.labelColor
+			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey) as? UIColor
 			self?.cell?.accessoryView?.tintColor = themeCollection.tableRowColors.labelColor
 			})
 
@@ -203,7 +203,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, image: UIImage? = nil, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, accessoryView: UIView?, identifier: String? = nil) {
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, image: UIImage? = nil, imageTintColorKey : String = "labelColor", accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, accessoryView: UIView?, identifier: String? = nil) {
 		self.init()
 		type = .row
 
@@ -240,7 +240,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
-			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.labelColor
+			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey) as? UIColor
 		})
 	}
 
@@ -405,6 +405,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			cellTextField.textColor = (self?.enabled == true) ? themeCollection.tableRowColors.labelColor : themeCollection.tableRowColors.secondaryLabelColor
 			cellTextField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : themeCollection.tableRowColors.secondaryLabelColor])
+			cellTextField.keyboardAppearance = themeCollection.keyboardAppearance
 		})
 
 		cellTextField.accessibilityLabel = accessibilityLabel
@@ -511,7 +512,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	// MARK: - Buttons
 
-	convenience init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = .proceed, image: UIImage? = nil, imageWidth : CGFloat? = nil, alignment: NSTextAlignment = .center, identifier : String? = nil, accessoryView: UIView? = nil) {
+	convenience init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = .proceed, image: UIImage? = nil, imageWidth : CGFloat? = nil, imageTintColorKey : String? = nil,  alignment: NSTextAlignment = .center, identifier : String? = nil, accessoryView: UIView? = nil) {
 		self.init()
 		type = .button
 
@@ -561,8 +562,9 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			}
 
 			self?.cell?.textLabel?.textColor = textColor
-			self?.cell?.imageView?.tintColor = textColor
+			self?.cell?.imageView?.tintColor = (imageTintColorKey != nil) ? themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey!) as? UIColor : textColor
 			self?.cell?.accessoryView?.tintColor = textColor
+			self?.cell?.tintColor = themeCollection.tintColor
 
 			if selectedTextColor != nil {
 
