@@ -232,7 +232,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 	}
 
 	@objc private func removeAllLogs() {
-		let alert = UIAlertController(with: "Delete all log files?".localized,
+		let alert = ThemedAlertController(with: "Delete all log files?".localized,
 									  message: "This action can't be undone.".localized,
 									  destructiveLabel: "Delete all".localized,
 									  preferredStyle: .alert,

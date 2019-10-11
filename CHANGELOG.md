@@ -1,5 +1,30 @@
 # ChangeLog
 
+## Release version 1.1.1 (October 2019)
+
+- Dark mode support (PR #489)
+- iOS 13 support (#502)
+- Background media playback fixed (PR #522)
+- Displaying long file name improved (#516)
+- Fixed naming of uploaded edited photos (#520)
+- Fixed crash in File Provider (#502)
+- UI fixes (#511, #502)
+
+## Release version 1.1.0 (September 2019)
+
+- Available Offline Support (#134, #135)
+- Background Sync Support (#386)
+- Background Image Upload (#116)
+- Import Files from Share Sheet (#76)
+- Added "Create Folder" Action in Directory Picker (#443)
+- Added Change Sort Order for all Sort Methods (#470)
+- Added Index Bar in File list (#413)
+- Image Gallery improvements (#322)
+- UI improvements for the Navigation Bar (#477)
+- Added Activity Indicator for deleting Local Copies (#393)
+- Sharing fixes (#439, #415)
+- Fixed min length for searching sharing users (#454)
+
 ## Release version 1.0.4 (August 2019)
 
 - Authentication improvements (PR #459)

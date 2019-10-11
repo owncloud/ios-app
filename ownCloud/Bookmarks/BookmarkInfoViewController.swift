@@ -47,7 +47,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 		// Compacting
 		let includeAvailableOfflineCopiesRow = StaticTableViewRow(switchWithAction: { [weak self] (row, _) in
 			if (row.value as? Bool) == true {
-				let alertController = UIAlertController(title: "Really include available offline files?".localized,
+				let alertController = ThemedAlertController(title: "Really include available offline files?".localized,
 									message: "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).".localized,
 									preferredStyle: .alert)
 
@@ -58,7 +58,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 
 				self?.present(alertController, animated: true, completion: nil)
 			}
-		}, title: "Include available offline files", value: false, identifier: "row-include-available-offline")
+		}, title: "Include available offline files".localized, value: false, identifier: "row-include-available-offline")
 
 		let deleteLocalFilesRow = StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
 			if let bookmark  = self?.bookmark {
@@ -88,7 +88,7 @@ class BookmarkInfoViewController: StaticTableViewController {
 							row.cell?.accessoryView = nil
 							if error != nil {
 								// Inform user if vault couldn't be comp acted
-								let alertController = UIAlertController(title: NSString(format: "Compacting of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+								let alertController = ThemedAlertController(title: NSString(format: "Compacting of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
 																		message: error?.localizedDescription,
 																		preferredStyle: .alert)
 

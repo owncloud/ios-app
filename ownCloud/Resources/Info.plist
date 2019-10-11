@@ -38,7 +38,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(APP_SHORT_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>145</string>
+	<string>143</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>

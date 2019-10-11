@@ -115,7 +115,7 @@ class UnshareAction : Action {
 			self.completed()
 		}
 
-		let alertController = UIAlertController(
+		let alertController = ThemedAlertController(
 			with: name,
 			message: message,
 			destructiveLabel: "Unshare".localized,
@@ -129,7 +129,7 @@ class UnshareAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreFolder {
 			return UIImage(named: "trash")
 		}
 

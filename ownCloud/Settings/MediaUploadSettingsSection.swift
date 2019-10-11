@@ -252,7 +252,7 @@ class MediaUploadSettingsSection: SettingsSection {
 																	} else {
 																		self.userDefaults.resetInstantUploadConfiguration()
 																		OnMainThread {
-																			let alertController = UIAlertController(with: "Instant upload disabled".localized,
+																			let alertController = ThemedAlertController(with: "Instant upload disabled".localized,
 																													message: "Instant upload of media was disabled since configured account / folder was not found".localized)
 																			self.viewController?.present(alertController, animated: true, completion: nil)
 																		}
@@ -345,7 +345,7 @@ class MediaUploadSettingsSection: SettingsSection {
 	private func selectUploadPath(for bookmark:OCBookmark, pushIn navigationController:UINavigationController, completion:@escaping (_ success:Bool) -> Void) {
 
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (_, _) in },
-										 completionHandler: { [weak self] (core, error) in
+										 completionHandler: { [weak self, weak navigationController] (core, error) in
 
 											if let core = core, error == nil {
 
@@ -358,7 +358,7 @@ class MediaUploadSettingsSection: SettingsSection {
 
 														completion(selectedDirectory != nil)
 													})
-													navigationController.pushViewController(directoryPickerViewController, animated: true)
+													navigationController?.pushViewController(directoryPickerViewController, animated: true)
 												}
 											}
 		})
