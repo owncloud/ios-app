@@ -74,6 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
 		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
+		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
 
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
 		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)

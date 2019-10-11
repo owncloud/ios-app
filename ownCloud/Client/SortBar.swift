@@ -259,7 +259,6 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 			tableViewController.tableView.contentInset = UIEdgeInsets(top: popoverArrowHeight, left: 0, bottom: 0, right: 0)
 			tableViewController.tableView.separatorInset = UIEdgeInsets()
 		}
-	}
 
 		let popoverPresentationController = tableViewController.popoverPresentationController
 		popoverPresentationController?.sourceView = sender

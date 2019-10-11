@@ -85,26 +85,6 @@ class MoreViewHeader: UIView {
 		render()
 	}
 
-	init(url : URL) {
-		self.showFavoriteButton = false
-		self.item = OCItem()
-		self.url = url
-
-		iconView = UIImageView()
-		titleLabel = UILabel()
-		detailLabel = UILabel()
-		labelContainerView = UIView()
-		favoriteButton = UIButton()
-
-		super.init(frame: .zero)
-
-		self.translatesAutoresizingMaskIntoConstraints = false
-
-		Theme.shared.register(client: self)
-
-		render()
-	}
-
 	deinit {
 		Theme.shared.unregister(client: self)
 	}

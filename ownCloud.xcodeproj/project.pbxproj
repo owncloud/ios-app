@@ -147,6 +147,9 @@
 		6EE97DCA2204703C0062CCBC /* BackgroundImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 6EE97DC42204703C0062CCBC /* BackgroundImage.png */; };
 		75AC0B4AD332C8CC785FE349 /* Pods_ownCloudTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */; };
 		A45A8D98137C902524B84E6D /* EarlGrey.framework in EarlGrey Copy Files */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		DC0030C12350B1CE00BB8570 /* NSData+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0030BF2350B1CE00BB8570 /* NSData+Encoding.m */; };
+		DC0030C22350B1CE00BB8570 /* NSData+Encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = DC0030C02350B1CE00BB8570 /* NSData+Encoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC0030CB2350B75000BB8570 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1AC7CF2319ADAE002B7892 /* ScanViewController.swift */; };
 		DC018F8320A0F56300135198 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC018F8220A0F56300135198 /* UIView+Extension.swift */; };
 		DC018F8C20A1060A00135198 /* ProgressHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC018F8B20A1060A00135198 /* ProgressHUDViewController.swift */; };
 		DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */; };
@@ -155,7 +158,6 @@
 		DC0B37972051681600189B9A /* ThemeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B37962051681600189B9A /* ThemeButton.swift */; };
 		DC136582208223F000FC0F60 /* OCBookmark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */; };
 		DC18898E218A773700CFB3F9 /* ownCloudMocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
-		DC1AC7D02319ADAE002B7892 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1AC7CF2319ADAE002B7892 /* ScanViewController.swift */; };
 		DC1B2707209CF0D3004715E1 /* IssuesDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B26FE209CF0D2004715E1 /* IssuesDismissalAnimator.swift */; };
 		DC1B2708209CF0D3004715E1 /* IssuesPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B26FF209CF0D2004715E1 /* IssuesPresentationAnimator.swift */; };
 		DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B2705209CF0D3004715E1 /* CertificateViewController.swift */; };
@@ -755,6 +757,8 @@
 		D0D9C062DD1E85A838608B0F /* EarlGrey.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EarlGrey.framework; path = Pods/EarlGrey/EarlGrey/EarlGrey.framework; sourceTree = SOURCE_ROOT; };
 		D6033BC23D1129172E6D6383 /* Pods-ownCloudTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.release.xcconfig"; sourceTree = "<group>"; };
 		D7F3B3E74D4B04F9CAF95C09 /* EarlGrey.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EarlGrey.swift; sourceTree = "<group>"; };
+		DC0030BF2350B1CE00BB8570 /* NSData+Encoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Encoding.m"; sourceTree = "<group>"; };
+		DC0030C02350B1CE00BB8570 /* NSData+Encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Encoding.h"; sourceTree = "<group>"; };
 		DC018F8220A0F56300135198 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		DC018F8B20A1060A00135198 /* ProgressHUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUDViewController.swift; sourceTree = "<group>"; };
 		DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
@@ -1351,6 +1355,15 @@
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
 		};
+		DC0030BE2350B1CE00BB8570 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				DC0030BF2350B1CE00BB8570 /* NSData+Encoding.m */,
+				DC0030C02350B1CE00BB8570 /* NSData+Encoding.h */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
 		DC1B26FD209CF0D2004715E1 /* Issues Animators */ = {
 			isa = PBXGroup;
 			children = (
@@ -1670,6 +1683,7 @@
 				DC774E5A22F44E2A000B11A1 /* Display Settings */,
 				DCC5E443232654C1002E5B84 /* Foundation Extensions */,
 				DC774E5422F44DF6000B11A1 /* SDK Extensions */,
+				DC0030BE2350B1CE00BB8570 /* Tools */,
 				DC774E5B22F44E4A000B11A1 /* ZIP Archive */,
 				DC774E6522F44EA7000B11A1 /* Resources */,
 			);
@@ -1765,15 +1779,6 @@
 				239F437D20D0EE6300B1276D /* icon-search.tvg */,
 			);
 			name = TVGs;
-			sourceTree = "<group>";
-		};
-		DCCE954B231D400F00B84077 /* Tools */ = {
-			isa = PBXGroup;
-			children = (
-				DCCE9552231D402F00B84077 /* NSData+Encoding.m */,
-				DCCE9551231D402F00B84077 /* NSData+Encoding.h */,
-			);
-			path = Tools;
 			sourceTree = "<group>";
 		};
 		DCE5E8B62080D8B8005F60CE /* SDK Extensions */ = {
@@ -1887,6 +1892,7 @@
 				DCC085802293F490008CC05C /* DisplaySettings.h in Headers */,
 				DC774E6322F44E6D000B11A1 /* OCCore+BundleImport.h in Headers */,
 				DCC0856E2293F1FD008CC05C /* ownCloudApp.h in Headers */,
+				DC0030C22350B1CE00BB8570 /* NSData+Encoding.h in Headers */,
 				DCC5E4472326564F002E5B84 /* NSObject+AnnotatedProperties.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2551,6 +2557,7 @@
 				4CB8ADE022DF5EC500F1FEBC /* UIAlertViewController+SystemPermissions.swift in Sources */,
 				396BE4CA2289500E00B254A9 /* RoundedLabel.swift in Sources */,
 				DC854936218331CF00782BA8 /* UserInterfaceSettingsSection.swift in Sources */,
+				DC0030CB2350B75000BB8570 /* ScanViewController.swift in Sources */,
 				4C464BF42187AF1500D30602 /* PDFSearchTableViewCell.swift in Sources */,
 				DC1B2709209CF0D3004715E1 /* CertificateViewController.swift in Sources */,
 				DC248C67213E7DB00067FE94 /* NSLayoutConstraint+Extension.swift in Sources */,
@@ -2734,6 +2741,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC774E6422F44E6D000B11A1 /* OCCore+BundleImport.m in Sources */,
+				DC0030C12350B1CE00BB8570 /* NSData+Encoding.m in Sources */,
 				DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */,
 				DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */,
 			);
