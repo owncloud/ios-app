@@ -122,31 +122,40 @@ extension OCItem {
 		return mimeTypeToIconMap
 	}()
 
-	static private let validIconNames : [String] = [
-		// List taken from https://github.com/owncloud/core/blob/master/core/js/mimetypelist.js
-		"application",
-		"application-pdf",
-		"audio",
-		"file",
-		"folder",
-		"folder-create",
-		"folder-drag-accept",
-		"folder-external",
-		"folder-public",
-		"folder-shared",
-		"folder-starred",
-		"image",
-		"package-x-generic",
-		"text",
-		"text-calendar",
-		"text-code",
-		"text-vcard",
-		"video",
-		"x-office-document",
-		"x-office-presentation",
-		"x-office-spreadsheet",
-		"icon-search"
-	]
+	static private var validIconNames : [String] = {
+		var names = [String]()
+		names.append(contentsOf: [
+			"application",
+			"file",
+			"folder",
+			"folder-create",
+			"folder-drag-accept",
+			"folder-external",
+			"folder-public",
+			"folder-shared",
+			"folder-starred",
+			"package-x-generic",
+			"icon-search",
+			"image",
+			"application-pdf"
+		])
+
+		if #available(iOS 13.0, *) {} else {
+			names.append(contentsOf: [
+				"text",
+				"text-calendar",
+				"text-code",
+				"text-vcard",
+				"video",
+				"audio",
+				"x-office-document",
+				"x-office-presentation",
+				"x-office-spreadsheet"
+			])
+		}
+
+		return names
+	}()
 
 	private static var _iconsRegistered : Bool = false
 	static func registerIcons() {
