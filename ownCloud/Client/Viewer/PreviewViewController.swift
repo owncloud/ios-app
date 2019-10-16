@@ -23,7 +23,7 @@ import QuickLook
 class PreviewViewController : DisplayViewController, QLPreviewControllerDataSource, QLPreviewControllerDelegate {
 
 	private var qlPreviewController: QLPreviewController?
-	var tapToHideBarsGestureRecognizer: UITapGestureRecognizer!
+	var showHideBarsTapGestureRecognizer: UITapGestureRecognizer!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -62,11 +62,11 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 
 			qlPreviewController?.view.isHidden = false
 
-			self.tapToHideBarsGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.tapToHideBars))
-			self.tapToHideBarsGestureRecognizer.delegate = self
-			self.tapToHideBarsGestureRecognizer.delaysTouchesBegan = true
+			self.showHideBarsTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showHideBars))
+			self.showHideBarsTapGestureRecognizer.delegate = self
+			self.showHideBarsTapGestureRecognizer.delaysTouchesBegan = true
 			self.qlPreviewController?.view.gestureRecognizers?.forEach({ $0.delegate = self })
-			self.qlPreviewController?.view?.addGestureRecognizer(self.tapToHideBarsGestureRecognizer)
+			self.qlPreviewController?.view?.addGestureRecognizer(self.showHideBarsTapGestureRecognizer)
 
 			completion(true)
 		} else {
@@ -74,7 +74,7 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 		}
 	}
 
-	@objc func tapToHideBars() {
+	@objc func showHideBars() {
 		guard let navigationController = navigationController else {
 			return
 		}
@@ -105,7 +105,7 @@ extension PreviewViewController: UIGestureRecognizerDelegate {
 						   shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
 		// Don't recognize a single tap until a double-tap fails.
 		if let otherTapGestureRecognizer = otherGestureRecognizer as? UITapGestureRecognizer {
-			if gestureRecognizer == self.tapToHideBarsGestureRecognizer && otherTapGestureRecognizer.numberOfTapsRequired == 2 {
+			if gestureRecognizer == self.showHideBarsTapGestureRecognizer && otherTapGestureRecognizer.numberOfTapsRequired == 2 {
 				return true
 			}
 		}
