@@ -49,6 +49,9 @@ extension UIImageView {
 				})
 			}
 
+			// Check if the theme has a pre-defined icon for the particular file type
+			let iconAvailable = OCItem.iconName(for: item.mimeType) != nil ? true :  false
+
 			weak var weakCore = core
 
 			if let thumbnail = item.thumbnail {
@@ -63,7 +66,7 @@ extension UIImageView {
 					if thumbnail == nil, #available(iOS 13, *) {
 						weakCore?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (_, url, _) in
 							if let url = url {
-								let thumbnailRequest = QLThumbnailGenerator.Request(fileAt: url, size: size, scale: UIScreen.main.scale, representationTypes: .all)
+								let thumbnailRequest = QLThumbnailGenerator.Request(fileAt: url, size: size, scale: UIScreen.main.scale, representationTypes: iconAvailable ? [.lowQualityThumbnail, .thumbnail] : .all)
 								QLThumbnailGenerator.shared.generateRepresentations(for: thumbnailRequest) { (representation, _, _) in
 									if let representation = representation {
 										self.cacheThumbnail(image: representation.uiImage, size:size, for: item, in: core)
