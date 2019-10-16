@@ -13,7 +13,10 @@ These are:
 * File list filter
 * File sort options
 * Thumbnails for supported images
-* File quota (displayed in the root folder)
+* File quota (only displayed in the root folder)
+* File actions
+* Folder actions
+* Select all/none
 
 image:21_File_list_annotated.png[Overview of the ownCloud iOS App's files view.]
 
@@ -52,7 +55,32 @@ To go back to the parent folder, tap btn:[Back] in the top left-hand corner.
 To navigate directly to *any* parent folder tap on the current folder's name.
 When you do, you will see the names of all the parent folders, right up to the root folder, as in the image below.
 
-image:21_File_list_parent.png[Navigating folders in ownCloud's iOS app.]
+image:21_File_list_parent.png[Navigating folders in ownCloud's iOS app]
+
+== Navigate Files
+
+When navigating files, as you would expect, you can scroll up and down the files and folders list.
+In addition, you can also use the index bar, highlighted in the screenshot below, to speed up traversing through files and folders.
+As you slide your finger over each letter, you’ll jump to the first file (or folder) that begins with that letter.
+
+image:index-bar-with-callout.png[Navigating files in ownCloud's iOS app]
+
+== Sort Files and Folders
+
+By default, files and folders are sorted by name in ascending order, with folders sorted before files.
+However, files can be sorted in ascending and descending order by name, type, size, date, and shared.
+If you press the Sort by menu, you can change sort method and order.
+The first time you change the sort category, files and folders are sorted using that category in ascending order.
+If you choose that category a second time, the sort order is inverted.
+
+[cols=","]
+|===
+|*Sorting files and folders in portrait mode*
+image:sort-files-portrait-mode.png[Sorting files and folders in portrait mode]
+|*Sorting files and folders in landscape mode*
+image:sort-files-landscape-mode.png[Sorting files and folders in landscape mode]
+|===
+
 
 == View Files
 

@@ -71,9 +71,9 @@ image:84_Settings_themes.png[84_Settings_themes.png]
 |Dark theme
 |Light theme
 
-a|image:themes-ownCloud-Classic.png[ownCloud iOS App - Classic theme]
-a|image:themes-ownCloud-Dark.png[ownCloud iOS App - Dark theme]
-a|image:themes-ownCloud-Light.png[ownCloud iOS App - Light theme]
+a|image:themes/classic.png[ownCloud iOS App - Classic theme]
+a|image:themes/dark.png[ownCloud iOS App - Dark theme]
+a|image:themes/light.png[ownCloud iOS App - Light theme]
 |===
 
 == Logging
