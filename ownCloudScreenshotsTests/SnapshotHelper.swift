@@ -176,7 +176,7 @@ open class Snapshot: NSObject {
             let window = app.windows.firstMatch
             let screenshot = window.screenshot()
             guard var simulator = ProcessInfo().environment["SIMULATOR_DEVICE_NAME"], let screenshotsDir = screenshotsDirectory else { return }
-            
+
             do {
                 // The simulator name contains "Clone X of " inside the screenshot file when running parallelized UI Tests on concurrent devices
                 let regex = try NSRegularExpression(pattern: "Clone [0-1]+ of ")
@@ -226,9 +226,11 @@ open class Snapshot: NSObject {
                 guard let simulatorHostHome = ProcessInfo().environment["SIMULATOR_HOST_HOME"] else {
                     throw SnapshotError.cannotFindSimulatorHomeDirectory
                 }
+
                 guard let homeDirUrl = URL(string: simulatorHostHome) else {
                     throw SnapshotError.cannotAccessSimulatorHomeDirectory(simulatorHostHome)
                 }
+
                 homeDir = URL(fileURLWithPath: homeDirUrl.path)
             #else
                 throw SnapshotError.cannotRunOnPhysicalDevice

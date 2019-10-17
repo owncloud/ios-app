@@ -1,5 +1,6 @@
 excluded:
     - ownCloudTests
+    - ownCloudScreenshotsTests
     - external
 
 function_body_length: 100

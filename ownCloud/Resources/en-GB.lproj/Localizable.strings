@@ -297,5 +297,31 @@
 "unknown" = "unknown";
 "Offline files use" = "Offline files use";
 "Compacting of '%@' failed" = "Compacting of '%@' failed";
-"Delete Offline Copies" = "Delete Offline Copies";
+"Include available offline files" = "Include available offline files";
+"Delete Local Copies" = "Delete Local Copies";
 "Manage" = "Manage";
+"Storage" = "Storage";
+"Proceed" = "Proceed";
+"Compacting" = "Compacting";
+
+"Really include available offline files?" = "Really include available offline files?";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).";
+
+/* Available offline */
+"Root folder" = "Root folder";
+"at" = "at";
+"(no match)" = "(no match)";
+
+"Make available offline" = "Make available offline";
+"Make unavailable offline" = "Make unavailable offline";
+
+"Available Offline" = "Available Offline";
+"No items have been selected for offline availability." = "No items have been selected for offline availability.";
+
+"Overview" = "Overview";
+"All Files" = "All Files";
+"Locations" = "Locations";
+
+/* Import File */
+"Save File" = "Save File";
+"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once.";

@@ -17,7 +17,7 @@
  */
 
 #import <ownCloudSDK/ownCloudSDK.h>
-#import <libzip/libzip.h>
+#import <ownCloudApp/ownCloudApp.h>
 
 #import "FileProviderExtension.h"
 #import "FileProviderEnumerator.h"
@@ -139,7 +139,7 @@
 
 	if (outError != NULL)
 	{
-		*outError = [returnError resolvedError];
+		*outError = [returnError translatedError];
 	}
 
 	return item;
@@ -223,7 +223,11 @@
 		 {
 			FPLogCmdBegin(@"StartProviding", @"Downloading %@", item);
 
-			[self.core downloadItem:(OCItem *)item options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, OCFile *file) {
+			[self.core downloadItem:(OCItem *)item options:@{
+
+				OCCoreOptionAddFileClaim : [OCClaim claimForLifetimeOfCore:core explicitIdentifier:OCClaimExplicitIdentifierFileProvider]
+
+			} resultHandler:^(NSError *error, OCCore *core, OCItem *item, OCFile *file) {
 				OCLogDebug(@"Starting to provide file:\nPAU: %@\nFURL: %@\nID: %@\nErr: %@\nlocalRelativePath: %@", provideAtURL, file.url, item.itemIdentifier, error, item.localRelativePath);
 
 				if ([error isOCErrorWithCode:OCErrorCancelled])
@@ -234,7 +238,7 @@
 
 				FPLogCmd(@"Completed with error=%@", error);
 
-				completionHandler([error resolvedError]);
+				completionHandler([error translatedError]);
 			}];
 
 			return;
@@ -330,6 +334,9 @@
 			}
 
 			FPLogCmd(@"Item %@ is downloading %d: %@", item, item.isDownloading, downloadProgress);
+
+			// Remove temporary FileProvider claim
+			[core removeClaimsWithExplicitIdentifier:OCClaimExplicitIdentifierFileProvider onItem:(OCItem *)item refreshItem:YES completionHandler:nil];
 		 }
 	}
 
@@ -380,7 +387,7 @@
 		{
 			FPLogCmd(@"Completed with collission with existingItem=%@ (locally detected)", existingItem);
 			// completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
-			completionHandler(nil, [OCError(OCErrorItemAlreadyExists) resolvedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
+			completionHandler(nil, [OCError(OCErrorItemAlreadyExists) translatedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
 			return;
 		}
 
@@ -388,7 +395,7 @@
 //			OCCoreOptionPlaceholderCompletionHandler : [^(NSError * _Nullable error, OCItem * _Nullable item) {
 //				FPLogCmd(@"Completed placeholder creation with item=%@, error=%@", item, error);
 //
-//				completionHandler(item, [error resolvedError]);
+//				completionHandler(item, [error translatedError]);
 //			} copy]
 		} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			if (error != nil)
@@ -402,7 +409,7 @@
 					{
 						FPLogCmd(@"Completed with collission with existingItem=%@ (server response)", existingItem);
 						// completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
-						completionHandler(nil, [OCError(OCErrorItemAlreadyExists) resolvedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
+						completionHandler(nil, [OCError(OCErrorItemAlreadyExists) translatedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
 						return;
 					}
 				}
@@ -410,7 +417,7 @@
 
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
 
-			completionHandler(item, [error resolvedError]);
+			completionHandler(item, [error translatedError]);
 		}];
 	}
 	else
@@ -436,7 +443,7 @@
 		[self.core moveItem:item to:parentItem withName:((newName != nil) ? newName : item.name) options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
 
-			completionHandler(item, [error resolvedError]);
+			completionHandler(item, [error translatedError]);
 		}];
 	}
 	else
@@ -453,7 +460,7 @@
 		}
 
 		FPLogCmd(@"Completed with item=%@ or parentItem=%@ not found, error=%@", item, parentItem, error);
-		completionHandler(nil, error);
+		completionHandler(nil, [error translatedError]);
 	}
 }
 
@@ -470,7 +477,7 @@
 
 		[self.core renameItem:item to:itemName options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
-			completionHandler(item, [error resolvedError]);
+			completionHandler(item, [error translatedError]);
 		}];
 	}
 	else
@@ -493,7 +500,7 @@
 
 		[self.core deleteItem:item requireMatch:YES resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with error=%@", error);
-			completionHandler([error resolvedError]);
+			completionHandler([error translatedError]);
 		}];
 	}
 	else
@@ -501,102 +508,6 @@
 		FPLogCmd(@"Completed with item=%@ not found, error=%@", item, error);
 		completionHandler(error);
 	}
-}
-
-+ (NSError *)compressContentsOf:(NSURL *)sourceDirectory asZipFile:(NSURL *)zipFileURL
-{
-	zip_t *zipArchive = NULL;
-	int zipError = ZIP_ER_OK;
-	NSError *error = nil;
-	NSErrorDomain LibZipErrorDomain = @"LibZIPErrorDomain";
-	NSError *(^ErrorFromZipArchive)(zip_t *zipArchive) = ^(zip_t *zipArchive) {
-		zip_error_t *zipError = zip_get_error(zipArchive);
-
-		return ([NSError errorWithDomain:LibZipErrorDomain code:zipError->zip_err userInfo:nil]);
-	};
-
-	if ((zipArchive = zip_open(zipFileURL.path.UTF8String, ZIP_CREATE, &zipError)) != NULL)
-	{
-		NSDirectoryEnumerator<NSURL *> *directoryEnumerator;
-
-		NSUInteger basePathLength = sourceDirectory.path.length;
-
-		if (![sourceDirectory.path hasSuffix:@"/"])
-		{
-			basePathLength++;
-		}
-
-		if ((directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtURL:sourceDirectory includingPropertiesForKeys:@[NSURLFileSizeKey,NSURLIsDirectoryKey] options:0 errorHandler:nil]) != nil)
-		{
-			for (NSURL *addURL in directoryEnumerator)
-			{
-				zip_source_t *fileSource = NULL;
-				NSNumber *isDirectory = nil, *size = nil;
-				NSString *relativePath = [addURL.path substringFromIndex:basePathLength];
-
-				if (relativePath.length == 0)
-				{
-					continue;
-				}
-
-				[addURL getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
-				[addURL getResourceValue:&size forKey:NSURLFileSizeKey error:nil];
-
-				if (isDirectory.boolValue)
-				{
-					// Add directory
-					OCLogDebug(@"Adding directory %@ from %@", relativePath, addURL);
-
-					if (zip_dir_add(zipArchive, relativePath.UTF8String, ZIP_FL_ENC_UTF_8) < 0)
-					{
-						// Error
-						error = ErrorFromZipArchive(zipArchive);
-						OCLogError(@"Error adding directory %@: %@", relativePath, error);
-					}
-				}
-				else
-				{
-					// Add file
-					OCLogDebug(@"Adding file %@ from %@", relativePath, addURL);
-
-					if ((fileSource = zip_source_file(zipArchive, addURL.path.UTF8String, 0, (zip_int64_t)size.unsignedIntegerValue)) != NULL)
-					{
-						if (zip_file_add(zipArchive, relativePath.UTF8String, fileSource, ZIP_FL_ENC_UTF_8) < 0)
-						{
-							// Error
-							error = ErrorFromZipArchive(zipArchive);
-							OCLogError(@"Error compressing %@: %@", relativePath, error);
-
-							zip_source_free(fileSource);
-						}
-					}
-					else
-					{
-						// Error
-						error = ErrorFromZipArchive(zipArchive);
-						OCLogError(@"Error adding directory %@: %@", relativePath, error);
-					}
-				}
-			}
-		}
-
-		if (zip_close(zipArchive) < 0)
-		{
-			// Error
-			error = ErrorFromZipArchive(zipArchive);
-			OCLogError(@"Error closing zip archive %@: %@", zipFileURL.path, error);
-
-			zip_discard(zipArchive);
-		}
-	}
-	else
-	{
-		// Error
-		error = [NSError errorWithDomain:LibZipErrorDomain code:zipError userInfo:nil];
-		OCLogError(@"Error opening zip archive %@: %@", zipFileURL.path, error);
-	}
-
-	return (error);
 }
 
 - (void)importDocumentAtURL:(NSURL *)fileURL toParentItemIdentifier:(NSFileProviderItemIdentifier)parentItemIdentifier completionHandler:(void (^)(NSFileProviderItem _Nullable, NSError * _Nullable))completionHandler
@@ -629,7 +540,6 @@
 	{
 		// Detect name collissions
 		OCItem *existingItem;
-		OCCoreImportTransformation transformation = nil;
 
 		if ((existingItem = [self.core cachedItemInParent:parentItem withName:importFileName isDirectory:NO error:NULL]) != nil)
 		{
@@ -641,65 +551,12 @@
 
 		FPLogCmd(@"Importing %@ at %@ fromURL %@", importFileName, parentItem, fileURL);
 
-		NSString *resourceType=nil;
-		if ([fileURL getResourceValue:&resourceType forKey:NSURLFileResourceTypeKey error:&error])
-		{
-			FPLogCmd(@"Importing resourceType=%@", resourceType);
-
-			if ([resourceType isEqual:NSURLFileResourceTypeDirectory])
-			{
-				NSString *bundleType = fileURL.pathExtension.lowercaseString;
-
-				if ([bundleType isEqual:@"pages"] || 	// Pages
-				    [bundleType isEqual:@"key"])	// Keynote
-				{
-					// Special handling for Pages and Keynote files
-					FPLogCmd(@"Importing with transformer for bundle-document of type=%@", bundleType);
-
-					transformation = ^(NSURL *sourceURL) {
-						NSError *error = nil;
-						NSURL *zipURL = [sourceURL URLByAppendingPathExtension:@".zip"];
-
-						if ((error = [FileProviderExtension compressContentsOf:sourceURL asZipFile:zipURL]) == nil)
-						{
-							if ([[NSFileManager defaultManager] removeItemAtURL:sourceURL error:&error])
-							{
-								if (![[NSFileManager defaultManager] moveItemAtURL:zipURL toURL:sourceURL error:&error])
-								{
-									FPLogCmd(@"Moving %@ to %@ failed with error=%@", OCLogPrivate(zipURL), OCLogPrivate(sourceURL), OCLogPrivate(error));
-								}
-							}
-							else
-							{
-								FPLogCmd(@"Removing %@ failed with error=%@", OCLogPrivate(sourceURL), OCLogPrivate(error));
-							}
-						}
-						else
-						{
-							FPLogCmd(@"Compressing %@ as %@ failed with error=%@", OCLogPrivate(sourceURL), OCLogPrivate(zipURL), OCLogPrivate(error));
-						}
-
-						FPLogCmd(@"Import transformation finished with error=%@", error);
-
-						return (error);
-					};
-				}
-				else
-				{
-					// Import of directories not supported
-					completionHandler(nil, [OCError(OCErrorFeatureNotSupportedForItem) resolvedError]);
-					return;
-				}
-			}
-		}
-
-		// Start import
-		[self.core importFileNamed:importFileName at:parentItem fromURL:fileURL isSecurityScoped:YES options:[NSDictionary dictionaryWithObjectsAndKeys:
-			@(importByCopying),    OCCoreOptionImportByCopying,
-			[transformation copy], OCCoreOptionImportTransformation,
-		nil] placeholderCompletionHandler:^(NSError *error, OCItem *item) {
+		// Import item
+		[self.core importItemNamed:importFileName at:parentItem fromURL:fileURL isSecurityScoped:YES options:@{
+			OCCoreOptionImportByCopying : @(importByCopying)
+		} placeholderCompletionHandler:^(NSError *error, OCItem *item) {
 			FPLogCmd(@"Completed with placeholderItem=%@, error=%@", item, error);
-			completionHandler(item, [error resolvedError]);
+			completionHandler(item, [error translatedError]);
 		} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			if ([error.domain isEqual:OCHTTPStatusErrorDomain] && (error.code == OCHTTPStatusCodePRECONDITION_FAILED))
 			{
@@ -749,7 +606,7 @@
 
 		[self.core updateItem:item properties:@[ OCItemPropertyNameLocalAttributes ] options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
-			completionHandler(item, [error resolvedError]);
+			completionHandler(item, [error translatedError]);
 		}];
 	}
 	else
@@ -784,7 +641,7 @@
 
 		[self.core updateItem:item properties:@[ OCItemPropertyNameLocalAttributes ] options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
-			completionHandler(item, [error resolvedError]);
+			completionHandler(item, [error translatedError]);
 		}];
 	}
 	else
@@ -818,7 +675,7 @@
 
 		[self.core deleteItem:item requireMatch:YES resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with error=%@", error);
-			completionHandler(nil, [error resolvedError]);
+			completionHandler(nil, [error translatedError]);
 		}];
 	}
 	else
@@ -1037,3 +894,5 @@
 }
 
 @end
+
+OCClaimExplicitIdentifier OCClaimExplicitIdentifierFileProvider = @"fileProvider";

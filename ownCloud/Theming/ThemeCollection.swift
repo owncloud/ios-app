@@ -73,8 +73,28 @@ enum ThemeCollectionStyle : String, CaseIterable {
 	}
 }
 
+enum ThemeCollectionInterfaceStyle : String, CaseIterable {
+	case dark
+	case light
+	case unspecified
+
+	@available(iOS 12.0, *)
+	var userInterfaceStyle : UIUserInterfaceStyle {
+		switch self {
+			case .dark: return .dark
+			case .light: return .light
+			case .unspecified: return .unspecified
+		}
+	}
+}
+
 class ThemeCollection : NSObject {
 	@objc var identifier : String = UUID().uuidString
+
+	// MARK: - Interface style
+	var interfaceStyle : ThemeCollectionInterfaceStyle
+	var keyboardAppearance : UIKeyboardAppearance
+	var backgroundBlurEffectStyle : UIBlurEffect.Style
 
 	// MARK: - Brand colors
 	@objc var darkBrandColor: UIColor
@@ -100,6 +120,8 @@ class ThemeCollection : NSObject {
 	// MARK: - Table views
 	@objc var tableBackgroundColor : UIColor
 	@objc var tableGroupBackgroundColor : UIColor
+	@objc var tableSectionHeaderColor : UIColor?
+	@objc var tableSectionFooterColor : UIColor?
 	@objc var tableSeparatorColor : UIColor?
 	@objc var tableRowColors : ThemeColorCollection
 	@objc var tableRowHighlightColors : ThemeColorCollection
@@ -146,6 +168,10 @@ class ThemeCollection : NSObject {
 	init(darkBrandColor darkColor: UIColor, lightBrandColor lightColor: UIColor, style: ThemeCollectionStyle = .dark) {
 		var logoFillColor : UIColor?
 
+		self.interfaceStyle = .unspecified
+		self.keyboardAppearance = .default
+		self.backgroundBlurEffectStyle = .regular
+
 		self.darkBrandColor = darkColor
 		self.lightBrandColor = lightColor
 
@@ -180,8 +206,15 @@ class ThemeCollection : NSObject {
 
 		// Table view
 		self.tableBackgroundColor = UIColor.white
-		self.tableGroupBackgroundColor = UIColor.groupTableViewBackground
-		self.tableSeparatorColor = nil
+		if #available(iOS 13, *) {
+			self.tableGroupBackgroundColor = UIColor.groupTableViewBackground.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light))
+			self.tableSeparatorColor = UIColor.separator
+		} else {
+			self.tableGroupBackgroundColor = UIColor.groupTableViewBackground
+			self.tableSeparatorColor = UIColor.lightGray
+		}
+		self.tableSectionHeaderColor = UIColor.gray
+		self.tableSectionFooterColor = UIColor.gray
 		self.tableRowBorderColor = UIColor.black.withAlphaComponent(0.1)
 
 		self.tableRowColors = ThemeColorCollection(
@@ -194,7 +227,7 @@ class ThemeCollection : NSObject {
 		)
 
 		self.tableRowHighlightColors = ThemeColorCollection(
-			backgroundColor: nil,
+			backgroundColor: UIColor.white.darker(0.1),
 			tintColor: nil,
 			labelColor: UIColor.black,
 			secondaryLabelColor: UIColor.gray,
@@ -208,6 +241,11 @@ class ThemeCollection : NSObject {
 		// Styles
 		switch style {
 			case .dark:
+				// Interface style
+				self.interfaceStyle = .dark
+				self.keyboardAppearance = .dark
+				self.backgroundBlurEffectStyle = .dark
+
 				// Bars
 				self.navigationBarColors = self.darkBrandColors
 				self.toolbarColors = self.darkBrandColors
@@ -250,6 +288,11 @@ class ThemeCollection : NSObject {
 				logoFillColor = UIColor.white
 
 			case .light:
+				// Interface style
+				self.interfaceStyle = .light
+				self.keyboardAppearance = .light
+				self.backgroundBlurEffectStyle = .light
+
 				// Bars
 				self.navigationBarColors = ThemeColorCollection(
 					backgroundColor: UIColor.white.darker(0.05),
@@ -263,7 +306,11 @@ class ThemeCollection : NSObject {
 				self.toolbarColors = self.navigationBarColors
 
 				// Bar styles
-				self.statusBarStyle = .default
+				if #available(iOS 13, *) {
+					self.statusBarStyle = .darkContent
+				} else {
+					self.statusBarStyle = .default
+				}
 				self.barStyle = .default
 
 				// Progress
@@ -277,6 +324,11 @@ class ThemeCollection : NSObject {
 				logoFillColor = UIColor.lightGray
 
 			case .contrast:
+				// Interface style
+				self.interfaceStyle = .light
+				self.keyboardAppearance = .light
+				self.backgroundBlurEffectStyle = .light
+
 				// Bars
 				self.navigationBarColors = self.darkBrandColors
 				self.toolbarColors = self.darkBrandColors
@@ -309,5 +361,19 @@ class ThemeCollection : NSObject {
 
 	convenience override init() {
 		self.init(darkBrandColor: UIColor(hex: 0x1D293B), lightBrandColor: UIColor(hex: 0x468CC8))
+	}
+}
+
+@available(iOS 13.0, *)
+extension ThemeCollection {
+	var navigationBarAppearance : UINavigationBarAppearance {
+		let appearance = UINavigationBarAppearance()
+
+		appearance.configureWithOpaqueBackground()
+		appearance.backgroundColor = navigationBarColors.backgroundColor
+		appearance.titleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
+		appearance.largeTitleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
+
+		return appearance
 	}
 }

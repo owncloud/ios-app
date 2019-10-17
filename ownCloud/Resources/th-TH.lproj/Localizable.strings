@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   ownCloud
 
@@ -47,7 +47,7 @@
 "Certificate has issues.\nOpen 'Certificate Details' for more informations." = "ใบรับรองมีปัญหา\nเปิด 'รายละเอียดใบรับรอง' สำหรับข้อมูลเพิ่มเติม";
 "No issues found. Certificate passed validation." = "ไม่พบปัญหา ผ่านการตรวจสอบใบรับรองแล้ว";
 "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "ใบรับรองอาจมีปัญหาแต่ได้รับการยอมรับจากผู้ใช้แล้ว\nเปิด 'รายละเอียดใบรับรอง' สำหรับข้อมูลเพิ่มเติม";
-"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "หากคุณ 'ดำเนินการต่อ' คุณจะได้รับแจ้งให้อนุญาตแอพ '%@' เพื่อเข้าสู่ระบบ OAuth2 ที่คุณสามารถป้อนหนังสือรับรองของคุณ";
+"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "หากคุณ 'ดำเนินการต่อ' คุณจะได้รับแจ้งให้อนุญาตแอป '%@' เพื่อเข้าสู่ระบบ OAuth2 ที่คุณสามารถป้อนหนังสือรับรองของคุณ";
 
 "Contacting server…" = "กำลังติดต่อเซิร์ฟเวอร์...";
 "Authenticating…" = "กำลังตรวจสอบสิทธิ์...";
@@ -82,8 +82,7 @@
 "Sort by %@" = "จัดเรียงตาม %@";
 "Sort by" = "เรียงตาม";
 
-"name (A-Z)" = "ชื่อ (A-Z)";
-"name (Z-A)" = "ชื่อ (Z-A)";
+"name" = "ชื่อ";
 "type" = "ชนิด";
 "size" = "ขนาด";
 "date" = "วันที่";
@@ -111,12 +110,20 @@
 "Not now" = "ไม่ใช่ตอนนี้";
 "Upload file" = "อัปโหลดไฟล์";
 "Upload files" = "อัปโหลดไฟล์";
-"Ignore" = "ไม่สนใจ";
-"Authorization failed" = "การอนุมัติล้มเหลว";
-"The server declined access with the credentials stored for this connection." = "เซิร์ฟเวอร์ปฏิเสธการเข้าถึงด้วยหนังสือรับรองที่เก็บไว้สำหรับการเชื่อมต่อนี้";
+
 "No matches" = "ไม่ตรงกัน";
 "There are no results for this search term" = "ไม่มีผลลัพธ์สำหรับคำค้นหานี้";
 "Status" = "สถานะ";
+
+"Authorization failed" = "การอนุมัติล้มเหลว";
+"The account has been disabled." = "บัญชีถูกปิดใช้งาน";
+"The server declined access with the credentials stored for this connection." = "เซิร์ฟเวอร์ปฏิเสธการเข้าถึงด้วยหนังสือรับรองที่เก็บไว้สำหรับการเชื่อมต่อนี้";
+"Access denied" = "เข้าถึงถูกปฏิเสธ";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "โทเค็นเข้าถึงการเชื่อมต่อหมดอายุหรือไม่ถูกต้อง กรุณาลงชื่อเข้าใช้อีกครั้งเพื่อรับสิทธิ์การเข้าถึง";
+"No authentication data has been found for this connection." = "ไม่พบข้อมูลการตรวจสอบสิทธิ์สำหรับการเชื่อมต่อนี้";
+"Sign in" = "เข้าสู่ระบบ";
+"Ignore" = "ไม่สนใจ";
+"Continue offline" = "ใช่งานแบบออฟไลน์ต่อไป";
 
 /* Server List*/
 "Cancel" = "ยกเลิก";
@@ -147,7 +154,7 @@
 "Background uploads" = "อัปโหลดพื้นหลัง";
 "Wifi only" = "Wifi เท่านั้น";
 "Settings" = "ตั้งค่า";
-"Lock application" = "ล็อกแอพพลิเคชัน";
+"Lock application" = "ล็อกแอปพลิเคชัน";
 "Upload videos via WiFi only" = "อัปโหลดวีดีโอผ่านทาง WiFi เท่านั้น";
 "Upload pictures via WiFi only" = "อัปโหลดรูปภาพผ่านทาง WiFi เท่านั้น";
 "More" = "ขยาย";
@@ -157,15 +164,16 @@
 "Acknowledgements" = "กิตติกรรมประกาศ";
 "Video upload path" = "เส้นทางการอัปโหลดวิดีโอ";
 "Photo upload path" = "เส้นทางการอัปโหลดภาพ";
-"Always" = "เสมอ";
+"Immediately" = "ทันที";
 "After 1 minute" = "หลังจากผ่านไป 1 นาที";
 "After 5 minutes" = "หลังจากผ่านไป 5 นาที";
 "After 30 minutes" = "หลังจากผ่านไป 30 นาที";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "หากคุณเลือก \"ทันที\" แอปจะถูกล็อคเมื่อไม่ถูกใช้งาน\n\nการเข้าถึงใน Files.app นั้นเป็นไปไม่ได้หากคุณเลือกช่วงเวลาล็อค \"ทันที\"\nโปรดเลือกความล่าช้าอื่นๆ หากคุณต้องการเข้าถึงไฟล์ของคุณใน Files.app หรือผ่านตัวเลือกเอกสาร";
 "Please configure an email account" = "โปรดกำหนดค่าบัญชีอีเมล";
 "You need to configure an email account first to be able to send emails." = "คุณต้องกำหนดค่าบัญชีอีเมลก่อนจึงจะสามารถส่งอีเมลได้";
 "Do you want to open the following URL?" = "คุณต้องการเปิด URL ต่อไปนี้?";
 
-"%@ %@ version %@ build %@ (%@)" = "%@%@รุ่น%@บิวด์%@(%@)";
+"%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@%@รุ่น%@ บิวด์ %@ (แอป: %@, sdk: %@)";
 "beta" = "รุ่นเบต้า";
 "release" = "ล่าสุด";
 
@@ -173,9 +181,9 @@
 /* User Interface Settings */
 "Theme" = "ธีม";
 "User Interface" = "หน้าจอผู้ใช้";
-"Dark" = "แบบมืด";
-"Light" = "แบบสว่าง";
-"Classic" = "แบบคลาสสิก";
+"Dark" = "มืด";
+"Light" = "สว่าง";
+"Classic" = "คลาสสิก";
 
 /* Log settings */
 "Log Files" = "ไฟล์ log";
@@ -201,7 +209,7 @@
 "Share log file" = "แชร์ไฟล์ log";
 "Reset log file" = "รีเซ็ตไฟล์ log";
 
-"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "เมื่อเปิดใช้งาน log อาจส่งผลต่อประสิทธิภาพและรวมถึงข้อมูลที่ละเอียดอ่อน อย่างไรก็ตาม log จะไม่ถูกส่งไปยังเซิร์ฟเวอร์ %@ โดยอัตโนมัติ การแชร์ log กับผู้อื่นถือเป็นความรับผิดชอบของผู้ใช้แต่เพียงผู้เดียว";
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "เมื่อเปิดใช้งาน log อาจส่งผลต่อประสิทธิภาพและรวมถึงข้อมูลส่วนตัว อย่างไรก็ตาม log จะไม่ถูกส่งไปยังเซิร์ฟเวอร์ %@ โดยอัตโนมัติ การแชร์ log กับผู้อื่นถือเป็นความรับผิดชอบของผู้ใช้เพียงผู้เดียว";
 
 "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "log 10 ไฟล์ล่าสุดถูกเก็บไว้ในอุปกรณ์ - โดยแต่ละ log ครอบคลุมการใช้งานสูงสุด 24 ชั่วโมง เมื่อทำการแชร์โปรดจำไว้ว่า log อาจมีข้อมูลที่ละเอียดอ่อนเช่น URL เซิร์ฟเวอร์และข้อมูลเฉพาะของผู้ใช้";
 
@@ -214,6 +222,12 @@
 
 "Really reset log file?" = "รีเซ็ตไฟล์ log?";
 "This action can't be undone." = "ไม่สามารถยกเลิกการดำเนินการนี้ได้";
+
+/* Storage settings */
+"Delete unused local copies" = "ลบสำเนาที่ไม่ได้ใช้ในเครื่อง";
+"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "เวลาที่วัดได้ตั้งแต่การอัปโหลด แก้ไขดาวน์โหลด หรือดูไฟล์ที่เกี่ยวข้องผ่านอุปกรณ์นี้ ใช้ไม่ได้กับไฟล์ที่ดาวน์โหลดผ่านคุณสมบัติ \"การพร้อมใช้งานแบบออฟไลน์\" สำเนาในเครื่องอาจถูกลบก่อนการประสานข้อมูล  เนื่องจากมีไฟล์เวอร์ชันใหม่บนเซิร์ฟเวอร์ - หรือผ่านการลบสำเนาออฟไลน์ด้วยตนเอง นอกจากนี้สำเนาในเครื่องอาจไม่ถูกลบหลังจากผ่านช่วงเวลาที่กำหนด หากมีการดำเนินการกับไฟล์นั้นยังคงมีการใช้งานอยู่หรือบัญชีที่ถือครองไฟล์นั้นไม่ได้ถูกใช้ในแอป";
+"never" = "ไม่ต้องเลย";
+"after %@" = "หลังจาก %@";
 
 /* Display settings */
 "Display settings" = "แสดงการตั้งค่า";
@@ -268,6 +282,7 @@
 "Error" = "ข้อผิดพลาด";
 "Could not get the picture" = "ไม่สามารถรับรูปภาพได้";
 "Downloading" = "กำลังดาวน์โหลด";
+"File couldn't be opened" = "ไม่สามารถเปิดไฟล์ได้";
 
 /* PDF Viewer */
 "Resume" = "ดำเนินการต่อ";
@@ -370,6 +385,9 @@
 "You" = "คุณ";
 "Share this file" = "แชร์ไฟล์นี้";
 "Share this folder" = "แชร์โฟลเดอร์นี้";
+"shared" = "ถูกแชร์";
+"Owner" = "เจ้าของ";
+"Private Link" = "ลิงก์ส่วนบุคคล";
 
 /* Quick Access view */
 "Quick Access" = "เข้าถึงด่วน";
@@ -378,6 +396,10 @@
 "Favorites"= "รายการโปรด";
 "Images" = "รูปภาพ";
 "PDF Documents" = "เอกสาร PDF";
+
+/* Media files settings */
+"Media Files" = "ไฟล์สื่อ";
+"Streaming Enabled" = "เปิดใช้งานการสตรีมแล้ว";
 
 /* Photo upload settings */
 "Media Upload" = "การอัปโหลดสื่อ";
@@ -398,6 +420,28 @@
 "unknown" = "ไม่รู้จัก";
 "Offline files use" = "ใช้ไฟล์ออฟไลน์";
 "Compacting of '%@' failed" = "กำลังย่อข้อมูลพบความล้มเหลว '%@'";
-"Delete Offline Copies" = "ลบสำเนาออฟไลน์";
+"Include available offline files" = "รวมถึงไฟล์ออฟไลน์ที่มีอยู่";
+"Delete Local Copies" = "ลบสำเนาในเครื่อง";
 "Manage" = "การจัดการ";
 "Storage" = "พื้นที่จัดเก็บข้อมูล";
+
+"Really include available offline files?" = "รวมไฟล์ออฟไลน์ที่มีอยู่?";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "ไฟล์และโฟลเดอร์ที่ทำเครื่องหมายว่าพร้อมใช้งานแบบออฟไลน์จะไม่สามารถใช้งานได้ ไฟล์เหล่านี้จะถูกดาวน์โหลดอีกในครั้งต่อไปที่คุณเข้าสู่บัญชีของคุณ (จำเป็นต้องเชื่อมต่อ)";
+
+/* Available offline */
+"Root folder" = "โฟลเดอร์รูท";
+"at" = "ที่";
+"(no match)" = "(ไม่ตรงกัน)";
+
+"Make available offline" = "ทำให้พร้อมใช้งานแบบออฟไลน์";
+"Make unavailable offline" = "ทำให้พร้อมใช้งานแบบออฟไลน์";
+
+"Available Offline" = "พร้อมใช้งานแบบออฟไลน์แล้ว";
+"No items have been selected for offline availability." = "ไม่มีรายการที่ถูกเลือกสำหรับการใช้งานแบบออฟไลน์";
+
+"Overview" = "ภาพรวม";
+"All Files" = "ไฟล์ทั้งหมด";
+
+/* Import File */
+"Save File" = "บันทึกไฟล์";
+"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "เลือกบัญชีและโฟลเดอร์ที่ต้องการนำเข้า\n\nสามารถนำเข้าได้ครั้งละหนึ่งไฟล์เท่านั้น";
