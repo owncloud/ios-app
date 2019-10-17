@@ -225,9 +225,9 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 
-		if MediaUploadQueue.shallShowUploadUnfinishedWarning 	(for: self.bookmark) {
-			let unfinishedUploadAlert = UIAlertController(with: "Warning".localized,
-														  message: "Media upload in the previous session was incomplete since the application was terminated".localized)
+		if MediaUploadQueue.isMediaUploadPendingFlagSet(for: self.bookmark) {
+			let unfinishedUploadAlert = ThemedAlertController(with: "Warning".localized,
+														   message: "Media upload in the previous session was incomplete since the application was terminated".localized)
 			self.present(unfinishedUploadAlert, animated: true, completion: nil)
 			MediaUploadQueue.resetUploadPendingFlag(for: self.bookmark)
 		}
@@ -392,7 +392,7 @@ extension ClientRootViewController : OCCoreDelegate {
 			var queueCompletionHandlerScheduled : Bool = false
 
 			if isAuthFailure {
-				let alertController = UIAlertController(title: authFailureTitle,
+				let alertController = ThemedAlertController(title: authFailureTitle,
 									message: authFailureMessage,
 									preferredStyle: .alert)
 
@@ -424,7 +424,7 @@ extension ClientRootViewController : OCCoreDelegate {
 				var presentViewController : UIViewController?
 
 				if presentIssue?.type == .multipleChoice {
-					presentViewController = UIAlertController(with: presentIssue!, completion: queueCompletionHandler)
+					presentViewController = ThemedAlertController(with: presentIssue!, completion: queueCompletionHandler)
 				} else {
 					presentViewController = ConnectionIssueViewController(displayIssues: presentIssue?.prepareForDisplay(), completion: { (response) in
  						switch response {
