@@ -49,9 +49,6 @@ extension UIImageView {
 				})
 			}
 
-			// Check if the theme has a pre-defined icon for the particular file type
-			let iconAvailable = OCItem.iconName(for: item.mimeType) != nil ? true :  false
-
 			weak var weakCore = core
 
 			if let thumbnail = item.thumbnail {
@@ -64,19 +61,20 @@ extension UIImageView {
 					// No thumbnail returned by the core, try QuickLook thumbnailing on iOS 13
 					#if canImport(QuickLookThumbnailing)
 					if thumbnail == nil, #available(iOS 13, *) {
-						weakCore?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (_, url, _) in
-							if let url = url {
-								let thumbnailRequest = QLThumbnailGenerator.Request(fileAt: url, size: size, scale: UIScreen.main.scale, representationTypes: iconAvailable ? [.lowQualityThumbnail, .thumbnail] : .all)
-								QLThumbnailGenerator.shared.generateRepresentations(for: thumbnailRequest) { (representation, _, _) in
-									if let representation = representation {
-										self.cacheThumbnail(image: representation.uiImage, size:size, for: item, in: core)
-										OnMainThread {
-											self.image = representation.uiImage
-										}
+						if let itemURL = weakCore?.localURL(for: item) {
+							let thumbnailRequest = QLThumbnailGenerator.Request(fileAt: itemURL,
+																				size: size,
+																				scale: UIScreen.main.scale,
+																				representationTypes:[.lowQualityThumbnail, .thumbnail])
+							QLThumbnailGenerator.shared.generateBestRepresentation(for: thumbnailRequest) { (representation, _) in
+								if let representation = representation {
+									self.cacheThumbnail(image: representation.uiImage, size:size, for: item, in: core)
+									OnMainThread {
+										self.image = representation.uiImage
 									}
 								}
 							}
-						})
+						}
 					}
 					#endif
 
