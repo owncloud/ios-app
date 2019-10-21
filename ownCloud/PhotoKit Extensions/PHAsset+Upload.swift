@@ -151,6 +151,7 @@ extension PHAsset {
 										imageConverted = image.convert(targetURL: localURL, outputFormat: .JPEG)
 									}
 
+									// Upload if conversion has been successful
 									if imageConverted {
 										performUpload(sourceURL: localURL, copySource: false)
 									} else {
@@ -183,5 +184,4 @@ extension PHAsset {
 			}
 		}
 	}
-
 }

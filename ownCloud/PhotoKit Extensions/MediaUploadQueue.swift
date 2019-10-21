@@ -122,15 +122,13 @@ class MediaUploadQueue {
 	class func addPending(_ assets:[PHAsset], for bookmark:OCBookmark, at rootItem:OCItem) {
 		let vault : OCVault = OCVault(bookmark: bookmark)
 		let assetIds : [String] = assets.map({ $0.localIdentifier })
+		var uploads = [String : String]()
 
-		var uploads = vault.keyValueStore?.readObject(forKey: MediaUploadQueue.PendingAssetsKey) as? [String : String]
-		if uploads == nil {
-			uploads = [String : String]()
-		}
 		assetIds.forEach { (assetLocalId) in
-			uploads![assetLocalId] = rootItem.path
+			uploads[assetLocalId] = rootItem.path
 		}
-		vault.keyValueStore?.storeObject(uploads! as NSDictionary, forKey: MediaUploadQueue.PendingAssetsKey)
+
+		vault.keyValueStore?.storeObject(uploads as NSDictionary, forKey: MediaUploadQueue.PendingAssetsKey)
 	}
 
 	class func removePending(asset identifier:String, for bookmark:OCBookmark) {

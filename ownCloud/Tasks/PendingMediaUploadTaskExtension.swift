@@ -97,25 +97,25 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 			if isInitial {
 				if error != nil {
 					Log.error(tagged: ["REMAINING_MEDIA_UPLOAD"], "Error tracking path \(String(describing: error))")
-				}
-
-				if item != nil {
-					// Upload assets
-					Log.debug(tagged: ["REMAINING_MEDIA_UPLOAD"], "Uploading \(assets.count) assets at \(path)")
-
-					MediaUploadQueue.shared.uploadAssets(assets, with: core, at: item!) { (_, finished) in
-						if finished {
-							self.uploadDirectoryTracking = nil
-							completion()
-						}
-					}
-				} else {
-					Log.warning(tagged: ["REMAINING_MEDIA_UPLOAD"], "Upload directory not found")
 					completion()
+				} else {
+					if item != nil {
+						// Upload assets
+						Log.debug(tagged: ["REMAINING_MEDIA_UPLOAD"], "Uploading \(assets.count) assets at \(path)")
+
+						MediaUploadQueue.shared.uploadAssets(assets, with: core, at: item!) { (_, finished) in
+							if finished {
+								self.uploadDirectoryTracking = nil
+								completion()
+							}
+						}
+					} else {
+						Log.warning(tagged: ["REMAINING_MEDIA_UPLOAD"], "Upload directory not found")
+						completion()
+					}
 				}
 			} else {
 				self.uploadDirectoryTracking = nil
-				completion()
 			}
 		})
 	}
