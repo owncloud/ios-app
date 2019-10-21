@@ -1,8 +1,8 @@
 //
-//  NSError+MessageResolution.h
-//  ownCloud File Provider
+//  NSObject+AnnotatedProperties.h
+//  ownCloud
 //
-//  Created by Felix Schwarz on 09.04.19.
+//  Created by Felix Schwarz on 09.09.19.
 //  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
 
@@ -20,9 +20,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSError (MessageResolution)
+@interface NSObject (AnnotatedProperties)
 
-- (NSError *)translatedError;
+- (nullable id)valueForAnnotatedProperty:(NSString *)annotatedPropertyName;
+- (void)setValue:(nullable id)value forAnnotatedProperty:(NSString *)annotatedPropertyName;
 
 @end
 

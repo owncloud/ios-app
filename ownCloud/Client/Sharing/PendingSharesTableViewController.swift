@@ -120,7 +120,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 							presentationStyle = .alert
 						}
 
-						let alertController = UIAlertController(title: String(format: "Accept Invite %@".localized, itemName ?? ""),
+						let alertController = ThemedAlertController(title: String(format: "Accept Invite %@".localized, itemName ?? ""),
 											message: nil,
 											preferredStyle: presentationStyle)
 						alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
@@ -194,7 +194,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 				OnMainThread {
 					if error != nil {
 						if let shareError = error {
-							let alertController = UIAlertController(with: (accept ? "Accept Share failed".localized : "Decline Share failed".localized), message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+							let alertController = ThemedAlertController(with: (accept ? "Accept Share failed".localized : "Decline Share failed".localized), message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 							strongSelf.present(alertController, animated: true)
 						}
 					} else if let libraryViewController = strongSelf.libraryViewController {
@@ -215,7 +215,7 @@ class PendingSharesTableViewController: StaticTableViewController {
 					itemName = (share.itemPath as NSString).lastPathComponent
 				}
 
-				let alertController = UIAlertController(title: String(format: "Decline Invite %@".localized, itemName ?? ""), message: "Decline cannot be undone.", preferredStyle: .alert)
+				let alertController = ThemedAlertController(title: String(format: "Decline Invite %@".localized, itemName ?? ""), message: "Decline cannot be undone.", preferredStyle: .alert)
 				alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 				alertController.addAction(UIAlertAction(title: "Decline".localized, style: .destructive, handler: { [weak self] (_) in
 					self?.makeDecision(on: share, accept: accept)
