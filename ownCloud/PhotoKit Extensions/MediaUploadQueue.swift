@@ -75,18 +75,22 @@ class MediaUploadQueue {
 					self.uploadSerialQueue.async {
 						if weakCore != nil {
 							weakCore!.perform(inRunningCore: { (runningCoreCompletion) in
-								asset.upload(with: weakCore!, at: rootItem, preferredFormats: prefferedMediaOutputFormats, completionHandler: { (item, _) in
-									if item == nil {
-										uploadFailed = true
-									} else {
-										assetUploadCompletion?(asset, false)
-										MediaUploadQueue.removePending(asset: asset.localIdentifier, for: weakCore!.bookmark)
-									}
-									runningCoreCompletion()
-									uploadGroup.leave()
-								}, progressHandler: { (progress) in
-									progressHandler?(progress)
-								})
+
+								weakCore!.schedule {
+									asset.upload(with: weakCore!, at: rootItem, preferredFormats: prefferedMediaOutputFormats, completionHandler: { (item, _) in
+										if item == nil {
+											uploadFailed = true
+										} else {
+											assetUploadCompletion?(asset, false)
+											MediaUploadQueue.removePending(asset: asset.localIdentifier, for: weakCore!.bookmark)
+										}
+										runningCoreCompletion()
+										uploadGroup.leave()
+									}, progressHandler: { (progress) in
+										progressHandler?(progress)
+									})
+								}
+
 							}, withDescription: "Uploading \(assets.count) photo assets")
 
 						} else {
