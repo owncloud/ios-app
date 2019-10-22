@@ -65,7 +65,7 @@ class Theme: NSObject {
 
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.PocketSVG", bundleOf: Theme.self, title: "PocketSVG", resourceName: "PocketSVG", fileExtension: "LICENSE"))
 
-		return (sharedInstance)
+		return sharedInstance
 	}()
 
 	// MARK: - Client register / unregister

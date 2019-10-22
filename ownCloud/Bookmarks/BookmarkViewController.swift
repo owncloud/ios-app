@@ -338,7 +338,7 @@ class BookmarkViewController: StaticTableViewController {
 				// Check for zero-length host name
 				if (serverURL.host == nil) || ((serverURL.host != nil) && (serverURL.host?.count==0)) {
 					// Missing hostname
-					let alertController = UIAlertController(title: "Missing hostname".localized, message: "The entered URL does not include a hostname.", preferredStyle: .alert)
+					let alertController = ThemedAlertController(title: "Missing hostname".localized, message: "The entered URL does not include a hostname.", preferredStyle: .alert)
 
 					alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
