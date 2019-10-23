@@ -122,7 +122,7 @@ extension PHAsset {
 
 					guard let url = assetURL else { return }
 
-					var fileName = url.lastPathComponent
+					let fileName = url.lastPathComponent
 
 					// Check if the conversion was requested and current media format is not found in the list of requested formats
 					if let formats = preferredFormats, formats.count > 0 {
