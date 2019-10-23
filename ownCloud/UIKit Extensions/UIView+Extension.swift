@@ -1,13 +1,13 @@
 //
-//  UIButton+Extension.swift
+//  UIView+Extension.swift
 //  ownCloud
 //
-//  Created by Matthias Hühne on 20.09.2019.
-//  Copyright © 2019 ownCloud GmbH. All rights reserved.
+//  Created by Felix Schwarz on 07.05.18.
+//  Copyright © 2018 ownCloud GmbH. All rights reserved.
 //
 
 /*
- * Copyright (C) 2019, ownCloud GmbH.
+ * Copyright (C) 2018, ownCloud GmbH.
  *
  * This code is covered by the GNU Public License Version 3.
  *
@@ -19,10 +19,29 @@
 import UIKit
 
 extension UIView {
-    func getSubview<T>(type: T.Type) -> T? {
-        let allSubviews = subviews.flatMap { $0.subviews }
-        let element = (allSubviews.filter { $0 is T }).first
+	// MARK: - Animation
+	func shakeHorizontally(amplitude : CGFloat = 20, duration : CFTimeInterval = 0.5) {
+		let animation : CAKeyframeAnimation = CAKeyframeAnimation(keyPath: "transform.translation.x")
 
-        return element as? T
-    }
+		animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+		animation.duration = duration
+		animation.values = [ 0, -amplitude, amplitude, -amplitude, amplitude, -amplitude, amplitude, 0 ]
+
+		self.layer.add(animation, forKey: "shakeHorizontally")
+	}
+
+	// MARK: - View hierarchy
+	func findSubviewInTree(where filter: (UIView) -> Bool) -> UIView? {
+		for subview in subviews {
+			if filter(subview) {
+				return subview
+			} else {
+				if let foundSubview = subview.findSubviewInTree(where: filter) {
+					return foundSubview
+				}
+			}
+		}
+
+		return nil
+	}
 }

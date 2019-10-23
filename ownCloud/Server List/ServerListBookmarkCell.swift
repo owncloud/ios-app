@@ -69,8 +69,6 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		iconView.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.vertical)
 		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
 		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
-
-		Theme.shared.add(tvgResourceFor: "owncloud-logo")
 	}
 
 	// MARK: - Themeing

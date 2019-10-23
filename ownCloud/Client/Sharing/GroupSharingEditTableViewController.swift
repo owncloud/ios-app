@@ -30,6 +30,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 	var createShare : Bool = false
 	var permissionMask : OCSharePermissionsMask?
 	var defaultPermissionMask : OCSharePermissionsMask
+	var canIncreasePermissions = true
 
 	// MARK: - Init & Deinit
 
@@ -40,8 +41,11 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 		share = inShare
 		reshares = inReshares
 		defaultPermissionMask = defaultPermissions
-
 		super.init(style: .grouped)
+
+		if inItem.isSharedWithUser && (inItem.owner?.userName != core?.connection.loggedInUser?.userName) {
+			canIncreasePermissions = false
+		}
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -95,7 +99,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 				} else {
 					if let shareError = error {
 						OnMainThread {
-							let alertController = UIAlertController(with: "Adding User to Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+							let alertController = ThemedAlertController(with: "Adding User to Share failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 							self.present(alertController, animated: true)
 						}
 					}
@@ -126,25 +130,27 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 				}, title: "Can Share".localized, subtitle: "", selected: canShare, identifier: "permission-section-share"))
 		}
 
-		section.add(row: StaticTableViewRow(toggleItemWithAction: { [weak self] (row, _) in
-			guard let self = self, let item = self.item else { return }
-			if let selected = row.value as? Bool {
-				if item.type == .collection {
-					if selected {
-						self.addPermissionEditSection(animated: true, selected: true)
-					} else {
-						if let section = self.sectionForIdentifier("permission-edit-section") {
-							self.removeSection(section, animated: true)
+		if canEdit || canIncreasePermissions {
+			section.add(row: StaticTableViewRow(toggleItemWithAction: { [weak self] (row, _) in
+				guard let self = self, let item = self.item else { return }
+				if let selected = row.value as? Bool {
+					if item.type == .collection {
+						if selected {
+							self.addPermissionEditSection(animated: true, selected: true)
+						} else {
+							if let section = self.sectionForIdentifier("permission-edit-section") {
+								self.removeSection(section, animated: true)
+							}
 						}
+						self.changePermissions(enabled: selected, permissions: [.create, .update, .delete], completionHandler: { (_) in
+						})
+					} else {
+						self.changePermissions(enabled: selected, permissions: [.update], completionHandler: { (_) in
+						})
 					}
-					self.changePermissions(enabled: selected, permissions: [.create, .update, .delete], completionHandler: { (_) in
-					})
-				} else {
-					self.changePermissions(enabled: selected, permissions: [.update], completionHandler: { (_) in
-					})
 				}
-			}
-			}, title: item?.type == .collection ? "Can Edit".localized : "Can Edit and Change".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
+				}, title: item?.type == .collection ? "Can Edit".localized : "Can Edit and Change".localized, subtitle: "", selected: canEdit, identifier: "permission-section-edit"))
+		}
 
 		let subtitles = [
 			"Allows the users you share with to re-share".localized,
@@ -166,11 +172,24 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 	}
 
 	func addPermissionEditSection(animated : Bool = false, selected : Bool = false) {
+
+		guard let permissions = share?.permissions else { return }
+
 		let section = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "permission-edit-section")
 
-		self.addPermissionRow(to: section, with: "Can Create", permission: .create, selected: (selected ? selected : hasAnyPermission(of: [.create])), identifier: "permission-section-edit-create")
-		self.addPermissionRow(to: section, with: "Can Change", permission: .update, selected: (selected ? selected : hasAnyPermission(of: [.update])), identifier: "permission-section-edit-change")
-		self.addPermissionRow(to: section, with: "Can Delete", permission: .delete, selected: (selected ? selected : hasAnyPermission(of: [.delete])), identifier: "permission-section-edit-delete")
+		let shallAddCreateRow = permissions.isSuperset(of: [.create]) || canIncreasePermissions
+		let shallAddChangeRow = permissions.isSuperset(of: [.update])  || canIncreasePermissions
+		let shallAddDeleteRow = permissions.isSuperset(of: [.delete]) || canIncreasePermissions
+
+		if shallAddCreateRow {
+			self.addPermissionRow(to: section, with: "Can Create", permission: .create, selected: (selected ? selected : hasAnyPermission(of: [.create])), identifier: "permission-section-edit-create")
+		}
+		if shallAddChangeRow {
+			self.addPermissionRow(to: section, with: "Can Change", permission: .update, selected: (selected ? selected : hasAnyPermission(of: [.update])), identifier: "permission-section-edit-change")
+		}
+		if shallAddDeleteRow {
+			self.addPermissionRow(to: section, with: "Can Delete", permission: .delete, selected: (selected ? selected : hasAnyPermission(of: [.delete])), identifier: "permission-section-edit-delete")
+		}
 
 		let subtitles = [
 			"Allows the users you share with to create new files and add them to the share".localized,
@@ -245,7 +264,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 					} else {
 						if let shareError = error {
 							OnMainThread {
-								let alertController = UIAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+								let alertController = ThemedAlertController(with: "Setting permission failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 								self.present(alertController, animated: true)
 								completionHandler(shareError)
 							}
@@ -301,7 +320,7 @@ class GroupSharingEditTableViewController: StaticTableViewController {
 								self?.navigationController?.popViewController(animated: true)
 							} else {
 								if let shareError = error {
-									let alertController = UIAlertController(with: "Delete Recipient failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+									let alertController = ThemedAlertController(with: "Delete Recipient failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 									self?.present(alertController, animated: true)
 								}
 							}

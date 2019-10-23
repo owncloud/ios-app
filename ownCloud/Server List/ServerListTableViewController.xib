@@ -37,7 +37,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PJc-v9-DYn" userLabel="Welcome Overlay">
-                    <rect key="frame" x="39.5" y="121" width="241.5" height="326"/>
+                    <rect key="frame" x="39.5" y="125.5" width="241.5" height="317"/>
                     <subviews>
                         <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" image="bookmark-logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="fP1-O2-lkg">
                             <rect key="frame" x="0.0" y="0.0" width="241.5" height="128"/>
@@ -52,7 +52,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jaa-D8-ghC" customClass="ThemeButton" customModule="ownCloud" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="283" width="241.5" height="43"/>
+                            <rect key="frame" x="0.0" y="283" width="241.5" height="34"/>
                             <color key="backgroundColor" red="0.27450980390000002" green="0.54901960780000003" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
                             <accessibility key="accessibilityConfiguration" identifier="addServer"/>
                             <constraints>
@@ -93,14 +93,14 @@ Start by adding your server.</string>
                         <constraint firstItem="fP1-O2-lkg" firstAttribute="top" secondItem="xJw-Td-7h2" secondAttribute="top" id="c7O-MV-CAw"/>
                         <constraint firstItem="xJw-Td-7h2" firstAttribute="trailing" secondItem="fP1-O2-lkg" secondAttribute="trailing" id="cF9-UI-9xL"/>
                         <constraint firstItem="xJw-Td-7h2" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="c8n-gy-7HF" secondAttribute="trailing" id="fQE-8k-zir"/>
-                        <constraint firstItem="xJw-Td-7h2" firstAttribute="trailing" secondItem="Jaa-D8-ghC" secondAttribute="trailing" id="gLY-Nv-73j"/>
+                        <constraint firstItem="xJw-Td-7h2" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="Jaa-D8-ghC" secondAttribute="trailing" id="gLY-Nv-73j"/>
                         <constraint firstItem="x7I-De-RhT" firstAttribute="bottom" secondItem="fP1-O2-lkg" secondAttribute="bottom" id="hPm-L8-5gB"/>
                         <constraint firstItem="fP1-O2-lkg" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="iBg-us-cdK"/>
                         <constraint firstItem="xJw-Td-7h2" firstAttribute="bottom" secondItem="Jaa-D8-ghC" secondAttribute="bottom" id="jPt-3z-e1W"/>
                         <constraint firstItem="x7I-De-RhT" firstAttribute="top" secondItem="fP1-O2-lkg" secondAttribute="top" id="oXa-Tt-Kb4"/>
                         <constraint firstItem="x7I-De-RhT" firstAttribute="leading" secondItem="fP1-O2-lkg" secondAttribute="leading" id="r2P-zD-FI5"/>
                         <constraint firstItem="Jaa-D8-ghC" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="rYy-mZ-wyn"/>
-                        <constraint firstItem="Jaa-D8-ghC" firstAttribute="leading" secondItem="xJw-Td-7h2" secondAttribute="leading" id="s2Y-9J-kgb"/>
+                        <constraint firstItem="Jaa-D8-ghC" firstAttribute="leading" relation="lessThanOrEqual" secondItem="xJw-Td-7h2" secondAttribute="leading" id="s2Y-9J-kgb"/>
                         <constraint firstItem="c8n-gy-7HF" firstAttribute="centerX" secondItem="PJc-v9-DYn" secondAttribute="centerX" id="u0i-ca-Uiz"/>
                         <constraint firstItem="Jaa-D8-ghC" firstAttribute="top" secondItem="IEC-5d-Hb5" secondAttribute="bottom" constant="25" id="wen-iH-60d"/>
                     </constraints>

@@ -73,8 +73,28 @@ enum ThemeCollectionStyle : String, CaseIterable {
 	}
 }
 
+enum ThemeCollectionInterfaceStyle : String, CaseIterable {
+	case dark
+	case light
+	case unspecified
+
+	@available(iOS 12.0, *)
+	var userInterfaceStyle : UIUserInterfaceStyle {
+		switch self {
+			case .dark: return .dark
+			case .light: return .light
+			case .unspecified: return .unspecified
+		}
+	}
+}
+
 class ThemeCollection : NSObject {
 	@objc var identifier : String = UUID().uuidString
+
+	// MARK: - Interface style
+	var interfaceStyle : ThemeCollectionInterfaceStyle
+	var keyboardAppearance : UIKeyboardAppearance
+	var backgroundBlurEffectStyle : UIBlurEffect.Style
 
 	// MARK: - Brand colors
 	@objc var darkBrandColor: UIColor
@@ -100,6 +120,8 @@ class ThemeCollection : NSObject {
 	// MARK: - Table views
 	@objc var tableBackgroundColor : UIColor
 	@objc var tableGroupBackgroundColor : UIColor
+	@objc var tableSectionHeaderColor : UIColor?
+	@objc var tableSectionFooterColor : UIColor?
 	@objc var tableSeparatorColor : UIColor?
 	@objc var tableRowColors : ThemeColorCollection
 	@objc var tableRowHighlightColors : ThemeColorCollection
@@ -149,6 +171,10 @@ class ThemeCollection : NSObject {
 	init(darkBrandColor darkColor: UIColor, lightBrandColor lightColor: UIColor, style: ThemeCollectionStyle = .dark, customColors: NSDictionary? = nil, genericColors: NSDictionary? = nil) {
 		var logoFillColor : UIColor?
 
+		self.interfaceStyle = .unspecified
+		self.keyboardAppearance = .default
+		self.backgroundBlurEffectStyle = .regular
+
 		self.darkBrandColor = darkColor
 		self.lightBrandColor = lightColor
 
@@ -192,8 +218,20 @@ class ThemeCollection : NSObject {
 
 		// Table view
 		self.tableBackgroundColor = colors.resolveColor("Table.tableBackgroundColor", UIColor.white, generic)
-		self.tableGroupBackgroundColor = colors.resolveColor("Table.tableGroupBackgroundColor", UIColor.groupTableViewBackground, generic)
-		self.tableSeparatorColor = colors.resolveColor("Table.tableSeparatorColor", nil, generic)
+
+		if #available(iOS 13, *) {
+			self.tableGroupBackgroundColor = colors.resolveColor("Table.tableGroupBackgroundColor", UIColor.groupTableViewBackground.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)), generic)
+			let color = colors.resolveColor("Table.tableSeparatorColor", UIColor.separator, generic)
+			self.tableSeparatorColor = color
+
+		} else {
+			self.tableGroupBackgroundColor = colors.resolveColor("Table.tableGroupBackgroundColor", UIColor.groupTableViewBackground, generic)
+			let color = colors.resolveColor("Table.tableSeparatorColor", UIColor.lightGray, generic)
+			self.tableSeparatorColor = color
+		}
+		self.tableSectionHeaderColor = UIColor.gray
+		self.tableSectionFooterColor = UIColor.gray
+
 		let rowColor : UIColor? = UIColor.black.withAlphaComponent(0.1)
 		self.tableRowBorderColor = colors.resolveColor("Table.tableRowBorderColor", rowColor, generic)
 
@@ -207,7 +245,7 @@ class ThemeCollection : NSObject {
 		), generic)
 
 		self.tableRowHighlightColors = colors.resolveThemeColorCollection("Table.tableRowHighlightColors", ThemeColorCollection(
-			backgroundColor: nil,
+			backgroundColor: UIColor.white.darker(0.1),
 			tintColor: nil,
 			labelColor: UIColor.black,
 			secondaryLabelColor: UIColor.gray,
@@ -218,9 +256,17 @@ class ThemeCollection : NSObject {
 		self.favoriteEnabledColor = UIColor(hex: 0xFFCC00)
 		self.favoriteDisabledColor = UIColor(hex: 0x7C7C7C)
 
+		self.favoriteEnabledColor = UIColor(hex: 0xFFCC00)
+		self.favoriteDisabledColor = UIColor(hex: 0x7C7C7C)
+
 		// Styles
 		switch style {
 			case .dark:
+				// Interface style
+				self.interfaceStyle = .dark
+				self.keyboardAppearance = .dark
+				self.backgroundBlurEffectStyle = .dark
+
 				// Bars
 				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors, generic)
 				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.darkBrandColors, generic)
@@ -267,6 +313,11 @@ class ThemeCollection : NSObject {
 				logoFillColor = colors.resolveColor("Icon.logoFillColor", logoColor, generic)
 
 			case .light:
+				// Interface style
+				self.interfaceStyle = .light
+				self.keyboardAppearance = .light
+				self.backgroundBlurEffectStyle = .light
+
 				// Bars
 				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", ThemeColorCollection(
 					backgroundColor: UIColor.white.darker(0.05),
@@ -281,7 +332,11 @@ class ThemeCollection : NSObject {
 				self.searchbarColors = colors.resolveThemeColorCollection("Searchbar", self.navigationBarColors, generic)
 
 				// Bar styles
-				self.statusBarStyle = .default
+				if #available(iOS 13, *) {
+					self.statusBarStyle = .darkContent
+				} else {
+					self.statusBarStyle = .default
+				}
 				self.barStyle = .default
 
 				// Progress
@@ -295,6 +350,11 @@ class ThemeCollection : NSObject {
 				logoFillColor = UIColor.lightGray
 
 			case .contrast:
+				// Interface style
+				self.interfaceStyle = .light
+				self.keyboardAppearance = .light
+				self.backgroundBlurEffectStyle = .light
+
 				// Bars
 				self.navigationBarColors = colors.resolveThemeColorCollection("NavigationBar", self.darkBrandColors, generic)
 				self.toolbarColors = colors.resolveThemeColorCollection("Toolbar", self.darkBrandColors, generic)
@@ -306,6 +366,10 @@ class ThemeCollection : NSObject {
 
 				// Progress
 				self.progressColors = colors.resolveThemeColorPair("Progress", ThemeColorPair(foreground: self.lightBrandColor, background: UIColor.lightGray.withAlphaComponent(0.3)), generic)
+
+				// Activity
+				self.activityIndicatorViewStyle = .gray
+				self.searchBarActivityIndicatorViewStyle = .white
 
 				// Activity
 				self.activityIndicatorViewStyle = .gray
@@ -336,9 +400,6 @@ extension NSDictionary {
 	func resolveColor(_ forKeyPath: String, _ fallback : UIColor, _ generic: NSDictionary) -> UIColor {
 		if let rawColor = self.value(forKeyPath: forKeyPath) as? String {
 			if rawColor.contains("."), let genericRawColor = generic.value(forKeyPath: rawColor) as? String, let decodedHexColor = genericRawColor.colorFromHex {
-
-				print("--->>> use generic path \(rawColor) \(genericRawColor) \(decodedHexColor)")
-
 				return decodedHexColor
 			} else if let decodedHexColor = rawColor.colorFromHex {
 				return decodedHexColor
@@ -386,5 +447,20 @@ extension NSDictionary {
 		newColorPairCollection.disabled = self.resolveThemeColorPair(forKeyPath.appending(".disabled"), colorPairCollection.disabled, generic)
 
 		return newColorPairCollection
+	}
+
+}
+
+@available(iOS 13.0, *)
+extension ThemeCollection {
+	var navigationBarAppearance : UINavigationBarAppearance {
+		let appearance = UINavigationBarAppearance()
+
+		appearance.configureWithOpaqueBackground()
+		appearance.backgroundColor = navigationBarColors.backgroundColor
+		appearance.titleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
+		appearance.largeTitleTextAttributes = [ .foregroundColor : navigationBarColors.labelColor  ]
+
+		return appearance
 	}
 }

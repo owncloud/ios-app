@@ -137,6 +137,8 @@ class PasscodeViewController: UIViewController, Themeable {
 		self.screenBlurringEnabled = false
 
 		super.init(nibName: "PasscodeViewController", bundle: nil)
+
+		self.modalPresentationStyle = .fullScreen
 	}
 
 	required init?(coder aDecoder: NSCoder) {

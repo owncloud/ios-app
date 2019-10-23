@@ -29,7 +29,7 @@ class LibraryFilesTableViewController: QueryFileListTableViewController {
 	}
 
 	override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-		if sortMethod == .alphabeticallyAscendant || sortMethod == .alphabeticallyDescendant {
+		if sortMethod == .alphabetically {
 			return Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
 		}
 
