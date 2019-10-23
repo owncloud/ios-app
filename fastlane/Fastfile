@@ -187,8 +187,7 @@ platform :ios do
           ENTERPRISE_FP_ID => ENTERPRISE_FP_PROFILE,
           ENTERPRISE_FP_UI_ID => ENTERPRISE_FP_UI_PROFILE
         }
-      },
-      output_name: ipaName
+      }
     )
   end
 
