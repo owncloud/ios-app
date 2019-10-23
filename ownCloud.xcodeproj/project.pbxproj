@@ -590,7 +590,7 @@
 		232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreViewHeader.swift; sourceTree = "<group>"; };
 		232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreStaticTableViewController.swift; sourceTree = "<group>"; };
 		232F7CAE2097260400EE22E4 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		233BDE9C204FEFE500C06732 /* SURFdrive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SURFdrive.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		233BDE9C204FEFE500C06732 /* ownCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ownCloud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		233BDE9F204FEFE500C06732 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		233BDEA6204FEFE500C06732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		233BDEA9204FEFE500C06732 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -1039,7 +1039,7 @@
 		233BDE9D204FEFE500C06732 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				233BDE9C204FEFE500C06732 /* SURFdrive.app */,
+				233BDE9C204FEFE500C06732 /* ownCloud.app */,
 				233BDEB0204FEFE500C06732 /* ownCloudTests.xctest */,
 				DC7DBA34207F84BF00E7337D /* MakeTVG */,
 				DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */,
@@ -1922,7 +1922,7 @@
 			);
 			name = ownCloud;
 			productName = ownCloud;
-			productReference = 233BDE9C204FEFE500C06732 /* SURFdrive.app */;
+			productReference = 233BDE9C204FEFE500C06732 /* ownCloud.app */;
 			productType = "com.apple.product-type.application";
 		};
 		233BDEAF204FEFE500C06732 /* ownCloudTests */ = {
@@ -3085,7 +3085,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
-				PRODUCT_NAME = SURFdrive;
+				PRODUCT_NAME = ownCloud;
 				PROVISIONING_PROFILE = "3bae2090-bddc-4ba3-a301-9d8afbbed296";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -3113,7 +3113,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
-				PRODUCT_NAME = SURFdrive;
+				PRODUCT_NAME = ownCloud;
 				PROVISIONING_PROFILE = "0720808b-becc-4621-8839-347863375834";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";

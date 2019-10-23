@@ -75,6 +75,19 @@ platform :ios do
     ENTERPRISE_TEAM = "5QNK8L2PSC"
     ENTERPRISE_IDENTITY = "iPhone Distribution: ownCloud GmbH"
 
+    appName = "ownCloud"
+    themePath = "ownCloud/Resources/Theming/Themes.plist"
+    if File.exist?(full_to_path)
+      appName = get_info_plist_value(path: themePath, key: "AppName")
+    end
+    ipaName = appName + ".ipa"
+
+    update_info_plist( # Target a specific `xcodeproj` rather than finding the first available one
+      xcodeproj: "ownCloud.xcodeproj",
+      plist_path: "ownCloud/Resources/Info.plist",
+      display_name: appName
+    )
+
     update_app_identifier(
       xcodeproj: "ownCloud.xcodeproj",
       plist_path: "ownCloud/Resources/Info.plist",
@@ -174,7 +187,8 @@ platform :ios do
 	        ENTERPRISE_FP_ID => ENTERPRISE_FP_PROFILE,
 	        ENTERPRISE_FP_UI_ID => ENTERPRISE_FP_UI_PROFILE
         }
-      }
+      },
+      output_name: ipaName
     )
   end
 
