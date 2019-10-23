@@ -30,7 +30,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "233BDE9B204FEFE500C06732"
-               BuildableName = "SURFdrive.app"
+               BuildableName = "ownCloud.app"
                BlueprintName = "ownCloud"
                ReferencedContainer = "container:ownCloud.xcodeproj">
             </BuildableReference>
@@ -42,6 +42,15 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "233BDE9B204FEFE500C06732"
+            BuildableName = "ownCloud.app"
+            BlueprintName = "ownCloud"
+            ReferencedContainer = "container:ownCloud.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -74,23 +83,13 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "233BDE9B204FEFE500C06732"
-            BuildableName = "SURFdrive.app"
-            BlueprintName = "ownCloud"
-            ReferencedContainer = "container:ownCloud.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = ""
       selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       launchStyle = "0"
+      askForAppToLaunch = "Yes"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
@@ -106,7 +105,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "233BDE9B204FEFE500C06732"
-            BuildableName = "SURFdrive.app"
+            BuildableName = "ownCloud.app"
             BlueprintName = "ownCloud"
             ReferencedContainer = "container:ownCloud.xcodeproj">
          </BuildableReference>
@@ -128,8 +127,6 @@
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -143,7 +140,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "233BDE9B204FEFE500C06732"
-            BuildableName = "SURFdrive.app"
+            BuildableName = "ownCloud.app"
             BlueprintName = "ownCloud"
             ReferencedContainer = "container:ownCloud.xcodeproj">
          </BuildableReference>

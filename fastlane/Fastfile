@@ -77,7 +77,7 @@ platform :ios do
 
     appName = "ownCloud"
     themePath = "ownCloud/Resources/Theming/Themes.plist"
-    if File.exist?(full_to_path)
+    if File.exist?("../" + themePath)
       appName = get_info_plist_value(path: themePath, key: "AppName")
     end
     ipaName = appName + ".ipa"
@@ -184,8 +184,8 @@ platform :ios do
         method: "enterprise",
         provisioningProfiles: {
           ENTERPRISE_APP_ID => ENTERPRISE_APP_PROFILE,
-	        ENTERPRISE_FP_ID => ENTERPRISE_FP_PROFILE,
-	        ENTERPRISE_FP_UI_ID => ENTERPRISE_FP_UI_PROFILE
+          ENTERPRISE_FP_ID => ENTERPRISE_FP_PROFILE,
+          ENTERPRISE_FP_UI_ID => ENTERPRISE_FP_UI_PROFILE
         }
       },
       output_name: ipaName
