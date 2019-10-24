@@ -27,6 +27,7 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 	override class var features : [String : Any]? { return [ FeatureKeys.runOnWifi : true] }
 
 	private var uploadDirectoryTracking: OCCoreItemTracking?
+	private var startedUploads: Bool = false
 
 	override func run(background:Bool) {
 
@@ -52,27 +53,33 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 						})
 					}
 
-					core?.fetchUpdates(completionHandler: { (fetchError, _) in
-						if fetchError == nil {
+					guard let pendingUploads = MediaUploadQueue.pendingAssetUploads(for: bookmark) else {
+						finalize()
+						return
+					}
+					
+					let uniquePaths = Array(Set(pendingUploads.values))
 
-							if let pendingUploads = MediaUploadQueue.pendingAssetUploads(for: bookmark) {
-								// Iterate over unique upload paths
-								let uniquePaths = Array(Set(pendingUploads.values))
-								let uploadGroup = DispatchGroup()
-								for path in uniquePaths {
-									uploadGroup.enter()
-									// Get assets for current upload path
-									let assetsToUpload = assets(from: pendingUploads, with: path)
-									// Perform upload
-									self.upload(assets: assetsToUpload, with: core!, at: path) {
-										uploadGroup.leave()
-									}
+					core?.fetchUpdates(completionHandler: {(fetchError, _) in
+						if fetchError == nil && self.startedUploads == false {
+
+							self.startedUploads = true
+
+							// Iterate over unique upload paths
+							let uploadGroup = DispatchGroup()
+							for path in uniquePaths {
+								uploadGroup.enter()
+								// Get assets for current upload path
+								let assetsToUpload = assets(from: pendingUploads, with: path)
+								// Perform upload
+								self.upload(assets: assetsToUpload, with: core!, at: path) {
+									uploadGroup.leave()
 								}
-
-								uploadGroup.notify(queue: .main, execute: {
-									finalize()
-								})
 							}
+
+							uploadGroup.notify(queue: .main, execute: {
+								finalize()
+							})
 
 						} else {
 							Log.error(tagged: ["REMAINING_MEDIA_UPLOAD"], "Fetching bookmark update failed with \(String(describing: fetchError))")
@@ -92,7 +99,7 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 
 	private func upload(assets:[PHAsset], with core:OCCore, at path:String, completion:@escaping () -> Void) {
 
-		self.uploadDirectoryTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
+		self.uploadDirectoryTracking = core.trackItem(atPath: path, trackingHandler: { [weak self] (error, item, isInitial) in
 
 			if isInitial {
 				if error != nil {
@@ -102,10 +109,9 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 					if item != nil {
 						// Upload assets
 						Log.debug(tagged: ["REMAINING_MEDIA_UPLOAD"], "Uploading \(assets.count) assets at \(path)")
-
+						self?.uploadDirectoryTracking = nil
 						MediaUploadQueue.shared.uploadAssets(assets, with: core, at: item!) { (_, finished) in
 							if finished {
-								self.uploadDirectoryTracking = nil
 								completion()
 							}
 						}
@@ -115,7 +121,7 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 					}
 				}
 			} else {
-				self.uploadDirectoryTracking = nil
+				self?.uploadDirectoryTracking = nil
 			}
 		})
 	}

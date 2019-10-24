@@ -19,28 +19,34 @@
 import AVFoundation
 
 extension AVAsset {
-	func exportVideo(targetURL:URL, type:AVFileType, completion:@escaping (_ success:Bool) -> Void) {
+	func exportVideo(targetURL:URL, type:AVFileType) -> Bool {
 		if self.isExportable {
-
+			let group = DispatchGroup()
 			let preset = AVAssetExportPresetHighestQuality
+			var compatiblePreset = false
+			var exportSuccess = false
 
+			group.enter()
 			AVAssetExportSession.determineCompatibility(ofExportPreset: preset, with: self, outputFileType: type, completionHandler: { (isCompatible) in
-				if !isCompatible {
-					completion(false)
-				}})
+				compatiblePreset = isCompatible
+				group.leave()
+			})
 
-			guard let export = AVAssetExportSession(asset: self, presetName: preset) else {
-				completion(false)
-				return
+			if compatiblePreset {
+				guard let export = AVAssetExportSession(asset: self, presetName: preset) else {
+					return false
+				}
+				export.outputFileType = type
+				export.outputURL = targetURL
+				export.exportAsynchronously {
+					exportSuccess = (export.status == .completed)
+				}
 			}
 
-			export.outputFileType = type
-			export.outputURL = targetURL
-			export.exportAsynchronously {
-				completion( export.status == .completed )
-			}
-		} else {
-			completion(false)
+			group.wait()
+			return exportSuccess
 		}
+
+		return false
 	}
 }

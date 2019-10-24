@@ -62,6 +62,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 									}
 
 									if item != nil {
+										self.uploadDirectoryTracking = nil
 										self.uploadMediaAssets(with: core, at: item!, completion: {
 											finalize()
 										})

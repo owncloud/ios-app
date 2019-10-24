@@ -34,6 +34,18 @@ class MediaUploadQueue {
 
 	func uploadAssets(_ assets:[PHAsset], with core:OCCore?, at rootItem:OCItem, progressHandler:((Progress) -> Void)? = nil, assetUploadCompletion:((_ asset:PHAsset?, _ finished:Bool) -> Void)? = nil ) {
 
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
+
+		// Determine the list of preferred media formats
+		var prefferedMediaOutputFormats = [String]()
+		if userDefaults.convertHeic {
+			prefferedMediaOutputFormats.append(String(kUTTypeJPEG))
+		}
+		if userDefaults.convertVideosToMP4 {
+			prefferedMediaOutputFormats.append(String(kUTTypeMPEG4))
+		}
+
+		// Create background task used to continue media upload in the background
 		let backgroundTask = OCBackgroundTask(name: "UploadMediaAction", expirationHandler: { (bgTask) in
 			Log.warning("UploadMediaAction background task expired")
 			bgTask.end()
@@ -44,78 +56,53 @@ class MediaUploadQueue {
 		weak var weakCore = core
 
 		if weakCore != nil {
+			// Store persistent flag indicating that media upload was started
 			let vault : OCVault = OCVault(bookmark: weakCore!.bookmark)
 			let flag = NSNumber(value: true)
 			vault.keyValueStore?.storeObject(flag, forKey: MediaUploadQueue.UploadPendingKey)
-
 			MediaUploadQueue.uploadStarted = true
-		}
 
-		queue.async {
+			// Submit upload job on the background queue
+			queue.async {
 
-			guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
+				// Add pending assets
+				MediaUploadQueue.addPending(assets, for: weakCore!.bookmark, at: rootItem)
 
-			var prefferedMediaOutputFormats = [String]()
-			if userDefaults.convertHeic {
-				prefferedMediaOutputFormats.append(String(kUTTypeJPEG))
-			}
-			if userDefaults.convertVideosToMP4 {
-				prefferedMediaOutputFormats.append(String(kUTTypeMPEG4))
-			}
+				let uploadGroup = DispatchGroup()
+				uploadGroup.enter()
+				weakCore!.perform(inRunningCore: { (runningCoreCompletion) in
 
-			let uploadGroup = DispatchGroup()
-			var uploadFailed = false
+					// Group multiple uploads within same OCCore context to avoid unnecessary syncing operations
+					weakCore!.schedule {
+						for asset in assets {
+							let result = asset.upload(with: weakCore!, at: rootItem, preferredFormats: prefferedMediaOutputFormats, progressHandler: { (progress) in
+								progressHandler?(progress)
+							})
 
-			// Add pending assets
-			MediaUploadQueue.addPending(assets, for: weakCore!.bookmark, at: rootItem)
-
-			for asset in assets {
-				if uploadFailed == false {
-					uploadGroup.enter()
-					self.uploadSerialQueue.async {
-						if weakCore != nil {
-							weakCore!.perform(inRunningCore: { (runningCoreCompletion) in
-
-								weakCore!.schedule {
-									asset.upload(with: weakCore!, at: rootItem, preferredFormats: prefferedMediaOutputFormats, completionHandler: { (item, _) in
-										if item == nil {
-											uploadFailed = true
-										} else {
-											assetUploadCompletion?(asset, false)
-											MediaUploadQueue.removePending(asset: asset.localIdentifier, for: weakCore!.bookmark)
-										}
-										runningCoreCompletion()
-										uploadGroup.leave()
-									}, progressHandler: { (progress) in
-										progressHandler?(progress)
-									})
-								}
-
-							}, withDescription: "Uploading \(assets.count) photo assets")
-
-						} else {
-							uploadGroup.leave()
-							// Core reference became nil
-							uploadFailed = true
+							// Was OCItem created upon importing the asset file?
+							if result?.0 != nil {
+								assetUploadCompletion?(asset, false)
+								MediaUploadQueue.removePending(asset: asset.localIdentifier, for: weakCore!.bookmark)
+							}
 						}
+						runningCoreCompletion()
+						uploadGroup.leave()
 					}
-					// Avoid submitting to many jobs simultaneously to reduce memory pressure
-					_ = uploadGroup.wait()
 
-				} else {
-					// Escape on first failed download
-					break
-				}
+				}, withDescription: "Uploading \(assets.count) photo assets")
+
+				// Wait until all to-be-uploaded assets are processed
+				uploadGroup.notify(queue: queue, execute: {
+					// Reset persistent flag indicating started media upload
+					if weakCore != nil {
+						MediaUploadQueue.resetUploadPendingFlag(for:  weakCore!.bookmark)
+					}
+					MediaUploadQueue.uploadStarted = false
+					// Finish background task
+					backgroundTask?.end()
+					assetUploadCompletion?(nil, true)
+				})
 			}
-
-			uploadGroup.notify(queue: queue, execute: {
-				if weakCore != nil {
-					MediaUploadQueue.resetUploadPendingFlag(for:  weakCore!.bookmark)
-				}
-				MediaUploadQueue.uploadStarted = false
-				backgroundTask?.end()
-				assetUploadCompletion?(nil, true)
-			})
 		}
 	}
 
