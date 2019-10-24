@@ -173,10 +173,16 @@ class MessageView: UIView {
 					self.composeViewBottomConstraint.constant = self.masterView.safeAreaInsets.bottom - keyboardHeight
 				}
 
+				var masterTopAnchor = masterView.safeAreaLayoutGuide.topAnchor
+
+				if let masterTableView = masterView as? UITableView, let masterTableHeaderView = masterTableView.tableHeaderView {
+					masterTopAnchor = masterTableHeaderView.safeAreaLayoutGuide.bottomAnchor
+				}
+
 				NSLayoutConstraint.activate([
 					rootView.leftAnchor.constraint(equalTo: self.masterView.leftAnchor),
 					rootView.widthAnchor.constraint(equalTo: self.masterView.widthAnchor),
-					rootView.topAnchor.constraint(equalTo: self.masterView.safeAreaLayoutGuide.topAnchor),
+					rootView.topAnchor.constraint(equalTo: masterTopAnchor),
 					self.composeViewBottomConstraint
 				])
 

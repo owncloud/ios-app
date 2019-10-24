@@ -35,12 +35,31 @@ class SegmentedControl: UISegmentedControl {
 	}
 }
 
+public enum SearchScope : Int, CaseIterable {
+	case global
+	case local
+
+	var label : String {
+		var name : String!
+
+		switch self {
+			case .global: name = "all".localized
+			case .local: name = "folder".localized
+		}
+
+		return name
+	}
+}
+
 protocol SortBarDelegate: class {
 
 	var sortDirection: SortDirection { get set }
 	var sortMethod: SortMethod { get set }
+	var searchScope: SearchScope { get set }
 
 	func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod)
+
+	func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SearchScope)
 
 	func sortBar(_ sortBar: SortBar, presentViewController: UIViewController, animated: Bool, completionHandler: (() -> Void)?)
 
@@ -66,10 +85,24 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 
 	var sortSegmentedControl: SegmentedControl?
 	var sortButton: UIButton?
+	var searchScopeSegmentedControl : SegmentedControl?
 	var selectButton: UIButton?
 	var showSelectButton: Bool = false {
 		didSet {
 			selectButton?.isHidden = !showSelectButton
+		}
+	}
+
+	var showSearchScope: Bool = false {
+		didSet {
+			self.searchScopeSegmentedControl?.isHidden = false
+			self.searchScopeSegmentedControl?.alpha = oldValue ? 1.0 : 0.0
+
+			UIView.animate(withDuration: 0.3, animations: {
+				self.searchScopeSegmentedControl?.alpha = self.showSearchScope ? 1.0 : 0.0
+			}, completion: { (_) in
+				self.searchScopeSegmentedControl?.isHidden = !self.showSearchScope
+			})
 		}
 	}
 
@@ -103,36 +136,57 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 		}
 	}
 
+	var searchScope : SearchScope {
+		didSet {
+			delegate?.searchScope = searchScope
+			searchScopeSegmentedControl?.selectedSegmentIndex = searchScope.rawValue
+		}
+	}
+
 	// MARK: - Init & Deinit
 
-	init(frame: CGRect, sortMethod: SortMethod) {
+	init(frame: CGRect, sortMethod: SortMethod, searchScope: SearchScope = .local) {
 		sortSegmentedControl = SegmentedControl()
 		selectButton = UIButton()
 		sortButton = UIButton(type: .system)
+		searchScopeSegmentedControl = SegmentedControl()
 
 		self.sortMethod = sortMethod
+		self.searchScope = searchScope
 
 		super.init(frame: frame)
 
-		if let sortButton = sortButton, let sortSegmentedControl = sortSegmentedControl, let selectButton = selectButton {
+		if let sortButton = sortButton, let sortSegmentedControl = sortSegmentedControl, let searchScopeSegmentedControl = searchScopeSegmentedControl, let selectButton = selectButton {
 			sortButton.translatesAutoresizingMaskIntoConstraints = false
 			sortSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
 			selectButton.translatesAutoresizingMaskIntoConstraints = false
+			searchScopeSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
 
 			sortButton.accessibilityIdentifier = "sort-bar.sortButton"
 			sortSegmentedControl.accessibilityIdentifier = "sort-bar.segmentedControl"
+			searchScopeSegmentedControl.accessibilityIdentifier = "sort-bar.searchScopeSegmentedControl"
+
+			for scope in SearchScope.allCases {
+				searchScopeSegmentedControl.insertSegment(withTitle: scope.label, at: scope.rawValue, animated:false)
+			}
+			searchScopeSegmentedControl.selectedSegmentIndex = searchScope.rawValue
+			searchScopeSegmentedControl.isHidden = !self.showSearchScope
+			searchScopeSegmentedControl.addTarget(self, action: #selector(searchScopeValueChanged), for: .valueChanged)
 
 			self.addSubview(sortSegmentedControl)
 			self.addSubview(sortButton)
+			self.addSubview(searchScopeSegmentedControl)
 			self.addSubview(selectButton)
 
 			// Sort segmented control
 			NSLayoutConstraint.activate([
 				sortSegmentedControl.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
 				sortSegmentedControl.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding),
-				sortSegmentedControl.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-				sortSegmentedControl.leftAnchor.constraint(greaterThanOrEqualTo: self.leftAnchor, constant: leftPadding),
-				sortSegmentedControl.rightAnchor.constraint(lessThanOrEqualTo: self.rightAnchor, constant: -rightPadding)
+				sortSegmentedControl.leftAnchor.constraint(equalTo: self.leftAnchor, constant: leftPadding),
+
+				searchScopeSegmentedControl.trailingAnchor.constraint(equalTo: selectButton.leadingAnchor, constant: -10),
+				searchScopeSegmentedControl.topAnchor.constraint(equalTo: self.topAnchor, constant: topPadding),
+				searchScopeSegmentedControl.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -bottomPadding)
 			])
 
 			var longestTitleWidth : CGFloat = 0.0
@@ -207,6 +261,7 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 		self.sortButton?.applyThemeCollection(collection)
 		self.selectButton?.applyThemeCollection(collection)
 		self.sortSegmentedControl?.applyThemeCollection(collection)
+		self.searchScopeSegmentedControl?.applyThemeCollection(collection)
 		self.backgroundColor = collection.navigationBarColors.backgroundColor
 	}
 
@@ -273,6 +328,13 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 		if let selectedIndex = sortSegmentedControl?.selectedSegmentIndex {
 			self.sortMethod = SortMethod.all[selectedIndex]
 			delegate?.sortBar(self, didUpdateSortMethod: self.sortMethod)
+		}
+	}
+
+	@objc private func searchScopeValueChanged() {
+		if let selectedIndex = searchScopeSegmentedControl?.selectedSegmentIndex {
+			self.searchScope = SearchScope(rawValue: selectedIndex)!
+			delegate?.sortBar(self, didUpdateSearchScope: self.searchScope)
 		}
 	}
 

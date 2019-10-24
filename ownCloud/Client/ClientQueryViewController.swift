@@ -35,7 +35,7 @@ extension OCQueryState {
 	}
 }
 
-class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
+class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate, UISearchControllerDelegate {
 	var selectedItemIds = Set<OCLocalID>()
 
 	var actions : [Action]?
@@ -58,8 +58,50 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	private var _actionProgressHandler : ActionProgressHandler?
 
+	private var _query : OCQuery
+	override var query : OCQuery {
+		set {
+			_query = newValue
+		}
+
+		get {
+			if let customSearchQuery = customSearchQuery {
+				return customSearchQuery
+			} else {
+				return _query
+			}
+		}
+	}
+	var customSearchQuery : OCQuery? {
+		willSet {
+			if customSearchQuery != newValue, let query = customSearchQuery {
+				core?.stop(query)
+				query.delegate = nil
+			}
+		}
+
+		didSet {
+			if customSearchQuery != nil, let query = customSearchQuery {
+				query.delegate = self
+				query.sortComparator = sortMethod.comparator(direction: sortDirection)
+				core?.start(query)
+			}
+		}
+	}
+	override var searchScope: SearchScope {
+		set {
+			UserDefaults.standard.setValue(newValue.rawValue, forKey: "search-scope")
+		}
+
+		get {
+			let scope = SearchScope(rawValue: UserDefaults.standard.integer(forKey: "search-scope")) ?? SearchScope.local
+			return scope
+		}
+	}
+
 	// MARK: - Init & Deinit
 	public override init(core inCore: OCCore, query inQuery: OCQuery) {
+		_query = inQuery
 		super.init(core: inCore, query: inQuery)
 
 		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
@@ -126,6 +168,49 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		}
 	}
 
+	// MARK: - Search events
+	func willPresentSearchController(_ searchController: UISearchController) {
+		self.sortBar?.showSearchScope = true
+	}
+
+	func willDismissSearchController(_ searchController: UISearchController) {
+		self.sortBar?.showSearchScope = false
+	}
+
+	// MARK: - Search scope support
+	private var searchText: String?
+
+	override func applySearchFilter(for searchText: String?, to query: OCQuery) {
+		self.searchText = searchText
+
+		updateCustomSearchQuery()
+	}
+
+	override func sortBar(_ sortBar: SortBar, didUpdateSearchScope: SearchScope) {
+		updateCustomSearchQuery()
+	}
+
+	override func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
+		sortMethod = didUpdateSortMethod
+
+		let comparator = sortMethod.comparator(direction: sortDirection)
+
+		_query.sortComparator = comparator
+		customSearchQuery?.sortComparator = comparator
+	}
+
+	func updateCustomSearchQuery() {
+		if let searchText = searchText, let searchScope = sortBar?.searchScope, searchScope == .global {
+			self.customSearchQuery = OCQuery(condition: .where(.name, contains: searchText), inputFilter: nil)
+		} else {
+			self.customSearchQuery = nil
+		}
+
+		super.applySearchFilter(for: searchText, to: _query)
+
+		self.queryHasChangesAvailable(query)
+	}
+
 	// MARK: - View controller events
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -169,6 +254,12 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
 	private var viewControllerVisible : Bool = false
+
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+
+		searchController?.delegate = self
+	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
@@ -588,10 +679,16 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	// MARK: - Updates
 	override func performUpdatesWithQueryChanges(query: OCQuery, changeSet: OCQueryChangeSet?) {
-		if let rootItem = self.query.rootItem {
-			if query.queryPath != "/" {
-				let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
-				self.updateFooter(text: totalSize)
+		if query == self.query {
+			super.performUpdatesWithQueryChanges(query: query, changeSet: changeSet)
+
+			if let rootItem = self.query.rootItem, searchText == nil {
+				if query.queryPath != "/" {
+					let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
+					self.updateFooter(text: totalSize)
+				}
+			} else {
+				self.updateFooter(text: nil)
 			}
 		}
 	}
