@@ -57,7 +57,7 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 						finalize()
 						return
 					}
-					
+
 					let uniquePaths = Array(Set(pendingUploads.values))
 
 					core?.fetchUpdates(completionHandler: {(fetchError, _) in

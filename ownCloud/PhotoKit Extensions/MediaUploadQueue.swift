@@ -23,8 +23,6 @@ import MobileCoreServices
 
 class MediaUploadQueue {
 
-	private let uploadSerialQueue = DispatchQueue(label: "com.owncloud.upload.queue", target: DispatchQueue.global(qos: .background))
-
 	static let shared = MediaUploadQueue()
 
 	static let UploadPendingKey = OCKeyValueStoreKey(rawValue: "com.owncloud.upload.queue.upload-pending-flag")
