@@ -27,78 +27,111 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 	override class var features : [String : Any]? { return [ FeatureKeys.runOnWifi : true] }
 
 	private var uploadDirectoryTracking: OCCoreItemTracking?
-	private var startedUploads: Bool = false
+	private var selectedBookmark: OCBookmark?
+	private weak var weakCore: OCCore?
+	private var coreUpdatesHandler: OCCoreItemListFetchUpdatesCompletionHandler?
 
 	override func run(background:Bool) {
 
-		func assets(from dictionary:[PHAsset : String], with uploadPath:String) -> [PHAsset] {
-			let assets = dictionary.reduce(into: [PHAsset]()) { (result, kvPair) in
-				let (key, value) = kvPair
-				if value == uploadPath {
-					result.append(key)
-				}
+		Log.debug(tagged: ["REMAINING_MEDIA_UPLOAD"], "Preparing...")
+
+		self.coreUpdatesHandler = {(fetchError:Error?, foundUpdates:Bool) in
+			if fetchError != nil {
+				Log.error(tagged: ["REMAINING_MEDIA_UPLOAD"], "Fetching bookmark update failed with \(String(describing: fetchError))")
+				self.cleanup()
+				return
 			}
-			return assets
+
+			self.coreUpdatesHandler = nil
+
+			Log.debug(tagged: ["REMAINING_MEDIA_UPLOAD"], "Started remaining media upload...")
+
+			self.fetchPendingUploads()
 		}
 
-		Log.debug(tagged: ["REMAINING_MEDIA_UPLOAD"], "Started remaining media upload...")
+		// Do we have a selected bookmark?
+		guard let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection else {
+			Log.debug(tagged: ["REMAINING_MEDIA_UPLOAD"], "No bookmark selected...")
+			self.completed()
+			return
+		}
+		self.selectedBookmark = bookmark
 
-		if let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection {
-			OCCoreManager.shared.requestCore(for: bookmark, setup:nil, completionHandler: {(core, coreError) in
-				if core != nil {
+		// Request a core for the bookmark
+		OCCoreManager.shared.requestCore(for: bookmark, setup:nil, completionHandler: { [weak self] (core, coreError) in
+			if coreError != nil {
+				Log.error(tagged: ["REMAINING_MEDIA_UPLOAD"], "No core returned with error \(String(describing: coreError))")
+				self?.result = .failure(coreError!)
+				self?.cleanup()
+				return
+			}
 
-					func finalize() {
-						OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
-							self.completed()
-						})
-					}
+			self?.weakCore = core
 
-					guard let pendingUploads = MediaUploadQueue.pendingAssetUploads(for: bookmark) else {
-						finalize()
-						return
-					}
+			// Fetch core updates
+			if let core = self?.weakCore {
+				core.fetchUpdates(completionHandler: {(fetchError, foundUpdates) in
+					self?.coreUpdatesHandler?(fetchError, foundUpdates)
+				})
+			}
+		})
+	}
 
-					let uniquePaths = Array(Set(pendingUploads.values))
-
-					core?.fetchUpdates(completionHandler: {(fetchError, _) in
-						if fetchError == nil && self.startedUploads == false {
-
-							self.startedUploads = true
-
-							// Iterate over unique upload paths
-							let uploadGroup = DispatchGroup()
-							for path in uniquePaths {
-								uploadGroup.enter()
-								// Get assets for current upload path
-								let assetsToUpload = assets(from: pendingUploads, with: path)
-								// Perform upload
-								self.upload(assets: assetsToUpload, with: core!, at: path) {
-									uploadGroup.leave()
-								}
-							}
-
-							uploadGroup.notify(queue: .main, execute: {
-								finalize()
-							})
-
-						} else {
-							Log.error(tagged: ["REMAINING_MEDIA_UPLOAD"], "Fetching bookmark update failed with \(String(describing: fetchError))")
-							finalize()
-						}
-					})
-				} else {
-					if coreError != nil {
-						Log.error(tagged: ["REMAINING_MEDIA_UPLOAD"], "No core returned with error \(String(describing: coreError))")
-						self.result = .failure(coreError!)
-					}
-					self.completed()
-				}
+	private func cleanup() {
+		if let bookmark = self.selectedBookmark {
+			OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
+				self.completed()
 			})
 		}
 	}
 
+	private func fetchPendingUploads() {
+		guard let bookmark = self.selectedBookmark else {
+			cleanup()
+			return
+		}
+
+		guard let pendingUploads = MediaUploadQueue.pendingAssetUploads(for: bookmark) else {
+			cleanup()
+			return
+		}
+
+		guard let core = weakCore else {
+			cleanup()
+			return
+		}
+
+		let uniquePaths = Array(Set(pendingUploads.values))
+
+		// Iterate over unique upload paths
+		let uploadGroup = DispatchGroup()
+		for path in uniquePaths {
+			uploadGroup.enter()
+
+			// Get assets for current upload path
+			let assetsToUpload = pendingUploads.reduce(into: [PHAsset]()) { (result, kvPair) in
+				let (key, value) = kvPair
+				if value == path {
+					result.append(key)
+				}
+			}
+
+			// Perform upload
+			self.upload(assets: assetsToUpload, with: core, at: path) {
+				uploadGroup.leave()
+			}
+		}
+
+		// All uploads are finished
+		uploadGroup.notify(queue: .main, execute: {
+			Log.debug(tagged: ["REMAINING_MEDIA_UPLOAD"], "Finished remaining media upload...")
+			self.cleanup()
+		})
+	}
+
 	private func upload(assets:[PHAsset], with core:OCCore, at path:String, completion:@escaping () -> Void) {
 
+		Log.debug(tagged: ["REMAINING_MEDIA_UPLOAD"], "Starting tracking \(path)")
 		self.uploadDirectoryTracking = core.trackItem(atPath: path, trackingHandler: { [weak self] (error, item, isInitial) in
 
 			if isInitial {
@@ -107,9 +140,12 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 					completion()
 				} else {
 					if item != nil {
-						// Upload assets
 						Log.debug(tagged: ["REMAINING_MEDIA_UPLOAD"], "Uploading \(assets.count) assets at \(path)")
+
+						// Stop tracking
 						self?.uploadDirectoryTracking = nil
+
+						// Upload assets
 						MediaUploadQueue.shared.uploadAssets(assets, with: core, at: item!) { (_, finished) in
 							if finished {
 								completion()
