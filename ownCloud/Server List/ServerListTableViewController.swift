@@ -321,43 +321,40 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		OCBookmarkManager.lock(bookmark: bookmark)
 
 		OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
-					OCBookmarkManager.lock(bookmark: bookmark)
+			let vault : OCVault = OCVault(bookmark: bookmark)
 
-					OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
-						let vault : OCVault = OCVault(bookmark: bookmark)
+			vault.erase(completionHandler: { (_, error) in
+				OnMainThread {
+					if error != nil {
+						// Inform user if vault couldn't be erased
+						let alertController = ThemedAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+											message: error?.localizedDescription,
+											preferredStyle: .alert)
 
-						vault.erase(completionHandler: { (_, error) in
-							OnMainThread {
-								if error != nil {
-									// Inform user if vault couldn't be erased
-									let alertController = ThemedAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
-														message: error?.localizedDescription,
-														preferredStyle: .alert)
+						alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
-									alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+						self.present(alertController, animated: true, completion: nil)
+					} else {
+						// Success! We can now remove the bookmark
+						self.ignoreServerListChanges = true
 
-									self.present(alertController, animated: true, completion: nil)
-								} else {
-									// Success! We can now remove the bookmark
-									self.ignoreServerListChanges = true
+						OCBookmarkManager.shared.removeBookmark(bookmark)
 
-									OCBookmarkManager.shared.removeBookmark(bookmark)
-
-									tableView.performBatchUpdates({
-										tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-									}, completion: { (_) in
-										self.ignoreServerListChanges = false
-									})
-
-									self.updateNoServerMessageVisibility()
-								}
-
-								OCBookmarkManager.unlock(bookmark: bookmark)
-
-								completionHandler()
-							}
+						self.tableView.performBatchUpdates({
+							self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+						}, completion: { (_) in
+							self.ignoreServerListChanges = false
 						})
-					}, for: bookmark)
+
+						self.updateNoServerMessageVisibility()
+					}
+
+					OCBookmarkManager.unlock(bookmark: bookmark)
+
+					completionHandler()
+				}
+			})
+		}, for: bookmark)
 	}
 
 	var themeCounter : Int = 0
