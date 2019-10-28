@@ -107,6 +107,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 
 		if allowPullToRefresh {
 			pullToRefreshControl = UIRefreshControl()
+			pullToRefreshControl?.tintColor = Theme.shared.activeCollection.navigationBarColors.labelColor
 			pullToRefreshControl?.addTarget(self, action: #selector(self.pullToRefreshTriggered), for: .valueChanged)
 			self.tableView.insertSubview(pullToRefreshControl!, at: 0)
 			tableView.contentOffset = CGPoint(x: 0, y: self.pullToRefreshVerticalOffset)
@@ -263,6 +264,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	// MARK: - Themable
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
+		pullToRefreshControl?.tintColor = collection.navigationBarColors.labelColor
 
 		if event == .update {
 			self.reloadTableData()

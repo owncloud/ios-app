@@ -161,7 +161,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			let lastGitCommit = LastGitCommit(),
 			(lastBetaWarningCommit == nil) || (lastBetaWarningCommit != lastGitCommit) {
 			// Beta warning has never been shown before - or has last been shown for a different release
-			let betaAlert = UIAlertController(with: "Beta Warning", message: "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings.", okLabel: "Agree") {
+			let betaAlert = ThemedAlertController(with: "Beta Warning", message: "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings.", okLabel: "Agree") {
 				OCAppIdentity.shared.userDefaults?.set(lastGitCommit, forKey: "LastBetaWarningCommit")
 				OCAppIdentity.shared.userDefaults?.set(NSDate(), forKey: "LastBetaWarningAcceptDate")
 			}
@@ -259,6 +259,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		let bookmarkViewController : BookmarkViewController = BookmarkViewController(bookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: bookmarkViewController)
 
+		navigationController.modalPresentationStyle = .fullScreen
+
 		// Prevent any in-progress connection from being shown
 		resetPreviousBookmarkSelection()
 
@@ -291,6 +293,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		let viewController = BookmarkInfoViewController(bookmark)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: viewController)
 
+		navigationController.modalPresentationStyle = .fullScreen
+
 		// Prevent any in-progress connection from being shown
 		resetPreviousBookmarkSelection()
 
@@ -317,40 +321,43 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		OCBookmarkManager.lock(bookmark: bookmark)
 
 		OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
-			let vault : OCVault = OCVault(bookmark: bookmark)
+					OCBookmarkManager.lock(bookmark: bookmark)
 
-			vault.erase(completionHandler: { (_, error) in
-				OnMainThread {
-					if error != nil {
-						// Inform user if vault couldn't be erased
-						let alertController = UIAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
-											message: error?.localizedDescription,
-											preferredStyle: .alert)
+					OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
+						let vault : OCVault = OCVault(bookmark: bookmark)
 
-						alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+						vault.erase(completionHandler: { (_, error) in
+							OnMainThread {
+								if error != nil {
+									// Inform user if vault couldn't be erased
+									let alertController = ThemedAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+														message: error?.localizedDescription,
+														preferredStyle: .alert)
 
-						self.present(alertController, animated: true, completion: nil)
-					} else {
-						// Success! We can now remove the bookmark
-						self.ignoreServerListChanges = true
+									alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
-						OCBookmarkManager.shared.removeBookmark(bookmark)
+									self.present(alertController, animated: true, completion: nil)
+								} else {
+									// Success! We can now remove the bookmark
+									self.ignoreServerListChanges = true
 
-						self.tableView.performBatchUpdates({
-							self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-						}, completion: { (_) in
-							self.ignoreServerListChanges = false
+									OCBookmarkManager.shared.removeBookmark(bookmark)
+
+									tableView.performBatchUpdates({
+										tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+									}, completion: { (_) in
+										self.ignoreServerListChanges = false
+									})
+
+									self.updateNoServerMessageVisibility()
+								}
+
+								OCBookmarkManager.unlock(bookmark: bookmark)
+
+								completionHandler()
+							}
 						})
-
-						self.updateNoServerMessageVisibility()
-					}
-
-					OCBookmarkManager.unlock(bookmark: bookmark)
-
-					completionHandler()
-				}
-			})
-		}, for: bookmark)
+					}, for: bookmark)
 	}
 
 	var themeCounter : Int = 0
@@ -420,6 +427,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		})
 
 		clientRootViewController.authDelegate = self
+		clientRootViewController.modalPresentationStyle = .fullScreen
 
 		clientRootViewController.afterCoreStart(lastVisibleItemId) {
 			// Make sure only the UI for the last selected bookmark is actually presented (in case of other bookmarks facing a huge delay and users selecting another bookmark in the meantime)
@@ -476,6 +484,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				self.connect(to: bookmark, lastVisibleItemId: nil, animated: true)
 				self.tableView.deselectRow(at: indexPath, animated: true)
 			}
+
+			self.tableView.deselectRow(at: indexPath, animated: true)
 		}
 	}
 
@@ -564,7 +574,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 					presentationStyle = .alert
 				}
 
-				let alertController = UIAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
+				let alertController = ThemedAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
 									message: "This will also delete all locally stored file copies.".localized,
 									preferredStyle: presentationStyle)
 
@@ -649,7 +659,7 @@ extension OCBookmarkManager {
 	static func isLocked(bookmark: OCBookmark, presentAlertOn viewController: UIViewController? = nil, completion: ((_ isLocked: Bool) -> Void)? = nil) -> Bool {
 		if self.lockedBookmarks.contains(bookmark) {
 			if viewController != nil {
-				let alertController = UIAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName as NSString) as String,
+				let alertController = ThemedAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName as NSString) as String,
 									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
 									preferredStyle: .alert)
 

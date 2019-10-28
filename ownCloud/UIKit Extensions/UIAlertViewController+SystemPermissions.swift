@@ -21,7 +21,7 @@ import UIKit
 extension UIAlertController {
 
 	class func alertControllerForPhotoLibraryAuthorizationInSettings() -> UIAlertController {
-		let alert = UIAlertController(title: "Missing permissions".localized, message: "This permission is needed to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
+		let alert = ThemedAlertController(title: "Missing permissions".localized, message: "This permission is needed to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
 
 		let settingAction = UIAlertAction(title: "Settings".localized, style: .default, handler: { _ in
 			UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)

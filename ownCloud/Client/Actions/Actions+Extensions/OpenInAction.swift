@@ -47,7 +47,7 @@ class OpenInAction: Action {
 				}
 
 				let appName = OCAppIdentity.shared.appName ?? "ownCloud"
-				let alertController = UIAlertController(with: "Cannot connect to ".localized + appName, message: appName + " couldn't download file(s)".localized, okLabel: "OK".localized, action: nil)
+				let alertController = ThemedAlertController(with: "Cannot connect to ".localized + appName, message: appName + " couldn't download file(s)".localized, okLabel: "OK".localized, action: nil)
 
 				hostViewController?.present(alertController, animated: true)
 			} else {

@@ -287,6 +287,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 			sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
 			sortBar?.delegate = self
 			sortBar?.sortMethod = self.sortMethod
+			sortBar?.updateForCurrentTraitCollection()
 
 			tableView.tableHeaderView = sortBar
 		}

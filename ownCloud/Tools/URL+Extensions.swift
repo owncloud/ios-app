@@ -12,8 +12,8 @@ import ownCloudSDK
 typealias UploadHandler = (OCItem?, Error?) -> Void
 
 extension URL {
-	func upload(with core:OCCore?, at rootItem:OCItem, importByCopy:Bool = false, placeholderHandler:UploadHandler? = nil, completionHandler:UploadHandler? = nil) -> Progress? {
-		let fileName = self.lastPathComponent
+	func upload(with core:OCCore?, at rootItem:OCItem, alternativeName:String? = nil, importByCopy:Bool = false, placeholderHandler:UploadHandler? = nil, completionHandler:UploadHandler? = nil) -> Progress? {
+		let fileName = alternativeName != nil ? alternativeName! : self.lastPathComponent
 		let importOptions : [OCCoreOption : Any] = [OCCoreOption.importByCopying : importByCopy, OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue]
 
 		var progress:Progress?
