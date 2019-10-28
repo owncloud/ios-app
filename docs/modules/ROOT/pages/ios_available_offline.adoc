@@ -62,4 +62,6 @@ Offline files can be set to automatically delete after a specified period, rangi
 The default is seven days.
 This is available under menu:Settings[Storage > Delete unused local copies].
 
+NOTE: This setting applies to all local files, not just available offline files.
+
 image::offline-storage/offline-storage-settings.png[Offline Storage options in the ownCloud iOS app]
