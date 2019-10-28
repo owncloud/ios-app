@@ -63,6 +63,8 @@ When navigating files, as you would expect, you can scroll up and down the files
 In addition, you can also use the index bar, highlighted in the screenshot below, to speed up traversing through files and folders.
 As you slide your finger over each letter, you’ll jump to the first file (or folder) that begins with that letter.
 
+NOTE: The index bar is only visible, if the sort order is `Name`.
+
 image:index-bar-with-callout.png[Navigating files in ownCloud's iOS app]
 
 == Sort Files and Folders
