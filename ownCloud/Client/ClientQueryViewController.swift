@@ -225,6 +225,8 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		for item in session.items {
 			if item.localObject == nil, item.itemProvider.hasItemConformingToTypeIdentifier("public.folder") {
 				return false
+			} else if let itemValues = item.localObject as? OCItemDraggingValue, let core = self.core, core.bookmark.uuid.uuidString != itemValues.bookmarkUUID, itemValues.item.type == .collection {
+				return false
 			}
 		}
 		return true
