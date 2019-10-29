@@ -219,7 +219,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 						presentationStyle = .alert
 					}
 
-					let alertController = UIAlertController(title: "Delete Public Link".localized,
+					let alertController = ThemedAlertController(title: "Delete Public Link".localized,
 										message: nil,
 										preferredStyle: presentationStyle)
 					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
@@ -231,7 +231,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 									self.navigationController?.popViewController(animated: true)
 								} else {
 									if let shareError = error {
-										let alertController = UIAlertController(with: "Delete Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Delete Public Link failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}

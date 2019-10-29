@@ -88,7 +88,7 @@ class DeleteAction : Action {
 			self.completed()
 		}
 
-		let alertController = UIAlertController(
+		let alertController = ThemedAlertController(
 			with: name,
 			message: message,
 			destructiveLabel: "Delete".localized,
@@ -102,7 +102,7 @@ class DeleteAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreFolder {
 			return UIImage(named: "trash")
 		}
 

@@ -237,7 +237,7 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 				sOCItemUploadingErrors = [NSMutableDictionary new];
 			}
 
-			sOCItemUploadingErrors[self.localID] = [uploadingError resolvedError];
+			sOCItemUploadingErrors[self.localID] = [uploadingError translatedError];
 		}
 	}
 }

@@ -80,7 +80,7 @@ class MakeUnavailableOfflineAction: Action {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .moreItem || location == .moreFolder {
-			return UIImage(named: "unavailable-offline")
+			return UIImage(named: "available-offline")
 		}
 
 		return nil

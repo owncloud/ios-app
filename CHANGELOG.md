@@ -1,5 +1,19 @@
 # ChangeLog
 
+## Release version 1.1.2 (October 2019)
+
+- Fix for long delays before starting a request on iOS 13.1 (PR #531)
+
+## Release version 1.1.1 (October 2019)
+
+- Dark mode support (PR #489)
+- iOS 13 support (#502)
+- Background media playback fixed (PR #522)
+- Displaying long file name improved (#516)
+- Fixed naming of uploaded edited photos (#520)
+- Fixed crash in File Provider (#502)
+- UI fixes (#511, #502)
+
 ## Release version 1.1.0 (September 2019)
 
 - Available Offline Support (#134, #135)

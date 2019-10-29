@@ -139,7 +139,7 @@
 
 	if (outError != NULL)
 	{
-		*outError = [returnError resolvedError];
+		*outError = [returnError translatedError];
 	}
 
 	return item;
@@ -238,7 +238,7 @@
 
 				FPLogCmd(@"Completed with error=%@", error);
 
-				completionHandler([error resolvedError]);
+				completionHandler([error translatedError]);
 			}];
 
 			return;
@@ -387,7 +387,7 @@
 		{
 			FPLogCmd(@"Completed with collission with existingItem=%@ (locally detected)", existingItem);
 			// completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
-			completionHandler(nil, [OCError(OCErrorItemAlreadyExists) resolvedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
+			completionHandler(nil, [OCError(OCErrorItemAlreadyExists) translatedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
 			return;
 		}
 
@@ -395,7 +395,7 @@
 //			OCCoreOptionPlaceholderCompletionHandler : [^(NSError * _Nullable error, OCItem * _Nullable item) {
 //				FPLogCmd(@"Completed placeholder creation with item=%@, error=%@", item, error);
 //
-//				completionHandler(item, [error resolvedError]);
+//				completionHandler(item, [error translatedError]);
 //			} copy]
 		} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			if (error != nil)
@@ -409,7 +409,7 @@
 					{
 						FPLogCmd(@"Completed with collission with existingItem=%@ (server response)", existingItem);
 						// completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
-						completionHandler(nil, [OCError(OCErrorItemAlreadyExists) resolvedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
+						completionHandler(nil, [OCError(OCErrorItemAlreadyExists) translatedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
 						return;
 					}
 				}
@@ -417,7 +417,7 @@
 
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
 
-			completionHandler(item, [error resolvedError]);
+			completionHandler(item, [error translatedError]);
 		}];
 	}
 	else
@@ -443,7 +443,7 @@
 		[self.core moveItem:item to:parentItem withName:((newName != nil) ? newName : item.name) options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
 
-			completionHandler(item, [error resolvedError]);
+			completionHandler(item, [error translatedError]);
 		}];
 	}
 	else
@@ -460,7 +460,7 @@
 		}
 
 		FPLogCmd(@"Completed with item=%@ or parentItem=%@ not found, error=%@", item, parentItem, error);
-		completionHandler(nil, error);
+		completionHandler(nil, [error translatedError]);
 	}
 }
 
@@ -477,7 +477,7 @@
 
 		[self.core renameItem:item to:itemName options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
-			completionHandler(item, [error resolvedError]);
+			completionHandler(item, [error translatedError]);
 		}];
 	}
 	else
@@ -500,7 +500,7 @@
 
 		[self.core deleteItem:item requireMatch:YES resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with error=%@", error);
-			completionHandler([error resolvedError]);
+			completionHandler([error translatedError]);
 		}];
 	}
 	else
@@ -556,7 +556,7 @@
 			OCCoreOptionImportByCopying : @(importByCopying)
 		} placeholderCompletionHandler:^(NSError *error, OCItem *item) {
 			FPLogCmd(@"Completed with placeholderItem=%@, error=%@", item, error);
-			completionHandler(item, [error resolvedError]);
+			completionHandler(item, [error translatedError]);
 		} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			if ([error.domain isEqual:OCHTTPStatusErrorDomain] && (error.code == OCHTTPStatusCodePRECONDITION_FAILED))
 			{
@@ -606,7 +606,7 @@
 
 		[self.core updateItem:item properties:@[ OCItemPropertyNameLocalAttributes ] options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
-			completionHandler(item, [error resolvedError]);
+			completionHandler(item, [error translatedError]);
 		}];
 	}
 	else
@@ -641,7 +641,7 @@
 
 		[self.core updateItem:item properties:@[ OCItemPropertyNameLocalAttributes ] options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
-			completionHandler(item, [error resolvedError]);
+			completionHandler(item, [error translatedError]);
 		}];
 	}
 	else
@@ -675,7 +675,7 @@
 
 		[self.core deleteItem:item requireMatch:YES resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with error=%@", error);
-			completionHandler(nil, [error resolvedError]);
+			completionHandler(nil, [error translatedError]);
 		}];
 	}
 	else
@@ -896,3 +896,8 @@
 @end
 
 OCClaimExplicitIdentifier OCClaimExplicitIdentifierFileProvider = @"fileProvider";
+
+/*
+	Additional information:
+	- NSExtensionFileProviderSupportsPickingFolders: https://twitter.com/palmin/status/1177860144258076673
+*/
