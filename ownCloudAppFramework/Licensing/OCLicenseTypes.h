@@ -21,11 +21,14 @@
 typedef NSString* OCLicenseProductIdentifier;
 typedef NSString* OCLicenseFeatureIdentifier;
 typedef NSString* OCLicenseProviderIdentifier;
+typedef NSString* OCLicenseEnvironmentIdentifier;
 typedef NSString* OCLicenseEntitlementIdentifier;
 typedef NSString* OCLicenseOfferIdentifier;
 
 typedef NSString* OCLicenseOfferCommitOption;
 typedef NSDictionary<OCLicenseOfferCommitOption,id>* OCLicenseOfferCommitOptions;
+
+typedef NSString* OCLicenseEntitlementEnvironmentApplicableRule;
 
 typedef NS_ENUM(NSUInteger, OCLicenseType)
 {
@@ -35,7 +38,19 @@ typedef NS_ENUM(NSUInteger, OCLicenseType)
 	OCLicenseTypeSubscription	//!< Subscription
 };
 
+typedef NS_ENUM(NSUInteger, OCLicenseAuthorizationStatus)
+{
+	OCLicenseAuthorizationStatusUnknown,		//!< Status unknown
+	OCLicenseAuthorizationStatusDenied,		//!< Authorization denied
+	OCLicenseAuthorizationStatusExpired,		//!< Authorization expired, existed at some point in the past
+	OCLicenseAuthorizationStatusGranted		//!< Authorization granted
+};
+
+@class OCLicenseEnvironment;
+@class OCLicenseObserver;
+
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void(^OCLicenseObserverUpdateHandler)(OCLicenseObserver * _Nonnull observer, BOOL isInitial, OCLicenseAuthorizationStatus authorizationStatus);
 
 NS_ASSUME_NONNULL_END

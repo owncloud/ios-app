@@ -1,5 +1,5 @@
 //
-//  OCLicenseManager.h
+//  OCLicenseEnvironment.h
 //  ownCloudApp
 //
 //  Created by Felix Schwarz on 29.10.19.
@@ -17,23 +17,18 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <ownCloudSDK/ownCloudSDK.h>
+
+#import "OCLicenseTypes.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class OCLicenseFeature;
-@class OCLicenseProvider;
-@class OCLicenseProduct;
+@interface OCLicenseEnvironment : NSObject
 
-@interface OCLicenseManager : NSObject
+@property(nullable,strong) OCLicenseEnvironmentIdentifier identifier;
 
-@property(strong,nonatomic,class,readonly) OCLicenseManager *sharedLicenseManager;
-
-#pragma mark - Feature/Product registration
-- (void)registerFeature:(OCLicenseFeature *)feature;
-- (void)registerProduct:(OCLicenseProduct *)product;
-
-#pragma mark - Provider management
-- (void)addProvider:(OCLicenseProvider *)provider;
+@property(nullable,strong) NSString *hostname;
+@property(nullable,strong) OCCertificate *certificate;
 
 @end
 

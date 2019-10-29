@@ -11,9 +11,16 @@ The `OCLicense` set of classes allow gating and granting access to features thro
 	- for an *Unlock all* IAP, that product would be defined by *all* features
 	- this allows creating tailored *products* consisting of a particular feature set, representing actual products
 
+- `OCLicenseEnvironment` encapsulates information on an environment against which the authorization to use a product should be checked
+	- typically defined by host name, TLS certificate, etc.
+
 - `OCLicenseEntitlement` represents the entitlement to use a product. An entitlement
+	- identifies its origin: where does it come from?
 	- includes an `expiryDate` property (to allow trials + subscription expirations)
-	- identifies origin of the entitlement
+	- provides information on *validity* and *applicability*:
+		- *validity*: if this entitlement should be considered at all (i.e. has not expired)
+		- *applicability*: if this entitlement actually authorizes the use of a product in a certain `OCLicenseEnvironment`
+			- can limit the authorization to use a product/feature to a certain domain/TLS certificate/public key
 
 - `OCLicenseOffer` represents an offer to purchase a product
 
@@ -26,4 +33,49 @@ The `OCLicense` set of classes allow gating and granting access to features thro
 	- about offers in the form of `OCLicenseOffer`, source from f.ex.
 		- StoreKit (App Store)
 
-- `OCLicenseManager` puts all the pieces together and provides APIs to determine the current status and subscription to changes
+- `OCLicenseManager` 
+	- puts all these pieces together and provides APIs to determine if the usage of a certain feature is allowed
+	- allows observation of single or groups of products and features in a particular environment and notify on change (handled through `OCLicenseObserver`)
+
+## Hierarchy
+- Sessions
+	- `OCLicenseEnvironment`
+- `OCLicenseManager` 
+	
+	- `OCLicenseFeature`s
+	- `OCLicenseProduct`s
+	- `OCLicenseProvider`s
+		- `OCLicenseEntitlement`s
+		- `OCLicenseOffer`s
+	- `OCLicenseObserver`
+		- app code
+
+## Examples
+
+#### Registering features and products
+```objc
+// Register features
+[OCLicenseManger.sharedLicenseManager registerFeature:[OCLicenseFeature featureWithIdentifier:@"feature.document-scanning" localizedName:@"Document scanning"]];
+[OCLicenseManger.sharedLicenseManager registerFeature:[OCLicenseFeature featureWithIdentifier:@"feature.push-notifications" localizedName:@"Push notification"]];
+
+// Register products
+[OCLicenseManger.sharedLicenseManager registerProduct:[OCLicenseProduct productWithIdentifier:@"product.document-scanner" localizedName:@"Document scanner" contents:@[
+	@"feature.document-scanning"
+]]];
+
+[OCLicenseManger.sharedLicenseManager registerProduct:[OCLicenseProduct productWithIdentifier:@"product.document-scanner" localizedName:@"Push notifications" contents:@[
+	@"feature.push-notifications"
+]]];
+
+[OCLicenseManger.sharedLicenseManager registerProduct:[OCLicenseProduct productWithIdentifier:@"product.unlock-all" localizedName:@"Unlock all" contents:@[
+	@"com.owncloud.document-scanning",
+	@"com.owncloud.push-notifications"
+]]];
+```
+
+#### Determining state and reacting to changes
+```objc
+[OCLicenseManager.sharedLicenseManager observeProducts:nil features:@[ @"product.document-scanner" ] environment:core.environment withOwner:self updateHandler:^(OCLicenseObserver *observer, BOOL isInitial, OCLicenseAuthorizationStatus authorizationStatus){
+	// Handle updates to authorization status to use the document scanner feature	
+}];
+```

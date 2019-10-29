@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong) NSString *localizedPriceTag;
 
 #pragma mark - Request offer / Make purchase
-- (void)commitWithOptions:(OCLicenseOfferCommitOptions)options;
+- (void)commitWithOptions:(OCLicenseOfferCommitOptions)options; //!< Commits to purchasing the offer, entering a purchase UI flow
 
 @end
 

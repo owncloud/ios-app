@@ -309,6 +309,10 @@
 		DCFEFE4A23687C83009A142F /* OCLicenseEntitlement.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE4823687C83009A142F /* OCLicenseEntitlement.m */; };
 		DCFEFE4F236880B5009A142F /* OCLicenseOffer.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE4D236880B5009A142F /* OCLicenseOffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCFEFE50236880B5009A142F /* OCLicenseOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE4E236880B5009A142F /* OCLicenseOffer.m */; };
+		DCFEFE972368D099009A142F /* OCLicenseEnvironment.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE952368D099009A142F /* OCLicenseEnvironment.h */; };
+		DCFEFE982368D099009A142F /* OCLicenseEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE962368D099009A142F /* OCLicenseEnvironment.m */; };
+		DCFEFE9C2368D7FA009A142F /* OCLicenseObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE9A2368D7FA009A142F /* OCLicenseObserver.h */; };
+		DCFEFE9D2368D7FA009A142F /* OCLicenseObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE9B2368D7FA009A142F /* OCLicenseObserver.m */; };
 		EA1D571C6B1E95925C459228 /* EarlGrey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; };
 		EA88A55521BFD5BF0055A58F /* DeleteBookmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA88A55421BFD5BF0055A58F /* DeleteBookmarkTests.swift */; };
 		EA9337E32226DB070054971F /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9337E22226DB070054971F /* SettingsTests.swift */; };
@@ -931,6 +935,10 @@
 		DCFEFE4823687C83009A142F /* OCLicenseEntitlement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseEntitlement.m; sourceTree = "<group>"; };
 		DCFEFE4D236880B5009A142F /* OCLicenseOffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseOffer.h; sourceTree = "<group>"; };
 		DCFEFE4E236880B5009A142F /* OCLicenseOffer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseOffer.m; sourceTree = "<group>"; };
+		DCFEFE952368D099009A142F /* OCLicenseEnvironment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseEnvironment.h; sourceTree = "<group>"; };
+		DCFEFE962368D099009A142F /* OCLicenseEnvironment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseEnvironment.m; sourceTree = "<group>"; };
+		DCFEFE9A2368D7FA009A142F /* OCLicenseObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseObserver.h; sourceTree = "<group>"; };
+		DCFEFE9B2368D7FA009A142F /* OCLicenseObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseObserver.m; sourceTree = "<group>"; };
 		DF01EC88E3D07CDA6F366E32 /* Pods-ownCloud Screenshots Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloud Screenshots Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloud Screenshots Tests/Pods-ownCloud Screenshots Tests.release.xcconfig"; sourceTree = "<group>"; };
 		EA88A55421BFD5BF0055A58F /* DeleteBookmarkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteBookmarkTests.swift; sourceTree = "<group>"; };
 		EA9337E22226DB070054971F /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
@@ -1872,10 +1880,10 @@
 			children = (
 				DCFEFE422368782F009A142F /* README.md */,
 				DCFEFE4323687BF5009A142F /* OCLicenseTypes.h */,
-				DCFEFE29236876BD009A142F /* OCLicenseManager.m */,
-				DCFEFE28236876BD009A142F /* OCLicenseManager.h */,
+				DCFEFE992368D7E3009A142F /* Manager */,
 				DCFEFE3F236877F6009A142F /* Providers */,
 				DCFEFE4B23687DB9009A142F /* Entitlement */,
+				DCFEFE8F2368D07D009A142F /* Environment */,
 				DCFEFE40236877FF009A142F /* Feature */,
 				DCFEFE4123687807009A142F /* Product */,
 				DCFEFE4C2368809D009A142F /* Offer */,
@@ -1928,6 +1936,26 @@
 			path = Offer;
 			sourceTree = "<group>";
 		};
+		DCFEFE8F2368D07D009A142F /* Environment */ = {
+			isa = PBXGroup;
+			children = (
+				DCFEFE962368D099009A142F /* OCLicenseEnvironment.m */,
+				DCFEFE952368D099009A142F /* OCLicenseEnvironment.h */,
+			);
+			path = Environment;
+			sourceTree = "<group>";
+		};
+		DCFEFE992368D7E3009A142F /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				DCFEFE29236876BD009A142F /* OCLicenseManager.m */,
+				DCFEFE28236876BD009A142F /* OCLicenseManager.h */,
+				DCFEFE9B2368D7FA009A142F /* OCLicenseObserver.m */,
+				DCFEFE9A2368D7FA009A142F /* OCLicenseObserver.h */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
 		EA9337DC2226DAE00054971F /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1947,6 +1975,7 @@
 				DCFEFE4923687C83009A142F /* OCLicenseEntitlement.h in Headers */,
 				DCFEFE39236877A7009A142F /* OCLicenseFeature.h in Headers */,
 				DC774E6022F44E57000B11A1 /* ZIPArchive.h in Headers */,
+				DCFEFE9C2368D7FA009A142F /* OCLicenseObserver.h in Headers */,
 				DCFEFE2E236876D4009A142F /* OCLicenseProvider.h in Headers */,
 				DCC085802293F490008CC05C /* DisplaySettings.h in Headers */,
 				DCFEFE3D236877B7009A142F /* OCLicenseProduct.h in Headers */,
@@ -1955,6 +1984,7 @@
 				DCFEFE4F236880B5009A142F /* OCLicenseOffer.h in Headers */,
 				DCC0856E2293F1FD008CC05C /* ownCloudApp.h in Headers */,
 				DCC5E4472326564F002E5B84 /* NSObject+AnnotatedProperties.h in Headers */,
+				DCFEFE972368D099009A142F /* OCLicenseEnvironment.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2797,6 +2827,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCFEFE9D2368D7FA009A142F /* OCLicenseObserver.m in Sources */,
 				DCFEFE3E236877B7009A142F /* OCLicenseProduct.m in Sources */,
 				DC774E6422F44E6D000B11A1 /* OCCore+BundleImport.m in Sources */,
 				DCFEFE2B236876BD009A142F /* OCLicenseManager.m in Sources */,
@@ -2806,6 +2837,7 @@
 				DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */,
 				DCFEFE2F236876D4009A142F /* OCLicenseProvider.m in Sources */,
 				DCFEFE4A23687C83009A142F /* OCLicenseEntitlement.m in Sources */,
+				DCFEFE982368D099009A142F /* OCLicenseEnvironment.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

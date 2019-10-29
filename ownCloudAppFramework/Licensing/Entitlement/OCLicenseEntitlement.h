@@ -22,6 +22,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class OCLicenseProvider;
+@class OCLicenseEnvironment;
 
 @interface OCLicenseEntitlement : NSObject
 
@@ -34,8 +35,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Payload
 @property(assign) OCLicenseType type;
-@property(nonatomic,assign) BOOL valid; //!< If the entitlement is currently valid
+
+@property(nonatomic,assign) BOOL valid; //!< If the entitlement is currently valid (i.e. has not expired)
 @property(nullable,strong) NSDate *expiryDate; //!< Date the entitlement expires - or nil if it doesn't expire
+
+@property(nonatomic,assign) BOOL environmentDependant; //!< If YES, applicability depends on the environment, otherwise the entitlement is applicable if it is valid
+@property(nullable,strong) OCLicenseEntitlementEnvironmentApplicableRule environmentApplicableRule; //!< If provided, a rule in NSPredicate notation to check an environment for applicability
+- (BOOL)isApplicableInEnvironment:(OCLicenseEnvironment *)environment; //!< Returns YES if the entitlement is applicable in the provided environment
 
 @end
 
