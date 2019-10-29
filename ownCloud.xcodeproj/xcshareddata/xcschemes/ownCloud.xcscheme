@@ -201,8 +201,8 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.log-omit-tags"
-            value = "[Request,Response]"
-            isEnabled = "NO">
+            value = "[BGMAN]"
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.log-blank-filtered-messages"
