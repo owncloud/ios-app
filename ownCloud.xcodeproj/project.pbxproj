@@ -296,6 +296,19 @@
 		DCFBAD0C21BE67A100943F76 /* ownCloudUI.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFED971208095E200A2D984 /* ClientItemCell.swift */; };
 		DCFED9BA20809B8900A2D984 /* ThemeTVGResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */; };
+		DCFEFE2A236876BD009A142F /* OCLicenseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE28236876BD009A142F /* OCLicenseManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCFEFE2B236876BD009A142F /* OCLicenseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE29236876BD009A142F /* OCLicenseManager.m */; };
+		DCFEFE2E236876D4009A142F /* OCLicenseProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE2C236876D4009A142F /* OCLicenseProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCFEFE2F236876D4009A142F /* OCLicenseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE2D236876D4009A142F /* OCLicenseProvider.m */; };
+		DCFEFE39236877A7009A142F /* OCLicenseFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE37236877A7009A142F /* OCLicenseFeature.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCFEFE3A236877A7009A142F /* OCLicenseFeature.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE38236877A7009A142F /* OCLicenseFeature.m */; };
+		DCFEFE3D236877B7009A142F /* OCLicenseProduct.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE3B236877B7009A142F /* OCLicenseProduct.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCFEFE3E236877B7009A142F /* OCLicenseProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE3C236877B7009A142F /* OCLicenseProduct.m */; };
+		DCFEFE4523687BF5009A142F /* OCLicenseTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE4323687BF5009A142F /* OCLicenseTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCFEFE4923687C83009A142F /* OCLicenseEntitlement.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE4723687C83009A142F /* OCLicenseEntitlement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCFEFE4A23687C83009A142F /* OCLicenseEntitlement.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE4823687C83009A142F /* OCLicenseEntitlement.m */; };
+		DCFEFE4F236880B5009A142F /* OCLicenseOffer.h in Headers */ = {isa = PBXBuildFile; fileRef = DCFEFE4D236880B5009A142F /* OCLicenseOffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCFEFE50236880B5009A142F /* OCLicenseOffer.m in Sources */ = {isa = PBXBuildFile; fileRef = DCFEFE4E236880B5009A142F /* OCLicenseOffer.m */; };
 		EA1D571C6B1E95925C459228 /* EarlGrey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0D9C062DD1E85A838608B0F /* EarlGrey.framework */; };
 		EA88A55521BFD5BF0055A58F /* DeleteBookmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA88A55421BFD5BF0055A58F /* DeleteBookmarkTests.swift */; };
 		EA9337E32226DB070054971F /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9337E22226DB070054971F /* SettingsTests.swift */; };
@@ -904,6 +917,20 @@
 		DCF4F18A2052BA4C00189B9A /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		DCFED971208095E200A2D984 /* ClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientItemCell.swift; sourceTree = "<group>"; };
 		DCFED9B920809B8900A2D984 /* ThemeTVGResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTVGResource.swift; sourceTree = "<group>"; };
+		DCFEFE28236876BD009A142F /* OCLicenseManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseManager.h; sourceTree = "<group>"; };
+		DCFEFE29236876BD009A142F /* OCLicenseManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseManager.m; sourceTree = "<group>"; };
+		DCFEFE2C236876D4009A142F /* OCLicenseProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseProvider.h; sourceTree = "<group>"; };
+		DCFEFE2D236876D4009A142F /* OCLicenseProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseProvider.m; sourceTree = "<group>"; };
+		DCFEFE37236877A7009A142F /* OCLicenseFeature.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseFeature.h; sourceTree = "<group>"; };
+		DCFEFE38236877A7009A142F /* OCLicenseFeature.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseFeature.m; sourceTree = "<group>"; };
+		DCFEFE3B236877B7009A142F /* OCLicenseProduct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseProduct.h; sourceTree = "<group>"; };
+		DCFEFE3C236877B7009A142F /* OCLicenseProduct.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseProduct.m; sourceTree = "<group>"; };
+		DCFEFE422368782F009A142F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		DCFEFE4323687BF5009A142F /* OCLicenseTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseTypes.h; sourceTree = "<group>"; };
+		DCFEFE4723687C83009A142F /* OCLicenseEntitlement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseEntitlement.h; sourceTree = "<group>"; };
+		DCFEFE4823687C83009A142F /* OCLicenseEntitlement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseEntitlement.m; sourceTree = "<group>"; };
+		DCFEFE4D236880B5009A142F /* OCLicenseOffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseOffer.h; sourceTree = "<group>"; };
+		DCFEFE4E236880B5009A142F /* OCLicenseOffer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseOffer.m; sourceTree = "<group>"; };
 		DF01EC88E3D07CDA6F366E32 /* Pods-ownCloud Screenshots Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloud Screenshots Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloud Screenshots Tests/Pods-ownCloud Screenshots Tests.release.xcconfig"; sourceTree = "<group>"; };
 		EA88A55421BFD5BF0055A58F /* DeleteBookmarkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteBookmarkTests.swift; sourceTree = "<group>"; };
 		EA9337E22226DB070054971F /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
@@ -1650,9 +1677,10 @@
 				DCC0855E2293F1FD008CC05C /* ownCloudApp.h */,
 				DC774E5A22F44E2A000B11A1 /* Display Settings */,
 				DCC5E443232654C1002E5B84 /* Foundation Extensions */,
+				DCFEFE2223687637009A142F /* Licensing */,
+				DC774E6522F44EA7000B11A1 /* Resources */,
 				DC774E5422F44DF6000B11A1 /* SDK Extensions */,
 				DC774E5B22F44E4A000B11A1 /* ZIP Archive */,
-				DC774E6522F44EA7000B11A1 /* Resources */,
 			);
 			path = ownCloudAppFramework;
 			sourceTree = "<group>";
@@ -1839,6 +1867,67 @@
 			path = Tools;
 			sourceTree = "<group>";
 		};
+		DCFEFE2223687637009A142F /* Licensing */ = {
+			isa = PBXGroup;
+			children = (
+				DCFEFE422368782F009A142F /* README.md */,
+				DCFEFE4323687BF5009A142F /* OCLicenseTypes.h */,
+				DCFEFE29236876BD009A142F /* OCLicenseManager.m */,
+				DCFEFE28236876BD009A142F /* OCLicenseManager.h */,
+				DCFEFE3F236877F6009A142F /* Providers */,
+				DCFEFE4B23687DB9009A142F /* Entitlement */,
+				DCFEFE40236877FF009A142F /* Feature */,
+				DCFEFE4123687807009A142F /* Product */,
+				DCFEFE4C2368809D009A142F /* Offer */,
+			);
+			path = Licensing;
+			sourceTree = "<group>";
+		};
+		DCFEFE3F236877F6009A142F /* Providers */ = {
+			isa = PBXGroup;
+			children = (
+				DCFEFE2D236876D4009A142F /* OCLicenseProvider.m */,
+				DCFEFE2C236876D4009A142F /* OCLicenseProvider.h */,
+			);
+			path = Providers;
+			sourceTree = "<group>";
+		};
+		DCFEFE40236877FF009A142F /* Feature */ = {
+			isa = PBXGroup;
+			children = (
+				DCFEFE38236877A7009A142F /* OCLicenseFeature.m */,
+				DCFEFE37236877A7009A142F /* OCLicenseFeature.h */,
+			);
+			path = Feature;
+			sourceTree = "<group>";
+		};
+		DCFEFE4123687807009A142F /* Product */ = {
+			isa = PBXGroup;
+			children = (
+				DCFEFE3C236877B7009A142F /* OCLicenseProduct.m */,
+				DCFEFE3B236877B7009A142F /* OCLicenseProduct.h */,
+			);
+			path = Product;
+			sourceTree = "<group>";
+		};
+		DCFEFE4B23687DB9009A142F /* Entitlement */ = {
+			isa = PBXGroup;
+			children = (
+				DCFEFE4823687C83009A142F /* OCLicenseEntitlement.m */,
+				DCFEFE4723687C83009A142F /* OCLicenseEntitlement.h */,
+			);
+			path = Entitlement;
+			sourceTree = "<group>";
+		};
+		DCFEFE4C2368809D009A142F /* Offer */ = {
+			isa = PBXGroup;
+			children = (
+				DCFEFE4E236880B5009A142F /* OCLicenseOffer.m */,
+				DCFEFE4D236880B5009A142F /* OCLicenseOffer.h */,
+			);
+			path = Offer;
+			sourceTree = "<group>";
+		};
 		EA9337DC2226DAE00054971F /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1854,9 +1943,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCFEFE2A236876BD009A142F /* OCLicenseManager.h in Headers */,
+				DCFEFE4923687C83009A142F /* OCLicenseEntitlement.h in Headers */,
+				DCFEFE39236877A7009A142F /* OCLicenseFeature.h in Headers */,
 				DC774E6022F44E57000B11A1 /* ZIPArchive.h in Headers */,
+				DCFEFE2E236876D4009A142F /* OCLicenseProvider.h in Headers */,
 				DCC085802293F490008CC05C /* DisplaySettings.h in Headers */,
+				DCFEFE3D236877B7009A142F /* OCLicenseProduct.h in Headers */,
+				DCFEFE4523687BF5009A142F /* OCLicenseTypes.h in Headers */,
 				DC774E6322F44E6D000B11A1 /* OCCore+BundleImport.h in Headers */,
+				DCFEFE4F236880B5009A142F /* OCLicenseOffer.h in Headers */,
 				DCC0856E2293F1FD008CC05C /* ownCloudApp.h in Headers */,
 				DCC5E4472326564F002E5B84 /* NSObject+AnnotatedProperties.h in Headers */,
 			);
@@ -2701,9 +2797,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCFEFE3E236877B7009A142F /* OCLicenseProduct.m in Sources */,
 				DC774E6422F44E6D000B11A1 /* OCCore+BundleImport.m in Sources */,
+				DCFEFE2B236876BD009A142F /* OCLicenseManager.m in Sources */,
+				DCFEFE3A236877A7009A142F /* OCLicenseFeature.m in Sources */,
+				DCFEFE50236880B5009A142F /* OCLicenseOffer.m in Sources */,
 				DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */,
 				DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */,
+				DCFEFE2F236876D4009A142F /* OCLicenseProvider.m in Sources */,
+				DCFEFE4A23687C83009A142F /* OCLicenseEntitlement.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
