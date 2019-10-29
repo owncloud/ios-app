@@ -344,7 +344,9 @@ class ScanViewController: StaticTableViewController {
 		// Save section
 
 		// - Name
-		fileNameRow = StaticTableViewRow(textFieldWithAction: nil, placeholder: "Name".localized, value: fileName ?? "", keyboardType: .default, autocorrectionType: .no, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "name", accessibilityLabel: "Name".localized)
+		fileNameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (row, _, _) in
+			self?.navigationItem.rightBarButtonItem?.isEnabled = ((row.value as? String)?.count ?? 0) > 0
+		}, placeholder: "Name".localized, value: fileName ?? "", keyboardType: .default, autocorrectionType: .no, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "name", accessibilityLabel: "Name".localized)
 		saveSection.add(row: fileNameRow!)
 		self.addSection(saveSection)
 
