@@ -25,8 +25,14 @@ class MediaUploadQueue {
 
 	static let shared = MediaUploadQueue()
 
-	static let UploadPendingKey = OCKeyValueStoreKey(rawValue: "com.owncloud.upload.queue.upload-pending-flag")
-	static let PendingAssetsKey = OCKeyValueStoreKey(rawValue: "com.owncloud.upload.queue.upload-pending-assets")
+	// MARK: - Notifications emitted by MediaUploadQueue
+
+	static let AssetImportStarted = Notification(name: Notification.Name(rawValue: "AssetImportStarted"))
+	static let AssetImportFinished = Notification(name: Notification.Name(rawValue: "AssetImportFinished"))
+	static let AssetImported = Notification(name: Notification.Name(rawValue: "AssetImported"))
+
+	private static let UploadPendingKey = OCKeyValueStoreKey(rawValue: "com.owncloud.upload.queue.upload-pending-flag")
+	private static let PendingAssetsKey = OCKeyValueStoreKey(rawValue: "com.owncloud.upload.queue.upload-pending-assets")
 
 	private static var uploadStarted = false
 
@@ -60,6 +66,10 @@ class MediaUploadQueue {
 			vault.keyValueStore?.storeObject(flag, forKey: MediaUploadQueue.UploadPendingKey)
 			MediaUploadQueue.uploadStarted = true
 
+			OnMainThread {
+				NotificationCenter.default.post(name: MediaUploadQueue.AssetImportStarted.name, object: NSNumber(value: assets.count))
+			}
+
 			// Submit upload job on the background queue
 			queue.async {
 
@@ -81,6 +91,10 @@ class MediaUploadQueue {
 							if result?.0 != nil {
 								assetUploadCompletion?(asset, false)
 								MediaUploadQueue.removePending(asset: asset.localIdentifier, for: weakCore!.bookmark)
+
+								OnMainThread {
+									NotificationCenter.default.post(name: MediaUploadQueue.AssetImported.name, object: nil)
+								}
 							}
 						}
 						runningCoreCompletion()
@@ -99,6 +113,10 @@ class MediaUploadQueue {
 					// Finish background task
 					backgroundTask?.end()
 					assetUploadCompletion?(nil, true)
+
+					OnMainThread {
+						NotificationCenter.default.post(name: MediaUploadQueue.AssetImportFinished.name, object: nil)
+					}
 				})
 			}
 		}
