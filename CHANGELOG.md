@@ -1,5 +1,9 @@
 # ChangeLog
 
+## Release version 1.1.2 (October 2019)
+
+- Fix for long delays before starting a request on iOS 13.1 (PR #531)
+
 ## Release version 1.1.1 (October 2019)
 
 - Dark mode support (PR #489)
