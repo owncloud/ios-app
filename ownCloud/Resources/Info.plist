@@ -60,6 +60,8 @@
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This permission is needed to scan documents.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>com.owncloud.ios-app.openAccount</string>
