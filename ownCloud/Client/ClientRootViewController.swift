@@ -139,7 +139,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	}
 
 	// MARK: - Startup
-	func afterCoreStart(_ completionHandler: @escaping (() -> Void)) {
+	func afterCoreStart(_ lastVisibleItemId: String?, completionHandler: @escaping (() -> Void)) {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
 			self.core = core
 			core?.delegate = self
@@ -148,7 +148,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
 		}, completionHandler: { (core, error) in
 			if error == nil {
-				self.coreReady()
+				self.coreReady(lastVisibleItemId)
 			}
 
 			// Start showing connection status with a delay of 1 second, so "Offline" doesn't flash briefly
@@ -248,14 +248,17 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		})
 	}
 
-	func coreReady() {
+	func coreReady(_ lastVisibleItemId: String?) {
 		OnMainThread {
 			if let core = self.core {
-				let query = OCQuery(forPath: "/")
-
-				let queryViewController = ClientQueryViewController(core: core, query: query)
-				// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
-				self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
+				if let localItemId = lastVisibleItemId {
+					self.createFileListStack(for: localItemId)
+				} else {
+					let query = OCQuery(forPath: "/")
+					let queryViewController = ClientQueryViewController(core: core, query: query)
+					// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
+					self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
+				}
 
 				let emptyViewController = self.emptyViewController
 				emptyViewController.navigationItem.title = "Accounts".localized
@@ -309,6 +312,45 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		progressBarHeightConstraint?.constant = -1 * (self.tabBar.bounds.height)
 		self.progressBar?.setNeedsLayout()
 //		self.view.setNeedsLayout()
+	}
+
+	func createFileListStack(for itemLocalID: String) {
+		if let core = core {
+		// retrieve the item for the item id
+		core.retrieveItemFromDatabase(forLocalID: itemLocalID, completionHandler: { (error, _, item) in
+			if error == nil, let item = item {
+				OnMainThread {
+					// get all parent items for the item and rebuild all underlaying ClientQueryViewController for this items in the navigation stack
+					let parentItems = core.retrieveParentItems(for: item)
+					let query = OCQuery(forPath: "/")
+					let queryViewController = ClientQueryViewController(core: core, query: query)
+
+					var subController = queryViewController
+					var newViewControllersStack : [UIViewController] = []
+					for item in parentItems {
+						if let controller = self.open(item: item, in: subController) {
+							subController = controller
+							newViewControllersStack.append(controller)
+						}
+					}
+
+					newViewControllersStack.insert(self.emptyViewController, at: 0)
+					self.filesNavigationController?.setViewControllers(newViewControllersStack, animated: false)
+
+					// open the controller for the item
+					subController.open(item: item, animated: false)
+				}
+			}
+		})
+		}
+	}
+
+	func open(item: OCItem, in controller: ClientQueryViewController) -> ClientQueryViewController? {
+		if let subController = controller.open(item: item, animated: false, pushViewController: false) {
+			return subController
+		}
+
+		return nil
 	}
 }
 

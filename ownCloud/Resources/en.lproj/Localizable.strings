@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   ownCloud
 
@@ -273,6 +273,9 @@
 " couldn't download file(s)" = " couldn't download file(s)";
 "Actions" = "Actions";
 "copy" = "copy";
+"Close Window" = "Close Window";
+"Open in a new Window" = "Open in a new Window";
+"Open in Window" = "Open in Window";
 
 "Preparing…" = "Preparing…";
 
@@ -305,6 +308,18 @@
 "All Photos" = "All Photos";
 "Albums" = "Albums";
 "Importing from photo library" = "Importing from photo library";
+
+/* Scan */
+"Scan" = "Scan";
+"Scans" = "Scans";
+"Scan document" = "Scan document";
+"Saving" = "Saving";
+"File format" = "File format";
+"Name" = "Name";
+"Save as" = "Save as";
+"Options" = "Options";
+"Scan additional" = "Scan additional";
+"Create one file per page" = "Create one file per page";
 
 /* Sharing */
 "Searching Shares…" = "Searching Shares…";

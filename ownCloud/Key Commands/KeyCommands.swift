@@ -68,7 +68,7 @@ extension ServerListTableViewController {
 	@objc func selectBookmark(_ command : UIKeyCommand) {
 		for bookmark in OCBookmarkManager.shared.bookmarks {
 			if bookmark.shortName == command.discoverabilityTitle {
-				self.connect(to: bookmark)
+				self.connect(to: bookmark, lastVisibleItemId: nil, animated: true)
 			}
 		}
 	}
@@ -87,7 +87,7 @@ extension ServerListTableViewController {
 
 	@objc func deleteBookmarkCommand() {
 		if let indexPath = self.tableView?.indexPathForSelectedRow, let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-			deleteBookmark(bookmark, on: indexPath)
+			delete(bookmark: bookmark, at: indexPath)
 		}
 	}
 }

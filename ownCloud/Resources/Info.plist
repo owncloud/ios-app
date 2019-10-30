@@ -23,8 +23,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<false/>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -47,6 +45,8 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<false/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -60,6 +60,13 @@
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This permission is needed to scan documents.</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>com.owncloud.ios-app.openAccount</string>
+		<string>com.owncloud.ios-app.openItem</string>
+	</array>
 	<key>OCAppGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>OCAppIdentifierPrefix</key>
@@ -68,6 +75,23 @@
 	<true/>
 	<key>OCKeychainAccessGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<true/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default Configuration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(PRODUCT_NAME).SceneDelegate</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
