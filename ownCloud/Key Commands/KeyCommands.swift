@@ -106,8 +106,43 @@ extension ServerListTableViewController {
 extension BookmarkViewController {
 	override var keyCommands: [UIKeyCommand]? {
 		return [
-			UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
+			UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized),
+			UIKeyCommand(input: "C", modifierFlags: [.command], action: #selector(handleContinue), discoverabilityTitle: "Continue".localized)
 		]
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+}
+
+extension IssuesViewController {
+	override var keyCommands: [UIKeyCommand]? {
+		var shortcuts = [UIKeyCommand]()
+
+		if let buttons = buttons {
+			var counter = 1
+			for button in buttons {
+				let command = UIKeyCommand(input: String(counter), modifierFlags: [.command], action: #selector(issueButtonPressed), discoverabilityTitle: button.title)
+				shortcuts.append(command)
+				counter += 1
+			}
+		}
+
+		return shortcuts
+	}
+
+	@objc func issueButtonPressed(_ command : UIKeyCommand) {
+		if let buttons = buttons {
+			for button in buttons {
+				if command.discoverabilityTitle == button.title {
+					if let buttonPressed: IssueButton = button {
+						buttonPressed.action()
+					}
+					break
+				}
+			}
+		}
 	}
 
 	override var canBecomeFirstResponder: Bool {
