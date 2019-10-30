@@ -104,6 +104,24 @@ extension BookmarkViewController {
 	}
 }
 
+extension BookmarkInfoViewController {
+	override var keyCommands: [UIKeyCommand]? {
+		var shortcuts = [UIKeyCommand]()
+		if let superKeyCommands = super.keyCommands {
+			shortcuts.append(contentsOf: superKeyCommands)
+		}
+
+		let doneCommand = UIKeyCommand(input: "D", modifierFlags: [.command], action: #selector(userActionDone), discoverabilityTitle: "Done".localized)
+		shortcuts.append(doneCommand)
+
+		return shortcuts
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+}
+
 extension ThemeNavigationController {
 	override var keyCommands: [UIKeyCommand]? {
 
@@ -419,8 +437,12 @@ extension ClientQueryViewController {
 		}
 
 		if let core = core, let rootItem = query.rootItem {
+			var item = rootItem
+			if let indexPath = self.tableView?.indexPathForSelectedRow, let selectedItem = itemAt(indexPath: indexPath) {
+				item = selectedItem
+			}
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreFolder)
-			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
+			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 			let actions = Action.sortedApplicableActions(for: actionContext)
 
 			actions.forEach({
@@ -436,8 +458,12 @@ extension ClientQueryViewController {
 
 	@objc func performFolderAction(_ command : UIKeyCommand) {
 		if let core = core, let rootItem = query.rootItem {
+			var item = rootItem
+			if let indexPath = self.tableView?.indexPathForSelectedRow, let selectedItem = itemAt(indexPath: indexPath) {
+				item = selectedItem
+			}
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreFolder)
-			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
+			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 			let actions = Action.sortedApplicableActions(for: actionContext)
 			actions.forEach({
 				if command.discoverabilityTitle == $0.actionExtension.name {
@@ -509,14 +535,18 @@ extension QueryFileListTableViewController {
 			}
 		}
 
-		if let core = core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath) {
+		if let core = core, let rootItem = query.rootItem {
+			var item = rootItem
+			if let indexPath = self.tableView?.indexPathForSelectedRow, let selectedItem = itemAt(indexPath: indexPath) {
+				item = selectedItem
+			}
 			let actionsLocationCollaborate = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
 			let actionContextCollaborate = ActionContext(viewController: self, core: core, items: [item], location: actionsLocationCollaborate)
 			let actionsCollaborate = Action.sortedApplicableActions(for: actionContextCollaborate)
 
 			actionsCollaborate.forEach({
-				if let keyCommand = $0.actionExtension.keyCommand {
-					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: [.command], action: #selector(performMoreItemAction), discoverabilityTitle: $0.actionExtension.name)
+				if let keyCommand = $0.actionExtension.keyCommand, let keyModifierFlags = $0.actionExtension.keyModifierFlags {
+					let actionCommand = UIKeyCommand(input: keyCommand, modifierFlags: keyModifierFlags, action: #selector(performMoreItemAction), discoverabilityTitle: $0.actionExtension.name)
 					shortcuts.append(actionCommand)
 				}
 			})
@@ -566,7 +596,11 @@ extension QueryFileListTableViewController {
 	}
 
 	@objc func performMoreItemAction(_ command : UIKeyCommand) {
-		if let core = core, let indexPath = self.tableView?.indexPathForSelectedRow, let item = itemAt(indexPath: indexPath) {
+		if let core = core, let rootItem = query.rootItem {
+			var item = rootItem
+			if let indexPath = self.tableView?.indexPathForSelectedRow, let selectedItem = itemAt(indexPath: indexPath) {
+				item = selectedItem
+			}
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .keyboardShortcut)
 			let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
 			let actions = Action.sortedApplicableActions(for: actionContext)
@@ -622,9 +656,14 @@ extension QueryFileListTableViewController {
 extension ClientDirectoryPickerViewController {
 	override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
-		if let superKeyCommands = super.keyCommands {
-			shortcuts.append(contentsOf: superKeyCommands)
-		}
+
+		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
+		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
+		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
+		shortcuts.append(nextObjectCommand)
+		shortcuts.append(previousObjectCommand)
+		shortcuts.append(selectObjectCommand)
+
 		if let selectButtonTitle = selectButton?.title, let selector = selectButton?.action {
 			let doCommand = UIKeyCommand(input: "\r", modifierFlags: [.command], action: selector, discoverabilityTitle: selectButtonTitle)
 			shortcuts.append(doCommand)
