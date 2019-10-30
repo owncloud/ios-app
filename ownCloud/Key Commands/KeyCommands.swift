@@ -37,6 +37,10 @@ extension ServerListTableViewController {
 			shortcuts.append(editSettingsCommand)
 			shortcuts.append(manageSettingsCommand)
 			shortcuts.append(deleteSettingsCommand)
+			if #available(iOS 13.0, *), UIDevice.current.isIpad() {
+				let openWindowCommand = UIKeyCommand(input: "W", modifierFlags: [.command, .shift], action: #selector(openSelectedBookmarkInWindow), discoverabilityTitle: "Open in new Window".localized)
+				shortcuts.append(openWindowCommand)
+			}
 
 			if selectedRow < OCBookmarkManager.shared.bookmarks.count - 1 {
 				shortcuts.append(nextObjectCommand)
@@ -63,6 +67,13 @@ extension ServerListTableViewController {
 
 	override var canBecomeFirstResponder: Bool {
 		return true
+	}
+
+	@available(iOS 13.0, *)
+	@objc func openSelectedBookmarkInWindow() {
+		if let indexPath = self.tableView?.indexPathForSelectedRow {
+			openAccountInWindow(at: indexPath)
+		}
 	}
 
 	@objc func selectBookmark(_ command : UIKeyCommand) {
