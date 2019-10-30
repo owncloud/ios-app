@@ -32,7 +32,8 @@ class UnfavoriteAction : Action {
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.filter({return $0.isRoot}).count > 0 {
 			return .none
-
+		} else if forContext.items.count > 0, let item = forContext.items.first, item.isFavorite == false {
+			return .none
 		}
 
 		return .middle
@@ -45,7 +46,7 @@ class UnfavoriteAction : Action {
 			return
 		}
 
-		item.isFavorite = true
+		item.isFavorite = false
 
 		core.update(item, properties: [OCItemPropertyName.isFavorite], options: nil, resultHandler: { (error, _, _, _) in
 			if error == nil {

@@ -32,7 +32,8 @@ class FavoriteAction : Action {
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.filter({return $0.isRoot}).count > 0 {
 			return .none
-
+		} else if forContext.items.count > 0, let item = forContext.items.first, item.isFavorite == true {
+			return .none
 		}
 
 		return .middle
