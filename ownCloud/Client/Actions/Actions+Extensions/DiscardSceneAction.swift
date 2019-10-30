@@ -27,7 +27,7 @@ class DiscardSceneAction: Action {
 	override class var name : String { return "Close Window".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder, .keyboardShortcut] }
 	override class var keyCommand : String? { return "W" }
-	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {

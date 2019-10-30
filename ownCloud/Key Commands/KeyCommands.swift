@@ -205,7 +205,7 @@ extension ClientRootViewController {
 extension UITableViewController {
 
 	@objc func selectNext(sender: UIKeyCommand) {
-		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, selectedIndexPath.row < self.tableView?.numberOfRows(inSection: selectedIndexPath.section) ?? 0 {
+		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, selectedIndexPath.row < (self.tableView?.numberOfRows(inSection: selectedIndexPath.section) ?? 0 ) - 1 {
 			self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row + 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
 		} else {
 			self.tableView.selectRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, animated: true, scrollPosition: .top)
@@ -213,7 +213,7 @@ extension UITableViewController {
 	}
 
 	@objc func selectPrevious(sender: UIKeyCommand) {
-		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, selectedIndexPath.row >= 0 {
+		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, selectedIndexPath.row > 0 {
 			self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row - 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
 		}
 	}

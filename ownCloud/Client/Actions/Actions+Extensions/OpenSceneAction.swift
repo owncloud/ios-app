@@ -27,7 +27,7 @@ class OpenSceneAction: Action {
 	override class var name : String { return "Open in a new Window".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .keyboardShortcut] }
 	override class var keyCommand : String? { return "O" }
-	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .shift] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
