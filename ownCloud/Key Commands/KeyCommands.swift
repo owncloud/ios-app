@@ -164,7 +164,10 @@ extension UIAlertController {
 
     @objc func tapActionButton(_ command : UIKeyCommand) {
 		guard let action = actions.first(where: {$0.title == command.discoverabilityTitle}) else { return }
-		guard let block = action.value(forKey: "handler") else { return }
+		guard let block = action.value(forKey: "handler") else {
+			dismiss(animated: true, completion: nil)
+			return
+		}
 
 		let handler = unsafeBitCast(block as AnyObject, to: AlertHandler.self)
 		dismiss(animated: true) {
@@ -241,6 +244,10 @@ extension NamingViewController {
 extension ClientRootViewController {
 	override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
+
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, navigationController.visibleViewController is ThemedAlertController {
+			return shortcuts
+		}
 
 		let keyCommands = self.tabBar.items?.enumerated().map { (index, item) -> UIKeyCommand in
 			let tabIndex = String(index + 1)
