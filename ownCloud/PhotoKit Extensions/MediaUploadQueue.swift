@@ -74,7 +74,7 @@ class MediaUploadQueue {
 			queue.async {
 
 				// Add pending assets
-				MediaUploadQueue.addPending(assets, for: weakCore!.bookmark, at: rootItem)
+				MediaUploadQueue.updatePending(assets, for: weakCore!.bookmark, at: rootItem)
 
 				let uploadGroup = DispatchGroup()
 				uploadGroup.enter()
@@ -122,7 +122,7 @@ class MediaUploadQueue {
 		}
 	}
 
-	class func addPending(_ assets:[PHAsset], for bookmark:OCBookmark, at rootItem:OCItem) {
+	class func updatePending(_ assets:[PHAsset], for bookmark:OCBookmark, at rootItem:OCItem) {
 		let vault : OCVault = OCVault(bookmark: bookmark)
 		let assetIds : [String] = assets.map({ $0.localIdentifier })
 		var uploads = [String : String]()
@@ -131,16 +131,27 @@ class MediaUploadQueue {
 			uploads[assetLocalId] = rootItem.path
 		}
 
+		vault.keyValueStore?.updateObject(forKey: MediaUploadQueue.PendingAssetsKey, usingModifier: { (value, changesMadePtr) -> Any? in
+			changesMadePtr.pointee = true
+			return uploads as NSDictionary?
+		})
+
 		vault.keyValueStore?.storeObject(uploads as NSDictionary, forKey: MediaUploadQueue.PendingAssetsKey)
 	}
 
 	class func removePending(asset identifier:String, for bookmark:OCBookmark) {
 		let vault : OCVault = OCVault(bookmark: bookmark)
-		var uploads = vault.keyValueStore?.readObject(forKey: MediaUploadQueue.PendingAssetsKey) as? [String : String]
-		if uploads != nil {
-			uploads?.removeValue(forKey: identifier)
-			vault.keyValueStore?.storeObject(uploads! as NSDictionary, forKey: MediaUploadQueue.PendingAssetsKey)
-		}
+
+		vault.keyValueStore?.updateObject(forKey: MediaUploadQueue.PendingAssetsKey, usingModifier: { (value, changesMadePtr) -> Any? in
+			var uploads = value as? [String : String]
+
+			if uploads != nil {
+				uploads?.removeValue(forKey: identifier)
+				changesMadePtr.pointee = true
+			}
+
+			return uploads as NSDictionary?
+		})
 	}
 
 	class func pendingAssetUploads(for bookmark:OCBookmark) -> [PHAsset : String]? {

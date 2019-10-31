@@ -36,10 +36,15 @@ extension AVAsset {
 				guard let export = AVAssetExportSession(asset: self, presetName: preset) else {
 					return false
 				}
+				// Configure export session
 				export.outputFileType = type
 				export.outputURL = targetURL
+
+				// Start export
+				group.enter()
 				export.exportAsynchronously {
 					exportSuccess = (export.status == .completed)
+					group.leave()
 				}
 			}
 
