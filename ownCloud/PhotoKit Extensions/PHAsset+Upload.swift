@@ -88,7 +88,7 @@ extension PHAsset {
 			if uploadProgress != nil {
 				progressHandler?(uploadProgress!)
 			}
-			
+
 			importSemaphore.wait()
 
 			return importResult
