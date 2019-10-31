@@ -49,7 +49,7 @@ extension ServerListTableViewController {
 				shortcuts.append(previousObjectCommand)
 			}
 			shortcuts.append(selectObjectCommand)
-		} else {
+		} else if self.tableView?.numberOfRows(inSection: 0) ?? 0 > 0 {
 			shortcuts.append(nextObjectCommand)
 		}
 
@@ -133,19 +133,46 @@ extension IssuesViewController {
 	}
 
 	@objc func issueButtonPressed(_ command : UIKeyCommand) {
-		if let buttons = buttons {
-			for button in buttons {
-				if command.discoverabilityTitle == button.title {
-					if let buttonPressed: IssueButton = button {
-						buttonPressed.action()
-					}
-					break
-				}
-			}
-		}
+		guard let button = buttons?.first(where: {$0.title == command.discoverabilityTitle}) else { return }
+
+		let buttonPressed: IssueButton = button
+		buttonPressed.action()
 	}
 
 	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+}
+
+extension UIAlertController {
+
+    typealias AlertHandler = @convention(block) (UIAlertAction) -> Void
+
+	override open var keyCommands: [UIKeyCommand]? {
+		var shortcuts = [UIKeyCommand]()
+		var counter = 1
+		for action in actions {
+			if let title = action.title {
+				let command = UIKeyCommand(input: String(counter), modifierFlags: [.command], action: #selector(tapActionButton), discoverabilityTitle: title)
+				shortcuts.append(command)
+				counter += 1
+			}
+		}
+
+		return shortcuts
+	}
+
+    @objc func tapActionButton(_ command : UIKeyCommand) {
+		guard let action = actions.first(where: {$0.title == command.discoverabilityTitle}) else { return }
+		guard let block = action.value(forKey: "handler") else { return }
+
+		let handler = unsafeBitCast(block as AnyObject, to: AlertHandler.self)
+		dismiss(animated: true) {
+			handler(action)
+		}
+	}
+
+	override open var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
@@ -223,7 +250,22 @@ extension ClientRootViewController {
 			shortcuts.append(contentsOf: keyCommands)
 		}
 
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, (navigationController.visibleViewController is ClientQueryViewController || navigationController.visibleViewController is GroupSharingTableViewController) {
+			let cancelCommand = UIKeyCommand(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissSearch), discoverabilityTitle: "Cancel".localized)
+			shortcuts.append(cancelCommand)
+		}
+
 		return shortcuts
+	}
+
+	@objc func dismissSearch(sender: UIKeyCommand) {
+		if let navigationController = self.selectedViewController as? ThemeNavigationController {
+			if let clientQueryViewController = navigationController.visibleViewController as? ClientQueryViewController {
+				clientQueryViewController.searchController?.isActive = false
+			} else if let groupSharingViewController = navigationController.visibleViewController as? GroupSharingTableViewController {
+				groupSharingViewController.searchController?.isActive = false
+			}
+		}
 	}
 
 	@objc func selectTab(sender: UIKeyCommand) {
@@ -242,7 +284,7 @@ extension UITableViewController {
 	@objc func selectNext(sender: UIKeyCommand) {
 		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow, selectedIndexPath.row < (self.tableView?.numberOfRows(inSection: selectedIndexPath.section) ?? 0 ) - 1 {
 			self.tableView.selectRow(at: NSIndexPath(row: selectedIndexPath.row + 1, section: selectedIndexPath.section) as IndexPath, animated: true, scrollPosition: .middle)
-		} else {
+		} else if self.tableView?.numberOfRows(inSection: 0) ?? 0 > 0 {
 			self.tableView.selectRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, animated: true, scrollPosition: .top)
 		}
 	}
@@ -352,15 +394,29 @@ extension StaticTableViewController {
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
 
 		var shortcuts = [UIKeyCommand]()
-		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row, let selectedSection = self.tableView?.indexPathForSelectedRow?.section {
+		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
+			let selectedRow = selectedIndexPath.row
+			let selectedSection = selectedIndexPath.section
 			if selectedRow < sections[selectedSection].rows.count - 1 || sections.count > selectedSection {
 				shortcuts.append(nextObjectCommand)
 			}
 			if selectedRow > 0 || selectedSection > 0 {
 				shortcuts.append(previousObjectCommand)
 			}
-			shortcuts.append(selectObjectCommand)
-		} else {
+			if staticRowForIndexPath(selectedIndexPath).type == .slider {
+				let row = staticRowForIndexPath(selectedIndexPath)
+				let sliders = row.cell?.subviews.filter { $0 is UISlider }
+				if let slider = sliders?.first as? UISlider {
+					slider.thumbTintColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
+				}
+				let sliderDownCommand = UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(sliderDown), discoverabilityTitle: "Decrease Slider Value".localized)
+				let sliderUpCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(sliderUp), discoverabilityTitle: "Increase Slider Value".localized)
+				shortcuts.append(sliderDownCommand)
+				shortcuts.append(sliderUpCommand)
+			} else {
+				shortcuts.append(selectObjectCommand)
+			}
+		} else if self.tableView?.numberOfRows(inSection: 0) ?? 0 > 0 {
 			shortcuts.append(nextObjectCommand)
 		}
 
@@ -369,6 +425,28 @@ extension StaticTableViewController {
 
 	override var canBecomeFirstResponder: Bool {
 		return true
+	}
+
+	@objc func sliderDown() {
+		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
+			let row = staticRowForIndexPath(selectedIndexPath)
+			let sliders = row.cell?.subviews.filter { $0 is UISlider }
+			if let slider = sliders?.first as? UISlider, slider.value > slider.minimumValue {
+				slider.value = (slider.value - 1.0)
+				slider.sendActions(for: .valueChanged)
+			}
+		}
+	}
+
+	@objc func sliderUp() {
+		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
+			let row = staticRowForIndexPath(selectedIndexPath)
+			let sliders = row.cell?.subviews.filter { $0 is UISlider }
+			if let slider = sliders?.first as? UISlider, slider.value < slider.maximumValue {
+				slider.value = (slider.value + 1.0)
+				slider.sendActions(for: .valueChanged)
+			}
+		}
 	}
 
 	@objc override func selectNext(sender: UIKeyCommand) {
@@ -380,6 +458,11 @@ extension StaticTableViewController {
 				staticRow.cell?.textLabel?.textColor = Theme.shared.activeCollection.tableRowColors.labelColor
 			} else if staticRow.type == .text || staticRow.type == .secureText, let textField = staticRow.textField {
 				textField.textColor = Theme.shared.activeCollection.tableRowColors.labelColor
+			} else if staticRow.type == .slider {
+				let sliders = staticRow.cell?.subviews.filter { $0 is UISlider }
+				if let slider = sliders?.first as? UISlider {
+					slider.thumbTintColor = .white
+				}
 			}
 
 			if (selectedIndexPath.row + 1) < sections[selectedIndexPath.section].rows.count {
@@ -412,6 +495,11 @@ extension StaticTableViewController {
 				staticRow.cell?.textLabel?.textColor = Theme.shared.activeCollection.tableRowColors.labelColor
 			} else if staticRow.type == .text || staticRow.type == .secureText, let textField = staticRow.textField {
 				textField.textColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
+			} else if staticRow.type == .slider {
+				let sliders = staticRow.cell?.subviews.filter { $0 is UISlider }
+				if let slider = sliders?.first as? UISlider {
+					slider.thumbTintColor = .white
+				}
 			}
 
 			if indexPath.row == 0, indexPath.section > 0 {
