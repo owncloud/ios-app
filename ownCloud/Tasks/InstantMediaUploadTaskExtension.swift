@@ -138,7 +138,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 		if assets.count > 0 {
 			Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Uploading \(assets.count) assets")
-			MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
+			MediaUploadManager.shared.uploadQueue.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
 				if let asset = asset {
 					switch asset.mediaType {
 					case .image:

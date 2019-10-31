@@ -23,8 +23,6 @@ import MobileCoreServices
 
 class MediaUploadQueue {
 
-	static let shared = MediaUploadQueue()
-
 	// MARK: - Notifications emitted by MediaUploadQueue
 
 	static let AssetImportStarted = Notification(name: Notification.Name(rawValue: "AssetImportStarted"))
@@ -33,8 +31,6 @@ class MediaUploadQueue {
 
 	private static let UploadPendingKey = OCKeyValueStoreKey(rawValue: "com.owncloud.upload.queue.upload-pending-flag")
 	private static let PendingAssetsKey = OCKeyValueStoreKey(rawValue: "com.owncloud.upload.queue.upload-pending-assets")
-
-	private static var uploadStarted = false
 
 	func uploadAssets(_ assets:[PHAsset], with core:OCCore?, at rootItem:OCItem, progressHandler:((Progress) -> Void)? = nil, assetUploadCompletion:((_ asset:PHAsset?, _ finished:Bool) -> Void)? = nil ) {
 
@@ -64,7 +60,6 @@ class MediaUploadQueue {
 			let vault : OCVault = OCVault(bookmark: weakCore!.bookmark)
 			let flag = NSNumber(value: true)
 			vault.keyValueStore?.storeObject(flag, forKey: MediaUploadQueue.UploadPendingKey)
-			MediaUploadQueue.uploadStarted = true
 
 			OnMainThread {
 				NotificationCenter.default.post(name: MediaUploadQueue.AssetImportStarted.name, object: NSNumber(value: assets.count))
@@ -80,36 +75,29 @@ class MediaUploadQueue {
 				uploadGroup.enter()
 				weakCore!.perform(inRunningCore: { (runningCoreCompletion) in
 
-					// Group multiple uploads within same OCCore context to avoid unnecessary syncing operations
-					weakCore!.schedule {
-						for asset in assets {
-							let result = asset.upload(with: weakCore!, at: rootItem, preferredFormats: prefferedMediaOutputFormats, progressHandler: { (progress) in
-								progressHandler?(progress)
-							})
+					for asset in assets {
+						let result = asset.upload(with: weakCore!, at: rootItem, preferredFormats: prefferedMediaOutputFormats, progressHandler: { (progress) in
+							progressHandler?(progress)
+						})
 
-							// Was OCItem created upon importing the asset file?
-							if result?.0 != nil {
-								assetUploadCompletion?(asset, false)
-								MediaUploadQueue.removePending(asset: asset.localIdentifier, for: weakCore!.bookmark)
+						// Was OCItem created upon importing the asset file?
+						if result?.0 != nil {
+							assetUploadCompletion?(asset, false)
+							MediaUploadQueue.removePending(asset: asset.localIdentifier, for: weakCore!.bookmark)
 
-								OnMainThread {
-									NotificationCenter.default.post(name: MediaUploadQueue.AssetImported.name, object: nil)
-								}
+							OnMainThread {
+								NotificationCenter.default.post(name: MediaUploadQueue.AssetImported.name, object: nil)
 							}
 						}
-						runningCoreCompletion()
-						uploadGroup.leave()
 					}
+					runningCoreCompletion()
+					uploadGroup.leave()
 
 				}, withDescription: "Uploading \(assets.count) photo assets")
 
 				// Wait until all to-be-uploaded assets are processed
 				uploadGroup.notify(queue: queue, execute: {
-					// Reset persistent flag indicating started media upload
-					if weakCore != nil {
-						MediaUploadQueue.resetUploadPendingFlag(for:  weakCore!.bookmark)
-					}
-					MediaUploadQueue.uploadStarted = false
+
 					// Finish background task
 					backgroundTask?.end()
 					assetUploadCompletion?(nil, true)
@@ -131,7 +119,7 @@ class MediaUploadQueue {
 			uploads[assetLocalId] = rootItem.path
 		}
 
-		vault.keyValueStore?.updateObject(forKey: MediaUploadQueue.PendingAssetsKey, usingModifier: { (value, changesMadePtr) -> Any? in
+		vault.keyValueStore?.updateObject(forKey: MediaUploadQueue.PendingAssetsKey, usingModifier: { (_, changesMadePtr) -> Any? in
 			changesMadePtr.pointee = true
 			return uploads as NSDictionary?
 		})
@@ -169,27 +157,5 @@ class MediaUploadQueue {
 			}
 		}
 		return nil
-	}
-
-	class func isMediaUploadPendingFlagSet(for bookmark:OCBookmark) -> Bool {
-		let vault : OCVault = OCVault(bookmark: bookmark)
-		if vault.keyValueStore?.readObject(forKey: MediaUploadQueue.UploadPendingKey) != nil {
-			return true
-		} else {
-			return false
-		}
-	}
-
-	class func resetUploadPendingFlag(for bookmark:OCBookmark) {
-		let vault : OCVault = OCVault(bookmark: bookmark)
-		vault.keyValueStore?.storeObject(nil, forKey: MediaUploadQueue.UploadPendingKey)
-	}
-
-	class func shallShowUploadUnfinishedWarning(for bookmark:OCBookmark) -> Bool {
-		if !MediaUploadQueue.uploadStarted && isMediaUploadPendingFlagSet(for: bookmark) {
-			return true
-		} else {
-			return false
-		}
 	}
 }

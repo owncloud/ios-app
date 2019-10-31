@@ -146,7 +146,7 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 						self?.uploadDirectoryTracking = nil
 
 						// Upload assets
-						MediaUploadQueue.shared.uploadAssets(assets, with: core, at: item!) { (_, finished) in
+						MediaUploadManager.shared.uploadQueue.uploadAssets(assets, with: core, at: item!) { (_, finished) in
 							if finished {
 								completion()
 							}

@@ -24,8 +24,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	var window: UIWindow?
 	var serverListTableViewController: ServerListTableViewController?
-	var hud: ProgressHUDViewController?
-	var importedMediaCount: NSNumber?
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
@@ -56,6 +54,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
 		ScheduledTaskManager.shared.setup()
+
+		MediaUploadManager.shared.setup()
 
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
@@ -95,37 +95,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UIApplication.shared.setMinimumBackgroundFetchInterval(
 			UIApplication.backgroundFetchIntervalMinimum)
 
-		// Subscribe to media upload queue notifications
-		NotificationCenter.default.addObserver(self, selector: #selector(handleAssetImportStarted(notification:)), name: MediaUploadQueue.AssetImportStarted.name, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(handleAssetImportFinished), name: MediaUploadQueue.AssetImportFinished.name, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(handleSingleAssetImport), name: MediaUploadQueue.AssetImported.name, object: nil)
-
 		return true
-	}
-
-	private func updateImportMediaHUD() {
-		let countText = self.importedMediaCount != nil ? "\(self.importedMediaCount!.intValue)" : ""
-		let message = String(format: "Importing %@ media files for upload".localized, countText)
-		hud?.updateLabel(with: message)
-	}
-
-	@objc func handleAssetImportStarted(notification:Notification) {
-		if let visibleViewController = self.window?.rootViewController?.topMostViewController() {
-			self.importedMediaCount = notification.object as? NSNumber
-			hud = ProgressHUDViewController(on: visibleViewController, label: nil)
-			updateImportMediaHUD()
-		}
-	}
-
-	@objc func handleSingleAssetImport(notification:Notification) {
-		if let count = self.importedMediaCount {
-			self.importedMediaCount = NSNumber(value: count.intValue - 1)
-			updateImportMediaHUD()
-		}
-	}
-
-	@objc func handleAssetImportFinished(notification:Notification) {
-		hud?.dismiss()
 	}
 
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
