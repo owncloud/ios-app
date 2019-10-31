@@ -35,6 +35,11 @@ extension OCQueryState {
 	}
 }
 
+struct OCItemDraggingValue {
+	var item : OCItem
+	var bookmarkUUID : String
+}
+
 class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
 	var selectedItemIds = Set<OCLocalID>()
 
@@ -220,6 +225,8 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		for item in session.items {
 			if item.localObject == nil, item.itemProvider.hasItemConformingToTypeIdentifier("public.folder") {
 				return false
+			} else if let itemValues = item.localObject as? OCItemDraggingValue, let core = self.core, core.bookmark.uuid.uuidString != itemValues.bookmarkUUID, itemValues.item.type == .collection {
+				return false
 			}
 		}
 		return true
@@ -259,11 +266,14 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		}
 	}
 
-	func updateToolbarItemsForDropping(_ items: [OCItem]) {
+	func updateToolbarItemsForDropping(_ draggingValues: [OCItemDraggingValue]) {
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }
 
 		if let core = self.core {
+			let items = draggingValues.map({(value: OCItemDraggingValue) -> OCItem in
+				return value.item
+			})
 			// Remove duplicates
 			let uniqueItems = Array(Set(items))
 			// Get possible associated actions
@@ -420,6 +430,10 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		selectedItemIds.removeAll()
 		removeToolbar()
 		sortBar?.showSelectButton = true
+
+		if #available(iOS 13, *) {
+			self.tableView.overrideUserInterfaceStyle = .unspecified
+		}
 	}
 
 	func populateToolbar() {
@@ -464,6 +478,10 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	@objc func multipleSelectionButtonPressed() {
 
 		if !self.tableView.isEditing {
+			if #available(iOS 13, *) {
+				self.tableView.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
+			}
+
 			updateMultiSelectionUI()
 			self.tableView.setEditing(true, animated: true)
 			sortBar?.showSelectButton = false
@@ -500,7 +518,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	@objc func plusBarButtonPressed(_ sender: UIBarButtonItem) {
 
-		let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+		let controller = ThemedAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
 		// Actions for folderAction
 		if let core = self.core, let rootItem = query.rootItem {
@@ -550,6 +568,16 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		if let shortName = core?.bookmark.shortName {
 			tableViewController.bookmarkShortName = shortName
 		}
+
+		if #available(iOS 13, *) {
+ 			// On iOS 13.0/13.1, the table view's content needs to be inset by the height of the arrow
+ 			// (this can hopefully be removed again in the future, if/when Apple addresses the issue)
+ 			let popoverArrowHeight : CGFloat = 13
+
+  			tableViewController.tableView.contentInsetAdjustmentBehavior = .never
+ 			tableViewController.tableView.contentInset = UIEdgeInsets(top: popoverArrowHeight, left: 0, bottom: 0, right: 0)
+ 			tableViewController.tableView.separatorInset = UIEdgeInsets()
+ 		}
 
 		let popoverPresentationController = tableViewController.popoverPresentationController
 		popoverPresentationController?.sourceView = sender
@@ -604,6 +632,12 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 }
 
+extension OCBookmarkManager {
+	public func bookmark(for uuidString: String) -> OCBookmark? {
+		return OCBookmarkManager.shared.bookmarks.filter({ $0.uuid.uuidString == uuidString}).first
+	}
+}
+
 // MARK: - Drag & Drop delegates
 extension ClientQueryViewController: UITableViewDropDelegate {
 	func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
@@ -611,11 +645,13 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 		for item in coordinator.items {
 			if item.dragItem.localObject != nil {
+
 				var destinationItem: OCItem
 
-				guard let item = item.dragItem.localObject as? OCItem, let itemName = item.name else {
+				guard let itemValues = item.dragItem.localObject as? OCItemDraggingValue, let itemName = itemValues.item.name, let sourceBookmark = OCBookmarkManager.shared.bookmark(for: itemValues.bookmarkUUID) else {
 					return
 				}
+				let item = itemValues.item
 
 				if coordinator.proposal.intent == .insertIntoDestinationIndexPath {
 
@@ -645,13 +681,32 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 				}
 
-				if let progress = core.move(item, to: destinationItem, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
-					if error != nil {
-						Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
+				// Move Items in the same Account
+				if core.bookmark.uuid.uuidString == itemValues.bookmarkUUID {
+					if let progress = core.move(item, to: destinationItem, withName: itemName, options: nil, resultHandler: { (error, _, _, _) in
+						if error != nil {
+							Log.log("Error \(String(describing: error)) moving \(String(describing: item.path))")
+						}
+					}) {
+						self.progressSummarizer?.startTracking(progress: progress)
 					}
-				}) {
-					self.progressSummarizer?.startTracking(progress: progress)
+				// Copy Items between Accounts
+				} else {
+					OCCoreManager.shared.requestCore(for: sourceBookmark, setup: nil) { (srcCore, error) in
+						if error == nil {
+							srcCore?.downloadItem(item, options: nil, resultHandler: { (error, _, srcItem, _) in
+								if error == nil, let srcItem = srcItem, let localURL = srcCore?.localCopy(of: srcItem) {
+									core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil) { (error, _, _, _) in
+										if error == nil {
+
+										}
+									}
+								}
+							})
+						}
+					}
 				}
+			// Import Items from outside
 			} else {
 				guard let UTI = item.dragItem.itemProvider.registeredTypeIdentifiers.last else { return }
 				item.dragItem.itemProvider.loadFileRepresentation(forTypeIdentifier: UTI) { (url, _ error) in
@@ -671,28 +726,31 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 			self.populateToolbar()
 		}
 
-		var selectedItems = [OCItem]()
+		var selectedItems = [OCItemDraggingValue]()
 		// Add Items from Multiselection too
 		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
 			if selectedIndexPaths.count > 0 {
 				for indexPath in selectedIndexPaths {
-					if let selectedItem : OCItem = itemAt(indexPath: indexPath) {
-						selectedItems.append(selectedItem)
+					if let selectedItem : OCItem = itemAt(indexPath: indexPath), let uuid = core?.bookmark.uuid.uuidString {
+						let draggingValue = OCItemDraggingValue(item: selectedItem, bookmarkUUID: uuid)
+						selectedItems.append(draggingValue)
 					}
 				}
 			}
 		}
 		for dragItem in session.items {
-			guard let item = dragItem.localObject as? OCItem else { continue }
-			selectedItems.append(item)
+			guard let item = dragItem.localObject as? OCItem, let uuid = core?.bookmark.uuid.uuidString else { continue }
+			let draggingValue = OCItemDraggingValue(item: item, bookmarkUUID: uuid)
+			selectedItems.append(draggingValue)
 		}
 
-		if let item: OCItem = itemAt(indexPath: indexPath) {
-			selectedItems.append(item)
+		if let item: OCItem = itemAt(indexPath: indexPath), let uuid = core?.bookmark.uuid.uuidString {
+			let draggingValue = OCItemDraggingValue(item: item, bookmarkUUID: uuid)
+			selectedItems.append(draggingValue)
 
 			updateToolbarItemsForDropping(selectedItems)
 
-			guard let dragItem = itemForDragging(item: item) else { return [] }
+			guard let dragItem = itemForDragging(draggingValue: draggingValue) else { return [] }
 			return [dragItem]
 		}
 
@@ -700,32 +758,35 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 	}
 
 	func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-		var selectedItems = [OCItem]()
+		var selectedItems = [OCItemDraggingValue]()
 		for dragItem in session.items {
-			guard let item = dragItem.localObject as? OCItem else { continue }
-			selectedItems.append(item)
+			guard let item = dragItem.localObject as? OCItem, let uuid = core?.bookmark.uuid.uuidString else { continue }
+			let draggingValue = OCItemDraggingValue(item: item, bookmarkUUID: uuid)
+			selectedItems.append(draggingValue)
 		}
 
-		if let item: OCItem = itemAt(indexPath: indexPath) {
-			selectedItems.append(item)
+		if let item: OCItem = itemAt(indexPath: indexPath), let uuid = core?.bookmark.uuid.uuidString {
+			let draggingValue = OCItemDraggingValue(item: item, bookmarkUUID: uuid)
+			selectedItems.append(draggingValue)
 
 			updateToolbarItemsForDropping(selectedItems)
 
-			guard let dragItem = itemForDragging(item: item) else { return [] }
+			guard let dragItem = itemForDragging(draggingValue: draggingValue) else { return [] }
 			return [dragItem]
 		}
 
 		return []
 	}
 
-	func itemForDragging(item : OCItem) -> UIDragItem? {
+	func itemForDragging(draggingValue : OCItemDraggingValue) -> UIDragItem? {
+		let item = draggingValue.item
 		if let core = self.core {
 			switch item.type {
 			case .collection:
 				guard let data = item.serializedData() else { return nil }
 				let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
 				let dragItem = UIDragItem(itemProvider: itemProvider)
-				dragItem.localObject = item
+				dragItem.localObject = draggingValue
 				return dragItem
 			case .file:
 				guard let itemMimeType = item.mimeType else { return nil }
@@ -738,13 +799,13 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 					let itemProvider = NSItemProvider(item: fileData, typeIdentifier: rawUtiString)
 					itemProvider.suggestedName = item.name
 					let dragItem = UIDragItem(itemProvider: itemProvider)
-					dragItem.localObject = item
+					dragItem.localObject = draggingValue
 					return dragItem
 				} else {
 					guard let data = item.serializedData() else { return nil }
 					let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypeData as String)
 					let dragItem = UIDragItem(itemProvider: itemProvider)
-					dragItem.localObject = item
+					dragItem.localObject = draggingValue
 					return dragItem
 				}
 			}

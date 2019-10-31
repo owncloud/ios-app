@@ -21,10 +21,13 @@
 
 @implementation NSError (MessageResolution)
 
-- (NSError *)resolvedError
+- (NSError *)resolvedErrorWithTranslation:(BOOL)withTranslation
 {
 	if ([self.domain isEqual:OCErrorDomain])
 	{
+		NSErrorDomain errorDomain = self.domain;
+		NSInteger errorCode = self.code;
+
 		NSString *localizedDescription = self.localizedDescription;
 		NSString *localizedFailureReason = self.localizedFailureReason;
 
@@ -40,10 +43,61 @@
 			resolvedDict[NSLocalizedFailureReasonErrorKey] = localizedFailureReason;
 		}
 
-		return ([NSError errorWithDomain:self.domain code:self.code userInfo:resolvedDict]);
+		if (withTranslation)
+		{
+			errorDomain = NSCocoaErrorDomain;
+
+			resolvedDict[NSUnderlyingErrorKey] = self;
+
+			switch ((OCError)self.code)
+			{
+				case OCErrorItemAlreadyExists:
+					errorCode = NSFileWriteFileExistsError;
+				break;
+
+				case OCErrorItemNotFound:
+				case OCErrorItemDestinationNotFound:
+				case OCErrorFileNotFound:
+					errorCode = NSFileNoSuchFileError;
+				break;
+
+				case OCErrorFeatureNotImplemented:
+				case OCErrorItemOperationForbidden:
+					errorCode = NSFeatureUnsupportedError;
+				break;
+
+				case OCErrorItemInsufficientPermissions:
+					errorCode = NSFileWriteNoPermissionError;
+				break;
+
+				case OCErrorCancelled:
+					errorCode = NSUserCancelledError;
+				break;
+
+				case OCErrorInsufficientStorage:
+					errorCode = NSFileWriteOutOfSpaceError;
+				break;
+
+				default:
+					errorCode = NSFileReadUnknownError;
+				break;
+			}
+		}
+
+		return ([NSError errorWithDomain:errorDomain code:errorCode userInfo:resolvedDict]);
 	}
 
 	return (self);
+}
+
+- (NSError *)translatedError
+{
+	if (@available(iOS 13, *))
+	{
+		return ([self resolvedErrorWithTranslation:YES]);
+	}
+
+	return ([self resolvedErrorWithTranslation:NO]);
 }
 
 @end

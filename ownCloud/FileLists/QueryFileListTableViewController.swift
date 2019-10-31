@@ -287,6 +287,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 			sortBar = SortBar(frame: CGRect(x: 0, y: 0, width: self.tableView.frame.width, height: 40), sortMethod: sortMethod)
 			sortBar?.delegate = self
 			sortBar?.sortMethod = self.sortMethod
+			sortBar?.updateForCurrentTraitCollection()
 
 			tableView.tableHeaderView = sortBar
 		}
@@ -379,5 +380,34 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		}
 
 		return 0
+	}
+
+	@available(iOS 13.0, *)
+	override func tableView(_ tableView: UITableView,
+	contextMenuConfigurationForRowAt indexPath: IndexPath,
+	point: CGPoint) -> UIContextMenuConfiguration? {
+		if let item = itemAt(indexPath: indexPath), UIDevice.current.isIpad() {
+			return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+				return self.makeContextMenu(for: indexPath, with: item)
+			})
+		}
+
+		return nil
+	}
+
+	@available(iOS 13.0, *)
+	func makeContextMenu(for indexPath: IndexPath, with item: OCItem) -> UIMenu {
+		let openWindow = UIAction(title: "Open in a new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+			self.openItemInWindow(at: indexPath)
+		}
+		return UIMenu(title: item.name ?? "", children: [openWindow])
+	}
+
+	@available(iOS 13.0, *)
+	func openItemInWindow(at indexPath: IndexPath) {
+		if let item = itemAt(indexPath: indexPath), let tabBarController = self.tabBarController as? ClientRootViewController {
+			let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
+			UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
+		}
 	}
 }

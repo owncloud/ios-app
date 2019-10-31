@@ -210,7 +210,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		guard let pdfDocument = pdfView.document else { return }
 
 		let alertMessage = NSString(format: "This document has %@ pages".localized as NSString, "\(pdfDocument.pageCount)") as String
-		let alertController = UIAlertController(title: "Go to page".localized, message: alertMessage, preferredStyle: .alert)
+		let alertController = ThemedAlertController(title: "Go to page".localized, message: alertMessage, preferredStyle: .alert)
 		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
 		alertController.addTextField(configurationHandler: { textField in
@@ -357,7 +357,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 					self.pdfView.go(to: page)
 				}
 			} else {
-				let alertController = UIAlertController(title: "Invalid Page".localized,
+				let alertController = ThemedAlertController(title: "Invalid Page".localized,
 														message: "The entered page number doesn't exist".localized,
 														preferredStyle: .alert)
 				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))

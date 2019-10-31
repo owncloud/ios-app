@@ -113,7 +113,7 @@ class VendorServices : NSObject {
 
 			viewController.present(mail, animated: true)
 		} else {
-			let alert = UIAlertController(title: "Please configure an email account".localized,
+			let alert = ThemedAlertController(title: "Please configure an email account".localized,
 						      message: "You need to configure an email account first to be able to send emails.".localized,
 						      preferredStyle: .alert)
 
@@ -146,7 +146,7 @@ extension VendorServices : OCClassSettingsSupport {
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
-			return [ .isBetaBuild : false, .showBetaWarning : false, .enableUIAnimations: true ]
+			return [ .isBetaBuild : true, .showBetaWarning : true, .enableUIAnimations: true ]
 		}
 
 		return nil

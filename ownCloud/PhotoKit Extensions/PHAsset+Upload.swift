@@ -61,6 +61,7 @@ extension PHAsset {
 
 			// Synchronously import media file into the OCCore and schedule upload
 			let importSemaphore = DispatchSemaphore(value: 0)
+
 			uploadProgress = sourceURL.upload(with: core,
 										at: rootItem,
 										alternativeName: fileName,

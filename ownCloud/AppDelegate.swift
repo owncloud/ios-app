@@ -22,7 +22,7 @@ import ownCloudSDK
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-	var window: UIWindow?
+	var window: ThemeWindow?
 	var serverListTableViewController: ServerListTableViewController?
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
 
 		// Set up app
-		window = UIWindow(frame: UIScreen.main.bounds)
+		window = ThemeWindow(frame: UIScreen.main.bounds)
 
 		ThemeStyle.registerDefaultStyles()
 
@@ -76,15 +76,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
 		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
+		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
 
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
 		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 		OCExtensionManager.shared.addExtension(PendingMediaUploadTaskExtension.taskExtension)
 
+		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
+			OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
+			OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
+		}
+
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
 		// Licenses
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: Theme.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
+
+		// Initially apply theme based on light / dark mode
+		ThemeStyle.considerAppearanceUpdate()
 
 		//Disable UI Animation for UITesting (screenshots)
 		if let enableUIAnimations = VendorServices.classSetting(forOCClassSettingsKey: .enableUIAnimations) as? Bool {
@@ -125,5 +134,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Log.debug("AppDelegate: handle events for background URL session with identifier \(identifier)")
 
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
+	}
+
+	// MARK: UISceneSession Lifecycle
+	@available(iOS 13.0, *)
+	func application(_ application: UIApplication,
+					 configurationForConnecting connectingSceneSession: UISceneSession,
+					 options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+		return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+	}
+
+	@available(iOS 13.0, *)
+	func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
 	}
 }
