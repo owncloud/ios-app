@@ -896,3 +896,8 @@
 @end
 
 OCClaimExplicitIdentifier OCClaimExplicitIdentifierFileProvider = @"fileProvider";
+
+/*
+	Additional information:
+	- NSExtensionFileProviderSupportsPickingFolders: https://twitter.com/palmin/status/1177860144258076673
+*/
