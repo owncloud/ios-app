@@ -123,14 +123,6 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 		return (YES);
 	}
 
-	if (self.type == OCItemTypeCollection)
-	{
-		// Needs to return YES for folders in order to allow browsing while offline
-		// Otherwise Files.app will bring up an alert "You're not connected to the Internet"
-		// (big thanks to @palmin who pointed me to this possibility)
-		return (YES);
-	}
-
 	return (NO);
 }
 
