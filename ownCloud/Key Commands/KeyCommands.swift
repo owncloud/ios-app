@@ -247,6 +247,8 @@ extension ClientRootViewController {
 
 		if let navigationController = self.selectedViewController as? ThemeNavigationController, navigationController.visibleViewController is ThemedAlertController {
 			return shortcuts
+		} else if let navigationController = self.selectedViewController as? ThemeNavigationController, navigationController.visibleViewController is SharingTableViewController {
+			return shortcuts
 		}
 
 		let keyCommands = self.tabBar.items?.enumerated().map { (index, item) -> UIKeyCommand in
@@ -401,6 +403,7 @@ extension StaticTableViewController {
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
 
 		var shortcuts = [UIKeyCommand]()
+
 		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
 			let selectedRow = selectedIndexPath.row
 			let selectedSection = selectedIndexPath.section
@@ -423,7 +426,7 @@ extension StaticTableViewController {
 			} else {
 				shortcuts.append(selectObjectCommand)
 			}
-		} else if self.tableView?.numberOfRows(inSection: 0) ?? 0 > 0 {
+		} else if self.tableView?.numberOfSections ?? 0 > 0, self.tableView?.numberOfRows(inSection: 0) ?? 0 > 0 {
 			shortcuts.append(nextObjectCommand)
 		}
 
