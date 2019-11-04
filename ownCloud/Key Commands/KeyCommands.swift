@@ -245,10 +245,12 @@ extension ClientRootViewController {
 	override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 
-		if let navigationController = self.selectedViewController as? ThemeNavigationController, navigationController.visibleViewController is ThemedAlertController {
-			return shortcuts
-		} else if let navigationController = self.selectedViewController as? ThemeNavigationController, navigationController.visibleViewController is SharingTableViewController {
-			return shortcuts
+		let excludeViewControllers = [ThemedAlertController.self, SharingTableViewController.self, PublicLinkTableViewController.self, PublicLinkEditTableViewController.self, GroupSharingEditTableViewController.self]
+
+		if let navigationController = self.selectedViewController as? ThemeNavigationController, let visibleController = navigationController.visibleViewController {
+			if excludeViewControllers.contains(where: {$0 == type(of: visibleController)}) {
+				return shortcuts
+			}
 		}
 
 		let keyCommands = self.tabBar.items?.enumerated().map { (index, item) -> UIKeyCommand in
@@ -351,6 +353,11 @@ extension GroupSharingEditTableViewController {
 		shortcuts.append(dismissCommand)
 		shortcuts.append(createCommand)
 
+		if createShare {
+			let showInfoObjectCommand = UIKeyCommand(input: "H", modifierFlags: [.command, .alternate], action: #selector(showInfoSubtitles), discoverabilityTitle: "Help".localized)
+			shortcuts.append(showInfoObjectCommand)
+		}
+
 		return shortcuts
 	}
 
@@ -386,6 +393,14 @@ extension PublicLinkEditTableViewController {
 		let createCommand = UIKeyCommand(input: "S", modifierFlags: [.command], action: #selector(createPublicLink), discoverabilityTitle: "Create".localized)
 		shortcuts.append(dismissCommand)
 		shortcuts.append(createCommand)
+
+		if createLink {
+			let showInfoObjectCommand = UIKeyCommand(input: "H", modifierFlags: [.command, .alternate], action: #selector(showInfoSubtitles), discoverabilityTitle: "Help".localized)
+			shortcuts.append(showInfoObjectCommand)
+		} else {
+			let shareObjectCommand = UIKeyCommand(input: "S", modifierFlags: [.command, .alternate], action: #selector(shareLinkURL), discoverabilityTitle: "Share".localized)
+			shortcuts.append(shareObjectCommand)
+		}
 
 		return shortcuts
 	}
