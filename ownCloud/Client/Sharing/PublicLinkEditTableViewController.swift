@@ -137,7 +137,9 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					if error == nil {
 						guard let changedShare = share else { return }
 						self.share.name = changedShare.name
-						self.title = changedShare.name
+						OnMainThread {
+							self.title = changedShare.name
+						}
 					} else {
 						if let shareError = error {
 							OnMainThread {
