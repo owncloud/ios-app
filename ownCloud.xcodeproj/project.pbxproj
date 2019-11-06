@@ -37,7 +37,7 @@
 		3913213822946E5E00EF88F4 /* FileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913213722946E5E00EF88F4 /* FileListTableViewController.swift */; };
 		3913214D22956D5700EF88F4 /* LibraryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */; };
 		392557FE2278703300E83F60 /* UISearchBar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392557FD2278703300E83F60 /* UISearchBar+Extension.swift */; };
-		393120702326451900E8DFBA /* Themes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3931206A2326451900E8DFBA /* Themes.plist */; };
+		393120702326451900E8DFBA /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3931206A2326451900E8DFBA /* Branding.plist */; };
 		394804DA225CBDBA00AA8183 /* BreadCrumbTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394804D9225CBDBA00AA8183 /* BreadCrumbTableViewController.swift */; };
 		39607CBC2225D480007B386D /* UITableViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39607CBB2225D480007B386D /* UITableViewController+Extension.swift */; };
 		396BE4C32288A84C00B254A9 /* PendingSharesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396BE4C22288A84C00B254A9 /* PendingSharesTableViewController.swift */; };
@@ -622,7 +622,7 @@
 		3913213722946E5E00EF88F4 /* FileListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListTableViewController.swift; sourceTree = "<group>"; };
 		3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableViewController.swift; sourceTree = "<group>"; };
 		392557FD2278703300E83F60 /* UISearchBar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchBar+Extension.swift"; sourceTree = "<group>"; };
-		3931206A2326451900E8DFBA /* Themes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Themes.plist; path = ownCloud/Resources/Theming/Themes.plist; sourceTree = SOURCE_ROOT; };
+		3931206A2326451900E8DFBA /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Branding.plist; path = ownCloud/Resources/Theming/Branding.plist; sourceTree = SOURCE_ROOT; };
 		394804D9225CBDBA00AA8183 /* BreadCrumbTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadCrumbTableViewController.swift; sourceTree = "<group>"; };
 		39607CBB2225D480007B386D /* UITableViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewController+Extension.swift"; sourceTree = "<group>"; };
 		396BE4C22288A84C00B254A9 /* PendingSharesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingSharesTableViewController.swift; sourceTree = "<group>"; };
@@ -1213,7 +1213,7 @@
 		39C31F8E22F1A4F50023923D /* Theming */ = {
 			isa = PBXGroup;
 			children = (
-				3931206A2326451900E8DFBA /* Themes.plist */,
+				3931206A2326451900E8DFBA /* Branding.plist */,
 			);
 			name = Theming;
 			sourceTree = "<unknown>";
@@ -2298,7 +2298,7 @@
 				233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */,
 				233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */,
 				3995E53123605DE7003525EB /* bookmark-icon.png in Resources */,
-				393120702326451900E8DFBA /* Themes.plist in Resources */,
+				393120702326451900E8DFBA /* Branding.plist in Resources */,
 				DCE5E8A72080D781005F60CE /* x-office-spreadsheet.tvg in Resources */,
 				DCE5E8AA2080D781005F60CE /* owncloud-logo.tvg in Resources */,
 				595E2CA821EE501400F0E95D /* PropfindResponseNewFolder.xml in Resources */,

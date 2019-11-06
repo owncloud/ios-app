@@ -5,7 +5,12 @@
 	<key>AppName</key>
 	<string>SURFdrive</string>
 	<key>URLs</key>
-	<array/>
+	<dict>
+		<key>Help</key>
+		<string>https://www.owncloud.com/help</string>
+		<key>Privacy</key>
+		<string>https://owncloud.org/privacy-policy/</string>
+	</dict>
 	<key>Generic</key>
 	<dict>
 		<key>Corporate</key>

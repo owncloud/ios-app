@@ -199,7 +199,7 @@ extension ThemeStyle {
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudClassic.themeStyleExtension())
 */
 
-		let themeProvider = ThemeProvider(plist: "Themes")
+		let themeProvider = ThemeProvider(plist: "Branding")
 
 			for theme in themeProvider.themes {
 				let themeExtension = theme.themeStyleExtension(isDefault: true)

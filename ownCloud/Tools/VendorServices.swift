@@ -46,6 +46,26 @@ class VendorServices : NSObject {
 		return ""
 	}
 
+	var helpURL: URL? {
+		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
+			if let themingValues = NSDictionary(contentsOfFile: path), let urls = themingValues["URLs"] as? NSDictionary, let help = urls["Help"] as? String {
+				return URL(string: help)
+			}
+		}
+
+		return URL(string: "https://www.owncloud.com/help")
+	}
+
+	var privacyURL: URL? {
+		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
+			if let themingValues = NSDictionary(contentsOfFile: path), let urls = themingValues["URLs"] as? NSDictionary, let privacy = urls["Privacy"] as? String {
+				return URL(string: privacy)
+			}
+		}
+
+		return URL(string: "https://owncloud.org/privacy-policy/")
+	}
+
 	var isBetaBuild: Bool {
 		if let isBetaBuild = self.classSetting(forOCClassSettingsKey: .isBetaBuild) as? Bool {
 			return isBetaBuild
