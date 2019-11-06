@@ -54,6 +54,14 @@ class VendorServices : NSObject {
 		return false
 	}
 
+	var isBranded: Bool {
+		if let buildName = Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as? String, !buildName.hasPrefix("ownCloud") {
+			return true
+		}
+
+		return false
+	}
+
 	var showBetaWarning: Bool {
 		if let showBetaWarning = self.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool {
 			return showBetaWarning

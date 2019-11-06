@@ -118,11 +118,18 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
 		settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
 
-		self.toolbarItems = [
-			helpBarButtonItem,
-			UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
-			settingsBarButtonItem
-		]
+		if VendorServices.shared.isBranded {
+			self.toolbarItems = [
+				UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
+				settingsBarButtonItem
+			]
+		} else {
+			self.toolbarItems = [
+				helpBarButtonItem,
+				UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
+				settingsBarButtonItem
+			]
+		}
 
 		if showBetaWarning, shownFirstTime {
 			showBetaWarning = !considerAutoLogin()

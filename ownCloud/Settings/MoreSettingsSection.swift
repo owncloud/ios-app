@@ -172,8 +172,8 @@ extension MoreSettingsSection : OCClassSettingsSupport {
 		if identifier == .feedback {
 			return [ .appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
 					 .feedbackEmail: "ios-app@owncloud.com",
-					 .recommendToFriendEnabled: true,
-					 .sendFeedbackEnabled: true
+					 .recommendToFriendEnabled: !VendorServices.shared.isBranded,
+					 .sendFeedbackEnabled: !VendorServices.shared.isBranded
 			]
 		}
 
