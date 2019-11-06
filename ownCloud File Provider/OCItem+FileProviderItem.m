@@ -55,6 +55,33 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 	return (self.name);
 }
 
++ (NSDictionary<NSString*, NSString*> *)overriddenUTIByMIMEType
+{
+	static dispatch_once_t onceToken;
+	static NSDictionary<NSString *, NSString *> *utiByMIMEType;
+
+	dispatch_once(&onceToken, ^{
+		utiByMIMEType = @{
+			@"application/vnd.oasis.opendocument.text" 			: @"org.oasis-open.opendocument.text",
+			@"application/vnd.oasis.opendocument.text-template" 		: @"org.oasis-open.opendocument.text-template",
+
+			@"application/vnd.oasis.opendocument.graphics" 			: @"org.oasis-open.opendocument.graphics",
+			@"application/vnd.oasis.opendocument.graphics-template" 	: @"org.oasis-open.opendocument.graphics-template",
+
+			@"application/vnd.oasis.opendocument.presentation" 		: @"org.oasis-open.opendocument.presentation",
+			@"application/vnd.oasis.opendocument.presentation-template" 	: @"org.oasis-open.opendocument.presentation-template",
+
+			@"application/vnd.oasis.opendocument.spreadsheet" 		: @"org.oasis-open.opendocument.spreadsheet",
+			@"application/vnd.oasis.opendocument.spreadsheet-template" 	: @"org.oasis-open.opendocument.spreadsheet-template",
+
+			@"application/vnd.oasis.opendocument.formula" 			: @"org.oasis-open.opendocument.formula",
+			@"application/vnd.oasis.opendocument.formula-template" 		: @"org.oasis-open.opendocument.formula-template"
+		};
+	});
+
+	return (utiByMIMEType);
+}
+
 + (NSDictionary<NSString*, NSString*> *)overriddenUTIBySuffix
 {
 	static dispatch_once_t onceToken;
@@ -62,17 +89,17 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 
 	dispatch_once(&onceToken, ^{
 		utiBySuffix = @{
-			@"odt" : @"org.oasis-open.opendocument.text",
-			@"ott" : @"org.oasis-open.opendocument.text-template",
+			// @"odt" : @"org.oasis-open.opendocument.text",
+			// @"ott" : @"org.oasis-open.opendocument.text-template",
 
-			@"odg" : @"org.oasis-open.opendocument.graphics",
-			@"otg" : @"org.oasis-open.opendocument.graphics-template",
+			// @"odg" : @"org.oasis-open.opendocument.graphics",
+			// @"otg" : @"org.oasis-open.opendocument.graphics-template",
 
-			@"odp" : @"org.oasis-open.opendocument.presentation",
-			@"otp" : @"org.oasis-open.opendocument.presentation-template",
+			// @"odp" : @"org.oasis-open.opendocument.presentation",
+			// @"otp" : @"org.oasis-open.opendocument.presentation-template",
 
-			@"ods" : @"org.oasis-open.opendocument.spreadsheet",
-			@"ots" : @"org.oasis-open.opendocument.spreadsheet-template",
+			// @"ods" : @"org.oasis-open.opendocument.spreadsheet",
+			// @"ots" : @"org.oasis-open.opendocument.spreadsheet-template",
 
 			@"odc" : @"org.oasis-open.opendocument.chart",
 			@"otc" : @"org.oasis-open.opendocument.chart-template",
@@ -80,8 +107,8 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 			@"odi" : @"org.oasis-open.opendocument.image",
 			@"oti" : @"org.oasis-open.opendocument.image-template",
 
-			@"odf" : @"org.oasis-open.opendocument.formula",
-			@"otf" : @"org.oasis-open.opendocument.formula-template",
+			// @"odf" : @"org.oasis-open.opendocument.formula",
+			// @"otf" : @"org.oasis-open.opendocument.formula-template",
 
 			@"odm" : @"org.oasis-open.opendocument.text-master",
 			@"oth" : @"org.oasis-open.opendocument.text-web",
@@ -102,19 +129,41 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 	}
 
 	// Workaround for broken MIMEType->UTI conversions
-	NSString *suffix;
-
-	if ((suffix = self.name.pathExtension.lowercaseString) != nil)
+	if (uti == nil)
 	{
-		uti = OCItem.overriddenUTIBySuffix[suffix];
+		// Override by MIMEType
+		if (self.mimeType != nil)
+		{
+			uti = OCItem.overriddenUTIByMIMEType[self.mimeType];
 
-		OCLogDebug(@"Mapped %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
+			OCLogDebug(@"Mapped %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
+		}
+	}
+
+	if (uti == nil)
+	{
+		NSString *suffix;
+
+		// Override by suffix
+		if ((suffix = self.name.pathExtension.lowercaseString) != nil)
+		{
+			uti = OCItem.overriddenUTIBySuffix[suffix];
+
+			OCLogDebug(@"Mapped %@ suffix %@ to UTI %@", self.name, suffix, uti);
+		}
 	}
 
 	// Convert MIME type to UTI type identifier
 	if (uti == nil)
 	{
-		uti = ((NSString *)CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)self.mimeType, NULL)));
+		if (self.mimeType != nil)
+		{
+			uti = ((NSString *)CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)self.mimeType, NULL)));
+		}
+		else
+		{
+			uti = (__bridge NSString *)kUTTypeItem;
+		}
 
 		OCLogDebug(@"Converted %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
 	}
