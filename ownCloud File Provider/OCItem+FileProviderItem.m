@@ -55,16 +55,71 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 	return (self.name);
 }
 
++ (NSDictionary<NSString*, NSString*> *)overriddenUTIBySuffix
+{
+	static dispatch_once_t onceToken;
+	static NSDictionary<NSString *, NSString *> *utiBySuffix;
+
+	dispatch_once(&onceToken, ^{
+		utiBySuffix = @{
+			@"odt" : @"org.oasis-open.opendocument.text",
+			@"ott" : @"org.oasis-open.opendocument.text-template",
+
+			@"odg" : @"org.oasis-open.opendocument.graphics",
+			@"otg" : @"org.oasis-open.opendocument.graphics-template",
+
+			@"odp" : @"org.oasis-open.opendocument.presentation",
+			@"otp" : @"org.oasis-open.opendocument.presentation-template",
+
+			@"ods" : @"org.oasis-open.opendocument.spreadsheet",
+			@"ots" : @"org.oasis-open.opendocument.spreadsheet-template",
+
+			@"odc" : @"org.oasis-open.opendocument.chart",
+			@"otc" : @"org.oasis-open.opendocument.chart-template",
+
+			@"odi" : @"org.oasis-open.opendocument.image",
+			@"oti" : @"org.oasis-open.opendocument.image-template",
+
+			@"odf" : @"org.oasis-open.opendocument.formula",
+			@"otf" : @"org.oasis-open.opendocument.formula-template",
+
+			@"odm" : @"org.oasis-open.opendocument.text-master",
+			@"oth" : @"org.oasis-open.opendocument.text-web",
+		};
+	});
+
+	return (utiBySuffix);
+}
+
 - (NSString *)typeIdentifier
 {
+	NSString *uti = nil;
+
 	// Return special UTI type for folders
 	if (self.type == OCItemTypeCollection)
 	{
 		return ((__bridge NSString *)kUTTypeFolder);
 	}
 
+	// Workaround for broken MIMEType->UTI conversions
+	NSString *suffix;
+
+	if ((suffix = self.name.pathExtension.lowercaseString) != nil)
+	{
+		uti = OCItem.overriddenUTIBySuffix[suffix];
+
+		OCLogDebug(@"Mapped %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
+	}
+
 	// Convert MIME type to UTI type identifier
-	return ((NSString *)CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)self.mimeType, NULL)));
+	if (uti == nil)
+	{
+		uti = ((NSString *)CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)self.mimeType, NULL)));
+
+		OCLogDebug(@"Converted %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
+	}
+
+	return (uti);
 }
 
 - (NSFileProviderItemCapabilities)capabilities
