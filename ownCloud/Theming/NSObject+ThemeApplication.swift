@@ -135,7 +135,6 @@ extension NSObject {
 		}
 
 		if let searchBar = self as? UISearchBar {
-
 			searchBar.tintColor = collection.searchbarColors.tintColor
 			searchBar.barStyle = collection.barStyle
 
@@ -143,11 +142,13 @@ extension NSObject {
 				searchBar.searchTextField.textColor = collection.navigationBarColors.labelColor
 				// Ensure search bar icon color is correct
 				searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+				searchBar.searchTextField.backgroundColor = collection.searchbarColors.backgroundColor
+				searchBar.searchTextField.setPlaceholder(textColor: collection.navigationBarColors.labelColor)
 			} else {
-UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = collection.searchbarColors.backgroundColor
-			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-			UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = collection.searchbarColors.tintColor
-}
+				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = collection.searchbarColors.backgroundColor
+				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = collection.searchbarColors.tintColor
+			}
 		}
 
 		if let label = self as? UILabel {
@@ -270,4 +271,49 @@ extension UITableViewController : ThemeableSectionHeader, ThemeableSectionFooter
 			label.textColor = sectionFooterColor
 		}
 	}
+}
+
+extension UISearchBar {
+
+	func getTextField() -> UITextField? {
+			return value(forKey: "searchField") as? UITextField
+
+	}
+	func setPlaceholder(textColor: UIColor) {
+		getTextField()?.setPlaceholder(textColor: textColor)
+
+	}
+}
+
+private extension UITextField {
+
+    private class Label: UILabel {
+        private var _textColor = UIColor.lightGray
+        override var textColor: UIColor! {
+            set { super.textColor = _textColor }
+            get { return _textColor }
+        }
+
+        init(label: UILabel, textColor: UIColor = .lightGray) {
+            _textColor = textColor
+            super.init(frame: label.frame)
+            self.text = label.text
+            self.font = label.font
+        }
+
+        required init?(coder: NSCoder) { super.init(coder: coder) }
+    }
+
+    var placeholderLabel: UILabel? {
+		return value(forKey: "placeholderLabel") as? UILabel
+
+	}
+
+    func setPlaceholder(textColor: UIColor) {
+        guard let placeholderLabel = placeholderLabel else { return }
+
+        let label = Label(label: placeholderLabel, textColor: textColor)
+        placeholderLabel.removeFromSuperview() // To remove existing label. Otherwise it will overwrite it if called multiple times.
+        setValue(label, forKey: "placeholderLabel")
+    }
 }
