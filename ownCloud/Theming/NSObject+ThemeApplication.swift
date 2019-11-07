@@ -236,6 +236,8 @@ extension NSObject {
 				visualEffectView.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
 			}
 		}
+
+		UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.navigationBarColors.backgroundColor
 	}
 }
 
