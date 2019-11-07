@@ -87,7 +87,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false
 
-		self.navigationItem.title = OCAppIdentity.shared.appName
+		self.navigationItem.title = VendorServices.shared.appName
 
 		NotificationCenter.default.addObserver(self, selector: #selector(considerAutoLogin), name: UIApplication.didBecomeActiveNotification, object: nil)
 	}
