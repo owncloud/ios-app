@@ -66,6 +66,16 @@ class VendorServices : NSObject {
 		return URL(string: "https://owncloud.org/privacy-policy/")
 	}
 
+	var appName: String {
+		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
+			if let themingValues = NSDictionary(contentsOfFile: path), let appName = themingValues["AppName"] as? String {
+				return appName
+			}
+		}
+
+		return OCAppIdentity.shared.appName ?? "App"
+	}
+
 	var isBetaBuild: Bool {
 		if let isBetaBuild = self.classSetting(forOCClassSettingsKey: .isBetaBuild) as? Bool {
 			return isBetaBuild
@@ -75,8 +85,10 @@ class VendorServices : NSObject {
 	}
 
 	var isBranded: Bool {
-		if let buildName = Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as? String, !buildName.hasPrefix("ownCloud") {
-			return true
+		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
+			if let themingValues = NSDictionary(contentsOfFile: path), let appName = themingValues["AppName"] as? String, !appName.hasPrefix("ownCloud") {
+				return true
+			}
 		}
 
 		return false
