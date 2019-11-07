@@ -76,7 +76,7 @@ platform :ios do
     ENTERPRISE_IDENTITY = "iPhone Distribution: ownCloud GmbH"
 
     appName = "ownCloud"
-    themePath = "ownCloud/Resources/Theming/Themes.plist"
+    themePath = "ownCloud/Resources/Theming/Branding.plist"
     if File.exist?("../" + themePath)
       appName = get_info_plist_value(path: themePath, key: "AppName")
     end
