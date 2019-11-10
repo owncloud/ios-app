@@ -30,6 +30,7 @@ enum DisplayViewState {
 	case noNetworkConnection
 	case downloading(progress: Progress)
 	case errorDownloading(error: Error?)
+	case downloadFinished
 	case canceledDownload
 	case notSupportedMimeType
 }
@@ -80,15 +81,17 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	var source: URL? {
 		didSet {
 			OnMainThread(inline: true) {
-				self.iconImageView?.isHidden = true
-				self.hideItemMetadataUIElements()
-				self.renderSpecificView(completion: { (success) in
-					if !success {
-						self.iconImageView?.isHidden = false
-						self.infoLabel?.text = "File couldn't be opened".localized
-						self.infoLabel?.isHidden = false
-					}
-				})
+				if self.shallShowPreview == true {
+					self.iconImageView?.isHidden = true
+					self.hideItemMetadataUIElements()
+					self.renderSpecificView(completion: { (success) in
+						if !success {
+							self.iconImageView?.isHidden = false
+							self.infoLabel?.text = "File couldn't be opened".localized
+							self.infoLabel?.isHidden = false
+						}
+					})
+				}
 			}
 		}
 	}
@@ -97,24 +100,27 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	var shallDisplayMoreButtonInToolbar = true
 
+	var shallShowPreview = true
+
 	private var state: DisplayViewState = .hasNetworkConnection {
 		didSet {
-			OnMainThread(inline: true) {
-				switch self.state {
-					case .downloading(let progress):
-						self.downloadProgress = progress
-
-					default:
-						self.downloadProgress = nil
-				}
-				self.render()
+			switch self.state {
+			case .downloading(let progress):
+				self.downloadProgress = progress
+			case .notSupportedMimeType:
+				shallShowPreview = false
+			default:
+				self.downloadProgress = nil
 			}
+			self.render()
 		}
 	}
 
 	public var downloadProgress : Progress? {
 		didSet {
-			progressView?.observedProgress = downloadProgress
+			OnMainThread(inline: true) {
+				self.progressView?.observedProgress = self.downloadProgress
+			}
 		}
 	}
 
@@ -289,6 +295,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				}
 				return
 			}
+			self?.state = .downloadFinished
+
 			self?.item = latestItem
 			self?.source = file?.url
 
@@ -316,33 +324,44 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	private func render() {
-		switch state {
-		case .hasNetworkConnection:
-			hideProgressIndicators()
+		OnMainThread(inline: true) {
+			switch self.state {
+			case .hasNetworkConnection:
+				self.hideProgressIndicators()
 
-		case .noNetworkConnection:
-			self.progressView?.isHidden = true
-			self.cancelButton?.isHidden = true
-			self.infoLabel?.isHidden = false
-			self.showPreviewButton?.isHidden = true
+			case .noNetworkConnection:
+				self.progressView?.isHidden = true
+				self.cancelButton?.isHidden = true
+				self.infoLabel?.isHidden = false
+				self.showPreviewButton?.isHidden = true
 
-		case .errorDownloading, .canceledDownload:
-			if core?.connectionStatus == .online {
-				hideProgressIndicators()
+			case .errorDownloading, .canceledDownload:
+				if self.core?.connectionStatus == .online {
+					self.hideProgressIndicators()
+				}
+
+			case .downloading(_):
+				self.progressView?.isHidden = false
+				self.cancelButton?.isHidden = false
+				self.infoLabel?.isHidden = true
+				self.showPreviewButton?.isHidden = true
+
+			case .notSupportedMimeType:
+				self.progressView?.isHidden = true
+				self.cancelButton?.isHidden = true
+				self.infoLabel?.isHidden = true
+
+				if let item = self.item {
+					if self.core?.localCopy(of:item) == nil {
+						self.showPreviewButton?.isHidden = false
+						self.showPreviewButton?.setTitle("Download".localized, for: .normal)
+					}
+				}
+
+			case .downloadFinished:
+				self.cancelButton?.isHidden = true
+				self.progressView?.isHidden = true
 			}
-
-		case .downloading(_):
-			self.progressView?.isHidden = false
-			self.cancelButton?.isHidden = false
-			self.infoLabel?.isHidden = true
-			self.showPreviewButton?.isHidden = true
-
-		case .notSupportedMimeType:
-			self.progressView?.isHidden = true
-			self.cancelButton?.isHidden = true
-			self.infoLabel?.isHidden = true
-			self.showPreviewButton?.isHidden = true
-
 		}
 	}
 
@@ -427,12 +446,13 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			return
 		}
 
+		self.item = item
+		metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
+
 		switch state {
 			case .notSupportedMimeType: break
 
 			default:
-				self.item = item
-				metadataInfoLabel?.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
 
 				Log.log("Presenting item (DisplayViewController.present): \(item.description)")
 
