@@ -80,7 +80,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(LinksAction.actionExtension)
 		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
-		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
+		// OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
 		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
 			OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
 			OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
