@@ -44,8 +44,23 @@ extension PHAsset {
 
 			var uploadProgress: Progress?
 
+			// Sometimes if the image was edited, the name is FullSizeRender.jpg but it is stored in the subfolder
+			// in the PhotoLibrary which is named after original image
+			var fileName = sourceURL.lastPathComponent
+			for component in sourceURL.pathComponents {
+				if component.starts(with: "IMG_") {
+					fileName = component
+					if component != sourceURL.pathComponents.last! {
+						fileName += "."
+						fileName += sourceURL.pathExtension
+					}
+					break
+				}
+			}
+
 			uploadProgress = sourceURL.upload(with: core,
 										at: rootItem,
+										alternativeName: fileName,
 										importByCopy: copySource,
 										placeholderHandler: { (item, error) in
 											if !copySource && error != nil {

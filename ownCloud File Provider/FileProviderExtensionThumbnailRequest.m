@@ -75,7 +75,7 @@
 						if (!isOngoing)
 						{
 							dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-								self.perThumbnailCompletionHandler(itemIdentifier, thumbnail.data, (thumbnail==nil) ? nil : [error resolvedError]);
+								self.perThumbnailCompletionHandler(itemIdentifier, thumbnail.data, (thumbnail==nil) ? nil : [error translatedError]);
 
 								OCLogDebug(@"Replied %ld: %@ -> thumbnailData=%d, error=%@", self.cursorPosition-1, itemFromDatabase.name, (thumbnail.data != nil), error);
 
