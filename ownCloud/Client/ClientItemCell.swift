@@ -197,12 +197,15 @@ class ClientItemCell: ThemeTableViewCell {
 
 	// MARK: - Present item
 	var item : OCItem? {
+
+		willSet {
+			if self.item != newValue, newValue != nil {
+				updateWith(newValue!)
+			}
+		}
+
 		didSet {
 			localID = item?.localID as NSString?
-
-			if let newItem = item {
-				updateWith(newItem)
-			}
 		}
 	}
 
