@@ -56,10 +56,6 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 
 	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
 		if source != nil {
-
-			self.qlPreviewController?.dataSource = self
-			self.qlPreviewController?.reloadData()
-
 			qlPreviewController?.view.isHidden = false
 
 			self.showHideBarsTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showHideBars))
@@ -67,6 +63,9 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 			self.showHideBarsTapGestureRecognizer.delaysTouchesBegan = true
 			self.qlPreviewController?.view.gestureRecognizers?.forEach({ $0.delegate = self })
 			self.qlPreviewController?.view?.addGestureRecognizer(self.showHideBarsTapGestureRecognizer)
+
+			self.qlPreviewController?.dataSource = self
+			self.qlPreviewController?.reloadData()
 
 			completion(true)
 		} else {

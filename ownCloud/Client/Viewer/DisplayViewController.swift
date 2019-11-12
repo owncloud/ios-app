@@ -80,17 +80,19 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	var source: URL? {
 		didSet {
-			OnMainThread(inline: true) {
-				if self.shallShowPreview == true {
-					self.iconImageView?.isHidden = true
-					self.hideItemMetadataUIElements()
-					self.renderSpecificView(completion: { (success) in
-						if !success {
-							self.iconImageView?.isHidden = false
-							self.infoLabel?.text = "File couldn't be opened".localized
-							self.infoLabel?.isHidden = false
-						}
-					})
+			if self.source != oldValue, self.source != nil {
+				OnMainThread(inline: true) {
+					if self.shallShowPreview == true {
+						self.iconImageView?.isHidden = true
+						self.hideItemMetadataUIElements()
+						self.renderSpecificView(completion: { (success) in
+							if !success {
+								self.iconImageView?.isHidden = false
+								self.infoLabel?.text = "File couldn't be opened".localized
+								self.infoLabel?.isHidden = false
+							}
+						})
+					}
 				}
 			}
 		}
