@@ -239,9 +239,13 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		Theme.shared.register(client: self)
 
 		if let item = item, let core = self.core {
-			iconImageView?.image = item.icon(fitInSize:iconImageSize)
+			if core.localCopy(of: item) == nil {
+				iconImageView?.setThumbnailImage(using: core, from: item, with: iconImageSize, avoidNetworkRequests: true)
+			}
 
-			iconImageView?.setThumbnailImage(using: core, from: item, with: iconImageSize)
+			if iconImageView?.image == nil {
+				iconImageView?.image = item.icon(fitInSize:iconImageSize)
+			}
 		}
 
 		self.render()
