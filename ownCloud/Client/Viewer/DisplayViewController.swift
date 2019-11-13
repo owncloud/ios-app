@@ -242,7 +242,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 		if let item = item, let core = self.core {
 			if core.localCopy(of: item) == nil {
-				iconImageView?.setThumbnailImage(using: core, from: item, with: iconImageSize, avoidNetworkRequests: true)
+				iconImageView?.setThumbnailImage(using: core, from: item, with: iconImageSize, avoidSystemThumbnails: true)
 			}
 
 			if iconImageView?.image == nil {

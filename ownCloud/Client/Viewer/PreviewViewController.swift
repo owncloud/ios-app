@@ -121,7 +121,7 @@ extension PreviewViewController: DisplayExtension {
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		do {
 			if let mimeType = context.location?.identifier?.rawValue {
-				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/)|(application/octet-stream)|(model/(vnd|usd))|application/(rtf|x-rtf|doc)|(application/x-iwork*)|(image/*)|(application/(vnd.|ms))(?!(oasis|android))(ms|openxmlformats)?)", options: .caseInsensitive)
+				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/)|(application/octet-stream)|(model/(vnd|usd))|application/(rtf|x-rtf|doc)|(application/x-iwork*)|(application/(vnd.|ms))(?!(oasis|android))(ms|openxmlformats)?)", options: .caseInsensitive)
 				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
 
 				if matches > 0 {

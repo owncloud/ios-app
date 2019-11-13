@@ -38,7 +38,7 @@ extension UIImageView {
 		core.handle(event, sender: self)
 	}
 
-	@discardableResult func setThumbnailImage(using core:OCCore, from item:OCItem, with size:CGSize, avoidNetworkRequests:Bool = false, progressHandler:((_ progress:Progress) -> Void)? = nil) -> Progress? {
+	@discardableResult func setThumbnailImage(using core:OCCore, from item:OCItem, with size:CGSize, avoidSystemThumbnails:Bool = false, progressHandler:((_ progress:Progress) -> Void)? = nil) -> Progress? {
 
 		weak var weakCore = core
 
@@ -92,7 +92,7 @@ extension UIImageView {
 				if thumbnail != nil {
 					item.thumbnail = thumbnail
 					displayThumbnail(thumbnail)
-				} else {
+				} else if avoidSystemThumbnails == false {
 					// No thumbnail returned by the core, try QuickLook thumbnailing on iOS 13
 					requestSystemThumbnailIfPossible()
 				}
