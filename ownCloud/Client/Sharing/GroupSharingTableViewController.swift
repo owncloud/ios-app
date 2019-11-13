@@ -91,6 +91,8 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			searchController?.searchBar.applyThemeCollection(Theme.shared.activeCollection)
 			recipientSearchController = core?.recipientSearchController(for: item)
 			recipientSearchController?.delegate = self
+			recipientSearchController?.minimumSearchTermLength = core?.connection.capabilities?.sharingSearchMinLength?.uintValue ?? OCCapabilities.defaultSharingSearchMinLength.magnitude
+			showActivityIndicator = true
 		}
 
 		messageView = MessageView(add: self.view)
@@ -181,7 +183,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 									self.dismissAnimated()
 								} else {
 									if let shareError = error {
-										let alertController = UIAlertController(with: "Unshare failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Unshare failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
@@ -347,14 +349,13 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	func updateSearchResults(for searchController: UISearchController) {
 		guard let text = searchController.searchBar.text else { return }
-		if text.count > core?.connection.capabilities?.sharingSearchMinLength?.intValue ?? 1 {
+		recipientSearchController?.searchTerm = text
+		if text.count > 0 {
 			if let recipients = recipientSearchController?.recipients, recipients.count > 0,
-				recipientSearchController?.searchTerm == text,
 				searchResultsSection == nil {
 				self.searchControllerHasNewResults(recipientSearchController!, error: nil)
 			}
 
-			recipientSearchController?.searchTerm = text
 		} else if searchController.isActive {
 			resetTable(showShares: false)
 		}
@@ -362,11 +363,18 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
 		self.resetTable(showShares: true)
-		self.searchController?.searchBar.isLoading = false
+		self.messageView?.message(show: false)
+
+		if let headerView = self.tableView.tableHeaderView as? MoreViewHeader {
+			headerView.activityIndicator.stopAnimating()
+		}
 	}
 
 	func searchControllerHasNewResults(_ searchController: OCRecipientSearchController, error: Error?) {
 		OnMainThread {
+			if let headerView = self.tableView.tableHeaderView as? MoreViewHeader {
+				headerView.activityIndicator.stopAnimating()
+			}
 			guard let recipients = searchController.recipients, let core = self.core else {
 				self.messageView?.message(show: true, imageName: "icon-search", title: "No matches".localized, message: "There are no results for this search term".localized)
 				return
@@ -428,10 +436,13 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 	}
 
 	func searchController(_ searchController: OCRecipientSearchController, isWaitingForResults isSearching: Bool) {
-		if isSearching {
-			self.searchController?.searchBar.isLoading = true
-		} else {
-			self.searchController?.searchBar.isLoading = false
+		OnMainThread {
+			if isSearching {
+
+				if let headerView = self.tableView.tableHeaderView as? MoreViewHeader {
+					headerView.activityIndicator.startAnimating()
+				}
+			}
 		}
 	}
 
@@ -450,7 +461,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 						presentationStyle = .alert
 					}
 
-					let alertController = UIAlertController(title: "Remove Recipient".localized, message: nil, preferredStyle: presentationStyle)
+					let alertController = ThemedAlertController(title: "Remove Recipient".localized, message: nil, preferredStyle: presentationStyle)
 
 					alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 					alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
@@ -460,7 +471,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 									self.navigationController?.popViewController(animated: true)
 								} else {
 									if let shareError = error {
-										let alertController = UIAlertController(with: "Remove Recipient failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
+										let alertController = ThemedAlertController(with: "Remove Recipient failed".localized, message: shareError.localizedDescription, okLabel: "OK".localized, action: nil)
 										self.present(alertController, animated: true)
 									}
 								}
@@ -474,5 +485,14 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		}
 
 		return []
+	}
+
+	// MARK: Themeing
+	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		super.applyThemeCollection(theme: theme, collection: collection, event: event)
+
+		if #available(iOS 13, *) {
+			self.searchController?.searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+		}
 	}
 }

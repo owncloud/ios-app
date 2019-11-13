@@ -28,8 +28,8 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.folder-action")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Create folder".localized)).perform(grey_tap())
 
 			//Asserts
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).assert(grey_sufficientlyVisible())
@@ -59,8 +59,8 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.folder-action")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Create folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
@@ -107,8 +107,8 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.folder-action")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Create folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
@@ -146,8 +146,8 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.folder-action")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Create folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
@@ -185,8 +185,8 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.folder-action")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Create folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
@@ -231,8 +231,8 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark, issue: issue)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Create Folder".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.folder-action")).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Create folder".localized)).perform(grey_tap())
 
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
 			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).perform(grey_tap())
@@ -246,7 +246,7 @@ class CreateFolderTests: FileTests {
 			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
+			EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).atIndex(0).perform(grey_tap())
 			dismissFileList()
 
 		} else {

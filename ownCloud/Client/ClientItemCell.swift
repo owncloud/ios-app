@@ -34,12 +34,15 @@ class ClientItemCell: ThemeTableViewCell {
 	private let iconViewWidth : CGFloat = 60
 	private let moreButtonWidth : CGFloat = 60
 	private let verticalLabelMarginFromCenter : CGFloat = 2
+	private let iconSize : CGSize = CGSize(width: 40, height: 40)
+	private let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
 
 	weak var delegate: ClientItemCellDelegate?
 
 	var titleLabel : UILabel = UILabel()
 	var detailLabel : UILabel = UILabel()
 	var iconView : UIImageView = UIImageView()
+	var showingIcon : Bool = false
 	var cloudStatusIconView : UIImageView = UIImageView()
 	var sharedStatusIconView : UIImageView = UIImageView()
 	var publicLinkStatusIconView : UIImageView = UIImageView()
@@ -83,6 +86,8 @@ class ClientItemCell: ThemeTableViewCell {
 			blankView.layer.masksToBounds = true
 			return blankView
 		}()
+
+		NotificationCenter.default.addObserver(self, selector: #selector(updateAvailableOfflineStatus(_:)), name: .OCCoreItemPoliciesChanged, object: OCItemPolicyKind.availableOffline)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -90,6 +95,7 @@ class ClientItemCell: ThemeTableViewCell {
 	}
 
 	deinit {
+		NotificationCenter.default.removeObserver(self, name: .OCCoreItemPoliciesChanged, object: OCItemPolicyKind.availableOffline)
 		self.localID = nil
 	}
 
@@ -114,6 +120,7 @@ class ClientItemCell: ThemeTableViewCell {
 
 		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
 		titleLabel.adjustsFontForContentSizeCategory = true
+		titleLabel.lineBreakMode = .byTruncatingMiddle
 
 		detailLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
 		detailLabel.adjustsFontForContentSizeCategory = true
@@ -199,9 +206,29 @@ class ClientItemCell: ThemeTableViewCell {
 		}
 	}
 
+	func titleLabelString(for item: OCItem?) -> String {
+		if let item = item, let itemName = item.name {
+			return itemName
+		}
+
+		return ""
+	}
+
+	func detailLabelString(for item: OCItem?) -> String {
+		if let item = item {
+			var size: String = item.sizeLocalized
+
+			if item.size < 0 {
+				size = "Pending".localized
+			}
+
+			return size + " - " + item.lastModifiedLocalized
+		}
+
+		return ""
+	}
+
 	func updateWith(_ item: OCItem) {
-		let iconSize : CGSize = CGSize(width: 40, height: 40)
-		let thumbnailSize : CGSize = CGSize(width: 60, height: 60)
 		var iconImage : UIImage?
 
 		// Cancel any already active request
@@ -210,24 +237,18 @@ class ClientItemCell: ThemeTableViewCell {
 		}
 
 		iconImage = item.icon(fitInSize: iconSize)
-
-		var size: String = item.sizeLocalized
-
-		if item.size < 0 {
-			size = "Pending".localized
-		}
-
-		self.detailLabel.text = size + " - " + item.lastModifiedLocalized
+		showingIcon = true
 
 		self.accessoryType = .none
 
 		if item.thumbnailAvailability != .none {
 			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				_ = thumbnail?.requestImage(for: thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
+				_ = thumbnail?.requestImage(for: self.thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
 					if error == nil,
 						image != nil,
 						self.item?.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
 						OnMainThread {
+							self.showingIcon = false
 							self.iconView.image = image
 						}
 					}
@@ -237,7 +258,7 @@ class ClientItemCell: ThemeTableViewCell {
 			if let thumbnail = item.thumbnail {
 				displayThumbnail(thumbnail)
 			} else {
-				activeThumbnailRequestProgress = core?.retrieveThumbnail(for: item, maximumSize: thumbnailSize, scale: 0, retrieveHandler: { [weak self] (_, _, _, thumbnail, _, progress) in
+				activeThumbnailRequestProgress = core?.retrieveThumbnail(for: item, maximumSize: self.thumbnailSize, scale: 0, retrieveHandler: { [weak self] (_, _, _, thumbnail, _, progress) in
 					displayThumbnail(thumbnail)
 
 					if self?.activeThumbnailRequestProgress === progress {
@@ -262,23 +283,11 @@ class ClientItemCell: ThemeTableViewCell {
 			publicLinkStatusIconViewRightMarginConstraint?.constant = 0
 		}
 
-		if item.type == .file {
-			switch item.cloudStatus {
-			case .cloudOnly:
-				cloudStatusIconView.image = UIImage(named: "cloud-only")
-
-			case .localCopy:
-				cloudStatusIconView.image = nil
-
-			case .locallyModified, .localOnly:
-				cloudStatusIconView.image = UIImage(named: "cloud-local-only")
-			}
-		} else {
-			cloudStatusIconView.image = nil
-		}
+		self.updateCloudStatusIcon(with: item)
 
 		self.iconView.image = iconImage
-		self.titleLabel.text = item.name
+
+		self.updateLabels(with: item)
 
 		self.iconView.alpha = item.isPlaceholder ? 0.5 : 1.0
 		self.moreButton.isHidden = (item.isPlaceholder || (progressView != nil)) ? true : false
@@ -286,6 +295,58 @@ class ClientItemCell: ThemeTableViewCell {
 		self.moreButton.accessibilityLabel = (item.name != nil) ? (item.name! + " " + "Actions".localized) : "Actions".localized
 
 		self.updateProgress()
+	}
+
+	func updateCloudStatusIcon(with item: OCItem?) {
+		var cloudStatusIcon : UIImage?
+		var cloudStatusIconAlpha : CGFloat = 1.0
+
+		if let item = item {
+			let availableOfflineCoverage : OCCoreAvailableOfflineCoverage = core?.availableOfflinePolicyCoverage(of: item) ?? .none
+
+			switch availableOfflineCoverage {
+				case .direct, .none: cloudStatusIconAlpha = 1.0
+				case .indirect: cloudStatusIconAlpha = 0.5
+			}
+
+			if item.type == .file {
+				switch item.cloudStatus {
+				case .cloudOnly:
+					cloudStatusIcon = UIImage(named: "cloud-only")
+					cloudStatusIconAlpha = 1.0
+
+				case .localCopy:
+					cloudStatusIcon = (item.downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? UIImage(named: "cloud-available-offline") : nil
+
+				case .locallyModified, .localOnly:
+					cloudStatusIcon = UIImage(named: "cloud-local-only")
+					cloudStatusIconAlpha = 1.0
+				}
+			} else {
+				if availableOfflineCoverage == .none {
+					cloudStatusIcon = nil
+				} else {
+					cloudStatusIcon = UIImage(named: "cloud-available-offline")
+				}
+			}
+		}
+
+		cloudStatusIconView.image = cloudStatusIcon
+		cloudStatusIconView.alpha = cloudStatusIconAlpha
+
+		cloudStatusIconView.invalidateIntrinsicContentSize()
+	}
+
+	func updateLabels(with item: OCItem?) {
+		self.titleLabel.text = titleLabelString(for: item)
+		self.detailLabel.text = detailLabelString(for: item)
+	}
+
+	// MARK: - Available offline tracking
+	@objc func updateAvailableOfflineStatus(_ notification: Notification) {
+		OnMainThread { [weak self] in
+			self?.updateCloudStatusIcon(with: self?.item)
+		}
 	}
 
 	// MARK: - Progress
@@ -362,6 +423,10 @@ class ClientItemCell: ThemeTableViewCell {
 		detailLabel.textColor = collection.tableRowColors.secondaryLabelColor
 
 		moreButton.tintColor = collection.tableRowColors.labelColor
+
+		if showingIcon, let item = item {
+			iconView.image = item.icon(fitInSize: iconSize)
+		}
 	}
 
 	// MARK: - Editing mode

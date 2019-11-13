@@ -41,8 +41,8 @@ class MoreSettingsSection: SettingsSection {
 			buildType = "beta".localized
 		}
 
-		let localizedFooter = "%@ %@ version %@ build %@ (%@)".localized
-		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName!, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit)
+		let localizedFooter = "%@ %@ version %@ build %@ (app: %@, sdk: %@)".localized
+		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName ?? "App", buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit, OCAppIdentity.shared.sdkCommit ?? "unknown")
 
 		self.footerTitle = footerTitle
 
@@ -118,7 +118,7 @@ class MoreSettingsSection: SettingsSection {
 					row.viewController?.navigationController?.pushViewController(textViewController, animated: true)
 				}
 			})
-		}, title: "Acknowledgements".localized, accessoryType: .disclosureIndicator)
+		}, title: "Acknowledgements".localized, accessoryType: .disclosureIndicator, identifier: "acknowledgements")
 	}
 
 	// MARK: - Update UI
@@ -139,7 +139,7 @@ class MoreSettingsSection: SettingsSection {
 	}
 
 	private func openSFWebViewWithConfirmation(for url: URL) {
-		let alert = UIAlertController(title: "Do you want to open the following URL?".localized,
+		let alert = ThemedAlertController(title: "Do you want to open the following URL?".localized,
 					      message: url.absoluteString,
 					      preferredStyle: .alert)
 

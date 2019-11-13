@@ -6,7 +6,8 @@
 :charles-web-debugging-proxy-url: https://www.charlesproxy.com/documentation/ios/
 :create-screen-recording-url: https://support.apple.com/en-us/HT207935
 :mitmproxy-url: https://mitmproxy.org/
-:owncloud-logging-url: https://doc.owncloud.com/server/10.0/admin_manual/configuration/server/logging_configuration.html
+:owncloud-logging-url: https://doc.owncloud.com/server/latest/admin_manual/configuration/server/logging_configuration.html
+:owncloud-log-tracing-url: https://doc.owncloud.com/server/latest/admin_manual/configuration/server/request_tracing.html
 
 If you experience problems while using the iOS app, you can use this guide to help find the solution.
 
@@ -57,6 +58,10 @@ image:owncloud-log-configuration.png[Configuring logging in ownCloud server.]
 === Web Server Log Files
 
 It can be helpful to view your web server's error log file to isolate any ownCloud-related problems.
+
+The ownCloud iOS app sends the `X-REQUEST-ID` header with every request. You'll find the `X-REQUEST-ID` in the `owncloud.log`, and you can configure your webserver to add the `X-REQUEST-ID` to the logs. Here you can find more information:
+{owncloud-log-tracing-url}
+
 Some helpful files include the following:
 
 error_logx:: Maintains errors associated with PHP code.

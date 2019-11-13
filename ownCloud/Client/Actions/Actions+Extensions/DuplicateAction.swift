@@ -28,7 +28,11 @@ class DuplicateAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		// Examine items in context
+		if forContext.items.filter({return $0.isRoot}).count > 0 {
+			return .none
+
+		}
+
 		return .middle
 	}
 
@@ -43,61 +47,21 @@ class DuplicateAction : Action {
 
 		if let core = self.core {
 			OnBackgroundQueue { [weak core] in
-				let localizedCopy = "copy".localized
-				let pattern = " \(localizedCopy)[ ]?[0-9]{0,}$"
-
-				var scheduledCopyPaths : [String] = []
-
 				for item in duplicateItems {
-					if let core = core, let baseName = item.baseName, let parentItem = item.parentItem(from: core) {
-						var duplicateCounter = 0
-						let itemPathExtension = item.fileExtension
+					if let core = core, let itemName = item.name, let parentItem = item.parentItem(from: core), let parentPath = parentItem.path {
+						core.suggestUnusedNameBased(on: itemName, atPath: parentPath, isDirectory: item.type == .collection, using: item.type == .collection ? .numbered : .bracketed, filteredBy: nil, resultHandler: { (suggestedName, _) in
+							Log.debug("Duplicating \(item.name ?? "(null)") as \(suggestedName ?? "(null)")")
 
-						findFreeName: repeat {
-							var copyItemName = "\(baseName.replacingOccurrences(for: pattern)) \(localizedCopy)"
-
-							if duplicateCounter > 0 {
-								copyItemName = "\(copyItemName) \(String(duplicateCounter+1))"
-							}
-
-							if let itemPathExtension = itemPathExtension, itemPathExtension != "" {
-								copyItemName = (copyItemName as NSString).appendingPathExtension(itemPathExtension) ?? copyItemName
-							}
-
-							var copyPath = (parentItem.path as NSString?)?.appendingPathComponent(copyItemName)
-
-							if (item.type == .collection) && (copyPath?.hasSuffix("/") == false) {
-								copyPath = copyPath?.appending("/")
-							}
-
-							if let copyPath = copyPath, scheduledCopyPaths.contains(copyPath) {
-								Log.debug("Skipping scheduled path \(copyPath) for duplicating \(item.name ?? "(null)") ")
-								duplicateCounter += 1
+							if let suggestedName = suggestedName, let progress = core.copy(item, to: parentItem, withName: suggestedName, options: nil, resultHandler: { (error, _, item, _) in
+								if error != nil {
+									Log.error("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
+								}
+							}) {
+								self.publish(progress: progress)
 							} else {
-								if let copyPath = copyPath {
-									scheduledCopyPaths.append(copyPath)
-								}
-
-								if let existingItemFile = try? core.cachedItem(inParent: parentItem, withName: copyItemName, isDirectory: false) {
-									Log.debug("Skipping existing file \(existingItemFile.path ?? "(null)") for duplicating \(item.name ?? "(null)") ")
-									duplicateCounter += 1
-								} else if let existingItemDir = try? core.cachedItem(inParent: parentItem, withName: copyItemName, isDirectory: true) {
-									Log.debug("Skipping existing dir \(existingItemDir.path ?? "(null)") for duplicating \(item.name ?? "(null)") ")
-									duplicateCounter += 1
-								} else {
-									Log.debug("Duplicating \(item.name ?? "(null)") as \(copyItemName)")
-
-									if let progress = core.copy(item, to: parentItem, withName: copyItemName, options: nil, resultHandler: { (error, _, item, _) in
-										if error != nil {
-											Log.error("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
-										}
-									}) {
-										self.publish(progress: progress)
-										break findFreeName
-									}
-								}
+								Log.error("Error duplicating \(String(describing: item.path)) - no suggestedName")
 							}
-						} while (duplicateCounter < 10000)
+						})
 					}
 				}
 			}
@@ -107,7 +71,7 @@ class DuplicateAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreFolder {
 			return UIImage(named: "duplicate-file")
 		}
 

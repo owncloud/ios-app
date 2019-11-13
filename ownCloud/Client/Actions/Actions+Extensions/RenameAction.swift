@@ -29,6 +29,10 @@ class RenameAction : Action {
 		if forContext.items.count > 1 {
 			return .none
 		}
+		if forContext.items.filter({return $0.isRoot}).count > 0 {
+			return .none
+
+		}
 		// Examine items in context
 		return .middle
 	}
@@ -79,7 +83,7 @@ class RenameAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreFolder {
 			return UIImage(named: "folder")
 		}
 

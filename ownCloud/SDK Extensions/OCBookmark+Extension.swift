@@ -69,4 +69,12 @@ extension OCBookmark {
 		return "bookmark"
 	}
 
+	var isTokenBased : Bool? {
+		if let authenticationMethodIdentifier = self.authenticationMethodIdentifier, let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
+			return authenticationMethodClass.type == .token
+		}
+
+		return nil
+	}
+
 }

@@ -19,6 +19,17 @@
 import Foundation
 import ownCloudSDK
 
+@available(iOS 13.0, *)
+extension UIUserInterfaceStyle {
+	func themeCollectionStyles() -> [ThemeCollectionStyle] {
+		if self == .dark {
+			return [.dark]
+		}
+
+		return [.light, .contrast]
+	}
+}
+
 extension ThemeStyle {
 	func themeStyleExtension(isDefault: Bool = false, isBranding: Bool = false) -> OCExtension {
 		let features : [String:Any] = [
@@ -52,6 +63,8 @@ extension ThemeStyle {
 	static var preferredStyle : ThemeStyle {
 		set {
 			UserDefaults.standard.setValue(newValue.identifier, forKey: "preferred-theme-style")
+
+			considerAppearanceUpdate(animated: true)
 		}
 
 		get {
@@ -67,6 +80,85 @@ extension ThemeStyle {
 
 			return style!
 		}
+	}
+
+	static var displayName : String {
+		if #available(iOS 13, *), ThemeStyle.followSystemAppearance {
+			return "System".localized
+		}
+
+		return ThemeStyle.preferredStyle.localizedName
+	}
+
+	@available(iOS 13.0, *)
+	static func userInterfaceStyle() -> UIUserInterfaceStyle? {
+		if let themeWindow = (UIApplication.shared.delegate as? AppDelegate)?.window {
+			return themeWindow.traitCollection.userInterfaceStyle
+		}
+
+		return nil
+	}
+
+	static func considerAppearanceUpdate(animated: Bool = false) {
+		let themeWindow : ThemeWindow? = (UIApplication.shared.delegate as? AppDelegate)?.window
+		var applyStyle : ThemeStyle? = ThemeStyle.preferredStyle
+
+		if #available(iOS 13, *) {
+			if self.followSystemAppearance {
+				if ThemeStyle.userInterfaceStyle() == .dark {
+					if let darkStyleIdentifier = ThemeStyle.preferredStyle.darkStyleIdentifier, let style = ThemeStyle.forIdentifier(darkStyleIdentifier) {
+						ThemeStyle.preferredStyle = style
+						applyStyle = style
+					}
+				} else {
+					if ThemeStyle.preferredStyle.themeStyle == .dark, let style = ThemeStyle.availableStyles(for: [.contrast])?.first {
+						ThemeStyle.preferredStyle = style
+						applyStyle = style
+					}
+				}
+			}
+		}
+
+		if let applyStyle = applyStyle {
+			let themeCollection = ThemeCollection(with: applyStyle)
+
+			if #available(iOS 13, *) {
+				if let themeWindowSubviews = themeWindow?.subviews {
+					for view in themeWindowSubviews {
+						view.overrideUserInterfaceStyle = themeCollection.interfaceStyle.userInterfaceStyle
+					}
+				}
+			}
+
+			if animated {
+				Theme.shared.switchThemeCollection(themeCollection)
+			} else {
+				Theme.shared.activeCollection = themeCollection
+			}
+		}
+	}
+
+	static var followSystemAppearance : Bool {
+		set {
+			UserDefaults.standard.setValue(newValue, forKey: "theme-style-follows-system-appearance")
+
+			considerAppearanceUpdate()
+		}
+
+		get {
+			var followSystemAppearance : Bool?
+
+			if let themeStyleFollowsSystemAppearance = UserDefaults.standard.object(forKey: "theme-style-follows-system-appearance") as? Bool {
+				followSystemAppearance = themeStyleFollowsSystemAppearance
+			}
+
+			if followSystemAppearance == nil {
+				followSystemAppearance = false
+			}
+
+			return followSystemAppearance!
+		}
+
 	}
 
 	static func forIdentifier(_ identifier: String) -> ThemeStyle? {
@@ -104,6 +196,18 @@ extension ThemeStyle {
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension())
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension(isDefault: true))
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudClassic.themeStyleExtension())
+	}
+
+	static func availableStyles(for styles: [ThemeCollectionStyle]) -> [ThemeStyle]? {
+		let styles = ThemeStyle.availableStyles?.filter { (theme) -> Bool in
+			if styles.contains(theme.themeStyle) {
+				return true
+			}
+
+			return false
+		}
+
+		return styles
 	}
 }
 
