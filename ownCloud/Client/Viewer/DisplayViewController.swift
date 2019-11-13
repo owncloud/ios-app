@@ -80,7 +80,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	var source: URL? {
 		didSet {
-			if self.source != oldValue, self.source != nil {
+			if self.source != oldValue && self.source != nil {
 				OnMainThread(inline: true) {
 					if self.shallShowPreview == true {
 						self.iconImageView?.isHidden = true

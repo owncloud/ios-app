@@ -47,19 +47,15 @@ extension UIImageView {
 			if  #available(iOS 13, *) {
 
 				var types : QLThumbnailGenerator.Request.RepresentationTypes?
-				if avoidNetworkRequests == true {
-					types = .icon
-				} else {
-					types = [.lowQualityThumbnail, .thumbnail]
-				}
+				types = [.icon, .lowQualityThumbnail, .thumbnail]
 
 				if let itemURL = weakCore?.localURL(for: item) {
 					let thumbnailRequest = QLThumbnailGenerator.Request(fileAt: itemURL,
 																		size: size,
 																		scale: UIScreen.main.scale,
 																		representationTypes:types!)
-					QLThumbnailGenerator.shared.generateBestRepresentation(for: thumbnailRequest) { (representation, _) in
-						if let representation = representation {
+					QLThumbnailGenerator.shared.generateBestRepresentation(for: thumbnailRequest) { (representation, error) in
+						if let representation = representation, error == nil {
 							self.cacheThumbnail(image: representation.uiImage, size:size, for: item, in: core)
 							OnMainThread {
 								self.image = representation.uiImage
@@ -71,43 +67,41 @@ extension UIImageView {
 			#endif
 		}
 
-		if item.thumbnailAvailability != .none {
-			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				_ = thumbnail?.requestImage(for: size, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
-					if error == nil, image != nil, item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
-						OnMainThread {
-							self.image = image
-						}
+		let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
+			_ = thumbnail?.requestImage(for: size, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
+				if error == nil, image != nil, item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
+					OnMainThread {
+						self.image = image
 					}
-				})
-			}
+				}
+			})
+		}
 
+		if item.thumbnailAvailability == .available {
 			if let thumbnail = item.thumbnail {
 				displayThumbnail(thumbnail)
-			} else {
-				if avoidNetworkRequests == true {
-					requestSystemThumbnailIfPossible()
-					return nil
+			}
+			return nil
+		}
+
+		if item.thumbnailAvailability != .none {
+
+			let activeThumbnailRequestProgress = weakCore?.retrieveThumbnail(for: item, maximumSize: size, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, progress) in
+
+				// Did we get valid thumbnail?
+				if thumbnail != nil {
+					item.thumbnail = thumbnail
+					displayThumbnail(thumbnail)
 				} else {
-					let activeThumbnailRequestProgress = weakCore?.retrieveThumbnail(for: item, maximumSize: size, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, progress) in
-
-						// Did we get valid thumbnail?
-						if thumbnail != nil {
-							item.thumbnail = thumbnail
-							displayThumbnail(thumbnail)
-						}
-
-						// No thumbnail returned by the core, try QuickLook thumbnailing on iOS 13
-						requestSystemThumbnailIfPossible()
-
-						if progress != nil {
-							progressHandler?(progress!)
-						}
-					})
-					return activeThumbnailRequestProgress
+					// No thumbnail returned by the core, try QuickLook thumbnailing on iOS 13
+					requestSystemThumbnailIfPossible()
 				}
 
-			}
+				if progress != nil {
+					progressHandler?(progress!)
+				}
+			})
+			return activeThumbnailRequestProgress
 		}
 
 		return nil
