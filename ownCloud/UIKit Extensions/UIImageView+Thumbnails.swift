@@ -47,7 +47,7 @@ extension UIImageView {
 			if  #available(iOS 13, *) {
 
 				var types : QLThumbnailGenerator.Request.RepresentationTypes?
-				types = [.icon, .lowQualityThumbnail, .thumbnail]
+				types = [.lowQualityThumbnail, .thumbnail]
 
 				if let itemURL = weakCore?.localURL(for: item) {
 					let thumbnailRequest = QLThumbnailGenerator.Request(fileAt: itemURL,
