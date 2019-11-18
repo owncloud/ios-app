@@ -46,7 +46,7 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 
 			Log.debug(tagged: ["REMAINING_MEDIA_UPLOAD"], "Started remaining media upload...")
 
-			self.fetchPendingUploads()
+			self.fetchAndContinuePendingUploads()
 		}
 
 		// Do we have a selected bookmark?
@@ -85,7 +85,7 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 		}
 	}
 
-	private func fetchPendingUploads() {
+	private func fetchAndContinuePendingUploads() {
 		guard let bookmark = self.selectedBookmark else {
 			cleanup()
 			return
@@ -101,23 +101,15 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 			return
 		}
 
-		let uniquePaths = Array(Set(pendingUploads.values))
+		Log.debug(tagged: ["REMAINING_MEDIA_UPLOAD"], "Started remaining media upload...")
 
-		// Iterate over unique upload paths
+		// Iterate assets and paths of unfinished uploads
 		let uploadGroup = DispatchGroup()
-		for path in uniquePaths {
+
+		for (path, assetSet) in pendingUploads {
 			uploadGroup.enter()
-
-			// Get assets for current upload path
-			let assetsToUpload = pendingUploads.reduce(into: [PHAsset]()) { (result, kvPair) in
-				let (key, value) = kvPair
-				if value == path {
-					result.append(key)
-				}
-			}
-
 			// Perform upload
-			self.upload(assets: assetsToUpload, with: core, at: path) {
+			self.upload(assets: Array(assetSet), with: core, at: path) {
 				uploadGroup.leave()
 			}
 		}
@@ -146,7 +138,7 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 						self?.uploadDirectoryTracking = nil
 
 						// Upload assets
-						MediaUploadManager.shared.uploadQueue.uploadAssets(assets, with: core, at: item!) { (_, finished) in
+						MediaUploadQueue.shared.uploadAssets(assets, with: core, at: item!) { (_, finished) in
 							if finished {
 								completion()
 							}

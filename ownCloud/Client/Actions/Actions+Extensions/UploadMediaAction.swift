@@ -57,7 +57,7 @@ class UploadMediaAction: UploadBaseAction {
 
 				guard let rootItem = self.context.items.first else { return }
 
-				MediaUploadManager.shared.uploadQueue.uploadAssets(assets, with: self.core, at: rootItem, progressHandler: { (progress) in
+				MediaUploadQueue.shared.uploadAssets(assets, with: self.core, at: rootItem, progressHandler: { (progress) in
 					if progress.isFinished || progress.isCancelled {
 						self.unpublish(progress: progress)
 					} else {
