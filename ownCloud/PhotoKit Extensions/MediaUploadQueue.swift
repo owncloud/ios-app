@@ -21,12 +21,24 @@ import ownCloudSDK
 import Photos
 import MobileCoreServices
 
-
-class MediaUploadQueue {
+class MediaUploadQueue : OCActivitySource {
+	var activityIdentifier: String
+	var activityProgress: Progress?
 
 	private static let PendingAssetsKey = OCKeyValueStoreKey(rawValue: "com.owncloud.upload.queue.upload-pending-assets")
 
+	init() {
+		activityIdentifier = "MediaUploadQueue:\(UUID())"
+	}
+
 	static var shared = MediaUploadQueue()
+
+	func provideActivity() -> OCActivity {
+		let activity = OCActivity.withIdentifier(self.activityIdentifier, description: "Media upload", statusMessage: nil, ranking: 0)
+		activity.progress = activityProgress != nil ? activityProgress : Progress.indeterminate()
+		activity.isCancellable = true
+		return activity
+	}
 
 	func uploadAssets(_ assets:[PHAsset], with core:OCCore?, at rootItem:OCItem, progressHandler:((Progress) -> Void)? = nil, assetUploadCompletion:((_ asset:PHAsset?, _ finished:Bool) -> Void)? = nil ) {
 
@@ -53,7 +65,9 @@ class MediaUploadQueue {
 
 		if weakCore != nil {
 
-			// TODO: Activity started
+			// Activity started
+			self.activityProgress = Progress(totalUnitCount: Int64(assets.count))
+			weakCore?.activityManager.update(OCActivityUpdate.publishingActivity(for: self))
 
 			// Submit upload job on the background queue
 			queue.async {
@@ -68,15 +82,24 @@ class MediaUploadQueue {
 					for asset in assets {
 						let result = asset.upload(with: weakCore!, at: rootItem, preferredFormats: prefferedMediaOutputFormats, progressHandler: { (progress) in
 							progressHandler?(progress)
+
+							// Update activity
+							self.activityProgress?.completedUnitCount += 1
+							weakCore?.activityManager.update(OCActivityUpdate.updatingActivity(for: self))
 						})
 
 						// Was OCItem created upon importing the asset file?
 						if result?.0 != nil, let path = rootItem.path {
 							assetUploadCompletion?(asset, false)
 							MediaUploadQueue.removePending(asset: asset.localIdentifier, path:path, for: weakCore!.bookmark)
+						}
 
+						if let cancelled = self.activityProgress?.isCancelled, cancelled == true {
+							MediaUploadQueue.removeAllPendingUploads(for: weakCore!.bookmark)
+							break
 						}
 					}
+
 					runningCoreCompletion()
 					uploadGroup.leave()
 
@@ -89,7 +112,8 @@ class MediaUploadQueue {
 					backgroundTask?.end()
 					assetUploadCompletion?(nil, true)
 
-					// TODO: Activity completed
+					// Indicate, that the activity has finished
+					weakCore?.activityManager.update(OCActivityUpdate.unpublishActivity(for: self))
 				})
 			}
 		}
@@ -144,6 +168,15 @@ class MediaUploadQueue {
 			}
 
 			return uploads
+		})
+	}
+
+	class func removeAllPendingUploads(for bookmark:OCBookmark) {
+		let vault : OCVault = OCVault(bookmark: bookmark)
+
+		vault.keyValueStore?.updateObject(forKey: MediaUploadQueue.PendingAssetsKey, usingModifier: { (_, changesMadePtr) -> Any? in
+			changesMadePtr.pointee = true
+			return nil
 		})
 	}
 
