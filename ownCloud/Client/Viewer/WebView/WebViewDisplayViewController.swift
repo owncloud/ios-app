@@ -119,7 +119,7 @@ extension WebViewDisplayViewController: DisplayExtension {
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		do {
 			if let mimeType = context.location?.identifier?.rawValue {
-				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/html)|(application/javascript)|(application/json)|(application/x-php))", options: .caseInsensitive)
+				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/(html|css))|(application/(javascript|json|x-php|x-tex)))", options: .caseInsensitive)
 				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
 
 				if matches > 0 {
