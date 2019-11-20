@@ -82,7 +82,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		didSet {
 			if self.source != oldValue && self.source != nil {
 				OnMainThread(inline: true) {
-					if self.shallShowPreview == true {
+					if self.shallShowPreview == true && self.canPreview(url: self.source!) {
 						self.iconImageView?.isHidden = true
 						self.hideItemMetadataUIElements()
 						self.renderSpecificView(completion: { (success) in
@@ -376,7 +376,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		self.progressView?.isHidden = true
 		self.cancelButton?.isHidden = true
 		self.infoLabel?.isHidden = true
-		self.showPreviewButton?.isHidden = false
+		//self.showPreviewButton?.isHidden = false
 	}
 
 	@objc func optionsBarButtonPressed() {
@@ -485,8 +485,12 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				}
 
 				self.updateNavigationBarItems()
-
 		}
+	}
+
+	// Override in subclasses and implement specific checks if required
+	func canPreview(url:URL) -> Bool {
+		return true
 	}
 }
 
