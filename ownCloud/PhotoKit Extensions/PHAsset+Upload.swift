@@ -28,8 +28,9 @@ extension PHAsset {
 	 - parameter preferredFormats: Array of UTI identifiers describing desired output formats
 	 - parameter completionHandler: Completion handler called after the media file is imported into the core and placeholder item is created.
 	 - parameter progressHandler: Receives progress of the at the moment running activity
+	 - parameter uploadCompleteHandler: Called when core reports that upload is done
 	*/
-	func upload(with core:OCCore?, at rootItem:OCItem, preferredFormats:[String]? = nil, progressHandler:((_ progress:Progress) -> Void)? = nil) -> (OCItem?, Error?)? {
+	func upload(with core:OCCore?, at rootItem:OCItem, preferredFormats:[String]? = nil, progressHandler:((_ progress:Progress) -> Void)? = nil, uploadCompleteHandler:(() -> Void)? = nil) -> (OCItem?, Error?)? {
 
 		func performUpload(sourceURL:URL, copySource:Bool) -> (OCItem?, Error?)? {
 
@@ -83,6 +84,7 @@ extension PHAsset {
 				if uploadProgress != nil {
 					progressHandler?(uploadProgress!)
 				}
+				uploadCompleteHandler?()
 			})
 
 			if uploadProgress != nil {

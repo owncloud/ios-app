@@ -55,15 +55,14 @@ class UploadMediaAction: UploadBaseAction {
 			photoAlbumViewController.selectionCallback = {(assets) in
 				self.completed()
 
-				guard let rootItem = self.context.items.first else { return }
+				guard let path = self.context.items.first?.path else { return }
 
-				MediaUploadQueue.shared.uploadAssets(assets, with: self.core, at: rootItem, progressHandler: { (progress) in
-					if progress.isFinished || progress.isCancelled {
-						self.unpublish(progress: progress)
-					} else {
-						self.publish(progress: progress)
-					}
-				})
+				guard let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection else { return }
+
+				for asset in assets {
+					MediaUploadQueue.shared.addUpload(asset, for: bookmark, at: path)
+				}
+				MediaUploadQueue.shared.scheduleUploads(in: bookmark)
 			}
 			let navigationController = ThemeNavigationController(rootViewController: photoAlbumViewController)
 

@@ -42,117 +42,50 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		guard let path = userDefaults.instantUploadPath else { return }
 
 		if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
-
-			OCCoreManager.shared.requestCore(for: bookmark, setup:nil, completionHandler: {(core, coreError) in
-				if core != nil {
-
-					func finalize() {
-						OCCoreManager.shared.returnCore(for: bookmark, completionHandler: {
-							self.completed()
-						})
-					}
-
-					core?.fetchUpdates(completionHandler: { (fetchError, _) in
-						if fetchError == nil {
-							self.uploadDirectoryTracking = core?.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
-
-								if isInitial {
-									if error != nil {
-										Log.error(tagged: ["INSTANT_MEDIA_UPLOAD"], "Error tracking upload path: \(String(describing: error))")
-									}
-
-									if item != nil {
-										self.uploadDirectoryTracking = nil
-										self.uploadMediaAssets(with: core, at: item!, completion: {
-											finalize()
-										})
-									} else {
-										Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant upload directory not found")
-										userDefaults.resetInstantUploadConfiguration()
-										finalize()
-										self.showFeatureDisabledAlert()
-									}
-								} else {
-									self.uploadDirectoryTracking = nil
-									finalize()
-								}
-							})
-						} else {
-							Log.error(tagged: ["INSTANT_MEDIA_UPLOAD"], "Fetching bookmark update failed with \(String(describing: fetchError))")
-							finalize()
-						}
-					})
-				} else {
-					if coreError != nil {
-						Log.error(tagged: ["INSTANT_MEDIA_UPLOAD"], "No core returned with error \(String(describing: coreError))")
-						self.result = .failure(coreError!)
-					}
-					self.completed()
-				}
-			})
+			uploadMediaAssets(for: bookmark, at: path)
+			MediaUploadQueue.shared.scheduleUploads(in: bookmark)
 		}
 	}
 
-	private func uploadMediaAssets(with core:OCCore?, at item:OCItem, completion:@escaping () -> Void) {
+	private func uploadMediaAssets(for bookmark:OCBookmark, at path:String) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
-		var assets = Set<PHAsset>()
+		var photoAssets = Set<PHAsset>()
 
 		// Add photo assets
 		if let uploadPhotosAfter = userDefaults.instantUploadPhotosAfter {
 			let fetchResult = self.fetchAssetsFromCameraRoll(.images, createdAfter: uploadPhotosAfter)
 			if fetchResult != nil {
 				fetchResult!.enumerateObjects({ (asset, _, _) in
-					assets.insert(asset)
+					photoAssets.insert(asset)
 				})
 			}
 		}
+
+		Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Importing \(photoAssets.count) photo assets")
+
+		for asset in photoAssets {
+			MediaUploadQueue.shared.addUpload(asset, for: bookmark, at: path)
+			userDefaults.instantUploadPhotosAfter = asset.modificationDate
+		}
+
+		var videoAssets = Set<PHAsset>()
 
 		// Add video assets
 		if let uploadVideosAfter = userDefaults.instantUploadVideosAfter {
 			let fetchResult = self.fetchAssetsFromCameraRoll(.videos, createdAfter: uploadVideosAfter)
 			if fetchResult != nil {
 				fetchResult!.enumerateObjects({ (asset, _, _) in
-					assets.insert(asset)
+					videoAssets.insert(asset)
 				})
 			}
 		}
 
-		// Perform actual upload operation
-		if assets.count > 0 {
-			self.upload(assets: Array(assets), with: core, at: item, completion: { () in
-				OnMainThread {
-					completion()
-				}
-			})
-		} else {
-			OnMainThread {
-				completion()
-			}
-		}
-	}
+		Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Importing \(videoAssets.count) video assets")
 
-	private func upload(assets:[PHAsset], with core:OCCore?, at rootItem:OCItem, completion:@escaping () -> Void) {
-
-		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
-
-		if assets.count > 0 {
-			Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Uploading \(assets.count) assets")
-			MediaUploadQueue.shared.uploadAssets(assets, with: core, at: rootItem, assetUploadCompletion: { (asset, finished) in
-				if let asset = asset {
-					switch asset.mediaType {
-					case .image:
-						userDefaults.instantUploadPhotosAfter = asset.modificationDate
-					case .video:
-						userDefaults.instantUploadVideosAfter = asset.modificationDate
-					default:
-						break
-					}
-				}
-				if finished {
-					completion()
-				}
-			})
+		for asset in videoAssets {
+			MediaUploadQueue.shared.addUpload(asset, for: bookmark, at: path)
+			userDefaults.instantUploadVideosAfter = asset.modificationDate
 		}
 	}
 
