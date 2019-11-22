@@ -115,6 +115,11 @@ class MediaUploadQueue : OCActivitySource {
 
 								// Check if the import activity has been cancelled
 								if self.isImportActivityCancelled() {
+									// Remove all stored jobs
+									bookmark.modifyMediaUploadStorage { (_) -> MediaUploadStorage in
+										return MediaUploadStorage()
+									}
+									
 									finalizeImport()
 									return
 								}
