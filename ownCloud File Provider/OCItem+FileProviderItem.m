@@ -89,6 +89,12 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 
 	dispatch_once(&onceToken, ^{
 		utiBySuffix = @{
+			// These suffix -> UTI mappings are currently not needed as the OC server
+			// already returns correct MIME-Types for these, so the MIMEType -> UTI
+			// mapping already takes care of it. Decided to let them still stay here
+			// as a reference and to document the thinking behind not including these
+			// five file types in this conversion dictionary.
+
 			// @"odt" : @"org.oasis-open.opendocument.text",
 			// @"ott" : @"org.oasis-open.opendocument.text-template",
 
@@ -101,17 +107,22 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 			// @"ods" : @"org.oasis-open.opendocument.spreadsheet",
 			// @"ots" : @"org.oasis-open.opendocument.spreadsheet-template",
 
+			// @"odf" : @"org.oasis-open.opendocument.formula",
+			// @"otf" : @"org.oasis-open.opendocument.formula-template",
+
+
+			// OC server does not seem to return MIME Types for these types
+			// at the time of writing, so these entries take care of correctly
+			// mapping suffixes to UTIs
+
 			@"odc" : @"org.oasis-open.opendocument.chart",
 			@"otc" : @"org.oasis-open.opendocument.chart-template",
 
 			@"odi" : @"org.oasis-open.opendocument.image",
 			@"oti" : @"org.oasis-open.opendocument.image-template",
 
-			// @"odf" : @"org.oasis-open.opendocument.formula",
-			// @"otf" : @"org.oasis-open.opendocument.formula-template",
-
 			@"odm" : @"org.oasis-open.opendocument.text-master",
-			@"oth" : @"org.oasis-open.opendocument.text-web",
+			@"oth" : @"org.oasis-open.opendocument.text-web"
 		};
 	});
 
