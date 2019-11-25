@@ -1,5 +1,6 @@
 excluded:
-    - ownCloudTests/EarlGrey.swift
+    - ownCloudTests
+    - ownCloudScreenshotsTests
     - external
 
 function_body_length: 100
@@ -16,6 +17,8 @@ identifier_name:
         - y
 
 disabled_rules:
+    - block_based_kvo
+    - empty_enum_arguments
     - switch_case_alignment
     - identifier_name
     - colon
@@ -26,7 +29,8 @@ disabled_rules:
     - type_body_length
     - line_length
     - type_name
-
+    - vertical_parameter_alignment
+    - function_body_length
 custom_rules:
   empty_line_after_guard_statement:
     included: ".*\\.swift"

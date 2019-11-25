@@ -46,7 +46,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 		if animated {
 			tableView.performBatchUpdates({
 				sections.insert(section, at: index)
-				tableView.insertSections(IndexSet(integer: index), with: UITableView.RowAnimation.fade)
+				tableView.insertSections(IndexSet(integer: index), with: .fade)
 			})
 		} else {
 			sections.insert(section, at: index)
@@ -58,19 +58,23 @@ class StaticTableViewController: UITableViewController, Themeable {
 	func removeSection(_ section: StaticTableViewSection, animated: Bool = false) {
 		if animated {
 			tableView.performBatchUpdates({
-				if let index : Int = sections.index(of: section) {
+				if let index = sections.index(of: section) {
 					sections.remove(at: index)
-					tableView.deleteSections(IndexSet(integer: index), with: UITableView.RowAnimation.fade)
+					tableView.deleteSections(IndexSet(integer: index), with: .fade)
 				}
 			}, completion: { (_) in
 				section.viewController = nil
 			})
 		} else {
-			sections.remove(at: sections.index(of: section)!)
+			if let sectionIndex = sections.index(of: section) {
+				sections.remove(at: sectionIndex)
 
-			section.viewController = nil
+				section.viewController = nil
 
-			tableView.reloadData()
+				tableView.reloadData()
+			} else {
+				section.viewController = nil
+			}
 		}
 	}
 
@@ -108,7 +112,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 					}
 				}
 
-				tableView.deleteSections(removalIndexes, with: UITableView.RowAnimation.fade)
+				tableView.deleteSections(removalIndexes, with: .fade)
 			}, completion: { (_) in
 				for section in removeSections {
 					section.viewController = nil
@@ -153,6 +157,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		extendedLayoutIncludesOpaqueBars = true
 		Theme.shared.register(client: self)
 	}
 
@@ -207,6 +212,15 @@ class StaticTableViewController: UITableViewController, Themeable {
 		return sections[section].footerTitle
 	}
 
+	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		let cell = staticRowForIndexPath(indexPath)
+		if cell.type == .datePicker {
+			return 216.0
+		}
+
+		return UITableView.automaticDimension
+	}
+
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		return sections[section].headerView
 	}
@@ -217,7 +231,6 @@ class StaticTableViewController: UITableViewController, Themeable {
 
 	// MARK: - Theme support
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		self.tableView.backgroundColor = collection.tableGroupBackgroundColor
-		self.tableView.separatorColor = collection.tableSeparatorColor
+		self.tableView.applyThemeCollection(collection)
 	}
 }

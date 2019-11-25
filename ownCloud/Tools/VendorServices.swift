@@ -18,6 +18,7 @@
 
 import UIKit
 import MessageUI
+import ownCloudSDK
 
 class VendorServices : NSObject {
 	// MARK: - App version information
@@ -45,21 +46,93 @@ class VendorServices : NSObject {
 		return ""
 	}
 
+	var helpURL: URL? {
+		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
+			if let themingValues = NSDictionary(contentsOfFile: path), let urls = themingValues["URLs"] as? NSDictionary, let help = urls["Help"] as? String {
+				return URL(string: help)
+			}
+		}
+
+		return URL(string: "https://www.owncloud.com/help")
+	}
+
+	var privacyURL: URL? {
+		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
+			if let themingValues = NSDictionary(contentsOfFile: path), let urls = themingValues["URLs"] as? NSDictionary, let privacy = urls["Privacy"] as? String {
+				return URL(string: privacy)
+			}
+		}
+
+		return URL(string: "https://owncloud.org/privacy-policy/")
+	}
+
+	var appName: String {
+		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
+			if let themingValues = NSDictionary(contentsOfFile: path), let appName = themingValues["AppName"] as? String {
+				return appName
+			}
+		}
+
+		return OCAppIdentity.shared.appName ?? "App"
+	}
+
+	var isBetaBuild: Bool {
+		if let isBetaBuild = self.classSetting(forOCClassSettingsKey: .isBetaBuild) as? Bool {
+			return isBetaBuild
+		}
+
+		return false
+	}
+
+	var isBranded: Bool {
+		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
+			if let themingValues = NSDictionary(contentsOfFile: path), let appName = themingValues["AppName"] as? String, !appName.hasPrefix("ownCloud") {
+				return true
+			}
+		}
+
+		return false
+	}
+
+	var showBetaWarning: Bool {
+		if let showBetaWarning = self.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool {
+			return showBetaWarning
+		}
+
+		return false
+	}
+
 	static var shared : VendorServices = {
 		return VendorServices()
 	}()
 
 	// MARK: - Vendor services
 	func recommendToFriend(from viewController: UIViewController) {
+
+		guard let appStoreLink = MoreSettingsSection.classSetting(forOCClassSettingsKey: .appStoreLink) as? String,
+			let appName = OCAppIdentity.shared.appName else {
+				return
+		}
+
 		let message = """
-<p>I want to invite you to use ownCloud on your smartphone!</p>
-<a href="https://itunes.apple.com/app/owncloud/id543672169?mt=8">Download here</a>
+<p>I want to invite you to use \(appName) on your smartphone!</p>
+<a href="\(appStoreLink)">Download here</a>
 """
-		self.sendMail(to: nil, subject: "Try ownCloud on your smartphone!", message: message, from: viewController)
+		self.sendMail(to: nil, subject: "Try \(appName) on your smartphone!", message: message, from: viewController)
 	}
 
 	func sendFeedback(from viewController: UIViewController) {
-		self.sendMail(to: "ios-beta@owncloud.com", subject: "ownCloud iOS app beta (\(self.appVersion) (\(self.appBuildNumber)))", message: nil, from: viewController)
+		var buildType = "release".localized
+
+		if self.isBetaBuild {
+			buildType = "beta".localized
+		}
+
+		guard let feedbackEmail = MoreSettingsSection.classSetting(forOCClassSettingsKey: .feedbackEmail) as? String,
+			let appName = OCAppIdentity.shared.appName else {
+				return
+		}
+		self.sendMail(to: feedbackEmail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(appName)", message: nil, from: viewController)
 	}
 
 	func sendMail(to: String?, subject: String?, message: String?, from viewController: UIViewController) {
@@ -80,7 +153,7 @@ class VendorServices : NSObject {
 
 			viewController.present(mail, animated: true)
 		} else {
-			let alert = UIAlertController(title: "Please configure an email account".localized,
+			let alert = ThemedAlertController(title: "Please configure an email account".localized,
 						      message: "You need to configure an email account first to be able to send emails.".localized,
 						      preferredStyle: .alert)
 
@@ -94,5 +167,28 @@ class VendorServices : NSObject {
 extension VendorServices: MFMailComposeViewControllerDelegate {
 	func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
 		controller.dismiss(animated: true)
+	}
+}
+
+// MARK: - OCClassSettings support
+extension OCClassSettingsIdentifier {
+	static let app = OCClassSettingsIdentifier("app")
+}
+
+extension OCClassSettingsKey {
+	static let showBetaWarning = OCClassSettingsKey("show-beta-warning")
+	static let isBetaBuild = OCClassSettingsKey("is-beta-build")
+	static let enableUIAnimations = OCClassSettingsKey("enable-ui-animations")
+}
+
+extension VendorServices : OCClassSettingsSupport {
+	static let classSettingsIdentifier : OCClassSettingsIdentifier = .app
+
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		if identifier == .app {
+			return [ .isBetaBuild : false, .showBetaWarning : false, .enableUIAnimations: true ]
+		}
+
+		return nil
 	}
 }

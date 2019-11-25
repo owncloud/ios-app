@@ -30,7 +30,22 @@ Register new devices to Apple portal
 ```
 fastlane ios build_ipa_ad_hoc
 ```
-Ad-Hoc Distribution IPA geneation
+Ad-Hoc Distribution IPA generation
+### ios screenshots
+```
+fastlane ios screenshots
+```
+Generate the screenshots for the AppStore
+### ios badgeIcon
+```
+fastlane ios badgeIcon
+```
+BadgeIcon
+### ios build_ipa_enterprise_in_house
+```
+fastlane ios build_ipa_enterprise_in_house
+```
+In-House Enterprise IPA generation
 
 ----
 

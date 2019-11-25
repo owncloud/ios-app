@@ -19,6 +19,7 @@
 import UIKit
 
 typealias StaticTableViewRowAction = (_ staticRow : StaticTableViewRow, _ sender: Any?) -> Void
+typealias StaticTableViewRowTextAction = (_ staticRow : StaticTableViewRow, _ sender: Any?, _ type: StaticTableViewRowActionType) -> Void
 typealias StaticTableViewRowEventHandler = (_ staticRow : StaticTableViewRow, _ event : StaticTableViewEvent) -> Void
 
 enum StaticTableViewRowButtonStyle {
@@ -29,12 +30,33 @@ enum StaticTableViewRowButtonStyle {
 	case custom(textColor: UIColor?, selectedTextColor: UIColor?, backgroundColor: UIColor?, selectedBackgroundColor: UIColor?)
 }
 
+enum StaticTableViewRowType {
+	case row
+	case subtitleRow
+	case valueRow
+	case radio
+	case toggle
+	case text
+	case secureText
+	case label
+	case switchButton
+	case button
+	case datePicker
+}
+
+enum StaticTableViewRowActionType {
+	case changed
+	case didBegin
+	case didEnd
+}
+
 class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	public weak var section : StaticTableViewSection?
 
 	public var identifier : String?
 	public var groupIdentifier : String?
+	public var type : StaticTableViewRowType
 
 	public var value : Any? {
 		didSet {
@@ -60,6 +82,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	public var action : StaticTableViewRowAction?
+	public var textFieldAction : StaticTableViewRowTextAction?
 	public var eventHandler : StaticTableViewRowEventHandler?
 
 	public var viewController: StaticTableViewController? {
@@ -84,27 +107,146 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		return self.index != nil
 	}
 
+	var representedObject : Any?
+
+	public var additionalAccessoryView : UIView?
+
 	override init() {
+		type = .row
 		super.init()
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, imageTintColorKey : String = "labelColor", alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = .none, identifier : String? = nil, accessoryView: UIView? = nil) {
 		self.init()
+		type = .row
+
+		var image = image
+		if image != nil, imageWidth != nil {
+			image = image?.paddedTo(width: imageWidth)
+		}
+
+		self.identifier = identifier
+		var cellStyle = UITableViewCell.CellStyle.default
+		if subtitle != nil {
+			cellStyle = UITableViewCell.CellStyle.subtitle
+		}
+
+		self.cell = ThemeTableViewCell(style: cellStyle, reuseIdentifier: nil)
+		if subtitle != nil {
+			self.cell?.detailTextLabel?.text = subtitle
+			self.cell?.detailTextLabel?.numberOfLines = 0
+		}
+		self.cell?.textLabel?.text = title
+		self.cell?.textLabel?.textAlignment = alignment
+		self.cell?.accessoryType = accessoryType
+		self.cell?.imageView?.image = image
+		if accessoryView != nil {
+			self.cell?.accessoryView = accessoryView
+		}
+
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey) as? UIColor
+			self?.cell?.accessoryView?.tintColor = themeCollection.tableRowColors.labelColor
+			})
+
+		self.cell?.accessibilityIdentifier = identifier
+
+		if rowWithAction != nil {
+			self.action = rowWithAction
+		} else {
+			self.cell?.selectionStyle = .none
+		}
+	}
+
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryView: UIView? = nil, identifier : String? = nil) {
+		self.init()
+		type = .row
+
+		self.identifier = identifier
+
+		self.cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		self.cell?.textLabel?.text = title
+		self.cell?.textLabel?.textAlignment = alignment
+		self.cell?.accessoryView = accessoryView
+		self.cell?.accessibilityIdentifier = identifier
+
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
+
+			textColor = themeCollection.tintColor
+			backgroundColor = themeCollection.tableRowColors.backgroundColor
+
+			self?.cell?.textLabel?.textColor = textColor
+
+			if selectedTextColor != nil {
+				self?.cell?.textLabel?.highlightedTextColor = selectedTextColor
+			}
+
+			if backgroundColor != nil {
+
+				self?.cell?.backgroundColor = backgroundColor
+			}
+
+			if selectedBackgroundColor != nil {
+				let selectedBackgroundView = UIView()
+
+				selectedBackgroundView.backgroundColor = selectedBackgroundColor
+
+				self?.cell?.selectedBackgroundView? = selectedBackgroundView
+			}
+			}, applyImmediately: true)
+
+		if rowWithAction != nil {
+			self.action = rowWithAction
+		} else {
+			self.cell?.selectionStyle = .none
+		}
+	}
+
+	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, image: UIImage? = nil, imageTintColorKey : String = "labelColor", accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, accessoryView: UIView?, identifier: String? = nil) {
+		self.init()
+		type = .row
 
 		self.identifier = identifier
 
 		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
-		self.cell?.textLabel?.text = title
-		self.cell?.textLabel?.textAlignment = alignment
-		self.cell?.accessoryType = accessoryType
 
-		self.cell?.accessibilityIdentifier = identifier
+		guard let cell = self.cell else { return }
 
-		self.action = rowWithAction
+		cell.textLabel?.text = title
+		cell.textLabel?.textAlignment = alignment
+		cell.accessoryType = accessoryType
+		self.cell?.imageView?.image = image
+		cell.accessibilityIdentifier = identifier
+		if rowWithAction != nil {
+			self.action = rowWithAction
+		} else {
+			self.cell?.selectionStyle = .none
+		}
+
+		if let accessoryView = accessoryView {
+			cell.textLabel?.numberOfLines = 0
+			additionalAccessoryView = accessoryView
+
+			cell.contentView.addSubview(accessoryView)
+			accessoryView.translatesAutoresizingMaskIntoConstraints = false
+
+			NSLayoutConstraint.activate([
+				accessoryView.trailingAnchor.constraint(equalTo: cell.accessoryView?.leadingAnchor ?? cell.contentView.trailingAnchor, constant: -5.0),
+				accessoryView.widthAnchor.constraint(greaterThanOrEqualToConstant: 0),
+				accessoryView.heightAnchor.constraint(equalToConstant: 24.0),
+				accessoryView.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor)
+			])
+		}
+
+		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
+			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey) as? UIColor
+		})
 	}
 
 	convenience init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, style : UITableViewCell.CellStyle = .subtitle, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
 		self.init()
+		type = .subtitleRow
 
 		self.identifier = identifier
 
@@ -116,20 +258,36 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.accessibilityIdentifier = identifier
 
 		self.action = subtitleRowWithAction
+
+		self.updateViewFromValue = { (row) in
+			if let value = row.value as? String {
+				row.cell?.detailTextLabel?.text = value
+			}
+		}
 	}
 
 	convenience init(valueRowWithAction: StaticTableViewRowAction?, title: String, value: String, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
-		self.init(subtitleRowWithAction: valueRowWithAction, title: title, subtitle: value, style: .value1, accessoryType: .disclosureIndicator, identifier: identifier)
+		self.init(subtitleRowWithAction: valueRowWithAction, title: title, subtitle: value, style: .value1, accessoryType: accessoryType, identifier: identifier)
+		type = .valueRow
 	}
 
 	// MARK: - Radio Item
-	convenience init(radioItemWithAction: StaticTableViewRowAction?, groupIdentifier: String, value: Any, title: String, selected: Bool, identifier : String? = nil) {
+	convenience init(radioItemWithAction: StaticTableViewRowAction?, groupIdentifier: String, value: Any, title: String, subtitle: String? = nil, selected: Bool, identifier : String? = nil) {
 		self.init()
+		type = .radio
 
+		var tableViewStyle = UITableViewCell.CellStyle.default
 		self.identifier = identifier
+		if subtitle != nil {
+			tableViewStyle = UITableViewCell.CellStyle.subtitle
+		}
 
-		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: tableViewStyle, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
+		if subtitle != nil {
+			self.cell?.detailTextLabel?.text = subtitle
+			self.cell?.detailTextLabel?.numberOfLines = 0
+		}
 
 		if let accessibilityIdentifier : String = identifier {
 			self.cell?.accessibilityIdentifier = groupIdentifier + "." + accessibilityIdentifier
@@ -148,19 +306,63 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 	}
 
+	// MARK: - Toggle Item
+	convenience init(toggleItemWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, selected: Bool, identifier : String? = nil) {
+		self.init()
+		type = .toggle
+
+		var tableViewStyle = UITableViewCell.CellStyle.default
+		self.identifier = identifier
+		if subtitle != nil {
+			tableViewStyle = UITableViewCell.CellStyle.subtitle
+		}
+
+		self.cell = ThemeTableViewCell(style: tableViewStyle, reuseIdentifier: nil)
+		self.cell?.textLabel?.text = title
+		if subtitle != nil {
+			self.cell?.detailTextLabel?.text = subtitle
+			self.cell?.detailTextLabel?.numberOfLines = 0
+		}
+
+		if let accessibilityIdentifier : String = identifier {
+			self.cell?.accessibilityIdentifier = accessibilityIdentifier
+		}
+
+		if selected {
+			self.cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
+			self.value = true
+		} else {
+			self.value = false
+		}
+
+		self.action = { (row, sender) in
+
+			guard let value = row.value as? Bool else { return }
+			if value {
+				row.cell?.accessoryType = UITableViewCell.AccessoryType.none
+				row.value = false
+			} else {
+				row.cell?.accessoryType = UITableViewCell.AccessoryType.checkmark
+				row.value = true
+			}
+
+			toggleItemWithAction?(row, sender)
+		}
+	}
+
 	// MARK: - Text Field
 	public var textField : UITextField?
 
-	convenience init(textFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil) {
-
+	convenience init(textFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = UIControl.Event.editingChanged) {
 		self.init()
+		type = .text
 
 		self.identifier = identifier
 
 		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.selectionStyle = UITableViewCell.SelectionStyle.none
 
-		self.action = action
+		self.textFieldAction = action
 		self.value = textValue
 
 		let cellTextField : UITextField = UITextField()
@@ -175,10 +377,11 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cellTextField.autocapitalizationType = autocapitalizationType
 		cellTextField.enablesReturnKeyAutomatically = enablesReturnKeyAutomatically
 		cellTextField.returnKeyType = returnKeyType
+		cellTextField.inputAccessoryView = inputAccessoryView
 		cellTextField.text = textValue
 		cellTextField.accessibilityIdentifier = identifier
 
-		cellTextField.addTarget(self, action: #selector(textFieldContentChanged(_:)), for: UIControl.Event.editingChanged)
+		cellTextField.addTarget(self, action: #selector(textFieldContentChanged(_:)), for: actionEvent)
 
 		if cell != nil {
 			cell?.contentView.addSubview(cellTextField)
@@ -202,24 +405,40 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			cellTextField.textColor = (self?.enabled == true) ? themeCollection.tableRowColors.labelColor : themeCollection.tableRowColors.secondaryLabelColor
 			cellTextField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : themeCollection.tableRowColors.secondaryLabelColor])
+			cellTextField.keyboardAppearance = themeCollection.keyboardAppearance
 		})
+
+		cellTextField.accessibilityLabel = accessibilityLabel
 	}
 
-	convenience init(secureTextFieldWithAction action: StaticTableViewRowAction?, placeholder placeholderString: String = "", value textValue: String = "", keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, identifier : String? = nil) {
-		self.init(textFieldWithAction: action,
-                  placeholder: placeholderString,
-                  value: textValue, secureTextEntry: true,
-                  keyboardType: keyboardType,
-                  autocorrectionType: autocorrectionType,
-                  autocapitalizationType: autocapitalizationType,
-                  enablesReturnKeyAutomatically: enablesReturnKeyAutomatically,
-                  returnKeyType: returnKeyType, identifier : identifier)
+	convenience init(secureTextFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = UIControl.Event.editingChanged) {
+		self.init(	textFieldWithAction: action,
+				placeholder: placeholderString,
+				value: textValue, secureTextEntry: true,
+				keyboardType: keyboardType,
+				autocorrectionType: autocorrectionType,
+				autocapitalizationType: autocapitalizationType,
+				enablesReturnKeyAutomatically: enablesReturnKeyAutomatically,
+				returnKeyType: returnKeyType,
+				inputAccessoryView: inputAccessoryView,
+				identifier : identifier,
+				accessibilityLabel: accessibilityLabel,
+				actionEvent: actionEvent)
+		type = .secureText
 	}
 
 	@objc func textFieldContentChanged(_ sender: UITextField) {
 		self.value = sender.text
 
-		self.action?(self, sender)
+		self.textFieldAction?(self, sender, .changed)
+	}
+
+	func textFieldDidBeginEditing(_ textField: UITextField) {
+		self.textFieldAction?(self, textField, .didBegin)
+	}
+
+	func textFieldDidEndEditing(_ textField: UITextField) {
+		self.textFieldAction?(self, textField, .didEnd)
 	}
 
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -229,14 +448,17 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Labels
-	convenience init(label: String, identifier: String? = nil) {
+	convenience init(label: String, alignment: NSTextAlignment = .left, identifier: String? = nil) {
 		self.init()
+		type = .label
 
 		self.identifier = identifier
 
 		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = label
 		self.cell?.isUserInteractionEnabled = false
+		self.cell?.textLabel?.numberOfLines = 0
+		self.cell?.textLabel?.textAlignment = alignment
 
 		self.value = label
 		self.selectable = false
@@ -251,6 +473,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	// MARK: - Switches
 	convenience init(switchWithAction action: StaticTableViewRowAction?, title: String, value switchValue: Bool = false, identifier: String? = nil) {
 		self.init()
+		type = .switchButton
 
 		self.identifier = identifier
 
@@ -288,14 +511,25 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Buttons
-	convenience init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = StaticTableViewRowButtonStyle.proceed, identifier : String? = nil) {
+
+	convenience init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = .proceed, image: UIImage? = nil, imageWidth : CGFloat? = nil, imageTintColorKey : String? = nil, alignment: NSTextAlignment = .center, identifier : String? = nil, accessoryView: UIView? = nil) {
 		self.init()
+		type = .button
 
 		self.identifier = identifier
 
+		var image = image
+		if image != nil, imageWidth != nil {
+			image = image?.paddedTo(width: imageWidth)
+		}
+
 		self.cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
-		self.cell?.textLabel?.textAlignment = NSTextAlignment.center
+		self.cell?.textLabel?.textAlignment = alignment
+		self.cell?.imageView?.image = image
+		if accessoryView != nil {
+			self.cell?.accessoryView = accessoryView
+		}
 
 		self.cell?.accessibilityIdentifier = identifier
 
@@ -303,32 +537,34 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
 
 			switch style {
-				case .plain:
-					textColor = themeCollection.tintColor
-					backgroundColor = themeCollection.tableRowColors.backgroundColor
+			case .plain:
+				textColor = themeCollection.tintColor
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-				case .plainNonOpaque:
-					textColor = themeCollection.tableRowColors.tintColor
-					backgroundColor = themeCollection.tableRowColors.backgroundColor
+			case .plainNonOpaque:
+				textColor = themeCollection.tableRowColors.tintColor
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-				case .proceed:
-					textColor = themeCollection.neutralColors.normal.foreground
-					backgroundColor = themeCollection.neutralColors.normal.background
-					selectedBackgroundColor = themeCollection.neutralColors.highlighted.background
+			case .proceed:
+				textColor = themeCollection.neutralColors.normal.foreground
+				backgroundColor = themeCollection.neutralColors.normal.background
+				selectedBackgroundColor = themeCollection.neutralColors.highlighted.background
 
-				case .destructive:
-					textColor = UIColor.red
-					backgroundColor = themeCollection.tableRowColors.backgroundColor
+			case .destructive:
+				textColor = UIColor.red
+				backgroundColor = themeCollection.tableRowColors.backgroundColor
 
-				case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
-					textColor = customTextColor
-					selectedTextColor = customSelectedTextColor
-					backgroundColor = customBackgroundColor
-					selectedBackgroundColor = customSelectedBackgroundColor
-
+			case let .custom(customTextColor, customSelectedTextColor, customBackgroundColor, customSelectedBackgroundColor):
+				textColor = customTextColor
+				selectedTextColor = customSelectedTextColor
+				backgroundColor = customBackgroundColor
+				selectedBackgroundColor = customSelectedBackgroundColor
 			}
 
 			self?.cell?.textLabel?.textColor = textColor
+			self?.cell?.imageView?.tintColor = (imageTintColorKey != nil) ? themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey!) as? UIColor : textColor
+			self?.cell?.accessoryView?.tintColor = textColor
+			self?.cell?.tintColor = themeCollection.tintColor
 
 			if selectedTextColor != nil {
 
@@ -352,7 +588,82 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.action = action
 	}
 
+	// MARK: - Date Picker
+
+	convenience init(datePickerWithAction action: StaticTableViewRowAction?, date dateValue: Date, maximumDate:Date? = nil, identifier: String? = nil) {
+		self.init()
+		type = .datePicker
+
+		self.identifier = identifier
+
+		let datePickerView = UIDatePicker()
+		datePickerView.date = dateValue
+		datePickerView.datePickerMode = .date
+		datePickerView.minimumDate = Date()
+		datePickerView.maximumDate = maximumDate
+		datePickerView.accessibilityIdentifier = identifier
+		datePickerView.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: UIControl.Event.valueChanged)
+		datePickerView.translatesAutoresizingMaskIntoConstraints = false
+		datePickerView.setValue(Theme.shared.activeCollection.tableRowColors.labelColor, forKey: "textColor")
+
+		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		self.cell?.selectionStyle = .none
+		self.cell?.addSubview(datePickerView)
+
+		self.value = dateValue
+		self.action = action
+
+		if let cell = self.cell {
+			NSLayoutConstraint.activate([
+				datePickerView.leftAnchor.constraint(equalTo: cell.safeAreaLayoutGuide.leftAnchor),
+				datePickerView.rightAnchor.constraint(equalTo: cell.safeAreaLayoutGuide.rightAnchor),
+				datePickerView.topAnchor.constraint(equalTo: cell.topAnchor),
+				datePickerView.heightAnchor.constraint(equalToConstant: 216.0)
+				])
+		}
+	}
+
+	@objc func datePickerValueChanged(_ sender: UIDatePicker) {
+		self.action?(self, sender)
+	}
+
+	// MARK: - Slider
+
+	convenience init(sliderWithAction action: StaticTableViewRowAction?, minimumValue: Float, maximumValue: Float, value: Float, identifier: String? = nil) {
+		self.init()
+
+		let slider = UISlider()
+		slider.translatesAutoresizingMaskIntoConstraints = false
+		slider.minimumValue = minimumValue
+		slider.maximumValue = maximumValue
+		slider.value = value
+		slider.accessibilityIdentifier = identifier
+		slider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
+		slider.tintColor = Theme.shared.activeCollection.tintColor
+
+		cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
+		cell?.selectionStyle = .none
+		cell?.addSubview(slider)
+
+		self.value = value
+		self.action = action
+
+		if let cell = self.cell {
+			NSLayoutConstraint.activate([
+				slider.leftAnchor.constraint(equalTo: cell.safeAreaLayoutGuide.leftAnchor, constant: 20),
+				slider.rightAnchor.constraint(equalTo: cell.safeAreaLayoutGuide.rightAnchor, constant: -20),
+				slider.topAnchor.constraint(equalTo: cell.topAnchor),
+				slider.bottomAnchor.constraint(equalTo: cell.bottomAnchor)
+			])
+		}
+	}
+
+	@objc func sliderValueChanged(_ sender: UISlider) {
+		action?(self, sender)
+	}
+
 	// MARK: - Deinit
+
 	deinit {
 		if themeApplierToken != nil {
 			Theme.shared.remove(applierForToken: themeApplierToken)

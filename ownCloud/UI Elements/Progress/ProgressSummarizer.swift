@@ -19,11 +19,32 @@
 import UIKit
 import ownCloudSDK
 
-struct ProgressSummary : Equatable {
+class ProgressSummary : Equatable {
+	private let uuid = UUID()
+
 	var indeterminate : Bool
 	var progress : Double
 	var message : String?
 	var progressCount : Int
+
+	init(indeterminate: Bool, progress: Double, message: String? = nil, progressCount : Int) {
+		self.indeterminate = indeterminate
+		self.progress = progress
+		self.message = message
+		self.progressCount = progressCount
+	}
+
+	func update(progressView: UIProgressView) {
+		if indeterminate {
+			progressView.progress = 1.0
+		} else {
+			progressView.progress = Float(progress)
+		}
+	}
+
+	static func == (lhs: ProgressSummary, rhs: ProgressSummary) -> Bool {
+		return lhs.uuid == rhs.uuid
+	}
 }
 
 typealias ProgressSummarizerNotificationBlock =  (_ summarizer : ProgressSummarizer, _ summary : ProgressSummary) -> Void
@@ -39,6 +60,8 @@ class ProgressSummarizer: NSObject {
 	private var observerContext : UnsafeMutableRawPointer?
 
 	var trackedProgress : [Progress] = []
+	var trackedProgressByType : [ OCEventType : [Progress] ] = [ : ]
+	var trackedProgressByTypeCount : [ OCEventType : Int ] = [ : ]
 
 	override init() {
 		observerContext = UnsafeMutableRawPointer(&observerContextTarget)
@@ -48,7 +71,9 @@ class ProgressSummarizer: NSObject {
 
 	deinit {
 		OCSynchronized(self) {
-			for progress in trackedProgress {
+			let existingTrackedProgress = trackedProgress
+
+			for progress in existingTrackedProgress {
 				self.stopTracking(progress: progress, remove: false)
 			}
 		}
@@ -82,11 +107,25 @@ class ProgressSummarizer: NSObject {
 	// MARK: - Start/Stop tracking of progress objects
 	func startTracking(progress: Progress) {
 		OCSynchronized(self) {
-			if !trackedProgress.contains(progress) {
-				trackedProgress.append(progress)
+			Log.debug("Start tracking progress \(String(describing: progress))")
+
+			if !trackedProgress.contains(progress), !progress.isFinished, !progress.isCancelled {
+				trackedProgress.insert(progress, at: 0)
+
+				if progress.eventType != .none {
+					if trackedProgressByType[progress.eventType] != nil {
+						trackedProgressByType[progress.eventType]?.append(progress)
+					} else {
+						trackedProgressByType[progress.eventType] = [ progress ]
+					}
+
+					// Count the number of progress objects with the same type
+					trackedProgressByTypeCount[progress.eventType] = (trackedProgressByTypeCount[progress.eventType] ?? 0) + 1
+				}
 
 				progress.addObserver(self, forKeyPath: "fractionCompleted", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 				progress.addObserver(self, forKeyPath: "isFinished", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
+				progress.addObserver(self, forKeyPath: "isCancelled", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 				progress.addObserver(self, forKeyPath: "isIndeterminate", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 				progress.addObserver(self, forKeyPath: "localizedDescription", options: NSKeyValueObservingOptions(rawValue: 0), context: observerContext)
 
@@ -97,17 +136,45 @@ class ProgressSummarizer: NSObject {
 
 	func stopTracking(progress: Progress, remove: Bool = true) {
 		OCSynchronized(self) {
-			if trackedProgress.contains(progress) {
+			Log.debug("Stop tracking progress \(String(describing: progress)) (remove=\(remove))")
+
+			if let trackedProgressIndex = trackedProgress.index(of: progress) {
 				progress.removeObserver(self, forKeyPath: "fractionCompleted", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "isFinished", context: observerContext)
+				progress.removeObserver(self, forKeyPath: "isCancelled", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "isIndeterminate", context: observerContext)
 				progress.removeObserver(self, forKeyPath: "localizedDescription", context: observerContext)
 
 				if remove {
-					trackedProgress.remove(at: trackedProgress.index(of: progress)!)
+					trackedProgress.remove(at: trackedProgressIndex)
+
+					if progress.eventType != .none {
+						if let progressByTypeIndex = trackedProgressByType[progress.eventType]?.index(of: progress) {
+							trackedProgressByType[progress.eventType]?.remove(at: progressByTypeIndex)
+
+							let remainingProgressByType = (trackedProgressByType[progress.eventType]?.count ?? 0)
+
+							if remainingProgressByType < 2 {
+								// Reset the number of progress objects with the same type only after at least (all-1) have finished
+								// to make sure using trackedProgressByTypeCount leads to an evenly drawn progress bar, but also
+								// resets the count if only one is left, so the next that's scheduled doesn't bring the message back to "x of previousAll"
+								trackedProgressByTypeCount[progress.eventType] = remainingProgressByType
+							}
+						}
+					}
 
 					self.setNeedsUpdate()
 				}
+			}
+		}
+	}
+
+	func reset() {
+		OCSynchronized(self) {
+			let existingTrackedProgress = trackedProgress
+
+			for progress in existingTrackedProgress {
+				self.stopTracking(progress: progress)
 			}
 		}
 	}
@@ -141,11 +208,11 @@ class ProgressSummarizer: NSObject {
 
 		if scheduleUpdate {
 			if minimumUpdateTimeInterval > 0 {
-				DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + minimumUpdateTimeInterval) {
+				OnMainThread(after: minimumUpdateTimeInterval) {
 					self.performNeededUpdate()
 				}
 			} else {
-				DispatchQueue.main.async {
+				OnMainThread {
 					self.performNeededUpdate()
 				}
 			}
@@ -156,7 +223,7 @@ class ProgressSummarizer: NSObject {
 		OCSynchronized(self) {
 			self.update()
 
-			updateInProgress = false
+			self.updateInProgress = false
 		}
 	}
 
@@ -191,6 +258,8 @@ class ProgressSummarizer: NSObject {
 
 	func pushFallbackSummary(summary : ProgressSummary) {
 		OCSynchronized(self) {
+			Log.debug("Push fallback summary \(String(describing: summary))")
+
 			fallbackSummaries.append(summary)
 
 			if fallbackSummaries.count == 1 {
@@ -201,6 +270,8 @@ class ProgressSummarizer: NSObject {
 
 	func popFallbackSummary(summary : ProgressSummary) {
 		OCSynchronized(self) {
+			Log.debug("Pop fallback summary \(String(describing: summary))")
+
 			if let index = fallbackSummaries.index(of: summary) {
 				fallbackSummaries.remove(at: index)
 
@@ -211,6 +282,49 @@ class ProgressSummarizer: NSObject {
 					} else {
 						self.fallbackSummary = nil
 					}
+				}
+			}
+		}
+	}
+
+	// MARK: - Priority summaries (to be used in favor of everything else whenever they exist)
+	internal var _prioritySummary : ProgressSummary?
+	public var prioritySummary : ProgressSummary? {
+		set(newPrioritySummary) {
+			if _prioritySummary != newPrioritySummary {
+				_prioritySummary = newPrioritySummary
+				self.setNeedsUpdate()
+			}
+		}
+
+		get {
+			return _prioritySummary
+		}
+	}
+
+	private var prioritySummaries : [ProgressSummary] = []
+
+	func pushPrioritySummary(summary : ProgressSummary) {
+		OCSynchronized(self) {
+			Log.debug("Push priority summary \(String(describing: summary))")
+
+			prioritySummaries.append(summary)
+
+			self.prioritySummary = summary
+		}
+	}
+
+	func popPrioritySummary(summary : ProgressSummary) {
+		OCSynchronized(self) {
+			Log.debug("Pop priority summary \(String(describing: summary))")
+
+			if let index = prioritySummaries.index(of: summary) {
+				prioritySummaries.remove(at: index)
+
+				if prioritySummaries.count == 0 {
+					self.prioritySummary = nil
+				} else if prioritySummaries.count == index {
+					self.prioritySummary = prioritySummaries.last
 				}
 			}
 		}
@@ -236,60 +350,131 @@ class ProgressSummarizer: NSObject {
 
 	// MARK: - Summary computation
 	func summarize() -> ProgressSummary {
-		var summary : ProgressSummary = ProgressSummary(indeterminate: false, progress: 0, message: nil, progressCount: 0)
+		let summary : ProgressSummary = ProgressSummary(indeterminate: false, progress: 0, message: nil, progressCount: 0)
 		var totalUnitCount : Int64 = 0
 		var completedUnitCount : Int64 = 0
 		var completedFraction : Double = 0
 		var totalFraction : Double = 0
 		var completedProgress : [Progress]?
+		var isGroupedProgress : Bool = false
 
 		OCSynchronized(self) {
+			var usedProgress : Int = 0
+
 			for progress in trackedProgress {
-				if progress.isIndeterminate {
-					summary.indeterminate = true
-				}
-
-				if progress.isFinished {
-					if completedProgress == nil {
-						completedProgress = []
-					}
-					completedProgress?.append(progress)
-				}
-
+				// Only consider progress objects that have a description (those without have to be considered to be not active and/or unsuitable)
 				if let message = progress.localizedDescription {
-					// Pick the first localized description that we encounter as message, because it's also the oldest, longest-running one.
-					if summary.message == nil {
-						summary.message = message
+					if message.count > 0 {
+						if progress.isIndeterminate {
+							summary.indeterminate = true
+						}
+
+						if progress.isFinished || progress.isCancelled {
+							if completedProgress == nil {
+								completedProgress = []
+							}
+							completedProgress?.append(progress)
+						}
+
+						// Pick the first localized description that we encounter as message, because it's also the most recent one (=> trackedProgress is reversed above!)
+						if summary.message == nil {
+							summary.message = message
+
+							if progress.eventType != .none, let progressOfSameType = trackedProgressByType[progress.eventType], progressOfSameType.count > 1 {
+								var multiMessage : String?
+								var sameTypeCount = progressOfSameType.count
+								let totalSameTypeCount = trackedProgressByTypeCount[progress.eventType] ?? sameTypeCount
+
+								for progress in progressOfSameType {
+									if !progress.isIndeterminate, (progress.isFinished || progress.isCancelled) {
+										sameTypeCount -= 1
+									}
+								}
+
+								if sameTypeCount > 1 {
+									switch progress.eventType {
+										case .createFolder:
+											multiMessage = NSString(format:"Creating %ld folders…".localized as NSString, sameTypeCount) as String
+
+										case .move:
+											multiMessage = NSString(format:"Moving %ld items…".localized as NSString, sameTypeCount) as String
+
+										case .copy:
+											multiMessage = NSString(format:"Copying %ld items…".localized as NSString, sameTypeCount) as String
+
+										case .delete:
+											multiMessage = NSString(format:"Deleting %ld items…".localized as NSString, sameTypeCount) as String
+
+										case .upload:
+											multiMessage = NSString(format:"Uploading %ld files…".localized as NSString, sameTypeCount) as String
+
+										case .download:
+											multiMessage = NSString(format:"Downloading %ld files…".localized as NSString, sameTypeCount) as String
+
+										case .update:
+											multiMessage = NSString(format:"Updating %ld items…".localized as NSString, sameTypeCount) as String
+
+										case .createShare, .updateShare, .deleteShare, .decideOnShare: break
+										case .none, .retrieveThumbnail, .retrieveItemList, .retrieveShares, .issueResponse, .filterFiles: break
+									}
+
+									if multiMessage != nil {
+										var multiProgress : Double = Double(totalSameTypeCount - sameTypeCount) / Double(totalSameTypeCount) // add progress for already completed & removed progress
+
+										isGroupedProgress = true
+
+										summary.message = multiMessage
+
+										for progress in progressOfSameType {
+											if !progress.isIndeterminate, !progress.isFinished, !progress.isCancelled {
+												multiProgress += (progress.fractionCompleted / Double(totalSameTypeCount))
+											}
+										}
+
+										summary.progress = multiProgress
+
+										usedProgress += sameTypeCount
+										break
+									}
+								}
+							}
+						}
+
+						if !progress.isIndeterminate {
+							totalUnitCount += progress.totalUnitCount
+							completedUnitCount += progress.completedUnitCount
+
+							if progress.totalUnitCount > 0 {
+								totalFraction += 1
+								completedFraction += progress.fractionCompleted
+							}
+						}
+
+						usedProgress += 1
 					}
 				}
+			}
 
-				totalUnitCount += progress.totalUnitCount
-				completedUnitCount += progress.completedUnitCount
+			summary.progressCount = usedProgress
 
-				if progress.totalUnitCount > 0 {
-					totalFraction += 1
-					completedFraction += progress.fractionCompleted
+			if !isGroupedProgress {
+				if totalUnitCount == 0 {
+					if usedProgress == 0 {
+						summary.progress = 1
+					} else {
+						summary.indeterminate = true
+					}
+				} else {
+					if totalFraction != 0 {
+						summary.progress = completedFraction / totalFraction
+					} else {
+						summary.progress = Double(completedUnitCount) / Double(totalUnitCount)
+					}
 				}
 			}
 
-			summary.progressCount = trackedProgress.count
-
-			if totalUnitCount == 0 {
-				if trackedProgress.count == 0 {
-					summary.progress = 1
-				} else {
-					summary.indeterminate = true
-				}
-			} else {
-				if totalFraction != 0 {
-					summary.progress = completedFraction / totalFraction
-				} else {
-					summary.progress = Double(completedUnitCount) / Double(totalUnitCount)
-				}
-			}
-
-			if completedProgress != nil {
-				for removeProgress in completedProgress! {
+			if let completedProgress = completedProgress {
+				for removeProgress in completedProgress {
 					self.stopTracking(progress: removeProgress)
 				}
 			}

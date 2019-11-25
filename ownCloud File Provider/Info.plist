@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>ownCloud</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -17,17 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(APP_SHORT_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>85</string>
-	<key>OCAppGroupIdentifier</key>
-	<string>group.com.owncloud.ios-app</string>
-	<key>OCAppIdentifierPrefix</key>
-	<string>$(AppIdentifierPrefix)</string>
-	<key>OCKeychainAccessGroupIdentifier</key>
-	<string>group.com.owncloud.ios-app</string>
-	<key>OCHasFileProvider</key>
-	<true/>
+	<string>143</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionFileProviderDocumentGroup</key>
@@ -38,6 +30,19 @@
 		<string>com.apple.fileprovider-nonui</string>
 		<key>NSExtensionPrincipalClass</key>
 		<string>FileProviderExtension</string>
+	</dict>
+	<key>OCAppGroupIdentifier</key>
+	<string>group.com.owncloud.ios-app</string>
+	<key>OCAppIdentifierPrefix</key>
+	<string>$(AppIdentifierPrefix)</string>
+	<key>OCHasFileProvider</key>
+	<true/>
+	<key>OCKeychainAccessGroupIdentifier</key>
+	<string>group.com.owncloud.ios-app</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 	</dict>
 </dict>
 </plist>

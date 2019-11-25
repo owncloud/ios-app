@@ -22,58 +22,86 @@ class OpenInAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openin") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Open in".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .toolbar] }
 
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.contains(where: {$0.type == .collection}) {
 			return .none
 		}
-
-		if forContext.items.count > 1 {
- 			return .none
- 		}
 		return .first
 	}
 
-	private var interactionController: UIDocumentInteractionController?
+	var interactionControllerDispatchGroup : DispatchGroup?
+	var interactionController : UIDocumentInteractionController?
 
 	override func run() {
-		guard context.items.count > 0, let viewController = context.viewController else {
-			completionHandler?(NSError(ocError: .errorInsufficientParameters))
+		guard context.items.count > 0, let hostViewController = context.viewController, let core = self.core else {
+			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
-		let item = context.items[0]
-
-		let controller = DownloadFileProgressHUDViewController()
-
-		controller.present(on: viewController) {
-			if let progress = self.core?.downloadItem(item, options: nil, resultHandler: { (error, _, _, file) in
-				if error != nil {
-					Log.log("Error \(String(describing: error)) downloading \(String(describing: item.path)) in openIn function")
-					controller.dismiss(animated: true, completion: {
-						self.completed(with: error)
-					})
-				} else {
-					OnMainThread {
-						controller.dismiss(animated: true, completion: {
-							self.interactionController = UIDocumentInteractionController(url: file!.url)
-							self.interactionController?.delegate = self
-							self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
-						})
-					}
+		let hudViewController = DownloadItemsHUDViewController(core: core, downloadItems: context.items) { [weak hostViewController] (error, files) in
+			if let error = error {
+				if (error as NSError).isOCError(withCode: .cancelled) {
+					return
 				}
-			}) {
-				controller.attach(progress: progress)
-				self.publish(progress: progress)
+
+				let appName = OCAppIdentity.shared.appName ?? "ownCloud"
+				let alertController = ThemedAlertController(with: "Cannot connect to ".localized + appName, message: appName + " couldn't download file(s)".localized, okLabel: "OK".localized, action: nil)
+
+				hostViewController?.present(alertController, animated: true)
+			} else {
+				guard let files = files, files.count > 0, let viewController = hostViewController else { return }
+
+				// UIDocumentInteractionController can only be used with a single file
+				if files.count == 1 {
+					if let fileURL = files.first?.url {
+						// Make sure self is around until interactionControllerDispatchGroup.leave() is called by the documentInteractionControllerDidDismissOptionsMenu delegate method implementation
+						self.interactionControllerDispatchGroup = DispatchGroup()
+						self.interactionControllerDispatchGroup?.enter()
+
+						self.interactionControllerDispatchGroup?.notify(queue: .main, execute: {
+							self.interactionController?.delegate = nil
+							self.interactionController = nil
+						})
+
+						// Present UIDocumentInteractionController
+						self.interactionController = UIDocumentInteractionController(url: fileURL)
+						self.interactionController?.delegate = self
+						self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
+					}
+				} else {
+					// Handle multiple files with a fallback solution
+					let urls = files.map { (file) -> URL in
+						return file.url!
+					}
+					let activityController = UIActivityViewController(activityItems: urls, applicationActivities: nil)
+
+					if UIDevice.current.isIpad() {
+						activityController.popoverPresentationController?.sourceView = viewController.view
+					}
+
+					viewController.present(activityController, animated: true, completion: nil)
+				}
 			}
 		}
+
+		hudViewController.presentHUDOn(viewController: hostViewController)
+
+		self.completed()
+	}
+
+	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+		if location == .moreItem {
+			return UIImage(named: "open-in")
+		}
+
+		return nil
 	}
 }
 
-extension OpenInAction: UIDocumentInteractionControllerDelegate {
-
+extension OpenInAction : UIDocumentInteractionControllerDelegate {
 	func documentInteractionControllerDidDismissOptionsMenu(_ controller: UIDocumentInteractionController) {
-		self.interactionController = nil
+		interactionControllerDispatchGroup?.leave() // We're done! Trigger notify block and then release last reference to self.
 	}
 }

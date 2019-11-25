@@ -32,13 +32,24 @@ struct IssueButton {
 	let accessibilityIdentifier: String
 }
 
-class IssuesTableViewCell : UITableViewCell {
+class IssuesTableViewCell : UITableViewCell, Themeable {
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+
+		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+
+	deinit {
+		Theme.shared.unregister(client: self)
+	}
+
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.backgroundColor = collection.tableBackgroundColor
+		self.detailTextLabel?.textColor = collection.tableRowColors.labelColor
 	}
 }
 
@@ -90,7 +101,7 @@ class IssuesViewController: UIViewController {
 		tableView?.separatorInset = .zero
 		tableView?.bounces = false
 		tableView?.rowHeight = UITableView.automaticDimension
-	tableView?.register(IssuesTableViewCell.self, forCellReuseIdentifier: IssuesViewControllerCellIdentifier)
+		tableView?.register(IssuesTableViewCell.self, forCellReuseIdentifier: IssuesViewControllerCellIdentifier)
 	}
 
 	private func setupBottomContainer() {
@@ -116,8 +127,8 @@ class IssuesViewController: UIViewController {
 				case .custom(let backColor):
 					backgroundColor = backColor
 				default:
-					backgroundColor = .white
-					color = .blue
+					backgroundColor = Theme.shared.activeCollection.tableRowColors.filledColorPairCollection.normal.background
+					color = Theme.shared.activeCollection.tableRowColors.filledColorPairCollection.normal.foreground
 				}
 
 				button.backgroundColor = backgroundColor
@@ -137,9 +148,7 @@ class IssuesViewController: UIViewController {
 	}
 
 	@objc func buttonPressed(_ button :UIButton) {
-
 		if let buttonPressed: IssueButton = buttons?[button.tag] {
-			print("buttonPressed name \(buttonPressed.title)")
 			buttonPressed.action()
 		}
 	}
@@ -178,12 +187,14 @@ extension IssuesViewController: UITableViewDelegate {
 
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-		cell.textLabel?.attributedText = NSAttributedString(string: headerTitle ?? "", attributes: [.font : UIFont.systemFont(ofSize: 20, weight: .semibold)])
-		cell.backgroundColor = .white
+		cell.textLabel?.text = headerTitle ?? ""
+		cell.textLabel?.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+		cell.textLabel?.textColor = Theme.shared.activeCollection.tableRowColors.labelColor
+		cell.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 
 		let separatorView: UIView = UIView()
 		separatorView.translatesAutoresizingMaskIntoConstraints = false
-		separatorView.backgroundColor = UIColor(hex: 0x04040F)
+		separatorView.backgroundColor = Theme.shared.activeCollection.tableSeparatorColor
 		cell.addSubview(separatorView)
 		separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
 		separatorView.leftAnchor.constraint(equalTo: cell.leftAnchor, constant: 0).isActive = true

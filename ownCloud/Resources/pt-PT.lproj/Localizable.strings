@@ -1,0 +1,142 @@
+/* 
+  Localizable.strings
+  ownCloud
+
+  Created by Pablo Carrascal on 13/03/2018.
+  Copyright © 2018 ownCloud GmbH. All rights reserved.
+*/
+
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
+/* Add / Edit Bookmark */
+"Edit bookmark" = "Editar marcador";
+"Add bookmark" = "Adicionar marcador";
+"Server URL" = "URL do Servidor";
+"https://example.com" = "https://example.com";
+"Continue" = "Continuar";
+"Name" = "Nome";
+"Example Server" = "Exemplo de Servidor";
+"Show Certificate Details" = "Mostrar Detalhes do Certificado";
+"Connect" = "Ligar";
+"Delete Authentication Data" = "Eliminar Dados de Autenticação";
+"Authentication" = "Autenticação";
+"Username" = "Nome de utilizador";
+"Password" = "Palavra-passe";
+"Certificate Details" = "Detalhes do Certificado";
+"Cancel" = "Cancelar";
+"Approve" = "Aprovar";
+"Error" = "Erro";
+"Review Connection" = "Rever Ligação";
+"Authenticated via" = "Autenticado via";
+"Authenticated as %@ via %@" = "Autenticado como %@ via %@";
+
+"Contacting server…" = "A contactar o servidor...";
+"Authenticating…" = "A autenticar...";
+
+"Missing hostname" = "Nome de hospedeiro em falta";
+"The entered URL does not include a hostname." = "O URL inserido não inclui um nome de anfitrião.";
+
+/* Client */
+"Browse" = "Explorar";
+"Disconnect" = "Desligar";
+"Connecting…" = "A ligar...";
+"Connected." = "Ligado.";
+
+"Folder" = "Pasta";
+
+"Stopped" = "Parado";
+"Started…" = "Iniciada...";
+"Contents from cache." = "Conteúdos da cache.";
+"Offline. Contents from cache." = "Off-line. Conteúdos da cache.";
+"Waiting for server response…" = "A aguardar resposta do servidor...";
+"This folder no longer exists." = "Esta pasta já não existe.";
+"Everything up-to-date." = "Tudo atualizado.";
+"Please wait…" = "Aguarde, por favor...";
+"Sort by %@" = "Ordenado por %@";
+"Sort by" = "Ordenar por";
+
+"name (A-Z)" = "nome (A-Z)";
+"name (Z-A)" = "nome (Z-A)";
+"type" = "tipo";
+"size" = "tamanho";
+"date" = "data";
+"Search this folder" = "Procurar esta pasta";
+"Pending" = "Pendente";
+
+/* Client Messages */
+"Empty folder" = "Pasta vazia";
+"This folder contains no files or folders." = "Esta pasta não contém ficheiros ou pastas.";
+
+"Folder removed" = "Pasta removida";
+"This folder no longer exists on the server." = "Esta pasta já não existe no servidor.";
+"Are you sure you want to delete this item from the server?" = "Are you sure you want to delete this item from the server?";
+"Deleting '%@'" = "Deleting '%@'";
+"Renaming to %@" = "Renaming to %@";
+
+/* Server List*/
+"Cancel" = "Cancelar";
+"OK" = "ACEITAR";
+
+"'%@' is currently locked" = "'%@' está atualmente bloqueado";
+"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "De momento, é executada uma operação que impede a ligação a '%@'. Por favor, tente novamente mais tarde.";
+"Really delete '%@'?" = "Deseja eliminar '%@'?";
+"This will also delete all locally stored file copies." = "Isto também irá eliminar todas as cópias de ficheiro guardadas localmente.";
+"Delete" = "Eliminar";
+"Deletion of '%@' failed" = "A eliminação de '%@' falhou";
+
+/* Settings Messages */
+
+"Security" = "Segurança";
+"Passcode Lock" = "Código de Proteção";
+"Face ID" = "Id. de Rosto";
+"Touch ID" = "Id. por Toque";
+"Instant Uploads" = "Envios Instantâneos";
+"Videos" = "Vídeos";
+"Photos" = "Fotografias";
+"Background uploads" = "Envios em segundo plano";
+"Wifi only" = "Apenas wi-fi";
+"Settings" = "Definições";
+"Lock application" = "Bloquear aplicação";
+"Upload videos via WiFi only" = "Só enviar os vídeos via wi-fi";
+"Upload pictures via WiFi only" = "Só enviar as fotografias via wi-fi";
+"More" = "Mais";
+"Send feedback" = "Enviar opinião";
+"Recommend to a friend" = "Recomendar a um amigo";
+"Privacy Policy" = "Política de Privacidade";
+"Video upload path" = "Caminho do envio de vídeo";
+"Photo upload path" = "Caminho do envio de fotografia";
+"Always" = "Sempre";
+"After 1 minute" = "Depois de 1 minuto";
+"After 5 minutes" = "Depois de 5 minutos";
+"After 30 minutes" = "Depois de 30 minutos";
+"Please configure an email account" = "Por favor, configure uma conta de e-mail";
+"You need to configure an email account first to be able to send emails." = "Primeiro, precisa de configurar uma conta de e-mail para poder enviar mensagens.";
+"Do you want to open the following URL?" = "Do you want to open the following URL?";
+
+/* Passcode Messages */
+
+"Enter code" = "Inserir código";
+"Repeat code" = "Repetir código";
+"Delete code" = "Eliminar código";
+"The entered codes are different" = "As códigos inseridos são diferentes";
+"Incorrect code" = "Código incorreto";
+"Please try again in %@" = "Por favor, tente novamente em %@";
+"Unlock %@" = "Desbloquear %@";
+"Biometric authentication failed" = "A autenticação biométrica falhou";
+
+/* Actions */
+
+"Forbidden Characters" = "Forbidden Characters";
+"File name cannot contain / or \\" = "File name cannot contain / or \\";
+
+"New Folder" = "Nova Pasta";
+"Rename" =" Rename";
+"Create folder" =" Create folder";

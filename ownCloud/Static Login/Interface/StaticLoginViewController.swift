@@ -25,7 +25,7 @@ class StaticLoginViewController: UIViewController, Themeable {
 	var backgroundImageView : UIImageView?
 
 	var headerContainerView : UIView?
-	var headerLogoView : VectorImageView?
+	var headerLogoView : UIImageView?
 	var headerLabel : UILabel?
 
 	var contentContainerView : UIView?
@@ -114,7 +114,7 @@ class StaticLoginViewController: UIViewController, Themeable {
 		contentContainerView?.translatesAutoresizingMaskIntoConstraints = false
 		rootView.addSubview(contentContainerView!)
 
-		headerLogoView = VectorImageView()
+		headerLogoView = UIImageView()
 		headerLogoView?.translatesAutoresizingMaskIntoConstraints = false
 		headerContainerView?.addSubview(headerLogoView!)
 
@@ -177,15 +177,21 @@ class StaticLoginViewController: UIViewController, Themeable {
 
 		OCItem.registerIcons()
 
-		Theme.shared.add(tvgResourceFor: "owncloud-logo")
-
 		headerLabel?.text = loginBundle.organizationName
+		headerLabel?.applyThemeCollection(Theme.shared.activeCollection, itemStyle: .logo)
 
-		Theme.shared.add(tvgResourceFor: loginBundle.organizationLogoName!)
-		headerLogoView?._vectorImage = Theme.shared.tvgImage(for: loginBundle.organizationLogoName!)
+		if let organizationLogoName = loginBundle.organizationLogoName {
+			Theme.shared.add(tvgResourceFor: organizationLogoName)
+			let image = Theme.shared.image(for: organizationLogoName, size: CGSize(width: 51.0, height: 28.0))?.withRenderingMode(.alwaysTemplate)
+			headerLogoView?.image = image
+			headerLogoView?.contentMode = .scaleAspectFit
+			headerLogoView?.tintColor = Theme.shared.activeCollection.navigationBarColors.labelColor
+		}
 
-		backgroundImageView?.image = UIImage(named: loginBundle.organizationBackgroundName!)
-		backgroundImageView?.contentMode = .scaleAspectFill
+		if let organizationBackgroundName = loginBundle.organizationBackgroundName {
+			backgroundImageView?.image = UIImage(named: organizationBackgroundName)
+			backgroundImageView?.contentMode = .scaleAspectFill
+		}
 
 		contentContainerView?.backgroundColor = UIColor(white: 0.0, alpha: 0.5)
 	}
@@ -298,7 +304,7 @@ class StaticLoginViewController: UIViewController, Themeable {
 		   let themeStyleIdentifier = staticLoginProfile.themeStyleID {
 			self.switchToTheme(with: themeStyleIdentifier)
 		}
-
+/*
 		clientRootViewController.closeHandler = { [weak self] () in
 			// Switch to theme for static login UI
 			if let themeStyleIdentifier = self?.loginBundle.loginThemeStyleID {
@@ -306,7 +312,7 @@ class StaticLoginViewController: UIViewController, Themeable {
 			}
 
 			closeHandler?()
-		}
+		}*/
 
 		self.present(clientRootViewController, animated: true, completion: nil)
 	}

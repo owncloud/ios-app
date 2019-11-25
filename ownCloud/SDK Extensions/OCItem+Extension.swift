@@ -191,7 +191,7 @@ extension OCItem {
 		return iconName
 	}
 
-	func iconName() -> String? {
+	var iconName : String? {
 		var iconName = OCItem.iconName(for: self.mimeType)
 
 		if iconName == nil {
@@ -206,32 +206,29 @@ extension OCItem {
 	}
 
 	func icon(fitInSize: CGSize) -> UIImage? {
-		if let iconName = self.iconName() {
+		if let iconName = self.iconName {
 			return Theme.shared.image(for: iconName, size: fitInSize)
 		}
 
 		return nil
 	}
 
-	func fileExtension() -> String {
-		return (self.name as NSString).pathExtension
+	var fileExtension : String? {
+		return (self.name as NSString?)?.pathExtension
 	}
 
-	func nameWithoutExtension() -> String {
-		return (self.name as NSString).deletingPathExtension
+	var baseName : String? {
+		return (self.name as NSString?)?.deletingPathExtension
 	}
 
-	var sizeInReadableFormat: String {
-		let size = OCItem.byteCounterFormatter.string(fromByteCount: Int64(self.size))
-		return size
+	var sizeLocalized: String {
+		return OCItem.byteCounterFormatter.string(fromByteCount: Int64(self.size))
 	}
 
-	var lastModifiedInReadableFormat: String {
-		if self.lastModified != nil {
-			return OCItem.dateFormatter.string(from: self.lastModified)
-		} else {
-			return ""
-		}
+	var lastModifiedLocalized: String {
+		guard let lastModified = self.lastModified else { return "" }
+
+		return OCItem.dateFormatter.string(from: lastModified)
 	}
 
 	static private let byteCounterFormatter: ByteCountFormatter = {
@@ -242,17 +239,66 @@ extension OCItem {
 
 	static private let dateFormatter: DateFormatter = {
 		let dateFormatter: DateFormatter =  DateFormatter()
-		dateFormatter.timeStyle = .none
+		dateFormatter.timeStyle = .short
 		dateFormatter.dateStyle = .medium
 		dateFormatter.locale = Locale.current
 		dateFormatter.doesRelativeDateFormatting = true
 		return dateFormatter
 	}()
 
+	var sharedByPublicLink : Bool {
+		if self.shareTypesMask.contains(.link) {
+			return true
+		}
+		return false
+	}
+
+	var isShared : Bool {
+		if self.shareTypesMask.isEmpty {
+			return false
+		}
+		return true
+	}
+
+	var sharedByUserOrGroup : Bool {
+		if self.shareTypesMask.contains(.userShare) || self.shareTypesMask.contains(.groupShare) || self.shareTypesMask.contains(.remote) {
+			return true
+		}
+		return false
+	}
+
+	func shareRootItem(from core: OCCore) -> OCItem? {
+		var shareRootItem : OCItem?
+
+		if self.isSharedWithUser {
+			var parentItem : OCItem? = self
+
+			shareRootItem = self
+
+			repeat {
+				parentItem = parentItem?.parentItem(from: core)
+
+				if parentItem != nil, parentItem?.isSharedWithUser == true {
+					shareRootItem = parentItem
+				}
+			} while ((parentItem != nil) && (parentItem?.isSharedWithUser == true))
+		}
+
+		return shareRootItem
+	}
+
+	func isShareRootItem(from core: OCCore) -> Bool {
+		if let shareRootItem = shareRootItem(from: core) {
+			return shareRootItem.localID == localID
+		}
+
+		return false
+	}
+
 	func parentItem(from core: OCCore, completionHandler: ((_ error: Error?, _ parentItem: OCItem?) -> Void)? = nil) -> OCItem? {
 		var parentItem : OCItem?
 
-		if let parentItemIdentifier = self.parentFileID {
+		if let parentItemLocalID = self.parentLocalID {
 			var waitGroup : DispatchGroup?
 
 			if completionHandler == nil {
@@ -260,7 +306,11 @@ extension OCItem {
 				waitGroup?.enter()
 			}
 
-			core.retrieveItemFromDatabase(forFileID: parentItemIdentifier) { (error, _, item) in
+			core.retrieveItemFromDatabase(forLocalID: parentItemLocalID) { (error, _, item) in
+				if parentItem == nil, let parentPath = self.path?.parentPath {
+					parentItem = try? core.cachedItem(atPath: parentPath)
+				}
+
 				if completionHandler == nil {
 					parentItem = item
 					waitGroup?.leave()
@@ -273,5 +323,36 @@ extension OCItem {
 		}
 
 		return parentItem
+	}
+
+	func displaysDifferent(than item: OCItem?, in core: OCCore? = nil) -> Bool {
+		guard let item = item else {
+			return true
+		}
+
+		return (
+			// Different item
+			(item.localID != localID) ||
+
+			// File contents (and therefore likely metadata) differs
+			(item.itemVersionIdentifier != itemVersionIdentifier) ||
+
+			// File name differs
+			(item.name != name) ||
+
+			// Upload/Download status differs
+			(item.syncActivity != syncActivity) ||
+
+			// Cloud status differs
+			(item.cloudStatus != cloudStatus) ||
+
+			// Available offline status differs
+			(item.downloadTriggerIdentifier != downloadTriggerIdentifier) ||
+			(core?.availableOfflinePolicyCoverage(of: item) != core?.availableOfflinePolicyCoverage(of: self)) ||
+
+			// Sharing attributes differ
+			(item.shareTypesMask != shareTypesMask) ||
+			(item.permissions != permissions) // these contain sharing info, too
+		)
 	}
 }

@@ -1,0 +1,327 @@
+/* 
+  Localizable.strings
+  ownCloud
+
+  Created by Pablo Carrascal on 13/03/2018.
+  Copyright © 2018 ownCloud GmbH. All rights reserved.
+*/
+
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
+/* Add / Edit Bookmark */
+"Edit account" = "Edit account";
+"Add account" = "Add account";
+"Server URL" = "Server URL";
+"https://example.com" = "https://example.com";
+"Continue" = "Continue";
+"Name" = "Name";
+"Example Server" = "Example Server";
+"Show Certificate Details" = "Show Certificate Details";
+"Connect" = "Connect";
+"Delete Authentication Data" = "Delete Authentication Data";
+"Authentication" = "Authentication";
+"Username" = "Username";
+"Password" = "Password";
+"Certificate Details" = "Certificate Details";
+"Cancel" = "Cancel";
+"Approve" = "Approve";
+"Error" = "Error";
+"Review Connection" = "Review Connection";
+"Authenticated via" = "Authenticated via";
+"Authenticated as %@ via %@" = "Authenticated as %@ via %@";
+"Edit" = "Edit";
+"Credentials" = "Credentials";
+"Rejected" = "Rejected";
+"Passed" = "Passed";
+"Accepted" = "Accepted";
+"Validation Error" = "Validation Error";
+"Certificate was rejected by user." = "Certificate was rejected by user.";
+"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Certificate has issues.\nOpen 'Certificate Details' for more informations.";
+"No issues found. Certificate passed validation." = "No issues found. Certificate passed validation.";
+"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations.";
+"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials.";
+
+"Contacting server…" = "Contacting server…";
+"Authenticating…" = "Authenticating…";
+
+"Fetching user information…" = "Fetching user information…";
+"Updating connection…" = "Updating connection…";
+
+"Missing hostname" = "Missing hostname";
+"The entered URL does not include a hostname." = "The entered URL does not include a hostname.";
+"Add account" = "Add account";
+"Server name" = "Server name";
+"Server Password" = "Server Password";
+"Server Username" = "Server Username";
+
+/* Client */
+"Browse" = "Browse";
+"Disconnect" = "Disconnect";
+"Connecting…" = "Connecting…";
+"Connected." = "Connected.";
+"Select" = "Select";
+"Done" = "Done";
+
+"Folder" = "Folder";
+
+"Stopped" = "Stopped";
+"Started…" = "Started…";
+"Contents from cache." = "Contents from cache.";
+"Waiting for server response…" = "Waiting for server response…";
+"This folder no longer exists." = "This folder no longer exists.";
+"Everything up-to-date." = "Everything up-to-date.";
+"Please wait…" = "Please wait…";
+"Sort by %@" = "Sort by %@";
+"Sort by" = "Sort by";
+
+"name (A-Z)" = "name (A-Z)";
+"name (Z-A)" = "name (Z-A)";
+"type" = "type";
+"size" = "size";
+"date" = "date";
+"Search this folder" = "Search this folder";
+"Pending" = "Pending";
+"Show parent paths" = "Show parent paths";
+
+"%@ of %@ used" = "%@ of %@ used";
+"Total: %@" = "Total: %@";
+
+/* Client Messages */
+"Empty folder" = "Empty folder";
+"This folder contains no files or folders." = "This folder contains no files or folders.";
+
+"Folder removed" = "Folder removed";
+"This folder no longer exists on the server." = "This folder no longer exists on the server.";
+"Are you sure you want to delete this item from the server?" = "Are you sure you want to delete this item from the server?";
+"Are you sure you want to delete these items from the server?" = "Are you sure you want to delete these items from the server?";
+"Multiple items" = "Multiple items";
+"Deleting '%@'" = "Deleting '%@'";
+"Renaming to %@" = "Renaming to %@";
+"Upload from your photo library" = "Upload from your photo library";
+"Missing permissions" = "Missing permissions";
+"This permission is needed to upload photos and videos from your photo library." = "This permission is needed to upload photos and videos from your photo library.";
+"Not now" = "Not now";
+"Upload file" = "Upload file";
+"Upload files" = "Upload files";
+"Ignore" = "Ignore";
+"Authorization failed" = "Authorization failed";
+"The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
+"No matches" = "No matches";
+"There is no results for this search" = "There is no results for this search";
+"Status" = "Status";
+
+/* Server List*/
+"Cancel" = "Cancel";
+"OK" = "OK";
+
+"'%@' is currently locked" = "'%@' is currently locked";
+"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "An operation is currently performed that prevents connecting to '%@'. Please try again later.";
+"Really delete '%@'?" = "Really delete '%@'?";
+"This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
+"Delete" = "Delete";
+"Deletion of '%@' failed" = "Deletion of '%@' failed";
+"Accounts" = "Accounts";
+
+"Help" = "Help";
+"Feedback" = "Feedback";
+"Welcome" = "Welcome";
+"Thanks for choosing %@! \n Start by adding your account." = "Thanks for choosing %@! \n Start by adding your account.";
+
+/* Settings Messages */
+
+"Security" = "Security";
+"Passcode Lock" = "Passcode Lock";
+"Face ID" = "Face ID";
+"Touch ID" = "Touch ID";
+"Instant Uploads" = "Instant Uploads";
+"Videos" = "Videos";
+"Photos" = "Photos";
+"Background uploads" = "Background uploads";
+"Wifi only" = "WiFi only";
+"Settings" = "Settings";
+"Lock application" = "Lock application";
+"Upload videos via WiFi only" = "Upload videos via WiFi only";
+"Upload pictures via WiFi only" = "Upload pictures via WiFi only";
+"More" = "More";
+"Send feedback" = "Send feedback";
+"Recommend to a friend" = "Recommend to a friend";
+"Privacy Policy" = "Privacy Policy";
+"Acknowledgements" = "Acknowledgements";
+"Video upload path" = "Video upload path";
+"Photo upload path" = "Photo upload path";
+"Always" = "Always";
+"After 1 minute" = "After 1 minute";
+"After 5 minutes" = "After 5 minutes";
+"After 30 minutes" = "After 30 minutes";
+"Please configure an email account" = "Please configure an email account";
+"You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
+"Do you want to open the following URL?" = "Do you want to open the following URL?";
+
+"%@ %@ version %@ build %@ (%@)" = "%@ %@ version %@ build %@ (%@)";
+"beta" = "beta";
+"release" = "release";
+
+
+/* User Interface Settings */
+"Theme" = "Theme";
+"User Interface" = "User Interface";
+"Dark" = "Dark";
+"Light" = "Light";
+"Classic" = "Classic";
+
+/* Log settings */
+"Log Files" = "Log Files";
+"Browse log files" = "Browse log files";
+"Share" = "Share";
+"Delete all log files?" = "Delete all log files?";
+"Delete all" = "Delete all";
+
+"Log Level" = "Log Level";
+"Log Destinations" = "Log Destinations";
+"Privacy" = "Privacy";
+
+"Logging" = "Logging";
+"Enable logging" = "Enable logging";
+"Options" = "Options";
+
+"Off" = "Off";
+"Info" = "Info";
+"Default" = "Default";
+"Warning" = "Warning";
+"Error" = "Error";
+
+"Share log file" = "Share log file";
+"Reset log file" = "Reset log file";
+
+"Up to 10 recent logs are kept on the device and each log can accumulate messages for the last 24 hours of the app use" = "Up to 10 recent logs are kept on the device and each log can accumulate messages for the last 24 hours of the app use";
+
+"Mask private data" = "Mask private data";
+"Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.";
+
+"No log file found" = "No log file found";
+"The log file can't be shared because no log file could be found or the log file is empty." = "The log file can't be shared because no log file could be found or the log file is empty.";
+"Enable log file" = "Enable log file";
+
+"Really reset log file?" = "Really reset log file?";
+"This action can't be undone." = "This action can't be undone.";
+
+/* Passcode Messages */
+
+"Enter code" = "Enter code";
+"Repeat code" = "Repeat code";
+"Delete code" = "Delete code";
+"The entered codes are different" = "The entered codes are different";
+"Incorrect code" = "Incorrect code";
+"Please try again in %@" = "Please try again in %@";
+"Unlock %@" = "Unlock %@";
+"Biometric authentication failed" = "Biometric authentication failed";
+
+/* Certificate management */
+
+"Certificates" = "Certificates";
+"User-approved certificates" = "User-approved certificates";
+
+"Approved" = "Approved";
+"Auto-approved" = "Auto-approved";
+"Revoke approval" =  "Revoke approval";
+
+/* Actions */
+
+"Forbidden Characters" = "Forbidden Characters";
+"File name cannot contain / or \\" = "File name cannot contain / or \\";
+"New Folder" = "New Folder";
+"Folder name" = "Folder name";
+"Rename" =" Rename";
+"Create folder" =" Create folder";
+"Duplicate" = "Duplicate";
+"Move" = "Move";
+"Open in" = "Open in";
+"Copy" = "Copy";
+"Copy here" = "Copy here";
+"Cannot connect to " = "Cannot connect to ";
+" couldn't download file(s)" = " couldn't download file(s)";
+"Actions" = "Actions";
+"copy" = "copy";
+
+/* Directory Picker Messages */
+"Move here" = "Move here";
+
+/* Preview */
+"Open file" = "Open file";
+"Network unavailable" = "Network unavailable";
+"Error" = "Error";
+"Could not get the picture" = "Could not get the picture";
+"Downloading" = "Downloading";
+
+/* PDF Viewer */
+"Resume" = "Resume";
+"Go to page" = "Go to page";
+"Page" = "Page";
+"This document has %@ pages" = "This document has %@ pages";
+"%@ of %@" = "%@ of %@";
+"Invalid Page" = "Invalid Page";
+"The entered page number doesn't exist" = "The entered page number doesn't exist";
+
+/* Photo Upload */
+"Upload" = "Upload";
+"Select All" = "Select All";
+"Deselect All" = "Deselect All";
+"All Photos" = "All Photos";
+"Albums" = "Albums";
+"Importing from photo library" = "Importing from photo library";
+
+/* Photo upload settings */
+"Media Upload" = "Media Upload";
+"Convert HEIC to JPEG" = "Convert HEIC to JPEG";
+"Convert videos to MP4" = "Convert videos to MP4";
+
+/* Progress summarizer */
+"Creating %ld of %ld folders…" = "Creating %ld of %ld folders…";
+"Moving %ld of %ld items…" = "Moving %ld of %ld items…";
+"Copying %ld of %ld items…" = "Copying %ld of %ld items…";
+"Deleting %ld of %ld items…" = "Deleting %ld of %ld items…";
+"Uploading %ld of %ld files…" = "Uploading %ld of %ld files…";
+"Downloading %ld of %ld files…" = "Downloading %ld of %ld files…";
+"Updating %ld of %ld items…" = "Updating %ld of %ld items…";
+
+/* Offline storage management */
+"Free on %@" = "Free on %@";
+"unknown" = "unknown";
+"Offline files use" = "Offline files use";
+"Compacting of '%@' failed" = "Compacting of '%@' failed";
+"Include available offline files" = "Include available offline files";
+"Delete Local Copies" = "Delete Local Copies";
+"Manage" = "Manage";
+"Storage" = "Storage";
+"Proceed" = "Proceed";
+"Compacting" = "Compacting";
+
+"Really include available offline files?" = "Really include available offline files?";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required).";
+
+/* Available offline */
+"Root folder" = "Root folder";
+"at" = "at";
+"(no match)" = "(no match)";
+
+"Make available offline" = "Make available offline";
+"Make unavailable offline" = "Make unavailable offline";
+
+"Available Offline" = "Available Offline";
+"No items have been selected for offline availability." = "No items have been selected for offline availability.";
+
+"Overview" = "Overview";
+"All Files" = "All Files";
+"Locations" = "Locations";
+
+/* Import File */
+"Save File" = "Save File";
+"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once.";

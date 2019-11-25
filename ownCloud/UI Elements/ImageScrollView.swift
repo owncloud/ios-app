@@ -74,13 +74,15 @@ class ImageScrollView: UIScrollView {
 	}
 
 	private func setMinZoomScaleForCurrentBounds(_ size: CGSize? = nil) {
+		guard let image = imageView?.image else { return }
+
 		var boundsSize: CGSize
 		if size == nil {
 			boundsSize = self.bounds.size
 		} else {
 			boundsSize = size!
 		}
-		let imageSize = imageView.bounds.size
+		let imageSize = image.size
 
 		let xScale =  boundsSize.width  / imageSize.width
 		let yScale = boundsSize.height / imageSize.height
@@ -102,11 +104,13 @@ extension ImageScrollView {
 		setNeedsLayout()
 	}
 
-	func display(image: UIImage) {
+	func display(image: UIImage, inSize: CGSize) {
 		imageView?.removeFromSuperview()
 		imageView = UIImageView(image: image)
+		imageView.accessibilityIdentifier = "loaded-image-gallery"
+		imageView.contentMode = .scaleAspectFit
 		addSubview(imageView)
-		updateScaleForRotation(size: self.bounds.size)
+		updateScaleForRotation(size: inSize)
 	}
 }
 

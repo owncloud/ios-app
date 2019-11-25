@@ -16,12 +16,35 @@
  *
  */
 
-import UIKit
+import Foundation
 
-func OnMainThread(async: Bool = true, _ block: @escaping () -> Void) {
-	if async {
-		DispatchQueue.main.async(execute: block)
+func OnMainThread(async: Bool = true, after: TimeInterval? = nil, inline: Bool = false, _ block: @escaping () -> Void) {
+	if inline {
+		if Thread.isMainThread {
+			block()
+			return
+		}
+	}
+
+	if let after = after {
+		DispatchQueue.main.asyncAfter(deadline: .now() + after, execute: block)
 	} else {
-		DispatchQueue.main.sync(execute: block)
+		if async {
+			DispatchQueue.main.async(execute: block)
+		} else {
+			DispatchQueue.main.sync(execute: block)
+		}
+	}
+}
+
+func OnBackgroundQueue(async: Bool = true, after: TimeInterval? = nil, _ block: @escaping () -> Void) {
+	if let after = after {
+		DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + after, execute: block)
+	} else {
+		if async {
+			DispatchQueue.global(qos: .background).async(execute: block)
+		} else {
+			DispatchQueue.global(qos: .background).sync(execute: block)
+		}
 	}
 }

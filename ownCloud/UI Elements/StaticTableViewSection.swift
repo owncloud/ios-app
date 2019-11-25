@@ -92,7 +92,7 @@ class StaticTableViewSection: NSObject {
 
 				if let selectedValueObject = selectedValue as? NSObject, let valueObject = value as? NSObject, (selectedValueObject == valueObject) { selected = true }
 
-				radioGroupRows.append(StaticTableViewRow(radioItemWithAction: radioAction, groupIdentifier: groupIdentifier, value: value, title: label, selected: selected))
+				radioGroupRows.append(StaticTableViewRow(radioItemWithAction: radioAction, groupIdentifier: groupIdentifier, value: value, title: label, subtitle: "", selected: selected))
 			}
 		}
 
@@ -148,6 +148,39 @@ class StaticTableViewSection: NSObject {
 		if sectionIndex != nil, self.viewController?.needsLiveUpdates == true {
 			self.viewController?.tableView.deleteRows(at: indexPaths, with: animated ? .fade : .none)
 		}
+	}
+
+	func remove(rowWithIdentifier identifier: String, animated : Bool = false) {
+		if let row = row(withIdentifier: identifier) {
+			self.remove(rows: [row], animated: animated)
+		}
+	}
+
+	// MARK: - Update Section Titles
+	func updateHeader(title: String?) {
+		self.headerTitle = title
+		// with this way we are not loosing focus of selected text field
+		UIView.setAnimationsEnabled(false)
+		self.viewController?.tableView.beginUpdates()
+		if let containerView = self.viewController?.tableView.headerView(forSection: self.index!) {
+			containerView.textLabel!.text = self.headerTitle
+			containerView.sizeToFit()
+		}
+		self.viewController?.tableView.endUpdates()
+		UIView.setAnimationsEnabled(true)
+	}
+
+	func updateFooter(title: String?) {
+		self.footerTitle = title
+		// with this way we are not loosing focus of selected text field
+		UIView.setAnimationsEnabled(false)
+		self.viewController?.tableView.beginUpdates()
+		if let containerView = self.viewController?.tableView.footerView(forSection: self.index!) {
+			containerView.textLabel!.text = self.footerTitle
+			containerView.sizeToFit()
+		}
+		self.viewController?.tableView.endUpdates()
+		UIView.setAnimationsEnabled(true)
 	}
 
 	// MARK: - Radio group value setter/getter

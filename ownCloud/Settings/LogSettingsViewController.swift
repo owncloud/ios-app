@@ -41,6 +41,8 @@ class LogSettingsViewController: StaticTableViewController {
 	private let loggingSection = StaticTableViewSection(headerTitle: "Logging".localized)
 	private var logLevelSection : StaticTableViewSection?
 	private var logOutputSection : StaticTableViewSection?
+	private var logBrowseSection : StaticTableViewSection?
+	private var logTogglesSection : StaticTableViewSection?
 	private var logPrivacySection : StaticTableViewSection?
 
 	static let logLevelChangedNotificationName = NSNotification.Name("settings.log-level-changed")
@@ -66,8 +68,19 @@ class LogSettingsViewController: StaticTableViewController {
 			if let enabled = row.value as? Bool {
 				LogSettingsViewController.loggingEnabled = enabled
 				self?.updateSectionVisibility(animated: true)
+
+				if enabled == false {
+					for writer in OCLogger.shared.writers {
+						if let fileWriter = writer as? OCLogFileWriter {
+							fileWriter.rotate()
+						}
+					}
+				}
 			}
-		}, title: "Enable logging", value: LogSettingsViewController.loggingEnabled, identifier: "enable-logging"))
+		}, title: "Enable logging".localized, value: LogSettingsViewController.loggingEnabled, identifier: "enable-logging"))
+
+		let footerTitle = "When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility.".localized
+		loggingSection.footerTitle = footerTitle.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")
 
 		// Update section visibility
 		self.addSection(loggingSection)
@@ -76,8 +89,74 @@ class LogSettingsViewController: StaticTableViewController {
 	}
 
 	private func updateSectionVisibility(animated: Bool) {
+
+		var addSections : [StaticTableViewSection] = []
+
+		func createRequiredSections() {
+			if logBrowseSection == nil {
+				logBrowseSection = StaticTableViewSection(headerTitle: "Log Files".localized)
+
+				// Creation of the frequency row.
+				let logsRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
+					let logFilesViewController = LogFilesViewController(style: .plain)
+					self?.navigationController?.pushViewController(logFilesViewController, animated: true)
+					}, title: "Browse".localized, accessoryType: .disclosureIndicator, identifier: "viewLogs")
+				logBrowseSection?.add(row: logsRow)
+				logBrowseSection?.footerTitle = "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.".localized
+
+				addSections.append(logBrowseSection!)
+			}
+
+			// Privacy
+			// TODO: Reactivate the below code when the code base is reviewed in terms of correct masking of private data
+			#if false
+			if logPrivacySection == nil {
+				logPrivacySection = StaticTableViewSection(headerTitle: "Privacy".localized)
+
+				logPrivacySection?.add(row: StaticTableViewRow(switchWithAction: { (row, _) in
+					if let maskPrivateData = row.value as? Bool {
+						OCLogger.maskPrivateData = maskPrivateData
+					}
+				}, title: "Mask private data".localized, value: OCLogger.maskPrivateData, identifier: "mask-private-data"))
+				logPrivacySection?.footerTitle = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.".localized
+
+				addSections.append(logPrivacySection!)
+			}
+			#endif
+		}
+
+		func removeAllSections() {
+			var removeSections : [StaticTableViewSection] = []
+
+			if logLevelSection != nil {
+				removeSections.append(logLevelSection!)
+				logLevelSection = nil
+			}
+			if logTogglesSection != nil {
+				removeSections.append(logTogglesSection!)
+				logTogglesSection = nil
+			}
+			if logOutputSection != nil {
+				removeSections.append(logOutputSection!)
+				logOutputSection = nil
+			}
+
+			if logBrowseSection != nil {
+				removeSections.append(logBrowseSection!)
+				logBrowseSection = nil
+			}
+
+			if logPrivacySection != nil {
+				removeSections.append(logPrivacySection!)
+				logPrivacySection = nil
+			}
+
+			self.removeSections(removeSections, animated: animated)
+		}
+
 		if LogSettingsViewController.loggingEnabled {
-			var addSections : [StaticTableViewSection] = []
+
+			removeAllSections()
 
 			// Log level
 			if logLevelSection == nil {
@@ -101,11 +180,26 @@ class LogSettingsViewController: StaticTableViewController {
 				addSections.append(logLevelSection!)
 			}
 
+			// Log toggles
+			if logTogglesSection == nil {
+				logTogglesSection = StaticTableViewSection(headerTitle: "Options".localized)
+
+				for toggle in OCLogger.shared.toggles {
+					let row = StaticTableViewRow(switchWithAction: { (row, _) in
+						if let enabled = row.value as? Bool {
+							toggle.enabled = enabled
+						}
+					}, title: toggle.localizedName, value: toggle.enabled, identifier: toggle.identifier.rawValue)
+
+					logTogglesSection?.add(row: row)
+				}
+
+				addSections.append(logTogglesSection!)
+			}
+
 			// Log output
 			if logOutputSection == nil {
 				logOutputSection = StaticTableViewSection(headerTitle: "Log Destinations".localized)
-
-				var logFileWriterSwitchRow : StaticTableViewRow?
 
 				for writer in OCLogger.shared.writers {
 					let row = StaticTableViewRow(switchWithAction: { (row, _) in
@@ -114,108 +208,20 @@ class LogSettingsViewController: StaticTableViewController {
 						}
 					}, title: writer.name, value: writer.enabled, identifier: writer.identifier.rawValue)
 
-					if writer.identifier == .file {
-						logFileWriterSwitchRow = row
-					}
-
 					logOutputSection?.add(row: row)
 				}
-
-				logOutputSection?.add(row: StaticTableViewRow(buttonWithAction: { [weak self] (row, _) in
-					if let logFileWriter = OCLogger.shared.writer(withIdentifier: .file) as? OCLogFileWriter {
-						if !FileManager.default.fileExists(atPath: logFileWriter.logFileURL.path) {
-							let alert = UIAlertController(title: "No log file found".localized, message: "The log file can't be shared because no log file could be found or the log file is empty.".localized, preferredStyle: .alert)
-
-							alert.addAction(UIAlertAction(title: "Cancel".localized, style: .default, handler: nil))
-
-							if !logFileWriter.enabled {
-								alert.addAction(UIAlertAction(title: "Enable log file".localized, style: .default, handler: { (_) in
-									logFileWriter.enabled = true
-									logFileWriterSwitchRow?.value = logFileWriter.enabled
-								}))
-							}
-
-							self?.present(alert, animated: true, completion: nil)
-						} else {
-							let logURL = FileManager.default.temporaryDirectory.appendingPathComponent("ownCloud App Log.txt")
-
-							do {
-								if FileManager.default.fileExists(atPath: logURL.path) {
-									try FileManager.default.removeItem(at: logURL)
-								}
-
-								try FileManager.default.copyItem(at: logFileWriter.logFileURL, to: logURL)
-							} catch {
-							}
-
-							let shareViewController = UIActivityViewController(activityItems: [logURL], applicationActivities:nil)
-							shareViewController.completionWithItemsHandler = { (_, _, _, _) in
-								do {
-									try FileManager.default.removeItem(at: logURL)
-								} catch {
-								}
-							}
-
-							if UIDevice.current.isIpad() {
-								shareViewController.popoverPresentationController?.sourceView = row.cell
-								shareViewController.popoverPresentationController?.sourceRect = CGRect(x: row.cell?.bounds.midX ?? 0, y: row.cell?.bounds.midY ?? 0, width: 1, height: 1)
-								shareViewController.popoverPresentationController?.permittedArrowDirections = .down
-							}
-
-							row.viewController?.present(shareViewController, animated: true, completion: nil)
-						}
-					}
-				}, title: "Share log file".localized, style: .plain, identifier: "share-logfile"))
-
-				logOutputSection?.add(row: StaticTableViewRow(buttonWithAction: { (row, _) in
-					let alert = UIAlertController(with: "Really reset log file?".localized, message: "This action can't be undone.".localized, destructiveLabel: "Reset log file".localized, preferredStyle: .alert, destructiveAction: {
-						OCLogger.shared.pauseWriters(intermittentBlock: {
-							if let logFileWriter = OCLogger.shared.writer(withIdentifier: .file) as? OCLogFileWriter {
-								logFileWriter.eraseOrTruncate()
-							}
-						})
-					})
-
-					row.viewController?.present(alert, animated: true, completion: nil)
-				}, title: "Reset log file".localized, style: .destructive, identifier: "reset-logfile"))
 
 				addSections.append(logOutputSection!)
 			}
 
-			// Privacy
-			if logPrivacySection == nil {
-				logPrivacySection = StaticTableViewSection(headerTitle: "Privacy".localized)
-
-				logPrivacySection?.add(row: StaticTableViewRow(switchWithAction: { (row, _) in
-					if let maskPrivateData = row.value as? Bool {
-						OCLogger.maskPrivateData = maskPrivateData
-					}
-				}, title: "Mask private data".localized, value: OCLogger.maskPrivateData, identifier: "mask-private-data"))
-				logPrivacySection?.footerTitle = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.".localized
-
-				addSections.append(logPrivacySection!)
-			}
-
-			if addSections.count > 0 {
-				self.addSections(addSections, animated: animated)
-			}
 		} else {
-			var removeSections : [StaticTableViewSection] = []
+			removeAllSections()
+		}
 
-			if logLevelSection != nil {
-				removeSections.append(logLevelSection!)
-				logLevelSection = nil
-			}
-			if logOutputSection != nil {
-				removeSections.append(logOutputSection!)
-				logOutputSection = nil
-			}
-			if logPrivacySection != nil {
-				removeSections.append(logPrivacySection!)
-				logPrivacySection = nil
-			}
+		createRequiredSections()
 
-			self.removeSections(removeSections, animated: animated)
+		if addSections.count > 0 {
+			self.addSections(addSections, animated: animated)
 		}
 	}
 }

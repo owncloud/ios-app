@@ -22,7 +22,7 @@ import ownCloudSDK
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-	var window: UIWindow?
+	var window: ThemeWindow?
 	var serverListTableViewController: ServerListTableViewController?
 	var staticLoginViewController : StaticLoginViewController?
 
@@ -32,34 +32,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		var rootViewController : UIViewController?
 
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
-		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching")
+		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
 
-		window = UIWindow(frame: UIScreen.main.bounds)
+		// Set up app
+		window = ThemeWindow(frame: UIScreen.main.bounds)
 
 		ThemeStyle.registerDefaultStyles()
 
-//		serverListTableViewController = ServerListTableViewController(style: UITableView.Style.plain)
-//		navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
-//		rootViewController = navigationController
-
-		staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.demoBundle)
-		navigationController = ThemeNavigationController(rootViewController: staticLoginViewController!)
-		navigationController?.setNavigationBarHidden(true, animated: false)
-		rootViewController = navigationController
+		if VendorServices.shared.isBranded {
+			staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.demoBundle)
+			navigationController = ThemeNavigationController(rootViewController: staticLoginViewController!)
+			navigationController?.setNavigationBarHidden(true, animated: false)
+			rootViewController = navigationController
+		} else {
+			serverListTableViewController = ServerListTableViewController(style: UITableView.Style.plain)
+			navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
+			rootViewController = navigationController
+		}
 
 		window?.rootViewController = rootViewController!
 		window?.makeKeyAndVisible()
 
+		ImportFilesController.removeImportDirectory()
+
 		AppLockManager.shared.showLockscreenIfNeeded()
+
+		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
 
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
-		application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum + 10)
+		ScheduledTaskManager.shared.setup()
 
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(MediaDisplayViewController.displayExtension)
 
 		// Action Extensions
 		OCExtensionManager.shared.addExtension(OpenInAction.actionExtension)
@@ -68,16 +76,49 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(RenameAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DuplicateAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CreateFolderAction.actionExtension)
+		OCExtensionManager.shared.addExtension(CopyAction.actionExtension)
+		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
+		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
+		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
+
+		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
+		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
+
+		// Licenses
+		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: Theme.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
+
+		// Initially apply theme based on light / dark mode
+		ThemeStyle.considerAppearanceUpdate()
+
+		//Disable UI Animation for UITesting (screenshots)
+		if let enableUIAnimations = VendorServices.classSetting(forOCClassSettingsKey: .enableUIAnimations) as? Bool {
+			UIView.setAnimationsEnabled(enableUIAnimations)
+		}
+
+		// Set background refresh interval
+		UIApplication.shared.setMinimumBackgroundFetchInterval(
+			UIApplication.backgroundFetchIntervalMinimum)
+
+		return true
+	}
+
+	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+		var copyBeforeUsing = true
+		if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
+			copyBeforeUsing = !shouldOpenInPlace
+		}
+
+		ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountUI()
 
 		return true
 	}
 
 	func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-			completionHandler(.newData)
-		}
+		ScheduledTaskManager.shared.backgroundFetch(completionHandler: completionHandler)
 	}
 
 	func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {

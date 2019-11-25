@@ -55,7 +55,7 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 				bookmarkCell.textLabel?.text = bookmark.shortName
 			}
 		} else {
-			bookmarkCell.textLabel?.text = "Add account"
+			bookmarkCell.textLabel?.text = "Add account".localized
 			bookmarkCell.accessoryType = .disclosureIndicator
 		}
 
@@ -64,7 +64,7 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		if headerView == nil {
-			headerView = StaticTableViewSection.buildHeader(title: "Accounts")
+			headerView = StaticTableViewSection.buildHeader(title: "Accounts".localized)
 		}
 
 		return headerView
@@ -74,7 +74,7 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 		if indexPath.row < OCBookmarkManager.shared.bookmarks.count {
 			super.tableView(tableView, didSelectRowAt: indexPath)
 		} else {
-			if let viewController = staticLoginViewController?.buildProfileSetupSelector(title: "Add account", includeCancelOption: true) {
+			if let viewController = staticLoginViewController?.buildProfileSetupSelector(title: "Add account".localized, includeCancelOption: true) {
 				self.navigationController?.pushViewController(viewController, animated: true)
 			}
 		}

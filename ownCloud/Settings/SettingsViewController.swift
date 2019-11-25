@@ -23,26 +23,16 @@ class SettingsViewController: StaticTableViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
 		self.navigationItem.title = "Settings".localized
 
-		let userDefaults = OCAppIdentity.shared.userDefaults
-
-		let uploadSettings = UploadsSettingsSection(userDefaults: userDefaults!)
-		let securitySettings = SecuritySettingsSection(userDefaults: userDefaults!)
-		let userInterfaceSettings = UserInterfaceSettingsSection(userDefaults: userDefaults!)
-		let moreSettings = MoreSettingsSection(userDefaults: userDefaults!)
-		self.addSection(securitySettings)
-		self.addSection(userInterfaceSettings)
-		self.addSection(uploadSettings)
-		self.addSection(moreSettings)
-	}
-
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-
-		if self.navigationController?.topViewController === self {
-			self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(self.dismissAnimated))
+		if let userDefaults = OCAppIdentity.shared.userDefaults {
+			self.addSection(SecuritySettingsSection(userDefaults: userDefaults))
+			self.addSection(UserInterfaceSettingsSection(userDefaults: userDefaults))
+			self.addSection(StorageSettingsSection(userDefaults: userDefaults))
+			self.addSection(DisplaySettingsSection(userDefaults: userDefaults))
+			self.addSection(MediaFilesSettingsSection(userDefaults: userDefaults))
+			self.addSection(MediaUploadSettingsSection(userDefaults: userDefaults))
+			self.addSection(MoreSettingsSection(userDefaults: userDefaults))
 		}
 	}
 }

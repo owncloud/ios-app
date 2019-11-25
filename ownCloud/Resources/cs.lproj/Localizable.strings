@@ -1,0 +1,142 @@
+/* 
+  Localizable.strings
+  ownCloud
+
+  Created by Pablo Carrascal on 13/03/2018.
+  Copyright © 2018 ownCloud GmbH. All rights reserved.
+*/
+
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
+/* Add / Edit Bookmark */
+"Edit bookmark" = "Upravit záložku";
+"Add bookmark" = "Přidat záložku";
+"Server URL" = "URL serveru";
+"https://example.com" = "https://example.com";
+"Continue" = "Pokračovat";
+"Name" = "Název";
+"Example Server" = "Vzorový server";
+"Show Certificate Details" = "Zobrazit detail certifikátu";
+"Connect" = "Připojit";
+"Delete Authentication Data" = "Delete Authentication Data";
+"Authentication" = "Ověření";
+"Username" = "Uživatelské jméno";
+"Password" = "Heslo";
+"Certificate Details" = "Detail certifikátu";
+"Cancel" = "Zrušit";
+"Approve" = "Schválit";
+"Error" = "Chyba";
+"Review Connection" = "Review Connection";
+"Authenticated via" = "Přihlášen";
+"Authenticated as %@ via %@" = "Přihlášený jako %@ prostřednictvím %@";
+
+"Contacting server…" = "Kontaktování serveru";
+"Authenticating…" = "Probíhá autentizace...";
+
+"Missing hostname" = "Chybějící hostitel";
+"The entered URL does not include a hostname." = "Zadaná URL adresa neobsahuje hostitele.";
+
+/* Client */
+"Browse" = "Procházet";
+"Disconnect" = "Odpojit";
+"Connecting…" = "Připojování...";
+"Connected." = "Připojeno.";
+
+"Folder" = "Adresář";
+
+"Stopped" = "Zastaveno";
+"Started…" = "Zahájeno...";
+"Contents from cache." = "Načteno z mezipaměti.";
+"Offline. Contents from cache." = "Nepřipojeno. Načteno z mezipaměti.";
+"Waiting for server response…" = "Čekání na spojení se serverem...";
+"This folder no longer exists." = "Tento adresář již neexistuje";
+"Everything up-to-date." = "Vše je aktuální.";
+"Please wait…" = "Čekejte prosím...";
+"Sort by %@" = "Seřazeno podle '%@'";
+"Sort by" = "Seřadit podle";
+
+"name (A-Z)" = "Jméno (A-Z)";
+"name (Z-A)" = "Jméno (Z-A)";
+"type" = "typ";
+"size" = "velikost";
+"date" = "datum";
+"Search this folder" = "Hledat v tomto adresáři";
+"Pending" = "Nevyřízené";
+
+/* Client Messages */
+"Empty folder" = "Prázdný adresář";
+"This folder contains no files or folders." = "Tento adresář neobsahuje žádné soubory ani podadresáře";
+
+"Folder removed" = "Adresář odstraněn";
+"This folder no longer exists on the server." = "Tento adresář již neexistuje na serveru.";
+"Are you sure you want to delete this item from the server?" = "Are you sure you want to delete this item from the server?";
+"Deleting '%@'" = "Mazání '%@'";
+"Renaming to %@" = "Přejmenování na '%@'";
+
+/* Server List*/
+"Cancel" = "Zrušit";
+"OK" = "OK";
+
+"'%@' is currently locked" = "'%@' je uzamčen";
+"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "An operation is currently performed that prevents connecting to '%@'. Please try again later.";
+"Really delete '%@'?" = "Opravdu smazat '%@'?";
+"This will also delete all locally stored file copies." = "Tímto zároveň smažete všechny lokálně uložené kopie.";
+"Delete" = "Smazat";
+"Deletion of '%@' failed" = "Mazání '%@' selhalo";
+
+/* Settings Messages */
+
+"Security" = "Zabezpečení";
+"Passcode Lock" = "Přístupový kód";
+"Face ID" = "Face ID";
+"Touch ID" = "Touch ID";
+"Instant Uploads" = "Okamžitá odesílání";
+"Videos" = "Videa";
+"Photos" = "Fotky";
+"Background uploads" = "Nahrávání na pozadí";
+"Wifi only" = "Pouze Wi-Fi";
+"Settings" = "Nastavení";
+"Lock application" = "Uzamknout aplikaci";
+"Upload videos via WiFi only" = "Nahrávat videa pouze přes WiFi";
+"Upload pictures via WiFi only" = "Odesílat obrázky pouze přes WiFi";
+"More" = "Více";
+"Send feedback" = "Odeslat názor";
+"Recommend to a friend" = "Doporučit přátelům";
+"Privacy Policy" = "Ochrana soukromí";
+"Video upload path" = "Cesta k nahrání videa";
+"Photo upload path" = "Photo upload path";
+"Always" = "Vždy";
+"After 1 minute" = "Za 1 minutu";
+"After 5 minutes" = "Za 5 minut";
+"After 30 minutes" = "Za 30 minut";
+"Please configure an email account" = "Prosím, nastavte svůj e-mailový účet";
+"You need to configure an email account first to be able to send emails." = "Abyste mohli odesílat e-maily, nejprve musíte nastavit e-mailový účet.";
+"Do you want to open the following URL?" = "Do you want to open the following URL?";
+
+/* Passcode Messages */
+
+"Enter code" = "Zadejte kód";
+"Repeat code" = "Zopakujte kód";
+"Delete code" = "Smazat kód";
+"The entered codes are different" = "Zadané kódy jsou rozdílné";
+"Incorrect code" = "Neplatný kód";
+"Please try again in %@" = "Prosím, zkuste znovu za %@";
+"Unlock %@" = "Odemknout %@";
+"Biometric authentication failed" = "Biometrická autentizace selhala";
+
+/* Actions */
+
+"Forbidden Characters" = "Zakázané znaky";
+"File name cannot contain / or \\" = "Název souboru nesmí obsahovat znaky / a \\";
+
+"New Folder" = "Nová složka";
+"Rename" =" Rename";
+"Create folder" =" Create folder";

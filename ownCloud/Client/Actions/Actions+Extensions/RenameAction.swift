@@ -29,6 +29,10 @@ class RenameAction : Action {
 		if forContext.items.count > 1 {
 			return .none
 		}
+		if forContext.items.filter({return $0.isRoot}).count > 0 {
+			return .none
+
+		}
 		// Examine items in context
 		return .middle
 	}
@@ -36,7 +40,7 @@ class RenameAction : Action {
 	// MARK: - Action implementation
 	override func run() {
 		guard context.items.count > 0, let viewController = context.viewController, let core = self.core else {
-			completionHandler?(NSError(ocError: .errorInsufficientParameters))
+			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
@@ -44,18 +48,17 @@ class RenameAction : Action {
 		let rootItem = item.parentItem(from: core)
 
 		guard rootItem != nil else {
-			self.completionHandler?(NSError(ocError: OCError.errorItemNotFound))
+			self.completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
 
 		let renameViewController = NamingViewController(with: item, core: self.core, stringValidator: { name in
 			if name.contains("/") || name.contains("\\") {
-				return (false, "File name cannot contain / or \\")
+				return (false, "File name cannot contain / or \\".localized)
 			} else {
 				return (true, nil)
 			}
 		}, completion: { newName, _ in
-
 			guard newName != nil else {
 				return
 			}
@@ -63,13 +66,12 @@ class RenameAction : Action {
 			if let progress = self.core?.move(item, to: rootItem!, withName: newName!, options: nil, resultHandler: { (error, _, _, _) in
 				if error != nil {
 					Log.log("Error \(String(describing: error)) renaming \(String(describing: item.path))")
-					self.completed(with: error)
-				} else {
-					self.completed()
 				}
 			}) {
 				self.publish(progress: progress)
 			}
+
+			self.completed()
 		})
 
 		renameViewController.navigationItem.title = "Rename".localized
@@ -78,5 +80,13 @@ class RenameAction : Action {
 		navigationController.modalPresentationStyle = .overFullScreen
 
 		viewController.present(navigationController, animated: true)
+	}
+
+	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+		if location == .moreItem || location == .moreFolder {
+			return UIImage(named: "folder")
+		}
+
+		return nil
 	}
 }

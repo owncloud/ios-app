@@ -17,6 +17,7 @@
  */
 
 #import "FileProviderExtensionThumbnailRequest.h"
+#import "NSError+MessageResolution.h"
 
 @implementation FileProviderExtensionThumbnailRequest
 
@@ -34,7 +35,8 @@
 
 	if (self.progress.cancelled)
 	{
-		[self completedRequest];
+		OCLogDebug(@"Thumbnail request cancelled by the system");
+		[self completedRequestWithError:nil];
 		return;
 	}
 
@@ -46,54 +48,80 @@
 
 		self.cursorPosition += 1;
 
-		[self.extension.core retrieveItemFromDatabaseForFileID:(OCFileID)itemIdentifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
-			OCLogDebug(@"Retrieving %ld: %@", self.cursorPosition-1, itemFromDatabase.name);
+		OCCore *core;
 
-			if ((itemFromDatabase.type == OCItemTypeCollection) || (itemFromDatabase.thumbnailAvailability == OCItemThumbnailAvailabilityNone))
-			{
-				dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-					self.perThumbnailCompletionHandler(itemIdentifier, nil, nil);
+		if ((core = self.extension.core) != nil)
+		{
+//			if (core.connectionStatus == OCCoreConnectionStatusOnline)
+			[core retrieveItemFromDatabaseForLocalID:(OCLocalID)itemIdentifier completionHandler:^(NSError *error, OCSyncAnchor syncAnchor, OCItem *itemFromDatabase) {
+				OCLogDebug(@"Retrieving %ld: %@", self.cursorPosition-1, itemFromDatabase.name);
 
-					OCLogDebug(@"Replied %ld: %@ -> none available", self.cursorPosition-1, itemFromDatabase.name);
+				if ((itemFromDatabase.type == OCItemTypeCollection) || (itemFromDatabase.thumbnailAvailability == OCItemThumbnailAvailabilityNone))
+				{
+					dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+						self.perThumbnailCompletionHandler(itemIdentifier, nil, nil);
 
-					[self requestNextThumbnail];
-				});
-			}
-			else
-			{
-				NSProgress *retrieveProgress = [self.extension.core retrieveThumbnailFor:itemFromDatabase maximumSize:self.sizeInPixels scale:1.0 retrieveHandler:^(NSError *error, OCCore *core, OCItem *item, OCItemThumbnail *thumbnail, BOOL isOngoing, NSProgress *progress) {
+						OCLogDebug(@"Replied %ld: %@ -> none available", self.cursorPosition-1, itemFromDatabase.name);
 
-					OCLogDebug(@"Retrieved %ld: %@ -> %d", self.cursorPosition-1, itemFromDatabase.name, isOngoing);
+						[self requestNextThumbnail];
+					});
+				}
+				else
+				{
+					NSProgress *retrieveProgress = [self.extension.core retrieveThumbnailFor:itemFromDatabase maximumSize:self.sizeInPixels scale:1.0 waitForConnectivity:NO retrieveHandler:^(NSError *error, OCCore *core, OCItem *item, OCItemThumbnail *thumbnail, BOOL isOngoing, NSProgress *progress) {
 
-					if (!isOngoing)
-					{
-						dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-							self.perThumbnailCompletionHandler(itemIdentifier, thumbnail.data, (thumbnail==nil) ? nil : error);
+						OCLogDebug(@"Retrieved %ld: %@ -> %d", self.cursorPosition-1, itemFromDatabase.name, isOngoing);
 
-							[self requestNextThumbnail];
-						});
-					}
-				}];
+						if (!isOngoing)
+						{
+							dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+								self.perThumbnailCompletionHandler(itemIdentifier, thumbnail.data, (thumbnail==nil) ? nil : [error translatedError]);
 
-				[self.progress addChild:retrieveProgress withPendingUnitCount:1];
-			}
-		}];
+								OCLogDebug(@"Replied %ld: %@ -> thumbnailData=%d, error=%@", self.cursorPosition-1, itemFromDatabase.name, (thumbnail.data != nil), error);
+
+								[self requestNextThumbnail];
+							});
+						}
+					}];
+
+					[self.progress addChild:retrieveProgress withPendingUnitCount:1];
+				}
+			}];
+		}
+		else
+		{
+			OCLogDebug(@"Stopping thumbnail retrieval due to lack of core");
+			[self completedRequestWithError:OCError(OCErrorInternal)];
+		}
 	}
 	else
 	{
 		OCLogDebug(@"Done retrieving %ld / %ld", self.cursorPosition, self.itemIdentifiers.count);
 
-		[self completedRequest];
+		[self completedRequestWithError:nil];
 	}
 }
 
-- (void)completedRequest
+- (void)completedRequestWithError:(NSError *)error
 {
-	_isDone = YES;
+	if (!_isDone)
+	{
+		_isDone = YES;
 
-	dispatch_async(dispatch_get_main_queue(), ^{
-		self.completionHandler(nil);
-	});
+		dispatch_async(dispatch_get_main_queue(), ^{
+			self.completionHandler(nil);
+		});
+	}
+}
+
+- (nonnull NSArray<OCLogTagName> *)logTags
+{
+	return (@[@"FPThumbs"]);
+}
+
++ (nonnull NSArray<OCLogTagName> *)logTags
+{
+	return (@[@"FPThumbs"]);
 }
 
 @end

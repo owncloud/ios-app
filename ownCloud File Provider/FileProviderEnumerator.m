@@ -16,11 +16,18 @@
  *
  */
 
+#import <ownCloudApp/ownCloudApp.h>
+
 #import "FileProviderEnumerator.h"
 #import "FileProviderExtension.h"
 #import "OCCore+FileProviderTools.h"
 #import "OCItem+FileProviderItem.h"
 #import "NSNumber+OCSyncAnchorData.h"
+
+@interface OCVault (InternalSignal)
+- (void)signalEnumeratorForContainerItemIdentifier:(NSFileProviderItemIdentifier)changedDirectoryLocalID;
+@end
+
 
 @implementation FileProviderEnumerator
 
@@ -35,6 +42,8 @@
 
 		_enumerationObservers = [NSMutableArray new];
 		_changeObservers = [NSMutableArray new];
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_displaySettingsChanged:) name:DisplaySettingsChanged object:nil];
 	}
 
 	return (self);
@@ -43,6 +52,8 @@
 - (void)invalidate
 {
 	OCLogDebug(@"##### INVALIDATE %@", _query.queryPath);
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:DisplaySettingsChanged object:nil];
 
 	if (_core != nil)
 	{
@@ -55,6 +66,18 @@
 
 	_query.delegate = nil;
 	_query = nil;
+}
+
+- (void)_displaySettingsChanged:(NSNotification *)notification
+{
+	OCLogDebug(@"Received display settings update notification (enumerator for %@)", _enumeratedItemIdentifier);
+
+	[DisplaySettings.sharedDisplaySettings updateQueryWithDisplaySettings:_query];
+
+	if (_enumeratedItemIdentifier != nil)
+	{
+		[_core.vault signalEnumeratorForContainerItemIdentifier:_enumeratedItemIdentifier];
+	}
 }
 
 - (void)enumerateItemsForObserver:(id<NSFileProviderEnumerationObserver>)observer startingAtPage:(NSFileProviderPage)page
@@ -103,7 +126,7 @@
 
 	if ((_core == nil) && (_query == nil))
 	{
-		_core = [[OCCoreManager sharedCoreManager] requestCoreForBookmark:_bookmark completionHandler:^(OCCore *core, NSError *error) {
+		[[OCCoreManager sharedCoreManager] requestCoreForBookmark:_bookmark setup:nil completionHandler:^(OCCore *core, NSError *error) {
 			self->_core = core;
 
 			if (error != nil)
@@ -125,7 +148,7 @@
 					NSError *error = nil;
 					OCItem *item;
 
-					if ((item = [core synchronousRetrieveItemFromDatabaseForFileID:self->_enumeratedItemIdentifier syncAnchor:NULL error:&error]) != nil)
+					if ((item = [core synchronousRetrieveItemFromDatabaseForLocalID:self->_enumeratedItemIdentifier syncAnchor:NULL error:&error]) != nil)
 					{
 						if (item.type == OCItemTypeCollection)
 						{
@@ -155,7 +178,10 @@
 				{
 					// Start query
 					self->_query = [OCQuery queryForPath:queryPath];
+					self->_query.includeRootItem = YES;
 					self->_query.delegate = self;
+
+					[DisplaySettings.sharedDisplaySettings updateQueryWithDisplaySettings:self->_query];
 
 					@synchronized(self)
 					{
@@ -234,13 +260,33 @@
 				{
 					if (!observer.didProvideInitialItems)
 					{
-						OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER %@ FOR %@: %@", _enumerationObservers.count, observer.enumerationObserver, query.queryPath, query.queryResults);
+						NSArray <OCItem *> *queryResults = query.queryResults;
+
+						OCLogDebug(@"##### PROVIDE ITEMS TO %ld --ENUMERATION-- OBSERVER %@ FOR %@: %@", _enumerationObservers.count, observer.enumerationObserver, query.queryPath, queryResults);
 
 						observer.didProvideInitialItems = YES;
 
-						if (query.queryResults != nil)
+						if (queryResults != nil)
 						{
-							[observer.enumerationObserver didEnumerateItems:query.queryResults];
+//							NSUInteger offset = 0, count = queryResults.count;
+//
+//							while (offset < count)
+//							{
+//								NSUInteger sliceCount = 100;
+//
+//								if (offset + sliceCount > count)
+//								{
+//									sliceCount = count - offset;
+//								}
+//
+//								NSArray<OCItem *> *partialResults = [queryResults subarrayWithRange:NSMakeRange(offset, sliceCount)];
+//
+//								[observer.enumerationObserver didEnumerateItems:partialResults];
+//
+//								offset += sliceCount;
+//							};
+
+							[observer.enumerationObserver didEnumerateItems:queryResults];
 						}
 
 						[observer.enumerationObserver finishEnumeratingUpToPage:nil];
@@ -261,7 +307,7 @@
 	{
 		if (_changeObservers.count > 0)
 		{
-			OCLogDebug(@"##### PROVIDE ITEMS TO %d --CHANGE-- OBSERVER FOR %@: %@", _changeObservers.count, query.queryPath, query.queryResults);
+			OCLogDebug(@"##### PROVIDE ITEMS TO %lu --CHANGE-- OBSERVER FOR %@: %@", _changeObservers.count, query.queryPath, query.queryResults);
 
 			for (FileProviderEnumeratorObserver *observer in _changeObservers)
 			{

@@ -45,12 +45,16 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		loginMaskSection = StaticTableViewSection(headerTitle: nil, identifier: "loginMaskSection")
 		loginMaskSection.addStaticHeader(title: profile.name!, message: profile.prompt)
 
-		loginMaskSection.add(row: StaticTableViewRow(textFieldWithAction: { [weak self] (row, _) in
-			self?.username = row.value as? String
+		loginMaskSection.add(row: StaticTableViewRow(textFieldWithAction: { [weak self] (row, _, _) in
+			if let value = row.value as? String {
+				self?.username = value
+			}
 		}, placeholder: "Username", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "username"))
 
-		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (row, _) in
-			self?.password = row.value as? String
+		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (row, _, _) in
+			if let value = row.value as? String {
+				self?.password = value
+			}
 		}, placeholder: "Password", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password")
 		loginMaskSection.add(row: passwordRow!)
 
@@ -125,21 +129,20 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	@objc func startAuthentication(_ sender: Any?) {
 		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
 
-		if let connection = OCConnection(bookmark: bookmark, persistentStoreBaseURL: nil) {
-			var options : [OCAuthenticationMethodKey : Any] = [:]
+		let connection = OCConnection(bookmark: bookmark)
+		var options : [OCAuthenticationMethodKey : Any] = [:]
 
-			if let authMethodIdentifier = bookmark.authenticationMethodIdentifier {
-				if OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authMethodIdentifier)?.type() == .passphrase {
-					options[.usernameKey] = username ?? ""
-					options[.passphraseKey] = password ?? ""
-				}
+		if let authMethodIdentifier = bookmark.authenticationMethodIdentifier {
+			if OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authMethodIdentifier)?.type == .passphrase {
+				options[.usernameKey] = username ?? ""
+				options[.passphraseKey] = password ?? ""
 			}
 
 			options[.presentingViewControllerKey] = self
 
 			hud?.present(on: self, label: "Authenticating…".localized)
 
-			connection.generateAuthenticationData(withMethod: bookmark.authenticationMethodIdentifier, options: options, completionHandler: { (error, authMethodIdentifier, authMethodData) in
+			connection.generateAuthenticationData(withMethod: authMethodIdentifier, options: options, completionHandler: { (error, authMethodIdentifier, authMethodData) in
 				OnMainThread {
 					hud?.dismiss(completion: {
 						if error == nil {
@@ -154,16 +157,16 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 							self.pushSuccessViewController()
 						} else {
-							var issue : OCConnectionIssue?
+							var issue : OCIssue?
 							let nsError = error as NSError?
 
 							if let embeddedIssue = nsError?.embeddedIssue() {
 								issue = embeddedIssue
-							} else {
-								issue = OCConnectionIssue(forError: error, level: .error, issueHandler: nil)
+							} else if let error = error {
+								issue = OCIssue(forError: error, level: .error, issueHandler: nil)
 							}
 
-							if nsError?.isOCError(withCode: .errorAuthorizationFailed) == true {
+							if nsError?.isOCError(withCode: .authorizationFailed) == true {
 								// Shake
 								self.navigationController?.view.shakeHorizontally()
 								OnMainThread {
@@ -172,14 +175,14 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 							} else {
 								let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
 									switch response {
-										case .cancel:
-											issue?.reject()
+									case .cancel:
+										issue?.reject()
 
-										case .approve:
-											issue?.approve()
-											self?.startAuthentication(nil)
+									case .approve:
+										issue?.approve()
+										self?.startAuthentication(nil)
 
-										case .dismiss: break
+									case .dismiss: break
 									}
 								})
 
@@ -234,50 +237,50 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	}
 
 	func determineSupportedAuthMethod() {
-		if let connection = OCConnection(bookmark: bookmark, persistentStoreBaseURL: nil) {
-			connection.prepareForSetup(options: nil, completionHandler: { (connectionIssue, _, _, preferredAuthenticationMethods) in
-				var proceed : Bool = true
+		let connection = OCConnection(bookmark: bookmark)
+		connection.prepareForSetup(options: nil, completionHandler: { (connectionIssue, _, _, preferredAuthenticationMethods) in
+			var proceed : Bool = true
 
-				if let issue = connectionIssue {
-					proceed = self.show(issue: issue, proceed: { () in
-						OnMainThread {
+			if let issue = connectionIssue {
+				proceed = self.show(issue: issue, proceed: { () in
+					OnMainThread {
 						//	self.determineSupportedAuthMethod()
-						}
-					}, cancel: { () in
-						OnMainThread {
-							self.cancel(nil)
-						}
-					})
-				}
-
-				if proceed, preferredAuthenticationMethods != nil, let authenticationMethod = preferredAuthenticationMethods!.first {
-					self.bookmark.authenticationMethodIdentifier = preferredAuthenticationMethods?.first
-
-					if let authMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethod) {
-						OnMainThread {
-							self.tableView.performBatchUpdates({
-								self.removeSection(self.busySection!, animated: true)
-
-								switch authMethodClass.type() {
-									case .passphrase:
-										self.addSection(self.loginMaskSection(), animated: true)
-
-									case .token:
-										self.addSection(self.tokenMaskSection(), animated: true)
-								}
-							}, completion: nil)
-						}
 					}
-				} else {
-					self.bookmark.authenticationMethodIdentifier = nil
+				}, cancel: { () in
+					OnMainThread {
+						self.cancel(nil)
+					}
+				})
+			}
+
+			if proceed, preferredAuthenticationMethods != nil, let authenticationMethod = preferredAuthenticationMethods!.first {
+				self.bookmark.authenticationMethodIdentifier = preferredAuthenticationMethods?.first
+
+				if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethod) {
+					OnMainThread {
+						self.tableView.performBatchUpdates({
+							self.removeSection(self.busySection!, animated: true)
+
+							let authMethodType = authenticationMethodClass.type as OCAuthenticationMethodType
+							switch authMethodType {
+							case .passphrase:
+								self.addSection(self.loginMaskSection(), animated: true)
+
+							case .token:
+								self.addSection(self.tokenMaskSection(), animated: true)
+							}
+						}, completion: nil)
+					}
 				}
-			})
-		}
+			} else {
+				self.bookmark.authenticationMethodIdentifier = nil
+			}
+		})
 	}
 
-	func show(issue: OCConnectionIssue?, proceed: (() -> Void)? = nil, cancel: (() -> Void)? = nil) -> Bool {
+	func show(issue: OCIssue?, proceed: (() -> Void)? = nil, cancel: (() -> Void)? = nil) -> Bool {
 		if let displayIssues = issue?.prepareForDisplay() {
-			if displayIssues.displayLevel.rawValue >= OCConnectionIssueLevel.warning.rawValue {
+			if displayIssues.displayLevel.rawValue >= OCIssueLevel.warning.rawValue {
 				// Present issues if the level is >= warning
 				OnMainThread {
 					let issuesViewController = ConnectionIssueViewController(displayIssues: displayIssues, completion: { (response) in

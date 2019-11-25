@@ -20,6 +20,8 @@ import UIKit
 import ownCloudSDK
 import ownCloudUI
 
+typealias BookmarkViewControllerUserActionCompletionHandler = (_ bookmark : OCBookmark?, _ savedValidBookmark: Bool) -> Void
+
 class BookmarkViewController: StaticTableViewController {
 	// MARK: - UI elements
 	var nameSection : StaticTableViewSection?
@@ -34,9 +36,29 @@ class BookmarkViewController: StaticTableViewController {
 	var passwordRow : StaticTableViewRow?
 	var tokenInfoRow : StaticTableViewRow?
 	var deleteAuthDataButtonRow : StaticTableViewRow?
+	var oAuthInfoView : RoundedInfoView?
+	var showOAuthInfoHeader = false
+	var showedOAuthInfoHeader : Bool = false
+	var activeTextField: UITextField?
 
-	var continueSection : StaticTableViewSection?
-	var continueButtonRow : StaticTableViewRow?
+	var userActionCompletionHandler : BookmarkViewControllerUserActionCompletionHandler?
+
+	lazy var continueBarButtonItem: UIBarButtonItem = UIBarButtonItem(title: "Continue".localized, style: .done, target: self, action: #selector(handleContinue))
+	lazy var saveBarButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
+	lazy var nextBarButtonItem = UIBarButtonItem(image: UIImage(named: "arrow-down"), style: .plain, target: self, action: #selector(toogleTextField))
+	lazy var previousBarButtonItem = UIBarButtonItem(image: UIImage(named: "arrow-up"), style: .plain, target: self, action: #selector(toogleTextField))
+	lazy var inputToolbar: UIToolbar = {
+		var toolbar = UIToolbar()
+		toolbar.barStyle = .default
+		toolbar.isTranslucent = true
+		toolbar.sizeToFit()
+		let doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(resignTextField))
+		let flexibleSpaceBarButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+		let fixedSpaceBarButtonItem = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+		toolbar.setItems([fixedSpaceBarButtonItem, previousBarButtonItem, fixedSpaceBarButtonItem, fixedSpaceBarButtonItem, nextBarButtonItem, flexibleSpaceBarButtonItem, doneBarButtonItem], animated: false)
+		toolbar.isUserInteractionEnabled = true
+		return toolbar
+	}()
 
 	// MARK: - Internal storage
 	var bookmark : OCBookmark?
@@ -50,7 +72,7 @@ class BookmarkViewController: StaticTableViewController {
 	private var mode : BookmarkViewControllerMode
 
 	// MARK: - Init & Deinit
-	init(_ editBookmark: OCBookmark?) {
+	init(_ editBookmark: OCBookmark?, removeAuthDataFromCopy: Bool = false) {
 		// Determine mode
 		if editBookmark != nil {
 			mode = .edit
@@ -64,25 +86,40 @@ class BookmarkViewController: StaticTableViewController {
 
 		bookmark?.authenticationDataStorage = .memory  // Disconnect bookmark from keychain
 
+		if bookmark?.isTokenBased == true, removeAuthDataFromCopy {
+			bookmark?.authenticationData = nil
+		}
+
 		originalBookmark = editBookmark // Save original bookmark (if any)
 
 		// Super init
 		super.init(style: .grouped)
 
+		// Accessibility Identifiers
+		continueBarButtonItem.accessibilityIdentifier = "continue-bar-button"
+		saveBarButtonItem.accessibilityIdentifier = "save-bar-button"
+
 		// Name section + row
-		nameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender) in
-			if let textField = sender as? UITextField {
+		nameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender, action) in
+			if let textField = sender as? UITextField, action == .changed {
 				self?.bookmark?.name = (textField.text?.count == 0) ? nil : textField.text
 			}
-		}, placeholder: "Name".localized, identifier: "row-name-name")
+		}, placeholder: "Name".localized, identifier: "row-name-name", accessibilityLabel: "Server name".localized)
 
 		nameSection = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "section-name", rows: [ nameRow! ])
 
 		// URL section + row
-		urlRow = StaticTableViewRow(textFieldWithAction: { [weak self]  (_, sender) in
-			if let textField = sender as? UITextField {
+		urlRow = StaticTableViewRow(textFieldWithAction: { [weak self]  (_, sender, action) in
+			if let textField = sender as? UITextField, action == .changed {
 				var placeholderString = "Name".localized
 				var changedBookmark = false
+
+				// Disable Continue button if there is no url
+				if textField.text != "" {
+					self?.continueBarButtonItem.isEnabled = true
+				} else {
+					self?.continueBarButtonItem.isEnabled = false
+				}
 
 				if let normalizedURL = NSURL(username: nil, password: nil, afterNormalizingURLString: textField.text, protocolWasPrepended: nil) {
 					if let host = normalizedURL.host {
@@ -111,12 +148,13 @@ class BookmarkViewController: StaticTableViewController {
 				}
 
 				if changedBookmark {
+					self?.showOAuthInfoHeader = false
 					self?.composeSectionsAndRows(animated: true)
 				}
 
 				self?.nameRow?.textField?.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : Theme.shared.activeCollection.tableRowColors.secondaryLabelColor])
 			}
-		}, placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, identifier: "row-url-url")
+		}, placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, identifier: "row-url-url", accessibilityLabel: "Server URL".localized)
 
 		certificateRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let certificate = self?.bookmark?.certificate {
@@ -126,24 +164,24 @@ class BookmarkViewController: StaticTableViewController {
 					self?.present(navigationController, animated: true, completion: nil)
 				}
 			}
-		}, title: "Certificate Details".localized, accessoryType: .disclosureIndicator, identifier: "row-url-certificate")
+		}, title: "Certificate Details".localized, accessoryType: .disclosureIndicator, accessoryView: BorderedLabel(), identifier: "row-url-certificate")
 
 		urlSection = StaticTableViewSection(headerTitle: "Server URL".localized, footerTitle: nil, identifier: "section-url", rows: [ urlRow! ])
 
 		// Credentials section + rows
-		usernameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender) in
-			if (sender as? UITextField) != nil, self?.bookmark?.authenticationData != nil {
+		usernameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender, action) in
+			if (sender as? UITextField) != nil, self?.bookmark?.authenticationData != nil, action == .changed {
 				self?.bookmark?.authenticationData = nil
 				self?.composeSectionsAndRows(animated: true)
 			}
-		}, placeholder: "Username".localized, autocorrectionType: .no, identifier: "row-credentials-username")
+		}, placeholder: "Username".localized, autocorrectionType: .no, identifier: "row-credentials-username", accessibilityLabel: "Server Username".localized)
 
-		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (_, sender) in
-			if (sender as? UITextField) != nil, self?.bookmark?.authenticationData != nil {
+		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (_, sender, action) in
+			if (sender as? UITextField) != nil, self?.bookmark?.authenticationData != nil, action == .changed {
 				self?.bookmark?.authenticationData = nil
 				self?.composeSectionsAndRows(animated: true)
 			}
-		}, placeholder: "Password".localized, autocorrectionType: .no, identifier: "row-credentials-password")
+		}, placeholder: "Password".localized, autocorrectionType: .no, identifier: "row-credentials-password", accessibilityLabel: "Server Password".localized)
 
 		addPasswordManagerButton()
 
@@ -151,6 +189,14 @@ class BookmarkViewController: StaticTableViewController {
 
 		deleteAuthDataButtonRow = StaticTableViewRow(buttonWithAction: { [weak self] (_, _) in
 			if self?.bookmark?.authenticationData != nil {
+
+				if let authMethodIdentifier = self?.bookmark?.authenticationMethodIdentifier {
+					if self?.isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) ?? false {
+						self?.showOAuthInfoHeader = true
+						self?.showedOAuthInfoHeader = true
+					}
+				}
+
 				self?.bookmark?.authenticationMethodIdentifier = nil
 				self?.bookmark?.authenticationData = nil
 				self?.updateUI(from: (self?.bookmark)!, fieldSelector: { (row) -> Bool in
@@ -163,13 +209,9 @@ class BookmarkViewController: StaticTableViewController {
 
 		credentialsSection = StaticTableViewSection(headerTitle: "Credentials".localized, footerTitle: nil, identifier: "section-credentials", rows: [ usernameRow!, passwordRow! ])
 
-		// Continue section + row
-		continueButtonRow = StaticTableViewRow(buttonWithAction: { [weak self] (row, sender) in
-			Log.log("Event: \(row) \(String(describing: sender))")
-			self?.handleContinue()
-		}, title: "Continue".localized, identifier: "row-continue-continue")
-
-		continueSection = StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "section-continue", rows: [ continueButtonRow! ])
+		var oAuthInfoText = "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials.".localized
+		oAuthInfoText = oAuthInfoText.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")
+		oAuthInfoView = RoundedInfoView(text: oAuthInfoText)
 
 		// Input focus tracking
 		urlRow?.textField?.delegate = self
@@ -179,11 +221,12 @@ class BookmarkViewController: StaticTableViewController {
 		// Mode setup
 		self.navigationController?.navigationBar.isHidden = false
 		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(BookmarkViewController.userActionCancel))
-        self.navigationItem.leftBarButtonItem?.accessibilityIdentifier = "cancel"
+		self.navigationItem.leftBarButtonItem?.accessibilityIdentifier = "cancel"
 
 		switch mode {
 			case .create:
-				self.navigationItem.title = "Add bookmark".localized
+				self.navigationItem.title = "Add account".localized
+				self.navigationItem.rightBarButtonItem = continueBarButtonItem
 
 				// Support for bookmark default URL
 				if let defaultURLString = self.classSetting(forOCClassSettingsKey: .bookmarkDefaultURL) as? String {
@@ -198,13 +241,17 @@ class BookmarkViewController: StaticTableViewController {
 				// Fill UI
 				if bookmark != nil {
 					updateUI(from: bookmark!) { (_) -> Bool in return(true) }
+
+					if bookmark?.isTokenBased == false, removeAuthDataFromCopy {
+						bookmark?.authenticationData = nil
+						self.passwordRow?.value = ""
+					}
 				}
 
 				self.usernameRow?.enabled = false
 
-				self.navigationItem.title = "Edit bookmark".localized
-
-				self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
+				self.navigationItem.title = "Edit account".localized
+				self.navigationItem.rightBarButtonItem = saveBarButtonItem
 		}
 
 		// Support for bookmark URL editable
@@ -233,8 +280,17 @@ class BookmarkViewController: StaticTableViewController {
 		self.updateInputFocus()
 	}
 
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
+		if size.width != self.view.frame.size.width {
+			DispatchQueue.main.async {
+				self.tableView.layoutTableHeaderView()
+			}
+		}
+	}
+
 	// MARK: - Continue
-	func handleContinue() {
+	@objc func handleContinue() {
 		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
 
 		let hudCompletion: (((() -> Void)?) -> Void) = { (completion) in
@@ -253,7 +309,21 @@ class BookmarkViewController: StaticTableViewController {
 		}
 
 		if bookmark?.authenticationData == nil {
-			handleContinueAuthentication(hud: hud, hudCompletion: hudCompletion)
+			var proceed = true
+			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {
+				if isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
+					// Only proceed, if OAuth Info Header was shown to the user, before continue was pressed
+					// Statement here is only important for http connections and token based auth
+					if showedOAuthInfoHeader == false {
+						proceed = false
+						showedOAuthInfoHeader = true
+					}
+				}
+			}
+			if proceed == true {
+				handleContinueAuthentication(hud: hud, hudCompletion: hudCompletion)
+			}
+
 			return
 		}
 	}
@@ -268,7 +338,7 @@ class BookmarkViewController: StaticTableViewController {
 				// Check for zero-length host name
 				if (serverURL.host == nil) || ((serverURL.host != nil) && (serverURL.host?.count==0)) {
 					// Missing hostname
-					let alertController = UIAlertController(title: "Missing hostname".localized, message: "The entered URL does not include a hostname.", preferredStyle: .alert)
+					let alertController = ThemedAlertController(title: "Missing hostname".localized, message: "The entered URL does not include a hostname.", preferredStyle: .alert)
 
 					alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
@@ -291,10 +361,11 @@ class BookmarkViewController: StaticTableViewController {
 				// Probe URL
 				bookmark?.url = serverURL
 
-				if let connection = OCConnection(bookmark: bookmark, persistentStoreBaseURL: nil) {
-					hud?.present(on: self, label: "Contacting server…".localized)
-
+				if let connectionBookmark = bookmark {
+					let connection = OCConnection(bookmark: connectionBookmark)
 					let previousCertificate = bookmark?.certificate
+
+					hud?.present(on: self, label: "Contacting server…".localized)
 
 					connection.prepareForSetup(options: nil) { (issue, _, _, preferredAuthenticationMethods) in
 						hudCompletion({
@@ -318,7 +389,7 @@ class BookmarkViewController: StaticTableViewController {
 							if issue != nil {
 								// Parse issue for display
 								if let displayIssues = issue?.prepareForDisplay() {
-									if displayIssues.displayLevel.rawValue >= OCConnectionIssueLevel.warning.rawValue {
+									if displayIssues.displayLevel.rawValue >= OCIssueLevel.warning.rawValue {
 										// Present issues if the level is >= warning
 										let issuesViewController = ConnectionIssueViewController(displayIssues: displayIssues, completion: { [weak self] (response) in
 											switch response {
@@ -353,8 +424,10 @@ class BookmarkViewController: StaticTableViewController {
 	}
 
 	func handleContinueAuthentication(hud: ProgressHUDViewController?, hudCompletion: @escaping (((() -> Void)?) -> Void)) {
-		if let connection = OCConnection(bookmark: bookmark, persistentStoreBaseURL: nil) {
+		if let connectionBookmark = bookmark {
 			var options : [OCAuthenticationMethodKey : Any] = [:]
+
+			let connection = OCConnection(bookmark: connectionBookmark)
 
 			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {
 				if isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
@@ -365,28 +438,35 @@ class BookmarkViewController: StaticTableViewController {
 
 			options[.presentingViewControllerKey] = self
 
+			guard let bookmarkAuthenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier else { return }
+
 			hud?.present(on: self, label: "Authenticating…".localized)
 
-			connection.generateAuthenticationData(withMethod: bookmark?.authenticationMethodIdentifier, options: options) { (error, authMethodIdentifier, authMethodData) in
-				hudCompletion({
-					if error == nil {
-						self.bookmark?.authenticationMethodIdentifier = authMethodIdentifier
-						self.bookmark?.authenticationData = authMethodData
-						self.userActionSave()
-					} else {
-						var issue : OCConnectionIssue?
+			connection.generateAuthenticationData(withMethod: bookmarkAuthenticationMethodIdentifier, options: options) { (error, authMethodIdentifier, authMethodData) in
+				if error == nil {
+					self.bookmark?.authenticationMethodIdentifier = authMethodIdentifier
+					self.bookmark?.authenticationData = authMethodData
+					OnMainThread {
+						hud?.updateLabel(with: "Fetching user information…".localized)
+					}
+					self.save(hudCompletion: hudCompletion)
+				} else {
+					hudCompletion({
+						var issue : OCIssue?
 						let nsError = error as NSError?
 
 						if let embeddedIssue = nsError?.embeddedIssue() {
 							issue = embeddedIssue
-						} else {
-							issue = OCConnectionIssue(forError: error, level: .error, issueHandler: nil)
+						} else if let error = error {
+							issue = OCIssue(forError: error, level: .error, issueHandler: nil)
 						}
 
-						if nsError?.isOCError(withCode: .errorAuthorizationFailed) == true {
+						if nsError?.isOCError(withCode: .authorizationFailed) == true {
 							// Shake
 							self.navigationController?.view.shakeHorizontally()
 							self.updateInputFocus(fallbackRow: self.passwordRow)
+						} else if nsError?.isOCError(withCode: .authorizationCancelled) == true {
+							// User cancelled authorization, no reaction needed
 						} else {
 							let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
 								switch response {
@@ -403,37 +483,116 @@ class BookmarkViewController: StaticTableViewController {
 
 							self.present(issuesViewController, animated: true, completion: nil)
 						}
-					}
-				})
+					})
+				}
 			}
 		}
 	}
 
 	// MARK: - User actions
 	@objc func userActionCancel() {
-		self.presentingViewController?.dismiss(animated: true, completion: nil)
+		let userActionCompletionHandler = self.userActionCompletionHandler
+		self.userActionCompletionHandler = nil
+
+		self.presentingViewController?.dismiss(animated: true, completion: {
+			OnMainThread {
+				userActionCompletionHandler?(nil, false)
+			}
+		})
 	}
 
 	@objc func userActionSave() {
-		if isBookmarkComplete(bookmark: self.bookmark) {
-			self.bookmark?.authenticationDataStorage = .keychain // Commit auth changes to keychain
+		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
 
-			switch mode {
-				case .create:
-					// Add bookmark
-					OCBookmarkManager.shared.addBookmark(bookmark!)
-					OCBookmarkManager.shared.saveBookmarks()
-
-				case .edit:
-					// Update original bookmark
-					originalBookmark?.setValuesFrom(bookmark!)
-					OCBookmarkManager.shared.saveBookmarks()
-					OCBookmarkManager.shared.postChangeNotification()
+		let hudCompletion: (((() -> Void)?) -> Void) = { (completion) in
+			OnMainThread {
+				if hud?.presenting == true {
+					hud?.dismiss(completion: completion)
+				} else {
+					completion?()
+				}
 			}
+		}
 
-			self.presentingViewController?.dismiss(animated: true, completion: nil)
+		hud?.present(on: self, label: "Updating connection…".localized)
+
+		save(hudCompletion: hudCompletion)
+	}
+
+	func save(hudCompletion: @escaping (((() -> Void)?) -> Void)) {
+		guard let bookmark = self.bookmark else { return }
+
+		if isBookmarkComplete(bookmark: bookmark) {
+			bookmark.authenticationDataStorage = .keychain // Commit auth changes to keychain
+
+			let connection = OCConnection(bookmark: bookmark)
+
+			connection.connect { [weak self] (error, issue) in
+				if let strongSelf = self {
+					if error == nil {
+						bookmark.displayName = connection.loggedInUser?.displayName
+						connection.disconnect(completionHandler: {
+							switch strongSelf.mode {
+							case .create:
+								// Add bookmark
+								OCBookmarkManager.shared.addBookmark(bookmark)
+								OCBookmarkManager.shared.saveBookmarks()
+
+							case .edit:
+								// Update original bookmark
+								self?.originalBookmark?.setValuesFrom(bookmark)
+								OCBookmarkManager.shared.saveBookmarks()
+								OCBookmarkManager.shared.postChangeNotification()
+							}
+
+							let userActionCompletionHandler = strongSelf.userActionCompletionHandler
+							strongSelf.userActionCompletionHandler = nil
+
+							OnMainThread {
+								hudCompletion({
+									strongSelf.presentingViewController?.dismiss(animated: true, completion: {
+										OnMainThread {
+											userActionCompletionHandler?(bookmark, true)
+										}
+									})
+								})
+							}
+
+						})
+					} else {
+						OnMainThread {
+							hudCompletion({
+								if issue != nil {
+									self?.bookmark?.authenticationData = nil
+
+									let issuesViewController = ConnectionIssueViewController(displayIssues: issue?.prepareForDisplay(), completion: { [weak self] (response) in
+										switch response {
+											case .cancel:
+												issue?.reject()
+
+											case .approve:
+												issue?.approve()
+												self?.handleContinue()
+
+											case .dismiss: break
+										}
+									})
+
+									strongSelf.present(issuesViewController, animated: true, completion: nil)
+								} else {
+									strongSelf.presentingViewController?.dismiss(animated: true, completion: nil)
+								}
+							})
+						}
+					}
+				}
+			}
 		} else {
-			handleContinue()
+			hudCompletion({ [weak self] in
+				if let strongSelf = self {
+					strongSelf.handleContinue()
+				}
+			})
 		}
 	}
 
@@ -467,9 +626,18 @@ class BookmarkViewController: StaticTableViewController {
 		if bookmark?.certificate != nil {
 			if certificateRow != nil, certificateRow?.attached == false {
 				urlSection?.add(row: certificateRow!, animated: animated)
+				showedOAuthInfoHeader = true
+				bookmark?.certificate?.validationResult(completionHandler: { (_, shortDescription, longDescription, color, _) in
+					OnMainThread {
+						guard let accessoryView = self.certificateRow?.additionalAccessoryView as? BorderedLabel else { return }
+						accessoryView.update(text: shortDescription, color: color)
+					}
+					self.urlSection?.footerTitle = longDescription
+				})
 			}
 		} else {
 			if certificateRow != nil, certificateRow?.attached == true {
+				urlSection?.updateFooter(title: nil)
 				urlSection?.remove(rows: [certificateRow!], animated: animated)
 			}
 		}
@@ -481,13 +649,12 @@ class BookmarkViewController: StaticTableViewController {
 
 		// Credentials section: show depending on authentication method and data
 		var showCredentialsSection = false
-
 		if let authenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier {
 			// Username & Password: show if passphrase-based authentication method is used
 			if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
 				// Remove unwanted rows
 				var removeRows : [StaticTableViewRow] = []
-				let authMethodType = authenticationMethodClass.type()
+				let authMethodType = authenticationMethodClass.type as OCAuthenticationMethodType
 
 				switch authMethodType {
 					case .passphrase:
@@ -538,9 +705,9 @@ class BookmarkViewController: StaticTableViewController {
 
 					case .token:
 						if let authData = self.bookmark?.authenticationData, let userName = authenticationMethodClass.userName(fromAuthenticationData: authData) {
-							tokenInfoRow?.value = NSString(format:"Authenticated as %@ via %@".localized as NSString, userName, authenticationMethodClass.name())
+							tokenInfoRow?.value = NSString(format:"Authenticated as %@ via %@".localized as NSString, userName, authenticationMethodClass.name)
 						} else {
-							tokenInfoRow?.value = "Authenticated via".localized + " " + authenticationMethodClass.name()
+							tokenInfoRow?.value = "Authenticated via".localized + " " + authenticationMethodClass.name
 						}
 
 						if self.bookmark?.authenticationData != nil {
@@ -549,6 +716,8 @@ class BookmarkViewController: StaticTableViewController {
 							}
 
 							showCredentialsSection = true
+						} else {
+							showOAuthInfoHeader = true
 						}
 				}
 
@@ -572,15 +741,26 @@ class BookmarkViewController: StaticTableViewController {
 			}
 		}
 
-		// Continue section: show always
+		if showOAuthInfoHeader {
+			self.tableView.tableHeaderView = oAuthInfoView
+			self.tableView.layoutTableHeaderView()
+		} else {
+			self.tableView.tableHeaderView?.removeFromSuperview()
+		}
+
+		// Continue button: show always
 		if isBookmarkComplete(bookmark: self.bookmark) {
-			// No continue needed
-			if continueSection?.attached == true {
-				self.removeSection(continueSection!, animated: animated)
+			if self.mode == .create {
+				self.navigationItem.rightBarButtonItem = continueBarButtonItem
+			} else {
+				self.navigationItem.rightBarButtonItem = saveBarButtonItem
 			}
 		} else {
-			if continueSection?.attached == false {
-				self.addSection(continueSection!, animated: animated)
+			self.navigationItem.rightBarButtonItem = continueBarButtonItem
+			if urlRow?.textField?.text != ""{
+				continueBarButtonItem.isEnabled = true
+			} else {
+				continueBarButtonItem.isEnabled = false
 			}
 		}
 	}
@@ -686,7 +866,7 @@ class BookmarkViewController: StaticTableViewController {
 
 	func authenticationMethodTypeForIdentifier(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> OCAuthenticationMethodType? {
 		if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
-			return authenticationMethodClass.type()
+			return authenticationMethodClass.type
 		}
 
 		return nil
@@ -698,6 +878,21 @@ class BookmarkViewController: StaticTableViewController {
 
 	func isAuthenticationMethodTokenBased(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> Bool {
 		return authenticationMethodTypeForIdentifier(authenticationMethodIdentifier) == OCAuthenticationMethodType.token
+	}
+
+	// MARK: - Keyboard AccessoryView
+	@objc func toogleTextField (_ sender: UIBarButtonItem) {
+		if passwordRow?.textField?.isFirstResponder ?? false {
+			// Found next responder, so set it
+			usernameRow?.textField?.becomeFirstResponder()
+		} else {
+			// Not found, so remove keyboard
+			passwordRow?.textField?.becomeFirstResponder()
+		}
+	}
+
+	@objc func resignTextField (_ sender: UIBarButtonItem) {
+		activeTextField?.resignFirstResponder()
 	}
 }
 
@@ -731,8 +926,9 @@ extension BookmarkViewController : OCClassSettingsSupport {
 
 // MARK: - Keyboard / return key tracking
 extension BookmarkViewController : UITextFieldDelegate {
+
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-		if continueButtonRow?.attached == true {
+		if self.navigationItem.rightBarButtonItem == continueBarButtonItem {
 			if !updateInputFocus() {
 				handleContinue()
 			}
@@ -741,6 +937,23 @@ extension BookmarkViewController : UITextFieldDelegate {
 		}
 
 		return true
+	}
+
+	func textFieldDidBeginEditing(_ textField: UITextField) {
+		activeTextField = textField
+		if textField.isEqual(urlRow?.textField) {
+			textField.returnKeyType = .continue
+		} else if textField.isEqual(usernameRow?.textField) && passwordRow?.textField?.isEnabled ?? false {
+			previousBarButtonItem.isEnabled = false
+			nextBarButtonItem.isEnabled = true
+			textField.inputAccessoryView = inputToolbar
+			textField.returnKeyType = .next
+		} else if textField.isEqual(passwordRow?.textField) && usernameRow?.textField?.isEnabled ?? false {
+			previousBarButtonItem.isEnabled = true
+			nextBarButtonItem.isEnabled = false
+			textField.inputAccessoryView = inputToolbar
+			textField.returnKeyType = .continue
+		}
 	}
 }
 

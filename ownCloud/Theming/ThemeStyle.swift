@@ -28,15 +28,22 @@ class ThemeStyle : NSObject {
 	var darkColor: UIColor
 	var themeStyle: ThemeCollectionStyle
 
-	var customizedColorsByPath : [String:String]?
+	var darkStyleIdentifier: String?
 
-	init(identifier idtfr: ThemeStyleIdentifier, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customizedColorsByPath customizations: [String:String]? = nil) {
-		self.identifier = idtfr
+	var customizedColorsByPath : [String:String]?
+	var customColors : NSDictionary?
+	var genericColors : NSDictionary?
+
+	init(styleIdentifier: String, darkStyleIdentifier darkIdentifier: String? = nil, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customizedColorsByPath customizations: [String:String]? = nil, customColors: NSDictionary? = nil, genericColors: NSDictionary? = nil) {
+		self.identifier = styleIdentifier
+		self.darkStyleIdentifier = darkIdentifier
 		self.localizedName = name
 		self.lightColor = lColor
 		self.darkColor = dColor
 		self.themeStyle = style
 		self.customizedColorsByPath = customizations
+		self.customColors = customColors
+		self.genericColors = genericColors
 	}
 
 	var parsedCustomizedColorsByPath : [String:UIColor]? {
@@ -64,14 +71,15 @@ class ThemeStyle : NSObject {
 
 extension String {
 	var colorFromHex : UIColor? {
-		if self.hasPrefix("#") {
-			switch self.count {
-				case 7:
-					// Format: #RRGGBB
-					if let hexRGB = UInt(self.replacingOccurrences(of: "#", with: ""), radix: 16) {
-						return UIColor(hex: hexRGB)
-					}
-				default: break
+		if self.hasPrefix("#"), self.count == 7 {
+			// Format: #RRGGBB
+			if let hexRGB = UInt(self.replacingOccurrences(of: "#", with: ""), radix: 16) {
+				return UIColor(hex: hexRGB)
+			}
+		} else if self.count == 6 {
+			// Format: RRGGBB
+			if let hexRGB = UInt(self, radix: 16) {
+				return UIColor(hex: hexRGB)
 			}
 		}
 
@@ -81,8 +89,7 @@ extension String {
 
 extension ThemeCollection {
 	convenience init(with style: ThemeStyle) {
-		self.init(darkBrandColor: style.darkColor, lightBrandColor: style.lightColor, style: style.themeStyle)
-
+		self.init(darkBrandColor: style.darkColor, lightBrandColor: style.lightColor, style: style.themeStyle, customColors: style.customColors, genericColors: style.genericColors)
 		if let customizationColors = style.parsedCustomizedColorsByPath {
 			for (keyPath, color) in customizationColors {
 				self.setValue(color, forKeyPath: keyPath)

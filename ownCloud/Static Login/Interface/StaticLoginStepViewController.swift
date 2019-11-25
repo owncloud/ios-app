@@ -25,14 +25,13 @@ class StaticLoginStepViewController : StaticTableViewController {
 
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
-
-		self.view.backgroundColor = .clear
 	}
 
 	init(loginViewController theLoginViewController: StaticLoginViewController) {
 		super.init(style: .grouped)
 
 		loginViewController = theLoginViewController
+		self.tableView.backgroundColor = .clear
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -71,7 +70,7 @@ extension StaticTableViewSection {
 		headerView.addSubview(titleLabel)
 
 		headerView.addThemeApplier({ (_, collection, _) in
-			titleLabel.applyThemeCollection(collection, itemStyle: .title)
+			titleLabel.applyThemeCollection(collection, itemStyle: .logo)
 		})
 
 		titleLabel.font = UIFont.systemFont(ofSize: UIFont.systemFontSize * 1.5, weight: .bold)
@@ -94,7 +93,8 @@ extension StaticTableViewSection {
 			messageLabel.numberOfLines = 0
 
 			headerView.addThemeApplier({ (_, collection, _) in
-				messageLabel.applyThemeCollection(collection)
+				//messageLabel.applyThemeCollection(collection)
+				messageLabel.textColor = collection.navigationBarColors.labelColor
 			})
 
 			headerView.addSubview(messageLabel)
@@ -133,7 +133,7 @@ extension StaticTableViewSection {
 
 		if proceedLabel != nil {
 			continueButton = ThemeButton()
-			// containerView.translatesAutoresizingMaskIntoConstraints = false
+			//containerView.translatesAutoresizingMaskIntoConstraints = false
 			continueButton?.translatesAutoresizingMaskIntoConstraints = false
 
 			continueButton?.setTitle(proceedLabel, for: .normal)

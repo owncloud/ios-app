@@ -31,6 +31,7 @@ class ThemeNavigationController: UINavigationController {
 		themeToken = Theme.shared.add(applier: {[weak self] (_, themeCollection, event) in
 			self?.applyThemeCollection(themeCollection)
 			self?.toolbar.applyThemeCollection(themeCollection)
+			self?.view.backgroundColor = .clear
 
 			if event == .update {
 				self?.setNeedsStatusBarAppearanceUpdate()
@@ -40,5 +41,23 @@ class ThemeNavigationController: UINavigationController {
 
 	deinit {
 		Theme.shared.remove(applierForToken: themeToken)
+	}
+
+	var popLastHandler : ((UIViewController?) -> Bool)?
+
+	override func popViewController(animated: Bool) -> UIViewController? {
+		if let popLastHandler = popLastHandler {
+			let viewControllerToPop = self.viewControllers.count > 1 ? self.viewControllers[self.viewControllers.count-2] : self.viewControllers.last
+
+			if popLastHandler(viewControllerToPop) {
+				return super.popViewController(animated: animated)
+			} else {
+				// Avoid empty navigation bar bug when returning nil
+				self.pushViewController(UIViewController(), animated: false)
+				return super.popViewController(animated: false)
+			}
+		}
+
+		return super.popViewController(animated: animated)
 	}
 }

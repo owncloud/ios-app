@@ -23,6 +23,10 @@ typealias PasscodeViewControllerCompletionHandler = ((_ passcodeViewController: 
 
 class PasscodeViewController: UIViewController, Themeable {
 
+	// MARK: - Constants
+	fileprivate var passCodeCompletionDelay: TimeInterval = 0.1
+	fileprivate let inputDelete: String = "\u{8}"
+
 	// MARK: - Views
 	@IBOutlet private var messageLabel: UILabel?
 	@IBOutlet private var errorMessageLabel: UILabel?
@@ -33,7 +37,7 @@ class PasscodeViewController: UIViewController, Themeable {
 	@IBOutlet private var backgroundBlurView : UIVisualEffectView?
 
 	@IBOutlet private var keypadContainerView : UIView?
-	@IBOutlet private var keypadButtons: [ThemeButton]?
+	@IBOutlet private var keypadButtons: [ThemeRoundedButton]?
 	@IBOutlet private var deleteButton: ThemeButton?
 	@IBOutlet private var cancelButton: ThemeButton?
 
@@ -133,6 +137,8 @@ class PasscodeViewController: UIViewController, Themeable {
 		self.screenBlurringEnabled = false
 
 		super.init(nibName: "PasscodeViewController", bundle: nil)
+
+		self.modalPresentationStyle = .fullScreen
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -153,6 +159,8 @@ class PasscodeViewController: UIViewController, Themeable {
 		self.keypadButtonsEnabled = { self.keypadButtonsEnabled }()
 		self.keypadButtonsHidden = { self.keypadButtonsHidden }()
 		self.screenBlurringEnabled = { self.screenBlurringEnabled }()
+		self.errorMessageLabel?.minimumScaleFactor = 0.5
+		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -199,36 +207,44 @@ class PasscodeViewController: UIViewController, Themeable {
 
 	// MARK: - Actions
 	@IBAction func appendDigit(_ sender: UIButton) {
-		if !keypadButtonsEnabled || keypadButtonsHidden {
-			return
-		}
-
-		if let currentPasscode = passcode {
-			// Enforce length limit
-			if currentPasscode.count < passcodeLength {
-				self.passcode = currentPasscode + String(sender.tag)
-			}
-		} else {
-			self.passcode = String(sender.tag)
-		}
-
-		// Check if passcode is complete
-		if let passcode = passcode {
-			if passcode.count == passcodeLength {
-				// Delay to give feedback to user after the last digit was added
-				DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-					self.completionHandler?(self, passcode)
-				}
-			}
-		}
+        appendDigit(digit: String(sender.tag))
 	}
+
+    private func appendDigit(digit: String) {
+        if !keypadButtonsEnabled || keypadButtonsHidden {
+            return
+        }
+
+        if let currentPasscode = passcode {
+            // Enforce length limit
+            if currentPasscode.count < passcodeLength {
+                self.passcode = currentPasscode + digit
+            }
+        } else {
+            self.passcode = digit
+        }
+
+        // Check if passcode is complete
+        if let enteredPasscode = passcode {
+            if enteredPasscode.count == passcodeLength {
+                // Delay to give feedback to user after the last digit was added
+                OnMainThread(after: passCodeCompletionDelay) {
+                    self.completionHandler?(self, enteredPasscode)
+                }
+            }
+        }
+    }
 
 	@IBAction func deleteLastDigit(_ sender: UIButton) {
-		if passcode != nil, passcode!.count > 0 {
-			passcode?.removeLast()
-			updatePasscodeDots()
-		}
+        deleteLastDigit()
 	}
+
+    private func deleteLastDigit() {
+        if passcode != nil, passcode!.count > 0 {
+            passcode?.removeLast()
+            updatePasscodeDots()
+        }
+    }
 
 	@IBAction func cancel(_ sender: UIButton) {
 		cancelHandler?(self)
@@ -252,9 +268,58 @@ class PasscodeViewController: UIViewController, Themeable {
 			button.applyThemeCollection(collection, itemStyle: .bigTitle)
 		}
 
-		deleteButton?.themeColorCollection = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: collection.tintColor, background: collection.tableBackgroundColor))
+		deleteButton?.themeColorCollection = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: collection.neutralColors.normal.background, background: collection.neutralColors.normal.foreground))
 
 		cancelButton?.applyThemeCollection(collection, itemStyle: .defaultForItem)
-		cancelButton?.layer.cornerRadius = 0
 	}
+
+    // MARK: - External Keyboard Commands
+
+    @objc func performKeyCommand(sender: UIKeyCommand) {
+        guard let key = sender.input else {
+            return
+        }
+
+        switch key {
+        case inputDelete:
+            deleteLastDigit()
+        case UIKeyCommand.inputEscape:
+            cancelHandler?(self)
+        default:
+            appendDigit(digit: key)
+        }
+
+    }
+
+    override var keyCommands: [UIKeyCommand]? {
+
+        var keyCommands : [UIKeyCommand] = []
+        for i in 0 ..< 10 {
+            keyCommands.append(
+                UIKeyCommand(input:String(i),
+                             modifierFlags: [],
+                             action: #selector(self.performKeyCommand(sender:)),
+                             discoverabilityTitle: String(i))
+            )
+        }
+
+        keyCommands.append(
+            UIKeyCommand(input: inputDelete,
+                         modifierFlags: [],
+                         action: #selector(self.performKeyCommand(sender:)),
+                         discoverabilityTitle: "Delete".localized)
+        )
+
+        if cancelButton?.isHidden == false {
+            keyCommands.append(
+
+                UIKeyCommand(input: UIKeyCommand.inputEscape,
+                            modifierFlags: [],
+                            action: #selector(self.performKeyCommand(sender:)),
+                            discoverabilityTitle: "Cancel".localized)
+            )
+        }
+
+        return keyCommands
+    }
 }

@@ -52,11 +52,17 @@ enum ThemeItemState {
 	}
 }
 
+protocol ThemeableSectionHeader : class {
+	var sectionHeaderColor : UIColor? { get set }
+}
+
+protocol ThemeableSectionFooter : class {
+	var sectionFooterColor : UIColor? { get set }
+}
+
 extension NSObject {
 	func applyThemeCollection(_ collection: ThemeCollection, itemStyle: ThemeItemStyle = .defaultForItem, itemState: ThemeItemState = .normal) {
-		if self.isKind(of: ThemeButton.self) {
-			let themeButton : ThemeButton = (self as? ThemeButton)!
-
+		if let themeButton = self as? ThemeButton {
 			switch itemStyle {
 				case .approval:
 					themeButton.themeColorCollection = collection.approvalColors
@@ -69,69 +75,82 @@ extension NSObject {
 
 				case .bigTitle:
 					themeButton.themeColorCollection = collection.neutralColors
-					themeButton.titleLabel?.font = UIFont.systemFont(ofSize: 22)
+					themeButton.titleLabel?.font = UIFont.systemFont(ofSize: 34)
 
 				default:
 					themeButton.themeColorCollection = collection.lightBrandColors.filledColorPairCollection
 			}
-		} else if self.isKind(of: UIButton.self) {
-			let button : UIButton = (self as? UIButton)!
-
-			button.setTitleColor(collection.tintColor, for: .normal)
+		} else if let button = self as? UIButton {
+			button.tintColor = collection.navigationBarColors.tintColor
 		}
 
-		if self.isKind(of: UINavigationController.self) {
-			let navigationController : UINavigationController = (self as? UINavigationController)!
-
+		if let navigationController = self as? UINavigationController {
 			navigationController.navigationBar.applyThemeCollection(collection, itemStyle: itemStyle)
-			//navigationController.view.backgroundColor = collection.tableBackgroundColor
+			navigationController.view.backgroundColor = collection.tableBackgroundColor
 		}
 
-		if self.isKind(of: UINavigationBar.self) {
-			let navigationBar : UINavigationBar = (self as? UINavigationBar)!
-
+		if let navigationBar = self as? UINavigationBar {
 			navigationBar.barTintColor = collection.navigationBarColors.backgroundColor
 			navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
 			navigationBar.tintColor = collection.navigationBarColors.tintColor
 			navigationBar.titleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
+			navigationBar.largeTitleTextAttributes = [ .foregroundColor :  collection.navigationBarColors.labelColor ]
+			navigationBar.isTranslucent = false
+			if #available(iOS 13, *) {
+				let navigationBarAppearance = collection.navigationBarAppearance
+
+				navigationBar.standardAppearance = navigationBarAppearance
+				navigationBar.compactAppearance = navigationBarAppearance
+				navigationBar.scrollEdgeAppearance = navigationBarAppearance
+			}
 		}
 
-		if self.isKind(of: UIToolbar.self) {
-			let toolbar : UIToolbar = (self as? UIToolbar)!
-
+		if let toolbar = self as? UIToolbar {
 			toolbar.barTintColor = collection.toolbarColors.backgroundColor
 			toolbar.tintColor = collection.toolbarColors.tintColor
 		}
 
-		if self.isKind(of: UITabBar.self) {
-			let tabBar : UITabBar = (self as? UITabBar)!
-
+		if let tabBar = self as? UITabBar {
 			tabBar.barTintColor = collection.toolbarColors.backgroundColor
-			tabBar.tintColor = collection.toolbarColors.tintColor
+			tabBar.tintColor =  collection.toolbarColors.filledColorPairCollection.normal.foreground
+			tabBar.unselectedItemTintColor = collection.toolbarColors.filledColorPairCollection.disabled.foreground
 		}
 
-		if self.isKind(of: UITableView.self) {
-			let tableView : UITableView = (self as? UITableView)!
-
-			tableView.backgroundColor = collection.tableBackgroundColor
+		if let tableView = self as? UITableView {
+			tableView.backgroundColor = tableView.style == .grouped ? collection.tableGroupBackgroundColor : collection.tableBackgroundColor
 			tableView.separatorColor = collection.tableSeparatorColor
+
+			if let themeableSectionHeaderTableView = tableView as? ThemeableSectionHeader {
+				themeableSectionHeaderTableView.sectionHeaderColor = collection.tableSectionHeaderColor
+			}
+
+			if let themeableSectionFooterTableView = tableView as? ThemeableSectionFooter {
+				themeableSectionFooterTableView.sectionFooterColor = collection.tableSectionFooterColor
+			}
 		}
 
-		if self.isKind(of: UICollectionView.self) {
-			let collectionView : UICollectionView = (self as? UICollectionView)!
-
+		if let collectionView = self as? UICollectionView {
 			collectionView.backgroundColor = collection.tableBackgroundColor
 		}
 
-		if self.isKind(of: UISearchBar.self) {
-			let searchBar : UISearchBar = (self as? UISearchBar)!
-
-			searchBar.tintColor = collection.tintColor
+		if let searchBar = self as? UISearchBar {
+			searchBar.tintColor = collection.searchbarColors.tintColor
 			searchBar.barStyle = collection.barStyle
+
+			if #available(iOS 13, *) {
+				searchBar.searchTextField.textColor = collection.navigationBarColors.labelColor
+				// Ensure search bar icon color is correct
+				searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+				searchBar.searchTextField.backgroundColor = collection.searchbarColors.backgroundColor
+				searchBar.searchTextField.setPlaceholder(textColor: collection.navigationBarColors.labelColor)
+			} else {
+				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = collection.searchbarColors.backgroundColor
+				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = collection.searchbarColors.tintColor
+			}
 		}
 
-		if self.isKind(of: UILabel.self) {
-			let label : UILabel = (self as? UILabel)!
+		if let label = self as? UILabel {
 			var normalColor : UIColor = collection.tableRowColors.labelColor
 			var highlightColor : UIColor = collection.tableRowHighlightColors.labelColor
 			let disabledColor : UIColor = collection.tableRowColors.secondaryLabelColor
@@ -145,6 +164,10 @@ extension NSObject {
 					normalColor = collection.tableRowColors.secondaryLabelColor
 					highlightColor = collection.tableRowHighlightColors.secondaryLabelColor
 
+				case .logo:
+					normalColor = collection.navigationBarColors.labelColor
+					highlightColor = collection.navigationBarColors.secondaryLabelColor
+
 				default:
 					normalColor = collection.tableRowColors.labelColor
 					highlightColor = collection.tableRowHighlightColors.labelColor
@@ -157,7 +180,8 @@ extension NSObject {
 				case .bigMessage:
 					label.font = UIFont.systemFont(ofSize: 17)
 
-				default: break
+				default:
+				break
 			}
 
 			switch itemState {
@@ -172,14 +196,13 @@ extension NSObject {
 			}
 		}
 
-		if self.isKind(of: UITextField.self) {
-			let textField : UITextField = (self as? UITextField)!
+		if let textField = self as? UITextField {
 			textField.textColor = collection.tableRowColors.labelColor
 		}
 
-		if self.isKind(of: UITableViewCell.self) {
-			let cell : UITableViewCell = (self as? UITableViewCell)!
+		if let cell = self as? UITableViewCell {
 			cell.backgroundColor = collection.tableRowColors.backgroundColor
+			cell.tintColor = collection.tintColor
 
 			if cell.selectionStyle != .none {
 				if collection.tableRowHighlightColors.backgroundColor != nil {
@@ -192,13 +215,110 @@ extension NSObject {
 					cell.selectedBackgroundView = nil
 				}
 			}
+
+			if #available(iOS 13, *) {
+				cell.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
+			}
 		}
 
-		if self.isKind(of: UIProgressView.self) {
-			let progressView = (self as? UIProgressView)!
-
+		if let progressView = self as? UIProgressView {
 			progressView.tintColor = collection.tintColor
 			progressView.trackTintColor = collection.tableSeparatorColor
 		}
+
+		if let segmentedControl = self as? UISegmentedControl {
+			segmentedControl.tintColor = collection.navigationBarColors.tintColor
+			if #available(iOS 13, *) {
+				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.navigationBarColors.labelColor], for: .normal)
+				segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : collection.tintColor], for: .selected)
+			}
+		}
+
+		if let visualEffectView = self as? UIVisualEffectView {
+			if #available(iOS 13, *) {
+				visualEffectView.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
+			}
+		}
+
+		UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.navigationBarColors.backgroundColor
 	}
+}
+
+extension UITableViewController : ThemeableSectionHeader, ThemeableSectionFooter {
+	var sectionHeaderColor: UIColor? {
+		get {
+			return self.value(forAnnotatedProperty: "sectionHeaderColor") as? UIColor
+		}
+
+		set {
+			self.setValue(newValue, forAnnotatedProperty: "sectionHeaderColor")
+		}
+	}
+
+	var sectionFooterColor: UIColor? {
+		get {
+			return self.value(forAnnotatedProperty: "sectionFooterColor") as? UIColor
+		}
+
+		set {
+			self.setValue(newValue, forAnnotatedProperty: "sectionFooterColor")
+		}
+	}
+
+	func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+		if let label = view as? UILabel, let sectionHeaderColor = sectionHeaderColor {
+			label.textColor = sectionHeaderColor
+		}
+	}
+
+	func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+		if let label = view as? UILabel, let sectionFooterColor = sectionFooterColor {
+			label.textColor = sectionFooterColor
+		}
+	}
+}
+
+extension UISearchBar {
+
+	func getTextField() -> UITextField? {
+			return value(forKey: "searchField") as? UITextField
+
+	}
+	func setPlaceholder(textColor: UIColor) {
+		getTextField()?.setPlaceholder(textColor: textColor)
+
+	}
+}
+
+private extension UITextField {
+
+    private class Label: UILabel {
+        private var _textColor = UIColor.lightGray
+        override var textColor: UIColor! {
+            set { super.textColor = _textColor }
+            get { return _textColor }
+        }
+
+        init(label: UILabel, textColor: UIColor = .lightGray) {
+            _textColor = textColor
+            super.init(frame: label.frame)
+            self.text = label.text
+            self.font = label.font
+        }
+
+        required init?(coder: NSCoder) { super.init(coder: coder) }
+    }
+
+    var placeholderLabel: UILabel? {
+		return value(forKey: "placeholderLabel") as? UILabel
+
+	}
+
+    func setPlaceholder(textColor: UIColor) {
+        guard let placeholderLabel = placeholderLabel else { return }
+
+        let label = Label(label: placeholderLabel, textColor: textColor)
+        placeholderLabel.removeFromSuperview() // To remove existing label. Otherwise it will overwrite it if called multiple times.
+        setValue(label, forKey: "placeholderLabel")
+    }
 }

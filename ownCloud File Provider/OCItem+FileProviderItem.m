@@ -19,8 +19,9 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 
 #import "OCItem+FileProviderItem.h"
+#import "NSError+MessageResolution.h"
 
-static NSMutableDictionary<OCFileID, NSError *> *sOCItemUploadingErrors;
+static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 
 @implementation OCItem (FileProviderItem)
 
@@ -36,7 +37,7 @@ static NSMutableDictionary<OCFileID, NSError *> *sOCItemUploadingErrors;
 		return (NSFileProviderRootContainerItemIdentifier);
 	}
 
-	return (self.fileID);
+	return (self.localID);
 }
 
 - (NSFileProviderItemIdentifier)parentItemIdentifier
@@ -46,7 +47,7 @@ static NSMutableDictionary<OCFileID, NSError *> *sOCItemUploadingErrors;
 		return (NSFileProviderRootContainerItemIdentifier);
 	}
 
-	return (self.parentFileID);
+	return (self.parentLocalID);
 }
 
 - (NSString *)filename
@@ -78,7 +79,6 @@ static NSMutableDictionary<OCFileID, NSError *> *sOCItemUploadingErrors;
 				((permissions & OCItemPermissionWritable) 	? NSFileProviderItemCapabilitiesAllowsWriting     : 0) |
 				((permissions & OCItemPermissionMove)     	? NSFileProviderItemCapabilitiesAllowsReparenting : 0) |
 				((permissions & OCItemPermissionRename)   	? NSFileProviderItemCapabilitiesAllowsRenaming    : 0) |
-				((permissions & OCItemPermissionDelete) 	? NSFileProviderItemCapabilitiesAllowsTrashing    : 0) |
 				((permissions & OCItemPermissionDelete) 	? NSFileProviderItemCapabilitiesAllowsDeleting    : 0)
 			);
 		break;
@@ -208,16 +208,16 @@ static NSMutableDictionary<OCFileID, NSError *> *sOCItemUploadingErrors;
 
 - (NSError *)uploadingError
 {
-	if (self.fileID != nil)
+	if (self.localID != nil)
 	{
 		if (self.isPlaceholder)
 		{
-			NSLog(@"Request uploadingError for %@", self.fileID);
+			NSLog(@"Request uploadingError for %@", self.localID);
 		}
 
 		@synchronized ([OCItem class])
 		{
-			return (sOCItemUploadingErrors[self.fileID]);
+			return (sOCItemUploadingErrors[self.localID]);
 		}
 	}
 
@@ -226,9 +226,9 @@ static NSMutableDictionary<OCFileID, NSError *> *sOCItemUploadingErrors;
 
 - (void)setUploadingError:(NSError *)uploadingError
 {
-	NSLog(@"Set uploadingError for %@ to %@", self.fileID, uploadingError);
+	NSLog(@"Set uploadingError for %@ to %@", self.localID, uploadingError);
 
-	if (self.fileID != nil)
+	if (self.localID != nil)
 	{
 		@synchronized ([OCItem class])
 		{
@@ -237,7 +237,7 @@ static NSMutableDictionary<OCFileID, NSError *> *sOCItemUploadingErrors;
 				sOCItemUploadingErrors = [NSMutableDictionary new];
 			}
 
-			sOCItemUploadingErrors[self.fileID] = uploadingError;
+			sOCItemUploadingErrors[self.localID] = [uploadingError translatedError];
 		}
 	}
 }

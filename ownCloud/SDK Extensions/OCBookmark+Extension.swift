@@ -7,28 +7,40 @@
 //
 
 /*
- * Copyright (C) 2018, ownCloud GmbH.
- *
- * This code is covered by the GNU Public License Version 3.
- *
- * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
- * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
- *
- */
+* Copyright (C) 2018, ownCloud GmbH.
+*
+* This code is covered by the GNU Public License Version 3.
+*
+* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+*
+*/
 
 import UIKit
 import ownCloudSDK
 
 extension OCBookmark {
+	static let OCBookmarkDisplayName : NSString = "OCBookmarkDisplayName"
+
 	var userName : String? {
-		if self.authenticationData != nil,
-		   self.authenticationMethodIdentifier != nil,
-		   let authenticationMethod = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: self.authenticationMethodIdentifier),
-		   let userName = authenticationMethod.userName(fromAuthenticationData: self.authenticationData) {
-		   	return userName
+		if let authenticationData = self.authenticationData,
+		   let authenticationMethodIdentifier = self.authenticationMethodIdentifier,
+		   let authenticationMethod = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier),
+		   let userName = authenticationMethod.userName(fromAuthenticationData: authenticationData) {
+			return userName
 		}
 
 		return nil
+	}
+
+	var displayName : String? {
+		get {
+			return self.userInfo.object(forKey: OCBookmark.OCBookmarkDisplayName) as? String
+		}
+
+		set {
+			self.userInfo[OCBookmark.OCBookmarkDisplayName] = newValue
+		}
 	}
 
 	var shortName: String {
@@ -37,8 +49,14 @@ extension OCBookmark {
 		} else {
 			var userNamePrefix = ""
 
-			if let userName = self.userName {
-				userNamePrefix = userName + " @ "
+			if let displayName = self.displayName {
+				userNamePrefix = displayName + "@"
+			}
+
+			if userNamePrefix.count == 0 {
+				if let userName = self.userName {
+					userNamePrefix = userName + "@"
+				}
 			}
 
 			if self.originURL?.host != nil {
@@ -50,4 +68,13 @@ extension OCBookmark {
 
 		return "bookmark"
 	}
+
+	var isTokenBased : Bool? {
+		if let authenticationMethodIdentifier = self.authenticationMethodIdentifier, let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
+			return authenticationMethodClass.type == .token
+		}
+
+		return nil
+	}
+
 }

@@ -40,8 +40,11 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		iconView.translatesAutoresizingMaskIntoConstraints = false
 		iconView.contentMode = .scaleAspectFit
 
-		titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)
-		detailLabel.font = UIFont.systemFont(ofSize: 14)
+		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+		titleLabel.adjustsFontForContentSizeCategory = true
+
+		detailLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
+		detailLabel.adjustsFontForContentSizeCategory = true
 
 		detailLabel.textColor = UIColor.gray
 
@@ -66,8 +69,6 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		iconView.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.vertical)
 		titleLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
 		detailLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.vertical)
-
-		Theme.shared.add(tvgResourceFor: "owncloud-logo")
 	}
 
 	// MARK: - Themeing
@@ -77,7 +78,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
 
-		self.iconView.image = theme.image(for: "owncloud-logo", size: CGSize(width: 40, height: 40))
+		self.iconView.image = UIImage(named: "bookmark-icon")
 	}
 
 	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {

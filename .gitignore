@@ -72,9 +72,10 @@ xcuserdata/
 
 fastlane/report.xml
 fastlane/Preview.html
-fastlane/screenshots
 fastlane/test_output
 fastlane/Match/
+fastlane/screenshots/screenshots.html
+fastlane/screenshots/**/*.png
 .env.default
 
 # Code Injection
@@ -130,6 +131,7 @@ playground.xcworkspace
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/
 !*.xcworkspace/contents.xcworkspacedata
+*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
 /*.gcno
 *.xcworkspacedata
 *.xcuserdata

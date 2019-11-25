@@ -7,14 +7,14 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
 import Foundation
 
@@ -24,51 +24,57 @@ class DuplicateAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.duplicate") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Duplicate".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		// Examine items in context
+		if forContext.items.filter({return $0.isRoot}).count > 0 {
+			return .none
+
+		}
+
 		return .middle
 	}
 
 	// MARK: - Action implementation
 	override func run() {
-		guard context.items.count > 0, let core = self.core else {
-			completed(with: NSError(ocError: OCError.errorItemNotFound))
+		guard context.items.count > 0 else {
+			completed(with: NSError(ocError: .itemNotFound))
 			return
 		}
 
-		let item = context.items[0]
-		let rootItem = item.parentItem(from: core)
+		let duplicateItems = self.context.items
 
-		guard rootItem != nil else {
-			completed(with: NSError(ocError: OCError.errorItemNotFound))
-			return
-		}
+		if let core = self.core {
+			OnBackgroundQueue { [weak core] in
+				for item in duplicateItems {
+					if let core = core, let itemName = item.name, let parentItem = item.parentItem(from: core), let parentPath = parentItem.path {
+						core.suggestUnusedNameBased(on: itemName, atPath: parentPath, isDirectory: item.type == .collection, using: item.type == .collection ? .numbered : .bracketed, filteredBy: nil, resultHandler: { (suggestedName, _) in
+							Log.debug("Duplicating \(item.name ?? "(null)") as \(suggestedName ?? "(null)")")
 
-		var name: String = "\(item.name!) copy"
-
-		if item.type != .collection {
-			let itemName = item.nameWithoutExtension()
-			var fileExtension = item.fileExtension()
-
-			if fileExtension != "" {
-				fileExtension = ".\(fileExtension)"
+							if let suggestedName = suggestedName, let progress = core.copy(item, to: parentItem, withName: suggestedName, options: nil, resultHandler: { (error, _, item, _) in
+								if error != nil {
+									Log.error("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
+								}
+							}) {
+								self.publish(progress: progress)
+							} else {
+								Log.error("Error duplicating \(String(describing: item.path)) - no suggestedName")
+							}
+						})
+					}
+				}
 			}
-
-			name = "\(itemName) copy\(fileExtension)"
 		}
 
-		if let progress = core.copy(item, to: rootItem!, withName: name, options: nil, resultHandler: { (error, _, item, _) in
-			if error != nil {
-				Log.log("Error \(String(describing: error)) duplicating \(String(describing: item?.path))")
-				self.completed(with: error)
-			} else {
-				self.completed()
-			}
-		}) {
-			publish(progress: progress)
+		self.completed()
+	}
+
+	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
+		if location == .moreItem || location == .moreFolder {
+			return UIImage(named: "duplicate-file")
 		}
+
+		return nil
 	}
 }

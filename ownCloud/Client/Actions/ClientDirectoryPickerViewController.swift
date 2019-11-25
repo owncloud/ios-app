@@ -19,93 +19,219 @@
 import UIKit
 import ownCloudSDK
 
+typealias ClientDirectoryPickerPathFilter = (_ path: String) -> Bool
+typealias ClientDirectoryPickerChoiceHandler = (_ chosenItem: OCItem?) -> Void
+
 class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	private let SELECT_BUTTON_HEIGHT: CGFloat = 44.0
 
-	// MARK: - Query directory filter
-	private static let DIRECTORY_FILTER_IDENTIFIER: String = "directory-filter"
-	private static var directoryFilterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
-		if let item = item {
-			if item.type == .collection {return true}
-		}
-		return false
-	}
-	private static var directoryFilter: OCQueryFilter {
-		return OCQueryFilter(handler: ClientDirectoryPickerViewController.directoryFilterHandler)
-	}
-
 	// MARK: - Instance Properties
-	private var selectButton: UIBarButtonItem!
-	private var selectButtonTitle: String
-	private var cancelBarButton: UIBarButtonItem!
-	private var completion: (OCItem) -> Void
+	private var selectButton: UIBarButtonItem?
+	private var selectButtonTitle: String?
+	private var cancelBarButton: UIBarButtonItem?
+
+	var directoryPath : String?
+
+	var choiceHandler: ClientDirectoryPickerChoiceHandler?
+	var allowedPathFilter : ClientDirectoryPickerPathFilter?
+	var navigationPathFilter : ClientDirectoryPickerPathFilter?
 
 	// MARK: - Init & deinit
-	init(core inCore: OCCore, path: String, selectButtonTitle: String = "Move here".localized, completion: @escaping (OCItem) -> Void) {
+	convenience init(core inCore: OCCore, path: String, selectButtonTitle: String, avoidConflictsWith items: [OCItem], choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
+		let folderItemPaths = items.filter({ (item) -> Bool in
+			return item.type == .collection && item.path != nil && !item.isRoot
+		}).map { (item) -> String in
+			return item.path!
+		}
+		let itemParentPaths = items.filter({ (item) -> Bool in
+			return item.path?.parentPath != nil
+		}).map { (item) -> String in
+			return item.path!.parentPath
+		}
+
+		var navigationPathFilter : ClientDirectoryPickerPathFilter?
+
+		if folderItemPaths.count > 0 {
+			navigationPathFilter = { (targetPath) in
+				return !folderItemPaths.contains(targetPath)
+			}
+		}
+
+		self.init(core: inCore, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: { (targetPath) in
+			// Disallow all paths as target that are parent of any of the items
+			return !itemParentPaths.contains(targetPath)
+		}, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler)
+	}
+
+	init(core inCore: OCCore, path: String, selectButtonTitle: String, allowedPathFilter: ClientDirectoryPickerPathFilter? = nil, navigationPathFilter: ClientDirectoryPickerPathFilter? = nil, choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
+		let targetDirectoryQuery = OCQuery(forPath: path)
+
+		// Sort folders first
+		targetDirectoryQuery.sortComparator = { (left, right) in
+			guard let leftItem  = left as? OCItem, let rightItem = right as? OCItem else {
+				return .orderedSame
+			}
+			if leftItem.type == OCItemType.collection && rightItem.type != OCItemType.collection {
+				return .orderedAscending
+			} else if leftItem.type != OCItemType.collection && rightItem.type == OCItemType.collection {
+				return .orderedDescending
+			} else if leftItem.name != nil && rightItem.name != nil {
+				return leftItem.name!.caseInsensitiveCompare(rightItem.name!)
+			}
+			return .orderedSame
+		}
+
+		super.init(core: inCore, query: targetDirectoryQuery)
+
+		self.directoryPath = path
+
+		self.choiceHandler = choiceHandler
+
 		self.selectButtonTitle = selectButtonTitle
-		self.completion = completion
+		self.allowedPathFilter = allowedPathFilter
+		self.navigationPathFilter = navigationPathFilter
 
-		super.init(core: inCore, query: OCQuery(forPath: path)!)
+		// Force disable sorting options
+		self.shallShowSortBar = false
 
-		self.query.addFilter(ClientDirectoryPickerViewController.directoryFilter, withIdentifier: ClientDirectoryPickerViewController.DIRECTORY_FILTER_IDENTIFIER)
-
-		Theme.shared.register(client: self)
+		// Disable pull to refresh
+		allowPullToRefresh = false
 	}
 
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	deinit {
-		Theme.shared.unregister(client: self)
-	}
-
 	// MARK: - ViewController lifecycle
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		// Adapt to disabled pull-to-refresh
+		self.tableView.alwaysBounceVertical = false
+
 		// Select button creation
 		selectButton = UIBarButtonItem(title: selectButtonTitle, style: .plain, target: self, action: #selector(selectButtonPressed))
-		selectButton.title = selectButtonTitle
+		selectButton?.title = selectButtonTitle
+
+		if let allowedPathFilter = allowedPathFilter, let directoryPath = directoryPath {
+			selectButton?.isEnabled = allowedPathFilter(directoryPath)
+		}
 
 		// Cancel button creation
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
-		navigationItem.rightBarButtonItem = cancelBarButton
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
 
-		if let navController = self.navigationController {
+		if let cancelBarButton = cancelBarButton {
+			navigationItem.rightBarButtonItems = [cancelBarButton]
+		}
+
+		if let navController = self.navigationController, let selectButton = selectButton {
 			navController.isToolbarHidden = false
+			navController.toolbar.isTranslucent = false
 			let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-			self.setToolbarItems([flexibleSpaceBarButton, selectButton, flexibleSpaceBarButton], animated: false)
+
+			let leftButtonImage = Theme.shared.image(for: "folder-create", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
+
+			let createFolderBarButton = UIBarButtonItem(image: leftButtonImage, style: .plain, target: self, action: #selector(createFolderButtonPressed))
+			createFolderBarButton.accessibilityIdentifier = "client.folder-create"
+
+			self.setToolbarItems([createFolderBarButton, flexibleSpaceBarButton, selectButton, flexibleSpaceBarButton], animated: false)
 		}
 	}
 
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let item: OCItem = itemAtIndexPath(indexPath)
+	private func allowNavigationFor(item: OCItem?) -> Bool {
+		guard let item = item else { return false }
 
-		guard item.type == OCItemType.collection, let core = self.core else {
+		var allowNavigation = item.type == .collection
+
+		if allowNavigation, let navigationPathFilter = navigationPathFilter, let itemPath = item.path {
+			allowNavigation = navigationPathFilter(itemPath)
+		}
+
+		return allowNavigation
+	}
+
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = super.tableView(tableView, cellForRowAt: indexPath)
+
+		if let clientItemCell = cell as? ClientItemCell {
+			clientItemCell.isMoreButtonPermanentlyHidden = true
+			clientItemCell.isActive = self.allowNavigationFor(item: clientItemCell.item)
+		}
+
+		return cell
+	}
+
+	override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+		if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
+			return true
+		}
+
+		return false
+	}
+
+	override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+		if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
+			return indexPath
+		}
+
+		return nil
+	}
+
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		guard let item : OCItem = itemAt(indexPath: indexPath), item.type == OCItemType.collection, let core = self.core, let path = item.path, let selectButtonTitle = selectButtonTitle, let choiceHandler = choiceHandler else {
 			return
 		}
 
-		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: item.path, completion: completion), animated: true)
+		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler), animated: true)
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		return nil
 	}
 
+	override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+		return .none
+	}
+
 	// MARK: - Actions
+	func userChose(item: OCItem?) {
+		self.choiceHandler?(item)
+	}
+
 	@objc private func cancelBarButtonPressed() {
-		self.dismiss(animated: true)
+		dismiss(animated: true, completion: {
+			self.userChose(item: nil)
+		})
 	}
 
 	@objc private func selectButtonPressed() {
-		self.dismiss(animated: true, completion: {
-			self.completion(self.query.rootItem)
+		dismiss(animated: true, completion: {
+			self.userChose(item: self.query.rootItem)
 		})
+	}
+
+	@objc func createFolderButtonPressed(_ sender: UIBarButtonItem) {
+		// Actions for Create Folder
+		if let core = self.core, let rootItem = query.rootItem {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .folderAction)
+			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
+
+			let actions = Action.sortedApplicableActions(for: actionContext).filter { (action) -> Bool in
+				if action.actionExtension.identifier == OCExtensionIdentifier("com.owncloud.action.createFolder") {
+					return true
+				}
+
+				return false
+			}
+
+			let createFolderAction = actions.first
+			createFolderAction?.progressHandler = makeActionProgressHandler()
+			createFolderAction?.run()
+		}
 	}
 }

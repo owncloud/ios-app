@@ -19,18 +19,51 @@
 import UIKit
 import ownCloudSDK
 
-class ClientRootViewController: UITabBarController {
+protocol ClientRootViewControllerAuthenticationDelegate : class {
+	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?)
+}
+
+class ClientRootViewController: UITabBarController, UINavigationControllerDelegate {
+
+	// MARK: - Constants
+	let folderButtonsSize: CGSize = CGSize(width: 25.0, height: 25.0)
+
+	// MARK: - Instance variables.
 	let bookmark : OCBookmark
 	weak var core : OCCore?
 	var filesNavigationController : ThemeNavigationController?
+	let emptyViewController = UIViewController()
+	var activityNavigationController : ThemeNavigationController?
+	var activityViewController : ClientActivityViewController?
+	var libraryNavigationController : ThemeNavigationController?
+	var libraryViewController : LibraryTableViewController?
 	var progressBar : CollapsibleProgressBar?
+	var progressBarHeightConstraint: NSLayoutConstraint?
 	var progressSummarizer : ProgressSummarizer?
+	var toolbar : UIToolbar?
 
-	var closeHandler : (() -> Void)?
+	weak var authDelegate : ClientRootViewControllerAuthenticationDelegate?
+
+	var skipAuthorizationFailure : Bool = false
+
+	var connectionStatusObservation : NSKeyValueObservation?
+	var connectionStatusSummary : ProgressSummary? {
+		willSet {
+			if newValue != nil {
+				progressSummarizer?.pushPrioritySummary(summary: newValue!)
+			}
+		}
+
+		didSet {
+			if oldValue != nil {
+				progressSummarizer?.popPrioritySummary(summary: oldValue!)
+			}
+		}
+	}
+
+	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
 
 	init(bookmark inBookmark: OCBookmark) {
-		let openProgress = Progress()
-
 		bookmark = inBookmark
 
 		super.init(nibName: nil, bundle: nil)
@@ -39,32 +72,46 @@ class ClientRootViewController: UITabBarController {
 		if progressSummarizer != nil {
 			progressSummarizer?.addObserver(self) { [weak self] (summarizer, summary) in
 				var useSummary : ProgressSummary = summary
+				let prioritySummary : ProgressSummary? = summarizer.prioritySummary
 
 				if (summary.progress == 1) && (summarizer.fallbackSummary != nil) {
 					useSummary = summarizer.fallbackSummary ?? summary
 				}
 
+				if prioritySummary != nil {
+					useSummary = prioritySummary!
+				}
+
 				self?.progressBar?.update(with: useSummary.message, progress: Float(useSummary.progress))
 
-				self?.progressBar?.autoCollapse = (summarizer.fallbackSummary == nil) || (useSummary.progressCount == 0)
+				self?.progressBar?.autoCollapse = ((summarizer.fallbackSummary == nil) || (useSummary.progressCount == 0)) && (prioritySummary == nil)
 			}
 		}
 
-		openProgress.localizedDescription = "Connecting…".localized
-		progressSummarizer?.startTracking(progress: openProgress)
+		self.delegate = self
+	}
 
-		core = OCCoreManager.shared.requestCore(for: bookmark, completionHandler: { (_, error) in
-			if error == nil {
-				self.coreReady()
+	func updateConnectionStatusSummary() {
+		var summary : ProgressSummary? = ProgressSummary(indeterminate: true, progress: 1.0, message: nil, progressCount: 1)
+
+		if let connectionStatus = core?.connectionStatus {
+			var connectionShortDescription = core?.connectionStatusShortDescription
+
+			connectionShortDescription = connectionShortDescription != nil ? (connectionShortDescription! + ". ") : ""
+
+			switch connectionStatus {
+				case .online:
+					summary = nil
+
+				case .offline:
+					summary?.message = "\(connectionShortDescription!)Contents from cache.".localized
+
+				case .unavailable:
+					summary?.message = "\(connectionShortDescription!)Contents from cache.".localized
 			}
+		}
 
-			openProgress.localizedDescription = "Connected.".localized
-			openProgress.completedUnitCount = 1
-			openProgress.totalUnitCount = 1
-
-			self.progressSummarizer?.stopTracking(progress: openProgress)
-		})
-		core?.delegate = self
+		self.connectionStatusSummary = summary
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -72,22 +119,76 @@ class ClientRootViewController: UITabBarController {
 	}
 
 	deinit {
+		connectionStatusObservation = nil
+
+		if let statusSummary = connectionStatusSummary {
+			ProgressSummarizer.shared(forBookmark: bookmark).popPrioritySummary(summary: statusSummary)
+		}
 		ProgressSummarizer.shared(forBookmark: bookmark).removeObserver(self)
+		ProgressSummarizer.shared(forBookmark: bookmark).reset()
 
 		if core?.delegate === self {
 			core?.delegate = nil
 		}
 
+		Theme.shared.unregister(client: self)
+
 		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 	}
+
+	// MARK: - Startup
+	func afterCoreStart(_ completionHandler: @escaping (() -> Void)) {
+		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
+			self.core = core
+			core?.delegate = self
+
+			// Remove skip available offline when user opens the bookmark
+			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
+		}, completionHandler: { (core, error) in
+			if error == nil {
+				self.coreReady()
+			}
+
+			// Start showing connection status with a delay of 1 second, so "Offline" doesn't flash briefly
+			OnMainThread(after: 1.0) { [weak self] () in
+				self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
+					self?.updateConnectionStatusSummary()
+				})
+			}
+
+			OnMainThread {
+				completionHandler()
+			}
+		})
+	}
+
+	var pushTransition : PushTransitionDelegate?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		self.view.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
+		self.navigationController?.setNavigationBarHidden(true, animated: true)
+
+		self.tabBar.isTranslucent = false
+
 		filesNavigationController = ThemeNavigationController()
+		filesNavigationController?.delegate = self
 		filesNavigationController?.navigationBar.isTranslucent = false
 		filesNavigationController?.tabBarItem.title = "Browse".localized
-		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: CGSize(width: 25, height: 25))
+		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: folderButtonsSize)
+
+		Theme.shared.add(tvgResourceFor: "status-flash")
+
+		activityViewController = ClientActivityViewController()
+		activityNavigationController = ThemeNavigationController(rootViewController: activityViewController!)
+		activityNavigationController?.tabBarItem.title = "Status".localized
+		activityNavigationController?.tabBarItem.image = Theme.shared.image(for: "status-flash", size: CGSize(width: 25, height: 25))
+
+		libraryViewController = LibraryTableViewController(style: .grouped)
+		libraryNavigationController = ThemeNavigationController(rootViewController: libraryViewController!)
+		libraryNavigationController?.tabBarItem.title = "Quick Access".localized
+		libraryNavigationController?.tabBarItem.image = UIImage(named: "bookmark-icon")?.scaledImageFitting(in: CGSize(width: 25.0, height: 25.0))
 
 		progressBar = CollapsibleProgressBar(frame: CGRect.zero)
 		progressBar?.translatesAutoresizingMaskIntoConstraints = false
@@ -96,85 +197,236 @@ class ClientRootViewController: UITabBarController {
 
 		progressBar?.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
 		progressBar?.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-		progressBar?.bottomAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
+		progressBarHeightConstraint = NSLayoutConstraint(item: progressBar!, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: -1 * (self.tabBar.bounds.height))
+		progressBarHeightConstraint?.isActive = true
 
-		self.tabBar.applyThemeCollection(Theme.shared.activeCollection)
+		toolbar = UIToolbar(frame: .zero)
+		toolbar?.translatesAutoresizingMaskIntoConstraints = false
+		toolbar?.insetsLayoutMarginsFromSafeArea = true
+		toolbar?.isTranslucent = false
 
-		self.viewControllers = [filesNavigationController] as? [UIViewController]
+		self.view.addSubview(toolbar!)
+
+		toolbar?.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+		toolbar?.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+		toolbar?.topAnchor.constraint(equalTo: self.tabBar.topAnchor).isActive = true
+		toolbar?.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+
+		toolbar?.isHidden = true
+
+		Theme.shared.register(client: self, applyImmediately: true)
+
+		if let filesNavigationController = filesNavigationController,
+		   let activityNavigationController = activityNavigationController, let libraryNavigationController = libraryNavigationController {
+			self.viewControllers = [ filesNavigationController, libraryNavigationController, activityNavigationController ]
+		}
 	}
 
-	func logoutBarButtonItem() -> UIBarButtonItem {
-		let barButton = UIBarButtonItem(title: "Disconnect".localized, style: .plain, target: self, action: #selector(logout(_:)))
-		barButton.accessibilityIdentifier = "disconnect-button"
-		return barButton
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		if MediaUploadQueue.isMediaUploadPendingFlagSet(for: self.bookmark) {
+			let unfinishedUploadAlert = ThemedAlertController(with: "Warning".localized,
+														  message: "Media upload in the previous session was incomplete since the application was terminated".localized)
+			self.present(unfinishedUploadAlert, animated: true, completion: nil)
+			MediaUploadQueue.resetUploadPendingFlag(for: self.bookmark)
+		}
 	}
 
-	@objc func logout(_: Any) {
-		self.closeClient()
-	}
+	var closeClientCompletionHandler : (() -> Void)?
 
 	func closeClient(completion: (() -> Void)? = nil) {
-		closeHandler?()
-		self.presentingViewController?.dismiss(animated: true, completion: completion)
+		OCBookmarkManager.lastBookmarkSelectedForConnection = nil
+
+		self.dismiss(animated: true, completion: {
+			if completion != nil {
+				OnMainThread { // Work-around to make sure the self.presentingViewController is ready to present something new. Immediately after .dismiss returns, it isn't, so we wait one runloop-cycle for it to complete
+					completion?()
+				}
+			}
+		})
 	}
 
 	func coreReady() {
-		DispatchQueue.main.async {
-			let queryViewController = ClientQueryViewController(core: self.core!, query: OCQuery(forPath: "/"))
+		OnMainThread {
+			if let core = self.core {
+				let query = OCQuery(forPath: "/")
 
-			queryViewController.navigationItem.leftBarButtonItem = self.logoutBarButtonItem()
+				let queryViewController = ClientQueryViewController(core: core, query: query)
+				// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
+				self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
 
-			self.filesNavigationController?.pushViewController(queryViewController, animated: false)
+				let emptyViewController = self.emptyViewController
+				emptyViewController.navigationItem.title = "Accounts".localized
+
+				self.filesNavigationController?.popLastHandler = { [weak self] (viewController) in
+					if viewController == emptyViewController {
+						OnMainThread {
+							self?.closeClient()
+						}
+					}
+
+					return (viewController != emptyViewController)
+				}
+				self.activityViewController?.core = core
+				self.libraryViewController?.core = core
+
+				self.connectionInitializedObservation = core.observe(\OCCore.connection.connectionInitializationPhaseCompleted, options: [.initial], changeHandler: { [weak self] (core, _) in
+					if core.connection.connectionInitializationPhaseCompleted {
+						self?.connectionInitialized()
+					}
+				})
+			}
 		}
+	}
+
+	private var connectionInitializedObservation : NSKeyValueObservation?
+
+	func connectionInitialized() {
+		OCSynchronized(self) {
+			if connectionInitializedObservation == nil {
+				return
+			}
+
+			connectionInitializedObservation = nil
+		}
+
+		OnMainThread {
+			self.libraryViewController?.setupQueries()
+		}
+	}
+
+	func navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) {
+		// if the emptyViewController will show, because the push button in ClientQueryViewController was triggered, push immediately to the ServerListTableViewController, because emptyViewController is only a helper for showing the "Back" button in ClientQueryViewController
+		if willShow.isEqual(emptyViewController) {
+			self.closeClient()
+		}
+	}
+
+	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
+		progressBarHeightConstraint?.constant = -1 * (self.tabBar.bounds.height)
+		self.progressBar?.setNeedsLayout()
+//		self.view.setNeedsLayout()
+	}
+}
+
+extension ClientRootViewController : Themeable {
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.tabBar.applyThemeCollection(collection)
+
+		self.toolbar?.applyThemeCollection(Theme.shared.activeCollection)
+
+		self.view.backgroundColor = collection.tableBackgroundColor
 	}
 }
 
 extension ClientRootViewController : OCCoreDelegate {
-	func core(_ core: OCCore!, handleError error: Error!, issue: OCConnectionIssue!) {
-		OnMainThread {
-			var presentIssue : OCConnectionIssue? = issue
+	func core(_ core: OCCore, handleError error: Error?, issue inIssue: OCIssue?) {
+		var issue = inIssue
+		var isAuthFailure : Bool = false
+		var authFailureMessage : String?
+		var authFailureTitle : String = "Authorization failed".localized
+		var authFailureHasEditOption : Bool = true
+		var authFailureIgnoreLabel = "Ignore".localized
+		var authFailureIgnoreStyle = UIAlertAction.Style.destructive
+		let editBookmark = self.bookmark
+		var nsError = error as NSError?
 
-			if error != nil {
-				if let nsError : NSError = error as NSError? {
-					if nsError.isOCError(withCode: .errorAuthorizationFailed) {
-						let alertController = UIAlertController(title: "Authorization failed".localized,
-											message: "The server declined access with the credentials stored for this connection.".localized,
-											preferredStyle: .alert)
+		if nsError == nil, let issueNSError = issue?.error as NSError? {
+			// Turn issues that are just converted authorization errors back into errors and discard the issue
+			if issueNSError.isOCError(withCode: .authorizationFailed) ||
+			   issueNSError.isOCError(withCode: .authorizationNoMethodData) ||
+			   issueNSError.isOCError(withCode: .authorizationMissingData) {
+				nsError = issueNSError
+				issue = nil
+			}
+		}
 
-						alertController.addAction(UIAlertAction(title: "Ignore".localized, style: .destructive, handler: nil))
-
-						alertController.addAction(UIAlertAction(title: "Edit".localized, style: .default, handler: { (_) in
-							let presentingViewController = self.presentingViewController
-							let editBookmark = self.bookmark
-
-							self.closeClient(completion: {
-								if presentingViewController != nil,
-								   let serverListNavigationController = presentingViewController as? UINavigationController,
-								   let serverListTableViewController = serverListNavigationController.topViewController as? ServerListTableViewController {
-									serverListTableViewController.showBookmarkUI(edit: editBookmark)
-								}
-							})
-						}))
-
-						self.present(alertController, animated: true, completion: nil)
-
-						return
+		if let nsError = nsError {
+			if nsError.isOCError(withCode: .authorizationFailed) {
+				if let underlyingError = nsError.userInfo[NSUnderlyingErrorKey] as? NSError, underlyingError.isDAVException, underlyingError.davExceptionMessage == "User disabled" {
+					authFailureHasEditOption = false
+					authFailureIgnoreStyle = .cancel
+					authFailureIgnoreLabel = "Continue offline".localized
+					authFailureMessage = "The account has been disabled."
+				} else {
+					if bookmark.isTokenBased == true {
+						authFailureTitle = "Access denied".localized
+						authFailureMessage = "The connection's access token has expired or become invalid. Sign in again to re-gain access.".localized
+					} else {
+						authFailureMessage = "The server declined access with the credentials stored for this connection.".localized
 					}
 				}
+
+				isAuthFailure = true
 			}
 
-			if issue == nil && error != nil {
-				presentIssue = OCConnectionIssue(forError: error, level: .error, issueHandler: nil)
+			if nsError.isOCError(withCode: .authorizationNoMethodData) || nsError.isOCError(withCode: .authorizationMissingData) {
+				authFailureMessage = "No authentication data has been found for this connection.".localized
+
+				isAuthFailure = true
+			}
+
+			if isAuthFailure {
+				// Make sure only the first auth failure will actually lead to an alert
+				// (otherwise alerts could keep getting enqueued while the first alert is being shown,
+				// and then be presented even though they're no longer relevant). It's ok to only show
+				// an alert for the first auth failure, because the options are "Ignore" (=> no longer show them)
+				// and "Edit" (=> log out, go to bookmark editing)
+				var doSkip = false
+
+				OCSynchronized(self) {
+					doSkip = skipAuthorizationFailure  // Keep in mind OCSynchronized() contents is running as a block, so "return" in here wouldn't have the desired effect
+					skipAuthorizationFailure = true
+				}
+
+				if doSkip {
+					return
+				}
+			}
+		}
+
+		alertQueue.async { [weak self] (queueCompletionHandler) in
+			var presentIssue : OCIssue? = issue
+			var queueCompletionHandlerScheduled : Bool = false
+
+			if isAuthFailure {
+				let alertController = ThemedAlertController(title: authFailureTitle,
+									message: authFailureMessage,
+									preferredStyle: .alert)
+
+				alertController.addAction(UIAlertAction(title: authFailureIgnoreLabel, style: authFailureIgnoreStyle, handler: { (_) in
+					queueCompletionHandler()
+				}))
+
+				if authFailureHasEditOption {
+					alertController.addAction(UIAlertAction(title: "Sign in".localized, style: .default, handler: { (_) in
+						queueCompletionHandler()
+
+						if let authDelegate = self?.authDelegate, let self = self, let nsError = nsError {
+							authDelegate.handleAuthError(for: self, error: nsError, editBookmark: editBookmark)
+						}
+					}))
+				}
+
+				self?.present(alertController, animated: true, completion: nil)
+				queueCompletionHandlerScheduled = true
+
+				return
+			}
+
+			if issue == nil, let error = error {
+				presentIssue = OCIssue(forError: error, level: .error, issueHandler: nil)
 			}
 
 			if presentIssue != nil {
 				var presentViewController : UIViewController?
 
 				if presentIssue?.type == .multipleChoice {
-					presentViewController = UIAlertController(with: presentIssue!)
+					presentViewController = ThemedAlertController(with: presentIssue!, completion: queueCompletionHandler)
 				} else {
 					presentViewController = ConnectionIssueViewController(displayIssues: presentIssue?.prepareForDisplay(), completion: { (response) in
-						switch response {
+ 						switch response {
 							case .cancel:
 								presentIssue?.reject()
 
@@ -183,19 +435,44 @@ extension ClientRootViewController : OCCoreDelegate {
 
 							case .dismiss: break
 						}
+						queueCompletionHandler()
 					})
 				}
 
-				if presentViewController != nil {
-					var hostViewController : UIViewController = self
+				if presentViewController != nil, let startViewController = self {
+					var hostViewController : UIViewController = startViewController
 
-					while hostViewController.presentedViewController != nil {
+					while hostViewController.presentedViewController != nil,
+					      hostViewController.presentedViewController?.isBeingDismissed == false {
 						hostViewController = hostViewController.presentedViewController!
 					}
+
+					queueCompletionHandlerScheduled = true
 
 					hostViewController.present(presentViewController!, animated: true, completion: nil)
 				}
 			}
+
+			if !queueCompletionHandlerScheduled {
+				queueCompletionHandler()
+			}
 		}
+	}
+}
+
+extension ClientRootViewController: UITabBarControllerDelegate {
+	func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+		if tabBarController.selectedViewController == viewController {
+			if let navigationController = viewController as? ThemeNavigationController {
+				let navigationStack = navigationController.viewControllers
+
+				if navigationStack.count > 1 {
+					navigationController.popToViewController(navigationStack[1], animated: true)
+					return false
+				}
+			}
+		}
+
+		return true
 	}
 }

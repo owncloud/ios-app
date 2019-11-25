@@ -29,7 +29,23 @@ class AppLockManager: NSObject {
 	private var userDefaults: UserDefaults
 
 	// MARK: - State
-	var lastApplicationBackgroundedDate : Date?
+	private var lastApplicationBackgroundedDate : Date? {
+		didSet {
+			if let date = lastApplicationBackgroundedDate {
+				let archivedData = NSKeyedArchiver.archivedData(withRootObject: date)
+				OCAppIdentity.shared.keychain?.write(archivedData, toKeychainItemForAccount: keychainAccount, path: keychainLockedDate)
+			} else {
+				_ = self.keychain?.removeItem(forAccount: keychainAccount, path: keychainLockedDate)
+			}
+		}
+	}
+
+	var unlocked: Bool = false {
+		didSet {
+			let archivedData = NSKeyedArchiver.archivedData(withRootObject: unlocked)
+			OCAppIdentity.shared.keychain?.write(archivedData, toKeychainItemForAccount: keychainAccount, path: keychainUnlocked)
+		}
+	}
 
 	private var failedPasscodeAttempts: Int {
 		get {
@@ -56,6 +72,8 @@ class AppLockManager: NSObject {
 	private let keychainAccount = "app.passcode"
 	private let keychainPasscodePath = "passcode"
 	private let keychainLockEnabledPath = "lockEnabled"
+	private let keychainLockedDate = "lockedDate"
+	private let keychainUnlocked = "unlocked"
 
 	private var keychain : OCKeychain? {
 		return OCAppIdentity.shared.keychain
@@ -199,10 +217,12 @@ class AppLockManager: NSObject {
 	// MARK: - Unlock
 	func attemptUnlock(with testPasscode: String?, customErrorMessage: String? = nil) {
 		if testPasscode == self.passcode {
+			unlocked = true
 			lastApplicationBackgroundedDate = nil
 			failedPasscodeAttempts = 0
 			dismissLockscreen(animated: true)
 		} else {
+			unlocked = false
 			passcodeViewController?.errorMessage = (customErrorMessage != nil) ? customErrorMessage! : "Incorrect code".localized
 
 			failedPasscodeAttempts += 1
@@ -224,14 +244,14 @@ class AppLockManager: NSObject {
 			return false
 		}
 
-		if !self.shouldDisplayCountdown {
+		if unlocked, !self.shouldDisplayCountdown {
 			if let date = self.lastApplicationBackgroundedDate {
 				if Int(-date.timeIntervalSinceNow) < self.lockDelay {
 					return false
 				}
 			}
 		}
-
+		unlocked = false
 		return true
 	}
 
@@ -299,23 +319,23 @@ class AppLockManager: NSObject {
 				context.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { (success, error) in
 					if success {
 						//Fill the passcode dots
-						DispatchQueue.main.async {
+						OnMainThread {
 							self.passcodeViewController?.passcode = self.passcode
 						}
 						//Remove the passcode after small delay to give user feedback after use the biometrical unlock
-						DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+						OnMainThread(after: 0.3) {
 							self.attemptUnlock(with: self.passcode)
 						}
 					} else {
 						if let error = error {
 							switch error {
 								case LAError.biometryLockout:
-									DispatchQueue.main.async {
+									OnMainThread {
 										self.passcodeViewController?.errorMessage = error.localizedDescription
 									}
 
 								case LAError.authenticationFailed:
-									DispatchQueue.main.async {
+									OnMainThread {
 										self.attemptUnlock(with: nil, customErrorMessage: "Biometric authentication failed".localized)
 									}
 

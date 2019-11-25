@@ -19,9 +19,9 @@
 import UIKit
 import ownCloudSDK
 
-class MoreViewController: UIViewController {
+class MoreViewController: UIViewController, CardPresentationSizing {
 
-	private var item: OCItem
+	private var item: OCItem?
 	private weak var core: OCCore?
 
 	private var headerView: UIView
@@ -38,6 +38,13 @@ class MoreViewController: UIViewController {
 	init(item: OCItem, core: OCCore, header: UIView, viewController: UIViewController) {
 		self.item = item
 		self.core = core
+		self.headerView = header
+		self.viewController = viewController
+
+		super.init(nibName: nil, bundle: nil)
+	}
+
+	init(header: UIView, viewController: UIViewController) {
 		self.headerView = header
 		self.viewController = viewController
 
@@ -86,9 +93,11 @@ class MoreViewController: UIViewController {
 		headerView.layer.shadowRadius = 10
 		headerView.layer.cornerRadius = 10
 		headerView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+
+		self.view.layoutIfNeeded()
 	}
 
-	func moreLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
+	func cardPresentationSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
 		var size : CGSize = CGSize(width: 0, height: 0)
 
 		if self.view != nil {
@@ -108,6 +117,14 @@ class MoreViewController: UIViewController {
 		}
 
 		return size
+	}
+
+	override func viewDidLayoutSubviews() {
+		if self.view.superview != nil {
+			self.preferredContentSize = cardPresentationSizeFitting(CGSize(width: UIView.layoutFittingExpandedSize.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
+		}
+
+		super.viewDidLayoutSubviews()
 	}
 }
 
