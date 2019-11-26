@@ -34,7 +34,7 @@ class DisplayHostViewController: UIPageViewController {
 	private var initialItem: OCItem
 	private var displayedIndex: Int?
 
-	private var items: [OCItem]?
+	public var items: [OCItem]?
 
 	private var query: OCQuery
 	private var queryStarted : Bool = false
@@ -163,9 +163,6 @@ class DisplayHostViewController: UIPageViewController {
 						let foundIndex = self?.items?.firstIndex(where: {$0.localID == item.localID})
 
 						if foundIndex == nil {
-
-							currentDisplayViewController.removeFromParent()
-
 							if index < itemCount {
 								if let newIndex = self?.computeNewIndex(for: index, itemCount: itemCount, position: .after, indexFound: false),
 									let newViewController = self?.viewControllerAtIndex(index: newIndex) {
