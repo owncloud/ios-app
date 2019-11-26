@@ -231,7 +231,9 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 							self.messageView?.message(show: false)
 						}
 
+						let indexPath = self.tableView.indexPathForSelectedRow
 						self.tableView.reloadData()
+						self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
 					case .targetRemoved:
 						self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
 						self.tableView.reloadData()

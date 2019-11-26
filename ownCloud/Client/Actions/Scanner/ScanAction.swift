@@ -23,7 +23,9 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.scan") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Scan document".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [ .folderAction ] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [ .folderAction, .keyboardShortcut ] }
+	override class var keyCommand : String? { return "S" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
