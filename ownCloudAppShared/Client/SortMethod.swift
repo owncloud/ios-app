@@ -57,6 +57,18 @@ public enum SortMethod: Int {
 
 	public func comparator(direction: SortDirection) -> OCSort {
 		var comparator: OCSort
+		var combinedComparator: OCSort?
+
+		let alphabeticComparator : OCSort = { (left, right) in
+			guard let leftName  = (left as? OCItem)?.name, let rightName = (right as? OCItem)?.name else {
+				return .orderedSame
+			}
+			if direction == .descendant {
+				return rightName.caseInsensitiveCompare(leftName)
+			}
+
+			return leftName.caseInsensitiveCompare(rightName)
+		}
 
 		switch self {
 		case .size:
@@ -67,22 +79,14 @@ public enum SortMethod: Int {
 				let leftSize = leftItem!.size as NSNumber
 				let rightSize = rightItem!.size as NSNumber
 				if direction == .descendant {
-					return (leftSize.compare(rightSize))
+					return leftSize.compare(rightSize)
 				}
 
-				return (rightSize.compare(leftSize))
+				return rightSize.compare(leftSize)
 			}
 		case .alphabetically:
-			comparator = { (left, right) in
-				guard let leftName  = (left as? OCItem)?.name, let rightName = (right as? OCItem)?.name else {
-					return .orderedSame
-				}
-				if direction == .descendant {
-					return (rightName.caseInsensitiveCompare(leftName))
-				}
-
-				return (leftName.caseInsensitiveCompare(rightName))
-			}
+			comparator = alphabeticComparator
+			combinedComparator = alphabeticComparator
 		case .type:
 			comparator = { (left, right) in
 				let leftItem = left as? OCItem
@@ -145,12 +149,25 @@ public enum SortMethod: Int {
 					return .orderedSame
 				}
 				if direction == .descendant {
-					return (leftLastModified.compare(rightLastModified))
+					return leftLastModified.compare(rightLastModified)
 				}
 
-				return (rightLastModified.compare(leftLastModified))
+				return rightLastModified.compare(leftLastModified)
 			}
 		}
-		return comparator
+
+		if combinedComparator == nil {
+			combinedComparator = { (left, right) in
+				var result : ComparisonResult = comparator(left, right)
+
+				if result == .orderedSame {
+					result = alphabeticComparator(left, right)
+				}
+
+				return result
+			}
+		}
+
+		return combinedComparator ?? comparator
 	}
 }

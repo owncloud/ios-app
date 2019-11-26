@@ -1,8 +1,8 @@
 //
-//  Calendar+Extension.swift
-//  ownCloudAppShared
+//  NSData+Encoding.m
+//  ownCloudApp
 //
-//  Created by Matthias Hühne on 27.09.19.
+//  Created by Felix Schwarz on 02.09.19.
 //  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
 
@@ -16,11 +16,13 @@
  *
  */
 
-import UIKit
+#import "NSData+Encoding.h"
 
-extension Calendar {
-	func dateTimeComponents(from date: Date) -> DateComponents {
-		let components : Set<Calendar.Component> = [.day, .month, .year, .hour, .minute, .second]
-		return self.dateComponents(components, from: date)
-	}
+@implementation NSData (OCEncoding)
+
++ (NSData *)dataFromCGRect:(CGRect)rect
+{
+	return ([NSData dataWithBytes:&rect length:sizeof(CGRect)]);
 }
+
+@end

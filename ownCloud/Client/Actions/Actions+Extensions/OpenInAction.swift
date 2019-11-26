@@ -22,7 +22,9 @@ class OpenInAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openin") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Open in".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .toolbar] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .toolbar, .keyboardShortcut] }
+	override class var keyCommand : String? { return "O" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.contains(where: {$0.type == .collection}) {
@@ -92,7 +94,7 @@ class OpenInAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreFolder {
 			return UIImage(named: "open-in")
 		}
 

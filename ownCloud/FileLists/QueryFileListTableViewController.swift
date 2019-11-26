@@ -45,12 +45,6 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		if query.sortComparator == nil {
 			query.sortComparator = self.sortMethod.comparator(direction: sortDirection)
 		}
-
-		core?.start(query)
-
-		queryStateObservation = query.observe(\OCQuery.state, options: .initial, changeHandler: { [weak self] (_, _) in
-			self?.updateQueryProgressSummary()
-		})
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -59,10 +53,6 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: .DisplaySettingsChanged, object: nil)
-
-		queryProgressSummary = nil
-
-		core?.stop(query)
 	}
 
 	// MARK: - Display settings
@@ -242,7 +232,9 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 							self.messageView?.message(show: false)
 						}
 
+						let indexPath = self.tableView.indexPathForSelectedRow
 						self.tableView.reloadData()
+						self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
 					case .targetRemoved:
 						self.messageView?.message(show: true, imageName: "folder", title: "Folder removed".localized, message: "This folder no longer exists on the server.".localized)
 						self.tableView.reloadData()
@@ -299,11 +291,21 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
+		core?.start(query)
+
+		queryStateObservation = query.observe(\OCQuery.state, options: .initial, changeHandler: { [weak self] (_, _) in
+			self?.updateQueryProgressSummary()
+		})
+
 		updateQueryProgressSummary()
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
+
+		core?.stop(query)
+		queryStateObservation?.invalidate()
+		queryStateObservation = nil
 
 		queryProgressSummary = nil
 
@@ -381,5 +383,34 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		}
 
 		return 0
+	}
+
+	@available(iOS 13.0, *)
+	override func tableView(_ tableView: UITableView,
+	contextMenuConfigurationForRowAt indexPath: IndexPath,
+	point: CGPoint) -> UIContextMenuConfiguration? {
+		if let item = itemAt(indexPath: indexPath), UIDevice.current.isIpad() {
+			return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+				return self.makeContextMenu(for: indexPath, with: item)
+			})
+		}
+
+		return nil
+	}
+
+	@available(iOS 13.0, *)
+	func makeContextMenu(for indexPath: IndexPath, with item: OCItem) -> UIMenu {
+		let openWindow = UIAction(title: "Open in a new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { _ in
+			self.openItemInWindow(at: indexPath)
+		}
+		return UIMenu(title: item.name ?? "", children: [openWindow])
+	}
+
+	@available(iOS 13.0, *)
+	func openItemInWindow(at indexPath: IndexPath) {
+		if let item = itemAt(indexPath: indexPath), let tabBarController = self.tabBarController as? ClientRootViewController {
+			let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
+			UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
+		}
 	}
 }

@@ -60,8 +60,12 @@
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This permission is needed to scan documents.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
+		<string>com.owncloud.ios-app.openAccount</string>
+		<string>com.owncloud.ios-app.openItem</string>
 		<string>CreateFolderIntent</string>
 		<string>DeletePathItemIntent</string>
 		<string>GetAccountIntent</string>
@@ -80,6 +84,23 @@
 	<true/>
 	<key>OCKeychainAccessGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<true/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default Configuration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(PRODUCT_NAME).SceneDelegate</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
