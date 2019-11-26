@@ -44,12 +44,6 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		if query.sortComparator == nil {
 			query.sortComparator = self.sortMethod.comparator(direction: sortDirection)
 		}
-
-		core?.start(query)
-
-		queryStateObservation = query.observe(\OCQuery.state, options: .initial, changeHandler: { [weak self] (_, _) in
-			self?.updateQueryProgressSummary()
-		})
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -58,10 +52,6 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: .DisplaySettingsChanged, object: nil)
-
-		queryProgressSummary = nil
-
-		core?.stop(query)
 	}
 
 	// MARK: - Display settings
@@ -300,11 +290,21 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
+		core?.start(query)
+
+		queryStateObservation = query.observe(\OCQuery.state, options: .initial, changeHandler: { [weak self] (_, _) in
+			self?.updateQueryProgressSummary()
+		})
+
 		updateQueryProgressSummary()
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
+
+		core?.stop(query)
+		queryStateObservation?.invalidate()
+		queryStateObservation = nil
 
 		queryProgressSummary = nil
 

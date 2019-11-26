@@ -30,6 +30,7 @@ enum DisplayViewState {
 	case noNetworkConnection
 	case downloading(progress: Progress)
 	case errorDownloading(error: Error?)
+	case downloadFinished
 	case canceledDownload
 	case notSupportedMimeType
 }
@@ -79,16 +80,20 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	var source: URL? {
 		didSet {
-			OnMainThread(inline: true) {
-				self.iconImageView?.isHidden = true
-				self.hideItemMetadataUIElements()
-				self.renderSpecificView(completion: { (success) in
-					if !success {
-						self.iconImageView?.isHidden = false
-						self.infoLabel?.text = "File couldn't be opened".localized
-						self.infoLabel?.isHidden = false
+			if self.source != oldValue && self.source != nil {
+				OnMainThread(inline: true) {
+					if self.shallShowPreview == true && self.canPreview(url: self.source!) {
+						self.iconImageView?.isHidden = true
+						self.hideItemMetadataUIElements()
+						self.renderSpecificView(completion: { (success) in
+							if !success {
+								self.iconImageView?.isHidden = false
+								self.infoLabel?.text = "File couldn't be opened".localized
+								self.infoLabel?.isHidden = false
+							}
+						})
 					}
-				})
+				}
 			}
 		}
 	}
@@ -97,24 +102,27 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	var shallDisplayMoreButtonInToolbar = true
 
+	var shallShowPreview = true
+
 	private var state: DisplayViewState = .hasNetworkConnection {
 		didSet {
-			OnMainThread(inline: true) {
-				switch self.state {
-					case .downloading(let progress):
-						self.downloadProgress = progress
-
-					default:
-						self.downloadProgress = nil
-				}
-				self.render()
+			switch self.state {
+			case .downloading(let progress):
+				self.downloadProgress = progress
+			case .notSupportedMimeType:
+				shallShowPreview = false
+			default:
+				self.downloadProgress = nil
 			}
+			self.render()
 		}
 	}
 
 	public var downloadProgress : Progress? {
 		didSet {
-			progressView?.observedProgress = downloadProgress
+			OnMainThread(inline: true) {
+				self.progressView?.observedProgress = self.downloadProgress
+			}
 		}
 	}
 
@@ -232,31 +240,13 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 		Theme.shared.register(client: self)
 
-		if let item = item {
-			iconImageView?.image = item.icon(fitInSize:iconImageSize)
+		if let item = item, let core = self.core {
+			if core.localCopy(of: item) == nil {
+				iconImageView?.setThumbnailImage(using: core, from: item, with: iconImageSize, avoidSystemThumbnails: true)
+			}
 
-			if item.thumbnailAvailability != .none {
-				let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-					_ = thumbnail?.requestImage(for: self.iconImageSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
-						if error == nil,
-							image != nil,
-							item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
-							OnMainThread {
-								if self.iconImageView?.isHidden == false {
-									self.iconImageView?.image = image
-								}
-							}
-						}
-					})
-				}
-
-				if let thumbnail = item.thumbnail {
-					displayThumbnail(thumbnail)
-				} else {
-					_ = core?.retrieveThumbnail(for: item, maximumSize: iconImageSize, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, _) in
-						displayThumbnail(thumbnail)
-					})
-				}
+			if iconImageView?.image == nil {
+				iconImageView?.image = item.icon(fitInSize:iconImageSize)
 			}
 		}
 
@@ -311,6 +301,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				}
 				return
 			}
+			self?.state = .downloadFinished
+
 			self?.item = latestItem
 			self?.source = file?.url
 
@@ -338,33 +330,44 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	private func render() {
-		switch state {
-		case .hasNetworkConnection:
-			hideProgressIndicators()
+		OnMainThread(inline: true) {
+			switch self.state {
+			case .hasNetworkConnection:
+				self.hideProgressIndicators()
 
-		case .noNetworkConnection:
-			self.progressView?.isHidden = true
-			self.cancelButton?.isHidden = true
-			self.infoLabel?.isHidden = false
-			self.showPreviewButton?.isHidden = true
+			case .noNetworkConnection:
+				self.progressView?.isHidden = true
+				self.cancelButton?.isHidden = true
+				self.infoLabel?.isHidden = false
+				self.showPreviewButton?.isHidden = true
 
-		case .errorDownloading, .canceledDownload:
-			if core?.connectionStatus == .online {
-				hideProgressIndicators()
+			case .errorDownloading, .canceledDownload:
+				if self.core?.connectionStatus == .online {
+					self.hideProgressIndicators()
+				}
+
+			case .downloading(_):
+				self.progressView?.isHidden = false
+				self.cancelButton?.isHidden = false
+				self.infoLabel?.isHidden = true
+				self.showPreviewButton?.isHidden = true
+
+			case .notSupportedMimeType:
+				self.progressView?.isHidden = true
+				self.cancelButton?.isHidden = true
+				self.infoLabel?.isHidden = true
+
+				if let item = self.item {
+					if self.core?.localCopy(of:item) == nil {
+						self.showPreviewButton?.isHidden = false
+						self.showPreviewButton?.setTitle("Download".localized, for: .normal)
+					}
+				}
+
+			case .downloadFinished:
+				self.cancelButton?.isHidden = true
+				self.progressView?.isHidden = true
 			}
-
-		case .downloading(_):
-			self.progressView?.isHidden = false
-			self.cancelButton?.isHidden = false
-			self.infoLabel?.isHidden = true
-			self.showPreviewButton?.isHidden = true
-
-		case .notSupportedMimeType:
-			self.progressView?.isHidden = true
-			self.cancelButton?.isHidden = true
-			self.infoLabel?.isHidden = true
-			self.showPreviewButton?.isHidden = true
-
 		}
 	}
 
@@ -373,7 +376,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		self.progressView?.isHidden = true
 		self.cancelButton?.isHidden = true
 		self.infoLabel?.isHidden = true
-		self.showPreviewButton?.isHidden = false
+		//self.showPreviewButton?.isHidden = false
 	}
 
 	@objc func optionsBarButtonPressed() {
@@ -482,8 +485,12 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				}
 
 				self.updateNavigationBarItems()
-
 		}
+	}
+
+	// Override in subclasses and implement specific checks if required
+	func canPreview(url:URL) -> Bool {
+		return true
 	}
 }
 
