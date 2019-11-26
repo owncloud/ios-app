@@ -81,10 +81,12 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.tableView.allowsSelectionDuringEditing = true
  		extendedLayoutIncludesOpaqueBars = true
 
-		let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
-		addServerBarButtonItem.accessibilityLabel = "Add account".localized
-		addServerBarButtonItem.accessibilityIdentifier = "addAccount"
-		self.navigationItem.rightBarButtonItem = addServerBarButtonItem
+		if VendorServices.shared.canAddAccount {
+			let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addBookmark))
+			addServerBarButtonItem.accessibilityLabel = "Add account".localized
+			addServerBarButtonItem.accessibilityIdentifier = "addAccount"
+			self.navigationItem.rightBarButtonItem = addServerBarButtonItem
+		}
 
 		if welcomeOverlayView != nil {
 			welcomeOverlayView.translatesAutoresizingMaskIntoConstraints = false

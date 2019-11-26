@@ -31,12 +31,47 @@ class StaticLoginBundle: NSObject {
 	static var demoBundle : StaticLoginBundle {
 		let bundle = StaticLoginBundle()
 
+		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
+			if let themingValues = NSDictionary(contentsOfFile: path) {
+				if let bundleValues = themingValues["Bundle"] as? NSDictionary, let organizationLogoName = bundleValues["organizationLogoName"] as? String, let organizationBackgroundName = bundleValues["organizationBackgroundName"] as? String, let organizationName = bundleValues["organizationName"] as? String {
+					bundle.organizationName = organizationName
+					bundle.organizationLogoName = organizationLogoName
+					bundle.organizationBackgroundName = organizationBackgroundName
+				}
+
+				if let profileValues = themingValues["Profiles"] as? NSArray {
+					bundle.profiles = profileValues.map { (profile) -> StaticLoginProfile? in
+						if let profile = profile as? NSDictionary, let identifier = profile["identifier"] as? String, let name = profile["name"] as? String, let prompt = profile["prompt"] as? String, let customLogoName = profile["customLogoName"] as? String, let bookmarkName = profile["bookmarkName"] as? String, let url = profile["url"] as? String, let allowedAuthenticationMethods = profile["allowedAuthenticationMethods"] as? NSArray {
+							let staticloginProfile = StaticLoginProfile()
+							staticloginProfile.identifier = identifier
+							staticloginProfile.name = name
+							staticloginProfile.prompt = prompt
+							staticloginProfile.customLogoName = customLogoName
+							staticloginProfile.bookmarkName = bookmarkName
+							staticloginProfile.url = URL(string: url)
+
+							let foo = allowedAuthenticationMethods.map { (authenticationMethodTypeIdentifier) -> OCAuthenticationMethodType? in
+								if let authenticationMethodTypeIdentifier = authenticationMethodTypeIdentifier as? String {
+									let authenticationMethod = OCAuthenticationMethodIdentifier(rawValue: authenticationMethodTypeIdentifier)
+									return OCAuthenticationMethod().authenticationMethodTypeForIdentifier(authenticationMethod)
+								}
+								return nil
+							}
+							print("foo \(foo)")
+
+							return staticloginProfile
+						}
+
+						return nil
+						} as! [StaticLoginProfile]
+				}
+			}
+		}
+
+/*
 		let salesProfile = StaticLoginProfile()
 		let publicRelationsProfile = StaticLoginProfile()
 
-		bundle.organizationName = "ownCloud"
-		bundle.organizationLogoName = "owncloud-logo"
-		bundle.organizationBackgroundName = "brand-background.jpg"
 
 		bundle.loginThemeStyleID = "com.owncloud.dark"
 
@@ -54,6 +89,10 @@ class StaticLoginBundle: NSObject {
 
 		salesProfile.themeStyleID = "com.owncloud.light"
 
+
+
+
+
 		// Customer profile
 		publicRelationsProfile.identifier = "public-relations"
 		publicRelationsProfile.name = "🌍 Public Relations Group"
@@ -69,7 +108,7 @@ class StaticLoginBundle: NSObject {
 		publicRelationsProfile.themeStyleID = "com.owncloud.dark"
 
 		bundle.profiles = [ salesProfile, publicRelationsProfile ]
-
+*/
 		return bundle
 	}
 }

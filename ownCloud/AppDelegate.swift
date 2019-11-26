@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		ThemeStyle.registerDefaultStyles()
 
-		if VendorServices.shared.isBranded {
+		if VendorServices.shared.isBranded, VendorServices.shared.hasBrandedLogin {
 			staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.demoBundle)
 			navigationController = ThemeNavigationController(rootViewController: staticLoginViewController!)
 			navigationController?.setNavigationBarHidden(true, animated: false)

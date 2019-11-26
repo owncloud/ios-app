@@ -94,6 +94,40 @@ class VendorServices : NSObject {
 		return false
 	}
 
+	var hasBrandedProfiles: Bool {
+		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
+			if let themingValues = NSDictionary(contentsOfFile: path), let profiles = themingValues["Profiles"] as? NSArray, profiles.count > 0 {
+				return true
+			}
+		}
+
+		return false
+	}
+
+	var hasBrandedLogin: Bool {
+		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
+			if let themingValues = NSDictionary(contentsOfFile: path), let bundleValues = themingValues["Bundle"] as? NSDictionary, bundleValues["organizationLogoName"] != nil, bundleValues["organizationBackgroundName"] != nil, bundleValues["organizationName"] != nil {
+				return true
+			}
+		}
+
+		return false
+	}
+
+	var canAddAccount: Bool {
+		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
+			if let themingValues = NSDictionary(contentsOfFile: path), let canAddAccount = themingValues["canAddAccount"] as? Bool {
+				if canAddAccount, VendorServices.shared.hasBrandedProfiles {
+					return true
+				}
+
+				return false
+			}
+		}
+
+		return true
+	}
+
 	var showBetaWarning: Bool {
 		if let showBetaWarning = self.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool {
 			return showBetaWarning

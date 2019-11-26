@@ -191,7 +191,7 @@ class BookmarkViewController: StaticTableViewController {
 			if self?.bookmark?.authenticationData != nil {
 
 				if let authMethodIdentifier = self?.bookmark?.authenticationMethodIdentifier {
-					if self?.isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) ?? false {
+					if OCAuthenticationMethod().isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
 						self?.showOAuthInfoHeader = true
 						self?.showedOAuthInfoHeader = true
 					}
@@ -311,7 +311,7 @@ class BookmarkViewController: StaticTableViewController {
 		if bookmark?.authenticationData == nil {
 			var proceed = true
 			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {
-				if isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
+				if OCAuthenticationMethod().isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
 					// Only proceed, if OAuth Info Header was shown to the user, before continue was pressed
 					// Statement here is only important for http connections and token based auth
 					if showedOAuthInfoHeader == false {
@@ -380,7 +380,7 @@ class BookmarkViewController: StaticTableViewController {
 
 								if self?.bookmark?.certificate == previousCertificate,
 								   let authMethodIdentifier = self?.bookmark?.authenticationMethodIdentifier,
-								   self?.isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) == true {
+								   OCAuthenticationMethod().isAuthenticationMethodTokenBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) == true {
 
 									self?.handleContinue()
 								}
@@ -430,7 +430,7 @@ class BookmarkViewController: StaticTableViewController {
 			let connection = OCConnection(bookmark: connectionBookmark)
 
 			if let authMethodIdentifier = bookmark?.authenticationMethodIdentifier {
-				if isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
+				if OCAuthenticationMethod().isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier) {
 					options[.usernameKey] = usernameRow?.value ?? ""
 					options[.passphraseKey] = passwordRow?.value ?? ""
 				}
@@ -843,7 +843,7 @@ class BookmarkViewController: StaticTableViewController {
 		var password : String?
 
 		if let authMethodIdentifier = bookmark.authenticationMethodIdentifier,
-		   isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier),
+			OCAuthenticationMethod().isAuthenticationMethodPassphraseBased(authMethodIdentifier as OCAuthenticationMethodIdentifier),
 		   let authData = bookmark.authenticationData,
 		   let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authMethodIdentifier) {
 			userName = authenticationMethodClass.userName(fromAuthenticationData: authData)
@@ -862,22 +862,6 @@ class BookmarkViewController: StaticTableViewController {
 	// MARK: - Tools
 	func isBookmarkComplete(bookmark: OCBookmark?) -> Bool {
 		return (bookmark?.url != nil) && (bookmark?.authenticationMethodIdentifier != nil) && (bookmark?.authenticationData != nil)
-	}
-
-	func authenticationMethodTypeForIdentifier(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> OCAuthenticationMethodType? {
-		if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
-			return authenticationMethodClass.type
-		}
-
-		return nil
-	}
-
-	func isAuthenticationMethodPassphraseBased(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> Bool {
-		return authenticationMethodTypeForIdentifier(authenticationMethodIdentifier) == OCAuthenticationMethodType.passphrase
-	}
-
-	func isAuthenticationMethodTokenBased(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> Bool {
-		return authenticationMethodTypeForIdentifier(authenticationMethodIdentifier) == OCAuthenticationMethodType.token
 	}
 
 	// MARK: - Keyboard AccessoryView
@@ -993,4 +977,24 @@ extension BookmarkViewController {
 			}
 		}
 	}
+}
+
+public extension OCAuthenticationMethod {
+
+	func authenticationMethodTypeForIdentifier(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> OCAuthenticationMethodType? {
+		if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
+			return authenticationMethodClass.type
+		}
+
+		return nil
+	}
+
+	func isAuthenticationMethodPassphraseBased(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> Bool {
+		return authenticationMethodTypeForIdentifier(authenticationMethodIdentifier) == OCAuthenticationMethodType.passphrase
+	}
+
+	func isAuthenticationMethodTokenBased(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> Bool {
+		return authenticationMethodTypeForIdentifier(authenticationMethodIdentifier) == OCAuthenticationMethodType.token
+	}
+
 }

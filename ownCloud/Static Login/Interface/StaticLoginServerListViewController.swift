@@ -42,7 +42,11 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return super.tableView(tableView, numberOfRowsInSection: section) + 1
+		if VendorServices.shared.canAddAccount {
+			return super.tableView(tableView, numberOfRowsInSection: section) + 1
+		}
+
+		return super.tableView(tableView, numberOfRowsInSection: section)
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -54,7 +58,7 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 			if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 				bookmarkCell.textLabel?.text = bookmark.shortName
 			}
-		} else {
+		} else if VendorServices.shared.canAddAccount {
 			bookmarkCell.textLabel?.text = "Add account".localized
 			bookmarkCell.accessoryType = .disclosureIndicator
 		}
@@ -75,7 +79,7 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 			super.tableView(tableView, didSelectRowAt: indexPath)
 		} else {
 			if let viewController = staticLoginViewController?.buildProfileSetupSelector(title: "Add account".localized, includeCancelOption: true) {
-				self.navigationController?.pushViewController(viewController, animated: true)
+				self.navigationController?.pushViewController(viewController, animated: false)
 			}
 		}
 	}

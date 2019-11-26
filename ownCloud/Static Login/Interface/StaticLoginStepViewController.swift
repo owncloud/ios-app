@@ -39,7 +39,7 @@ class StaticLoginStepViewController : StaticTableViewController {
 	}
 
 	@objc func popViewController() {
-		self.navigationController?.popViewController(animated: true)
+		self.navigationController?.popViewController(animated: false)
 	}
 }
 

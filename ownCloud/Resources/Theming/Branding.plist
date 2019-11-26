@@ -2,6 +2,56 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>canAddAccount</key>
+	<true/>
+	<key>Bundle</key>
+	<dict>
+		<key>organizationLogoName</key>
+		<string>owncloud-logo</string>
+		<key>organizationBackgroundName</key>
+		<string>brand-background.jpg</string>
+		<key>organizationName</key>
+		<string>ownCloud</string>
+	</dict>
+	<key>Profiles</key>
+	<array>
+		<dict>
+			<key>identifier</key>
+			<string>sales</string>
+			<key>name</key>
+			<string>💶 Sales</string>
+			<key>prompt</key>
+			<string>Enter your Sales username and password:</string>
+			<key>customLogoName</key>
+			<string>sales</string>
+			<key>bookmarkName</key>
+			<string>💶 Sales Files</string>
+			<key>url</key>
+			<string>https://demo.owncloud.org/</string>
+			<key>allowedAuthenticationMethods</key>
+			<array>
+				<string>com.owncloud.basicauth</string>
+			</array>
+		</dict>
+		<dict>
+			<key>identifier</key>
+			<string>public-relations</string>
+			<key>name</key>
+			<string>🌍 Public Relations Group</string>
+			<key>prompt</key>
+			<string>Please press &quot;Continue&quot; and enter your PR department login and password.</string>
+			<key>customLogoName</key>
+			<string>public-relations</string>
+			<key>bookmarkName</key>
+			<string>🌍 Public Relations</string>
+			<key>url</key>
+			<string>https://owncloud-io.lan/</string>
+			<key>allowedAuthenticationMethods</key>
+			<array>
+				<string>com.owncloud.oauth2</string>
+			</array>
+		</dict>
+	</array>
 	<key>AppName</key>
 	<string>SURFdrive</string>
 	<key>URLs</key>
