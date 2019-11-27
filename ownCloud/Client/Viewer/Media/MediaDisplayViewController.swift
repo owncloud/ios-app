@@ -22,6 +22,8 @@ import ownCloudSDK
 
 class MediaDisplayViewController : DisplayViewController {
 
+	static let MediaPlaybackFinishedNotification = NSNotification.Name("media_playback.finished")
+
 	private var playerStatusObservation: NSKeyValueObservation?
 	private var playerItemStatusObservation: NSKeyValueObservation?
 	private var playerItem: AVPlayerItem?
@@ -132,6 +134,9 @@ class MediaDisplayViewController : DisplayViewController {
 
 	@objc private func handleAVPlayerItem(notification:Notification) {
 		try? AVAudioSession.sharedInstance().setActive(false)
+		OnMainThread {
+			NotificationCenter.default.post(name: MediaDisplayViewController.MediaPlaybackFinishedNotification, object: self.item)
+		}
 	}
 }
 
