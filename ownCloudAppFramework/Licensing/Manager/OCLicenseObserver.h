@@ -23,14 +23,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface OCLicenseObserver : NSObject
 
-@property(weak,nullable) OCLicenseEnvironment *environment;
-@property(weak,nullable) id owner;
+@property(weak,nullable) OCLicenseEnvironment *environment; //!< The environment for which to observe authorization status
+@property(weak,nullable) id owner; //!< The owner of the observer. If the owner is deallocated, the observer is automatically removed.
 
-@property(strong,nullable) NSArray<OCLicenseProductIdentifier> *products;
-@property(strong,nullable) NSArray<OCLicenseFeatureIdentifier> *features;
+@property(strong,nullable) NSArray<OCLicenseProductIdentifier> *products; //!< Identifiers of the products to observe (need to be resolvable - or authorizationStatus will always be denied)
+@property(strong,nullable) NSArray<OCLicenseFeatureIdentifier> *features; //!< Identifiers of the features to observe (need to be resolvable - or authorizationStatus will always be denied)
 
-@property(assign,nonatomic) OCLicenseAuthorizationStatus authorizationStatus;
-@property(copy,nullable) OCLicenseObserverUpdateHandler updateHandler;
+@property(assign,nonatomic) OCLicenseAuthorizationStatus authorizationStatus; //!< Combined authorization status of all .products and .features (== lowest authorization status determined among them).
+@property(copy,nullable) OCLicenseObserverAuthorizationStatusUpdateHandler statusUpdateHandler; //!< Update handler block. Called whenever the authorizationStatus changes.
+
+@property(strong,nonatomic,nullable) NSArray<OCLicenseOffer *> *offers; //!< Offers covering any of the products or features specified
+@property(copy,nullable) OCLicenseObserverOffersUpdateHandler offersUpdateHandler; //!< Update handler block. Called whenever the offers change.
 
 @end
 

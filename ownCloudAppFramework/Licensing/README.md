@@ -79,3 +79,17 @@ The `OCLicense` set of classes allow gating and granting access to features thro
 	// Handle updates to authorization status to use the document scanner feature	
 }];
 ```
+
+## Setup
+
+To comply with `StoreKit` requirements, the `OCLicense` system needs to be completely set up in the `-[UIApplicationDelegate application:didFinishLaunchingWithOptions:]` method. In particular, the `OCLicenseAppStoreProvider` method needs to be added to `OCLicenseManager` in that method.
+
+## Reference
+### App Store Receipt parsing
+- RevenueCat: [Dissecting an App Store Receipt](https://www.revenuecat.com/2018/01/17/dissecting-an-app-store-receipt)
+- Apple: [Validating Receipts Locally](https://developer.apple.com/library/archive/releasenotes/General/ValidateAppStoreReceipt/Chapters/ValidateLocally.html)
+- Apple: [Receipt Fields](https://developer.apple.com/library/archive/releasenotes/General/ValidateAppStoreReceipt/Chapters/ReceiptFields.html#//apple_ref/doc/uid/TP40010573-CH106-SW1)
+
+### Non-consumable IAPs as trial mechanism
+- MacRumors: [Free Trials for All Paid Apps Now Possible Thanks to Updated App Store Guidelines](https://www.macrumors.com/2018/06/05/app-store-app-free-trials-now-available/)
+- Apple: [App Store Review Guidelines: In-App Purchases](https://developer.apple.com/app-store/review/guidelines/#in-app-purchase)

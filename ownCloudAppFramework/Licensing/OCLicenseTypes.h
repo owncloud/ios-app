@@ -34,8 +34,8 @@ typedef NS_ENUM(NSUInteger, OCLicenseType)
 {
 	OCLicenseTypeNone,		//!< NO license
 	OCLicenseTypeTrial,		//!< Trial
-	OCLicenseTypeRegular,		//!< Regular purchase
-	OCLicenseTypeSubscription	//!< Subscription
+	OCLicenseTypeSubscription,	//!< Subscription
+	OCLicenseTypePurchase		//!< Regular purchase
 };
 
 typedef NS_ENUM(NSUInteger, OCLicenseAuthorizationStatus)
@@ -48,9 +48,11 @@ typedef NS_ENUM(NSUInteger, OCLicenseAuthorizationStatus)
 
 @class OCLicenseEnvironment;
 @class OCLicenseObserver;
+@class OCLicenseOffer;
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^OCLicenseObserverUpdateHandler)(OCLicenseObserver * _Nonnull observer, BOOL isInitial, OCLicenseAuthorizationStatus authorizationStatus);
+typedef void(^OCLicenseObserverAuthorizationStatusUpdateHandler)(OCLicenseObserver * _Nonnull observer, BOOL isInitial, OCLicenseAuthorizationStatus authorizationStatus);
+typedef void(^OCLicenseObserverOffersUpdateHandler)(OCLicenseObserver * _Nonnull observer, BOOL isInitial, NSArray<OCLicenseOffer *> *offers);
 
 NS_ASSUME_NONNULL_END

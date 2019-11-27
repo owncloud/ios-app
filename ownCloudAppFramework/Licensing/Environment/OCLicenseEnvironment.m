@@ -20,4 +20,16 @@
 
 @implementation OCLicenseEnvironment
 
++ (instancetype)environmentWithIdentifier:(nullable OCLicenseEnvironmentIdentifier)identifier hostname:(nullable NSString *)hostname certificate:(nullable OCCertificate *)certificate attributes:(NSDictionary<OCLicenseEnvironmentAttributesKey, id> *)attributes
+{
+	OCLicenseEnvironment *environment = [self new];
+
+	environment.identifier = identifier;
+	environment.hostname = hostname;
+	environment.certificate = certificate;
+	environment.attributes = attributes;
+
+	return (environment);
+}
+
 @end

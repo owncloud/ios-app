@@ -23,12 +23,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NSString* OCLicenseEnvironmentAttributesKey;
+
 @interface OCLicenseEnvironment : NSObject
 
 @property(nullable,strong) OCLicenseEnvironmentIdentifier identifier;
 
 @property(nullable,strong) NSString *hostname;
 @property(nullable,strong) OCCertificate *certificate;
+
+@property(nullable,strong) NSDictionary<OCLicenseEnvironmentAttributesKey, id> *attributes;
+
++ (instancetype)environmentWithIdentifier:(nullable OCLicenseEnvironmentIdentifier)identifier hostname:(nullable NSString *)hostname certificate:(nullable OCCertificate *)certificate attributes:(nullable NSDictionary<OCLicenseEnvironmentAttributesKey, id> *)attributes;
 
 @end
 

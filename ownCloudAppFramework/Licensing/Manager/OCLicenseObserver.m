@@ -18,6 +18,68 @@
 
 #import "OCLicenseObserver.h"
 
+@interface OCLicenseObserver ()
+{
+	BOOL _didInitialUpdate;
+}
+@end
+
 @implementation OCLicenseObserver
+
+- (void)setAuthorizationStatus:(OCLicenseAuthorizationStatus)authorizationStatus
+{
+	BOOL isInitial = NO;
+	OCLicenseObserverAuthorizationStatusUpdateHandler updateHandler = nil;
+
+	@synchronized(self)
+	{
+		if (_authorizationStatus != authorizationStatus)
+		{
+			_authorizationStatus = authorizationStatus;
+
+			if ((updateHandler = self.statusUpdateHandler) != nil)
+			{
+				if (!_didInitialUpdate)
+				{
+					isInitial = YES;
+					_didInitialUpdate = YES;
+				}
+			}
+		}
+	}
+
+	if (updateHandler != nil)
+	{
+		updateHandler(self, isInitial, authorizationStatus);
+	}
+}
+
+- (void)setOffers:(NSArray<OCLicenseOffer *> *)offers
+{
+	BOOL isInitial = NO;
+	OCLicenseObserverOffersUpdateHandler updateHandler = nil;
+
+	@synchronized(self)
+	{
+		if (![_offers isEqual:offers])
+		{
+			_offers = offers;
+
+			if ((updateHandler = self.offersUpdateHandler) != nil)
+			{
+				if (!_didInitialUpdate)
+				{
+					isInitial = YES;
+					_didInitialUpdate = YES;
+				}
+			}
+		}
+	}
+
+	if (updateHandler != nil)
+	{
+		updateHandler(self, isInitial, offers);
+	}
+}
 
 @end

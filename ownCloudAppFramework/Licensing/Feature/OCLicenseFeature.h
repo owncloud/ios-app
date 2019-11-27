@@ -18,19 +18,25 @@
 
 #import <Foundation/Foundation.h>
 #import "OCLicenseTypes.h"
-#import "OCLicenseEntitlement.h"
+
+@class OCLicenseManager;
+@class OCLicenseProduct;
+@class OCLicenseEntitlement;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface OCLicenseFeature : NSObject
 
-#pragma mark - Metadata
-@property(strong) OCLicenseFeatureIdentifier identifier; //!< Identifier uniquely identifying a feature
-@property(nullable,strong) NSString *localizedName; //!< (optional) localized name of the feature
+@property(nullable,weak) OCLicenseManager *manager;
 
-#pragma mark - Access information
-@property(nullable,strong) NSArray<OCLicenseEntitlement *> *entitlements; //!< Array of entitlements relevant to this feature
-@property(nonatomic,readonly) BOOL accessAllowed; //!< YES if access to this feature should be allowed
+#pragma mark - Metadata
+@property(strong,readonly) OCLicenseFeatureIdentifier identifier; //!< Identifier uniquely identifying a feature
+
+#pragma mark - Ownership
+@property(strong) NSHashTable<OCLicenseProduct *> *containedInProducts; //!< Products in which this feature is contained
+@property(nullable,strong,nonatomic) NSArray<OCLicenseEntitlement *> *entitlements; //!< Array of entitlements relevant to this feature
+
++ (instancetype)featureWithIdentifier:(OCLicenseFeatureIdentifier)identifier;
 
 @end
 

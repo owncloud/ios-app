@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface OCLicenseEntitlement : NSObject
 
++ (instancetype)entitlementWithIdentifier:(nullable OCLicenseEntitlementIdentifier)identifier forProduct:(OCLicenseProductIdentifier)productIdentifier type:(OCLicenseType)type valid:(BOOL)valid expiryDate:(nullable NSDate *)expiryDate applicability:(nullable OCLicenseEntitlementEnvironmentApplicableRule)applicability;
+
 #pragma mark - Metadata
 @property(nullable,strong) OCLicenseEntitlementIdentifier identifier; //!< (optional) identifier uniquely identifying this license entitlement
 @property(weak) OCLicenseProvider *provider; //!< Provider from which this entitlement originated
@@ -39,9 +41,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,assign) BOOL valid; //!< If the entitlement is currently valid (i.e. has not expired)
 @property(nullable,strong) NSDate *expiryDate; //!< Date the entitlement expires - or nil if it doesn't expire
 
-@property(nonatomic,assign) BOOL environmentDependant; //!< If YES, applicability depends on the environment, otherwise the entitlement is applicable if it is valid
-@property(nullable,strong) OCLicenseEntitlementEnvironmentApplicableRule environmentApplicableRule; //!< If provided, a rule in NSPredicate notation to check an environment for applicability
+@property(nullable,strong,nonatomic) NSDate *nextStatusChangeDate; //!< Date the entitlement should next be checked for changes - or nil if it doesn't need to be checked
+
+@property(nullable,strong) OCLicenseEntitlementEnvironmentApplicableRule environmentApplicableRule; //!< If provided, a rule (as string) in NSPredicate notation to check an OCLicenseEnvironment for applicability. If nil, the entitlement's applicability is not dependent on the environment.
 - (BOOL)isApplicableInEnvironment:(OCLicenseEnvironment *)environment; //!< Returns YES if the entitlement is applicable in the provided environment
+
+- (OCLicenseAuthorizationStatus)authorizationStatusInEnvironment:(OCLicenseEnvironment *)environment; //!< Computes and returns the current authorization status for the respective environment based on .valid, .expiryDate and -isApplicableInEnvironment:
 
 @end
 

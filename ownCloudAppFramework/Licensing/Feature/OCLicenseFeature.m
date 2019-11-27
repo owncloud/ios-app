@@ -17,7 +17,49 @@
  */
 
 #import "OCLicenseFeature.h"
+#import "OCLicenseProduct.h"
 
 @implementation OCLicenseFeature
+
++ (instancetype)featureWithIdentifier:(OCLicenseFeatureIdentifier)identifier
+{
+	return ([[self alloc] initWithIdentifier:identifier]);
+}
+
+- (instancetype)initWithIdentifier:(OCLicenseFeatureIdentifier)identifier
+{
+	if ((self = [super init]) != nil)
+	{
+		_identifier = identifier;
+	}
+
+	return (self);
+}
+
+- (NSArray<OCLicenseEntitlement *> *)entitlements
+{
+	@synchronized(self)
+	{
+		if (_entitlements == nil)
+		{
+			NSMutableArray<OCLicenseEntitlement *> *entitlements = [NSMutableArray new];
+
+			for (OCLicenseProduct *product in self.containedInProducts)
+			{
+				if (product.entitlements != nil)
+				{
+					[entitlements addObjectsFromArray:product.entitlements];
+				}
+			}
+
+			if (entitlements.count > 0)
+			{
+				_entitlements = entitlements;
+			}
+		}
+
+		return (_entitlements);
+	}
+}
 
 @end

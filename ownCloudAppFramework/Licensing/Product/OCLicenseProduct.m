@@ -17,7 +17,66 @@
  */
 
 #import "OCLicenseProduct.h"
+#import "OCLicenseManager+Internal.h"
 
 @implementation OCLicenseProduct
+
++ (instancetype)productWithIdentifier:(OCLicenseProductIdentifier)identifier name:(NSString *)localizedName description:(nullable NSString *)localizedDescription contents:(NSArray<OCLicenseFeatureIdentifier> *)contents
+{
+	return ([[self alloc] initWithIdentifier:identifier name:localizedName description:localizedDescription contents:contents]);
+}
+
+- (instancetype)initWithIdentifier:(OCLicenseProductIdentifier)identifier name:(NSString *)localizedName description:(nullable NSString *)localizedDescription contents:(NSArray<OCLicenseFeatureIdentifier> *)contents
+{
+	if ((self = [super init]) != nil)
+	{
+		_identifier = identifier;
+
+		_localizedName = localizedName;
+		_localizedDescription = localizedDescription;
+
+		_contents = contents;
+	}
+
+	return (self);
+}
+
+- (NSArray<OCLicenseEntitlement *> *)entitlements
+{
+	@synchronized(self)
+	{
+		if (_entitlements == nil)
+		{
+			_entitlements = [self.manager _entitlementsForProduct:self];
+		}
+
+		return (_entitlements);
+	}
+}
+
+#pragma mark - Tools
++ (NSString *)stringForType:(OCLicenseType)type
+{
+	switch (type)
+	{
+		case OCLicenseTypeNone:
+			return (@"none");
+		break;
+
+		case OCLicenseTypeTrial:
+			return (@"trial");
+		break;
+
+		case OCLicenseTypePurchase:
+			return (@"purchase");
+		break;
+
+		case OCLicenseTypeSubscription:
+			return (@"subscription");
+		break;
+	}
+
+	return (@"unknown");
+}
 
 @end

@@ -17,7 +17,37 @@
  */
 
 #import "OCLicenseProvider.h"
+#import "OCLicenseEntitlement.h"
 
 @implementation OCLicenseProvider
+
+- (void)setEntitlements:(NSArray<OCLicenseEntitlement *> *)entitlements
+{
+	for (OCLicenseEntitlement *entitlement in _entitlements)
+	{
+		if ([entitlements indexOfObjectIdenticalTo:entitlement] == NSNotFound)
+		{
+			entitlement.provider = nil;
+		}
+	}
+
+	for (OCLicenseEntitlement *entitlement in entitlements)
+	{
+		entitlement.provider = self;
+	}
+
+	_entitlements = entitlements;
+}
+
+#pragma mark - Control
+- (void)startProvidingWithCompletionHandler:(OCLicenseProviderCompletionHandler)completionHandler
+{
+
+}
+
+- (void)stopProvidingWithCompletionHandler:(OCLicenseProviderCompletionHandler)completionHandler
+{
+
+}
 
 @end

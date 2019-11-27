@@ -19,16 +19,33 @@
 #import <Foundation/Foundation.h>
 #import "OCLicenseTypes.h"
 
+@class OCLicenseManager;
+@class OCLicenseEntitlement;
+@class OCLicenseFeature;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface OCLicenseProduct : NSObject
 
+@property(weak,nullable) OCLicenseManager *manager;
+
 #pragma mark - Metadata
-@property(strong) OCLicenseProductIdentifier identifier;
-@property(strong) NSString *localizedName;
+@property(strong,readonly) OCLicenseProductIdentifier identifier; //!< Identifier uniquely identifying the product
+
+@property(strong) NSString *localizedName; //!< Localized name of the product
+@property(nullable,strong) NSString *localizedDescription; //!< Localized description of the product
 
 #pragma mark - Feature set
-@property(strong) NSArray<OCLicenseFeatureIdentifier> *contents;
+@property(nullable,strong,readonly) NSArray<OCLicenseFeatureIdentifier> *contents; //!< Array of feature identifiers of features contained in this product
+@property(nullable,strong,nonatomic) NSArray<OCLicenseFeature *> *features; //!< Array of features contained in this product
+
+#pragma mark - Access information
+@property(nullable,strong,nonatomic) NSArray<OCLicenseEntitlement *> *entitlements; //!< Array of entitlements relevant to this product
+
++ (instancetype)productWithIdentifier:(OCLicenseProductIdentifier)identifier name:(NSString *)localizedName description:(nullable NSString *)localizedDescription contents:(NSArray<OCLicenseFeatureIdentifier> *)contents;
+
+#pragma mark - Tools
++ (NSString *)stringForType:(OCLicenseType)type;
 
 @end
 
