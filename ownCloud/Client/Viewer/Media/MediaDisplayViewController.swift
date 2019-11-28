@@ -92,6 +92,23 @@ class MediaDisplayViewController : DisplayViewController {
 				self.view.addSubview(playerViewController!.view)
 				playerViewController!.didMove(toParent: self)
 
+				// Add artwork to the player overlay if corresponding meta data item is available in the asset
+				if let artworkMetadataItem = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyArtwork}).first,
+					let imageData = artworkMetadataItem.dataValue,
+					let overlayView = playerViewController?.contentOverlayView {
+
+					let artworkImage = UIImage(data: imageData)
+					let imageView = UIImageView(image: artworkImage)
+					imageView.translatesAutoresizingMaskIntoConstraints = false
+					imageView.contentMode = .center
+					playerViewController?.contentOverlayView?.addSubview(imageView)
+
+					NSLayoutConstraint.activate([
+						imageView.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor),
+						imageView.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor)
+					])
+				}
+
 				playerStatusObservation = player!.observe(\AVPlayer.status, options: [.initial, .new], changeHandler: { [weak self] (player, _) in
 					if player.status == .readyToPlay {
 
