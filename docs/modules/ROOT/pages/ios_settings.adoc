@@ -60,7 +60,7 @@ The iOS app comes with three themes:
 * Dark; and
 * Classic
 
-To change the theme, navigate to menu:Settings[Theme], and pick the one that you want.
+To change the theme, navigate to menu:Settings[Theme], and pick the one that you want. 
 
 image:84_Settings_themes.png[84_Settings_themes.png]
 
@@ -74,6 +74,11 @@ image:84_Settings_themes.png[84_Settings_themes.png]
 a|image:themes/classic.png[ownCloud iOS App - Classic theme]
 a|image:themes/dark.png[ownCloud iOS App - Dark theme]
 a|image:themes/light.png[ownCloud iOS App - Light theme]
+
+=== System Appearance (up from iOS 13)
+
+When System Appearance is selected, ownCloud will automatically use the selected iOS system theme (light or dark) to reflect the system UI. Setting System Appearance is only available up from iOS 13.
+
 |===
 
 == Logging
