@@ -62,7 +62,6 @@ class UploadMediaAction: UploadBaseAction {
 				for asset in assets {
 					MediaUploadQueue.shared.addUpload(asset, for: bookmark, at: path)
 				}
-				MediaUploadQueue.shared.scheduleUploads(in: bookmark)
 			}
 			let navigationController = ThemeNavigationController(rootViewController: photoAlbumViewController)
 

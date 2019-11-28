@@ -309,7 +309,7 @@
 "Albums" = "Albums";
 "Importing from photo library" = "Importing from photo library";
 "Media import" = "Media import";
-"%@ of %@" = "%@ of %@";"
+"%@ of %@" = "%@ of %@";
 
 /* Scan */
 "Scan" = "Scan";
@@ -433,7 +433,7 @@
 "Upload Path" = "Upload Path";
 "Select Upload Path" = "Select Upload Path";
 "Instant upload of media was disabled since configured account / folder was not found" = "Instant upload of media was disabled since configured account / folder was not found";
-"Importing %@ media files for upload" = "Importing %@ media files for upload";"
+"Importing %@ media files for upload" = "Importing %@ media files for upload";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Creating %ld folders…";

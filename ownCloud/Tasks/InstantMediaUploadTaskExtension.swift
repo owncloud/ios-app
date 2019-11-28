@@ -43,7 +43,6 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 		if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
 			uploadMediaAssets(for: bookmark, at: path)
-			MediaUploadQueue.shared.scheduleUploads(in: bookmark)
 		}
 	}
 

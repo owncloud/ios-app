@@ -49,24 +49,12 @@ class MediaUploadQueue : OCActivitySource {
 			storage.addJob(with: asset.localIdentifier, targetPath: path)
 			return storage
 		}
-
-		self.setNeedsScheduling(in: bookmark)
-	}
-
-	private var _needsSchedulingCount : Int = 0
-	func setNeedsScheduling(in bookmark: OCBookmark) {
-		// Increment counter by one
-		_needsSchedulingCount += 1
-
-		// Schedule right away. If it's already busy, it'll return quickly. If not, it'll schedule.
-		self.scheduleUploads(in: bookmark)
 	}
 
 	func scheduleUploads(in bookmark:OCBookmark) {
 
 		var uploadStorageAlreadyProcessing = false
 		var uploadStorageQueueEmpty = false
-		var needsSchedulingCountAtEntry = _needsSchedulingCount
 
 		// Avoid race conditions by performing checks and modifications atomically
 		bookmark.modifyMediaUploadStorage { (mediaUploadStorage) -> MediaUploadStorage in
@@ -77,19 +65,14 @@ class MediaUploadQueue : OCActivitySource {
 				// Check if upload queue processing can be started and no-one else is processing it
 				if mediaUploadStorage.processing != nil {
 					// Found OCProcessSession instance -> check if it is valid though
-					if OCProcessManager.shared.isSessionValid(mediaUploadStorage.processing!, usingThoroughChecks: true) {
+					if OCProcessManager.shared().isSessionValid(mediaUploadStorage.processing!, usingThoroughChecks: true) {
 						// If the process session is valid, may be it is being used by running extension --> bail out
 						uploadStorageAlreadyProcessing = true
-					} else {
-						// Remove invalid session
-						mediaUploadStorage.processing = nil
 					}
 				}
 
-				if mediaUploadStorage.processing == nil {
-					// Mark the queue as being processed
-					mediaUploadStorage.processing = OCProcessManager.shared.processSession
-				}
+				// Mark the queue as being processed
+				mediaUploadStorage.processing = OCProcessSession()
 			}
 
 			return (mediaUploadStorage)
@@ -116,13 +99,6 @@ class MediaUploadQueue : OCActivitySource {
 						mediaUploadStorage.processing = nil
 						return mediaUploadStorage
 					}
-
-					// Check if .setNeedsScheduling() has been called since starting the scheduling:
-					// since any new entries added to the queue after scheduling has started will not be handled,
-					// it's important to start scheduling again if any change to the queue has been performed since
-					if needsSchedulingCountAtEntry != self._needsSchedulingCount {
-						self.scheduleUploads(in: bookmark)
-					}
 				}
 
 				// Publish activity including number of jobs to be processed
@@ -140,14 +116,31 @@ class MediaUploadQueue : OCActivitySource {
 				let importGroup = DispatchGroup()
 
 				queue.async {
-					// Make copies to avoid side effects of caching that KVS might perform
-					let assetIDQueue : [String] = uploadStorage.queue
-					let jobsByAssetID : [String : [MediaUploadJob]] = uploadStorage.jobs
 
 					// Iterate over PHObject local asset IDs
-					for assetId in assetIDQueue {
+					var handledAssetIDs : [String] = []
 
-						if let assetJobs = jobsByAssetID[assetId] {
+					// Fetch latest version of mediaUploadStorage on each iteration
+					while let uploadStorage = bookmark.mediaUploadStorage, uploadStorage.queue.count > 0 {
+						var assetIDQueue : [String] = uploadStorage.queue
+						var nextAssetID : String?
+
+						// Find the first asset ID we haven't handled yet
+						for queuedAssetID in uploadStorage.queue {
+							if !handledAssetIDs.contains(queuedAssetID) { // This assetID hasn't been handled yet:
+								handledAssetIDs.append(queuedAssetID) // - add assetID to list of handledAssetIDs
+								nextAssetID = queuedAssetID	      // - work on that assetID next
+								break				      // - exit for loop
+							}
+						}
+
+						// Exit loop if no unhandled asset could be found
+						guard let assetId = nextAssetID else {
+							break // exit while loop
+						}
+
+						// Process jobs for assetID
+						if let assetJobs = uploadStorage.jobs[assetId] {
 							// Iterate over jobs associated with asset ID
 							for job in assetJobs {
 
@@ -279,10 +272,6 @@ class MediaUploadQueue : OCActivitySource {
 		if let result = asset.upload(with: core, at: rootItem, preferredFormats: prefferedMediaOutputFormats, progressHandler: nil, uploadCompleteHandler: {
 			uploadCompletion()
 		}) {
-			if let error = result.1 {
-				Log.error("Asset upload failed with error \(error)")
-			}
-
 			return result.0
 		}
 

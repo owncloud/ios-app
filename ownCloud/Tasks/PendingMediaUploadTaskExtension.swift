@@ -41,7 +41,7 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 			return
 		}
 
-		MediaUploadQueue.shared.scheduleUploads(in: bookmark)
+		MediaUploadQueue.shared.setNeedsScheduling(in: bookmark)
 
 		self.completed()
 	}

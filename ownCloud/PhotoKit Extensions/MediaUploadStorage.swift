@@ -145,14 +145,7 @@ extension OCBookmark {
 		})
 	}
 
-	func mediaUploadStorage() -> MediaUploadStorage? {
+	var mediaUploadStorage : MediaUploadStorage? {
 		return self.kvStore?.readObject(forKey: OCBookmark.MediaUploadStorageKey) as? MediaUploadStorage
-	}
-
-	func isMediaUploadJobsStorageEmpty() -> Bool {
-		if let storage = self.mediaUploadStorage(), storage.jobCount > 0 {
-			return false
-		}
-		return true
 	}
 }
