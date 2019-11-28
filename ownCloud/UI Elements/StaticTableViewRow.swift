@@ -42,6 +42,7 @@ enum StaticTableViewRowType {
 	case switchButton
 	case button
 	case datePicker
+	case slider
 }
 
 enum StaticTableViewRowActionType {
@@ -650,6 +651,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
 		cell?.selectionStyle = .none
 		cell?.addSubview(slider)
+		type = .slider
 
 		self.value = value
 		self.action = action

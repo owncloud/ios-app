@@ -58,8 +58,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
-		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(PreviewViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(MediaDisplayViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
 
 		// Action Extensions
 		OCExtensionManager.shared.addExtension(OpenInAction.actionExtension)
@@ -74,17 +75,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
 		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
-		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
-
-		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
-		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
-		OCExtensionManager.shared.addExtension(PendingMediaUploadTaskExtension.taskExtension)
+		OCExtensionManager.shared.addExtension(CollaborateAction.actionExtension)
+		OCExtensionManager.shared.addExtension(LinksAction.actionExtension)
+		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
+		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
+		// OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
 
 		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
 			OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
 			OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
 		}
 
+		// Task extensions
+		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
+		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
+		OCExtensionManager.shared.addExtension(PendingMediaUploadTaskExtension.taskExtension)
+
+		// Theming
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
 		// Licenses

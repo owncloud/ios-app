@@ -117,6 +117,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 		cell?.titleLabel.text = album.name
 		cell?.countLabel.text = album.countString
 		cell?.thumbnailImageView.image = album.thumbnail
+		cell?.selectionStyle = .default
 
 		return cell!
 	}
