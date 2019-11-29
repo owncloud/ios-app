@@ -56,7 +56,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 				self?.password = value
 			}
 		}, placeholder: "Password", keyboardType: .asciiCapable, autocorrectionType: .no, autocapitalizationType: .none, returnKeyType: .continue, identifier: "password")
-		loginMaskSection.add(row: passwordRow!)
+		if let passwordRow = passwordRow {
+			loginMaskSection.add(row: passwordRow)
+		}
 
 		let (proceedButton, cancelButton) = loginMaskSection.addButtonFooter(proceedLabel: "Login", cancelLabel: "Cancel")
 		proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)

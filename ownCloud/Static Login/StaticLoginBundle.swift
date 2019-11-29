@@ -41,23 +41,33 @@ class StaticLoginBundle: NSObject {
 
 				if let profileValues = themingValues["Profiles"] as? NSArray {
 					bundle.profiles = profileValues.map { (profile) -> StaticLoginProfile? in
-						if let profile = profile as? NSDictionary, let identifier = profile["identifier"] as? String, let name = profile["name"] as? String, let prompt = profile["prompt"] as? String, let customLogoName = profile["customLogoName"] as? String, let bookmarkName = profile["bookmarkName"] as? String, let url = profile["url"] as? String, let allowedAuthenticationMethods = profile["allowedAuthenticationMethods"] as? NSArray {
+						if let profile = profile as? NSDictionary {
 							let staticloginProfile = StaticLoginProfile()
-							staticloginProfile.identifier = identifier
-							staticloginProfile.name = name
-							staticloginProfile.prompt = prompt
-							staticloginProfile.customLogoName = customLogoName
-							staticloginProfile.bookmarkName = bookmarkName
-							staticloginProfile.url = URL(string: url)
 
-							let foo = allowedAuthenticationMethods.map { (authenticationMethodTypeIdentifier) -> OCAuthenticationMethodType? in
-								if let authenticationMethodTypeIdentifier = authenticationMethodTypeIdentifier as? String {
-									let authenticationMethod = OCAuthenticationMethodIdentifier(rawValue: authenticationMethodTypeIdentifier)
-									return OCAuthenticationMethod().authenticationMethodTypeForIdentifier(authenticationMethod)
-								}
-								return nil
+							if let identifier = profile["identifier"] as? String {
+								staticloginProfile.identifier = identifier
 							}
-							print("foo \(foo)")
+							if let name = profile["name"] as? String {
+								staticloginProfile.name = name
+							}
+							if let prompt = profile["prompt"] as? String {
+								staticloginProfile.prompt = prompt
+							}
+							if let customLogoName = profile["customLogoName"] as? String {
+								staticloginProfile.customLogoName = customLogoName
+							}
+							if let bookmarkName = profile["bookmarkName"] as? String {
+								staticloginProfile.bookmarkName = bookmarkName
+							}
+							if let url = profile["url"] as? String {
+								staticloginProfile.url = URL(string: url)
+							}
+							if let allowedAuthenticationMethods = profile["allowedAuthenticationMethods"] as? NSArray {
+								staticloginProfile.allowedAuthenticationMethods = allowedAuthenticationMethods as? [OCAuthenticationMethodIdentifier]
+							}
+							if let maxBookmarkCount = profile["maxBookmarkCount"] as? Int {
+								staticloginProfile.maxBookmarkCount = maxBookmarkCount
+							}
 
 							return staticloginProfile
 						}
@@ -68,47 +78,6 @@ class StaticLoginBundle: NSObject {
 			}
 		}
 
-/*
-		let salesProfile = StaticLoginProfile()
-		let publicRelationsProfile = StaticLoginProfile()
-
-
-		bundle.loginThemeStyleID = "com.owncloud.dark"
-
-		// Sales profile
-		salesProfile.identifier = "sales"
-		salesProfile.name = "💶 Sales"
-		salesProfile.prompt = "Enter your Sales username and password:"
-
-		salesProfile.customLogoName = "sales"
-		salesProfile.bookmarkName = "💶 Sales Files"
-
-		salesProfile.url = URL(string: "https://demo.owncloud.org/")
-		salesProfile.allowedAuthenticationMethods = [ .basicAuth ]
-		salesProfile.maxBookmarkCount = 1
-
-		salesProfile.themeStyleID = "com.owncloud.light"
-
-
-
-
-
-		// Customer profile
-		publicRelationsProfile.identifier = "public-relations"
-		publicRelationsProfile.name = "🌍 Public Relations Group"
-		publicRelationsProfile.prompt = "Please press \"Continue\" and enter your PR department login and password."
-
-		publicRelationsProfile.customLogoName = "public-relations"
-		publicRelationsProfile.bookmarkName = "🌍 Public Relations"
-
-		publicRelationsProfile.url = URL(string: "https://owncloud-io.lan/")
-		publicRelationsProfile.allowedAuthenticationMethods = [ .oAuth2 ]
-		publicRelationsProfile.maxBookmarkCount = 1
-
-		publicRelationsProfile.themeStyleID = "com.owncloud.dark"
-
-		bundle.profiles = [ salesProfile, publicRelationsProfile ]
-*/
 		return bundle
 	}
 }

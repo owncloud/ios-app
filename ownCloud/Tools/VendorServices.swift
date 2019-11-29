@@ -68,8 +68,8 @@ class VendorServices : NSObject {
 
 	var appName: String {
 		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
-			if let themingValues = NSDictionary(contentsOfFile: path), let appName = themingValues["AppName"] as? String {
-				return appName
+			if let themingValues = NSDictionary(contentsOfFile: path), let bundleValues = themingValues["Bundle"] as? NSDictionary, let organizationName = bundleValues["organizationName"] as? String {
+				return organizationName
 			}
 		}
 
@@ -86,7 +86,7 @@ class VendorServices : NSObject {
 
 	var isBranded: Bool {
 		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
-			if let themingValues = NSDictionary(contentsOfFile: path), let appName = themingValues["AppName"] as? String, !appName.hasPrefix("ownCloud") {
+			if let themingValues = NSDictionary(contentsOfFile: path), let bundleValues = themingValues["Bundle"] as? NSDictionary, let organizationName = bundleValues["organizationName"] as? String, !organizationName.hasPrefix("ownCloud") {
 				return true
 			}
 		}
