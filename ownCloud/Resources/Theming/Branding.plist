@@ -7,7 +7,7 @@
 	<key>Bundle</key>
 	<dict>
 		<key>organizationLogoName</key>
-		<string>owncloud-logo</string>
+		<string>bookmark-logo</string>
 		<key>organizationBackgroundName</key>
 		<string>brand-background.jpg</string>
 		<key>organizationName</key>

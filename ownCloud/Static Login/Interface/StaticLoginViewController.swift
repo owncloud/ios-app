@@ -72,17 +72,24 @@ class StaticLoginViewController: UIViewController, Themeable {
 	var toolbarShown : Bool = false {
 		didSet {
 			if self.toolbarItems == nil, toolbarShown {
-				let feedbackBarButtonItem = UIBarButtonItem(title: "Feedback".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(sendFeedback))
-				feedbackBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
-
 				let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
 				settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
 
-				self.toolbarItems = [
-					feedbackBarButtonItem,
-					UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
-					settingsBarButtonItem
-				]
+				if VendorServices.shared.isBranded {
+					self.toolbarItems = [
+						UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
+						settingsBarButtonItem
+					]
+				} else {
+					let feedbackBarButtonItem = UIBarButtonItem(title: "Feedback".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(sendFeedback))
+					feedbackBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
+
+					self.toolbarItems = [
+						feedbackBarButtonItem,
+						UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
+						settingsBarButtonItem
+					]
+				}
 			}
 
 			self.navigationController?.setToolbarHidden(!toolbarShown, animated: true)
@@ -181,11 +188,9 @@ class StaticLoginViewController: UIViewController, Themeable {
 		headerLabel?.applyThemeCollection(Theme.shared.activeCollection, itemStyle: .logo)
 
 		if let organizationLogoName = loginBundle.organizationLogoName {
-			Theme.shared.add(tvgResourceFor: organizationLogoName)
-			let image = Theme.shared.image(for: organizationLogoName, size: CGSize(width: 51.0, height: 28.0))?.withRenderingMode(.alwaysTemplate)
+			let image = UIImage(named: organizationLogoName)
 			headerLogoView?.image = image
 			headerLogoView?.contentMode = .scaleAspectFit
-			headerLogoView?.tintColor = Theme.shared.activeCollection.navigationBarColors.labelColor
 		}
 
 		if let organizationBackgroundName = loginBundle.organizationBackgroundName {
