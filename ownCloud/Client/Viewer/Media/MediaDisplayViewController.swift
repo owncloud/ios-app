@@ -18,6 +18,7 @@
 
 import UIKit
 import AVKit
+import MediaPlayer
 import ownCloudSDK
 
 class MediaDisplayViewController : DisplayViewController {
@@ -29,6 +30,11 @@ class MediaDisplayViewController : DisplayViewController {
 	private var playerItem: AVPlayerItem?
 	private var player: AVPlayer?
 	private var playerViewController: AVPlayerViewController?
+
+	// Information for now playing
+	private var mediaItemArtwork: MPMediaItemArtwork?
+	private var mediaItemTitle: String?
+	private var mediaItemArtist: String?
 
 	deinit {
 		playerStatusObservation?.invalidate()
@@ -85,7 +91,11 @@ class MediaDisplayViewController : DisplayViewController {
 				player = AVPlayer(playerItem: playerItem)
 				player?.allowsExternalPlayback = true
 				playerViewController = AVPlayerViewController()
-				playerViewController!.player = player
+				playerViewController!.updatesNowPlayingInfoCenter = false
+
+				if UIApplication.shared.applicationState == .active {
+					playerViewController!.player = player
+				}
 
 				addChild(playerViewController!)
 				playerViewController!.view.frame = self.view.bounds
@@ -97,25 +107,45 @@ class MediaDisplayViewController : DisplayViewController {
 					let imageData = artworkMetadataItem.dataValue,
 					let overlayView = playerViewController?.contentOverlayView {
 
-					let artworkImage = UIImage(data: imageData)
-					let imageView = UIImageView(image: artworkImage)
-					imageView.translatesAutoresizingMaskIntoConstraints = false
-					imageView.contentMode = .center
-					playerViewController?.contentOverlayView?.addSubview(imageView)
+					if let artworkImage = UIImage(data: imageData) {
 
-					NSLayoutConstraint.activate([
-						imageView.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor),
-						imageView.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor)
-					])
+						// Construct image view overlay for AVPlayerViewController
+						let imageView = UIImageView(image: artworkImage)
+						imageView.translatesAutoresizingMaskIntoConstraints = false
+						imageView.contentMode = .center
+						playerViewController?.contentOverlayView?.addSubview(imageView)
+
+						NSLayoutConstraint.activate([
+							imageView.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor),
+							imageView.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor)
+						])
+
+						// Create MPMediaItemArtwork to be shown in 'now playing' in the lock screen
+						mediaItemArtwork = MPMediaItemArtwork(boundsSize: artworkImage.size, requestHandler: { (_) -> UIImage in
+							return artworkImage
+						})
+					}
 				}
 
+				// Extract title meta-data item
+				mediaItemTitle = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyTitle}).first?.value as? String
+
+				// Extract artist meta-data item
+				mediaItemArtist = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyArtist}).first?.value as? String
+
+				// Setup player status observation handler
 				playerStatusObservation = player!.observe(\AVPlayer.status, options: [.initial, .new], changeHandler: { [weak self] (player, _) in
 					if player.status == .readyToPlay {
+
+						self?.setupRemoteTransportControls()
 
 						try? AVAudioSession.sharedInstance().setCategory(.playback)
 						try? AVAudioSession.sharedInstance().setActive(true)
 
 						self?.player?.play()
+
+						self?.updateNowPlayingInfoCenter()
+
 					} else if player.status == .failed {
 						self?.present(error: self?.player?.error)
 					}
@@ -154,6 +184,84 @@ class MediaDisplayViewController : DisplayViewController {
 		OnMainThread {
 			NotificationCenter.default.post(name: MediaDisplayViewController.MediaPlaybackFinishedNotification, object: self.item)
 		}
+	}
+
+	private func setupRemoteTransportControls() {
+		// Get the shared MPRemoteCommandCenter
+		let commandCenter = MPRemoteCommandCenter.shared()
+
+		// Add handler for Play Command
+		commandCenter.playCommand.addTarget { [unowned self] _ in
+			if let player = self.player {
+				if player.rate == 0.0 {
+					player.play()
+					return .success
+				}
+			}
+
+			return .commandFailed
+		}
+
+		// Add handler for Pause Command
+		commandCenter.pauseCommand.addTarget { [unowned self] _ in
+			if let player = self.player {
+				if player.rate == 1.0 {
+					player.pause()
+					return .success
+				}
+			}
+
+			return .commandFailed
+		}
+
+		commandCenter.skipForwardCommand.isEnabled = true
+		commandCenter.skipForwardCommand.addTarget { [unowned self] (_) -> MPRemoteCommandHandlerStatus in
+			if let player = self.player {
+				let time = player.currentTime() + CMTime(seconds: 10.0, preferredTimescale: 1)
+				player.seek(to: time) { [weak self] (finished) in
+					if finished {
+						MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self?.playerItem?.currentTime().seconds
+					}
+				}
+			}
+			return .commandFailed
+		}
+
+		commandCenter.skipBackwardCommand.isEnabled = true
+		commandCenter.skipBackwardCommand.addTarget { [unowned self] (_) -> MPRemoteCommandHandlerStatus in
+			if let player = self.player {
+				let time = player.currentTime() - CMTime(seconds: 10.0, preferredTimescale: 1)
+				player.seek(to: time) { [weak self] (finished) in
+					if finished {
+						MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self?.playerItem?.currentTime().seconds
+					}
+				}
+			}
+			return .commandFailed
+		}
+		commandCenter.seekForwardCommand.isEnabled = false
+		commandCenter.seekBackwardCommand.isEnabled = false
+	}
+
+	private func updateNowPlayingInfoCenter() {
+		guard let player = self.player else { return }
+		guard let playerItem = self.playerItem else { return }
+
+		var nowPlayingInfo = [String : Any]()
+
+		nowPlayingInfo[MPMediaItemPropertyTitle] = mediaItemTitle
+		nowPlayingInfo[MPMediaItemPropertyArtist] = mediaItemArtist
+		nowPlayingInfo[MPNowPlayingInfoPropertyCurrentPlaybackDate] = self.playerItem?.currentDate()
+		nowPlayingInfo[MPNowPlayingInfoPropertyAssetURL] = source
+		nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = playerItem.currentTime().seconds
+		nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = playerItem.asset.duration.seconds
+		nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
+
+		if mediaItemArtwork != nil {
+			nowPlayingInfo[MPMediaItemPropertyArtwork] = mediaItemArtwork
+		}
+
+		MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
 	}
 }
 
