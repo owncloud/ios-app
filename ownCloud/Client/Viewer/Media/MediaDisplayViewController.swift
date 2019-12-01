@@ -191,8 +191,8 @@ class MediaDisplayViewController : DisplayViewController {
 		let commandCenter = MPRemoteCommandCenter.shared()
 
 		// Add handler for Play Command
-		commandCenter.playCommand.addTarget { [unowned self] _ in
-			if let player = self.player {
+		commandCenter.playCommand.addTarget { [weak self] _ in
+			if let player = self?.player {
 				if player.rate == 0.0 {
 					player.play()
 					return .success
@@ -203,8 +203,8 @@ class MediaDisplayViewController : DisplayViewController {
 		}
 
 		// Add handler for Pause Command
-		commandCenter.pauseCommand.addTarget { [unowned self] _ in
-			if let player = self.player {
+		commandCenter.pauseCommand.addTarget { [weak self] _ in
+			if let player = self?.player {
 				if player.rate == 1.0 {
 					player.pause()
 					return .success
@@ -214,11 +214,12 @@ class MediaDisplayViewController : DisplayViewController {
 			return .commandFailed
 		}
 
+		// Add handler for skip forward command
 		commandCenter.skipForwardCommand.isEnabled = true
-		commandCenter.skipForwardCommand.addTarget { [unowned self] (_) -> MPRemoteCommandHandlerStatus in
-			if let player = self.player {
+		commandCenter.skipForwardCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
+			if let player = self?.player {
 				let time = player.currentTime() + CMTime(seconds: 10.0, preferredTimescale: 1)
-				player.seek(to: time) { [weak self] (finished) in
+				player.seek(to: time) { (finished) in
 					if finished {
 						MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self?.playerItem?.currentTime().seconds
 					}
@@ -227,11 +228,12 @@ class MediaDisplayViewController : DisplayViewController {
 			return .commandFailed
 		}
 
+		// Add handler for skip backward command
 		commandCenter.skipBackwardCommand.isEnabled = true
-		commandCenter.skipBackwardCommand.addTarget { [unowned self] (_) -> MPRemoteCommandHandlerStatus in
-			if let player = self.player {
+		commandCenter.skipBackwardCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
+			if let player = self?.player {
 				let time = player.currentTime() - CMTime(seconds: 10.0, preferredTimescale: 1)
-				player.seek(to: time) { [weak self] (finished) in
+				player.seek(to: time) { (finished) in
 					if finished {
 						MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self?.playerItem?.currentTime().seconds
 					}
@@ -239,6 +241,8 @@ class MediaDisplayViewController : DisplayViewController {
 			}
 			return .commandFailed
 		}
+
+		// Disable seek commands
 		commandCenter.seekForwardCommand.isEnabled = false
 		commandCenter.seekBackwardCommand.isEnabled = false
 	}
