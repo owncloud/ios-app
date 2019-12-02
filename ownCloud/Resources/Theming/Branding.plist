@@ -4,6 +4,8 @@
 <dict>
 	<key>canAddAccount</key>
 	<true/>
+	<key>feedbackMail</key>
+	<string>ios-app@owncloud.com</string>
 	<key>Bundle</key>
 	<dict>
 		<key>organizationLogoName</key>
