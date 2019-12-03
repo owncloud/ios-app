@@ -376,13 +376,13 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		self.showPreviewButton?.isHidden = false
 	}
 
-	@objc func optionsBarButtonPressed() {
+	@objc func optionsBarButtonPressed(_ sender: UIBarButtonItem) {
 		guard let core = core, let item = item else {
 			return
 		}
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
-		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: sender)
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: nil) {
 			self.present(asCard: moreViewController, animated: true)

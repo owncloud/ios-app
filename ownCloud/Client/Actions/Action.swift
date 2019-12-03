@@ -82,14 +82,16 @@ class ActionContext: OCExtensionContext {
 	weak var core: OCCore?
 	weak var query: OCQuery?
 	var items: [OCItem]
+	weak var sender: AnyObject?
 
 	// MARK: - Init & Deinit.
-	init(viewController: UIViewController, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
+	init(viewController: UIViewController, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
 		self.items = items
 
 		super.init()
 
 		self.viewController = viewController
+		self.sender = sender
 		self.core = core
 		self.location = location
 
