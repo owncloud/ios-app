@@ -26,7 +26,7 @@ class DisplayHostViewController: UIPageViewController {
 	}
 
 	// MARK: - Constants
-	let imageFilterRegexp: String = "\\A((image/*))" // Filters all the mime types that are images (incluiding gif and svg)
+	let mediaFilterRegexp: String = "\\A(((image|audio|video)/*))" // Filters all the mime types that are images (incluiding gif and svg)
 
 	// MARK: - Instance Variables
 	weak private var core: OCCore?
@@ -61,7 +61,7 @@ class DisplayHostViewController: UIPageViewController {
 
 			query.requestChangeSet(withFlags: .onlyResults) { ( _, changeSet) in
 				guard let changeSet = changeSet  else { return }
-				if let queryResult = changeSet.queryResult, let newItems = self?.applyImageFilesFilter(items: queryResult) {
+				if let queryResult = changeSet.queryResult, let newItems = self?.applyMediaFilesFilter(items: queryResult) {
 					let shallUpdateDatasource = self?.items?.count != newItems.count ? true : false
 
 					self?.items = newItems
@@ -105,6 +105,8 @@ class DisplayHostViewController: UIPageViewController {
 				displayController.itemIndex = currentIndex
 			}
 		}
+
+		NotificationCenter.default.addObserver(self, selector: #selector(handleMediaPlaybackFinished(notification:)), name: MediaDisplayViewController.MediaPlaybackFinishedNotification, object: nil)
 	}
 
 	override var childForHomeIndicatorAutoHidden : UIViewController? {
@@ -247,9 +249,9 @@ class DisplayHostViewController: UIPageViewController {
 	}
 
 	// MARK: - Filters
-	private func applyImageFilesFilter(items: [OCItem]) -> [OCItem] {
-		if initialItem.mimeType?.matches(regExp: imageFilterRegexp) ?? false {
-			let filteredItems = items.filter({$0.type != .collection && $0.mimeType?.matches(regExp: self.imageFilterRegexp) ?? false})
+	private func applyMediaFilesFilter(items: [OCItem]) -> [OCItem] {
+		if initialItem.mimeType?.matches(regExp: mediaFilterRegexp) ?? false {
+			let filteredItems = items.filter({$0.type != .collection && $0.mimeType?.matches(regExp: self.mediaFilterRegexp) ?? false})
 			return filteredItems
 		} else {
 			let filteredItems = items.filter({$0.type != .collection && $0.fileID == self.initialItem.fileID})
@@ -321,5 +323,15 @@ extension DisplayHostViewController: UIPageViewControllerDelegate {
 extension DisplayHostViewController: Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.view.backgroundColor = .black
+	}
+}
+
+extension DisplayHostViewController {
+	@objc private func handleMediaPlaybackFinished(notification:Notification) {
+		if let mediaController = self.viewControllers?.first as? MediaDisplayViewController {
+			if let vc = vendNewViewController(from: mediaController, .after) {
+				self.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
+			}
+		}
 	}
 }
