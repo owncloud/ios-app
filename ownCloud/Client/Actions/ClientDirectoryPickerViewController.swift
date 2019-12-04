@@ -219,7 +219,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		// Actions for Create Folder
 		if let core = self.core, let rootItem = query.rootItem {
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .folderAction)
-			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
+			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation, sender: sender)
 
 			let actions = Action.sortedApplicableActions(for: actionContext).filter { (action) -> Bool in
 				if action.actionExtension.identifier == OCExtensionIdentifier("com.owncloud.action.createFolder") {
