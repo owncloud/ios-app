@@ -53,6 +53,16 @@ class MediaUploadQueue : OCActivitySource {
 		self.setNeedsScheduling(in: bookmark)
 	}
 
+	func addUploads(_ assets:[PHAsset], for bookmark:OCBookmark, at path:String) {
+		bookmark.modifyMediaUploadStorage { (storage) -> MediaUploadStorage in
+			for asset in assets {
+				storage.addJob(with: asset.localIdentifier, targetPath: path)
+			}
+			return storage
+		}
+		self.setNeedsScheduling(in: bookmark)
+	}
+
 	private var _needsSchedulingCount : Int = 0
 	func setNeedsScheduling(in bookmark: OCBookmark) {
 		// Increment counter by one

@@ -49,42 +49,42 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 	private func uploadMediaAssets(for bookmark:OCBookmark, at path:String) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
-		var photoAssets = Set<PHAsset>()
+		var photoAssets = [PHAsset]()
 
 		// Add photo assets
 		if let uploadPhotosAfter = userDefaults.instantUploadPhotosAfter {
 			let fetchResult = self.fetchAssetsFromCameraRoll(.images, createdAfter: uploadPhotosAfter)
 			if fetchResult != nil {
 				fetchResult!.enumerateObjects({ (asset, _, _) in
-					photoAssets.insert(asset)
+					photoAssets.append(asset)
 				})
 			}
 		}
 
 		Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Importing \(photoAssets.count) photo assets")
 
-		for asset in photoAssets {
-			MediaUploadQueue.shared.addUpload(asset, for: bookmark, at: path)
-			userDefaults.instantUploadPhotosAfter = asset.modificationDate
+		if photoAssets.count > 0 {
+			MediaUploadQueue.shared.addUploads(Array(photoAssets), for: bookmark, at: path)
+			userDefaults.instantUploadPhotosAfter = photoAssets.last?.modificationDate
 		}
 
-		var videoAssets = Set<PHAsset>()
+		var videoAssets = [PHAsset]()
 
 		// Add video assets
 		if let uploadVideosAfter = userDefaults.instantUploadVideosAfter {
 			let fetchResult = self.fetchAssetsFromCameraRoll(.videos, createdAfter: uploadVideosAfter)
 			if fetchResult != nil {
 				fetchResult!.enumerateObjects({ (asset, _, _) in
-					videoAssets.insert(asset)
+					videoAssets.append(asset)
 				})
 			}
 		}
 
 		Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Importing \(videoAssets.count) video assets")
 
-		for asset in videoAssets {
-			MediaUploadQueue.shared.addUpload(asset, for: bookmark, at: path)
-			userDefaults.instantUploadVideosAfter = asset.modificationDate
+		if videoAssets.count > 0 {
+			MediaUploadQueue.shared.addUploads(videoAssets, for: bookmark, at: path)
+			userDefaults.instantUploadVideosAfter = videoAssets.last?.modificationDate
 		}
 	}
 

@@ -61,9 +61,7 @@ class UploadMediaAction: UploadBaseAction {
 
 				guard let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection else { return }
 
-				for asset in assets {
-					MediaUploadQueue.shared.addUpload(asset, for: bookmark, at: path)
-				}
+				MediaUploadQueue.shared.addUploads(assets, for: bookmark, at: path)
 			}
 			let navigationController = ThemeNavigationController(rootViewController: photoAlbumViewController)
 
