@@ -62,8 +62,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
-		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(PreviewViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(MediaDisplayViewController.displayExtension)
+		OCExtensionManager.shared.addExtension(ImageDisplayViewController.displayExtension)
 
 		// Action Extensions
 		OCExtensionManager.shared.addExtension(OpenInAction.actionExtension)
@@ -76,11 +77,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
-		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
-		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
-
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
 		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
+		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
+		OCExtensionManager.shared.addExtension(CollaborateAction.actionExtension)
+		OCExtensionManager.shared.addExtension(LinksAction.actionExtension)
+		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
+		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
+		// OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
+		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
+			OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
+			OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
+		}
 
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
@@ -145,5 +154,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		])
 
 		OCLicenseManager.shared.add(appStoreLicenseProvider)
+	}
+
+	// MARK: UISceneSession Lifecycle
+	@available(iOS 13.0, *)
+	func application(_ application: UIApplication,
+					 configurationForConnecting connectingSceneSession: UISceneSession,
+					 options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+		return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+	}
+
+	@available(iOS 13.0, *)
+	func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
 	}
 }
