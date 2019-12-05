@@ -24,14 +24,24 @@ The `OCLicense` set of classes allow gating and granting access to features thro
 
 - `OCLicenseOffer` represents an offer to purchase a product
 
+- `OCLicenseTransaction` represent a transaction and provide information on:
+	- quantity and product
+	- type of transaction (trial, subscription, etc.)
+	- transaction date
+	- expiration date
+	- on purpose: **does not** contain financial details
+
 - `OCLicenseProvider` retrieve and provide information 
 	- about licensed/purchased products in the form of `OCLicenseEntitlement`s, sourced from f.ex.
 		- In App Purchases
 		- Subscriptions
 		- License Information pulled from a server
 		- App Store Receipt original purchase date
-	- about offers in the form of `OCLicenseOffer`, source from f.ex.
+	- about offers in the form of `OCLicenseOffer`s, sourced from f.ex.
 		- StoreKit (App Store)
+	- about transactions in the form of `OCLicenseTransaction`s, sourced from f.ex.
+		- App Store Receipt IAPs
+		- OC server license endpoint
 
 - `OCLicenseManager` 
 	- puts all these pieces together and provides APIs to determine if the usage of a certain feature is allowed
@@ -47,6 +57,7 @@ The `OCLicense` set of classes allow gating and granting access to features thro
 	- `OCLicenseProvider`s
 		- `OCLicenseEntitlement`s
 		- `OCLicenseOffer`s
+		- `OCLicenseTransaction`s
 	- `OCLicenseObserver`
 		- app code
 
@@ -82,7 +93,8 @@ The `OCLicense` set of classes allow gating and granting access to features thro
 
 ## Setup
 
-To comply with `StoreKit` requirements, the `OCLicense` system needs to be completely set up in the `-[UIApplicationDelegate application:didFinishLaunchingWithOptions:]` method. In particular, the `OCLicenseAppStoreProvider` method needs to be added to `OCLicenseManager` in that method.
+To comply with `StoreKit` requirements, the `OCLicense` system needs to
+- be completely set up in the `-[UIApplicationDelegate application:didFinishLaunchingWithOptions:]` method. In particular, the `OCLicenseAppStoreProvider` method needs to be added to `OCLicenseManager` in that method.
 
 ## Reference
 ### App Store Receipt parsing

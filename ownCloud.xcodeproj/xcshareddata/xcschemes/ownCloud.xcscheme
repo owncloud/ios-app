@@ -145,6 +145,11 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:authentication-oauth2.oa2-browser-session-class"
+            value = "string:UIWebView"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:core.override-reachability-signal"
             value = "true"
             isEnabled = "NO">

@@ -18,8 +18,19 @@
 
 #import "OCLicenseProvider.h"
 #import "OCLicenseEntitlement.h"
+#import "OCLicenseOffer.h"
 
 @implementation OCLicenseProvider
+
+- (instancetype)initWithIdentifier:(OCLicenseProviderIdentifier)identifier
+{
+	if ((self = [super init]) != nil)
+	{
+		_identifier = identifier;
+	}
+
+	return (self);
+}
 
 - (void)setEntitlements:(NSArray<OCLicenseEntitlement *> *)entitlements
 {
@@ -39,6 +50,30 @@
 	_entitlements = entitlements;
 }
 
+- (void)setOffers:(NSArray<OCLicenseOffer *> *)offers
+{
+	for (OCLicenseOffer *offer in _offers)
+	{
+		if ([offers indexOfObjectIdenticalTo:offer] == NSNotFound)
+		{
+			offer.provider = nil;
+		}
+	}
+
+	for (OCLicenseOffer *offer in offers)
+	{
+		offer.provider = self;
+	}
+
+	_offers = offers;
+}
+
+#pragma mark - Transaction access
+- (void)retrieveTransactionsWithCompletionHandler:(void (^)(NSError * _Nullable, NSArray<OCLicenseTransaction *> * _Nullable))completionHandler
+{
+	completionHandler(nil, nil);
+}
+
 #pragma mark - Control
 - (void)startProvidingWithCompletionHandler:(OCLicenseProviderCompletionHandler)completionHandler
 {
@@ -48,6 +83,32 @@
 - (void)stopProvidingWithCompletionHandler:(OCLicenseProviderCompletionHandler)completionHandler
 {
 
+}
+
+#pragma mark - Storage
+- (NSData *)storedData
+{
+	if (self.storageURL != nil)
+	{
+		return ([NSData dataWithContentsOfURL:self.storageURL]);
+	}
+
+	return (nil);
+}
+
+- (void)setStoredData:(NSData *)storedData
+{
+	if (self.storageURL != nil)
+	{
+		if (storedData != nil)
+		{
+			[storedData writeToURL:self.storageURL atomically:YES];
+		}
+		else
+		{
+			[NSFileManager.defaultManager removeItemAtURL:self.storageURL error:NULL];
+		}
+	}
 }
 
 @end

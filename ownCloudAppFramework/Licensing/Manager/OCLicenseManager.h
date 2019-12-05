@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class OCLicenseProduct;
 @class OCLicenseOffer;
 @class OCLicenseObserver;
+@class OCLicenseTransaction;
 
 @interface OCLicenseManager : NSObject
 
@@ -48,12 +49,20 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Provider management
 - (void)addProvider:(OCLicenseProvider *)provider; //!< Add an entitlement and offer provider to the license manager
 - (void)removeProvider:(OCLicenseProvider *)provider; //!< Remove an entitlement and offer provider from the license manager
+- (nullable OCLicenseProvider *)providerForIdentifier:(OCLicenseProviderIdentifier)providerIdentifier; //!< Retrieve a provider by its identifier
 
 #pragma mark - Observation
 - (OCLicenseObserver *)observeProducts:(nullable NSArray<OCLicenseProductIdentifier> *)productIdentifiers features:(nullable NSArray<OCLicenseFeatureIdentifier> *)featureIdentifiers inEnvironment:(OCLicenseEnvironment *)environment withOwner:(nullable id)owner updateHandler:(OCLicenseObserverAuthorizationStatusUpdateHandler)updateHandler; //!< Starts observing the authorization status of the products and features identified by their respective identifiers, in the passed environment. The passed .updateHandler will be called whenever the authorization status changes. An owner to which only a weak reference is stored can be passed for convenience. If the owner is deallocated, the observation will stop automatically. 
 - (OCLicenseObserver *)observeOffersForProducts:(nullable NSArray<OCLicenseProductIdentifier> *)productIdentifiers features:(nullable NSArray<OCLicenseFeatureIdentifier> *)featureIdentifiers withOwner:(nullable id)owner updateHandler:(OCLicenseObserverOffersUpdateHandler)updateHandler; //!< Starts observing offers covering the provided products and features. The passed .updateHandler will be called whenever the offers change. An owner to which only a weak reference is stored can be passed for convenience. If the owner is deallocated, the observation will stop automatically.
 
 - (void)stopObserver:(OCLicenseObserver *)observer;
+
+#pragma mark - One-off status info
+- (OCLicenseAuthorizationStatus)authorizationStatusForFeature:(OCLicenseFeatureIdentifier)featureIdentifier inEnvironment:(OCLicenseEnvironment *)environment;
+- (OCLicenseAuthorizationStatus)authorizationStatusForProduct:(OCLicenseProductIdentifier)productIdentifier inEnvironment:(OCLicenseEnvironment *)environment;
+
+#pragma mark - Transactions
+- (void)retrieveAllTransactionsWithCompletionHandler:(void(^)(NSError * _Nullable error, NSArray<NSArray<OCLicenseTransaction *> *> * _Nullable transactionsByProvider))completionHandler;
 
 @end
 

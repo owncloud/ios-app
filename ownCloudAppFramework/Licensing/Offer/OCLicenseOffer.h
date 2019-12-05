@@ -18,16 +18,20 @@
 
 #import <Foundation/Foundation.h>
 #import "OCLicenseTypes.h"
+#import "OCLicenseDuration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class OCLicenseProvider;
+@class OCLicenseDuration;
+@class OCLicenseProduct;
 
-typedef void(^OCLicenseOfferCommitHandler)(OCLicenseOfferCommitOptions options);
+typedef void(^OCLicenseOfferCommitHandler)(OCLicenseOffer *offer, OCLicenseOfferCommitOptions _Nullable options);
 
 typedef NS_ENUM(NSUInteger, OCLicenseOfferState)
 {
 	OCLicenseOfferStateUncommitted,	//!< The offer has not been commited to (bought) by the user.
+	OCLicenseOfferStateUnavailable, //!< The offer is not available
 	OCLicenseOfferStateRedundant,	//!< The user has not committed to (bought) the offer, but committed to (an)other offer(s) that also cover the entirety of the contents of this offer. It is therefore redundant.
 
 	OCLicenseOfferStateInProgress,	//!< The user is committing to (buying) the offer, but the commitment is still being processed.
@@ -45,10 +49,20 @@ typedef NS_ENUM(NSUInteger, OCLicenseOfferState)
 
 #pragma mark - Offer type
 @property(assign) OCLicenseType type;
+
+#pragma mark - Product info
 @property(strong) OCLicenseProductIdentifier productIdentifier;
+@property(nullable,strong) OCLicenseOfferGroupIdentifier groupIdentifier;
+
+@property(nullable,strong,nonatomic) OCLicenseProduct *product;
+
+@property(nullable,strong) NSString *localizedTitle;
+@property(nullable,strong) NSString *localizedDescription;
 
 #pragma mark - State
 @property(assign) OCLicenseOfferState state;
+
+- (OCLicenseOfferState)stateInEnvironment:(OCLicenseEnvironment *)environment; //!< Computes the state based on environment. The state OCLicenseOfferStateRedundant can only occur as a result of this method, not as value for .state.
 
 #pragma mark - Availability
 @property(nullable,strong) NSDate *fromDate;
@@ -61,9 +75,12 @@ typedef NS_ENUM(NSUInteger, OCLicenseOfferState)
 
 @property(nonatomic,strong) NSString *localizedPriceTag;
 
+@property(nonatomic,strong) OCLicenseDuration *trialDuration;
+@property(nonatomic,strong) OCLicenseDuration *subscriptionTermDuration;
+
 #pragma mark - Request offer / Make purchase
 @property(nullable,copy) OCLicenseOfferCommitHandler commitHandler; //!< Used as -commitWithOptions: implementation if provided
-- (void)commitWithOptions:(OCLicenseOfferCommitOptions)options; //!< Commits to purchasing the offer, entering a purchase UI flow
+- (void)commitWithOptions:(nullable OCLicenseOfferCommitOptions)options; //!< Commits to purchasing the offer, entering a purchase UI flow
 
 @end
 

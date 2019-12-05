@@ -24,6 +24,7 @@ typedef NSString* OCLicenseProviderIdentifier;
 typedef NSString* OCLicenseEnvironmentIdentifier;
 typedef NSString* OCLicenseEntitlementIdentifier;
 typedef NSString* OCLicenseOfferIdentifier;
+typedef NSString* OCLicenseOfferGroupIdentifier;
 
 typedef NSString* OCLicenseOfferCommitOption;
 typedef NSDictionary<OCLicenseOfferCommitOption,id>* OCLicenseOfferCommitOptions;

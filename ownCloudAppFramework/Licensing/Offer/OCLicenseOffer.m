@@ -19,6 +19,8 @@
 #import <ownCloudSDK/ownCloudSDK.h>
 #import "OCLicenseOffer.h"
 #import "OCLicenseProduct.h"
+#import "OCLicenseProvider.h"
+#import "OCLicenseManager.h"
 
 @implementation OCLicenseOffer
 
@@ -31,6 +33,12 @@
 	offer.productIdentifier = productIdentifier;
 
 	return (offer);
+}
+
+#pragma mark - Product info
+- (OCLicenseProduct *)product
+{
+	return ([self.provider.manager productWithIdentifier:self.productIdentifier]);
 }
 
 #pragma mark - Availability
@@ -47,6 +55,26 @@
 	}
 
 	return (_available);
+}
+
+- (OCLicenseOfferState)stateInEnvironment:(OCLicenseEnvironment *)environment
+{
+	if (!self.available)
+	{
+		// Offer is not currently available
+		return (OCLicenseOfferStateUnavailable);
+	}
+
+	if (_state == OCLicenseOfferStateUncommitted)
+	{
+		if ([self.provider.manager authorizationStatusForProduct:_productIdentifier inEnvironment:environment] == OCLicenseAuthorizationStatusGranted)
+		{
+			// Contents of offer already paid for
+			return (OCLicenseOfferStateRedundant);
+		}
+	}
+
+	return (_state);
 }
 
 #pragma mark - Price information
@@ -81,7 +109,10 @@
 #pragma mark - Request offer / Make purchase
 - (void)commitWithOptions:(OCLicenseOfferCommitOptions)options
 {
-	
+	if (_commitHandler != nil)
+	{
+		_commitHandler(self, options);
+	}
 }
 
 #pragma mark - Description
@@ -91,6 +122,10 @@
 	{
 		case OCLicenseOfferStateUncommitted:
 			return (@"uncommitted");
+		break;
+
+		case OCLicenseOfferStateUnavailable:
+			return (@"unavailable");
 		break;
 
 		case OCLicenseOfferStateRedundant:
@@ -111,7 +146,14 @@
 
 - (NSString *)description
 {
-	return ([NSString stringWithFormat:@"<%@: %p, type: %@, identifier: %@, state: %@, productIdentifier: %@, localizedPriceTag: %@>", NSStringFromClass(self.class), self, [OCLicenseProduct stringForType:self.type], self.identifier, [OCLicenseOffer stringForOfferState:self.state], self.productIdentifier, self.localizedPriceTag]);
+	return ([NSString stringWithFormat:@"<%@: %p, type: %@, identifier: %@, state: %@, available: %d, productIdentifier: %@, localizedPriceTag: %@%@%@%@%@%@%@>", NSStringFromClass(self.class), self, [OCLicenseProduct stringForType:self.type], self.identifier, [OCLicenseOffer stringForOfferState:self.state], self.available, self.productIdentifier, self.localizedPriceTag,
+		((_fromDate != nil) ? [@", fromDate: " stringByAppendingString:_fromDate.description] : @""),
+		((_untilDate != nil) ? [@", untilDate: " stringByAppendingString:_untilDate.description] : @""),
+		((_trialDuration != nil) ? [@", trialDuration: " stringByAppendingString:_trialDuration.localizedDescription] : @""),
+		((_subscriptionTermDuration != nil) ? [@", subscriptionTermDuration: " stringByAppendingString:_subscriptionTermDuration.localizedDescription] : @""),
+		((_localizedTitle != nil) ? [@", localizedTitle: " stringByAppendingString:_localizedTitle] : @""),
+		((_localizedDescription != nil) ? [@", localizedDescription: " stringByAppendingString:_localizedDescription] : @"")
+	]);
 }
 
 @end

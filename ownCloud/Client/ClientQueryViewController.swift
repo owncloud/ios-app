@@ -508,6 +508,12 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 	@objc func plusBarButtonPressed(_ sender: UIBarButtonItem) {
 
+//		let licenseOffer = LicenseOffersViewController(withFeature: "document-scanner")
+//
+//		self.present(licenseOffer, animated: true)
+//
+//		return
+
 		let controller = ThemedAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
 		// Actions for folderAction

@@ -19,28 +19,30 @@
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
 #import "OCLicenseOffer.h"
+#import "OCLicenseDuration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NSString* OCLicenseAppStoreItemIdentifier;
+typedef NSString* OCLicenseAppStoreProductIdentifier;
 
 @interface OCLicenseAppStoreItem : NSObject
 
-@property(strong,readonly) OCLicenseAppStoreItemIdentifier identifier;
+@property(strong,readonly) OCLicenseAppStoreProductIdentifier identifier;
 
 @property(assign,readonly) OCLicenseType type;
-@property(assign,readonly) NSTimeInterval trialDuration;
+
+@property(strong,readonly) OCLicenseDuration *trialDuration;
 
 @property(strong,readonly) OCLicenseProductIdentifier productIdentifier;
 
 @property(nullable,strong) SKProduct *storeProduct;
 @property(nullable,strong) OCLicenseOffer *offer;
 
-+ (instancetype)trialWithAppStoreIdentifier:(OCLicenseAppStoreItemIdentifier)identifier trialDuration:(NSTimeInterval)trialDuration productIdentifier:(OCLicenseProductIdentifier)productIdentifier;
++ (instancetype)trialWithAppStoreIdentifier:(OCLicenseAppStoreProductIdentifier)identifier trialDuration:(OCLicenseDuration *)trialDuration productIdentifier:(OCLicenseProductIdentifier)productIdentifier;
 
-+ (instancetype)nonConsumableIAPWithAppStoreIdentifier:(OCLicenseAppStoreItemIdentifier)identifier productIdentifier:(OCLicenseProductIdentifier)productIdentifier;
++ (instancetype)nonConsumableIAPWithAppStoreIdentifier:(OCLicenseAppStoreProductIdentifier)identifier productIdentifier:(OCLicenseProductIdentifier)productIdentifier;
 
-+ (instancetype)subscriptionWithAppStoreIdentifier:(OCLicenseAppStoreItemIdentifier)identifier productIdentifier:(OCLicenseProductIdentifier)productIdentifier;
++ (instancetype)subscriptionWithAppStoreIdentifier:(OCLicenseAppStoreProductIdentifier)identifier productIdentifier:(OCLicenseProductIdentifier)productIdentifier trialDuration:(OCLicenseDuration *)trialDuration;
 
 @end
 

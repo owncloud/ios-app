@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -31,6 +32,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
 		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
+
+		// Set up license management
+		self.setupLicenseManagement()
 
 		// Set up app
 		window = ThemeWindow(frame: UIScreen.main.bounds)
@@ -125,5 +129,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Log.debug("AppDelegate: handle events for background URL session with identifier \(identifier)")
 
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
+	}
+
+	func setupLicenseManagement() {
+		// Set up features and products
+		OCLicenseManager.shared.register(OCLicenseFeature(identifier: "document-scanner"))
+		OCLicenseManager.shared.register(OCLicenseProduct(identifier: "single.document-scanner", name: "Document scanner".localized, description: "Allows scanning documents and photos with the camera of your device", contents: ["document-scanner"]))
+		OCLicenseManager.shared.register(OCLicenseProduct(identifier: "bundle.pro", name: "Pro Features".localized, description: "Pro Features include the document scanner", contents: ["document-scanner"]))
+
+		// Set up App Store License Provider
+		let appStoreLicenseProvider = OCLicenseAppStoreProvider(items: [
+			OCLicenseAppStoreItem.trial(withAppStoreIdentifier: "trial.pro.30days", trialDuration: OCLicenseDuration(unit: .day, length: 30), productIdentifier: "bundle.pro"),
+			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentsharing", productIdentifier: "single.document-scanner"),
+			OCLicenseAppStoreItem.subscription(withAppStoreIdentifier: "bundle.pro", productIdentifier: "bundle.pro", trialDuration: OCLicenseDuration(unit: .day, length: 14))
+		])
+
+		OCLicenseManager.shared.add(appStoreLicenseProvider)
 	}
 }

@@ -298,6 +298,59 @@
 	}
 }
 
+- (nullable OCLicenseProvider *)providerForIdentifier:(OCLicenseProviderIdentifier)providerIdentifier
+{
+	OCLicenseProvider *result = nil;
+
+	@synchronized(self)
+	{
+		for (OCLicenseProvider *provider in _providers)
+		{
+			if ([provider.identifier isEqual:providerIdentifier])
+			{
+				result = provider;
+				break;
+			}
+		}
+	}
+
+	return (result);
+}
+
+#pragma mark - Transactions
+- (void)retrieveAllTransactionsWithCompletionHandler:(void(^)(NSError *error, NSArray<NSArray<OCLicenseTransaction *> *> *transactionsByProvider))completionHandler
+{
+	dispatch_group_t retrieveGroup = dispatch_group_create();
+	__block NSMutableArray <NSArray<OCLicenseTransaction *> *> *transactionsByProvider = [NSMutableArray new];
+	__block NSError *allError = nil;
+
+	@synchronized(self)
+	{
+		for (OCLicenseProvider *provider in _providers)
+		{
+			dispatch_group_enter(retrieveGroup);
+
+			[provider retrieveTransactionsWithCompletionHandler:^(NSError * _Nonnull error, NSArray<OCLicenseTransaction *> * _Nullable transactions) {
+				if (error != nil)
+				{
+					allError = error;
+				}
+
+				if (transactions != nil)
+				{
+					[transactionsByProvider addObject:transactions];
+				}
+
+				dispatch_group_leave(retrieveGroup);
+			}];
+		}
+	}
+
+	dispatch_group_notify(retrieveGroup, dispatch_get_main_queue(), ^{
+		completionHandler(allError, transactionsByProvider);
+	});
+}
+
 #pragma mark - Observation
 - (void)_addObserver:(OCLicenseObserver *)observer withOwner:(id)owner
 {
@@ -545,6 +598,35 @@
 			}
 		}
 	}
+}
+
+#pragma mark - One-off status info
+- (OCLicenseAuthorizationStatus)authorizationStatusForFeature:(OCLicenseFeatureIdentifier)featureIdentifier inEnvironment:(OCLicenseEnvironment *)environment
+{
+	OCLicenseAuthorizationStatus authStatus = OCLicenseAuthorizationStatusUnknown;
+	OCLicenseFeature *feature;
+
+	if ((feature = [self featureWithIdentifier:featureIdentifier]) != nil)
+	{
+		// Feature found => compute authorization status
+		authStatus = [self _authorizationStatusForEntitlements:feature.entitlements inEnvironment:environment];
+	}
+
+	return (authStatus);
+}
+
+- (OCLicenseAuthorizationStatus)authorizationStatusForProduct:(OCLicenseProductIdentifier)productIdentifier inEnvironment:(OCLicenseEnvironment *)environment
+{
+	OCLicenseAuthorizationStatus authStatus = OCLicenseAuthorizationStatusUnknown;
+	OCLicenseProduct *product;
+
+	if ((product = [self productWithIdentifier:productIdentifier]) != nil)
+	{
+		// Product found => compute authorization status
+		authStatus = [self _authorizationStatusForEntitlements:product.entitlements inEnvironment:environment];
+	}
+
+	return (authStatus);
 }
 
 #pragma mark - Updates

@@ -22,12 +22,14 @@ import WebKit
 import MessageUI
 import SafariServices
 import ownCloudSDK
+import ownCloudApp
 
 class MoreSettingsSection: SettingsSection {
 	// MARK: - More Settings Cells
 
 	private var helpRow: StaticTableViewRow?
 	private var sendFeedbackRow: StaticTableViewRow?
+	private var purchasesRow: StaticTableViewRow?
 	private var recommendRow: StaticTableViewRow?
 	private var privacyPolicyRow: StaticTableViewRow?
 	private var acknowledgementsRow: StaticTableViewRow?
@@ -65,7 +67,17 @@ class MoreSettingsSection: SettingsSection {
 			if let viewController = self?.viewController {
 				VendorServices.shared.sendFeedback(from: viewController)
 			}
-			}, title: "Send feedback".localized, accessoryType: .disclosureIndicator, identifier: "send-feedback")
+		}, title: "Send feedback".localized, accessoryType: .disclosureIndicator, identifier: "send-feedback")
+
+		if let appStoreReceipt = OCLicenseAppStoreReceipt.default {
+			appStoreReceipt.parse()
+
+			purchasesRow = StaticTableViewRow(rowWithAction: { (row, _) in
+
+				row.viewController?.navigationController?.pushViewController(LicenseTransactionsViewController(), animated: true)
+//				row.viewController?.navigationController?.pushViewController(InAppPurchasesReceiptViewController(with: appStoreReceipt), animated: true)
+			}, title: "Purchases".localized, accessoryType: .disclosureIndicator, identifier: "purchases")
+		}
 
 		recommendRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let viewController = self?.viewController {
@@ -124,6 +136,10 @@ class MoreSettingsSection: SettingsSection {
 	// MARK: - Update UI
 	func updateUI() {
 		var rows = [helpRow!]
+
+		if let purchasesRow = purchasesRow {
+			rows.append(purchasesRow)
+		}
 
 		if let sendFeedbackEnabled = self.classSetting(forOCClassSettingsKey: .sendFeedbackEnabled) as? Bool, sendFeedbackEnabled {
 			rows.append(sendFeedbackRow!)

@@ -16,17 +16,41 @@
  *
  */
 
+#import <ownCLoudSDK/ownCloudSDK.h>
+
 #import "OCLicenseProvider.h"
 #import "OCLicenseAppStoreItem.h"
+#import "OCLicenseAppStoreReceipt.h"
+#import "OCLicenseManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface OCLicenseAppStoreProvider : OCLicenseProvider
+typedef void(^OCLicenseAppStoreRestorePurchasesCompletionHandler)(NSError * _Nullable error);
+
+@interface OCLicenseAppStoreProvider : OCLicenseProvider <OCLogTagging>
+{
+	OCLicenseAppStoreReceipt *_receipt;
+}
+
+@property(nullable,strong,readonly,nonatomic) OCLicenseAppStoreReceipt *receipt;
 
 @property(strong) NSArray<OCLicenseAppStoreItem *> *items;
 
+#pragma mark - Init
 - (instancetype)initWithItems:(NSArray<OCLicenseAppStoreItem *> *)items;
+
+#pragma mark - Restoring IAPs
+- (void)restorePurchasesWithCompletionHandler:(OCLicenseAppStoreRestorePurchasesCompletionHandler)completionHandler; //!< Restores in-app purchases and calls the completion handler when done
 
 @end
 
+@interface OCLicenseManager (AppStore)
+
+@property(readonly,nonatomic,strong,nullable,class) OCLicenseAppStoreProvider *appStoreProvider; //! Convenience accessor for the AppStore Provider 
+
+@end
+
+extern OCLicenseProviderIdentifier OCLicenseProviderIdentifierAppStore;
+
 NS_ASSUME_NONNULL_END
+

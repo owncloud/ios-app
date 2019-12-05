@@ -23,6 +23,7 @@
 @class OCLicenseOffer;
 @class OCLicenseEntitlement;
 @class OCLicenseProvider;
+@class OCLicenseTransaction;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,6 +32,8 @@ typedef void(^OCLicenseProviderCompletionHandler)(OCLicenseProvider *provider, N
 @interface OCLicenseProvider : NSObject
 
 @property(weak,nullable) OCLicenseManager *manager;
+
+- (instancetype)initWithIdentifier:(OCLicenseProviderIdentifier)identifier;
 
 #pragma mark - Metadata
 @property(strong) OCLicenseProviderIdentifier identifier; //!< Identifier uniquely identifying this license provider
@@ -43,6 +46,9 @@ typedef void(^OCLicenseProviderCompletionHandler)(OCLicenseProvider *provider, N
 #pragma mark - Payload
 @property(nullable,strong,nonatomic) NSArray <OCLicenseOffer *> *offers; //!< Offers made available by the provider. Updates to this property trigger updates in OCLicenseManager.
 @property(nullable,strong,nonatomic) NSArray <OCLicenseEntitlement *> *entitlements; //!< Entitlements found by the provider. Updates to this property trigger updates in OCLicenseManager.
+
+#pragma mark - Transaction access
+- (void)retrieveTransactionsWithCompletionHandler:(void(^)(NSError * _Nullable error, NSArray <OCLicenseTransaction *> * _Nullable transactions))completionHandler; //!< Retrieve transactions
 
 #pragma mark - Control
 - (void)startProvidingWithCompletionHandler:(OCLicenseProviderCompletionHandler)completionHandler; //!< Called when the provider should start providing payloads

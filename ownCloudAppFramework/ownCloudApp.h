@@ -41,9 +41,12 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 #import <ownCloudApp/OCLicenseProvider.h>
 #import <ownCloudApp/OCLicenseEntitlement.h>
 #import <ownCloudApp/OCLicenseOffer.h>
+#import <ownCloudApp/OCLicenseDuration.h>
+#import <ownCloudApp/OCLicenseTransaction.h>
 
-#import <ownCloudApp/OCLicenseTrialProvider.h>
 #import <ownCloudApp/OCLicenseAppStoreProvider.h>
 #import <ownCloudApp/OCLicenseAppStoreItem.h>
+#import <ownCloudApp/OCLicenseAppStoreReceipt.h>
+#import <ownCloudApp/OCLicenseAppStoreReceiptInAppPurchase.h>
 
 #import <ownCloudApp/OCLicenseEnvironment.h>

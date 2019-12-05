@@ -20,28 +20,29 @@
 
 @implementation OCLicenseAppStoreItem
 
-+ (instancetype)trialWithAppStoreIdentifier:(OCLicenseAppStoreItemIdentifier)identifier trialDuration:(NSTimeInterval)trialDuration productIdentifier:(OCLicenseProductIdentifier)productIdentifier
++ (instancetype)trialWithAppStoreIdentifier:(OCLicenseAppStoreProductIdentifier)identifier trialDuration:(OCLicenseDuration *)trialDuration productIdentifier:(OCLicenseProductIdentifier)productIdentifier
 {
 	return ([[self alloc] initWithType:OCLicenseTypeTrial identifier:identifier productIdentifier:productIdentifier trialDuration:trialDuration]);
 }
 
-+ (instancetype)nonConsumableIAPWithAppStoreIdentifier:(OCLicenseAppStoreItemIdentifier)identifier productIdentifier:(OCLicenseProductIdentifier)productIdentifier;
++ (instancetype)nonConsumableIAPWithAppStoreIdentifier:(OCLicenseAppStoreProductIdentifier)identifier productIdentifier:(OCLicenseProductIdentifier)productIdentifier
 {
-	return ([[self alloc] initWithType:OCLicenseTypePurchase identifier:identifier productIdentifier:productIdentifier trialDuration:0]);
+	return ([[self alloc] initWithType:OCLicenseTypePurchase identifier:identifier productIdentifier:productIdentifier trialDuration:nil]);
 }
 
-+ (instancetype)subscriptionWithAppStoreIdentifier:(OCLicenseAppStoreItemIdentifier)identifier productIdentifier:(OCLicenseProductIdentifier)productIdentifier;
++ (instancetype)subscriptionWithAppStoreIdentifier:(OCLicenseAppStoreProductIdentifier)identifier productIdentifier:(OCLicenseProductIdentifier)productIdentifier trialDuration:(OCLicenseDuration *)trialDuration
 {
-	return ([[self alloc] initWithType:OCLicenseTypeSubscription identifier:identifier productIdentifier:productIdentifier trialDuration:0]);
+	return ([[self alloc] initWithType:OCLicenseTypeSubscription identifier:identifier productIdentifier:productIdentifier trialDuration:trialDuration]);
 }
 
-- (instancetype)initWithType:(OCLicenseType)type identifier:(OCLicenseAppStoreItemIdentifier)identifier productIdentifier:(OCLicenseProductIdentifier)productIdentifier trialDuration:(NSTimeInterval)trialDuration
+- (instancetype)initWithType:(OCLicenseType)type identifier:(OCLicenseAppStoreProductIdentifier)identifier productIdentifier:(OCLicenseProductIdentifier)productIdentifier trialDuration:(OCLicenseDuration *)trialDuration
 {
 	if ((self = [self init]) != nil)
 	{
 		_type = type;
 		_identifier = identifier;
 		_productIdentifier = productIdentifier;
+
 		_trialDuration = trialDuration;
 	}
 
