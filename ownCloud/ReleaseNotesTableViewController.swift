@@ -23,62 +23,37 @@ class ReleaseNotesTableViewController: StaticTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		let header = UILabel()
-		header.text = "New in ownCloud"
-		header.translatesAutoresizingMaskIntoConstraints = false
+		tableView.separatorColor = .clear
+		let section = StaticTableViewSection()
 
+  		if let path = Bundle.main.path(forResource: "ReleaseNotes", ofType: "plist") {
+ 			if let releaseNotesValues = NSDictionary(contentsOfFile: path), let versionsValues = releaseNotesValues["Versions"] as? NSArray {
 
-		NSLayoutConstraint.activate([
-			header.heightAnchor.constraint(equalToConstant: 100.0)
-			])
+				let relevantReleaseNotes = versionsValues.filter {
+					if let version = ($0 as AnyObject)["Version"] as? String, version.compare(VendorServices.shared.appVersion, options: .numeric) == .orderedDescending {
+						print("store version is newer")
+						return false
+					}
 
-	//	self.tableView.tableHeaderView = header
+					return true
+				}
 
-		let row = StaticTableViewRow(rowWithAction: nil, title: "Scan documents", subtitle: "Scan documents with iOS 13 with your camera and save it as PDF, JPEG or PNG direclty in your ownCloud account.", image: UIImage(named: "available-offline"), imageWidth: 50, alignment: .left, accessoryType: .none)
+				for aDict in (relevantReleaseNotes as? [[String:Any]])! {
+					if let notes = aDict["ReleaseNotes"] as? NSArray {
+						for releaseNote in (notes as? [[String:String]])! {
+							if let iconName = releaseNote["Icon"], let title = releaseNote["Title"], let subtitle = releaseNote["Subtitle"] {
+							let row = StaticTableViewRow(rowWithAction: { (_, _) in
+								self.dismissAnimated()
+							}, title: title, subtitle: subtitle, image: UIImage(named: iconName), imageWidth: 50, alignment: .left, accessoryType: .none)
+							section.add(row: row)
+							}
+						}
+					}
+				}
+					}
+		}
 
-		let section = StaticTableViewSection(headerTitle: "New in ownCloud")
-		section.add(row: row)
-
-		let buttonRow = StaticTableViewRow(buttonWithAction: { (_, _) in
-			self.dismissAnimated()
-		}, title: "Proceed", style: .proceed, image: nil, imageWidth: nil, alignment: .center, identifier: nil, accessoryView: nil)
-		//section.add(row: buttonRow)
 		self.addSection(section)
-
-
-
-		/*
-
-		let containerInsets = UIEdgeInsets(top: 20, left: 30, bottom: 20, right: 30)
-		let messageProgressSpacing : CGFloat = 15
-		let progressCancelSpacing : CGFloat = 25
-		let containerView = UIView()
-
-
-
-		let proceedButton = ThemeButton()
-		proceedButton.setTitle("Proceed".localized, for: .normal)
-		proceedButton.backgroundColor = UIColor.red
-		containerView.translatesAutoresizingMaskIntoConstraints = false
-		proceedButton.translatesAutoresizingMaskIntoConstraints = false
-
-		containerView.addSubview(proceedButton)
-
-		NSLayoutConstraint.activate([
-			proceedButton.heightAnchor.constraint(equalToConstant: 40),
-			proceedButton.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 50),
-		proceedButton.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -50),
-
-		containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: containerInsets.top),
-		containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -containerInsets.bottom),
-		containerView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: containerInsets.left),
-		containerView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -containerInsets.right)
-			])
-
-		self.tableView.tableFooterView = containerView
-
-		self.tableView.separatorStyle = .none*/
     }
 
-	
 }

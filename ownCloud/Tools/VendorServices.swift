@@ -20,7 +20,7 @@ import UIKit
 import MessageUI
 import ownCloudSDK
 
-class VendorServices : NSObject {
+class VendorServices : NSObject, OCClassSettingsUserPreferencesSupport {
 	// MARK: - App version information
 	var appVersion: String {
 		if let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
@@ -60,6 +60,41 @@ class VendorServices : NSObject {
 		}
 
 		return false
+	}
+
+	var shouldShowReleaseNotes: Bool {
+		print("-->> lastSeenReleaseNotesVersion \(self.classSetting(forOCClassSettingsKey: .lastSeenReleaseNotesVersion))")
+		if let lastSeenReleaseNotesVersion = self.classSetting(forOCClassSettingsKey: .lastSeenReleaseNotesVersion) as? String {
+
+			print("-->> lastSeenReleaseNotesVersion \(lastSeenReleaseNotesVersion)")
+
+			if VendorServices.shared.appVersion.compare(lastSeenReleaseNotesVersion, options: .numeric) == .orderedDescending {
+				print("store version is newer")
+				return false
+			}
+
+			if let path = Bundle.main.path(forResource: "ReleaseNotes", ofType: "plist") {
+				if let releaseNotesValues = NSDictionary(contentsOfFile: path), let versionsValues = releaseNotesValues["Versions"] as? NSArray {
+
+					let relevantReleaseNotes = versionsValues.filter {
+						if let version = ($0 as AnyObject)["Version"] as? String, version.compare(VendorServices.shared.appVersion, options: .numeric) == .orderedDescending {
+							print("store version is newer")
+							return false
+						}
+
+						return true
+					}
+
+					if relevantReleaseNotes.count > 0 {
+						return true
+					}
+				}
+			}
+
+			return false
+		}
+
+		return true
 	}
 
 	static var shared : VendorServices = {
@@ -139,6 +174,7 @@ extension OCClassSettingsKey {
 	static let showBetaWarning = OCClassSettingsKey("show-beta-warning")
 	static let isBetaBuild = OCClassSettingsKey("is-beta-build")
 	static let enableUIAnimations = OCClassSettingsKey("enable-ui-animations")
+	static let lastSeenReleaseNotesVersion = OCClassSettingsKey("lastSeenReleaseNotesVersion")
 }
 
 extension VendorServices : OCClassSettingsSupport {
