@@ -18,9 +18,9 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NSString* OCLicenseProductIdentifier;
-typedef NSString* OCLicenseFeatureIdentifier;
-typedef NSString* OCLicenseProviderIdentifier;
+typedef NSString* OCLicenseProductIdentifier NS_TYPED_ENUM;
+typedef NSString* OCLicenseFeatureIdentifier NS_TYPED_ENUM;
+typedef NSString* OCLicenseProviderIdentifier NS_TYPED_ENUM;
 typedef NSString* OCLicenseEnvironmentIdentifier;
 typedef NSString* OCLicenseEntitlementIdentifier;
 typedef NSString* OCLicenseOfferIdentifier;

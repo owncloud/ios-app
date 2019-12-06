@@ -69,15 +69,9 @@ class MoreSettingsSection: SettingsSection {
 			}
 		}, title: "Send feedback".localized, accessoryType: .disclosureIndicator, identifier: "send-feedback")
 
-		if let appStoreReceipt = OCLicenseAppStoreReceipt.default {
-			appStoreReceipt.parse()
-
-			purchasesRow = StaticTableViewRow(rowWithAction: { (row, _) in
-
-				row.viewController?.navigationController?.pushViewController(LicenseTransactionsViewController(), animated: true)
-//				row.viewController?.navigationController?.pushViewController(InAppPurchasesReceiptViewController(with: appStoreReceipt), animated: true)
-			}, title: "Purchases".localized, accessoryType: .disclosureIndicator, identifier: "purchases")
-		}
+		purchasesRow = StaticTableViewRow(rowWithAction: { (row, _) in
+			row.viewController?.navigationController?.pushViewController(LicenseTransactionsViewController(), animated: true)
+		}, title: "Purchases".localized, accessoryType: .disclosureIndicator, identifier: "purchases")
 
 		recommendRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let viewController = self?.viewController {

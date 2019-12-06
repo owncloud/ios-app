@@ -29,6 +29,7 @@ typedef NSString* OCLicenseEnvironmentAttributesKey;
 
 @property(nullable,strong) OCLicenseEnvironmentIdentifier identifier;
 
+@property(nullable,weak) OCCore *core;
 @property(nullable,strong) OCBookmarkUUID bookmarkUUID;
 
 @property(nullable,strong) NSString *hostname;

@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 enum ActionCategory {
 	case normal
@@ -298,13 +299,51 @@ class Action : NSObject {
 		}
 	}
 
+	// MARK: - Licensing
+	class var licenseRequirements : LicenseRequirements? { return nil }
+
+	var isLicensed : Bool {
+		guard let core = self.core else {
+			return false
+		}
+
+		if let licenseRequirements = type(of:self).licenseRequirements, !licenseRequirements.isUnlocked(for: core) {
+			return false
+		}
+
+		return true
+	}
+
+	func proceedWithLicensing(from viewController: UIViewController) -> Bool {
+		if !isLicensed {
+			if let core = core, let requirements = type(of:self).licenseRequirements {
+				OnMainThread {
+					let offersViewController = LicenseOffersViewController(withFeature: requirements.feature, in: core.licenseEnvironment)
+
+//					viewController.present(offersViewController, animated: true, completion: nil)
+					viewController.present(asCard: offersViewController, animated: true)
+				}
+			}
+
+			return false
+		}
+
+		return true
+	}
+
 	// MARK: - Action UI elements
 	private static let staticRowImageWidth : CGFloat = 32
 
 	func provideStaticRow() -> StaticTableViewRow? {
+		var name = actionExtension.name
+
+		if !isLicensed {
+			name += " ᴾᴿᴼ"
+		}
+
 		return StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
 			self.perform()
-		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, image: self.icon, imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: actionExtension.identifier.rawValue)
+		}, title: name, style: actionExtension.category == .destructive ? .destructive : .plain, image: self.icon, imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: actionExtension.identifier.rawValue)
 	}
 
 	func provideContextualAction() -> UIContextualAction? {
@@ -315,7 +354,13 @@ class Action : NSObject {
 	}
 
 	func provideAlertAction() -> UIAlertAction? {
-		let alertAction = UIAlertAction(title: self.actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .default, handler: { (_ alertAction) in
+		var name = actionExtension.name
+
+		if !isLicensed {
+			name += " ᴾᴿᴼ" // " 🅿🆁🅾"
+		}
+
+		let alertAction = UIAlertAction(title: name, style: actionExtension.category == .destructive ? .destructive : .default, handler: { (_ alertAction) in
 			self.perform()
 		})
 

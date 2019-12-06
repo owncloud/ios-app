@@ -31,9 +31,16 @@ class LicenseTransactionsViewController: StaticTableViewController {
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 		]
 
+		fetchTransactions()
+	}
+
+	func fetchTransactions() {
 		OCLicenseManager.shared.retrieveAllTransactions(completionHandler: { (error, transactionsByProvider) in
 			if let error = error {
 				let alert = UIAlertController(title: "Error fetching transaction".localized, message: error.localizedDescription, preferredStyle: .alert)
+
+				alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+
 				self.present(alert, animated: true, completion: nil)
 			}
 
@@ -93,7 +100,13 @@ class LicenseTransactionsViewController: StaticTableViewController {
 
 				if let error = error {
 					let alert = UIAlertController(title: "Error restoring purchases".localized, message: error.localizedDescription, preferredStyle: .alert)
+
+					alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+
 					self.present(alert, animated: true, completion: nil)
+				} else {
+					self.removeSections(self.sections)
+					self.fetchTransactions()
 				}
 			})
 		}

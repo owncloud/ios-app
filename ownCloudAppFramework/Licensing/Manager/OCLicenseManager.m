@@ -449,7 +449,7 @@
 
 - (OCLicenseAuthorizationStatus)_authorizationStatusForEntitlements:(NSArray<OCLicenseEntitlement *> *)entitlements inEnvironment:(OCLicenseEnvironment *)environment
 {
-	OCLicenseAuthorizationStatus summaryAuthStatus = OCLicenseAuthorizationStatusGranted;
+	OCLicenseAuthorizationStatus summaryAuthStatus = OCLicenseAuthorizationStatusUnknown;
 
 	// No entitlements => denied
 	if (entitlements.count == 0)
@@ -457,14 +457,14 @@
 		return (OCLicenseAuthorizationStatusDenied);
 	}
 
-	// Find lowest authorization status among entitlements and return it as summary value
+	// Find greatest authorization status among entitlements and return it as summary value
 	for (OCLicenseEntitlement *entitlement in entitlements)
 	{
 		OCLicenseAuthorizationStatus authStatus;
 
 		authStatus = [entitlement authorizationStatusInEnvironment:environment];
 
-		if (authStatus < summaryAuthStatus)
+		if (authStatus > summaryAuthStatus)
 		{
 			summaryAuthStatus = authStatus;
 		}

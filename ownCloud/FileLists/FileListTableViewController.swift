@@ -226,6 +226,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 	}
 
+	@discardableResult
 	func open(item: OCItem, animated: Bool, pushViewController: Bool = true) -> ClientQueryViewController? {
 		if let core = self.core {
 			if #available(iOS 13.0, *) {

@@ -26,6 +26,7 @@
 
 	entitlement.identifier = identifier;
 	entitlement.productIdentifier = productIdentifier;
+	entitlement.type = type;
 	entitlement.valid = valid;
 	entitlement.expiryDate = expiryDate;
 	entitlement.environmentApplicableRule = applicability;

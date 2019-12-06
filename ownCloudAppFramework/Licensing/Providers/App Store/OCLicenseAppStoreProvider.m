@@ -106,7 +106,8 @@
 		if (receipt.originalAppVersion != nil)
 		{
 			[transactions addObject:[OCLicenseTransaction transactionWithProvider:self tableRows:@[
-				@{ OCLocalized(@"Purchased App Version") : receipt.originalAppVersion }
+				@{ OCLocalized(@"Purchased App Version") : receipt.originalAppVersion },
+				@{ OCLocalized(@"Receipt Date") : (receipt.creationDate != nil) ? receipt.creationDate : @"-" }
 			]]];
 		}
 
@@ -211,11 +212,7 @@
 	OCLicenseAppStoreReceipt *receipt = self.receipt;
 	BOOL needsReload = NO;
 
-	if (receipt == nil)
-	{
-		needsReload = YES;
-	}
-	else
+	if (receipt != nil)
 	{
 		if ((receipt.expirationDate != nil) && (receipt.expirationDate.timeIntervalSinceNow < 0))
 		{
@@ -578,6 +575,8 @@
 
 	@synchronized(self)
 	{
+		[self loadReceipt];
+
 		if (_restorePurchasesCompletionHandler != nil)
 		{
 			_restorePurchasesCompletionHandler(error);
@@ -592,6 +591,8 @@
 
 	@synchronized(self)
 	{
+		[self loadReceipt];
+
 		if (_restorePurchasesCompletionHandler != nil)
 		{
 			_restorePurchasesCompletionHandler(nil);

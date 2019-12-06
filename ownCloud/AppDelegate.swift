@@ -85,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(LinksAction.actionExtension)
 		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
-		// OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
+		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
 		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
 			OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
 			OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
@@ -142,18 +142,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func setupLicenseManagement() {
 		// Set up features and products
-		OCLicenseManager.shared.register(OCLicenseFeature(identifier: "document-scanner"))
-		OCLicenseManager.shared.register(OCLicenseProduct(identifier: "single.document-scanner", name: "Document scanner".localized, description: "Allows scanning documents and photos with the camera of your device", contents: ["document-scanner"]))
-		OCLicenseManager.shared.register(OCLicenseProduct(identifier: "bundle.pro", name: "Pro Features".localized, description: "Pro Features include the document scanner", contents: ["document-scanner"]))
+		OCLicenseManager.shared.register(OCLicenseFeature(identifier: .documentScanner))
+		OCLicenseManager.shared.register(OCLicenseProduct(identifier: OCLicenseProductIdentifier(rawValue: "single.document-scanner"), name: "Document scanner".localized, description: "Allows scanning documents and photos with the camera of your device", contents: [.documentScanner]))
+		OCLicenseManager.shared.register(OCLicenseProduct(identifier: OCLicenseProductIdentifier(rawValue: "bundle.pro"), name: "Pro Features".localized, description: "Pro Features include the document scanner", contents: [.documentScanner]))
 
 		// Set up App Store License Provider
 		let appStoreLicenseProvider = OCLicenseAppStoreProvider(items: [
-			OCLicenseAppStoreItem.trial(withAppStoreIdentifier: "trial.pro.30days", trialDuration: OCLicenseDuration(unit: .day, length: 30), productIdentifier: "bundle.pro"),
-			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentsharing", productIdentifier: "single.document-scanner"),
-			OCLicenseAppStoreItem.subscription(withAppStoreIdentifier: "bundle.pro", productIdentifier: "bundle.pro", trialDuration: OCLicenseDuration(unit: .day, length: 14))
+			OCLicenseAppStoreItem.trial(withAppStoreIdentifier: "trial.pro.30days", trialDuration: OCLicenseDuration(unit: .day, length: 30), productIdentifier: OCLicenseProductIdentifier(rawValue: "bundle.pro")),
+			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentsharing", productIdentifier: OCLicenseProductIdentifier(rawValue: "single.document-scanner")),
+			OCLicenseAppStoreItem.subscription(withAppStoreIdentifier: "bundle.pro", productIdentifier: OCLicenseProductIdentifier(rawValue: "bundle.pro"), trialDuration: OCLicenseDuration(unit: .day, length: 14))
 		])
 
 		OCLicenseManager.shared.add(appStoreLicenseProvider)
+
+		// Set up Enterprise Provider
+		let enterpriseProvider = OCLicenseEnterpriseProvider(unlockedProductIdentifiers: [OCLicenseProductIdentifier(rawValue: "bundle.pro")])
+
+		OCLicenseManager.shared.add(enterpriseProvider)
 	}
 
 	// MARK: UISceneSession Lifecycle

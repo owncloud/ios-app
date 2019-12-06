@@ -20,7 +20,7 @@ import UIKit
 import ownCloudApp
 
 class LicenseOffersViewController: StaticTableViewController {
-	init(withFeature featureIdentifier: String) {
+	init(withFeature featureIdentifier: OCLicenseFeatureIdentifier, in environment: OCLicenseEnvironment) {
 		super.init(style: .grouped)
 
 		let offerSection = StaticTableViewSection(headerTitle: "Offers")
@@ -39,6 +39,12 @@ class LicenseOffersViewController: StaticTableViewController {
 		}
 
 		self.addSection(offerSection)
+
+		OCLicenseManager.shared.observeProducts(nil, features: [featureIdentifier], in: environment, withOwner: self, updateHandler: { (observer, initial, authStatus) in
+			if authStatus == .granted {
+				(observer.owner as? LicenseOffersViewController)?.dismissAnimated()
+			}
+		})
 	}
 
 	required init?(coder: NSCoder) {

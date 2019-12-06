@@ -297,11 +297,15 @@
 		DCD2D40622F06ECA0071FB8F /* StorageSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD2D40522F06ECA0071FB8F /* StorageSettingsSection.swift */; };
 		DCD8109A23984AF2003B0053 /* OCLicenseDuration.h in Headers */ = {isa = PBXBuildFile; fileRef = DCD810922398492C003B0053 /* OCLicenseDuration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCD8109B23984AF6003B0053 /* OCLicenseDuration.m in Sources */ = {isa = PBXBuildFile; fileRef = DCD810932398492C003B0053 /* OCLicenseDuration.m */; };
-		DCD8109D23985409003B0053 /* InAppPurchasesReceiptViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD8109C23985409003B0053 /* InAppPurchasesReceiptViewController.swift */; };
 		DCD9B87B2379612B00691929 /* OCLicenseManager+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = DCD9B873237960E600691929 /* OCLicenseManager+Internal.h */; };
 		DCDC208C239912DC003CFF5B /* OCLicenseTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDC208A239912DC003CFF5B /* OCLicenseTransaction.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCDC208D239912DC003CFF5B /* OCLicenseTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDC208B239912DC003CFF5B /* OCLicenseTransaction.m */; };
 		DCDC208F23994DFB003CFF5B /* LicenseTransactionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDC208E23994DFB003CFF5B /* LicenseTransactionsViewController.swift */; };
+		DCDC209C2399A4CF003CFF5B /* LicenseRequirements.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDC209B2399A4CF003CFF5B /* LicenseRequirements.swift */; };
+		DCDC20A12399A715003CFF5B /* OCCore+LicenseEnvironment.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDC209F2399A715003CFF5B /* OCCore+LicenseEnvironment.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCDC20A22399A715003CFF5B /* OCCore+LicenseEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDC20A02399A715003CFF5B /* OCCore+LicenseEnvironment.m */; };
+		DCDC20AB2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDC20A92399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCDC20AC2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDC20AA2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m */; };
 		DCE0275E21F1DF7E00F2544E /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		DCE442CE2387452000940A6D /* LicensingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC0856B2293F1FD008CC05C /* LicensingTests.m */; };
 		DCE5E8A12080D781005F60CE /* video.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88C2080D77E005F60CE /* video.tvg */; };
@@ -969,11 +973,15 @@
 		DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "ios-sdk/ownCloudUI/openssl/framework/openssl.xcodeproj"; sourceTree = "<group>"; };
 		DCD810922398492C003B0053 /* OCLicenseDuration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseDuration.h; sourceTree = "<group>"; };
 		DCD810932398492C003B0053 /* OCLicenseDuration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseDuration.m; sourceTree = "<group>"; };
-		DCD8109C23985409003B0053 /* InAppPurchasesReceiptViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppPurchasesReceiptViewController.swift; sourceTree = "<group>"; };
 		DCD9B873237960E600691929 /* OCLicenseManager+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCLicenseManager+Internal.h"; sourceTree = "<group>"; };
 		DCDC208A239912DC003CFF5B /* OCLicenseTransaction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseTransaction.h; sourceTree = "<group>"; };
 		DCDC208B239912DC003CFF5B /* OCLicenseTransaction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseTransaction.m; sourceTree = "<group>"; };
 		DCDC208E23994DFB003CFF5B /* LicenseTransactionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseTransactionsViewController.swift; sourceTree = "<group>"; };
+		DCDC209B2399A4CF003CFF5B /* LicenseRequirements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseRequirements.swift; sourceTree = "<group>"; };
+		DCDC209F2399A715003CFF5B /* OCCore+LicenseEnvironment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCCore+LicenseEnvironment.h"; sourceTree = "<group>"; };
+		DCDC20A02399A715003CFF5B /* OCCore+LicenseEnvironment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCCore+LicenseEnvironment.m"; sourceTree = "<group>"; };
+		DCDC20A92399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseEnterpriseProvider.h; sourceTree = "<group>"; };
+		DCDC20AA2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseEnterpriseProvider.m; sourceTree = "<group>"; };
 		DCE5E88C2080D77E005F60CE /* video.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = video.tvg; path = "img/filetypes-tvg/video.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E88D2080D77E005F60CE /* folder-external.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-external.tvg"; path = "img/filetypes-tvg/folder-external.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E88E2080D77E005F60CE /* file.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = file.tvg; path = "img/filetypes-tvg/file.tvg"; sourceTree = SOURCE_ROOT; };
@@ -1484,6 +1492,15 @@
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
 		};
+		DC0030BE2350B1CE00BB8570 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				DC0030BF2350B1CE00BB8570 /* NSData+Encoding.m */,
+				DC0030C02350B1CE00BB8570 /* NSData+Encoding.h */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
 		DC080CDC238AE3D00044C5D2 /* App Store */ = {
 			isa = PBXGroup;
 			children = (
@@ -1503,15 +1520,6 @@
 				DC080CE7238BD71F0044C5D2 /* OCLicenseAppStoreItem.h */,
 			);
 			path = Items;
-			sourceTree = "<group>";
-		};
-		DC0030BE2350B1CE00BB8570 /* Tools */ = {
-			isa = PBXGroup;
-			children = (
-				DC0030BF2350B1CE00BB8570 /* NSData+Encoding.m */,
-				DC0030C02350B1CE00BB8570 /* NSData+Encoding.h */,
-			);
-			path = Tools;
 			sourceTree = "<group>";
 		};
 		DC1B26FD209CF0D2004715E1 /* Issues Animators */ = {
@@ -1809,8 +1817,8 @@
 		DC8EB26F239308C3009148F9 /* Licensing */ = {
 			isa = PBXGroup;
 			children = (
+				DCDC209B2399A4CF003CFF5B /* LicenseRequirements.swift */,
 				DC8EB270239308E5009148F9 /* LicenseOffersViewController.swift */,
-				DCD8109C23985409003B0053 /* InAppPurchasesReceiptViewController.swift */,
 				DCDC208E23994DFB003CFF5B /* LicenseTransactionsViewController.swift */,
 			);
 			path = Licensing;
@@ -1975,6 +1983,31 @@
 			path = Transactions;
 			sourceTree = "<group>";
 		};
+		DCDC20952399A4AB003CFF5B /* Licensing Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Licensing Controller";
+			sourceTree = "<group>";
+		};
+		DCDC20A32399A720003CFF5B /* Core Integration */ = {
+			isa = PBXGroup;
+			children = (
+				DCDC20A02399A715003CFF5B /* OCCore+LicenseEnvironment.m */,
+				DCDC209F2399A715003CFF5B /* OCCore+LicenseEnvironment.h */,
+			);
+			path = "Core Integration";
+			sourceTree = "<group>";
+		};
+		DCDC20A42399A898003CFF5B /* Enterprise */ = {
+			isa = PBXGroup;
+			children = (
+				DCDC20AA2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m */,
+				DCDC20A92399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h */,
+			);
+			path = Enterprise;
+			sourceTree = "<group>";
+		};
 		DCE5E8B62080D8B8005F60CE /* SDK Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -2010,6 +2043,7 @@
 		DCF4F1622051927200189B9A /* UI Elements */ = {
 			isa = PBXGroup;
 			children = (
+				DCDC20952399A4AB003CFF5B /* Licensing Controller */,
 				DC297959226E4C9200E01BC7 /* Push Presentation Controller */,
 				2366821521144DCD0045EF72 /* Card Presentation Controller */,
 				DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */,
@@ -2079,6 +2113,7 @@
 				DCFEFE4C2368809D009A142F /* Offer */,
 				DCDC208923991296003CFF5B /* Transactions */,
 				DCFEFE8F2368D07D009A142F /* Environment */,
+				DCDC20A32399A720003CFF5B /* Core Integration */,
 			);
 			path = Licensing;
 			sourceTree = "<group>";
@@ -2089,6 +2124,7 @@
 				DCFEFE2D236876D4009A142F /* OCLicenseProvider.m */,
 				DCFEFE2C236876D4009A142F /* OCLicenseProvider.h */,
 				DC080CDC238AE3D00044C5D2 /* App Store */,
+				DCDC20A42399A898003CFF5B /* Enterprise */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -2167,6 +2203,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCDC20AB2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h in Headers */,
 				DCD8109A23984AF2003B0053 /* OCLicenseDuration.h in Headers */,
 				DCFEFE2A236876BD009A142F /* OCLicenseManager.h in Headers */,
 				DCFEFE4923687C83009A142F /* OCLicenseEntitlement.h in Headers */,
@@ -2184,6 +2221,7 @@
 				DC774E6322F44E6D000B11A1 /* OCCore+BundleImport.h in Headers */,
 				DC080CE6238AE3F40044C5D2 /* OCLicenseAppStoreProvider.h in Headers */,
 				DCDC208C239912DC003CFF5B /* OCLicenseTransaction.h in Headers */,
+				DCDC20A12399A715003CFF5B /* OCCore+LicenseEnvironment.h in Headers */,
 				DCFEFE4F236880B5009A142F /* OCLicenseOffer.h in Headers */,
 				DCC0856E2293F1FD008CC05C /* ownCloudApp.h in Headers */,
 				DC66F3A523965A1400CF4812 /* NSDate+RFC3339.h in Headers */,
@@ -2832,6 +2870,7 @@
 				3998F5CC2240CD8300B66713 /* RoundedInfoView.swift in Sources */,
 				DC82D6FA23171339001551C5 /* ScanAction.swift in Sources */,
 				23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */,
+				DCDC209C2399A4CF003CFF5B /* LicenseRequirements.swift in Sources */,
 				DC018F8C20A1060A00135198 /* ProgressHUDViewController.swift in Sources */,
 				4CB8ADE922DF6DE200F1FEBC /* AVAsset+Extension.swift in Sources */,
 				39CC8B01228C8A950020253B /* MediaUploadSettingsSection.swift in Sources */,
@@ -2893,7 +2932,6 @@
 				DC297965226E4D1100E01BC7 /* PushTransitionDelegate.swift in Sources */,
 				396BE4C32288A84C00B254A9 /* PendingSharesTableViewController.swift in Sources */,
 				233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */,
-				DCD8109D23985409003B0053 /* InAppPurchasesReceiptViewController.swift in Sources */,
 				396D7C6523224A53002380C1 /* DiscardSceneAction.swift in Sources */,
 				DCF4F18B2052BA4C00189B9A /* Log.swift in Sources */,
 				DC8549382183B4CD00782BA8 /* ThemeStyle+Extensions.swift in Sources */,
@@ -3060,6 +3098,8 @@
 				DCDC208D239912DC003CFF5B /* OCLicenseTransaction.m in Sources */,
 				DC23D1D9238F390A00423F62 /* OCLicenseAppStoreReceipt.m in Sources */,
 				DCFEFE2B236876BD009A142F /* OCLicenseManager.m in Sources */,
+				DCDC20A22399A715003CFF5B /* OCCore+LicenseEnvironment.m in Sources */,
+				DCDC20AC2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m in Sources */,
 				DCFEFE3A236877A7009A142F /* OCLicenseFeature.m in Sources */,
 				DCFEFE50236880B5009A142F /* OCLicenseOffer.m in Sources */,
 				DC0030C12350B1CE00BB8570 /* NSData+Encoding.m in Sources */,
