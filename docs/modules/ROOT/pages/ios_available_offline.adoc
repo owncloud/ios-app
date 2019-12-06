@@ -58,7 +58,7 @@ image::offline-storage/all-available-offline-items.png[]
 
 == Storage
 
-Offline files can be set to automatically delete after a specified period, ranging from 1 minute to 30 days.
+Locally available file copies can be set to be automatically deleted after a specified period, ranging from 1 minute to 30 days, to clean up device space.
 The default is seven days.
 This is available under menu:Settings[Storage > Delete unused local copies].
 
