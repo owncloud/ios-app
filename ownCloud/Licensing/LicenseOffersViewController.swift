@@ -28,10 +28,11 @@ class LicenseOffersViewController: StaticTableViewController {
 		if let feature = OCLicenseManager.shared.feature(withIdentifier: featureIdentifier) {
 			if let offers = OCLicenseManager.shared.offers(for: feature) {
 				for offer in offers {
+					let offerType = OCLicenseProduct.string(for: offer.type)
 					let product = OCLicenseManager.shared.product(withIdentifier: offer.productIdentifier)
 					let offerRow = StaticTableViewRow(subtitleRowWithAction: { (_, _) in
 						offer.commit(options: nil)
-					}, title: product?.localizedName ?? "-", subtitle: (product?.localizedDescription ?? "") + " " + offer.localizedPriceTag, accessoryType: UITableViewCell.AccessoryType.disclosureIndicator, identifier: offer.identifier)
+					}, title: "\(product?.localizedName ?? "-") [\(offerType)]", subtitle: offer.localizedPriceTag + " – " + (product?.localizedDescription ?? ""), accessoryType: UITableViewCell.AccessoryType.disclosureIndicator, identifier: offer.identifier)
 
 					offerSection.add(row: offerRow)
 				}
