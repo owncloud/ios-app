@@ -22,6 +22,9 @@ extension Array where Element: OCItem {
 	var sharedWithUser : [OCItem] {
 		return self.filter({ (item) -> Bool in return item.isSharedWithUser })
 	}
+	var isShared : [OCItem] {
+		return self.filter({ (item) -> Bool in return item.isShared })
+	}
 }
 
 class UnshareAction : Action {
@@ -115,7 +118,7 @@ class UnshareAction : Action {
 			self.completed()
 		}
 
-		let alertController = UIAlertController(
+		let alertController = ThemedAlertController(
 			with: name,
 			message: message,
 			destructiveLabel: "Unshare".localized,
@@ -129,7 +132,7 @@ class UnshareAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreFolder {
 			return UIImage(named: "trash")
 		}
 

@@ -72,7 +72,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
-		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [item], location: actionsLocation)
+		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [item], location: actionsLocation, sender: cell)
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: makeActionProgressHandler()) {
 			self.present(asCard: moreViewController, animated: true)
@@ -107,6 +107,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 
 		if allowPullToRefresh {
 			pullToRefreshControl = UIRefreshControl()
+			pullToRefreshControl?.tintColor = Theme.shared.activeCollection.navigationBarColors.labelColor
 			pullToRefreshControl?.addTarget(self, action: #selector(self.pullToRefreshTriggered), for: .valueChanged)
 			self.tableView.insertSubview(pullToRefreshControl!, at: 0)
 			tableView.contentOffset = CGPoint(x: 0, y: self.pullToRefreshVerticalOffset)
@@ -221,31 +222,49 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 				return
 			}
 
-			if let core = self.core {
-				switch rowItem.type {
-					case .collection:
-						if let path = rowItem.path {
-							self.navigationController?.pushViewController(ClientQueryViewController(core: core, query: OCQuery(forPath: path)), animated: true)
-						}
+			open(item: rowItem, animated: true)
+		}
+	}
 
-					case .file:
-						guard let query = self.query(forItem: rowItem) else {
-							return
-						}
-
-						let itemViewController = DisplayHostViewController(core: core, selectedItem: rowItem, query: query)
-						itemViewController.hidesBottomBarWhenPushed = true
-						itemViewController.progressSummarizer = self.progressSummarizer
-						self.navigationController?.pushViewController(itemViewController, animated: true)
+	func open(item: OCItem, animated: Bool, pushViewController: Bool = true) -> ClientQueryViewController? {
+		if let core = self.core {
+			if #available(iOS 13.0, *) {
+				if  let tabBarController = self.tabBarController as? ClientRootViewController {
+					let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
+					view.window?.windowScene?.userActivity = activity.openItemUserActivity
 				}
 			}
 
+			switch item.type {
+				case .collection:
+					if let path = item.path {
+						let clientQueryViewController = ClientQueryViewController(core: core, query: OCQuery(forPath: path))
+						if pushViewController {
+							self.navigationController?.pushViewController(clientQueryViewController, animated: animated)
+						}
+
+						return clientQueryViewController
+					}
+
+				case .file:
+					guard let query = self.query(forItem: item) else {
+						return nil
+					}
+
+					let itemViewController = DisplayHostViewController(core: core, selectedItem: item, query: query)
+					itemViewController.hidesBottomBarWhenPushed = true
+					itemViewController.progressSummarizer = self.progressSummarizer
+					self.navigationController?.pushViewController(itemViewController, animated: animated)
+			}
 		}
+
+		return nil
 	}
 
 	// MARK: - Themable
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
+		pullToRefreshControl?.tintColor = collection.navigationBarColors.labelColor
 
 		if event == .update {
 			self.reloadTableData()

@@ -22,7 +22,9 @@ class DeleteAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.delete") }
 	override class var category : ActionCategory? { return .destructive }
 	override class var name : String? { return "Delete".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .tableRow, .moreFolder, .toolbar] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .tableRow, .moreFolder, .toolbar, .keyboardShortcut] }
+	override class var keyCommand : String? { return "\u{08}" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -86,7 +88,7 @@ class DeleteAction : Action {
 			self.completed()
 		}
 
-		let alertController = UIAlertController(
+		let alertController = ThemedAlertController(
 			with: name,
 			message: message,
 			destructiveLabel: "Delete".localized,
@@ -100,7 +102,7 @@ class DeleteAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreFolder {
 			return UIImage(named: "trash")
 		}
 

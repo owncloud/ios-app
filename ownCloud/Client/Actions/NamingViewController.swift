@@ -22,10 +22,7 @@ import ownCloudSDK
 typealias StringValidatorResult = (Bool, String?)
 typealias StringValidatorHandler = (String) -> StringValidatorResult
 
-class NamingViewController: UIViewController {
-
-	//TODO This view controller ideally should have Theme support.
-
+class NamingViewController: UIViewController, Themeable {
 	weak var item: OCItem?
 	weak var core: OCCore?
 	var completion: (String?, NamingViewController) -> Void
@@ -62,7 +59,7 @@ class NamingViewController: UIViewController {
 		self.stringValidator = stringValidator
 		self.defaultName = defaultName
 
-		blurView = UIVisualEffectView.init(effect: UIBlurEffect(style: .regular))
+		blurView = UIVisualEffectView(effect: UIBlurEffect(style: Theme.shared.activeCollection.backgroundBlurEffectStyle))
 
 		stackView = UIStackView(frame: .zero)
 
@@ -82,6 +79,8 @@ class NamingViewController: UIViewController {
 		thumbnailHeightAnchorConstraint = thumbnailImageView.heightAnchor.constraint(equalToConstant: 150)
 
 		super.init(nibName: nil, bundle: nil)
+
+		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
 	convenience init(with item: OCItem, core: OCCore? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
@@ -98,6 +97,13 @@ class NamingViewController: UIViewController {
 
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: nil)
+		Theme.shared.unregister(client: self)
+	}
+
+	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		nameTextField.backgroundColor = collection.tableBackgroundColor
+		nameTextField.textColor = collection.tableRowColors.labelColor
+		nameTextField.keyboardAppearance = collection.keyboardAppearance
 	}
 
 	override func viewDidLoad() {
@@ -106,23 +112,10 @@ class NamingViewController: UIViewController {
 		stackViewLeftAnchorConstraint = stackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0)
 		stackViewRightAnchorConstraint = stackView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0)
 
-		if let item = item {
+		if let item = item, let core = core {
 			nameTextField.text = item.name
 			thumbnailImageView.image = item.icon(fitInSize: thumbnailSize)
-
-			if item.thumbnailAvailability != .none {
-				_ = core!.retrieveThumbnail(for: item, maximumSize: self.thumbnailSize, scale: 0, retrieveHandler: { (error, _, _, thumbnail, _, _) in
-					_ = thumbnail?.requestImage(for: self.thumbnailSize, scale: 0, withCompletionHandler: { [weak self] (thumbnail, error, _, image) in
-						if error == nil,
-							image != nil,
-							item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
-							OnMainThread {
-								self?.thumbnailImageView.image = image
-							}
-						}
-					})
-				})
-			}
+			thumbnailImageView.setThumbnailImage(using: core, from: item, with: thumbnailSize)
 		} else {
 			nameTextField.text = defaultName
 			thumbnailImageView.image = Theme.shared.image(for: "folder", size: thumbnailSize)
@@ -170,7 +163,6 @@ class NamingViewController: UIViewController {
 			nameTextField.rightAnchor.constraint(equalTo: nameContainer.rightAnchor, constant: -20)
 			])
 
-		nameTextField.backgroundColor = .white
 		nameTextField.delegate = self
 		nameTextField.textAlignment = .center
 		nameTextField.becomeFirstResponder()
@@ -266,6 +258,8 @@ class NamingViewController: UIViewController {
 	}
 
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
+
 		render(newTraitCollection: traitCollection)
 	}
 
@@ -301,7 +295,7 @@ class NamingViewController: UIViewController {
 						self.completion(self.nameTextField.text!, self)
 					}
 				} else {
-					let controller = UIAlertController(title: "Forbidden Characters".localized, message: validationErrorMessage, preferredStyle: .alert)
+					let controller = ThemedAlertController(title: "Forbidden Characters".localized, message: validationErrorMessage, preferredStyle: .alert)
 					controller.view.accessibilityIdentifier = "forbidden-characters-alert"
 					let okAction = UIAlertAction(title: "OK".localized, style: .default)
 					controller.addAction(okAction)

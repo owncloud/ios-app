@@ -37,7 +37,7 @@ class ImageDisplayViewController : DisplayViewController {
 
 	// MARK: - Gesture recognizers
 	var tapToZoomGestureRecognizer : UITapGestureRecognizer!
-	var tapToHideBarsGestureRecognizer: UITapGestureRecognizer!
+	var showHideBarsTapGestureRecognizer: UITapGestureRecognizer!
 
 	// MARK: - View controller lifecycle
 
@@ -113,11 +113,11 @@ class ImageDisplayViewController : DisplayViewController {
 						self.tapToZoomGestureRecognizer.numberOfTapsRequired = 2
 						self.scrollView?.addGestureRecognizer(self.tapToZoomGestureRecognizer)
 
-						self.tapToHideBarsGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.tapToHideBars))
-						self.scrollView?.addGestureRecognizer(self.tapToHideBarsGestureRecognizer)
+						self.showHideBarsTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showHideBars))
+						self.scrollView?.addGestureRecognizer(self.showHideBarsTapGestureRecognizer)
 
 						self.tapToZoomGestureRecognizer.delegate = self
-						self.tapToHideBarsGestureRecognizer.delegate = self
+						self.showHideBarsTapGestureRecognizer.delegate = self
 
 						completion(true)
 					} else {
@@ -127,7 +127,7 @@ class ImageDisplayViewController : DisplayViewController {
 			}
 
 		} else {
-			let alert = UIAlertController(with: "Error".localized, message: "Could not get the picture".localized, okLabel: "OK")
+			let alert = ThemedAlertController(with: "Error".localized, message: "Could not get the picture".localized, okLabel: "OK")
 			self.parent?.present(alert, animated: true) {
 				self.parent?.dismiss(animated: true)
 			}
@@ -151,7 +151,7 @@ class ImageDisplayViewController : DisplayViewController {
 		setNeedsUpdateOfHomeIndicatorAutoHidden()
 	}
 
-	@objc func tapToHideBars() {
+	@objc func showHideBars() {
 		guard let navigationController = navigationController else {
 			return
 		}
@@ -209,7 +209,7 @@ extension ImageDisplayViewController: DisplayExtension {
 extension ImageDisplayViewController: UIGestureRecognizerDelegate {
 
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-		if gestureRecognizer === tapToZoomGestureRecognizer && otherGestureRecognizer === tapToHideBarsGestureRecognizer {
+		if gestureRecognizer === tapToZoomGestureRecognizer && otherGestureRecognizer === showHideBarsTapGestureRecognizer {
 			return true
 		}
 
@@ -217,11 +217,11 @@ extension ImageDisplayViewController: UIGestureRecognizerDelegate {
 	}
 
 	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-		if gestureRecognizer === tapToZoomGestureRecognizer && otherGestureRecognizer === tapToHideBarsGestureRecognizer {
+		if gestureRecognizer === tapToZoomGestureRecognizer && otherGestureRecognizer === showHideBarsTapGestureRecognizer {
 			return false
 		}
 
-		if gestureRecognizer === tapToHideBarsGestureRecognizer && otherGestureRecognizer === tapToZoomGestureRecognizer {
+		if gestureRecognizer === showHideBarsTapGestureRecognizer && otherGestureRecognizer === tapToZoomGestureRecognizer {
 			return false
 		}
 

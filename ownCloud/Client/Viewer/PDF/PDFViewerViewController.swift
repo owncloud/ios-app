@@ -51,7 +51,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	fileprivate let thumbnailViewHeightMultiplier: CGFloat = 0.1
 	fileprivate let thumbnailMargin: CGFloat = 32.0
 	fileprivate let filenameContainerTopMargin: CGFloat = 10.0
-	fileprivate let pdfView = PDFView()
+	public let pdfView = PDFView()
 	fileprivate let thumbnailView = PDFThumbnailView()
 
 	fileprivate let containerView = UIStackView()
@@ -210,7 +210,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		guard let pdfDocument = pdfView.document else { return }
 
 		let alertMessage = NSString(format: "This document has %@ pages".localized as NSString, "\(pdfDocument.pageCount)") as String
-		let alertController = UIAlertController(title: "Go to page".localized, message: alertMessage, preferredStyle: .alert)
+		let alertController = ThemedAlertController(title: "Go to page".localized, message: alertMessage, preferredStyle: .alert)
 		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
 		alertController.addTextField(configurationHandler: { textField in
@@ -357,7 +357,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 					self.pdfView.go(to: page)
 				}
 			} else {
-				let alertController = UIAlertController(title: "Invalid Page".localized,
+				let alertController = ThemedAlertController(title: "Invalid Page".localized,
 														message: "The entered page number doesn't exist".localized,
 														preferredStyle: .alert)
 				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
