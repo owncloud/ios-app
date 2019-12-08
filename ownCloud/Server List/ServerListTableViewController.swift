@@ -94,8 +94,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		NotificationCenter.default.addObserver(self, selector: #selector(considerAutoLogin), name: UIApplication.didBecomeActiveNotification, object: nil)
 
-		if VendorServices.shared.shouldShowReleaseNotes {
-			VendorServices.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenReleaseNotesVersion)
+		if ReleaseNotesDatasource().shouldShowReleaseNotes {
 			let releaseNotesHostController = ReleaseNotesHostViewController()
 			releaseNotesHostController.modalPresentationStyle = .formSheet
 			self.present(releaseNotesHostController, animated: true, completion: nil)

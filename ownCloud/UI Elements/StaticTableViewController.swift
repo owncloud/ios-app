@@ -186,14 +186,10 @@ class StaticTableViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		print("--> section count \(sections[section].rows.count)")
-
 		return sections[section].rows.count
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-		print("--> section cell \(sections[indexPath.section].rows[indexPath.row])")
 		return sections[indexPath.section].rows[indexPath.row].cell!
 	}
 
