@@ -20,7 +20,7 @@ import UIKit
 import MessageUI
 import ownCloudSDK
 
-class VendorServices : NSObject, OCClassSettingsUserPreferencesSupport {
+class VendorServices : NSObject {
 	// MARK: - App version information
 	var appVersion: String {
 		if let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
