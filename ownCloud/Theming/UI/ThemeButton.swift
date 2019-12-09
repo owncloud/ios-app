@@ -85,7 +85,7 @@ class ThemeButton : UIButton {
 	}
 
 	private func styleButton() {
-		self.layer.cornerRadius = 5
+		self.layer.cornerRadius = 8
 		self.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
 		self.titleLabel?.adjustsFontForContentSizeCategory = true
 	}

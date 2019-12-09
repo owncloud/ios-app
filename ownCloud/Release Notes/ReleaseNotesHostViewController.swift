@@ -30,7 +30,7 @@ class ReleaseNotesHostViewController: UIViewController {
 
 	// MARK: - Instance Variables
 	var titleLabel = UILabel()
-	var proceedButton = UIButton(type: .roundedRect)
+	var proceedButton = ThemeButton()
 	var footerLabel = UILabel()
 
 	override func viewDidLoad() {
@@ -57,7 +57,8 @@ class ReleaseNotesHostViewController: UIViewController {
 		titleLabel.text = "New in ownCloud".localized
 		titleLabel.textAlignment = .center
 		titleLabel.numberOfLines = 0
-		titleLabel.font = UIFont.systemFont(ofSize: UIFont.systemFontSize * 1.5, weight: .bold)
+		titleLabel.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)
+		titleLabel.adjustsFontForContentSizeCategory = true
 		headerView.addSubview(titleLabel)
 
 		NSLayoutConstraint.activate([
@@ -86,7 +87,6 @@ class ReleaseNotesHostViewController: UIViewController {
 			])
 
 			proceedButton.setTitle("Proceed".localized, for: .normal)
-			proceedButton.layer.cornerRadius = cornerRadius
 			proceedButton.translatesAutoresizingMaskIntoConstraints = false
 			proceedButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
 			bottomView.addSubview(proceedButton)
@@ -95,7 +95,8 @@ class ReleaseNotesHostViewController: UIViewController {
 			footerLabel.translatesAutoresizingMaskIntoConstraints = false
 			footerLabel.text = "Thank you for using ownCloud.\nIf you like our App, please leave an AppStore review.\n❤️".localized
 			footerLabel.numberOfLines = 0
-			footerLabel.font = UIFont.systemFont(ofSize: 14.0)
+			footerLabel.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.footnote)
+			footerLabel.adjustsFontForContentSizeCategory = true
 			bottomView.addSubview(footerLabel)
 
 			NSLayoutConstraint.activate([
@@ -151,20 +152,18 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 				return false
 			}
 
-			if let path = Bundle.main.path(forResource: "ReleaseNotes", ofType: "plist") {
-				if let releaseNotesValues = NSDictionary(contentsOfFile: path), let versionsValues = releaseNotesValues["Versions"] as? NSArray {
+			if let path = Bundle.main.path(forResource: "ReleaseNotes", ofType: "plist"), let releaseNotesValues = NSDictionary(contentsOfFile: path), let versionsValues = releaseNotesValues["Versions"] as? NSArray {
 
-					let relevantReleaseNotes = versionsValues.filter {
-						if let version = ($0 as AnyObject)["Version"] as? String, version.compare(VendorServices.shared.appVersion, options: .numeric) == .orderedDescending {
-							return false
-						}
-
-						return true
+				let relevantReleaseNotes = versionsValues.filter {
+					if let version = ($0 as AnyObject)["Version"] as? String, version.compare(VendorServices.shared.appVersion, options: .numeric) == .orderedDescending {
+						return false
 					}
 
-					if relevantReleaseNotes.count > 0 {
-						return true
-					}
+					return true
+				}
+
+				if relevantReleaseNotes.count > 0 {
+					return true
 				}
 			}
 
