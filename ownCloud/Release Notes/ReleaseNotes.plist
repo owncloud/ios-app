@@ -13,7 +13,7 @@
 					<key>Title</key>
 					<string>Multiple Window Support</string>
 					<key>Subtitle</key>
-					<string>Starting with iPadOS 13 you can have multiple windows and app instances. Open your ownCloud accounts side by side, show a file preview in a new window or drag and drop files betweenn two accounts. All windows will be restored, after the app was launched.</string>
+					<string>Starting with iPadOS 13 you can have multiple windows and app instances. Open your ownCloud accounts side by side, show a file preview in a new window or drag and drop files between two accounts. All windows will be restored, after the app was launched.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageData</key>
