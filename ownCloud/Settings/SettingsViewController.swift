@@ -25,6 +25,11 @@ class SettingsViewController: StaticTableViewController {
 		super.viewDidLoad()
 		self.navigationItem.title = "Settings".localized
 
+		if self.navigationController?.isBeingPresented ?? false {
+			let doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
+			self.navigationItem.rightBarButtonItem = doneBarButtonItem
+		}
+
 		if let userDefaults = OCAppIdentity.shared.userDefaults {
 			self.addSection(SecuritySettingsSection(userDefaults: userDefaults))
 			self.addSection(UserInterfaceSettingsSection(userDefaults: userDefaults))
