@@ -73,8 +73,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
-		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
-		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CollaborateAction.actionExtension)
@@ -82,11 +80,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
 		// OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
+
 		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
 			OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
 			OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
 		}
 
+		// Task extensions
+		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
+		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
+		OCExtensionManager.shared.addExtension(PendingMediaUploadTaskExtension.taskExtension)
+
+		// Theming
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
 		// Licenses
