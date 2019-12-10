@@ -23,7 +23,7 @@
 					<key>Title</key>
 					<string>Keyboard Commands</string>
 					<key>Subtitle</key>
-					<string>On iPadOS 13 you can control the app with a hardware keyboard. Long press the command key to see all available actions. These actions can change, if an item is selected or not.</string>
+					<string>On iPadOS you can control the app with a hardware keyboard. Long press the command key to see all available actions. These actions can change, if an item is selected or not.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageData</key>
