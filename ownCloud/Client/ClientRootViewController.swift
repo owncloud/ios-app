@@ -174,13 +174,16 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		self.tabBar.isTranslucent = false
 
+		// Add tab bar icons
+		Theme.shared.add(tvgResourceFor: "folder")
+		Theme.shared.add(tvgResourceFor: "owncloud-logo")
+		Theme.shared.add(tvgResourceFor: "status-flash")
+
 		filesNavigationController = ThemeNavigationController()
 		filesNavigationController?.delegate = self
 		filesNavigationController?.navigationBar.isTranslucent = false
 		filesNavigationController?.tabBarItem.title = "Browse".localized
 		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: folderButtonsSize)
-
-		Theme.shared.add(tvgResourceFor: "status-flash")
 
 		activityViewController = ClientActivityViewController()
 		activityNavigationController = ThemeNavigationController(rootViewController: activityViewController!)
