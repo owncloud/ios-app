@@ -25,6 +25,8 @@ import MobileCoreServices
 class MediaDisplayViewController : DisplayViewController {
 
 	static let MediaPlaybackFinishedNotification = NSNotification.Name("media_playback.finished")
+    static let MediaPlaybackNextTrackNotification = NSNotification.Name("media_playback.play_next")
+    static let MediaPlaybackPreviousTrackNotification = NSNotification.Name("media_playback.play_previous")
 
 	private var playerStatusObservation: NSKeyValueObservation?
 	private var playerItemStatusObservation: NSKeyValueObservation?
@@ -40,6 +42,8 @@ class MediaDisplayViewController : DisplayViewController {
 	deinit {
 		playerStatusObservation?.invalidate()
 		playerItemStatusObservation?.invalidate()
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
 
 		NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
 		NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -219,7 +223,6 @@ class MediaDisplayViewController : DisplayViewController {
 		}
 
 		// Add handler for skip forward command
-		commandCenter.skipForwardCommand.isEnabled = true
 		commandCenter.skipForwardCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
 			if let player = self?.player {
 				let time = player.currentTime() + CMTime(seconds: 10.0, preferredTimescale: 1)
@@ -228,12 +231,12 @@ class MediaDisplayViewController : DisplayViewController {
 						MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self?.playerItem?.currentTime().seconds
 					}
 				}
+                return .success
 			}
 			return .commandFailed
 		}
 
 		// Add handler for skip backward command
-		commandCenter.skipBackwardCommand.isEnabled = true
 		commandCenter.skipBackwardCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
 			if let player = self?.player {
 				let time = player.currentTime() - CMTime(seconds: 10.0, preferredTimescale: 1)
@@ -242,13 +245,56 @@ class MediaDisplayViewController : DisplayViewController {
 						MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self?.playerItem?.currentTime().seconds
 					}
 				}
+                return .success
 			}
 			return .commandFailed
 		}
+        
+        // TODO: Skip controls are useful for podcasts but not so much for music.
+        // Disable them for now but keep the implementation of command handlers
+        commandCenter.skipForwardCommand.isEnabled = false
+        commandCenter.skipBackwardCommand.isEnabled = false
 
-		// Disable seek commands
-		commandCenter.seekForwardCommand.isEnabled = false
-		commandCenter.seekBackwardCommand.isEnabled = false
+		// Configure next / previous track buttons according to number of items to be played
+        var enableNextTrackCommand = false
+        var enablePreviousTrackCommand = false
+
+        if let itemIndex = self.itemIndex {
+            if itemIndex > 0 {
+                enablePreviousTrackCommand = true
+            }
+            
+            if let displayHostController = self.parent as? DisplayHostViewController, let items = displayHostController.items {
+                enableNextTrackCommand = itemIndex < (items.count - 1)
+            }
+        }
+        
+        commandCenter.nextTrackCommand.isEnabled = enableNextTrackCommand
+		commandCenter.previousTrackCommand.isEnabled = enablePreviousTrackCommand
+        
+        // Add handler for seek forward command
+        commandCenter.nextTrackCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
+            if let player = self?.player {
+                player.pause()
+                OnMainThread {
+                    NotificationCenter.default.post(name: MediaDisplayViewController.MediaPlaybackNextTrackNotification, object: nil)
+                }
+                return .success
+            }
+            return .commandFailed
+        }
+        
+        // Add handler for seek backward command
+        commandCenter.previousTrackCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
+            if let player = self?.player {
+                player.pause()
+                OnMainThread {
+                    NotificationCenter.default.post(name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
+                }
+                return .success
+            }
+            return .commandFailed
+        }
 	}
 
 	private func updateNowPlayingInfoCenter() {
