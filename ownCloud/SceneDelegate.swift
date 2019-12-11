@@ -68,4 +68,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 		return false
 	}
+
+	func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+		if let urlContext = URLContexts.first {
+			ImportFilesController(url: urlContext.url, copyBeforeUsing: urlContext.options.openInPlace).accountUI()
+		}
+	}
 }
