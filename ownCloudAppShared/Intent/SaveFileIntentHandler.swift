@@ -25,6 +25,13 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 
 	public func handle(intent: SaveFileIntent, completion: @escaping (SaveFileIntentResponse) -> Void) {
 
+		// Todo:
+		// if Shortcuts not enabled
+		//completion(GetAccountIntentResponse(code: .disabled, userActivity: nil))
+
+		// if enabled, but not a valid license
+		//completion(GetAccountIntentResponse(code: .unlicensed, userActivity: nil))
+
 		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(SaveFileIntentResponse(code: .authenticationRequired, userActivity: nil))
 			return

@@ -25,6 +25,13 @@ public class GetFileInfoIntentHandler: NSObject, GetFileInfoIntentHandling {
 
 	public func handle(intent: GetFileInfoIntent, completion: @escaping (GetFileInfoIntentResponse) -> Void) {
 
+		// Todo:
+		// if Shortcuts not enabled
+		//completion(GetAccountIntentResponse(code: .disabled, userActivity: nil))
+
+		// if enabled, but not a valid license
+		//completion(GetAccountIntentResponse(code: .unlicensed, userActivity: nil))
+
 		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(GetFileInfoIntentResponse(code: .authenticationRequired, userActivity: nil))
 			return

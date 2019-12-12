@@ -25,6 +25,13 @@ public class GetAccountsIntentHandler: NSObject, GetAccountsIntentHandling {
 
 	public func handle(intent: GetAccountsIntent, completion: @escaping (GetAccountsIntentResponse) -> Void) {
 
+		// Todo:
+		// if Shortcuts not enabled
+		//completion(GetAccountIntentResponse(code: .disabled, userActivity: nil))
+
+		// if enabled, but not a valid license
+		//completion(GetAccountIntentResponse(code: .unlicensed, userActivity: nil))
+
 		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(GetAccountsIntentResponse(code: .authenticationRequired, userActivity: nil))
 			return

@@ -25,6 +25,13 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 
 	public func handle(intent: CreateFolderIntent, completion: @escaping (CreateFolderIntentResponse) -> Void) {
 
+		// Todo:
+		// if Shortcuts not enabled
+		//completion(GetAccountIntentResponse(code: .disabled, userActivity: nil))
+
+		// if enabled, but not a valid license
+		//completion(GetAccountIntentResponse(code: .unlicensed, userActivity: nil))
+
 		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(CreateFolderIntentResponse(code: .authenticationRequired, userActivity: nil))
 			return

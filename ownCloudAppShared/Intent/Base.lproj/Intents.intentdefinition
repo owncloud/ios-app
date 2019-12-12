@@ -126,11 +126,11 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>K5U8aR</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>18G95</string>
+	<string>19B88</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>11A420a</string>
+	<string>11B53</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>11.0</string>
+	<string>11.2.1</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -199,6 +199,30 @@
 						<string>iDEwxe</string>
 						<key>INIntentResponseCodeName</key>
 						<string>authenticationRequired</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>74Rz1p</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>xzMJ1y</string>
+						<key>INIntentResponseCodeName</key>
+						<string>disabled</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>y8oko2</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>VSQYEZ</string>
+						<key>INIntentResponseCodeName</key>
+						<string>unlicensed</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -571,6 +595,30 @@
 						<key>INIntentResponseCodeName</key>
 						<string>accountFailure</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>6JHJJP</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>pLbUOb</string>
+						<key>INIntentResponseCodeName</key>
+						<string>disabled</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>fjiVU2</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>0pF5fq</string>
+						<key>INIntentResponseCodeName</key>
+						<string>unlicensed</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>2</integer>
@@ -791,6 +839,30 @@
 						<string>61YuKy</string>
 						<key>INIntentResponseCodeName</key>
 						<string>accountFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>SW8AiH</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>cfhOuF</string>
+						<key>INIntentResponseCodeName</key>
+						<string>disabled</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>rzbAOP</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>8a8rsQ</string>
+						<key>INIntentResponseCodeName</key>
+						<string>unlicensed</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -1126,6 +1198,30 @@
 						<key>INIntentResponseCodeName</key>
 						<string>accountFailure</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>WfA15u</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>OmLLGX</string>
+						<key>INIntentResponseCodeName</key>
+						<string>disabled</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>81IjYk</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>yTzyi1</string>
+						<key>INIntentResponseCodeName</key>
+						<string>unlicensed</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>1</integer>
@@ -1389,6 +1485,30 @@
 						<key>INIntentResponseCodeName</key>
 						<string>folderExistsFailure</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>je9RXz</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>4WGDPz</string>
+						<key>INIntentResponseCodeName</key>
+						<string>disabled</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>X0Zskf</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>bfU2dy</string>
+						<key>INIntentResponseCodeName</key>
+						<string>unlicensed</string>
+					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>1</integer>
@@ -1605,6 +1725,30 @@
 						<string>hLfV0h</string>
 						<key>INIntentResponseCodeName</key>
 						<string>accountFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>4JjSYi</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>znA04X</string>
+						<key>INIntentResponseCodeName</key>
+						<string>disabled</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>idUnAy</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>lNNcvh</string>
+						<key>INIntentResponseCodeName</key>
+						<string>unlicensed</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -1828,6 +1972,30 @@
 						<string>C4qdxp</string>
 						<key>INIntentResponseCodeName</key>
 						<string>accountFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>tiPumg</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>sdm6CF</string>
+						<key>INIntentResponseCodeName</key>
+						<string>disabled</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>65dv1W</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>9tIXKj</string>
+						<key>INIntentResponseCodeName</key>
+						<string>unlicensed</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -2071,6 +2239,30 @@
 						<key>INIntentResponseCodeName</key>
 						<string>accountFailure</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>5bfpVi</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>6oQ3E3</string>
+						<key>INIntentResponseCodeName</key>
+						<string>disabled</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>sKUo1c</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>1rpPPR</string>
+						<key>INIntentResponseCodeName</key>
+						<string>unlicensed</string>
+					</dict>
 				</array>
 			</dict>
 			<key>INIntentTitle</key>
@@ -2201,6 +2393,30 @@
 						<string>UdyMQ5</string>
 						<key>INIntentResponseCodeName</key>
 						<string>accountFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>7bVLsg</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>4U4XOu</string>
+						<key>INIntentResponseCodeName</key>
+						<string>disabled</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>ceG0fs</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Your subscription is no longer valid. Please go into the app and renew the subscription for this feature.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>GJ25u2</string>
+						<key>INIntentResponseCodeName</key>
+						<string>unlicensed</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>

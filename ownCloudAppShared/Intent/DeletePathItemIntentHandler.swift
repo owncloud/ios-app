@@ -25,6 +25,13 @@ public class DeletePathItemIntentHandler: NSObject, DeletePathItemIntentHandling
 
 	public func handle(intent: DeletePathItemIntent, completion: @escaping (DeletePathItemIntentResponse) -> Void) {
 
+		// Todo:
+		// if Shortcuts not enabled
+		//completion(GetAccountIntentResponse(code: .disabled, userActivity: nil))
+
+		// if enabled, but not a valid license
+		//completion(GetAccountIntentResponse(code: .unlicensed, userActivity: nil))
+
 		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(DeletePathItemIntentResponse(code: .authenticationRequired, userActivity: nil))
 			return
