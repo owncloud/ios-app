@@ -136,7 +136,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		OnMainThread {
 			let alertController = ThemedAlertController(with: "Instant upload disabled".localized,
 																	message: "Instant upload of media was disabled since configured account / folder was not found".localized)
-			UIApplication.shared.delegate?.window??.rootViewController?.present(alertController, animated: true, completion: nil)
+			UIApplication.shared.currentWindow()?.rootViewController?.present(alertController, animated: true, completion: nil)
 		}
 	}
 }
