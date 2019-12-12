@@ -202,7 +202,8 @@ class MediaDisplayViewController : DisplayViewController {
 		commandCenter.playCommand.addTarget { [weak self] _ in
 			if let player = self?.player {
 				if player.rate == 0.0 {
-					player.play()
+                    player.play()
+                    self?.updateNowPlayingTimeline()
 					return .success
 				}
 			}
@@ -215,6 +216,7 @@ class MediaDisplayViewController : DisplayViewController {
 			if let player = self?.player {
 				if player.rate == 1.0 {
 					player.pause()
+                    self?.updateNowPlayingTimeline()
 					return .success
 				}
 			}
@@ -228,7 +230,7 @@ class MediaDisplayViewController : DisplayViewController {
 				let time = player.currentTime() + CMTime(seconds: 10.0, preferredTimescale: 1)
 				player.seek(to: time) { (finished) in
 					if finished {
-						MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self?.playerItem?.currentTime().seconds
+                        self?.updateNowPlayingTimeline()
 					}
 				}
                 return .success
@@ -242,7 +244,7 @@ class MediaDisplayViewController : DisplayViewController {
 				let time = player.currentTime() - CMTime(seconds: 10.0, preferredTimescale: 1)
 				player.seek(to: time) { (finished) in
 					if finished {
-						MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self?.playerItem?.currentTime().seconds
+                        self?.updateNowPlayingTimeline()
 					}
 				}
                 return .success
@@ -297,25 +299,34 @@ class MediaDisplayViewController : DisplayViewController {
         }
 	}
 
+    private func updateNowPlayingTimeline() {
+
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.playerItem?.currentTime().seconds
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = self.player?.rate
+    }
+    
 	private func updateNowPlayingInfoCenter() {
-		guard let player = self.player else { return }
+        guard let player = self.player else { return }
 		guard let playerItem = self.playerItem else { return }
 
 		var nowPlayingInfo = [String : Any]()
 
 		nowPlayingInfo[MPMediaItemPropertyTitle] = mediaItemTitle
 		nowPlayingInfo[MPMediaItemPropertyArtist] = mediaItemArtist
-		nowPlayingInfo[MPNowPlayingInfoPropertyCurrentPlaybackDate] = self.playerItem?.currentDate()
 		nowPlayingInfo[MPNowPlayingInfoPropertyAssetURL] = source
+        nowPlayingInfo[MPNowPlayingInfoPropertyCurrentPlaybackDate] = playerItem.currentDate()
 		nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = playerItem.currentTime().seconds
-		nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = playerItem.asset.duration.seconds
-		nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = playerItem.asset.duration.seconds
 
 		if mediaItemArtwork != nil {
 			nowPlayingInfo[MPMediaItemPropertyArtwork] = mediaItemArtwork
 		}
 
 		MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        
+        updateNowPlayingTimeline()
 	}
 }
 
