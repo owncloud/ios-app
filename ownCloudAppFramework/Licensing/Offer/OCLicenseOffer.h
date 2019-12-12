@@ -36,7 +36,8 @@ typedef NS_ENUM(NSUInteger, OCLicenseOfferState)
 
 	OCLicenseOfferStateInProgress,	//!< The user is committing to (buying) the offer, but the commitment is still being processed.
 
-	OCLicenseOfferStateCommitted	//!< The user has commited to (bought) the offer.
+	OCLicenseOfferStateCommitted,	//!< The user has committed to (bought) the offer.
+	OCLicenseOfferStateExpired 	//!< The user has committed to the offer, but it has expired (f.ex. for subscriptions that have ended).
 };
 
 @interface OCLicenseOffer : NSObject
@@ -62,7 +63,7 @@ typedef NS_ENUM(NSUInteger, OCLicenseOfferState)
 #pragma mark - State
 @property(assign) OCLicenseOfferState state;
 
-- (OCLicenseOfferState)stateInEnvironment:(OCLicenseEnvironment *)environment; //!< Computes the state based on environment. The state OCLicenseOfferStateRedundant can only occur as a result of this method, not as value for .state.
+- (OCLicenseOfferState)stateInEnvironment:(OCLicenseEnvironment *)environment; //!< Computes the state based on environment. The OCLicenseOfferStateRedundant and OCLicenseOfferStateExpired states can only occur as a result of this method, not as value for .state.
 
 #pragma mark - Availability
 @property(nullable,strong) NSDate *fromDate;
@@ -75,7 +76,7 @@ typedef NS_ENUM(NSUInteger, OCLicenseOfferState)
 
 @property(nonatomic,strong) NSString *localizedPriceTag;
 
-@property(nonatomic,strong) OCLicenseDuration *trialDuration;
+@property(nonatomic,nullable,strong) OCLicenseDuration *trialDuration;
 @property(nonatomic,strong) OCLicenseDuration *subscriptionTermDuration;
 
 #pragma mark - Request offer / Make purchase

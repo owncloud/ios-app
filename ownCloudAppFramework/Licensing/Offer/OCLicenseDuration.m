@@ -68,7 +68,7 @@
 		case OCLicenseDurationUnitDay:
 			if (_length == 1)
 			{
-				format = OCLocalized(@"%lu day");
+				format = OCLocalized(@"day");
 			}
 			else
 			{
@@ -79,7 +79,7 @@
 		case OCLicenseDurationUnitWeek:
 			if (_length == 1)
 			{
-				format = OCLocalized(@"%lu week");
+				format = OCLocalized(@"week");
 			}
 			else
 			{
@@ -90,7 +90,7 @@
 		case OCLicenseDurationUnitMonth:
 			if (_length == 1)
 			{
-				format = OCLocalized(@"%lu month");
+				format = OCLocalized(@"month");
 			}
 			else
 			{
@@ -101,7 +101,7 @@
 		case OCLicenseDurationUnitYear:
 			if (_length == 1)
 			{
-				format = OCLocalized(@"%lu year");
+				format = OCLocalized(@"year");
 			}
 			else
 			{

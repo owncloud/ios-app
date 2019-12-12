@@ -148,7 +148,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		// Set up App Store License Provider
 		let appStoreLicenseProvider = OCLicenseAppStoreProvider(items: [
-			OCLicenseAppStoreItem.trial(withAppStoreIdentifier: "trial.pro.30days", trialDuration: OCLicenseDuration(unit: .day, length: 30), productIdentifier: OCLicenseProductIdentifier(rawValue: "bundle.pro")),
 			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentsharing", productIdentifier: OCLicenseProductIdentifier(rawValue: "single.document-scanner")),
 			OCLicenseAppStoreItem.subscription(withAppStoreIdentifier: "bundle.pro", productIdentifier: OCLicenseProductIdentifier(rawValue: "bundle.pro"), trialDuration: OCLicenseDuration(unit: .day, length: 14))
 		])

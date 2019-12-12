@@ -74,6 +74,37 @@
 		}
 	}
 
+	OCLicenseProduct *product;
+
+	if ((product = [self.provider.manager productWithIdentifier:_productIdentifier]) != nil)
+	{
+		BOOL allFeaturesUnlocked = (product.contents.count > 0);
+
+		for (OCLicenseFeatureIdentifier featureIdentifier in product.contents)
+		{
+			if ([self.provider.manager authorizationStatusForFeature:featureIdentifier inEnvironment:environment] != OCLicenseAuthorizationStatusGranted)
+			{
+				allFeaturesUnlocked = NO;
+				break;
+			}
+		}
+
+		if (allFeaturesUnlocked)
+		{
+			// Contents of product unlocked by offer already paid for
+			return (OCLicenseOfferStateRedundant);
+		}
+	}
+
+	if (_state == OCLicenseOfferStateCommitted)
+	{
+		if ([self.provider.manager authorizationStatusForProduct:_productIdentifier inEnvironment:environment] == OCLicenseAuthorizationStatusExpired)
+		{
+			// Offer was taken, but entitlements granted through it have since expired
+			return (OCLicenseOfferStateExpired);
+		}
+	}
+
 	return (_state);
 }
 
@@ -138,6 +169,10 @@
 
 		case OCLicenseOfferStateCommitted:
 			return (@"committed");
+		break;
+
+		case OCLicenseOfferStateExpired:
+			return (@"expired");
 		break;
 	}
 

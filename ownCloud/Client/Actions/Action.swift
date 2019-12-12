@@ -320,8 +320,7 @@ class Action : NSObject {
 				OnMainThread {
 					let offersViewController = LicenseOffersViewController(withFeature: requirements.feature, in: core.licenseEnvironment)
 
-//					viewController.present(offersViewController, animated: true, completion: nil)
-					viewController.present(asCard: offersViewController, animated: true)
+					viewController.present(asCard: MoreViewController(header: offersViewController.cardHeaderView!, viewController: offersViewController), animated: true)
 				}
 			}
 

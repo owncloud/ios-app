@@ -47,6 +47,8 @@ typedef NSString* OCLicenseTransactionIdentifier;
 @property(nullable,strong,nonatomic) NSArray<NSDictionary<NSString *, id> *> *tableRows;
 @property(nullable,strong,nonatomic) NSArray<NSDictionary<NSString *, NSString *> *> *displayTableRows;
 
+@property(nullable,strong) NSDictionary<NSString *, NSURL *> *links;
+
 + (instancetype)transactionWithProvider:(nullable OCLicenseProvider *)provider identifier:(OCLicenseTransactionIdentifier)identifier type:(OCLicenseType)type quantity:(NSInteger)quantity name:(NSString *)name productIdentifier:(nullable OCLicenseProductIdentifier)productIdentifier date:(nullable NSDate *)date endDate:(nullable NSDate *)endDate cancellationDate:(nullable NSDate *)cancellationDate;
 
 + (instancetype)transactionWithProvider:(nullable OCLicenseProvider *)provider tableRows:(NSArray<NSDictionary<NSString *, id> *> *)tableRows;

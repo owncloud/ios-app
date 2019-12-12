@@ -27,7 +27,7 @@ class LicenseTransactionsViewController: StaticTableViewController {
 
 		self.toolbarItems = [
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-			UIBarButtonItem(title: "Restore in-app purchases".localized, style: .plain, target: self, action: #selector(restorePurchases)),
+			UIBarButtonItem(title: "Restore purchases".localized, style: .plain, target: self, action: #selector(restorePurchases)),
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 		]
 
@@ -81,6 +81,14 @@ class LicenseTransactionsViewController: StaticTableViewController {
 						}
 					}
 
+					if let links = transaction.links {
+						for (title, url) in links {
+							section.add(row: StaticTableViewRow(rowWithAction: { (_, _) in
+								UIApplication.shared.open(url, options: [:], completionHandler: nil)
+							}, title: title, alignment: .center))
+						}
+					}
+
 					firstTransaction = false
 
 					self.addSection(section)
@@ -90,25 +98,11 @@ class LicenseTransactionsViewController: StaticTableViewController {
 	}
 
 	@objc func restorePurchases() {
-		if let appStoreProvider = OCLicenseManager.appStoreProvider {
-			let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
-
-			hud?.present(on: self, label: "Restoring purchases…".localized)
-
-			appStoreProvider.restorePurchases(completionHandler: { (error) in
-				hud?.dismiss(completion: nil)
-
-				if let error = error {
-					let alert = UIAlertController(title: "Error restoring purchases".localized, message: error.localizedDescription, preferredStyle: .alert)
-
-					alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
-
-					self.present(alert, animated: true, completion: nil)
-				} else {
-					self.removeSections(self.sections)
-					self.fetchTransactions()
-				}
-			})
+		OCLicenseManager.shared.restorePurchases(on: self) { (error) in
+			if error == nil {
+				self.removeSections(self.sections)
+				self.fetchTransactions()
+			}
 		}
 	}
 }

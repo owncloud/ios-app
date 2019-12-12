@@ -36,6 +36,8 @@ typedef void(^OCLicenseAppStoreRestorePurchasesCompletionHandler)(NSError * _Nul
 
 @property(strong) NSArray<OCLicenseAppStoreItem *> *items;
 
+@property(nonatomic,readonly) BOOL purchasesAllowed;
+
 #pragma mark - Init
 - (instancetype)initWithItems:(NSArray<OCLicenseAppStoreItem *> *)items;
 

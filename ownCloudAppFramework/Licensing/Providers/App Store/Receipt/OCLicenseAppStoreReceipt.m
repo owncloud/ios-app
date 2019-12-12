@@ -186,7 +186,7 @@
 							return ([iap parseField:fieldType withContents:contents]);
 						}];
 
-						self->_inAppPurchases = contents.containers;
+						self->_inAppPurchases = (self->_inAppPurchases != nil) ? [self->_inAppPurchases arrayByAddingObjectsFromArray:contents.containers] : contents.containers;
 					break;
 
 					default:

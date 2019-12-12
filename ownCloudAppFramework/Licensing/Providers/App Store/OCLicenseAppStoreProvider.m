@@ -25,6 +25,8 @@
 #import "OCLicenseProduct.h"
 #import "OCLicenseTransaction.h"
 
+#define AppStoreOfferIdentifier(appStoreProductIdentifier) [@"appstore." stringByAppendingString:appStoreProductIdentifier]
+
 @interface OCLicenseAppStoreProvider () <SKProductsRequestDelegate, SKPaymentTransactionObserver>
 {
 	OCLicenseProviderCompletionHandler _startCompletionHandler;
@@ -54,6 +56,12 @@
 	}
 
 	return (self);
+}
+
+#pragma mark - Purchases allowed
+- (BOOL)purchasesAllowed
+{
+	return (SKPaymentQueue.canMakePayments);
 }
 
 #pragma mark - Mapping
@@ -117,7 +125,9 @@
 			OCLicenseProduct *product = [self.manager productWithIdentifier:productID];
 			OCLicenseAppStoreItem *item = [self itemForAppStoreIdentifier:iap.productID];
 
-			[transactions addObject:[OCLicenseTransaction transactionWithProvider:self
+			OCLicenseTransaction *transaction;
+
+			transaction = [OCLicenseTransaction transactionWithProvider:self
 										   identifier:iap.webOrderLineItemID.stringValue
 											 type:item.type
 										     quantity:iap.quantity.integerValue
@@ -125,8 +135,13 @@
 									    productIdentifier:product.identifier
 											 date:iap.purchaseDate
 										      endDate:iap.subscriptionExpirationDate
-									     cancellationDate:iap.cancellationDate]
-			];
+									     cancellationDate:iap.cancellationDate];
+			if ((transaction.type == OCLicenseTypeSubscription) && (iap.subscriptionExpirationDate.timeIntervalSinceNow > 0) && ((iap.cancellationDate==nil) || (iap.cancellationDate.timeIntervalSinceNow > 0)))
+			{
+				transaction.links = @{ OCLocalized(@"Manage subscription") : [NSURL URLWithString:@"https://apps.apple.com/account/subscriptions"] };
+			}
+
+			[transactions addObject:transaction];
 		}
 	}
 
@@ -339,7 +354,6 @@
 {
 	// Create offers from items
 	NSMutableArray<OCLicenseOffer *> *offers = [NSMutableArray new];
-	OCLicenseAppStoreReceipt *receipt = _receipt;
 
 	for (OCLicenseAppStoreItem *item in _items)
 	{
@@ -350,10 +364,12 @@
 			OCLicenseOffer *offer = nil;
 			OCLicenseAppStoreProductIdentifier appStoreProductIdentifier = storeProduct.productIdentifier;
 
-			offer = [OCLicenseOffer offerWithIdentifier:[@"appstore." stringByAppendingString:appStoreProductIdentifier] type:item.type product:item.productIdentifier];
+			offer = [OCLicenseOffer offerWithIdentifier:AppStoreOfferIdentifier(appStoreProductIdentifier) type:item.type product:item.productIdentifier];
 
 			offer.price = storeProduct.price;
 			offer.priceLocale = storeProduct.priceLocale;
+
+			offer.available = YES;
 
 			offer.localizedTitle = storeProduct.localizedTitle;
 			offer.localizedDescription = storeProduct.localizedDescription;
@@ -363,7 +379,14 @@
 
 				if (appStoreProvider != nil)
 				{
-					[appStoreProvider requestPaymentFor:storeProduct];
+					if (!appStoreProvider.purchasesAllowed)
+					{
+						// Present alert
+					}
+					else
+					{
+						[appStoreProvider requestPaymentFor:storeProduct];
+					}
 				}
 			};
 
@@ -377,20 +400,8 @@
 
 			offer.groupIdentifier = storeProduct.subscriptionGroupIdentifier;
 
-			// Derive state from payment queue
-			if (_offerStateByAppStoreProductIdentifier[appStoreProductIdentifier] != nil)
-			{
-				offer.state = _offerStateByAppStoreProductIdentifier[appStoreProductIdentifier].unsignedIntegerValue;
-			}
-
-			// Derive state from receipt
-			for (OCLicenseAppStoreReceiptInAppPurchase *iap in receipt.inAppPurchases)
-			{
-				if ([iap.productID isEqual:appStoreProductIdentifier])
-				{
-					offer.state = OCLicenseOfferStateCommitted;
-				}
-			}
+			// Compute state
+			[self _updateStateForOffer:offer withAppStoreProductIdentifier:appStoreProductIdentifier];
 
 			// Add offer
 			if (offer != nil)
@@ -401,7 +412,26 @@
 	}
 
 	self.offers = (offers.count > 0) ? offers : nil;
+}
 
+- (void)_updateStateForOffer:(OCLicenseOffer *)offer withAppStoreProductIdentifier:(OCLicenseAppStoreProductIdentifier)appStoreProductIdentifier
+{
+	OCLicenseAppStoreReceipt *receipt = _receipt;
+
+	// Derive state from payment queue
+	if (_offerStateByAppStoreProductIdentifier[appStoreProductIdentifier] != nil)
+	{
+		offer.state = _offerStateByAppStoreProductIdentifier[appStoreProductIdentifier].unsignedIntegerValue;
+	}
+
+	// Derive state from receipt
+	for (OCLicenseAppStoreReceiptInAppPurchase *iap in receipt.inAppPurchases)
+	{
+		if ([iap.productID isEqual:appStoreProductIdentifier])
+		{
+			offer.state = OCLicenseOfferStateCommitted;
+		}
+	}
 }
 
 #pragma mark - Product request delegate
@@ -529,6 +559,18 @@
 			@synchronized(self)
 			{
 				_offerStateByAppStoreProductIdentifier[appStoreProductIdentifier] = @(offerState);
+
+				// Update offer
+				OCLicenseOfferIdentifier offerID = AppStoreOfferIdentifier(appStoreProductIdentifier);
+
+				for (OCLicenseOffer *offer in self.offers)
+				{
+					if ([offer.identifier isEqual:offerID])
+					{
+						[self _updateStateForOffer:offer withAppStoreProductIdentifier:appStoreProductIdentifier];
+						break;
+					}
+				}
 			}
 		}
 
