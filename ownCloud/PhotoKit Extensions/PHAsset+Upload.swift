@@ -185,10 +185,9 @@ extension PHAsset {
 					default:
 						break
 					}
-				} else {
-					Log.error(tagged: ["MEDIA_UPLOAD"], "Format mismatch for asset ID \(self.localIdentifier)")
-					conversionError = NSError(ocError: .internal)
-				}
+                } else {
+                    Log.debug(tagged: ["MEDIA_UPLOAD"], "No conversion format match for asset ID \(self.localIdentifier), URL: \(String(describing: assetURL)), UTI: \(String(describing: assetUTI))")
+                }
 			}
 		}
 
