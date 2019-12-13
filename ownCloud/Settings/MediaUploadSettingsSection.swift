@@ -51,7 +51,9 @@ extension UserDefaults {
 		}
 
 		get {
-			return self.bool(forKey: MediaUploadKeys.ConvertVideosToMP4Key.rawValue)
+            // TODO: MPEG-4 conversion is broken in iOS13, revisit it again in later releases
+            //return self.bool(forKey: MediaUploadKeys.ConvertVideosToMP4Key.rawValue)
+            return false
 		}
 	}
 
@@ -169,7 +171,8 @@ class MediaUploadSettingsSection: SettingsSection {
 			}, title: "Convert videos to MP4".localized, value: self.userDefaults.convertVideosToMP4, identifier: "convert_to_mp4")
 
 		self.add(row: convertPhotosSwitchRow!)
-		self.add(row: convertVideosSwitchRow!)
+        // TODO: MPEG-4 conversion is broken in iOS13, revisit it again in later releases
+		//self.add(row: convertVideosSwitchRow!)
 
 		// Instant upload requires at least one configured account
 		if OCBookmarkManager.shared.bookmarks.count > 0 {
