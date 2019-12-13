@@ -72,7 +72,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
-		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [item], location: actionsLocation)
+		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [item], location: actionsLocation, sender: cell)
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: makeActionProgressHandler()) {
 			self.present(asCard: moreViewController, animated: true)
@@ -226,7 +226,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 	}
 
-	func open(item: OCItem, animated: Bool, pushViewController: Bool = true) -> ClientQueryViewController? {
+	@discardableResult func open(item: OCItem, animated: Bool, pushViewController: Bool = true) -> ClientQueryViewController? {
 		if let core = self.core {
 			if #available(iOS 13.0, *) {
 				if  let tabBarController = self.tabBarController as? ClientRootViewController {

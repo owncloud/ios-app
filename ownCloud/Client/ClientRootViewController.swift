@@ -174,13 +174,16 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		self.tabBar.isTranslucent = false
 
+		// Add tab bar icons
+		Theme.shared.add(tvgResourceFor: "folder")
+		Theme.shared.add(tvgResourceFor: "owncloud-logo")
+		Theme.shared.add(tvgResourceFor: "status-flash")
+
 		filesNavigationController = ThemeNavigationController()
 		filesNavigationController?.delegate = self
 		filesNavigationController?.navigationBar.isTranslucent = false
 		filesNavigationController?.tabBarItem.title = "Browse".localized
 		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: folderButtonsSize)
-
-		Theme.shared.add(tvgResourceFor: "status-flash")
 
 		activityViewController = ClientActivityViewController()
 		activityNavigationController = ThemeNavigationController(rootViewController: activityViewController!)
@@ -221,17 +224,6 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		if let filesNavigationController = filesNavigationController,
 		   let activityNavigationController = activityNavigationController, let libraryNavigationController = libraryNavigationController {
 			self.viewControllers = [ filesNavigationController, libraryNavigationController, activityNavigationController ]
-		}
-	}
-
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-
-		if MediaUploadQueue.isMediaUploadPendingFlagSet(for: self.bookmark) {
-			let unfinishedUploadAlert = ThemedAlertController(with: "Warning".localized,
-														   message: "Media upload in the previous session was incomplete since the application was terminated".localized)
-			self.present(unfinishedUploadAlert, animated: true, completion: nil)
-			MediaUploadQueue.resetUploadPendingFlag(for: self.bookmark)
 		}
 	}
 

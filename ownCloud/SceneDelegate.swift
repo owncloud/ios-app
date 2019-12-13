@@ -44,7 +44,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		return scene.userActivity
 	}
 
-	func configure(window: UIWindow?, with activity: NSUserActivity) -> Bool {
+	@discardableResult func configure(window: UIWindow?, with activity: NSUserActivity) -> Bool {
 		guard let bookmarkUUIDString = activity.userInfo?[ownCloudOpenAccountAccountUuidKey] as? String, let bookmarkUUID = UUID(uuidString: bookmarkUUIDString), let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID), let navigationController = window?.rootViewController as? ThemeNavigationController, let serverListController = navigationController.topViewController as? ServerListTableViewController else {
 			return false
 		}
@@ -67,5 +67,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		}
 
 		return false
+	}
+
+	func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+		if let urlContext = URLContexts.first {
+			ImportFilesController(url: urlContext.url, copyBeforeUsing: urlContext.options.openInPlace).accountUI()
+		}
 	}
 }
