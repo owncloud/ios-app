@@ -124,6 +124,7 @@
 "Sign in" = "Einloggen";
 "Ignore" = "Ignorieren";
 "Continue offline" = "Offline fortfahren";
+"Media upload in the previous session was incomplete since the application was terminated" = "Der Medien-Upload in der vorherigen Sitzung war unvollständig, da die Anwendung beendet wurde.";
 
 /* Server List*/
 "Cancel" = "Abbrechen";
@@ -160,7 +161,7 @@
 "More" = "Mehr";
 "Send feedback" = "Feedback senden";
 "Recommend to a friend" = "Dies einem Freund empfehlen";
-"Privacy Policy" = "Datenschutzerkärung";
+"Privacy Policy" = "Datenschutzerklärung";
 "Acknowledgements" = "Danksagungen";
 "Video upload path" = "Pfad für den Video-Upload";
 "Photo upload path" = "Upload Pfad für Fotos";
@@ -184,6 +185,8 @@
 "Dark" = "Dunkel";
 "Light" = "Hell";
 "Classic" = "Klassik";
+"System" = "System";
+"System Appeareance" = "Erscheinungsbild";
 
 /* Log settings */
 "Log Files" = "Protokolldateien";
@@ -228,6 +231,8 @@
 "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Gemessene Zeit seit dem Hochladen, Bearbeiten, Herunterladen oder Anzeigen der jeweiligen Datei über dieses Gerät. Gilt nicht für Dateien, die über die Funktion Offline verfügbar heruntergeladen wurden. Lokale Kopien können vor Ablauf des angegebenen Zeitraums gelöscht werden, z.B. weil es eine neuere Version einer Datei auf dem Server gibt - oder durch das manuelle Löschen von Offline-Kopien. Außerdem dürfen lokale Kopien nach Ablauf der angegebenen Zeit nicht gelöscht werden, z.B. wenn eine Aktion an ihr durchgeführt wird, die Datei noch in Gebrauch ist - oder das Konto, das die Datei enthält, nicht in der App verwendet wurde.";
 "never" = "Niemals";
 "after %@" = "nach %@";
+"Decrease Slider Value" = "Decrease Slider Value";
+"Increase Slider Value" = "Increase Slider Value";
 
 /* Display settings */
 "Display settings" = "Anzeigeeinstellungen";
@@ -270,6 +275,9 @@
 " couldn't download file(s)" = "Datei(en) konnte nicht geladen werden";
 "Actions" = "Aktionen";
 "copy" = "Kopie";
+"Close Window" = "Close Window";
+"Open in a new Window" = "Open in a new Window";
+"Open in Window" = "Open in Window";
 
 "Preparing…" = "Vorbereiten...";
 
@@ -302,6 +310,18 @@
 "All Photos" = "Alle Fotos";
 "Albums" = "Alben";
 "Importing from photo library" = "Importieren aus der Fotobibliothek";
+
+/* Scan */
+"Scan" = "Scan";
+"Scans" = "Scans";
+"Scan document" = "Scan document";
+"Saving" = "Speichern";
+"File format" = "File format";
+"Name" = "Name";
+"Save as" = "Speichern unter";
+"Options" = "Optionen";
+"Scan additional" = "Scan additional";
+"Create one file per page" = "Create one file per page";
 
 /* Sharing */
 "Searching Shares…" = "Suche nach Freigaben…";
@@ -405,6 +425,14 @@
 "Media Upload" = "Medienupload";
 "Convert HEIC to JPEG" = "Konvertiere HEIC zu JPEG";
 "Convert videos to MP4" = "Videos konvertieren zu MP4";
+"Instant Upload Photos" = "Sofortiges hochladen der Bilder ";
+"Instant Upload Videos" = "Sofortiges hochladen der Videos";
+"Account" = "Benutzerkonto";
+"Accounts" = "Konten";
+"Select account" = "Account auswählen";
+"Upload Path" = "Upload Pfad";
+"Select Upload Path" = "Upload-Pfad auswählen";
+"Instant upload of media was disabled since configured account / folder was not found" = "Instant Upload von Medien wurde deaktiviert, da das konfigurierte Konto / Ordner nicht gefunden wurde.";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Erstelle %ld Ordner…";
@@ -424,11 +452,10 @@
 "Delete Local Copies" = "Lösche lokale Kopien";
 "Manage" = "Verwalten";
 "Storage" = "Speicher";
-"Proceed" = "Fortfahren";
 "Compacting" = "Freigeben";
 
 "Really include available offline files?" = "Offline-Dateien wirklich einbeziehen?";
-"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Dateien und Ordner, die als Offline Verfügbar markiert sind, sind nicht mehr vorhanden. Sie werden beim nächsten Login in Ihr Konto erneut heruntergeladen (Konnektivität erforderlich).";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Dateien und Ordner, die als Offline Verfügbar markiert sind, werden nicht mehr verfübar sein. Sie werden beim nächsten Login in Ihr Konto erneut heruntergeladen (Konnektivität erforderlich).";
 
 /* Available offline */
 "Root folder" = "Hauptverzeichnis";
@@ -443,8 +470,27 @@
 
 "Overview" = "Übersicht";
 "All Files" = "Alle Dateien";
-"Locations" = "Speicherorte";
 
 /* Import File */
 "Save File" = "Datei speichern";
 "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Wählen Sie ein Konto und einen Ordner, in den die Datei importiert werden soll.\n\nEs kann nur eine Datei auf einmal importiert werden.";
+
+/* Key Commands */
+"Select Next" = "Select Next";
+"Select Previous" = "Select Previous";
+"Open Selected" = "Open Selected";
+"Change Sort Order" = "Change Sort Order";
+"Search" = "Suche";
+"Back" = "Zurück";
+"Save" = "Speichern";
+"Sort by %@" = "Sortiert nach %@";
+"Tab %@" = "Tab %@";
+"Select Last Item on Page" = "Select Last Item on Page";
+"Scroll to Top" = "Scroll to Top";
+"Scroll to Bottom" = "Scroll to Bottom";
+"Copy to Pasteboard" = "Copy to Pasteboard";
+"Import from Pasteboard" = "Import from Pasteboard";
+"Next" = "Weiter";
+"Previous" = "Zurück";
+"Favorite" = "Favorit";
+"Cut" = "Cut";

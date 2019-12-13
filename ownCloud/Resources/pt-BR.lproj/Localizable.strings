@@ -124,6 +124,7 @@
 "Sign in" = "Entrar";
 "Ignore" = "Ignore";
 "Continue offline" = "Continuar offline";
+"Media upload in the previous session was incomplete since the application was terminated" = "O envio de mídia na sessão anterior estava incompleto desde que o aplicativo foi encerrado";
 
 /* Server List*/
 "Cancel" = "Cancelar";
@@ -184,6 +185,8 @@
 "Dark" = "Escuro";
 "Light" = "Claro";
 "Classic" = "Clássico";
+"System" = "Sistema";
+"System Appeareance" = "Aparência do Sistema";
 
 /* Log settings */
 "Log Files" = "Arquivos de log";
@@ -228,6 +231,8 @@
 "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Tempo medido desde o envio, edição, baixa ou visualização do respectivo arquivo através deste dispositivo. Não se aplica a arquivos baixados pelo recurso Disponível Off-line. As cópias locais podem ser excluídas antes que o período de tempo tenha passado, por ex. porque há uma versão mais recente de um arquivo no servidor - ou através da exclusão manual de cópias offline. Além disso, as cópias locais não podem ser excluídas após o período de tempo especificado, por ex. se uma ação for executada, o arquivo ainda está em uso - ou a conta que o contém não foi usada no aplicativo. ";
 "never" = "nunca";
 "after %@" = "após %@";
+"Decrease Slider Value" = "Decrescer o Valor de Recuo";
+"Increase Slider Value" = "Acrescer o Valor de Avanço";
 
 /* Display settings */
 "Display settings" = "Configurações do Visor";
@@ -270,6 +275,9 @@
 " couldn't download file(s)" = "não foi possível baixar esse arquivo(s)";
 "Actions" = "Ações";
 "copy" = "copiar";
+"Close Window" = "Fechar Janela";
+"Open in a new Window" = "Abrir em uma nova Janela";
+"Open in Window" = "Abrir na Janela";
 
 "Preparing…" = "Preparando…";
 
@@ -302,6 +310,18 @@
 "All Photos" = "Todas as fotos";
 "Albums" = "Albuns";
 "Importing from photo library" = "Importando da biblioteca de fotos";
+
+/* Scan */
+"Scan" = "Escanear";
+"Scans" = "Escaneamentos";
+"Scan document" = "Escanear documento";
+"Saving" = "Salvando";
+"File format" = "Formato do arquivo";
+"Name" = "Nome";
+"Save as" = "Salvar como";
+"Options" = "Opções";
+"Scan additional" = "Escaneamento adicional";
+"Create one file per page" = "Criar um aquivo por página";
 
 /* Sharing */
 "Searching Shares…" = "Pesquisando Compartilhamentos...";
@@ -405,6 +425,14 @@
 "Media Upload" = "Envio de mídia";
 "Convert HEIC to JPEG" = "Converter HEIC para JPEG";
 "Convert videos to MP4" = "Converta vídeos para MP4";
+"Instant Upload Photos" = "Envio Instantâneo de Fotos";
+"Instant Upload Videos" = "Envio Instantâneo de Videos";
+"Account" = "Conta";
+"Accounts" = "Contas";
+"Select account" = "Selecionar conta";
+"Upload Path" = "Enviar Caminho";
+"Select Upload Path" = "Selecione Caminho para Envio";
+"Instant upload of media was disabled since configured account / folder was not found" = "O envio instantâneo de mídia foi desativado porque a conta/pasta configurada não foi encontrada";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Criando %ld pastas…";
@@ -424,6 +452,7 @@
 "Delete Local Copies" = "Excluir Cópias Locais";
 "Manage" = "Gerenciar";
 "Storage" = "Armazenamento";
+"Compacting" = "Compactando";
 
 "Really include available offline files?" = " Realmente incluir arquivos offline disponíveis?";
 "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = " Arquivos e pastas marcados como Disponível offline ficarão indisponíveis. Eles serão baixados novamente na próxima vez que você fizer login na sua conta (é necessária conectividade).";
@@ -445,3 +474,23 @@
 /* Import File */
 "Save File" = "Salvar Arquivo";
 "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Escolha uma conta e uma pasta para importar o arquivo.\n\nApenas um arquivo pode ser importado de cada vez.";
+
+/* Key Commands */
+"Select Next" = "Selecionar Próximo";
+"Select Previous" = "Selecionar o Anterior";
+"Open Selected" = "Abrir o Selecionado";
+"Change Sort Order" = "Modificar Ordem de Classificação";
+"Search" = "Pesquisar";
+"Back" = "Voltar";
+"Save" = "Salvar";
+"Sort by %@" = "Ordenar por %@";
+"Tab %@" = "Aba %@";
+"Select Last Item on Page" = "Selecione Último item na Página";
+"Scroll to Top" = "Rolar para o Topo";
+"Scroll to Bottom" = "Rolar para Baixo";
+"Copy to Pasteboard" = "Copiar para o Segundo Plano";
+"Import from Pasteboard" = "Importar do Segundo Plano";
+"Next" = "Próxima";
+"Previous" = "Anterior";
+"Favorite" = "Favorito";
+"Cut" = "Cortar";

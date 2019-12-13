@@ -19,24 +19,24 @@
 /* Add / Edit Bookmark */
 "Edit account" = "Konto bearbeiten";
 "Add account" = "Konto hinzufügen";
-"Server URL" = "Server-URL";
-"https://example.com" = "https://beispiel.com";
+"Server URL" = "Serveradresse";
+"https://example.com" = "https://example.com";
 "Continue" = "Fortsetzen";
 "Name" = "Name";
-"Example Server" = "Beispielserver";
-"Show Certificate Details" = "Zeige Zertifikatsdetails";
+"Example Server" = "Beispiel Server";
+"Show Certificate Details" = "Zertifikats-Details anzeigen";
 "Connect" = "Verbinden";
-"Delete Authentication Data" = "Lösche Anmeldedaten";
+"Delete Authentication Data" = "Authentifizierungs-Daten löschen";
 "Authentication" = "Authentifizierung";
 "Username" = "Benutzername";
-"Password" = "Kennwort";
-"Certificate Details" = "Zertifikatsdetails";
+"Password" = "Passwort";
+"Certificate Details" = "Zertifikats-Details";
 "Cancel" = "Abbrechen";
 "Approve" = "Genehmigen";
 "Error" = "Fehler";
-"Review Connection" = "Verbindung überprüfen";
-"Authenticated via" = "Angemeldet mit";
-"Authenticated as %@ via %@" = "Als %@ mit %@ angemeldet";
+"Review Connection" = "Verbindung prüfen";
+"Authenticated via" = "Authentifiziert über ";
+"Authenticated as %@ via %@" = "Authentifiziert als %@ über %@";
 "Edit" = "Bearbeiten";
 "Credentials" = "Zugangsdaten";
 "Rejected" = "Abgelehnt";
@@ -49,14 +49,14 @@
 "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Das Zertifikat hat möglicherweise Probleme, wurde aber vom Benutzer akzeptiert.\nÖffnen Sie 'Zertifikat-Details' für weitere Informationen.";
 "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "Wenn Sie auf 'Fortsetzen' klicken, werden Sie aufgefordert, der App '%@' zu erlauben, die Anmeldung bei OAuth2 zu öffnen, wo Sie Ihre Zugangsdaten eingeben können.";
 
-"Contacting server…" = "Kontaktiere Server...";
-"Authenticating…" = "Authentifiziere";
+"Contacting server…" = "Verbinde zu Server ...";
+"Authenticating…" = "Anmeldung läuft";
 
 "Fetching user information…" = "Nutzerinformationen abrufen ...";
 "Updating connection…" = "Aktualisierung der Verbindung...";
 
 "Missing hostname" = "Hostname fehlt";
-"The entered URL does not include a hostname." = "Eingegebene URL enthält keinen Hostnamen.";
+"The entered URL does not include a hostname." = "Die eingegebene URL Adresse enthält keinen Hostname";
 "Add account" = "Konto hinzufügen";
 "Server name" = "Server Name";
 "Server Password" = "Server Passwort";
@@ -65,28 +65,28 @@
 /* Client */
 "Browse" = "Durchsuchen";
 "Disconnect" = "Trennen";
-"Connecting…" = "Verbinde...";
-"Connected." = "Verbunden.";
+"Connecting…" = "Verbinde ...";
+"Connected." = "Verbunden";
 "Select" = "Auswählen";
 "Done" = "Erledigt";
 
 "Folder" = "Ordner";
 
-"Stopped" = "Angehalten";
-"Started…" = "Gestartet...";
-"Contents from cache." = "Inhalte vom Cache.";
-"Waiting for server response…" = "Warte auf Serverantwort...";
+"Stopped" = "Gestoppt";
+"Started…" = "Gestartet";
+"Contents from cache." = "Inhalte aus Zwischenspeicher.";
+"Waiting for server response…" = "Warte auf Server-Antwort ...";
 "This folder no longer exists." = "Dieser Ordner existiert nicht mehr.";
-"Everything up-to-date." = "Alles aktuell.";
-"Please wait…" = "Bitte warten...";
-"Sort by %@" = "Sortieren nach %@";
+"Everything up-to-date." = "Alles ist aktuell.";
+"Please wait…" = "Bitte warten ...";
+"Sort by %@" = "Sortiert nach %@";
 "Sort by" = "Sortieren nach";
 
 "name" = "Name";
 "type" = "Typ";
 "size" = "Größe";
 "date" = "Datum";
-"Search this folder" = "Diesen Ordner durchsuchen";
+"Search this folder" = "Ordner durchsuchen";
 "Pending" = "Ausstehend";
 "Show parent paths" = "Übergeordnete Pfade anzeigen";
 
@@ -95,18 +95,18 @@
 
 /* Client Messages */
 "Empty folder" = "Leerer Ordner";
-"This folder contains no files or folders." = "Dieser Ordner enthält keine Dateien oder Ordner.";
+"This folder contains no files or folders." = "Dieser Ordner enthält keine Dateien oder andere Ordner";
 
-"Folder removed" = "Ordner entfernt";
-"This folder no longer exists on the server." = "Dieser Ordner existiert nicht mehr auf diesem Server.";
-"Are you sure you want to delete this item from the server?" = "Sind Sie sich sicher dieses Element vom Server zu löschen?";
-"Are you sure you want to delete these items from the server?" = "Sind Sie sicher, dass sie diese Items vom Server löschen möchten?";
+"Folder removed" = "Ordner gelöscht";
+"This folder no longer exists on the server." = "Der Ordner existiert nicht mehr auf dem Server";
+"Are you sure you want to delete this item from the server?" = "Sind Sie sicher, dass Sie dieses Objekt vom Server löschen möchten?";
+"Are you sure you want to delete these items from the server?" = "Sind Sie sicher, dass Sie diese Objekte vom Server löschen möchten?";
 "Multiple items" = "Mehrere Objekte";
-"Deleting '%@'" = "Lösche \"%@\"";
-"Renaming to %@" = "Ändere Namen auf %@";
+"Deleting '%@'" = "Lösche '%@'";
+"Renaming to %@" = "Umbenennen in %@";
 "Upload from your photo library" = "Hochladen aus Ihrer Fotobibliothek";
-"Missing permissions" = "Fehlende Berechtigung";
-"This permission is needed to upload photos and videos from your photo library." = "Diese Berechtigung wird benötigt, um Fotos und Videos aus Ihrer Fotobibliothek hochzuladen.";
+"Missing permissions" = "Fehlende Berechtigungen";
+"This permission is needed to upload photos and videos from your photo library." = "Diese Berechtigung ist erforderlich, um Fotos und Videos aus deinem Fotoalbum hochzuladen.";
 "Not now" = "Nicht jetzt";
 "Upload file" = "Datei hochladen";
 "Upload files" = "Dateien hochladen";
@@ -124,17 +124,18 @@
 "Sign in" = "Einloggen";
 "Ignore" = "Ignorieren";
 "Continue offline" = "Offline fortfahren";
+"Media upload in the previous session was incomplete since the application was terminated" = "Der Medien-Upload in der vorherigen Sitzung war unvollständig, da die Anwendung beendet wurde.";
 
 /* Server List*/
 "Cancel" = "Abbrechen";
 "OK" = "OK";
 
-"'%@' is currently locked" = "\"%@\" wird derzeit verwendet";
-"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "Ein Vorgang wird derzeit ausgeführt, der die Verbindung zu \"%@\" verhindert. Bitte versuchen Sie es später nochmal.";
+"'%@' is currently locked" = "%@ ist gerade gesperrt";
+"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "Die Verbindung zu %@ wird gerade durch eine laufende Operation verhindert. Bitte später probieren.";
 "Really delete '%@'?" = "\"%@\" wirklich löschen?";
-"This will also delete all locally stored file copies." = "Das wird auch alle lokale Kopien vom Gerät entfernen.";
+"This will also delete all locally stored file copies." = "Dies löscht auch alle lokalen Datei-Kopien";
 "Delete" = "Löschen";
-"Deletion of '%@' failed" = "\"%@\" konnte nicht gelöscht werden";
+"Deletion of '%@' failed" = "Löschen von 1%@ ist fehlgeschlagen";
 "Accounts" = "Konten";
 
 "Help" = "Hilfe";
@@ -147,7 +148,7 @@
 "Security" = "Sicherheit";
 "Passcode Lock" = "PIN-Sperre";
 "Face ID" = "Face ID";
-"Touch ID" = "Fingerabdruck-ID";
+"Touch ID" = "Touch ID";
 "Instant Uploads" = "Sofortiges Hochladen";
 "Videos" = "Videos";
 "Photos" = "Fotos";
@@ -159,18 +160,18 @@
 "Upload pictures via WiFi only" = "Fotos nur über WiFi hochladen";
 "More" = "Mehr";
 "Send feedback" = "Feedback senden";
-"Recommend to a friend" = "Empfehle dies einem Freund";
-"Privacy Policy" = "Datenschutzerkärung";
+"Recommend to a friend" = "Dies einem Freund empfehlen";
+"Privacy Policy" = "Datenschutzerklärung";
 "Acknowledgements" = "Danksagungen";
-"Video upload path" = "Pfad für Video-Upload";
-"Photo upload path" = "Foto-Upload-Pfad";
+"Video upload path" = "Pfad für den Video-Upload";
+"Photo upload path" = "Upload Pfad für Fotos";
 "Immediately" = "Sofort";
-"After 1 minute" = "Nach 1 Minute";
-"After 5 minutes" = "Nach 5 Minuten";
-"After 30 minutes" = "Nach 30 Minuten";
-"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "Wenn du \"Sofort\" wählst, wird die App gesperrt, wenn sie nicht mehr im Vordergrund ist.\n\nDer Zugriff in Files.app ist nicht möglich, wenn du das Sperrintervall \"Sofort\" wählst.\nBitte wähle eine andere Verzögerung, wenn du auf deine Dateien in der Files.app oder über eine Dokumentauswahl, zugreifen möchtest.";
-"Please configure an email account" = "Bitte richten Sie ein E-Mail-Konto ein";
-"You need to configure an email account first to be able to send emails." = "Sie müssen zuerst ein E-Mail-Konto einrichten, um E-Mails senden zu können.";
+"After 1 minute" = "nach 1 Minute";
+"After 5 minutes" = "nach 5 Minuten";
+"After 30 minutes" = "nach 30 Minuten";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "Wenn Sie \"Sofort\" wählen, wird die App gesperrt, wenn sie nicht mehr im Vordergrund ist.\n\nDer Zugriff in Files.app ist nicht möglich, wenn Sie das Sperrintervall \"Sofort\" wählen.\nBitte wählen Sie eine andere Verzögerung, wenn Sie auf Ihre Dateien in der Files.app oder über eine Dokumentauswahl, zugreifen möchten.";
+"Please configure an email account" = "Bitte ein E-Mail Konto konfigurieren";
+"You need to configure an email account first to be able to send emails." = "Sie müssen zuerst ein E-Mail Konto konfigurieren, um Mails zu versenden";
 "Do you want to open the following URL?" = "Möchten Sie die folgende URL öffnen?";
 
 "%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@ %@ Version %@ Build %@ (App: %@, SDK: %@)";
@@ -184,6 +185,8 @@
 "Dark" = "Dunkel";
 "Light" = "Hell";
 "Classic" = "Klassik";
+"System" = "System";
+"System Appeareance" = "Erscheinungsbild";
 
 /* Log settings */
 "Log Files" = "Protokolldateien";
@@ -194,7 +197,7 @@
 
 "Log Level" = "Protokollierungsstufe";
 "Log Destinations" = "Protokollierungsausgabe";
-"Privacy" = "Privatsphäre";
+"Privacy" = "Datenschutz";
 
 "Logging" = "Protokollierung";
 "Enable logging" = "Protokollierung aktivieren";
@@ -206,8 +209,8 @@
 "Warning" = "Warnung";
 "Error" = "Fehler";
 
-"Share log file" = "Logdatei teilen";
-"Reset log file" = "Logdatei zurücksetzen";
+"Share log file" = "Protokolldatei teilen";
+"Reset log file" = "Protokolldatei zurücksetzen";
 
 "When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Wenn aktiviert, können Protokolle die Leistung beeinträchtigen und sensible Informationen enthalten. Die Protokolle unterliegen jedoch nicht der automatischen Übertragung an %@ Server. Die Weitergabe von Protokollen an andere liegt in der alleinigen Verantwortung des Benutzers.";
 
@@ -221,13 +224,15 @@
 "Enable log file" = "Protokolldatei aktivieren";
 
 "Really reset log file?" = "Protokolldatei wirklich zurücksetzen?";
-"This action can't be undone." = "Diese Handlung kann nicht rückgängig gemacht werden.";
+"This action can't be undone." = "Diese Aktion kann nicht rückgängig gemacht werden.";
 
 /* Storage settings */
 "Delete unused local copies" = "Lösche ungenutzte lokale Kopien";
 "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Gemessene Zeit seit dem Hochladen, Bearbeiten, Herunterladen oder Anzeigen der jeweiligen Datei über dieses Gerät. Gilt nicht für Dateien, die über die Funktion Offline verfügbar heruntergeladen wurden. Lokale Kopien können vor Ablauf des angegebenen Zeitraums gelöscht werden, z.B. weil es eine neuere Version einer Datei auf dem Server gibt - oder durch das manuelle Löschen von Offline-Kopien. Außerdem dürfen lokale Kopien nach Ablauf der angegebenen Zeit nicht gelöscht werden, z.B. wenn eine Aktion an ihr durchgeführt wird, die Datei noch in Gebrauch ist - oder das Konto, das die Datei enthält, nicht in der App verwendet wurde.";
 "never" = "Niemals";
 "after %@" = "nach %@";
+"Decrease Slider Value" = "Decrease Slider Value";
+"Increase Slider Value" = "Increase Slider Value";
 
 /* Display settings */
 "Display settings" = "Anzeigeeinstellungen";
@@ -238,11 +243,11 @@
 "Enter code" = "Code eingeben";
 "Repeat code" = "Code wiederholen";
 "Delete code" = "Code löschen";
-"The entered codes are different" = "Die eingegebenen Codes sind verschieden";
+"The entered codes are different" = "Die eingegebenen Codes sind unterschiedlich";
 "Incorrect code" = "Falscher Code";
-"Please try again in %@" = "Bitte erneut in %@ versuchen";
+"Please try again in %@" = "Bitte nochmal in %@ versuchen";
 "Unlock %@" = "%@ entsperren";
-"Biometric authentication failed" = "Biometrische Authentifizierung fehlgeschlagen";
+"Biometric authentication failed" = "Biometrische Authentifizierung ist fehlgeschlagen";
 
 /* Certificate management */
 
@@ -251,12 +256,12 @@
 
 "Approved" = "Geprüft";
 "Auto-approved" = "Automatisch genehmigt";
-"Revoke approval" =  "Bestätigung widerrufen";
+"Revoke approval" =  "Genehmigung widerrufen";
 
 /* Actions */
 
 "Forbidden Characters" = "Nicht erlaubte Zeichen";
-"File name cannot contain / or \\" = "Dateiname darf nicht / oder \\ enthalten";
+"File name cannot contain / or \\" = "Dateiname darf nicht / oder \\ enthalten.";
 "New Folder" = "Neuer Ordner";
 "Folder name" = "Ordnername";
 "Rename" ="Umbenennen";
@@ -270,28 +275,31 @@
 " couldn't download file(s)" = "Datei(en) konnte nicht geladen werden";
 "Actions" = "Aktionen";
 "copy" = "Kopie";
+"Close Window" = "Close Window";
+"Open in a new Window" = "Open in a new Window";
+"Open in Window" = "Open in Window";
 
 "Preparing…" = "Vorbereiten...";
 
 /* Directory Picker Messages */
-"Move here" = "Hierhin verschieben";
+"Move here" = "Hierher bewegen";
 
 /* Preview */
 "Open file" = "Datei öffnen";
 "Network unavailable" = "Netzwerk nicht verfügbar";
 "Error" = "Fehler";
 "Could not get the picture" = "Bild konnte nicht geladen werden";
-"Downloading" = "Lade herunter";
+"Downloading" = "Herunterladen";
 "File couldn't be opened" = "Datei kann nicht geöffnet werden";
 
 /* PDF Viewer */
 "Resume" = "Fortsetzen";
-"Go to page" = "Gehe zu Seite";
+"Go to page" = "Gehe zur Seite";
 "Page" = "Seite";
 "This document has %@ pages" = "Dieses Dokument hat %@ Seiten";
 "%@ of %@" = "%@ von %@";
 "Invalid Page" = "Ungültige Seite";
-"The entered page number doesn't exist" = "Die angegebene Seitennummer existiert nicht.";
+"The entered page number doesn't exist" = "Die eingegebene Seitennummer existiert nicht";
 "Search PDF" = "PDF suchen";
 "Outline" = "Gliederung";
 
@@ -302,6 +310,18 @@
 "All Photos" = "Alle Fotos";
 "Albums" = "Alben";
 "Importing from photo library" = "Importieren aus der Fotobibliothek";
+
+/* Scan */
+"Scan" = "Scan";
+"Scans" = "Scans";
+"Scan document" = "Scan document";
+"Saving" = "Speichern";
+"File format" = "File format";
+"Name" = "Name";
+"Save as" = "Speichern unter";
+"Options" = "Optionen";
+"Scan additional" = "Scan additional";
+"Create one file per page" = "Create one file per page";
 
 /* Sharing */
 "Searching Shares…" = "Suche nach Freigaben…";
@@ -337,7 +357,7 @@
 "Receive files from multiple recipients without revealing the contents of the folder." = "Von mehreren Empfängern Dateien empfangen, ohne den Inhalt des Ordners preiszugeben.";
 "Download / View" = "Herunterladen / Ansehen";
 "Download / View / Upload" = "Herunterladen / Ansehen / Hochladen";
-"Upload only (File Drop)" = "Nur Hochladen (File Drop)";
+"Upload only (File Drop)" = "Nur hochladen (Datei hineinziehen)";
 "Creating public link failed" = "Öffentlichen Link erstellen fehlgeschlagen";
 "Create Public Link" = "Öffentlichen Link erstellen";
 "Links" = "Links";
@@ -355,15 +375,15 @@
 "Password Protected" = "passwortgeschützt";
 "Pending Federated Invites" = "Ausstehende Federated-Einladungen";
 "Pending Invites" = "Ausstehende Einladungen";
-"Shared with you" = "Mit Dir geteilt";
-"Shared with others" = "Von Dir geteilt";
-"Shares" = "Freigaben";
+"Shared with you" = "Mit Ihnen geteilt";
+"Shared with others" = "Mit anderen geteilt";
+"Shares" = "Geteiltes";
 "Copy Private Link" = "Privaten Link kopieren";
 "Only recipients can use this link. Use it as a permanent link to point to this resource" = "Nur Empfänger können diesen Link verwenden. Verwenden Sie diesen als permanenten Link, um auf diese Ressource zu verweisen.";
 "Accept Share failed" = "Freigabe annehmen fehlgeschlagen";
 "Decline Share failed" = "Freigabe ablehnen fehlgeschlagen";
 "Accept" = "Akzeptieren";
-"Decline" = "Abgelehnt";
+"Decline" = "Ablehnen";
 "Declined" = "Abgelehnt";
 "Decline Share" = "Freigabe ablehnen";
 "Unshare" = "Freigabe aufheben";
@@ -395,7 +415,7 @@
 "Recents" = "Kürzlich";
 "Favorites"= "Favoriten";
 "Images" = "Bilder";
-"PDF Documents" = "PDF-Dokumente";
+"PDF Documents" = "PDF Dokumente";
 
 /* Media files settings */
 "Media Files" = "Medien Dateien";
@@ -403,8 +423,16 @@
 
 /* Photo upload settings */
 "Media Upload" = "Medienupload";
-"Convert HEIC to JPEG" = "HEIC in JPEG konvertieren";
+"Convert HEIC to JPEG" = "Konvertiere HEIC zu JPEG";
 "Convert videos to MP4" = "Videos konvertieren zu MP4";
+"Instant Upload Photos" = "Sofortiges hochladen der Bilder ";
+"Instant Upload Videos" = "Sofortiges hochladen der Videos";
+"Account" = "Benutzerkonto";
+"Accounts" = "Konten";
+"Select account" = "Account auswählen";
+"Upload Path" = "Upload Pfad";
+"Select Upload Path" = "Upload-Pfad auswählen";
+"Instant upload of media was disabled since configured account / folder was not found" = "Instant Upload von Medien wurde deaktiviert, da das konfigurierte Konto / Ordner nicht gefunden wurde.";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Erstelle %ld Ordner…";
@@ -424,7 +452,6 @@
 "Delete Local Copies" = "Lösche lokale Kopien";
 "Manage" = "Verwalten";
 "Storage" = "Speicher";
-"Proceed" = "Fortfahren";
 "Compacting" = "Freigeben";
 
 "Really include available offline files?" = "Offline-Dateien wirklich einbeziehen?";
@@ -443,8 +470,27 @@
 
 "Overview" = "Übersicht";
 "All Files" = "Alle Dateien";
-"Locations" = "Speicherorte";
 
 /* Import File */
 "Save File" = "Datei speichern";
 "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Wählen Sie ein Konto und einen Ordner, in den die Datei importiert werden soll.\n\nEs kann nur eine Datei auf einmal importiert werden.";
+
+/* Key Commands */
+"Select Next" = "Select Next";
+"Select Previous" = "Select Previous";
+"Open Selected" = "Open Selected";
+"Change Sort Order" = "Change Sort Order";
+"Search" = "Suche";
+"Back" = "Zurück";
+"Save" = "Speichern";
+"Sort by %@" = "Sortiert nach %@";
+"Tab %@" = "Tab %@";
+"Select Last Item on Page" = "Select Last Item on Page";
+"Scroll to Top" = "Scroll to Top";
+"Scroll to Bottom" = "Scroll to Bottom";
+"Copy to Pasteboard" = "Copy to Pasteboard";
+"Import from Pasteboard" = "Import from Pasteboard";
+"Next" = "Weiter";
+"Previous" = "Zurück";
+"Favorite" = "Favorit";
+"Cut" = "Cut";

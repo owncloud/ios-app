@@ -124,6 +124,7 @@
 "Sign in" = "Войти";
 "Ignore" = "Игнорировать";
 "Continue offline" = "Продолжить без сети";
+"Media upload in the previous session was incomplete since the application was terminated" = "Загрузка данных в прошлом сеансе не была завершена, так как приложение было завершено";
 
 /* Server List*/
 "Cancel" = "Отмена";
@@ -184,6 +185,8 @@
 "Dark" = "Тёмная";
 "Light" = "Светлая";
 "Classic" = "Классическая";
+"System" = "Система";
+"System Appeareance" = "Внешний вид системы";
 
 /* Log settings */
 "Log Files" = "Лог-файлы";
@@ -228,6 +231,8 @@
 "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Время, измеренное с момента закачки, правки, скачивания или просмотра соответствующего файла с помощью этого устройства. Не применяется к файлам, скачанным через возможность доступа без сети. Локальные копии могут удаляться до наступления заданного периода времени, например из-за более свежей версии файла на сервере, или через ручное удаление локальных копий. С другой стороны, локальные копии могут быть не удалены по истечении заданного времени, например из-за выполняемых над ними действий удерживающих файл, или учётная запись, в которой числится файл, не используется в приложении.";
 "never" = "никогда";
 "after %@" = "после %@";
+"Decrease Slider Value" = "Увеличить значение слайдера";
+"Increase Slider Value" = "Уменьшить значение слайдера";
 
 /* Display settings */
 "Display settings" = "Установки отображения";
@@ -270,6 +275,9 @@
 " couldn't download file(s)" = "не удалось скачать файл(ы)";
 "Actions" = "Действия";
 "copy" = "копия";
+"Close Window" = "Закрыть окно";
+"Open in a new Window" = "Открыть в новом окне";
+"Open in Window" = "Открыть в окне";
 
 "Preparing…" = "Подготовка";
 
@@ -302,6 +310,18 @@
 "All Photos" = "Все фотографии";
 "Albums" = "Альбомы";
 "Importing from photo library" = "Импорт из фото-библиотеки";
+
+/* Scan */
+"Scan" = "Cканировать";
+"Scans" = "Сканы";
+"Scan document" = "Сканировать документ";
+"Saving" = "Сохраняется";
+"File format" = "Формат файла";
+"Name" = "Название";
+"Save as" = "Сохранить как";
+"Options" = "Опции";
+"Scan additional" = "Сканировать дополнительно";
+"Create one file per page" = "Создавать по файлу на каждую страницу";
 
 /* Sharing */
 "Searching Shares…" = "Поиск по общим ресурсам";
@@ -405,6 +425,14 @@
 "Media Upload" = "Загрузка фото и видео";
 "Convert HEIC to JPEG" = "Преобразовать HEIC в JPEG";
 "Convert videos to MP4" = "Преобразовать видео в MP4";
+"Instant Upload Photos" = "Немедленно загружать фотоснимки";
+"Instant Upload Videos" = "Немедленно загружать видеоролики";
+"Account" = "Уч.запись";
+"Accounts" = "Учётные записи";
+"Select account" = "Выберите учётную запись";
+"Upload Path" = "Путь для загрузки";
+"Select Upload Path" = "Выберите путь для загрузки";
+"Instant upload of media was disabled since configured account / folder was not found" = "Немедленная загрузка данных была отключена, так как настроенная учётная запись или папка не найдена";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Создание %ld папок…";
@@ -424,6 +452,7 @@
 "Delete Local Copies" = "Удалить локальные копии";
 "Manage" = "Управление";
 "Storage" = "Хранилище";
+"Compacting" = "Сжатие";
 
 "Really include available offline files?" = "Действительно включить доступные автономные файлы?";
 "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Файлы и папки, помеченные как доступные без сети, станут недоступными. При следующем входе в учётную запись они будут скачаны повторно (нужна связь).";
@@ -445,3 +474,23 @@
 /* Import File */
 "Save File" = "Сохранить файл";
 "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Выберите учётную запись и папку, куда импортировать файл.\n\nЗа раз можно импортировать только один файл.";
+
+/* Key Commands */
+"Select Next" = "Выбрать следующее";
+"Select Previous" = "Выбрать предыдущее";
+"Open Selected" = "Открыть выбранное";
+"Change Sort Order" = "Изменить порядок сортировки";
+"Search" = "Найти";
+"Back" = "Назад";
+"Save" = "Сохранить";
+"Sort by %@" = "Сортировка по %@";
+"Tab %@" = "Вкладка %@";
+"Select Last Item on Page" = "Выбрать последний элемент на странице";
+"Scroll to Top" = "Прокрутить в начало";
+"Scroll to Bottom" = "Прокрутить в конец";
+"Copy to Pasteboard" = "Копировать в буфер обмена";
+"Import from Pasteboard" = "Импорт из буфера обмена";
+"Next" = "Следующий";
+"Previous" = "Предыдущий";
+"Favorite" = "В избранное";
+"Cut" = "Вырезать";
