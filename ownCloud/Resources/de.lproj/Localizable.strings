@@ -149,7 +149,6 @@
 "Passcode Lock" = "PIN-Sperre";
 "Face ID" = "Face ID";
 "Touch ID" = "Touch ID";
-"Instant Uploads" = "Sofortiges Hochladen";
 "Videos" = "Videos";
 "Photos" = "Fotos";
 "Background uploads" = "Hochladen im Hintergrund";
@@ -425,14 +424,14 @@
 "Media Upload" = "Medienupload";
 "Convert HEIC to JPEG" = "Konvertiere HEIC zu JPEG";
 "Convert videos to MP4" = "Videos konvertieren zu MP4";
-"Instant Upload Photos" = "Sofortiges hochladen der Bilder ";
-"Instant Upload Videos" = "Sofortiges hochladen der Videos";
+"Auto Upload Photos" = "Sofortiges hochladen der Bilder ";
+"Auto Upload Videos" = "Sofortiges hochladen der Videos";
 "Account" = "Benutzerkonto";
 "Accounts" = "Konten";
 "Select account" = "Account auswählen";
 "Upload Path" = "Upload Pfad";
 "Select Upload Path" = "Upload-Pfad auswählen";
-"Instant upload of media was disabled since configured account / folder was not found" = "Instant Upload von Medien wurde deaktiviert, da das konfigurierte Konto / Ordner nicht gefunden wurde.";
+"Auto upload of media was disabled since configured account / folder was not found" = "Auto Upload von Medien wurde deaktiviert, da das konfigurierte Konto / Ordner nicht gefunden wurde.";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Erstelle %ld Ordner…";

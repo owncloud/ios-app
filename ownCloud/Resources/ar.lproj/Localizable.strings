@@ -149,7 +149,6 @@
 "Passcode Lock" = "قفل رمز المرور";
 "Face ID" = "معرّف الوجه";
 "Touch ID" = "معرّف اللمسة";
-"Instant Uploads" = "تحميلات فورية";
 "Videos" = "فيديوهات";
 "Photos" = "صور";
 "Background uploads" = "تحميلات الخلفية";
@@ -425,14 +424,14 @@
 "Media Upload" = "تحميل الوسائط";
 "Convert HEIC to JPEG" = "تحويل HEIC إلى JPEG";
 "Convert videos to MP4" = "تحويل الفيديوهات إلى امتداد MP4";
-"Instant Upload Photos" = "Instant Upload Photos";
-"Instant Upload Videos" = "Instant Upload Videos";
+"Auto Upload Photos" = "Instant Upload Photos";
+"Auto Upload Videos" = "Instant Upload Videos";
 "Account" = "حساب";
 "Accounts" = "حسابات";
 "Select account" = "Select account";
 "Upload Path" = "Upload Path";
 "Select Upload Path" = "Select Upload Path";
-"Instant upload of media was disabled since configured account / folder was not found" = "Instant upload of media was disabled since configured account / folder was not found";
+"Auto upload of media was disabled since configured account / folder was not found" = "Auto upload of media was disabled since configured account / folder was not found";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "إنشاء مجلدات %ld…";

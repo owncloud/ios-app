@@ -149,7 +149,6 @@
 "Passcode Lock" = "Блокировка кодом доступа";
 "Face ID" = "Идентификатор лица";
 "Touch ID" = "Touch ID";
-"Instant Uploads" = "Мгновенные загрузки";
 "Videos" = "Видео";
 "Photos" = "Фото";
 "Background uploads" = "Фоновые загрузки";
@@ -425,14 +424,14 @@
 "Media Upload" = "Загрузка фото и видео";
 "Convert HEIC to JPEG" = "Преобразовать HEIC в JPEG";
 "Convert videos to MP4" = "Преобразовать видео в MP4";
-"Instant Upload Photos" = "Немедленно загружать фотоснимки";
-"Instant Upload Videos" = "Немедленно загружать видеоролики";
+"Auto Upload Photos" = "Автоматически загружать фотоснимки";
+"Auto Upload Videos" = "Автоматически загружать видеоролики";
 "Account" = "Уч.запись";
 "Accounts" = "Учётные записи";
 "Select account" = "Выберите учётную запись";
 "Upload Path" = "Путь для загрузки";
 "Select Upload Path" = "Выберите путь для загрузки";
-"Instant upload of media was disabled since configured account / folder was not found" = "Немедленная загрузка данных была отключена, так как настроенная учётная запись или папка не найдена";
+"Auto upload of media was disabled since configured account / folder was not found" = "Автоматическая загрузка данных была отключена, так как настроенная учётная запись или папка не найдена";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Создание %ld папок…";

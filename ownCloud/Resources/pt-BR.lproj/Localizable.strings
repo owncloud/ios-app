@@ -149,7 +149,6 @@
 "Passcode Lock" = "Senha-código de bloqueio";
 "Face ID" = "ID de Face";
 "Touch ID" = "ID de toque";
-"Instant Uploads" = "Envios Instantâneos";
 "Videos" = "Videos";
 "Photos" = "Imagens";
 "Background uploads" = "Atualização em segundo plano";
@@ -425,14 +424,14 @@
 "Media Upload" = "Envio de mídia";
 "Convert HEIC to JPEG" = "Converter HEIC para JPEG";
 "Convert videos to MP4" = "Converta vídeos para MP4";
-"Instant Upload Photos" = "Envio Instantâneo de Fotos";
-"Instant Upload Videos" = "Envio Instantâneo de Videos";
+"Auto Upload Photos" = "Envio Instantâneo de Fotos";
+"Auto Upload Videos" = "Envio Instantâneo de Videos";
 "Account" = "Conta";
 "Accounts" = "Contas";
 "Select account" = "Selecionar conta";
 "Upload Path" = "Enviar Caminho";
 "Select Upload Path" = "Selecione Caminho para Envio";
-"Instant upload of media was disabled since configured account / folder was not found" = "O envio instantâneo de mídia foi desativado porque a conta/pasta configurada não foi encontrada";
+"Auto upload of media was disabled since configured account / folder was not found" = "O envio instantâneo de mídia foi desativado porque a conta/pasta configurada não foi encontrada";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Criando %ld pastas…";

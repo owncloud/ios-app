@@ -149,7 +149,6 @@
 "Passcode Lock" = "Pasakode Babesa";
 "Face ID" = "Face ID";
 "Touch ID" = "Touch ID";
-"Instant Uploads" = "Berehalako Igoerak";
 "Videos" = "Bidekoak";
 "Photos" = "Argazkiak";
 "Background uploads" = "Atzeko planoko igoerak";
@@ -425,14 +424,14 @@
 "Media Upload" = "Media Kargatu";
 "Convert HEIC to JPEG" = "HEIC JPEGera bihurtu";
 "Convert videos to MP4" = "Bideoak MP4ra bihurtu";
-"Instant Upload Photos" = "Instant Upload Photos";
-"Instant Upload Videos" = "Instant Upload Videos";
+"Auto Upload Photos" = "Instant Upload Photos";
+"Auto Upload Videos" = "Instant Upload Videos";
 "Account" = "Kontua";
 "Accounts" = "Kontuak";
 "Select account" = "Select account";
 "Upload Path" = "Igotzetarako Bidea";
 "Select Upload Path" = "Select Upload Path";
-"Instant upload of media was disabled since configured account / folder was not found" = "Instant upload of media was disabled since configured account / folder was not found";
+"Auto upload of media was disabled since configured account / folder was not found" = "Auto upload of media was disabled since configured account / folder was not found";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "%ld karpetak sortzen...";

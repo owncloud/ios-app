@@ -87,7 +87,7 @@ class MediaUploadQueue : OCActivitySource {
 				// Check if upload queue processing can be started and no-one else is processing it
 				if mediaUploadStorage.processing != nil {
 					// Found OCProcessSession instance -> check if it is valid though
-					if OCProcessManager.shared.isSessionValid(mediaUploadStorage.processing!, usingThoroughChecks: true) {
+                    if OCProcessManager.shared().isSessionValid(mediaUploadStorage.processing!, usingThoroughChecks: true) {
 						// If the process session is valid, may be it is being used by running extension --> bail out
 						uploadStorageAlreadyProcessing = true
 					} else {
@@ -98,7 +98,7 @@ class MediaUploadQueue : OCActivitySource {
 
 				if mediaUploadStorage.processing == nil {
 					// Mark the queue as being processed
-					mediaUploadStorage.processing = OCProcessManager.shared.processSession
+                    mediaUploadStorage.processing = OCProcessManager.shared().processSession
 				}
 			}
 
