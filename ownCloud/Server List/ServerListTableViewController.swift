@@ -116,14 +116,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		updateNoServerMessageVisibility()
 
-		let helpBarButtonItem = UIBarButtonItem(title: "Feedback".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(help))
-		helpBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
-
 		let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
 		settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
 
 		self.toolbarItems = [
-			helpBarButtonItem,
 			UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
 			settingsBarButtonItem
 		]
@@ -358,13 +354,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	var themeCounter : Int = 0
-
-	@IBAction func help() {
-		// Prevent any in-progress connection from being shown
-		resetPreviousBookmarkSelection()
-
-		VendorServices.shared.sendFeedback(from: self)
-	}
 
 	@IBAction func settings() {
 		let viewController : SettingsViewController = SettingsViewController(style: .grouped)
