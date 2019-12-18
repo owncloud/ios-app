@@ -26,7 +26,6 @@ class StaticLoginViewController: UIViewController, Themeable {
 
 	var headerContainerView : UIView?
 	var headerLogoView : UIImageView?
-	var headerLabel : UILabel?
 
 	var contentContainerView : UIView?
 
@@ -125,12 +124,6 @@ class StaticLoginViewController: UIViewController, Themeable {
 		headerLogoView?.translatesAutoresizingMaskIntoConstraints = false
 		headerContainerView?.addSubview(headerLogoView!)
 
-		headerLabel = UILabel()
-		headerLabel?.translatesAutoresizingMaskIntoConstraints = false
-		headerLabel?.font = UIFont.systemFont(ofSize: UIFont.systemFontSize * 2.5, weight: .semibold)
-		headerLabel?.textAlignment = .center
-		headerContainerView?.addSubview(headerLabel!)
-
 		NSLayoutConstraint.activate([
 			// Background image view
 			backgroundImageView!.topAnchor.constraint(equalTo: rootView.topAnchor),
@@ -142,17 +135,12 @@ class StaticLoginViewController: UIViewController, Themeable {
 				// Logo size
 				headerLogoView!.leftAnchor.constraint(equalTo: headerContainerView!.safeAreaLayoutGuide.leftAnchor),
 				headerLogoView!.rightAnchor.constraint(equalTo: headerContainerView!.safeAreaLayoutGuide.rightAnchor),
-				headerLogoView!.heightAnchor.constraint(equalToConstant: 96),
+				headerLogoView!.heightAnchor.constraint(equalTo: rootView.heightAnchor, multiplier: 0.25, constant: 0),
 
 				// Logo and label position
 				headerLogoView!.topAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.topAnchor, constant: headerVerticalSpacing),
 				headerLogoView!.centerXAnchor.constraint(equalTo: rootView.centerXAnchor),
-
-				headerLogoView!.bottomAnchor.constraint(equalTo: headerLabel!.topAnchor, constant: -20),
-
-				headerLabel!.bottomAnchor.constraint(equalTo: headerContainerView!.bottomAnchor, constant: -headerVerticalSpacing),
-				headerLabel!.leftAnchor.constraint(equalTo: headerContainerView!.safeAreaLayoutGuide.leftAnchor, constant: 10),
-				headerLabel!.rightAnchor.constraint(equalTo: headerContainerView!.safeAreaLayoutGuide.rightAnchor, constant: -20),
+				headerLogoView!.bottomAnchor.constraint(equalTo: headerContainerView!.bottomAnchor, constant: -20),
 
 				// Header position
 				headerContainerView!.topAnchor.constraint(equalTo: rootView.topAnchor),
@@ -175,17 +163,12 @@ class StaticLoginViewController: UIViewController, Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 //		self.view.backgroundColor = collection.tableBackgroundColor
 //		self.headerView?.backgroundColor = collection.tableGroupBackgroundColor
-
-		self.headerLabel?.applyThemeCollection(collection)
 	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
 		OCItem.registerIcons()
-
-		headerLabel?.text = loginBundle.organizationName
-		headerLabel?.applyThemeCollection(Theme.shared.activeCollection, itemStyle: .logo)
 
 		if let organizationLogoName = loginBundle.organizationLogoName {
 			let image = UIImage(named: organizationLogoName)
