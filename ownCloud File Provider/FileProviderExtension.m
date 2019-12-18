@@ -396,8 +396,14 @@
 		if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
 		{
 			FPLogCmd(@"Completed with collission with existingItem=%@ (locally detected)", existingItem);
-			// completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
-			completionHandler(nil, [OCError(OCErrorItemAlreadyExists) translatedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
+			if (@available(iOS 13.3, *))
+			{
+				completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
+			}
+			else
+			{
+				completionHandler(nil, [OCError(OCErrorItemAlreadyExists) translatedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
+			}
 			return;
 		}
 
