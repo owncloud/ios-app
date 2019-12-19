@@ -285,23 +285,23 @@ class StaticLoginViewController: UIViewController, Themeable {
 
 	func openBookmark(_ bookmark: OCBookmark, closeHandler: (() -> Void)? = nil) {
 		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+		clientRootViewController.modalPresentationStyle = .overFullScreen
 
-		// Switch to theme for bookmark
-		if let staticLoginProfileIdentifier = bookmark.userInfo[StaticLoginProfile.staticLoginProfileIdentifierKey] as? StaticLoginProfileIdentifier,
-		   let staticLoginProfile = self.profile(for: staticLoginProfileIdentifier),
-		   let themeStyleIdentifier = staticLoginProfile.themeStyleID {
-			self.switchToTheme(with: themeStyleIdentifier)
-		}
-/*
-		clientRootViewController.closeHandler = { [weak self] () in
-			// Switch to theme for static login UI
-			if let themeStyleIdentifier = self?.loginBundle.loginThemeStyleID {
-				self?.switchToTheme(with: themeStyleIdentifier)
+		clientRootViewController.afterCoreStart {
+			OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
+
+			// Set up custom push transition for presentation
+			if let navigationController = self.navigationController {
+				let transitionDelegate = PushTransitionDelegate()
+
+				clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
+				clientRootViewController.transitioningDelegate = transitionDelegate
+				clientRootViewController.modalPresentationStyle = .custom
+
+				navigationController.present(clientRootViewController, animated: true, completion: {
+				})
 			}
-
-			closeHandler?()
-		}*/
-
-		self.present(clientRootViewController, animated: true, completion: nil)
+			self.showFirstScreen()
+		}
 	}
 }
