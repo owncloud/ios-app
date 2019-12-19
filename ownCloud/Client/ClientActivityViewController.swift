@@ -77,9 +77,40 @@ class ClientActivityViewController: UITableViewController, Themeable {
 	func reloadDataIfOnScreen() {
 		if needsDataReload, isOnScreen {
 			needsDataReload = false
+            
+            if let activities = activities, let updatedActivities = core?.activityManager.activities {
 
-			activities = core?.activityManager.activities
-			self.tableView.reloadData()
+                var indexPathsToInsert = [IndexPath]()
+                var indexPathsToDelete = [IndexPath]()
+
+                let addedActivities = updatedActivities.filter({!(activities.contains($0))})
+                let removedActivities = activities.filter({!updatedActivities.contains($0)})
+                
+                for activity in removedActivities {
+                    if let index = activities.index(of: activity) {
+                        indexPathsToDelete.append(IndexPath(row: index, section: 0))
+                    }
+                }
+                
+                var activityIndex = activities.count - removedActivities.count
+                for _ in addedActivities {
+                    indexPathsToInsert.append(IndexPath(row: activityIndex, section: 0))
+                    activityIndex += 1
+                }
+                
+                tableView.performBatchUpdates({
+                    self.activities?.removeAll(where: { removedActivities.contains($0) })
+                    self.activities?.append(contentsOf: addedActivities)
+                    tableView.deleteRows(at: indexPathsToDelete, with: .automatic)
+                    tableView.insertRows(at: indexPathsToInsert, with: .automatic)
+                }) { (_) in
+                    
+                }
+                
+            } else {
+                activities = core?.activityManager.activities
+                self.tableView.reloadData()
+            }
 		}
 	}
 
