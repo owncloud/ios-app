@@ -129,7 +129,7 @@ extension ImportFilesController {
 
 			if bookmarks.count > 0 {
 				let moreViewController = self.cardViewController(for: self.localCopyURL ?? self.url)
-				if let window = UIApplication.shared.currentWindow() {
+				if let window = UIApplication.shared.currentWindow {
 					let viewController = window.rootViewController
 					if let navigationController = viewController as? UINavigationController, let viewController = navigationController.visibleViewController {
 						OnMainThread {
@@ -159,7 +159,7 @@ extension ImportFilesController {
 					let pickerNavigationController = ThemeNavigationController(rootViewController: directoryPickerViewController)
 					pickerNavigationController.modalPresentationStyle = .formSheet
 
-					if let window = UIApplication.shared.currentWindow() {
+					if let window = UIApplication.shared.currentWindow {
 						let viewController = window.rootViewController
 						if let navCon = viewController as? UINavigationController, let viewController = navCon.visibleViewController {
 							viewController.present(pickerNavigationController, animated: true)
