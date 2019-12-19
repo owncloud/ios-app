@@ -20,7 +20,7 @@ import UIKit
 
 public extension UIApplication {
 
-	func currentWindow() -> UIWindow? {
+	var currentWindow: UIWindow? {
 		return windows.first
 	}
 }
