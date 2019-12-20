@@ -63,10 +63,10 @@ class MediaUploadQueue : OCActivitySource {
 		self.setNeedsScheduling(in: bookmark)
 	}
 
-	private var _needsSchedulingCount : Int = 0
+	private var _needsSchedulingCountByBookmarkUUID : [UUID : Int] = [:]
 	func setNeedsScheduling(in bookmark: OCBookmark) {
 		// Increment counter by one
-		_needsSchedulingCount += 1
+		_needsSchedulingCountByBookmarkUUID[bookmark.uuid] = (_needsSchedulingCountByBookmarkUUID[bookmark.uuid] ?? 0) + 1
 
 		// Schedule right away. If it's already busy, it'll return quickly. If not, it'll schedule.
 		self.scheduleUploads(in: bookmark)
@@ -76,7 +76,7 @@ class MediaUploadQueue : OCActivitySource {
 
 		var uploadStorageAlreadyProcessing = false
 		var uploadStorageQueueEmpty = false
-		var needsSchedulingCountAtEntry = _needsSchedulingCount
+		var needsSchedulingCountAtEntry = _needsSchedulingCountByBookmarkUUID[bookmark.uuid]
 
 		// Avoid race conditions by performing checks and modifications atomically
 		bookmark.modifyMediaUploadStorage { (mediaUploadStorage) -> MediaUploadStorage in
@@ -87,7 +87,7 @@ class MediaUploadQueue : OCActivitySource {
 				// Check if upload queue processing can be started and no-one else is processing it
 				if mediaUploadStorage.processing != nil {
 					// Found OCProcessSession instance -> check if it is valid though
-                    if OCProcessManager.shared.isSessionValid(mediaUploadStorage.processing!, usingThoroughChecks: true) {
+					if OCProcessManager.shared.isSessionValid(mediaUploadStorage.processing!, usingThoroughChecks: true) {
 						// If the process session is valid, may be it is being used by running extension --> bail out
 						uploadStorageAlreadyProcessing = true
 					} else {
@@ -98,11 +98,11 @@ class MediaUploadQueue : OCActivitySource {
 
 				if mediaUploadStorage.processing == nil {
 					// Mark the queue as being processed
-                    mediaUploadStorage.processing = OCProcessManager.shared.processSession
+                    			mediaUploadStorage.processing = OCProcessManager.shared.processSession
 				}
 			}
 
-			return (mediaUploadStorage)
+			return mediaUploadStorage
 		}
 
 		if uploadStorageAlreadyProcessing || uploadStorageQueueEmpty {
@@ -130,7 +130,7 @@ class MediaUploadQueue : OCActivitySource {
 					// Check if .setNeedsScheduling() has been called since starting the scheduling:
 					// since any new entries added to the queue after scheduling has started will not be handled,
 					// it's important to start scheduling again if any change to the queue has been performed since
-					if needsSchedulingCountAtEntry != self._needsSchedulingCount {
+					if needsSchedulingCountAtEntry != self._needsSchedulingCountByBookmarkUUID[bookmark.uuid] {
 						self.scheduleUploads(in: bookmark)
 					}
 				}
