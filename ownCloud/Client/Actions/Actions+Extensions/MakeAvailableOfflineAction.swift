@@ -23,7 +23,9 @@ class MakeAvailableOfflineAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.makeAvailableOffline") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Make available offline".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut] }
+	override class var keyCommand : String? { return "O" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext context: ActionContext) -> ActionPosition {
