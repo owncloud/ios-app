@@ -52,13 +52,17 @@ class StaticLoginViewController: UIViewController, Themeable {
 					contentViewController?.view.alpha = 0.0
 
 					UIView.animate(withDuration: 0.25, animations: {
-						oldValue?.view?.alpha = 0.0
+						if oldValue != self.contentViewController { // only animate the old view controller if it is distinct
+							oldValue?.view?.alpha = 0.0
+						}
 						self.contentViewController?.view.alpha = 1.0
 					}, completion: { (_) in
-						oldValue?.view?.removeFromSuperview()
-						oldValue?.removeFromParent()
+						if oldValue != self.contentViewController { // only animate the old view controller if it is distinct
+							oldValue?.view?.removeFromSuperview()
+							oldValue?.removeFromParent()
 
-						oldValue?.view?.alpha = 1.0
+							oldValue?.view?.alpha = 1.0
+						}
 
 						self.contentViewController?.didMove(toParent: self)
 					})
@@ -231,6 +235,19 @@ class StaticLoginViewController: UIViewController, Themeable {
 
 			navigationViewController.isNavigationBarHidden = true
 
+ 			// Saved for future reference. Ended up not being used now because ServerListTableViewController gained the
+			// ability to start the PushTransition from a custom viewController (.pushFromViewController), at which point
+			// PushTransition correctly restores the view.
+			// --
+			// if let serverListTableViewController = firstViewController as? ServerListTableViewController {
+			// 	// This block is executed when the transition back from the server list table view controller has finished
+			// 	// - at which point it is removed due to an iOS bug documented in PushTransition. To re-attach the view
+			// 	// controller in the right place, this custom pushTransitionRecovery is used
+			// 	serverListTableViewController.pushTransitionRecovery = { (_, _) in
+			// 		self.contentViewController = navigationViewController
+			// 	}
+			// }
+
 			self.contentViewController = navigationViewController
 		}
 	}
@@ -272,6 +289,11 @@ class StaticLoginViewController: UIViewController, Themeable {
 
 		serverList.staticLoginViewController = self
 		serverList.hasToolbar = false
+
+		// Push ClientRootViewControllers via PushTransition from this view controller, so it is correctly
+		// animated (otherwise just the list is moved *inside* this view controller, which is weird) and the
+		// PushTransition correctly restores the view
+		serverList.pushFromViewController = self
 
 		return serverList
 	}
