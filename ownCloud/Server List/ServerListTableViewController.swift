@@ -295,7 +295,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			}
 		}
 
-		self.present(navigationController, animated: true, completion: {
+		self.showModal(viewController: navigationController, completion: {
 			OnMainThread {
 				if performContinue {
 					bookmarkViewController.showedOAuthInfoHeader = true // needed for HTTP+OAuth2 connections to really continue on .handleContinue() call
@@ -313,7 +313,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		// Prevent any in-progress connection from being shown
 		resetPreviousBookmarkSelection()
 
-		self.present(navigationController, animated: true, completion: nil)
+		self.showModal(viewController: navigationController)
 	}
 
 	var themeCounter : Int = 0
@@ -350,6 +350,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	func isLocked(bookmark: OCBookmark, presentAlert: Bool = true) -> Bool {
 		return OCBookmarkManager.isLocked(bookmark: bookmark, presentAlertOn: presentAlert ? self : nil)
 	}
+
+	var pushTransitionRecovery : PushTransitionRecovery?
+	weak var pushFromViewController : UIViewController?
 
 	func connect(to bookmark: OCBookmark) {
 		if isLocked(bookmark: bookmark) {
@@ -388,14 +391,14 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
 
 				// Set up custom push transition for presentation
-				if let navigationController = self.navigationController {
-					let transitionDelegate = PushTransitionDelegate()
+				if let fromViewController = self.pushFromViewController ?? self.navigationController {
+					let transitionDelegate = PushTransitionDelegate(with: self.pushTransitionRecovery)
 
 					clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
 					clientRootViewController.transitioningDelegate = transitionDelegate
 					clientRootViewController.modalPresentationStyle = .custom
 
-					navigationController.present(clientRootViewController, animated: true, completion: {
+					fromViewController.present(clientRootViewController, animated: true, completion: {
 						self.resetPreviousBookmarkSelection(bookmark)
 					})
 				}
@@ -454,8 +457,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.showModal(viewController: clientRootViewController)
 	}
 
-	func showModal(viewController: UIViewController) {
-		self.present(viewController, animated: true, completion: nil)
+	func showModal(viewController: UIViewController, completion: (() -> Void)? = nil) {
+		self.present(viewController, animated: true, completion: completion)
 	}
 
 	// MARK: - Table view data source
@@ -525,7 +528,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 														preferredStyle: .alert)
 
 									alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
-									self.present(alertController, animated: true, completion: nil)
+									self.showModal(viewController: alertController)
 								} else {
 									// Success! We can now remove the bookmark
 									self.ignoreServerListChanges = true
@@ -549,7 +552,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 					}, for: bookmark)
 				}))
 
-				self.present(alertController, animated: true, completion: nil)
+				self.showModal(viewController: alertController)
 			}
 		})
 
