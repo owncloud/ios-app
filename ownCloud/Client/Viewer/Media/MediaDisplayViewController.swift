@@ -18,9 +18,15 @@
 
 import UIKit
 import AVKit
+import MediaPlayer
 import ownCloudSDK
+import MobileCoreServices
 
 class MediaDisplayViewController : DisplayViewController {
+
+	static let MediaPlaybackFinishedNotification = NSNotification.Name("media_playback.finished")
+    static let MediaPlaybackNextTrackNotification = NSNotification.Name("media_playback.play_next")
+    static let MediaPlaybackPreviousTrackNotification = NSNotification.Name("media_playback.play_previous")
 
 	private var playerStatusObservation: NSKeyValueObservation?
 	private var playerItemStatusObservation: NSKeyValueObservation?
@@ -28,10 +34,20 @@ class MediaDisplayViewController : DisplayViewController {
 	private var player: AVPlayer?
 	private var playerViewController: AVPlayerViewController?
 
+	// Information for now playing
+	private var mediaItemArtwork: MPMediaItemArtwork?
+	private var mediaItemTitle: String?
+	private var mediaItemArtist: String?
+
 	deinit {
 		playerStatusObservation?.invalidate()
 		playerItemStatusObservation?.invalidate()
-		NotificationCenter.default.removeObserver(self)
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+
+		NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+		NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+		NotificationCenter.default.removeObserver(self, name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
 	}
 
 	override func viewDidLoad() {
@@ -83,20 +99,61 @@ class MediaDisplayViewController : DisplayViewController {
 				player = AVPlayer(playerItem: playerItem)
 				player?.allowsExternalPlayback = true
 				playerViewController = AVPlayerViewController()
-				playerViewController!.player = player
+				playerViewController!.updatesNowPlayingInfoCenter = false
+
+				if UIApplication.shared.applicationState == .active {
+					playerViewController!.player = player
+				}
 
 				addChild(playerViewController!)
 				playerViewController!.view.frame = self.view.bounds
 				self.view.addSubview(playerViewController!.view)
 				playerViewController!.didMove(toParent: self)
 
+				// Add artwork to the player overlay if corresponding meta data item is available in the asset
+				if let artworkMetadataItem = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyArtwork}).first,
+					let imageData = artworkMetadataItem.dataValue,
+					let overlayView = playerViewController?.contentOverlayView {
+
+					if let artworkImage = UIImage(data: imageData) {
+
+						// Construct image view overlay for AVPlayerViewController
+						let imageView = UIImageView(image: artworkImage)
+						imageView.translatesAutoresizingMaskIntoConstraints = false
+						imageView.contentMode = .center
+						playerViewController?.contentOverlayView?.addSubview(imageView)
+
+						NSLayoutConstraint.activate([
+							imageView.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor),
+							imageView.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor)
+						])
+
+						// Create MPMediaItemArtwork to be shown in 'now playing' in the lock screen
+						mediaItemArtwork = MPMediaItemArtwork(boundsSize: artworkImage.size, requestHandler: { (_) -> UIImage in
+							return artworkImage
+						})
+					}
+				}
+
+				// Extract title meta-data item
+				mediaItemTitle = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyTitle}).first?.value as? String
+
+				// Extract artist meta-data item
+				mediaItemArtist = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyArtist}).first?.value as? String
+
+				// Setup player status observation handler
 				playerStatusObservation = player!.observe(\AVPlayer.status, options: [.initial, .new], changeHandler: { [weak self] (player, _) in
 					if player.status == .readyToPlay {
+
+						self?.setupRemoteTransportControls()
 
 						try? AVAudioSession.sharedInstance().setCategory(.playback)
 						try? AVAudioSession.sharedInstance().setActive(true)
 
 						self?.player?.play()
+
+						self?.updateNowPlayingInfoCenter()
+
 					} else if player.status == .failed {
 						self?.present(error: self?.player?.error)
 					}
@@ -132,27 +189,157 @@ class MediaDisplayViewController : DisplayViewController {
 
 	@objc private func handleAVPlayerItem(notification:Notification) {
 		try? AVAudioSession.sharedInstance().setActive(false)
+		OnMainThread {
+			NotificationCenter.default.post(name: MediaDisplayViewController.MediaPlaybackFinishedNotification, object: self.item)
+		}
+	}
+
+	private func setupRemoteTransportControls() {
+		// Get the shared MPRemoteCommandCenter
+		let commandCenter = MPRemoteCommandCenter.shared()
+
+		// Add handler for Play Command
+		commandCenter.playCommand.addTarget { [weak self] _ in
+			if let player = self?.player {
+				if player.rate == 0.0 {
+                    player.play()
+                    self?.updateNowPlayingTimeline()
+					return .success
+				}
+			}
+
+			return .commandFailed
+		}
+
+		// Add handler for Pause Command
+		commandCenter.pauseCommand.addTarget { [weak self] _ in
+			if let player = self?.player {
+				if player.rate == 1.0 {
+					player.pause()
+                    self?.updateNowPlayingTimeline()
+					return .success
+				}
+			}
+
+			return .commandFailed
+		}
+
+		// Add handler for skip forward command
+		commandCenter.skipForwardCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
+			if let player = self?.player {
+				let time = player.currentTime() + CMTime(seconds: 10.0, preferredTimescale: 1)
+				player.seek(to: time) { (finished) in
+					if finished {
+                        self?.updateNowPlayingTimeline()
+					}
+				}
+                return .success
+			}
+			return .commandFailed
+		}
+
+		// Add handler for skip backward command
+		commandCenter.skipBackwardCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
+			if let player = self?.player {
+				let time = player.currentTime() - CMTime(seconds: 10.0, preferredTimescale: 1)
+				player.seek(to: time) { (finished) in
+					if finished {
+                        self?.updateNowPlayingTimeline()
+					}
+				}
+                return .success
+			}
+			return .commandFailed
+		}
+        
+        // TODO: Skip controls are useful for podcasts but not so much for music.
+        // Disable them for now but keep the implementation of command handlers
+        commandCenter.skipForwardCommand.isEnabled = false
+        commandCenter.skipBackwardCommand.isEnabled = false
+
+		// Configure next / previous track buttons according to number of items to be played
+        var enableNextTrackCommand = false
+        var enablePreviousTrackCommand = false
+
+        if let itemIndex = self.itemIndex {
+            if itemIndex > 0 {
+                enablePreviousTrackCommand = true
+            }
+            
+            if let displayHostController = self.parent as? DisplayHostViewController, let items = displayHostController.items {
+                enableNextTrackCommand = itemIndex < (items.count - 1)
+            }
+        }
+        
+        commandCenter.nextTrackCommand.isEnabled = enableNextTrackCommand
+		commandCenter.previousTrackCommand.isEnabled = enablePreviousTrackCommand
+        
+        // Add handler for seek forward command
+        commandCenter.nextTrackCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
+            if let player = self?.player {
+                player.pause()
+                OnMainThread {
+                    NotificationCenter.default.post(name: MediaDisplayViewController.MediaPlaybackNextTrackNotification, object: nil)
+                }
+                return .success
+            }
+            return .commandFailed
+        }
+        
+        // Add handler for seek backward command
+        commandCenter.previousTrackCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
+            if let player = self?.player {
+                player.pause()
+                OnMainThread {
+                    NotificationCenter.default.post(name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
+                }
+                return .success
+            }
+            return .commandFailed
+        }
+	}
+
+    private func updateNowPlayingTimeline() {
+
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.playerItem?.currentTime().seconds
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = self.player?.rate
+    }
+    
+	private func updateNowPlayingInfoCenter() {
+        guard let player = self.player else { return }
+		guard let playerItem = self.playerItem else { return }
+
+		var nowPlayingInfo = [String : Any]()
+
+		nowPlayingInfo[MPMediaItemPropertyTitle] = mediaItemTitle
+		nowPlayingInfo[MPMediaItemPropertyArtist] = mediaItemArtist
+		nowPlayingInfo[MPNowPlayingInfoPropertyAssetURL] = source
+        nowPlayingInfo[MPNowPlayingInfoPropertyCurrentPlaybackDate] = playerItem.currentDate()
+		nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = playerItem.currentTime().seconds
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = playerItem.asset.duration.seconds
+
+		if mediaItemArtwork != nil {
+			nowPlayingInfo[MPMediaItemPropertyArtwork] = mediaItemArtwork
+		}
+
+		MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        
+        updateNowPlayingTimeline()
 	}
 }
 
 // MARK: - Display Extension.
 extension MediaDisplayViewController: DisplayExtension {
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
-		do {
-			if let mimeType = context.location?.identifier?.rawValue {
-				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((video/)|(audio/))",
-																	options: .caseInsensitive)
-				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
+		if let mimeType = context.location?.identifier?.rawValue {
 
-				if matches > 0 {
-					return OCExtensionPriority.locationMatch
-				}
+			if MediaDisplayViewController.mimeTypeConformsTo(mime: mimeType, utTypeClass: kUTTypeAudiovisualContent) {
+				return OCExtensionPriority.locationMatch
 			}
-
-			return OCExtensionPriority.noMatch
-		} catch {
-			return OCExtensionPriority.noMatch
 		}
+		return OCExtensionPriority.noMatch
 	}
 	static var displayExtensionIdentifier: String = "org.owncloud.media"
 	static var supportedMimeTypes: [String]?

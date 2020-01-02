@@ -1,5 +1,19 @@
 # ChangeLog
 
+## Release version 1.2.0 (December 2019)
+
+- Multiple Window Support (iPadOS) (#488)
+- Keyboard Commands (iPadOS) (#282)
+- Media Player Improvements (#59, #374)
+- Better File Previews (#481)
+- Arabic Language Support
+- Fix: Sort alphabetically (PR #546)
+- Fix: Share Sheet on iPad (#568)
+- Fix: FileProvider File Type Issue (#557)
+- Fix: FileProvider Offline Browsing (PR #547)
+- Fix: FileProvider Saving from Microsoft Word (PR #574)
+- Fix: Photo Upload (#504)
+
 ## Release version 1.1.2 (October 2019)
 
 - Fix for long delays before starting a request on iOS 13.1 (PR #531)
