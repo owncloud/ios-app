@@ -1,5 +1,9 @@
 # ChangeLog
 
+## Release version 1.2.1 (January 2020)
+
+- Fix: Passcode Lock Screen on iOS 13 (#582)
+
 ## Release version 1.2.0 (December 2019)
 
 - Multiple Window Support (iPadOS) (#488)
