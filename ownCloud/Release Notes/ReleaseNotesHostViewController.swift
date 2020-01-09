@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import StoreKit
 
 class ReleaseNotesHostViewController: UIViewController {
 
@@ -31,14 +32,14 @@ class ReleaseNotesHostViewController: UIViewController {
 	// MARK: - Instance Variables
 	var titleLabel = UILabel()
 	var proceedButton = ThemeButton()
-	var footerLabel = UILabel()
+	var footerButton = UIButton()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
 		Theme.shared.register(client: self)
 
-		VendorServices.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenReleaseNotesVersion)
+		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenReleaseNotesVersion)
 
 		let headerView = UIView()
 		headerView.backgroundColor = .clear
@@ -91,19 +92,20 @@ class ReleaseNotesHostViewController: UIViewController {
 			proceedButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
 			bottomView.addSubview(proceedButton)
 
-			footerLabel.textAlignment = .center
-			footerLabel.translatesAutoresizingMaskIntoConstraints = false
-			footerLabel.text = "Thank you for using ownCloud.\nIf you like our App, please leave an AppStore review.\n❤️".localized
-			footerLabel.numberOfLines = 0
-			footerLabel.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.footnote)
-			footerLabel.adjustsFontForContentSizeCategory = true
-			bottomView.addSubview(footerLabel)
+			footerButton.setTitle("Thank you for using ownCloud.\nIf you like our App, please leave an AppStore review.\n❤️".localized, for: .normal)
+			footerButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.footnote)
+			footerButton.titleLabel?.adjustsFontForContentSizeCategory = true
+			footerButton.titleLabel?.numberOfLines = 0
+			footerButton.titleLabel?.textAlignment = .center
+			footerButton.translatesAutoresizingMaskIntoConstraints = false
+			footerButton.addTarget(self, action: #selector(rateApp), for: .touchUpInside)
+			bottomView.addSubview(footerButton)
 
 			NSLayoutConstraint.activate([
-				footerLabel.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: padding),
-				footerLabel.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: padding * -1),
-				footerLabel.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: smallPadding),
-				footerLabel.bottomAnchor.constraint(equalTo: proceedButton.topAnchor, constant: padding * -1)
+				footerButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: padding),
+				footerButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: padding * -1),
+				footerButton.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: smallPadding),
+				footerButton.bottomAnchor.constraint(equalTo: proceedButton.topAnchor, constant: padding * -1)
 			])
 
 			NSLayoutConstraint.activate([
@@ -129,6 +131,10 @@ class ReleaseNotesHostViewController: UIViewController {
 	@objc func dismissView() {
 		self.dismiss(animated: true, completion: nil)
 	}
+
+	@objc func rateApp() {
+		SKStoreReviewController.requestReview()
+	}
 }
 
 // MARK: - Themeable implementation
@@ -139,7 +145,7 @@ extension ReleaseNotesHostViewController : Themeable {
 		titleLabel.applyThemeCollection(collection, itemStyle: .logo)
 		proceedButton.backgroundColor = collection.neutralColors.normal.background
 		proceedButton.setTitleColor(collection.neutralColors.normal.foreground, for: .normal)
-		footerLabel.textColor = collection.tableRowColors.labelColor
+		footerButton.titleLabel?.textColor = collection.tableRowColors.labelColor
 	}
 }
 
@@ -168,9 +174,11 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 			}
 
 			return false
+		} else if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) != nil, self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) as? String != VendorServices.shared.appVersion {
+			return true
 		}
 
-		return true
+		return false
 	}
 
 	func releaseNotes(for version: String) -> [[String:Any]]? {
@@ -194,7 +202,8 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 }
 
 extension OCClassSettingsKey {
-	static let lastSeenReleaseNotesVersion = OCClassSettingsKey("lastSeenReleaseNotesVersionTest")
+	static let lastSeenReleaseNotesVersion = OCClassSettingsKey("lastSeenReleaseNotesVersion")
+	static let lastSeenAppVersion = OCClassSettingsKey("lastSeenAppVersion")
 }
 
 extension ReleaseNotesDatasource : OCClassSettingsSupport {
@@ -202,7 +211,7 @@ extension ReleaseNotesDatasource : OCClassSettingsSupport {
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
-			return [ .lastSeenReleaseNotesVersion : true]
+			return nil
 		}
 
 		return nil

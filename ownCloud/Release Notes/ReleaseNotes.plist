@@ -21,16 +21,6 @@
 				</dict>
 				<dict>
 					<key>Title</key>
-					<string>Keyboard Commands</string>
-					<key>Subtitle</key>
-					<string>On iPadOS you can control the app with a hardware keyboard. Long press the command key to see all available actions. These actions can change, if an item is selected or not.</string>
-					<key>Type</key>
-					<string>New</string>
-					<key>ImageData</key>
-					<string>iVBORw0KGgoAAAANSUhEUgAAAEYAAAAiCAYAAADiS6/IAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAABIF7AAAQAAAMCmQAACoDAAOgAQADAAAAAQABAACgAgAEAAAAAQAAAEagAwAEAAAAAQAAACIAAAAAZ/XYJwAAAAlwSFlzAAALFgAAC0kBEAO4dQAAA9ZJREFUaAXtmUtsTVEUhktQ1VQ8y4BWSDziHSEmBgZMRCQkiKQSMSExFmJk0ATBkIkBSUOFATHQeEyISTvRkHqVNE1oEY8qbeL9/cnZsbq7z809p7fiHvdP/py919prP9bZZ6297y0rKyHogRFB6R/hSIqb4HpYAytgseIXE/8CX8Br8DaMRS7HVGOlDibBBvgU9sFiRhWTXwrrYAvcCvthIjTRuhGOSWRVHI0nMM178HTS6S7C4AOUh7OK2SxMu2VyaIGKISGsQXgL9oaUGZEp1jyAq0PriXPMNBp3hgwyJutgPdNDa4pzzGgafwsZZEz2lfUEY2icY3KtX5lMO0pZK4Q4ncaSbkrAqByZ3pyCog9NPE5XGenG+0bUFR9ll+qIkcYxGxmsG76G26DFHipOpzhlcYiKdG/hfKugfBx2wffQd9z5SCe9f7y4HunaePpoRiAbZZ/ESOOYcWYUvTELW7ft1CaXzrXVwv037OzGovPn6+zcU+M4OJmzd/K8nqPyajWwUSvVRqiTZPNAVdldo3vs6ZTlauEP2AEtmqhoATpAvrEKypdhD/wIZWuhebTDTiuMyud4zoX3A7rUonosj6S2Lh5Dnej3hqbrb81Qm/9SVnJMzGtPE2N0xpkHFWOewO/QQalV37V0ijE2Jiiozolkj3haKE3PhIoxz62C8kQ4A7qbsVUrHU+FikF+nJGNbBWzlEELglwxZjMjaOHiDm+0fUa31tMdNrqFnu6U0VV7uiuRTocxZS0LpWLNQ2nZxzME0rX6ClMvaIzRrnAod4Xoaeu2ndRWZ8v56rRTfce4fvyx1KeTuTaS5Y00n1ILvZ+Aeht6YxY3qUgn6IJmcZWKFqfPSxc4i0tUlI77oZ+uzyBrg5/hT2ihnabd122FUVnzqIX63AuGenoqpeuCuTNDHZXSdczLTBNjKulrFVSMUbxRGnXQLXcF9IOk0w/XU5dP/+i/BJkupK+gfz1BlBtpHLOBLi9G3e7ieTYq67EbnjT1v1V8x0D+rVzBfhaUUxbAREjzKdndYMsa2K8nmswQGofGdTL3TNR9mh1zhxEOQH1KN7zRdBhTSk41Ga+vJFV9Lj4OIkidrtM4posBj/qziOo6n8TpYkyGTXxhKD2n+ZSGMt6/ZqudrZ0/CHGO0SmzalDr7Am0Rq11EOIcoxuu/srMMrRblsP2JIvU/9Xy5MokRkXWdjvz7YSJ4+x+jF7CdTBL0FeyE36CW+IWlstbxzDqhQ1Qv4XoltoHixmKKYthD6yDOgQGkc95Q85bBmtgRbCX4hAq+7hfAR9SDmYjt5TfSE6nAoZwo80AAAAASUVORK5CYII=</string>
-				</dict>
-				<dict>
-					<key>Title</key>
 					<string>Media Player Improvements</string>
 					<key>Subtitle</key>
 					<string>The integrated Media Player autoplays all media files from the current folder. The media player was improved, to show available album covers. Furthermore you have now controls, to skip 10 seconds forward or backward. If you have an Apple Watch, you can control the media playback right from your wrist.</string>
@@ -48,16 +38,6 @@
 					<string>New</string>
 					<key>ImageData</key>
 					<string>iVBORw0KGgoAAAANSUhEUgAAAD0AAAAtCAYAAAAdtGNyAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAABYMMAAATdwACZakAAAhkAAOgAQADAAAAAQABAACgAgAEAAAAAQAAAD2gAwAEAAAAAQAAAC0AAAAA5nzNHQAAAAlwSFlzAAALJgAACz8BbRxhqAAAA3ZJREFUaAXtmluITVEYx4cRyW0at8h4kDwQL4QH6lDGm0gpacqDKC9ueZuUB+WB8qJ4oIxGCPGkkBHxgBeXB0m5TIkyNZRL7r9/c3ad9t5rr7X23nNmb85Xv/Y5a33ft75v3c+eaWpqSKMHGj3wL/XAMEsyU6nfAe0wE0ZDEeU3QfXDYzgFF8AoSUkvwOo63IGT8By+QBFlOEFNggrshR7ogD/gLOqMp9DpbFEcxSmE8hK2+Ia0DINeaPY1LIj+JuJ46BvLTgy6fI0KpD+RWH5C7KBpLcRJK4Xv4ypKUtZHnNrcWuLiNSWtHvoVZ1CiMsXvNdIlys0/VNNI+3sqkUWeSVfI+wzogvAADsMMKI0cINKDHtEqQV0EwnyibJWHnzxVv+JMZ3ZE8hjpbXjdHfE8UDCOx0VoM9QPSXHWpHVz22eJXImbOsViOjjVWZOeQ1jTHUKrOOjUTSVr0mMcI3XVc3SXTS1r0i9o/odDCM8cdOqmkjVp7c7aqGxywqZQz/qsSSvWXfA6IejT1F1JqK97VR5JvyPqpaAR1yU/EM2CTtgcFDg+9QtpLmjXr6v4Xk6C4PT2YjkshlFBoeNzNnpXQR2nS8530CxxOR1Qi4jxchLRrBakTdrkz1a+EgW94wrf6PS9D1aArxiTzmN6+wYT1t9IgUZ4Qrii+r21Wr/eUO9dPNRJ7yHibhhpiVxL5TzoyptZ8khaI6TR8BG1ewQOga6yLiKbY2C79lp9ZUl6Ft6vgdai1t190AZmE43aWdD79DSyH6OjkCX22HZtG9kirD5AeOP5Rtm6WI8DhZoVtyBsl+b7OfwkLQvjRoZdrCQlrSPpI5gC1VvIjhiveqHwJMHO5C+p/Ab+TOd5bkm308hnh8B11m6HQObxoReSEkhbp/fbk4OGap7GpEfUKNk+rkXBNqUCH9qctO7Gwz3QNbQFBkMW4vQuaEBeQWoJT2/9xUC/ptKMhqZ7Gjtfm7e0Mx8CMY60yw64FS9d4DMrgob1bK79Moifp+H7NmjPSRRb0ro8HAebXmIjdazUEtIxuiZNm7oAvAHfKVYUfS0pbabaUyJiGkGtj7aIdnkKtKR0yujnbURMSfegqVErs9xME3w3RkWZrr5x6KRZkibpsRhdKmHiui1uSErY5ReODv/VoDVe5H+0UbKP4DL0Q0MaPfA/9sBfxCR9OVqwnVoAAAAASUVORK5CYII=</string>
-				</dict>
-				<dict>
-					<key>Title</key>
-					<string>In-App Release Notes</string>
-					<key>Subtitle</key>
-					<string>Show all new features and fixes after an update to the user.</string>
-					<key>Type</key>
-					<string>New</string>
-					<key>ImageData</key>
-					<string>iVBORw0KGgoAAAANSUhEUgAAADUAAAAfCAYAAABH0YUgAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAABK8DAAAQXQAAAEgAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADWgAwAEAAAAAQAAAB8AAAAAxZI1qAAAAAlwSFlzAAALRQAACxMB2k138gAAAXJJREFUWAntmM0qRVEUx3GVjygMKBmReAYZKQ+glPIAysDIxGPIjHdgqKQkxVCGylgGykRE8vH7q12rc8+63cnptE9r1a/933utu+9aq1Nnn93q8W0Q1zL0w4sflo9njFTv4Re+YRuysV4n0x3WD4zvGT1p5knOIxTr7ZPiqhiP2fSybGM9WmX2VVgszpP7A/EEdRT1mpLodhwm8Ab0+CnxDWiE9VHFAow3opooIjoQHYgORAea1oE1CjqBfZhoQnFLFPEDOlGIU/BMR6Q68PJx1/fwpII0vjmRK4U4+5uq9a6T0/+3UplP5z5r13Zi9AV6BOo40HqNNum1y02WzuAIptrdsRIdiA5EB6ID0YHKO9Dq8A96oc6C7v0+O8Rl4xoi0yvQUecd1iEb8443W1RwaKp4RM+YeZLTCJ08vH1SXBXjOZvelW3sXWbqHt3agJ0YPYqegzqKujV5dCX1/fQAevz0CaKr5UaYbmlXYTG3av4AOqxMfQL52RcAAAAASUVORK5CYII=</string>
 				</dict>
 				<dict>
 					<key>Title</key>
@@ -108,6 +88,43 @@
 					<string>Fix</string>
 					<key>ImageData</key>
 					<string>iVBORw0KGgoAAAANSUhEUgAAADcAAABACAYAAAC+/O8/AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAABDrcAAAOywAEcK0AAA+4AAOgAQADAAAAAQABAACgAgAEAAAAAQAAADegAwAEAAAAAQAAAEAAAAAA8o3R7QAAAAlwSFlzAAALQgAACx8Ba/0IRgAABHZJREFUaAXtmFuITVEYx5lxv99zGbmMwYNLopRbijzJrTwpxu2BB5cXlFCaQi5PikTxIIUwTxiXxiWSFOLBkGTcLzHI/fb7M6t2p33O+fbZe8+Zqf3Vr7PP2v/1rfV9Z621v30aNUosyUCSgSQDSQaSDCQZiCIDhThpEoWj+uRDQZXBJ/gM26AZNHhTECfgKpRAEZyECmgJDdYUWDmch1aeKLQ0j/i0eyT1+9IFdo5pegNzs3YBVtLQ2jU2hE8X2Fkmm2npuQAvomsTR2CNc3CqTHeAAp++XWjbXHtvGp9ffDTeJgV4CHrDcngGqfabhg/wMfVGlN+H4+w6/IAaeO/Da9oOQAuwmgLcCS/Bz6fG0ph3YBxEbvqFq2AFaNnVtTVlwPnwCoIkzjTPYlT6VfJtd5nAWOsk/PaNX1/tJWUt3/acCXS1TsIanHR/rE5j1GkO1jnbhTFOODbX5izENoMYHde34FRk74HBUcRc34JbS1DTIZKTWQ9Qi7VH9MsiDKEZTd91MBPepvGjOWgukZke2qrsVUXEZa1xfB92ZRlAwd+CSGpRVQblcAYirwzw6WwvF/fA7w3CafTpiu1LXIcKUIEdh2zVPZJQpmX4HUYZvbgAL6LXLx7YFNgxOAeZXlsCO07p0IPvb0AHSRBzAV6gU6AAdRwfhbgDUzF+GrTENGZQcwFW0tG8ZTYhvgzZ1j+SUKY3jBroG8KLAtSZsM/ioy0ivRT2tIhDaIbQ9yvMDeHDddWc9egocg3pPrtzQ9nUnrPYDERjLEKPpjnXt+Gwpy3s5UMcDLU4OYVIS9Ni6xHp7Vm/hNV2IHwCHa0dsuiWcf8GaA9nNZ1gysTqrMr/Do+gewy9DPrJaH7BJIPWIilF9AJKLGKn6cvFI7AEqJPqCtyEdpDOOnHjKWxPJwjYPh+9/ncxLcdU3/1o0C9iCVBvxw+gAtLtVz1etNe058LaQhy8huFhHBXTuRosAQ5C9xb2Q6opyzodc8pyirNFfH8DI1Lac/o6gF7PQdnKZhMQfIONHqESpMfLSk9brpfT6fgORubqwK/fPBqv+d3waZtD229QMgrhKqjwNp1m6DJZOTfXZBJ47zXxfslwXcU9aw13EK32626YCgNhGETxB5OqJs3FZNbgTM48ojKutRxLYTbolKxzK4hxxMX4Hg86JfNicQb3k4gu5yWq2kHjDC6fcf0buyEGZz6YrMHpOdU27z/F/zl8inoeKplqIJKqIMfJ9aGfktzN2t/6KFDVsQou1KLyx295/KBdfx0cgyA2BfEs0N+IqaaHfweYCJvhFZgsaNWg7Ol47wh+S7oz7UthK2wBiy1CtAN2wTOfDqp2tGpU6dz3uV+nTSWM9gQsxbZKNK2CSGtF/MVqA/BeDZkCXMB9vbbkcx8zfG6m8usx+AVYSrv2Tqj3Mfrn1fozugLcAG5/L+Fafw2omI7V3IBxDtIb5zo99TjRC6sqe52M5uoebU5WF8FpYgWgU7YpVILqzsSSDCQZSDKQZCDJQJKBEBn4C7hrtbpGJWzdAAAAAElFTkSuQmCC</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Version</key>
+			<string>1.3.0</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Document Scanner</string>
+					<key>Subtitle</key>
+					<string>Scan your documents directly into your ownCloud. You do not longer need a third party app or import scanned documents. Our ownCloud app has an integrated document scanner. Tap on the &quot;+&quot; button to start your scan!</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string>iVBORw0KGgoAAAANSUhEUgAAADEAAAAsCAYAAADM1FBZAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAACTAAAAAgADHvMAAArkAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADGgAwAEAAAAAQAAACwAAAAAbTe5pQAAAAlwSFlzAAALTgAAC0gB6cUDrgAAAqdJREFUaAXtmb1rFUEUxaNRMX5HiBJBMYiIiAhpxNIQQsDK2sLKQkRBEaxsUomFiGDs8h8EazGNiJ1gI0i0UwzEryiKEcWP3xELi3sWZ3bee7LshZMH5865d+7MzszupK+vtXYEio3Ain+MtJJ2g2DAtF+E/2Z8jl6NY7txLsMvgR/Gn0SP0vo2+Ai+gg8GZ+FT7RwCF0+5lHMWHALZNonyE5gCI9lR8oV7kV4F6sN4Tpg1iF6CEzniwppTxHsB9PglmWbhSZKic421bp+BCZdCCzayg5APIkcPuJ/kvA/Up9BcEZtp/TZU9IZ8Q9otLvUq49AUagQik0+7xlHQHzXI4L6juQeOgyivOOUNzRURNv5D7uBXa2Yf0DZYwjYRZB4Mg4XUgDlFaOf6DLRjlLL3BFJMxU42tyaSA/VS0Igi3OOkdyG7kIJRPw83GPBV1Duc16sa/OVTf/QqEpor4kbY2pOKk7pTudxRlmsRWYcbQax9u7TpXNqdE7TRayJ1QIYQrDcinSUdPf1TnkvTx9/0HH+3mQZ6kRwzviJ0qSJqfbjUraQRa6Itou5jUErfzkSpkawbp9EzoYPLHV51By5HvwHROid0M3ERwSUn6gGvvqhPobnDTl9YqW+lYYJCpPpjPw3cTBTK3Z0wjSjCPU5VQ6i70Y3gJNDHfQnTJqKYip1sOUW8JssFcAyUWje6d1LMrI8tV4SCVl2f3MQvdMvUzy8umVsT+ojRRdb/YrqwS56lI4gWQPJ1egeqXkvMV+BwamztyY/AlVRhB9rr5uVhVVx7gCDaD+6Cx2AG6K7U7Ua60rTPLL7INMI7IwecXjEOAP2DZQ8YB09BaFVFSLAVnAYTYBcYAJFNQU5HjgruDL7LgV834MvgObgDbgHd1bbWjkA3RuAXSxthkFuX+eQAAAAASUVORK5CYII=</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Shortcut Support</string>
+					<key>Subtitle</key>
+					<string>On iOS 13 you get great Shortcut support. We have added multiple action, to build your own scripts and automation for your ownCloud.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string>iVBORw0KGgoAAAANSUhEUgAAADoAAABKCAYAAADqmUfpAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAACL1OAAAe2QADfXkAAAxiAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADqgAwAEAAAAAQAAAEoAAAAAQdNw6AAAAAlwSFlzAAALJwAACxkBZZ4xKQAABGFJREFUeAHtmVmoj1sYxs0cwxHKEMnQoWOKnJMy7dqGC5KUk5IhF4criVK4kHDFyYULcWMqhS0XppBhJ7kgTmkTkThnZziOcwwZMv+eWLX2sva3rf+mb3279daz1/Su7/887/rW8K3dqFGyFIEUgRSBFIEUgRSBFIEUgRSBhhmBxpHK6gSvMjAIdAZNwCNwHZwFt0GhbQzsD4O34EMGLtI2DzQDhbIfYbsLZInztVXR55eiKO0KURH2Cfmautf0nR272PYQvFwPkSYQ73nGjCyxmuR52mZ+fPA3IFDNM0aBKBfXCRAzIxKaPqXvAbAQ9AdRWyXsQgQ+wX8dGA0Ks9r2DBT5H/59QMmW1xwtD2SsredWYJ8a7nkJHVKDRd0Fzcl6WV5CewSyHh7o/4V7XkJ1lg2xMpx/COng+uYltKNLxCrfJ685edCqa0W+3CoHZ/MSqrOtbecpLAGau73BVvAG2DbZLnjyCob2Zm1BOvDXsLz2I1foIVg1BX8AfcHoNX0GbJtkF8jrFDQMSNx4oP1VYmVzPyX5/m3Oz+ts6h4WXlB3HCwFQ0FLcA3YfgMprwfngL5P7TaT1ydeN5C7iawhZVJ9UGsUB4BFQPNTI2raTaog/O6pN+1Kj4IobAEsbGLKa4T//VyvuXkWrAJrge1bSbm7U2e3Kz8WRGGnYeGSU1k3C1NAO6AFaT6oBLavgqBPu0tOvfHZTX0UNhIWhpSbVtCmz7abGT7qMx2s8fhcpU5ByN3awuAKcAWGlrfxjBHOc+5Q1luQu2kFPQJCRfn87/McbUX/fH7eeVLN29xNe+Zp4CNdap0uxPSarwYtQO6mw/ufoFRBbj+tznreOBBkOl18LyvjwXuBLqBD7ALOJ8AN8BC8Ai/B/0Bz8TmIwhQ8bezaCtwRySprrumVLIR1haWOcVmCfG076aOjYSFsGizNSugTU1vdHvrl9RUVFFht0jtAbUKy6o/RL4pVsy7F+kT6q0SRWj3b1PUDebe3hsAm4PvcyhpB06bVtBeI2n6FnT6rDOnQVKtxecwKtW0sA6HbhhuIFTGL7AA5fQy7pEPLJ3lGtCtsP8jplBIqyvXXvIziigMeX5hu5UrZG12RKmufjdK6w6oauKR11gxdbbfTJ1o7BTMj8jX5lcC8errumAPuAuNTW3oHH/d6k6o4bCo0DHGNnu5yfKZR/xsYXzdV36i3EnuFrfAptOpmZgjdaPlFmX1skZeQLNMxzh1JlXVZVa9/DGX96Ldoc4nrPFuXaQ7bYlXWvwuiMd/m/QJ2Ov0Y+8lkakn7Uu9+Sy6nTof26O0MDM0IibAvIEbEBstXffabhiKk8xzyWyg38xD/jbp3lu818u09ftFW6d70AjCjqrQKLAaTwCywD2j7MD73yPcBhTNdVfpORkaYnd7G9+fCKbQIS6w7srZA5Q+DLlafwma1EM0Fp4DuVyXuAagAE0GDNXcrabBCk7AUgRSBFIEUgRSBFIEUgRSBQkfgI4TsZy0UEI/OAAAAAElFTkSuQmCC</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>In-App Release Notes</string>
+					<key>Subtitle</key>
+					<string>Show all new features and fixes after an update to the user.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string>iVBORw0KGgoAAAANSUhEUgAAADUAAAAfCAYAAABH0YUgAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAABK8DAAAQXQAAAEgAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADWgAwAEAAAAAQAAAB8AAAAAxZI1qAAAAAlwSFlzAAALRQAACxMB2k138gAAAXJJREFUWAntmM0qRVEUx3GVjygMKBmReAYZKQ+glPIAysDIxGPIjHdgqKQkxVCGylgGykRE8vH7q12rc8+63cnptE9r1a/933utu+9aq1Nnn93q8W0Q1zL0w4sflo9njFTv4Re+YRuysV4n0x3WD4zvGT1p5knOIxTr7ZPiqhiP2fSybGM9WmX2VVgszpP7A/EEdRT1mpLodhwm8Ab0+CnxDWiE9VHFAow3opooIjoQHYgORAea1oE1CjqBfZhoQnFLFPEDOlGIU/BMR6Q68PJx1/fwpII0vjmRK4U4+5uq9a6T0/+3UplP5z5r13Zi9AV6BOo40HqNNum1y02WzuAIptrdsRIdiA5EB6ID0YHKO9Dq8A96oc6C7v0+O8Rl4xoi0yvQUecd1iEb8443W1RwaKp4RM+YeZLTCJ08vH1SXBXjOZvelW3sXWbqHt3agJ0YPYqegzqKujV5dCX1/fQAevz0CaKr5UaYbmlXYTG3av4AOqxMfQL52RcAAAAASUVORK5CYII=</string>
 				</dict>
 			</array>
 		</dict>

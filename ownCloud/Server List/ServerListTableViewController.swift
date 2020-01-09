@@ -100,6 +100,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			releaseNotesHostController.modalPresentationStyle = .formSheet
 			self.present(releaseNotesHostController, animated: true, completion: nil)
 		}
+
+		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenAppVersion)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {

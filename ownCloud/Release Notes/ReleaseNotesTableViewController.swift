@@ -36,10 +36,10 @@ class ReleaseNotesTableViewController: StaticTableViewController {
 					for releaseNote in (notes as? [[String:String]])! {
 						if let title = releaseNote["Title"], let subtitle = releaseNote["Subtitle"], let strBase64 = releaseNote["ImageData"] {
 							let dataDecoded : Data = Data(base64Encoded: strBase64, options: .ignoreUnknownCharacters)!
-							if let decodedimage = UIImage(data: dataDecoded)?.tinted(with: .white) {
+							if let decodedimage = UIImage(data: dataDecoded)?.tinted(with: .white)?.scaledImageFitting(in: CGSize(width: 50.0, height: 44.0)) {
 								let row = StaticTableViewRow(rowWithAction: { (_, _) in
 									self.dismissAnimated()
-								}, title: title, subtitle: subtitle, image: decodedimage, imageWidth:70.0, alignment: .left, accessoryType: .none)
+								}, title: title, subtitle: subtitle, image: decodedimage, imageWidth:50.0, alignment: .left, accessoryType: .none)
 								section.add(row: row)
 							}
 						}
