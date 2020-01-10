@@ -184,6 +184,9 @@ platform :ios do
     short_hash = commit[:abbreviated_commit_hash] # short sha of commit
     sh "curl https://badgen.net/badge/Bitrise/" + short_hash + "/blue > badge.svg"
     sh "brew install librsvg"
+    sh "brew unlink pango"
+    sh "brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/7cf3b63be191cb2ce4cd86f4406915128ec97432/Formula/pango.rb"
+    sh "brew switch pango 1.42.4_1 "
     sh "rsvg-convert badge.svg > badge.png"
     sh "badge --custom badge.png --glob /../**/*.appiconset/*.{png,PNG}"
 

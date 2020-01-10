@@ -116,14 +116,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		updateNoServerMessageVisibility()
 
-		let helpBarButtonItem = UIBarButtonItem(title: "Feedback", style: UIBarButtonItem.Style.plain, target: self, action: #selector(help))
-		helpBarButtonItem.accessibilityIdentifier = "helpBarButtonItem"
-
 		let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
 		settingsBarButtonItem.accessibilityIdentifier = "settingsBarButtonItem"
 
 		self.toolbarItems = [
-			helpBarButtonItem,
 			UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil),
 			settingsBarButtonItem
 		]
@@ -318,12 +314,21 @@ class ServerListTableViewController: UITableViewController, Themeable {
 	}
 
 	func delete(bookmark: OCBookmark, at indexPath: IndexPath) {
-		OCBookmarkManager.lock(bookmark: bookmark)
+		var presentationStyle: UIAlertController.Style = .actionSheet
+		if UIDevice.current.isIpad() {
+			presentationStyle = .alert
+		}
 
-		OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
+		let alertController = ThemedAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
+													message: "This will also delete all locally stored file copies.".localized,
+													preferredStyle: presentationStyle)
+
+		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
+
+		alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
 			let vault : OCVault = OCVault(bookmark: bookmark)
 
-			vault.erase(completionHandler: { (_, error) in
+			OCBookmarkManager.lock(bookmark: bookmark)
 				OnMainThread {
 					if error != nil {
 						// Inform user if vault couldn't be erased
@@ -331,40 +336,52 @@ class ServerListTableViewController: UITableViewController, Themeable {
 											message: error?.localizedDescription,
 											preferredStyle: .alert)
 
-						alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+			OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
+				let vault : OCVault = OCVault(bookmark: bookmark)
 
-						self.present(alertController, animated: true, completion: nil)
-					} else {
-						// Success! We can now remove the bookmark
-						self.ignoreServerListChanges = true
+				vault.erase(completionHandler: { (_, error) in
+					OnMainThread {
+						if error != nil {
+							// Inform user if vault couldn't be erased
+							let alertController = ThemedAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+																		message: error?.localizedDescription,
+																		preferredStyle: .alert)
 
-						OCBookmarkManager.shared.removeBookmark(bookmark)
+							alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
-						self.tableView.performBatchUpdates({
+							self.present(alertController, animated: true, completion: nil)
 							self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-						}, completion: { (_) in
-							self.ignoreServerListChanges = false
-						})
+						} else {
+							// Success! We can now remove the bookmark
+							self.ignoreServerListChanges = true
 
-						self.updateNoServerMessageVisibility()
+							OCBookmarkManager.shared.removeBookmark(bookmark)
 					}
 
-					OCBookmarkManager.unlock(bookmark: bookmark)
+							self.tableView.performBatchUpdates({
+								self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+							}, completion: { (_) in
+								self.ignoreServerListChanges = false
+							})
 
-					completionHandler()
-				}
+							self.updateNoServerMessageVisibility()
+						}
 			})
 		}, for: bookmark)
 	}
 
-	var themeCounter : Int = 0
+						OCBookmarkManager.unlock(bookmark: bookmark)
 
-	@IBAction func help() {
-		// Prevent any in-progress connection from being shown
-		resetPreviousBookmarkSelection()
+						completionHandler()
+					}
+				})
+			}, for: bookmark)
+		}))
 
-		VendorServices.shared.sendFeedback(from: self)
+		self.present(alertController, animated: true, completion: nil)
 	}
+
+	var themeCounter : Int = 0
 
 	@IBAction func settings() {
 		let viewController : SettingsViewController = SettingsViewController(style: .grouped)

@@ -233,12 +233,12 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
  	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath) else {
+		guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath), let cell = tableView.cellForRow(at: indexPath) else {
 			return nil
 		}
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .tableRow)
-		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: cell)
 		let actions = Action.sortedApplicableActions(for: actionContext)
 		actions.forEach({
 			$0.progressHandler = makeActionProgressHandler()
@@ -453,6 +453,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		// Find associated action
 		if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
 			// Configure progress handler
+			action.context.sender = self.tabBarController
 			action.progressHandler = makeActionProgressHandler()
 
 			action.completionHandler = { [weak self] (_, _) in
@@ -523,7 +524,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		// Actions for folderAction
 		if let core = self.core, let rootItem = query.rootItem {
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .folderAction)
-			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
+			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation, sender: sender)
 
 			let actions = Action.sortedApplicableActions(for: actionContext)
 
@@ -552,7 +553,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		}
 
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreFolder)
-		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [rootItem], location: actionsLocation)
+		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [rootItem], location: actionsLocation, sender: sender)
 
 		if let moreViewController = Action.cardViewController(for: rootItem, with: actionContext, progressHandler: makeActionProgressHandler()) {
 			self.present(asCard: moreViewController, animated: true)
