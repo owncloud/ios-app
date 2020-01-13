@@ -18,11 +18,8 @@
 
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 import VisionKit
-
-extension OCLicenseFeatureIdentifier {
-	static var documentScanner : OCLicenseFeatureIdentifier { return OCLicenseFeatureIdentifier(rawValue: "document-scanner") }
-}
 
 class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.scan") }

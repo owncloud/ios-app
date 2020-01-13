@@ -399,9 +399,9 @@ typedef void(^LicenseProviderBlock)(OCLicenseProvider *provider, OCLicenseProvid
 - (NSArray <OCLicenseAppStoreItem *> *)_appStoreItems
 {
 	return (@[
-		[OCLicenseAppStoreItem trialWithAppStoreIdentifier:@"trial.pro.30days" trialDuration:30*24*3600 productIdentifier:@"bundle.pro"],
+		[OCLicenseAppStoreItem trialWithAppStoreIdentifier:@"trial.pro.30days" trialDuration:[[OCLicenseDuration alloc] initWithUnit:OCLicenseDurationUnitDay length:30] productIdentifier:@"bundle.pro"],
 		[OCLicenseAppStoreItem nonConsumableIAPWithAppStoreIdentifier:@"single.documentsharing" productIdentifier:@"single.documentsharing"],
-		[OCLicenseAppStoreItem subscriptionWithAppStoreIdentifier:@"bundle.pro" productIdentifier:@"bundle.pro"]
+		[OCLicenseAppStoreItem subscriptionWithAppStoreIdentifier:@"bundle.pro" productIdentifier:@"bundle.pro" trialDuration:[[OCLicenseDuration alloc] initWithUnit:OCLicenseDurationUnitDay length:30]]
 	]);
 }
 

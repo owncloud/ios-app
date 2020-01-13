@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -33,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
 
 		// Set up license management
-		self.setupLicenseManagement()
+		OCLicenseManager.shared.setupLicenseManagement()
 
 		// Set up app
 		window = ThemeWindow(frame: UIScreen.main.bounds)
@@ -143,26 +144,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Log.debug("AppDelegate: handle events for background URL session with identifier \(identifier)")
 
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
-	}
-
-	func setupLicenseManagement() {
-		// Set up features and products
-		OCLicenseManager.shared.register(OCLicenseFeature(identifier: .documentScanner))
-		OCLicenseManager.shared.register(OCLicenseProduct(identifier: OCLicenseProductIdentifier(rawValue: "single.document-scanner"), name: "Document scanner".localized, description: "Allows scanning documents and photos with the camera of your device", contents: [.documentScanner]))
-		OCLicenseManager.shared.register(OCLicenseProduct(identifier: OCLicenseProductIdentifier(rawValue: "bundle.pro"), name: "Pro Features".localized, description: "Pro Features include the document scanner", contents: [.documentScanner]))
-
-		// Set up App Store License Provider
-		let appStoreLicenseProvider = OCLicenseAppStoreProvider(items: [
-			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentsharing", productIdentifier: OCLicenseProductIdentifier(rawValue: "single.document-scanner")),
-			OCLicenseAppStoreItem.subscription(withAppStoreIdentifier: "bundle.pro", productIdentifier: OCLicenseProductIdentifier(rawValue: "bundle.pro"), trialDuration: OCLicenseDuration(unit: .day, length: 14))
-		])
-
-		OCLicenseManager.shared.add(appStoreLicenseProvider)
-
-		// Set up Enterprise Provider
-		let enterpriseProvider = OCLicenseEnterpriseProvider(unlockedProductIdentifiers: [OCLicenseProductIdentifier(rawValue: "bundle.pro")])
-
-		OCLicenseManager.shared.add(enterpriseProvider)
 	}
 
 	// MARK: UISceneSession Lifecycle

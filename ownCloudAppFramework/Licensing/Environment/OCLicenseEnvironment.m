@@ -32,4 +32,15 @@
 	return (environment);
 }
 
++ (instancetype)environmentWithBookmark:(OCBookmark *)bookmark
+{
+	OCLicenseEnvironment *environment = [self new];
+
+	environment.identifier = bookmark.uuid.UUIDString;
+	environment.hostname = bookmark.url.host;
+	environment.certificate = bookmark.certificate;
+
+	return (environment);
+}
+
 @end

@@ -60,12 +60,10 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 
 	public func handle(intent: GetDirectoryListingIntent, completion: @escaping (GetDirectoryListingIntentResponse) -> Void) {
 
-		// Todo:
-		// if Shortcuts not enabled
-		//completion(GetAccountIntentResponse(code: .disabled, userActivity: nil))
-
-		// if enabled, but not a valid license
-		//completion(GetAccountIntentResponse(code: .unlicensed, userActivity: nil))
+		guard IntentSettings.shared.isEnabled else {
+			completion(GetDirectoryListingIntentResponse(code: .disabled, userActivity: nil))
+			return
+		}
 
 		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(GetDirectoryListingIntentResponse(code: .authenticationRequired, userActivity: nil))
@@ -81,6 +79,12 @@ public class GetDirectoryListingIntentHandler: NSObject, GetDirectoryListingInte
 			completion(GetDirectoryListingIntentResponse(code: .accountFailure, userActivity: nil))
 			return
 		}
+
+		guard IntentSettings.shared.isLicensedFor(bookmark: bookmark) else {
+			completion(GetDirectoryListingIntentResponse(code: .unlicensed, userActivity: nil))
+			return
+		}
+
 		self.completion = completion
 
 		OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in

@@ -39,6 +39,8 @@ typedef NSString* OCLicenseEnvironmentAttributesKey;
 
 + (instancetype)environmentWithIdentifier:(nullable OCLicenseEnvironmentIdentifier)identifier hostname:(nullable NSString *)hostname certificate:(nullable OCCertificate *)certificate attributes:(nullable NSDictionary<OCLicenseEnvironmentAttributesKey, id> *)attributes;
 
++ (instancetype)environmentWithBookmark:(OCBookmark *)bookmark;
+
 @end
 
 NS_ASSUME_NONNULL_END
