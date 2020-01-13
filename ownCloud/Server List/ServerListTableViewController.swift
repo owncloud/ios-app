@@ -326,15 +326,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
 		alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
-			let vault : OCVault = OCVault(bookmark: bookmark)
 
 			OCBookmarkManager.lock(bookmark: bookmark)
-				OnMainThread {
-					if error != nil {
-						// Inform user if vault couldn't be erased
-						let alertController = ThemedAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
-											message: error?.localizedDescription,
-											preferredStyle: .alert)
 
 			OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
 				let vault : OCVault = OCVault(bookmark: bookmark)
@@ -350,13 +343,11 @@ class ServerListTableViewController: UITableViewController, Themeable {
 							alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
 
 							self.present(alertController, animated: true, completion: nil)
-							self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
 						} else {
 							// Success! We can now remove the bookmark
 							self.ignoreServerListChanges = true
 
 							OCBookmarkManager.shared.removeBookmark(bookmark)
-					}
 
 							self.tableView.performBatchUpdates({
 								self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
@@ -366,9 +357,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 							self.updateNoServerMessageVisibility()
 						}
-			})
-		}, for: bookmark)
-	}
 
 						OCBookmarkManager.unlock(bookmark: bookmark)
 
