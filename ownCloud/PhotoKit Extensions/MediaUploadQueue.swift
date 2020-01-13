@@ -33,11 +33,11 @@ class MediaUploadQueue : OCActivitySource {
 		return self.uploadActivity!
 	}
 
-	var activityIdentifier: String {
+	var activityIdentifier: OCActivityIdentifier {
 		if let activity = self.uploadActivity {
 			return activity.identifier
 		} else {
-			return ""
+			return OCActivityIdentifier(rawValue: "")
 		}
 	}
 
@@ -303,7 +303,7 @@ class MediaUploadQueue : OCActivitySource {
 
 	private func publishImportActivity(for core:OCCore, itemCount:Int) {
 		let activityId = "MediaUploadQueue:\(UUID())"
-		self.uploadActivity = MediaUploadActivity(identifier: activityId, assetCount: itemCount)
+        self.uploadActivity = MediaUploadActivity(identifier: OCActivityIdentifier(rawValue: activityId), assetCount: itemCount)
 		core.activityManager.update(OCActivityUpdate.publishingActivity(for: self))
 	}
 
