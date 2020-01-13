@@ -19,6 +19,57 @@
 import UIKit
 
 class ThemeWindow : UIWindow {
+	// MARK: - Theme window list
+	static let themeWindowListChangedNotification: NSNotification.Name = NSNotification.Name(rawValue: "ThemeWindowListChanged")
+	static private let _themeWindows : NSHashTable<ThemeWindow> = NSHashTable<ThemeWindow>.weakObjects()
+
+	private static func addThemeWindow(_ window: ThemeWindow) {
+		OCSynchronized(self) {
+			_themeWindows.add(window)
+		}
+		NotificationCenter.default.post(name: ThemeWindow.themeWindowListChangedNotification, object: nil, userInfo: nil)
+	}
+
+	private static func removeThemeWindow(_ window: ThemeWindow) {
+		OCSynchronized(self) {
+			_themeWindows.remove(window)
+		}
+		NotificationCenter.default.post(name: ThemeWindow.themeWindowListChangedNotification, object: nil, userInfo: nil)
+	}
+
+	static var themeWindows : [ThemeWindow] {
+		var themeWindows : [ThemeWindow] = []
+
+		OCSynchronized(self) {
+			themeWindows = _themeWindows.allObjects
+		}
+
+		return themeWindows
+	}
+
+	// MARK: - Lifecycle
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+
+		ThemeWindow.addThemeWindow(self)
+	}
+
+	@available(iOS 13, *)
+	override init(windowScene: UIWindowScene) {
+		super.init(windowScene: windowScene)
+
+		ThemeWindow.addThemeWindow(self)
+	}
+
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+	deinit {
+		ThemeWindow.removeThemeWindow(self)
+	}
+
+	// MARK: - Theme change detection
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
 

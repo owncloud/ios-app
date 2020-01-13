@@ -107,6 +107,10 @@ class DisplayHostViewController: UIPageViewController {
 		}
 
 		NotificationCenter.default.addObserver(self, selector: #selector(handleMediaPlaybackFinished(notification:)), name: MediaDisplayViewController.MediaPlaybackFinishedNotification, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(handlePlayNextMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackNextTrackNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handlePlayPreviousMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
 	}
 
 	override var childForHomeIndicatorAutoHidden : UIViewController? {
@@ -327,6 +331,7 @@ extension DisplayHostViewController: Themeable {
 }
 
 extension DisplayHostViewController {
+
 	@objc private func handleMediaPlaybackFinished(notification:Notification) {
 		if let mediaController = self.viewControllers?.first as? MediaDisplayViewController {
 			if let vc = vendNewViewController(from: mediaController, .after) {
@@ -334,4 +339,20 @@ extension DisplayHostViewController {
 			}
 		}
 	}
+
+    @objc private func handlePlayNextMedia(notification:Notification) {
+        if let mediaController = self.viewControllers?.first as? MediaDisplayViewController {
+            if let vc = vendNewViewController(from: mediaController, .after) {
+                self.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
+            }
+        }
+    }
+    
+    @objc private func handlePlayPreviousMedia(notification:Notification) {
+        if let mediaController = self.viewControllers?.first as? MediaDisplayViewController {
+            if let vc = vendNewViewController(from: mediaController, .before) {
+                self.setViewControllers([vc], direction: .forward, animated: false, completion: nil)
+            }
+        }
+    }
 }

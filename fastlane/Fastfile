@@ -37,7 +37,8 @@ platform :ios do
         provisioningProfiles: {
           "com.owncloud.ios-app" => "match AdHoc com.owncloud.ios-app",
 	        "com.owncloud.ios-app.ownCloud-File-Provider" => "match AdHoc com.owncloud.ios-app.ownCloud-File-Provider",
-	        "com.owncloud.ios-app.ownCloud-File-ProviderUI" => "match AdHoc com.owncloud.ios-app.ownCloud-File-ProviderUI"
+	        "com.owncloud.ios-app.ownCloud-File-ProviderUI" => "match AdHoc com.owncloud.ios-app.ownCloud-File-ProviderUI",
+	        "com.owncloud.ios-app.ownCloud-File-Intents" => "match AdHoc com.owncloud.ios-app.ownCloud-Intents"
           #Add more Provisioning Profiles when extensions are added
         }
       }
@@ -71,6 +72,8 @@ platform :ios do
     ENTERPRISE_FP_PROFILE = "Enterprise Distribution iOS Neo File Provider"
     ENTERPRISE_FP_UI_ID = "com.owncloud.enterprise.ios-app.ownCloud-File-ProviderUI"
     ENTERPRISE_FP_UI_PROFILE = "Enterprise Distribution iOS Neo File ProviderUI"
+    ENTERPRISE_INTENT_ID = "com.owncloud.enterprise.ios-app.ownCloud-Intents"
+    ENTERPRISE_INTENT_PROFILE = "Enterprise Distribution iOS Neo Intent"
     ENTERPRISE_APP_FW_ID = "com.owncloud.enterprise.ownCloudApp"
     ENTERPRISE_TEAM = "5QNK8L2PSC"
     ENTERPRISE_IDENTITY = "iPhone Distribution: ownCloud GmbH"
@@ -99,6 +102,12 @@ platform :ios do
       app_identifier: ENTERPRISE_APP_FW_ID
     )
 
+    update_app_identifier(
+      xcodeproj: "ownCloud.xcodeproj",
+      plist_path: "ownCloud Intents/Info.plist",
+      app_identifier: ENTERPRISE_INTENT_ID
+    )
+
     update_app_group_identifiers(
       entitlements_file: "ownCloud/ownCloud.entitlements",
       app_group_identifiers: ["group.com.owncloud.enterprise.ios-app"]
@@ -109,9 +118,17 @@ platform :ios do
       app_group_identifiers: ["group.com.owncloud.enterprise.ios-app"]
     )
 
+    update_app_group_identifiers(
+      entitlements_file: "ownCloud Intents/ownCloud Intents.entitlements",
+      app_group_identifiers: ["group.com.owncloud.enterprise.ios-app"]
+    )
+
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCAppGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
     set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "NSExtension", subkey: "NSExtensionFileProviderDocumentGroup", value: "group.com.owncloud.enterprise.ios-app")
+
+    set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCAppGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
+    set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
 
     automatic_code_signing(
       path: "ownCloud.xcodeproj",
@@ -148,6 +165,16 @@ platform :ios do
       use_automatic_signing: false,
       team_id: ENTERPRISE_TEAM,
       code_sign_identity: ENTERPRISE_IDENTITY,
+      profile_name: ENTERPRISE_INTENT_PROFILE,
+      bundle_identifier: ENTERPRISE_INTENT_ID,
+      targets: ["ownCloud Intents"]
+    )
+
+    automatic_code_signing(
+      path: "ownCloud.xcodeproj",
+      use_automatic_signing: false,
+      team_id: ENTERPRISE_TEAM,
+      code_sign_identity: ENTERPRISE_IDENTITY,
       bundle_identifier: ENTERPRISE_APP_FW_ID,
       targets: ["ownCloudApp"]
     )
@@ -157,6 +184,9 @@ platform :ios do
     short_hash = commit[:abbreviated_commit_hash] # short sha of commit
     sh "curl https://badgen.net/badge/Bitrise/" + short_hash + "/blue > badge.svg"
     sh "brew install librsvg"
+    sh "brew unlink pango"
+    sh "brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/7cf3b63be191cb2ce4cd86f4406915128ec97432/Formula/pango.rb"
+    sh "brew switch pango 1.42.4_1 "
     sh "rsvg-convert badge.svg > badge.png"
     sh "badge --custom badge.png --glob /../**/*.appiconset/*.{png,PNG}"
 
@@ -172,7 +202,8 @@ platform :ios do
         provisioningProfiles: {
           ENTERPRISE_APP_ID => ENTERPRISE_APP_PROFILE,
 	        ENTERPRISE_FP_ID => ENTERPRISE_FP_PROFILE,
-	        ENTERPRISE_FP_UI_ID => ENTERPRISE_FP_UI_PROFILE
+	        ENTERPRISE_FP_UI_ID => ENTERPRISE_FP_UI_PROFILE,
+	        ENTERPRISE_INTENT_ID => ENTERPRISE_INTENT_PROFILE
         }
       }
     )

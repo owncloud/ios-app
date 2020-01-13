@@ -17,6 +17,7 @@
 */
 
 import UIKit
+import ownCloudAppShared
 
 class SortMethodTableViewController: StaticTableViewController {
 

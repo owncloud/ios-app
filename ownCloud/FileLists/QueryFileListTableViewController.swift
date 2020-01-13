@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 
 class QueryFileListTableViewController: FileListTableViewController, SortBarDelegate, OCQueryDelegate, UISearchResultsUpdating {
 	var query : OCQuery
@@ -201,7 +202,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 	func queryHasChangesAvailable(_ query: OCQuery) {
 		queryRefreshRateLimiter.runRateLimitedBlock {
-			query.requestChangeSet(withFlags: OCQueryChangeSetRequestFlag(rawValue: 0)) { (query, changeSet) in
+			query.requestChangeSet(withFlags: .onlyResults) { (query, changeSet) in
 				OnMainThread {
 					if query.state.isFinal {
 						OnMainThread {

@@ -27,7 +27,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var serverListTableViewController: ServerListTableViewController?
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-		// Override point for customization after application launch.
 		var navigationController: UINavigationController?
 
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
@@ -41,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		ThemeStyle.registerDefaultStyles()
 
-		serverListTableViewController = ServerListTableViewController(style: UITableView.Style.plain)
+		serverListTableViewController = ServerListTableViewController(style: .plain)
 
 		navigationController = ThemeNavigationController(rootViewController: serverListTableViewController!)
 
@@ -91,6 +90,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
 		}
 
+		// Task extensions
+		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
+		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
+		OCExtensionManager.shared.addExtension(PendingMediaUploadTaskExtension.taskExtension)
+
+		// Theming
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
 		// Licenses

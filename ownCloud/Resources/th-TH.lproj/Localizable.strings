@@ -17,431 +17,479 @@
  */
 
 /* Add / Edit Bookmark */
-"Edit account" = "แก้ไขบัญชี";
-"Add account" = "เพิ่มบัญชี";
-"Server URL" = "URL ของเซิร์ฟเวอร์";
+"Edit account" = "Përpunoni llogari";
+"Add account" = "Shtoni llogari";
+"Server URL" = "URL shërbyesi";
 "https://example.com" = "https://example.com";
-"Continue" = "ดำเนินการต่อ";
-"Name" = "ชื่อ";
-"Example Server" = "เซิร์ฟเวอร์ตัวอย่าง";
-"Show Certificate Details" = "แสดงรายละเอียดใบรับรอง";
-"Connect" = "เชื่อมต่อ";
-"Delete Authentication Data" = "ลบข้อมูลการรับรองความถูกต้อง";
-"Authentication" = "รับรองความถูกต้อง";
-"Username" = "ชื่อผู้ใช้";
-"Password" = "รหัสผ่าน";
-"Certificate Details" = "รายละเอียดใบรับรอง";
-"Cancel" = "ยกเลิก";
-"Approve" = "อนุมัติ";
-"Error" = "ข้อผิดพลาด";
-"Review Connection" = "ตรวจสอบการเชื่อมต่อ";
-"Authenticated via" = "ตรวจสอบแล้วผ่านทาง";
-"Authenticated as %@ via %@" = "รับรองความถูกต้องด้วย %@ ผ่านทาง %@";
-"Edit" = "แก้ไข";
-"Credentials" = "ข้อมูลส่วนตัวสำหรับเข้าระบบ";
-"Rejected" = "ปฏิเสธแล้ว";
-"Passed" = "ผ่านแล้ว";
-"Accepted" = "ยืนยันแล้ว";
-"Validation Error" = "ข้อผิดพลาดในการตรวจสอบ";
-"Certificate was rejected by user." = "หนังสือรับรองถูกปฏิเสธโดยผู้ใช้";
-"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "ใบรับรองมีปัญหา\nเปิด 'รายละเอียดใบรับรอง' สำหรับข้อมูลเพิ่มเติม";
-"No issues found. Certificate passed validation." = "ไม่พบปัญหา ผ่านการตรวจสอบใบรับรองแล้ว";
-"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "ใบรับรองอาจมีปัญหาแต่ได้รับการยอมรับจากผู้ใช้แล้ว\nเปิด 'รายละเอียดใบรับรอง' สำหรับข้อมูลเพิ่มเติม";
-"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "หากคุณ 'ดำเนินการต่อ' คุณจะได้รับแจ้งให้อนุญาตแอป '%@' เพื่อเข้าสู่ระบบ OAuth2 ที่คุณสามารถป้อนหนังสือรับรองของคุณ";
+"Continue" = "Vazhdo";
+"Name" = "Emër";
+"Example Server" = "Shërbyes Shembull";
+"Show Certificate Details" = "Shfaq Hollësi Dëshmie";
+"Connect" = "Lidhuni";
+"Delete Authentication Data" = "Fshi të Dhëna Mirëfilltësimi";
+"Authentication" = "Mirëfilltësim";
+"Username" = "Emër përdoruesi";
+"Password" = "Fjalëkalim";
+"Certificate Details" = "Hollësi Dëshmie";
+"Cancel" = "Anuloje";
+"Approve" = "Miratoje";
+"Error" = "Gabim";
+"Review Connection" = "Shqyrtoni Lidhjen";
+"Authenticated via" = "Mirëfilltësuar përmes";
+"Authenticated as %@ via %@" = "Mirëfilltësuar si %@ përmes %@";
+"Edit" = "Përpunoni";
+"Credentials" = "Kredenciale";
+"Rejected" = "Hedhur poshtë";
+"Passed" = "Vleftësuar";
+"Accepted" = "Pranuar";
+"Validation Error" = "Gabim Vleftësim";
+"Certificate was rejected by user." = "Dëshmia u hodh poshtë nga përdoruesi.";
+"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Dëshmia ka probleme.\nPër më tepër të dhëna, hapni 'Hollësi Dëshmie'.";
+"No issues found. Certificate passed validation." = "S’u gjetën probleme. Dëshmia e mori vleftësimin.";
+"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "Dëshmia mund të ketë probleme, por u pranua nga përdoruesi.\nPër më tepër hollësi, hapni 'Hollësi Dëshmie'.";
+"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "Nëse 'Vazhdoni', do t’ju shfaqet kërkesa për të lejuar aplikacionin '%@' të hapë hyrjet me OAuth2, prej nga mund të jepni kredencialet tuaja.";
 
-"Contacting server…" = "กำลังติดต่อเซิร์ฟเวอร์...";
-"Authenticating…" = "กำลังตรวจสอบสิทธิ์...";
+"Contacting server…" = "Po kontaktohet shërbyesi…";
+"Authenticating…" = "Po bëhet mirëfilltësimi…";
 
-"Fetching user information…" = "กำลังเรียกข้อมูลผู้ใช้...";
-"Updating connection…" = "กำลังอัปเดตการเชื่อมต่อ ...";
+"Fetching user information…" = "Po sillen të dhëna përdoruesi…";
+"Updating connection…" = "Po përditësohet lidhja…";
 
-"Missing hostname" = "ไม่มีชื่อโฮสต์";
-"The entered URL does not include a hostname." = "ป้อน URL โดยไม่รวมชื่อโฮสต์";
-"Add account" = "เพิ่มบัญชี";
-"Server name" = "ชื่อเซิร์ฟเวอร์";
-"Server Password" = "รหัสผ่านเซิร์ฟเวอร์";
-"Server Username" = "ชื่อผู้ใช้เซิร์ฟเวอร์";
+"Missing hostname" = "Mungon strehëemër";
+"The entered URL does not include a hostname." = "URL-ja e dhënë nuk përmban një strehëemër.";
+"Add account" = "Shtoni llogari";
+"Server name" = "Emër shërbyesi";
+"Server Password" = "Fjalëkalim Shërbyesi";
+"Server Username" = "Emër përdoruesi Shërbyesi";
 
 /* Client */
-"Browse" = "เรียกดู";
-"Disconnect" = "ตัดการเชื่อมต่อ";
-"Connecting…" = "กำลังเชื่อมต่อ...";
-"Connected." = "เชื่อมต่อแล้ว";
-"Select" = "เลือก";
-"Done" = "เสร็จสิ้น";
+"Browse" = "Shfletoni";
+"Disconnect" = "Shkëputu";
+"Connecting…" = "Po lidhet…";
+"Connected." = "U lidh.";
+"Select" = "Përzgjidhe";
+"Done" = "U bë";
 
-"Folder" = "แฟ้มเอกสาร";
+"Folder" = "Dosje";
 
-"Stopped" = "หยุดแล้ว";
-"Started…" = "เริ่มต้นแล้ว...";
-"Contents from cache." = "เนื้อหาจากแคช";
-"Waiting for server response…" = "กำลังรอการตอบกลับของเซิร์ฟเวอร์...";
-"This folder no longer exists." = "โฟลเดอร์นี้ไม่มีอยู่แล้ว";
-"Everything up-to-date." = "ทุกอย่างใหม่ล่าสุดแล้ว";
-"Please wait…" = "โปรดรอ…";
-"Sort by %@" = "จัดเรียงตาม %@";
-"Sort by" = "เรียงตาม";
+"Stopped" = "U ndal";
+"Started…" = "U fillua…";
+"Contents from cache." = "Lëndë prej fshehtine.";
+"Waiting for server response…" = "Po pritet për përgjigje nga shërbyesi…";
+"This folder no longer exists." = "Kjo dosje s’ekziston më.";
+"Everything up-to-date." = "Gjithçka është e përditësuar.";
+"Please wait…" = "Ju lutemi, prisni…";
+"Sort by %@" = "Renditi sipas %@";
+"Sort by" = "Renditi sipas";
 
-"name" = "ชื่อ";
-"type" = "ชนิด";
-"size" = "ขนาด";
-"date" = "วันที่";
-"Search this folder" = "ค้นหาโฟลเดอร์นี้";
-"Pending" = "อยู่ระหว่างดำเนินการ";
-"Show parent paths" = "แสดงพาธ";
+"name" = "emër";
+"type" = "lloj";
+"size" = "madhësi";
+"date" = "datë";
+"Search this folder" = "Kërko në këtë dosje";
+"Pending" = "Në pritje";
+"Show parent paths" = "Shfaq shtigjet mëmë";
 
-"%@ of %@ used" = "มีทั้งหมด %@ ใช้ไปแล้ว%@";
-"Total: %@" = "ทั้งหมด: %@";
+"%@ of %@ used" = "%@ nga %@ të përdorur";
+"Total: %@" = "Gjithsej: %@";
 
 /* Client Messages */
-"Empty folder" = "โฟลเดอร์ว่างเปล่า";
-"This folder contains no files or folders." = "โฟลเดอร์นี้ไม่มีไฟล์หรือโฟลเดอร์";
+"Empty folder" = "Dosje e zbrazët";
+"This folder contains no files or folders." = "Kjo dosje s’përmban kartela ose dosje.";
 
-"Folder removed" = "ลบโฟลเดอร์แล้ว";
-"This folder no longer exists on the server." = "โฟลเดอร์นี้ไม่มีอยู่บนเซิร์ฟเวอร์อีกต่อไป";
-"Are you sure you want to delete this item from the server?" = "คุณแน่ใจว่าต้องการลบรายการนี้ออกจากเซิร์ฟเวอร์?";
-"Are you sure you want to delete these items from the server?" = "คุณแน่ใจหรือว่าต้องการลบรายการเหล่านี้ออกจากเซิร์ฟเวอร์?";
-"Multiple items" = "หลายรายการ";
-"Deleting '%@'" = "กำลังลบ '%@'";
-"Renaming to %@" = "กำลังเปลี่ยนฃื่อเป็น %@";
-"Upload from your photo library" = "อัปโหลดจากคลังรูปภาพของคุณ";
-"Missing permissions" = "ไม่มีสิทธิ์";
-"This permission is needed to upload photos and videos from your photo library." = "จำเป็นต้องได้รับอนุญาตเพื่ออัปโหลดรูปภาพและวิดีโอจากคลังรูปภาพของคุณ";
-"Not now" = "ไม่ใช่ตอนนี้";
-"Upload file" = "อัปโหลดไฟล์";
-"Upload files" = "อัปโหลดไฟล์";
+"Folder removed" = "Dosje e hequr";
+"This folder no longer exists on the server." = "Kjo dosje s’ekziston më te shërbyesi.";
+"Are you sure you want to delete this item from the server?" = "Jeni i sigurt se doni të fshihet ky objekt prej shërbyesit?";
+"Are you sure you want to delete these items from the server?" = "Jeni i sigurt se doni të fshihen këto objekte prej shërbyesi?";
+"Multiple items" = "Shumë objekte";
+"Deleting '%@'" = "Po fshihet '%@'";
+"Renaming to %@" = "Po riemërtohet si %@";
+"Upload from your photo library" = "Ngarkoni që nga fototeka juaj";
+"Missing permissions" = "Mungojnë leje";
+"This permission is needed to upload photos and videos from your photo library." = "Kjo leje është e domosdoshme për të ngarkuar foto dhe video prej fototekës tuaj.";
+"Not now" = "Jo tani";
+"Upload file" = "Ngarkoni kartelë";
+"Upload files" = "Ngarko kartela";
 
-"No matches" = "ไม่ตรงกัน";
-"There are no results for this search term" = "ไม่มีผลลัพธ์สำหรับคำค้นหานี้";
-"Status" = "สถานะ";
+"No matches" = "S’ka përputhje";
+"There are no results for this search term" = "S’ka përfundime për këtë term kërkimi";
+"Status" = "Gjendje";
 
-"Authorization failed" = "การอนุมัติล้มเหลว";
-"The account has been disabled." = "บัญชีถูกปิดใช้งาน";
-"The server declined access with the credentials stored for this connection." = "เซิร์ฟเวอร์ปฏิเสธการเข้าถึงด้วยหนังสือรับรองที่เก็บไว้สำหรับการเชื่อมต่อนี้";
-"Access denied" = "เข้าถึงถูกปฏิเสธ";
-"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "โทเค็นเข้าถึงการเชื่อมต่อหมดอายุหรือไม่ถูกต้อง กรุณาลงชื่อเข้าใช้อีกครั้งเพื่อรับสิทธิ์การเข้าถึง";
-"No authentication data has been found for this connection." = "ไม่พบข้อมูลการตรวจสอบสิทธิ์สำหรับการเชื่อมต่อนี้";
-"Sign in" = "เข้าสู่ระบบ";
-"Ignore" = "ไม่สนใจ";
-"Continue offline" = "ใช่งานแบบออฟไลน์ต่อไป";
+"Authorization failed" = "Autorizimi dështoi";
+"The account has been disabled." = "Llogaria është çaktivizuar.";
+"The server declined access with the credentials stored for this connection." = "Shërbyesi nuk pranoi hyrje me kredencialet e depozituara për këtë lidhje.";
+"Access denied" = "Hyrje e mohuar";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "Token-i i hyrjes për lidhjen ka skaduar ose është bërë i pavlefshëm. Ribëni hyrjen në llogari, që të rifitoni hyrje.";
+"No authentication data has been found for this connection." = "Për këtë lidhje s’u gjetën të dhëna mirëfilltësimi.";
+"Sign in" = "Hyni";
+"Ignore" = "Shpërfille";
+"Continue offline" = "Vazhdo pa qenë në linjë";
+"Media upload in the previous session was incomplete since the application was terminated" = "Ngarkimi media në sesionin e mëparshëm qe i paplotë, ngaqë aplikacioni u mbyll";
 
 /* Server List*/
-"Cancel" = "ยกเลิก";
-"OK" = "ตกลง";
+"Cancel" = "Anuloje";
+"OK" = "OK";
 
-"'%@' is currently locked" = "'%@' ปัจจุบันถูกล็อกอยู่";
-"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "ขณะนี้มีการดำเนินการเพื่อป้องกันการเชื่อมต่อไปยัง '%@' กรุณาลองใหม่อีกครั้งในภายหลัง";
-"Really delete '%@'?" = "ต้องการลบ '%@'?";
-"This will also delete all locally stored file copies." = "นอกจากนี้จะลบไฟล์สำเนาที่เก็บไว้ในเครื่องทั้งหมด";
-"Delete" = "ลบ";
-"Deletion of '%@' failed" = "การลบ '%@' ล้มเหลว";
-"Accounts" = "บัญชี";
+"'%@' is currently locked" = "'%@' është e kyçur";
+"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "Po kryhet një veprim që e pengon lidhjen me '%@'. Ju lutemi, riprovoni më vonë.";
+"Really delete '%@'?" = "Të fshihet '%@' vërtet?";
+"This will also delete all locally stored file copies." = "Kjo do të shkaktojë fshirjen edhe të krejt kopjeve të kartelës të depozituara lokalisht.";
+"Delete" = "Fshije";
+"Deletion of '%@' failed" = "Fshirja e '%@' dështoi";
+"Accounts" = "Llogari";
 
-"Help" = "ช่วยเหลือ";
-"Feedback" = "ข้อเสนอแนะ";
-"Welcome" = "ยินดีต้อนรับ";
-"Thanks for choosing %@! \n Start by adding your account." = "ขอบคุณที่เลือก %@!\nเริ่มต้นด้วยการเพิ่มบัญชีของคุณ";
+"Help" = "Ndihmë";
+"Feedback" = "Përshtypje";
+"Welcome" = "Mirë se vini";
+"Thanks for choosing %@! \n Start by adding your account." = "Faleminderit që zgjodhët %@! \nFillojani duke shtuar llogarinë tuaj.";
 
 /* Settings Messages */
 
-"Security" = "ความปลอดภัย";
-"Passcode Lock" = "ล็อกรหัสผ่าน";
-"Face ID" = "ปลดล็อคด้วยใบหน้า";
-"Touch ID" = "ยืนยันตนด้วยลายนิ้วมือ";
-"Instant Uploads" = "อัปโหลดทันที";
-"Videos" = "วิดีโอ";
-"Photos" = "รูปภาพ";
-"Background uploads" = "อัปโหลดพื้นหลัง";
-"Wifi only" = "Wifi เท่านั้น";
-"Settings" = "ตั้งค่า";
-"Lock application" = "ล็อกแอปพลิเคชัน";
-"Upload videos via WiFi only" = "อัปโหลดวีดีโอผ่านทาง WiFi เท่านั้น";
-"Upload pictures via WiFi only" = "อัปโหลดรูปภาพผ่านทาง WiFi เท่านั้น";
-"More" = "ขยาย";
-"Send feedback" = "ส่งความคิดเห็น";
-"Recommend to a friend" = "แนะนำให้เพื่อน";
-"Privacy Policy" = "นโยบายส่วนบุคคล";
-"Acknowledgements" = "กิตติกรรมประกาศ";
-"Video upload path" = "เส้นทางการอัปโหลดวิดีโอ";
-"Photo upload path" = "เส้นทางการอัปโหลดภาพ";
-"Immediately" = "ทันที";
-"After 1 minute" = "หลังจากผ่านไป 1 นาที";
-"After 5 minutes" = "หลังจากผ่านไป 5 นาที";
-"After 30 minutes" = "หลังจากผ่านไป 30 นาที";
-"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "หากคุณเลือก \"ทันที\" แอปจะถูกล็อคเมื่อไม่ถูกใช้งาน\n\nการเข้าถึงใน Files.app นั้นเป็นไปไม่ได้หากคุณเลือกช่วงเวลาล็อค \"ทันที\"\nโปรดเลือกความล่าช้าอื่นๆ หากคุณต้องการเข้าถึงไฟล์ของคุณใน Files.app หรือผ่านตัวเลือกเอกสาร";
-"Please configure an email account" = "โปรดกำหนดค่าบัญชีอีเมล";
-"You need to configure an email account first to be able to send emails." = "คุณต้องกำหนดค่าบัญชีอีเมลก่อนจึงจะสามารถส่งอีเมลได้";
-"Do you want to open the following URL?" = "คุณต้องการเปิด URL ต่อไปนี้?";
+"Security" = "Siguri";
+"Passcode Lock" = "Kyçje Me Kodkalim";
+"Face ID" = "Face ID";
+"Touch ID" = "Touch ID";
+"Videos" = "Video";
+"Photos" = "Foto";
+"Background uploads" = "Ngarkime në prapaskenë";
+"Wifi only" = "Vetëm wifi";
+"Settings" = "Rregullime";
+"Lock application" = "Kyçe aplikacionin";
+"Upload videos via WiFi only" = "Videot ngarkoji vetëm përmes WiFi-it";
+"Upload pictures via WiFi only" = "Fotot ngarkoji vetëm përmes WiFi-it";
+"More" = "Më tepër";
+"Send feedback" = "Dërgoni përshtypje";
+"Recommend to a friend" = "Këshillojani një shoku";
+"Privacy Policy" = "Rregulla Privatësie";
+"Acknowledgements" = "Falënderime";
+"Video upload path" = "Shteg ngarkimesh videosh";
+"Photo upload path" = "Shteg ngarkimi fotosh";
+"Immediately" = "Menjëherë";
+"After 1 minute" = "Pas 1 minute";
+"After 5 minutes" = "Pas 5 minutash";
+"After 30 minutes" = "Pas 30 minutash";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "Nëse zgjidhni \"Menjëherë\", Aplikacioni do të kyçet, kur të mos jetë më i dukshëm te pjesa e përparme.\n\nHyrja te Files.app s’është e mundur, nëse zgjidhni \"Menjëherë\" si interval kyçjeje.\nNëse doni të hyni te kartelat tuaja në Files.app ose përmes një zgjedhësi dokumentesh, ju lutemi, zgjidhni një tjetër vonesë.";
+"Please configure an email account" = "Ju lutemi, formësoni një llogari email";
+"You need to configure an email account first to be able to send emails." = "Së pari lypset të formësoni një llogari email, që të jeni në gjendje të dërgoni email-e.";
+"Do you want to open the following URL?" = "Doni të hapet URL-ja vijuese?";
 
-"%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@%@รุ่น%@ บิวด์ %@ (แอป: %@, sdk: %@)";
-"beta" = "รุ่นเบต้า";
-"release" = "ล่าสุด";
+"%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@ %@ version %@ montim %@ (aplikacion: %@, sdk: %@)";
+"beta" = "beta";
+"release" = "hedhje në qarkullim";
 
 
 /* User Interface Settings */
-"Theme" = "ธีม";
-"User Interface" = "หน้าจอผู้ใช้";
-"Dark" = "มืด";
-"Light" = "สว่าง";
-"Classic" = "คลาสสิก";
+"Theme" = "Temë";
+"User Interface" = "Ndërfaqe Përdoruesi";
+"Dark" = "E errët";
+"Light" = "E çelët";
+"Classic" = "Klasike";
+"System" = "Sistem";
+"System Appeareance" = "Dukje Sistemi";
 
 /* Log settings */
-"Log Files" = "ไฟล์ log";
-"Browse log files" = "เรียกดูไฟล์ log";
-"Share" = "แชร์";
-"Delete all log files?" = "ลบไฟล์ log ทั้งหมด?";
-"Delete all" = "ลบทั้งหมด";
+"Log Files" = "Kartela Regjistër";
+"Browse log files" = "Shfletoni kartela regjistër";
+"Share" = "Ndaje me të tjerë";
+"Delete all log files?" = "Të fshihen krejt kartelat regjistër?";
+"Delete all" = "Fshiji krejt";
 
-"Log Level" = "ระดับ log";
-"Log Destinations" = "log ปลายทาง";
-"Privacy" = "ความเป็นส่วนตัว";
+"Log Level" = "Nivel Regjistrimi";
+"Log Destinations" = "Destinacione Regjistri";
+"Privacy" = "Privatësi";
 
-"Logging" = "กำลังเก็บบันทึก";
-"Enable logging" = "เปิดใช้ระบบบันทึกข้อมูล";
-"Options" = "ตัวเลือก";
+"Logging" = "Regjistrim";
+"Enable logging" = "Aktivizo regjistrimet";
+"Options" = "Mundësi";
 
-"Off" = "ปิด";
-"Info" = "ข้อมูล";
-"Default" = "ค่าเริ่มต้น";
-"Warning" = "คำเตือน";
-"Error" = "ข้อผิดพลาด";
+"Off" = "Off";
+"Info" = "Të dhëna";
+"Default" = "Parazgjedhje";
+"Warning" = "Kujdes";
+"Error" = "Gabim";
 
-"Share log file" = "แชร์ไฟล์ log";
-"Reset log file" = "รีเซ็ตไฟล์ log";
+"Share log file" = "Ndajeni kartelën e regjistrimit me dikë";
+"Reset log file" = "Zeroje kartelën e regjistrimit";
 
-"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "เมื่อเปิดใช้งาน log อาจส่งผลต่อประสิทธิภาพและรวมถึงข้อมูลส่วนตัว อย่างไรก็ตาม log จะไม่ถูกส่งไปยังเซิร์ฟเวอร์ %@ โดยอัตโนมัติ การแชร์ log กับผู้อื่นถือเป็นความรับผิดชอบของผู้ใช้เพียงผู้เดียว";
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Kur aktivizohen, regjistrat mund të kenë ndikim në funksionim dhe përfshijnë të dhëna rezervat. Sidoqoftë, regjistrat nuk janë subjekt parashtrimi të automatizuar te shërbyes %@. Ndarja e regjistrave me të tjerë është përgjegjësi vetëm e përdoruesit.";
 
-"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "log 10 ไฟล์ล่าสุดถูกเก็บไว้ในอุปกรณ์ - โดยแต่ละ log ครอบคลุมการใช้งานสูงสุด 24 ชั่วโมง เมื่อทำการแชร์โปรดจำไว้ว่า log อาจมีข้อมูลที่ละเอียดอ่อนเช่น URL เซิร์ฟเวอร์และข้อมูลเฉพาะของผู้ใช้";
+"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "10 regjistrat e fundit të arkivuar mbahen në pajisje - ku çdo regjistër mbulon deri në 24 orë përdorim. Kur bëhet ndarje e tyre, ju lutemi, kini parasysh se regjistrat mund të përmbajnë të dhëna rezervat, të tilla si URL shërbyesi dhe të dhëna që lidhen me përdoruesin.";
 
-"Mask private data" = "ซ่อนข้อมูลส่วนตัว";
-"Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "การเปิดใช้งานตัวเลือกนี้จะพยายามปกปิดข้อมูลส่วนตัวดังนั้นจึงไม่มีการเก็บบันทึกใดๆ เนื่องจาก log เป็นคุณลักษณะการพัฒนาและดีบัก แม้ว่าจะเปิดใช้งานตัวเลือกนี้เราไม่สามารถรับประกันได้ว่าไฟล์ log จะไม่มีข้อมูลส่วนตัวใดๆ  ดังนั้นโปรดดูไฟล์ log เพื่อความแน่ใจ";
+"Mask private data" = "Masko të dhëna private";
+"Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Me aktivizimin e kësaj mundësie programi do të rreket të maskojë të dhëna private, që të mos jenë pjesë e ndonjë regjistrimi. Por, ngaqë regjistrimi është një veçori e lidhur me zhvillimin dhe diagnostikimet, s’mund të garantojmë që kartela regjistër do të jetë pa ndonjë të dhënë private, edhe pse kjo mundësi është e aktivizuar. Ndaj, ju lutemi, hidhini një sy cilësdo kartele regjistër dhe verifikoni se është pa ndonjë të dhënë për të cilën s’ndiheni rehat ta ndani me të tjerë, përpara se ta ndani me dikë.";
 
-"No log file found" = "ไม่พบไฟล์ log";
-"The log file can't be shared because no log file could be found or the log file is empty." = "ไม่สามารถแชร์ไฟล์ log ได้เนื่องจากไม่พบไฟล์ log หรือไม่มีข้อมูล";
-"Enable log file" = "เปิดใช้งานไฟล์ log";
+"No log file found" = "S’u gjet kartelë regjistër";
+"The log file can't be shared because no log file could be found or the log file is empty." = "S’ndahet dot me të tjerë kartela regjistër, ngaqë s’u gjet e tillë, ose kartela regjistër është e zbrazët.";
+"Enable log file" = "Aktivizo kartelë regjistër";
 
-"Really reset log file?" = "รีเซ็ตไฟล์ log?";
-"This action can't be undone." = "ไม่สามารถยกเลิกการดำเนินการนี้ได้";
+"Really reset log file?" = "Të zerohet vërtet kartela regjistër?";
+"This action can't be undone." = "Ky veprim s’mund të zhbëhet.";
 
 /* Storage settings */
-"Delete unused local copies" = "ลบสำเนาที่ไม่ได้ใช้ในเครื่อง";
-"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "เวลาที่วัดได้ตั้งแต่การอัปโหลด แก้ไขดาวน์โหลด หรือดูไฟล์ที่เกี่ยวข้องผ่านอุปกรณ์นี้ ใช้ไม่ได้กับไฟล์ที่ดาวน์โหลดผ่านคุณสมบัติ \"การพร้อมใช้งานแบบออฟไลน์\" สำเนาในเครื่องอาจถูกลบก่อนการประสานข้อมูล  เนื่องจากมีไฟล์เวอร์ชันใหม่บนเซิร์ฟเวอร์ - หรือผ่านการลบสำเนาออฟไลน์ด้วยตนเอง นอกจากนี้สำเนาในเครื่องอาจไม่ถูกลบหลังจากผ่านช่วงเวลาที่กำหนด หากมีการดำเนินการกับไฟล์นั้นยังคงมีการใช้งานอยู่หรือบัญชีที่ถือครองไฟล์นั้นไม่ได้ถูกใช้ในแอป";
-"never" = "ไม่ต้องเลย";
-"after %@" = "หลังจาก %@";
+"Delete unused local copies" = "Fshi kopje vendore të papërdorura";
+"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Kohë e matur që prej ngarkimit, përpunimit, shkarkimit apo parjes së kartelës përkatëse përmes kësaj pajisjeje. Nuk prek kartelat e shkarkuara përmes veçorisë E passhme Jo Në Linjë. Kopjet vendore mund të fshihen përpara se të ketë kaluar periudha kohore e dhënë, p.sh., ngaqë në shërbyes pati një version më të ri të kartelës - ose përmes fshirjes dorazi të kopjeve <em>offline</em>. Kopjet vendore mundet gjithashtu të mos fshihen pasi të ketë kaluar periudha kohore e dhënë, p.sh., nëse mbi të po kryhet një veprim, kartela është ende në përdorim - ose llogaria që përmban kartelën s’është përdorur në aplikacion.";
+"never" = "kurrë";
+"after %@" = "pas %@";
+"Decrease Slider Value" = "Zvogëloni Vlerë Rrëshqitësi";
+"Increase Slider Value" = "Zmadhoni Vlerë Rrëshqitësi";
 
 /* Display settings */
-"Display settings" = "แสดงการตั้งค่า";
-"Show hidden files and folders" = "แสดงไฟล์และโฟลเดอร์ที่ซ่อน";
+"Display settings" = "Rregullime shfaqjeje";
+"Show hidden files and folders" = "Shfaq kartela dhe dosje të fshehura";
 
 /* Passcode Messages */
 
-"Enter code" = "ใส่รหัส";
-"Repeat code" = "ใส่รหัสอีกครั้ง";
-"Delete code" = "ลบรหัส";
-"The entered codes are different" = "กรุณาป้อนรหัสให้ตรงกัน";
-"Incorrect code" = "รหัสไม่ถูกต้อง";
-"Please try again in %@" = "โปรดลองอีกครั้งใน %@";
-"Unlock %@" = "ปลดล็อค %@";
-"Biometric authentication failed" = "การตรวจสอบสิทธิ์แบบไบโอเมตริกซ์ล้มเหลว";
+"Enter code" = "Jepni kod";
+"Repeat code" = "Përsëriteni kodin";
+"Delete code" = "Fshije kodin";
+"The entered codes are different" = "Kodet e dhënë janë të ndryshëm";
+"Incorrect code" = "Kod i pasaktë";
+"Please try again in %@" = "Ju lutemi, riprovoni për %@";
+"Unlock %@" = "Shkyçe %@";
+"Biometric authentication failed" = "Mirëfilltësimi biometrik dështoi";
 
 /* Certificate management */
 
-"Certificates" = "ใบรับรอง";
-"User-approved certificates" = "ใบรับรองที่ได้รับอนุญาตจากผู้ใช้";
+"Certificates" = "Dëshmi";
+"User-approved certificates" = "Dëshmi të miratuara nga përdorues";
 
-"Approved" = "ได้รับการอนุมัติ";
-"Auto-approved" = "อนุมัติอัตโนมัติ";
-"Revoke approval" =  "เพิกถอนการอนุมัติ";
+"Approved" = "Të miratuara";
+"Auto-approved" = "E vetëmiratuar";
+"Revoke approval" =  "Shfuqizoji miratimin";
 
 /* Actions */
 
-"Forbidden Characters" = "ห้ามใช้อักขระต้องห้าม";
-"File name cannot contain / or \\" = "ชื่อไฟล์จะต้องไม่มี / หรือ \\";
-"New Folder" = "โฟลเดอร์ใหม่";
-"Folder name" = "ชื่อโฟลเดอร์";
-"Rename" ="เปลี่ยนชื่อ";
-"Create folder" ="สร้างโฟลเดอร์";
-"Duplicate" = "ซ้ำ";
-"Move" = "ย้าย";
-"Open in" = "เปิดใน";
-"Copy" = "คัดลอก";
-"Copy here" = "ึคัดลอก";
-"Cannot connect to " = "ไม่สามารถเชื่อมต่อ";
-" couldn't download file(s)" = "ไม่สามารถดาวน์โหลดไฟล์";
-"Actions" = "การกระทำ";
-"copy" = "คัดลอก";
+"Forbidden Characters" = "Shenja të Ndaluara";
+"File name cannot contain / or \\" = "Emri i kartelës s’mund të përmbajë / ose \\";
+"New Folder" = "Dosje e Re";
+"Folder name" = "Emër dosjeje";
+"Rename" ="RiemÃ«rtoje";
+"Create folder" ="Krijo dosje";
+"Duplicate" = "Përsëdyte";
+"Move" = "Zhvendose";
+"Open in" = "Hape në";
+"Copy" = "Kopjoje";
+"Copy here" = "Kopjoje këtu";
+"Cannot connect to " = "S’lidhet dot te";
+" couldn't download file(s)" = "s’u shkarkua dot kartelë(a)";
+"Actions" = "Veprime";
+"copy" = "kopjoje";
+"Close Window" = "Mbylle Dritaren";
+"Open in a new Window" = "Hape në Dritare të re";
+"Open in Window" = "Hape në Dritare";
 
-"Preparing…" = "กำลังจัดเตรียม…";
+"Preparing…" = "Po përgatitet…";
 
 /* Directory Picker Messages */
-"Move here" = "ย้ายมาที่นี่";
+"Move here" = "Shpjere këtu";
 
 /* Preview */
-"Open file" = "เปิดไฟล์";
-"Network unavailable" = "เครือข่ายใช้งานไม่ได้";
-"Error" = "ข้อผิดพลาด";
-"Could not get the picture" = "ไม่สามารถรับรูปภาพได้";
-"Downloading" = "กำลังดาวน์โหลด";
-"File couldn't be opened" = "ไม่สามารถเปิดไฟล์ได้";
+"Open file" = "Hap kartelë";
+"Network unavailable" = "Rrjet i pakapshëm";
+"Error" = "Gabim";
+"Could not get the picture" = "S’u mor dot figura";
+"Downloading" = "Shkarkim";
+"File couldn't be opened" = "Kartela s’u hap dot";
 
 /* PDF Viewer */
-"Resume" = "ดำเนินการต่อ";
-"Go to page" = "ไปยังหน้า";
-"Page" = "หน้า";
-"This document has %@ pages" = "เอกสารนี้มีทั้งหมด %@ หน้า";
-"%@ of %@" = "%@ จาก %@";
-"Invalid Page" = "หน้าไม่ถูกต้อง";
-"The entered page number doesn't exist" = "ไม่มีหมายเลขหน้าที่ป้อน";
-"Search PDF" = "ค้นหา PDF";
-"Outline" = "เค้าโครง";
+"Resume" = "Rimerre";
+"Go to page" = "Shko tek faqja";
+"Page" = "Faqe";
+"This document has %@ pages" = "Ky dokument ka %@ faqe";
+"%@ of %@" = "%@ nga %@";
+"Invalid Page" = "Faqe e Pavlefshme";
+"The entered page number doesn't exist" = "Numri i dhënë për faqen nuk ekziston";
+"Search PDF" = "Kërko në PDF";
+"Outline" = "Përvijoje";
 
 /* Photo Upload */
-"Upload" = "อัปโหลด";
-"Select All" = "เลือกทั้งหมด";
-"Deselect All" = "ยกเลิกการเลือกทั้งหมด";
-"All Photos" = "รูปภาพทั้งหมด";
-"Albums" = "อัลบัม";
-"Importing from photo library" = "นำเข้าจากคลังรูปภาพ";
+"Upload" = "Ngarkoje";
+"Select All" = "Përzgjidhi Krejt";
+"Deselect All" = "Shpërzgjidhi Krejt";
+"All Photos" = "Krejt Fotot";
+"Albums" = "Albume";
+"Importing from photo library" = "Importim nga fototekë";
+
+/* Scan */
+"Scan" = "Skanim";
+"Scans" = "Skanime";
+"Scan document" = "Skanoni dokument";
+"Saving" = "Po ruhet";
+"File format" = "Format kartelash";
+"Name" = "Emër";
+"Save as" = "Ruaje si";
+"Options" = "Mundësi";
+"Scan additional" = "Skanim shtesë";
+"Create one file per page" = "Krijo një kartelë për faqe";
 
 /* Sharing */
-"Searching Shares…" = "กำลังค้นหาแชร์...";
-"Recipient" = "ผู้รับ";
-"Recipients" = "ผู้รับ";
-"Public Link" = "ลิงก์สาธารณะ";
-"Public Links" = "ลิงก์สาธารณะ";
-"Shared by %@" = "แชร์แล้วโดย %@";
-"Invite Recipient" = "คำเชิญผู้รับ";
-"Recipients" = "ผู้รับ";
-"Add email or name" = "เพิ่มอีเมลหรือชื่อ";
-"Users" = "ผู้ใช้งาน";
-"Groups" = "กลุ่ม";
-"Start typing to search users, groups and remote users." = "เริ่มพิมพ์เพื่อค้นหาผู้ใช้กลุ่มและผู้ใช้รีโมท";
-"(Group)" = "(กลุ่ม)";
-"Adding User to Share failed" = "เพิ่มผู้ใช้ไปยังแชร์ล้มเหลว";
-"Permissions" = "สิทธิ์การเข้าใช้งาน";
-"Invited: %@" = "เชิญแล้ว: %@";
-"Created: %@" = "สร้างแล้ว: %@";
-"Allows the users you share with to re-share" = "อนุญาตให้ผู้ใช้ที่คุณแชร์ด้วยแขร์อีกครั้ง";
-"Allows the users you share with to edit your shared files, and to collaborate" = "อนุญาตให้ผู้ใช้ให้สามารถแก้ไขข้อมูลที่คุณแชร์";
-"Allows the users you share with to create new files and add them to the share" = "อนุญาตให้ผู้ใช้สามารถเพิ่มไฟล์ไปยังแชร์ของคุณ";
-"Allows uploading a new version of a shared file and replacing it" = "อนุญาตให้อัปโหลดไฟล์แชร์เวอร์ชันใหม่และแทนที่ไฟล์เดิม";
-"Allows the users you share with to delete shared files" = "อนุญาตให้ผู้ใช้สามารถลบไฟล์ที่คุณแชร์";
-"Setting permission failed" = "ตั้งค่าการอนุญาตล้มเหลว";
-"Shared with" = "แชร์ด้วย";
-"Remove Recipient failed" = "ลบผู้รับล้มเหลว";
-"Remove Recipient" = "ลบผู้รับ";
-"Create" = "สร้าง";
-"Change" = "เปลี่ยนแปลง";
-"Recipients can view or download contents." = "ผู้รับสามารถดูหรือดาวน์โหลดเนื้อหา";
-"Recipients can view, download, edit, delete and upload contents." = "ผู้รับสามารถดู ดาวน์โหลด แก้ไข ลบและอัปโหลดเนื้อหาได้";
-"Receive files from multiple recipients without revealing the contents of the folder." = "รับไฟล์จากผู้รับหลายรายโดยไม่ต้องเปิดเผยเนื้อหาของโฟลเดอร์";
-"Download / View" = "ดาวน์โหลดหรือดู";
-"Download / View / Upload" = "ดาวน์โหลด ดู หรืออัปโหลด";
-"Upload only (File Drop)" = "เฉพาะอัปโหลด (วางไฟล์)";
-"Creating public link failed" = "สร้างลิงก์สาธารณะล้มเหลว";
-"Create Public Link" = "สร้างลิงก์สาธารณะ";
-"Links" = "ลิงก์";
-"Link" = "ลิงก์";
-"Setting expiration date failed" = "ตั้งค่าวันหมดอายุล้มเหลว";
-"Expiration date" = "วันที่หมดอายุ";
-"Copy Public Link" = "คัดลอกลิงก์สาธารณะ";
-"Delete Public Link" = "ลบลิงก์สาธารณะ";
-"Deleting Public Link failed" = "ลบลิงก์สาธารณะล้มเหลว";
-"Deleting password failed" = "ลบรหัสผ่านล้มเหลว";
-"Setting password failed" = "การตั้งรหัสผ่านล้มเหลว";
-"Type to update password" = "กรอกเพื่ออัปเดตรหัสผ่าน";
-"Cannot change permission" = "ไม่สามารถเปลี่ยนการอนุญาต";
-"Before you can set the permission\n%@,\n you must enter a password." = "ก่อนที่คุณจะสามารถตั้งค่าการอนุญาต\n%@\nคุณต้องใส่รหัสผ่าน";
-"Password Protected" = "รหัสผ่านถูกป้องกันแล้ว";
-"Pending Federated Invites" = "คำเชิญแบบรวมที่รอดำเนินการ";
-"Pending Invites" = "กำลังรอคำเชิญ";
-"Shared with you" = "แชร์กับคุณ";
-"Shared with others" = "แชร์กับผู้อื่น";
-"Shares" = "แชร์";
-"Copy Private Link" = "คัดลอกลิงก์ส่วนตัว";
-"Only recipients can use this link. Use it as a permanent link to point to this resource" = "ผู้รับเท่านั้นที่สามารถใช้ลิงก์นี้ ใช้เป็นลิงก์ถาวรเพื่อชี้ไปยังแหล่งข้อมูลนี้";
-"Accept Share failed" = "ยอมรับการแชร์ล้มเหลว";
-"Decline Share failed" = "ปฏิเสธการแชร์ล้มเหลว";
-"Accept" = "ยอมรับ";
-"Decline" = "ลดลง";
-"Declined" = "ปฏิเสธ";
-"Decline Share" = "ปฏิเสธแชร์";
-"Unshare" = "ยกเลิกการแชร์";
-"Unshare failed" = "ยกเลิกการแชร์ไม่สำเร็จ";
-"Are you sure you want to unshare these items?" = "คุณแน่ใจว่าต้องการยกเลิกการแชร์รายการเหล่านี้?";
-"Are you sure you want to unshare this item?" = "คุณแน่ใจว่าต้องการยกเลิกการแชร์รายการนี้?";
-"Share" = "แชร์";
-"Read" = "อ่าน";
-"Can Share" = "สามารถแชร์";
-"Can Edit" = "สามารถแก้ไข";
-"Can Edit and Change" = "สามารถแก้ไขและเปลี่ยนแปลง";
-"Can Create" = "สามารถสร้าง";
-"Can Change" = "สามารถเปลี่ยน";
-"Can Delete" = "สามารถลบ";
-"Accept Invite %@" = "ยอมรับคำเชิญ %@";
-"Decline Invite %@" = "ปฏิเสธคำเชิญของ %@";
-"Decline cannot be undone." = "ไม่สามารถยกเลิกได้";
-"Sharing" = "แชร์ข้อมูล";
-"You" = "คุณ";
-"Share this file" = "แชร์ไฟล์นี้";
-"Share this folder" = "แชร์โฟลเดอร์นี้";
-"shared" = "ถูกแชร์";
-"Owner" = "เจ้าของ";
-"Private Link" = "ลิงก์ส่วนบุคคล";
+"Searching Shares…" = "Po kërkohet në Ndarje…";
+"Recipient" = "Marrës";
+"Recipients" = "Marrëss";
+"Public Link" = "Lidhje Publike";
+"Public Links" = "Lidhje Publike";
+"Shared by %@" = "Ndarë nga %@";
+"Invite Recipient" = "Ftoni Marrës";
+"Recipients" = "Marrëss";
+"Add email or name" = "Shtoni email ose emër";
+"Users" = "PÃ«rdorues";
+"Groups" = "Grupe";
+"Start typing to search users, groups and remote users." = "Filloni të shtypni që të kërkohet për përdorues, grupe dhe përdorues të largët.";
+"(Group)" = "(Grup)";
+"Adding User to Share failed" = "Dështoi shtim Përdoruesi te Ndarje";
+"Permissions" = "Leje";
+"Invited: %@" = "U ftua: %@";
+"Created: %@" = "U krijua: %@";
+"Allows the users you share with to re-share" = "Lejon që përdoruesit me të cilët ndani të rindajnë";
+"Allows the users you share with to edit your shared files, and to collaborate" = "U lejon përdoruesve me të cilët ndani gjëra të përpunojnë kartelat tuaja që ndani, dhe të bashkëpunojnë";
+"Allows the users you share with to create new files and add them to the share" = "U lejon përdoruesve me të cilët ndani gjëra të krijojnë kartela të reja dhe t’i shtojnë ato te ndarja";
+"Allows uploading a new version of a shared file and replacing it" = "Lejon ngarkimin e një versioni të ri të një kartelë të ndarë, si dhe zëvendësim të saj";
+"Allows the users you share with to delete shared files" = "U lejon përdoruesve me të cilët ndani gjëra të fshijnë kartela të ndara";
+"Setting permission failed" = "Dështoi dhënia e lejes";
+"Shared with" = "Ndarë me:";
+"Remove Recipient failed" = "Dështoi Heqje Marrësi";
+"Remove Recipient" = "Hiqe Marrësin";
+"Create" = "Krijoje";
+"Change" = "Ndryshoje";
+"Recipients can view or download contents." = "Marrësit mund të shohin dhe shkarkojnë lëndë.";
+"Recipients can view, download, edit, delete and upload contents." = "Marrësit mund të shohin shkarkojnë, përpunojnë, fshijnë dhe ngarkojnë lëndë.";
+"Receive files from multiple recipients without revealing the contents of the folder." = "Merr kartela prej të tjerësh pa e zbuluar lëndën e dosjes.";
+"Download / View" = "Të shkarkojë / Të shohë";
+"Download / View / Upload" = "Të shkarkojë / Të shohë / Të ngarkojë";
+"Upload only (File Drop)" = "Vetëm ngarkim (Lënie Kartele)";
+"Creating public link failed" = "Dështoi krijimi i lidhjes publike";
+"Create Public Link" = "Krijoni Lidhje Publike";
+"Links" = "Lidhje";
+"Link" = "Lidhje";
+"Setting expiration date failed" = "Dështoi caktimi i datës së skadimit";
+"Expiration date" = "Datë skadimi";
+"Copy Public Link" = "Kopjo Lidhje Publike";
+"Delete Public Link" = "Fshi Lidhje Publike";
+"Deleting Public Link failed" = "Dështoi fshirja e Lidhjes Publike";
+"Deleting password failed" = "Dështoi fshirja e fjalëkalimit";
+"Setting password failed" = "Dështoi caktimi i fjalëkalimit";
+"Type to update password" = "Shtypni që të përditësohet fjalëkalimi";
+"Cannot change permission" = "S’ndryshohet dot leje";
+"Before you can set the permission\n%@,\n you must enter a password." = "Përpara se të caktoni lejen\n%@,\n duhet të jepni një fjalëkalim.";
+"Password Protected" = "Mbrojtur me Fjalëkalim";
+"Pending Federated Invites" = "Ftesa të Federuara Pezull";
+"Pending Invites" = "Ftesa Pezull";
+"Shared with you" = "Të ndara me ju";
+"Shared with others" = "Të ndara me të tjerët";
+"Shares" = "Ndarje";
+"Copy Private Link" = "Kopjo Lidhje Private";
+"Only recipients can use this link. Use it as a permanent link to point to this resource" = "Vetëm marrësit mund ta përdorin këtë lidhje. Përdoreni si një lidhje të përhershme që shpie te ky burim";
+"Accept Share failed" = "Dështoi Pranimi i Ndarjes";
+"Decline Share failed" = "Dështoi Hedhja Tej e Ndarjes";
+"Accept" = "Pranoje";
+"Decline" = "Hidhe poshtë";
+"Declined" = "Hedhur Poshtë";
+"Decline Share" = "Hidhe Poshtë Ndarjen";
+"Unshare" = "Hiqi ndarjen me të tjerë";
+"Unshare failed" = "Dështoi heqja e ndarjes";
+"Are you sure you want to unshare these items?" = "Jeni i sigurt se doni të hiqet ndarja e këtyre objekteve?";
+"Are you sure you want to unshare this item?" = "Jeni i sigurt se doni të hiqet ndarja e këtij objekti?";
+"Share" = "Ndaje me të tjerë";
+"Read" = "Lexoni";
+"Can Share" = "Mund të Ndajë";
+"Can Edit" = "Mund të Përpunojë";
+"Can Edit and Change" = "Mund të Përpunojë dhe Ndryshojë";
+"Can Create" = "Mund të Krijojë";
+"Can Change" = "Mund të Ndryshojë";
+"Can Delete" = "Mund të Fshijë";
+"Accept Invite %@" = "Pranoni Ftesën %@";
+"Decline Invite %@" = "Hidheni Tej Ftesën %@";
+"Decline cannot be undone." = "Hedhja tej s’mund të zhbëhet.";
+"Sharing" = "Ndarje me të tjerët";
+"You" = "Ju";
+"Share this file" = "Ndajeni këtë kartelë";
+"Share this folder" = "Ndajeni këtë dosje";
+"shared" = "e ndarë me të tjerë";
+"Owner" = "I zoti";
+"Private Link" = "Lidhje Private";
 
 /* Quick Access view */
-"Quick Access" = "เข้าถึงด่วน";
-"Collection" = "รวบรวม";
-"Recents" = "ล่าสุด";
-"Favorites"= "รายการโปรด";
-"Images" = "รูปภาพ";
-"PDF Documents" = "เอกสาร PDF";
+"Quick Access" = "Hyrje e Shpejtë";
+"Collection" = "Koleksion";
+"Recents" = "Tani së fundi";
+"Favorites"= "Të parapëlqyera";
+"Images" = "Foto";
+"PDF Documents" = "Dokumente PDF";
 
 /* Media files settings */
-"Media Files" = "ไฟล์สื่อ";
-"Streaming Enabled" = "เปิดใช้งานการสตรีมแล้ว";
+"Media Files" = "Kartela Media";
+"Streaming Enabled" = "Transmetim i Aktivizuar";
 
 /* Photo upload settings */
-"Media Upload" = "การอัปโหลดสื่อ";
-"Convert HEIC to JPEG" = "แปลง HEIC เป็น JPEG";
-"Convert videos to MP4" = "แปลงวิดีโอเป็น MP4";
+"Media Upload" = "Ngarkim Media";
+"Convert HEIC to JPEG" = "Shndërroje HEIC në JPEG";
+"Convert videos to MP4" = "Shndërroji videot në MP4";
+"Auto Upload Photos" = "Ngarkoni Foto Në Çast";
+"Auto Upload Videos" = "Ngarkoni Video Në Çast";
+"Account" = "Llogari";
+"Accounts" = "Llogari";
+"Select account" = "Përzgjidhni llogari";
+"Upload Path" = "Shteg Ngarkimi";
+"Select Upload Path" = "Përzgjidhni Shteg Ngarkimi";
+"Auto upload of media was disabled since configured account / folder was not found" = "Ngarkimi i menjëhershëm i medias qe çaktivizuar, ngaqë s’u gjet llogari / dosje e formësuar ";
 
 /* Progress summarizer */
-"Creating %ld folders…" = "กำลังสร้าง %ld โฟลเดอร์";
-"Moving %ld items…" = "กำลังย้าย %ld ไฟล์";
-"Copying %ld items…" = "กำลังคัดลอก %ld ไฟล์";
-"Deleting %ld items…" = "กำลังลบ %ld ไฟล์";
-"Uploading %ld files…" = "กำลังอัปโหลด %ld ไฟล์";
-"Downloading %ld files…" = "กำลังดาวน์โหลด  %ld ไฟล์";
-"Updating %ld items…" = "กำลังอัปเดต %ld ไฟล์";
+"Creating %ld folders…" = "Po krijohen %ld dosje…";
+"Moving %ld items…" = "Po lëziven %ld objekte…";
+"Copying %ld items…" = "Po kopjohen %ld objekte…";
+"Deleting %ld items…" = "Po fshihen %ld objekte…";
+"Uploading %ld files…" = "Po ngarkohen %ld kartela…";
+"Downloading %ld files…" = "Po shkarkohen %ld kartela…";
+"Updating %ld items…" = "Po përditësohen %ld objekte…";
 
 /* Offline storage management */
-"Free on %@" = "ฟรีบน %@";
-"unknown" = "ไม่รู้จัก";
-"Offline files use" = "ใช้ไฟล์ออฟไลน์";
-"Compacting of '%@' failed" = "กำลังย่อข้อมูลพบความล้มเหลว '%@'";
-"Include available offline files" = "รวมถึงไฟล์ออฟไลน์ที่มีอยู่";
-"Delete Local Copies" = "ลบสำเนาในเครื่อง";
-"Manage" = "การจัดการ";
-"Storage" = "พื้นที่จัดเก็บข้อมูล";
+"Free on %@" = "Falas në %@";
+"unknown" = "i panjohur";
+"Offline files use" = "Përdorim kartelash pa internet";
+"Compacting of '%@' failed" = "Dështoi ngjeshja e '%@'";
+"Include available offline files" = "Përfshi kartela të passhme jashtë linje";
+"Delete Local Copies" = "Fshi Kopje Vendore";
+"Manage" = "Administroni";
+"Storage" = "Depozitë";
+"Compacting" = "Po ngjeshet";
 
-"Really include available offline files?" = "รวมไฟล์ออฟไลน์ที่มีอยู่?";
-"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "ไฟล์และโฟลเดอร์ที่ทำเครื่องหมายว่าพร้อมใช้งานแบบออฟไลน์จะไม่สามารถใช้งานได้ ไฟล์เหล่านี้จะถูกดาวน์โหลดอีกในครั้งต่อไปที่คุณเข้าสู่บัญชีของคุณ (จำเป็นต้องเชื่อมต่อ)";
+"Really include available offline files?" = "Të përfshihen vërtet kartela të passhme jashtë linje?";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Kartelat dhe dosjet me shenjë për Të Passhme Jashtë Linje s’do të mund të përdoren dot. Ato do të rishkarkohen herës pasuese që bëni hyrjen në llogarinë tuaj (lypset lidhje në internet).";
 
 /* Available offline */
-"Root folder" = "โฟลเดอร์รูท";
-"at" = "ที่";
-"(no match)" = "(ไม่ตรงกัน)";
+"Root folder" = "Dosje rrënjë";
+"at" = "në";
+"(no match)" = "(pa përputhje)";
 
-"Make available offline" = "ทำให้พร้อมใช้งานแบบออฟไลน์";
-"Make unavailable offline" = "ทำให้พร้อมใช้งานแบบออฟไลน์";
+"Make available offline" = "Bëje të passhme jo në linjë";
+"Make unavailable offline" = "Bëje jo të passhme jashtë linje";
 
-"Available Offline" = "พร้อมใช้งานแบบออฟไลน์แล้ว";
-"No items have been selected for offline availability." = "ไม่มีรายการที่ถูกเลือกสำหรับการใช้งานแบบออฟไลน์";
+"Available Offline" = "E passhme Jashtë Linje";
+"No items have been selected for offline availability." = "S’janë përzgjedhur objekte për t’i pasur jashtë linje.";
 
-"Overview" = "ภาพรวม";
-"All Files" = "ไฟล์ทั้งหมด";
+"Overview" = "Përmbledhje";
+"All Files" = "Krejt Kartelat";
 
 /* Import File */
-"Save File" = "บันทึกไฟล์";
-"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "เลือกบัญชีและโฟลเดอร์ที่ต้องการนำเข้า\n\nสามารถนำเข้าได้ครั้งละหนึ่งไฟล์เท่านั้น";
+"Save File" = "Ruaje Kartelën";
+"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Zgjidhni një llogari dhe dosje ku të importohet kartela.\n\nMund të importohet vetëm një kartelë në herë.";
+
+/* Key Commands */
+"Select Next" = "Përzgjidhni Pasuesen";
+"Select Previous" = "Përzgjidhni të Mëparshmen";
+"Open Selected" = "Hap të Përzgjedhurën";
+"Change Sort Order" = "Ndrysho Rend Renditjeje";
+"Search" = "Kërko";
+"Back" = "Mbrapsht";
+"Save" = "Ruaje";
+"Sort by %@" = "Renditi sipas %@";
+"Tab %@" = "Skeda %@";
+"Select Last Item on Page" = "Përzgjidhni Elementin e Fundit në Faqe";
+"Scroll to Top" = "Rrëshqitni drejt Kreut";
+"Scroll to Bottom" = "Rrëshqitni drejt Fundit";
+"Copy to Pasteboard" = "Kopjoje në të Papastër";
+"Import from Pasteboard" = "Importo prej të Papastre";
+"Next" = "Pasuesja";
+"Previous" = "E mëparshmja";
+"Favorite" = "Vëre Si të Parapëlqyer";
+"Cut" = "Prije";

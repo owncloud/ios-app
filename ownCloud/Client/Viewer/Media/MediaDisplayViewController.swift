@@ -25,6 +25,8 @@ import MobileCoreServices
 class MediaDisplayViewController : DisplayViewController {
 
 	static let MediaPlaybackFinishedNotification = NSNotification.Name("media_playback.finished")
+    static let MediaPlaybackNextTrackNotification = NSNotification.Name("media_playback.play_next")
+    static let MediaPlaybackPreviousTrackNotification = NSNotification.Name("media_playback.play_previous")
 
 	private var playerStatusObservation: NSKeyValueObservation?
 	private var playerItemStatusObservation: NSKeyValueObservation?
@@ -40,7 +42,12 @@ class MediaDisplayViewController : DisplayViewController {
 	deinit {
 		playerStatusObservation?.invalidate()
 		playerItemStatusObservation?.invalidate()
-		NotificationCenter.default.removeObserver(self)
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+
+		NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+		NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+		NotificationCenter.default.removeObserver(self, name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
 	}
 
 	override func viewDidLoad() {
@@ -195,7 +202,8 @@ class MediaDisplayViewController : DisplayViewController {
 		commandCenter.playCommand.addTarget { [weak self] _ in
 			if let player = self?.player {
 				if player.rate == 0.0 {
-					player.play()
+                    player.play()
+                    self?.updateNowPlayingTimeline()
 					return .success
 				}
 			}
@@ -208,6 +216,7 @@ class MediaDisplayViewController : DisplayViewController {
 			if let player = self?.player {
 				if player.rate == 1.0 {
 					player.pause()
+                    self?.updateNowPlayingTimeline()
 					return .success
 				}
 			}
@@ -216,57 +225,107 @@ class MediaDisplayViewController : DisplayViewController {
 		}
 
 		// Add handler for skip forward command
-		commandCenter.skipForwardCommand.isEnabled = true
 		commandCenter.skipForwardCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
 			if let player = self?.player {
 				let time = player.currentTime() + CMTime(seconds: 10.0, preferredTimescale: 1)
 				player.seek(to: time) { (finished) in
 					if finished {
-						MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self?.playerItem?.currentTime().seconds
+                        self?.updateNowPlayingTimeline()
 					}
 				}
+                return .success
 			}
 			return .commandFailed
 		}
 
 		// Add handler for skip backward command
-		commandCenter.skipBackwardCommand.isEnabled = true
 		commandCenter.skipBackwardCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
 			if let player = self?.player {
 				let time = player.currentTime() - CMTime(seconds: 10.0, preferredTimescale: 1)
 				player.seek(to: time) { (finished) in
 					if finished {
-						MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self?.playerItem?.currentTime().seconds
+                        self?.updateNowPlayingTimeline()
 					}
 				}
+                return .success
 			}
 			return .commandFailed
 		}
+        
+        // TODO: Skip controls are useful for podcasts but not so much for music.
+        // Disable them for now but keep the implementation of command handlers
+        commandCenter.skipForwardCommand.isEnabled = false
+        commandCenter.skipBackwardCommand.isEnabled = false
 
-		// Disable seek commands
-		commandCenter.seekForwardCommand.isEnabled = false
-		commandCenter.seekBackwardCommand.isEnabled = false
+		// Configure next / previous track buttons according to number of items to be played
+        var enableNextTrackCommand = false
+        var enablePreviousTrackCommand = false
+
+        if let itemIndex = self.itemIndex {
+            if itemIndex > 0 {
+                enablePreviousTrackCommand = true
+            }
+            
+            if let displayHostController = self.parent as? DisplayHostViewController, let items = displayHostController.items {
+                enableNextTrackCommand = itemIndex < (items.count - 1)
+            }
+        }
+        
+        commandCenter.nextTrackCommand.isEnabled = enableNextTrackCommand
+		commandCenter.previousTrackCommand.isEnabled = enablePreviousTrackCommand
+        
+        // Add handler for seek forward command
+        commandCenter.nextTrackCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
+            if let player = self?.player {
+                player.pause()
+                OnMainThread {
+                    NotificationCenter.default.post(name: MediaDisplayViewController.MediaPlaybackNextTrackNotification, object: nil)
+                }
+                return .success
+            }
+            return .commandFailed
+        }
+        
+        // Add handler for seek backward command
+        commandCenter.previousTrackCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
+            if let player = self?.player {
+                player.pause()
+                OnMainThread {
+                    NotificationCenter.default.post(name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
+                }
+                return .success
+            }
+            return .commandFailed
+        }
 	}
 
+    private func updateNowPlayingTimeline() {
+
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.playerItem?.currentTime().seconds
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = self.player?.rate
+    }
+    
 	private func updateNowPlayingInfoCenter() {
-		guard let player = self.player else { return }
+        guard let player = self.player else { return }
 		guard let playerItem = self.playerItem else { return }
 
 		var nowPlayingInfo = [String : Any]()
 
 		nowPlayingInfo[MPMediaItemPropertyTitle] = mediaItemTitle
 		nowPlayingInfo[MPMediaItemPropertyArtist] = mediaItemArtist
-		nowPlayingInfo[MPNowPlayingInfoPropertyCurrentPlaybackDate] = self.playerItem?.currentDate()
 		nowPlayingInfo[MPNowPlayingInfoPropertyAssetURL] = source
+        nowPlayingInfo[MPNowPlayingInfoPropertyCurrentPlaybackDate] = playerItem.currentDate()
 		nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = playerItem.currentTime().seconds
-		nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = playerItem.asset.duration.seconds
-		nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
+        nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = playerItem.asset.duration.seconds
 
 		if mediaItemArtwork != nil {
 			nowPlayingInfo[MPMediaItemPropertyArtwork] = mediaItemArtwork
 		}
 
 		MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        updateNowPlayingTimeline()
 	}
 }
 
