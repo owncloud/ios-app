@@ -324,6 +324,18 @@
 "Scan additional" = "Scan additional";
 "Create one file per page" = "Create one file per page";
 
+/* Scan */
+"Scan" = "Scan";
+"Scans" = "Scans";
+"Scan document" = "Scan document";
+"Saving" = "Saving";
+"File format" = "File format";
+"Name" = "Name";
+"Save as" = "Save as";
+"Options" = "Options";
+"Scan additional" = "Scan additional";
+"Create one file per page" = "Create one file per page";
+
 /* Sharing */
 "Searching Shares…" = "Searching Shares…";
 "Recipient" = "Recipient";

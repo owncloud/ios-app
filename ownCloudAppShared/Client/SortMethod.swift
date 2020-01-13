@@ -19,7 +19,7 @@
 import Foundation
 import ownCloudSDK
 
-typealias OCSort = Comparator
+public typealias OCSort = Comparator
 
 public enum SortDirection: Int {
 	case ascendant = 0
@@ -34,9 +34,9 @@ public enum SortMethod: Int {
 	case date = 3
 	case shared = 4
 
-	static var all: [SortMethod] = [alphabetically, type, size, date, shared]
+	public static var all: [SortMethod] = [alphabetically, type, size, date, shared]
 
-	func localizedName() -> String {
+	public func localizedName() -> String {
 		var name = ""
 
 		switch self {
@@ -55,8 +55,8 @@ public enum SortMethod: Int {
 		return name
 	}
 
-	func comparator(direction: SortDirection) -> OCSort {
-		var comparator : OCSort
+	public func comparator(direction: SortDirection) -> OCSort {
+		var comparator: OCSort
 		var combinedComparator: OCSort?
 
 		let alphabeticComparator : OCSort = { (left, right) in
