@@ -420,7 +420,7 @@ class ClientItemCell: ThemeTableViewCell {
 		cloudStatusIconView.tintColor = collection.tableRowColors.secondaryLabelColor
 		detailLabel.textColor = collection.tableRowColors.secondaryLabelColor
 
-		moreButton.tintColor = collection.tableRowColors.labelColor
+		moreButton.tintColor = collection.tableRowColors.secondaryLabelColor
 
 		if showingIcon, let item = item {
 			iconView.image = item.icon(fitInSize: iconSize)
