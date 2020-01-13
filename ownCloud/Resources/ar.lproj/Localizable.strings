@@ -1,0 +1,495 @@
+/*
+  Localizable.strings
+  ownCloud
+
+  Created by Pablo Carrascal on 13/03/2018.
+  Copyright © 2018 ownCloud GmbH. All rights reserved.
+*/
+
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
+/* Add / Edit Bookmark */
+"Edit account" = "تعديل الحساب";
+"Add account" = "إضافة حساب";
+"Server URL" = "عنوان URL الخادم";
+"https://example.com" = "https://example.com";
+"Continue" = "متابعة";
+"Name" = "الاسم";
+"Example Server" = "خادم المثال";
+"Show Certificate Details" = "عرض تفاصيل الشهادة";
+"Connect" = "اتصال";
+"Delete Authentication Data" = "حذف بيانات المصادقة";
+"Authentication" = "مصادقة";
+"Username" = "اسم المستخدم";
+"Password" = "كلمة السر";
+"Certificate Details" = "تفاصيل الشهادة";
+"Cancel" = "إلغاء";
+"Approve" = "موافقة";
+"Error" = "خطأ";
+"Review Connection" = "مراجعة الاتصال";
+"Authenticated via" = "تمت المصادقة عبر";
+"Authenticated as %@ via %@" = "تمت مصادقة %@ عبر %@";
+"Edit" = "تعديل";
+"Credentials" = "بيانات الاعتماد";
+"Rejected" = "مرفوض";
+"Passed" = "تم الاجتياز";
+"Accepted" = "مقبول";
+"Validation Error" = "خطأ في التحقق";
+"Certificate was rejected by user." = "لقد رفض المستخدم الشهادة.";
+"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "هناك مشكلة بالشهادة.\nافتح 'تفاصيل الشهادة' لمزيد من المعلومات.";
+"No issues found. Certificate passed validation." = "لم يتم العثور على أي مشكلات. اجتازت الشهادة عملية التحقق.";
+"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "قد تكون هناك مشكلة بالشهادة، ولكن وافق عليها المستخدم.\nافتح 'تفاصيل الشهادة' لمزيد من المعلومات.";
+"If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." = "إذا قررت 'الاستمرار'، سيُطلب منك السماح لتطبيق '%@' بفتح ملف تسجيل الدخول إلى OAuth2 حيث يُمكنك إدخال بيانات اعتمادك.";
+
+"Contacting server…" = "جارٍ الاتصال بالخادم…";
+"Authenticating…" = "جارٍ المصادقة…";
+
+"Fetching user information…" = "جارٍ إحضار معلومات المستخدم…";
+"Updating connection…" = "جارٍ تحديث الاتصال…";
+
+"Missing hostname" = "اسم المضيف مفقود";
+"The entered URL does not include a hostname." = "لا يتضمن عنوان URL المُدخل اسم المضيف.";
+"Add account" = "إضافة حساب";
+"Server name" = "اسم الخادم";
+"Server Password" = "كلمة مرور الخادم";
+"Server Username" = "اسم مستخدم الخادم";
+
+/* Client */
+"Browse" = "تصفح";
+"Disconnect" = "قطع الاتصال";
+"Connecting…" = "جارٍ الاتصال…";
+"Connected." = "متصل.";
+"Select" = "اختيار";
+"Done" = "تم";
+
+"Folder" = "مجلد";
+
+"Stopped" = "تم الإيقاف";
+"Started…" = "تم البدء…";
+"Contents from cache." = "محتويات من ذاكرة التخزين المؤقتة.";
+"Waiting for server response…" = "انتظار استجابة الخادم…";
+"This folder no longer exists." = "لم يعد هذا المجلد مفقودًا.";
+"Everything up-to-date." = "كل الأشياء محدثة.";
+"Please wait…" = "يُرجى الانتظار…";
+"Sort by %@" = "ترتيب حسب %@";
+"Sort by" = "ترتيب حسب";
+
+"name" = "الاسم";
+"type" = "النوع";
+"size" = "الحجم";
+"date" = "التاريخ";
+"Search this folder" = "بحث في هذا المجلد";
+"Pending" = "معلق";
+"Show parent paths" = "عرض المسارات الأصلية";
+
+"%@ of %@ used" = "%@ الخاصة %@ المستخدمة";
+"Total: %@" = "إجمالي: %@";
+
+/* Client Messages */
+"Empty folder" = "مجلد فارغ";
+"This folder contains no files or folders." = "لا يحتوي هذا المجلد على ملفات أو مجلدات.";
+
+"Folder removed" = "المجلد محذوف";
+"This folder no longer exists on the server." = "لم يعد هذا المجلد موجود في الخادم.";
+"Are you sure you want to delete this item from the server?" = "هل تريد بالتأكيد حذف هذا العنصر من الخادم؟";
+"Are you sure you want to delete these items from the server?" = "هل تريد بالتأكيد حذف هذه العناصر من الخادم؟";
+"Multiple items" = "عناصر متعددة";
+"Deleting '%@'" = "حذف'%@'";
+"Renaming to %@" = "إعادة تسمية لـ %@";
+"Upload from your photo library" = "تحميل من مكتبة الصور";
+"Missing permissions" = "الأذونات مفقودة";
+"This permission is needed to upload photos and videos from your photo library." = "هذا الإذن مطلوب لتحميل الصور والفيديوهات من مكتبة الصور.";
+"Not now" = "ليس الآن";
+"Upload file" = "تحميل ملف";
+"Upload files" = "تحميل ملفات";
+
+"No matches" = "لا يوجد تطابقات";
+"There are no results for this search term" = "لا توجد نتائج عن البحث بهذا المصطلح";
+"Status" = "الحالة";
+
+"Authorization failed" = "تعذر إجراء المصادقة";
+"The account has been disabled." = "تم تعطيل الحساب.";
+"The server declined access with the credentials stored for this connection." = "رفض الخادم الوصول باستخدام بيانات الاعتماد المخزنة لهذا الاتصال.";
+"Access denied" = "الوصول محظور";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "انتهت صلاحية الوصول للاتصال أو أصبح الوصول غير صالح. أعد تسجيل الدخول للحصول على وصول.";
+"No authentication data has been found for this connection." = "لم يتم العثور على بيانات مصادقة لهذا الاتصال.";
+"Sign in" = "تسجيل الدخول";
+"Ignore" = "تجاهل";
+"Continue offline" = "الاستمرار دون اتصال بالإنترنت";
+"Media upload in the previous session was incomplete since the application was terminated" = "Media upload in the previous session was incomplete since the application was terminated";
+
+/* Server List*/
+"Cancel" = "إلغاء";
+"OK" = "تم";
+
+"'%@' is currently locked" = "'%@' مقفول حاليًا";
+"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "هناك عملية تُجرى حاليًا تحول دون الاتصال بـ '%@'. يُرجى المحاولة مجددًا.";
+"Really delete '%@'?" = "هل تريد الحذف بالتأكيد '%@'؟";
+"This will also delete all locally stored file copies." = "سيحذف هذا جميع نسخ الملف المخزنة محليًا.";
+"Delete" = "حذف";
+"Deletion of '%@' failed" = "تعذر حذف '%@'";
+"Accounts" = "حسابات";
+
+"Help" = "المساعدة";
+"Feedback" = "ملاحظات";
+"Welcome" = "مرحباً";
+"Thanks for choosing %@! \n Start by adding your account." = "شكرًا على اختيارك %@! \n ابدأ بإضافة حسابك.";
+
+/* Settings Messages */
+
+"Security" = "الأمان";
+"Passcode Lock" = "قفل رمز المرور";
+"Face ID" = "معرّف الوجه";
+"Touch ID" = "معرّف اللمسة";
+"Videos" = "فيديوهات";
+"Photos" = "صور";
+"Background uploads" = "تحميلات الخلفية";
+"Wifi only" = "Wifi فقط";
+"Settings" = "الإعدادات";
+"Lock application" = "تطبيق القفل";
+"Upload videos via WiFi only" = "تحميل فيديو عبر WiFi فقط";
+"Upload pictures via WiFi only" = "تحميل الصور عبر WiFi فقط";
+"More" = "المزيد";
+"Send feedback" = "إرسال التعليقات";
+"Recommend to a friend" = "توصية إلى صديق";
+"Privacy Policy" = "سياسة الخصوصية";
+"Acknowledgements" = "رسائل الإقرار";
+"Video upload path" = "مسار تحميل الفيديو";
+"Photo upload path" = "مسار تحميل الصورة";
+"Immediately" = "على الفور";
+"After 1 minute" = "بعد دقيقة واحدة";
+"After 5 minutes" = "بعد 5 دقائق";
+"After 30 minutes" = "بعد 30 دقيقة";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.\n\nAccess in Files.app is not possible, if you choose lock interval \"Immediately\".\nPlease choose an other delay, if you want to access your files in the Files.app or via a document picker." = "إذا اخترت \"Immediately\"، سيتم غلق التطبيق، فهو لم يعد موجودًا في المقدمة. الدخول إلى تطبيق \n\nAccess in Files غير متاح، إذا ما اخترت فترة الإقفال \"Immediately\".يُرجى \n اختيار مدة تأخير أخرى، إذا أردت الوصول إلى الملفات في تطبيق \"الملفات\" أو بواسطة منتقي المستندات.";
+"Please configure an email account" = "يُرجى تكوين حساب البريد الإلكتروني";
+"You need to configure an email account first to be able to send emails." = "تحتاج إلى تكوين حساب البريد الإلكتروني أولًا حتى تتمكن من إرسال رسائل البريد الإلكتروني.";
+"Do you want to open the following URL?" = "هل ترغب في فتح عنوان URL التالي؟";
+
+"%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@ %@ إصدار %@ إنشاء %@ (تطبيق: %@, sdk: %@)";
+"beta" = "بيتا";
+"release" = "إطلاق";
+
+
+/* User Interface Settings */
+"Theme" = "لون الخلفية";
+"User Interface" = "واجهة المستخدم";
+"Dark" = "داكن";
+"Light" = "ساطع";
+"Classic" = "كلاسيكي";
+"System" = "النظام";
+"System Appeareance" = "System Appeareance";
+
+/* Log settings */
+"Log Files" = "ملفات السجل";
+"Browse log files" = "ملفات سجل التصفح";
+"Share" = "مشاركة";
+"Delete all log files?" = "هل تريد حذف جميع ملفات السجل؟";
+"Delete all" = "حذف الكل";
+
+"Log Level" = "مستوى السجل";
+"Log Destinations" = "وجهات السجل";
+"Privacy" = "خصوصية";
+
+"Logging" = "جارِ التسجيل";
+"Enable logging" = "تمكين التسجيل";
+"Options" = "خيارات";
+
+"Off" = "إيقاف التشغيل";
+"Info" = "معلومات";
+"Default" = "افتراضي";
+"Warning" = "تحذير";
+"Error" = "خطأ";
+
+"Share log file" = "ملف سجل المشاركة";
+"Reset log file" = "إعادة تعيين ملف السجل";
+
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "عند التنشيط، قد تؤثر السجلات في الأداء وقد تشمل محتويات حساسة. ومع هذا، لا تخضع السجلات إلى الإرسال الآلي لخوادم %@ . إنَّ مشاركة السجلات مع مستخدمين آخرين هي مسؤولية المستخدم وحده.";
+
+"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "السجلات العشرة الأخيرة محفوظة على الجهاز - يحمل كل سجل تغطية ذاكرة تصل إلى 24 ساعة من الاستخدام. عند المشاركة، يُرجى الأخذ في الاعتبار أن السجلات قد تحتوي على معلومات حساسة مثل عناوين URL للخادم ومعلومات خاصة بالمستخدم.";
+
+"Mask private data" = "إخفاء البيانات الخاصة";
+"Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "سيعمل تمكين هذا الخيار على إخفاء البيانات الخاصة، كي لا تصبح جزءًا من أي سجل. نظرًا لأن التسجيل ميزة تطويرية ومتعلقة بالتصحيح، ورغم هذا، لا يمكن ضمان خلو ملف السجل من أي بيانات خاصة حتى بعد تمكين هذا الخيار. ولهذا، يُرجى فحص أي ملف سجل والتحقق من خلوه من أي بيانات لا ترغب في مشاركتها قبل مشاركة هذا مع أي شخص.";
+
+"No log file found" = "لم يتم العثور على أي ملف سجل";
+"The log file can't be shared because no log file could be found or the log file is empty." = "تعذر مشاركة ملف السجل لأنه لم يتم العثور على أي ملف سجل أو أن ملف السجل فارغ.";
+"Enable log file" = "تمكين ملف السجل";
+
+"Really reset log file?" = "هل تريد إعادة تعيين ملف السجل؟";
+"This action can't be undone." = "لا يمكن التراجع عن هذا الإجراء.";
+
+/* Storage settings */
+"Delete unused local copies" = "حذف نسخ محلية غير مستخدمة";
+"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "الوقت المقدّر منذ تحميل الملف المعني أو تعديله أو تنزيله أو عرضه بواسطة هذا الجهاز. لا ينطبق على أي من الملفات المحملة بواسطة خاصية التوافر مع عدم الاتصال بالإنترنت. يمكن حذف النسخ المحلية قبل انتهاء المدة المحددة، على سبيل المثال، بعد أن تتوفر نسخة أحدث من الملف على الخادم - أو من خلال الحذف اليدوي للنسخ غير المتصلة بالإنترنت. وأيضًا، لا يمكن حذف النسخ المحلية قبل انتهاء المدة المحددة، على سبيل المثال، إذا تم تنفيذ إجراء ما عليها، أو أن الملف قيد الاستخدام - أو لم يتم بعد استخدام الحساب الذي يحتوي على الملف في التطبيق.";
+"never" = "أبدًا";
+"after %@" = "بعد %@";
+"Decrease Slider Value" = "Decrease Slider Value";
+"Increase Slider Value" = "Increase Slider Value";
+
+/* Display settings */
+"Display settings" = "عرض الإعدادات";
+"Show hidden files and folders" = "عرض الملفات والمجلدات المختفية";
+
+/* Passcode Messages */
+
+"Enter code" = "إدخال الرمز";
+"Repeat code" = "تكرار الرمز";
+"Delete code" = "حذف الرمز";
+"The entered codes are different" = "الرموز المدخلة مختلفة";
+"Incorrect code" = "رمز غير صحيح";
+"Please try again in %@" = "يُرجى المحاولة مجددًا %@";
+"Unlock %@" = "إلغاء القفل %@";
+"Biometric authentication failed" = "تعذر إجراء المصادقة البيولوجية";
+
+/* Certificate management */
+
+"Certificates" = "شهادات";
+"User-approved certificates" = "شهادات المستخدم المعتمدة";
+
+"Approved" = "معتمدة";
+"Auto-approved" = "معتمدة آليًا";
+"Revoke approval" =  "Revoke approval";
+
+/* Actions */
+
+"Forbidden Characters" = "أحرف ممنوعة";
+"File name cannot contain / or \\" = "لا يمكن أن يحتوي اسم الملف على / أو \\";
+"New Folder" = "مجلد جديد";
+"Folder name" = "اسم المجلد";
+"Rename" ="Rename";
+"Create folder" ="انشئ مجلد";
+"Duplicate" = "تكرار";
+"Move" = "نقل";
+"Open in" = "فتح في";
+"Copy" = "نسخ";
+"Copy here" = "نسخ هنا";
+"Cannot connect to " = "تعذر الاتصال بـ ";
+" couldn't download file(s)" = " تعذر تنزيل الملف (الملفات)";
+"Actions" = "إجراءات";
+"copy" = "نسخ";
+"Close Window" = "Close Window";
+"Open in a new Window" = "Open in a new Window";
+"Open in Window" = "Open in Window";
+
+"Preparing…" = "جارٍ الإعداد…";
+
+/* Directory Picker Messages */
+"Move here" = "نقل هنا";
+
+/* Preview */
+"Open file" = "فتح الملف";
+"Network unavailable" = "الشبكة غير متوفرة";
+"Error" = "خطأ";
+"Could not get the picture" = "تعذر الحصول على الصورة";
+"Downloading" = "جارٍ التنزيل";
+"File couldn't be opened" = "تعذر فتح الملفات";
+
+/* PDF Viewer */
+"Resume" = "استئناف";
+"Go to page" = "ذهاب إلى الصفحة";
+"Page" = "صفحة";
+"This document has %@ pages" = "يحتوي هذا المستند على عدد %@ صفحة";
+"%@ of %@" = "%@ من %@";
+"Invalid Page" = "صفحة غير صالحة";
+"The entered page number doesn't exist" = "رقم الصفحة المكتوب غير موجود";
+"Search PDF" = "بحث في ملف PDF";
+"Outline" = "مخطط تفصيلي";
+
+/* Photo Upload */
+"Upload" = "تحميل";
+"Select All" = "تحديد الكل";
+"Deselect All" = "إلغاء تحديد الكل";
+"All Photos" = "جميع الصور";
+"Albums" = "الألبومات";
+"Importing from photo library" = "استيراد من مكتبة صورك";
+
+/* Scan */
+"Scan" = "Scan";
+"Scans" = "Scans";
+"Scan document" = "Scan document";
+"Saving" = "Saving";
+"File format" = "File format";
+"Name" = "الاسم";
+"Save as" = "Save as";
+"Options" = "خيارات";
+"Scan additional" = "Scan additional";
+"Create one file per page" = "Create one file per page";
+
+/* Sharing */
+"Searching Shares…" = "جارِ البحث في المشاركات…";
+"Recipient" = "مستلم";
+"Recipients" = "مستلمون";
+"Public Link" = "ارتباط عام";
+"Public Links" = "ارتباطات عامة";
+"Shared by %@" = "مشاركة بواسطة %@";
+"Invite Recipient" = "إرسال دعوة إلى مستلم";
+"Recipients" = "مستلمون";
+"Add email or name" = "إضافة بريد إلكتروني أو اسم";
+"Users" = "مستخدمون";
+"Groups" = "مجموعات";
+"Start typing to search users, groups and remote users." = "ابدأ الكتابة للبحث عن المستخدمين والمجموعات والمستخدمين عن بُعد.";
+"(Group)" = "(مجموعة)";
+"Adding User to Share failed" = "تعذر إضافة مستخدم إلى المشاركة";
+"Permissions" = "أذونات";
+"Invited: %@" = "تمت الدعوة: %@";
+"Created: %@" = "تم الإنشاء: %@";
+"Allows the users you share with to re-share" = "يُتيح للمستخدمين الذين تشاركهم إعادة المشاركة";
+"Allows the users you share with to edit your shared files, and to collaborate" = "يُتيح للمستخدمين الذين تشاركهم تعديل الملفات التي تم مشاركتها والتعاون فيها";
+"Allows the users you share with to create new files and add them to the share" = "يُتيح للمستخدمين الذين تشاركهم إنشاء ملفات جديدة وإضافتهم للمشاركة";
+"Allows uploading a new version of a shared file and replacing it" = "يُتيح تحميل إصدار جديد من الملفات التي تم مشاركتها واستبدالها";
+"Allows the users you share with to delete shared files" = "يُتيح للمستخدمين الذين تشاركهم حذف الملفات التي تشاركها";
+"Setting permission failed" = "تعذر إعداد الإذن";
+"Shared with" = "تمت المشاركة مع";
+"Remove Recipient failed" = "تعذر إزالة المستلم";
+"Remove Recipient" = "إزالة المستلم";
+"Create" = "إنشاء";
+"Change" = "تغيير";
+"Recipients can view or download contents." = "يستطيع المستلمون عرض المحتويات أو تنزيلها.";
+"Recipients can view, download, edit, delete and upload contents." = "يستطيع المستلمون عرض المحتويات أو تنزيلها أو تعديلها أو حذفها أو تحميلها.";
+"Receive files from multiple recipients without revealing the contents of the folder." = "استلام ملفات من مستلمين متعددين دون إظهار محتويات المجلد.";
+"Download / View" = "تنزيل / عرض";
+"Download / View / Upload" = "تنزيل / عرض/ تحميل";
+"Upload only (File Drop)" = "تحميل الملف فقط (إفلات الملف)";
+"Creating public link failed" = "تعذر إنشاء ارتباط عام";
+"Create Public Link" = "إنشاء ارتباط عام";
+"Links" = "ارتباطات";
+"Link" = "ارتباط";
+"Setting expiration date failed" = "تعذر إعداد تاريخ انتهاء الصلاحية";
+"Expiration date" = "تاريخ إنتهاء الصلاحية";
+"Copy Public Link" = "نسخ ارتباط عام";
+"Delete Public Link" = "حذف ارتباط عام";
+"Deleting Public Link failed" = "تعذر حذف ارتباط عام";
+"Deleting password failed" = "تعذر حذف كلمة المرور";
+"Setting password failed" = "تعذر تعيين كلمة المرور";
+"Type to update password" = "اكتب لتحديث كلمة المرور";
+"Cannot change permission" = "تعذر تغيير الإذن";
+"Before you can set the permission\n%@,\n you must enter a password." = "قبل تعيين الإذن\n%@,\n يجب إدخال كلمة المرور.";
+"Password Protected" = "كلمة المرور محمية";
+"Pending Federated Invites" = "تعليق الدعوات الموحدة";
+"Pending Invites" = "تعليق الدعوات";
+"Shared with you" = "تمت المشاركة معك";
+"Shared with others" = "تمت المشاركة مع الآخرين";
+"Shares" = "المشاركات";
+"Copy Private Link" = "نسخ ارتباط خاص";
+"Only recipients can use this link. Use it as a permanent link to point to this resource" = "يستطيع المستلمون فقط استخدام هذا الارتباط. استخدم الارتباط كارتباط دائم للإشارة إلى هذا المصدر";
+"Accept Share failed" = "تعذر الموافقة على المشاركة";
+"Decline Share failed" = "تعذر رفض المشاركة";
+"Accept" = "قبول";
+"Decline" = "رفض";
+"Declined" = "رفض";
+"Decline Share" = "رفض المشاركة";
+"Unshare" = "إلغاء المشاركة";
+"Unshare failed" = "تعذر إلغاء المشاركة";
+"Are you sure you want to unshare these items?" = "هل تريد بالتأكيد إلغاء مشاركة هذه العناصر؟";
+"Are you sure you want to unshare this item?" = "هل تريد بالتأكيد إلغاء مشاركة هذا العنصر؟";
+"Share" = "مشاركة";
+"Read" = "قراءة";
+"Can Share" = "يمكن المشاركة";
+"Can Edit" = "يمكن التعديل";
+"Can Edit and Change" = "يمكن التعديل والتغيير";
+"Can Create" = "يمكن الإنشاء";
+"Can Change" = "يمكن التغيير";
+"Can Delete" = "يمكن الحذف";
+"Accept Invite %@" = "قبول الدعوة %@";
+"Decline Invite %@" = "رفض الدعوة %@";
+"Decline cannot be undone." = "تعذر التراجع عن الرفض.";
+"Sharing" = "مشاركة";
+"You" = "أنت";
+"Share this file" = "مشاركة هذا الملف";
+"Share this folder" = "مشاركة هذا المجلد";
+"shared" = "مُشارك";
+"Owner" = "المالك";
+"Private Link" = "ارتباط خاص";
+
+/* Quick Access view */
+"Quick Access" = "وصول سريع";
+"Collection" = "مجموعة";
+"Recents" = "الأخيرة";
+"Favorites"= "المفضلة";
+"Images" = "صور";
+"PDF Documents" = "مستندات PDF";
+
+/* Media files settings */
+"Media Files" = "ملفات الوسائط";
+"Streaming Enabled" = "تم تمكين البث";
+
+/* Photo upload settings */
+"Media Upload" = "تحميل الوسائط";
+"Convert HEIC to JPEG" = "تحويل HEIC إلى JPEG";
+"Convert videos to MP4" = "تحويل الفيديوهات إلى امتداد MP4";
+"Auto Upload Photos" = "Instant Upload Photos";
+"Auto Upload Videos" = "Instant Upload Videos";
+"Account" = "حساب";
+"Accounts" = "حسابات";
+"Select account" = "Select account";
+"Upload Path" = "Upload Path";
+"Select Upload Path" = "Select Upload Path";
+"Auto upload of media was disabled since configured account / folder was not found" = "Auto upload of media was disabled since configured account / folder was not found";
+
+/* Progress summarizer */
+"Creating %ld folders…" = "إنشاء مجلدات %ld…";
+"Moving %ld items…" = "نقل عناصر %ld…";
+"Copying %ld items…" = "نسخ عناصر %ld…";
+"Deleting %ld items…" = "حذف عناصر %ld…";
+"Uploading %ld files…" = "تحميل ملفات %ld…";
+"Downloading %ld files…" = "تنزيل ملفات %ld…";
+"Updating %ld items…" = "تحميل عناصر %ld…";
+
+/* Offline storage management */
+"Free on %@" = "مجاني في %@";
+"unknown" = "غير معروف";
+"Offline files use" = "استخدام الملفات دون اتصال";
+"Compacting of '%@' failed" = "تعذر ضغط '%@'";
+"Include available offline files" = "تضمين ملفات متوفرة دون اتصال";
+"Delete Local Copies" = "حذف نسخ محلية";
+"Manage" = "إدارة";
+"Storage" = "وحدة التخزين";
+"Compacting" = "Compacting";
+
+"Really include available offline files?" = "هل تريد تضمين ملفات متوفرة دون اتصال؟";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "ستصبح الملفات والمجلدات المُشار إليها بـ(متوفرة دون اتصال) غير متوفرة. سيتم إعادة تحميلها في المرة القادمة التي تسجل فيها الدخول إلى حسابك (الاتصال مطلوب).";
+
+/* Available offline */
+"Root folder" = "المجلد الجذر";
+"at" = "في";
+"(no match)" = "(لا يوجد تطابق)";
+
+"Make available offline" = "اجعل العنصر متوفر دون اتصال";
+"Make unavailable offline" = "اجعل العنصر غير متوفر دون اتصال";
+
+"Available Offline" = "متوفر دون اتصال";
+"No items have been selected for offline availability." = "لم يتم اختيار أي عنصر للتوفر دون اتصال.";
+
+"Overview" = "نظرة عامة";
+"All Files" = "جميع الملفات";
+
+/* Import File */
+"Save File" = "حفظ الملفات";
+"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "اختر حسابًا ومجلدًا لاستيراد الملف إليه.\n\nيمكن استيراد ملف واحد في المرة الواحدة.";
+
+/* Key Commands */
+"Select Next" = "Select Next";
+"Select Previous" = "Select Previous";
+"Open Selected" = "Open Selected";
+"Change Sort Order" = "Change Sort Order";
+"Search" = "بحث";
+"Back" = "رجوع إلى الخلف";
+"Save" = "حفظ";
+"Sort by %@" = "ترتيب حسب %@";
+"Tab %@" = "Tab %@";
+"Select Last Item on Page" = "Select Last Item on Page";
+"Scroll to Top" = "Scroll to Top";
+"Scroll to Bottom" = "Scroll to Bottom";
+"Copy to Pasteboard" = "Copy to Pasteboard";
+"Import from Pasteboard" = "Import from Pasteboard";
+"Next" = "التالي";
+"Previous" = "السابق";
+"Favorite" = "المفضلة";
+"Cut" = "Cut";

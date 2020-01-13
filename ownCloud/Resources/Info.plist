@@ -36,7 +36,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(APP_SHORT_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>144</string>
+	<string>149</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
@@ -66,6 +66,15 @@
 	<array>
 		<string>com.owncloud.ios-app.openAccount</string>
 		<string>com.owncloud.ios-app.openItem</string>
+		<string>CreateFolderIntent</string>
+		<string>DeletePathItemIntent</string>
+		<string>GetAccountIntent</string>
+		<string>GetAccountsIntent</string>
+		<string>GetDirectoryListingIntent</string>
+		<string>GetFileInfoIntent</string>
+		<string>GetFileIntent</string>
+		<string>PathExistsIntent</string>
+		<string>SaveFileIntent</string>
 	</array>
 	<key>OCAppGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>

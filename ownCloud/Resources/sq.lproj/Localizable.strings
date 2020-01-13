@@ -124,6 +124,7 @@
 "Sign in" = "Hyni";
 "Ignore" = "Shpërfille";
 "Continue offline" = "Vazhdo pa qenë në linjë";
+"Media upload in the previous session was incomplete since the application was terminated" = "Ngarkimi media në sesionin e mëparshëm qe i paplotë, ngaqë aplikacioni u mbyll";
 
 /* Server List*/
 "Cancel" = "Anuloje";
@@ -148,7 +149,6 @@
 "Passcode Lock" = "Kyçje Me Kodkalim";
 "Face ID" = "Face ID";
 "Touch ID" = "Touch ID";
-"Instant Uploads" = "Ngarkime të Menjëhershme";
 "Videos" = "Video";
 "Photos" = "Foto";
 "Background uploads" = "Ngarkime në prapaskenë";
@@ -184,6 +184,8 @@
 "Dark" = "E errët";
 "Light" = "E çelët";
 "Classic" = "Klasike";
+"System" = "Sistem";
+"System Appeareance" = "Dukje Sistemi";
 
 /* Log settings */
 "Log Files" = "Kartela Regjistër";
@@ -228,6 +230,8 @@
 "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Kohë e matur që prej ngarkimit, përpunimit, shkarkimit apo parjes së kartelës përkatëse përmes kësaj pajisjeje. Nuk prek kartelat e shkarkuara përmes veçorisë E passhme Jo Në Linjë. Kopjet vendore mund të fshihen përpara se të ketë kaluar periudha kohore e dhënë, p.sh., ngaqë në shërbyes pati një version më të ri të kartelës - ose përmes fshirjes dorazi të kopjeve <em>offline</em>. Kopjet vendore mundet gjithashtu të mos fshihen pasi të ketë kaluar periudha kohore e dhënë, p.sh., nëse mbi të po kryhet një veprim, kartela është ende në përdorim - ose llogaria që përmban kartelën s’është përdorur në aplikacion.";
 "never" = "kurrë";
 "after %@" = "pas %@";
+"Decrease Slider Value" = "Zvogëloni Vlerë Rrëshqitësi";
+"Increase Slider Value" = "Zmadhoni Vlerë Rrëshqitësi";
 
 /* Display settings */
 "Display settings" = "Rregullime shfaqjeje";
@@ -270,6 +274,9 @@
 " couldn't download file(s)" = "s’u shkarkua dot kartelë(a)";
 "Actions" = "Veprime";
 "copy" = "kopjoje";
+"Close Window" = "Mbylle Dritaren";
+"Open in a new Window" = "Hape në Dritare të re";
+"Open in Window" = "Hape në Dritare";
 
 "Preparing…" = "Po përgatitet…";
 
@@ -302,6 +309,18 @@
 "All Photos" = "Krejt Fotot";
 "Albums" = "Albume";
 "Importing from photo library" = "Importim nga fototekë";
+
+/* Scan */
+"Scan" = "Skanim";
+"Scans" = "Skanime";
+"Scan document" = "Skanoni dokument";
+"Saving" = "Po ruhet";
+"File format" = "Format kartelash";
+"Name" = "Emër";
+"Save as" = "Ruaje si";
+"Options" = "Mundësi";
+"Scan additional" = "Skanim shtesë";
+"Create one file per page" = "Krijo një kartelë për faqe";
 
 /* Sharing */
 "Searching Shares…" = "Po kërkohet në Ndarje…";
@@ -405,6 +424,14 @@
 "Media Upload" = "Ngarkim Media";
 "Convert HEIC to JPEG" = "Shndërroje HEIC në JPEG";
 "Convert videos to MP4" = "Shndërroji videot në MP4";
+"Auto Upload Photos" = "Ngarkoni Foto Në Çast";
+"Auto Upload Videos" = "Ngarkoni Video Në Çast";
+"Account" = "Llogari";
+"Accounts" = "Llogari";
+"Select account" = "Përzgjidhni llogari";
+"Upload Path" = "Shteg Ngarkimi";
+"Select Upload Path" = "Përzgjidhni Shteg Ngarkimi";
+"Auto upload of media was disabled since configured account / folder was not found" = "Ngarkimi i menjëhershëm i medias qe çaktivizuar, ngaqë s’u gjet llogari / dosje e formësuar ";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Po krijohen %ld dosje…";
@@ -424,6 +451,7 @@
 "Delete Local Copies" = "Fshi Kopje Vendore";
 "Manage" = "Administroni";
 "Storage" = "Depozitë";
+"Compacting" = "Po ngjeshet";
 
 "Really include available offline files?" = "Të përfshihen vërtet kartela të passhme jashtë linje?";
 "Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Kartelat dhe dosjet me shenjë për Të Passhme Jashtë Linje s’do të mund të përdoren dot. Ato do të rishkarkohen herës pasuese që bëni hyrjen në llogarinë tuaj (lypset lidhje në internet).";
@@ -445,3 +473,23 @@
 /* Import File */
 "Save File" = "Ruaje Kartelën";
 "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Zgjidhni një llogari dhe dosje ku të importohet kartela.\n\nMund të importohet vetëm një kartelë në herë.";
+
+/* Key Commands */
+"Select Next" = "Përzgjidhni Pasuesen";
+"Select Previous" = "Përzgjidhni të Mëparshmen";
+"Open Selected" = "Hap të Përzgjedhurën";
+"Change Sort Order" = "Ndrysho Rend Renditjeje";
+"Search" = "Kërko";
+"Back" = "Mbrapsht";
+"Save" = "Ruaje";
+"Sort by %@" = "Renditi sipas %@";
+"Tab %@" = "Skeda %@";
+"Select Last Item on Page" = "Përzgjidhni Elementin e Fundit në Faqe";
+"Scroll to Top" = "Rrëshqitni drejt Kreut";
+"Scroll to Bottom" = "Rrëshqitni drejt Fundit";
+"Copy to Pasteboard" = "Kopjoje në të Papastër";
+"Import from Pasteboard" = "Importo prej të Papastre";
+"Next" = "Pasuesja";
+"Previous" = "E mëparshmja";
+"Favorite" = "Vëre Si të Parapëlqyer";
+"Cut" = "Prije";
