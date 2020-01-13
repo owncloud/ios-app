@@ -27,12 +27,12 @@ protocol ClientItemCellDelegate: class {
 
 class ClientItemCell: ThemeTableViewCell {
 	private let horizontalMargin : CGFloat = 15
-	private let verticalLabelMargin : CGFloat = 15
-	private let verticalIconMargin : CGFloat = 15
+	private let verticalLabelMargin : CGFloat = 10
+	private let verticalIconMargin : CGFloat = 10
 	private let horizontalSmallMargin : CGFloat = 10
 	private let spacing : CGFloat = 15
 	private let smallSpacing : CGFloat = 2
-	private let iconViewWidth : CGFloat = 50
+	private let iconViewWidth : CGFloat = 40
 	private let detailIconViewHeight : CGFloat = 15
 	private let moreButtonWidth : CGFloat = 60
 	private let verticalLabelMarginFromCenter : CGFloat = 2
@@ -123,7 +123,7 @@ class ClientItemCell: ThemeTableViewCell {
 		publicLinkStatusIconView.contentMode = .center
 		publicLinkStatusIconView.contentMode = .scaleAspectFit
 
-		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+		titleLabel.font = UIFont.preferredFont(forTextStyle: .callout)
 		titleLabel.adjustsFontForContentSizeCategory = true
 		titleLabel.lineBreakMode = .byTruncatingMiddle
 
