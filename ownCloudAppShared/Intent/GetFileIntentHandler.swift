@@ -34,7 +34,7 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 
 		// if enabled, but not a valid license
 		//completion(GetAccountIntentResponse(code: .unlicensed, userActivity: nil))
-		
+
 		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(GetFileIntentResponse(code: .authenticationRequired, userActivity: nil))
 			return

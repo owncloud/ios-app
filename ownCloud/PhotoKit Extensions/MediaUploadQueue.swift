@@ -22,7 +22,6 @@ import Photos
 import MobileCoreServices
 
 class MediaUploadQueue : OCActivitySource {
-
 	private var uploadActivity: MediaUploadActivity?
 
 	static var shared = MediaUploadQueue()
@@ -33,11 +32,11 @@ class MediaUploadQueue : OCActivitySource {
 		return self.uploadActivity!
 	}
 
-	var activityIdentifier: String {
+	var activityIdentifier: OCActivityIdentifier {
 		if let activity = self.uploadActivity {
 			return activity.identifier
 		} else {
-			return ""
+			return OCActivityIdentifier(rawValue: "")
 		}
 	}
 

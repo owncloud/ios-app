@@ -109,7 +109,7 @@ class DisplayHostViewController: UIPageViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(handleMediaPlaybackFinished(notification:)), name: MediaDisplayViewController.MediaPlaybackFinishedNotification, object: nil)
 
         NotificationCenter.default.addObserver(self, selector: #selector(handlePlayNextMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackNextTrackNotification, object: nil)
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(handlePlayPreviousMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
 	}
 
@@ -347,7 +347,7 @@ extension DisplayHostViewController {
             }
         }
     }
-    
+
     @objc private func handlePlayPreviousMedia(notification:Notification) {
         if let mediaController = self.viewControllers?.first as? MediaDisplayViewController {
             if let vc = vendNewViewController(from: mediaController, .before) {

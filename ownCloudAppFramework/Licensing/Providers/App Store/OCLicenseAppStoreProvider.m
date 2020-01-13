@@ -398,7 +398,10 @@
 				offer.subscriptionTermDuration = storeProduct.subscriptionPeriod.licenseDuration;
 			}
 
-			offer.groupIdentifier = storeProduct.subscriptionGroupIdentifier;
+			if (@available(iOS 12, *))
+			{
+				offer.groupIdentifier = storeProduct.subscriptionGroupIdentifier;
+			}
 
 			// Compute state
 			[self _updateStateForOffer:offer withAppStoreProductIdentifier:appStoreProductIdentifier];
