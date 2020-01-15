@@ -183,8 +183,6 @@ class StaticLoginViewController: UIViewController, Themeable {
 			backgroundImageView?.image = UIImage(named: organizationBackgroundName)
 			backgroundImageView?.contentMode = .scaleAspectFill
 		}
-
-		contentContainerView?.backgroundColor = UIColor(white: 0.0, alpha: 0.5)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {

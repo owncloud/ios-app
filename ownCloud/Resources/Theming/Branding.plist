@@ -22,8 +22,10 @@
 			<string>DeG Files</string>
 			<key>name</key>
 			<string>DeG Files</string>
+			<key>welcome</key>
+			<string>Welcome to DeG Files</string>
 			<key>prompt</key>
-			<string>Enter your DeG Files username and password:</string>
+			<string>Enter your username and password:</string>
 			<key>bookmarkName</key>
 			<string>DeG Files</string>
 			<key>url</key>
