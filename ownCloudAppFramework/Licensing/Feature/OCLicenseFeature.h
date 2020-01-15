@@ -32,11 +32,15 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Metadata
 @property(strong,readonly) OCLicenseFeatureIdentifier identifier; //!< Identifier uniquely identifying a feature
 
+@property(nullable,strong,readonly) NSString *localizedName; //!< Localized name of the feature
+@property(nullable,strong,readonly) NSString *localizedDescription; //!< Localized description of the feature
+
 #pragma mark - Ownership
 @property(strong) NSHashTable<OCLicenseProduct *> *containedInProducts; //!< Products in which this feature is contained
 @property(nullable,strong,nonatomic) NSArray<OCLicenseEntitlement *> *entitlements; //!< Array of entitlements relevant to this feature
 
 + (instancetype)featureWithIdentifier:(OCLicenseFeatureIdentifier)identifier;
++ (instancetype)featureWithIdentifier:(OCLicenseFeatureIdentifier)identifier name:(nullable NSString *)localizedName description:(nullable NSString *)localizedDescription;
 
 @end
 

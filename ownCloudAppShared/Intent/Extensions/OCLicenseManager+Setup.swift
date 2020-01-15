@@ -41,18 +41,24 @@ public extension OCLicenseManager {
 		OCLicenseManagerHasBeenSetup = true
 
 		// Set up features and products
-		register(OCLicenseFeature(identifier: .documentScanner))
-		register(OCLicenseFeature(identifier: .shortcuts))
+		let documentScannerFeature = OCLicenseFeature(identifier: .documentScanner, name: "Document Scanner".localized, description: "Scan documents and photos with your camera.".localized)
+		let shortcutsFeature = OCLicenseFeature(identifier: .shortcuts, name: "Shortcuts Actions".localized, description: "Use ownCloud actions in Shortcuts.".localized)
 
-		register(OCLicenseProduct(identifier: .singleDocumentScanner, name: "Document scanner".localized, description: "Allows scanning documents and photos with the camera of your device", contents: [.documentScanner]))
+		// - Features
+		register(documentScannerFeature)
+		register(shortcutsFeature)
 
-		register(OCLicenseProduct(identifier: .singleShortcuts, name: "Shortcuts".localized, description: "Use ownCloud in your Shortcut workflows", contents: [.shortcuts]))
+		// - Single feature products
+		register(OCLicenseProduct(identifier: .singleDocumentScanner, name: documentScannerFeature.localizedName!, description: documentScannerFeature.localizedDescription, contents: [.documentScanner]))
+		register(OCLicenseProduct(identifier: .singleShortcuts, name: shortcutsFeature.localizedName!, description: shortcutsFeature.localizedDescription, contents: [.shortcuts]))
 
-		register(OCLicenseProduct(identifier: .bundlePro, name: "Pro Features".localized, description: "Pro Features include the document scanner", contents: [.documentScanner, .shortcuts]))
+		// - Subscription
+		register(OCLicenseProduct(identifier: .bundlePro, name: "Pro Features".localized, description: "Unlock all Pro Features.".localized, contents: [.documentScanner, .shortcuts]))
 
 		// Set up App Store License Provider
 		let appStoreLicenseProvider = OCLicenseAppStoreProvider(items: [
-			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentsharing", productIdentifier: .singleDocumentScanner),
+			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentscanner", productIdentifier: .singleDocumentScanner),
+			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.shortcuts", productIdentifier: .singleShortcuts),
 			OCLicenseAppStoreItem.subscription(withAppStoreIdentifier: "bundle.pro", productIdentifier: .bundlePro, trialDuration: OCLicenseDuration(unit: .day, length: 14))
 		])
 

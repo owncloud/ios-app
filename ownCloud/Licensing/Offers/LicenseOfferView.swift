@@ -223,7 +223,7 @@ class LicenseOfferView: UIView, Themeable {
 		titleLabel?.applyThemeCollection(collection)
 		descriptionLabel?.applyThemeCollection(collection)
 		pricingLabel?.applyThemeCollection(collection)
-		purchaseButton?.applyThemeCollection(collection)
+		purchaseButton?.applyThemeCollection(collection, itemStyle: .purchase)
 
 		pricingDivider?.backgroundColor = collection.tableSeparatorColor ?? .gray
 	}

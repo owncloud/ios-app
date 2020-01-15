@@ -23,14 +23,21 @@
 
 + (instancetype)featureWithIdentifier:(OCLicenseFeatureIdentifier)identifier
 {
-	return ([[self alloc] initWithIdentifier:identifier]);
+	return ([[self alloc] initWithIdentifier:identifier name:nil description:nil]);
 }
 
-- (instancetype)initWithIdentifier:(OCLicenseFeatureIdentifier)identifier
++ (instancetype)featureWithIdentifier:(OCLicenseFeatureIdentifier)identifier name:(NSString *)localizedName description:(NSString *)localizedDescription
+{
+	return ([[self alloc] initWithIdentifier:identifier name:localizedName description:localizedDescription]);
+}
+
+- (instancetype)initWithIdentifier:(OCLicenseFeatureIdentifier)identifier name:(NSString *)localizedName description:(NSString *)localizedDescription
 {
 	if ((self = [super init]) != nil)
 	{
 		_identifier = identifier;
+		_localizedName = localizedName;
+		_localizedDescription = localizedDescription;
 	}
 
 	return (self);

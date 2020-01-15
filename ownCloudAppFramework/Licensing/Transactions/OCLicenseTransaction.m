@@ -85,9 +85,9 @@
 
 		if (_name != nil)
 		{
-			[tableRows addObject:@{
+			[tableRows insertObject:@{
 				@"Product" : _name
-			}];
+			} atIndex:0];
 		}
 
 		if (_date != nil)

@@ -42,7 +42,7 @@
 	{
 		OCLicenseEntitlement *entitlement;
 
-		entitlement = [OCLicenseEntitlement entitlementWithIdentifier:nil forProduct:productIdentifier type:OCLicenseTypePurchase valid:YES expiryDate:nil applicability:@"core.connection.serverEdition == \"Enterprise\""];
+		entitlement = [OCLicenseEntitlement entitlementWithIdentifier:nil forProduct:productIdentifier type:OCLicenseTypePurchase valid:YES expiryDate:nil applicability:@"core.connection.serverEdition == \"Enterprise\" || bookmark.userInfo.statusInfo.edition == \"Enterprise\""];
 
 		[entitlements addObject:entitlement];
 	}

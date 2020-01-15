@@ -71,7 +71,11 @@ class LicenseTransactionsViewController: StaticTableViewController {
 		for transactions in transactionsByProvider {
 			var firstTransaction = true
 
-			for transaction in transactions {
+			let sortedTransactions = transactions.sorted { (t1, t2) in
+				return (t1.date?.timeIntervalSinceReferenceDate ?? Double.greatestFiniteMagnitude) > (t2.date?.timeIntervalSinceReferenceDate ?? Double.greatestFiniteMagnitude)
+			}
+
+			for transaction in sortedTransactions {
 				if let tableRows = transaction.displayTableRows, tableRows.count > 0 {
 					let section = StaticTableViewSection(headerTitle: firstTransaction ? transaction.provider?.localizedName : nil)
 

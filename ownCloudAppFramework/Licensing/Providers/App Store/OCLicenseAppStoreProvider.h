@@ -16,7 +16,7 @@
  *
  */
 
-#import <ownCLoudSDK/ownCloudSDK.h>
+#import <ownCloudSDK/ownCloudSDK.h>
 
 #import "OCLicenseProvider.h"
 #import "OCLicenseAppStoreItem.h"

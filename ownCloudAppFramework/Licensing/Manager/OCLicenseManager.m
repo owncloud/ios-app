@@ -201,6 +201,28 @@
 	return ([self _orderedOffersFromOfferSet:offerSet]);
 }
 
+- (nullable NSArray<OCLicenseFeature *> *)featuresWithOffers:(BOOL)withOffers
+{
+	NSMutableArray <OCLicenseFeature *> *features = [NSMutableArray new];
+
+	@synchronized (self)
+	{
+		for (OCLicenseFeature *feature in _features)
+		{
+			if (!withOffers || (withOffers && ([self offersForFeature:feature].count > 0)))
+			{
+				[features addObject:feature];
+			}
+		}
+	}
+
+	[features sortUsingDescriptors:@[
+		[NSSortDescriptor sortDescriptorWithKey:@"localizedName" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]
+	]];
+
+	return (features);
+}
+
 #pragma mark - Product/feature rewiring
 - (void)setNeedsProductFeatureRewiring
 {

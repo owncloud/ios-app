@@ -66,8 +66,8 @@ The `OCLicense` set of classes allow gating and granting access to features thro
 #### Registering features and products
 ```objc
 // Register features
-[OCLicenseManger.sharedLicenseManager registerFeature:[OCLicenseFeature featureWithIdentifier:@"feature.document-scanning" localizedName:@"Document scanning"]];
-[OCLicenseManger.sharedLicenseManager registerFeature:[OCLicenseFeature featureWithIdentifier:@"feature.push-notifications" localizedName:@"Push notification"]];
+[OCLicenseManger.sharedLicenseManager registerFeature:[OCLicenseFeature featureWithIdentifier:@"feature.document-scanning" localizedName:@"Document scanning" localizedDescription:nil]];
+[OCLicenseManger.sharedLicenseManager registerFeature:[OCLicenseFeature featureWithIdentifier:@"feature.push-notifications" localizedName:@"Push notification" localizedDescription:nil]];
 
 // Register products
 [OCLicenseManger.sharedLicenseManager registerProduct:[OCLicenseProduct productWithIdentifier:@"product.document-scanner" localizedName:@"Document scanner" contents:@[

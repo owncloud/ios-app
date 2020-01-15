@@ -35,6 +35,7 @@
 	NSMutableDictionary<OCLicenseAppStoreProductIdentifier, NSNumber *> *_offerStateByAppStoreProductIdentifier;
 
 	OCLicenseAppStoreRestorePurchasesCompletionHandler _restorePurchasesCompletionHandler;
+	BOOL _appStoreReceiptNeedsReload;
 }
 
 @property(nullable,strong) SKProductsRequest *request;
@@ -222,6 +223,18 @@
 	[self recomputeEntitlements];
 }
 
+- (void)setReceiptNeedsReload
+{
+	@synchronized(self)
+	{
+		_appStoreReceiptNeedsReload = YES;
+	}
+
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self reloadReceiptIfNeeded];
+	});
+}
+
 - (void)reloadReceiptIfNeeded
 {
 	OCLicenseAppStoreReceipt *receipt = self.receipt;
@@ -249,7 +262,15 @@
 		}
 	}
 
-	if (needsReload)
+	BOOL reloadRequested = NO;
+
+	@synchronized(self)
+	{
+		reloadRequested = _appStoreReceiptNeedsReload;
+		_appStoreReceiptNeedsReload = NO;
+	}
+
+	if (needsReload || reloadRequested)
 	{
 		OCLogDebug(@"App Store Receipt needs reload");
 
@@ -430,7 +451,10 @@
 	// Derive state from receipt
 	for (OCLicenseAppStoreReceiptInAppPurchase *iap in receipt.inAppPurchases)
 	{
-		if ([iap.productID isEqual:appStoreProductIdentifier])
+		if ([iap.productID isEqual:appStoreProductIdentifier] && (
+			 (iap.subscriptionExpirationDate == nil) || // not a subscription
+			((iap.subscriptionExpirationDate != nil) && (iap.subscriptionExpirationDate.timeIntervalSinceNow > 0)) // subscription valid
+		   ))
 		{
 			offer.state = OCLicenseOfferStateCommitted;
 		}
@@ -581,6 +605,12 @@
 		if (finishTransaction)
 		{
 			[SKPaymentQueue.defaultQueue finishTransaction:originalTransaction];
+		}
+
+		// Reload receipt
+		if ((appStoreProductIdentifier != nil) && finishTransaction && (offerState == OCLicenseOfferStateCommitted))
+		{
+			[self loadReceipt];
 		}
 	}
 

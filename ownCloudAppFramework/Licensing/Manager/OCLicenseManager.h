@@ -46,6 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable NSArray<OCLicenseOffer *> *)offersForFeature:(OCLicenseFeature *)feature; //!< Returns an array of offers for products containing that feature, sorted by price.
 - (nullable NSArray<OCLicenseOffer *> *)offersForProduct:(OCLicenseProduct *)product; //!< Returns an array of offers for the product, sorted by price.
 
+- (nullable NSArray<OCLicenseFeature *> *)featuresWithOffers:(BOOL)withOffers; //!< Returns an array of features for which offers are available
+
 #pragma mark - Provider management
 - (void)addProvider:(OCLicenseProvider *)provider; //!< Add an entitlement and offer provider to the license manager
 - (void)removeProvider:(OCLicenseProvider *)provider; //!< Remove an entitlement and offer provider from the license manager

@@ -37,10 +37,48 @@
 	OCLicenseEnvironment *environment = [self new];
 
 	environment.identifier = bookmark.uuid.UUIDString;
+	environment.bookmarkUUID = bookmark.uuid;
+	environment.bookmark = bookmark;
 	environment.hostname = bookmark.url.host;
 	environment.certificate = bookmark.certificate;
 
 	return (environment);
+}
+
+- (OCBookmarkUUID)bookmarkUUID
+{
+	if (_bookmarkUUID == nil)
+	{
+		if (_bookmark.uuid != nil)
+		{
+			return (_bookmark.uuid);
+		}
+
+		if (_core.bookmark.uuid != nil)
+		{
+			return (_core.bookmark.uuid);
+		}
+	}
+
+	return (_bookmarkUUID);
+}
+
+- (OCBookmark *)bookmark
+{
+	if (_bookmark == nil)
+	{
+		if (_core.bookmark != nil)
+		{
+			return (_core.bookmark);
+		}
+
+		if (_bookmarkUUID != nil)
+		{
+			return ([OCBookmarkManager.sharedBookmarkManager bookmarkForUUID:_bookmarkUUID]);
+		}
+	}
+
+	return (_bookmark);
 }
 
 @end
