@@ -27,11 +27,13 @@ protocol ClientItemCellDelegate: class {
 
 class ClientItemCell: ThemeTableViewCell {
 	private let horizontalMargin : CGFloat = 15
-	private let verticalLabelMargin : CGFloat = 15
-	private let verticalIconMargin : CGFloat = 15
+	private let verticalLabelMargin : CGFloat = 10
+	private let verticalIconMargin : CGFloat = 10
 	private let horizontalSmallMargin : CGFloat = 10
 	private let spacing : CGFloat = 15
-	private let iconViewWidth : CGFloat = 60
+	private let smallSpacing : CGFloat = 2
+	private let iconViewWidth : CGFloat = 40
+	private let detailIconViewHeight : CGFloat = 15
 	private let moreButtonWidth : CGFloat = 60
 	private let verticalLabelMarginFromCenter : CGFloat = 2
 	private let iconSize : CGSize = CGSize(width: 40, height: 40)
@@ -50,8 +52,8 @@ class ClientItemCell: ThemeTableViewCell {
 	var progressView : ProgressView?
 
 	var moreButtonWidthConstraint : NSLayoutConstraint?
-	var sharedStatusIconViewRightMarginConstraint : NSLayoutConstraint?
-	var publicLinkStatusIconViewRightMarginConstraint : NSLayoutConstraint?
+	var sharedStatusIconViewLeftMarginConstraint : NSLayoutConstraint?
+	var publicLinkStatusIconViewLeftMarginConstraint : NSLayoutConstraint?
 
 	var activeThumbnailRequestProgress : Progress?
 
@@ -111,14 +113,17 @@ class ClientItemCell: ThemeTableViewCell {
 
 		cloudStatusIconView.translatesAutoresizingMaskIntoConstraints = false
 		cloudStatusIconView.contentMode = .center
+		cloudStatusIconView.contentMode = .scaleAspectFit
 
 		sharedStatusIconView.translatesAutoresizingMaskIntoConstraints = false
 		sharedStatusIconView.contentMode = .center
+		sharedStatusIconView.contentMode = .scaleAspectFit
 
 		publicLinkStatusIconView.translatesAutoresizingMaskIntoConstraints = false
 		publicLinkStatusIconView.contentMode = .center
+		publicLinkStatusIconView.contentMode = .scaleAspectFit
 
-		titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+		titleLabel.font = UIFont.preferredFont(forTextStyle: .callout)
 		titleLabel.adjustsFontForContentSizeCategory = true
 		titleLabel.lineBreakMode = .byTruncatingMiddle
 
@@ -159,40 +164,44 @@ class ClientItemCell: ThemeTableViewCell {
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
 		moreButtonWidthConstraint = moreButton.widthAnchor.constraint(equalToConstant: moreButtonWidth)
-		sharedStatusIconViewRightMarginConstraint = sharedStatusIconView.rightAnchor.constraint(equalTo: publicLinkStatusIconView.leftAnchor, constant: 0)
-		publicLinkStatusIconViewRightMarginConstraint = publicLinkStatusIconView.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: 0)
+		sharedStatusIconViewLeftMarginConstraint = sharedStatusIconView.leftAnchor.constraint(equalTo: cloudStatusIconView.rightAnchor, constant: smallSpacing)
+		publicLinkStatusIconViewLeftMarginConstraint = publicLinkStatusIconView.leftAnchor.constraint(equalTo: sharedStatusIconView.rightAnchor, constant: smallSpacing)
 
 		NSLayoutConstraint.activate([
 			iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: horizontalMargin),
 			iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -spacing),
-			iconView.rightAnchor.constraint(equalTo: detailLabel.leftAnchor, constant: -spacing),
+			iconView.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: -spacing),
 			iconView.widthAnchor.constraint(equalToConstant: iconViewWidth),
 			iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
 			iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
 
-			titleLabel.rightAnchor.constraint(equalTo: sharedStatusIconView.leftAnchor, constant: -horizontalSmallMargin),
-			sharedStatusIconViewRightMarginConstraint!,
-			publicLinkStatusIconViewRightMarginConstraint!,
-			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: -horizontalMargin),
+			titleLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: 0),
+			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: 0),
+
+			cloudStatusIconView.leftAnchor.constraint(lessThanOrEqualTo: iconView.rightAnchor, constant: spacing),
+			sharedStatusIconViewLeftMarginConstraint!,
+			publicLinkStatusIconViewLeftMarginConstraint!,
+			detailLabel.leftAnchor.constraint(equalTo: publicLinkStatusIconView.rightAnchor, constant: smallSpacing),
 
 			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalLabelMargin),
 			titleLabel.bottomAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: -verticalLabelMarginFromCenter),
 			detailLabel.topAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: verticalLabelMarginFromCenter),
 			detailLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalLabelMargin),
 
+			cloudStatusIconView.centerYAnchor.constraint(equalTo: detailLabel.centerYAnchor),
+			sharedStatusIconView.centerYAnchor.constraint(equalTo: detailLabel.centerYAnchor),
+			publicLinkStatusIconView.centerYAnchor.constraint(equalTo: detailLabel.centerYAnchor),
+
+			cloudStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
+			sharedStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
+			publicLinkStatusIconView.heightAnchor.constraint(equalToConstant: detailIconViewHeight),
+
 			moreButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 			moreButton.topAnchor.constraint(equalTo: self.contentView.topAnchor),
 			moreButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 			moreButtonWidthConstraint!,
-			moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
-
-			sharedStatusIconView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-
-			publicLinkStatusIconView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
-
-			cloudStatusIconView.rightAnchor.constraint(lessThanOrEqualTo: moreButton.leftAnchor, constant: -horizontalSmallMargin),
-			cloudStatusIconView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor)
-			])
+			moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor)
+		])
 	}
 
 	// MARK: - Present item
@@ -270,22 +279,26 @@ class ClientItemCell: ThemeTableViewCell {
 
 		if item.isSharedWithUser || item.sharedByUserOrGroup {
 			sharedStatusIconView.image = UIImage(named: "group")
-			sharedStatusIconViewRightMarginConstraint?.constant = -horizontalSmallMargin
+			sharedStatusIconViewLeftMarginConstraint?.constant = smallSpacing
 		} else {
 			sharedStatusIconView.image = nil
-			sharedStatusIconViewRightMarginConstraint?.constant = 0
+			sharedStatusIconViewLeftMarginConstraint?.constant = 0
+			NSLayoutConstraint.activate([
+				sharedStatusIconView.widthAnchor.constraint(equalToConstant: 0)
+			])
 		}
 		if item.sharedByPublicLink {
 			publicLinkStatusIconView.image = UIImage(named: "link")
-			publicLinkStatusIconViewRightMarginConstraint?.constant = -horizontalSmallMargin
+			publicLinkStatusIconViewLeftMarginConstraint?.constant = smallSpacing
 		} else {
 			publicLinkStatusIconView.image = nil
-			publicLinkStatusIconViewRightMarginConstraint?.constant = 0
+			publicLinkStatusIconViewLeftMarginConstraint?.constant = 0
+			NSLayoutConstraint.activate([
+					publicLinkStatusIconView.widthAnchor.constraint(equalToConstant: 0)
+			])
 		}
 
 		self.updateCloudStatusIcon(with: item)
-
-		self.iconView.image = iconImage
 
 		self.updateLabels(with: item)
 
@@ -325,6 +338,9 @@ class ClientItemCell: ThemeTableViewCell {
 			} else {
 				if availableOfflineCoverage == .none {
 					cloudStatusIcon = nil
+					NSLayoutConstraint.activate([
+						cloudStatusIconView.widthAnchor.constraint(equalToConstant: 0)
+					])
 				} else {
 					cloudStatusIcon = UIImage(named: "cloud-available-offline")
 				}
@@ -422,7 +438,7 @@ class ClientItemCell: ThemeTableViewCell {
 		cloudStatusIconView.tintColor = collection.tableRowColors.secondaryLabelColor
 		detailLabel.textColor = collection.tableRowColors.secondaryLabelColor
 
-		moreButton.tintColor = collection.tableRowColors.labelColor
+		moreButton.tintColor = collection.tableRowColors.secondaryLabelColor
 
 		if showingIcon, let item = item {
 			iconView.image = item.icon(fitInSize: iconSize)
