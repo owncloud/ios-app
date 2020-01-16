@@ -457,11 +457,12 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.showModal(viewController: clientRootViewController)
 	}
 
-	func deleteBookmark(_ bookmark: OCBookmark, completionHandler: (() -> Void)? = nil) {
+	func deleteBookmark(_ bookmark: OCBookmark, completionHandler: ((_ error: Error?) -> Void)? = nil) {
 		var presentationStyle: UIAlertController.Style = .actionSheet
 		if UIDevice.current.isIpad() {
 			presentationStyle = .alert
 		}
+		let deleteCompletionHandler = completionHandler
 
 		let alertController = ThemedAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
 													message: "This will also delete all locally stored file copies.".localized,
@@ -496,7 +497,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 						OCBookmarkManager.unlock(bookmark: bookmark)
 
-						completionHandler()
+						deleteCompletionHandler?(error)
 					}
 				})
 			}, for: bookmark)
@@ -550,12 +551,15 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		let deleteRowAction = UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, indexPath) in
 			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-				self.deleteBookmark(bookmark) {
-					tableView.performBatchUpdates({
-						tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-					}, completion: { (_) in
-						self.ignoreServerListChanges = false
-					})
+
+				self.deleteBookmark(bookmark) { (error) in
+					if error == nil {
+						tableView.performBatchUpdates({
+							tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+						}, completion: { (_) in
+							self.ignoreServerListChanges = false
+						})
+					}
 				}
 			}
 		})

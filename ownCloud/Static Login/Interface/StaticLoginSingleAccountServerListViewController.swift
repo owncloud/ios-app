@@ -135,7 +135,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			case 1:
 				showBookmarkInfoUI(bookmark)
 			case 2:
-				deleteBookmark(bookmark) {
+				deleteBookmark(bookmark) { (_) in
 					self.staticLoginViewController?.showFirstScreen()
 				}
 			default:
