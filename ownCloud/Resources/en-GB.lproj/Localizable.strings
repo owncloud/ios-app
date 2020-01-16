@@ -61,6 +61,9 @@
 "Server name" = "Server name";
 "Server Password" = "Server Password";
 "Server Username" = "Server Username";
+"Edit Login" = "Edit Login";
+"Manage Storage" = "Manage Storage";
+"Logout" = "Logout";
 
 /* Client */
 "Browse" = "Browse";

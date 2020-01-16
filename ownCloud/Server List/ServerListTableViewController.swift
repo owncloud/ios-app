@@ -457,6 +457,54 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.showModal(viewController: clientRootViewController)
 	}
 
+	func deleteBookmark(_ bookmark: OCBookmark, completionHandler: (() -> Void)? = nil) {
+		var presentationStyle: UIAlertController.Style = .actionSheet
+		if UIDevice.current.isIpad() {
+			presentationStyle = .alert
+		}
+
+		let alertController = ThemedAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
+													message: "This will also delete all locally stored file copies.".localized,
+													preferredStyle: presentationStyle)
+
+		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
+
+		alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
+			OCBookmarkManager.lock(bookmark: bookmark)
+
+			OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
+				let vault : OCVault = OCVault(bookmark: bookmark)
+
+				vault.erase(completionHandler: { (_, error) in
+					OnMainThread {
+						if error != nil {
+							// Inform user if vault couldn't be erased
+							let alertController = ThemedAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+																		message: error?.localizedDescription,
+																		preferredStyle: .alert)
+
+							alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+							self.showModal(viewController: alertController)
+						} else {
+							// Success! We can now remove the bookmark
+							self.ignoreServerListChanges = true
+
+							OCBookmarkManager.shared.removeBookmark(bookmark)
+
+							self.updateNoServerMessageVisibility()
+						}
+
+						OCBookmarkManager.unlock(bookmark: bookmark)
+
+						completionHandler()
+					}
+				})
+			}, for: bookmark)
+		}))
+
+		self.showModal(viewController: alertController)
+	}
+
 	func showModal(viewController: UIViewController, completion: (() -> Void)? = nil) {
 		self.present(viewController, animated: true, completion: completion)
 	}
@@ -502,57 +550,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		let deleteRowAction = UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, indexPath) in
 			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-				var presentationStyle: UIAlertController.Style = .actionSheet
-				if UIDevice.current.isIpad() {
-					presentationStyle = .alert
+				self.deleteBookmark(bookmark) {
+					tableView.performBatchUpdates({
+						tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+					}, completion: { (_) in
+						self.ignoreServerListChanges = false
+					})
 				}
-
-				let alertController = ThemedAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
-									message: "This will also delete all locally stored file copies.".localized,
-									preferredStyle: presentationStyle)
-
-				alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
-
-				alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
-					OCBookmarkManager.lock(bookmark: bookmark)
-
-					OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
-						let vault : OCVault = OCVault(bookmark: bookmark)
-
-						vault.erase(completionHandler: { (_, error) in
-							OnMainThread {
-								if error != nil {
-									// Inform user if vault couldn't be erased
-									let alertController = ThemedAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
-														message: error?.localizedDescription,
-														preferredStyle: .alert)
-
-									alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
-									self.showModal(viewController: alertController)
-								} else {
-									// Success! We can now remove the bookmark
-									self.ignoreServerListChanges = true
-
-									OCBookmarkManager.shared.removeBookmark(bookmark)
-
-									tableView.performBatchUpdates({
-										tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-									}, completion: { (_) in
-										self.ignoreServerListChanges = false
-									})
-
-									self.updateNoServerMessageVisibility()
-								}
-
-								OCBookmarkManager.unlock(bookmark: bookmark)
-
-								completionHandler()
-							}
-						})
-					}, for: bookmark)
-				}))
-
-				self.showModal(viewController: alertController)
 			}
 		})
 

@@ -138,7 +138,7 @@ class StaticLoginViewController: UIViewController, Themeable {
 				// Logo size
 				headerLogoView!.leftAnchor.constraint(equalTo: headerContainerView!.safeAreaLayoutGuide.leftAnchor),
 				headerLogoView!.rightAnchor.constraint(equalTo: headerContainerView!.safeAreaLayoutGuide.rightAnchor),
-				headerLogoView!.heightAnchor.constraint(equalTo: rootView.heightAnchor, multiplier: 0.25, constant: 0),
+				headerLogoView!.heightAnchor.constraint(equalTo: rootView.heightAnchor, multiplier: 0.15, constant: 0),
 
 				// Logo and label position
 				headerLogoView!.topAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.topAnchor, constant: headerVerticalSpacing),
@@ -264,18 +264,34 @@ class StaticLoginViewController: UIViewController, Themeable {
 		return StaticLoginSetupViewController(loginViewController: self, profile: profile)
 	}
 
-	func buildBookmarkSelector() -> ServerListTableViewController {
-		let serverList = StaticLoginServerListViewController(style: .grouped)
+	func buildBookmarkSelector() -> UIViewController {
+		if OCBookmarkManager.shared.bookmarks.count > 1 {
+			let serverList = StaticLoginServerListViewController(style: .grouped)
 
-		serverList.staticLoginViewController = self
-		serverList.hasToolbar = false
+			serverList.staticLoginViewController = self
+			serverList.hasToolbar = false
 
-		// Push ClientRootViewControllers via PushTransition from this view controller, so it is correctly
- 		// animated (otherwise just the list is moved *inside* this view controller, which is weird) and the
- 		// PushTransition correctly restores the view
- 		serverList.pushFromViewController = self
+			// Push ClientRootViewControllers via PushTransition from this view controller, so it is correctly
+			// animated (otherwise just the list is moved *inside* this view controller, which is weird) and the
+			// PushTransition correctly restores the view
+			serverList.pushFromViewController = self
 
-		return serverList
+			return serverList
+		} else {
+			let serverList = StaticLoginSingleAccountServerListViewController(style: .grouped)
+
+			serverList.staticLoginViewController = self
+			serverList.hasToolbar = false
+
+			// Push ClientRootViewControllers via PushTransition from this view controller, so it is correctly
+			// animated (otherwise just the list is moved *inside* this view controller, which is weird) and the
+			// PushTransition correctly restores the view
+			serverList.pushFromViewController = self
+
+			return serverList
+		}
+
+		return UIViewController()
 	}
 
 	func profile(for staticLoginProfileIdentifier: StaticLoginProfileIdentifier) -> StaticLoginProfile? {

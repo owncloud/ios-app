@@ -44,6 +44,8 @@
 		396BE4CA2289500E00B254A9 /* RoundedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396BE4C92289500E00B254A9 /* RoundedLabel.swift */; };
 		3971B48F221B23FE006FB441 /* ThemeableColoredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */; };
 		397328EF22D606AC006CFAA4 /* ImportFilesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397328EE22D606AC006CFAA4 /* ImportFilesController.swift */; };
+		397E276A23D04D7100117B07 /* StaticLoginSingleAccountServerListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397E276923D04D7100117B07 /* StaticLoginSingleAccountServerListViewController.swift */; };
+		397E276C23D05A5400117B07 /* ServerListToolCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397E276B23D05A5400117B07 /* ServerListToolCell.swift */; };
 		39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */; };
 		398FD4512334CF66004B68A1 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 398FD4502334CF66004B68A1 /* UIView+Extension.swift */; };
 		3995E53123605DE7003525EB /* bookmark-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3995E52B23605DE7003525EB /* bookmark-icon.png */; };
@@ -638,6 +640,8 @@
 		396BE4C92289500E00B254A9 /* RoundedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedLabel.swift; sourceTree = "<group>"; };
 		3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableColoredView.swift; sourceTree = "<group>"; };
 		397328EE22D606AC006CFAA4 /* ImportFilesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportFilesController.swift; sourceTree = "<group>"; };
+		397E276923D04D7100117B07 /* StaticLoginSingleAccountServerListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StaticLoginSingleAccountServerListViewController.swift; sourceTree = "<group>"; };
+		397E276B23D05A5400117B07 /* ServerListToolCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerListToolCell.swift; sourceTree = "<group>"; };
 		3983085923AC0941007A373D /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extension.swift"; sourceTree = "<group>"; };
 		39880BAA233B5236006EA539 /* eu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = eu; path = eu.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1503,6 +1507,7 @@
 		DC44344921AC2C2B00376B16 /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				397E276923D04D7100117B07 /* StaticLoginSingleAccountServerListViewController.swift */,
 				DC44344321AC031600376B16 /* StaticLoginViewController.swift */,
 				DC4434C321AC894700376B16 /* StaticLoginStepViewController.swift */,
 				DC4434C521AC898700376B16 /* StaticLoginSetupViewController.swift */,
@@ -1594,6 +1599,7 @@
 		DC7DBA27207F6DFD00E7337D /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				397E276B23D05A5400117B07 /* ServerListToolCell.swift */,
 				39B394482385334D00892E8D /* ThemeView.swift */,
 				39B39446238532DC00892E8D /* ThemeTableViewCell.swift */,
 				DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */,
@@ -2617,6 +2623,7 @@
 				23D5241521491C670002C566 /* DisplayViewController.swift in Sources */,
 				DCFB74C221AD5D10005796AF /* StaticLoginSetupViewController.swift in Sources */,
 				DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */,
+				397E276A23D04D7100117B07 /* StaticLoginSingleAccountServerListViewController.swift in Sources */,
 				DC297965226E4D1100E01BC7 /* PushTransitionDelegate.swift in Sources */,
 				396BE4C32288A84C00B254A9 /* PendingSharesTableViewController.swift in Sources */,
 				233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */,
@@ -2659,6 +2666,7 @@
 				DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */,
 				23EC77582137F3DD0032D4E6 /* PDFViewerViewController.swift in Sources */,
 				DC29F09422976B9300F77349 /* LibraryFilesTableViewController.swift in Sources */,
+				397E276C23D05A5400117B07 /* ServerListToolCell.swift in Sources */,
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
 				23EC775B2137F3DD0032D4E6 /* OCExtensionType+Extension.swift in Sources */,
 				4C88041822E78D790016CBA9 /* MediaFilesSettings.swift in Sources */,
