@@ -41,6 +41,12 @@ class StaticLoginStepViewController : StaticTableViewController {
 	@objc func popViewController() {
 		self.navigationController?.popViewController(animated: false)
 	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		self.tableView.backgroundColor = .clear
+	}
 }
 
 class FullWidthHeaderView : ThemeView {

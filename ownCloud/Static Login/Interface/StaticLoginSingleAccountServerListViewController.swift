@@ -26,7 +26,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.tableView.isScrollEnabled = false
+		self.tableView.isScrollEnabled = true
 		self.tableView.register(ThemeTableViewCell.self, forCellReuseIdentifier: "login-cell")
 		self.tableView.register(ServerListToolCell.self, forCellReuseIdentifier: "tool-cell")
 	}
@@ -59,6 +59,8 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			bookmarkCell.layer.masksToBounds = true
 			if #available(iOS 13.0, *) {
 				bookmarkCell.imageView?.image = UIImage(systemName: "folder")
+			} else {
+				bookmarkCell.imageView?.image = UIImage(named: "folder")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
 			}
 
 			return bookmarkCell
@@ -79,12 +81,16 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 
 				if #available(iOS 13.0, *) {
 					bookmarkCell.imageView?.image = UIImage(systemName: "square.and.pencil")
+				} else {
+					bookmarkCell.imageView?.image = UIImage(named: "square.and.pencil")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
 				}
 			case 1:
 				bookmarkCell.textLabel?.text = "Manage Storage".localized
 
 				if #available(iOS 13.0, *) {
 					bookmarkCell.imageView?.image = UIImage(systemName: "arrow.3.trianglepath")
+				} else {
+					bookmarkCell.imageView?.image = UIImage(named: "arrow.3.trianglepath")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
 				}
 			case 2:
 				bookmarkCell.textLabel?.text = "Logout".localized
@@ -95,6 +101,8 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 
 				if #available(iOS 13.0, *) {
 					bookmarkCell.imageView?.image = UIImage(systemName: "power")
+				} else {
+					bookmarkCell.imageView?.image = UIImage(named: "power")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
 				}
 			default:
 				bookmarkCell.textLabel?.text = ""
@@ -105,6 +113,8 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			bookmarkCell.layer.masksToBounds = true
 			if #available(iOS 13.0, *) {
 				bookmarkCell.imageView?.image = UIImage(systemName: "gear")
+			} else {
+				bookmarkCell.imageView?.image = UIImage(named: "gear")?.scaledImageFitting(in: CGSize(width: 28, height: 28))
 			}
 		}
 

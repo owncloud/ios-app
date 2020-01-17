@@ -138,12 +138,12 @@ class StaticLoginViewController: UIViewController, Themeable {
 				// Logo size
 				headerLogoView!.leftAnchor.constraint(equalTo: headerContainerView!.safeAreaLayoutGuide.leftAnchor),
 				headerLogoView!.rightAnchor.constraint(equalTo: headerContainerView!.safeAreaLayoutGuide.rightAnchor),
-				headerLogoView!.heightAnchor.constraint(equalTo: rootView.heightAnchor, multiplier: 0.15, constant: 0),
+				headerLogoView!.heightAnchor.constraint(equalTo: rootView.heightAnchor, multiplier: 0.25, constant: 0),
 
 				// Logo and label position
 				headerLogoView!.topAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.topAnchor, constant: headerVerticalSpacing),
 				headerLogoView!.centerXAnchor.constraint(equalTo: rootView.centerXAnchor),
-				headerLogoView!.bottomAnchor.constraint(equalTo: headerContainerView!.bottomAnchor, constant: -20),
+				headerLogoView!.bottomAnchor.constraint(equalTo: headerContainerView!.bottomAnchor, constant: 0),
 
 				// Header position
 				headerContainerView!.topAnchor.constraint(equalTo: rootView.topAnchor),

@@ -464,13 +464,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 		let deleteCompletionHandler = completionHandler
 
-		let alertController = ThemedAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
-													message: "This will also delete all locally stored file copies.".localized,
+		let alertController = ThemedAlertController(title: NSString(format: "Do you really want to disconnect from your '%@' account?".localized as NSString, bookmark.shortName) as String,
+													message: "This will remove all locally stored file copies from your device.".localized,
 													preferredStyle: presentationStyle)
 
 		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
-		alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
+		alertController.addAction(UIAlertAction(title: "Remove".localized, style: .destructive, handler: { (_) in
 			OCBookmarkManager.lock(bookmark: bookmark)
 
 			OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, completionHandler) in
@@ -480,7 +480,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 					OnMainThread {
 						if error != nil {
 							// Inform user if vault couldn't be erased
-							let alertController = ThemedAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+							let alertController = ThemedAlertController(title: NSString(format: "Removing of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
 																		message: error?.localizedDescription,
 																		preferredStyle: .alert)
 
