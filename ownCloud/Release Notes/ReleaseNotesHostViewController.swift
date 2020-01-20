@@ -174,7 +174,11 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 			}
 
 			return false
-		} else if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) != nil, self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) as? String != VendorServices.shared.appVersion {
+		} else if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) != nil {
+			if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) as? String != VendorServices.shared.appVersion {
+				return true
+			}
+		} else if VendorServices.classSetting(forOCClassSettingsKey: .isBetaBuild) != nil {
 			return true
 		}
 
