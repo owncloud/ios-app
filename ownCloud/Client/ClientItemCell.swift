@@ -54,6 +54,7 @@ class ClientItemCell: ThemeTableViewCell {
 	var moreButtonWidthConstraint : NSLayoutConstraint?
 	var sharedStatusIconViewLeftMarginConstraint : NSLayoutConstraint?
 	var publicLinkStatusIconViewLeftMarginConstraint : NSLayoutConstraint?
+	var cloudStatusIconViewLeftMarginConstraint : NSLayoutConstraint?
 
 	var activeThumbnailRequestProgress : Progress?
 
@@ -166,6 +167,7 @@ class ClientItemCell: ThemeTableViewCell {
 		moreButtonWidthConstraint = moreButton.widthAnchor.constraint(equalToConstant: moreButtonWidth)
 		sharedStatusIconViewLeftMarginConstraint = sharedStatusIconView.leftAnchor.constraint(equalTo: cloudStatusIconView.rightAnchor, constant: smallSpacing)
 		publicLinkStatusIconViewLeftMarginConstraint = publicLinkStatusIconView.leftAnchor.constraint(equalTo: sharedStatusIconView.rightAnchor, constant: smallSpacing)
+		cloudStatusIconViewLeftMarginConstraint = cloudStatusIconView.leftAnchor.constraint(equalTo: iconView.rightAnchor, constant: spacing)
 
 		NSLayoutConstraint.activate([
 			iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: horizontalMargin),
@@ -178,7 +180,7 @@ class ClientItemCell: ThemeTableViewCell {
 			titleLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: 0),
 			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: 0),
 
-			cloudStatusIconView.leftAnchor.constraint(lessThanOrEqualTo: iconView.rightAnchor, constant: spacing),
+			cloudStatusIconViewLeftMarginConstraint!,
 			sharedStatusIconViewLeftMarginConstraint!,
 			publicLinkStatusIconViewLeftMarginConstraint!,
 			detailLabel.leftAnchor.constraint(equalTo: publicLinkStatusIconView.rightAnchor, constant: smallSpacing),
@@ -245,19 +247,37 @@ class ClientItemCell: ThemeTableViewCell {
 			activeThumbnailRequestProgress?.cancel()
 		}
 
-		// Set the icon and initiate thumbnail generation
 		iconImage = item.icon(fitInSize: iconSize)
-		self.iconView.image = iconImage
-
-		if let core = core {
-			activeThumbnailRequestProgress = self.iconView.setThumbnailImage(using: core, from: item, with: thumbnailSize, progressHandler: { [weak self] (progress) in
-				if self?.activeThumbnailRequestProgress === progress {
-					self?.activeThumbnailRequestProgress = nil
-				}
-			})
-		}
+		showingIcon = true
 
 		self.accessoryType = .none
+
+		if item.thumbnailAvailability != .none {
+			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
+				_ = thumbnail?.requestImage(for: self.thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
+					if error == nil,
+						image != nil,
+						self.item?.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
+						OnMainThread {
+							self.showingIcon = false
+							self.iconView.image = image
+						}
+					}
+				})
+			}
+
+			if let thumbnail = item.thumbnail {
+				displayThumbnail(thumbnail)
+			} else {
+				activeThumbnailRequestProgress = core?.retrieveThumbnail(for: item, maximumSize: self.thumbnailSize, scale: 0, retrieveHandler: { [weak self] (_, _, _, thumbnail, _, progress) in
+					displayThumbnail(thumbnail)
+
+					if self?.activeThumbnailRequestProgress === progress {
+						self?.activeThumbnailRequestProgress = nil
+					}
+				})
+			}
+		}
 
 		if item.isSharedWithUser || item.sharedByUserOrGroup {
 			sharedStatusIconView.image = UIImage(named: "group")
@@ -331,6 +351,13 @@ class ClientItemCell: ThemeTableViewCell {
 
 		cloudStatusIconView.image = cloudStatusIcon
 		cloudStatusIconView.alpha = cloudStatusIconAlpha
+
+		if cloudStatusIconView.image == nil {
+			cloudStatusIconViewLeftMarginConstraint?.constant = 0
+			NSLayoutConstraint.activate([
+					cloudStatusIconView.widthAnchor.constraint(equalToConstant: 0)
+			])
+		}
 
 		cloudStatusIconView.invalidateIntrinsicContentSize()
 	}
