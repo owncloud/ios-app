@@ -174,11 +174,8 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 			}
 
 			return false
-		} else if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) != nil {
-			if self.classSetting(forOCClassSettingsKey: .lastSeenAppVersion) as? String != VendorServices.shared.appVersion {
-				return true
-			}
 		} else if VendorServices.classSetting(forOCClassSettingsKey: .isBetaBuild) != nil {
+			// Fallback, if app was previously installed, but user defaults key not exists. Key '.isBetaBuild' exists since version 1.0.0
 			return true
 		}
 
@@ -206,6 +203,7 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 }
 
 extension OCClassSettingsKey {
+	 // Available since version 1.3.0
 	static let lastSeenReleaseNotesVersion = OCClassSettingsKey("lastSeenReleaseNotesVersion")
 	static let lastSeenAppVersion = OCClassSettingsKey("lastSeenAppVersion")
 }
