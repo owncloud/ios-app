@@ -59,7 +59,7 @@ class UploadMediaAction: UploadBaseAction {
 
 				guard let path = self.context.items.first?.path else { return }
 
-				guard let bookmark = OCBookmarkManager.lastBookmarkSelectedForConnection else { return }
+				guard let bookmark = self.core?.bookmark else { return }
 
 				MediaUploadQueue.shared.addUploads(assets, for: bookmark, at: path)
 			}

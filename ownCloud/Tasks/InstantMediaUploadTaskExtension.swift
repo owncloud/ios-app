@@ -37,9 +37,15 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 		guard userDefaults.instantUploadPhotos == true || userDefaults.instantUploadVideos == true else { return }
 
-		guard let bookmarkUUID = userDefaults.instantUploadBookmarkUUID else { return }
+		guard let bookmarkUUID = userDefaults.instantUploadBookmarkUUID else {
+            Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant media upload enabled, but bookmark not configured")
+            return
+        }
 
-		guard let path = userDefaults.instantUploadPath else { return }
+		guard let path = userDefaults.instantUploadPath else {
+            Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant media upload enabled, but path not configured")
+            return
+        }
 
 		if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
 			uploadMediaAssets(for: bookmark, at: path)
@@ -50,6 +56,8 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
 		var photoAssets = [PHAsset]()
+        
+        Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Fetching images created after \(String(describing: userDefaults.instantUploadPhotosAfter))")
 
 		// Add photo assets
 		if let uploadPhotosAfter = userDefaults.instantUploadPhotosAfter {
@@ -66,9 +74,12 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		if photoAssets.count > 0 {
 			MediaUploadQueue.shared.addUploads(Array(photoAssets), for: bookmark, at: path)
 			userDefaults.instantUploadPhotosAfter = photoAssets.last?.modificationDate
+            Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Last added photo asset modification date: \(String(describing: userDefaults.instantUploadPhotosAfter))")
 		}
 
 		var videoAssets = [PHAsset]()
+        
+        Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Fetching videos created after \(String(describing: userDefaults.instantUploadVideosAfter))")
 
 		// Add video assets
 		if let uploadVideosAfter = userDefaults.instantUploadVideosAfter {
@@ -85,6 +96,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		if videoAssets.count > 0 {
 			MediaUploadQueue.shared.addUploads(videoAssets, for: bookmark, at: path)
 			userDefaults.instantUploadVideosAfter = videoAssets.last?.modificationDate
+            Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Last added video asset modification date: \(String(describing: userDefaults.instantUploadPhotosAfter))")
 		}
 	}
 
@@ -125,6 +137,8 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 			let sort = NSSortDescriptor(key: "modificationDate", ascending: true)
 			fetchOptions.sortDescriptors = [sort]
+            
+            Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Fetching assets with options \(fetchOptions.debugDescription)")
 
 			return PHAsset.fetchAssets(in: cameraRoll, options: fetchOptions)
 		}
@@ -136,7 +150,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		OnMainThread {
 			let alertController = ThemedAlertController(with: "Auto upload disabled".localized,
 																	message: "Auto upload of media was disabled since configured account / folder was not found".localized)
-			UIApplication.shared.currentWindow?.rootViewController?.present(alertController, animated: true, completion: nil)
+			UIApplication.shared.currentWindow()?.rootViewController?.present(alertController, animated: true, completion: nil)
 		}
 	}
 }

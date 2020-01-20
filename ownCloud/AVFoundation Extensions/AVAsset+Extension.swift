@@ -32,6 +32,8 @@ extension AVAsset {
 				group.leave()
 			})
 
+			group.wait()
+
 			if compatiblePreset {
 				guard let export = AVAssetExportSession(asset: self, presetName: preset) else {
 					return false
@@ -46,9 +48,10 @@ extension AVAsset {
 					exportSuccess = (export.status == .completed)
 					group.leave()
 				}
+
+				group.wait()
 			}
 
-			group.wait()
 			return exportSuccess
 		}
 

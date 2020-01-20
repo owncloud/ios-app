@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>SiriKit</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(APP_SHORT_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>140</string>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionAttributes</key>
+		<dict>
+			<key>IntentsRestrictedWhileLocked</key>
+			<array/>
+			<key>IntentsRestrictedWhileProtectedDataUnavailable</key>
+			<array/>
+			<key>IntentsSupported</key>
+			<array>
+				<string>CreateFolderIntent</string>
+				<string>DeletePathItemIntent</string>
+				<string>GetAccountIntent</string>
+				<string>GetAccountsIntent</string>
+				<string>GetDirectoryListingIntent</string>
+				<string>GetFileInfoIntent</string>
+				<string>GetFileIntent</string>
+				<string>PathExistsIntent</string>
+				<string>SaveFileIntent</string>
+			</array>
+		</dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.intents-service</string>
+		<key>NSExtensionPrincipalClass</key>
+		<string>$(PRODUCT_MODULE_NAME).IntentHandler</string>
+	</dict>
+	<key>OCAppGroupIdentifier</key>
+	<string>group.com.owncloud.ios-app</string>
+	<key>OCAppIdentifierPrefix</key>
+	<string>$(AppIdentifierPrefix)</string>
+	<key>OCHasFileProvider</key>
+	<true/>
+	<key>OCKeychainAccessGroupIdentifier</key>
+	<string>group.com.owncloud.ios-app</string>
+</dict>
+</plist>
