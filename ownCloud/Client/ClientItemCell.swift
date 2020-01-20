@@ -52,9 +52,14 @@ class ClientItemCell: ThemeTableViewCell {
 	var progressView : ProgressView?
 
 	var moreButtonWidthConstraint : NSLayoutConstraint?
-	var sharedStatusIconViewLeftMarginConstraint : NSLayoutConstraint?
-	var publicLinkStatusIconViewLeftMarginConstraint : NSLayoutConstraint?
-	var cloudStatusIconViewLeftMarginConstraint : NSLayoutConstraint?
+
+	var sharedStatusIconViewZeroWidthConstraint : NSLayoutConstraint?
+	var publicLinkStatusIconViewZeroWidthConstraint : NSLayoutConstraint?
+	var cloudStatusIconViewZeroWidthConstraint : NSLayoutConstraint?
+
+	var sharedStatusIconViewRightMarginConstraint : NSLayoutConstraint?
+	var publicLinkStatusIconViewRightMarginConstraint : NSLayoutConstraint?
+	var cloudStatusIconViewRightMarginConstraint : NSLayoutConstraint?
 
 	var activeThumbnailRequestProgress : Progress?
 
@@ -165,14 +170,18 @@ class ClientItemCell: ThemeTableViewCell {
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
 		moreButtonWidthConstraint = moreButton.widthAnchor.constraint(equalToConstant: moreButtonWidth)
-		sharedStatusIconViewLeftMarginConstraint = sharedStatusIconView.leftAnchor.constraint(equalTo: cloudStatusIconView.rightAnchor, constant: smallSpacing)
-		publicLinkStatusIconViewLeftMarginConstraint = publicLinkStatusIconView.leftAnchor.constraint(equalTo: sharedStatusIconView.rightAnchor, constant: smallSpacing)
-		cloudStatusIconViewLeftMarginConstraint = cloudStatusIconView.leftAnchor.constraint(equalTo: iconView.rightAnchor, constant: spacing)
+
+		cloudStatusIconViewZeroWidthConstraint = cloudStatusIconView.widthAnchor.constraint(equalToConstant: 0)
+		sharedStatusIconViewZeroWidthConstraint = sharedStatusIconView.widthAnchor.constraint(equalToConstant: 0)
+		publicLinkStatusIconViewZeroWidthConstraint = publicLinkStatusIconView.widthAnchor.constraint(equalToConstant: 0)
+
+		cloudStatusIconViewRightMarginConstraint = sharedStatusIconView.leftAnchor.constraint(equalTo: cloudStatusIconView.rightAnchor)
+		sharedStatusIconViewRightMarginConstraint = publicLinkStatusIconView.leftAnchor.constraint(equalTo: sharedStatusIconView.rightAnchor)
+		publicLinkStatusIconViewRightMarginConstraint = detailLabel.leftAnchor.constraint(equalTo: publicLinkStatusIconView.rightAnchor)
 
 		NSLayoutConstraint.activate([
 			iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: horizontalMargin),
 			iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -spacing),
-			iconView.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: -spacing),
 			iconView.widthAnchor.constraint(equalToConstant: iconViewWidth),
 			iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
 			iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
@@ -180,10 +189,14 @@ class ClientItemCell: ThemeTableViewCell {
 			titleLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: 0),
 			detailLabel.rightAnchor.constraint(equalTo: moreButton.leftAnchor, constant: 0),
 
-			cloudStatusIconViewLeftMarginConstraint!,
-			sharedStatusIconViewLeftMarginConstraint!,
-			publicLinkStatusIconViewLeftMarginConstraint!,
-			detailLabel.leftAnchor.constraint(equalTo: publicLinkStatusIconView.rightAnchor, constant: smallSpacing),
+			cloudStatusIconViewZeroWidthConstraint!,
+			sharedStatusIconViewZeroWidthConstraint!,
+			publicLinkStatusIconViewZeroWidthConstraint!,
+
+			cloudStatusIconView.leftAnchor.constraint(equalTo: iconView.rightAnchor, constant: spacing),
+			cloudStatusIconViewRightMarginConstraint!,
+			sharedStatusIconViewRightMarginConstraint!,
+			publicLinkStatusIconViewRightMarginConstraint!,
 
 			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalLabelMargin),
 			titleLabel.bottomAnchor.constraint(equalTo: self.contentView.centerYAnchor, constant: -verticalLabelMarginFromCenter),
@@ -263,24 +276,25 @@ class ClientItemCell: ThemeTableViewCell {
 
 		if item.isSharedWithUser || item.sharedByUserOrGroup {
 			sharedStatusIconView.image = UIImage(named: "group")
-			sharedStatusIconViewLeftMarginConstraint?.constant = smallSpacing
+			sharedStatusIconViewRightMarginConstraint?.constant = smallSpacing
+			sharedStatusIconViewZeroWidthConstraint?.isActive = false
 		} else {
 			sharedStatusIconView.image = nil
-			sharedStatusIconViewLeftMarginConstraint?.constant = 0
-			NSLayoutConstraint.activate([
-				sharedStatusIconView.widthAnchor.constraint(equalToConstant: 0)
-			])
+			sharedStatusIconViewRightMarginConstraint?.constant = 0
+			sharedStatusIconViewZeroWidthConstraint?.isActive = true
 		}
+		sharedStatusIconView.invalidateIntrinsicContentSize()
+
 		if item.sharedByPublicLink {
 			publicLinkStatusIconView.image = UIImage(named: "link")
-			publicLinkStatusIconViewLeftMarginConstraint?.constant = smallSpacing
+			publicLinkStatusIconViewRightMarginConstraint?.constant = smallSpacing
+			publicLinkStatusIconViewZeroWidthConstraint?.isActive = false
 		} else {
 			publicLinkStatusIconView.image = nil
-			publicLinkStatusIconViewLeftMarginConstraint?.constant = 0
-			NSLayoutConstraint.activate([
-					publicLinkStatusIconView.widthAnchor.constraint(equalToConstant: 0)
-			])
+			publicLinkStatusIconViewRightMarginConstraint?.constant = 0
+			publicLinkStatusIconViewZeroWidthConstraint?.isActive = true
 		}
+		publicLinkStatusIconView.invalidateIntrinsicContentSize()
 
 		self.updateCloudStatusIcon(with: item)
 
@@ -322,9 +336,6 @@ class ClientItemCell: ThemeTableViewCell {
 			} else {
 				if availableOfflineCoverage == .none {
 					cloudStatusIcon = nil
-					NSLayoutConstraint.activate([
-						cloudStatusIconView.widthAnchor.constraint(equalToConstant: 0)
-					])
 				} else {
 					cloudStatusIcon = UIImage(named: "cloud-available-offline")
 				}
@@ -334,12 +345,8 @@ class ClientItemCell: ThemeTableViewCell {
 		cloudStatusIconView.image = cloudStatusIcon
 		cloudStatusIconView.alpha = cloudStatusIconAlpha
 
-		if cloudStatusIconView.image == nil {
-			cloudStatusIconViewLeftMarginConstraint?.constant = 0
-			NSLayoutConstraint.activate([
-					cloudStatusIconView.widthAnchor.constraint(equalToConstant: 0)
-			])
-		}
+		cloudStatusIconViewZeroWidthConstraint?.isActive = (cloudStatusIcon == nil)
+		cloudStatusIconViewRightMarginConstraint?.constant = (cloudStatusIcon == nil) ? 0 : smallSpacing
 
 		cloudStatusIconView.invalidateIntrinsicContentSize()
 	}
