@@ -309,31 +309,35 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 	func createFileListStack(for itemLocalID: String) {
 		if let core = core {
-		// retrieve the item for the item id
-		core.retrieveItemFromDatabase(forLocalID: itemLocalID, completionHandler: { (error, _, item) in
-			if error == nil, let item = item {
+			// retrieve the item for the item id
+			core.retrieveItemFromDatabase(forLocalID: itemLocalID, completionHandler: { (error, _, item) in
 				OnMainThread {
-					// get all parent items for the item and rebuild all underlaying ClientQueryViewController for this items in the navigation stack
-					let parentItems = core.retrieveParentItems(for: item)
 					let query = OCQuery(forPath: "/")
 					let queryViewController = ClientQueryViewController(core: core, query: query)
 
-					var subController = queryViewController
-					var newViewControllersStack : [UIViewController] = []
-					for item in parentItems {
-						if let controller = self.open(item: item, in: subController) {
-							subController = controller
-							newViewControllersStack.append(controller)
+					if error == nil, let item = item {
+						// get all parent items for the item and rebuild all underlaying ClientQueryViewController for this items in the navigation stack
+						let parentItems = core.retrieveParentItems(for: item)
+
+						var subController = queryViewController
+						var newViewControllersStack : [UIViewController] = []
+						for item in parentItems {
+							if let controller = self.open(item: item, in: subController) {
+								subController = controller
+								newViewControllersStack.append(controller)
+							}
 						}
+
+						newViewControllersStack.insert(self.emptyViewController, at: 0)
+						self.filesNavigationController?.setViewControllers(newViewControllersStack, animated: false)
+
+						// open the controller for the item
+						subController.open(item: item, animated: false)
+					} else {
+						// Fallback, if item no longer exists show root folder
+						self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
 					}
-
-					newViewControllersStack.insert(self.emptyViewController, at: 0)
-					self.filesNavigationController?.setViewControllers(newViewControllersStack, animated: false)
-
-					// open the controller for the item
-					subController.open(item: item, animated: false)
 				}
-			}
 		})
 		}
 	}
