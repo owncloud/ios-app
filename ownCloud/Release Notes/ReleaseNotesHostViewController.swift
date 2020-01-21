@@ -179,8 +179,8 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 				   return true
 			}
 			return false
-		} else if VendorServices.classSetting(forOCClassSettingsKey: .isBetaBuild) != nil {
-			// Fallback, if app was previously installed, but user defaults key not exists. Key '.isBetaBuild' exists since version 1.0.0
+		} else if OCBookmarkManager.shared.bookmarks.count > 0 {
+			// Fallback, if app was previously installed, because we cannot check for an user defaults key, we have to check if accounts was previously configured
 			return true
 		}
 
