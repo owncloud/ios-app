@@ -492,7 +492,7 @@
 /* Release Notes */
 "Proceed" = "Proceed";
 "New in ownCloud" = "New in ownCloud";
-"Thank you for using ownCloud.\nIf you like our App, please leave an AppStore review.\n❤️" = "Thank you for using ownCloud.\nIf you like our App, please leave an AppStore review.\n❤️";
+"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️" = "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️";
 
 /* Key Commands */
 "Select Next" = "Select Next";

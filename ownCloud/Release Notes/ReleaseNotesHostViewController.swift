@@ -92,7 +92,8 @@ class ReleaseNotesHostViewController: UIViewController {
 			proceedButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
 			bottomView.addSubview(proceedButton)
 
-			footerButton.setTitle("Thank you for using ownCloud.\nIf you like our App, please leave an AppStore review.\n❤️".localized, for: .normal)
+			let appName = OCAppIdentity.shared.appName ?? "ownCloud"
+			footerButton.setTitle(String(format:"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️".localized, appName), for: .normal)
 			footerButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.footnote)
 			footerButton.titleLabel?.adjustsFontForContentSizeCategory = true
 			footerButton.titleLabel?.numberOfLines = 0
