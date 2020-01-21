@@ -1,6 +1,6 @@
 # [ownCloud](https://owncloud.org) iOS App
 
-## 📱 The new iOS app for your ownCloud!
+## 📱 The new iOS App for your ownCloud!
 
 ####  🌎 https://ownCloud.com
 
@@ -17,6 +17,7 @@
 * 🕹 Multi-select with drag and drop features for efficient file management
 * 👑 Using iPadOS features for pro users
 * ✅ Certificate management and password manager integration for boosting security
+* 🏳️‍🌈 Multiple UI themes with dark and light colors
 * 🚢 Free on the AppStore
 * 🇪🇺 Localised in many languages
 * 📱iOS 11+
@@ -30,10 +31,10 @@ Our iOS app is free for downloading available on the AppStore
 
 ## 🛠 Build our App
 
-To build our app, please read our [SETUP.md](https://github.com/owncloud/ios-app/blob/master/SETUP.md)
+To build our App, please read our [SETUP.md](https://github.com/owncloud/ios-app/blob/master/SETUP.md)
 
 ```
-$ read [SETUP.md]()
+$ read SETUP.md
 ```
 
 ## 🇪🇺 Translate
