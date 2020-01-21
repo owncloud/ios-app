@@ -429,6 +429,9 @@
 "Favorites"= "Favorites";
 "Images" = "Images";
 "PDF Documents" = "PDF Documents";
+"Text" = "Text";
+"Documents" = "Documents";
+"Audio" = "Audio";
 
 /* Media files settings */
 "Media Files" = "Media Files";
