@@ -145,6 +145,12 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		}
 	}
 
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+
+		sortBar?.showSelectButton = false
+	}
+
 	private func allowNavigationFor(item: OCItem?) -> Bool {
 		guard let item = item else { return false }
 
