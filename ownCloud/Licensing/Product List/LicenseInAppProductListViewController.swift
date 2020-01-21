@@ -30,8 +30,6 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 			UIBarButtonItem(title: "Restore purchases".localized, style: .plain, target: self, action: #selector(restorePurchases)),
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 		]
-
-		generateContent()
 	}
 
 	required init?(coder: NSCoder) {
@@ -43,6 +41,8 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 
 		self.navigationController?.toolbar.isTranslucent = false
 		self.navigationController?.isToolbarHidden = false
+
+		provideContent()
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
@@ -51,17 +51,35 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 		self.navigationController?.isToolbarHidden = true
 	}
 
-	func generateContent() {
-		let section = StaticTableViewSection(headerTitle: "Pro Features".localized)
-		let environment = OCLicenseEnvironment()
+	func provideContent() {
+		OCLicenseManager.appStoreProvider?.refreshProductsIfNeeded(completionHandler: { [weak self] (error) in
+			OnMainThread {
+				if error != nil {
+					let alertController = ThemedAlertController(with: "Error loading product info from App Store".localized, message: error!.localizedDescription, action: { [weak self] in
+						self?.navigationController?.popViewController(animated: true)
+					})
 
-		if let features = OCLicenseManager.shared.features(withOffers: true) {
-			for feature in features {
-				section.add(row: StaticTableViewRow(customView: LicenseInAppPurchaseFeatureView(with: feature, in: environment, baseViewController: self), inset: UIEdgeInsets(top: 15, left: 18, bottom: 15, right: 18)))
+					self?.present(alertController, animated: true)
+				} else {
+					self?.generateContent()
+				}
 			}
-		}
+		})
+	}
 
-		self.addSection(section)
+	func generateContent() {
+		if self.sections.count == 0 {
+			let section = StaticTableViewSection(headerTitle: "Pro Features".localized)
+			let environment = OCLicenseEnvironment()
+
+			if let features = OCLicenseManager.shared.features(withOffers: true) {
+				for feature in features {
+					section.add(row: StaticTableViewRow(customView: LicenseInAppPurchaseFeatureView(with: feature, in: environment, baseViewController: self), inset: UIEdgeInsets(top: 15, left: 18, bottom: 15, right: 18)))
+				}
+			}
+
+			self.addSection(section)
+		}
 	}
 
 	@objc func restorePurchases() {

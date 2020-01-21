@@ -67,26 +67,41 @@ The `OCLicense` set of classes allow gating and granting access to features thro
 ```objc
 // Register features
 [OCLicenseManger.sharedLicenseManager registerFeature:[OCLicenseFeature featureWithIdentifier:@"feature.document-scanning" localizedName:@"Document scanning" localizedDescription:nil]];
-[OCLicenseManger.sharedLicenseManager registerFeature:[OCLicenseFeature featureWithIdentifier:@"feature.push-notifications" localizedName:@"Push notification" localizedDescription:nil]];
+[OCLicenseManger.sharedLicenseManager registerFeature:[OCLicenseFeature featureWithIdentifier:@"feature.shortcuts" localizedName:@"Shortcuts" localizedDescription:nil]];
 
 // Register products
 [OCLicenseManger.sharedLicenseManager registerProduct:[OCLicenseProduct productWithIdentifier:@"product.document-scanner" localizedName:@"Document scanner" contents:@[
 	@"feature.document-scanning"
 ]]];
 
-[OCLicenseManger.sharedLicenseManager registerProduct:[OCLicenseProduct productWithIdentifier:@"product.document-scanner" localizedName:@"Push notifications" contents:@[
-	@"feature.push-notifications"
+[OCLicenseManger.sharedLicenseManager registerProduct:[OCLicenseProduct productWithIdentifier:@"product.shortcuts" localizedName:@"Shortcuts" contents:@[
+	@"feature.shortcuts"
 ]]];
 
 [OCLicenseManger.sharedLicenseManager registerProduct:[OCLicenseProduct productWithIdentifier:@"product.unlock-all" localizedName:@"Unlock all" contents:@[
-	@"com.owncloud.document-scanning",
-	@"com.owncloud.push-notifications"
+	@"feature.document-scanning",
+	@"feature.shortcuts"
 ]]];
 ```
 
 #### Determining state and reacting to changes
+Determine current status:
 ```objc
-[OCLicenseManager.sharedLicenseManager observeProducts:nil features:@[ @"product.document-scanner" ] environment:core.environment withOwner:self updateHandler:^(OCLicenseObserver *observer, BOOL isInitial, OCLicenseAuthorizationStatus authorizationStatus){
+OCLicenseAuthorizationStatus status = [OCLicenseManager.sharedLicenseManager authorizationStatusForFeature:@"feature.document-scanning" inEnvironment:core.environment];
+
+if (status == OCLicenseAuthorizationStatusGranted)
+{
+	// Feature available
+}
+else
+{
+	// Feature not available
+}
+```
+
+Determine current (initial) status and subscribe to status changes:
+```objc
+[OCLicenseManager.sharedLicenseManager observeProducts:nil features:@[ @"feature.document-scanning" ] environment:core.environment withOwner:self updateHandler:^(OCLicenseObserver *observer, BOOL isInitial, OCLicenseAuthorizationStatus authorizationStatus){
 	// Handle updates to authorization status to use the document scanner feature	
 }];
 ```

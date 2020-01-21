@@ -17,6 +17,7 @@
  */
 
 import ownCloudApp
+import ownCloudSDK
 
 class IntentSettings: NSObject {
 	static let shared = {
@@ -27,7 +28,9 @@ class IntentSettings: NSObject {
 		OCLicenseManager.shared.setupLicenseManagement()
 	}
 
-	var isEnabled : Bool = true
+	var isEnabled : Bool {
+		return (self.classSetting(forOCClassSettingsKey: .shortcutsEnabled) as? Bool) ?? true
+	}
 
 	func isLicensedFor(bookmark: OCBookmark, core: OCCore? = nil) -> Bool {
 		var environment : OCLicenseEnvironment? = core?.licenseEnvironment
@@ -41,5 +44,24 @@ class IntentSettings: NSObject {
 		}
 
 		return false
+	}
+}
+
+// MARK: - OCClassSettings support
+extension OCClassSettingsIdentifier {
+	static let shortcuts = OCClassSettingsIdentifier("shortcuts")
+}
+
+extension OCClassSettingsKey {
+	static let shortcutsEnabled = OCClassSettingsKey("enabled")
+}
+
+extension IntentSettings: OCClassSettingsSupport {
+	static var classSettingsIdentifier: OCClassSettingsIdentifier = .shortcuts;
+
+	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		return [
+			.shortcutsEnabled : true
+		]
 	}
 }

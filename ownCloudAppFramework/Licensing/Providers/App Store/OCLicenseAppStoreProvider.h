@@ -26,6 +26,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^OCLicenseAppStoreRestorePurchasesCompletionHandler)(NSError * _Nullable error);
+typedef void(^OCLicenseAppStoreRefreshProductsCompletionHandler)(NSError * _Nullable error);
 
 @interface OCLicenseAppStoreProvider : OCLicenseProvider <OCLogTagging>
 {
@@ -40,6 +41,10 @@ typedef void(^OCLicenseAppStoreRestorePurchasesCompletionHandler)(NSError * _Nul
 
 #pragma mark - Init
 - (instancetype)initWithItems:(NSArray<OCLicenseAppStoreItem *> *)items;
+
+#pragma mark - Refreshing products
+- (void)refreshProductsWithCompletionHandler:(OCLicenseAppStoreRefreshProductsCompletionHandler)completionHandler; //!< Re-requests the list of products from the App Store
+- (void)refreshProductsIfNeededWithCompletionHandler:(OCLicenseAppStoreRefreshProductsCompletionHandler)completionHandler; //!< Requests the list of products from the App Store if it hasn't already (or failed due to f.ex. a lack of connectivity)
 
 #pragma mark - Restoring IAPs
 - (void)restorePurchasesWithCompletionHandler:(OCLicenseAppStoreRestorePurchasesCompletionHandler)completionHandler; //!< Restores in-app purchases and calls the completion handler when done

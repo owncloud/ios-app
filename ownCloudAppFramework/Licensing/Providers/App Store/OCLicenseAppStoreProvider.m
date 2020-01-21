@@ -29,7 +29,7 @@
 
 @interface OCLicenseAppStoreProvider () <SKProductsRequestDelegate, SKPaymentTransactionObserver>
 {
-	OCLicenseProviderCompletionHandler _startCompletionHandler;
+	OCLicenseAppStoreRefreshProductsCompletionHandler _productsRefreshCompletionHandler;
 	BOOL _setupTransactionObserver;
 
 	NSMutableDictionary<OCLicenseAppStoreProductIdentifier, NSNumber *> *_offerStateByAppStoreProductIdentifier;
@@ -159,23 +159,11 @@
 		return;
 	}
 
-	if (_request == nil)
-	{
-		NSMutableSet<OCLicenseAppStoreProductIdentifier> *appStoreIdentifiers = [NSMutableSet new];
+	__weak OCLicenseAppStoreProvider *weakSelf = self;
 
-		// Build product request
-		for (OCLicenseAppStoreItem *item in _items)
-		{
-			[appStoreIdentifiers addObject:item.identifier];
-		}
-
-		_startCompletionHandler = [completionHandler copy];
-
-		_request = [[SKProductsRequest alloc] initWithProductIdentifiers:appStoreIdentifiers];
-		_request.delegate = self;
-
-		[_request start];
-	}
+	[self refreshProductsWithCompletionHandler:^(NSError * _Nullable error) {
+		completionHandler(weakSelf, error);
+	}];
 
 	if (!_setupTransactionObserver)
 	{
@@ -462,6 +450,54 @@
 }
 
 #pragma mark - Product request delegate
+- (void)refreshProductsWithCompletionHandler:(OCLicenseAppStoreRefreshProductsCompletionHandler)completionHandler
+{
+	NSMutableSet<OCLicenseAppStoreProductIdentifier> *appStoreIdentifiers = [NSMutableSet new];
+
+	// Build product request
+	for (OCLicenseAppStoreItem *item in _items)
+	{
+		[appStoreIdentifiers addObject:item.identifier];
+	}
+
+	// Store completion handler and start request if needed
+	@synchronized(self)
+	{
+		OCLicenseAppStoreRefreshProductsCompletionHandler existingCompletionHandler = _productsRefreshCompletionHandler;
+
+		if (existingCompletionHandler != nil)
+		{
+			_productsRefreshCompletionHandler = ^(NSError *error) {
+				existingCompletionHandler(error);
+				completionHandler(error);
+			};
+
+			return;
+		}
+		else
+		{
+			_productsRefreshCompletionHandler = [completionHandler copy];
+		}
+
+		_request = [[SKProductsRequest alloc] initWithProductIdentifiers:appStoreIdentifiers];
+		_request.delegate = self;
+
+		[_request start];
+	}
+}
+
+- (void)refreshProductsIfNeededWithCompletionHandler:(OCLicenseAppStoreRefreshProductsCompletionHandler)completionHandler
+{
+	if ((self.offers.count == 0) && self.purchasesAllowed)
+	{
+		[self refreshProductsWithCompletionHandler:completionHandler];
+	}
+	else
+	{
+		completionHandler(nil);
+	}
+}
+
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
 {
 	// Called on success
@@ -487,20 +523,40 @@
 {
 	// Called last on success (not called on error)
 
-	if (_startCompletionHandler != nil)
+	@synchronized(self)
 	{
-		_startCompletionHandler(self, nil);
-		_startCompletionHandler = nil;
+		OCLogDebug(@"App Store request %@ finished", request);
+
+		if (_productsRefreshCompletionHandler != nil)
+		{
+			_productsRefreshCompletionHandler(nil);
+			_productsRefreshCompletionHandler = nil;
+		}
+
+		if (request == _request)
+		{
+			_request = nil;
+		}
 	}
 }
 
 - (void)request:(SKRequest *)request didFailWithError:(NSError *)error
 {
 	// Called last on error
-	if (_startCompletionHandler != nil)
+	@synchronized(self)
 	{
-		_startCompletionHandler(self, error);
-		_startCompletionHandler = nil;
+		OCLogWarning(@"App Store request %@ failed with error %@", request, error);
+
+		if (_productsRefreshCompletionHandler != nil)
+		{
+			_productsRefreshCompletionHandler(error);
+			_productsRefreshCompletionHandler = nil;
+		}
+
+		if (request == _request)
+		{
+			_request = nil;
+		}
 	}
 }
 

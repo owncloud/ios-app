@@ -318,9 +318,19 @@ class Action : NSObject {
 		if !isLicensed {
 			if let core = core, let requirements = type(of:self).licenseRequirements {
 				OnMainThread {
-					let offersViewController = LicenseOffersViewController(withFeature: requirements.feature, in: core.licenseEnvironment)
+					OCLicenseManager.appStoreProvider?.refreshProductsIfNeeded(completionHandler: { (error) in
+						OnMainThread {
+							if error != nil {
+								let alertController = ThemedAlertController(with: "Error loading product info from App Store".localized, message: error!.localizedDescription)
 
-					viewController.present(asCard: MoreViewController(header: offersViewController.cardHeaderView!, viewController: offersViewController), animated: true)
+								viewController.present(alertController, animated: true)
+							} else {
+								let offersViewController = LicenseOffersViewController(withFeature: requirements.feature, in: core.licenseEnvironment)
+
+								viewController.present(asCard: MoreViewController(header: offersViewController.cardHeaderView!, viewController: offersViewController), animated: true)
+							}
+						}
+					})
 				}
 			}
 
@@ -332,12 +342,13 @@ class Action : NSObject {
 
 	// MARK: - Action UI elements
 	private static let staticRowImageWidth : CGFloat = 32
+	private let proLabel = "ᴾᴿᴼ" // "🅿🆁🅾"
 
 	func provideStaticRow() -> StaticTableViewRow? {
 		var name = actionExtension.name
 
 		if !isLicensed {
-			name += " ᴾᴿᴼ"
+			name += " " + proLabel
 		}
 
 		return StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
@@ -356,7 +367,7 @@ class Action : NSObject {
 		var name = actionExtension.name
 
 		if !isLicensed {
-			name += " ᴾᴿᴼ" // " 🅿🆁🅾"
+			name += " " + proLabel
 		}
 
 		let alertAction = UIAlertAction(title: name, style: actionExtension.category == .destructive ? .destructive : .default, handler: { (_ alertAction) in
