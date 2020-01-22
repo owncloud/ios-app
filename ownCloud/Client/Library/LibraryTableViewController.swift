@@ -25,7 +25,7 @@ protocol LibraryShareList: UIViewController {
 
 struct QuickAccessQuery {
 	var name : String
-	var mimeType : String
+	var mimeType : [String]
 	var imageName : String
 }
 
@@ -400,16 +400,20 @@ class LibraryTableViewController: StaticTableViewController {
 			})
 
 			let queries = [
-				QuickAccessQuery(name: "PDF Documents".localized, mimeType: "pdf", imageName: "application-pdf"),
-				QuickAccessQuery(name: "Documents".localized, mimeType: "doc", imageName: "x-office-document"),
-				QuickAccessQuery(name: "Text".localized, mimeType: "text/plain", imageName: "text"),
-				QuickAccessQuery(name: "Images".localized, mimeType: "image", imageName: "image"),
-				QuickAccessQuery(name: "Videos".localized, mimeType: "video", imageName: "video"),
-				QuickAccessQuery(name: "Audio".localized, mimeType: "audio", imageName: "audio")
+				QuickAccessQuery(name: "PDF Documents".localized, mimeType: ["pdf"], imageName: "application-pdf"),
+				QuickAccessQuery(name: "Documents".localized, mimeType: ["doc", "application/vnd", "application/msword", "text/rtf"], imageName: "x-office-document"),
+				QuickAccessQuery(name: "Text".localized, mimeType: ["text/plain"], imageName: "text"),
+				QuickAccessQuery(name: "Images".localized, mimeType: ["image"], imageName: "image"),
+				QuickAccessQuery(name: "Videos".localized, mimeType: ["video"], imageName: "video"),
+				QuickAccessQuery(name: "Audio".localized, mimeType: ["audio"], imageName: "audio")
 			]
 
 			for query in queries {
-				let customQuery = OCQuery(condition: .where(.mimeType, contains: query.mimeType), inputFilter:nil)
+				let conditions = query.mimeType.map { (mimeType) -> OCQueryCondition in
+					return .where(.mimeType, contains: mimeType)
+				}
+
+				let customQuery = OCQuery(condition: .any(of: conditions), inputFilter:nil)
 				addCollectionRow(to: section, title: query.name, image: Theme.shared.image(for: query.imageName, size: CGSize(width: 25, height: 25))!, query: customQuery, actionHandler: nil)
 			}
 		}
