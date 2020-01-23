@@ -61,7 +61,9 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		self.setEditing(false, animated: false)
 
 		if handleSaving == nil {
-			requestHandleSaving(completion: nil)
+			requestHandleSaving { (_) in
+				self.dismiss(animated: true, completion: nil)
+			}
 		}
 	}
 
@@ -79,14 +81,12 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		alertController.addAction(UIAlertAction(title: "Overwrite originale".localized, style: .default, handler: { (_) in
 			self.handleSaving = .updateContents
 
-			self.dismiss(animated: true, completion: nil)
 			completion?(.updateContents)
 		}))
 
 		alertController.addAction(UIAlertAction(title: "Save as copy".localized, style: .default, handler: { (_) in
 			self.handleSaving = .createCopy
 
-			self.dismiss(animated: true, completion: nil)
 			completion?(.createCopy)
 
 		}))
@@ -94,7 +94,6 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		alertController.addAction(UIAlertAction(title: "Discard changes".localized, style: .destructive, handler: { (_) in
 			self.handleSaving = .disabled
 
-			self.dismiss(animated: true, completion: nil)
 			completion?(.disabled)
 		}))
 
