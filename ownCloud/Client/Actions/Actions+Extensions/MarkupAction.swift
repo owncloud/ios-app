@@ -97,11 +97,7 @@ class MarkupAction : Action {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .moreItem || location == .moreFolder {
-			if #available(iOS 13.0, *) {
-				return UIImage(systemName: "pencil.tip.crop.circle")?.tinted(with: Theme.shared.activeCollection.tintColor)
-			} else {
-				return UIImage(named: "folder")
-			}
+			return UIImage(systemName: "pencil.tip.crop.circle")?.tinted(with: Theme.shared.activeCollection.tintColor)
 		}
 
 		return nil

@@ -149,7 +149,6 @@ extension EditDocumentViewController: QLPreviewControllerDataSource, QLPreviewCo
 		self.editDelegte?.editDocumentViewControllerDidDismiss(self)
 	}
 
-	@available(iOS 13.0, *)
 	func previewController(_ controller: QLPreviewController, editingModeFor previewItem: QLPreviewItem) -> QLPreviewItemEditingMode {
 		return .createCopy
     }
