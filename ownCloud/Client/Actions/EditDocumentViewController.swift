@@ -64,6 +64,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 			requestHandleSaving { (_) in
 				self.dismiss(animated: true, completion: nil)
 			}
+		} else {
+			self.dismiss(animated: true, completion: nil)
 		}
 	}
 
