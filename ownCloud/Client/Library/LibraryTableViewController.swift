@@ -401,7 +401,7 @@ class LibraryTableViewController: StaticTableViewController {
 
 			let queries = [
 				QuickAccessQuery(name: "PDF Documents".localized, mimeType: ["pdf"], imageName: "application-pdf"),
-				QuickAccessQuery(name: "Documents".localized, mimeType: ["doc", "application/vnd", "application/msword", "text/rtf"], imageName: "x-office-document"),
+				QuickAccessQuery(name: "Documents".localized, mimeType: ["doc", "application/vnd", "application/msword", "application/ms-doc", "text/rtf", "application/rtf", "application/mspowerpoint", "application/powerpoint", "application/x-mspowerpoint", "application/excel", "application/x-excel", "application/x-msexcel"], imageName: "x-office-document"),
 				QuickAccessQuery(name: "Text".localized, mimeType: ["text/plain"], imageName: "text"),
 				QuickAccessQuery(name: "Images".localized, mimeType: ["image"], imageName: "image"),
 				QuickAccessQuery(name: "Videos".localized, mimeType: ["video"], imageName: "video"),
