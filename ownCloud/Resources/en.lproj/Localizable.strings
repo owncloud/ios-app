@@ -508,3 +508,11 @@
 "Previous" = "Previous";
 "Favorite" = "Favorite";
 "Cut" = "Cut";
+
+/* Markup */
+"How should this file be saved?" = "How should this file be saved?";
+"Overwrite originale" = "Overwrite originale";
+"Save as copy" = "Save as copy";
+"Discard changes" = "Discard changes";
+"Markup" = "Markup";
+"Crop or Rotate" = "Crop or Rotate";
