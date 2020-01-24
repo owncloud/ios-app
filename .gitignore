@@ -74,8 +74,6 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/test_output
 fastlane/Match/
-fastlane/screenshots/screenshots.html
-fastlane/screenshots/**/*.png
 .env.default
 
 # Code Injection
