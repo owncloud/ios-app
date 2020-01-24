@@ -93,7 +93,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		self.navigationPathFilter = navigationPathFilter
 
 		// Force disable sorting options
-		self.shallShowSortBar = false
+		self.shallShowSortBar = true
 
 		// Disable pull to refresh
 		allowPullToRefresh = false
@@ -120,6 +120,8 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 		// Cancel button creation
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
+
+		sortBar?.showSelectButton = false
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -141,6 +143,12 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 			self.setToolbarItems([createFolderBarButton, flexibleSpaceBarButton, selectButton, flexibleSpaceBarButton], animated: false)
 		}
+	}
+
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+
+		sortBar?.showSelectButton = false
 	}
 
 	private func allowNavigationFor(item: OCItem?) -> Bool {

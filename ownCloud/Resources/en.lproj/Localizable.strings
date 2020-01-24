@@ -429,6 +429,9 @@
 "Favorites"= "Favorites";
 "Images" = "Images";
 "PDF Documents" = "PDF Documents";
+"Text" = "Text";
+"Documents" = "Documents";
+"Audio" = "Audio";
 
 /* Media files settings */
 "Media Files" = "Media Files";
@@ -488,6 +491,11 @@
 /* Import File */
 "Save File" = "Save File";
 "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once.";
+
+/* Release Notes */
+"Proceed" = "Proceed";
+"New in ownCloud" = "New in ownCloud";
+"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️" = "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️";
 
 /* Key Commands */
 "Select Next" = "Select Next";

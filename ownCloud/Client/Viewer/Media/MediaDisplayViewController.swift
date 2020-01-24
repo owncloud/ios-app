@@ -225,6 +225,7 @@ class MediaDisplayViewController : DisplayViewController {
 		}
 
 		// Add handler for skip forward command
+		commandCenter.skipForwardCommand.isEnabled = true
 		commandCenter.skipForwardCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
 			if let player = self?.player {
 				let time = player.currentTime() + CMTime(seconds: 10.0, preferredTimescale: 1)
@@ -239,6 +240,7 @@ class MediaDisplayViewController : DisplayViewController {
 		}
 
 		// Add handler for skip backward command
+		commandCenter.skipBackwardCommand.isEnabled = true
 		commandCenter.skipBackwardCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
 			if let player = self?.player {
 				let time = player.currentTime() - CMTime(seconds: 10.0, preferredTimescale: 1)
@@ -314,6 +316,7 @@ class MediaDisplayViewController : DisplayViewController {
 
 		nowPlayingInfo[MPMediaItemPropertyTitle] = mediaItemTitle
 		nowPlayingInfo[MPMediaItemPropertyArtist] = mediaItemArtist
+		nowPlayingInfo[MPNowPlayingInfoPropertyCurrentPlaybackDate] = self.playerItem?.currentDate()
 		nowPlayingInfo[MPNowPlayingInfoPropertyAssetURL] = source
         nowPlayingInfo[MPNowPlayingInfoPropertyCurrentPlaybackDate] = playerItem.currentDate()
 		nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = playerItem.currentTime().seconds
