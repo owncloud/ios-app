@@ -87,7 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 				OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
 				OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
 			}
-			OCExtensionManager.shared.addExtension(MarkupAction.actionExtension)
+			OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
 			OCExtensionManager.shared.addExtension(MediaEditingAction.actionExtension)
 		}
 

@@ -1,5 +1,5 @@
 //
-//  MarkupAction.swift
+//  DocumentEditingAction.swift
 //  ownCloud
 //
 //  Created by Matthias Hühne on 21/01/2020.
@@ -19,37 +19,29 @@
 import ownCloudSDK
 
 @available(iOS 13.0, *)
-class MarkupAction : Action {
+class DocumentEditingAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.markup") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Markup".localized }
 	override class var keyCommand : String? { return "E" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut] }
-
-	var interactionControllerDispatchGroup : DispatchGroup?
-	var interactionController : EditDocumentViewController?
+	class var supportedMimeTypes : [String] { return ["image", "pdf"] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		let supportedMimeTypes = ["image", "pdf"]
-		if forContext.items.contains(where: {$0.type == .collection}) {
-			return .none
-		} else if forContext.items.count > 1 {
-			return .none
-		} else if let item = forContext.items.first {
-			if let mimeType = item.mimeType {
+		if forContext.items.count == 1, forContext.items.contains(where: {$0.type == .file}) {
+			if let item = forContext.items.first, let mimeType = item.mimeType {
 				if supportedMimeTypes.filter({
 					return mimeType.contains($0)
-				}).count == 0 {
-					return .none
+				}).count > 0 {
+					return .middle
 				}
-			} else {
-				return .none
 			}
 		}
+
 		// Examine items in context
-		return .middle
+		return .none
 	}
 
 	// MARK: - Action implementation
@@ -72,17 +64,7 @@ class MarkupAction : Action {
 			} else {
 				guard let files = files, files.count > 0, let viewController = hostViewController else { return }
 				if let fileURL = files.first?.url, let item = self.context.items.first {
-					// Make sure self is around until interactionControllerDispatchGroup.leave() is called by the documentInteractionControllerDidDismissOptionsMenu delegate method implementation
-					self.interactionControllerDispatchGroup = DispatchGroup()
-					self.interactionControllerDispatchGroup?.enter()
-
-					self.interactionControllerDispatchGroup?.notify(queue: .main, execute: {
-						self.interactionController?.delegate = nil
-						self.interactionController = nil
-					})
-
 					let editDocumentViewController = EditDocumentViewController(with: fileURL, item: item, core: self.core)
-					editDocumentViewController.editDelegte = self
 					let navigationController = ThemeNavigationController(rootViewController: editDocumentViewController)
 					navigationController.modalPresentationStyle = .overFullScreen
 					viewController.present(navigationController, animated: true)
@@ -101,12 +83,5 @@ class MarkupAction : Action {
 		}
 
 		return nil
-	}
-}
-
-@available(iOS 13.0, *)
-extension MarkupAction : EditDocumentViewControllerDelegate {
-	func editDocumentViewControllerDidDismiss(_ controller: EditDocumentViewController) {
-		interactionControllerDispatchGroup?.leave() // We're done! Trigger notify block and then release last reference to self.
 	}
 }

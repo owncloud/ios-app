@@ -19,31 +19,10 @@
 import ownCloudSDK
 
 @available(iOS 13.0, *)
-class MediaEditingAction : MarkupAction {
+class MediaEditingAction : DocumentEditingAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.mediaediting") }
 	override class var name : String? { return "Crop or Rotate".localized }
-
-	// MARK: - Extension matching
-	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		let supportedMimeTypes = ["video"]
-		if forContext.items.contains(where: {$0.type == .collection}) {
-			return .none
-		} else if forContext.items.count > 1 {
-			return .none
-		} else if let item = forContext.items.first {
-			if let mimeType = item.mimeType {
-				if supportedMimeTypes.filter({
-					return mimeType.contains($0)
-				}).count == 0 {
-					return .none
-				}
-			} else {
-				return .none
-			}
-		}
-		// Examine items in context
-		return .middle
-	}
+	override class var supportedMimeTypes : [String] { return ["video"] }
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .moreItem || location == .moreFolder {

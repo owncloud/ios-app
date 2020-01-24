@@ -516,8 +516,9 @@
 
 /* Markup */
 "How should this file be saved?" = "How should this file be saved?";
-"Overwrite originale" = "Overwrite originale";
+"Overwrite original" = "Overwrite original";
 "Save as copy" = "Save as copy";
 "Discard changes" = "Discard changes";
 "Markup" = "Markup";
 "Crop or Rotate" = "Crop or Rotate";
+"Saving edited file failed" = "Saving edited file failed";

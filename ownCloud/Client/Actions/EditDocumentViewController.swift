@@ -21,17 +21,11 @@ import ownCloudSDK
 import QuickLook
 
 @available(iOS 13.0, *)
-protocol EditDocumentViewControllerDelegate: class {
-	func editDocumentViewControllerDidDismiss(_ controller: EditDocumentViewController)
-}
-
-@available(iOS 13.0, *)
 class EditDocumentViewController: QLPreviewController, Themeable {
 
 	weak var core: OCCore?
 	var item: OCItem
-	var editDelegte: EditDocumentViewControllerDelegate?
-	var handleSaving: QLPreviewItemEditingMode?
+	var savingMode: QLPreviewItemEditingMode?
 
 	var source: URL {
 		didSet {
@@ -60,8 +54,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	@objc func dismissAnimated() {
 		self.setEditing(false, animated: false)
 
-		if handleSaving == nil {
-			requestHandleSaving { (_) in
+		if savingMode == nil {
+			requestsavingMode { (_) in
 				self.dismiss(animated: true, completion: nil)
 			}
 		} else {
@@ -69,7 +63,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		}
 	}
 
-	func requestHandleSaving(completion: ((QLPreviewItemEditingMode) -> Void)? = nil) {
+	func requestsavingMode(completion: ((QLPreviewItemEditingMode) -> Void)? = nil) {
 		var presentationStyle: UIAlertController.Style = .actionSheet
 		if UIDevice.current.isIpad() {
 			presentationStyle = .alert
@@ -80,21 +74,20 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 													preferredStyle: presentationStyle)
 		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
-		alertController.addAction(UIAlertAction(title: "Overwrite originale".localized, style: .default, handler: { (_) in
-			self.handleSaving = .updateContents
+		alertController.addAction(UIAlertAction(title: "Overwrite original".localized, style: .default, handler: { (_) in
+			self.savingMode = .updateContents
 
 			completion?(.updateContents)
 		}))
 
 		alertController.addAction(UIAlertAction(title: "Save as copy".localized, style: .default, handler: { (_) in
-			self.handleSaving = .createCopy
+			self.savingMode = .createCopy
 
 			completion?(.createCopy)
-
 		}))
 
 		alertController.addAction(UIAlertAction(title: "Discard changes".localized, style: .destructive, handler: { (_) in
-			self.handleSaving = .disabled
+			self.savingMode = .disabled
 
 			completion?(.disabled)
 		}))
@@ -102,19 +95,44 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		self.present(alertController, animated: true, completion: nil)
 	}
 
-	func saveModifiedContents(at url: URL, handleSaving: QLPreviewItemEditingMode) {
-		switch handleSaving {
+	func saveModifiedContents(at url: URL, savingMode: QLPreviewItemEditingMode) {
+
+		print("--> saveModifiedContents \(url) savingMode \(savingMode) \(item)")
+		switch savingMode {
 		case .createCopy:
 			if let core = core, let parentItem = item.parentItem(from: core) {
-				self.core?.importFileNamed(item.name, at: parentItem, from: url, isSecurityScoped: false, options: [ .automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue ], placeholderCompletionHandler: nil, resultHandler: nil)
+				self.core?.importFileNamed(item.name, at: parentItem, from: url, isSecurityScoped: false, options: [ .automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue ], placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+					if let error = error {
+						self.present(error: error, title: "Saving edited file failed".localized)
+					}
+				})
 			}
 		case .updateContents:
 			if let core = core, let parentItem = item.parentItem(from: core) {
-				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: false, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: nil)
+				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: false, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+					if let error = error {
+						self.present(error: error, title: "Saving edited file failed".localized)
+					}
+				})
 			}
 		default:
 			break
 		}
+	}
+
+	func present(error: Error, title: String) {
+		var presentationStyle: UIAlertController.Style = .actionSheet
+		if UIDevice.current.isIpad() {
+			presentationStyle = .alert
+		}
+
+		let alertController = ThemedAlertController(title: title,
+													message: error.localizedDescription,
+													preferredStyle: presentationStyle)
+
+		alertController.addAction(UIAlertAction(title: "OK".localized, style: .cancel, handler: nil))
+
+		self.present(alertController, animated: true, completion: nil)
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -145,10 +163,6 @@ extension EditDocumentViewController: QLPreviewControllerDataSource, QLPreviewCo
 		return source as QLPreviewItem
     }
 
-	func previewControllerDidDismiss(_ controller: QLPreviewController) {
-		self.editDelegte?.editDocumentViewControllerDidDismiss(self)
-	}
-
 	func previewController(_ controller: QLPreviewController, editingModeFor previewItem: QLPreviewItem) -> QLPreviewItemEditingMode {
 		return .createCopy
     }
@@ -157,11 +171,12 @@ extension EditDocumentViewController: QLPreviewControllerDataSource, QLPreviewCo
     }
 
     func previewController(_ controller: QLPreviewController, didSaveEditedCopyOf previewItem: QLPreviewItem, at modifiedContentsURL: URL) {
-		if let handleSaving = handleSaving {
-			saveModifiedContents(at: modifiedContentsURL, handleSaving: handleSaving)
+		if let savingMode = savingMode {
+			saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
 		} else {
-			requestHandleSaving { (handleSaving) in
-				self.saveModifiedContents(at: modifiedContentsURL, handleSaving: handleSaving)
+			requestsavingMode { (savingMode) in
+				print("--> completion requestsavingMode")
+				self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
 			}
 		}
 	}
