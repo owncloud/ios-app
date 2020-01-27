@@ -124,7 +124,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 						self.present(error: error, title: "Saving edited file failed".localized)
 					}
 				})
-			}	
+			}
 		case .updateContents:
 			if let core = core, let parentItem = item.parentItem(from: core) {
 				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: false, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
@@ -193,7 +193,9 @@ extension EditDocumentViewController: QLPreviewControllerDataSource, QLPreviewCo
 			saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
 		} else {
 			requestsavingMode { (savingMode) in
-				self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
+				OnMainThread {
+					self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
+				}
 			}
 		}
 	}
