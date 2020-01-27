@@ -129,7 +129,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		switch savingMode {
 		case .createCopy:
 			if let core = core, let parentItem = item.parentItem(from: core) {
-				self.core?.importFileNamed(item.name, at: parentItem, from: url, isSecurityScoped: false, options: [ .automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue ], placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+				self.core?.importFileNamed(item.name, at: parentItem, from: url, isSecurityScoped: false, options: [ .automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue, OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
 					if let error = error {
 						self.present(error: error, title: "Saving edited file failed".localized)
 					}
