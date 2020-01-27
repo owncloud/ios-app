@@ -26,6 +26,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	weak var core: OCCore?
 	var item: OCItem
 	var savingMode: QLPreviewItemEditingMode?
+	var itemTracker: OCCoreItemTracking?
 
 	var source: URL {
 		didSet {
@@ -49,6 +50,35 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
 
 		Theme.shared.register(client: self, applyImmediately: true)
+
+		if let core = core, let path = item.path {
+			itemTracker = core.trackItem(atPath: path, trackingHandler: { [weak self](error, item, _) in
+				if let item = item, let self = self {
+					self.item = item
+				} else if item == nil {
+
+					OnMainThread {
+						var presentationStyle: UIAlertController.Style = .actionSheet
+						if UIDevice.current.isIpad() {
+							presentationStyle = .alert
+						}
+
+						let alertController = ThemedAlertController(title: "File no longer exists".localized,
+																	message: nil,
+																	preferredStyle: presentationStyle)
+
+						alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
+							self?.dismiss(animated: true, completion: nil)
+						}))
+
+						self?.present(alertController, animated: true, completion: nil)
+					}
+
+				} else if let error = error {
+					self?.present(error: error, title: "Saving edited file failed".localized)
+				}
+			})
+		}
 	}
 
 	@objc func dismissAnimated() {
@@ -96,8 +126,6 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	}
 
 	func saveModifiedContents(at url: URL, savingMode: QLPreviewItemEditingMode) {
-
-		print("--> saveModifiedContents \(url) savingMode \(savingMode) \(item)")
 		switch savingMode {
 		case .createCopy:
 			if let core = core, let parentItem = item.parentItem(from: core) {
@@ -175,7 +203,6 @@ extension EditDocumentViewController: QLPreviewControllerDataSource, QLPreviewCo
 			saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
 		} else {
 			requestsavingMode { (savingMode) in
-				print("--> completion requestsavingMode")
 				self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
 			}
 		}
