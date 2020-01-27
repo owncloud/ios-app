@@ -84,13 +84,18 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 		if savingMode == nil {
 			requestsavingMode { (savingMode) in
-				if let modifiedContentsURL = self.modifiedContentsURL {
-					self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
+				self.dismiss(animated: true) {
+					if let modifiedContentsURL = self.modifiedContentsURL {
+						self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
+					}
 				}
-				self.dismiss(animated: true, completion: nil)
 			}
 		} else {
-			self.dismiss(animated: true, completion: nil)
+			self.dismiss(animated: true) {
+				if let modifiedContentsURL = self.modifiedContentsURL, let savingMode = self.savingMode {
+					self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
+				}
+			}
 		}
 	}
 
