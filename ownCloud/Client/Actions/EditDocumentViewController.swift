@@ -27,6 +27,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	var item: OCItem
 	var savingMode: QLPreviewItemEditingMode?
 	var itemTracker: OCCoreItemTracking?
+	var modifiedContentsURL: URL?
 
 	var source: URL {
 		didSet {
@@ -47,7 +48,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 		self.dataSource = self
 		self.delegate = self
-		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
+		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(dismissAnimated))
 
 		Theme.shared.register(client: self, applyImmediately: true)
 
@@ -70,7 +71,9 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 					}
 
 				} else if let error = error {
-					self?.present(error: error, title: "Saving edited file failed".localized)
+					OnMainThread {
+						self?.present(error: error, title: "Saving edited file failed".localized)
+					}
 				}
 			})
 		}
@@ -80,7 +83,10 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		self.setEditing(false, animated: false)
 
 		if savingMode == nil {
-			requestsavingMode { (_) in
+			requestsavingMode { (savingMode) in
+				if let modifiedContentsURL = self.modifiedContentsURL {
+					self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
+				}
 				self.dismiss(animated: true, completion: nil)
 			}
 		} else {
@@ -189,14 +195,9 @@ extension EditDocumentViewController: QLPreviewControllerDataSource, QLPreviewCo
     }
 
     func previewController(_ controller: QLPreviewController, didSaveEditedCopyOf previewItem: QLPreviewItem, at modifiedContentsURL: URL) {
+		self.modifiedContentsURL = modifiedContentsURL
 		if let savingMode = savingMode {
 			saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
-		} else {
-			requestsavingMode { (savingMode) in
-				OnMainThread {
-					self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
-				}
-			}
 		}
 	}
 }
