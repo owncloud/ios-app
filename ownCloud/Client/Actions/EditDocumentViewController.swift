@@ -58,14 +58,9 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 				} else if item == nil {
 
 					OnMainThread {
-						var presentationStyle: UIAlertController.Style = .actionSheet
-						if UIDevice.current.isIpad() {
-							presentationStyle = .alert
-						}
-
 						let alertController = ThemedAlertController(title: "File no longer exists".localized,
 																	message: nil,
-																	preferredStyle: presentationStyle)
+																	preferredStyle: .alert)
 
 						alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
 							self?.dismiss(animated: true, completion: nil)
@@ -94,14 +89,9 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	}
 
 	func requestsavingMode(completion: ((QLPreviewItemEditingMode) -> Void)? = nil) {
-		var presentationStyle: UIAlertController.Style = .actionSheet
-		if UIDevice.current.isIpad() {
-			presentationStyle = .alert
-		}
-
 		let alertController = ThemedAlertController(title: "How should this file be saved?".localized,
 													message: nil,
-													preferredStyle: presentationStyle)
+													preferredStyle: .alert)
 		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
 		alertController.addAction(UIAlertAction(title: "Overwrite original".localized, style: .default, handler: { (_) in
@@ -134,7 +124,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 						self.present(error: error, title: "Saving edited file failed".localized)
 					}
 				})
-			}
+			}	
 		case .updateContents:
 			if let core = core, let parentItem = item.parentItem(from: core) {
 				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: false, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
