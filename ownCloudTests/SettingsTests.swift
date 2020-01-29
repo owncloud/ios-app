@@ -52,8 +52,9 @@ class SettingsTests: XCTestCase {
 	*/
 	func testCheckMediaUploadSettings () {
 		// Scroll into view and apply assertions
-		EarlGrey.select(elementWithMatcher:grey_accessibilityID("convert_heic_to_jpeg")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 300), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher:grey_accessibilityID("convert_to_mp4")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 300), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
+		EarlGrey.select(elementWithMatcher:grey_accessibilityID("convert_heic_to_jpeg")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 350), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
+	/*	EarlGrey.select(elementWithMatcher:grey_accessibilityID("convert_to_mp4")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 300), onElementWithMatcher: grey_kindOfClass(UITableView.self)).assert(grey_sufficientlyVisible())
+*/
 	}
 
 

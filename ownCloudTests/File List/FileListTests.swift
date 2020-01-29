@@ -29,12 +29,9 @@ class FileListTests: FileTests {
 			//Mocks
 			self.showFileList(bookmark: bookmark)
 
-			//Asserts
-			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).assert(grey_sufficientlyVisible())
+			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).assert(grey_sufficientlyVisible())
 
-			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
-
+			self.dismissFileList()
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
@@ -50,9 +47,6 @@ class FileListTests: FileTests {
 			//Mocks
 			self.mockQueryPropfindResults(resourceName: "PropfindResponse", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 			self.showFileList(bookmark: bookmark)
-			
-			//Asserts
-			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).assert(grey_sufficientlyVisible())
 
 			var error:NSError?
 			var index: UInt = 0
@@ -65,12 +59,8 @@ class FileListTests: FileTests {
 				}
 			}
 			GREYAssertEqual(index as AnyObject, expectedCells as AnyObject, reason: "Founded \(index) cells when expected \(expectedCells)")
-			
-			//Asserts
-			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).assert(grey_sufficientlyVisible())
 
-			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_allOf([grey_accessibilityLabel("Back"), grey_accessibilityTrait(UIAccessibilityTraits.staticText)])).perform(grey_tap())
+			self.dismissFileList()
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
 		}
