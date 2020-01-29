@@ -130,7 +130,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		switch savingMode {
 		case .createCopy:
 			if let core = core, let parentItem = item.parentItem(from: core) {
-				self.core?.importFileNamed(item.name, at: parentItem, from: url, isSecurityScoped: false, options: [ .automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue, OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+				self.core?.importFileNamed(item.name, at: parentItem, from: url, isSecurityScoped: true, options: [ .automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue, OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
 					if let error = error {
 						self.present(error: error, title: "Saving edited file failed".localized)
 					}
@@ -138,7 +138,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 			}
 		case .updateContents:
 			if let core = core, let parentItem = item.parentItem(from: core) {
-				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: false, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
 					if let error = error {
 						self.present(error: error, title: "Saving edited file failed".localized)
 					}
@@ -201,8 +201,5 @@ extension EditDocumentViewController: QLPreviewControllerDataSource, QLPreviewCo
 
     func previewController(_ controller: QLPreviewController, didSaveEditedCopyOf previewItem: QLPreviewItem, at modifiedContentsURL: URL) {
 		self.modifiedContentsURL = modifiedContentsURL
-		if let savingMode = savingMode {
-			saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
-		}
 	}
 }
