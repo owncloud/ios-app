@@ -57,7 +57,7 @@ extension OCClassSettingsKey {
 }
 
 extension IntentSettings: OCClassSettingsSupport {
-	static var classSettingsIdentifier: OCClassSettingsIdentifier = .shortcuts;
+	static var classSettingsIdentifier: OCClassSettingsIdentifier = .shortcuts
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		return [
