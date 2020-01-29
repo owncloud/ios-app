@@ -47,7 +47,7 @@ class FileTests: XCTestCase {
 
 			let rootViewController: MockClientRootViewController = MockClientRootViewController(core: core, query: query, bookmark: bookmark)
 
-			rootViewController.afterCoreStart {
+			rootViewController.afterCoreStart(nil) {
 				let navigationController = (appDelegate.serverListTableViewController?.navigationController)!
 				let transitionDelegate = PushTransitionDelegate()
 

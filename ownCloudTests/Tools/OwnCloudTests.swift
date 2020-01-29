@@ -28,7 +28,7 @@ class OwnCloudTests: XCTestCase {
      */
     func testAddServerButtonIsEnabled() {
 	EarlGrey.waitForElement(accessibilityID: "addServer")
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(with: grey_enabled())
+        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert( grey_enabled())
     }
 
     func testClickOnTheButtonAndNothingHappens() {
