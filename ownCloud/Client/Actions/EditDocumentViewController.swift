@@ -100,10 +100,9 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	}
 
 	func requestsavingMode(completion: ((QLPreviewItemEditingMode) -> Void)? = nil) {
-		let alertController = ThemedAlertController(title: "How should this file be saved?".localized,
+		let alertController = ThemedAlertController(title: "Save File".localized,
 													message: nil,
 													preferredStyle: .alert)
-		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
 		alertController.addAction(UIAlertAction(title: "Overwrite original".localized, style: .default, handler: { (_) in
 			self.savingMode = .updateContents
