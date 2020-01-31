@@ -28,6 +28,11 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^OCLicenseAppStoreRestorePurchasesCompletionHandler)(NSError * _Nullable error);
 typedef void(^OCLicenseAppStoreRefreshProductsCompletionHandler)(NSError * _Nullable error);
 
+typedef NS_ENUM(NSUInteger, OCLicenseAppStoreProviderError)
+{
+	OCLicenseAppStoreProviderErrorPurchasesNotAllowed
+};
+
 @interface OCLicenseAppStoreProvider : OCLicenseProvider <OCLogTagging>
 {
 	OCLicenseAppStoreReceipt *_receipt;
@@ -58,6 +63,8 @@ typedef void(^OCLicenseAppStoreRefreshProductsCompletionHandler)(NSError * _Null
 @end
 
 extern OCLicenseProviderIdentifier OCLicenseProviderIdentifierAppStore;
+
+extern NSErrorDomain OCLicenseAppStoreProviderErrorDomain;
 
 NS_ASSUME_NONNULL_END
 

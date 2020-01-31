@@ -26,7 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 @class OCLicenseDuration;
 @class OCLicenseProduct;
 
-typedef void(^OCLicenseOfferCommitHandler)(OCLicenseOffer *offer, OCLicenseOfferCommitOptions _Nullable options);
+typedef void(^OCLicenseOfferCommitErrorHandler)(NSError * _Nullable error);
+typedef void(^OCLicenseOfferCommitHandler)(OCLicenseOffer *offer, OCLicenseOfferCommitOptions _Nullable options, OCLicenseOfferCommitErrorHandler _Nullable errorHandler);
 
 typedef NS_ENUM(NSUInteger, OCLicenseOfferState)
 {
@@ -81,7 +82,7 @@ typedef NS_ENUM(NSUInteger, OCLicenseOfferState)
 
 #pragma mark - Request offer / Make purchase
 @property(nullable,copy) OCLicenseOfferCommitHandler commitHandler; //!< Used as -commitWithOptions: implementation if provided
-- (void)commitWithOptions:(nullable OCLicenseOfferCommitOptions)options; //!< Commits to purchasing the offer, entering a purchase UI flow
+- (void)commitWithOptions:(nullable OCLicenseOfferCommitOptions)options errorHandler:(nullable OCLicenseOfferCommitErrorHandler)errorHandler; //!< Commits to purchasing the offer, entering a purchase UI flow
 
 @end
 

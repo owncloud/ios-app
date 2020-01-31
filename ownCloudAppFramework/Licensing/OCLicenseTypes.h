@@ -26,7 +26,7 @@ typedef NSString* OCLicenseEntitlementIdentifier;
 typedef NSString* OCLicenseOfferIdentifier;
 typedef NSString* OCLicenseOfferGroupIdentifier;
 
-typedef NSString* OCLicenseOfferCommitOption;
+typedef NSString* OCLicenseOfferCommitOption NS_TYPED_ENUM;
 typedef NSDictionary<OCLicenseOfferCommitOption,id>* OCLicenseOfferCommitOptions;
 
 typedef NSString* OCLicenseEntitlementEnvironmentApplicableRule;

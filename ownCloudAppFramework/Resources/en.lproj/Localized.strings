@@ -1,0 +1,9 @@
+/* 
+  Localized.strings
+  ownCloud
+
+  Created by Felix Schwarz on 31.01.20.
+  Copyright © 2020 ownCloud GmbH. All rights reserved.
+*/
+
+"Purchases are not allowed on this device." = "Purchases are not allowed on this device.";

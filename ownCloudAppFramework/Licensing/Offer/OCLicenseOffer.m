@@ -138,11 +138,11 @@
 }
 
 #pragma mark - Request offer / Make purchase
-- (void)commitWithOptions:(OCLicenseOfferCommitOptions)options
+- (void)commitWithOptions:(nullable OCLicenseOfferCommitOptions)options errorHandler:(nullable OCLicenseOfferCommitErrorHandler)errorHandler
 {
 	if (_commitHandler != nil)
 	{
-		_commitHandler(self, options);
+		_commitHandler(self, options, errorHandler);
 	}
 }
 
@@ -193,4 +193,4 @@
 
 @end
 
-OCLicenseOfferCommitOption OCLicenseOfferCommitOptionBaseViewController = @"BaseViewController";
+OCLicenseOfferCommitOption OCLicenseOfferCommitOptionBaseViewController = @"baseViewController";

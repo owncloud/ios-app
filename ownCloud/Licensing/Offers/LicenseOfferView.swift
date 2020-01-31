@@ -230,8 +230,20 @@ class LicenseOfferView: UIView, Themeable {
 
 	@objc func takeOffer() {
 		offer.commit(options: [
-			OCLicenseOfferCommitOptionBaseViewController : self.baseViewController as Any
-		])
+			.baseViewController : self.baseViewController as Any
+		], errorHandler: { [weak self] (error) in
+			guard let error = error else { return }
+
+			OnMainThread {
+				guard let self = self else { return }
+
+				let alertController = UIAlertController(title: "Purchase failed".localized, message: error.localizedDescription, preferredStyle: .alert)
+
+				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+
+				self.baseViewController?.present(alertController, animated: true, completion: nil)
+			}
+		})
 	}
 
 	func updateOfferFromState() {

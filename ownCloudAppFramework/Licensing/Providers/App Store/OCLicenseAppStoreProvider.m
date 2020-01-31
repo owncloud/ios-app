@@ -24,6 +24,7 @@
 #import "OCLicenseEntitlement.h"
 #import "OCLicenseProduct.h"
 #import "OCLicenseTransaction.h"
+#import "OCLicenseOffer.h"
 
 #define AppStoreOfferIdentifier(appStoreProductIdentifier) [@"appstore." stringByAppendingString:appStoreProductIdentifier]
 
@@ -33,6 +34,8 @@
 	BOOL _setupTransactionObserver;
 
 	NSMutableDictionary<OCLicenseAppStoreProductIdentifier, NSNumber *> *_offerStateByAppStoreProductIdentifier;
+
+	NSMutableDictionary<NSString *, OCLicenseOfferCommitErrorHandler> *_commitErrorHandlerByProductIdentifier;
 
 	OCLicenseAppStoreRestorePurchasesCompletionHandler _restorePurchasesCompletionHandler;
 	BOOL _appStoreReceiptNeedsReload;
@@ -52,6 +55,8 @@
 	{
 		_items = items;
 		_offerStateByAppStoreProductIdentifier = [NSMutableDictionary new];
+
+		_commitErrorHandlerByProductIdentifier = [NSMutableDictionary new];
 
 		self.localizedName = OCLocalized(@"App Store");
 	}
@@ -383,7 +388,9 @@
 			offer.localizedTitle = storeProduct.localizedTitle;
 			offer.localizedDescription = storeProduct.localizedDescription;
 
-			offer.commitHandler = ^(OCLicenseOffer * _Nonnull offer, OCLicenseOfferCommitOptions  _Nullable options) {
+			NSMutableDictionary<NSString *, OCLicenseOfferCommitErrorHandler> *commitErrorHandlerByProductIdentifier = _commitErrorHandlerByProductIdentifier;
+
+			offer.commitHandler = ^(OCLicenseOffer * _Nonnull offer, OCLicenseOfferCommitOptions  _Nullable options, OCLicenseOfferCommitErrorHandler _Nullable errorHandler) {
 				OCLicenseAppStoreProvider *appStoreProvider = [offer.provider isKindOfClass:[OCLicenseAppStoreProvider class]] ? (OCLicenseAppStoreProvider *)offer.provider : nil;
 
 				if (appStoreProvider != nil)
@@ -391,9 +398,20 @@
 					if (!appStoreProvider.purchasesAllowed)
 					{
 						// Present alert
+						if (errorHandler != nil)
+						{
+							errorHandler([NSError errorWithDomain:OCLicenseAppStoreProviderErrorDomain code:OCLicenseAppStoreProviderErrorPurchasesNotAllowed userInfo:@{
+								NSLocalizedDescriptionKey : OCLocalized(@"Purchases are not allowed on this device.")
+							}]);
+						}
 					}
 					else
 					{
+						if ((errorHandler != nil) && (appStoreProductIdentifier!=nil))
+						{
+							commitErrorHandlerByProductIdentifier[appStoreProductIdentifier] = [errorHandler copy];
+						}
+
 						[appStoreProvider requestPaymentFor:storeProduct];
 					}
 				}
@@ -583,6 +601,7 @@
 	{
 		OCLicenseOfferState offerState = OCLicenseOfferStateUncommitted;
 		SKPaymentTransaction *transaction = originalTransaction;
+		NSError *error = nil;
 		BOOL finishTransaction = NO;
 
 		// Restored transaction => use the original transaction if available
@@ -627,6 +646,8 @@
 			case SKPaymentTransactionStateFailed:
 				OCLogError(@"Transaction failed with error=%@", transaction.error);
 
+				error = transaction.error;
+
 				offerState = OCLicenseOfferStateUncommitted;
 				finishTransaction = YES;
 			break;
@@ -667,6 +688,17 @@
 		if ((appStoreProductIdentifier != nil) && finishTransaction && (offerState == OCLicenseOfferStateCommitted))
 		{
 			[self loadReceipt];
+		}
+
+		// Report errors
+		if ((appStoreProductIdentifier != nil) && finishTransaction)
+		{
+			if (_commitErrorHandlerByProductIdentifier[appStoreProductIdentifier] != nil)
+			{
+				((OCLicenseOfferCommitErrorHandler)_commitErrorHandlerByProductIdentifier[appStoreProductIdentifier])(error);
+
+				[_commitErrorHandlerByProductIdentifier removeObjectForKey:appStoreProductIdentifier];
+			}
 		}
 	}
 
@@ -752,4 +784,7 @@
 }
 
 @end
+
 OCLicenseProviderIdentifier OCLicenseProviderIdentifierAppStore = @"app-store";
+
+NSErrorDomain OCLicenseAppStoreProviderErrorDomain = @"OCLicenseAppStoreProviderError";

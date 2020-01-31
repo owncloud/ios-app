@@ -553,6 +553,7 @@
 "Restoring purchases…" = "Restoring purchases…";
 "Error restoring purchases" = "Error restoring purchases";
 "Error loading product info from App Store"= "Error loading product info from App Store";
+"Purchase failed" = "Purchase failed";
 
 /* Licensing: Enterprise */
 "Enterprise" = "Enterprise";

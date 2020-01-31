@@ -349,6 +349,7 @@
 		DCDC20AC2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDC20AA2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m */; };
 		DCDF58B323CE82E100080BEB /* LicenseInAppPurchaseFeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDF58B223CE82E100080BEB /* LicenseInAppPurchaseFeatureView.swift */; };
 		DCE0275E21F1DF7E00F2544E /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		DCE0FC4723E42ACB0037B4AD /* Localized.strings in Resources */ = {isa = PBXBuildFile; fileRef = DCE0FC4923E42ACB0037B4AD /* Localized.strings */; };
 		DCE442CE2387452000940A6D /* LicensingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC0856B2293F1FD008CC05C /* LicensingTests.m */; };
 		DCE5E8A12080D781005F60CE /* video.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88C2080D77E005F60CE /* video.tvg */; };
 		DCE5E8A22080D781005F60CE /* folder-external.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88D2080D77E005F60CE /* folder-external.tvg */; };
@@ -1111,6 +1112,7 @@
 		DCDC20A92399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseEnterpriseProvider.h; sourceTree = "<group>"; };
 		DCDC20AA2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseEnterpriseProvider.m; sourceTree = "<group>"; };
 		DCDF58B223CE82E100080BEB /* LicenseInAppPurchaseFeatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseInAppPurchaseFeatureView.swift; sourceTree = "<group>"; };
+		DCE0FC4823E42ACB0037B4AD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localized.strings; sourceTree = "<group>"; };
 		DCE5E88C2080D77E005F60CE /* video.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = video.tvg; path = "img/filetypes-tvg/video.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E88D2080D77E005F60CE /* folder-external.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-external.tvg"; path = "img/filetypes-tvg/folder-external.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E88E2080D77E005F60CE /* file.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = file.tvg; path = "img/filetypes-tvg/file.tvg"; sourceTree = SOURCE_ROOT; };
@@ -1939,6 +1941,7 @@
 			isa = PBXGroup;
 			children = (
 				DCC0855F2293F1FD008CC05C /* Info.plist */,
+				DCE0FC4923E42ACB0037B4AD /* Localized.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2128,10 +2131,10 @@
 				DC774E5A22F44E2A000B11A1 /* Display Settings */,
 				DCC5E443232654C1002E5B84 /* Foundation Extensions */,
 				DCFEFE2223687637009A142F /* Licensing */,
-				DC774E6522F44EA7000B11A1 /* Resources */,
 				DC774E5422F44DF6000B11A1 /* SDK Extensions */,
 				DC0030BE2350B1CE00BB8570 /* Tools */,
 				DC774E5B22F44E4A000B11A1 /* ZIP Archive */,
+				DC774E6522F44EA7000B11A1 /* Resources */,
 			);
 			path = ownCloudAppFramework;
 			sourceTree = "<group>";
@@ -2981,6 +2984,7 @@
 				DCB504DD221EF07F007638BE /* status-flash.tvg in Resources */,
 				DCE5E8B42080D781005F60CE /* folder-shared.tvg in Resources */,
 				DCE5E8A42080D781005F60CE /* audio.tvg in Resources */,
+				DCE0FC4723E42ACB0037B4AD /* Localized.strings in Resources */,
 				59D4895220C83F2E00369C2E /* InfoPlist.strings in Resources */,
 				DC3393A822E0C4ED00DD3DA4 /* icon-available-offline.tvg in Resources */,
 				6EB8EDC52114358400C2BF44 /* folder-create.tvg in Resources */,
@@ -3773,6 +3777,14 @@
 				DCC6565D20C9B7E400110A97 /* Base */,
 			);
 			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+		DCE0FC4923E42ACB0037B4AD /* Localized.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DCE0FC4823E42ACB0037B4AD /* en */,
+			);
+			name = Localized.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
