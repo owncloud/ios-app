@@ -71,9 +71,34 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		return false
 	}
 
-	func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-		if let urlContext = URLContexts.first {
-			ImportFilesController(url: urlContext.url, copyBeforeUsing: urlContext.options.openInPlace).accountUI()
-		}
-	}
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        if let urlContext = URLContexts.first {
+            if urlContext.url.scheme == "owncloud" {
+                
+                if let _ = urlContext.url.privateLinkItemID() {
+                    
+                    urlContext.url.retrieveLinkedItem(with: { (item, bookmark, error) in
+                        if let itemID = item?.localID, let bookmark = bookmark, let windowScene = scene as? UIWindowScene {
+                            windowScene.windows.first?.display(itemWithID: itemID, in: bookmark)
+                        }
+                    }, replaceScheme: true)
+                }
+            } else {
+                ImportFilesController(url: urlContext.url, copyBeforeUsing: urlContext.options.openInPlace).accountUI()
+            }
+        }
+    }
+    
+    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+            let url = userActivity.webpageURL else {
+                return
+        }
+        
+        url.retrieveLinkedItem(with: { (item, bookmark, error) in
+            if let itemID = item?.localID, let bookmark = bookmark, let windowScene = scene as? UIWindowScene {
+                windowScene.windows.first?.display(itemWithID: itemID, in: bookmark)
+            }
+        })
+    }
 }

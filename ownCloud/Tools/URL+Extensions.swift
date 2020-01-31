@@ -44,4 +44,53 @@ extension URL {
 
 		return progress
 	}
+    
+    func privateLinkItemID() -> String? {
+        
+        if self.pathComponents.count > 2 {
+            if self.pathComponents[self.pathComponents.count - 2] == "f" {
+                return self.pathComponents.last
+            }
+        }
+        
+        return nil
+    }
+    
+    @discardableResult func retrieveLinkedItem(with completion: @escaping (_ item:OCItem?, _ bookmark:OCBookmark?, _ error:Error?)->Void, replaceScheme:Bool = false) -> Bool {
+        // Check if the link is private ones and has item ID
+        guard let _ = self.privateLinkItemID() else {
+            return false
+        }
+        
+        // Find matching bookmark
+        guard let bookmark = OCBookmarkManager.shared.bookmarks.filter({$0.url?.host == self.host}).first else {
+            return false
+        }
+        
+        var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
+        // E.g. if we would like to use app URL scheme (owncloud://) instead of universal link, to make it work with oC SDK, we need to change scheme back to the original bookmark URL scheme
+        if replaceScheme {
+            components?.scheme = bookmark.url?.scheme
+        }
+        
+        if let privateLinkURL = components?.url {
+            OCCoreManager.shared.requestCore(for: bookmark, setup: nil) { (core, error) in
+                if core != nil {
+                    core?.retrieveItem(forPrivateLink: privateLinkURL, completionHandler: { (error, item) in
+                        OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+                        OnMainThread {
+                            completion(item, bookmark, error)
+                        }
+                    })
+                } else {
+                    OnMainThread {
+                        completion(nil, nil, error)
+                    }
+                }
+
+            }
+        }
+        
+        return true
+    }
 }
