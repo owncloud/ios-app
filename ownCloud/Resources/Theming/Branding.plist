@@ -5,7 +5,7 @@
 	<key>canAddAccount</key>
 	<false/>
 	<key>feedbackMail</key>
-	<string>info@sharjah.ae</string>
+	<string>info@saudiaramco.com</string>
 	<key>Bundle</key>
 	<dict>
 		<key>organizationLogoName</key>
@@ -19,17 +19,17 @@
 	<array>
 		<dict>
 			<key>identifier</key>
-			<string>DeG Files</string>
+			<string>Saudi Aramco</string>
 			<key>name</key>
-			<string>DeG Files</string>
+			<string>Saudi Aramco</string>
 			<key>welcome</key>
-			<string>Welcome to DeG Files</string>
+			<string>Welcome to Saudi Aramco</string>
 			<key>prompt</key>
 			<string>Enter your username and password:</string>
 			<key>bookmarkName</key>
-			<string>DeG Files</string>
+			<string>Saudi Aramco</string>
 			<key>url</key>
-			<string>https://degfiles.shj.ae/</string>
+			<string>https://oc-di-234.owncloud.works</string>
 			<key>maxBookmarkCount</key>
 			<integer>1</integer>
 			<key>allowedAuthenticationMethods</key>
@@ -41,9 +41,9 @@
 	<key>URLs</key>
 	<dict>
 		<key>Help</key>
-		<string>https://www.sharjah.ae/help</string>
+		<string>https://www.saudiaramco.com</string>
 		<key>Privacy</key>
-		<string>https://www.sharjah.ae/privacy-policy/</string>
+		<string>https://www.saudiaramco.com</string>
 	</dict>
 	<key>Generic</key>
 	<dict>
