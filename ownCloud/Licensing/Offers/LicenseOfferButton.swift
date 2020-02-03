@@ -19,6 +19,8 @@
 import UIKit
 
 class LicenseOfferButton: ThemeButton {
+	var originalTitle : String?
+
 	init(purchaseButtonWithTitle title: String, target: Any? = nil, action: Selector? = nil) {
 		super.init(frame: .zero)
 
@@ -30,6 +32,7 @@ class LicenseOfferButton: ThemeButton {
 		self.buttonHorizontalPadding = 23
 		self.buttonCornerRadius = -1
 
+		originalTitle = title
 		self.setTitle(title, for: .normal)
 
 		if let action = action {

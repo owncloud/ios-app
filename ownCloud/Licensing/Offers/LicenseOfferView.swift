@@ -247,27 +247,36 @@ class LicenseOfferView: UIView, Themeable {
 	}
 
 	func updateOfferFromState() {
+		var buttonTitle = purchaseButton?.originalTitle
+		var buttonEnabled = true
+
 		purchaseBusyView?.isHidden = true
 		purchaseButton?.isHidden = false
 
 		switch offer.state(in: environment) {
 			case .uncommitted, .expired:
-				purchaseButton?.isEnabled = true
+				buttonEnabled = true
 
 			case .unavailable:
-				purchaseButton?.isEnabled = false
+				buttonEnabled = false
 
 			case .redundant:
-				purchaseButton?.isEnabled = false
-				purchaseButton?.setTitle("Unlocked".localized, for: .normal)
+				buttonEnabled = false
+				buttonTitle = "Unlocked".localized
 
 			case .inProgress:
 				purchaseButton?.isHidden = true
 				purchaseBusyView?.isHidden = false
 
 			case .committed:
-				purchaseButton?.isEnabled = false
-				purchaseButton?.setTitle("Unlocked".localized, for: .normal)
+				buttonEnabled = false
+				buttonTitle = "Unlocked".localized
+		}
+
+		purchaseButton?.isEnabled = buttonEnabled
+
+		if let buttonTitle = buttonTitle {
+			purchaseButton?.setTitle(buttonTitle, for: .normal)
 		}
 	}
 }

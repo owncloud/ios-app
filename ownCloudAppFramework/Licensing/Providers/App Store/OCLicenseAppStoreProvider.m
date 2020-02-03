@@ -214,6 +214,7 @@
 	OCLogDebug(@"App Store Receipt loaded: %@", _receipt);
 
 	[self recomputeEntitlements];
+	[self recomputeOffers];
 }
 
 - (void)setReceiptNeedsReload
