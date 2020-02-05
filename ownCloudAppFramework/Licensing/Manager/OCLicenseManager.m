@@ -473,6 +473,8 @@
 {
 	OCLicenseAuthorizationStatus summaryAuthStatus = OCLicenseAuthorizationStatusUnknown;
 
+	OCLogDebug(@"Determining authorization status with entitlements: %@", entitlements);
+
 	// No entitlements => denied
 	if (entitlements.count == 0)
 	{
@@ -634,6 +636,8 @@
 		authStatus = [self _authorizationStatusForEntitlements:feature.entitlements inEnvironment:environment];
 	}
 
+	OCLogDebug(@"Returning authorizationStatus %lu for feature %@ in environment %@…", (unsigned long)authStatus, featureIdentifier, environment);
+
 	return (authStatus);
 }
 
@@ -648,6 +652,8 @@
 		authStatus = [self _authorizationStatusForEntitlements:product.entitlements inEnvironment:environment];
 	}
 
+	OCLogDebug(@"Returning authorizationStatus %lu for produt %@ in environment %@…", (unsigned long)authStatus, productIdentifier, environment);
+
 	return (authStatus);
 }
 
@@ -661,6 +667,8 @@
 
 - (void)_rebuildFromProvidersWithCompletionHandler:(dispatch_block_t)completionHandler
 {
+	OCLogDebug(@"Rebuilding from providers…");
+
 	@synchronized(self)
 	{
 		NSMutableSet<OCLicenseEntitlement *> *newEntitlements = [NSMutableSet new];
@@ -799,6 +807,28 @@
 			block(self, completionHandler);
 		}];
 	}
+}
+
+#pragma mark - Pending refresh tracking
+- (void)performAfterCurrentlyPendingRefreshes:(dispatch_block_t)block
+{
+	OCLogDebug(@"Queuing block %@ for execution after completing pending refreshes…", block);
+
+	[_queue async:^(dispatch_block_t  _Nonnull completionHandler) {
+		block();
+		completionHandler();
+	}];
+}
+
+#pragma mark - Log tagging
++ (NSArray<OCLogTagName> *)logTags
+{
+	return (@[@"Licensing", @"Manager"]);
+}
+
+- (NSArray<OCLogTagName> *)logTags
+{
+	return (@[@"Licensing", @"Manager"]);
 }
 
 @end

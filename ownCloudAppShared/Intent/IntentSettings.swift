@@ -32,7 +32,8 @@ class IntentSettings: NSObject {
 		return (self.classSetting(forOCClassSettingsKey: .shortcutsEnabled) as? Bool) ?? true
 	}
 
-	func isLicensedFor(bookmark: OCBookmark, core: OCCore? = nil) -> Bool {
+	@discardableResult
+	func isLicensedFor(bookmark: OCBookmark, core: OCCore? = nil, completion: ((Bool) -> Void)? = nil) -> Bool {
 		var environment : OCLicenseEnvironment? = core?.licenseEnvironment
 
 		if environment == nil {
@@ -40,7 +41,29 @@ class IntentSettings: NSObject {
 		}
 
 		if let environment = environment {
-			return (OCLicenseManager.shared.authorizationStatus(forFeature: .shortcuts, in: environment) == .granted)
+			if completion != nil {
+				OCLicenseManager.shared.perform(afterCurrentlyPendingRefreshes: {
+					completion?(OCLicenseManager.shared.authorizationStatus(forFeature: .shortcuts, in: environment) == .granted)
+				})
+			} else {
+				// Take a shortcut (ha!) if the authorization status is granted
+				if OCLicenseManager.shared.authorizationStatus(forFeature: .shortcuts, in: environment) == .granted {
+					return true
+				}
+
+				// Make sure that pending refreshes have been carried out otherwise, so the result is actually conclusive
+				let waitGroup = DispatchGroup()
+
+				waitGroup.enter()
+
+				OCLicenseManager.shared.perform(afterCurrentlyPendingRefreshes: {
+					waitGroup.leave()
+				})
+
+				_ = waitGroup.wait(timeout: .now() + 3)
+
+				return (OCLicenseManager.shared.authorizationStatus(forFeature: .shortcuts, in: environment) == .granted)
+			}
 		}
 
 		return false

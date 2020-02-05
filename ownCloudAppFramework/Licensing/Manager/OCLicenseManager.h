@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class OCLicenseObserver;
 @class OCLicenseTransaction;
 
-@interface OCLicenseManager : NSObject
+@interface OCLicenseManager : NSObject <OCLogTagging>
 
 @property(strong,nonatomic,class,readonly) OCLicenseManager *sharedLicenseManager;
 
@@ -58,6 +58,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (OCLicenseObserver *)observeOffersForProducts:(nullable NSArray<OCLicenseProductIdentifier> *)productIdentifiers features:(nullable NSArray<OCLicenseFeatureIdentifier> *)featureIdentifiers withOwner:(nullable id)owner updateHandler:(OCLicenseObserverOffersUpdateHandler)updateHandler; //!< Starts observing offers covering the provided products and features. The passed .updateHandler will be called whenever the offers change. An owner to which only a weak reference is stored can be passed for convenience. If the owner is deallocated, the observation will stop automatically.
 
 - (void)stopObserver:(OCLicenseObserver *)observer;
+
+#pragma mark - Pending refresh tracking
+- (void)performAfterCurrentlyPendingRefreshes:(dispatch_block_t)block; //!< Waits until all currently pending refreshes have been performed and then calls the block. Keep in mind pending refreshes are performed on the main thread, so you may not want to do any waiting or blocking for refreshes on the main thread, to avoid deadlocks.
 
 #pragma mark - One-off status info
 - (OCLicenseAuthorizationStatus)authorizationStatusForFeature:(OCLicenseFeatureIdentifier)featureIdentifier inEnvironment:(OCLicenseEnvironment *)environment;

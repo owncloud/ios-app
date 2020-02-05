@@ -17,6 +17,7 @@
  */
 
 #import <StoreKit/StoreKit.h>
+#import <ownCloudSDK/ownCloudSDK.h>
 
 #import "OCLicenseAppStoreProvider.h"
 #import "OCLicenseManager.h"
@@ -27,6 +28,8 @@
 #import "OCLicenseOffer.h"
 
 #define AppStoreOfferIdentifier(appStoreProductIdentifier) [@"appstore." stringByAppendingString:appStoreProductIdentifier]
+
+OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = @"org.owncloud.app-store-provider.data-changed";
 
 @interface OCLicenseAppStoreProvider () <SKProductsRequestDelegate, SKPaymentTransactionObserver>
 {
@@ -59,9 +62,20 @@
 		_commitErrorHandlerByProductIdentifier = [NSMutableDictionary new];
 
 		self.localizedName = OCLocalized(@"App Store");
+
+		__weak OCLicenseAppStoreProvider *weakSelf = self;
+
+		[OCIPNotificationCenter.sharedNotificationCenter addObserver:self forName:OCIPCNotificationNameLicenseAppStoreProviderDataChanged withHandler:^(OCIPNotificationCenter * _Nonnull notificationCenter, id  _Nonnull observer, OCIPCNotificationName  _Nonnull notificationName) {
+			[weakSelf loadReceipt];
+		}];
 	}
 
 	return (self);
+}
+
+- (void)dealloc
+{
+	[OCIPNotificationCenter.sharedNotificationCenter removeObserver:self forName:OCIPCNotificationNameLicenseAppStoreProviderDataChanged];
 }
 
 #pragma mark - Purchases allowed
@@ -195,6 +209,11 @@
 	}
 
 	return (_receipt);
+}
+
+- (void)_ipcNotifyToReloadReceipt
+{
+	[OCIPNotificationCenter.sharedNotificationCenter postNotificationForName:OCIPCNotificationNameLicenseAppStoreProviderDataChanged ignoreSelf:YES];
 }
 
 - (void)loadReceipt
@@ -689,6 +708,7 @@
 		if ((appStoreProductIdentifier != nil) && finishTransaction && (offerState == OCLicenseOfferStateCommitted))
 		{
 			[self loadReceipt];
+			[self _ipcNotifyToReloadReceipt];
 		}
 
 		// Report errors
@@ -740,6 +760,7 @@
 	@synchronized(self)
 	{
 		[self loadReceipt];
+		[self _ipcNotifyToReloadReceipt];
 
 		if (_restorePurchasesCompletionHandler != nil)
 		{
@@ -756,6 +777,7 @@
 	@synchronized(self)
 	{
 		[self loadReceipt];
+		[self _ipcNotifyToReloadReceipt];
 
 		if (_restorePurchasesCompletionHandler != nil)
 		{

@@ -101,4 +101,9 @@
 	return (OCLicenseAuthorizationStatusDenied);
 }
 
+- (NSString *)description
+{
+	return ([NSString stringWithFormat:@"<%@: %p, identifier: %@, productIdentifier: %@, type: %lu, valid: %d, expiryDate: %@, environmentApplicableRule: %@>", NSStringFromClass(self.class), self, _identifier, _productIdentifier, (unsigned long)_type, _valid, _expiryDate, _environmentApplicableRule]);
+}
+
 @end
