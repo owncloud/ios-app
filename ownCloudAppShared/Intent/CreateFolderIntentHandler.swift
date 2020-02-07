@@ -25,12 +25,10 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 
 	public func handle(intent: CreateFolderIntent, completion: @escaping (CreateFolderIntentResponse) -> Void) {
 
-		// Todo:
-		// if Shortcuts not enabled
-		//completion(GetAccountIntentResponse(code: .disabled, userActivity: nil))
-
-		// if enabled, but not a valid license
-		//completion(GetAccountIntentResponse(code: .unlicensed, userActivity: nil))
+		guard IntentSettings.shared.isEnabled else {
+			completion(CreateFolderIntentResponse(code: .disabled, userActivity: nil))
+			return
+		}
 
 		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(CreateFolderIntentResponse(code: .authenticationRequired, userActivity: nil))
@@ -44,6 +42,11 @@ public class CreateFolderIntentHandler: NSObject, CreateFolderIntentHandling {
 
 		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
 			completion(CreateFolderIntentResponse(code: .accountFailure, userActivity: nil))
+			return
+		}
+
+		guard IntentSettings.shared.isLicensedFor(bookmark: bookmark) else {
+			completion(CreateFolderIntentResponse(code: .unlicensed, userActivity: nil))
 			return
 		}
 

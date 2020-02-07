@@ -56,7 +56,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
 		var photoAssets = [PHAsset]()
-        
+
         Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Fetching images created after \(String(describing: userDefaults.instantUploadPhotosAfter))")
 
 		// Add photo assets
@@ -78,7 +78,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		}
 
 		var videoAssets = [PHAsset]()
-        
+
         Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Fetching videos created after \(String(describing: userDefaults.instantUploadVideosAfter))")
 
 		// Add video assets
@@ -137,7 +137,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 			let sort = NSSortDescriptor(key: "modificationDate", ascending: true)
 			fetchOptions.sortDescriptors = [sort]
-            
+
             Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Fetching assets with options \(fetchOptions.debugDescription)")
 
 			return PHAsset.fetchAssets(in: cameraRoll, options: fetchOptions)

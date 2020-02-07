@@ -42,7 +42,7 @@ class MediaDisplayViewController : DisplayViewController {
 	deinit {
 		playerStatusObservation?.invalidate()
 		playerItemStatusObservation?.invalidate()
-        
+
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
 
 		NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
@@ -253,7 +253,7 @@ class MediaDisplayViewController : DisplayViewController {
 			}
 			return .commandFailed
 		}
-        
+
         // TODO: Skip controls are useful for podcasts but not so much for music.
         // Disable them for now but keep the implementation of command handlers
         commandCenter.skipForwardCommand.isEnabled = false
@@ -267,15 +267,15 @@ class MediaDisplayViewController : DisplayViewController {
             if itemIndex > 0 {
                 enablePreviousTrackCommand = true
             }
-            
+
             if let displayHostController = self.parent as? DisplayHostViewController, let items = displayHostController.items {
                 enableNextTrackCommand = itemIndex < (items.count - 1)
             }
         }
-        
-        commandCenter.nextTrackCommand.isEnabled = enableNextTrackCommand
+
+	commandCenter.nextTrackCommand.isEnabled = enableNextTrackCommand
 		commandCenter.previousTrackCommand.isEnabled = enablePreviousTrackCommand
-        
+
         // Add handler for seek forward command
         commandCenter.nextTrackCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
             if let player = self?.player {
@@ -287,7 +287,7 @@ class MediaDisplayViewController : DisplayViewController {
             }
             return .commandFailed
         }
-        
+
         // Add handler for seek backward command
         commandCenter.previousTrackCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
             if let player = self?.player {
@@ -304,10 +304,10 @@ class MediaDisplayViewController : DisplayViewController {
     private func updateNowPlayingTimeline() {
 
         MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.playerItem?.currentTime().seconds
-        
+
         MPNowPlayingInfoCenter.default().nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = self.player?.rate
     }
-    
+
 	private func updateNowPlayingInfoCenter() {
         guard let player = self.player else { return }
 		guard let playerItem = self.playerItem else { return }
@@ -328,7 +328,6 @@ class MediaDisplayViewController : DisplayViewController {
 		}
 
 		MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
-        
         updateNowPlayingTimeline()
 	}
 }

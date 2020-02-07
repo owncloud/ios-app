@@ -429,6 +429,9 @@
 "Favorites"= "Favorites";
 "Images" = "Images";
 "PDF Documents" = "PDF Documents";
+"Text" = "Text";
+"Documents" = "Documents";
+"Audio" = "Audio";
 
 /* Media files settings */
 "Media Files" = "Media Files";
@@ -523,3 +526,50 @@
 "Crop or Rotate" = "Crop or Rotate";
 "Saving edited file failed" = "Saving edited file failed";
 "File no longer exists" = "File no longer exists";
+
+/* Licensing */
+"Unlocked" = "Unlocked";
+"Unlock" = "Unlock";
+
+"Subscribe Now" = "Subscribe Now";
+"Free" = "Free";
+
+"day" = "day";
+"%lu days" = "%lu days";
+
+"week" = "week";
+"%lu weeks" = "%lu weeks";
+
+"month" = "month";
+"%lu months" = "%lu months";
+
+"year" = "year";
+"%lu years" = "%lu years";
+
+/* Example usage: "Try [14 days] for free." */
+"Try %@ for free." = "Try %@ for free.";
+
+/* Example usage: "Then [1,99 €] / [year]." */
+"Then %@ / %@." = "Then %@ / %@.";
+
+/* Example usage: "[1,99 €] / [year] - starting immediately." */
+"%@ / %@ – starting immediately" = "%@ / %@ – starting immediately";
+
+/* Licensing: Pro Features */
+"Pro Features" = "Pro Features";
+
+/* Licensing: App Store */
+"Restore purchases" = "Restore purchases";
+"Restoring purchases…" = "Restoring purchases…";
+"Error restoring purchases" = "Error restoring purchases";
+"Error loading product info from App Store"= "Error loading product info from App Store";
+"Purchase failed" = "Purchase failed";
+
+/* Licensing: Enterprise */
+"Enterprise" = "Enterprise";
+
+/* Licensing: Settings */
+"In-App Purchases" = "In-App Purchases";
+
+"Purchases" = "Purchases";
+"Error fetching transactions" = "Error fetching transactions";
