@@ -27,13 +27,22 @@ class DocumentEditingAction : Action {
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut] }
 	class var supportedMimeTypes : [String] { return ["image", "pdf"] }
+	class var excludedMimeTypes : [String] { return ["image/x-dcraw"] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.count == 1, forContext.items.contains(where: {$0.type == .file}) {
 			if let item = forContext.items.first, let mimeType = item.mimeType {
 				if supportedMimeTypes.filter({
-					return mimeType.contains($0)
+					if mimeType.contains($0) {
+						if excludedMimeTypes.filter({
+							return mimeType.contains($0)
+						}).count == 0 {
+							return true
+						}
+					}
+
+					return false
 				}).count > 0 {
 					return .middle
 				}
