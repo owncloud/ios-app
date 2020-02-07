@@ -25,12 +25,10 @@ public class GetAccountIntentHandler: NSObject, GetAccountIntentHandling {
 
 	public func handle(intent: GetAccountIntent, completion: @escaping (GetAccountIntentResponse) -> Void) {
 
-		// Todo:
-		// if Shortcuts not enabled
-		//completion(GetAccountIntentResponse(code: .disabled, userActivity: nil))
-
-		// if enabled, but not a valid license
-		//completion(GetAccountIntentResponse(code: .unlicensed, userActivity: nil))
+		guard IntentSettings.shared.isEnabled else {
+			completion(GetAccountIntentResponse(code: .disabled, userActivity: nil))
+			return
+		}
 
 		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(GetAccountIntentResponse(code: .authenticationRequired, userActivity: nil))
@@ -42,12 +40,17 @@ public class GetAccountIntentHandler: NSObject, GetAccountIntentHandling {
 			return
 		}
 
-		guard let accountBookmark = OCBookmarkManager.shared.accountBookmark(for: uuid) else {
+		guard let (bookmark, account) = OCBookmarkManager.shared.accountBookmark(for: uuid) else {
 			completion(GetAccountIntentResponse(code: .accountFailure, userActivity: nil))
 			return
 		}
 
-		completion(GetAccountIntentResponse.success(account: accountBookmark))
+		guard IntentSettings.shared.isLicensedFor(bookmark: bookmark) else {
+			completion(GetAccountIntentResponse(code: .unlicensed, userActivity: nil))
+			return
+		}
+
+		completion(GetAccountIntentResponse.success(account: account))
 	}
 
 	public func resolveAccountUUID(for intent: GetAccountIntent, with completion: @escaping (INStringResolutionResult) -> Void) {

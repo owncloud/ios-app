@@ -40,14 +40,14 @@ extension OCBookmarkManager {
 		return OCBookmarkManager.shared.bookmarks.filter({ $0.uuid.uuidString == uuidString}).first
 	}
 
-	public func accountBookmark(for uuidString: String) -> Account? {
+	public func accountBookmark(for uuidString: String) -> (OCBookmark, Account)? {
 		if let bookmark = bookmark(for: uuidString) {
 			let account = Account(identifier: bookmark.uuid.uuidString, display: bookmark.shortName)
 			account.name = bookmark.shortName
 			account.serverURL = bookmark.url
 			account.uuid = bookmark.uuid.uuidString
 
-			return account
+			return (bookmark, account)
 		}
 
 		return nil

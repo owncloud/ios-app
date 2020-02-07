@@ -702,6 +702,10 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 	}
 
+	@objc func actionTriggered(_ sender: UIView) {
+		action?(self, sender)
+	}
+
 	// MARK: - Deinit
 
 	deinit {
