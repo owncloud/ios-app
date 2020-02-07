@@ -92,7 +92,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
-		OCExtensionManager.shared.addExtension(MediaEditingAction.actionExtension)
+		//TODO: Enable in version 1.4 after testing this feature
+		//OCExtensionManager.shared.addExtension(MediaEditingAction.actionExtension)
 		}
 
 		// Task extensions
