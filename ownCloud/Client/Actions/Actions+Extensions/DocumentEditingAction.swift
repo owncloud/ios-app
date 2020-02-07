@@ -28,6 +28,7 @@ class DocumentEditingAction : Action {
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut] }
 	class var supportedMimeTypes : [String] { return ["image", "pdf"] }
 	class var excludedMimeTypes : [String] { return ["image/x-dcraw"] }
+	override class var licenseRequirements: LicenseRequirements? { return LicenseRequirements(feature: .documentMarkup) }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -57,6 +58,10 @@ class DocumentEditingAction : Action {
 	override func run() {
 		guard context.items.count > 0, let hostViewController = context.viewController, let core = self.core else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
+			return
+		}
+
+		guard self.proceedWithLicensing(from: hostViewController) else {
 			return
 		}
 
