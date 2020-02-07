@@ -48,7 +48,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 		self.dataSource = self
 		self.delegate = self
-		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(dismissAnimated))
+		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
 
 		Theme.shared.register(client: self, applyImmediately: true)
 
@@ -87,6 +87,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 				self.dismiss(animated: true) {
 					if let modifiedContentsURL = self.modifiedContentsURL {
 						self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
+					} else if let savingMode = self.savingMode, savingMode == .createCopy {
+						self.saveModifiedContents(at: self.source, savingMode: savingMode)
 					}
 				}
 			}
@@ -94,6 +96,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 			self.dismiss(animated: true) {
 				if let modifiedContentsURL = self.modifiedContentsURL, let savingMode = self.savingMode {
 					self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
+				} else if let savingMode = self.savingMode, savingMode == .createCopy {
+					self.saveModifiedContents(at: self.source, savingMode: savingMode)
 				}
 			}
 		}
