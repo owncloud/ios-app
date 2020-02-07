@@ -22,14 +22,12 @@ import ownCloudSDK
 class AppLockHelper: NSObject {
 
 	var isPassCodeEnabled : Bool {
-		get {
-			let defaults = OCAppIdentity.shared.userDefaults
-			if let applockEnabled = defaults?.bool(forKey: "applock-lock-enabled") {
-				return applockEnabled
-			}
+		let defaults = OCAppIdentity.shared.userDefaults
 
-			return false
+		if let applockEnabled = defaults?.bool(forKey: "applock-lock-enabled") {
+			return applockEnabled
 		}
-	}
 
+		return false
+	}
 }

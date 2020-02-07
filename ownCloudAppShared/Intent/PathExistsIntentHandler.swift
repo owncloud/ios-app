@@ -25,12 +25,10 @@ public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 
 	public func handle(intent: PathExistsIntent, completion: @escaping (PathExistsIntentResponse) -> Void) {
 
-		// Todo:
-		// if Shortcuts not enabled
-		//completion(GetAccountIntentResponse(code: .disabled, userActivity: nil))
-
-		// if enabled, but not a valid license
-		//completion(GetAccountIntentResponse(code: .unlicensed, userActivity: nil))
+		guard IntentSettings.shared.isEnabled else {
+			completion(PathExistsIntentResponse(code: .disabled, userActivity: nil))
+			return
+		}
 
 		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(PathExistsIntentResponse(code: .authenticationRequired, userActivity: nil))
@@ -44,6 +42,11 @@ public class PathExistsIntentHandler: NSObject, PathExistsIntentHandling {
 
 		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
 			completion(PathExistsIntentResponse(code: .accountFailure, userActivity: nil))
+			return
+		}
+
+		guard IntentSettings.shared.isLicensedFor(bookmark: bookmark) else {
+			completion(PathExistsIntentResponse(code: .unlicensed, userActivity: nil))
 			return
 		}
 

@@ -18,6 +18,8 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
+import ownCloudAppShared
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -30,6 +32,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
 		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
+
+		// Set up license management
+		OCLicenseManager.shared.setupLicenseManagement()
 
 		// Set up app
 		window = ThemeWindow(frame: UIScreen.main.bounds)
@@ -80,15 +85,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(LinksAction.actionExtension)
 		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
-		// OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
-
 		if #available(iOS 13.0, *) {
 			if UIDevice.current.isIpad() {
 				OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
 				OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
 			}
-			OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
-			OCExtensionManager.shared.addExtension(MediaEditingAction.actionExtension)
+		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
+		OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MediaEditingAction.actionExtension)
 		}
 
 		// Task extensions

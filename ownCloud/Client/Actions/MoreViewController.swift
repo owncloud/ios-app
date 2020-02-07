@@ -75,7 +75,10 @@ class MoreViewController: UIViewController, CardPresentationSizing {
 			headerView.topAnchor.constraint(equalTo: view.topAnchor)
 		])
 
+		self.addChild(viewController)
 		view.addSubview(viewController.view)
+		viewController.didMove(toParent: self)
+
 		viewController.view.translatesAutoresizingMaskIntoConstraints = false
 
 		let bottomConstraint = viewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)

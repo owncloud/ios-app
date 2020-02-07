@@ -23,6 +23,12 @@ protocol LibraryShareList: UIViewController {
 	func updateWith(shares: [OCShare])
 }
 
+struct QuickAccessQuery {
+	var name : String
+	var mimeType : [String]
+	var imageName : String
+}
+
 class LibraryShareView {
 	enum Identifier : String {
 		case sharedWithYou
@@ -393,11 +399,23 @@ class LibraryTableViewController: StaticTableViewController {
 				completion()
 			})
 
-			let imageQuery = OCQuery(condition: .where(.mimeType, contains: "image"), inputFilter:nil)
-			addCollectionRow(to: section, title: "Images".localized, themeImageName: "image", query: imageQuery, actionHandler: nil)
+			let queries = [
+				QuickAccessQuery(name: "PDF Documents".localized, mimeType: ["pdf"], imageName: "application-pdf"),
+				QuickAccessQuery(name: "Documents".localized, mimeType: ["doc", "application/vnd", "application/msword", "application/ms-doc", "text/rtf", "application/rtf", "application/mspowerpoint", "application/powerpoint", "application/x-mspowerpoint", "application/excel", "application/x-excel", "application/x-msexcel"], imageName: "x-office-document"),
+				QuickAccessQuery(name: "Text".localized, mimeType: ["text/plain"], imageName: "text"),
+				QuickAccessQuery(name: "Images".localized, mimeType: ["image"], imageName: "image"),
+				QuickAccessQuery(name: "Videos".localized, mimeType: ["video"], imageName: "video"),
+				QuickAccessQuery(name: "Audio".localized, mimeType: ["audio"], imageName: "audio")
+			]
 
-			let pdfQuery = OCQuery(condition: .where(.mimeType, contains: "pdf"), inputFilter:nil)
-			addCollectionRow(to: section, title: "PDF Documents".localized, themeImageName: "application-pdf", query: pdfQuery, actionHandler: nil)
+			for query in queries {
+				let conditions = query.mimeType.map { (mimeType) -> OCQueryCondition in
+					return .where(.mimeType, contains: mimeType)
+				}
+
+				let customQuery = OCQuery(condition: .any(of: conditions), inputFilter:nil)
+				addCollectionRow(to: section, title: query.name, image: Theme.shared.image(for: query.imageName, size: CGSize(width: 25, height: 25))!, query: customQuery, actionHandler: nil)
+			}
 		}
 	}
 
