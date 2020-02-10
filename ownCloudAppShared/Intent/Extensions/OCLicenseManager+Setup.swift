@@ -21,11 +21,13 @@ import ownCloudApp
 public extension OCLicenseFeatureIdentifier {
 	static var documentScanner : OCLicenseFeatureIdentifier { return OCLicenseFeatureIdentifier(rawValue: "document-scanner") }
 	static var shortcuts : OCLicenseFeatureIdentifier { return OCLicenseFeatureIdentifier(rawValue: "shortcuts") }
+	static var documentMarkup : OCLicenseFeatureIdentifier { return OCLicenseFeatureIdentifier(rawValue: "document-markup") }
 }
 
 public extension OCLicenseProductIdentifier {
 	static var singleDocumentScanner : OCLicenseProductIdentifier { return OCLicenseProductIdentifier(rawValue: "single.document-scanner") }
 	static var singleShortcuts : OCLicenseProductIdentifier { return OCLicenseProductIdentifier(rawValue: "single.shortcuts") }
+	static var singleDocumentMarkup : OCLicenseProductIdentifier { return OCLicenseProductIdentifier(rawValue: "single.document-markup") }
 
 	static var bundlePro : OCLicenseProductIdentifier { return OCLicenseProductIdentifier(rawValue: "bundle.pro") }
 }
@@ -43,22 +45,26 @@ public extension OCLicenseManager {
 		// Set up features and products
 		let documentScannerFeature = OCLicenseFeature(identifier: .documentScanner, name: "Document Scanner".localized, description: "Scan documents and photos with your camera.".localized)
 		let shortcutsFeature = OCLicenseFeature(identifier: .shortcuts, name: "Shortcuts Actions".localized, description: "Use ownCloud actions in Shortcuts.".localized)
+		let documentMarkupFeature = OCLicenseFeature(identifier: .documentMarkup, name: "Markup Documents".localized, description: "Markup photos and PDF files.".localized)
 
 		// - Features
 		register(documentScannerFeature)
 		register(shortcutsFeature)
+		register(documentMarkupFeature)
 
 		// - Single feature products
 		register(OCLicenseProduct(identifier: .singleDocumentScanner, name: documentScannerFeature.localizedName!, description: documentScannerFeature.localizedDescription, contents: [.documentScanner]))
 		register(OCLicenseProduct(identifier: .singleShortcuts, name: shortcutsFeature.localizedName!, description: shortcutsFeature.localizedDescription, contents: [.shortcuts]))
+		register(OCLicenseProduct(identifier: .singleDocumentMarkup, name: documentMarkupFeature.localizedName!, description: documentMarkupFeature.localizedDescription, contents: [.documentMarkup]))
 
 		// - Subscription
-		register(OCLicenseProduct(identifier: .bundlePro, name: "Pro Features".localized, description: "Unlock all Pro Features.".localized, contents: [.documentScanner, .shortcuts]))
+		register(OCLicenseProduct(identifier: .bundlePro, name: "Pro Features".localized, description: "Unlock all Pro Features.".localized, contents: [.documentScanner, .shortcuts, .documentMarkup]))
 
 		// Set up App Store License Provider
 		let appStoreLicenseProvider = OCLicenseAppStoreProvider(items: [
 			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentscanner", productIdentifier: .singleDocumentScanner),
 			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.shortcuts", productIdentifier: .singleShortcuts),
+			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentmarkup", productIdentifier: .singleDocumentMarkup),
 			OCLicenseAppStoreItem.subscription(withAppStoreIdentifier: "bundle.pro", productIdentifier: .bundlePro, trialDuration: OCLicenseDuration(unit: .day, length: 14))
 		])
 

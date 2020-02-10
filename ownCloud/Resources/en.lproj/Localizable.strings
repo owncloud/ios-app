@@ -517,6 +517,16 @@
 "Favorite" = "Favorite";
 "Cut" = "Cut";
 
+/* Markup */
+"How should this file be saved?" = "How should this file be saved?";
+"Overwrite original" = "Overwrite original";
+"Save as copy" = "Save as copy";
+"Discard changes" = "Discard changes";
+"Markup" = "Markup";
+"Crop or Rotate" = "Crop or Rotate";
+"Saving edited file failed" = "Saving edited file failed";
+"File no longer exists" = "File no longer exists";
+
 /* Licensing */
 "Unlocked" = "Unlocked";
 "Unlock" = "Unlock";

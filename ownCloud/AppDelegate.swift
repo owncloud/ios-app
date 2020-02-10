@@ -85,10 +85,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(LinksAction.actionExtension)
 		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
+		if #available(iOS 13.0, *) {
+			if UIDevice.current.isIpad() {
+				OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
+				OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
+			}
 		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
-		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
-			OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
-			OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
+		OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
+		//TODO: Enable in version 1.4 after testing this feature
+		//OCExtensionManager.shared.addExtension(MediaEditingAction.actionExtension)
 		}
 
 		// Task extensions
