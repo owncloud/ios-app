@@ -148,16 +148,6 @@
 				</dict>
 				<dict>
 					<key>Title</key>
-					<string>File List Layout</string>
-					<key>Subtitle</key>
-					<string>There is a smaller and cleaner file list layout to show more informations.</string>
-					<key>Type</key>
-					<string>New</string>
-					<key>ImageData</key>
-					<string>iVBORw0KGgoAAAANSUhEUgAAADUAAAAfCAYAAABH0YUgAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAABK8DAAAQXQAAAEgAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADWgAwAEAAAAAQAAAB8AAAAAxZI1qAAAAAlwSFlzAAALRQAACxMB2k138gAAAXJJREFUWAntmM0qRVEUx3GVjygMKBmReAYZKQ+glPIAysDIxGPIjHdgqKQkxVCGylgGykRE8vH7q12rc8+63cnptE9r1a/933utu+9aq1Nnn93q8W0Q1zL0w4sflo9njFTv4Re+YRuysV4n0x3WD4zvGT1p5knOIxTr7ZPiqhiP2fSybGM9WmX2VVgszpP7A/EEdRT1mpLodhwm8Ab0+CnxDWiE9VHFAow3opooIjoQHYgORAea1oE1CjqBfZhoQnFLFPEDOlGIU/BMR6Q68PJx1/fwpII0vjmRK4U4+5uq9a6T0/+3UplP5z5r13Zi9AV6BOo40HqNNum1y02WzuAIptrdsRIdiA5EB6ID0YHKO9Dq8A96oc6C7v0+O8Rl4xoi0yvQUecd1iEb8443W1RwaKp4RM+YeZLTCJ08vH1SXBXjOZvelW3sXWbqHt3agJ0YPYqegzqKujV5dCX1/fQAevz0CaKr5UaYbmlXYTG3av4AOqxMfQL52RcAAAAASUVORK5CYII=</string>
-				</dict>
-				<dict>
-					<key>Title</key>
 					<string>Sort Bar in Directory Picker</string>
 					<key>Subtitle</key>
 					<string>The sort bar is now also present in the Directory Picker view.</string>
