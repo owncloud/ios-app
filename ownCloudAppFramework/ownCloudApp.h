@@ -31,3 +31,26 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 #import <ownCloudApp/OCCore+BundleImport.h>
 #import <ownCloudApp/NSObject+AnnotatedProperties.h>
 #import <ownCloudApp/ZIPArchive.h>
+
+#import <ownCloudApp/OCLicenseTypes.h>
+#import <ownCloudApp/OCLicenseManager.h>
+#import <ownCloudApp/OCLicenseObserver.h>
+
+#import <ownCloudApp/OCLicenseFeature.h>
+#import <ownCloudApp/OCLicenseProduct.h>
+
+#import <ownCloudApp/OCLicenseProvider.h>
+#import <ownCloudApp/OCLicenseEntitlement.h>
+#import <ownCloudApp/OCLicenseOffer.h>
+#import <ownCloudApp/OCLicenseDuration.h>
+#import <ownCloudApp/OCLicenseTransaction.h>
+
+#import <ownCloudApp/OCLicenseAppStoreProvider.h>
+#import <ownCloudApp/OCLicenseAppStoreItem.h>
+#import <ownCloudApp/OCLicenseAppStoreReceipt.h>
+#import <ownCloudApp/OCLicenseAppStoreReceiptInAppPurchase.h>
+
+#import <ownCloudApp/OCLicenseEnterpriseProvider.h>
+
+#import <ownCloudApp/OCLicenseEnvironment.h>
+#import <ownCloudApp/OCCore+LicenseEnvironment.h>

@@ -28,13 +28,11 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 
 	public func handle(intent: GetFileIntent, completion: @escaping (GetFileIntentResponse) -> Void) {
 
-		// Todo:
-		// if Shortcuts not enabled
-		//completion(GetAccountIntentResponse(code: .disabled, userActivity: nil))
+		guard IntentSettings.shared.isEnabled else {
+			completion(GetFileIntentResponse(code: .disabled, userActivity: nil))
+			return
+		}
 
-		// if enabled, but not a valid license
-		//completion(GetAccountIntentResponse(code: .unlicensed, userActivity: nil))
-		
 		guard !AppLockHelper().isPassCodeEnabled else {
 			completion(GetFileIntentResponse(code: .authenticationRequired, userActivity: nil))
 			return
@@ -47,6 +45,11 @@ public class GetFileIntentHandler: NSObject, GetFileIntentHandling {
 
 		guard let bookmark = OCBookmarkManager.shared.bookmark(for: uuid) else {
 			completion(GetFileIntentResponse(code: .accountFailure, userActivity: nil))
+			return
+		}
+
+		guard IntentSettings.shared.isLicensedFor(bookmark: bookmark) else {
+			completion(GetFileIntentResponse(code: .unlicensed, userActivity: nil))
 			return
 		}
 

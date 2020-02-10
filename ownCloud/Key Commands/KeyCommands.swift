@@ -782,7 +782,7 @@ extension QueryFileListTableViewController {
 	}
 
 	@objc func changeSortMethod(_ command : UIKeyCommand) {
-		for (_, method) in SortMethod.all.enumerated() {
+		for method in SortMethod.all {
 			let sortTitle = String(format: "Sort by %@".localized, method.localizedName())
 			if command.discoverabilityTitle == sortTitle {
 				self.sortBar?.sortMethod = method

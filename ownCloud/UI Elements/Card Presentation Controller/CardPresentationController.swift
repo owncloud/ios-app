@@ -70,7 +70,7 @@ final class CardPresentationController: UIPresentationController, Themeable {
 	}
 
 	private var windowFrame: CGRect {
-		if let window = UIApplication.shared.currentWindow() as? UIWindow {
+		if let window = UIApplication.shared.currentWindow() {
 			return window.bounds
 		} else {
 			return UIScreen.main.bounds
