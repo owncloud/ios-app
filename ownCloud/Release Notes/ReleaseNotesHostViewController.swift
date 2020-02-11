@@ -146,7 +146,7 @@ extension ReleaseNotesHostViewController : Themeable {
 		titleLabel.applyThemeCollection(collection, itemStyle: .logo)
 		proceedButton.backgroundColor = collection.neutralColors.normal.background
 		proceedButton.setTitleColor(collection.neutralColors.normal.foreground, for: .normal)
-		footerButton.titleLabel?.textColor = collection.tableRowColors.labelColor
+		footerButton.setTitleColor(collection.tableRowColors.labelColor, for: .normal)
 	}
 }
 
