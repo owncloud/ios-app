@@ -104,6 +104,7 @@
 		39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E6DE85233CDF1E008DAE04 /* OCItemTracker.swift */; };
 		39E98B3E22797D1B009911F1 /* PublicLinkTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E98B3D22797D1B009911F1 /* PublicLinkTableViewController.swift */; };
 		39E98B452279ACF5009911F1 /* PublicLinkEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E98B442279ACF5009911F1 /* PublicLinkEditTableViewController.swift */; };
+		39EEA1A323F45C51002B8229 /* UIDevice+UIUserInterfaceIdiom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E22BB220C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift */; };
 		39F689AB22F018C100E63429 /* GetDirectoryListingIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F689AA22F018C100E63429 /* GetDirectoryListingIntentHandler.swift */; };
 		39F689AC22F0206900E63429 /* OCBookmark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */; };
 		46B9D336BF7FE50321823888 /* Pods_ownCloudScreenshotsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54199937F74A129BC74DEB0A /* Pods_ownCloudScreenshotsTests.framework */; };
@@ -3500,6 +3501,7 @@
 				59296652224CD1DB0078F13D /* OCBookmarkManager+Tools.swift in Sources */,
 				59799F8122415956007E8008 /* EarlGrey+Tools.swift in Sources */,
 				59799F80224158FD007E8008 /* EarlGrey.swift in Sources */,
+				39EEA1A323F45C51002B8229 /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
