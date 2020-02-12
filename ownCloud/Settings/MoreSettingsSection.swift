@@ -22,6 +22,7 @@ import WebKit
 import MessageUI
 import SafariServices
 import ownCloudSDK
+import ownCloudApp
 
 class MoreSettingsSection: SettingsSection {
 	// MARK: - More Settings Cells
@@ -65,7 +66,7 @@ class MoreSettingsSection: SettingsSection {
 			if let viewController = self?.viewController {
 				VendorServices.shared.sendFeedback(from: viewController)
 			}
-			}, title: "Send feedback".localized, accessoryType: .disclosureIndicator, identifier: "send-feedback")
+		}, title: "Send feedback".localized, accessoryType: .disclosureIndicator, identifier: "send-feedback")
 
 		recommendRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let viewController = self?.viewController {

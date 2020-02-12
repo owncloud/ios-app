@@ -146,7 +146,7 @@ extension VendorServices : OCClassSettingsSupport {
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
-			return [ .isBetaBuild : true, .showBetaWarning : true, .enableUIAnimations: true ]
+			return [ .isBetaBuild : false, .showBetaWarning : false, .enableUIAnimations: true ]
 		}
 
 		return nil

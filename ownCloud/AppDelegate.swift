@@ -18,6 +18,8 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
+import ownCloudAppShared
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -30,6 +32,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
 		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
+
+		// Set up license management
+		OCLicenseManager.shared.setupLicenseManagement()
 
 		// Set up app
 		window = ThemeWindow(frame: UIScreen.main.bounds)
@@ -72,19 +77,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
-		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
-		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CollaborateAction.actionExtension)
 		OCExtensionManager.shared.addExtension(LinksAction.actionExtension)
 		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
-		// OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
-
-		if #available(iOS 13.0, *), UIDevice.current.isIpad() {
-			OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
-			OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
+		if #available(iOS 13.0, *) {
+			if UIDevice.current.isIpad() {
+				OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
+				OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
+			}
+		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
+		OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
+		//TODO: Enable in version 1.4 after testing this feature
+		//OCExtensionManager.shared.addExtension(MediaEditingAction.actionExtension)
 		}
 
 		// Task extensions
