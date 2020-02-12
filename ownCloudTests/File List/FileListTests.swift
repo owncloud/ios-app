@@ -29,7 +29,7 @@ class FileListTests: FileTests {
 			//Mocks
 			self.showFileList(bookmark: bookmark)
 
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).assert(grey_sufficientlyVisible())
+			EarlGrey.selectElement(with: grey_accessibilityID("client.file-add")).assert(grey_sufficientlyVisible())
 
 			self.dismissFileList()
 		} else {
@@ -51,7 +51,7 @@ class FileListTests: FileTests {
 			var error:NSError?
 			var index: UInt = 0
 			while true {
-				EarlGrey.select(elementWithMatcher: grey_kindOfClass(ClientItemCell.self)).atIndex(index).assert( grey_notNil(), error: &error)
+				EarlGrey.selectElement(with: grey_kindOfClass(ClientItemCell.self)).atIndex(index).assert( grey_notNil(), error: &error)
 				if error != nil {
 					break
 				} else {

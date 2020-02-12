@@ -28,13 +28,13 @@ class OwnCloudTests: XCTestCase {
      */
     func testAddServerButtonIsEnabled() {
 	EarlGrey.waitForElement(accessibilityID: "addServer")
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert( grey_enabled())
+        EarlGrey.selectElement(with: grey_accessibilityID("addServer")).assert( grey_enabled())
     }
 
     func testClickOnTheButtonAndNothingHappens() {
 	EarlGrey.waitForElement(accessibilityID: "addServer")
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).perform(grey_tap())
+        EarlGrey.selectElement(with: grey_accessibilityID("addServer")).perform(grey_tap())
 	EarlGrey.waitForElement(accessibilityID: "cancel")
-        EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel")).perform(grey_tap())
+        EarlGrey.selectElement(with: grey_accessibilityID("cancel")).perform(grey_tap())
     }
 }

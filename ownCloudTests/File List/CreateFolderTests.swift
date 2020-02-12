@@ -28,17 +28,17 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Create folder".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_text("Create folder".localized)).perform(grey_tap())
 
 			//Asserts
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).assert(grey_sufficientlyVisible())
+			EarlGrey.selectElement(with: grey_accessibilityID("name-text-field")).assert(grey_sufficientlyVisible())
 
 			//Remove Mocks
 			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("cancel-button")).perform(grey_tap())
 			dismissFileList()
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
@@ -59,8 +59,8 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Create folder".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_text("Create folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
@@ -68,14 +68,14 @@ class CreateFolderTests: FileTests {
 			//Mock again
 			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
+			EarlGrey.selectElement(with: grey_accessibilityID("done-button")).perform(grey_tap())
 
 			//Assert
 			let isFolderCreated = GREYCondition(name: "Wait for folder is created", block: {
 				var error: NSError?
 
-				EarlGrey.select(elementWithMatcher: grey_accessibilityID(folderName)).assert(grey_sufficientlyVisible(), error: &error)
+				EarlGrey.selectElement(with: grey_accessibilityID(folderName)).assert(grey_sufficientlyVisible(), error: &error)
 
 				return error == nil
 			}).wait(withTimeout: 5.0, pollInterval: 0.5)
@@ -107,8 +107,8 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Create folder".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_text("Create folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
@@ -116,16 +116,16 @@ class CreateFolderTests: FileTests {
 			//Mock again
 			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
+			EarlGrey.selectElement(with: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
 
 			//Assert
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).assert(grey_not(grey_enabled()))
+			EarlGrey.selectElement(with: grey_accessibilityID("done-button")).assert(grey_not(grey_enabled()))
 
 			//Remove Mocks
 			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("cancel-button")).perform(grey_tap())
 			dismissFileList()
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
@@ -146,8 +146,8 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Create folder".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_text("Create folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
@@ -155,16 +155,16 @@ class CreateFolderTests: FileTests {
 			//Mock again
 			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
+			EarlGrey.selectElement(with: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
 
 			//Assert
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).assert(grey_enabled())
+			EarlGrey.selectElement(with: grey_accessibilityID("done-button")).assert(grey_enabled())
 
 			//Remove Mocks
 			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("cancel-button")).perform(grey_tap())
 			dismissFileList()
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
@@ -185,8 +185,8 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Create folder".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_text("Create folder".localized)).perform(grey_tap())
 
 			//Remove Mocks
 			OCMockManager.shared.removeMockingBlock(atLocation: OCMockLocation.ocQueryRequestChangeSetWithFlags)
@@ -194,18 +194,18 @@ class CreateFolderTests: FileTests {
 			//Mock again
 			self.mockQueryPropfindResults(resourceName: "PropfindResponseNewFolder", basePath: "/remote.php/dav/files/admin", state: .contentsFromCache)
 
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
+			EarlGrey.selectElement(with: grey_accessibilityID("done-button")).perform(grey_tap())
 
 			//Assert
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("forbidden-characters-alert")).assert(grey_sufficientlyVisible())
+			EarlGrey.selectElement(with: grey_accessibilityID("forbidden-characters-alert")).assert(grey_sufficientlyVisible())
 
 			//Remove Mocks
 			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_text("OK".localized)).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("cancel-button")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_text("OK".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("cancel-button")).perform(grey_tap())
 			dismissFileList()
 		} else {
 			assertionFailure("File list not loaded because Bookmark is nil")
@@ -231,22 +231,22 @@ class CreateFolderTests: FileTests {
 			self.showFileList(bookmark: bookmark, issue: issue)
 
 			//Actions
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("client.file-add")).perform(grey_tap())
-			EarlGrey.select(elementWithMatcher: grey_text("Create folder".localized)).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("client.file-add")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_text("Create folder".localized)).perform(grey_tap())
 
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("done-button")).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_accessibilityID("name-text-field")).perform(grey_replaceText(folderName))
+			EarlGrey.selectElement(with: grey_accessibilityID("done-button")).perform(grey_tap())
 
 			//Assert
 			EarlGrey.waitForElement(withMatcher: grey_text(errorTitle), label: errorTitle)
-			EarlGrey.select(elementWithMatcher: grey_text(errorTitle)).assert(grey_sufficientlyVisible())
-			EarlGrey.select(elementWithMatcher: grey_text(errorMessage)).assert(grey_sufficientlyVisible())
+			EarlGrey.selectElement(with: grey_text(errorTitle)).assert(grey_sufficientlyVisible())
+			EarlGrey.selectElement(with: grey_text(errorMessage)).assert(grey_sufficientlyVisible())
 
 			//Remove Mocks
 			OCMockManager.shared.removeAllMockingBlocks()
 
 			//Reset status
-			EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).atIndex(0).perform(grey_tap())
+			EarlGrey.selectElement(with: grey_text("Cancel".localized)).atIndex(0).perform(grey_tap())
 			dismissFileList()
 
 		} else {
