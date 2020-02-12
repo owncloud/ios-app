@@ -27,8 +27,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		if let windowScene = scene as? UIWindowScene {
 			window = ThemeWindow(windowScene: windowScene)
-			let serverListTableViewController = ServerListTableViewController(style: UITableView.Style.plain)
+
+			let serverListTableViewController = ServerListTableViewController(style: .plain)
 			serverListTableViewController.restorationIdentifier = "ServerListTableViewController"
+
 			let navigationController = ThemeNavigationController(rootViewController: serverListTableViewController)
 			window?.rootViewController = navigationController
 			window?.addSubview((navigationController.view)!)
