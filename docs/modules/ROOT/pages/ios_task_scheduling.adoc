@@ -7,7 +7,7 @@ These factors include:
 * Is WiFi available?
 * Is the device in Low Power Mode?
 * Is the device connected to external power?
-* Has the photo library has changed?
+* Has the photo library changed?
 
 == Tasks 
 
