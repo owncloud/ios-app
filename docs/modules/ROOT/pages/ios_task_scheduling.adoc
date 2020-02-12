@@ -14,7 +14,7 @@ These factors include:
 Currently, two tasks are available:
 
 * *Instant photo uploads:* This task is triggered when:
-** The photo library has new assets
+** The photo library has new photos, and;
 ** The user is connected to a WiFi network
 * *Bookmark update task:* This task is triggered by the background fetch event scheduled by iOS
 
