@@ -19,6 +19,7 @@ Release a new version
 - [ ] [DEV] Update `APP_SHORT_VERSION` `[major].[minor].[patch]` in [ownCloud.xcodeproj/project.pbxproj](https://github.com/owncloud/ios-app/blob/master/ownCloud.xcodeproj/project.pbxproj)
 - [ ] [TRFX] Update translations from transifex branch.
 - [ ] [DIS] Update [changelog](https://github.com/owncloud/ios-app/blob/master/CHANGELOG.md)
+- [ ] [DEV] Update In-App Release Notes (changelog) in ownCloud/Release Notes/ReleaseNotes.plist
 - [ ] [QA] Design Test plan
 - [ ] [QA] Regression Test plan
 - [ ] [DOC] Update user manual with the new functionalities
@@ -29,7 +30,7 @@ Release a new version
 
 If it is required to update the iOS-SDK version:
 
-- [ ] [GIT] Create branch library `release/[major].[minor].[patch]`(freeze the code) 
+- [ ] [GIT] Create branch library `release/[major].[minor].[patch]`(freeze the code)
 - [ ] [mail] inform #marketing about the new release.
 - [ ] [DIS] Update README.md (version number, third party, supported versions of iOS, Xcode)
 - [ ] [DIS] Update [changelog](https://github.com/owncloud/ios-sdk/blob/master/CHANGELOG.md)

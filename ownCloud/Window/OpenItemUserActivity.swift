@@ -31,7 +31,7 @@ class OpenItemUserActivity : NSObject {
 	var openItemUserActivity: NSUserActivity {
 		let userActivity = NSUserActivity(activityType: ownCloudOpenItemActivityType)
 		userActivity.title = ownCloudOpenItemPath
-		userActivity.userInfo = [ownCloudOpenItemUuidKey: item.localID!, ownCloudOpenAccountAccountUuidKey : bookmark.uuid.uuidString]
+		userActivity.userInfo = [ownCloudOpenItemUuidKey: item.localID as Any, ownCloudOpenAccountAccountUuidKey : bookmark.uuid.uuidString]
 		return userActivity
 	}
 

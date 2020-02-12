@@ -28,7 +28,7 @@ class MediaUploadActivity : OCActivity {
 	}
 
 	init(identifier: String, assetCount:Int) {
-		super.init(identifier: identifier)
+		super.init(identifier: OCActivityIdentifier(rawValue: identifier))
 		self.isCancellable = true
 		self.localizedDescription = "Media import".localized
 

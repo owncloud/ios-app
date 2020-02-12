@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 enum ActionCategory {
 	case normal
@@ -298,13 +299,61 @@ class Action : NSObject {
 		}
 	}
 
+	// MARK: - Licensing
+	class var licenseRequirements : LicenseRequirements? { return nil }
+
+	var isLicensed : Bool {
+		guard let core = self.core else {
+			return false
+		}
+
+		if let licenseRequirements = type(of:self).licenseRequirements, !licenseRequirements.isUnlocked(for: core) {
+			return false
+		}
+
+		return true
+	}
+
+	func proceedWithLicensing(from viewController: UIViewController) -> Bool {
+		if !isLicensed {
+			if let core = core, let requirements = type(of:self).licenseRequirements {
+				OnMainThread {
+					OCLicenseManager.appStoreProvider?.refreshProductsIfNeeded(completionHandler: { (error) in
+						OnMainThread {
+							if error != nil {
+								let alertController = ThemedAlertController(with: "Error loading product info from App Store".localized, message: error!.localizedDescription)
+
+								viewController.present(alertController, animated: true)
+							} else {
+								let offersViewController = LicenseOffersViewController(withFeature: requirements.feature, in: core.licenseEnvironment)
+
+								viewController.present(asCard: MoreViewController(header: offersViewController.cardHeaderView!, viewController: offersViewController), animated: true)
+							}
+						}
+					})
+				}
+			}
+
+			return false
+		}
+
+		return true
+	}
+
 	// MARK: - Action UI elements
 	private static let staticRowImageWidth : CGFloat = 32
+	private let proLabel = "ᴾᴿᴼ" // "🅿🆁🅾"
 
 	func provideStaticRow() -> StaticTableViewRow? {
+		var name = actionExtension.name
+
+		if !isLicensed {
+			name += " " + proLabel
+		}
+
 		return StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
 			self.perform()
-		}, title: actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .plain, image: self.icon, imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: actionExtension.identifier.rawValue)
+		}, title: name, style: actionExtension.category == .destructive ? .destructive : .plain, image: self.icon, imageWidth: Action.staticRowImageWidth, alignment: .left, identifier: actionExtension.identifier.rawValue)
 	}
 
 	func provideContextualAction() -> UIContextualAction? {
@@ -315,7 +364,13 @@ class Action : NSObject {
 	}
 
 	func provideAlertAction() -> UIAlertAction? {
-		let alertAction = UIAlertAction(title: self.actionExtension.name, style: actionExtension.category == .destructive ? .destructive : .default, handler: { (_ alertAction) in
+		var name = actionExtension.name
+
+		if !isLicensed {
+			name += " " + proLabel
+		}
+
+		let alertAction = UIAlertAction(title: name, style: actionExtension.category == .destructive ? .destructive : .default, handler: { (_ alertAction) in
 			self.perform()
 		})
 
