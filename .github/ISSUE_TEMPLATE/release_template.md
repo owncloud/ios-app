@@ -1,6 +1,14 @@
 <!--
 This is the template to release a new version on the App Store
 -->
+---
+name: Release
+about: List of checklist to accomplish for the ownCloud team to finish the release process
+title: "[RELEASE]"
+labels: Release
+assignees: ''
+
+---
 
 Release a new version
 ## TASKS:
