@@ -27,7 +27,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	private let SELECT_BUTTON_HEIGHT: CGFloat = 44.0
 
 	// MARK: - Instance Properties
-	private var selectButton: UIBarButtonItem?
+	var selectButton: UIBarButtonItem?
 	private var selectButtonTitle: String?
 	private var cancelBarButton: UIBarButtonItem?
 
@@ -93,7 +93,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		self.navigationPathFilter = navigationPathFilter
 
 		// Force disable sorting options
-		self.shallShowSortBar = false
+		self.shallShowSortBar = true
 
 		// Disable pull to refresh
 		allowPullToRefresh = false
@@ -120,6 +120,8 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 		// Cancel button creation
 		cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelBarButtonPressed))
+
+		sortBar?.showSelectButton = false
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -141,6 +143,12 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 			self.setToolbarItems([createFolderBarButton, flexibleSpaceBarButton, selectButton, flexibleSpaceBarButton], animated: false)
 		}
+	}
+
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+
+		sortBar?.showSelectButton = false
 	}
 
 	private func allowNavigationFor(item: OCItem?) -> Bool {
@@ -219,7 +227,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		// Actions for Create Folder
 		if let core = self.core, let rootItem = query.rootItem {
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .folderAction)
-			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation)
+			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation, sender: sender)
 
 			let actions = Action.sortedApplicableActions(for: actionContext).filter { (action) -> Bool in
 				if action.actionExtension.identifier == OCExtensionIdentifier("com.owncloud.action.createFolder") {
