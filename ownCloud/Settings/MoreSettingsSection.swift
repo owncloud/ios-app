@@ -31,6 +31,7 @@ class MoreSettingsSection: SettingsSection {
 	private var sendFeedbackRow: StaticTableViewRow?
 	private var recommendRow: StaticTableViewRow?
 	private var privacyPolicyRow: StaticTableViewRow?
+	private var termsOfUseRow: StaticTableViewRow?
 	private var acknowledgementsRow: StaticTableViewRow?
 
 	override init(userDefaults: UserDefaults) {
@@ -78,6 +79,11 @@ class MoreSettingsSection: SettingsSection {
 			let url = URL(string: "https://owncloud.org/privacy-policy/")
 			self?.openSFWebViewWithConfirmation(for: url!)
 		}, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator, identifier: "privacy-policy")
+
+		termsOfUseRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
+			let url = URL(string: "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE")
+			self?.openSFWebViewWithConfirmation(for: url!)
+		}, title: "Terms Of Use".localized, accessoryType: .disclosureIndicator, identifier: "terms-of-use")
 
 		acknowledgementsRow = StaticTableViewRow(rowWithAction: { (row, _) in
 			let context = OCExtensionContext(location: OCExtensionLocation(ofType: .license, identifier: nil), requirements: nil, preferences: nil)
@@ -134,7 +140,7 @@ class MoreSettingsSection: SettingsSection {
 			rows.append(recommendRow!)
 		}
 
-		rows.append(contentsOf: [privacyPolicyRow!, acknowledgementsRow!])
+		rows.append(contentsOf: [privacyPolicyRow!, termsOfUseRow!, acknowledgementsRow!])
 
 		add(rows: rows)
 	}
