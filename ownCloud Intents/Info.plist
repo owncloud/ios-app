@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(APP_SHORT_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>151</string>
+	<string>152</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>
