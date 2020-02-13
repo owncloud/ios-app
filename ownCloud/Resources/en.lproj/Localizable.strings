@@ -324,6 +324,18 @@
 "Scan additional" = "Scan additional";
 "Create one file per page" = "Create one file per page";
 
+/* Scan */
+"Scan" = "Scan";
+"Scans" = "Scans";
+"Scan document" = "Scan document";
+"Saving" = "Saving";
+"File format" = "File format";
+"Name" = "Name";
+"Save as" = "Save as";
+"Options" = "Options";
+"Scan additional" = "Scan additional";
+"Create one file per page" = "Create one file per page";
+
 /* Sharing */
 "Searching Shares…" = "Searching Shares…";
 "Recipient" = "Recipient";
@@ -417,6 +429,9 @@
 "Favorites"= "Favorites";
 "Images" = "Images";
 "PDF Documents" = "PDF Documents";
+"Text" = "Text";
+"Documents" = "Documents";
+"Audio" = "Audio";
 
 /* Media files settings */
 "Media Files" = "Media Files";
@@ -477,6 +492,11 @@
 "Save File" = "Save File";
 "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once.";
 
+/* Release Notes */
+"Proceed" = "Proceed";
+"New in ownCloud" = "New in ownCloud";
+"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️" = "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️";
+
 /* Key Commands */
 "Select Next" = "Select Next";
 "Select Previous" = "Select Previous";
@@ -496,3 +516,60 @@
 "Previous" = "Previous";
 "Favorite" = "Favorite";
 "Cut" = "Cut";
+
+/* Markup */
+"How should this file be saved?" = "How should this file be saved?";
+"Overwrite original" = "Overwrite original";
+"Save as copy" = "Save as copy";
+"Discard changes" = "Discard changes";
+"Markup" = "Markup";
+"Crop or Rotate" = "Crop or Rotate";
+"Saving edited file failed" = "Saving edited file failed";
+"File no longer exists" = "File no longer exists";
+
+/* Licensing */
+"Unlocked" = "Unlocked";
+"Unlock" = "Unlock";
+
+"Subscribe Now" = "Subscribe Now";
+"Free" = "Free";
+
+"day" = "day";
+"%lu days" = "%lu days";
+
+"week" = "week";
+"%lu weeks" = "%lu weeks";
+
+"month" = "month";
+"%lu months" = "%lu months";
+
+"year" = "year";
+"%lu years" = "%lu years";
+
+/* Example usage: "Try [14 days] for free." */
+"Try %@ for free." = "Try %@ for free.";
+
+/* Example usage: "Then [1,99 €] / [year]." */
+"Then %@ / %@." = "Then %@ / %@.";
+
+/* Example usage: "[1,99 €] / [year] - starting immediately." */
+"%@ / %@ – starting immediately" = "%@ / %@ – starting immediately";
+
+/* Licensing: Pro Features */
+"Pro Features" = "Pro Features";
+
+/* Licensing: App Store */
+"Restore purchases" = "Restore purchases";
+"Restoring purchases…" = "Restoring purchases…";
+"Error restoring purchases" = "Error restoring purchases";
+"Error loading product info from App Store"= "Error loading product info from App Store";
+"Purchase failed" = "Purchase failed";
+
+/* Licensing: Enterprise */
+"Enterprise" = "Enterprise";
+
+/* Licensing: Settings */
+"In-App Purchases" = "In-App Purchases";
+
+"Purchases" = "Purchases";
+"Error fetching transactions" = "Error fetching transactions";
