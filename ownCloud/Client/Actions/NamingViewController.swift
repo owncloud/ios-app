@@ -112,23 +112,10 @@ class NamingViewController: UIViewController, Themeable {
 		stackViewLeftAnchorConstraint = stackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0)
 		stackViewRightAnchorConstraint = stackView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: 0)
 
-		if let item = item {
+		if let item = item, let core = core {
 			nameTextField.text = item.name
 			thumbnailImageView.image = item.icon(fitInSize: thumbnailSize)
-
-			if item.thumbnailAvailability != .none {
-				_ = core!.retrieveThumbnail(for: item, maximumSize: self.thumbnailSize, scale: 0, retrieveHandler: { (error, _, _, thumbnail, _, _) in
-					_ = thumbnail?.requestImage(for: self.thumbnailSize, scale: 0, withCompletionHandler: { [weak self] (thumbnail, error, _, image) in
-						if error == nil,
-							image != nil,
-							item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
-							OnMainThread {
-								self?.thumbnailImageView.image = image
-							}
-						}
-					})
-				})
-			}
+			thumbnailImageView.setThumbnailImage(using: core, from: item, with: thumbnailSize)
 		} else {
 			nameTextField.text = defaultName
 			thumbnailImageView.image = Theme.shared.image(for: "folder", size: thumbnailSize)

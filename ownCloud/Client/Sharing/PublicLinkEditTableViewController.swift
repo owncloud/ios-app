@@ -77,7 +77,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 			self.navigationItem.title = linkName
 		}
 
-		let shareBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareLinkURL))
+		let shareBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareLinkURL(sender:)))
 		if item.type == .collection {
 			let infoButton = UIButton(type: .infoLight)
 			infoButton.addTarget(self, action: #selector(showInfoSubtitles), for: .touchUpInside)
@@ -137,7 +137,9 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					if error == nil {
 						guard let changedShare = share else { return }
 						self.share.name = changedShare.name
-						self.title = changedShare.name
+						OnMainThread {
+							self.title = changedShare.name
+						}
 					} else {
 						if let shareError = error {
 							OnMainThread {
@@ -586,7 +588,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		addPermissionsSection()
 	}
 
-	@objc func shareLinkURL() {
+	@objc func shareLinkURL(sender: UIBarButtonItem) {
 		guard let shareURL = share.url, let capabilities = self.core.connection.capabilities else { return }
 
 		let activityViewController = UIActivityViewController(activityItems: [shareURL], applicationActivities: nil)
@@ -601,7 +603,9 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				UIActivity.ActivityType("com.facebook.Facebook")
 			]
 		}
-		activityViewController.popoverPresentationController?.sourceView = self.view
+
+		activityViewController.popoverPresentationController?.barButtonItem = sender
+		activityViewController.popoverPresentationController?.permittedArrowDirections = .down
 		self.present(activityViewController, animated: true, completion: nil)
 	}
 

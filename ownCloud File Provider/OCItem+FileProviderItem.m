@@ -55,16 +55,131 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 	return (self.name);
 }
 
++ (NSDictionary<NSString*, NSString*> *)overriddenUTIByMIMEType
+{
+	static dispatch_once_t onceToken;
+	static NSDictionary<NSString *, NSString *> *utiByMIMEType;
+
+	dispatch_once(&onceToken, ^{
+		utiByMIMEType = @{
+			@"application/vnd.oasis.opendocument.text" 			: @"org.oasis-open.opendocument.text",
+			@"application/vnd.oasis.opendocument.text-template" 		: @"org.oasis-open.opendocument.text-template",
+
+			@"application/vnd.oasis.opendocument.graphics" 			: @"org.oasis-open.opendocument.graphics",
+			@"application/vnd.oasis.opendocument.graphics-template" 	: @"org.oasis-open.opendocument.graphics-template",
+
+			@"application/vnd.oasis.opendocument.presentation" 		: @"org.oasis-open.opendocument.presentation",
+			@"application/vnd.oasis.opendocument.presentation-template" 	: @"org.oasis-open.opendocument.presentation-template",
+
+			@"application/vnd.oasis.opendocument.spreadsheet" 		: @"org.oasis-open.opendocument.spreadsheet",
+			@"application/vnd.oasis.opendocument.spreadsheet-template" 	: @"org.oasis-open.opendocument.spreadsheet-template",
+
+			@"application/vnd.oasis.opendocument.formula" 			: @"org.oasis-open.opendocument.formula",
+			@"application/vnd.oasis.opendocument.formula-template" 		: @"org.oasis-open.opendocument.formula-template"
+		};
+	});
+
+	return (utiByMIMEType);
+}
+
++ (NSDictionary<NSString*, NSString*> *)overriddenUTIBySuffix
+{
+	static dispatch_once_t onceToken;
+	static NSDictionary<NSString *, NSString *> *utiBySuffix;
+
+	dispatch_once(&onceToken, ^{
+		utiBySuffix = @{
+			// These suffix -> UTI mappings are currently not needed as the OC server
+			// already returns correct MIME-Types for these, so the MIMEType -> UTI
+			// mapping already takes care of it. Decided to let them still stay here
+			// as a reference and to document the thinking behind not including these
+			// five file types in this conversion dictionary.
+
+			// @"odt" : @"org.oasis-open.opendocument.text",
+			// @"ott" : @"org.oasis-open.opendocument.text-template",
+
+			// @"odg" : @"org.oasis-open.opendocument.graphics",
+			// @"otg" : @"org.oasis-open.opendocument.graphics-template",
+
+			// @"odp" : @"org.oasis-open.opendocument.presentation",
+			// @"otp" : @"org.oasis-open.opendocument.presentation-template",
+
+			// @"ods" : @"org.oasis-open.opendocument.spreadsheet",
+			// @"ots" : @"org.oasis-open.opendocument.spreadsheet-template",
+
+			// @"odf" : @"org.oasis-open.opendocument.formula",
+			// @"otf" : @"org.oasis-open.opendocument.formula-template",
+
+
+			// OC server does not seem to return MIME Types for these types
+			// at the time of writing, so these entries take care of correctly
+			// mapping suffixes to UTIs
+
+			@"odc" : @"org.oasis-open.opendocument.chart",
+			@"otc" : @"org.oasis-open.opendocument.chart-template",
+
+			@"odi" : @"org.oasis-open.opendocument.image",
+			@"oti" : @"org.oasis-open.opendocument.image-template",
+
+			@"odm" : @"org.oasis-open.opendocument.text-master",
+			@"oth" : @"org.oasis-open.opendocument.text-web"
+		};
+	});
+
+	return (utiBySuffix);
+}
+
 - (NSString *)typeIdentifier
 {
+	NSString *uti = nil;
+
 	// Return special UTI type for folders
 	if (self.type == OCItemTypeCollection)
 	{
 		return ((__bridge NSString *)kUTTypeFolder);
 	}
 
+	// Workaround for broken MIMEType->UTI conversions
+	if (uti == nil)
+	{
+		// Override by MIMEType
+		if (self.mimeType != nil)
+		{
+			uti = OCItem.overriddenUTIByMIMEType[self.mimeType];
+
+			OCLogDebug(@"Mapped %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
+		}
+	}
+
+	if (uti == nil)
+	{
+		NSString *suffix;
+
+		// Override by suffix
+		if ((suffix = self.name.pathExtension.lowercaseString) != nil)
+		{
+			uti = OCItem.overriddenUTIBySuffix[suffix];
+
+			OCLogDebug(@"Mapped %@ suffix %@ to UTI %@", self.name, suffix, uti);
+		}
+	}
+
 	// Convert MIME type to UTI type identifier
-	return ((NSString *)CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)self.mimeType, NULL)));
+	if (uti == nil)
+	{
+		if (self.mimeType != nil)
+		{
+			uti = ((NSString *)CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, (__bridge CFStringRef)self.mimeType, NULL)));
+		}
+		else
+		{
+			uti = (__bridge NSString *)kUTTypeItem;
+		}
+
+		OCLogDebug(@"Converted %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);
+	}
+
+	return (uti);
 }
 
 - (NSFileProviderItemCapabilities)capabilities
@@ -120,6 +235,14 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 {
 	if (self.localRelativePath != nil)
 	{
+		return (YES);
+	}
+
+	if (self.type == OCItemTypeCollection)
+	{
+		// Needs to return YES for folders in order to allow browsing while offline
+		// Otherwise Files.app will bring up an alert "You're not connected to the Internet"
+		// (big thanks to @palmin who pointed me to this possibility)
 		return (YES);
 	}
 
