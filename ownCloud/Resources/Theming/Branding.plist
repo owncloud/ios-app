@@ -13,23 +13,24 @@
 		<key>organizationBackgroundName</key>
 		<string>brand-background.jpg</string>
 		<key>organizationName</key>
-		<string>DeG Files</string>
+		<string>oC.online</string>
 	</dict>
 	<key>Profiles</key>
 	<array>
 		<dict>
 			<key>identifier</key>
-			<string>Saudi Aramco</string>
+			<string>ownCloud.online</string>
 			<key>name</key>
-			<string>Saudi Aramco</string>
+			<string>ownCloud.online</string>
 			<key>welcome</key>
-			<string>Welcome to Saudi Aramco</string>
+			<string>Welcome to ownCloud.online</string>
 			<key>prompt</key>
 			<string>Enter your username and password:</string>
 			<key>bookmarkName</key>
-			<string>Saudi Aramco</string>
+			<string>ownCloud.online</string>
 			<key>url</key>
-			<string>https://oc-di-234.owncloud.works</string>
+			<string>https://intellinue311.owncloud.online/
+</string>
 			<key>maxBookmarkCount</key>
 			<integer>1</integer>
 			<key>allowedAuthenticationMethods</key>
