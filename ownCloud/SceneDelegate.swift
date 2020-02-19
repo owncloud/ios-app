@@ -37,16 +37,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			window?.makeKeyAndVisible()
 		}
 
-		if let userActivity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
-			configure(window: window, with: userActivity)
-		}
+        if let userActivity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
+            if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
+                OnMainThread {
+                    self.scene(scene, continue: userActivity)
+                }
+            } else {
+                configure(window: window, with: userActivity)
+            }
+        }
 	}
 
 	func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
 		return scene.userActivity
 	}
 
-	@discardableResult func configure(window: ThemeWindow?, with activity: NSUserActivity) -> Bool {
+    @discardableResult func configure(window: ThemeWindow?, with activity: NSUserActivity) -> Bool {
 		guard let bookmarkUUIDString = activity.userInfo?[ownCloudOpenAccountAccountUuidKey] as? String, let bookmarkUUID = UUID(uuidString: bookmarkUUIDString), let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID), let navigationController = window?.rootViewController as? ThemeNavigationController, let serverListController = navigationController.topViewController as? ServerListTableViewController else {
 			return false
 		}
@@ -66,7 +72,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			window?.windowScene?.userActivity = activity
 
 			return true
-		}
+        }
 
 		return false
 	}
