@@ -64,6 +64,11 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 					guard let state = self?.state, case DisplayViewState.notSupportedMimeType = state else {
 						if core.connectionStatus == .online {
 							self?.state = .hasNetworkConnection
+                            if self?.source == nil, let item = self?.item {
+                                OnMainThread {
+                                    self?.present(item: item)
+                                }
+                            }
 						} else {
 							self?.state = .noNetworkConnection
 						}
@@ -430,7 +435,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				switch query.state {
 					case .idle, .contentsFromCache, .waitingForServerReply:
 						if let firstItem = changeSet?.queryResult.first {
-							if (firstItem.syncActivity != .updating) && ((firstItem.itemVersionIdentifier != self?.item?.itemVersionIdentifier) || (firstItem.name != self?.item?.name)) {
+                            if (firstItem.syncActivity != .updating) && ((firstItem.itemVersionIdentifier != self?.item?.itemVersionIdentifier) || (firstItem.name != self?.item?.name)) {
 								self?.present(item: firstItem)
 							} else {
 								self?.item = firstItem
