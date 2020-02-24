@@ -36,6 +36,8 @@ enum ThemeItemStyle {
 
 	case bigTitle
 	case bigMessage
+
+	case purchase
 }
 
 enum ThemeItemState {
@@ -76,6 +78,9 @@ extension NSObject {
 				case .bigTitle:
 					themeButton.themeColorCollection = collection.neutralColors
 					themeButton.titleLabel?.font = UIFont.systemFont(ofSize: 34)
+
+				case .purchase:
+					themeButton.themeColorCollection = collection.purchaseColors
 
 				default:
 					themeButton.themeColorCollection = collection.lightBrandColors.filledColorPairCollection

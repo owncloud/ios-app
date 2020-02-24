@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   ownCloud
 
@@ -149,7 +149,6 @@
 "Passcode Lock" = "Passcode Lock";
 "Face ID" = "Face ID";
 "Touch ID" = "Touch ID";
-"Instant Uploads" = "Instant Uploads";
 "Videos" = "Videos";
 "Photos" = "Photos";
 "Background uploads" = "Background uploads";
@@ -162,6 +161,7 @@
 "Send feedback" = "Send feedback";
 "Recommend to a friend" = "Recommend to a friend";
 "Privacy Policy" = "Privacy Policy";
+"Terms Of Use" = "Terms Of Use";
 "Acknowledgements" = "Acknowledgements";
 "Video upload path" = "Video upload path";
 "Photo upload path" = "Photo upload path";
@@ -231,6 +231,8 @@
 "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app.";
 "never" = "never";
 "after %@" = "after %@";
+"Decrease Slider Value" = "Decrease Slider Value";
+"Increase Slider Value" = "Increase Slider Value";
 
 /* Display settings */
 "Display settings" = "Display settings";
@@ -263,7 +265,7 @@
 "New Folder" = "New Folder";
 "Folder name" = "Folder name";
 "Rename" ="Rename";
-"Create folder" =" Create folder";
+"Create folder" ="Create folder";
 "Duplicate" = "Duplicate";
 "Move" = "Move";
 "Open in" = "Open in";
@@ -273,6 +275,9 @@
 " couldn't download file(s)" = " couldn't download file(s)";
 "Actions" = "Actions";
 "copy" = "copy";
+"Close Window" = "Close Window";
+"Open in a new Window" = "Open in a new Window";
+"Open in Window" = "Open in Window";
 
 "Preparing…" = "Preparing…";
 
@@ -305,6 +310,32 @@
 "All Photos" = "All Photos";
 "Albums" = "Albums";
 "Importing from photo library" = "Importing from photo library";
+"Media import" = "Media import";
+"%@ of %@" = "%@ of %@";
+
+/* Scan */
+"Scan" = "Scan";
+"Scans" = "Scans";
+"Scan document" = "Scan document";
+"Saving" = "Saving";
+"File format" = "File format";
+"Name" = "Name";
+"Save as" = "Save as";
+"Options" = "Options";
+"Scan additional" = "Scan additional";
+"Create one file per page" = "Create one file per page";
+
+/* Scan */
+"Scan" = "Scan";
+"Scans" = "Scans";
+"Scan document" = "Scan document";
+"Saving" = "Saving";
+"File format" = "File format";
+"Name" = "Name";
+"Save as" = "Save as";
+"Options" = "Options";
+"Scan additional" = "Scan additional";
+"Create one file per page" = "Create one file per page";
 
 /* Sharing */
 "Searching Shares…" = "Searching Shares…";
@@ -399,6 +430,9 @@
 "Favorites"= "Favorites";
 "Images" = "Images";
 "PDF Documents" = "PDF Documents";
+"Text" = "Text";
+"Documents" = "Documents";
+"Audio" = "Audio";
 
 /* Media files settings */
 "Media Files" = "Media Files";
@@ -408,14 +442,15 @@
 "Media Upload" = "Media Upload";
 "Convert HEIC to JPEG" = "Convert HEIC to JPEG";
 "Convert videos to MP4" = "Convert videos to MP4";
-"Instant Upload Photos" = "Instant Upload Photos";
-"Instant Upload Videos" = "Instant Upload Videos";
+"Auti Upload Photos" = "Auto Upload Photos";
+"Auto Upload Videos" = "Auto Upload Videos";
 "Account" = "Account";
 "Accounts" = "Accounts";
 "Select account" = "Select account";
 "Upload Path" = "Upload Path";
 "Select Upload Path" = "Select Upload Path";
-"Instant upload of media was disabled since configured account / folder was not found" = "Instant upload of media was disabled since configured account / folder was not found";
+"Auto upload of media was disabled since configured account / folder was not found" = "Auto upload of media was disabled since configured account / folder was not found";
+"Importing %@ media files for upload" = "Importing %@ media files for upload";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Creating %ld folders…";
@@ -457,3 +492,85 @@
 /* Import File */
 "Save File" = "Save File";
 "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once.";
+
+/* Release Notes */
+"Proceed" = "Proceed";
+"New in ownCloud" = "New in ownCloud";
+"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️" = "Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️";
+
+/* Key Commands */
+"Select Next" = "Select Next";
+"Select Previous" = "Select Previous";
+"Open Selected" = "Open Selected";
+"Change Sort Order" = "Change Sort Order";
+"Search" = "Search";
+"Back" = "Back";
+"Save" = "Save";
+"Sort by %@" = "Sort by %@";
+"Tab %@" = "Tab %@";
+"Select Last Item on Page" = "Select Last Item on Page";
+"Scroll to Top" = "Scroll to Top";
+"Scroll to Bottom" = "Scroll to Bottom";
+"Copy to Pasteboard" = "Copy to Pasteboard";
+"Import from Pasteboard" = "Import from Pasteboard";
+"Next" = "Next";
+"Previous" = "Previous";
+"Favorite" = "Favorite";
+"Cut" = "Cut";
+
+/* Markup */
+"How should this file be saved?" = "How should this file be saved?";
+"Overwrite original" = "Overwrite original";
+"Save as copy" = "Save as copy";
+"Discard changes" = "Discard changes";
+"Markup" = "Markup";
+"Crop or Rotate" = "Crop or Rotate";
+"Saving edited file failed" = "Saving edited file failed";
+"File no longer exists" = "File no longer exists";
+
+/* Licensing */
+"Unlocked" = "Unlocked";
+"Unlock" = "Unlock";
+
+"Subscribe Now" = "Subscribe Now";
+"Free" = "Free";
+
+"day" = "day";
+"%lu days" = "%lu days";
+
+"week" = "week";
+"%lu weeks" = "%lu weeks";
+
+"month" = "month";
+"%lu months" = "%lu months";
+
+"year" = "year";
+"%lu years" = "%lu years";
+
+/* Example usage: "Try [14 days] for free." */
+"Try %@ for free." = "Try %@ for free.";
+
+/* Example usage: "Then [1,99 €] / [year]." */
+"Then %@ / %@." = "Then %@ / %@.";
+
+/* Example usage: "[1,99 €] / [year] - starting immediately." */
+"%@ / %@ – starting immediately" = "%@ / %@ – starting immediately";
+
+/* Licensing: Pro Features */
+"Pro Features" = "Pro Features";
+
+/* Licensing: App Store */
+"Restore purchases" = "Restore purchases";
+"Restoring purchases…" = "Restoring purchases…";
+"Error restoring purchases" = "Error restoring purchases";
+"Error loading product info from App Store"= "Error loading product info from App Store";
+"Purchase failed" = "Purchase failed";
+
+/* Licensing: Enterprise */
+"Enterprise" = "Enterprise";
+
+/* Licensing: Settings */
+"In-App Purchases" = "In-App Purchases";
+
+"Purchases" = "Purchases";
+"Error fetching transactions" = "Error fetching transactions";

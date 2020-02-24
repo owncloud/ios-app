@@ -74,8 +74,6 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/test_output
 fastlane/Match/
-fastlane/screenshots/screenshots.html
-fastlane/screenshots/**/*.png
 .env.default
 
 # Code Injection
@@ -140,3 +138,5 @@ playground.xcworkspace
 Pods/
 
 # End of https://www.gitignore.io/api/xcode,swift,macos,objective-c
+/fastlane/fastlane/Appfile
+/Gemfile.lock
