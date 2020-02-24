@@ -50,12 +50,10 @@ extension UIImageView {
 				types = [.lowQualityThumbnail, .thumbnail]
 
 				if let itemURL = weakCore?.localURL(for: item) {
-					let thumbnailRequest = QLThumbnailGenerator.Request(fileAt: itemURL,
-																		size: size,
-																		scale: UIScreen.main.scale,
-																		representationTypes:types!)
-					QLThumbnailGenerator.shared.generateBestRepresentation(for: thumbnailRequest) { (representation, error) in
-						if let representation = representation, error == nil {
+					let thumbnailRequest = QLThumbnailGenerator.Request(fileAt: itemURL, size: size, scale: UIScreen.main.scale, representationTypes:types!)
+
+					QLThumbnailGenerator.shared.generateBestRepresentation(for: thumbnailRequest) { [weak self] (representation, error) in
+						if let representation = representation, let self = self, let core = weakCore, error == nil {
 							self.cacheThumbnail(image: representation.uiImage, size:size, for: item, in: core)
 							OnMainThread {
 								self.image = representation.uiImage
