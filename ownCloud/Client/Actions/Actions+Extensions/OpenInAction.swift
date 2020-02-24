@@ -22,7 +22,9 @@ class OpenInAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openin") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Open in".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .toolbar] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .toolbar, .keyboardShortcut] }
+	override class var keyCommand : String? { return "O" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.contains(where: {$0.type == .collection}) {
@@ -52,7 +54,6 @@ class OpenInAction: Action {
 				hostViewController?.present(alertController, animated: true)
 			} else {
 				guard let files = files, files.count > 0, let viewController = hostViewController else { return }
-
 				// UIDocumentInteractionController can only be used with a single file
 				if files.count == 1 {
 					if let fileURL = files.first?.url {
@@ -68,7 +69,24 @@ class OpenInAction: Action {
 						// Present UIDocumentInteractionController
 						self.interactionController = UIDocumentInteractionController(url: fileURL)
 						self.interactionController?.delegate = self
-						self.interactionController?.presentOptionsMenu(from: .zero, in: viewController.view, animated: true)
+
+						if let sender = self.context.sender as? UITabBarController {
+							var sourceRect = sender.view.frame
+							sourceRect.origin.y = viewController.view.frame.size.height
+							sourceRect.size.width = 0.0
+							sourceRect.size.height = 0.0
+
+							self.interactionController?.presentOptionsMenu(from: sourceRect, in: sender.view, animated: true)
+						} else if let barButtonItem = self.context.sender as? UIBarButtonItem {
+							self.interactionController?.presentOptionsMenu(from: barButtonItem, animated: true)
+						} else if let cell = self.context.sender as? UITableViewCell, let clientQueryViewController = viewController as? ClientQueryViewController {
+							if let indexPath = clientQueryViewController.tableView.indexPath(for: cell) {
+								let cellRect = clientQueryViewController.tableView.rectForRow(at: indexPath)
+								self.interactionController?.presentOptionsMenu(from: cellRect, in: clientQueryViewController.tableView, animated: true)
+							}
+						} else {
+							self.interactionController?.presentOptionsMenu(from: viewController.view.frame, in: viewController.view, animated: true)
+						}
 					}
 				} else {
 					// Handle multiple files with a fallback solution
@@ -78,7 +96,18 @@ class OpenInAction: Action {
 					let activityController = UIActivityViewController(activityItems: urls, applicationActivities: nil)
 
 					if UIDevice.current.isIpad() {
-						activityController.popoverPresentationController?.sourceView = viewController.view
+						if let sender = self.context.sender as? UITabBarController {
+							var sourceRect = sender.view.frame
+							sourceRect.origin.y = viewController.view.frame.size.height
+							sourceRect.size.width = 0.0
+							sourceRect.size.height = 0.0
+
+							activityController.popoverPresentationController?.sourceView = sender.view
+							activityController.popoverPresentationController?.sourceRect = sourceRect
+						} else {
+							activityController.popoverPresentationController?.sourceView = viewController.view
+							activityController.popoverPresentationController?.sourceRect = viewController.view.frame
+						}
 					}
 
 					viewController.present(activityController, animated: true, completion: nil)
@@ -92,7 +121,7 @@ class OpenInAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .moreFolder {
 			return UIImage(named: "open-in")
 		}
 

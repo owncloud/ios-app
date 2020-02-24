@@ -109,6 +109,8 @@ class ThemeCollection : NSObject {
 	@objc var neutralColors : ThemeColorPairCollection
 	@objc var destructiveColors : ThemeColorPairCollection
 
+	@objc var purchaseColors : ThemeColorPairCollection
+
 	// MARK: - Label colors
 	@objc var informativeColor: UIColor
 	@objc var successColor: UIColor
@@ -201,6 +203,9 @@ class ThemeCollection : NSObject {
 		self.approvalColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor(hex: 0x1AC763)))
 		self.neutralColors = lightBrandColors.filledColorPairCollection
 		self.destructiveColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: UIColor.white, background: UIColor.red))
+
+		self.purchaseColors = ThemeColorPairCollection(fromPair: ThemeColorPair(foreground: lightBrandColors.labelColor, background: lightBrandColor))
+		self.purchaseColors.disabled.background = self.purchaseColors.disabled.background.greyscale()
 
 		self.tintColor = self.lightBrandColor
 
