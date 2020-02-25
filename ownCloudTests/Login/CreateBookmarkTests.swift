@@ -79,11 +79,13 @@ class CreateBookmarkTests: XCTestCase {
 		//Assert
 		let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
 			var error: NSError?
-			
+
+			EarlGrey.selectElement(with: grey_kindOfClass(UITableView.self)).perform(grey_scrollToContentEdge(.top))
+			EarlGrey.selectElement(with: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
 			EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_kindOfClass(UITableView.self)).perform(grey_scrollToContentEdge(.bottom))
 			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible(), error: &error)
 			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.selectElement(with: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
 			
 			return error == nil
 		}).wait(withTimeout: 5.0, pollInterval: 0.5)
@@ -144,11 +146,13 @@ class CreateBookmarkTests: XCTestCase {
 		//Assert
 		let isServerChecked = GREYCondition(name: "Wait for server is checked", block: {
 			var error: NSError?
-			
+
+			EarlGrey.selectElement(with: grey_kindOfClass(UITableView.self)).perform(grey_scrollToContentEdge(.top))
+			EarlGrey.selectElement(with: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
 			EarlGrey.selectElement(with: grey_accessibilityID("row-url-url")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_kindOfClass(UITableView.self)).perform(grey_scrollToContentEdge(.bottom))
 			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-username")).assert(grey_sufficientlyVisible(), error: &error)
 			EarlGrey.selectElement(with: grey_accessibilityID("row-credentials-password")).assert(grey_sufficientlyVisible(), error: &error)
-			EarlGrey.selectElement(with: grey_accessibilityID("row-name-name")).assert(grey_sufficientlyVisible(), error: &error)
 			
 			return error == nil
 		}).wait(withTimeout: 5.0, pollInterval: 0.5)
