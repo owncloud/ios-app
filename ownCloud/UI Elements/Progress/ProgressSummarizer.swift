@@ -415,7 +415,7 @@ class ProgressSummarizer: NSObject {
 											multiMessage = NSString(format:"Updating %ld items…".localized as NSString, sameTypeCount) as String
 
 										case .createShare, .updateShare, .deleteShare, .decideOnShare: break
-										case .none, .retrieveThumbnail, .retrieveItemList, .retrieveShares, .issueResponse, .filterFiles: break
+										case .none, .retrieveThumbnail, .retrieveItemList, .retrieveShares, .issueResponse, .filterFiles, .wakeupSyncRecord: break
 									}
 
 									if multiMessage != nil {
