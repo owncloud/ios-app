@@ -126,11 +126,11 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>K5U8aR</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>19B88</string>
+	<string>19D76</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>11B53</string>
+	<string>11C504</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>11.2.1</string>
+	<string>11.3.1</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -214,11 +214,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>y8oko2</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>VSQYEZ</string>
 						<key>INIntentResponseCodeName</key>
@@ -609,11 +609,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>fjiVU2</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>0pF5fq</string>
 						<key>INIntentResponseCodeName</key>
@@ -854,11 +854,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>rzbAOP</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>8a8rsQ</string>
 						<key>INIntentResponseCodeName</key>
@@ -912,10 +912,10 @@
 			<key>INIntentKeyParameter</key>
 			<string>file</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>9</integer>
+			<integer>11</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>path,file,account,filename,fileextension</key>
+				<key>path,file,account,filename,fileextension,shouldOverwrite</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
@@ -1147,6 +1147,46 @@
 					<key>INIntentParameterType</key>
 					<string>String</string>
 				</dict>
+				<dict>
+					<key>INIntentParameterDisplayName</key>
+					<string>Overwrite existing File</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>YNY6aQ</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>6</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataFalseDisplayName</key>
+						<string>false</string>
+						<key>INIntentParameterMetadataFalseDisplayNameID</key>
+						<string>pDN16g</string>
+						<key>INIntentParameterMetadataTrueDisplayName</key>
+						<string>true</string>
+						<key>INIntentParameterMetadataTrueDisplayNameID</key>
+						<string>icA1AQ</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>shouldOverwrite</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Overwrite file if already exists</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>X2zTIZ</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>11</integer>
+					<key>INIntentParameterType</key>
+					<string>Boolean</string>
+				</dict>
 			</array>
 			<key>INIntentResponse</key>
 			<dict>
@@ -1212,15 +1252,27 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>81IjYk</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>yTzyi1</string>
 						<key>INIntentResponseCodeName</key>
 						<string>unlicensed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The file already exists and overwrite file is disabled.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>UaOocE</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The file already exists and overwrite file is disabled.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>GUKqkE</string>
+						<key>INIntentResponseCodeName</key>
+						<string>overwriteFailure</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
@@ -1499,11 +1551,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>X0Zskf</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>bfU2dy</string>
 						<key>INIntentResponseCodeName</key>
@@ -1740,11 +1792,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>idUnAy</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>lNNcvh</string>
 						<key>INIntentResponseCodeName</key>
@@ -1987,11 +2039,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>65dv1W</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>9tIXKj</string>
 						<key>INIntentResponseCodeName</key>
@@ -2253,11 +2305,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>sKUo1c</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>1rpPPR</string>
 						<key>INIntentResponseCodeName</key>
@@ -2408,11 +2460,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>ceG0fs</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings > Pro Features &gt; Shortcuts.</string>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>GJ25u2</string>
 						<key>INIntentResponseCodeName</key>
