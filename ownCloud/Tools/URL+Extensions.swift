@@ -47,6 +47,7 @@ extension URL {
     
     func privateLinkItemID() -> String? {
         
+		// Check if the link URL has format https://<server>/f/<item_id>
         if self.pathComponents.count > 2 {
             if self.pathComponents[self.pathComponents.count - 2] == "f" {
                 return self.pathComponents.last
