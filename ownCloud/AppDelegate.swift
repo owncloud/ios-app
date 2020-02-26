@@ -77,6 +77,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
+		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
+		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CollaborateAction.actionExtension)
@@ -85,13 +87,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
 		if #available(iOS 13.0, *) {
 			if UIDevice.current.isIpad() {
+				// iPad & iOS 13+ only
 				OCExtensionManager.shared.addExtension(DiscardSceneAction.actionExtension)
 				OCExtensionManager.shared.addExtension(OpenSceneAction.actionExtension)
 			}
-		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
-		OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
-		//TODO: Enable in version 1.4 after testing this feature
-		//OCExtensionManager.shared.addExtension(MediaEditingAction.actionExtension)
+
+			// iOS 13+ only
+			OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
+			OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
+
+			//TODO: Enable in version 1.4 after testing this feature
+			//OCExtensionManager.shared.addExtension(MediaEditingAction.actionExtension)
 		}
 
 		// Task extensions

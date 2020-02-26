@@ -1,3 +1,13 @@
+---
+name: Bug report
+about: Create a bug report to help us improve
+title: "[BUG]"
+labels: ''
+assignees: ''
+
+---
+
+
 <!--
 Thanks for reporting issues back to this repository, you contributons are much appriciated! This is the issue tracker of the ownCloud iOS app.
 
