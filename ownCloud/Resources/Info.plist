@@ -64,8 +64,6 @@
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
-		<string>com.owncloud.ios-app.openAccount</string>
-		<string>com.owncloud.ios-app.openItem</string>
 		<string>CreateFolderIntent</string>
 		<string>DeletePathItemIntent</string>
 		<string>GetAccountIntent</string>
@@ -75,6 +73,8 @@
 		<string>GetFileIntent</string>
 		<string>PathExistsIntent</string>
 		<string>SaveFileIntent</string>
+		<string>com.owncloud.ios-app.openAccount</string>
+		<string>com.owncloud.ios-app.openItem</string>
 	</array>
 	<key>OCAppGroupIdentifier</key>
 	<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
