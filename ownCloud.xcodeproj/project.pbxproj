@@ -84,6 +84,7 @@
 		39A513AC22674E56002CF1AA /* OCCore+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A513AB22674E56002CF1AA /* OCCore+Extension.swift */; };
 		39A5C3A1231566D9009D9EE3 /* GetFileInfoIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A5C3A0231566D9009D9EE3 /* GetFileInfoIntentHandler.swift */; };
 		39A7138722E79C6700089423 /* ownCloud Intents.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 39A7138022E79C6700089423 /* ownCloud Intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		39AD95F324053AFE00844C70 /* UIDevice+UIUserInterfaceIdiom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E22BB220C6A5C40024D11E /* UIDevice+UIUserInterfaceIdiom.swift */; };
 		39AFC3D1225E72FB00A6D3AE /* GroupSharingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AFC3D0225E72FB00A6D3AE /* GroupSharingTableViewController.swift */; };
 		39AFC3D8225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39AFC3D7225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift */; };
 		39B289A8226F1EE000BE0E11 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B289A7226F1EE000BE0E11 /* MessageView.swift */; };
@@ -2766,7 +2767,7 @@
 					233BDE9B204FEFE500C06732 = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 1010;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -2794,7 +2795,7 @@
 					};
 					39A7137F22E79C6700089423 = {
 						CreatedOnToolsVersion = 11.0;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 					59056CA922414F3C00A18A22 = {
 						CreatedOnToolsVersion = 10.1;
@@ -2817,7 +2818,7 @@
 					};
 					DCC6564520C9B7E300110A97 = {
 						CreatedOnToolsVersion = 9.4;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Keychain = {
 								enabled = 1;
@@ -2826,7 +2827,7 @@
 					};
 					DCC6565620C9B7E400110A97 = {
 						CreatedOnToolsVersion = 9.4;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -3136,21 +3137,17 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-ownCloudScreenshotsTests/Pods-ownCloudScreenshotsTests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-ownCloudScreenshotsTests/Pods-ownCloudScreenshotsTests-frameworks.sh",
 				"${PODS_ROOT}/EarlGrey/EarlGrey/EarlGrey.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/EarlGrey.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ownCloudScreenshotsTests/Pods-ownCloudScreenshotsTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ownCloudScreenshotsTests/Pods-ownCloudScreenshotsTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		CCD5F274B7E08D493D596856 /* [CP] Check Pods Manifest.lock */ = {
@@ -3209,7 +3206,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests-frameworks.sh",
 				"${PODS_ROOT}/EarlGrey/EarlGrey/EarlGrey.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -3218,7 +3215,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -3504,6 +3501,7 @@
 				59296652224CD1DB0078F13D /* OCBookmarkManager+Tools.swift in Sources */,
 				59799F8122415956007E8008 /* EarlGrey+Tools.swift in Sources */,
 				59799F80224158FD007E8008 /* EarlGrey.swift in Sources */,
+				39AD95F324053AFE00844C70 /* UIDevice+UIUserInterfaceIdiom.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3806,7 +3804,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				APP_SHORT_VERSION = 1.3.0;
+				APP_SHORT_VERSION = 1.3.1;
+				APP_VERSION = 153;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -3868,7 +3867,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				APP_SHORT_VERSION = 1.3.0;
+				APP_SHORT_VERSION = 1.3.1;
+				APP_VERSION = 153;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -3922,13 +3922,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_SHORT_VERSION = 1.3.0;
+				APP_SHORT_VERSION = 1.3.1;
+				APP_VERSION = 153;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 152;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(APP_VERSION)";
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}";
 				GCC_WARN_UNUSED_LABEL = YES;
@@ -3938,8 +3939,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3bae2090-bddc-4ba3-a301-9d8afbbed296";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3951,13 +3951,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_SHORT_VERSION = 1.3.0;
+				APP_SHORT_VERSION = 1.3.1;
+				APP_VERSION = 153;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 152;
+				CURRENT_PROJECT_VERSION = "$(APP_VERSION)";
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				FRAMEWORK_SEARCH_PATHS = "${TARGET_BUILD_DIR}";
 				GCC_WARN_UNUSED_LABEL = YES;
@@ -3967,7 +3968,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0720808b-becc-4621-8839-347863375834";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				SWIFT_VERSION = 4.2;
@@ -4080,9 +4080,9 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "ownCloud Intents/ownCloud Intents.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -4095,7 +4095,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-Intents";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app.ownCloud-Intents";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -4217,11 +4217,11 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 152;
+				CURRENT_PROJECT_VERSION = "$(APP_VERSION)";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 152;
+				DYLIB_CURRENT_VERSION = "$(APP_VERSION)";
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -4255,11 +4255,11 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 152;
+				CURRENT_PROJECT_VERSION = "$(APP_VERSION)";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 152;
+				DYLIB_CURRENT_VERSION = "$(APP_VERSION)";
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = ownCloudAppFramework/Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -4323,17 +4323,16 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = "ownCloud File Provider/ownCloud_File_Provider.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				INFOPLIST_FILE = "ownCloud File Provider/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-Provider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "b9cd7516-5bdd-4c15-b338-55d02d1ed4aa";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app.ownCloud-File-Provider";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -4353,7 +4352,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-Provider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0be66300-94bb-43be-8e1f-6aee08a7c154";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app.ownCloud-File-Provider";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -4364,17 +4362,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4AP2STM4H5;
 				INFOPLIST_FILE = "ownCloud File ProviderUI/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-ProviderUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2fcc6dc1-dade-404b-b2c3-4ba9674f5680";
-				PROVISIONING_PROFILE_SPECIFIER = "match Development com.owncloud.ios-app.ownCloud-File-ProviderUI";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -4393,7 +4390,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-ProviderUI";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "fe9f450c-3f81-4041-903f-b72a48954466";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app.ownCloud-File-ProviderUI";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
