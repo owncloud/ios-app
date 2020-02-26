@@ -32,7 +32,7 @@ class DocumentEditingAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if forContext.items.count == 1, forContext.items.contains(where: {$0.type == .file}) {
+		if forContext.items.count == 1, forContext.items.contains(where: {$0.type == .file && $0.permissions.contains(.writable)}) {
 			if let item = forContext.items.first, let mimeType = item.mimeType {
 				if supportedMimeTypes.filter({
 					if mimeType.contains($0) {

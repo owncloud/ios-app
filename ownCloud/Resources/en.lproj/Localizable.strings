@@ -281,6 +281,9 @@
 
 "Preparing…" = "Preparing…";
 
+"No actions available" = "No actions available";
+"No actions are available for this folder, possibly because of missing permissions." = "No actions are available for this folder, possibly because of missing permissions.";
+
 /* Directory Picker Messages */
 "Move here" = "Move here";
 
