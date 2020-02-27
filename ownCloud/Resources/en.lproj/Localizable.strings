@@ -571,6 +571,27 @@
 
 /* Licensing: Settings */
 "In-App Purchases" = "In-App Purchases";
-
+"App Store" = "App Store";
 "Purchases" = "Purchases";
 "Error fetching transactions" = "Error fetching transactions";
+"Document Scanner" = "Document Scanner";
+"Scan documents and photos with your camera." = "Scan documents and photos with your camera.";
+"Shortcuts Actions" = "Shortcuts Actions";
+"Use ownCloud actions in Shortcuts." = "Use ownCloud actions in Shortcuts.";
+"Markup Documents" = "Markup Documents";
+"Markup photos and PDF files." = "Markup photos and PDF files.";
+"Unlock all Pro Features." = "Unlock all Pro Features.";
+"Purchased App Version" = "Purchased App Version";
+"Receipt Date" = "Receipt Date";
+"Manage subscription" = "Manage subscription";
+"Purchases are not allowed on this device." = "Purchases are not allowed on this device.";
+"Type" = "Type";
+"Quantity" = "Quantity";
+"Product" = "Product";
+"Date" = "Date";
+"Cancelled" = "Cancelled";
+"Ends" = "Ends";
+"none" = "none";
+"trial" = "trial";
+"purchase" = "purchase";
+"subscription" = "subscription";

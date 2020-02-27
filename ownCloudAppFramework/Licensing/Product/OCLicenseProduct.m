@@ -60,23 +60,23 @@
 	switch (type)
 	{
 		case OCLicenseTypeNone:
-			return (@"none");
+			return OCLocalizedString(@"none", @"");
 		break;
 
 		case OCLicenseTypeTrial:
-			return (@"trial");
+			return OCLocalizedString(@"trial", @"");
 		break;
 
 		case OCLicenseTypePurchase:
-			return (@"purchase");
+			return OCLocalizedString(@"purchase", @"");
 		break;
 
 		case OCLicenseTypeSubscription:
-			return (@"subscription");
+			return OCLocalizedString(@"subscription", @"");
 		break;
 	}
 
-	return (@"unknown");
+	return OCLocalizedString(@"unknown", @"");
 }
 
 @end
