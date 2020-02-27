@@ -5,7 +5,7 @@
 	<key>canAddAccount</key>
 	<false/>
 	<key>feedbackMail</key>
-	<string>info@saudiaramco.com</string>
+	<string>support@owncloud.online</string>
 	<key>Bundle</key>
 	<dict>
 		<key>organizationLogoName</key>
@@ -41,9 +41,9 @@
 	<key>URLs</key>
 	<dict>
 		<key>Help</key>
-		<string>https://www.saudiaramco.com</string>
+		<string>https://owncloud.online/faq/</string>
 		<key>Privacy</key>
-		<string>https://www.saudiaramco.com</string>
+		<string>https://owncloud.online/privacy-policy/</string>
 	</dict>
 	<key>Generic</key>
 	<dict>
