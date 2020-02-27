@@ -13,7 +13,7 @@
 		<key>organizationBackgroundName</key>
 		<string>brand-background.jpg</string>
 		<key>organizationName</key>
-		<string>oC.online</string>
+		<string>ownCloud GmbH</string>
 	</dict>
 	<key>Profiles</key>
 	<array>
@@ -29,8 +29,7 @@
 			<key>bookmarkName</key>
 			<string>ownCloud.online</string>
 			<key>url</key>
-			<string>https://intellinue311.owncloud.online/
-</string>
+			<string>https://intellinue311.owncloud.online/</string>
 			<key>maxBookmarkCount</key>
 			<integer>1</integer>
 			<key>allowedAuthenticationMethods</key>
