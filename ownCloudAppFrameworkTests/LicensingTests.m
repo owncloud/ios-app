@@ -399,8 +399,8 @@ typedef void(^LicenseProviderBlock)(OCLicenseProvider *provider, OCLicenseProvid
 - (NSArray <OCLicenseAppStoreItem *> *)_appStoreItems
 {
 	return (@[
-		[OCLicenseAppStoreItem trialWithAppStoreIdentifier:@"trial.pro.30days" trialDuration:[[OCLicenseDuration alloc] initWithUnit:OCLicenseDurationUnitDay length:30] productIdentifier:@"bundle.pro"],
-		[OCLicenseAppStoreItem nonConsumableIAPWithAppStoreIdentifier:@"single.documentsharing" productIdentifier:@"single.documentsharing"],
+//		[OCLicenseAppStoreItem trialWithAppStoreIdentifier:@"trial.pro.30days" trialDuration:[[OCLicenseDuration alloc] initWithUnit:OCLicenseDurationUnitDay length:30] productIdentifier:@"bundle.pro"],
+		[OCLicenseAppStoreItem nonConsumableIAPWithAppStoreIdentifier:@"single.documentscanner" productIdentifier:@"single.document-scanner"],
 		[OCLicenseAppStoreItem subscriptionWithAppStoreIdentifier:@"bundle.pro" productIdentifier:@"bundle.pro" trialDuration:[[OCLicenseDuration alloc] initWithUnit:OCLicenseDurationUnitDay length:30]]
 	]);
 }
@@ -408,21 +408,20 @@ typedef void(^LicenseProviderBlock)(OCLicenseProvider *provider, OCLicenseProvid
 - (void)_registerAppStoreFeaturesAndProductsInManager:(OCLicenseManager *)manager
 {
 	// Register features
-	[manager registerFeature:[OCLicenseFeature featureWithIdentifier:@"documentsharing"]];
+	[manager registerFeature:[OCLicenseFeature featureWithIdentifier:@"documentscanning"]];
 
 	// Register products
-	[manager registerProduct:[OCLicenseProduct productWithIdentifier:@"single.documentsharing" name:@"Document Sharing" description:@"Unlock Document Sharing" contents:@[
-		@"documentsharing"
+	[manager registerProduct:[OCLicenseProduct productWithIdentifier:@"single.document-scanner" name:@"Document Scanning" description:@"Unlock Document Scanning" contents:@[
+		@"documentscanning"
 	]]];
 
 	[manager registerProduct:[OCLicenseProduct productWithIdentifier:@"bundle.pro" name:@"Pro Bundle" description:@"Unlock Pro Features" contents:@[
-		@"documentsharing"
+		@"documentscanning"
 	]]];
 }
 
 - (void)testAppStoreProductRequest
 {
-	/*
 	NSArray <OCLicenseAppStoreItem *> *appStoreItems = [self _appStoreItems];
 	OCLicenseAppStoreProvider *provider = [[OCLicenseAppStoreProvider alloc] initWithItems:appStoreItems];
 
@@ -433,18 +432,16 @@ typedef void(^LicenseProviderBlock)(OCLicenseProvider *provider, OCLicenseProvid
 
 		XCTAssert((error==nil), @"Error: %@", error);
 		XCTAssert((provider.offers!=nil), @"No offers!");
-		XCTAssert((provider.offers.count==appStoreItems.count), @"Incomplete offers!");
+		XCTAssert((provider.offers.count==appStoreItems.count), @"Incomplete offers (%lu provided vs %lu locally registered)!", (unsigned long)provider.offers.count, (unsigned long)appStoreItems.count);
 
 		[expectResponse fulfill];
 	}];
 
 	[self waitForExpectationsWithTimeout:30 handler:nil];
-	 */
 }
 
 - (void)testOfferObservation
 {
-	/*
 	OCLicenseManager *manager = [OCLicenseManager new];
 	NSArray <OCLicenseAppStoreItem *> *appStoreItems = [self _appStoreItems];
 	OCLicenseAppStoreProvider *provider = [[OCLicenseAppStoreProvider alloc] initWithItems:appStoreItems];
@@ -484,7 +481,6 @@ typedef void(^LicenseProviderBlock)(OCLicenseProvider *provider, OCLicenseProvid
 	}];
 
 	[self waitForExpectationsWithTimeout:30 handler:nil];
-	 */
 }
 
 @end

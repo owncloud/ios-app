@@ -57,26 +57,27 @@
 #pragma mark - Tools
 + (NSString *)stringForType:(OCLicenseType)type
 {
+	// Convenience method for debugging purposes/logging - no user-facing strings
 	switch (type)
 	{
 		case OCLicenseTypeNone:
-			return OCLocalizedString(@"none", @"");
+			return (@"none");
 		break;
 
 		case OCLicenseTypeTrial:
-			return OCLocalizedString(@"trial", @"");
+			return (@"trial");
 		break;
 
 		case OCLicenseTypePurchase:
-			return OCLocalizedString(@"purchase", @"");
+			return (@"purchase");
 		break;
 
 		case OCLicenseTypeSubscription:
-			return OCLocalizedString(@"subscription", @"");
+			return (@"subscription");
 		break;
 	}
 
-	return OCLocalizedString(@"unknown", @"");
+	return (@"unknown");
 }
 
 @end
