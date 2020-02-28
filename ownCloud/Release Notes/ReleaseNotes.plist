@@ -311,7 +311,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 					<key>Title</key>
 					<string>Fix: Available Offline</string>
 					<key>Subtitle</key>
-					<string>Fixed a problem, when device was offline and a available offline ressource was changed on an other device.</string>
+					<string>Fixed a problem, when device was offline and an available offline resource was changed on an other device.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageData</key>
