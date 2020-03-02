@@ -249,7 +249,7 @@ extension NSObject {
 			}
 		}
 
-		UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.navigationBarColors.backgroundColor
+		UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = collection.tintColor
 	}
 }
 
