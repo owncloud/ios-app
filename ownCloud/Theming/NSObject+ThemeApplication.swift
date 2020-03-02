@@ -143,6 +143,15 @@ extension NSObject {
 				searchBar.overrideUserInterfaceStyle = collection.interfaceStyle.userInterfaceStyle
 				searchBar.searchTextField.backgroundColor = collection.searchbarColors.backgroundColor
 				searchBar.searchTextField.setPlaceholder(textColor: collection.navigationBarColors.labelColor)
+
+				if let glassIconView = searchBar.searchTextField.leftView as? UIImageView {
+					glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
+					glassIconView.tintColor = collection.navigationBarColors.labelColor
+				}
+				if let clearButton = searchBar.searchTextField.value(forKey: "clearButton") as? UIButton {
+					clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+					clearButton.tintColor = collection.navigationBarColors.labelColor
+				}
 			} else {
 				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = collection.searchbarColors.backgroundColor
 				UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
