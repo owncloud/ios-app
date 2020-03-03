@@ -22,7 +22,7 @@ import ownCloudSDK
 class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
 	weak var core : OCCore?
 
-	let estimatedTableRowHeight : CGFloat = 80
+	let estimatedTableRowHeight : CGFloat = 62
 
 	var progressSummarizer : ProgressSummarizer?
 	private var _actionProgressHandler : ActionProgressHandler?

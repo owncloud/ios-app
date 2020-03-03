@@ -53,6 +53,9 @@ class StaticLoginBundle: NSObject {
 							if let prompt = profile["prompt"] as? String {
 								staticloginProfile.prompt = prompt
 							}
+							if let welcome = profile["welcome"] as? String {
+								staticloginProfile.welcome = welcome
+							}
 							if let customLogoName = profile["customLogoName"] as? String {
 								staticloginProfile.customLogoName = customLogoName
 							}

@@ -78,7 +78,7 @@ platform :ios do
     appName = "ownCloud"
     themePath = "ownCloud/Resources/Theming/Branding.plist"
     if File.exist?("../" + themePath)
-      bundle = get_info_plist_value(path: themePath, key: "organizationName")
+      bundle = get_info_plist_value(path: themePath, key: "Bundle")
       appName = bundle["organizationName"]
     end
     ipaName = appName + ".ipa"

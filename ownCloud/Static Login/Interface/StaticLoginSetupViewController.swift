@@ -43,7 +43,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		var loginMaskSection : StaticTableViewSection
 
 		loginMaskSection = StaticTableViewSection(headerTitle: nil, identifier: "loginMaskSection")
-		loginMaskSection.addStaticHeader(title: profile.name!, message: profile.prompt)
+		loginMaskSection.addStaticHeader(title: profile.welcome!, message: profile.prompt)
 
 		loginMaskSection.add(row: StaticTableViewRow(textFieldWithAction: { [weak self] (row, _, _) in
 			if let value = row.value as? String {
@@ -60,9 +60,14 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			loginMaskSection.add(row: passwordRow)
 		}
 
-		let (proceedButton, cancelButton) = loginMaskSection.addButtonFooter(proceedLabel: "Login", cancelLabel: "Cancel")
-		proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
-		cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
+		if VendorServices.shared.canAddAccount {
+			let (proceedButton, cancelButton) = loginMaskSection.addButtonFooter(proceedLabel: "Login", cancelLabel: "Cancel")
+			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
+			cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
+		} else {
+			let (proceedButton, _) = loginMaskSection.addButtonFooter(proceedLabel: "Login", cancelLabel: nil)
+			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
+		}
 
 		return loginMaskSection
 	}
@@ -73,9 +78,14 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		tokenMaskSection = StaticTableViewSection(headerTitle: nil, identifier: "tokenMaskSection")
 		tokenMaskSection.addStaticHeader(title: profile.name!, message: profile.prompt)
 
-		let (proceedButton, cancelButton) = tokenMaskSection.addButtonFooter(proceedLabel: "Continue", cancelLabel: "Cancel")
-		proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
-		cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
+		if VendorServices.shared.canAddAccount {
+			let (proceedButton, cancelButton) = tokenMaskSection.addButtonFooter(proceedLabel: "Continue", cancelLabel: "Cancel")
+			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
+			cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
+		} else {
+			let (proceedButton, _) = tokenMaskSection.addButtonFooter(proceedLabel: "Continue", cancelLabel: nil)
+			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
+		}
 
 		return tokenMaskSection
 	}
@@ -98,7 +108,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		containerView.addSubview(centerView)
 
 		containerView.addThemeApplier({ (_, collection, _) in
-			messageLabel.applyThemeCollection(collection)
+			messageLabel.applyThemeCollection(collection, itemStyle: .logo)
 		})
 
 		messageLabel.text = message
@@ -142,10 +152,27 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 			options[.presentingViewControllerKey] = self
 
-			hud?.present(on: self, label: "Authenticating…".localized)
+			let spinner = UIActivityIndicatorView(style: .white)
+			if let button = sender as? ThemeButton {
+				button.setTitle("Authenticating…".localized, for: .normal)
+				button.isEnabled = false
+				let buttonHeight = button.bounds.size.height
+				let buttonWidth = button.bounds.size.width
+				let spinnerWidth = spinner.bounds.size.width
+				spinner.center = CGPoint(x: buttonWidth - spinnerWidth - 10.0, y: buttonHeight/2)
+				button.addSubview(spinner)
+				spinner.startAnimating()
+			} else {
+				hud?.present(on: self, label: "Authenticating…".localized)
+			}
 
 			connection.generateAuthenticationData(withMethod: authMethodIdentifier, options: options, completionHandler: { (error, authMethodIdentifier, authMethodData) in
 				OnMainThread {
+					if let button = sender as? ThemeButton {
+						spinner.removeFromSuperview()
+						button.setTitle("Login".localized, for: .normal)
+						button.isEnabled = true
+					}
 					hud?.dismiss(completion: {
 						if error == nil {
 							self.bookmark.authenticationMethodIdentifier = authMethodIdentifier
