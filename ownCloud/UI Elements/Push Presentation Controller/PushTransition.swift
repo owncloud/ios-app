@@ -18,15 +18,11 @@
 
 import UIKit
 
-typealias PushTransitionRecovery = (_ previousController: UIViewController, _ window: UIWindow) -> Void
-
 class PushTransition: NSObject, UIViewControllerAnimatedTransitioning {
 	var dismissTransition : Bool = false
-	var transitionRecovery : PushTransitionRecovery?
 
-	init(dismiss: Bool, transitionRecovery recoveryBlock: PushTransitionRecovery? = nil) {
+	init(dismiss: Bool) {
 		dismissTransition = dismiss
-		transitionRecovery = recoveryBlock
 	}
 
 	func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -58,11 +54,7 @@ class PushTransition: NSObject, UIViewControllerAnimatedTransitioning {
 					// Work around an iOS bug where using a custom dismissal animation removes both fromViewController and toViewController at the end of the animation, leaving behind a black device screen with no views
 					if !transitionContext.transitionWasCancelled, let window = window {
 						if toViewController.view.window == nil {
-							if let transitionRecovery = self.transitionRecovery {
-								transitionRecovery(toViewController, window)
-							} else {
-								window.addSubview(toViewController.view)
-							}
+							window.addSubview(toViewController.view)
 						}
 					}
 				})
