@@ -36,7 +36,7 @@ extension OCCore {
 			start(shareQuery)
 		}
 
-		if let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item) {
+		if let shareQuery = OCShareQuery(scope: .sharedWithUser, item: nil) {
 			dispatchGroup.enter()
 
 			shareQuery.initialPopulationHandler = { [weak self] query in
@@ -67,11 +67,12 @@ extension OCCore {
 		})
 	}
 
-	@discardableResult func sharesSharedWithMe(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, keepRunning: Bool = false) -> OCShareQuery? {
-		if let shareQuery = OCShareQuery(scope: .sharedWithUser, item: item) {
+	@discardableResult func sharesSharedWithMe(for item: OCItem, initialPopulationHandler: @escaping (_ shares: [OCShare]) -> Void, allowPartialMatch : Bool = false, keepRunning: Bool = false) -> OCShareQuery? {
+		if let shareQuery = OCShareQuery(scope: .sharedWithUser, item: nil) {
 			shareQuery.initialPopulationHandler = { [weak self] query in
 				let shares = query.queryResults.filter({ (share) -> Bool in
-					return share.itemPath == item.path
+					return (share.itemPath == item.path) ||
+					       (allowPartialMatch && (item.path?.hasPrefix(share.itemPath) == true))
 				})
 				initialPopulationHandler(shares)
 

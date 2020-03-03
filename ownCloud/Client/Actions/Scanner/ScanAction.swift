@@ -40,6 +40,10 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 			return .none
 		}
 
+		if forContext.items.first?.permissions.contains(.createFile) == false {
+			return .none
+		}
+
 		if #available(iOS 13.0, *) {
 			return .middle
 		} else {
