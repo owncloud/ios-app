@@ -28,6 +28,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	var savingMode: QLPreviewItemEditingMode?
 	var itemTracker: OCCoreItemTracking?
 	var modifiedContentsURL: URL?
+	var dismissedViewWithoutSaving: Bool = false
 
 	var source: URL {
 		didSet {
@@ -89,6 +90,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 						self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
 					} else if let savingMode = self.savingMode, savingMode == .createCopy {
 						self.saveModifiedContents(at: self.source, savingMode: savingMode)
+					} else {
+						self.dismissedViewWithoutSaving = true
 					}
 				}
 			}
@@ -98,6 +101,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 					self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
 				} else if let savingMode = self.savingMode, savingMode == .createCopy {
 					self.saveModifiedContents(at: self.source, savingMode: savingMode)
+				} else {
+					self.dismissedViewWithoutSaving = true
 				}
 			}
 		}
@@ -207,5 +212,8 @@ extension EditDocumentViewController: QLPreviewControllerDataSource, QLPreviewCo
 
     func previewController(_ controller: QLPreviewController, didSaveEditedCopyOf previewItem: QLPreviewItem, at modifiedContentsURL: URL) {
 		self.modifiedContentsURL = modifiedContentsURL
+		if self.dismissedViewWithoutSaving, let savingMode = self.savingMode {
+			self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
+		}
 	}
 }
