@@ -518,7 +518,6 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
 	@objc func plusBarButtonPressed(_ sender: UIBarButtonItem) {
-
 		let controller = ThemedAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
 		// Actions for folderAction
@@ -527,6 +526,17 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 			let actionContext = ActionContext(viewController: self, core: core, items: [rootItem], location: actionsLocation, sender: sender)
 
 			let actions = Action.sortedApplicableActions(for: actionContext)
+
+			if actions.count == 0 {
+				// Handle case of no actions
+				let alert = ThemedAlertController(title: "No actions available".localized, message: "No actions are available for this folder, possibly because of missing permissions.".localized, preferredStyle: .alert)
+
+				alert.addAction(UIAlertAction(title: "OK".localized, style: .default))
+
+				self.present(alert, animated: true)
+
+				return
+			}
 
 			for action in actions {
 				action.progressHandler = makeActionProgressHandler()
@@ -544,6 +554,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		if let popoverController = controller.popoverPresentationController {
 			popoverController.barButtonItem = sender
 		}
+
 		self.present(controller, animated: true)
 	}
 

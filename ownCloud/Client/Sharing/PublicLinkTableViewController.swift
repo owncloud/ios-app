@@ -255,12 +255,29 @@ class PublicLinkTableViewController: SharingTableViewController {
 			if item.isSharedWithUser {
 				core.sharesSharedWithMe(for: item, initialPopulationHandler: { shares in
 					OnMainThread {
-						if let share = shares.filter({ $0.itemPath == path}).first {
+						var deepestShare : OCShare?
+
+						for share in shares {
+							if share.itemPath == path {
+								deepestShare = share
+								break
+							} else {
+								if path.hasPrefix(share.itemPath) {
+									if deepestShare == nil {
+										deepestShare = share
+									} else if let deepestShareItemPath = deepestShare?.itemPath, share.itemPath.count > deepestShareItemPath.count {
+										deepestShare = share
+									}
+								}
+							}
+						}
+
+						if let share = deepestShare {
 							permissions = share.permissions
 							createLink(for: path, with: permissions!)
 						}
 					}
-				})
+				}, allowPartialMatch: true)
 			} else {
 				permissions = [.create, .read]
 				createLink(for: path, with: permissions!)
