@@ -41,6 +41,12 @@ class StaticLoginStepViewController : StaticTableViewController {
 	@objc func popViewController() {
 		self.navigationController?.popViewController(animated: false)
 	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		self.tableView.backgroundColor = .clear
+	}
 }
 
 class FullWidthHeaderView : ThemeView {
@@ -70,7 +76,7 @@ extension StaticTableViewSection {
 		headerView.addSubview(titleLabel)
 
 		headerView.addThemeApplier({ (_, collection, _) in
-			titleLabel.applyThemeCollection(collection, itemStyle: .logo)
+			titleLabel.applyThemeCollection(collection, itemStyle: .title)
 		})
 
 		titleLabel.font = UIFont.systemFont(ofSize: UIFont.systemFontSize * 1.5, weight: .bold)
@@ -94,7 +100,8 @@ extension StaticTableViewSection {
 
 			headerView.addThemeApplier({ (_, collection, _) in
 				//messageLabel.applyThemeCollection(collection)
-				messageLabel.textColor = collection.navigationBarColors.labelColor
+				messageLabel.applyThemeCollection(collection, itemStyle: .title)
+				//	messageLabel.textColor = collection.navigationBarColors.labelColor
 			})
 
 			headerView.addSubview(messageLabel)
@@ -154,7 +161,7 @@ extension StaticTableViewSection {
 		}
 
 		if cancelLabel != nil {
-			cancelButton = UIButton()
+			cancelButton = ThemeButton()
 			cancelButton?.translatesAutoresizingMaskIntoConstraints = false
 
 			cancelButton?.setTitle(cancelLabel, for: .normal)
@@ -177,10 +184,9 @@ extension StaticTableViewSection {
 		NSLayoutConstraint.activate(constraints)
 
 		containerView.addThemeApplier({ [weak continueButton, cancelButton] (_, collection, _) in
-			continueButton?.applyThemeCollection(collection)
+			continueButton?.applyThemeCollection(collection, itemStyle: .approval)
 			cancelButton?.applyThemeCollection(collection)
 		})
-
 		self.footerView = containerView
 
 		return (continueButton, cancelButton)

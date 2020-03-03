@@ -30,6 +30,7 @@ class StaticLoginProfile: NSObject {
 
 	var name : String?
 	var prompt : String?
+	var welcome : String?
 	var customLogoName : String?
 
 	var bookmarkName : String?

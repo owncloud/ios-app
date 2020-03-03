@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>canAddAccount</key>
-	<true/>
+	<false/>
 	<key>feedbackMail</key>
-	<string>ios-app@owncloud.com</string>
+	<string>support@owncloud.online</string>
 	<key>Bundle</key>
 	<dict>
 		<key>organizationLogoName</key>
@@ -13,23 +13,23 @@
 		<key>organizationBackgroundName</key>
 		<string>brand-background.jpg</string>
 		<key>organizationName</key>
-		<string>SURFdrive</string>
+		<string>ownCloud GmbH</string>
 	</dict>
 	<key>Profiles</key>
 	<array>
 		<dict>
 			<key>identifier</key>
-			<string>sales</string>
+			<string>ownCloud.online</string>
 			<key>name</key>
-			<string>💶 Sales</string>
+			<string>ownCloud.online</string>
+			<key>welcome</key>
+			<string>Welcome to ownCloud.online</string>
 			<key>prompt</key>
-			<string>Enter your Sales username and password:</string>
-			<key>customLogoName</key>
-			<string>sales</string>
+			<string>Enter your username and password:</string>
 			<key>bookmarkName</key>
-			<string>💶 Sales Files</string>
+			<string>ownCloud.online</string>
 			<key>url</key>
-			<string>https://demo.owncloud.org/</string>
+			<string>https://intellinue311.owncloud.online/</string>
 			<key>maxBookmarkCount</key>
 			<integer>1</integer>
 			<key>allowedAuthenticationMethods</key>
@@ -37,38 +37,20 @@
 				<string>com.owncloud.basicauth</string>
 			</array>
 		</dict>
-		<dict>
-			<key>identifier</key>
-			<string>public-relations</string>
-			<key>name</key>
-			<string>🌍 Public Relations Group</string>
-			<key>prompt</key>
-			<string>Please press &quot;Continue&quot; and enter your PR department login and password.</string>
-			<key>customLogoName</key>
-			<string>public-relations</string>
-			<key>bookmarkName</key>
-			<string>🌍 Public Relations</string>
-			<key>url</key>
-			<string>https://owncloud-io.lan/</string>
-			<key>allowedAuthenticationMethods</key>
-			<array>
-				<string>com.owncloud.oauth2</string>
-			</array>
-		</dict>
 	</array>
 	<key>URLs</key>
 	<dict>
 		<key>Help</key>
-		<string>https://www.owncloud.com/help</string>
+		<string>https://owncloud.online/faq/</string>
 		<key>Privacy</key>
-		<string>https://owncloud.org/privacy-policy/</string>
+		<string>https://owncloud.online/privacy-policy/</string>
 	</dict>
 	<key>Generic</key>
 	<dict>
 		<key>Corporate</key>
 		<dict>
 			<key>Color</key>
-			<string>#ED6B06</string>
+			<string>#52DDA9</string>
 		</dict>
 		<key>Action</key>
 		<dict>
@@ -99,7 +81,7 @@
 			<key>Light</key>
 			<string>#EEEEEE</string>
 			<key>Input-Form</key>
-			<string>#BE5605</string>
+			<string>#52DDA9</string>
 			<key>Selected</key>
 			<string>#E5EFFF</string>
 			<key>Tooltip</key>
@@ -143,14 +125,14 @@
 			<key>Active</key>
 			<string>#FFFFFF</string>
 			<key>Inactive</key>
-			<string>#8E4004</string>
+			<string>#EEEEEE</string>
 		</dict>
 	</dict>
 	<key>Themes</key>
 	<array>
 		<dict>
 			<key>Name</key>
-			<string>SURFdrive</string>
+			<string>ownCloud.online</string>
 			<key>Identifier</key>
 			<string>com.owncloud.branding</string>
 			<key>ThemeStyle</key>
@@ -158,7 +140,7 @@
 			<key>darkBrandColor</key>
 			<string>Corporate.Color</string>
 			<key>lightBrandColor</key>
-			<string>#676767</string>
+			<string>#628a99</string>
 			<key>Colors</key>
 			<dict>
 				<key>tintColor</key>

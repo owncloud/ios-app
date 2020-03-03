@@ -256,7 +256,11 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 				self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
 
 				let emptyViewController = self.emptyViewController
-				emptyViewController.navigationItem.title = "Accounts".localized
+				if VendorServices.shared.isBranded {
+					emptyViewController.navigationItem.title = "Manage".localized
+				} else {
+					emptyViewController.navigationItem.title = "Accounts".localized
+				}
 
 				self.filesNavigationController?.popLastHandler = { [weak self] (viewController) in
 					if viewController == emptyViewController {

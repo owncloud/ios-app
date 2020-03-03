@@ -26,7 +26,6 @@ class StaticLoginViewController: UIViewController, Themeable {
 
 	var headerContainerView : UIView?
 	var headerLogoView : UIImageView?
-	var headerLabel : UILabel?
 
 	var contentContainerView : UIView?
 
@@ -60,7 +59,6 @@ class StaticLoginViewController: UIViewController, Themeable {
 						if oldValue != self.contentViewController { // only animate the old view controller if it is distinct
 							oldValue?.view?.removeFromSuperview()
 							oldValue?.removeFromParent()
-
 							oldValue?.view?.alpha = 1.0
 						}
 
@@ -129,12 +127,6 @@ class StaticLoginViewController: UIViewController, Themeable {
 		headerLogoView?.translatesAutoresizingMaskIntoConstraints = false
 		headerContainerView?.addSubview(headerLogoView!)
 
-		headerLabel = UILabel()
-		headerLabel?.translatesAutoresizingMaskIntoConstraints = false
-		headerLabel?.font = UIFont.systemFont(ofSize: UIFont.systemFontSize * 2.5, weight: .semibold)
-		headerLabel?.textAlignment = .center
-		headerContainerView?.addSubview(headerLabel!)
-
 		NSLayoutConstraint.activate([
 			// Background image view
 			backgroundImageView!.topAnchor.constraint(equalTo: rootView.topAnchor),
@@ -146,17 +138,12 @@ class StaticLoginViewController: UIViewController, Themeable {
 				// Logo size
 				headerLogoView!.leftAnchor.constraint(equalTo: headerContainerView!.safeAreaLayoutGuide.leftAnchor),
 				headerLogoView!.rightAnchor.constraint(equalTo: headerContainerView!.safeAreaLayoutGuide.rightAnchor),
-				headerLogoView!.heightAnchor.constraint(equalToConstant: 96),
+				headerLogoView!.heightAnchor.constraint(equalTo: rootView.heightAnchor, multiplier: 0.25, constant: 0),
 
 				// Logo and label position
 				headerLogoView!.topAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.topAnchor, constant: headerVerticalSpacing),
 				headerLogoView!.centerXAnchor.constraint(equalTo: rootView.centerXAnchor),
-
-				headerLogoView!.bottomAnchor.constraint(equalTo: headerLabel!.topAnchor, constant: -20),
-
-				headerLabel!.bottomAnchor.constraint(equalTo: headerContainerView!.bottomAnchor, constant: -headerVerticalSpacing),
-				headerLabel!.leftAnchor.constraint(equalTo: headerContainerView!.safeAreaLayoutGuide.leftAnchor, constant: 10),
-				headerLabel!.rightAnchor.constraint(equalTo: headerContainerView!.safeAreaLayoutGuide.rightAnchor, constant: -20),
+				headerLogoView!.bottomAnchor.constraint(equalTo: headerContainerView!.bottomAnchor, constant: 0),
 
 				// Header position
 				headerContainerView!.topAnchor.constraint(equalTo: rootView.topAnchor),
@@ -179,17 +166,12 @@ class StaticLoginViewController: UIViewController, Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 //		self.view.backgroundColor = collection.tableBackgroundColor
 //		self.headerView?.backgroundColor = collection.tableGroupBackgroundColor
-
-		self.headerLabel?.applyThemeCollection(collection)
 	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
 		OCItem.registerIcons()
-
-		headerLabel?.text = loginBundle.organizationName
-		headerLabel?.applyThemeCollection(Theme.shared.activeCollection, itemStyle: .logo)
 
 		if let organizationLogoName = loginBundle.organizationLogoName {
 			let image = UIImage(named: organizationLogoName)
@@ -201,8 +183,6 @@ class StaticLoginViewController: UIViewController, Themeable {
 			backgroundImageView?.image = UIImage(named: organizationBackgroundName)
 			backgroundImageView?.contentMode = .scaleAspectFill
 		}
-
-		contentContainerView?.backgroundColor = UIColor(white: 0.0, alpha: 0.5)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -236,17 +216,17 @@ class StaticLoginViewController: UIViewController, Themeable {
 			navigationViewController.isNavigationBarHidden = true
 
  			// Saved for future reference. Ended up not being used now because ServerListTableViewController gained the
-			// ability to start the PushTransition from a custom viewController (.pushFromViewController), at which point
-			// PushTransition correctly restores the view.
-			// --
-			// if let serverListTableViewController = firstViewController as? ServerListTableViewController {
-			// 	// This block is executed when the transition back from the server list table view controller has finished
-			// 	// - at which point it is removed due to an iOS bug documented in PushTransition. To re-attach the view
-			// 	// controller in the right place, this custom pushTransitionRecovery is used
-			// 	serverListTableViewController.pushTransitionRecovery = { (_, _) in
-			// 		self.contentViewController = navigationViewController
-			// 	}
-			// }
+ 			// ability to start the PushTransition from a custom viewController (.pushFromViewController), at which point
+ 			// PushTransition correctly restores the view.
+ 			// --
+ 			// if let serverListTableViewController = firstViewController as? ServerListTableViewController {
+ 			// 	// This block is executed when the transition back from the server list table view controller has finished
+ 			// 	// - at which point it is removed due to an iOS bug documented in PushTransition. To re-attach the view
+ 			// 	// controller in the right place, this custom pushTransitionRecovery is used
+ 			// 	serverListTableViewController.pushTransitionRecovery = { (_, _) in
+ 			// 		self.contentViewController = navigationViewController
+ 			// 	}
+ 			// }
 
 			self.contentViewController = navigationViewController
 		}
@@ -284,18 +264,34 @@ class StaticLoginViewController: UIViewController, Themeable {
 		return StaticLoginSetupViewController(loginViewController: self, profile: profile)
 	}
 
-	func buildBookmarkSelector() -> ServerListTableViewController {
-		let serverList = StaticLoginServerListViewController(style: .grouped)
+	func buildBookmarkSelector() -> UIViewController {
+		if OCBookmarkManager.shared.bookmarks.count > 1 {
+			let serverList = StaticLoginServerListViewController(style: .grouped)
 
-		serverList.staticLoginViewController = self
-		serverList.hasToolbar = false
+			serverList.staticLoginViewController = self
+			serverList.hasToolbar = false
 
-		// Push ClientRootViewControllers via PushTransition from this view controller, so it is correctly
-		// animated (otherwise just the list is moved *inside* this view controller, which is weird) and the
-		// PushTransition correctly restores the view
-		serverList.pushFromViewController = self
+			// Push ClientRootViewControllers via PushTransition from this view controller, so it is correctly
+			// animated (otherwise just the list is moved *inside* this view controller, which is weird) and the
+			// PushTransition correctly restores the view
+			serverList.pushFromViewController = self
 
-		return serverList
+			return serverList
+		} else {
+			let serverList = StaticLoginSingleAccountServerListViewController(style: .grouped)
+
+			serverList.staticLoginViewController = self
+			serverList.hasToolbar = false
+
+			// Push ClientRootViewControllers via PushTransition from this view controller, so it is correctly
+			// animated (otherwise just the list is moved *inside* this view controller, which is weird) and the
+			// PushTransition correctly restores the view
+			serverList.pushFromViewController = self
+
+			return serverList
+		}
+
+		return UIViewController()
 	}
 
 	func profile(for staticLoginProfileIdentifier: StaticLoginProfileIdentifier) -> StaticLoginProfile? {
@@ -324,23 +320,23 @@ class StaticLoginViewController: UIViewController, Themeable {
 
 	func openBookmark(_ bookmark: OCBookmark, closeHandler: (() -> Void)? = nil) {
 		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+		clientRootViewController.modalPresentationStyle = .overFullScreen
 
-		// Switch to theme for bookmark
-		if let staticLoginProfileIdentifier = bookmark.userInfo[StaticLoginProfile.staticLoginProfileIdentifierKey] as? StaticLoginProfileIdentifier,
-		   let staticLoginProfile = self.profile(for: staticLoginProfileIdentifier),
-		   let themeStyleIdentifier = staticLoginProfile.themeStyleID {
-			self.switchToTheme(with: themeStyleIdentifier)
-		}
-/*
-		clientRootViewController.closeHandler = { [weak self] () in
-			// Switch to theme for static login UI
-			if let themeStyleIdentifier = self?.loginBundle.loginThemeStyleID {
-				self?.switchToTheme(with: themeStyleIdentifier)
+		clientRootViewController.afterCoreStart {
+			OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
+
+			// Set up custom push transition for presentation
+			if let navigationController = self.navigationController {
+				let transitionDelegate = PushTransitionDelegate()
+
+				clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
+				clientRootViewController.transitioningDelegate = transitionDelegate
+				clientRootViewController.modalPresentationStyle = .custom
+
+				navigationController.present(clientRootViewController, animated: true, completion: {
+				})
 			}
-
-			closeHandler?()
-		}*/
-
-		self.present(clientRootViewController, animated: true, completion: nil)
+			self.showFirstScreen()
+		}
 	}
 }

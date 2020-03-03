@@ -97,11 +97,11 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 
 	override func showModal(viewController: UIViewController, completion: (() -> Void)? = nil) {
 		// Ensure the presenting view controller isn't removed when the presentation ends
-		if viewController.modalPresentationStyle == .fullScreen {
-			viewController.modalPresentationStyle = .overFullScreen
-		}
+ 		if viewController.modalPresentationStyle == .fullScreen {
+ 			viewController.modalPresentationStyle = .overFullScreen
+ 		}
 
-		self.staticLoginViewController?.present(viewController, animated: true, completion: completion)
+  		self.staticLoginViewController?.present(viewController, animated: true, completion: completion)
 	}
 
 	override func openBookmark(_ bookmark: OCBookmark, closeHandler: (() -> Void)? = nil) {

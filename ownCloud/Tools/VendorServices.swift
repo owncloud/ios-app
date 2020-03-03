@@ -96,7 +96,7 @@ class VendorServices : NSObject {
 
 	var isBranded: Bool {
 		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
-			if let themingValues = NSDictionary(contentsOfFile: path), let bundleValues = themingValues["Bundle"] as? NSDictionary, let organizationName = bundleValues["organizationName"] as? String, !organizationName.hasPrefix("ownCloud") {
+			if let themingValues = NSDictionary(contentsOfFile: path), let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0 {
 				return true
 			}
 		}
