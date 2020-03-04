@@ -57,6 +57,7 @@
 #pragma mark - Tools
 + (NSString *)stringForType:(OCLicenseType)type
 {
+	// Convenience method for debugging purposes/logging - no user-facing strings
 	switch (type)
 	{
 		case OCLicenseTypeNone:
