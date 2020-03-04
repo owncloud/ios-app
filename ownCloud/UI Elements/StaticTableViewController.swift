@@ -161,8 +161,14 @@ class StaticTableViewController: UITableViewController, Themeable {
 		Theme.shared.register(client: self)
 	}
 
+	var willDismissAction : ((_ viewController: StaticTableViewController) -> Void)?
+	var didDismissAction : ((_ viewController: StaticTableViewController) -> Void)?
+
 	@objc func dismissAnimated() {
-		self.dismiss(animated: true, completion: nil)
+		self.willDismissAction?(self)
+		self.dismiss(animated: true, completion: {
+			self.didDismissAction?(self)
+		})
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
