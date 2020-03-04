@@ -396,7 +396,7 @@
 		if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
 		{
 			FPLogCmd(@"Completed with collission with existingItem=%@ (locally detected)", existingItem);
-			if (@available(iOS 12.4, *))
+			if (@available(iOS 13.3, *))
 			{
 				completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
 			}
@@ -424,7 +424,7 @@
 					if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
 					{
 						FPLogCmd(@"Completed with collission with existingItem=%@ (server response)", existingItem);
-						if (@available(iOS 12.4, *))
+						if (@available(iOS 13.3, *))
 						{
 							completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
 						}
