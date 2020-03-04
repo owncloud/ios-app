@@ -51,7 +51,9 @@ extension UserDefaults {
 		}
 
 		get {
-			return self.bool(forKey: MediaUploadKeys.ConvertVideosToMP4Key.rawValue)
+            // TODO: MPEG-4 conversion is broken in iOS13, revisit it again in later releases
+            //return self.bool(forKey: MediaUploadKeys.ConvertVideosToMP4Key.rawValue)
+            return false
 		}
 	}
 
@@ -169,7 +171,8 @@ class MediaUploadSettingsSection: SettingsSection {
 			}, title: "Convert videos to MP4".localized, value: self.userDefaults.convertVideosToMP4, identifier: "convert_to_mp4")
 
 		self.add(row: convertPhotosSwitchRow!)
-		self.add(row: convertVideosSwitchRow!)
+        // TODO: MPEG-4 conversion is broken in iOS13, revisit it again in later releases
+		//self.add(row: convertVideosSwitchRow!)
 
 		// Instant upload requires at least one configured account
 		if OCBookmarkManager.shared.bookmarks.count > 0 {
@@ -187,7 +190,7 @@ class MediaUploadSettingsSection: SettingsSection {
 
 					})
 				}
-				}, title: "Instant Upload Photos".localized, value: self.userDefaults.instantUploadPhotos)
+				}, title: "Auto Upload Photos".localized, value: self.userDefaults.instantUploadPhotos)
 
 			instantUploadVideosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 				if let convertSwitch = sender as? UISwitch {
@@ -202,7 +205,7 @@ class MediaUploadSettingsSection: SettingsSection {
 						}
 					})
 				}
-				}, title: "Instant Upload Videos".localized, value: self.userDefaults.instantUploadVideos)
+				}, title: "Auto Upload Videos".localized, value: self.userDefaults.instantUploadVideos)
 
 			bookmarkAndPathSelectionRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 				self?.showAccountSelectionViewController()
@@ -252,8 +255,8 @@ class MediaUploadSettingsSection: SettingsSection {
 																	} else {
 																		self.userDefaults.resetInstantUploadConfiguration()
 																		OnMainThread {
-																			let alertController = ThemedAlertController(with: "Instant upload disabled".localized,
-																													message: "Instant upload of media was disabled since configured account / folder was not found".localized)
+																			let alertController = ThemedAlertController(with: "Auto upload disabled".localized,
+																													message: "Auto upload of media was disabled since configured account / folder was not found".localized)
 																			self.viewController?.present(alertController, animated: true, completion: nil)
 																		}
 																	}

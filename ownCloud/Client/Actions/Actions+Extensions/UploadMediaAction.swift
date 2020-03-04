@@ -24,7 +24,9 @@ class UploadMediaAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadphotos") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Upload from your photo library".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut] }
+	override class var keyCommand : String? { return "M" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	private struct AssociatedKeys {
 		static var actionKey = "action"
@@ -54,15 +56,11 @@ class UploadMediaAction: UploadBaseAction {
 			photoAlbumViewController.selectionCallback = {(assets) in
 				self.completed()
 
-				guard let rootItem = self.context.items.first else { return }
+				guard let path = self.context.items.first?.path else { return }
 
-				MediaUploadQueue.shared.uploadAssets(assets, with: self.core, at: rootItem, progressHandler: { (progress) in
-					if progress.isFinished || progress.isCancelled {
-						self.unpublish(progress: progress)
-					} else {
-						self.publish(progress: progress)
-					}
-				})
+				guard let bookmark = self.core?.bookmark else { return }
+
+				MediaUploadQueue.shared.addUploads(assets, for: bookmark, at: path)
 			}
 			let navigationController = ThemeNavigationController(rootViewController: photoAlbumViewController)
 

@@ -1,5 +1,38 @@
 # ChangeLog
 
+## Release version 1.3.0 (February 2020)
+
+- Document Scanner on iOS 13 (PR #494)
+- Markup Documents on iOS 13 (#541)
+- Shortcut Support on iOS 13 (#463)
+- New Quick Access Collections (PR #600)
+- Cleaner File List Layout (PR #594)
+- Added Sort Bar in Directory Picker (#590)
+- Fix: Blank File List on UI restoration (#601)
+- Fix: Share Sheet on iPad for log files (#606)
+
+## Release version 1.2.1 (January 2020)
+
+- Fix: Passcode Lock Screen on iOS 13 (#582)
+
+## Release version 1.2.0 (December 2019)
+
+- Multiple Window Support (iPadOS) (#488)
+- Keyboard Commands (iPadOS) (#282)
+- Media Player Improvements (#59, #374)
+- Better File Previews (#481)
+- Arabic Language Support
+- Fix: Sort alphabetically (PR #546)
+- Fix: Share Sheet on iPad (#568)
+- Fix: FileProvider File Type Issue (#557)
+- Fix: FileProvider Offline Browsing (PR #547)
+- Fix: FileProvider Saving from Microsoft Word (PR #574)
+- Fix: Photo Upload (#504)
+
+## Release version 1.1.2 (October 2019)
+
+- Fix for long delays before starting a request on iOS 13.1 (PR #531)
+
 ## Release version 1.1.1 (October 2019)
 
 - Dark mode support (PR #489)

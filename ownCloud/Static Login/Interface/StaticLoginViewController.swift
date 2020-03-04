@@ -319,10 +319,12 @@ class StaticLoginViewController: UIViewController, Themeable {
 	}
 
 	func openBookmark(_ bookmark: OCBookmark, closeHandler: (() -> Void)? = nil) {
+
+
 		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 		clientRootViewController.modalPresentationStyle = .overFullScreen
 
-		clientRootViewController.afterCoreStart {
+		clientRootViewController.afterCoreStart(nil) {
 			OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
 
 			// Set up custom push transition for presentation

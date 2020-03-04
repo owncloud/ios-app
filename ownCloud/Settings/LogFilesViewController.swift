@@ -140,7 +140,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 		cell?.shareAction = { [weak self] (cell) in
 			if let indexPath = self?.tableView.indexPath(for: cell) {
-				self?.shareLogRecord(at: indexPath)
+				self?.shareLogRecord(at: indexPath, sender: cell)
 			}
 		}
 
@@ -149,7 +149,10 @@ class LogFilesViewController : UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
-		self.shareLogRecord(at: indexPath)
+		let cell = tableView.cellForRow(at: indexPath)
+		if let cell = cell {
+			self.shareLogRecord(at: indexPath, sender: cell)
+		}
 	}
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -176,8 +179,7 @@ class LogFilesViewController : UITableViewController, Themeable {
 		}
 	}
 
-	private func shareLogRecord(at indexPath:IndexPath) {
-
+	private func shareLogRecord(at indexPath:IndexPath, sender: UITableViewCell) {
 		let logRecord = self.logRecords[indexPath.row]
 
 		// Create a file name for sharing with format ownCloud_<date>_<time>.log.txt
@@ -210,7 +212,8 @@ class LogFilesViewController : UITableViewController, Themeable {
 		}
 
 		if UIDevice.current.isIpad() {
-			shareViewController.popoverPresentationController?.sourceView = self.view
+			shareViewController.popoverPresentationController?.sourceView = sender
+			shareViewController.popoverPresentationController?.sourceRect = sender.frame
 		}
 		self.present(shareViewController, animated: true, completion: nil)
 	}

@@ -182,7 +182,6 @@ class ClientItemCell: ThemeTableViewCell {
 		NSLayoutConstraint.activate([
 			iconView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: horizontalMargin),
 			iconView.rightAnchor.constraint(equalTo: titleLabel.leftAnchor, constant: -spacing),
-			iconView.rightAnchor.constraint(equalTo: cloudStatusIconView.leftAnchor, constant: -spacing),
 			iconView.widthAnchor.constraint(equalToConstant: iconViewWidth),
 			iconView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: verticalIconMargin),
 			iconView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -verticalIconMargin),
@@ -261,37 +260,19 @@ class ClientItemCell: ThemeTableViewCell {
 			activeThumbnailRequestProgress?.cancel()
 		}
 
+		// Set the icon and initiate thumbnail generation
 		iconImage = item.icon(fitInSize: iconSize)
-		showingIcon = true
+		self.iconView.image = iconImage
+
+  		if let core = core {
+ 			activeThumbnailRequestProgress = self.iconView.setThumbnailImage(using: core, from: item, with: thumbnailSize, progressHandler: { [weak self] (progress) in
+ 				if self?.activeThumbnailRequestProgress === progress {
+ 					self?.activeThumbnailRequestProgress = nil
+ 				}
+ 			})
+ 		}
 
 		self.accessoryType = .none
-
-		if item.thumbnailAvailability != .none {
-			let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
-				_ = thumbnail?.requestImage(for: self.thumbnailSize, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
-					if error == nil,
-						image != nil,
-						self.item?.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
-						OnMainThread {
-							self.showingIcon = false
-							self.iconView.image = image
-						}
-					}
-				})
-			}
-
-			if let thumbnail = item.thumbnail {
-				displayThumbnail(thumbnail)
-			} else {
-				activeThumbnailRequestProgress = core?.retrieveThumbnail(for: item, maximumSize: self.thumbnailSize, scale: 0, retrieveHandler: { [weak self] (_, _, _, thumbnail, _, progress) in
-					displayThumbnail(thumbnail)
-
-					if self?.activeThumbnailRequestProgress === progress {
-						self?.activeThumbnailRequestProgress = nil
-					}
-				})
-			}
-		}
 
 		if item.isSharedWithUser || item.sharedByUserOrGroup {
 			sharedStatusIconView.image = UIImage(named: "group")

@@ -104,7 +104,7 @@ class StaticLoginServerListViewController: ServerListTableViewController {
   		self.staticLoginViewController?.present(viewController, animated: true, completion: completion)
 	}
 
-	override func openBookmark(_ bookmark: OCBookmark, closeHandler: (() -> Void)? = nil) {
+	func openBookmark(_ bookmark: OCBookmark, closeHandler: (() -> Void)? = nil) {
 		self.staticLoginViewController?.openBookmark(bookmark, closeHandler: closeHandler)
 	}
 }

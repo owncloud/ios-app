@@ -126,4 +126,20 @@ extension OCCore {
 
 		return nil
 	}
+
+	func retrieveParentItems(for item: OCItem) -> [OCItem] {
+		var parentItems : [OCItem] = []
+
+		if item.parentLocalID != nil {
+			if let parentItem = item.parentItem(from: self) {
+				if item.parentLocalID != nil {
+					parentItems.append(parentItem)
+					let items = self.retrieveParentItems(for: parentItem)
+					parentItems.append(contentsOf: items.reversed())
+				}
+			}
+		}
+
+		return parentItems.reversed()
+	}
 }

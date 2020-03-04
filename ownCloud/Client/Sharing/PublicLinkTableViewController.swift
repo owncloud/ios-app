@@ -192,22 +192,6 @@ class PublicLinkTableViewController: SharingTableViewController {
 		}
 	}
 
-	func retrievePrivateLink(for item: OCItem, in row: StaticTableViewRow) {
-		let progressView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
-		progressView.startAnimating()
-		row.cell?.accessoryView = progressView
-
-		self.core?.retrievePrivateLink(for: item, completionHandler: { (error, url) in
-			OnMainThread {
-				row.cell?.accessoryView = nil
-			}
-			if error == nil {
-				guard let url = url else { return }
-				UIPasteboard.general.url = url
-			}
-		})
-	}
-
 	// MARK: TableView Delegate
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {

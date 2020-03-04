@@ -92,11 +92,7 @@ extension ThemeStyle {
 
 	@available(iOS 13.0, *)
 	static func userInterfaceStyle() -> UIUserInterfaceStyle? {
-		if let themeWindow = (UIApplication.shared.delegate as? AppDelegate)?.window {
-			return themeWindow.traitCollection.userInterfaceStyle
-		}
-
-		return nil
+		return UITraitCollection.current.userInterfaceStyle
 	}
 
 	static func considerAppearanceUpdate(animated: Bool = false) {

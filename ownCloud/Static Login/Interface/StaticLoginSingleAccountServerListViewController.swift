@@ -145,7 +145,8 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			case 1:
 				showBookmarkInfoUI(bookmark)
 			case 2:
-				deleteBookmark(bookmark) { (_) in
+				
+				delete(bookmark: bookmark, at: IndexPath(row: 0, section: 0) ) {
 					self.staticLoginViewController?.showFirstScreen()
 				}
 			default:
@@ -155,6 +156,11 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 			tableView.deselectRow(at: indexPath, animated: true)
 			settings()
 		}
+	}
+
+	@available(iOS 13.0, *)
+	override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+		return nil
 	}
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -181,7 +187,7 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
   		self.staticLoginViewController?.present(viewController, animated: true, completion: completion)
 	}
 
-	override func openBookmark(_ bookmark: OCBookmark, closeHandler: (() -> Void)? = nil) {
+	func openBookmark(_ bookmark: OCBookmark, closeHandler: (() -> Void)? = nil) {
 		self.staticLoginViewController?.openBookmark(bookmark, closeHandler: closeHandler)
 	}
 
