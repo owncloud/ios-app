@@ -180,7 +180,7 @@ class ReleaseNotesDatasource : NSObject, OCClassSettingsUserPreferencesSupport {
 				   return true
 			}
 			return false
-		} else if OCBookmarkManager.shared.bookmarks.count > 0 {
+		} else if OCBookmarkManager.shared.bookmarks.count > 0 && !VendorServices.shared.isBranded {
 			// Fallback, if app was previously installed, because we cannot check for an user defaults key, we have to check if accounts was previously configured
 			return true
 		}

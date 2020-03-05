@@ -345,13 +345,22 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			presentationStyle = .alert
 		}
 
-		let alertController = ThemedAlertController(title: NSString(format: "Really delete '%@'?".localized as NSString, bookmark.shortName) as String,
+		var alertTitle = "Really delete '%@'?".localized
+		var destructiveTitle = "Delete".localized
+		var failureTitle = "Deletion of '%@' failed".localized
+		if VendorServices.shared.isBranded {
+			alertTitle = "Really logout from '%@'?".localized
+			destructiveTitle = "Logout".localized
+			failureTitle = "Logout of '%@' failed".localized
+		}
+
+		let alertController = ThemedAlertController(title: NSString(format: alertTitle as NSString, bookmark.shortName) as String,
 													message: "This will also delete all locally stored file copies.".localized,
 													preferredStyle: presentationStyle)
 
 		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
 
-		alertController.addAction(UIAlertAction(title: "Delete".localized, style: .destructive, handler: { (_) in
+		alertController.addAction(UIAlertAction(title: destructiveTitle, style: .destructive, handler: { (_) in
 
 			OCBookmarkManager.lock(bookmark: bookmark)
 
@@ -362,7 +371,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 					OnMainThread {
 						if error != nil {
 							// Inform user if vault couldn't be erased
-							let alertController = ThemedAlertController(title: NSString(format: "Deletion of '%@' failed".localized as NSString, bookmark.shortName as NSString) as String,
+							let alertController = ThemedAlertController(title: NSString(format: failureTitle as NSString, bookmark.shortName as NSString) as String,
 																		message: error?.localizedDescription,
 																		preferredStyle: .alert)
 
@@ -385,8 +394,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 						}
 
 						OCBookmarkManager.unlock(bookmark: bookmark)
-
-						completion?()
+						
+						completionHandler()
 					}
 				})
 			}, for: bookmark)
@@ -463,14 +472,15 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				OCBookmarkManager.lastBookmarkSelectedForConnection = bookmark
 
 				// Set up custom push transition for presentation
-				if let navigationController = self.navigationController {
+
+				if let fromViewController = self.pushFromViewController ?? self.navigationController {
 					let transitionDelegate = PushTransitionDelegate()
 
 					clientRootViewController.pushTransition = transitionDelegate // Keep a reference, so it's still around on dismissal
 					clientRootViewController.transitioningDelegate = transitionDelegate
 					clientRootViewController.modalPresentationStyle = .custom
 
-					navigationController.present(clientRootViewController, animated: animated, completion: {
+					fromViewController.present(clientRootViewController, animated: animated, completion: {
 						self.resetPreviousBookmarkSelection(bookmark)
 					})
 				}

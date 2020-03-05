@@ -184,7 +184,8 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 							OCBookmarkManager.shared.addBookmark(self.bookmark)
 
-							self.pushSuccessViewController()
+							self.loginViewController?.showFirstScreen()
+							//self.pushSuccessViewController()
 						} else {
 							var issue : OCIssue?
 							let nsError = error as NSError?
