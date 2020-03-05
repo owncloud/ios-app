@@ -233,6 +233,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				self.navigationController?.navigationBar.shadowImage = nil
 
 				welcomeAddServerButton.setTitle("Add account".localized, for: .normal)
+				welcomeAddServerButton.accessibilityIdentifier = "addServer"
 				welcomeTitleLabel.text = "Welcome".localized
 				let welcomeMessage = "Thanks for choosing %@! \n Start by adding your account.".localized
 				welcomeMessageLabel.text = welcomeMessage.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")

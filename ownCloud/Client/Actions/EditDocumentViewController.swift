@@ -28,6 +28,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	var savingMode: QLPreviewItemEditingMode?
 	var itemTracker: OCCoreItemTracking?
 	var modifiedContentsURL: URL?
+	var dismissedViewWithoutSaving: Bool = false
 
 	var source: URL {
 		didSet {
@@ -89,6 +90,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 						self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
 					} else if let savingMode = self.savingMode, savingMode == .createCopy {
 						self.saveModifiedContents(at: self.source, savingMode: savingMode)
+					} else {
+						self.dismissedViewWithoutSaving = true
 					}
 				}
 			}
@@ -98,6 +101,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 					self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
 				} else if let savingMode = self.savingMode, savingMode == .createCopy {
 					self.saveModifiedContents(at: self.source, savingMode: savingMode)
+				} else {
+					self.dismissedViewWithoutSaving = true
 				}
 			}
 		}
@@ -108,17 +113,20 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 													message: nil,
 													preferredStyle: .alert)
 
-		alertController.addAction(UIAlertAction(title: "Overwrite original".localized, style: .default, handler: { (_) in
-			self.savingMode = .updateContents
+		if item.permissions.contains(.writable) {
+			alertController.addAction(UIAlertAction(title: "Overwrite original".localized, style: .default, handler: { (_) in
+				self.savingMode = .updateContents
 
-			completion?(.updateContents)
-		}))
+				completion?(.updateContents)
+			}))
+		}
+		if let core = core, item.parentItem(from: core)?.permissions.contains(.createFile) == true {
+			alertController.addAction(UIAlertAction(title: "Save as copy".localized, style: .default, handler: { (_) in
+				self.savingMode = .createCopy
 
-		alertController.addAction(UIAlertAction(title: "Save as copy".localized, style: .default, handler: { (_) in
-			self.savingMode = .createCopy
-
-			completion?(.createCopy)
-		}))
+				completion?(.createCopy)
+			}))
+		}
 
 		alertController.addAction(UIAlertAction(title: "Discard changes".localized, style: .destructive, handler: { (_) in
 			self.savingMode = .disabled
@@ -204,5 +212,8 @@ extension EditDocumentViewController: QLPreviewControllerDataSource, QLPreviewCo
 
     func previewController(_ controller: QLPreviewController, didSaveEditedCopyOf previewItem: QLPreviewItem, at modifiedContentsURL: URL) {
 		self.modifiedContentsURL = modifiedContentsURL
+		if self.dismissedViewWithoutSaving, let savingMode = self.savingMode {
+			self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
+		}
 	}
 }
