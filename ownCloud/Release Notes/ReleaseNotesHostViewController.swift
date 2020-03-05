@@ -143,7 +143,7 @@ extension ReleaseNotesHostViewController : Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 
 		self.view.backgroundColor = collection.tableBackgroundColor
-		titleLabel.applyThemeCollection(collection, itemStyle: .logo)
+		titleLabel.applyThemeCollection(collection, itemStyle: .title)
 		proceedButton.backgroundColor = collection.neutralColors.normal.background
 		proceedButton.setTitleColor(collection.neutralColors.normal.foreground, for: .normal)
 		footerButton.setTitleColor(collection.tableRowColors.labelColor, for: .normal)
