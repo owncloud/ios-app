@@ -197,12 +197,12 @@ platform :ios do
     )
 
     # Add a badge with the latest short commit hash to the app icon
-    version = app_version(
+    build_number = app_version(
       xcodeproj: "ownCloud.xcodeproj",
       version_key: "APP_VERSION"
     )
 
-    build_number = app_version(
+    version = app_version(
       xcodeproj: "ownCloud.xcodeproj",
       version_key: "APP_SHORT_VERSION"
     )
