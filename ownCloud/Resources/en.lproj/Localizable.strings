@@ -61,6 +61,8 @@
 "Server name" = "Server name";
 "Server Password" = "Server Password";
 "Server Username" = "Server Username";
+"Show accounts" = "Show accounts";
+"Setup complete" = "Setup complete";
 
 /* Client */
 "Browse" = "Browse";

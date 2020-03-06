@@ -219,7 +219,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		if sections[section].headerTitle != nil {
+		if sections[section].headerTitle != nil || sections[section].headerView != nil {
 			return UITableView.automaticDimension
 		}
 
@@ -227,7 +227,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-		if sections[section].footerTitle != nil {
+		if sections[section].footerTitle != nil || sections[section].footerView != nil {
 			return UITableView.automaticDimension
 		}
 

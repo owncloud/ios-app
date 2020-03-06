@@ -92,7 +92,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 	func busySection(message: String) -> StaticTableViewSection {
 		let busySection : StaticTableViewSection = StaticTableViewSection(headerTitle: nil, identifier: "busySection")
-		let activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(style: .whiteLarge)
+		let activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 		let containerView : FullWidthHeaderView = FullWidthHeaderView()
 		let centerView : UIView = UIView()
 		let messageLabel : UILabel = UILabel()
@@ -108,7 +108,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		containerView.addSubview(centerView)
 
 		containerView.addThemeApplier({ (_, collection, _) in
-			messageLabel.applyThemeCollection(collection, itemStyle: .logo)
+			messageLabel.applyThemeCollection(collection, itemStyle: .title)
 		})
 
 		messageLabel.text = message
@@ -177,9 +177,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 						if error == nil {
 							self.bookmark.authenticationMethodIdentifier = authMethodIdentifier
 							self.bookmark.authenticationData = authMethodData
-
 							self.bookmark.name = self.profile.bookmarkName
-
 							self.bookmark.userInfo[StaticLoginProfile.staticLoginProfileIdentifierKey] = self.profile.identifier
 
 							OCBookmarkManager.shared.addBookmark(self.bookmark)
@@ -233,9 +231,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		let successViewController : StaticLoginStepViewController = StaticLoginStepViewController(loginViewController: self.loginViewController!)
 		let messageSection = StaticTableViewSection(headerTitle: "")
 
-		messageSection.addStaticHeader(title: "Setup complete")
+		messageSection.addStaticHeader(title: "Setup complete".localized)
 
-		let (proceedButton, showAccountsList) = messageSection.addButtonFooter(proceedLabel: "Connect", cancelLabel: "Show accounts")
+		let (proceedButton, showAccountsList) = messageSection.addButtonFooter(proceedLabel: "Connect".localized, cancelLabel: "Show accounts".localized)
 
 		proceedButton?.addTarget(self, action: #selector(self.connectToBookmark), for: .touchUpInside)
 		showAccountsList?.addTarget(loginViewController, action: #selector(loginViewController?.showFirstScreen), for: .touchUpInside)
@@ -260,7 +258,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		busySection = self.busySection(message: "Contacting server…")
+		busySection = self.busySection(message: "Contacting server…".localized)
 
 		self.addSection(busySection!)
 		self.determineSupportedAuthMethod()
