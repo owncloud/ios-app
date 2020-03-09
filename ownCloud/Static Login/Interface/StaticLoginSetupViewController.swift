@@ -251,17 +251,17 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		busySection = self.busySection(message: "Contacting server…".localized)
+
+		self.addSection(busySection!)
+		self.determineSupportedAuthMethod()
 	}
 
 	var busySection : StaticTableViewSection?
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-
-		busySection = self.busySection(message: "Contacting server…".localized)
-
-		self.addSection(busySection!)
-		self.determineSupportedAuthMethod()
 	}
 
 	func determineSupportedAuthMethod() {

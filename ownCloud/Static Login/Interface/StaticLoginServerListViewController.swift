@@ -42,6 +42,11 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+		if OCBookmarkManager.shared.bookmarks.count == 0 {
+			return 0
+		}
+
 		if VendorServices.shared.canAddAccount {
 			return super.tableView(tableView, numberOfRowsInSection: section) + 1
 		}

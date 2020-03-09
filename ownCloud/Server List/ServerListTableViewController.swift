@@ -385,17 +385,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 							OCBookmarkManager.shared.removeBookmark(bookmark)
 
-							self.tableView.performBatchUpdates({
-								self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
-							}, completion: { (_) in
-								self.ignoreServerListChanges = false
-							})
-
+							completion?()
+							self.ignoreServerListChanges = false
 							self.updateNoServerMessageVisibility()
 						}
 
 						OCBookmarkManager.unlock(bookmark: bookmark)
-						
+
 						completionHandler()
 					}
 				})
@@ -565,7 +561,15 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 		menuItems.append(manage)
 		let delete = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
-			self.delete(bookmark: bookmark, at: indexPath)
+			self.delete(bookmark: bookmark, at: indexPath ) {
+				OnMainThread {
+					self.tableView.performBatchUpdates({
+						self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+					}, completion: { (_) in
+						self.ignoreServerListChanges = false
+					})
+				}
+			}
 		}
 		menuItems.append(delete)
 
@@ -613,7 +617,15 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		let deleteRowAction = UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, indexPath) in
 			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-				self.delete(bookmark: bookmark, at: indexPath)
+				self.delete(bookmark: bookmark, at: indexPath ) {
+					OnMainThread {
+						self.tableView.performBatchUpdates({
+							self.tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.fade)
+						}, completion: { (_) in
+							self.ignoreServerListChanges = false
+						})
+					}
+				}
 			}
 		})
 

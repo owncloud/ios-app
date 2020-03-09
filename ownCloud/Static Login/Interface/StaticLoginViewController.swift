@@ -319,8 +319,6 @@ class StaticLoginViewController: UIViewController, Themeable {
 	}
 
 	func openBookmark(_ bookmark: OCBookmark, closeHandler: (() -> Void)? = nil) {
-
-
 		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 		clientRootViewController.modalPresentationStyle = .overFullScreen
 
