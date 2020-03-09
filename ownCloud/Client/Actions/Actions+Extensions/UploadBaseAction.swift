@@ -34,6 +34,10 @@ class UploadBaseAction: Action {
 			return .none
 		}
 
+		if forContext.items.first?.permissions.contains(.createFile) == false {
+			return .none
+		}
+
 		return .middle
 	}
 

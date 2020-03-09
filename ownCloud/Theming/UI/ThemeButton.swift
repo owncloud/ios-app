@@ -78,16 +78,43 @@ class ThemeButton : UIButton {
 	override var intrinsicContentSize: CGSize {
 		var intrinsicContentSize = super.intrinsicContentSize
 
-		intrinsicContentSize.width += 30
-		intrinsicContentSize.height += 10
+		intrinsicContentSize.width += buttonHorizontalPadding
+		intrinsicContentSize.height += buttonVerticalPadding
 
 		return (intrinsicContentSize)
 	}
 
 	private func styleButton() {
-		self.layer.cornerRadius = 5
-		self.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+		adjustCornerRadius()
+		self.titleLabel?.font = buttonFont
 		self.titleLabel?.adjustsFontForContentSizeCategory = true
+	}
+
+	var buttonFont : UIFont = UIFont.preferredFont(forTextStyle: .headline)
+	var buttonHorizontalPadding : CGFloat = 30 {
+		didSet {
+			invalidateIntrinsicContentSize()
+		}
+	}
+	var buttonVerticalPadding : CGFloat = 10 {
+	       didSet {
+		       invalidateIntrinsicContentSize()
+	       }
+	}
+	var buttonCornerRadius : CGFloat = 5 {
+		didSet {
+			adjustCornerRadius()
+		}
+	}
+
+	func adjustCornerRadius() {
+		self.layer.cornerRadius = (buttonCornerRadius < 0) ? bounds.size.height/2 : buttonCornerRadius
+	}
+
+	override var bounds: CGRect {
+		didSet {
+			self.adjustCornerRadius()
+		}
 	}
 
 	override init(frame: CGRect) {

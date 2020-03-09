@@ -71,20 +71,6 @@
                BlueprintName = "ownCloudTests"
                ReferencedContainer = "container:ownCloud.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "CreateFolderTests">
-               </Test>
-               <Test
-                  Identifier = "DeleteBookmarkTests">
-               </Test>
-               <Test
-                  Identifier = "FileListTests">
-               </Test>
-               <Test
-                  Identifier = "SettingsTests">
-               </Test>
-            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "NO">
@@ -116,6 +102,16 @@
                ReferencedContainer = "container:ownCloud.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DCC085632293F1FD008CC05C"
+               BuildableName = "ownCloudAppTests.xctest"
+               BlueprintName = "ownCloudAppTests"
+               ReferencedContainer = "container:ownCloud.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
@@ -143,6 +139,11 @@
             key = "CG_NUMERICS_SHOW_BACKTRACE"
             value = "1"
             isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:authentication-oauth2.oa2-browser-session-class"
+            value = "string:UIWebView"
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:core.override-reachability-signal"
@@ -177,7 +178,7 @@
          <EnvironmentVariable
             key = "oc:log.log-synchronous"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.log-only-tags"

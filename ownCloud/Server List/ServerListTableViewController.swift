@@ -94,6 +94,14 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		self.navigationItem.title = OCAppIdentity.shared.appName
 
 		NotificationCenter.default.addObserver(self, selector: #selector(considerAutoLogin), name: UIApplication.didBecomeActiveNotification, object: nil)
+
+		if ReleaseNotesDatasource().shouldShowReleaseNotes {
+			let releaseNotesHostController = ReleaseNotesHostViewController()
+			releaseNotesHostController.modalPresentationStyle = .formSheet
+			self.present(releaseNotesHostController, animated: true, completion: nil)
+		}
+
+		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenAppVersion)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -210,6 +218,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				self.navigationController?.navigationBar.shadowImage = nil
 
 				welcomeAddServerButton.setTitle("Add account".localized, for: .normal)
+				welcomeAddServerButton.accessibilityIdentifier = "addServer"
 				welcomeTitleLabel.text = "Welcome".localized
 				let welcomeMessage = "Thanks for choosing %@! \n Start by adding your account.".localized
 				welcomeMessageLabel.text = welcomeMessage.replacingOccurrences(of: "%@", with: OCAppIdentity.shared.appName ?? "ownCloud")

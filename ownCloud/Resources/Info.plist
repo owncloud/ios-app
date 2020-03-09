@@ -49,7 +49,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>149</string>
+	<string>$(APP_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
@@ -77,6 +77,15 @@
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
+		<string>CreateFolderIntent</string>
+		<string>DeletePathItemIntent</string>
+		<string>GetAccountIntent</string>
+		<string>GetAccountsIntent</string>
+		<string>GetDirectoryListingIntent</string>
+		<string>GetFileInfoIntent</string>
+		<string>GetFileIntent</string>
+		<string>PathExistsIntent</string>
+		<string>SaveFileIntent</string>
 		<string>com.owncloud.ios-app.openAccount</string>
 		<string>com.owncloud.ios-app.openItem</string>
 	</array>

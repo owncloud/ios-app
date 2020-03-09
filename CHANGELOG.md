@@ -1,5 +1,24 @@
 # ChangeLog
 
+## Release version 1.3.1 (March 2020)
+
+- Fix: Shortcut - Save Action (#622)
+- Fix: Markup Documents (#617, #618
+- Fix: Offline Usage (#3828)
+- Fix: Available Offline (PR #616)
+- Fix: Permissions (#623)
+
+## Release version 1.3.0 (February 2020)
+
+- Document Scanner on iOS 13 (PR #494)
+- Markup Documents on iOS 13 (#541)
+- Shortcut Support on iOS 13 (#463)
+- New Quick Access Collections (PR #600)
+- Cleaner File List Layout (PR #594)
+- Added Sort Bar in Directory Picker (#590)
+- Fix: Blank File List on UI restoration (#601)
+- Fix: Share Sheet on iPad for log files (#606)
+
 ## Release version 1.2.1 (January 2020)
 
 - Fix: Passcode Lock Screen on iOS 13 (#582)

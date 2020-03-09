@@ -17,6 +17,8 @@
  */
 
 import ownCloudSDK
+import ownCloudApp
+import ownCloudAppShared
 import VisionKit
 
 class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
@@ -26,6 +28,7 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 	override class var locations : [OCExtensionLocationIdentifier]? { return [ .folderAction, .keyboardShortcut ] }
 	override class var keyCommand : String? { return "S" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
+	override class var licenseRequirements: LicenseRequirements? { return LicenseRequirements(feature: .documentScanner) }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -34,6 +37,10 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 		}
 
 		if forContext.items.first?.type != OCItemType.collection {
+			return .none
+		}
+
+		if forContext.items.first?.permissions.contains(.createFile) == false {
 			return .none
 		}
 
@@ -47,6 +54,10 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 	// MARK: - Action implementation
 	override func run() {
 		guard let viewController = context.viewController else {
+			return
+		}
+
+		guard self.proceedWithLicensing(from: viewController) else {
 			return
 		}
 

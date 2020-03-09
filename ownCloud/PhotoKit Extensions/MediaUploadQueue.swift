@@ -22,7 +22,6 @@ import Photos
 import MobileCoreServices
 
 class MediaUploadQueue : OCActivitySource {
-
 	private var uploadActivity: MediaUploadActivity?
 
 	static var shared = MediaUploadQueue()
