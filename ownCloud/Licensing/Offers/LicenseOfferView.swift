@@ -73,7 +73,7 @@ class LicenseOfferView: UIView, Themeable {
 	private let titleLabelSize : CGFloat = 20
 	private let descriptionLabelSize : CGFloat = 17
 	private let tryLabelSize : CGFloat = 17
-	private let priceLabelSize : CGFloat = 15
+	private let priceLabelSize : CGFloat = 17
 
 	func buildView() {
 		titleLabel = UILabel()
