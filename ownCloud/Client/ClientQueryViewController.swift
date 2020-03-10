@@ -734,6 +734,10 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
 
+		if !DisplaySettings.shared.dragFiles {
+			return [UIDragItem]()
+		}
+
 		if !self.tableView.isEditing {
 			self.populateToolbar()
 		}

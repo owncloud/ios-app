@@ -31,7 +31,8 @@
 	if ([identifier isEqual:OCClassSettingsIdentifierDisplay])
 	{
 		return (@{
-			OCClassSettingsKeyDisplayShowHiddenFiles : @(NO)
+			OCClassSettingsKeyDisplayShowHiddenFiles : @(NO),
+			OCClassSettingsKeyDisplayDragFiles : @(YES)
 		});
 	}
 
@@ -59,6 +60,7 @@
 		}];
 
 		_showHiddenFiles = [self _showHiddenFilesValue];
+		_dragFiles = [self _dragFilesValue];
 	}
 
 	return (self);
@@ -75,6 +77,10 @@
 	[self willChangeValueForKey:@"showHiddenFiles"];
 	_showHiddenFiles = [self _showHiddenFilesValue];
 	[self didChangeValueForKey:@"showHiddenFiles"];
+
+	[self willChangeValueForKey:@"dragFiles"];
+	_dragFiles = [self _dragFilesValue];
+	[self didChangeValueForKey:@"dragFiles"];
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:DisplaySettingsChanged object:self];
 }
@@ -97,6 +103,28 @@
 	_showHiddenFiles = showHiddenFiles;
 
 	[OCAppIdentity.sharedAppIdentity.userDefaults setBool:showHiddenFiles forKey:DisplaySettingsShowHiddenFilesPrefsKey];
+
+	[OCIPNotificationCenter.sharedNotificationCenter postNotificationForName:OCIPCNotificationNameDisplaySettingsChanged ignoreSelf:YES];
+}
+
+#pragma mark - Drag files
+- (BOOL)_dragFilesValue
+{
+	NSNumber *dragFilesNumber;
+
+	if ((dragFilesNumber = [OCAppIdentity.sharedAppIdentity.userDefaults objectForKey:DisplaySettingsDragFilesPrefsKey]) != nil)
+	{
+		return (dragFilesNumber.boolValue);
+	}
+
+	return ([[self classSettingForOCClassSettingsKey:OCClassSettingsKeyDisplayDragFiles] boolValue]);
+}
+
+- (void)setDragFiles:(BOOL)dragFiles
+{
+	_dragFiles = dragFiles;
+
+	[OCAppIdentity.sharedAppIdentity.userDefaults setBool:dragFiles forKey:DisplaySettingsDragFilesPrefsKey];
 
 	[OCIPNotificationCenter.sharedNotificationCenter postNotificationForName:OCIPCNotificationNameDisplaySettingsChanged ignoreSelf:YES];
 }
@@ -135,6 +163,7 @@
 @end
 
 NSString *DisplaySettingsShowHiddenFilesPrefsKey = @"display-show-hidden-files";
+NSString *DisplaySettingsDragFilesPrefsKey = @"display-drag-files";
 
 OCIPCNotificationName OCIPCNotificationNameDisplaySettingsChanged = @"org.owncloud.display-settings-changed";
 
@@ -142,3 +171,4 @@ NSNotificationName DisplaySettingsChanged = @"org.owncloud.display-settings-chan
 
 OCClassSettingsIdentifier OCClassSettingsIdentifierDisplay = @"display";
 OCClassSettingsKey OCClassSettingsKeyDisplayShowHiddenFiles = @"show-hidden-files";
+OCClassSettingsKey OCClassSettingsKeyDisplayDragFiles = @"drag-files";

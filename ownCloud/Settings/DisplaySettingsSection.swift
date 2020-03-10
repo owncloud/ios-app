@@ -24,12 +24,18 @@ class DisplaySettingsSection: SettingsSection {
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
 
-		self.headerTitle = "Display settings".localized
+		self.headerTitle = "Advanced settings".localized
 
 		self.add(row: StaticTableViewRow(switchWithAction: { (row, _) in
 			if let newShowHiddenFiles = row.value as? Bool {
 				DisplaySettings.shared.showHiddenFiles = newShowHiddenFiles
 			}
 		}, title: "Show hidden files and folders".localized, value: DisplaySettings.shared.showHiddenFiles, identifier: "show-hidden-files-switch"))
+
+		self.add(row: StaticTableViewRow(switchWithAction: { (row, _) in
+			if let disableDragging = row.value as? Bool {
+				DisplaySettings.shared.dragFiles = disableDragging
+			}
+		}, title: "Drag files enabled".localized, value: DisplaySettings.shared.dragFiles, identifier: "drag-files-switch"))
 	}
 }
