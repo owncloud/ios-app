@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 import StoreKit
 
 class ReleaseNotesHostViewController: UIViewController {

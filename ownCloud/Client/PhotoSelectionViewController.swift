@@ -19,6 +19,7 @@
 import UIKit
 import Photos
 import PhotosUI
+import ownCloudAppShared
 
 private extension UICollectionView {
 	func indexPathsForElements(in rect: CGRect) -> [IndexPath] {

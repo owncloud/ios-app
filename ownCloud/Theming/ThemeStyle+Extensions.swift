@@ -18,6 +18,7 @@
 
 import Foundation
 import ownCloudSDK
+import ownCloudAppShared
 
 @available(iOS 13.0, *)
 extension UIUserInterfaceStyle {
@@ -91,7 +92,7 @@ extension ThemeStyle {
 	}
 
 	@available(iOS 13.0, *)
-	static func userInterfaceStyle() -> UIUserInterfaceStyle? {
+	static public func userInterfaceStyle() -> UIUserInterfaceStyle? {
 		return UITraitCollection.current.userInterfaceStyle
 	}
 

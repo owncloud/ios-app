@@ -19,6 +19,10 @@
 import UIKit
 import ownCloudSDK
 
+let ownCloudItemDetailActivityType       = "com.owncloud.ios-app.itemDetail"
+let ownCloudItemDetailPath               = "itemDetail"
+let ownCloudItemDetailItemUuidKey         = "itemUuid"
+
 extension OCItem {
 	static private let iconNamesByMIMEType : [String:String] = {
 		var mimeTypeToIconMap :  [String:String] = [
@@ -148,7 +152,18 @@ extension OCItem {
 		"icon-search"
 	]
 
-	static func iconName(for MIMEType: String?) -> String? {
+	private static var _iconsRegistered : Bool = false
+	static public func registerIcons() {
+		if !_iconsRegistered {
+			_iconsRegistered = true
+
+			for iconName in self.validIconNames {
+				Theme.shared.add(tvgResourceFor: iconName)
+			}
+		}
+	}
+
+	static public func iconName(for MIMEType: String?) -> String? {
 		var iconName : String?
 
 		if let mimeType = MIMEType {
@@ -180,7 +195,7 @@ extension OCItem {
 		return iconName
 	}
 
-	var iconName : String? {
+	public var iconName : String? {
 		var iconName = OCItem.iconName(for: self.mimeType)
 
 		if iconName == nil {
@@ -194,19 +209,27 @@ extension OCItem {
 		return iconName
 	}
 
-	var fileExtension : String? {
+	public func icon(fitInSize: CGSize) -> UIImage? {
+		if let iconName = self.iconName {
+			return Theme.shared.image(for: iconName, size: fitInSize)
+		}
+
+		return nil
+	}
+
+	public var fileExtension : String? {
 		return (self.name as NSString?)?.pathExtension
 	}
 
-	var baseName : String? {
+	public var baseName : String? {
 		return (self.name as NSString?)?.deletingPathExtension
 	}
 
-	var sizeLocalized: String {
+	public var sizeLocalized: String {
 		return OCItem.byteCounterFormatter.string(fromByteCount: Int64(self.size))
 	}
 
-	var lastModifiedLocalized: String {
+	public var lastModifiedLocalized: String {
 		guard let lastModified = self.lastModified else { return "" }
 
 		return OCItem.dateFormatter.string(from: lastModified)
@@ -227,28 +250,28 @@ extension OCItem {
 		return dateFormatter
 	}()
 
-	var sharedByPublicLink : Bool {
+	public var sharedByPublicLink : Bool {
 		if self.shareTypesMask.contains(.link) {
 			return true
 		}
 		return false
 	}
 
-	var isShared : Bool {
+	public var isShared : Bool {
 		if self.shareTypesMask.isEmpty {
 			return false
 		}
 		return true
 	}
 
-	var sharedByUserOrGroup : Bool {
+	public var sharedByUserOrGroup : Bool {
 		if self.shareTypesMask.contains(.userShare) || self.shareTypesMask.contains(.groupShare) || self.shareTypesMask.contains(.remote) {
 			return true
 		}
 		return false
 	}
 
-	func shareRootItem(from core: OCCore) -> OCItem? {
+	public func shareRootItem(from core: OCCore) -> OCItem? {
 		var shareRootItem : OCItem?
 
 		if self.isSharedWithUser {
@@ -268,7 +291,7 @@ extension OCItem {
 		return shareRootItem
 	}
 
-	func isShareRootItem(from core: OCCore) -> Bool {
+	public func isShareRootItem(from core: OCCore) -> Bool {
 		if let shareRootItem = shareRootItem(from: core) {
 			return shareRootItem.localID == localID
 		}
@@ -276,7 +299,7 @@ extension OCItem {
 		return false
 	}
 
-	func parentItem(from core: OCCore, completionHandler: ((_ error: Error?, _ parentItem: OCItem?) -> Void)? = nil) -> OCItem? {
+	public func parentItem(from core: OCCore, completionHandler: ((_ error: Error?, _ parentItem: OCItem?) -> Void)? = nil) -> OCItem? {
 		var parentItem : OCItem?
 
 		if let parentItemLocalID = self.parentLocalID {
@@ -306,7 +329,7 @@ extension OCItem {
 		return parentItem
 	}
 
-	func displaysDifferent(than item: OCItem?, in core: OCCore? = nil) -> Bool {
+	public func displaysDifferent(than item: OCItem?, in core: OCCore? = nil) -> Bool {
 		guard let item = item else {
 			return true
 		}

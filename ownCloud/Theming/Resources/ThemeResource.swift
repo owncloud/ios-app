@@ -20,7 +20,7 @@ import UIKit
 
 typealias ThemeResourceIdentifier = String
 
-class ThemeResource : NSObject {
+public class ThemeResource : NSObject {
 	var identifier : ThemeResourceIdentifier?
 
 	internal var _sourceResource : Any?
@@ -102,7 +102,7 @@ class ThemeResource : NSObject {
 }
 
 extension ThemeResource : Themeable {
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		flushThemedResources()
 	}
 }

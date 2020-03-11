@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudAppShared
 
 class ThemedAlertController: UIAlertController, Themeable {
 	private var themeRegistered : Bool = false

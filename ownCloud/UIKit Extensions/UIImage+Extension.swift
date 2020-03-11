@@ -19,7 +19,7 @@
 import UIKit
 
 extension UIImage {
-	static func imageWithSize(size: CGSize, scale: CGFloat, _  renderBlock: ((_ contentRect: CGRect) -> Void)?) -> UIImage? {
+	static public func imageWithSize(size: CGSize, scale: CGFloat, _  renderBlock: ((_ contentRect: CGRect) -> Void)?) -> UIImage? {
 		var image : UIImage?
 
 		UIGraphicsBeginImageContextWithOptions(size, false, scale)
@@ -35,7 +35,7 @@ extension UIImage {
 		return image
 	}
 
-	func tinted(with color: UIColor, operation: CGBlendMode = CGBlendMode.sourceAtop) -> UIImage? {
+	public func tinted(with color: UIColor, operation: CGBlendMode = CGBlendMode.sourceAtop) -> UIImage? {
 		return UIImage.imageWithSize(size: self.size, scale: self.scale, { (contentRect) in
 			self.draw(at: CGPoint.zero, blendMode: .normal, alpha: 1.0)
 
@@ -45,7 +45,7 @@ extension UIImage {
 		})
 	}
 
-	func paddedTo(width: CGFloat? = nil, height : CGFloat? = nil) -> UIImage? {
+	public func paddedTo(width: CGFloat? = nil, height : CGFloat? = nil) -> UIImage? {
 		let origSize = size
 		let newSize : CGSize = CGSize(width: width ?? origSize.width, height: height ?? origSize.height)
 		var image : UIImage? = UIImage.imageWithSize(size: newSize, scale: scale, { (contentRect) in

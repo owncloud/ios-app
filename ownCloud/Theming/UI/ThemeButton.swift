@@ -19,7 +19,7 @@
 import UIKit
 
 @IBDesignable
-class ThemeButton : UIButton {
+open class ThemeButton : UIButton {
 	internal var _themeColorCollection : ThemeColorPairCollection?
 	public var themeColorCollection : ThemeColorPairCollection? {
 		set(colorCollection) {
@@ -39,7 +39,7 @@ class ThemeButton : UIButton {
 		}
 	}
 
-	override var isHighlighted: Bool {
+	override public var isHighlighted: Bool {
 		set(newIsHighlighted) {
 			super.isHighlighted = newIsHighlighted
 			updateBackgroundColor()
@@ -50,7 +50,7 @@ class ThemeButton : UIButton {
 		}
 	}
 
-	override var isEnabled: Bool {
+	override public var isEnabled: Bool {
 		set(newIsEnabled) {
 			super.isEnabled = newIsEnabled
 			updateBackgroundColor()
@@ -75,7 +75,7 @@ class ThemeButton : UIButton {
 		}
 	}
 
-	override var intrinsicContentSize: CGSize {
+	override public var intrinsicContentSize: CGSize {
 		var intrinsicContentSize = super.intrinsicContentSize
 
 		intrinsicContentSize.width += buttonHorizontalPadding
@@ -90,44 +90,44 @@ class ThemeButton : UIButton {
 		self.titleLabel?.adjustsFontForContentSizeCategory = true
 	}
 
-	var buttonFont : UIFont = UIFont.preferredFont(forTextStyle: .headline)
-	var buttonHorizontalPadding : CGFloat = 30 {
+	public var buttonFont : UIFont = UIFont.preferredFont(forTextStyle: .headline)
+	public var buttonHorizontalPadding : CGFloat = 30 {
 		didSet {
 			invalidateIntrinsicContentSize()
 		}
 	}
-	var buttonVerticalPadding : CGFloat = 10 {
+	public var buttonVerticalPadding : CGFloat = 10 {
 	       didSet {
 		       invalidateIntrinsicContentSize()
 	       }
 	}
-	var buttonCornerRadius : CGFloat = 5 {
+	public var buttonCornerRadius : CGFloat = 5 {
 		didSet {
 			adjustCornerRadius()
 		}
 	}
 
-	func adjustCornerRadius() {
+	public func adjustCornerRadius() {
 		self.layer.cornerRadius = (buttonCornerRadius < 0) ? bounds.size.height/2 : buttonCornerRadius
 	}
 
-	override var bounds: CGRect {
+	override public var bounds: CGRect {
 		didSet {
 			self.adjustCornerRadius()
 		}
 	}
 
-	override init(frame: CGRect) {
+	override public init(frame: CGRect) {
 		super.init(frame: frame)
 		styleButton()
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		styleButton()
 	}
 
-	override func prepareForInterfaceBuilder() {
+	override public func prepareForInterfaceBuilder() {
 		super.prepareForInterfaceBuilder()
 		styleButton()
 	}

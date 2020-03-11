@@ -18,16 +18,16 @@
 
 import UIKit
 
-class VectorImage: NSObject {
+public class VectorImage: NSObject {
 	var image : TVGImage
 	private var rasteredImages : [String:UIImage] = [:]
 	private var lastSeenIdentifier : String?
 
-	init(with tvgImage: TVGImage) {
+	public init(with tvgImage: TVGImage) {
 		self.image = tvgImage
 	}
 
-	func rasteredImage(fitInSize: CGSize, with variables: [String:String], cacheFor identifier: String? = nil) -> UIImage? {
+	public func rasteredImage(fitInSize: CGSize, with variables: [String:String], cacheFor identifier: String? = nil) -> UIImage? {
 		var uiImage : UIImage?
 		let sizeString = NSCoder.string(for: fitInSize)
 
@@ -55,7 +55,7 @@ class VectorImage: NSObject {
 		return uiImage
 	}
 
-	func flushRasteredImages() {
+	public func flushRasteredImages() {
 		OCSynchronized(self) {
 			rasteredImages.removeAll()
 		}

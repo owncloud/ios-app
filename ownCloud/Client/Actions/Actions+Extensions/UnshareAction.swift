@@ -17,6 +17,7 @@
 */
 
 import ownCloudSDK
+import ownCloudAppShared
 
 extension Array where Element: OCItem {
 	var sharedWithUser : [OCItem] {

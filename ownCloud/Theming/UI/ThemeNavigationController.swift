@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudAppShared
 
 class ThemeNavigationController: UINavigationController {
 	private var themeToken : ThemeApplierToken?

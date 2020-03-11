@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 import MobileCoreServices
 
 typealias ClientActionVieDidAppearHandler = () -> Void

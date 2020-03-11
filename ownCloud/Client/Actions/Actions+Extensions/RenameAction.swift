@@ -17,6 +17,7 @@
 */
 
 import ownCloudSDK
+import ownCloudAppShared
 
 class RenameAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.rename") }

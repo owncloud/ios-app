@@ -19,13 +19,13 @@ import ownCloudSDK
  *
  */
 
-class MoreViewHeader: UIView {
+public class MoreViewHeader: UIView {
 	private var iconView: UIImageView
 	private var labelContainerView : UIView
 	private var titleLabel: UILabel
 	private var detailLabel: UILabel
 	private var favoriteButton: UIButton
-	var activityIndicator : UIActivityIndicatorView
+	public var activityIndicator : UIActivityIndicatorView
 	private var showsIcon : Bool = true
 
 	var thumbnailSize = CGSize(width: 60, height: 60)
@@ -39,7 +39,7 @@ class MoreViewHeader: UIView {
 	weak var core: OCCore?
 	var url: URL?
 
-	init(for item: OCItem, with core: OCCore, favorite: Bool = true, adaptBackgroundColor: Bool = false, showActivityIndicator: Bool = false) {
+	public init(for item: OCItem, with core: OCCore, favorite: Bool = true, adaptBackgroundColor: Bool = false, showActivityIndicator: Bool = false) {
 		self.item = item
 		self.core = core
 		self.showFavoriteButton = favorite
@@ -62,7 +62,7 @@ class MoreViewHeader: UIView {
 		render()
 	}
 
-	init(url : URL) {
+	public init(url : URL) {
 		self.showFavoriteButton = false
 		self.showActivityIndicator = false
 		self.adaptBackgroundColor = false
@@ -251,7 +251,7 @@ class MoreViewHeader: UIView {
 }
 
 extension MoreViewHeader: Themeable {
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		titleLabel.applyThemeCollection(collection)
 		detailLabel.applyThemeCollection(collection, itemStyle: .message)
 		activityIndicator.style = collection.activityIndicatorViewStyle

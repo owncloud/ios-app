@@ -413,7 +413,7 @@ extension PublicLinkEditTableViewController {
 
 extension StaticTableViewController {
 
-	override var keyCommands: [UIKeyCommand]? {
+	public override var keyCommands: [UIKeyCommand]? {
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
 		let previousObjectCommand = UIKeyCommand(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
 		let selectObjectCommand = UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
@@ -449,7 +449,7 @@ extension StaticTableViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	override public var canBecomeFirstResponder: Bool {
 		return true
 	}
 

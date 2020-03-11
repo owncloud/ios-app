@@ -19,14 +19,14 @@
 import UIKit
 import PocketSVG
 
-class TVGImage: NSObject {
+public class TVGImage: NSObject {
 	var imageString : String?
 	var defaultValues : [String:String]?
 	var viewBox : CGRect?
 	var bezierPathsByIdentifier : [String:[SVGBezierPath]] = [:]
 	var bezierPathsBoundsByIdentifier : [String:CGRect] = [:]
 
-	init?(with data: Data) {
+	public init?(with data: Data) {
 		do {
 			let tvgObject : Any = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
 
@@ -47,7 +47,7 @@ class TVGImage: NSObject {
 		super.init()
 	}
 
-	convenience init?(named name: String) {
+	convenience public init?(named name: String) {
 		guard let resourceURL = Bundle.main.url(forResource: name, withExtension: "tvg") else {
 			return nil
 		}
@@ -145,7 +145,7 @@ class TVGImage: NSObject {
 		return (pathBoundingRect!, svgBezierPaths!)
 	}
 
-	func image(fitInSize: CGSize, with variables: [String:String]? = nil, cacheFor identifier: String? = nil) -> UIImage? {
+	public func image(fitInSize: CGSize, with variables: [String:String]? = nil, cacheFor identifier: String? = nil) -> UIImage? {
 		var image : UIImage?
 
 		if (fitInSize.width <= 0) || (fitInSize.height <= 0) {

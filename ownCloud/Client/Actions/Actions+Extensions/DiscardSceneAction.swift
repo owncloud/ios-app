@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudSDK
 import MobileCoreServices
+import ownCloudAppShared
 
 @available(iOS 13.0, *)
 class DiscardSceneAction: Action {

@@ -18,7 +18,7 @@
 
 import UIKit
 
-class StaticTableViewSection: NSObject {
+open class StaticTableViewSection: NSObject {
 	public weak var viewController : StaticTableViewController?
 
 	public var identifier : String?
@@ -36,7 +36,7 @@ class StaticTableViewSection: NSObject {
 		return self.index != nil
 	}
 
-	convenience init( headerTitle theHeaderTitle: String?, footerTitle theFooterTitle: String? = nil, identifier : String? = nil, rows rowsToAdd: [StaticTableViewRow] = Array()) {
+	convenience public init( headerTitle theHeaderTitle: String?, footerTitle theFooterTitle: String? = nil, identifier : String? = nil, rows rowsToAdd: [StaticTableViewRow] = Array()) {
 		self.init()
 
 		self.headerTitle = theHeaderTitle
@@ -48,7 +48,7 @@ class StaticTableViewSection: NSObject {
 	}
 
 	// MARK: - Adding rows
-	func add(rows rowsToAdd: [StaticTableViewRow], animated: Bool = false) {
+	public func add(rows rowsToAdd: [StaticTableViewRow], animated: Bool = false) {
 		var indexPaths : [IndexPath] = []
 		let sectionIndex = self.index
 		var rowIndex = rows.count
@@ -79,7 +79,7 @@ class StaticTableViewSection: NSObject {
 	}
 
 	@discardableResult
-	func add(radioGroupWithArrayOfLabelValueDictionaries labelValueDictRows: [[String : Any]], radioAction:StaticTableViewRowAction?, groupIdentifier: String, selectedValue: Any, animated : Bool = false) -> [StaticTableViewRow] {
+	public func add(radioGroupWithArrayOfLabelValueDictionaries labelValueDictRows: [[String : Any]], radioAction:StaticTableViewRowAction?, groupIdentifier: String, selectedValue: Any, animated : Bool = false) -> [StaticTableViewRow] {
 
 		var radioGroupRows : [StaticTableViewRow] = []
 
@@ -98,11 +98,11 @@ class StaticTableViewSection: NSObject {
 		return radioGroupRows
 	}
 
-	func add(row rowToAdd: StaticTableViewRow, animated: Bool = false) {
+	public func add(row rowToAdd: StaticTableViewRow, animated: Bool = false) {
 		self.insert(row: rowToAdd, at: rows.count, animated: animated)
 	}
 
-	func insert(row rowToAdd: StaticTableViewRow, at index: Int, animated: Bool = false) {
+	public func insert(row rowToAdd: StaticTableViewRow, at index: Int, animated: Bool = false) {
 		// Add reference to section to row
 		if rowToAdd.section == nil {
 			rowToAdd.eventHandler?(rowToAdd, .initial)
@@ -120,7 +120,7 @@ class StaticTableViewSection: NSObject {
 	}
 
 	// MARK: - Removing rows
-	func remove(rows rowsToRemove: [StaticTableViewRow], animated: Bool = false) {
+	public func remove(rows rowsToRemove: [StaticTableViewRow], animated: Bool = false) {
 		var indexPaths : [IndexPath] = []
 		var indexes : IndexSet = IndexSet()
 		let sectionIndex = self.index
@@ -147,14 +147,14 @@ class StaticTableViewSection: NSObject {
 		}
 	}
 
-	func remove(rowWithIdentifier identifier: String, animated : Bool = false) {
+	public func remove(rowWithIdentifier identifier: String, animated : Bool = false) {
 		if let row = row(withIdentifier: identifier) {
 			self.remove(rows: [row], animated: animated)
 		}
 	}
 
 	// MARK: - Update Section Titles
-	func updateHeader(title: String?) {
+	public func updateHeader(title: String?) {
 		self.headerTitle = title
 		// with this way we are not loosing focus of selected text field
 		UIView.setAnimationsEnabled(false)
@@ -167,7 +167,7 @@ class StaticTableViewSection: NSObject {
 		UIView.setAnimationsEnabled(true)
 	}
 
-	func updateFooter(title: String?) {
+	public func updateFooter(title: String?) {
 		self.footerTitle = title
 		// with this way we are not loosing focus of selected text field
 		UIView.setAnimationsEnabled(false)
@@ -181,7 +181,7 @@ class StaticTableViewSection: NSObject {
 	}
 
 	// MARK: - Radio group value setter/getter
-	func selectedValue(forGroupIdentifier groupIdentifier: String) -> Any? {
+	public func selectedValue(forGroupIdentifier groupIdentifier: String) -> Any? {
 		for row in rows {
 			if row.groupIdentifier == groupIdentifier {
 				if row.cell?.accessoryType == UITableViewCell.AccessoryType.checkmark {
@@ -193,7 +193,7 @@ class StaticTableViewSection: NSObject {
 		return nil
 	}
 
-	func setSelected(_ value: Any, groupIdentifier: String) {
+	public func setSelected(_ value: Any, groupIdentifier: String) {
 		for row in rows {
 			if row.groupIdentifier == groupIdentifier {
 				if let rowValueObject = row.value as? NSObject, let valueObject = value as? NSObject, rowValueObject == valueObject {
@@ -206,7 +206,7 @@ class StaticTableViewSection: NSObject {
 	}
 
 	// MARK: - Finding rows
-	func row(withIdentifier: String) -> StaticTableViewRow? {
+	public func row(withIdentifier: String) -> StaticTableViewRow? {
 		for row in rows {
 			if row.identifier == withIdentifier {
 				return row

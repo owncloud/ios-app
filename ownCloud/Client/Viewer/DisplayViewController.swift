@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 struct DisplayViewConfiguration {
 	var item: OCItem?

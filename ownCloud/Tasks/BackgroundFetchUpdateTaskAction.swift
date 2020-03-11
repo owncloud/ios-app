@@ -18,6 +18,7 @@
 
 import Foundation
 import ownCloudSDK
+import ownCloudAppShared
 
 class BackgroundFetchUpdateTaskAction : ScheduledTaskAction {
 

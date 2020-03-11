@@ -20,12 +20,12 @@ import UIKit
 
 import ownCloudSDK
 
-class Log {
-	static var logOptionStatus : String {
+public class Log {
+	static public var logOptionStatus : String {
 		return "level=\(OCLogger.logLevel.label), destinations=\(OCLogger.shared.writers.filter({ (writer) -> Bool in writer.enabled}).map({ (writer) -> String in writer.identifier.rawValue })), options=\(OCLogger.shared.toggles.filter({ (toggle) -> Bool in toggle.enabled}).map({ (toggle) -> String in toggle.identifier.rawValue })), maskPrivateData=\( OCLogger.maskPrivateData ? "true" : "false" )"
 	}
 
-	static func debug(tagged : [String]? = nil, _ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
+	static public func debug(tagged : [String]? = nil, _ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
 		withVaList(parameters) { va_list in
  			var tags : [String] = ["APP"]
 
@@ -37,7 +37,7 @@ class Log {
 		}
 	}
 
-	static func log(tagged : [String]? = nil, _ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
+	static public func log(tagged : [String]? = nil, _ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
 		withVaList(parameters) { va_list in
  			var tags : [String] = ["APP"]
 
@@ -49,7 +49,7 @@ class Log {
 		}
 	}
 
-	static func warning(tagged : [String]? = nil, _ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
+	static public func warning(tagged : [String]? = nil, _ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
 		withVaList(parameters) { va_list in
  			var tags : [String] = ["APP"]
 
@@ -61,7 +61,7 @@ class Log {
 		}
 	}
 
-	static func error(tagged : [String]? = nil, _ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
+	static public func error(tagged : [String]? = nil, _ message: String, _ parameters: CVarArg..., file: String = #file, functionName: String = #function, line: UInt = #line ) {
 		withVaList(parameters) { va_list in
  			var tags : [String] = ["APP"]
 
@@ -73,7 +73,7 @@ class Log {
 		}
 	}
 
-	static func mask(_ obj: Any?) -> Any {
+	static public func mask(_ obj: Any?) -> Any {
 		return OCLogger.applyPrivacyMask(obj) ?? "(null)"
 	}
 }

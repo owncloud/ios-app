@@ -18,14 +18,14 @@
 
 import UIKit
 
-class ThemeTableViewCell: UITableViewCell, Themeable {
+open class ThemeTableViewCell: UITableViewCell, Themeable {
 	private var themeRegistered = false
 
-	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+	override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -35,7 +35,7 @@ class ThemeTableViewCell: UITableViewCell, Themeable {
 		}
 	}
 
-	override func willMove(toSuperview newSuperview: UIView?) {
+	override public func willMove(toSuperview newSuperview: UIView?) {
 		super.willMove(toSuperview: newSuperview)
 
 		if !themeRegistered {
@@ -45,20 +45,20 @@ class ThemeTableViewCell: UITableViewCell, Themeable {
 		}
 	}
 
-	func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
+	open func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
 		let state = ThemeItemState(selected: self.isSelected)
 
 		self.textLabel?.applyThemeCollection(collection, itemStyle: .defaultForItem, itemState: state)
 		self.detailTextLabel?.applyThemeCollection(collection, itemStyle: .message, itemState: state)
 	}
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.applyThemeCollection(Theme.shared.activeCollection)
 
 		self.applyThemeCollectionToCellContents(theme: theme, collection: collection)
 	}
 
-	override func setSelected(_ selected: Bool, animated: Bool) {
+	override public func setSelected(_ selected: Bool, animated: Bool) {
 		super.setSelected(selected, animated: animated)
 
 		if self.selectionStyle != .none {

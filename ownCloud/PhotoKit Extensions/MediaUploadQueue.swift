@@ -20,6 +20,7 @@ import Foundation
 import ownCloudSDK
 import Photos
 import MobileCoreServices
+import ownCloudAppShared
 
 class MediaUploadQueue : OCActivitySource {
 	private var uploadActivity: MediaUploadActivity?

@@ -19,6 +19,7 @@
 import Foundation
 import ownCloudSDK
 import Photos
+import ownCloudAppShared
 
 class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 

@@ -18,6 +18,6 @@
 
 import Foundation
 
-func LastGitCommit() -> String? {
+public func LastGitCommit() -> String? {
 	return Bundle.main.object(forInfoDictionaryKey: "LastGitCommit") as? String
 }

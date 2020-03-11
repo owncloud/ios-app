@@ -19,6 +19,7 @@
 import UIKit
 import Photos
 import ownCloudSDK
+import ownCloudAppShared
 
 extension UserDefaults {
 

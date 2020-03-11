@@ -19,6 +19,7 @@
 import UIKit
 import PDFKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class PDFThumbnailsCollectionViewController: UICollectionViewController, UICollectionViewDataSourcePrefetching, Themeable {
 

@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class DisplaySleepPreventer : NSObject {
 	static var shared : DisplaySleepPreventer = DisplaySleepPreventer()

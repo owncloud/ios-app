@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudAppShared
 
 typealias PasscodeViewControllerCancelHandler = ((_ passcodeViewController: PasscodeViewController) -> Void)
 typealias PasscodeViewControllerCompletionHandler = ((_ passcodeViewController: PasscodeViewController, _ passcode: String) -> Void)

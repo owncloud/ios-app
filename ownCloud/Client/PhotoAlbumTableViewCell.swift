@@ -17,6 +17,7 @@
 */
 
 import UIKit
+import ownCloudAppShared
 
 class PhotoAlbumTableViewCell: ThemeTableViewCell {
 	static let identifier = "PhotoAlbumTableViewCell"

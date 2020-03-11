@@ -23,6 +23,7 @@ import MessageUI
 import SafariServices
 import ownCloudSDK
 import ownCloudApp
+import ownCloudAppShared
 
 class MoreSettingsSection: SettingsSection {
 	// MARK: - More Settings Cells

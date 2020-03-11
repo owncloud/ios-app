@@ -8,6 +8,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 class StorageSettingsSection: SettingsSection {
 	override init(userDefaults: UserDefaults) {

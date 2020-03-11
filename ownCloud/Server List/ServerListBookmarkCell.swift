@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudAppShared
 
 class ServerListBookmarkCell : ThemeTableViewCell {
 	public var titleLabel : UILabel = UILabel()

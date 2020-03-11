@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudAppShared
 
 enum ThemeImageType {
 	case image

@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudApp
+import ownCloudAppShared
 
 class LicenseOfferView: UIView, Themeable {
 	var offer: OCLicenseOffer

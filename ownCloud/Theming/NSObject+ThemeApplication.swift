@@ -18,7 +18,7 @@
 
 import UIKit
 
-enum ThemeItemStyle {
+public enum ThemeItemStyle {
 	case defaultForItem
 
 	case success
@@ -40,12 +40,12 @@ enum ThemeItemStyle {
 	case purchase
 }
 
-enum ThemeItemState {
+public enum ThemeItemState {
 	case normal
 	case highlighted
 	case disabled
 
-	init(selected: Bool) {
+	public init(selected: Bool) {
 		if selected {
 			self = .highlighted
 		} else {
@@ -63,7 +63,7 @@ protocol ThemeableSectionFooter : class {
 }
 
 extension NSObject {
-	func applyThemeCollection(_ collection: ThemeCollection, itemStyle: ThemeItemStyle = .defaultForItem, itemState: ThemeItemState = .normal) {
+	public func applyThemeCollection(_ collection: ThemeCollection, itemStyle: ThemeItemStyle = .defaultForItem, itemState: ThemeItemState = .normal) {
 		if let themeButton = self as? ThemeButton {
 			switch itemStyle {
 				case .approval:

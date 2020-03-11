@@ -8,6 +8,7 @@
 
 import Foundation
 import ownCloudSDK
+import ownCloudAppShared
 
 typealias UploadHandler = (OCItem?, Error?) -> Void
 

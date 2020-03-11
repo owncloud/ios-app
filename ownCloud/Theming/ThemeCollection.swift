@@ -18,38 +18,38 @@
 
 import UIKit
 
-class ThemeColorPair : NSObject {
-	@objc var foreground: UIColor
-	@objc var background: UIColor
+public class ThemeColorPair : NSObject {
+	@objc public var foreground: UIColor
+	@objc public var background: UIColor
 
-	init(foreground fgColor: UIColor, background bgColor: UIColor) {
+	public init(foreground fgColor: UIColor, background bgColor: UIColor) {
 		foreground = fgColor
 		background = bgColor
 	}
 }
 
-class ThemeColorPairCollection : NSObject {
-	@objc var normal : ThemeColorPair
-	@objc var highlighted : ThemeColorPair
-	@objc var disabled : ThemeColorPair
+public class ThemeColorPairCollection : NSObject {
+	@objc public var normal : ThemeColorPair
+	@objc public var highlighted : ThemeColorPair
+	@objc public var disabled : ThemeColorPair
 
-	init(fromPair: ThemeColorPair) {
+	public init(fromPair: ThemeColorPair) {
 		normal = fromPair
 		highlighted = ThemeColorPair(foreground: fromPair.foreground, background: fromPair.background.lighter(0.25))
 		disabled = ThemeColorPair(foreground: fromPair.foreground, background: fromPair.background.lighter(0.25))
 	}
 }
 
-class ThemeColorCollection : NSObject {
-	@objc var backgroundColor : UIColor?
-	@objc var labelColor : UIColor
-	@objc var secondaryLabelColor : UIColor
-	@objc var symbolColor : UIColor
-	@objc var tintColor : UIColor?
+public class ThemeColorCollection : NSObject {
+	@objc public var backgroundColor : UIColor?
+	@objc public var labelColor : UIColor
+	@objc public var secondaryLabelColor : UIColor
+	@objc public var symbolColor : UIColor
+	@objc public var tintColor : UIColor?
 
-	@objc var filledColorPairCollection : ThemeColorPairCollection
+	@objc public var filledColorPairCollection : ThemeColorPairCollection
 
-	init(backgroundColor bgColor : UIColor?, tintColor tntColor: UIColor?, labelColor lblColor : UIColor, secondaryLabelColor secLabelColor: UIColor, symbolColor symColor: UIColor, filledColorPairCollection filColorPairCollection: ThemeColorPairCollection) {
+	public init(backgroundColor bgColor : UIColor?, tintColor tntColor: UIColor?, labelColor lblColor : UIColor, secondaryLabelColor secLabelColor: UIColor, symbolColor symColor: UIColor, filledColorPairCollection filColorPairCollection: ThemeColorPairCollection) {
 		backgroundColor = bgColor
 		labelColor = lblColor
 		symbolColor = symColor
@@ -59,7 +59,7 @@ class ThemeColorCollection : NSObject {
 	}
 }
 
-enum ThemeCollectionStyle : String, CaseIterable {
+public enum ThemeCollectionStyle : String, CaseIterable {
 	case dark
 	case light
 	case contrast
@@ -73,13 +73,13 @@ enum ThemeCollectionStyle : String, CaseIterable {
 	}
 }
 
-enum ThemeCollectionInterfaceStyle : String, CaseIterable {
+public enum ThemeCollectionInterfaceStyle : String, CaseIterable {
 	case dark
 	case light
 	case unspecified
 
 	@available(iOS 12.0, *)
-	var userInterfaceStyle : UIUserInterfaceStyle {
+	public var userInterfaceStyle : UIUserInterfaceStyle {
 		switch self {
 			case .dark: return .dark
 			case .light: return .light
@@ -88,65 +88,65 @@ enum ThemeCollectionInterfaceStyle : String, CaseIterable {
 	}
 }
 
-class ThemeCollection : NSObject {
-	@objc var identifier : String = UUID().uuidString
+public class ThemeCollection : NSObject {
+	@objc public var identifier : String = UUID().uuidString
 
 	// MARK: - Interface style
-	var interfaceStyle : ThemeCollectionInterfaceStyle
-	var keyboardAppearance : UIKeyboardAppearance
-	var backgroundBlurEffectStyle : UIBlurEffect.Style
+	public var interfaceStyle : ThemeCollectionInterfaceStyle
+	public var keyboardAppearance : UIKeyboardAppearance
+	public var backgroundBlurEffectStyle : UIBlurEffect.Style
 
 	// MARK: - Brand colors
-	@objc var darkBrandColor: UIColor
-	@objc var lightBrandColor: UIColor
+	@objc public var darkBrandColor: UIColor
+	@objc public var lightBrandColor: UIColor
 
 	// MARK: - Brand color collection
-	@objc var darkBrandColors : ThemeColorCollection
-	@objc var lightBrandColors : ThemeColorCollection
+	@objc public var darkBrandColors : ThemeColorCollection
+	@objc public var lightBrandColors : ThemeColorCollection
 
 	// MARK: - Button / Fill color collections
-	@objc var approvalColors : ThemeColorPairCollection
-	@objc var neutralColors : ThemeColorPairCollection
-	@objc var destructiveColors : ThemeColorPairCollection
+	@objc public var approvalColors : ThemeColorPairCollection
+	@objc public var neutralColors : ThemeColorPairCollection
+	@objc public var destructiveColors : ThemeColorPairCollection
 
-	@objc var purchaseColors : ThemeColorPairCollection
+	@objc public var purchaseColors : ThemeColorPairCollection
 
 	// MARK: - Label colors
-	@objc var informativeColor: UIColor
-	@objc var successColor: UIColor
-	@objc var warningColor: UIColor
-	@objc var errorColor: UIColor
+	@objc public var informativeColor: UIColor
+	@objc public var successColor: UIColor
+	@objc public var warningColor: UIColor
+	@objc public var errorColor: UIColor
 
-	@objc var tintColor : UIColor
+	@objc public var tintColor : UIColor
 
 	// MARK: - Table views
-	@objc var tableBackgroundColor : UIColor
-	@objc var tableGroupBackgroundColor : UIColor
-	@objc var tableSectionHeaderColor : UIColor?
-	@objc var tableSectionFooterColor : UIColor?
-	@objc var tableSeparatorColor : UIColor?
-	@objc var tableRowColors : ThemeColorCollection
-	@objc var tableRowHighlightColors : ThemeColorCollection
-	@objc var tableRowBorderColor : UIColor?
+	@objc public var tableBackgroundColor : UIColor
+	@objc public var tableGroupBackgroundColor : UIColor
+	@objc public var tableSectionHeaderColor : UIColor?
+	@objc public var tableSectionFooterColor : UIColor?
+	@objc public var tableSeparatorColor : UIColor?
+	@objc public var tableRowColors : ThemeColorCollection
+	@objc public var tableRowHighlightColors : ThemeColorCollection
+	@objc public var tableRowBorderColor : UIColor?
 
 	// MARK: - Bars
-	@objc var navigationBarColors : ThemeColorCollection
-	@objc var toolbarColors : ThemeColorCollection
-	@objc var statusBarStyle : UIStatusBarStyle
-	@objc var barStyle : UIBarStyle
+	@objc public var navigationBarColors : ThemeColorCollection
+	@objc public var toolbarColors : ThemeColorCollection
+	@objc public var statusBarStyle : UIStatusBarStyle
+	@objc public var barStyle : UIBarStyle
 
 	// MARK: - Progress
-	@objc var progressColors : ThemeColorPair
+	@objc public var progressColors : ThemeColorPair
 
 	// MARK: - Activity View
-	@objc var activityIndicatorViewStyle : UIActivityIndicatorView.Style
-	@objc var searchBarActivityIndicatorViewStyle : UIActivityIndicatorView.Style
+	@objc public var activityIndicatorViewStyle : UIActivityIndicatorView.Style
+	@objc public var searchBarActivityIndicatorViewStyle : UIActivityIndicatorView.Style
 
 	// MARK: - Icon colors
-	@objc var iconColors : [String:String]
+	@objc public var iconColors : [String:String]
 
-	@objc var favoriteEnabledColor : UIColor?
-	@objc var favoriteDisabledColor : UIColor?
+	@objc public var favoriteEnabledColor : UIColor?
+	@objc public var favoriteDisabledColor : UIColor?
 
 	// MARK: - Default Collection
 	static var defaultCollection : ThemeCollection = {
@@ -167,7 +167,7 @@ class ThemeCollection : NSObject {
 		return (collection)
 	}()
 
-	init(darkBrandColor darkColor: UIColor, lightBrandColor lightColor: UIColor, style: ThemeCollectionStyle = .dark) {
+	public init(darkBrandColor darkColor: UIColor, lightBrandColor lightColor: UIColor, style: ThemeCollectionStyle = .dark) {
 		var logoFillColor : UIColor?
 
 		self.interfaceStyle = .unspecified

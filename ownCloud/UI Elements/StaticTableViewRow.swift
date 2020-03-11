@@ -18,11 +18,11 @@
 
 import UIKit
 
-typealias StaticTableViewRowAction = (_ staticRow : StaticTableViewRow, _ sender: Any?) -> Void
-typealias StaticTableViewRowTextAction = (_ staticRow : StaticTableViewRow, _ sender: Any?, _ type: StaticTableViewRowActionType) -> Void
-typealias StaticTableViewRowEventHandler = (_ staticRow : StaticTableViewRow, _ event : StaticTableViewEvent) -> Void
+public typealias StaticTableViewRowAction = (_ staticRow : StaticTableViewRow, _ sender: Any?) -> Void
+public typealias StaticTableViewRowTextAction = (_ staticRow : StaticTableViewRow, _ sender: Any?, _ type: StaticTableViewRowActionType) -> Void
+public typealias StaticTableViewRowEventHandler = (_ staticRow : StaticTableViewRow, _ event : StaticTableViewEvent) -> Void
 
-enum StaticTableViewRowButtonStyle {
+public enum StaticTableViewRowButtonStyle {
 	case plain
 	case plainNonOpaque
 	case proceed
@@ -30,7 +30,7 @@ enum StaticTableViewRowButtonStyle {
 	case custom(textColor: UIColor?, selectedTextColor: UIColor?, backgroundColor: UIColor?, selectedBackgroundColor: UIColor?)
 }
 
-enum StaticTableViewRowType {
+public enum StaticTableViewRowType {
 	case row
 	case subtitleRow
 	case valueRow
@@ -45,13 +45,13 @@ enum StaticTableViewRowType {
 	case slider
 }
 
-enum StaticTableViewRowActionType {
+public enum StaticTableViewRowActionType {
 	case changed
 	case didBegin
 	case didEnd
 }
 
-class StaticTableViewRow : NSObject, UITextFieldDelegate {
+open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	public weak var section : StaticTableViewSection?
 
@@ -108,16 +108,16 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		return self.index != nil
 	}
 
-	var representedObject : Any?
+	public var representedObject : Any?
 
 	public var additionalAccessoryView : UIView?
 
-	override init() {
+	override public init() {
 		type = .row
 		super.init()
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, imageTintColorKey : String = "labelColor", alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = .none, identifier : String? = nil, accessoryView: UIView? = nil) {
+	convenience public init(rowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, image: UIImage? = nil, imageWidth: CGFloat? = nil, imageTintColorKey : String = "labelColor", alignment: NSTextAlignment = .left, accessoryType: UITableViewCell.AccessoryType = .none, identifier : String? = nil, accessoryView: UIView? = nil) {
 		self.init()
 		type = .row
 
@@ -159,7 +159,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryView: UIView? = nil, identifier : String? = nil) {
+	convenience public init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, accessoryView: UIView? = nil, identifier : String? = nil) {
 		self.init()
 		type = .row
 
@@ -204,7 +204,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 	}
 
-	convenience init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, image: UIImage? = nil, imageTintColorKey : String = "labelColor", accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, accessoryView: UIView?, identifier: String? = nil) {
+	convenience public init(rowWithAction: StaticTableViewRowAction?, title: String, alignment: NSTextAlignment = .left, image: UIImage? = nil, imageTintColorKey : String = "labelColor", accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, accessoryView: UIView?, identifier: String? = nil) {
 		self.init()
 		type = .row
 
@@ -245,7 +245,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		})
 	}
 
-	convenience init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, style : UITableViewCell.CellStyle = .subtitle, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
+	convenience public init(subtitleRowWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, style : UITableViewCell.CellStyle = .subtitle, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
 		self.init()
 		type = .subtitleRow
 
@@ -267,13 +267,13 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 	}
 
-	convenience init(valueRowWithAction: StaticTableViewRowAction?, title: String, value: String, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
+	convenience public init(valueRowWithAction: StaticTableViewRowAction?, title: String, value: String, accessoryType: UITableViewCell.AccessoryType = UITableViewCell.AccessoryType.none, identifier : String? = nil) {
 		self.init(subtitleRowWithAction: valueRowWithAction, title: title, subtitle: value, style: .value1, accessoryType: accessoryType, identifier: identifier)
 		type = .valueRow
 	}
 
 	// MARK: - Radio Item
-	convenience init(radioItemWithAction: StaticTableViewRowAction?, groupIdentifier: String, value: Any, title: String, subtitle: String? = nil, selected: Bool, identifier : String? = nil) {
+	convenience public init(radioItemWithAction: StaticTableViewRowAction?, groupIdentifier: String, value: Any, title: String, subtitle: String? = nil, selected: Bool, identifier : String? = nil) {
 		self.init()
 		type = .radio
 
@@ -308,7 +308,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Toggle Item
-	convenience init(toggleItemWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, selected: Bool, identifier : String? = nil) {
+	convenience public init(toggleItemWithAction: StaticTableViewRowAction?, title: String, subtitle: String? = nil, selected: Bool, identifier : String? = nil) {
 		self.init()
 		type = .toggle
 
@@ -354,7 +354,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	// MARK: - Text Field
 	public var textField : UITextField?
 
-	convenience init(textFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = UIControl.Event.editingChanged) {
+	convenience public init(textFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = UIControl.Event.editingChanged) {
 		self.init()
 		type = .text
 
@@ -412,7 +412,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cellTextField.accessibilityLabel = accessibilityLabel
 	}
 
-	convenience init(secureTextFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = UIControl.Event.editingChanged) {
+	convenience public init(secureTextFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", keyboardType: UIKeyboardType = UIKeyboardType.default, autocorrectionType: UITextAutocorrectionType = UITextAutocorrectionType.default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = UIReturnKeyType.default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = UIControl.Event.editingChanged) {
 		self.init(	textFieldWithAction: action,
 				placeholder: placeholderString,
 				value: textValue, secureTextEntry: true,
@@ -428,28 +428,28 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		type = .secureText
 	}
 
-	@objc func textFieldContentChanged(_ sender: UITextField) {
+	@objc public func textFieldContentChanged(_ sender: UITextField) {
 		self.value = sender.text
 
 		self.textFieldAction?(self, sender, .changed)
 	}
 
-	func textFieldDidBeginEditing(_ textField: UITextField) {
+	public func textFieldDidBeginEditing(_ textField: UITextField) {
 		self.textFieldAction?(self, textField, .didBegin)
 	}
 
-	func textFieldDidEndEditing(_ textField: UITextField) {
+	public func textFieldDidEndEditing(_ textField: UITextField) {
 		self.textFieldAction?(self, textField, .didEnd)
 	}
 
-	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+	public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		textField.resignFirstResponder()
 
 		return true
 	}
 
 	// MARK: - Labels
-	convenience init(label: String, alignment: NSTextAlignment = .left, accessoryView: UIView? = nil, identifier: String? = nil) {
+	convenience public init(label: String, alignment: NSTextAlignment = .left, accessoryView: UIView? = nil, identifier: String? = nil) {
 		self.init()
 		type = .label
 
@@ -478,7 +478,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Switches
-	convenience init(switchWithAction action: StaticTableViewRowAction?, title: String, value switchValue: Bool = false, identifier: String? = nil) {
+	convenience public init(switchWithAction action: StaticTableViewRowAction?, title: String, value switchValue: Bool = false, identifier: String? = nil) {
 		self.init()
 		type = .switchButton
 
@@ -519,7 +519,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	// MARK: - Buttons
 
-	convenience init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = .proceed, image: UIImage? = nil, imageWidth : CGFloat? = nil, imageTintColorKey : String? = nil, alignment: NSTextAlignment = .center, identifier : String? = nil, accessoryView: UIView? = nil) {
+	convenience public init(buttonWithAction action: StaticTableViewRowAction?, title: String, style: StaticTableViewRowButtonStyle = .proceed, image: UIImage? = nil, imageWidth : CGFloat? = nil, imageTintColorKey : String? = nil, alignment: NSTextAlignment = .center, identifier : String? = nil, accessoryView: UIView? = nil) {
 		self.init()
 		type = .button
 
@@ -597,7 +597,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	// MARK: - Date Picker
 
-	convenience init(datePickerWithAction action: StaticTableViewRowAction?, date dateValue: Date, maximumDate:Date? = nil, identifier: String? = nil) {
+	convenience public init(datePickerWithAction action: StaticTableViewRowAction?, date dateValue: Date, maximumDate:Date? = nil, identifier: String? = nil) {
 		self.init()
 		type = .datePicker
 
@@ -630,13 +630,13 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 	}
 
-	@objc func datePickerValueChanged(_ sender: UIDatePicker) {
+	@objc public func datePickerValueChanged(_ sender: UIDatePicker) {
 		self.action?(self, sender)
 	}
 
 	// MARK: - Slider
 
-	convenience init(sliderWithAction action: StaticTableViewRowAction?, minimumValue: Float, maximumValue: Float, value: Float, identifier: String? = nil) {
+	convenience public init(sliderWithAction action: StaticTableViewRowAction?, minimumValue: Float, maximumValue: Float, value: Float, identifier: String? = nil) {
 		self.init()
 
 		let slider = UISlider()
@@ -666,12 +666,12 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 	}
 
-	@objc func sliderValueChanged(_ sender: UISlider) {
+	@objc public func sliderValueChanged(_ sender: UISlider) {
 		action?(self, sender)
 	}
 
 	// MARK: - Custom view
-	convenience init(customView: UIView, withAction action: StaticTableViewRowAction? = nil, identifier: String? = nil, inset: UIEdgeInsets? = nil, fixedHeight: CGFloat? = nil) {
+	convenience public init(customView: UIView, withAction action: StaticTableViewRowAction? = nil, identifier: String? = nil, inset: UIEdgeInsets? = nil, fixedHeight: CGFloat? = nil) {
 		self.init()
 
 		cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
@@ -702,7 +702,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 	}
 
-	@objc func actionTriggered(_ sender: UIView) {
+	@objc public func actionTriggered(_ sender: UIView) {
 		action?(self, sender)
 	}
 

@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudAppShared
 
 enum ItemPolicySectionIndex : Int {
 	case all

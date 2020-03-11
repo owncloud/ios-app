@@ -19,17 +19,17 @@
 import UIKit
 import ownCloudSDK
 
-enum ThemeEvent {
+public enum ThemeEvent {
 	case initial
 	case update
 }
 
-protocol Themeable : class {
+public protocol Themeable : class {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent)
 }
 
-typealias ThemeApplier = (_ theme : Theme, _ ThemeCollection: ThemeCollection, _ event: ThemeEvent) -> Void
-typealias ThemeApplierToken = Int
+public typealias ThemeApplier = (_ theme : Theme, _ ThemeCollection: ThemeCollection, _ event: ThemeEvent) -> Void
+public typealias ThemeApplierToken = Int
 
 final class WeakThemeable {
 	weak var weakClient : Themeable?
@@ -39,7 +39,7 @@ final class WeakThemeable {
 	}
 }
 
-class Theme: NSObject {
+public class Theme: NSObject {
 	private var weakClients : [WeakThemeable] = []
 
 	private var appliers : [ThemeApplierToken : ThemeApplier] = [:]
@@ -60,7 +60,7 @@ class Theme: NSObject {
 	}
 
 	// MARK: - Shared instance
-	static var shared : Theme = {
+	public static var shared : Theme = {
 		let sharedInstance = Theme()
 
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.PocketSVG", bundleOf: Theme.self, title: "PocketSVG", resourceName: "PocketSVG", fileExtension: "LICENSE"))
@@ -69,7 +69,7 @@ class Theme: NSObject {
 	}()
 
 	// MARK: - Client register / unregister
-	func register(client: Themeable, applyImmediately: Bool = true) {
+	public func register(client: Themeable, applyImmediately: Bool = true) {
 		OCSynchronized(self) {
 			weakClients.append(WeakThemeable(client))
 		}
@@ -79,7 +79,7 @@ class Theme: NSObject {
 		}
 	}
 
-	func unregister(client : Themeable) {
+	public func unregister(client : Themeable) {
 		OCSynchronized(self) {
 			if let clientIndex = weakClients.index(where: { (themable) -> Bool in
 				if themable.weakClient != nil {
@@ -93,7 +93,7 @@ class Theme: NSObject {
 	}
 
 	// MARK: - Resources
-	func add(resourceFor identifier: String, _ resourceCreationBlock: ((_ identifier: String) -> ThemeResource)) {
+	public func add(resourceFor identifier: String, _ resourceCreationBlock: ((_ identifier: String) -> ThemeResource)) {
 		OCSynchronized(self) {
 			if resourcesByIdentifier[identifier] == nil {
 				self.add(resource: resourceCreationBlock(identifier))
@@ -101,7 +101,7 @@ class Theme: NSObject {
 		}
 	}
 
-	func add(resource: ThemeResource) {
+	public func add(resource: ThemeResource) {
 		OCSynchronized(self) {
 			weakClients.insert(WeakThemeable(resource), at: 0)
 
@@ -111,7 +111,7 @@ class Theme: NSObject {
 		}
 	}
 
-	func resource(for identifier: String) -> ThemeResource? {
+	public func resource(for identifier: String) -> ThemeResource? {
 		var resource : ThemeResource?
 
 		OCSynchronized(self) {
@@ -121,7 +121,7 @@ class Theme: NSObject {
 		return resource
 	}
 
-	func image(for identifier: String, size: CGSize? = nil) -> UIImage? {
+	public func image(for identifier: String, size: CGSize? = nil) -> UIImage? {
 		var image : UIImage?
 
 		OCSynchronized(self) {
@@ -143,7 +143,7 @@ class Theme: NSObject {
 		return image
 	}
 
-	func tvgImage(for identifier: String) -> TVGImage? {
+	public func tvgImage(for identifier: String) -> TVGImage? {
 		var image : TVGImage?
 
 		OCSynchronized(self) {
@@ -159,7 +159,7 @@ class Theme: NSObject {
 		return image
 	}
 
-	func remove(resource: ThemeResource) {
+	public func remove(resource: ThemeResource) {
 		OCSynchronized(self) {
 			if resource.identifier != nil {
 				resourcesByIdentifier.removeValue(forKey: resource.identifier!)
@@ -170,14 +170,14 @@ class Theme: NSObject {
 	}
 
 	// MARK: - Convenience resource methods
-	func add(tvgResourceFor tvgName: String) {
+	public func add(tvgResourceFor tvgName: String) {
 		self.add(resourceFor: tvgName) { (identifier) -> ThemeResource in
 			return ThemeTVGResource(name: tvgName, identifier: identifier)
 		}
 	}
 
 	// MARK: - Applier register / unregister
-	func add(applier: @escaping ThemeApplier, applyImmediately: Bool = true) -> ThemeApplierToken {
+	public func add(applier: @escaping ThemeApplier, applyImmediately: Bool = true) -> ThemeApplierToken {
 		var token : ThemeApplierToken = -1
 
 		OCSynchronized(self) {
@@ -193,7 +193,7 @@ class Theme: NSObject {
 		return token
 	}
 
-	func get(applierForToken: ThemeApplierToken?) -> ThemeApplier? {
+	public func get(applierForToken: ThemeApplierToken?) -> ThemeApplier? {
 		var applier : ThemeApplier?
 
 		if applierForToken != nil {
@@ -205,7 +205,7 @@ class Theme: NSObject {
 		return applier
 	}
 
-	func remove(applierForToken: ThemeApplierToken?) {
+	public func remove(applierForToken: ThemeApplierToken?) {
 		if applierForToken != nil {
 			OCSynchronized(self) {
 				appliers.removeValue(forKey: applierForToken!)
@@ -214,7 +214,7 @@ class Theme: NSObject {
 	}
 
 	// MARK: - Theme client notification
-	func applyThemeCollection(_ collection: ThemeCollection) {
+	public func applyThemeCollection(_ collection: ThemeCollection) {
 		OCSynchronized(self) {
 			// Apply theme to clients
 			for client in weakClients {
@@ -231,7 +231,7 @@ class Theme: NSObject {
 	}
 
 	// MARK: - Theme switching
-	func switchThemeCollection(_ collection: ThemeCollection) {
+	public func switchThemeCollection(_ collection: ThemeCollection) {
 		UIView.animate(withDuration: 0.25) {
 			CATransaction.begin()
 			CATransaction.setAnimationDuration(0.25)

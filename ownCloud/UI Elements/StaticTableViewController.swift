@@ -18,7 +18,7 @@
 
 import UIKit
 
-enum StaticTableViewEvent {
+public enum StaticTableViewEvent {
 	case initial
 	case appBecameActive
 	case tableViewWillAppear
@@ -26,7 +26,7 @@ enum StaticTableViewEvent {
 	case tableViewDidDisappear
 }
 
-class StaticTableViewController: UITableViewController, Themeable {
+open class StaticTableViewController: UITableViewController, Themeable {
 	public var sections : [StaticTableViewSection] = Array()
 
 	public var needsLiveUpdates : Bool {
@@ -36,11 +36,11 @@ class StaticTableViewController: UITableViewController, Themeable {
 	private var hasBeenPresentedAtLeastOnce : Bool = false
 
 	// MARK: - Section administration
-	func addSection(_ section: StaticTableViewSection, animated animateThis: Bool = false) {
+	public func addSection(_ section: StaticTableViewSection, animated animateThis: Bool = false) {
 		self.insertSection(section, at: sections.count, animated: animateThis)
 	}
 
-	func insertSection(_ section: StaticTableViewSection, at index: Int, animated: Bool = false) {
+	public func insertSection(_ section: StaticTableViewSection, at index: Int, animated: Bool = false) {
 		section.viewController = self
 
 		if animated {
@@ -55,7 +55,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 		}
 	}
 
-	func removeSection(_ section: StaticTableViewSection, animated: Bool = false) {
+	public func removeSection(_ section: StaticTableViewSection, animated: Bool = false) {
 		if animated {
 			tableView.performBatchUpdates({
 				if let index = sections.index(of: section) {
@@ -78,7 +78,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 		}
 	}
 
-	func addSections(_ addSections: [StaticTableViewSection], animated animateThis: Bool = false) {
+	public func addSections(_ addSections: [StaticTableViewSection], animated animateThis: Bool = false) {
 		for section in addSections {
 			section.viewController = self
 		}
@@ -95,7 +95,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 		}
 	}
 
-	func removeSections(_ removeSections: [StaticTableViewSection], animated animateThis: Bool = false) {
+	public func removeSections(_ removeSections: [StaticTableViewSection], animated animateThis: Bool = false) {
 		if animateThis {
 			tableView.performBatchUpdates({
 				var removalIndexes : IndexSet = IndexSet()
@@ -129,7 +129,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 	}
 
 	// MARK: - Search
-	func sectionForIdentifier(_ sectionID: String) -> StaticTableViewSection? {
+	public func sectionForIdentifier(_ sectionID: String) -> StaticTableViewSection? {
 		for section in sections {
 			if section.identifier == sectionID {
 				return section
@@ -139,7 +139,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 		return nil
 	}
 
-	func rowInSection(_ inSection: StaticTableViewSection?, rowIdentifier: String) -> StaticTableViewRow? {
+	public func rowInSection(_ inSection: StaticTableViewSection?, rowIdentifier: String) -> StaticTableViewRow? {
 		if inSection == nil {
 			for section in sections {
 				if let row = section.row(withIdentifier: rowIdentifier) {
@@ -154,24 +154,24 @@ class StaticTableViewController: UITableViewController, Themeable {
 	}
 
 	// MARK: - View Controller
-	override func viewDidLoad() {
+	override open func viewDidLoad() {
 		super.viewDidLoad()
 
 		extendedLayoutIncludesOpaqueBars = true
 		Theme.shared.register(client: self)
 	}
 
-	var willDismissAction : ((_ viewController: StaticTableViewController) -> Void)?
-	var didDismissAction : ((_ viewController: StaticTableViewController) -> Void)?
+	public var willDismissAction : ((_ viewController: StaticTableViewController) -> Void)?
+	public var didDismissAction : ((_ viewController: StaticTableViewController) -> Void)?
 
-	@objc func dismissAnimated() {
+	@objc public func dismissAnimated() {
 		self.willDismissAction?(self)
 		self.dismiss(animated: true, completion: {
 			self.didDismissAction?(self)
 		})
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	override open func viewWillAppear(_ animated: Bool) {
 		hasBeenPresentedAtLeastOnce = true
 
 		super.viewWillAppear(animated)
@@ -182,24 +182,24 @@ class StaticTableViewController: UITableViewController, Themeable {
 	}
 
 	// MARK: - Tools
-	func staticRowForIndexPath(_ indexPath: IndexPath) -> StaticTableViewRow {
+	public func staticRowForIndexPath(_ indexPath: IndexPath) -> StaticTableViewRow {
 		return (sections[indexPath.section].rows[indexPath.row])
 	}
 
 	// MARK: - Table view data source
-	override func numberOfSections(in tableView: UITableView) -> Int {
+	override public func numberOfSections(in tableView: UITableView) -> Int {
 		return sections.count
 	}
 
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return sections[section].rows.count
 	}
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		return sections[indexPath.section].rows[indexPath.row].cell!
 	}
 
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
 		let staticRow : StaticTableViewRow = staticRowForIndexPath(indexPath)
 
@@ -210,15 +210,15 @@ class StaticTableViewController: UITableViewController, Themeable {
 		tableView.deselectRow(at: indexPath, animated: true)
 	}
 
-	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	override public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		return sections[section].headerTitle
 	}
 
-	override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+	override public func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
 		return sections[section].footerTitle
 	}
 
-	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	override public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		let cell = staticRowForIndexPath(indexPath)
 		if cell.type == .datePicker {
 			return 216.0
@@ -228,7 +228,7 @@ class StaticTableViewController: UITableViewController, Themeable {
 	}
 
 	// MARK: - Theme support
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
 	}
 }

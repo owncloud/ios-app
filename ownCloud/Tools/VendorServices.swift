@@ -19,6 +19,7 @@
 import UIKit
 import MessageUI
 import ownCloudSDK
+import ownCloudAppShared
 
 class VendorServices : NSObject {
 	// MARK: - App version information

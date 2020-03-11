@@ -18,7 +18,7 @@
 
 import Foundation
 
-func OCSynchronized(_ obj: Any, block: () -> Void) {
+public func OCSynchronized(_ obj: Any, block: () -> Void) {
 	objc_sync_enter(obj)
 	block()
 	objc_sync_exit(obj)

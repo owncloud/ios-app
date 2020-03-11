@@ -18,6 +18,7 @@
 
 import UIKit
 import PocketSVG
+import ownCloudAppShared
 
 class VectorImageView: UIView, Themeable {
 	internal var _vectorImage : TVGImage?

@@ -18,19 +18,19 @@
 
 import UIKit
 
-class ThemeStyle : NSObject {
-	var identifier: String
-	var localizedName: String
+public class ThemeStyle : NSObject {
+	public var identifier: String
+	public var localizedName: String
 
-	var lightColor: UIColor
-	var darkColor: UIColor
-	var themeStyle: ThemeCollectionStyle
+	public var lightColor: UIColor
+	public var darkColor: UIColor
+	public var themeStyle: ThemeCollectionStyle
 
-	var darkStyleIdentifier: String?
+	public var darkStyleIdentifier: String?
 
-	var customizedColorsByPath : [String:String]?
+	public var customizedColorsByPath : [String:String]?
 
-	init(identifier idtfr: String, darkStyleIdentifier darkIdentifier: String? = nil, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customizedColorsByPath customizations: [String:String]? = nil) {
+	public init(identifier idtfr: String, darkStyleIdentifier darkIdentifier: String? = nil, localizedName name: String, lightColor lColor: UIColor, darkColor dColor: UIColor, themeStyle style: ThemeCollectionStyle = .light, customizedColorsByPath customizations: [String:String]? = nil) {
 		self.identifier = idtfr
 		self.darkStyleIdentifier = darkIdentifier
 		self.localizedName = name
@@ -40,7 +40,7 @@ class ThemeStyle : NSObject {
 		self.customizedColorsByPath = customizations
 	}
 
-	var parsedCustomizedColorsByPath : [String:UIColor]? {
+	public var parsedCustomizedColorsByPath : [String:UIColor]? {
 		if let rawColorsByPath = customizedColorsByPath {
 			var colorsByPath : [String:UIColor] = [:]
 
@@ -81,7 +81,7 @@ extension String {
 }
 
 extension ThemeCollection {
-	convenience init(with style: ThemeStyle) {
+	convenience public init(with style: ThemeStyle) {
 		self.init(darkBrandColor: style.darkColor, lightBrandColor: style.lightColor, style: style.themeStyle)
 
 		if let customizationColors = style.parsedCustomizedColorsByPath {
