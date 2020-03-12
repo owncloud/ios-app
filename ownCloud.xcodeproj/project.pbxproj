@@ -238,6 +238,7 @@
 		39B1F458241A30450093939A /* x-office-spreadsheet.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8922080D77F005F60CE /* x-office-spreadsheet.tvg */; };
 		39B1F459241A30470093939A /* icon-search.tvg in Resources */ = {isa = PBXBuildFile; fileRef = 239F437D20D0EE6300B1276D /* icon-search.tvg */; };
 		39B1F45A241A36280093939A /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; };
+		39B1F460241A38BF0093939A /* AppLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593BAB96209F8A0500023634 /* AppLockManager.swift */; };
 		39B9675022BE0FBA0074DB22 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
 		39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BE385C23435AFE0062A2FE /* String+Extension.swift */; };
 		39CC8B01228C8A950020253B /* MediaUploadSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8B00228C8A950020253B /* MediaUploadSettingsSection.swift */; };
@@ -267,7 +268,6 @@
 		593A821120C7D4C5000E2A90 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
 		593BAB46209AE1BC00023634 /* PasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593BAB44209AE1BC00023634 /* PasscodeViewController.swift */; };
 		593BAB47209AE1BC00023634 /* PasscodeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 593BAB45209AE1BC00023634 /* PasscodeViewController.xib */; };
-		593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593BAB96209F8A0500023634 /* AppLockManager.swift */; };
 		59538A0321E4A9C2005E543B /* CreateFolderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59538A0221E4A9C2005E543B /* CreateFolderTests.swift */; };
 		59538A0B21E4C301005E543B /* MockOCQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59538A0A21E4C300005E543B /* MockOCQuery.swift */; };
 		59538A1C21E77FB7005E543B /* MockOCCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59538A1B21E77FB6005E543B /* MockOCCore.swift */; };
@@ -3425,7 +3425,6 @@
 				4C51727E22DE04BD001BC97F /* BackgroundFetchUpdateTaskAction.swift in Sources */,
 				39E2FE0021FF814A00F0117F /* ThemeRoundedButton.swift in Sources */,
 				23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */,
-				593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */,
 				4CC46D212284C677009E938F /* BookmarkInfoViewController.swift in Sources */,
 				4C51727F22DE04BD001BC97F /* ScheduledTaskManager.swift in Sources */,
 				3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */,
@@ -3436,6 +3435,7 @@
 				4C88041822E78D790016CBA9 /* MediaFilesSettings.swift in Sources */,
 				597A404920AD59EF00B028B2 /* AppLockWindow.swift in Sources */,
 				DCC5E446232654DE002E5B84 /* NSObject+AnnotatedProperties.m in Sources */,
+				39B1F460241A38BF0093939A /* AppLockManager.swift in Sources */,
 				DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */,
 				39DED4932369879100CCC62C /* ImportFilesController.swift in Sources */,
 				4CAF783C2282FD40000C85CF /* FileManager+Extension.swift in Sources */,
