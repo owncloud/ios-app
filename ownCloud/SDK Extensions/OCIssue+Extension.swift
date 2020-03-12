@@ -19,15 +19,15 @@
 import UIKit
 import ownCloudSDK
 
-struct DisplayIssues {
+public struct DisplayIssues {
 	var targetIssue : OCIssue //!< The issue to send the approve or decline message to
-	var displayLevel : OCIssueLevel //!< The issue level to be used for display
+	public var displayLevel : OCIssueLevel //!< The issue level to be used for display
 	var displayIssues: [OCIssue] //!< The selection of issues to be used for display
 	var primaryCertificate : OCCertificate? //!< The first certificate found among the issues
 }
 
 extension OCIssue {
-	func prepareForDisplay() -> DisplayIssues {
+	public func prepareForDisplay() -> DisplayIssues {
 		var displayIssues: [OCIssue] = []
 		var primaryCertificate: OCCertificate? = self.certificate
 

@@ -20,20 +20,19 @@ import Foundation
 import ownCloudSDK
 import Photos
 import MobileCoreServices
-import ownCloudAppShared
 
-class MediaUploadQueue : OCActivitySource {
+public class MediaUploadQueue : OCActivitySource {
 	private var uploadActivity: MediaUploadActivity?
 
-	static var shared = MediaUploadQueue()
+	public static var shared = MediaUploadQueue()
 
 	// MARK: - OCActivitySource protocol implementation
 
-	func provideActivity() -> OCActivity {
+	public func provideActivity() -> OCActivity {
 		return self.uploadActivity!
 	}
 
-	var activityIdentifier: OCActivityIdentifier {
+	public var activityIdentifier: OCActivityIdentifier {
 		if let activity = self.uploadActivity {
 			return activity.identifier
 		} else {
@@ -53,7 +52,7 @@ class MediaUploadQueue : OCActivitySource {
 		self.setNeedsScheduling(in: bookmark)
 	}
 
-	func addUploads(_ assets:[PHAsset], for bookmark:OCBookmark, at path:String) {
+	public func addUploads(_ assets:[PHAsset], for bookmark:OCBookmark, at path:String) {
 		bookmark.modifyMediaUploadStorage { (storage) -> MediaUploadStorage in
 			for asset in assets {
 				storage.addJob(with: asset.localIdentifier, targetPath: path)
@@ -64,7 +63,7 @@ class MediaUploadQueue : OCActivitySource {
 	}
 
 	private var _needsSchedulingCountByBookmarkUUID : [UUID : Int] = [:]
-	func setNeedsScheduling(in bookmark: OCBookmark) {
+	public func setNeedsScheduling(in bookmark: OCBookmark) {
 		// Increment counter by one
 		_needsSchedulingCountByBookmarkUUID[bookmark.uuid] = (_needsSchedulingCountByBookmarkUUID[bookmark.uuid] ?? 0) + 1
 

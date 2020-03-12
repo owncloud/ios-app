@@ -17,9 +17,8 @@
 */
 
 import ownCloudSDK
-import ownCloudAppShared
 
-class CreateFolderAction : Action {
+public class CreateFolderAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.createFolder") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Create folder".localized }

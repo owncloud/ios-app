@@ -71,7 +71,7 @@ final class CardPresentationController: UIPresentationController, Themeable {
 	}
 
 	private var windowFrame: CGRect {
-		if let window = UIApplication.shared.currentWindow() {
+		if let window = Application.shared.currentWindow() {
 			return window.bounds
 		} else {
 			return UIScreen.main.bounds
@@ -374,7 +374,7 @@ extension CardPresentationController: UIGestureRecognizerDelegate {
 
 // MARK: - Convenience addition to UIViewController
 extension UIViewController {
-	func present(asCard viewController: UIViewController, animated: Bool, withHandle: Bool = true, dismissable: Bool = true, completion: (() -> Void)? = nil) {
+	public func present(asCard viewController: UIViewController, animated: Bool, withHandle: Bool = true, dismissable: Bool = true, completion: (() -> Void)? = nil) {
 		let animator = CardTransitionDelegate(viewControllerToPresent: viewController, presentingViewController: self, withHandle: withHandle, dismissable: dismissable)
 
 		viewController.transitioningDelegate = animator

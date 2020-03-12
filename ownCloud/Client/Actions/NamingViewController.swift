@@ -18,12 +18,11 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
 typealias StringValidatorResult = (Bool, String?)
 typealias StringValidatorHandler = (String) -> StringValidatorResult
 
-class NamingViewController: UIViewController, Themeable {
+public class NamingViewController: UIViewController, Themeable {
 	weak var item: OCItem?
 	weak var core: OCCore?
 	var completion: (String?, NamingViewController) -> Void
@@ -101,13 +100,13 @@ class NamingViewController: UIViewController, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		nameTextField.backgroundColor = collection.tableBackgroundColor
 		nameTextField.textColor = collection.tableRowColors.labelColor
 		nameTextField.keyboardAppearance = collection.keyboardAppearance
 	}
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		stackViewLeftAnchorConstraint = stackView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 0)
@@ -258,7 +257,7 @@ class NamingViewController: UIViewController, Themeable {
 		}
 	}
 
-	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+	override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
 
 		render(newTraitCollection: traitCollection)
@@ -332,7 +331,7 @@ class NamingViewController: UIViewController, Themeable {
 		}
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
+	override public func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardDidShowNotification, object: nil)
 	}
@@ -341,7 +340,7 @@ class NamingViewController: UIViewController, Themeable {
 
 extension NamingViewController: UITextFieldDelegate {
 
-	func textFieldDidBeginEditing(_ textField: UITextField) {
+	public func textFieldDidBeginEditing(_ textField: UITextField) {
 
 		if let name = nameTextField.text,
 			let fileExtension = item?.fileExtension,
@@ -356,7 +355,7 @@ extension NamingViewController: UITextFieldDelegate {
 
 	}
 
-	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+	public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		if textField.text == "" {
 			return false
 		}

@@ -18,10 +18,9 @@
 
 import ownCloudSDK
 import ownCloudApp
-import ownCloudAppShared
 import VisionKit
 
-class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
+public class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.scan") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Scan document".localized }

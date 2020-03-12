@@ -25,7 +25,7 @@ extension OCIssueChoice {
 }
 
 extension UIAlertController {
-	convenience init(with issue: OCIssue, completion: (() -> Void)? = nil) {
+	convenience public init(with issue: OCIssue, completion: (() -> Void)? = nil) {
 		self.init(title: issue.localizedTitle, message: issue.localizedDescription, preferredStyle: .alert)
 
 		if let choices = issue.choices {
@@ -38,7 +38,7 @@ extension UIAlertController {
 		}
 	}
 
-	convenience init(with title: String, message: String, cancelLabel: String = "Cancel".localized, destructiveLabel: String, preferredStyle: UIAlertController.Style, destructiveAction action: @escaping () -> Void) {
+	convenience public init(with title: String, message: String, cancelLabel: String = "Cancel".localized, destructiveLabel: String, preferredStyle: UIAlertController.Style, destructiveAction action: @escaping () -> Void) {
 
 		self.init(title: title, message: message, preferredStyle: preferredStyle)
 
@@ -51,7 +51,7 @@ extension UIAlertController {
 		self.addAction(cancelAction)
 	}
 
-	convenience init(with title: String, message: String, okLabel: String = "OK".localized, action: (() -> Void)? = nil) {
+	convenience public init(with title: String, message: String, okLabel: String = "OK".localized, action: (() -> Void)? = nil) {
 		self.init(title: title, message: message, preferredStyle: UIDevice.current.isIpad() ? .alert : .actionSheet)
 
 		let okAction: UIAlertAction = UIAlertAction(title: okLabel, style: .default, handler: { (_) in

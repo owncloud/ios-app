@@ -17,7 +17,6 @@
  */
 
 import UIKit
-import ownCloudAppShared
 
 private struct CollapsibleProgressBarUpdate {
 	var progress: Float?

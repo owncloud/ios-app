@@ -17,16 +17,15 @@
  */
 
 import UIKit
-import ownCloudAppShared
 
-class ThemeNavigationController: UINavigationController {
+open class ThemeNavigationController: UINavigationController {
 	private var themeToken : ThemeApplierToken?
 
-	override var preferredStatusBarStyle : UIStatusBarStyle {
+	override public var preferredStatusBarStyle : UIStatusBarStyle {
 		return Theme.shared.activeCollection.statusBarStyle
 	}
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		themeToken = Theme.shared.add(applier: {[weak self] (_, themeCollection, event) in
@@ -43,9 +42,9 @@ class ThemeNavigationController: UINavigationController {
 		Theme.shared.remove(applierForToken: themeToken)
 	}
 
-	var popLastHandler : ((UIViewController?) -> Bool)?
+	public var popLastHandler : ((UIViewController?) -> Bool)?
 
-	override func popViewController(animated: Bool) -> UIViewController? {
+	override public func popViewController(animated: Bool) -> UIViewController? {
 		if let popLastHandler = popLastHandler {
 			let viewControllerToPop = self.viewControllers.count > 1 ? self.viewControllers[self.viewControllers.count-2] : self.viewControllers.last
 

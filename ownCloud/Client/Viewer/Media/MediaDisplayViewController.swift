@@ -22,7 +22,7 @@ import MediaPlayer
 import ownCloudSDK
 import MobileCoreServices
 
-class MediaDisplayViewController : DisplayViewController {
+public class MediaDisplayViewController : DisplayViewController {
 
 	static let MediaPlaybackFinishedNotification = NSNotification.Name("media_playback.finished")
     static let MediaPlaybackNextTrackNotification = NSNotification.Name("media_playback.play_next")
@@ -50,7 +50,7 @@ class MediaDisplayViewController : DisplayViewController {
 		NotificationCenter.default.removeObserver(self, name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
 	}
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 		self.requiresLocalItemCopy = !(OCAppIdentity.shared.userDefaults?.streamingEnabled ?? false)
 
@@ -59,11 +59,11 @@ class MediaDisplayViewController : DisplayViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(handleAVPlayerItem(notification:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
+	override public func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 	}
 
-	override func viewSafeAreaInsetsDidChange() {
+	override public func viewSafeAreaInsetsDidChange() {
 		super.viewSafeAreaInsetsDidChange()
 
 		if let playerController = self.playerViewController {
@@ -101,7 +101,7 @@ class MediaDisplayViewController : DisplayViewController {
 				playerViewController = AVPlayerViewController()
 				playerViewController!.updatesNowPlayingInfoCenter = false
 
-				if UIApplication.shared.applicationState == .active {
+				if Application.shared.applicationState == .active {
 					playerViewController!.player = player
 				}
 
@@ -334,7 +334,7 @@ class MediaDisplayViewController : DisplayViewController {
 
 // MARK: - Display Extension.
 extension MediaDisplayViewController: DisplayExtension {
-	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
+	public static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		if let mimeType = context.location?.identifier?.rawValue {
 
 			if MediaDisplayViewController.mimeTypeConformsTo(mime: mimeType, utTypeClass: kUTTypeAudiovisualContent) {
@@ -343,7 +343,7 @@ extension MediaDisplayViewController: DisplayExtension {
 		}
 		return OCExtensionPriority.noMatch
 	}
-	static var displayExtensionIdentifier: String = "org.owncloud.media"
-	static var supportedMimeTypes: [String]?
-	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
+	public static var displayExtensionIdentifier: String = "org.owncloud.media"
+	public static var supportedMimeTypes: [String]?
+	public static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 }

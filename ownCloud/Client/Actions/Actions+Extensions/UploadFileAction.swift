@@ -19,9 +19,8 @@
 import UIKit
 import ownCloudSDK
 import MobileCoreServices
-import ownCloudAppShared
 
-class UploadFileAction: UploadBaseAction {
+public class UploadFileAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadfile") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Upload file".localized }
@@ -63,7 +62,7 @@ class UploadFileAction: UploadBaseAction {
 
 // MARK: - UIDocumentPickerDelegate
 extension UploadFileAction : UIDocumentPickerDelegate {
-	func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+	public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
 		if let rootItem = context.items.first {
 			for url in urls {
 				if !self.upload(itemURL: url, to: rootItem, name: url.lastPathComponent) {

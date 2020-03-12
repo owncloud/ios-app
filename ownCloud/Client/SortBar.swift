@@ -48,7 +48,7 @@ protocol SortBarDelegate: class {
 	func toggleSelectMode()
 }
 
-class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
+public class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 
 	weak var delegate: SortBarDelegate? {
 		didSet {
@@ -74,7 +74,7 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 		}
 	}
 
-	var sortMethod: SortMethod {
+	public var sortMethod: SortMethod {
 		didSet {
 			if self.superview != nil { // Only toggle direction if the view is already in the view hierarchy (i.e. not during initial setup)
 				if oldValue == sortMethod {
@@ -204,7 +204,7 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 
 	// MARK: - Theme support
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.sortButton?.applyThemeCollection(collection)
 		self.selectButton?.applyThemeCollection(collection)
 		self.sortSegmentedControl?.applyThemeCollection(collection)
@@ -213,7 +213,7 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 
 	// MARK: - Sort UI
 
-	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+	override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
 		self.updateForCurrentTraitCollection()
 	}
@@ -282,11 +282,11 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 	}
 
 	// MARK: - UIPopoverPresentationControllerDelegate
-	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+	public func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return .none
 	}
 
-	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
+	public func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
 		popoverPresentationController.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 }

@@ -17,19 +17,18 @@
  */
 
 import UIKit
-import ownCloudAppShared
 
-class ProgressHUDViewController: UIViewController {
+public class ProgressHUDViewController: UIViewController {
 	var progressContainer : UIView?
 	var progressSpinner : UIActivityIndicatorView?
 	var progressLabel : UILabel?
 	var transitionAnimator = ProgressHUDViewControllerAnimator()
 
-	var presenting : Bool = false
+	public var presenting : Bool = false
 
 	var actionWaitGroup = DispatchGroup()
 
-	override func loadView() {
+	override public func loadView() {
 		let rootView = UIView()
 
 		rootView.backgroundColor = UIColor.init(white: 0.0, alpha: 0.5)
@@ -68,7 +67,7 @@ class ProgressHUDViewController: UIViewController {
 		self.view = rootView
 	}
 
-	init(on viewController: UIViewController? = nil, label: String? = nil) {
+	public init(on viewController: UIViewController? = nil, label: String? = nil) {
 		super.init(nibName: nil, bundle: nil)
 
 		self.modalPresentationStyle = .overCurrentContext
@@ -77,15 +76,15 @@ class ProgressHUDViewController: UIViewController {
 		self.present(on: viewController, label: label)
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	func updateLabel(with text: String?) {
+	public func updateLabel(with text: String?) {
 		progressLabel?.text = text
 	}
 
-	func present(on viewController: UIViewController?, label: String? = nil) {
+	public func present(on viewController: UIViewController?, label: String? = nil) {
 		if label != nil, self.view != nil {
 			self.updateLabel(with: label)
 		}
@@ -103,7 +102,7 @@ class ProgressHUDViewController: UIViewController {
 		}
 	}
 
-	func dismiss(completion: (() -> Void)? = nil) {
+	public func dismiss(completion: (() -> Void)? = nil) {
 		if presenting {
 			DispatchQueue.global(qos: .userInitiated).async {
 				self.actionWaitGroup.wait()
@@ -118,17 +117,17 @@ class ProgressHUDViewController: UIViewController {
 		}
 	}
 
-	override var preferredStatusBarStyle : UIStatusBarStyle {
+	override public var preferredStatusBarStyle : UIStatusBarStyle {
 		return Theme.shared.activeCollection.statusBarStyle
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	override public func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		progressSpinner?.startAnimating()
 	}
 
-	override func viewDidDisappear(_ animated: Bool) {
+	override public func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 
 		progressSpinner?.stopAnimating()

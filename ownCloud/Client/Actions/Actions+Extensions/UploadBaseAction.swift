@@ -19,9 +19,8 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
-import ownCloudAppShared
 
-class UploadBaseAction: Action {
+public class UploadBaseAction: Action {
 
 	// MARK: - Action Matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {

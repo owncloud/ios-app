@@ -18,9 +18,8 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class GroupSharingTableViewController: SharingTableViewController, UISearchResultsUpdating, UISearchBarDelegate, OCRecipientSearchControllerDelegate {
+public class GroupSharingTableViewController: SharingTableViewController, UISearchResultsUpdating, UISearchBarDelegate, OCRecipientSearchControllerDelegate {
 
 	// MARK: - Instance Variables
 	override var shares : [OCShare] {
@@ -42,7 +41,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 		return false
 	}
-	var searchController : UISearchController?
+	public var searchController : UISearchController?
 	var recipientSearchController : OCRecipientSearchController?
 	var recipientCanShare : Bool = false
 	var shouldStartSearch : Bool = false
@@ -76,7 +75,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		if ownerCanShare || recipientCanShare {
@@ -146,7 +145,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		shareQuery?.refreshInterval = 2
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
+	override public func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		if shouldStartSearch {
 			shouldStartSearch = false
@@ -348,7 +347,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	// MARK: - UISearchResultsUpdating Delegate
 
-	func updateSearchResults(for searchController: UISearchController) {
+	public func updateSearchResults(for searchController: UISearchController) {
 		guard let text = searchController.searchBar.text else { return }
 		recipientSearchController?.searchTerm = text
 		if text.count > 0 {
@@ -362,7 +361,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		}
 	}
 
-	func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+	public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
 		self.resetTable(showShares: true)
 		self.messageView?.message(show: false)
 
@@ -371,7 +370,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		}
 	}
 
-	func searchControllerHasNewResults(_ searchController: OCRecipientSearchController, error: Error?) {
+	public func searchControllerHasNewResults(_ searchController: OCRecipientSearchController, error: Error?) {
 		OnMainThread {
 			if let headerView = self.tableView.tableHeaderView as? MoreViewHeader {
 				headerView.activityIndicator.stopAnimating()
@@ -436,7 +435,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 		}
 	}
 
-	func searchController(_ searchController: OCRecipientSearchController, isWaitingForResults isSearching: Bool) {
+	public func searchController(_ searchController: OCRecipientSearchController, isWaitingForResults isSearching: Bool) {
 		OnMainThread {
 			if isSearching {
 
@@ -453,7 +452,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 
 	// MARK: TableView Delegate
 
-	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	override public func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		if let shareAtPath = share(at: indexPath), self.canEdit(share: shareAtPath) {
 			return [
 				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, _) in
@@ -489,7 +488,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 	}
 
 	// MARK: Themeing
-	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	override public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
 		if #available(iOS 13, *) {

@@ -18,7 +18,6 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
 struct DisplayViewConfiguration {
 	var item: OCItem?
@@ -40,7 +39,7 @@ protocol DisplayViewEditingDelegate: class {
 	func save(item: OCItem, fileURL newVersion: URL)
 }
 
-class DisplayViewController: UIViewController, OCQueryDelegate {
+public class DisplayViewController: UIViewController, OCQueryDelegate {
 	private let iconImageSize: CGSize = CGSize(width: 200.0, height: 200.0)
 	private let bottomMarginToYAxis: CGFloat = -60.0
 	private let verticalSpacing: CGFloat = 10.0
@@ -154,7 +153,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	// MARK: - Controller lifecycle
-	override func loadView() {
+	override public func loadView() {
 		super.loadView()
 
 		iconImageView = UIImageView()
@@ -236,7 +235,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		])
 	}
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		Theme.shared.register(client: self)
@@ -254,7 +253,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		self.render()
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	override public func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		updateNavigationBarItems()
 	}
@@ -419,11 +418,11 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	// MARK: - Query handling
 	// (not in an extension, so subclasses can override these as needed)
-	func query(_ query: OCQuery, failedWithError error: Error) {
+	public func query(_ query: OCQuery, failedWithError error: Error) {
 		// Not applicable atm
 	}
 
-	func queryHasChangesAvailable(_ query: OCQuery) {
+	public func queryHasChangesAvailable(_ query: OCQuery) {
 		query.requestChangeSet(withFlags: .onlyResults) { [weak self] (query, changeSet) in
 			OnMainThread {
 				Log.log("Presenting item (DisplayViewController.queryHasChangesAvailable): \(changeSet?.queryResult.description ?? "nil") - state: \(String(describing: query.state.rawValue))")
@@ -506,7 +505,7 @@ extension DisplayViewController {
 
 // MARK: - Themeable implementation
 extension DisplayViewController : Themeable {
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		progressView?.applyThemeCollection(collection)
 		cancelButton?.applyThemeCollection(collection)
 		metadataInfoLabel?.applyThemeCollection(collection)

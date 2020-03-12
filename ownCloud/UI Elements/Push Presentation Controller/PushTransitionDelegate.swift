@@ -18,16 +18,16 @@
 
 import UIKit
 
-final class PushTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
-	func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+public final class PushTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
+	public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
 		return PushPresentationController(presentedViewController: presented, presenting: presenting)
 	}
 
-	func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+	public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
 		return PushTransition(dismiss: false)
 	}
 
-	func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+	public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
 		return PushTransition(dismiss: true)
 	}
 }

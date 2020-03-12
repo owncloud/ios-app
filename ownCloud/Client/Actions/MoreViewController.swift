@@ -18,9 +18,8 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class MoreViewController: UIViewController, CardPresentationSizing {
+public class MoreViewController: UIViewController, CardPresentationSizing {
 
 	private var item: OCItem?
 	private weak var core: OCCore?
@@ -36,7 +35,7 @@ class MoreViewController: UIViewController, CardPresentationSizing {
 		}
 	}
 
-	init(item: OCItem, core: OCCore, header: UIView, viewController: UIViewController) {
+	public init(item: OCItem, core: OCCore, header: UIView, viewController: UIViewController) {
 		self.item = item
 		self.core = core
 		self.headerView = header
@@ -45,14 +44,14 @@ class MoreViewController: UIViewController, CardPresentationSizing {
 		super.init(nibName: nil, bundle: nil)
 	}
 
-	init(header: UIView, viewController: UIViewController) {
+	public init(header: UIView, viewController: UIViewController) {
 		self.headerView = header
 		self.viewController = viewController
 
 		super.init(nibName: nil, bundle: nil)
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -60,7 +59,7 @@ class MoreViewController: UIViewController, CardPresentationSizing {
 		Theme.shared.unregister(client: self)
 	}
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		definesPresentationContext = true
@@ -123,7 +122,7 @@ class MoreViewController: UIViewController, CardPresentationSizing {
 		return size
 	}
 
-	override func viewDidLayoutSubviews() {
+	override public func viewDidLayoutSubviews() {
 		if self.view.superview != nil {
 			self.preferredContentSize = cardPresentationSizeFitting(CGSize(width: UIView.layoutFittingExpandedSize.width, height: UIView.layoutFittingExpandedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .defaultHigh)
 		}
@@ -133,7 +132,7 @@ class MoreViewController: UIViewController, CardPresentationSizing {
 }
 
 extension MoreViewController: Themeable {
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.headerView.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
 }

@@ -19,7 +19,7 @@
 import Foundation
 import ownCloudSDK
 
-class CopyAction : Action {
+public class CopyAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.copy") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Copy".localized }

@@ -21,7 +21,7 @@ import Photos
 
 extension PHPhotoLibrary {
 
-	class func requestAccess(completion:@escaping (_ accessGranted:Bool) -> Void) {
+	public class func requestAccess(completion:@escaping (_ accessGranted:Bool) -> Void) {
 		let permisson = PHPhotoLibrary.authorizationStatus()
 
 		func requestAuthorization() {

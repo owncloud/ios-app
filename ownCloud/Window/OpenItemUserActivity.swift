@@ -19,9 +19,9 @@
 import UIKit
 import ownCloudSDK
 
-let ownCloudOpenItemActivityType       = "com.owncloud.ios-app.openItem"
-let ownCloudOpenItemPath               = "openItem"
-let ownCloudOpenItemUuidKey         = "itemUuid"
+public let ownCloudOpenItemActivityType       = "com.owncloud.ios-app.openItem"
+public let ownCloudOpenItemPath               = "openItem"
+public let ownCloudOpenItemUuidKey         = "itemUuid"
 
 class OpenItemUserActivity : NSObject {
 

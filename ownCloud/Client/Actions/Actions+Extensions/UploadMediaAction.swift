@@ -18,11 +18,10 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 import Photos
 import MobileCoreServices
 
-class UploadMediaAction: UploadBaseAction {
+public class UploadMediaAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadphotos") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Upload from your photo library".localized }

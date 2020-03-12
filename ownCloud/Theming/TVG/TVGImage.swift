@@ -48,7 +48,7 @@ public class TVGImage: NSObject {
 	}
 
 	convenience public init?(named name: String) {
-		guard let resourceURL = Bundle.main.url(forResource: name, withExtension: "tvg") else {
+		guard let resourceURL = Bundle(for: type(of: self)).url(forResource: name, withExtension: "tvg") else {
 			return nil
 		}
 

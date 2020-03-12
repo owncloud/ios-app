@@ -19,7 +19,7 @@
 import UIKit
 
 extension UITableViewController {
-	func addThemableBackgroundView() {
+	public func addThemableBackgroundView() {
 		// UITableView background view is nil for default. Set a UIView with clear color to can insert a subview above
 		let backgroundView = UIView.init(frame: self.tableView.frame)
 		backgroundView.backgroundColor = UIColor.clear

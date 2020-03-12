@@ -18,7 +18,7 @@
 
 import Foundation
 
-func OnMainThread(async: Bool = true, after: TimeInterval? = nil, inline: Bool = false, _ block: @escaping () -> Void) {
+public func OnMainThread(async: Bool = true, after: TimeInterval? = nil, inline: Bool = false, _ block: @escaping () -> Void) {
 	if inline {
 		if Thread.isMainThread {
 			block()
@@ -37,7 +37,7 @@ func OnMainThread(async: Bool = true, after: TimeInterval? = nil, inline: Bool =
 	}
 }
 
-func OnBackgroundQueue(async: Bool = true, after: TimeInterval? = nil, _ block: @escaping () -> Void) {
+public func OnBackgroundQueue(async: Bool = true, after: TimeInterval? = nil, _ block: @escaping () -> Void) {
 	if let after = after {
 		DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + after, execute: block)
 	} else {

@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class MakeAvailableOfflineAction: Action {
+public class MakeAvailableOfflineAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.makeAvailableOffline") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Make available offline".localized }

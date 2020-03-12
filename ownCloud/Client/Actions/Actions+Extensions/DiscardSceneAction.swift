@@ -19,10 +19,9 @@
 import UIKit
 import ownCloudSDK
 import MobileCoreServices
-import ownCloudAppShared
 
 @available(iOS 13.0, *)
-class DiscardSceneAction: Action {
+public class DiscardSceneAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.discardscene") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Close Window".localized }
@@ -51,7 +50,7 @@ class DiscardSceneAction: Action {
 
 		if UIDevice.current.isIpad() {
 			if let scene = viewController.view.window?.windowScene {
-				UIApplication.shared.requestSceneSessionDestruction(scene.session, options: nil) { (_) in
+				Application.shared.requestSceneSessionDestruction(scene.session, options: nil) { (_) in
 				}
 			}
 		}

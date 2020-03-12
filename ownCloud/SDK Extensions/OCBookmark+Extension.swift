@@ -19,10 +19,14 @@
 import UIKit
 import ownCloudSDK
 
-extension OCBookmark {
-	static let OCBookmarkDisplayName : OCBookmarkUserInfoKey = OCBookmarkUserInfoKey(rawValue: "OCBookmarkDisplayName")
+public let ownCloudOpenAccountActivityType       = "com.owncloud.ios-app.openAccount"
+public let ownCloudOpenAccountPath               = "openAccount"
+public let ownCloudOpenAccountAccountUuidKey     = "accountUuid"
 
-	var userName : String? {
+extension OCBookmark {
+	static public let OCBookmarkDisplayName : OCBookmarkUserInfoKey = OCBookmarkUserInfoKey(rawValue: "OCBookmarkDisplayName")
+
+	public var userName : String? {
 		if let authenticationData = self.authenticationData,
 		   let authenticationMethodIdentifier = self.authenticationMethodIdentifier,
 		   let authenticationMethod = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier),
@@ -33,7 +37,7 @@ extension OCBookmark {
 		return nil
 	}
 
-	var displayName : String? {
+	public var displayName : String? {
 		get {
 			return self.userInfo.object(forKey: OCBookmark.OCBookmarkDisplayName) as? String
 		}
@@ -43,7 +47,7 @@ extension OCBookmark {
 		}
 	}
 
-	var shortName: String {
+	public var shortName: String {
 		if self.name != nil {
 			return self.name!
 		} else {
@@ -69,12 +73,19 @@ extension OCBookmark {
 		return "bookmark"
 	}
 
-	var isTokenBased : Bool? {
+	public var isTokenBased : Bool? {
 		if let authenticationMethodIdentifier = self.authenticationMethodIdentifier, let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
 			return authenticationMethodClass.type == .token
 		}
 
 		return nil
+	}
+
+	public var openAccountUserActivity: NSUserActivity {
+		let userActivity = NSUserActivity(activityType: ownCloudOpenAccountActivityType)
+		userActivity.title = ownCloudOpenAccountPath
+		userActivity.userInfo = [ownCloudOpenAccountAccountUuidKey: uuid.uuidString]
+		return userActivity
 	}
 
 }

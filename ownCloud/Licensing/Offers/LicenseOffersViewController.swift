@@ -18,7 +18,6 @@
 
 import UIKit
 import ownCloudApp
-import ownCloudAppShared
 
 class LicenseOffersViewController: StaticTableViewController {
 	var featureIdentifier: OCLicenseFeatureIdentifier

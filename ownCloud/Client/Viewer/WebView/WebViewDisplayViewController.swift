@@ -18,10 +18,9 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 import WebKit
 
-class WebViewDisplayViewController: DisplayViewController {
+public class WebViewDisplayViewController: DisplayViewController {
 
 	var webView: WKWebView?
 	lazy var fullScreenGesture: UITapGestureRecognizer = {
@@ -117,7 +116,7 @@ class WebViewDisplayViewController: DisplayViewController {
 }
 
 extension WebViewDisplayViewController: DisplayExtension {
-	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
+	public static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		do {
 			if let mimeType = context.location?.identifier?.rawValue {
 				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/(html|css))|(image/gif)|(application/(javascript|json|x-php|octet-stream)))", options: .caseInsensitive)
@@ -133,13 +132,13 @@ extension WebViewDisplayViewController: DisplayExtension {
 			return OCExtensionPriority.noMatch
 		}
 	}
-	static var displayExtensionIdentifier: String = "org.owncloud.webview"
-	static var supportedMimeTypes: [String]?
-	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
+	public static var displayExtensionIdentifier: String = "org.owncloud.webview"
+	public static var supportedMimeTypes: [String]?
+	public static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 }
 
 extension WebViewDisplayViewController: UIGestureRecognizerDelegate {
-	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+	public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
 		if  otherGestureRecognizer == fullScreenGesture {
 			return false
 		}

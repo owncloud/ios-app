@@ -18,6 +18,7 @@
 
 import Foundation
 import ownCloudSDK
+import ownCloudAppShared
 
 extension OCExtensionType {
 	static let scheduledTask: OCExtensionType  =  OCExtensionType("app.scheduled_task") //!< Specific identifier for scheduled task extensions

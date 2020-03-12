@@ -18,10 +18,9 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
-	weak var core : OCCore?
+open class FileListTableViewController: UITableViewController, ClientItemCellDelegate, Themeable {
+	public weak var core : OCCore?
 
 	let estimatedTableRowHeight : CGFloat = 62
 
@@ -35,7 +34,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		progressSummarizer = ProgressSummarizer.shared(forCore: inCore)
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -83,13 +82,13 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	// MARK: - Visibility handling
 	private var viewControllerVisible : Bool = false
 
-	override func viewWillDisappear(_ animated: Bool) {
+	override open func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
 		viewControllerVisible = false
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	override open func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		viewControllerVisible = true
@@ -97,7 +96,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	}
 
 	// MARK: - View setup
-	override func viewDidLoad() {
+	override open func viewDidLoad() {
 		super.viewDidLoad()
 
 		self.navigationController?.navigationBar.prefersLargeTitles = false
@@ -210,12 +209,12 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	}
 
 	// MARK: - Table view data source
-	override func numberOfSections(in tableView: UITableView) -> Int {
+	override open func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 
 	// MARK: - Table view delegate
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
 
 		if !self.tableView.isEditing {
@@ -263,7 +262,7 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 	}
 
 	// MARK: - Themable
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
 		pullToRefreshControl?.tintColor = collection.navigationBarColors.labelColor
 

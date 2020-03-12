@@ -19,7 +19,6 @@
 import UIKit
 import Photos
 import PhotosUI
-import ownCloudAppShared
 
 private extension UICollectionView {
 	func indexPathsForElements(in rect: CGRect) -> [IndexPath] {
@@ -30,7 +29,7 @@ private extension UICollectionView {
 
 typealias PhotosSelectedCallback = ([PHAsset]) -> Void
 
-class PhotoSelectionViewController: UICollectionViewController, Themeable {
+public class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 	// MARK: - Constants
 	fileprivate let thumbnailSizeMultiplier: CGFloat = 0.205
@@ -106,7 +105,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		}
 	}
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 		Theme.shared.register(client: self)
 
@@ -156,7 +155,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		self.navigationController?.toolbar.isTranslucent = false
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	override public func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		uploadButtonItem?.isEnabled = false
 
@@ -169,24 +168,24 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		}
 	}
 
-	override func viewWillDisappear(_ animated: Bool) {
+	override public func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		self.navigationController?.isToolbarHidden = true
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
+	override public func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		updateCachedAssets()
 	}
 
-	override func viewWillLayoutSubviews() {
+	override public func viewWillLayoutSubviews() {
 		super.viewWillLayoutSubviews()
 		calculateItemSize()
 	}
 
 	// MARK: - Themeable support
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.collectionView!.applyThemeCollection(collection)
 	}
 
@@ -196,7 +195,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		self.dismiss(animated: true, completion: nil)
 	}
 
-	@objc func upload() {
+	@objc public func upload() {
 		self.dismiss(animated: true) {
 			// Get selected assets and call completion callback
 			if self.selectionCallback != nil {
@@ -209,7 +208,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		}
 	}
 
-	@objc func selectAllItems() {
+	@objc public func selectAllItems() {
 		(0..<self.collectionView.numberOfItems(inSection: 0)).map { (item) -> IndexPath in
 			return IndexPath(item: item, section: 0)
 			}.forEach { (indexPath) in
@@ -218,7 +217,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		enableDisableUploadButton()
 	}
 
-	@objc func deselectAllItems() {
+	@objc public func deselectAllItems() {
 		self.collectionView.indexPathsForSelectedItems?.forEach({ (indexPath) in
 			collectionView.deselectItem(at: indexPath, animated: true)
 		})
@@ -227,11 +226,11 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 	// MARK: - UICollectionViewDelegate
 
-	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+	override public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return fetchResult.count
 	}
 
-	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+	override public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let asset = fetchResult.object(at: indexPath.item)
 
 		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoSelectionViewCell.identifier, for: indexPath) as? PhotoSelectionViewCell
@@ -260,17 +259,17 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		return cell
 	}
 
-	override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+	override public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		enableDisableUploadButton()
 	}
 
-	override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+	override public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
 		enableDisableUploadButton()
 	}
 
 	// MARK: - UIScrollViewDelegate
 
-	override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+	override public func scrollViewDidScroll(_ scrollView: UIScrollView) {
 		updateCachedAssets()
 	}
 
@@ -349,7 +348,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 // MARK: - PHPhotoLibraryChangeObserver
 
 extension PhotoSelectionViewController: PHPhotoLibraryChangeObserver {
-	func photoLibraryDidChange(_ changeInstance: PHChange) {
+	public func photoLibraryDidChange(_ changeInstance: PHChange) {
 
 		guard let changes = changeInstance.changeDetails(for: fetchResult)
 			else { return }

@@ -18,7 +18,7 @@
 
 import UIKit
 
-public class MoreStaticTableViewController: StaticTableViewController {
+open class MoreStaticTableViewController: StaticTableViewController {
 
 	private var themeApplierTokens: [ThemeApplierToken]
 

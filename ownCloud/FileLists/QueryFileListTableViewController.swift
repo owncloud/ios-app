@@ -19,16 +19,15 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
-import ownCloudAppShared
 
-class QueryFileListTableViewController: FileListTableViewController, SortBarDelegate, OCQueryDelegate, UISearchResultsUpdating {
-	var query : OCQuery
+open class QueryFileListTableViewController: FileListTableViewController, SortBarDelegate, OCQueryDelegate, UISearchResultsUpdating {
+	public var query : OCQuery
 
 	var queryRefreshRateLimiter : OCRateLimiter = OCRateLimiter(minimumTime: 0.2)
 
 	var messageView : MessageView?
 
-	var items : [OCItem] = []
+	public var items : [OCItem] = []
 
 	public init(core inCore: OCCore, query inQuery: OCQuery) {
 		query = inQuery
@@ -47,7 +46,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		}
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -61,8 +60,8 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	// MARK: - Sorting
-	var sortBar: SortBar?
-	var sortMethod: SortMethod {
+	public var sortBar: SortBar?
+	public var sortMethod: SortMethod {
 		set {
 			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
 		}
@@ -84,10 +83,10 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	// MARK: - Search
-	var searchController: UISearchController?
+	public var searchController: UISearchController?
 
 	// MARK: - Search: UISearchResultsUpdating Delegate
-	func updateSearchResults(for searchController: UISearchController) {
+	public func updateSearchResults(for searchController: UISearchController) {
 		let searchText = searchController.searchBar.text!
 
 		let filterHandler: OCQueryFilterHandler = { (_, _, item) -> Bool in
@@ -196,11 +195,11 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	// MARK: - Query Delegate
-	func query(_ query: OCQuery, failedWithError error: Error) {
+	public func query(_ query: OCQuery, failedWithError error: Error) {
 		// Not applicable atm
 	}
 
-	func queryHasChangesAvailable(_ query: OCQuery) {
+	public func queryHasChangesAvailable(_ query: OCQuery) {
 		queryRefreshRateLimiter.runRateLimitedBlock {
 			query.requestChangeSet(withFlags: .onlyResults) { (query, changeSet) in
 				OnMainThread {
@@ -253,7 +252,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	// MARK: - Themeable
-	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	override public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 
 		self.searchController?.searchBar.applyThemeCollection(collection)
@@ -261,7 +260,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	// MARK: - Events
-	override func viewDidLoad() {
+	override open func viewDidLoad() {
 		super.viewDidLoad()
 
 		searchController = UISearchController(searchResultsController: nil)
@@ -288,7 +287,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		messageView = MessageView(add: self.view)
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	override open func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		core?.start(query)
@@ -300,7 +299,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		updateQueryProgressSummary()
 	}
 
-	override func viewWillDisappear(_ animated: Bool) {
+	override open func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
 		core?.stop(query)
@@ -314,7 +313,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	// MARK: - Item retrieval
-	override func itemAt(indexPath : IndexPath) -> OCItem? {
+	override public func itemAt(indexPath : IndexPath) -> OCItem? {
 		return items[indexPath.row]
 	}
 
@@ -324,11 +323,11 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	// MARK: - Table view data source
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return self.items.count
 	}
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ClientItemCell
 		if let newItem = itemAt(indexPath: indexPath) {
 
@@ -351,7 +350,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 	// MARK: - Table view delegate
 
-	override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+	override open func sectionIndexTitles(for tableView: UITableView) -> [String]? {
 		if sortMethod == .alphabetically {
 			var indexTitles = Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
 			if sortDirection == .descendant {
@@ -386,7 +385,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	}
 
 	@available(iOS 13.0, *)
-	override func tableView(_ tableView: UITableView,
+	override open func tableView(_ tableView: UITableView,
 	contextMenuConfigurationForRowAt indexPath: IndexPath,
 	point: CGPoint) -> UIContextMenuConfiguration? {
 		if let item = itemAt(indexPath: indexPath), UIDevice.current.isIpad() {
@@ -410,7 +409,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	func openItemInWindow(at indexPath: IndexPath) {
 		if let item = itemAt(indexPath: indexPath), let tabBarController = self.tabBarController as? ClientRootViewController {
 			let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
-			UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
+			Application.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
 		}
 	}
 }

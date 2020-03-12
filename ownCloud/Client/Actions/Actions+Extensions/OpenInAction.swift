@@ -18,7 +18,7 @@
 
 import ownCloudSDK
 
-class OpenInAction: Action {
+public class OpenInAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openin") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Open in".localized }
@@ -130,7 +130,7 @@ class OpenInAction: Action {
 }
 
 extension OpenInAction : UIDocumentInteractionControllerDelegate {
-	func documentInteractionControllerDidDismissOptionsMenu(_ controller: UIDocumentInteractionController) {
+	public func documentInteractionControllerDidDismissOptionsMenu(_ controller: UIDocumentInteractionController) {
 		interactionControllerDispatchGroup?.leave() // We're done! Trigger notify block and then release last reference to self.
 	}
 }

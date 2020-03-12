@@ -18,9 +18,8 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class PublicLinkTableViewController: SharingTableViewController {
+public class PublicLinkTableViewController: SharingTableViewController {
 
 	var publicLinkSharingEnabled : Bool {
 		if let core = core, core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == true, core.connection.capabilities?.publicSharingEnabled == true, item.isShareable { return true }
@@ -28,7 +27,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 	}
 
 	// MARK: - Instance Variables
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		messageView = MessageView(add: self.view)
@@ -66,7 +65,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 		}
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
+	override public func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		handleEmptyShares()
 	}
@@ -195,7 +194,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 
 	// MARK: TableView Delegate
 
-	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	override public func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		if let share = share(at: indexPath), self.canEdit(share: share) {
 			return [
 				UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, _) in

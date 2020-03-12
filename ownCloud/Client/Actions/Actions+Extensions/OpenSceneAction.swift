@@ -19,10 +19,9 @@
 import UIKit
 import ownCloudSDK
 import MobileCoreServices
-import ownCloudAppShared
 
 @available(iOS 13.0, *)
-class OpenSceneAction: Action {
+public class OpenSceneAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openscene") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Open in a new Window".localized }
@@ -52,7 +51,7 @@ class OpenSceneAction: Action {
 		if UIDevice.current.isIpad() {
 			if context.items.count == 1, let item = context.items.first, let tabBarController = viewController.tabBarController as? ClientRootViewController {
 				let activity = OpenItemUserActivity(detailItem: item, detailBookmark: tabBarController.bookmark)
-				UIApplication.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
+				Application.shared.requestSceneSessionActivation(nil, userActivity: activity.openItemUserActivity, options: nil)
 			}
 		}
 	}

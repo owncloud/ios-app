@@ -18,7 +18,6 @@
 
 import UIKit
 import Photos
-import ownCloudAppShared
 
 extension PHAssetCollection {
 	var assetCount: Int {
@@ -42,9 +41,9 @@ extension PHAssetCollection {
 	}
 }
 
-class PhotoAlbumTableViewController : UITableViewController, Themeable {
+public class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
-	class PhotoAlbum {
+	public class PhotoAlbum {
 		var name: String?
 		var count: Int?
 		var thumbnail: UIImage?
@@ -59,7 +58,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 		}
 	}
 
-	var albums = [PhotoAlbum]()
+	public var albums = [PhotoAlbum]()
 
 	var fetchAlbumQueue = DispatchQueue(label: "com.owncloud.photoalbum.queue", qos: DispatchQoS.userInitiated)
 
@@ -75,7 +74,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 		Theme.shared.register(client: self)
 
@@ -85,18 +84,18 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	override public func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		fetchAlbums()
 	}
 
-	override func viewWillDisappear(_ animated: Bool) {
+	override public func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 	}
 
 	// MARK: - Theme support
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
 	}
 
@@ -108,11 +107,11 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 	// MARK: - UITableView datasource / delegate
 
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return albums.count
 	}
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: PhotoAlbumTableViewCell.identifier, for: indexPath) as? PhotoAlbumTableViewCell
 		let album = albums[indexPath.row]
 		cell?.titleLabel.text = album.name
@@ -123,7 +122,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 		return cell!
 	}
 
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
 		let album = self.albums[indexPath.row]
 		let photoSelectionViewController = PhotoSelectionViewController()

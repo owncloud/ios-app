@@ -18,7 +18,6 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
 class DisplaySleepPreventer : NSObject {
 	static var shared : DisplaySleepPreventer = DisplaySleepPreventer()
@@ -27,7 +26,7 @@ class DisplaySleepPreventer : NSObject {
 
 	func startPreventingDisplaySleep() {
 		if preventCount == 0 {
-			UIApplication.shared.isIdleTimerDisabled = true
+			Application.shared.isIdleTimerDisabled = true
 		}
 
 		preventCount += 1
@@ -38,7 +37,7 @@ class DisplaySleepPreventer : NSObject {
 			preventCount -= 1
 
 			if preventCount == 0 {
-				UIApplication.shared.isIdleTimerDisabled = false
+				Application.shared.isIdleTimerDisabled = false
 			}
 		}
 	}

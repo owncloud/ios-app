@@ -58,6 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		FileProviderInterfaceManager.shared.updateDomainsFromBookmarks()
 
 		ScheduledTaskManager.shared.setup()
+		openURL = { UIApplication.shared.open($0 as URL, options: [:], completionHandler: nil) }
 
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)

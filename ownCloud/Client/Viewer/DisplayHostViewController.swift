@@ -18,9 +18,8 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class DisplayHostViewController: UIPageViewController {
+public class DisplayHostViewController: UIPageViewController {
 
 	enum PagePosition {
 		case before, after
@@ -91,7 +90,7 @@ class DisplayHostViewController: UIPageViewController {
 	}
 
 	// MARK: - ViewController lifecycle
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		self.dataSource = self
@@ -114,7 +113,7 @@ class DisplayHostViewController: UIPageViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(handlePlayPreviousMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
 	}
 
-	override var childForHomeIndicatorAutoHidden : UIViewController? {
+	override public var childForHomeIndicatorAutoHidden : UIViewController? {
 		if let childViewController = self.children.first {
 			return childViewController
 		}
@@ -292,17 +291,17 @@ extension DisplayHostViewController: UIPageViewControllerDataSource {
 		return nil
 	}
 
-	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+	public func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
 		return vendNewViewController(from: viewController, .after)
 	}
 
-	func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+	public func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
 		return vendNewViewController(from: viewController, .before)
 	}
 }
 
 extension DisplayHostViewController: UIPageViewControllerDelegate {
-	func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+	public func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
 
 		let previousViewController = previousViewControllers[0]
 		previousViewController.didMove(toParent: nil)
@@ -316,7 +315,7 @@ extension DisplayHostViewController: UIPageViewControllerDelegate {
 		}
 	}
 
-	func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
+	public func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
 		guard pendingViewControllers.isEmpty == false else { return }
 
 		if let viewControllerToTransition = pendingViewControllers[0] as? DisplayViewController {
@@ -326,7 +325,7 @@ extension DisplayHostViewController: UIPageViewControllerDelegate {
 }
 
 extension DisplayHostViewController: Themeable {
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.view.backgroundColor = .black
 	}
 }

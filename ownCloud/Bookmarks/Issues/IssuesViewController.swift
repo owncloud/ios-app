@@ -17,7 +17,6 @@
  */
 
 import UIKit
-import ownCloudAppShared
 
 enum IssueButtonStyle {
 	case plain
@@ -26,10 +25,10 @@ enum IssueButtonStyle {
 	case custom(backgroundColor: UIColor)
 }
 
-struct IssueButton {
-	let title: String
+public struct IssueButton {
+	public let title: String
 	let type: IssueButtonStyle
-	let action: () -> Void
+	public let action: () -> Void
 	let accessibilityIdentifier: String
 }
 
@@ -56,27 +55,27 @@ class IssuesTableViewCell : UITableViewCell, Themeable {
 
 let IssuesViewControllerCellIdentifier = "issue-cell"
 
-class IssuesViewController: UIViewController {
+public class IssuesViewController: UIViewController {
 
 	var tableView: UITableView?
 	private var bottomContainer: UIStackView?
 	var headerTitle: String?
-	var buttons:[IssueButton]?
+	public var buttons:[IssueButton]?
 	private var tableHeighConstraint: NSLayoutConstraint?
 	private var modalPresentationVC: UIViewControllerTransitioningDelegate?
 
-	init(buttons: [IssueButton]? = nil, title: String?) {
+	public init(buttons: [IssueButton]? = nil, title: String?) {
 		super.init(nibName: nil, bundle: nil)
 		self.headerTitle = title
 		self.buttons = buttons
 		setupTransitions()
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		self.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
@@ -86,12 +85,12 @@ class IssuesViewController: UIViewController {
 		self.addButtons()
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
+	override public func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		setupConstraints()
 	}
 
-	override func viewDidLayoutSubviews() {
+	override public func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		self.tableHeighConstraint?.constant =  self.tableView!.contentSize.height
 	}
@@ -186,7 +185,7 @@ class IssuesViewController: UIViewController {
 
 extension IssuesViewController: UITableViewDelegate {
 
-	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+	public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
 		cell.textLabel?.text = headerTitle ?? ""
 		cell.textLabel?.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
@@ -204,7 +203,7 @@ extension IssuesViewController: UITableViewDelegate {
 		return cell
 	}
 
-	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+	public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 		return 40
 	}
 

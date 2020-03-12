@@ -20,7 +20,7 @@ import Foundation
 import ownCloudSDK
 import MobileCoreServices
 
-class UnfavoriteAction : Action {
+public class UnfavoriteAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.unfavorite") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Unfavorite".localized }

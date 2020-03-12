@@ -20,7 +20,7 @@ import UIKit
 import ownCloudApp
 
 extension OCLicenseManager {
-	@objc func restorePurchases(on viewController: UIViewController, with completionHandler: OCLicenseAppStoreRestorePurchasesCompletionHandler? = nil) {
+	@objc public func restorePurchases(on viewController: UIViewController, with completionHandler: OCLicenseAppStoreRestorePurchasesCompletionHandler? = nil) {
 		if let appStoreProvider = OCLicenseManager.appStoreProvider {
 			let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
 

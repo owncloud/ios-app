@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class ImageDisplayViewController : DisplayViewController {
+public class ImageDisplayViewController : DisplayViewController {
 
 	private let max_zoom_divider: CGFloat = 3.0
 	private let activityIndicatorHeight: CGFloat = 50.0
@@ -41,13 +41,13 @@ class ImageDisplayViewController : DisplayViewController {
 
 	// MARK: - View controller lifecycle
 
-	override func viewDidDisappear(_ animated: Bool) {
+	override public func viewDidDisappear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 
 		scrollView?.setZoomScale(scrollView!.minimumZoomScale, animated: true)
 	}
 
-	override func viewDidLayoutSubviews() {
+	override public func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		scrollView?.updateScaleForRotation(size: self.view!.bounds.size)
 	}
@@ -135,7 +135,7 @@ class ImageDisplayViewController : DisplayViewController {
 	}
 
 	// MARK: - Frame changes
-	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+	override public func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
 		self.scrollView?.updateScaleForRotation(size: size)
 	}
@@ -165,7 +165,7 @@ class ImageDisplayViewController : DisplayViewController {
 		setNeedsUpdateOfHomeIndicatorAutoHidden()
 	}
 
-	override var prefersHomeIndicatorAutoHidden: Bool {
+	override public var prefersHomeIndicatorAutoHidden: Bool {
 		guard let navigationController = navigationController else {
 			return false
 		}
@@ -184,7 +184,7 @@ class ImageDisplayViewController : DisplayViewController {
 
 // MARK: - Display Extension.
 extension ImageDisplayViewController: DisplayExtension {
-	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
+	public static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		do {
 			if let mimeType = context.location?.identifier?.rawValue {
 				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((image/(?!(gif|svg*))))", options: .caseInsensitive)
@@ -200,15 +200,15 @@ extension ImageDisplayViewController: DisplayExtension {
 			return OCExtensionPriority.noMatch
 		}
 	}
-	static var displayExtensionIdentifier: String = "org.owncloud.image"
-	static var supportedMimeTypes: [String]?
-	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
+	public static var displayExtensionIdentifier: String = "org.owncloud.image"
+	public static var supportedMimeTypes: [String]?
+	public static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 }
 
 // MARK: - Gesture recognizer delegete.
 extension ImageDisplayViewController: UIGestureRecognizerDelegate {
 
-	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+	public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
 		if gestureRecognizer === tapToZoomGestureRecognizer && otherGestureRecognizer === showHideBarsTapGestureRecognizer {
 			return true
 		}
@@ -216,7 +216,7 @@ extension ImageDisplayViewController: UIGestureRecognizerDelegate {
 		return false
 	}
 
-	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+	public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
 		if gestureRecognizer === tapToZoomGestureRecognizer && otherGestureRecognizer === showHideBarsTapGestureRecognizer {
 			return false
 		}

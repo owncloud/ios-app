@@ -18,9 +18,8 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class SharingTableViewController : StaticTableViewController {
+public class SharingTableViewController : StaticTableViewController {
 
 	// MARK: - Instance Variables
 	weak var core : OCCore?
@@ -52,7 +51,7 @@ class SharingTableViewController : StaticTableViewController {
 	}
 
 	// MARK: - View events
-	override func viewWillAppear(_ animated: Bool) {
+	override public func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		navigationController?.isToolbarHidden = true
 	}
@@ -66,7 +65,7 @@ class SharingTableViewController : StaticTableViewController {
 		self.tableView.layoutTableHeaderView()
 	}
 
-	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+	override public func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 		super.viewWillTransition(to: size, with: coordinator)
 		if size.width != self.view.frame.size.width {
 			DispatchQueue.main.async {

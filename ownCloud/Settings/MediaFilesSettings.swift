@@ -19,23 +19,6 @@
 import UIKit
 import ownCloudAppShared
 
-extension UserDefaults {
-
-	enum MediaFilesKeys : String {
-		case EnableStreamingKey = "media-enable-streaming"
-	}
-
-	public var streamingEnabled: Bool {
-		set {
-			self.set(newValue, forKey: MediaFilesKeys.EnableStreamingKey.rawValue)
-		}
-
-		get {
-			return self.bool(forKey: MediaFilesKeys.EnableStreamingKey.rawValue)
-		}
-	}
-}
-
 class MediaFilesSettingsSection: SettingsSection {
 	private var enableStreamingSwitchRow: StaticTableViewRow?
 

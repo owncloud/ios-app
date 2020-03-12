@@ -28,7 +28,7 @@ extension Array where Element: OCItem {
 	}
 }
 
-class UnshareAction : Action {
+public class UnshareAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.unshare") }
 	override class var category : ActionCategory? { return .destructive }
 	override class var name : String? { return "Unshare".localized }

@@ -17,9 +17,8 @@
 */
 
 import ownCloudSDK
-import ownCloudAppShared
 
-class DeleteAction : Action {
+public class DeleteAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.delete") }
 	override class var category : ActionCategory? { return .destructive }
 	override class var name : String? { return "Delete".localized }

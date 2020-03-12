@@ -18,11 +18,10 @@
 
 import UIKit
 import PocketSVG
-import ownCloudAppShared
 
-class VectorImageView: UIView, Themeable {
+open class VectorImageView: UIView, Themeable {
 	internal var _vectorImage : TVGImage?
-	var vectorImage : TVGImage? {
+	public var vectorImage : TVGImage? {
 		get {
 			return _vectorImage
 		}
@@ -33,7 +32,7 @@ class VectorImageView: UIView, Themeable {
 		}
 	}
 
-	override var bounds: CGRect {
+	override public var bounds: CGRect {
 		set(viewBounds) {
 			super.bounds = viewBounds
 
@@ -45,16 +44,16 @@ class VectorImageView: UIView, Themeable {
 		}
 	}
 
-	init() {
+	public init() {
 		super.init(frame: CGRect.zero)
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		Theme.shared.register(client: self)
 	}
 
-	override init(frame: CGRect) {
+	override public init(frame: CGRect) {
 		super.init(frame: frame)
 		Theme.shared.register(client: self)
 	}
@@ -76,7 +75,7 @@ class VectorImageView: UIView, Themeable {
 		}
 	}
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		updateLayerWithRasteredImage(viewBounds: self.bounds, themeCollection: collection)
 	}
 }

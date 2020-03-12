@@ -32,5 +32,13 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.share-services</string>
 	</dict>
+	<key>OCAppGroupIdentifier</key>
+	<string>group.com.owncloud.ios-app</string>
+	<key>OCAppIdentifierPrefix</key>
+	<string>$(AppIdentifierPrefix)</string>
+	<key>OCHasFileProvider</key>
+	<true/>
+	<key>OCKeychainAccessGroupIdentifier</key>
+	<string>group.com.owncloud.ios-app</string>
 </dict>
 </plist>

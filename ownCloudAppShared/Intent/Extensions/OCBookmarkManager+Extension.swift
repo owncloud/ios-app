@@ -36,10 +36,6 @@ extension OCBookmarkManager {
 		return accountList
 	}
 
-	public func bookmark(for uuidString: String) -> OCBookmark? {
-		return OCBookmarkManager.shared.bookmarks.filter({ $0.uuid.uuidString == uuidString}).first
-	}
-
 	public func accountBookmark(for uuidString: String) -> (OCBookmark, Account)? {
 		if let bookmark = bookmark(for: uuidString) {
 			let account = Account(identifier: bookmark.uuid.uuidString, display: bookmark.shortName)
@@ -52,5 +48,66 @@ extension OCBookmarkManager {
 
 		return nil
 	}
+}
 
+extension OCBookmarkManager {
+
+	public func bookmark(for uuidString: String) -> OCBookmark? {
+		return OCBookmarkManager.shared.bookmarks.filter({ $0.uuid.uuidString == uuidString}).first
+	}
+
+	static private let lastConnectedBookmarkUUIDDefaultsKey = "last-connected-bookmark-uuid"
+
+	// MARK: - Defaults Keys
+	static public var lastBookmarkSelectedForConnection : OCBookmark? {
+		get {
+			if let bookmarkUUIDString = OCAppIdentity.shared.userDefaults?.string(forKey: OCBookmarkManager.lastConnectedBookmarkUUIDDefaultsKey), let bookmarkUUID = UUID(uuidString: bookmarkUUIDString) {
+				return OCBookmarkManager.shared.bookmark(for: bookmarkUUID)
+			}
+
+			return nil
+		}
+
+		set {
+			OCAppIdentity.shared.userDefaults?.set(newValue?.uuid.uuidString, forKey: OCBookmarkManager.lastConnectedBookmarkUUIDDefaultsKey)
+		}
+	}
+
+	static public var lockedBookmarks : [OCBookmark] = []
+
+	static public func lock(bookmark: OCBookmark) {
+		OCSynchronized(self) {
+			self.lockedBookmarks.append(bookmark)
+		}
+	}
+
+	static public func unlock(bookmark: OCBookmark) {
+		OCSynchronized(self) {
+			if let removeIndex = self.lockedBookmarks.index(of: bookmark) {
+				self.lockedBookmarks.remove(at: removeIndex)
+			}
+		}
+	}
+
+	static public func isLocked(bookmark: OCBookmark, presentAlertOn viewController: UIViewController? = nil, completion: ((_ isLocked: Bool) -> Void)? = nil) -> Bool {
+		if self.lockedBookmarks.contains(bookmark) {
+			if viewController != nil {
+				let alertController = ThemedAlertController(title: NSString(format: "'%@' is currently locked".localized as NSString, bookmark.shortName as NSString) as String,
+									message: NSString(format: "An operation is currently performed that prevents connecting to '%@'. Please try again later.".localized as NSString, bookmark.shortName as NSString) as String,
+									preferredStyle: .alert)
+
+				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
+					completion?(true)
+				}))
+
+				viewController?.present(alertController, animated: true, completion: nil)
+			}
+
+			return true
+		}
+
+		completion?(false)
+
+		return false
+	}
 }

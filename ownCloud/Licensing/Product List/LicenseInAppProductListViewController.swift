@@ -18,10 +18,9 @@
 
 import UIKit
 import ownCloudApp
-import ownCloudAppShared
 
-class LicenseInAppProductListViewController: StaticTableViewController {
-	init() {
+public class LicenseInAppProductListViewController: StaticTableViewController {
+	public init() {
 		super.init(style: .grouped)
 
 		self.navigationItem.title = "Pro Features".localized
@@ -33,11 +32,11 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 		]
 	}
 
-	required init?(coder: NSCoder) {
+	required public init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	override public func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		self.navigationController?.toolbar.isTranslucent = false
@@ -46,7 +45,7 @@ class LicenseInAppProductListViewController: StaticTableViewController {
 		provideContent()
 	}
 
-	override func viewWillDisappear(_ animated: Bool) {
+	override public func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
 		self.navigationController?.isToolbarHidden = true

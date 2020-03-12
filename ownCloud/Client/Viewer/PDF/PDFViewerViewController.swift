@@ -33,7 +33,7 @@ extension UILabel {
 	}
 }
 
-class PDFViewerViewController: DisplayViewController, DisplayExtension {
+public class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	enum ThumbnailViewPosition {
 		case left, right, bottom, none
@@ -89,10 +89,10 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	// MARK: - DisplayExtension
 
-	static var customMatcher: OCExtensionCustomContextMatcher?
-	static var displayExtensionIdentifier: String = "org.owncloud.pdfViewer.default"
-	static var supportedMimeTypes: [String]? = ["application/pdf"]
-	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
+	public static var customMatcher: OCExtensionCustomContextMatcher?
+	public static var displayExtensionIdentifier: String = "org.owncloud.pdfViewer.default"
+	public static var supportedMimeTypes: [String]? = ["application/pdf"]
+	public static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 
 	deinit {
 		NotificationCenter.default.removeObserver(self)
@@ -169,7 +169,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	// MARK: - View lifecycle management
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		shallDisplayMoreButtonInToolbar = false
 
 		super.viewDidLoad()
@@ -183,7 +183,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 		}
 	}
 
-	override func viewDidLayoutSubviews() {
+	override public func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		self.thumbnailViewPosition = .bottom
 

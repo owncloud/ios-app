@@ -17,17 +17,16 @@
  */
 
 import UIKit
-import ownCloudAppShared
 
-class ThemedAlertController: UIAlertController, Themeable {
+public class ThemedAlertController: UIAlertController, Themeable {
 	private var themeRegistered : Bool = false
 
-	override func viewWillAppear(_ animated: Bool) {
+	override public func viewWillAppear(_ animated: Bool) {
 		Theme.shared.register(client: self, applyImmediately: true)
 		super.viewWillAppear(animated)
 	}
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		if #available(iOS 13, *) {
 			self.overrideUserInterfaceStyle  = collection.interfaceStyle.userInterfaceStyle
 		}

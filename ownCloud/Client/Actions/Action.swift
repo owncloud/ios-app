@@ -19,7 +19,6 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
-import ownCloudAppShared
 
 enum ActionCategory {
 	case normal
@@ -52,24 +51,24 @@ typealias ActionProgressHandler = ((Progress, Bool) -> Void)
 typealias ActionWillRunHandler = ((@escaping () -> Void) -> Void)
 
 extension OCExtensionType {
-	static let action: OCExtensionType  =  OCExtensionType("app.action")
+	public static let action: OCExtensionType  =  OCExtensionType("app.action")
 }
 
 extension OCExtensionLocationIdentifier {
 	static let tableRow: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("tableRow") //!< Present as table row action
 	static let moreItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreItem") //!< Present in "more" card view for a single item
-	static let moreFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreFolder") //!< Present in "more" options for a whole folder
+	public static let moreFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreFolder") //!< Present in "more" options for a whole folder
 	static let toolbar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("toolbar") //!< Present in a toolbar
 	static let folderAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("folderAction") //!< Present in the alert sheet when the folder action bar button is pressed
-	static let keyboardShortcut: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("keyboardShortcut") //!< Currently used for UIKeyCommand
+	public static let keyboardShortcut: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("keyboardShortcut") //!< Currently used for UIKeyCommand
 }
 
-class ActionExtension: OCExtension {
+public class ActionExtension: OCExtension {
 	// MARK: - Custom Instance Properties.
-	var name: String
+	public var name: String
 	var category: ActionCategory
-	var keyCommand: String?
-	var keyModifierFlags: UIKeyModifierFlags?
+	public var keyCommand: String?
+	public var keyModifierFlags: UIKeyModifierFlags?
 
 	// MARK: - Init & Deinit
 	init(name: String, category: ActionCategory = .normal, identifier: OCExtensionIdentifier, locations: [OCExtensionLocationIdentifier]?, features: [String : Any]?, objectProvider: OCExtensionObjectProvider?, customMatcher: OCExtensionCustomContextMatcher?, keyCommand: String?, keyModifierFlags: UIKeyModifierFlags?) {
@@ -83,7 +82,7 @@ class ActionExtension: OCExtension {
 	}
 }
 
-class ActionContext: OCExtensionContext {
+public class ActionContext: OCExtensionContext {
 	// MARK: - Custom Instance Properties.
 	weak var viewController: UIViewController?
 	weak var core: OCCore?
@@ -92,7 +91,7 @@ class ActionContext: OCExtensionContext {
 	weak var sender: AnyObject?
 
 	// MARK: - Init & Deinit.
-	init(viewController: UIViewController, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
+	public init(viewController: UIViewController, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
 		self.items = items
 
 		super.init()
@@ -108,7 +107,7 @@ class ActionContext: OCExtensionContext {
 	}
 }
 
-class Action : NSObject {
+public class Action : NSObject {
 	// MARK: - Extension metadata
 	class var identifier : OCExtensionIdentifier? { return nil }
 	class var category : ActionCategory? { return .normal }
@@ -119,7 +118,7 @@ class Action : NSObject {
 	class var features : [String : Any]? { return nil }
 
 	// MARK: - Extension creation
-	class var actionExtension : ActionExtension {
+	public class var actionExtension : ActionExtension {
 		let objectProvider : OCExtensionObjectProvider = { (_ rawExtension, _ context, _ error) -> Any? in
 			if let actionExtension = rawExtension as? ActionExtension,
 				let actionContext   = context as? ActionContext {
@@ -154,7 +153,7 @@ class Action : NSObject {
 	}
 
 	// MARK: - Finding actions
-	class func sortedApplicableActions(for context: ActionContext) -> [Action] {
+	public class func sortedApplicableActions(for context: ActionContext) -> [Action] {
 		var sortedActions : [Action] = []
 
 		if let matches = try? OCExtensionManager.shared.provideExtensions(for: context) {
@@ -239,7 +238,7 @@ class Action : NSObject {
 
 	// MARK: - Action metadata
 	var context : ActionContext
-	var actionExtension: ActionExtension
+	public var actionExtension: ActionExtension
 	weak var core : OCCore?
 
 	// MARK: - Action creation
@@ -257,7 +256,7 @@ class Action : NSObject {
 	var actionWillRunHandler: ActionWillRunHandler? // to be filled before calling run(), provideStaticRow(), provideContextualAction(), etc. if desired
 
 	// MARK: - Action implementation
-	@objc func perform() {
+	@objc public func perform() {
 		self.willRun({
 			OnMainThread {
 				self.run()

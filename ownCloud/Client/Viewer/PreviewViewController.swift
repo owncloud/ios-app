@@ -20,12 +20,12 @@ import UIKit
 import ownCloudSDK
 import QuickLook
 
-class PreviewViewController : DisplayViewController, QLPreviewControllerDataSource, QLPreviewControllerDelegate {
+public class PreviewViewController : DisplayViewController, QLPreviewControllerDataSource, QLPreviewControllerDelegate {
 
 	private var qlPreviewController: QLPreviewController?
 	var showHideBarsTapGestureRecognizer: UITapGestureRecognizer!
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		qlPreviewController = QLPreviewController()
@@ -37,11 +37,11 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 		qlPreviewController?.view.isHidden = true
 	}
 
-	override func viewDidAppear(_ animated: Bool) {
+	override public func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 	}
 
-	override func viewSafeAreaInsetsDidChange() {
+	override public func viewSafeAreaInsetsDidChange() {
 		super.viewSafeAreaInsetsDidChange()
 
 		if let qlPreviewController = self.qlPreviewController {
@@ -91,12 +91,12 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 	}
 
 	// MARK: - QLPreviewControllerDataSource
-	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+	public func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
 		return source != nil ? 1 : 0
 	}
 
 	// MARK: - QLPreviewControllerDelegate
-	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+	public func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
 		return source! as QLPreviewItem
 	}
 
@@ -107,7 +107,7 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 
 // MARK: - Gesture recognizer delegete.
 extension PreviewViewController: UIGestureRecognizerDelegate {
-	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+	public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
 						   shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
 		// Don't recognize a single tap until a double-tap fails.
 		if let otherTapGestureRecognizer = otherGestureRecognizer as? UITapGestureRecognizer {
@@ -122,7 +122,7 @@ extension PreviewViewController: UIGestureRecognizerDelegate {
 // MARK: - Display Extension.
 extension PreviewViewController: DisplayExtension {
 
-	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
+	public static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
 		do {
 			if let mimeType = context.location?.identifier?.rawValue {
 				let supportedFormatsRegex = try NSRegularExpression(pattern: "\\A((text/)|(image/svg)|(model/(vnd|usd))|(application/(rtf|x-rtf|doc))|(application/x-iwork*)|(application/(vnd.|ms))(?!(oasis|android))(ms|openxmlformats)?)", options: .caseInsensitive)
@@ -139,7 +139,7 @@ extension PreviewViewController: DisplayExtension {
 		}
 	}
 
-	static var supportedMimeTypes: [String]?
-	static var displayExtensionIdentifier: String = "org.owncloud.ql_preview"
-	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
+	public static var supportedMimeTypes: [String]?
+	public static var displayExtensionIdentifier: String = "org.owncloud.ql_preview"
+	public static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 }

@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import MobileCoreServices
 
-protocol DisplayExtension where Self: DisplayViewController {
+public protocol DisplayExtension where Self: DisplayViewController {
 
 	static var features: [String : Any]? {get}
 	static var supportedMimeTypes: [String]? {get}
@@ -32,7 +32,7 @@ protocol DisplayExtension where Self: DisplayViewController {
 }
 
 extension DisplayExtension where Self: DisplayViewController {
-	static var displayExtension: OCExtension {
+	static public var displayExtension: OCExtension {
 		let rawIdentifier: OCExtensionIdentifier =  OCExtensionIdentifier(rawValue: displayExtensionIdentifier)
 		var locationIdentifiers: [OCExtensionLocationIdentifier] = []
 

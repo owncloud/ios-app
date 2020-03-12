@@ -18,9 +18,8 @@
 
 import Foundation
 import ownCloudSDK
-import ownCloudAppShared
 
-class DuplicateAction : Action {
+public class DuplicateAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.duplicate") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Duplicate".localized }

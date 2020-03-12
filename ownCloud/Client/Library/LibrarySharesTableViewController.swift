@@ -19,11 +19,11 @@
 import UIKit
 import ownCloudSDK
 
-class LibrarySharesTableViewController: FileListTableViewController {
+public class LibrarySharesTableViewController: FileListTableViewController {
 
 	var shareView : LibraryShareView?
 
-	var shares : [OCShare] = [] {
+	public var shares : [OCShare] = [] {
 		didSet {
 			OnMainThread {
 				self.reloadTableData()
@@ -40,11 +40,11 @@ class LibrarySharesTableViewController: FileListTableViewController {
 		return shares[indexPath.row]
 	}
 
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return self.shares.count
 	}
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as? ShareClientItemCell
 		let newItem = shareAtIndexPath(indexPath)
 

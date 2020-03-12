@@ -18,13 +18,16 @@
 
 import UIKit
 
+public var openURL: ((URL)->())? = nil
+
 extension UIAlertController {
 
-	class func alertControllerForPhotoLibraryAuthorizationInSettings() -> UIAlertController {
+	public class func alertControllerForPhotoLibraryAuthorizationInSettings() -> UIAlertController {
 		let alert = ThemedAlertController(title: "Missing permissions".localized, message: "This permission is needed to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
 
 		let settingAction = UIAlertAction(title: "Settings".localized, style: .default, handler: { _ in
-			UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+			//Application.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+			openURL?(URL(string: UIApplication.openSettingsURLString)!)
 		})
 		let notNowAction = UIAlertAction(title: "Not now".localized, style: .cancel)
 

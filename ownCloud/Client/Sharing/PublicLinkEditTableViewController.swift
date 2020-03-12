@@ -18,9 +18,8 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-class PublicLinkEditTableViewController: StaticTableViewController {
+public class PublicLinkEditTableViewController: StaticTableViewController {
 
 	// MARK: - Instance Variables
 	var share : OCShare
@@ -29,7 +28,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 	var defaultLinkName : String
 
 	var showSubtitles : Bool = false
-	var createLink : Bool = false
+	public var createLink : Bool = false
 	var permissionMask : OCSharePermissionsMask?
 	var activeTextField: UITextField?
 	var currentPermissionIndex: Int {
@@ -71,7 +70,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		if let linkName = share.name {
@@ -582,14 +581,14 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 	// MARK: - Actions
 
-	@objc func showInfoSubtitles() {
+	@objc public func showInfoSubtitles() {
 		showSubtitles.toggle()
 		guard let removeSection = self.sectionForIdentifier("permission-section") else { return }
 		self.removeSection(removeSection)
 		addPermissionsSection()
 	}
 
-	@objc func shareLinkURL(sender: UIBarButtonItem) {
+	@objc public func shareLinkURL(sender: UIBarButtonItem) {
 		guard let shareURL = share.url, let capabilities = self.core.connection.capabilities else { return }
 
 		let activityViewController = UIActivityViewController(activityItems: [shareURL], applicationActivities: nil)
@@ -638,7 +637,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 	// MARK: Add New Link Share
 
-	@objc func createPublicLink() {
+	@objc public func createPublicLink() {
 		let nameRow = rowInSection(sectionForIdentifier("name-section"), rowIdentifier: "name-text-row")
 		let shareName = nameRow?.textField?.text
 		let passwordRow = rowInSection(sectionForIdentifier("password-section"), rowIdentifier: "password-field-row")

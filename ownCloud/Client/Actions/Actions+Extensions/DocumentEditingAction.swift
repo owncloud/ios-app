@@ -17,10 +17,9 @@
 */
 
 import ownCloudSDK
-import ownCloudAppShared
 
 @available(iOS 13.0, *)
-class DocumentEditingAction : Action {
+public class DocumentEditingAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.markup") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Markup".localized }

@@ -18,13 +18,12 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-protocol ClientRootViewControllerAuthenticationDelegate : class {
+public protocol ClientRootViewControllerAuthenticationDelegate : class {
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?)
 }
 
-class ClientRootViewController: UITabBarController, UINavigationControllerDelegate {
+open class ClientRootViewController: UITabBarController, UINavigationControllerDelegate {
 
 	// MARK: - Constants
 	let folderButtonsSize: CGSize = CGSize(width: 25.0, height: 25.0)
@@ -45,7 +44,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 	var pasteboardChangedCounter = 0
 
-	weak var authDelegate : ClientRootViewControllerAuthenticationDelegate?
+	public weak var authDelegate : ClientRootViewControllerAuthenticationDelegate?
 
 	var skipAuthorizationFailure : Bool = false
 
@@ -66,7 +65,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
 
-	init(bookmark inBookmark: OCBookmark) {
+	public init(bookmark inBookmark: OCBookmark) {
 		bookmark = inBookmark
 
 		super.init(nibName: nil, bundle: nil)
@@ -117,7 +116,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		self.connectionStatusSummary = summary
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -140,7 +139,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	}
 
 	// MARK: - Startup
-	func afterCoreStart(_ lastVisibleItemId: String?, completionHandler: @escaping (() -> Void)) {
+	public func afterCoreStart(_ lastVisibleItemId: String?, completionHandler: @escaping (() -> Void)) {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
 			self.core = core
 			core?.delegate = self
@@ -165,9 +164,9 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		})
 	}
 
-	var pushTransition : PushTransitionDelegate?
+	public var pushTransition : PushTransitionDelegate?
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		self.view.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
@@ -230,7 +229,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 	var closeClientCompletionHandler : (() -> Void)?
 
-	func closeClient(completion: (() -> Void)? = nil) {
+	public func closeClient(completion: (() -> Void)? = nil) {
 		OCBookmarkManager.lastBookmarkSelectedForConnection = nil
 
 		self.dismiss(animated: true, completion: {
@@ -294,14 +293,14 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		}
 	}
 
-	func navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) {
+	public func navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) {
 		// if the emptyViewController will show, because the push button in ClientQueryViewController was triggered, push immediately to the ServerListTableViewController, because emptyViewController is only a helper for showing the "Back" button in ClientQueryViewController
 		if willShow.isEqual(emptyViewController) {
 			self.closeClient()
 		}
 	}
 
-	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+	override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
 		progressBarHeightConstraint?.constant = -1 * (self.tabBar.bounds.height)
 		self.progressBar?.setNeedsLayout()
@@ -353,7 +352,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 }
 
 extension ClientRootViewController : Themeable {
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tabBar.applyThemeCollection(collection)
 
 		self.toolbar?.applyThemeCollection(Theme.shared.activeCollection)
@@ -363,7 +362,7 @@ extension ClientRootViewController : Themeable {
 }
 
 extension ClientRootViewController : OCCoreDelegate {
-	func core(_ core: OCCore, handleError error: Error?, issue inIssue: OCIssue?) {
+	public func core(_ core: OCCore, handleError error: Error?, issue inIssue: OCIssue?) {
 		var issue = inIssue
 		var isAuthFailure : Bool = false
 		var authFailureMessage : String?
@@ -503,7 +502,7 @@ extension ClientRootViewController : OCCoreDelegate {
 }
 
 extension ClientRootViewController: UITabBarControllerDelegate {
-	func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+	public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
 		if tabBarController.selectedViewController == viewController {
 			if let navigationController = viewController as? ThemeNavigationController {
 				let navigationStack = navigationController.viewControllers

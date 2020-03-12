@@ -118,7 +118,7 @@ extension BookmarkViewController {
 }
 
 extension IssuesViewController {
-	override var keyCommands: [UIKeyCommand]? {
+	override public var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 
 		if let buttons = buttons {
@@ -140,7 +140,7 @@ extension IssuesViewController {
 		buttonPressed.action()
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	override public var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
@@ -200,7 +200,7 @@ extension BookmarkInfoViewController {
 }
 
 extension ThemeNavigationController {
-	override var keyCommands: [UIKeyCommand]? {
+	override public var keyCommands: [UIKeyCommand]? {
 
 		var shortcuts = [UIKeyCommand]()
 
@@ -212,17 +212,17 @@ extension ThemeNavigationController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	override public var canBecomeFirstResponder: Bool {
 		return true
 	}
 
-	@objc func popViewControllerAnimated() {
+	@objc public func popViewControllerAnimated() {
 		_ = popViewController(animated: true)
 	}
 }
 
 extension NamingViewController {
-	override var keyCommands: [UIKeyCommand]? {
+	override public var keyCommands: [UIKeyCommand]? {
 
 		var shortcuts = [UIKeyCommand]()
 		if let leftItem = self.navigationItem.leftBarButtonItem, let action = leftItem.action {
@@ -237,13 +237,13 @@ extension NamingViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	override public var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
 
 extension ClientRootViewController {
-	override var keyCommands: [UIKeyCommand]? {
+	override open var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 
 		let excludeViewControllers = [ThemedAlertController.self, SharingTableViewController.self, PublicLinkTableViewController.self, PublicLinkEditTableViewController.self, GroupSharingEditTableViewController.self]
@@ -286,7 +286,7 @@ extension ClientRootViewController {
 		}
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	override open var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
@@ -320,7 +320,7 @@ extension UITableViewController {
 }
 
 extension GroupSharingTableViewController {
-	override var keyCommands: [UIKeyCommand]? {
+	override public var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 		if let superKeyCommands = super.keyCommands {
 			shortcuts.append(contentsOf: superKeyCommands)
@@ -338,13 +338,13 @@ extension GroupSharingTableViewController {
 		self.searchController?.searchBar.becomeFirstResponder()
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	override public var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
 
 extension GroupSharingEditTableViewController {
-	override var keyCommands: [UIKeyCommand]? {
+	override public var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 		if let superKeyCommands = super.keyCommands {
 			shortcuts.append(contentsOf: superKeyCommands)
@@ -362,13 +362,13 @@ extension GroupSharingEditTableViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	override public var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
 
 extension PublicLinkTableViewController {
-	override var keyCommands: [UIKeyCommand]? {
+	override public var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 		if let superKeyCommands = super.keyCommands {
 			shortcuts.append(contentsOf: superKeyCommands)
@@ -379,13 +379,13 @@ extension PublicLinkTableViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	override public var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
 
 extension PublicLinkEditTableViewController {
-	override var keyCommands: [UIKeyCommand]? {
+	override public var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 		if let superKeyCommands = super.keyCommands {
 			shortcuts.append(contentsOf: superKeyCommands)
@@ -406,7 +406,7 @@ extension PublicLinkEditTableViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	override public var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
@@ -574,7 +574,7 @@ extension StaticTableViewController {
 
 extension ClientQueryViewController {
 
-	override var keyCommands: [UIKeyCommand]? {
+	override public var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 		if let superKeyCommands = super.keyCommands {
 			shortcuts.append(contentsOf: superKeyCommands)
@@ -633,18 +633,18 @@ extension ClientQueryViewController {
 		}
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	override open var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
 
 extension LibrarySharesTableViewController {
 
-	override var canBecomeFirstResponder: Bool {
+	override public var canBecomeFirstResponder: Bool {
 		return true
 	}
 
-	override var keyCommands: [UIKeyCommand]? {
+	override public var keyCommands: [UIKeyCommand]? {
 
 		var shortcuts = [UIKeyCommand]()
 
@@ -670,11 +670,11 @@ extension LibrarySharesTableViewController {
 
 extension QueryFileListTableViewController {
 
-	override var canBecomeFirstResponder: Bool {
+	override open var canBecomeFirstResponder: Bool {
 		return true
 	}
 
-	override var keyCommands: [UIKeyCommand]? {
+	override open var keyCommands: [UIKeyCommand]? {
 
 		var shortcuts = [UIKeyCommand]()
 
@@ -814,7 +814,7 @@ extension QueryFileListTableViewController {
 }
 
 extension ClientDirectoryPickerViewController {
-	override var keyCommands: [UIKeyCommand]? {
+	override public var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 
 		let nextObjectCommand = UIKeyCommand(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
@@ -837,13 +837,13 @@ extension ClientDirectoryPickerViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	override public var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
 
 extension PhotoAlbumTableViewController {
-	override var keyCommands: [UIKeyCommand]? {
+	override public var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 		if let superKeyCommands = super.keyCommands {
 			shortcuts.append(contentsOf: superKeyCommands)
@@ -871,14 +871,14 @@ extension PhotoAlbumTableViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	override public var canBecomeFirstResponder: Bool {
 		return true
 	}
 }
 
 extension PhotoSelectionViewController {
 
-	override var keyCommands: [UIKeyCommand]? {
+	override public var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 		if let superKeyCommands = super.keyCommands {
 			shortcuts.append(contentsOf: superKeyCommands)
@@ -905,7 +905,7 @@ extension PhotoSelectionViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	override public var canBecomeFirstResponder: Bool {
 		return true
 	}
 
@@ -1017,7 +1017,7 @@ extension PasscodeViewController {
 
 extension DisplayHostViewController {
 
-	override var keyCommands: [UIKeyCommand]? {
+	override public var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 		if let superKeyCommands = super.keyCommands {
 			shortcuts.append(contentsOf: superKeyCommands)
@@ -1041,7 +1041,7 @@ extension DisplayHostViewController {
 		return shortcuts
 	}
 
-	override var canBecomeFirstResponder: Bool {
+	override public var canBecomeFirstResponder: Bool {
 		return true
 	}
 

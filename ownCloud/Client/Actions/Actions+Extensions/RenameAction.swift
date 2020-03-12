@@ -17,9 +17,8 @@
 */
 
 import ownCloudSDK
-import ownCloudAppShared
 
-class RenameAction : Action {
+public class RenameAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.rename") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Rename".localized }

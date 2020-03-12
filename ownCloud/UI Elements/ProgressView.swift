@@ -17,7 +17,6 @@
  */
 
 import UIKit
-import ownCloudAppShared
 
 class ProgressView: UIView, Themeable, CAAnimationDelegate {
 	var backgroundCircleLayer : CAShapeLayer = CAShapeLayer()

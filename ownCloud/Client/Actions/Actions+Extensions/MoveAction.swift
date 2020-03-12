@@ -17,9 +17,8 @@
 */
 
 import ownCloudSDK
-import ownCloudAppShared
 
-class MoveAction : Action {
+public class MoveAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.move") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Move".localized }

@@ -19,15 +19,14 @@
 import UIKit
 import ownCloudSDK
 import ownCloudUI
-import ownCloudAppShared
 
-enum ConnectionResponse {
+public enum ConnectionResponse {
 	case cancel
 	case approve
 	case dismiss
 }
 
-class ConnectionIssueViewController: IssuesViewController {
+public class ConnectionIssueViewController: IssuesViewController {
 
 	private var displayIssues : DisplayIssues?
 	private var dismissedHandler : (() -> Void)?
@@ -36,13 +35,13 @@ class ConnectionIssueViewController: IssuesViewController {
 		super.init(coder: aDecoder)
 	}
 
-	init(displayIssues issues: DisplayIssues?, buttons: [IssueButton]? = nil, title: String? = nil) {
+	public init(displayIssues issues: DisplayIssues?, buttons: [IssueButton]? = nil, title: String? = nil) {
 		super.init(buttons: buttons, title: title)
 
 		displayIssues = issues
 	}
 
-	convenience init(displayIssues issues: DisplayIssues?, title: String? = nil, completion:@escaping (ConnectionResponse) -> Void, dismissedHandler dismissedHandlerBlock: (() -> Void)? = nil) {
+	convenience public init(displayIssues issues: DisplayIssues?, title: String? = nil, completion:@escaping (ConnectionResponse) -> Void, dismissedHandler dismissedHandlerBlock: (() -> Void)? = nil) {
 		var useButtons : [IssueButton]?
 		var useTitle = title
 
@@ -95,12 +94,12 @@ class ConnectionIssueViewController: IssuesViewController {
 		}
 	}
 
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 		self.tableView?.dataSource = self
 	}
 
-	override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+	override public func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
 		super.dismiss(animated: flag) {
 			completion?()
 			self.dismissedHandler?()
@@ -130,15 +129,15 @@ extension ConnectionIssueViewController {
 
 extension ConnectionIssueViewController: UITableViewDataSource {
 
-	func numberOfSections(in tableView: UITableView) -> Int {
+	public func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 
-	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return displayIssues?.displayIssues.count ?? 0
 	}
 
-	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: IssuesViewControllerCellIdentifier, for: indexPath)
 		let issue = (displayIssues?.displayIssues[indexPath.row])!
 		cell.detailTextLabel?.text = issue.localizedDescription

@@ -18,17 +18,16 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
-typealias ClientDirectoryPickerPathFilter = (_ path: String) -> Bool
-typealias ClientDirectoryPickerChoiceHandler = (_ chosenItem: OCItem?) -> Void
+public typealias ClientDirectoryPickerPathFilter = (_ path: String) -> Bool
+public typealias ClientDirectoryPickerChoiceHandler = (_ chosenItem: OCItem?) -> Void
 
-class ClientDirectoryPickerViewController: ClientQueryViewController {
+open class ClientDirectoryPickerViewController: ClientQueryViewController {
 
 	private let SELECT_BUTTON_HEIGHT: CGFloat = 44.0
 
 	// MARK: - Instance Properties
-	var selectButton: UIBarButtonItem?
+	public var selectButton: UIBarButtonItem?
 	private var selectButtonTitle: String?
 	private var cancelBarButton: UIBarButtonItem?
 
@@ -39,7 +38,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 	var navigationPathFilter : ClientDirectoryPickerPathFilter?
 
 	// MARK: - Init & deinit
-	convenience init(core inCore: OCCore, path: String, selectButtonTitle: String, avoidConflictsWith items: [OCItem], choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
+	convenience public init(core inCore: OCCore, path: String, selectButtonTitle: String, avoidConflictsWith items: [OCItem], choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
 		let folderItemPaths = items.filter({ (item) -> Bool in
 			return item.type == .collection && item.path != nil && !item.isRoot
 		}).map { (item) -> String in
@@ -65,7 +64,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		}, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler)
 	}
 
-	init(core inCore: OCCore, path: String, selectButtonTitle: String, allowedPathFilter: ClientDirectoryPickerPathFilter? = nil, navigationPathFilter: ClientDirectoryPickerPathFilter? = nil, choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
+	public init(core inCore: OCCore, path: String, selectButtonTitle: String, allowedPathFilter: ClientDirectoryPickerPathFilter? = nil, navigationPathFilter: ClientDirectoryPickerPathFilter? = nil, choiceHandler: @escaping ClientDirectoryPickerChoiceHandler) {
 		let targetDirectoryQuery = OCQuery(forPath: path)
 
 		// Sort folders first
@@ -100,12 +99,12 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		allowPullToRefresh = false
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
 	// MARK: - ViewController lifecycle
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		// Adapt to disabled pull-to-refresh
@@ -125,7 +124,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		sortBar?.showSelectButton = false
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	override public func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
 
 		if let cancelBarButton = cancelBarButton {
@@ -146,7 +145,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		}
 	}
 
-	override func viewWillDisappear(_ animated: Bool) {
+	override public func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
 		sortBar?.showSelectButton = false
@@ -164,7 +163,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		return allowNavigation
 	}
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = super.tableView(tableView, cellForRowAt: indexPath)
 
 		if let clientItemCell = cell as? ClientItemCell {
@@ -175,7 +174,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		return cell
 	}
 
-	override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+	override public func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
 		if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
 			return true
 		}
@@ -183,7 +182,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		return false
 	}
 
-	override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+	override public func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
 		if let item : OCItem = itemAt(indexPath: indexPath), allowNavigationFor(item: item) {
 			return indexPath
 		}
@@ -191,7 +190,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		return nil
 	}
 
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	override public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard let item : OCItem = itemAt(indexPath: indexPath), item.type == OCItemType.collection, let core = self.core, let path = item.path, let selectButtonTitle = selectButtonTitle, let choiceHandler = choiceHandler else {
 			return
 		}
@@ -199,11 +198,11 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		self.navigationController?.pushViewController(ClientDirectoryPickerViewController(core: core, path: path, selectButtonTitle: selectButtonTitle, allowedPathFilter: allowedPathFilter, navigationPathFilter: navigationPathFilter, choiceHandler: choiceHandler), animated: true)
 	}
 
-	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+	override public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		return nil
 	}
 
-	override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+	override public func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
 		return .none
 	}
 
@@ -224,7 +223,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 		})
 	}
 
-	@objc func createFolderButtonPressed(_ sender: UIBarButtonItem) {
+	@objc public func createFolderButtonPressed(_ sender: UIBarButtonItem) {
 		// Actions for Create Folder
 		if let core = self.core, let rootItem = query.rootItem {
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .folderAction)
