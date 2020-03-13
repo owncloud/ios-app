@@ -306,6 +306,9 @@ class MediaUploadSettingsSection: SettingsSection {
 		accountSelectionViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
 																						   target: accountSelectionViewController,
 																						   action: #selector(accountSelectionViewController.dismissAnimated))
+		accountSelectionViewController.didDismissAction = { [weak self] (viewController) in
+			self?.updateDynamicUI()
+		}
 
 		let accountsSection = StaticTableViewSection(headerTitle: "Accounts".localized)
 
