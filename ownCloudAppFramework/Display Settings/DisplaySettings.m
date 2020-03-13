@@ -32,7 +32,7 @@
 	{
 		return (@{
 			OCClassSettingsKeyDisplayShowHiddenFiles : @(NO),
-			OCClassSettingsKeyDisplayDragFiles : @(NO)
+			OCClassSettingsKeyDisplayPreventDraggingFiles : @(NO)
 		});
 	}
 
@@ -60,7 +60,7 @@
 		}];
 
 		_showHiddenFiles = [self _showHiddenFilesValue];
-		_dragFiles = [self _dragFilesValue];
+		_preventDraggingFiles = [self _preventDraggingFilesValue];
 	}
 
 	return (self);
@@ -78,9 +78,9 @@
 	_showHiddenFiles = [self _showHiddenFilesValue];
 	[self didChangeValueForKey:@"showHiddenFiles"];
 
-	[self willChangeValueForKey:@"dragFiles"];
-	_dragFiles = [self _dragFilesValue];
-	[self didChangeValueForKey:@"dragFiles"];
+	[self willChangeValueForKey:@"preventDraggingFiles"];
+	_preventDraggingFiles = [self _preventDraggingFilesValue];
+	[self didChangeValueForKey:@"preventDraggingFiles"];
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:DisplaySettingsChanged object:self];
 }
@@ -108,23 +108,23 @@
 }
 
 #pragma mark - Drag files
-- (BOOL)_dragFilesValue
+- (BOOL)_preventDraggingFilesValue
 {
-	NSNumber *dragFilesNumber;
+	NSNumber *preventDraggingFilesNumber;
 
-	if ((dragFilesNumber = [OCAppIdentity.sharedAppIdentity.userDefaults objectForKey:DisplaySettingsDragFilesPrefsKey]) != nil)
+	if ((preventDraggingFilesNumber = [OCAppIdentity.sharedAppIdentity.userDefaults objectForKey:DisplaySettingsPreventDraggingFilesPrefsKey]) != nil)
 	{
-		return (dragFilesNumber.boolValue);
+		return (preventDraggingFilesNumber.boolValue);
 	}
 
-	return ([[self classSettingForOCClassSettingsKey:OCClassSettingsKeyDisplayDragFiles] boolValue]);
+	return ([[self classSettingForOCClassSettingsKey:OCClassSettingsKeyDisplayPreventDraggingFiles] boolValue]);
 }
 
-- (void)setDragFiles:(BOOL)dragFiles
+- (void)setPreventDraggingFiles:(BOOL)preventDraggingFiles
 {
-	_dragFiles = dragFiles;
+	_preventDraggingFiles = preventDraggingFiles;
 
-	[OCAppIdentity.sharedAppIdentity.userDefaults setBool:dragFiles forKey:DisplaySettingsDragFilesPrefsKey];
+	[OCAppIdentity.sharedAppIdentity.userDefaults setBool:preventDraggingFiles forKey:DisplaySettingsPreventDraggingFilesPrefsKey];
 
 	[OCIPNotificationCenter.sharedNotificationCenter postNotificationForName:OCIPCNotificationNameDisplaySettingsChanged ignoreSelf:YES];
 }
@@ -163,7 +163,7 @@
 @end
 
 NSString *DisplaySettingsShowHiddenFilesPrefsKey = @"display-show-hidden-files";
-NSString *DisplaySettingsDragFilesPrefsKey = @"display-drag-files";
+NSString *DisplaySettingsPreventDraggingFilesPrefsKey = @"display-prevent-dragging-files";
 
 OCIPCNotificationName OCIPCNotificationNameDisplaySettingsChanged = @"org.owncloud.display-settings-changed";
 
@@ -171,4 +171,4 @@ NSNotificationName DisplaySettingsChanged = @"org.owncloud.display-settings-chan
 
 OCClassSettingsIdentifier OCClassSettingsIdentifierDisplay = @"display";
 OCClassSettingsKey OCClassSettingsKeyDisplayShowHiddenFiles = @"show-hidden-files";
-OCClassSettingsKey OCClassSettingsKeyDisplayDragFiles = @"drag-files";
+OCClassSettingsKey OCClassSettingsKeyDisplayPreventDraggingFiles = @"prevent-dragging-files";

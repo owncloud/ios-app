@@ -734,7 +734,7 @@ extension ClientQueryViewController: UITableViewDragDelegate {
 
 	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
 
-		if !DisplaySettings.shared.dragFiles {
+		if DisplaySettings.shared.preventDraggingFiles {
 			return [UIDragItem]()
 		}
 

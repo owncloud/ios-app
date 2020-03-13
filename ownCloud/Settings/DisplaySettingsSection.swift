@@ -34,8 +34,8 @@ class DisplaySettingsSection: SettingsSection {
 
 		self.add(row: StaticTableViewRow(switchWithAction: { (row, _) in
 			if let disableDragging = row.value as? Bool {
-				DisplaySettings.shared.dragFiles = disableDragging
+				DisplaySettings.shared.preventDraggingFiles = disableDragging
 			}
-		}, title: "Prevent dragging of files and folders".localized, value: DisplaySettings.shared.dragFiles, identifier: "drag-files-switch"))
+		}, title: "Prevent dragging of files and folders".localized, value: DisplaySettings.shared.preventDraggingFiles, identifier: "prevent-dragging-files-switch"))
 	}
 }

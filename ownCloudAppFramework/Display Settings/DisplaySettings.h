@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(assign,nonatomic) BOOL showHiddenFiles;
 
 #pragma mark - Drag files
-@property(assign,nonatomic) BOOL dragFiles;
+@property(assign,nonatomic) BOOL preventDraggingFiles;
 
 #pragma mark - Query updating
 - (void)updateQueryWithDisplaySettings:(OCQuery *)query;
@@ -38,13 +38,13 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 extern NSString *DisplaySettingsShowHiddenFilesPrefsKey;			//!< The UserDefaults Key containing the BOOL value for .showHiddenFiles
-extern NSString *DisplaySettingsDragFilesPrefsKey;			//!< The UserDefaults Key containing the BOOL value for .dragFiles
+extern NSString *DisplaySettingsPreventDraggingFilesPrefsKey;			//!< The UserDefaults Key containing the BOOL value for .preventDraggingFiles
 
 extern OCIPCNotificationName OCIPCNotificationNameDisplaySettingsChanged; 	//!< Posted when display settings changed (internal use only)
 extern NSNotificationName DisplaySettingsChanged;				//!< Posted when display settings changed (for use by app + File Provider)
 
 extern OCClassSettingsIdentifier OCClassSettingsIdentifierDisplay; 		//!< The class settings identifier for the Display Settings
 extern OCClassSettingsKey OCClassSettingsKeyDisplayShowHiddenFiles;		//!< The class settings key for Show Hidden Files
-extern OCClassSettingsKey OCClassSettingsKeyDisplayDragFiles;			//!< The class settings key if Drag Files is enabled
+extern OCClassSettingsKey OCClassSettingsKeyDisplayPreventDraggingFiles;			//!< The class settings key if Drag Files is enabled
 
 NS_ASSUME_NONNULL_END
