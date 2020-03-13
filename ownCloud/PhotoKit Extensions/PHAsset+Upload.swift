@@ -171,8 +171,8 @@ extension PHAsset {
 						// Convert image to JPEG format
 						let localURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension().appendingPathExtension("jpg")
 						var imageConverted = false
-						if let image = CIImage(contentsOf: assetURL!) {
 
+						if let image = CIImage(contentsOf: assetURL!) {
 							imageConverted = image.convert(targetURL: localURL, outputFormat: .JPEG)
 						}
 
