@@ -5,6 +5,7 @@
 //  Created by Felix Schwarz on 09.04.19.
 //  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
+
 /*
  * Copyright (C) 2019, ownCloud GmbH.
  *
