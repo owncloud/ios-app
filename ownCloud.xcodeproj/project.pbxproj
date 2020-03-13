@@ -1107,7 +1107,7 @@
 		DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySettingsSection.swift; sourceTree = "<group>"; };
 		DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ownCloudApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC0855E2293F1FD008CC05C /* ownCloudApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ownCloudApp.h; sourceTree = "<group>"; };
-		DCC0855F2293F1FD008CC05C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
+		DCC0855F2293F1FD008CC05C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DCC085642293F1FD008CC05C /* ownCloudAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ownCloudAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC0856B2293F1FD008CC05C /* LicensingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LicensingTests.m; sourceTree = "<group>"; };
 		DCC0856D2293F1FD008CC05C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1337,7 +1337,6 @@
 				233BDE9D204FEFE500C06732 /* Products */,
 				DC85573220513CC700189B9A /* Frameworks */,
 				5EE06126BB49344475598790 /* Pods */,
-				394EC829240E94F300412427 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1545,13 +1544,6 @@
 				394E200B233E477F009D2897 /* OpenItemUserActivity.swift */,
 			);
 			path = Window;
-			sourceTree = "<group>";
-		};
-		394EC829240E94F300412427 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		395E16FB22F0691F00DE89A1 /* Intent */ = {
@@ -2633,6 +2625,7 @@
 				DC85573420513CCC00189B9A /* Copy Frameworks */,
 				DC01CDCA212ECEB000FC8E38 /* Copy PocketSVG license */,
 				DC63207821FCA6A4007EC0A8 /* Copy libzip license */,
+				23DFDCF120AEEC77003BD16B /* Update LastGitCommit key in Info.plist */,
 				DCC6567020C9B7E400110A97 /* Embed App Extensions */,
 			);
 			buildRules = (
@@ -2725,8 +2718,8 @@
 				59056CA622414F3C00A18A22 /* Sources */,
 				59056CA722414F3C00A18A22 /* Frameworks */,
 				59056CA822414F3C00A18A22 /* Resources */,
+				CB0A5CD67C8C00CD02627343 /* [CP] Embed Pods Frameworks */,
 				59799F7C224157E0007E8008 /* EarlGrey Copy Files */,
-				6342DAD578D5C11AEDD857A5 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -3197,12 +3190,25 @@
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
-		6342DAD578D5C11AEDD857A5 /* [CP] Embed Pods Frameworks */ = {
+		23DFDCF120AEEC77003BD16B /* Update LastGitCommit key in Info.plist */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
+			inputPaths = (
+				"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}",
+			);
+			name = "Update LastGitCommit key in Info.plist";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "LASTGITCOMMIT=$(git rev-parse --short HEAD)\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"LastGitCommit\" \"${LASTGITCOMMIT}\"\n";
+		};
+		CB0A5CD67C8C00CD02627343 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ownCloudScreenshotsTests/Pods-ownCloudScreenshotsTests-frameworks.sh",
@@ -4016,7 +4022,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
-				PRODUCT_NAME = ownCloud;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				SWIFT_VERSION = 4.2;
@@ -4045,7 +4051,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
-				PRODUCT_NAME = ownCloud;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.owncloud.ios-app";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				SWIFT_VERSION = 4.2;
