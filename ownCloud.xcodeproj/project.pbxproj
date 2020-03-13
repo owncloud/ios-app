@@ -1110,7 +1110,7 @@
 		DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySettingsSection.swift; sourceTree = "<group>"; };
 		DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ownCloudApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC0855E2293F1FD008CC05C /* ownCloudApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ownCloudApp.h; sourceTree = "<group>"; };
-		DCC0855F2293F1FD008CC05C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DCC0855F2293F1FD008CC05C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
 		DCC085642293F1FD008CC05C /* ownCloudAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ownCloudAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC0856B2293F1FD008CC05C /* LicensingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LicensingTests.m; sourceTree = "<group>"; };
 		DCC0856D2293F1FD008CC05C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -2026,6 +2026,7 @@
 		DC774E6522F44EA7000B11A1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				DCC0855F2293F1FD008CC05C /* Info.plist */,
 				DCE0FC4923E42ACB0037B4AD /* Localized.strings */,
 			);
 			path = Resources;
@@ -2225,7 +2226,6 @@
 				DC0030BE2350B1CE00BB8570 /* Tools */,
 				DC774E5B22F44E4A000B11A1 /* ZIP Archive */,
 				DC774E6522F44EA7000B11A1 /* Resources */,
-				DCC0855F2293F1FD008CC05C /* Info.plist */,
 			);
 			path = ownCloudAppFramework;
 			sourceTree = "<group>";
