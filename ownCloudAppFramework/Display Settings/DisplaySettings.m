@@ -32,7 +32,7 @@
 	{
 		return (@{
 			OCClassSettingsKeyDisplayShowHiddenFiles : @(NO),
-			OCClassSettingsKeyDisplayDragFiles : @(YES)
+			OCClassSettingsKeyDisplayDragFiles : @(NO)
 		});
 	}
 

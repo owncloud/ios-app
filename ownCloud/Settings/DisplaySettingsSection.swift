@@ -36,6 +36,6 @@ class DisplaySettingsSection: SettingsSection {
 			if let disableDragging = row.value as? Bool {
 				DisplaySettings.shared.dragFiles = disableDragging
 			}
-		}, title: "Drag files enabled".localized, value: DisplaySettings.shared.dragFiles, identifier: "drag-files-switch"))
+		}, title: "Prevent dragging of files and folders".localized, value: DisplaySettings.shared.dragFiles, identifier: "drag-files-switch"))
 	}
 }

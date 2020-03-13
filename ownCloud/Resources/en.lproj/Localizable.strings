@@ -237,7 +237,7 @@
 /* Display settings */
 "Advanced settings" = "Advanced settings";
 "Show hidden files and folders" = "Show hidden files and folders";
-"Drag files enabled" = "Drag files enabled";
+"Prevent dragging of files and folders" = "Prevent dragging of files and folders";
 
 /* Passcode Messages */
 
