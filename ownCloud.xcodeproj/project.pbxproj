@@ -40,7 +40,6 @@
 		3912208223436EB80026C290 /* SortMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3912208123436EB80026C290 /* SortMethod.swift */; };
 		3913213822946E5E00EF88F4 /* FileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913213722946E5E00EF88F4 /* FileListTableViewController.swift */; };
 		3913214D22956D5700EF88F4 /* LibraryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */; };
-		392557FE2278703300E83F60 /* UISearchBar+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392557FD2278703300E83F60 /* UISearchBar+Extension.swift */; };
 		39265BB223D9987500B0C4CA /* MediaEditingAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39265BB123D9987500B0C4CA /* MediaEditingAction.swift */; };
 		393120702326451900E8DFBA /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3931206A2326451900E8DFBA /* Branding.plist */; };
 		393D2B3F23FEB6DC00ED4F8C /* DispatchQueueTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */; };
@@ -795,7 +794,6 @@
 		3912208123436EB80026C290 /* SortMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortMethod.swift; sourceTree = "<group>"; };
 		3913213722946E5E00EF88F4 /* FileListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListTableViewController.swift; sourceTree = "<group>"; };
 		3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableViewController.swift; sourceTree = "<group>"; };
-		392557FD2278703300E83F60 /* UISearchBar+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchBar+Extension.swift"; sourceTree = "<group>"; };
 		39265BB123D9987500B0C4CA /* MediaEditingAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaEditingAction.swift; sourceTree = "<group>"; };
 		3931206A2326451900E8DFBA /* Branding.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Branding.plist; path = ownCloud/Resources/Theming/Branding.plist; sourceTree = SOURCE_ROOT; };
 		3940C4EF2326985B008227AE /* GetAccountIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetAccountIntentHandler.swift; sourceTree = "<group>"; };
@@ -1472,7 +1470,6 @@
 				4CF8CAB021F9B70500B8CA67 /* UIBarButtonItem+Extension.swift */,
 				39607CBB2225D480007B386D /* UITableViewController+Extension.swift */,
 				3998F5D2224102FE00B66713 /* UITableView+Extension.swift */,
-				392557FD2278703300E83F60 /* UISearchBar+Extension.swift */,
 				39CC8AE5228C12100020253B /* Array+Extension.swift */,
 				4C63F0E4231A91230088E8CA /* UIImageView+Thumbnails.swift */,
 				398FD4502334CF66004B68A1 /* UIView+Extension.swift */,
@@ -3472,7 +3469,6 @@
 				4C464BF22187AF1500D30602 /* PDFSearchViewController.swift in Sources */,
 				DC3393A422E0A75C00DD3DA4 /* ClientItemResolvingCell.swift in Sources */,
 				DC29F09522976B9300F77349 /* LibrarySharesTableViewController.swift in Sources */,
-				392557FE2278703300E83F60 /* UISearchBar+Extension.swift in Sources */,
 				DC7DBA2B207F71E400E7337D /* VectorImageView.swift in Sources */,
 				DCD1301123A23F4E00255779 /* OCLicenseManager+AppStore.swift in Sources */,
 				39DE75CD22F960CF0064C1E2 /* SortMethodTableViewController.swift in Sources */,
