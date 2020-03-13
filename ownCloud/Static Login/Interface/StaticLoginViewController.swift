@@ -290,8 +290,6 @@ class StaticLoginViewController: UIViewController, Themeable {
 
 			return serverList
 		}
-
-		return UIViewController()
 	}
 
 	func profile(for staticLoginProfileIdentifier: StaticLoginProfileIdentifier) -> StaticLoginProfile? {

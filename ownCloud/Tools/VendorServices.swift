@@ -46,41 +46,51 @@ class VendorServices : NSObject {
 		return ""
 	}
 
+	var brandingURL : URL? {
+		return Bundle.main.url(forResource: "Branding", withExtension: "plist")
+	}
+
+	func brandingURLFor(name: String) -> URL? {
+		return Bundle.main.url(forResource: name, withExtension: "plist")
+	}
+
+	var brandingProperties : NSDictionary? {
+		var themingValues : NSDictionary?
+
+		if let url = self.brandingURL {
+			themingValues = NSDictionary(contentsOf: url)
+		}
+
+		return themingValues
+	}
+
 	var helpURL: URL? {
-		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
-			if let themingValues = NSDictionary(contentsOfFile: path), let urls = themingValues["URLs"] as? NSDictionary, let help = urls["Help"] as? String {
-				return URL(string: help)
-			}
+		if let themingValues = self.brandingProperties, let urls = themingValues["URLs"] as? NSDictionary, let help = urls["Help"] as? String {
+			return URL(string: help)
 		}
 
 		return URL(string: "https://www.owncloud.com/help")
 	}
 
 	var privacyURL: URL? {
-		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
-			if let themingValues = NSDictionary(contentsOfFile: path), let urls = themingValues["URLs"] as? NSDictionary, let privacy = urls["Privacy"] as? String {
-				return URL(string: privacy)
-			}
+		if let themingValues = self.brandingProperties, let urls = themingValues["URLs"] as? NSDictionary, let privacy = urls["Privacy"] as? String {
+			return URL(string: privacy)
 		}
 
 		return URL(string: "https://owncloud.org/privacy-policy/")
 	}
 
 	var appName: String {
-		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
-			if let themingValues = NSDictionary(contentsOfFile: path), let bundleValues = themingValues["Bundle"] as? NSDictionary, let organizationName = bundleValues["organizationName"] as? String {
-				return organizationName
-			}
+		if let themingValues = self.brandingProperties, let bundleValues = themingValues["Bundle"] as? NSDictionary, let organizationName = bundleValues["organizationName"] as? String {
+			return organizationName
 		}
 
 		return OCAppIdentity.shared.appName ?? "App"
 	}
 
 	var feedbackMail: String {
-		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
-			if let themingValues = NSDictionary(contentsOfFile: path), let bundleValues = themingValues["Bundle"] as? NSDictionary, let organizationName = bundleValues["organizationName"] as? String {
-				return organizationName
-			}
+		if let themingValues = self.brandingProperties, let bundleValues = themingValues["Bundle"] as? NSDictionary, let organizationName = bundleValues["organizationName"] as? String {
+			return organizationName
 		}
 
 		return OCAppIdentity.shared.appName ?? "App"
@@ -95,44 +105,36 @@ class VendorServices : NSObject {
 	}
 
 	var isBranded: Bool {
-		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
-			if let themingValues = NSDictionary(contentsOfFile: path), let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0 {
-				return true
-			}
+		if let themingValues = self.brandingProperties, let profileValues = themingValues["Profiles"] as? NSArray, profileValues.count > 0 {
+			return true
 		}
 
 		return false
 	}
 
 	var hasBrandedProfiles: Bool {
-		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
-			if let themingValues = NSDictionary(contentsOfFile: path), let profiles = themingValues["Profiles"] as? NSArray, profiles.count > 0 {
-				return true
-			}
+		if let themingValues = self.brandingProperties, let profiles = themingValues["Profiles"] as? NSArray, profiles.count > 0 {
+			return true
 		}
 
 		return false
 	}
 
 	var hasBrandedLogin: Bool {
-		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
-			if let themingValues = NSDictionary(contentsOfFile: path), let bundleValues = themingValues["Bundle"] as? NSDictionary, bundleValues["organizationLogoName"] != nil, bundleValues["organizationBackgroundName"] != nil, bundleValues["organizationName"] != nil {
-				return true
-			}
+		if let themingValues = self.brandingProperties, let bundleValues = themingValues["Bundle"] as? NSDictionary, bundleValues["organizationLogoName"] != nil, bundleValues["organizationBackgroundName"] != nil, bundleValues["organizationName"] != nil {
+			return true
 		}
 
 		return false
 	}
 
 	var canAddAccount: Bool {
-		if let path = Bundle.main.path(forResource: "Branding", ofType: "plist") {
-			if let themingValues = NSDictionary(contentsOfFile: path), let canAddAccount = themingValues["canAddAccount"] as? Bool {
-				if canAddAccount, VendorServices.shared.hasBrandedProfiles {
-					return true
-				}
-
-				return false
+		if let themingValues = self.brandingProperties, let canAddAccount = themingValues["canAddAccount"] as? Bool {
+			if canAddAccount, VendorServices.shared.hasBrandedProfiles {
+				return true
 			}
+
+			return false
 		}
 
 		return true
