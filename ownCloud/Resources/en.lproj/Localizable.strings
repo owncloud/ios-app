@@ -95,6 +95,12 @@
 "%@ of %@ used" = "%@ of %@ used";
 "Total: %@" = "Total: %@";
 
+/* Static Login Setup */
+"Server error" = "Server error";
+"The server doesn't support any allowed authentication method." = "The server doesn't support any allowed authentication method.";
+"The server doesn't support any known and allowed authentication method found." = "The server doesn't support any known and allowed authentication method found.";
+"Retry detection" = "Retry detection";
+
 /* Client Messages */
 "Empty folder" = "Empty folder";
 "This folder contains no files or folders." = "This folder contains no files or folders.";

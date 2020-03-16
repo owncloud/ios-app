@@ -281,27 +281,61 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 				})
 			}
 
-			if proceed, preferredAuthenticationMethods != nil, let authenticationMethod = preferredAuthenticationMethods!.first {
-				self.bookmark.authenticationMethodIdentifier = preferredAuthenticationMethods?.first
+			// Determine authentication method
+			// - use the most preferred one by default
+			var useAuthMethod = preferredAuthenticationMethods?.first
 
-				if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethod) {
-					OnMainThread {
-						self.tableView.performBatchUpdates({
-							self.removeSection(self.busySection!, animated: true)
+			// - if a limit is imposed on the allowed authentication methods, use the most preferred authentication method that's also available
+			if let allowedAuthenticationMethods = self.profile.allowedAuthenticationMethods, let preferredAuthenticationMethods = preferredAuthenticationMethods {
+				useAuthMethod = nil
 
-							let authMethodType = authenticationMethodClass.type as OCAuthenticationMethodType
-							switch authMethodType {
-							case .passphrase:
-								self.addSection(self.loginMaskSection(), animated: true)
-
-							case .token:
-								self.addSection(self.tokenMaskSection(), animated: true)
-							}
-						}, completion: nil)
+				for preferredAuthenticationMethod in preferredAuthenticationMethods {
+					if allowedAuthenticationMethods.contains(preferredAuthenticationMethod) {
+						useAuthMethod = preferredAuthenticationMethod
+						break
 					}
 				}
-			} else {
+			}
+
+			var authMethodKnown = false
+
+			if proceed, preferredAuthenticationMethods != nil, let authenticationMethod = useAuthMethod, let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethod) {
+
+				self.bookmark.authenticationMethodIdentifier = useAuthMethod
+				authMethodKnown = true
+
+				OnMainThread {
+					self.tableView.performBatchUpdates({
+						self.removeSection(self.busySection!, animated: true)
+
+						let authMethodType = authenticationMethodClass.type as OCAuthenticationMethodType
+						switch authMethodType {
+						case .passphrase:
+							self.addSection(self.loginMaskSection(), animated: true)
+
+						case .token:
+							self.addSection(self.tokenMaskSection(), animated: true)
+						}
+					}, completion: nil)
+				}
+			}
+
+			if !authMethodKnown {
 				self.bookmark.authenticationMethodIdentifier = nil
+
+				OnMainThread {
+					let alert = ThemedAlertController(title: "Server error".localized,
+									  message: ((preferredAuthenticationMethods != nil) && (preferredAuthenticationMethods!.count > 0)) ?
+									  		"The server doesn't support any allowed authentication method.".localized :
+									  		"The server doesn't support any known and allowed authentication method found.".localized,
+									  preferredStyle: .alert)
+
+					alert.addAction(UIAlertAction(title: "Retry detection".localized, style: .default, handler: { (_) in
+						self.determineSupportedAuthMethod()
+					}))
+
+					self.present(alert, animated: true, completion: nil)
+				}
 			}
 		})
 	}
