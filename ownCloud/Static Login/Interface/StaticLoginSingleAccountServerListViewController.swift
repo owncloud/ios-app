@@ -1,13 +1,13 @@
 //
-//  StaticLoginServerListViewController.swift
+//  StaticLoginSingleAccountServerListViewController.swift
 //  ownCloud
 //
-//  Created by Felix Schwarz on 27.11.18.
-//  Copyright © 2018 ownCloud GmbH. All rights reserved.
+//  Created by Matthias Hühne on 03.03.2020.
+//  Copyright © 2020 ownCloud GmbH. All rights reserved.
 //
 
 /*
- * Copyright (C) 2018, ownCloud GmbH.
+ * Copyright (C) 2020, ownCloud GmbH.
  *
  * This code is covered by the GNU Public License Version 3.
  *

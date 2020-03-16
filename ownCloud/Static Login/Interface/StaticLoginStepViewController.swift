@@ -1,5 +1,5 @@
 //
-//  StaticLoginStepViewControllerTableViewController.swift
+//  StaticLoginStepViewController.swift
 //  ownCloud
 //
 //  Created by Felix Schwarz on 26.11.18.
@@ -68,7 +68,7 @@ extension StaticTableViewSection {
 
 		let titleLabel = UILabel()
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
-		titleLabel.setContentHuggingPriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
+		titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
 		titleLabel.text = title
 		titleLabel.textAlignment = .center
@@ -92,16 +92,14 @@ extension StaticTableViewSection {
 		if message != nil {
 			let messageLabel = UILabel()
 			messageLabel.translatesAutoresizingMaskIntoConstraints = false
-			messageLabel.setContentHuggingPriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
+			messageLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
 			messageLabel.text = message
 			messageLabel.textAlignment = .center
 			messageLabel.numberOfLines = 0
 
 			headerView.addThemeApplier({ (_, collection, _) in
-				//messageLabel.applyThemeCollection(collection)
 				messageLabel.applyThemeCollection(collection, itemStyle: .title)
-				//	messageLabel.textColor = collection.navigationBarColors.labelColor
 			})
 
 			headerView.addSubview(messageLabel)
@@ -140,7 +138,6 @@ extension StaticTableViewSection {
 
 		if proceedLabel != nil {
 			continueButton = ThemeButton()
-			//containerView.translatesAutoresizingMaskIntoConstraints = false
 			continueButton?.translatesAutoresizingMaskIntoConstraints = false
 
 			continueButton?.setTitle(proceedLabel, for: .normal)

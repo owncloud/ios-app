@@ -41,7 +41,6 @@
 		3913213822946E5E00EF88F4 /* FileListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913213722946E5E00EF88F4 /* FileListTableViewController.swift */; };
 		3913214D22956D5700EF88F4 /* LibraryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913214A22956D5700EF88F4 /* LibraryTableViewController.swift */; };
 		39265BB223D9987500B0C4CA /* MediaEditingAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39265BB123D9987500B0C4CA /* MediaEditingAction.swift */; };
-		393120702326451900E8DFBA /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3931206A2326451900E8DFBA /* Branding.plist */; };
 		393D2B3F23FEB6DC00ED4F8C /* DispatchQueueTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */; };
 		3940C4F02326985B008227AE /* GetAccountIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3940C4EF2326985B008227AE /* GetAccountIntentHandler.swift */; };
 		394804DA225CBDBA00AA8183 /* BreadCrumbTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 394804D9225CBDBA00AA8183 /* BreadCrumbTableViewController.swift */; };
@@ -388,6 +387,7 @@
 		DCE5E8B42080D781005F60CE /* folder-shared.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89F2080D780005F60CE /* folder-shared.tvg */; };
 		DCE5E8B52080D781005F60CE /* x-office-presentation.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */; };
 		DCE5E8B82080D8D9005F60CE /* OCItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE5E8B72080D8D9005F60CE /* OCItem+Extension.swift */; };
+		DCE684F6241BD4E800799C30 /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3931206A2326451900E8DFBA /* Branding.plist */; };
 		DCE974B2207E3AF80069FC2B /* ThemeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */; };
 		DCE974BC207EACA60069FC2B /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */; };
 		DCEE1C9C23A0EADD00FE8D98 /* LicenseOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEE1C9B23A0EADD00FE8D98 /* LicenseOfferView.swift */; };
@@ -3071,11 +3071,11 @@
 				DC44344821AC265F00376B16 /* brand-background.jpg in Resources */,
 				DCE5E8B02080D781005F60CE /* folder-drag-accept.tvg in Resources */,
 				DCE5E8A62080D781005F60CE /* application.tvg in Resources */,
+				DCE684F6241BD4E800799C30 /* Branding.plist in Resources */,
 				DC9BFBB320A19AF4007064B5 /* doc in Resources */,
 				233BDEAA204FEFE500C06732 /* LaunchScreen.storyboard in Resources */,
 				233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */,
 				3995E53123605DE7003525EB /* bookmark-icon.png in Resources */,
-				393120702326451900E8DFBA /* Branding.plist in Resources */,
 				DCE5E8A72080D781005F60CE /* x-office-spreadsheet.tvg in Resources */,
 				DCE5E8AA2080D781005F60CE /* owncloud-logo.tvg in Resources */,
 				595E2CA821EE501400F0E95D /* PropfindResponseNewFolder.xml in Resources */,

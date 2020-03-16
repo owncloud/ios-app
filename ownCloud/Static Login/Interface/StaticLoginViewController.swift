@@ -265,31 +265,24 @@ class StaticLoginViewController: UIViewController, Themeable {
 	}
 
 	func buildBookmarkSelector() -> UIViewController {
+		var serverList : ServerListTableViewController?
+
 		if OCBookmarkManager.shared.bookmarks.count > 1 {
-			let serverList = StaticLoginServerListViewController(style: .grouped)
-
-			serverList.staticLoginViewController = self
-			serverList.hasToolbar = false
-
-			// Push ClientRootViewControllers via PushTransition from this view controller, so it is correctly
-			// animated (otherwise just the list is moved *inside* this view controller, which is weird) and the
-			// PushTransition correctly restores the view
-			serverList.pushFromViewController = self
-
-			return serverList
+			serverList = StaticLoginServerListViewController(style: .grouped)
+			(serverList as? StaticLoginServerListViewController)?.staticLoginViewController = self
 		} else {
-			let serverList = StaticLoginSingleAccountServerListViewController(style: .grouped)
-
-			serverList.staticLoginViewController = self
-			serverList.hasToolbar = false
-
-			// Push ClientRootViewControllers via PushTransition from this view controller, so it is correctly
-			// animated (otherwise just the list is moved *inside* this view controller, which is weird) and the
-			// PushTransition correctly restores the view
-			serverList.pushFromViewController = self
-
-			return serverList
+			serverList = StaticLoginSingleAccountServerListViewController(style: .grouped)
+			(serverList as? StaticLoginSingleAccountServerListViewController)?.staticLoginViewController = self
 		}
+
+		serverList?.hasToolbar = false
+
+		// Push ClientRootViewControllers via PushTransition from this view controller, so it is correctly
+		// animated (otherwise just the list is moved *inside* this view controller, which is weird) and the
+		// PushTransition correctly restores the view
+		serverList?.pushFromViewController = self
+
+		return serverList!
 	}
 
 	func profile(for staticLoginProfileIdentifier: StaticLoginProfileIdentifier) -> StaticLoginProfile? {
