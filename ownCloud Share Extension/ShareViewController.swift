@@ -89,6 +89,9 @@ class ShareViewController: MoreStaticTableViewController {
 
     func importFiles(to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?) {
         if let inputItems : [NSExtensionItem] = self.extensionContext?.inputItems as? [NSExtensionItem] {
+
+			let progressHUDViewController = ProgressHUDViewController(on: self, label: "Saving".localized)
+
             for item : NSExtensionItem in inputItems {
 				if let attachments = item.attachments {
                     if attachments.isEmpty {
@@ -103,7 +106,12 @@ class ShareViewController: MoreStaticTableViewController {
                                     if let url = item as? URL {
 										self.importFile(url: url, to: targetDirectory, bookmark: bookmark, core: core) { (_) in
 											if (index + 1) == attachments.count {
-												self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+												OnMainThread {
+													progressHUDViewController.dismiss(animated: true, completion: {
+														self.dismiss(animated: true)
+														self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+													})
+												}
 											}
 										}
 									} else if let data = item as? Data {
@@ -112,15 +120,16 @@ class ShareViewController: MoreStaticTableViewController {
 
 										FileManager.default.createFile(atPath: tempFilePath, contents:data, attributes:nil)
 
-										self.importFile(url: URL(fileURLWithPath: tempFilePath), to: targetDirectory, bookmark: bookmark, core: core) { (error) in
-											do {
-												try FileManager.default.removeItem(atPath: tempFilePath)
-											} catch {
-												print(error)
-											}
+										self.importFile(url: URL(fileURLWithPath: tempFilePath), to: targetDirectory, bookmark: bookmark, core: core) { (_) in
+											try? FileManager.default.removeItem(atPath: tempFilePath)
 
 											if (index + 1) == attachments.count {
-												self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+												OnMainThread {
+													progressHUDViewController.dismiss(animated: true, completion: {
+														self.dismiss(animated: true)
+														self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+													})
+												}
 											}
 										}
 									}
