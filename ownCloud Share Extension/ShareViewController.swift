@@ -51,16 +51,21 @@ class ShareViewController: MoreStaticTableViewController {
 		let title = NSAttributedString(string: "Save File".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])
 
 		var actionsRows: [StaticTableViewRow] = []
+		OCBookmarkManager.shared.loadBookmarks()
 		let bookmarks : [OCBookmark] = OCBookmarkManager.shared.bookmarks as [OCBookmark]
+		if bookmarks.count > 0 {
+			let rowDescription = StaticTableViewRow(label: "Choose an account and folder to import the file into.".localized, alignment: .center)
+			actionsRows.append(rowDescription)
 
-		let rowDescription = StaticTableViewRow(label: "Choose an account and folder to import the file into.".localized, alignment: .center)
-		actionsRows.append(rowDescription)
-
-		for (bookmark) in bookmarks {
-			let row = StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
-				self.openDirectoryPicker(for: bookmark)
-			}, title: bookmark.shortName, style: .plain, image: Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25)), imageWidth: 25, alignment: .left)
-			actionsRows.append(row)
+			for (bookmark) in bookmarks {
+				let row = StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
+					self.openDirectoryPicker(for: bookmark)
+				}, title: bookmark.shortName, style: .plain, image: Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25)), imageWidth: 25, alignment: .left)
+				actionsRows.append(row)
+			}
+		} else {
+			let rowDescription = StaticTableViewRow(label: "No account configured.\nSetup an new account in the app, before you can save a file.".localized, alignment: .center)
+			actionsRows.append(rowDescription)
 		}
 
 		self.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
@@ -84,39 +89,53 @@ class ShareViewController: MoreStaticTableViewController {
 
     func importFiles(to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?) {
         if let inputItems : [NSExtensionItem] = self.extensionContext?.inputItems as? [NSExtensionItem] {
-			print("--> inputItems \(inputItems)")
             for item : NSExtensionItem in inputItems {
 				if let attachments = item.attachments {
-
                     if attachments.isEmpty {
                         self.extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
                         return
                     }
 
-                    for current in attachments {
-						print("--> \(current.registeredTypeIdentifiers)")
-                        if current.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
+                    for (index, current) in attachments.enumerated() {
+						if let type = current.registeredTypeIdentifiers.first, current.hasItemConformingToTypeIdentifier(kUTTypeItem as String) {
                             current.loadItem(forTypeIdentifier: kUTTypeItem as String, options: nil, completionHandler: {(item, error) -> Void in
-								print("..>> item \(item)")
                                 if error == nil {
                                     if let url = item as? URL {
-                                        print("item as url: \(url)")
-										self.importFile(url: url, to: targetDirectory, bookmark: bookmark, core: core)
-                                    }
+										self.importFile(url: url, to: targetDirectory, bookmark: bookmark, core: core) { (_) in
+											if (index + 1) == attachments.count {
+												self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+											}
+										}
+									} else if let data = item as? Data {
+										let ext = self.utiToFileExtension(type)
+                                        let tempFilePath = NSTemporaryDirectory() + (current.suggestedName ?? "Import") + "." + (ext ?? type)
+
+										FileManager.default.createFile(atPath: tempFilePath, contents:data, attributes:nil)
+
+										self.importFile(url: URL(fileURLWithPath: tempFilePath), to: targetDirectory, bookmark: bookmark, core: core) { (error) in
+											do {
+												try FileManager.default.removeItem(atPath: tempFilePath)
+											} catch {
+												print(error)
+											}
+
+											if (index + 1) == attachments.count {
+												self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+											}
+										}
+									}
                                 } else {
                                     print("ERROR: \(error)")
                                 }
                             })
-
                         }
                     }
                 }
             }
         }
-		self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
     }
 
-	func importFile(url importItemURL: URL, to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?) {
+	func importFile(url importItemURL: URL, to targetDirectory : OCItem, bookmark: OCBookmark, core : OCCore?, completion: @escaping (_ error: Error?) -> Void) {
 		let name = importItemURL.lastPathComponent
 		if core?.importItemNamed(name,
 					 at: targetDirectory,
@@ -127,6 +146,7 @@ class ShareViewController: MoreStaticTableViewController {
 					 placeholderCompletionHandler: { (error, item) in
 						if error != nil {
 							Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
+							completion(error)
 						}
 
 						OnBackgroundQueue(after: 2) {
@@ -137,12 +157,24 @@ class ShareViewController: MoreStaticTableViewController {
 					 resultHandler: { (error, _ core, _ item, _) in
 						if error != nil {
 							Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
+							completion(error)
 						} else {
 							Log.debug("Success uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
+							completion(nil)
 						}
 					}
 		) == nil {
 			Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
+			let error = NSError(domain: "ImportFileErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
+			completion(error)
 		}
+	}
+}
+
+extension ShareViewController {
+	public func utiToFileExtension(_ utiType: String) -> String? {
+		guard let ext = UTTypeCopyPreferredTagWithClass(utiType as CFString, kUTTagClassFilenameExtension) else { return nil }
+
+		return ext.takeRetainedValue() as String
 	}
 }

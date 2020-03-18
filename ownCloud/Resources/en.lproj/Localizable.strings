@@ -599,3 +599,7 @@
 "trial" = "trial";
 "purchase" = "purchase";
 "subscription" = "subscription";
+
+/* Share Sheet */
+"Choose an account and folder to import the file into." = "Choose an account and folder to import the file into.";
+"No account configured.\nSetup an new account in the app, before you can save a file." = "No account configured.\nSetup an new account in the app, before you can save a file.";
