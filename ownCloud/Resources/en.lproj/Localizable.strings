@@ -235,8 +235,9 @@
 "Increase Slider Value" = "Increase Slider Value";
 
 /* Display settings */
-"Display settings" = "Display settings";
+"Advanced settings" = "Advanced settings";
 "Show hidden files and folders" = "Show hidden files and folders";
+"Prevent dragging of files and folders" = "Prevent dragging of files and folders";
 
 /* Passcode Messages */
 
