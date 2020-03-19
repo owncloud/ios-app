@@ -25,8 +25,8 @@ class ShareViewController: MoreStaticTableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		// Implement App Lock
-		//AppLockManager.shared.showLockscreenIfNeeded()
+		AppLockManager.shared.passwordViewHostViewController = self
+		AppLockManager.shared.showLockscreenIfNeeded()
 
 		OCExtensionManager.shared.addExtension(CreateFolderAction.actionExtension)
 		Theme.shared.add(tvgResourceFor: "owncloud-logo")

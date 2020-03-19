@@ -17,9 +17,8 @@
  */
 
 import UIKit
-import ownCloudAppShared
 
-class ThemeWindow : UIWindow {
+public class ThemeWindow : UIWindow {
 	// MARK: - Theme window list
 	static let themeWindowListChangedNotification: NSNotification.Name = NSNotification.Name(rawValue: "ThemeWindowListChanged")
 	static private let _themeWindows : NSHashTable<ThemeWindow> = NSHashTable<ThemeWindow>.weakObjects()
@@ -49,20 +48,20 @@ class ThemeWindow : UIWindow {
 	}
 
 	// MARK: - Lifecycle
-	override init(frame: CGRect) {
+	override public init(frame: CGRect) {
 		super.init(frame: frame)
 
 		ThemeWindow.addThemeWindow(self)
 	}
 
 	@available(iOS 13, *)
-	override init(windowScene: UIWindowScene) {
+	override public init(windowScene: UIWindowScene) {
 		super.init(windowScene: windowScene)
 
 		ThemeWindow.addThemeWindow(self)
 	}
 
-	required init?(coder: NSCoder) {
+	required public init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -71,7 +70,7 @@ class ThemeWindow : UIWindow {
 	}
 
 	// MARK: - Theme change detection
-	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+	override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
 
 		if #available(iOS 13.0, *) {

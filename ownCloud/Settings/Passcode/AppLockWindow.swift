@@ -19,10 +19,10 @@
 import UIKit
 
 //Subclass that only allows the protrait mode
-class AppLockWindow: UIWindow {
+public class AppLockWindow: UIWindow {
 
     // MARK: - Show and hide animations
-    func showWindowAnimation(completion: (() -> Void)? = nil) {
+    public func showWindowAnimation(completion: (() -> Void)? = nil) {
         let height = self.bounds.height
         self.frame = CGRect(x: 0, y: height, width: self.frame.size.width, height: self.frame.size.height)
 
@@ -33,7 +33,7 @@ class AppLockWindow: UIWindow {
         })
     }
 
-    func hideWindowAnimation(completion: (() -> Void)? = nil) {
+    public func hideWindowAnimation(completion: (() -> Void)? = nil) {
         let height = self.bounds.height
 
         UIView.transition(with: self, duration: 0.3, options: [], animations: {() -> Void in

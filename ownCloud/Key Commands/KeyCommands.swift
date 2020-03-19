@@ -963,7 +963,7 @@ extension PhotoSelectionViewController {
 
 extension PasscodeViewController {
 
-    override var keyCommands: [UIKeyCommand]? {
+	override public var keyCommands: [UIKeyCommand]? {
         var keyCommands : [UIKeyCommand] = []
         for i in 0 ..< 10 {
             keyCommands.append(

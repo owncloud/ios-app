@@ -20,7 +20,7 @@ import UIKit
 
 extension UIView {
 	// MARK: - Animation
-	func shakeHorizontally(amplitude : CGFloat = 20, duration : CFTimeInterval = 0.5) {
+	 public func shakeHorizontally(amplitude : CGFloat = 20, duration : CFTimeInterval = 0.5) {
 		let animation : CAKeyframeAnimation = CAKeyframeAnimation(keyPath: "transform.translation.x")
 
 		animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)

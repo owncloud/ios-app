@@ -17,12 +17,11 @@
  */
 
 import UIKit
-import ownCloudAppShared
 
-typealias PasscodeViewControllerCancelHandler = ((_ passcodeViewController: PasscodeViewController) -> Void)
-typealias PasscodeViewControllerCompletionHandler = ((_ passcodeViewController: PasscodeViewController, _ passcode: String) -> Void)
+public typealias PasscodeViewControllerCancelHandler = ((_ passcodeViewController: PasscodeViewController) -> Void)
+public typealias PasscodeViewControllerCompletionHandler = ((_ passcodeViewController: PasscodeViewController, _ passcode: String) -> Void)
 
-class PasscodeViewController: UIViewController, Themeable {
+public class PasscodeViewController: UIViewController, Themeable {
 
 	// MARK: - Constants
 	fileprivate var passCodeCompletionDelay: TimeInterval = 0.1
@@ -44,19 +43,19 @@ class PasscodeViewController: UIViewController, Themeable {
 	// MARK: - Properties
 	var passcodeLength: Int = 4
 
-	var passcode: String? {
+	public var passcode: String? {
 		didSet {
 			self.updatePasscodeDots()
 		}
 	}
 
-	var message: String? {
+	public var message: String? {
 		didSet {
 			self.messageLabel?.text = message ?? " "
 		}
 	}
 
-	var errorMessage: String? {
+	public var errorMessage: String? {
 		didSet {
 			self.errorMessageLabel?.text = errorMessage ?? " "
 
@@ -124,11 +123,11 @@ class PasscodeViewController: UIViewController, Themeable {
 	}
 
 	// MARK: - Handlers
-	var cancelHandler: PasscodeViewControllerCancelHandler?
+	public var cancelHandler: PasscodeViewControllerCancelHandler?
 	var completionHandler: PasscodeViewControllerCompletionHandler?
 
 	// MARK: - Init
-	init(cancelHandler: PasscodeViewControllerCancelHandler? = nil, completionHandler: @escaping PasscodeViewControllerCompletionHandler, hasCancelButton: Bool = true, keypadButtonsEnabled: Bool = true) {
+	public init(cancelHandler: PasscodeViewControllerCancelHandler? = nil, completionHandler: @escaping PasscodeViewControllerCompletionHandler, hasCancelButton: Bool = true, keypadButtonsEnabled: Bool = true) {
 		self.cancelHandler = cancelHandler
 		self.completionHandler = completionHandler
 		self.keypadButtonsEnabled = keypadButtonsEnabled
@@ -136,7 +135,7 @@ class PasscodeViewController: UIViewController, Themeable {
 		self.keypadButtonsHidden = false
 		self.screenBlurringEnabled = false
 
-		super.init(nibName: "PasscodeViewController", bundle: nil)
+		super.init(nibName: "PasscodeViewController", bundle: Bundle(for: type(of: self)))
 
 		self.modalPresentationStyle = .fullScreen
 	}
@@ -146,7 +145,7 @@ class PasscodeViewController: UIViewController, Themeable {
 	}
 
 	// MARK: - View Controller Events
-	override func viewDidLoad() {
+	override public func viewDidLoad() {
 		super.viewDidLoad()
 
 		self.cancelButton?.setTitle("Cancel".localized, for: .normal)
@@ -163,7 +162,7 @@ class PasscodeViewController: UIViewController, Themeable {
 		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
+	override public func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		Theme.shared.register(client: self)
@@ -171,18 +170,18 @@ class PasscodeViewController: UIViewController, Themeable {
 		self.updatePasscodeDots()
 	}
 
-	override func viewWillDisappear(_ animated: Bool) {
+	override public func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
 		Theme.shared.unregister(client: self)
 	}
 
 	// MARK: - Orientation
-	override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+	override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
 		return .portrait
 	}
 
-	override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+	override public var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
 		return .portrait
 	}
 
@@ -251,11 +250,11 @@ class PasscodeViewController: UIViewController, Themeable {
 	}
 
 	// MARK: - Themeing
-	override var preferredStatusBarStyle : UIStatusBarStyle {
+	override public var preferredStatusBarStyle : UIStatusBarStyle {
 		return Theme.shared.activeCollection.statusBarStyle
 	}
 
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 
 		lockscreenContainerView?.backgroundColor = collection.tableBackgroundColor
 

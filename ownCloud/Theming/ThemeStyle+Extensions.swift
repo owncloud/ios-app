@@ -18,7 +18,6 @@
 
 import Foundation
 import ownCloudSDK
-import ownCloudAppShared
 
 @available(iOS 13.0, *)
 extension UIUserInterfaceStyle {
@@ -44,7 +43,7 @@ extension ThemeStyle {
 		})
 	}
 
-	static var defaultStyle: ThemeStyle {
+	static public var defaultStyle: ThemeStyle {
 		let matchContext = OCExtensionContext(location: OCExtensionLocation(ofType: .themeStyle, identifier: nil),
 						      requirements: [ThemeStyleFeatureKeys.isDefault : true], // Match default
 						      preferences: [ThemeStyleFeatureKeys.isBranding : true]) // Prefer brandings (=> boosts score of brandings so it outmatches built-in styles)
@@ -61,7 +60,7 @@ extension ThemeStyle {
 		return ThemeStyle.ownCloudDark
 	}
 
-	static var preferredStyle : ThemeStyle {
+	static public var preferredStyle : ThemeStyle {
 		set {
 			UserDefaults.standard.setValue(newValue.identifier, forKey: "preferred-theme-style")
 
@@ -83,7 +82,7 @@ extension ThemeStyle {
 		}
 	}
 
-	static var displayName : String {
+	static public var displayName : String {
 		if #available(iOS 13, *), ThemeStyle.followSystemAppearance {
 			return "System".localized
 		}
@@ -96,7 +95,8 @@ extension ThemeStyle {
 		return UITraitCollection.current.userInterfaceStyle
 	}
 
-	static func considerAppearanceUpdate(animated: Bool = false) {
+	static public func considerAppearanceUpdate(animated: Bool = false) {
+		/*
 		let themeWindow : ThemeWindow? = (UIApplication.shared.delegate as? AppDelegate)?.window
 		var applyStyle : ThemeStyle? = ThemeStyle.preferredStyle
 
@@ -132,10 +132,10 @@ extension ThemeStyle {
 			} else {
 				Theme.shared.activeCollection = themeCollection
 			}
-		}
+		}*/
 	}
 
-	static var followSystemAppearance : Bool {
+	static public var followSystemAppearance : Bool {
 		set {
 			UserDefaults.standard.setValue(newValue, forKey: "theme-style-follows-system-appearance")
 
@@ -158,7 +158,7 @@ extension ThemeStyle {
 
 	}
 
-	static func forIdentifier(_ identifier: String) -> ThemeStyle? {
+	static public func forIdentifier(_ identifier: String) -> ThemeStyle? {
 		let matchContext = OCExtensionContext(location: OCExtensionLocation(ofType: .themeStyle, identifier: OCExtensionLocationIdentifier(rawValue: identifier)), requirements: nil, preferences: nil)
 
 		if let matches : [OCExtensionMatch] = try? OCExtensionManager.shared.provideExtensions(for: matchContext),
@@ -171,7 +171,7 @@ extension ThemeStyle {
 		return nil
 	}
 
-	static var availableStyles : [ThemeStyle]? {
+	static public var availableStyles : [ThemeStyle]? {
 		let matchContext = OCExtensionContext(location: OCExtensionLocation(ofType: .themeStyle, identifier: nil), requirements: nil, preferences: nil)
 
 		if let matches : [OCExtensionMatch] = try? OCExtensionManager.shared.provideExtensions(for: matchContext), matches.count > 0 {
@@ -189,13 +189,13 @@ extension ThemeStyle {
 		return nil
 	}
 
-	static func registerDefaultStyles() {
+	static public func registerDefaultStyles() {
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension())
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudDark.themeStyleExtension(isDefault: true))
 		OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudClassic.themeStyleExtension())
 	}
 
-	static func availableStyles(for styles: [ThemeCollectionStyle]) -> [ThemeStyle]? {
+	static public func availableStyles(for styles: [ThemeCollectionStyle]) -> [ThemeStyle]? {
 		let styles = ThemeStyle.availableStyles?.filter { (theme) -> Bool in
 			if styles.contains(theme.themeStyle) {
 				return true
