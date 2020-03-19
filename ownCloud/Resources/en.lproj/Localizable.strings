@@ -493,10 +493,6 @@
 "Overview" = "Overview";
 "All Files" = "All Files";
 
-/* Import File */
-"Save File" = "Save File";
-"Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once.";
-
 /* Release Notes */
 "Proceed" = "Proceed";
 "New in ownCloud" = "New in ownCloud";
@@ -601,5 +597,6 @@
 "subscription" = "subscription";
 
 /* Share Sheet */
+"Save File" = "Save File";
 "Choose an account and folder to import the file into." = "Choose an account and folder to import the file into.";
 "No account configured.\nSetup an new account in the app, before you can save a file." = "No account configured.\nSetup an new account in the app, before you can save a file.";
