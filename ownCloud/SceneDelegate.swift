@@ -73,8 +73,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 
 	func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-		if let urlContext = URLContexts.first {
-			ImportFilesController(url: urlContext.url, copyBeforeUsing: urlContext.options.openInPlace).accountUI()
-		}
 	}
 }
