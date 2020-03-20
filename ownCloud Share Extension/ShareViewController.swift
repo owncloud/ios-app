@@ -152,10 +152,12 @@ class ShareViewController: MoreStaticTableViewController {
 					 isSecurityScoped: false,
 					 options: [OCCoreOption.importByCopying : true,
 						   OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue],
-					 placeholderCompletionHandler: { (error, item) in
+					 placeholderCompletionHandler: { (error, _) in
 						if error != nil {
 							Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
 							completion(error)
+						} else {
+							completion(nil)
 						}
 
 						OnBackgroundQueue(after: 2) {
@@ -163,15 +165,7 @@ class ShareViewController: MoreStaticTableViewController {
 							OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 						}
 					 },
-					 resultHandler: { (error, _ core, _ item, _) in
-						if error != nil {
-							Log.debug("Error uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path)), error: \(error?.localizedDescription ?? "" )")
-							completion(error)
-						} else {
-							Log.debug("Success uploading \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
-							completion(nil)
-						}
-					}
+					 resultHandler: nil
 		) == nil {
 			Log.debug("Error setting up upload of \(Log.mask(name)) to \(Log.mask(targetDirectory.path))")
 			let error = NSError(domain: "ImportFileErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
