@@ -18,7 +18,6 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 
 class ProgressSummary : Equatable {
 	private let uuid = UUID()

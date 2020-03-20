@@ -18,7 +18,6 @@
 
 import UIKit
 import PDFKit
-import ownCloudAppShared
 
 class PDFOutlineViewController: UIViewController {
 

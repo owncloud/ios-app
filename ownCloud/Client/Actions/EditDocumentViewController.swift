@@ -18,7 +18,6 @@
 
 import UIKit
 import ownCloudSDK
-import ownCloudAppShared
 import QuickLook
 
 @available(iOS 13.0, *)

@@ -17,7 +17,6 @@
  */
 
 import UIKit
-import ownCloudAppShared
 
 class LicenseOfferButton: ThemeButton {
 	var originalTitle : String?

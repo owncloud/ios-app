@@ -18,7 +18,6 @@
 
 import Foundation
 import UIKit
-import ownCloudAppShared
 
 private enum CardPosition {
 	case half

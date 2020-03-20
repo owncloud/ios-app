@@ -17,7 +17,6 @@
 */
 
 import UIKit
-import ownCloudAppShared
 
 class SegmentedControl: UISegmentedControl {
 	var oldValue : Int!

@@ -19,7 +19,6 @@
 import Photos
 import ownCloudSDK
 import CoreServices
-import ownCloudAppShared
 
 extension PHAsset {
 	/**

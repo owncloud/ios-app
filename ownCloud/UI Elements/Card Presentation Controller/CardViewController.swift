@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import ownCloudAppShared
 
 class CardViewController: UIViewController, Themeable, CardPresentationSizing {
 	deinit {

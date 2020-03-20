@@ -17,7 +17,6 @@
  */
 
 import UIKit
-import ownCloudAppShared
 
 class ThemeRoundedButton: ThemeButton {
 
