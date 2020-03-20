@@ -36,10 +36,6 @@
         (
           ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.data&quot;
         )
-        AND
-        (
-          NOT ( ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO &quot;public.url&quot; )
-        )
     ).@count == $extensionItem.attachments.@count
 ).@count &gt; 0</string>
 		</dict>
