@@ -63,35 +63,51 @@ extension URL {
             return false
         }
         
-        // Find matching bookmark
-        guard let bookmark = OCBookmarkManager.shared.bookmarks.filter({$0.url?.host == self.host}).first else {
-            return false
-        }
-        
-        var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
-        // E.g. if we would like to use app URL scheme (owncloud://) instead of universal link, to make it work with oC SDK, we need to change scheme back to the original bookmark URL scheme
-        if replaceScheme {
-            components?.scheme = bookmark.url?.scheme
-        }
-        
-        if let privateLinkURL = components?.url {
-            OCCoreManager.shared.requestCore(for: bookmark, setup: nil) { (core, error) in
-                if core != nil {
-                    core?.retrieveItem(forPrivateLink: privateLinkURL, completionHandler: { (error, item) in
-                        OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
-                        OnMainThread {
-                            completion(item, bookmark, error)
-                        }
-                    })
-                } else {
-                    OnMainThread {
-                        completion(nil, nil, error)
-                    }
-                }
-
-            }
-        }
-        
+        // Find matching bookmarks
+		let bookmarks = OCBookmarkManager.shared.bookmarks.filter({$0.url?.host == self.host})
+		
+		var matchedBookmark: OCBookmark?
+		var foundItem: OCItem?
+		var lastError: Error?
+		
+		let group = DispatchGroup()
+		
+		for bookmark in bookmarks {
+			matchedBookmark = bookmark
+			
+			if foundItem == nil {
+				var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
+				// E.g. if we would like to use app URL scheme (owncloud://) instead of universal link, to make it work with oC SDK, we need to change scheme back to the original bookmark URL scheme
+				if replaceScheme {
+					components?.scheme = bookmark.url?.scheme
+				}
+				
+				if let privateLinkURL = components?.url {
+					group.enter()
+					OCCoreManager.shared.requestCore(for: bookmark, setup: nil) { (core, error) in
+						if core != nil {
+							core?.retrieveItem(forPrivateLink: privateLinkURL, completionHandler: { (error, item) in
+								foundItem = item
+								lastError = error
+								OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
+								group.leave()
+							})
+						} else {
+							group.leave()
+						}
+					}
+				}
+			}
+		}
+		
+		group.notify(queue: DispatchQueue.main) {
+			if foundItem != nil {
+				completion(foundItem, matchedBookmark, nil)
+			} else {
+				completion(nil, nil, lastError)
+			}
+		}
+		
         return true
     }
 }
