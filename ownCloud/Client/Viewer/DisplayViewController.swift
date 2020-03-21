@@ -78,9 +78,12 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	// This shall be set to false if DisplayViewController sublass is able to handle streamed data (e.g. audio, video)
 	var requiresLocalItemCopy: Bool = true
 
+	private var lastSourceItemVersion : OCItemVersionIdentifier?
 	var source: URL? {
 		didSet {
-			if self.source != oldValue && self.source != nil {
+			if self.source != nil && ((self.source != oldValue) || (lastSourceItemVersion != self.item?.itemVersionIdentifier)) {
+				lastSourceItemVersion = item?.localCopyVersionIdentifier ?? item?.itemVersionIdentifier
+
 				OnMainThread(inline: true) {
 					if self.shallShowPreview == true && self.canPreview(url: self.source!) {
 						self.iconImageView?.isHidden = true
@@ -430,7 +433,11 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				switch query.state {
 					case .idle, .contentsFromCache, .waitingForServerReply:
 						if let firstItem = changeSet?.queryResult.first {
-							if (firstItem.syncActivity != .updating) && ((firstItem.itemVersionIdentifier != self?.item?.itemVersionIdentifier) || (firstItem.name != self?.item?.name)) {
+							if (firstItem.syncActivity != .updating) &&
+							    ((firstItem.itemVersionIdentifier != self?.item?.itemVersionIdentifier) || // Item version changed
+							     (firstItem.name != self?.item?.name) || // Item name changed
+							     ((self?.lastSourceItemVersion != nil) && (firstItem.itemVersionIdentifier != self?.lastSourceItemVersion)) // Item already shown, this version is different from what was shown last
+							) {
 								self?.present(item: firstItem)
 							} else {
 								self?.item = firstItem
@@ -464,9 +471,9 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 				self.startQuery()
 
-				if source == nil {
+				if source == nil || ((lastSourceItemVersion != nil) && (item.itemVersionIdentifier != lastSourceItemVersion) && !item.syncActivity.contains(.downloading)) /* || item.localCopyVersionIdentifier != item.itemVersionIdentifier */ {
 					if requiresLocalItemCopy {
-						if core?.localCopy(of: item) == nil {
+						if core?.localCopy(of: item) == nil { /* || item.localCopyVersionIdentifier != item.itemVersionIdentifier { */
 							self.downloadItem(sender: nil)
 						} else {
 							core?.registerUsage(of: item, completionHandler: nil)
