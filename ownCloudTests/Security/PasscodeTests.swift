@@ -42,15 +42,15 @@ class PasscodeTests: XCTestCase {
 		EarlGrey.waitForElement(accessibilityID: "number1Button")
 
 		// Tap the number buttons
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
 
 		EarlGrey.waitForElement(accessibilityID: "addServer")
 
 		// Asserts
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible())
 
 		//Reset Status
 		AppLockManager.shared.dismissLockscreen(animated: false)
@@ -70,13 +70,13 @@ class PasscodeTests: XCTestCase {
 		EarlGrey.waitForElement(accessibilityID: "number1Button")
 
 		// Tap the number buttons
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
 
 		// Asserts
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("messageLabel")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("messageLabel")).assert(grey_sufficientlyVisible())
 
 		//Reset Status
 		AppLockManager.shared.dismissLockscreen(animated: false)
@@ -92,21 +92,21 @@ class PasscodeTests: XCTestCase {
 
 		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
+		EarlGrey.selectElement(with: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
 
 		// Tap the number buttons
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_text("Cancel".localized)).perform(grey_tap())
 
 		EarlGrey.waitForElementMissing(accessibilityID: "number1Button")
 
 		// Asserts
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
+		EarlGrey.selectElement(with: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
 
 		// Reset status
-		EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_text("ownCloud")).perform(grey_tap())
 	}
 
 	/*
@@ -119,27 +119,27 @@ class PasscodeTests: XCTestCase {
 
 		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
+		EarlGrey.selectElement(with: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
 
 		// Tap the number buttons first time
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
 
 		// Tap the number buttons second time & cancel
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_text("Cancel".localized)).perform(grey_tap())
 
 		EarlGrey.waitForElementMissing(accessibilityID: "number1Button")
 
 		// Asserts
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
+		EarlGrey.selectElement(with: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
 
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_text("ownCloud")).perform(grey_tap())
 	}
 
 	/*
@@ -152,28 +152,28 @@ class PasscodeTests: XCTestCase {
 
 		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
+		EarlGrey.selectElement(with: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(true))
 
 		// Tap the number buttons
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
 
 		// Tap the number buttons again
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number3Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number3Button")).perform(grey_tap())
 
 		// Asserts
-		EarlGrey.select(elementWithMatcher: grey_text("The entered codes are different".localized)).assert(grey_sufficientlyVisible())
-		EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
+		EarlGrey.selectElement(with: grey_text("The entered codes are different".localized)).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_text("Cancel".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
 
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_text("ownCloud")).perform(grey_tap())
 	}
 
 	/*
@@ -187,23 +187,23 @@ class PasscodeTests: XCTestCase {
 
 		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(false))
+		EarlGrey.selectElement(with: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(false))
 
 		// Tap the number buttons first time
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
 
 		EarlGrey.waitForElementMissing(accessibilityID: "number1Button")
 
 		// Asserts
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("lockFrequency")).assert(grey_notVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(false))
+		EarlGrey.selectElement(with: grey_accessibilityID("lockFrequency")).assert(grey_notVisible())
 
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_text("ownCloud")).perform(grey_tap())
 	}
 
 	/*
@@ -217,22 +217,22 @@ class PasscodeTests: XCTestCase {
 
 		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(false))
+		EarlGrey.selectElement(with: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("passcodeSwitchIdentifier")).perform(grey_turnSwitchOn(false))
 
 		// Tap the number buttons first time
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("number1Button")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_text("Cancel".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("number1Button")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_text("Cancel".localized)).perform(grey_tap())
 
 		EarlGrey.waitForElementMissing(accessibilityID: "number1Button")
 
 		// Asserts
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(true))
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("lockFrequency")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("passcodeSwitchIdentifier")).assert(grey_switchWithOnState(true))
+		EarlGrey.selectElement(with: grey_accessibilityID("lockFrequency")).assert(grey_sufficientlyVisible())
 
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_text("ownCloud")).perform(grey_tap())
 	}
 
 	/*
@@ -246,18 +246,18 @@ class PasscodeTests: XCTestCase {
 
 		EarlGrey.waitForElementMissing(accessibilityID: "settingsBarButtonItem")
 
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("settingsBarButtonItem")).perform(grey_tap())
 
 		// Tap the number buttons first time
-		EarlGrey.select(elementWithMatcher: grey_accessibilityID("lockFrequency")).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_text("After 1 minute".localized)).perform(grey_tap())
-		EarlGrey.select(elementWithMatcher: grey_text("Settings".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_accessibilityID("lockFrequency")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_text("After 1 minute".localized)).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_text("Settings".localized)).perform(grey_tap())
 
 		//Asserts
-		EarlGrey.select(elementWithMatcher: grey_text("After 1 minute".localized)).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_text("After 1 minute".localized)).assert(grey_sufficientlyVisible())
 
 		//Reset status
-		EarlGrey.select(elementWithMatcher: grey_text("ownCloud")).perform(grey_tap())
+		EarlGrey.selectElement(with: grey_text("ownCloud")).perform(grey_tap())
 		AppLockManager.shared.lockEnabled = false
 	}
 }

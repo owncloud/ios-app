@@ -41,7 +41,7 @@ class BiometricalTests: XCTestCase {
 		let isPasscodeUnlocked = GREYCondition(name: "Wait for passcode is unlocked by biometrical", block: {
 			var error: NSError?
 			
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible(), error: &error)
 			
 			return error == nil
 		}).wait(withTimeout: 5.0, pollInterval: 0.5)
@@ -62,7 +62,7 @@ class BiometricalTests: XCTestCase {
 		let isPasscodeLocked = GREYCondition(name: "Wait for passcode is unlocked by biometrical", block: {
 			var error: NSError?
 			
-			EarlGrey.select(elementWithMatcher: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible(), error: &error)
+			EarlGrey.selectElement(with: grey_accessibilityID("addServer")).assert(grey_sufficientlyVisible(), error: &error)
 			
 			return error?.code == 3
 		}).wait(withTimeout: 2.0, pollInterval: 0.5)
