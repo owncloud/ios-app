@@ -79,9 +79,10 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	var requiresLocalItemCopy: Bool = true
 
 	private var lastSourceItemVersion : OCItemVersionIdentifier?
+	private var lastSourceItemModificationDate : Date?
 	var source: URL? {
 		didSet {
-			if self.source != nil && ((self.source != oldValue) || (lastSourceItemVersion != self.item?.itemVersionIdentifier)) {
+			if self.source != nil {
 				lastSourceItemVersion = item?.localCopyVersionIdentifier ?? item?.itemVersionIdentifier
 
 				OnMainThread(inline: true) {
@@ -433,11 +434,33 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 				switch query.state {
 					case .idle, .contentsFromCache, .waitingForServerReply:
 						if let firstItem = changeSet?.queryResult.first {
+							var localURLLastModified : Date?
+
+							if let localURL = self?.core?.localCopy(of: firstItem) {
+								do {
+									localURLLastModified  = (try localURL.resourceValues(forKeys: [ .contentModificationDateKey ])).contentModificationDate
+								} catch {
+									Log.error("Error fetching last modification date of \(localURL): \(error)")
+								}
+							}
+
 							if (firstItem.syncActivity != .updating) &&
-							    ((firstItem.itemVersionIdentifier != self?.item?.itemVersionIdentifier) || // Item version changed
-							     (firstItem.name != self?.item?.name) || // Item name changed
-							     ((self?.lastSourceItemVersion != nil) && (firstItem.itemVersionIdentifier != self?.lastSourceItemVersion)) // Item already shown, this version is different from what was shown last
+							    (// Item version changed
+							     (firstItem.itemVersionIdentifier != self?.item?.itemVersionIdentifier) ||
+
+							     // Item name changed
+							     (firstItem.name != self?.item?.name) ||
+
+							     // Item already shown, this version is different from what was shown last
+							     ((self?.lastSourceItemVersion != nil) && (firstItem.itemVersionIdentifier != self?.lastSourceItemVersion)) ||
+
+							     // Item changed locally, exists locally, local file modification date changed
+							     (firstItem.locallyModified && (localURLLastModified != nil) && (localURLLastModified != self?.lastSourceItemModificationDate))
 							) {
+								if let lastModified = localURLLastModified {
+									self?.lastSourceItemModificationDate = lastModified
+								}
+
 								self?.present(item: firstItem)
 							} else {
 								self?.item = firstItem
@@ -471,7 +494,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 				self.startQuery()
 
-				if source == nil || ((lastSourceItemVersion != nil) && (item.itemVersionIdentifier != lastSourceItemVersion) && !item.syncActivity.contains(.downloading)) /* || item.localCopyVersionIdentifier != item.itemVersionIdentifier */ {
+				if source == nil || ((lastSourceItemVersion != nil) && (item.itemVersionIdentifier != lastSourceItemVersion) && !item.syncActivity.contains(.downloading)) || item.locallyModified /* || item.localCopyVersionIdentifier != item.itemVersionIdentifier */ {
 					if requiresLocalItemCopy {
 						if core?.localCopy(of: item) == nil { /* || item.localCopyVersionIdentifier != item.itemVersionIdentifier { */
 							self.downloadItem(sender: nil)
