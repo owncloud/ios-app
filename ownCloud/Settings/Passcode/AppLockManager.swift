@@ -201,10 +201,14 @@ public class AppLockManager: NSObject {
 					let passcodeViewController = passwordViewController()
 
 					passcodeViewController.willMove(toParent: passwordViewHostViewController)
-					passcodeViewController.view.frame = passwordViewHostViewController.view.frame
+					passcodeViewController.view.frame = passwordViewHostViewController.view.bounds
 					passwordViewHostViewController.view.addSubview(passcodeViewController.view)
 					passwordViewHostViewController.addChild(passcodeViewController)
 					passcodeViewController.didMove(toParent: passwordViewHostViewController)
+
+					if let tableViewController = passwordViewHostViewController as? UITableViewController {
+						tableViewController.tableView.isScrollEnabled = false
+					}
 
 					self.startLockCountdown()
 
@@ -260,6 +264,10 @@ public class AppLockManager: NSObject {
 				passcodeViewController.willMove(toParent: nil)
 				passcodeViewController.view.removeFromSuperview()
 				passcodeViewController.removeFromParent()
+
+				if let tableViewController = passwordViewHostViewController as? UITableViewController {
+					tableViewController.tableView.isScrollEnabled = true
+				}
 			} else {
 				for themeWindow in ThemeWindow.themeWindows {
 					if let appLockWindow = applockWindowByWindow.object(forKey: themeWindow) {
