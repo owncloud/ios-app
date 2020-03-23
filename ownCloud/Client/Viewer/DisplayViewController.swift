@@ -444,12 +444,14 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 								}
 							}
 
+							let currentItem = self?.item
+
 							if (firstItem.syncActivity != .updating) &&
 							    (// Item version changed
-							     (firstItem.itemVersionIdentifier != self?.item?.itemVersionIdentifier) ||
+							     (firstItem.itemVersionIdentifier != currentItem?.itemVersionIdentifier) ||
 
 							     // Item name changed
-							     (firstItem.name != self?.item?.name) ||
+							     (firstItem.name != currentItem?.name) ||
 
 							     // Item already shown, this version is different from what was shown last
 							     ((self?.lastSourceItemVersion != nil) && (firstItem.itemVersionIdentifier != self?.lastSourceItemVersion)) ||
@@ -465,12 +467,17 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 							} else {
 								self?.item = firstItem
 							}
+						} else {
+							// No item available
+							Log.debug("Item \(String(describing: self?.item)) no longer available")
+							self?.item = nil
 						}
 
 						self?.updateNavigationBarItems()
 
 					case .targetRemoved:
 						self?.updateNavigationBarItems()
+
 					default: break
 				}
 			}
