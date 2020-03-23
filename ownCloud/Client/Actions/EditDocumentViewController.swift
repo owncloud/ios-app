@@ -68,7 +68,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 					if refreshPreview {
 						OnMainThread {
-							self.refreshCurrentPreviewItem()
+							self.reloadData()
 						}
 					}
 				} else if item == nil {
