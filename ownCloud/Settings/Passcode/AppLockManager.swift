@@ -192,6 +192,11 @@ public class AppLockManager: NSObject {
 	private var passcodeControllerByWindow : NSMapTable<ThemeWindow, PasscodeViewController> = NSMapTable.weakToStrongObjects()
 	private var applockWindowByWindow : NSMapTable<ThemeWindow, AppLockWindow> = NSMapTable.weakToStrongObjects()
 
+	@objc private func cancelAction () {
+		let error = NSError(domain: "ShareViewErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey: "Canceled by user"])
+		passwordViewHostViewController?.extensionContext?.cancelRequest(withError: error)
+	}
+
 	@objc func updateLockscreens() {
 		if lockscreenOpen {
 			if let passwordViewHostViewController = passwordViewHostViewController {
@@ -199,16 +204,13 @@ public class AppLockManager: NSObject {
 					passcodeViewController.screenBlurringEnabled = lockscreenOpenForced
 				} else {
 					let passcodeViewController = passwordViewController()
+					let navigationController = ThemeNavigationController(rootViewController: passcodeViewController)
+					navigationController.modalPresentationStyle = .overFullScreen
 
-					passcodeViewController.willMove(toParent: passwordViewHostViewController)
-					passcodeViewController.view.frame = passwordViewHostViewController.view.bounds
-					passwordViewHostViewController.view.addSubview(passcodeViewController.view)
-					passwordViewHostViewController.addChild(passcodeViewController)
-					passcodeViewController.didMove(toParent: passwordViewHostViewController)
+					let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
+					passcodeViewController.navigationItem.setRightBarButton(itemCancel, animated: false)
 
-					if let tableViewController = passwordViewHostViewController as? UITableViewController {
-						tableViewController.tableView.isScrollEnabled = false
-					}
+					passwordViewHostViewController.present(navigationController, animated: false, completion: nil)
 
 					self.startLockCountdown()
 
@@ -260,14 +262,8 @@ public class AppLockManager: NSObject {
 				}
 			}
 		} else {
-			if let passwordViewHostViewController = passwordViewHostViewController, let passcodeViewController = passwordViewHostViewController.children.last as? PasscodeViewController {
-				passcodeViewController.willMove(toParent: nil)
-				passcodeViewController.view.removeFromSuperview()
-				passcodeViewController.removeFromParent()
-
-				if let tableViewController = passwordViewHostViewController as? UITableViewController {
-					tableViewController.tableView.isScrollEnabled = true
-				}
+			if let passwordViewHostViewController = passwordViewHostViewController, let passcodeViewController = passwordViewHostViewController.topMostViewController as? PasscodeViewController {
+				passcodeViewController.dismiss(animated: false, completion: nil)
 			} else {
 				for themeWindow in ThemeWindow.themeWindows {
 					if let appLockWindow = applockWindowByWindow.object(forKey: themeWindow) {

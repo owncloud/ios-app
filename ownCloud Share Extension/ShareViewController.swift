@@ -65,14 +65,18 @@ class ShareViewController: MoreStaticTableViewController {
 		OCBookmarkManager.shared.loadBookmarks()
 		let bookmarks : [OCBookmark] = OCBookmarkManager.shared.bookmarks as [OCBookmark]
 		if bookmarks.count > 0 {
-			let rowDescription = StaticTableViewRow(label: "Choose an account and folder to import the file into.".localized, alignment: .center)
-			actionsRows.append(rowDescription)
+			if bookmarks.count > 1 {
+				let rowDescription = StaticTableViewRow(label: "Choose an account and folder to import the file into.".localized, alignment: .center)
+				actionsRows.append(rowDescription)
 
-			for (bookmark) in bookmarks {
-				let row = StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
-					self.openDirectoryPicker(for: bookmark)
-				}, title: bookmark.shortName, style: .plain, image: Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25)), imageWidth: 25, alignment: .left)
-				actionsRows.append(row)
+				for (bookmark) in bookmarks {
+					let row = StaticTableViewRow(buttonWithAction: { (_ row, _ sender) in
+						self.openDirectoryPicker(for: bookmark, pushViewController: true)
+					}, title: bookmark.shortName, style: .plain, image: Theme.shared.image(for: "owncloud-logo", size: CGSize(width: 25, height: 25)), imageWidth: 25, alignment: .left)
+					actionsRows.append(row)
+				}
+			} else if let bookmark = bookmarks.first {
+				self.openDirectoryPicker(for: bookmark, pushViewController: false)
 			}
 		} else {
 			let rowDescription = StaticTableViewRow(label: "No account configured.\nSetup an new account in the app, before you can save a file.".localized, alignment: .center)
@@ -82,7 +86,7 @@ class ShareViewController: MoreStaticTableViewController {
 		self.addSection(MoreStaticTableViewSection(headerAttributedTitle: title, identifier: "actions-section", rows: actionsRows))
 	}
 
-	func openDirectoryPicker(for bookmark: OCBookmark ) {
+	func openDirectoryPicker(for bookmark: OCBookmark, pushViewController: Bool) {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (_, _) in
 		}, completionHandler: { (core, error) in
 			if let core = core, error == nil {
@@ -92,7 +96,16 @@ class ShareViewController: MoreStaticTableViewController {
 					}
 				})
 				OnMainThread {
-					self.navigationController?.pushViewController(directoryPickerViewController, animated: true)
+					if pushViewController {
+						self.navigationController?.pushViewController(directoryPickerViewController, animated: true)
+					} else {
+						self.addChild(directoryPickerViewController)
+						self.view.addSubview(directoryPickerViewController.view)
+						self.toolbarItems = directoryPickerViewController.toolbarItems
+
+						self.navigationItem.searchController = directoryPickerViewController.searchController
+						self.navigationItem.hidesSearchBarWhenScrolling = false
+					}
 				}
 			}
 		})
