@@ -22,17 +22,28 @@ import ownCloudAppShared
 import MobileCoreServices
 
 class ShareViewController: MoreStaticTableViewController {
+
+	var appearedInitial = false
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
 		AppLockManager.shared.passwordViewHostViewController = self
-		AppLockManager.shared.showLockscreenIfNeeded()
 
 		OCExtensionManager.shared.addExtension(CreateFolderAction.actionExtension)
 		Theme.shared.add(tvgResourceFor: "owncloud-logo")
 		OCItem.registerIcons()
 		setupNavigationBar()
 		setupAccountSelection()
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		if !appearedInitial {
+			appearedInitial = true
+			AppLockManager.shared.showLockscreenIfNeeded()
+		}
 	}
 
 	@objc private func cancelAction () {
