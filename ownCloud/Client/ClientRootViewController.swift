@@ -70,6 +70,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		super.init(nibName: nil, bundle: nil)
 
+		OCKeyValueStore.registerClasses(OCEvent.safeClasses, forKey: .autoResolveIssues)
+
 		progressSummarizer = ProgressSummarizer.shared(forBookmark: inBookmark)
 		if progressSummarizer != nil {
 			progressSummarizer?.addObserver(self) { [weak self] (summarizer, summary) in
@@ -372,14 +374,38 @@ extension ClientRootViewController : OCCoreDelegate {
 		var authFailureIgnoreStyle = UIAlertAction.Style.destructive
 		let editBookmark = self.bookmark
 		var nsError = error as NSError?
+		var attemptFixHandler : (() -> Void)?
 
-		if nsError == nil, let issueNSError = issue?.error as NSError? {
+		// Attempt auto-resolution of issue first
+		if let issue = issue, core.attemptAutoResolution(of: issue) {
+			// Issue could be auto-resolved - nothing left to do!
+			return
+		}
+
+		if nsError == nil, let issueAuthError = issue?.error?.ocAuthenticationError {
 			// Turn issues that are just converted authorization errors back into errors and discard the issue
-			if issueNSError.isOCError(withCode: .authorizationFailed) ||
-			   issueNSError.isOCError(withCode: .authorizationNoMethodData) ||
-			   issueNSError.isOCError(withCode: .authorizationMissingData) {
-				nsError = issueNSError
-				issue = nil
+			if (issue == nil) || ((issue != nil) && (issue?.allowsQueuing == false)) {
+				nsError = issueAuthError
+				issue = nil // Allowed since not an issue or issue is not queueable
+			}
+		}
+
+		if nsError == nil, let allowsQueueing = issue?.allowsQueuing, allowsQueueing == true, let uuid = issue?.uuid, let choices = issue?.choices {
+			for choice in choices {
+				if let choiceAuthError = choice.autoChoiceForError?.ocAuthenticationError {
+					// Detect issue choices that can be resolved by fixing authorization errors
+					// => this will trigger the auth UI
+					nsError = choiceAuthError
+
+					// Enqueue issue as it can't be solved immediately
+					issue?.enqueue()
+
+					attemptFixHandler = { [weak core] in
+						// => this will automatically pick the choice when the issue is next brought up
+						// (which is at the time of the core being started the next time)
+						core?.setAutoresolveable(error: choiceAuthError, for: uuid)
+					}
+				}
 			}
 		}
 
@@ -445,6 +471,8 @@ extension ClientRootViewController : OCCoreDelegate {
 						queueCompletionHandler()
 
 						if let authDelegate = self?.authDelegate, let self = self, let nsError = nsError {
+							attemptFixHandler?()
+
 							authDelegate.handleAuthError(for: self, error: nsError, editBookmark: editBookmark)
 						}
 					}))
@@ -516,4 +544,79 @@ extension ClientRootViewController: UITabBarControllerDelegate {
 
 		return true
 	}
+}
+
+// MARK: - Automatic issue resolution helpers
+extension OCCore {
+	func setAutoresolveable(error: NSError, for uuid: UUID) {
+ 		_modifyAutoresolvableIssues(uuid: uuid, error: error, remove: false)
+	}
+
+	func attemptAutoResolution(of issue: OCIssue) -> Bool {
+		if let uuid = issue.uuid, let choices = issue.choices, let error = _modifyAutoresolvableIssues(uuid: uuid, error: nil, remove: false) {
+			for choice in choices {
+				if let choiceError = choice.autoChoiceForError as NSError? {
+					if choiceError.code == error.code, choiceError.domain == error.domain {
+						issue.selectChoice(choice)
+
+						_modifyAutoresolvableIssues(uuid: uuid, error: nil, remove: true)
+
+						return true
+					}
+				}
+			}
+		}
+
+		return false
+	}
+
+	@discardableResult
+	func _modifyAutoresolvableIssues(uuid: UUID, error: NSError?, remove: Bool) -> NSError? {
+		var result : NSError?
+
+		self.vault.keyValueStore?.updateObject(forKey: .autoResolveIssues, usingModifier: { (value, changesMadePtr) -> Any? in
+			var autoResolveErrorsByIssueUUIDs = value as? NSMutableDictionary
+
+			guard let uuid = uuid as NSUUID? else { return value }
+
+			if autoResolveErrorsByIssueUUIDs == nil {
+				autoResolveErrorsByIssueUUIDs = NSMutableDictionary()
+				changesMadePtr.pointee = true
+			}
+
+			if remove {
+				changesMadePtr.pointee = true
+				autoResolveErrorsByIssueUUIDs?.removeObject(forKey: uuid)
+			} else {
+				if let error = error {
+					autoResolveErrorsByIssueUUIDs?.setObject(error, forKey: uuid)
+					changesMadePtr.pointee = true
+				} else {
+					result = autoResolveErrorsByIssueUUIDs?.object(forKey: uuid) as? NSError
+				}
+			}
+
+			return autoResolveErrorsByIssueUUIDs
+		})
+
+		return result
+	}
+}
+
+extension Error {
+	var ocAuthenticationError : NSError? {
+		if let nsError = self as NSError? {
+			if nsError.isOCError(withCode: .authorizationFailed) ||
+			   nsError.isOCError(withCode: .authorizationNoMethodData) ||
+			   nsError.isOCError(withCode: .authorizationMissingData) {
+				return nsError
+			}
+		}
+
+		return nil
+	}
+}
+
+extension OCKeyValueStoreKey {
+	static let autoResolveIssues : OCKeyValueStoreKey = OCKeyValueStoreKey(rawValue: "autoResolveIssues")
 }
