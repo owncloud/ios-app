@@ -124,6 +124,7 @@ public class AppLockManager: NSObject {
 		}
 	}
 
+	// Set a view controller only, if you want to use it in an extension, when UIWindow is not working
 	public var passwordViewHostViewController: UIViewController?
 
 	// MARK: - Init
@@ -209,6 +210,7 @@ public class AppLockManager: NSObject {
 
 					let itemCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelAction))
 					passcodeViewController.navigationItem.setRightBarButton(itemCancel, animated: false)
+					passcodeViewController.navigationItem.title = OCAppIdentity.shared.appName ?? "ownCloud"
 
 					passwordViewHostViewController.present(navigationController, animated: false, completion: nil)
 
