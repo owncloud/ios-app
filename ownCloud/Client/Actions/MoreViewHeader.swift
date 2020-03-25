@@ -19,7 +19,7 @@ import ownCloudSDK
  *
  */
 
-class MoreViewHeader: UIView {
+class MoreViewHeader: UIView, UIPointerInteractionDelegate {
 	private var iconView: UIImageView
 	private var labelContainerView : UIView
 	private var titleLabel: UILabel
@@ -29,7 +29,7 @@ class MoreViewHeader: UIView {
 	private var showsIcon : Bool = true
 
 	var thumbnailSize = CGSize(width: 60, height: 60)
-	let favoriteSize = CGSize(width: 24, height: 24)
+	let favoriteSize = CGSize(width: 44, height: 44)
 
 	var showFavoriteButton: Bool
 	var showActivityIndicator: Bool
@@ -60,6 +60,11 @@ class MoreViewHeader: UIView {
 		Theme.shared.register(client: self)
 
 		render()
+
+		if #available(iOS 13.4, *) {
+			_ = UIPointerInteraction(delegate: self)
+			customPointerInteraction(on: favoriteButton, pointerInteractionDelegate: self)
+		}
 	}
 
 	init(url : URL) {
@@ -248,6 +253,24 @@ class MoreViewHeader: UIView {
 			favoriteButton.tintColor = Theme.shared.activeCollection.favoriteDisabledColor
 		}
 	}
+
+	// MARK: - UIPointerInteractionDelegate
+	@available(iOS 13.4, *)
+	func customPointerInteraction(on view: UIView, pointerInteractionDelegate: UIPointerInteractionDelegate) {
+		let pointerInteraction = UIPointerInteraction(delegate: pointerInteractionDelegate)
+		view.addInteraction(pointerInteraction)
+	}
+
+	@available(iOS 13.4, *)
+	func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
+        var pointerStyle: UIPointerStyle?
+
+        if let interactionView = interaction.view {
+            let targetedPreview = UITargetedPreview(view: interactionView)
+            pointerStyle = UIPointerStyle(effect: UIPointerEffect.highlight(targetedPreview))
+        }
+        return pointerStyle
+    }
 }
 
 extension MoreViewHeader: Themeable {
