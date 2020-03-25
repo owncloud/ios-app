@@ -19,7 +19,7 @@ import ownCloudSDK
  *
  */
 
-class MoreViewHeader: UIView, UIPointerInteractionDelegate {
+class MoreViewHeader: UIView {
 	private var iconView: UIImageView
 	private var labelContainerView : UIView
 	private var titleLabel: UILabel
@@ -60,11 +60,6 @@ class MoreViewHeader: UIView, UIPointerInteractionDelegate {
 		Theme.shared.register(client: self)
 
 		render()
-
-		if #available(iOS 13.4, *) {
-			_ = UIPointerInteraction(delegate: self)
-			customPointerInteraction(on: favoriteButton, pointerInteractionDelegate: self)
-		}
 	}
 
 	init(url : URL) {
@@ -145,6 +140,9 @@ class MoreViewHeader: UIView, UIPointerInteractionDelegate {
 			updateFavoriteButtonImage()
 			favoriteButton.addTarget(self, action: #selector(toogleFavoriteState), for: UIControl.Event.touchUpInside)
 			self.addSubview(favoriteButton)
+			if #available(iOS 13.4, *) {
+				favoriteButton.isPointerInteractionEnabled = true
+			}
 
 			NSLayoutConstraint.activate([
 				favoriteButton.widthAnchor.constraint(equalToConstant: favoriteSize.width),
@@ -253,24 +251,6 @@ class MoreViewHeader: UIView, UIPointerInteractionDelegate {
 			favoriteButton.tintColor = Theme.shared.activeCollection.favoriteDisabledColor
 		}
 	}
-
-	// MARK: - UIPointerInteractionDelegate
-	@available(iOS 13.4, *)
-	func customPointerInteraction(on view: UIView, pointerInteractionDelegate: UIPointerInteractionDelegate) {
-		let pointerInteraction = UIPointerInteraction(delegate: pointerInteractionDelegate)
-		view.addInteraction(pointerInteraction)
-	}
-
-	@available(iOS 13.4, *)
-	func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
-        var pointerStyle: UIPointerStyle?
-
-        if let interactionView = interaction.view {
-            let targetedPreview = UITargetedPreview(view: interactionView)
-            pointerStyle = UIPointerStyle(effect: UIPointerEffect.highlight(targetedPreview))
-        }
-        return pointerStyle
-    }
 }
 
 extension MoreViewHeader: Themeable {

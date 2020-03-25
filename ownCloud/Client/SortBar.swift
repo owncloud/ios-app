@@ -48,7 +48,7 @@ protocol SortBarDelegate: class {
 	func toggleSelectMode()
 }
 
-class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate, UIPointerInteractionDelegate {
+class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 
 	weak var delegate: SortBarDelegate? {
 		didSet {
@@ -177,6 +177,9 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate, UIPoi
 			selectButton.setImage(UIImage(named: "select"), for: .normal)
 			selectButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
 			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .touchUpInside)
+			if #available(iOS 13.4, *) {
+				selectButton.isPointerInteractionEnabled = true
+			}
 
 			NSLayoutConstraint.activate([
 				selectButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
@@ -184,11 +187,6 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate, UIPoi
 				selectButton.heightAnchor.constraint(equalToConstant: sideButtonsSize.height),
 				selectButton.widthAnchor.constraint(equalToConstant: sideButtonsSize.width)
 				])
-
-			if #available(iOS 13.4, *) {
-				_ = UIPointerInteraction(delegate: self)
-				customPointerInteraction(on: selectButton, pointerInteractionDelegate: self)
-			}
 		}
 
 		// Finalize view setup
@@ -294,22 +292,4 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate, UIPoi
 	func prepareForPopoverPresentation(_ popoverPresentationController: UIPopoverPresentationController) {
 		popoverPresentationController.backgroundColor = Theme.shared.activeCollection.tableBackgroundColor
 	}
-
-	// MARK: - UIPointerInteractionDelegate
-	@available(iOS 13.4, *)
-	func customPointerInteraction(on view: UIView, pointerInteractionDelegate: UIPointerInteractionDelegate) {
-		let pointerInteraction = UIPointerInteraction(delegate: pointerInteractionDelegate)
-		view.addInteraction(pointerInteraction)
-	}
-
-	@available(iOS 13.4, *)
-	func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
-        var pointerStyle: UIPointerStyle?
-
-        if let interactionView = interaction.view {
-            let targetedPreview = UITargetedPreview(view: interactionView)
-            pointerStyle = UIPointerStyle(effect: UIPointerEffect.highlight(targetedPreview))
-        }
-        return pointerStyle
-    }
 }

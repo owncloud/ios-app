@@ -25,7 +25,7 @@ protocol ClientItemCellDelegate: class {
 
 }
 
-class ClientItemCell: ThemeTableViewCell, UIPointerInteractionDelegate {
+class ClientItemCell: ThemeTableViewCell {
 	private let horizontalMargin : CGFloat = 15
 	private let verticalLabelMargin : CGFloat = 10
 	private let verticalIconMargin : CGFloat = 10
@@ -94,10 +94,6 @@ class ClientItemCell: ThemeTableViewCell, UIPointerInteractionDelegate {
 			blankView.layer.masksToBounds = true
 			return blankView
 		}()
-		if #available(iOS 13.4, *) {
-			_ = UIPointerInteraction(delegate: self)
-			customPointerInteraction(on: moreButton, pointerInteractionDelegate: self)
-		}
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateAvailableOfflineStatus(_:)), name: .OCCoreItemPoliciesChanged, object: OCItemPolicyKind.availableOffline)
 	}
@@ -150,6 +146,9 @@ class ClientItemCell: ThemeTableViewCell, UIPointerInteractionDelegate {
 
 		moreButton.setImage(UIImage(named: "more-dots"), for: .normal)
 		moreButton.contentMode = .center
+		if #available(iOS 13.4, *) {
+			moreButton.isPointerInteractionEnabled = true
+		}
 
 		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
 
@@ -474,22 +473,4 @@ class ClientItemCell: ThemeTableViewCell, UIPointerInteractionDelegate {
 	@objc func moreButtonTapped() {
 		self.delegate?.moreButtonTapped(cell: self)
 	}
-
-	// MARK: - UIPointerInteractionDelegate
-	@available(iOS 13.4, *)
-	func customPointerInteraction(on view: UIView, pointerInteractionDelegate: UIPointerInteractionDelegate) {
-		let pointerInteraction = UIPointerInteraction(delegate: pointerInteractionDelegate)
-		view.addInteraction(pointerInteraction)
-	}
-
-	@available(iOS 13.4, *)
-	func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
-        var pointerStyle: UIPointerStyle?
-
-        if let interactionView = interaction.view {
-            let targetedPreview = UITargetedPreview(view: interactionView)
-            pointerStyle = UIPointerStyle(effect: UIPointerEffect.highlight(targetedPreview))
-        }
-        return pointerStyle
-    }
 }
