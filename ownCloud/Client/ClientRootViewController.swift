@@ -42,6 +42,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	var progressSummarizer : ProgressSummarizer?
 	var toolbar : UIToolbar?
 
+	var messagePresenter : SyncIssueMessagePresenter?
+
 	var pasteboardChangedCounter = 0
 
 	weak var authDelegate : ClientRootViewControllerAuthenticationDelegate?
@@ -69,6 +71,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		bookmark = inBookmark
 
 		super.init(nibName: nil, bundle: nil)
+
+		messagePresenter = SyncIssueMessagePresenter(for: self)
 
 		progressSummarizer = ProgressSummarizer.shared(forBookmark: inBookmark)
 		if progressSummarizer != nil {
@@ -143,6 +147,10 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
 			self.core = core
 			core?.delegate = self
+
+			if let messagePresenter = self.messagePresenter {
+				core?.messageQueue.add(messagePresenter)
+			}
 
 			// Remove skip available offline when user opens the bookmark
 			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)

@@ -19,45 +19,41 @@
 import UIKit
 import ownCloudSDK
 
-class DisplaySleepPreventer : NSObject {
-	static var shared : DisplaySleepPreventer = DisplaySleepPreventer()
-
-	var preventCount : Int = 0
-
-	func startPreventingDisplaySleep() {
-		if preventCount == 0 {
-			UIApplication.shared.isIdleTimerDisabled = true
-		}
-
-		preventCount += 1
-	}
-
-	func stopPreventingDisplaySleep() {
-		if preventCount > 0 {
-			preventCount -= 1
-
-			if preventCount == 0 {
-				UIApplication.shared.isIdleTimerDisabled = false
-			}
-		}
-	}
-}
-
 class ClientActivityViewController: UITableViewController, Themeable {
+	enum ActivitySection : Int, CaseIterable {
+		case messages
+		case activities
+	}
 
 	weak var core : OCCore? {
 		willSet {
 			if let core = core {
 				NotificationCenter.default.removeObserver(self, name: core.activityManager.activityUpdateNotificationName, object: nil)
 			}
+
+			messageSelector = nil
 		}
 
 		didSet {
 			if let core = core {
+				let bookmarkUUID = core.bookmark.uuid
+
 				NotificationCenter.default.addObserver(self, selector: #selector(handleActivityNotification(_:)), name: core.activityManager.activityUpdateNotificationName, object: nil)
+
+				messageSelector = MessageSelector(from: core.messageQueue, filter: { (message) in
+					return (message.bookmarkUUID == bookmarkUUID)
+				}, handler: { (messages) in
+					OnMainThread {
+						self.messages = messages
+						self.setNeedsDataReload()
+					}
+				})
 			}
 		}
 	}
+
+	var messageSelector : MessageSelector?
+	var messages : [OCMessage]?
 
 	var activities : [OCActivity]?
 	var isOnScreen : Bool = false {
@@ -113,7 +109,7 @@ class ClientActivityViewController: UITableViewController, Themeable {
 							   let activity = activityUpdate[OCActivityManagerUpdateActivityKey] as? OCActivity,
 							   let firstIndex = activities?.firstIndex(of: activity) {
 							   	// Update just the updated activity
-								self.tableView.reloadRows(at: [IndexPath(row: firstIndex, section: 0)], with: .none)
+								self.tableView.reloadRows(at: [IndexPath(row: firstIndex, section: ActivitySection.activities.rawValue)], with: .none)
 							} else {
 								// Schedule table reload if not on-screen
 								setNeedsDataReload()
@@ -144,9 +140,9 @@ class ClientActivityViewController: UITableViewController, Themeable {
 		super.viewDidLoad()
 
 		self.tableView.register(ClientActivityCell.self, forCellReuseIdentifier: "activity-cell")
+		self.tableView.register(MessageCell.self, forCellReuseIdentifier: "message-cell")
 		self.tableView.rowHeight = UITableView.automaticDimension
 		self.tableView.estimatedRowHeight = 80
-		self.tableView.allowsSelection = false
 
 		Theme.shared.register(client: self, applyImmediately: true)
 	}
@@ -176,69 +172,82 @@ class ClientActivityViewController: UITableViewController, Themeable {
 	// MARK: - Table view data source
 
 	override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
+		return ActivitySection.allCases.count
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		// #warning Incomplete implementation, return the number of rows
-		return activities?.count ?? 0
+		switch ActivitySection(rawValue: section) {
+			case .messages:
+				return messages?.count ?? 0
+
+			case .activities:
+				return activities?.count ?? 0
+
+			default:
+				return 0
+		}
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		guard let cell = tableView.dequeueReusableCell(withIdentifier: "activity-cell", for: indexPath) as? ClientActivityCell else {
-			return UITableViewCell()
+		switch ActivitySection(rawValue: indexPath.section) {
+			case .messages:
+				guard let cell = tableView.dequeueReusableCell(withIdentifier: "message-cell", for: indexPath) as? MessageCell else {
+					return UITableViewCell()
+				}
+
+				if let messages = messages, indexPath.row < messages.count {
+					cell.message = messages[indexPath.row]
+				}
+
+				return cell
+
+			case .activities:
+				guard let cell = tableView.dequeueReusableCell(withIdentifier: "activity-cell", for: indexPath) as? ClientActivityCell else {
+					return UITableViewCell()
+				}
+
+				if let activities = activities, indexPath.row < activities.count {
+					cell.activity = activities[indexPath.row]
+				}
+
+				return cell
+
+			default:
+				return UITableViewCell()
 		}
+	}
 
-		if let activities = activities, indexPath.row < activities.count {
-			cell.activity = activities[indexPath.row]
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		switch ActivitySection(rawValue: indexPath.section) {
+			case .messages:
+				if let messages = messages, indexPath.row < messages.count {
+					if let core = core, let coreDelegate = core.delegate, let queue = messageSelector?.queue {
+						coreDelegate.core(core, handleError: nil, issue: OCIssue(from: messages[indexPath.row], from: queue))
+					}
+				}
+
+			default: break
 		}
-
-		return cell
 	}
 
-	/*
-	// Override to support conditional editing of the table view.
-	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-	// Return false if you do not want the specified item to be editable.
-	return true
+	override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+		switch ActivitySection(rawValue: indexPath.section) {
+			case .messages:
+				return true
+
+			default:
+				return false
+		}
 	}
-	*/
 
-	/*
-	// Override to support editing the table view.
-	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-	if editingStyle == .delete {
-	// Delete the row from the data source
-	tableView.deleteRows(at: [indexPath], with: .fade)
-	} else if editingStyle == .insert {
-	// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+	override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+		switch ActivitySection(rawValue: indexPath.section) {
+			case .messages:
+				return indexPath
+
+			default:
+				return nil
+		}
 	}
-	}
-	*/
-
-	/*
-	// Override to support rearranging the table view.
-	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-	}
-	*/
-
-	/*
-	// Override to support conditional rearranging of the table view.
-	override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-	// Return false if you do not want the item to be re-orderable.
-	return true
-	}
-	*/
-
-	/*
-	// MARK: - Navigation
-
-	// In a storyboard-based application, you will often want to do a little preparation before navigation
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-	// Get the new view controller using segue.destination.
-	// Pass the selected object to the new view controller.
-	}
-	*/
-
 }
