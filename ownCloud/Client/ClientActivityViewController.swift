@@ -16,6 +16,14 @@
  *
  */
 
+/*
+	UI integration ideas:
+	- alert-badge inline in file list view, based on syncIssue.syncRecordID
+	- badge on activity tab icon
+	- badge next to bookmark
+	- user notification with issue
+*/
+
 import UIKit
 import ownCloudSDK
 
