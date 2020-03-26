@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
 		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
-
+		
 		// Set up license management
 		OCLicenseManager.shared.setupLicenseManagement()
 
@@ -122,6 +122,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Set background refresh interval
 		UIApplication.shared.setMinimumBackgroundFetchInterval(
 			UIApplication.backgroundFetchIntervalMinimum)
+		
+		if Migration.shared.legacyDataFound {
+			Migration.shared.migrateAccountsAndSettings()
+		}
 
 		return true
 	}
