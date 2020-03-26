@@ -112,9 +112,7 @@ class Migration {
 												if error == nil {
 													bookmark.authenticationMethodIdentifier = authMethodIdentifier
 													bookmark.authenticationData = authMethodData
-													
-													OCBookmarkManager.shared.addBookmark(bookmark)
-													OCBookmarkManager.shared.saveBookmarks()
+													self.finishMigration(of: bookmark, userId: userId, accountDictionary: rowDict)
 												}
 											}
 										}
@@ -136,33 +134,51 @@ class Migration {
 						db.execute(usersQuery)
 					}
 					
+					// Check if the passcode is set
+					let passcodeQuery = OCSQLiteQuery(selectingColumns: ["passcode"], fromTable: "passcode", where: nil, orderBy: "id DESC", limit: "1") { (_, err, _, resultSet) in
+						if let dict = try? resultSet?.nextRowDictionary(), let passcode = dict?["passcode"] as? Stringa {
+							AppLockManager.shared.passcode = passcode
+						}
+					}
+					if let query = passcodeQuery {
+						db.execute(query)
+					}
 				}
 			}
 		}
 	}
 	
-	func wipeLegacyData() {
-		
-	}
-	
 	// MARK: - Private helpers
 	
-	private func authenticationMethodTypeForIdentifier(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> OCAuthenticationMethodType? {
-		if let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethodIdentifier) {
-			return authenticationMethodClass.type
+	private func finishMigration(of bookmark:OCBookmark, userId:Int, accountDictionary: [String : Any]) {
+		
+		// Delete old auth data from the keychain
+		self.removeCredentials(for: userId)
+		
+		// Check if we are dealing with an active account
+		if let activeAccount = accountDictionary["activeaccount"] as? Int, activeAccount == 1 {
+			// TODO: Migrate instant upload settings
 		}
-
-		return nil
-	}
-
-	private func isAuthenticationMethodPassphraseBased(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> Bool {
-		return authenticationMethodTypeForIdentifier(authenticationMethodIdentifier) == OCAuthenticationMethodType.passphrase
-	}
-
-	private func isAuthenticationMethodTokenBased(_ authenticationMethodIdentifier: OCAuthenticationMethodIdentifier) -> Bool {
-		return authenticationMethodTypeForIdentifier(authenticationMethodIdentifier) == OCAuthenticationMethodType.token
+		
+		OCBookmarkManager.shared.addBookmark(bookmark)
+		OCBookmarkManager.shared.saveBookmarks()
 	}
 	
+	private func wipeLegacyData() {
+		var isDirectory: ObjCBool = false
+		if let legacyDataPath = self.legacyDataDirectoryURL?.path {
+			if FileManager.default.fileExists(atPath: legacyDataPath, isDirectory: &isDirectory) {
+				if isDirectory.boolValue == true {
+					if let contents = try? FileManager.default.contentsOfDirectory(atPath: legacyDataPath) {
+						for filePath in contents {
+							try? FileManager.default.removeItem(atPath: filePath)
+						}
+					}
+				}
+			}
+		}
+	}
+
 	private func getCredentialsDataItem(for userId:Int) -> OCCredentialsDto? {
 		
 		guard let groupId = self.appGroupId else { return nil }
