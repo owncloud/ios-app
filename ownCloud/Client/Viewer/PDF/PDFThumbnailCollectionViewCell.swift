@@ -19,7 +19,7 @@
 import UIKit
 import PDFKit
 
-class PDFThumbnailCollectionViewCell: UICollectionViewCell {
+class PDFThumbnailCollectionViewCell: UICollectionViewCell, UIPointerInteractionDelegate {
     static let identifier = "PDFThumbnailCollectionViewCell"
 
     fileprivate let pageLabelBottomMargin: CGFloat = 5
@@ -63,11 +63,34 @@ class PDFThumbnailCollectionViewCell: UICollectionViewCell {
         pageLabel!.rightAnchor.constraint(equalTo: imageView!.rightAnchor).isActive = true
         pageLabel!.leftAnchor.constraint(equalTo: imageView!.leftAnchor).isActive = true
         pageLabel!.heightAnchor.constraint(equalTo: imageView!.heightAnchor, multiplier:pageLabelHeightMultiplier).isActive = true
+
+		if #available(iOS 13.4, *) {
+			_ = UIPointerInteraction(delegate: self)
+			customPointerInteraction(on: self, pointerInteractionDelegate: self)
+		}
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
         self.imageView?.image = nil
         self.pageLabel?.text = ""
+    }
+
+	// MARK: - UIPointerInteractionDelegate
+	@available(iOS 13.4, *)
+	func customPointerInteraction(on view: UIView, pointerInteractionDelegate: UIPointerInteractionDelegate) {
+		let pointerInteraction = UIPointerInteraction(delegate: pointerInteractionDelegate)
+		view.addInteraction(pointerInteraction)
+	}
+
+	@available(iOS 13.4, *)
+	func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
+        var pointerStyle: UIPointerStyle?
+
+        if let interactionView = interaction.view {
+            let targetedPreview = UITargetedPreview(view: interactionView)
+			pointerStyle = UIPointerStyle(effect: UIPointerEffect.hover(targetedPreview, preferredTintMode: .overlay, prefersShadow: false, prefersScaledContent: true))
+        }
+        return pointerStyle
     }
 }

@@ -25,7 +25,7 @@ protocol ClientItemCellDelegate: class {
 
 }
 
-class ClientItemCell: ThemeTableViewCell {
+class ClientItemCell: ThemeTableViewCell, UIPointerInteractionDelegate {
 	private let horizontalMargin : CGFloat = 15
 	private let verticalLabelMargin : CGFloat = 10
 	private let verticalIconMargin : CGFloat = 10
@@ -96,6 +96,11 @@ class ClientItemCell: ThemeTableViewCell {
 		}()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateAvailableOfflineStatus(_:)), name: .OCCoreItemPoliciesChanged, object: OCItemPolicyKind.availableOffline)
+
+		if #available(iOS 13.4, *) {
+			_ = UIPointerInteraction(delegate: self)
+			customPointerInteraction(on: self.contentView, pointerInteractionDelegate: self)
+		}
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -473,4 +478,22 @@ class ClientItemCell: ThemeTableViewCell {
 	@objc func moreButtonTapped() {
 		self.delegate?.moreButtonTapped(cell: self)
 	}
+
+	// MARK: - UIPointerInteractionDelegate
+	@available(iOS 13.4, *)
+	func customPointerInteraction(on view: UIView, pointerInteractionDelegate: UIPointerInteractionDelegate) {
+		let pointerInteraction = UIPointerInteraction(delegate: pointerInteractionDelegate)
+		view.addInteraction(pointerInteraction)
+	}
+
+	@available(iOS 13.4, *)
+	func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
+        var pointerStyle: UIPointerStyle?
+
+        if let interactionView = interaction.view {
+            let targetedPreview = UITargetedPreview(view: interactionView)
+			pointerStyle = UIPointerStyle(effect: UIPointerEffect.hover(targetedPreview, preferredTintMode: .overlay, prefersShadow: false, prefersScaledContent: false))
+        }
+        return pointerStyle
+    }
 }
