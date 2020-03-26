@@ -39,7 +39,7 @@ protocol DisplayViewEditingDelegate: class {
 	func save(item: OCItem, fileURL newVersion: URL)
 }
 
-class DisplayViewController: UIViewController, OCQueryDelegate, UIPointerInteractionDelegate {
+class DisplayViewController: UIViewController, OCQueryDelegate {
 	private let iconImageSize: CGSize = CGSize(width: 200.0, height: 200.0)
 	private let bottomMarginToYAxis: CGFloat = -60.0
 	private let verticalSpacing: CGFloat = 10.0
@@ -162,9 +162,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate, UIPointerInterac
 		showPreviewButton = ThemeButton(type: .custom)
 
 		if #available(iOS 13.4, *) {
-			_ = UIPointerInteraction(delegate: self)
-			customPointerInteraction(on: cancelButton!, pointerInteractionDelegate: self)
-			customPointerInteraction(on: showPreviewButton!, pointerInteractionDelegate: self)
+			PointerEffect.install(on: cancelButton!, effectStyle: .highlight)
+			PointerEffect.install(on: showPreviewButton!, effectStyle: .highlight)
 		}
 		infoLabel = UILabel()
 		progressView = UIProgressView(progressViewStyle: .bar)
@@ -498,24 +497,6 @@ class DisplayViewController: UIViewController, OCQueryDelegate, UIPointerInterac
 	func canPreview(url:URL) -> Bool {
 		return true
 	}
-
-	// MARK: - UIPointerInteractionDelegate
-	@available(iOS 13.4, *)
-	func customPointerInteraction(on view: UIView, pointerInteractionDelegate: UIPointerInteractionDelegate) {
-		let pointerInteraction = UIPointerInteraction(delegate: pointerInteractionDelegate)
-		view.addInteraction(pointerInteraction)
-	}
-
-	@available(iOS 13.4, *)
-	func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
-        var pointerStyle: UIPointerStyle?
-
-        if let interactionView = interaction.view {
-            let targetedPreview = UITargetedPreview(view: interactionView)
-			pointerStyle = UIPointerStyle(effect: UIPointerEffect.highlight(targetedPreview))
-        }
-        return pointerStyle
-    }
 }
 
 // MARK: - Public API

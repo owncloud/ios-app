@@ -51,7 +51,7 @@ enum StaticTableViewRowActionType {
 	case didEnd
 }
 
-class StaticTableViewRow : NSObject, UITextFieldDelegate, UIPointerInteractionDelegate {
+class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 	public weak var section : StaticTableViewSection?
 
@@ -146,8 +146,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, UIPointerInteractionDe
 		}
 
 		if #available(iOS 13.4, *), let cell = self.cell {
-			_ = UIPointerInteraction(delegate: self)
-			customPointerInteraction(on: cell.contentView, pointerInteractionDelegate: self)
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
@@ -177,8 +176,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, UIPointerInteractionDe
 		self.cell?.accessibilityIdentifier = identifier
 
 		if #available(iOS 13.4, *), let cell = self.cell {
-			_ = UIPointerInteraction(delegate: self)
-			customPointerInteraction(on: cell.contentView, pointerInteractionDelegate: self)
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
@@ -251,8 +249,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, UIPointerInteractionDe
 		}
 
 		if #available(iOS 13.4, *), let cell = self.cell {
-			_ = UIPointerInteraction(delegate: self)
-			customPointerInteraction(on: cell.contentView, pointerInteractionDelegate: self)
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
@@ -274,8 +271,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, UIPointerInteractionDe
 		self.cell?.accessibilityIdentifier = identifier
 
 		if #available(iOS 13.4, *), let cell = self.cell {
-			_ = UIPointerInteraction(delegate: self)
-			customPointerInteraction(on: cell.contentView, pointerInteractionDelegate: self)
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
 		self.action = subtitleRowWithAction
@@ -315,8 +311,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, UIPointerInteractionDe
 		}
 
 		if #available(iOS 13.4, *), let cell = self.cell {
-			_ = UIPointerInteraction(delegate: self)
-			customPointerInteraction(on: cell.contentView, pointerInteractionDelegate: self)
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
 		self.groupIdentifier = groupIdentifier
@@ -351,8 +346,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, UIPointerInteractionDe
 		}
 
 		if #available(iOS 13.4, *), let cell = self.cell {
-			_ = UIPointerInteraction(delegate: self)
-			customPointerInteraction(on: cell.contentView, pointerInteractionDelegate: self)
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
 		if let accessibilityIdentifier : String = identifier {
@@ -571,8 +565,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, UIPointerInteractionDe
 		self.cell?.accessibilityIdentifier = identifier
 
 		if #available(iOS 13.4, *), let cell = self.cell {
-			_ = UIPointerInteraction(delegate: self)
-			customPointerInteraction(on: cell.contentView, pointerInteractionDelegate: self)
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
@@ -748,22 +741,4 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate, UIPointerInteractionDe
 			Theme.shared.remove(applierForToken: themeApplierToken)
 		}
 	}
-
-	// MARK: - UIPointerInteractionDelegate
-	@available(iOS 13.4, *)
-	func customPointerInteraction(on view: UIView, pointerInteractionDelegate: UIPointerInteractionDelegate) {
-		let pointerInteraction = UIPointerInteraction(delegate: pointerInteractionDelegate)
-		view.addInteraction(pointerInteraction)
-	}
-
-	@available(iOS 13.4, *)
-	func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
-        var pointerStyle: UIPointerStyle?
-
-        if let interactionView = interaction.view {
-            let targetedPreview = UITargetedPreview(view: interactionView)
-			pointerStyle = UIPointerStyle(effect: UIPointerEffect.hover(targetedPreview, preferredTintMode: .overlay, prefersShadow: false, prefersScaledContent: false))
-        }
-        return pointerStyle
-    }
 }

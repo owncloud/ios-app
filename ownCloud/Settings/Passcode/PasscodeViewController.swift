@@ -21,7 +21,7 @@ import UIKit
 typealias PasscodeViewControllerCancelHandler = ((_ passcodeViewController: PasscodeViewController) -> Void)
 typealias PasscodeViewControllerCompletionHandler = ((_ passcodeViewController: PasscodeViewController, _ passcode: String) -> Void)
 
-class PasscodeViewController: UIViewController, Themeable, UIPointerInteractionDelegate {
+class PasscodeViewController: UIViewController, Themeable {
 
 	// MARK: - Constants
 	fileprivate var passCodeCompletionDelay: TimeInterval = 0.1
@@ -162,13 +162,11 @@ class PasscodeViewController: UIViewController, Themeable, UIPointerInteractionD
 		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
 
 		if #available(iOS 13.4, *) {
-			_ = UIPointerInteraction(delegate: self)
-
 			for button in keypadButtons! {
-				customPointerInteraction(on: button, pointerInteractionDelegate: self)
+				PointerEffect.install(on: button, effectStyle: .highlight)
 			}
-			customPointerInteraction(on: cancelButton!, pointerInteractionDelegate: self)
-			customPointerInteraction(on: deleteButton!, pointerInteractionDelegate: self)
+			PointerEffect.install(on: cancelButton!, effectStyle: .highlight)
+			PointerEffect.install(on: deleteButton!, effectStyle: .highlight)
 		}
 	}
 
@@ -281,22 +279,4 @@ class PasscodeViewController: UIViewController, Themeable, UIPointerInteractionD
 
 		cancelButton?.applyThemeCollection(collection, itemStyle: .defaultForItem)
 	}
-
-	// MARK: - UIPointerInteractionDelegate
-	@available(iOS 13.4, *)
-	func customPointerInteraction(on view: UIView, pointerInteractionDelegate: UIPointerInteractionDelegate) {
-		let pointerInteraction = UIPointerInteraction(delegate: pointerInteractionDelegate)
-		view.addInteraction(pointerInteraction)
-	}
-
-	@available(iOS 13.4, *)
-	func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
-        var pointerStyle: UIPointerStyle?
-
-        if let interactionView = interaction.view {
-            let targetedPreview = UITargetedPreview(view: interactionView)
-            pointerStyle = UIPointerStyle(effect: UIPointerEffect.highlight(targetedPreview))
-        }
-        return pointerStyle
-    }
 }

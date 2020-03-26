@@ -18,7 +18,7 @@
 
 import UIKit
 
-class PhotoAlbumTableViewCell: ThemeTableViewCell, UIPointerInteractionDelegate {
+class PhotoAlbumTableViewCell: ThemeTableViewCell {
 	static let identifier = "PhotoAlbumTableViewCell"
 	static let cellHeight : CGFloat = 80.0
 
@@ -71,8 +71,7 @@ class PhotoAlbumTableViewCell: ThemeTableViewCell, UIPointerInteractionDelegate 
 		self.countLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.horizontal)
 
 		if #available(iOS 13.4, *) {
-			_ = UIPointerInteraction(delegate: self)
-			customPointerInteraction(on: self, pointerInteractionDelegate: self)
+			PointerEffect.install(on: self, effectStyle: .hover)
 		}
 	}
 
@@ -89,22 +88,4 @@ class PhotoAlbumTableViewCell: ThemeTableViewCell, UIPointerInteractionDelegate 
 		self.countLabel.text = nil
 		self.thumbnailImageView.image = nil
 	}
-
-	// MARK: - UIPointerInteractionDelegate
-	@available(iOS 13.4, *)
-	func customPointerInteraction(on view: UIView, pointerInteractionDelegate: UIPointerInteractionDelegate) {
-		let pointerInteraction = UIPointerInteraction(delegate: pointerInteractionDelegate)
-		view.addInteraction(pointerInteraction)
-	}
-
-	@available(iOS 13.4, *)
-	func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
-        var pointerStyle: UIPointerStyle?
-
-        if let interactionView = interaction.view {
-            let targetedPreview = UITargetedPreview(view: interactionView)
-			pointerStyle = UIPointerStyle(effect: UIPointerEffect.hover(targetedPreview, preferredTintMode: .overlay, prefersShadow: false, prefersScaledContent: false))
-        }
-        return pointerStyle
-    }
 }

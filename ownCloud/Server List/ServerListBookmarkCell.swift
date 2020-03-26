@@ -18,7 +18,7 @@
 
 import UIKit
 
-class ServerListBookmarkCell : ThemeTableViewCell, UIPointerInteractionDelegate {
+class ServerListBookmarkCell : ThemeTableViewCell {
 	public var titleLabel : UILabel = UILabel()
 	public var detailLabel : UILabel = UILabel()
 	public var iconView : UIImageView = UIImageView()
@@ -36,8 +36,7 @@ class ServerListBookmarkCell : ThemeTableViewCell, UIPointerInteractionDelegate 
 		self.selectionStyle = .default
 
 		if #available(iOS 13.4, *) {
-			_ = UIPointerInteraction(delegate: self)
-			customPointerInteraction(on: self.contentView, pointerInteractionDelegate: self)
+			PointerEffect.install(on: self.contentView, effectStyle: .hover)
 		}
 
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -96,22 +95,4 @@ class ServerListBookmarkCell : ThemeTableViewCell, UIPointerInteractionDelegate 
 		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 		self.detailLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
 	}
-
-	// MARK: - UIPointerInteractionDelegate
-	@available(iOS 13.4, *)
-	func customPointerInteraction(on view: UIView, pointerInteractionDelegate: UIPointerInteractionDelegate) {
-		let pointerInteraction = UIPointerInteraction(delegate: pointerInteractionDelegate)
-		view.addInteraction(pointerInteraction)
-	}
-
-	@available(iOS 13.4, *)
-	func pointerInteraction(_ interaction: UIPointerInteraction, styleFor region: UIPointerRegion) -> UIPointerStyle? {
-        var pointerStyle: UIPointerStyle?
-
-        if let interactionView = interaction.view {
-            let targetedPreview = UITargetedPreview(view: interactionView)
-			pointerStyle = UIPointerStyle(effect: UIPointerEffect.hover(targetedPreview, preferredTintMode: .overlay, prefersShadow: false, prefersScaledContent: false))
-        }
-        return pointerStyle
-    }
 }
