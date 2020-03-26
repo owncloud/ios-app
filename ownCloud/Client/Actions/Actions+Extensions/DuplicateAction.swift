@@ -30,9 +30,12 @@ class DuplicateAction : Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
+		if let rootItem = forContext.query?.rootItem, !rootItem.permissions.contains(.createFile) || !rootItem.permissions.contains(.createFolder) {
+			return .none
+		}
+
 		if forContext.items.filter({return $0.isRoot}).count > 0 {
 			return .none
-
 		}
 
 		return .middle

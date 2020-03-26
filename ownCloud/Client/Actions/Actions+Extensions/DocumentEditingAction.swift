@@ -27,12 +27,12 @@ class DocumentEditingAction : Action {
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut] }
 	class var supportedMimeTypes : [String] { return ["image", "pdf"] }
-	class var excludedMimeTypes : [String] { return ["image/x-dcraw"] }
+	class var excludedMimeTypes : [String] { return ["image/x-dcraw", "image/heic"] }
 	override class var licenseRequirements: LicenseRequirements? { return LicenseRequirements(feature: .documentMarkup) }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if forContext.items.count == 1, forContext.items.contains(where: {$0.type == .file}) {
+		if let core = forContext.core, forContext.items.count == 1, forContext.items.contains(where: {$0.type == .file && ($0.permissions.contains(.writable) || $0.parentItem(from: core)? .permissions.contains(.createFile) == true)}) {
 			if let item = forContext.items.first, let mimeType = item.mimeType {
 				if supportedMimeTypes.filter({
 					if mimeType.contains($0) {

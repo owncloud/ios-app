@@ -99,7 +99,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		if let connectionStatus = core?.connectionStatus {
 			var connectionShortDescription = core?.connectionStatusShortDescription
 
-			connectionShortDescription = connectionShortDescription != nil ? (connectionShortDescription! + ". ") : ""
+			connectionShortDescription = connectionShortDescription != nil ? (connectionShortDescription!.hasSuffix(".") ? connectionShortDescription! + " " : connectionShortDescription! + ". ") : ""
 
 			switch connectionStatus {
 				case .online:

@@ -36,6 +36,10 @@ class CreateFolderAction : Action {
 			return .none
 		}
 
+		if forContext.items.first?.permissions.contains(.createFolder) == false {
+			return .none
+		}
+
 		return .first
 	}
 
