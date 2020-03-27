@@ -337,6 +337,13 @@
 		DCC832DE242C0C3700153F8C /* DisplaySleepPreventer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC832DD242C0C3700153F8C /* DisplaySleepPreventer.swift */; };
 		DCC832E2242C0EAC00153F8C /* MessageSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC832E1242C0EAC00153F8C /* MessageSelector.swift */; };
 		DCC832E4242C198700153F8C /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC832E3242C198700153F8C /* MessageCell.swift */; };
+		DCC832F1242CC27B00153F8C /* NotificationMessagePresenter.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC832E6242CB18700153F8C /* NotificationMessagePresenter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCC832F2242CC28400153F8C /* NotificationMessagePresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC832E7242CB18700153F8C /* NotificationMessagePresenter.m */; };
+		DCC832F3242CC28900153F8C /* NotificationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC832E9242CB4D600153F8C /* NotificationManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DCC832F4242CC28F00153F8C /* NotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC832EA242CB4D600153F8C /* NotificationManager.m */; };
+		DCC832F6242CC5F700153F8C /* CardIssueMessagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC832F5242CC5F700153F8C /* CardIssueMessagePresenter.swift */; };
+		DCC832F8242CC94D00153F8C /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC832F7242CC94D00153F8C /* AlertView.swift */; };
+		DCC83304242CF3AD00153F8C /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC83303242CF3AC00153F8C /* AlertViewController.swift */; };
 		DCC8535823CE1236007BA3EB /* LicenseInAppProductListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC8535723CE1236007BA3EB /* LicenseInAppProductListViewController.swift */; };
 		DCC8536023CE1AF8007BA3EB /* PurchasesSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC8535F23CE1AF8007BA3EB /* PurchasesSettingsSection.swift */; };
 		DCD1300A23A191C000255779 /* LicenseOfferButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD1300923A191C000255779 /* LicenseOfferButton.swift */; };
@@ -1107,6 +1114,13 @@
 		DCC832DD242C0C3700153F8C /* DisplaySleepPreventer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySleepPreventer.swift; sourceTree = "<group>"; };
 		DCC832E1242C0EAC00153F8C /* MessageSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageSelector.swift; sourceTree = "<group>"; };
 		DCC832E3242C198700153F8C /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		DCC832E6242CB18700153F8C /* NotificationMessagePresenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationMessagePresenter.h; sourceTree = "<group>"; };
+		DCC832E7242CB18700153F8C /* NotificationMessagePresenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationMessagePresenter.m; sourceTree = "<group>"; };
+		DCC832E9242CB4D600153F8C /* NotificationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationManager.h; sourceTree = "<group>"; };
+		DCC832EA242CB4D600153F8C /* NotificationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationManager.m; sourceTree = "<group>"; };
+		DCC832F5242CC5F700153F8C /* CardIssueMessagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardIssueMessagePresenter.swift; sourceTree = "<group>"; };
+		DCC832F7242CC94D00153F8C /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
+		DCC83303242CF3AC00153F8C /* AlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 		DCC8535723CE1236007BA3EB /* LicenseInAppProductListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseInAppProductListViewController.swift; sourceTree = "<group>"; };
 		DCC8535F23CE1AF8007BA3EB /* PurchasesSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasesSettingsSection.swift; sourceTree = "<group>"; };
 		DCD1300923A191C000255779 /* LicenseOfferButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseOfferButton.swift; sourceTree = "<group>"; };
@@ -2152,6 +2166,7 @@
 				DC774E5A22F44E2A000B11A1 /* Display Settings */,
 				DCC5E443232654C1002E5B84 /* Foundation Extensions */,
 				DCFEFE2223687637009A142F /* Licensing */,
+				DCC832E5242CB14E00153F8C /* Notifications */,
 				DC774E5422F44DF6000B11A1 /* SDK Extensions */,
 				DC0030BE2350B1CE00BB8570 /* Tools */,
 				DC774E5B22F44E4A000B11A1 /* ZIP Archive */,
@@ -2220,10 +2235,24 @@
 		DCC832D1242BB3E900153F8C /* Messages */ = {
 			isa = PBXGroup;
 			children = (
+				DCC832F7242CC94D00153F8C /* AlertView.swift */,
+				DCC83303242CF3AC00153F8C /* AlertViewController.swift */,
+				DCC832F5242CC5F700153F8C /* CardIssueMessagePresenter.swift */,
 				DCC832DA242BB44F00153F8C /* SyncIssueMessagePresenter.swift */,
 				DCC832E1242C0EAC00153F8C /* MessageSelector.swift */,
 			);
 			path = Messages;
+			sourceTree = "<group>";
+		};
+		DCC832E5242CB14E00153F8C /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				DCC832EA242CB4D600153F8C /* NotificationManager.m */,
+				DCC832E9242CB4D600153F8C /* NotificationManager.h */,
+				DCC832E7242CB18700153F8C /* NotificationMessagePresenter.m */,
+				DCC832E6242CB18700153F8C /* NotificationMessagePresenter.h */,
+			);
+			path = Notifications;
 			sourceTree = "<group>";
 		};
 		DCC8535E23CE123C007BA3EB /* Product List */ = {
@@ -2543,10 +2572,12 @@
 				DC774E6022F44E57000B11A1 /* ZIPArchive.h in Headers */,
 				DCFEFE9C2368D7FA009A142F /* OCLicenseObserver.h in Headers */,
 				DCFEFE2E236876D4009A142F /* OCLicenseProvider.h in Headers */,
+				DCC832F3242CC28900153F8C /* NotificationManager.h in Headers */,
 				DCC085802293F490008CC05C /* DisplaySettings.h in Headers */,
 				DCFEFE3D236877B7009A142F /* OCLicenseProduct.h in Headers */,
 				DCFEFE4523687BF5009A142F /* OCLicenseTypes.h in Headers */,
 				DC66F39C239659C000CF4812 /* OCASN1.h in Headers */,
+				DCC832F1242CC27B00153F8C /* NotificationMessagePresenter.h in Headers */,
 				DC080CF2238C8DF70044C5D2 /* OCLicenseAppStoreItem.h in Headers */,
 				DCD9B87B2379612B00691929 /* OCLicenseManager+Internal.h in Headers */,
 				DC774E6322F44E6D000B11A1 /* OCCore+BundleImport.h in Headers */,
@@ -3350,6 +3381,7 @@
 				236735A621217C3500E5834A /* MoreViewController.swift in Sources */,
 				39E2FE0021FF814A00F0117F /* ThemeRoundedButton.swift in Sources */,
 				23957A6D209AFFE8003C8537 /* MoreSettingsSection.swift in Sources */,
+				DCC832F8242CC94D00153F8C /* AlertView.swift in Sources */,
 				4C464BEF2187AF1500D30602 /* PDFThumbnailCollectionViewCell.swift in Sources */,
 				232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */,
 				4C96463C238489E4003278B7 /* MediaUploadActivity.swift in Sources */,
@@ -3413,6 +3445,7 @@
 				4C464BF22187AF1500D30602 /* PDFSearchViewController.swift in Sources */,
 				DC3393A422E0A75C00DD3DA4 /* ClientItemResolvingCell.swift in Sources */,
 				DC29F09522976B9300F77349 /* LibrarySharesTableViewController.swift in Sources */,
+				DCC832F6242CC5F700153F8C /* CardIssueMessagePresenter.swift in Sources */,
 				DC7DBA2B207F71E400E7337D /* VectorImageView.swift in Sources */,
 				DCD1301123A23F4E00255779 /* OCLicenseManager+AppStore.swift in Sources */,
 				39DE75CD22F960CF0064C1E2 /* SortMethodTableViewController.swift in Sources */,
@@ -3438,6 +3471,7 @@
 				39057AA3233BA7A60008E6C0 /* Intents.intentdefinition in Sources */,
 				6E586CFE2199A75900F680C4 /* MoveAction.swift in Sources */,
 				DC625148225CEB2C00736874 /* UploadFileAction.swift in Sources */,
+				DCC83304242CF3AD00153F8C /* AlertViewController.swift in Sources */,
 				394E1FDC233E3750009D2897 /* UnfavoriteAction.swift in Sources */,
 				DC4FEAE7209E3A7700D4476B /* OCIssue+Extension.swift in Sources */,
 				DC434D1320D7A8F100740056 /* UIAlertController+OCIssue.swift in Sources */,
@@ -3550,6 +3584,7 @@
 				DC774E6422F44E6D000B11A1 /* OCCore+BundleImport.m in Sources */,
 				DCDC208D239912DC003CFF5B /* OCLicenseTransaction.m in Sources */,
 				DC23D1D9238F390A00423F62 /* OCLicenseAppStoreReceipt.m in Sources */,
+				DCC832F2242CC28400153F8C /* NotificationMessagePresenter.m in Sources */,
 				DCFEFE2B236876BD009A142F /* OCLicenseManager.m in Sources */,
 				DCDC20A22399A715003CFF5B /* OCCore+LicenseEnvironment.m in Sources */,
 				DCDC20AC2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m in Sources */,
@@ -3560,6 +3595,7 @@
 				DC080CE5238AE3F40044C5D2 /* OCLicenseAppStoreProvider.m in Sources */,
 				DCC0857F2293F48D008CC05C /* DisplaySettings.m in Sources */,
 				DCFEFE2F236876D4009A142F /* OCLicenseProvider.m in Sources */,
+				DCC832F4242CC28F00153F8C /* NotificationManager.m in Sources */,
 				DCFEFE4A23687C83009A142F /* OCLicenseEntitlement.m in Sources */,
 				DC66F3AC23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.m in Sources */,
 				DCD8109B23984AF6003B0053 /* OCLicenseDuration.m in Sources */,

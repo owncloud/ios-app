@@ -28,6 +28,7 @@
 @interface FileProviderExtension ()
 {
 	NSFileCoordinator *_fileCoordinator;
+	NotificationMessagePresenter *_messagePresenter;
 }
 
 @property (nonatomic, readonly, strong) NSFileManager *fileManager;
@@ -72,6 +73,12 @@
 
 	if (_core != nil)
 	{
+		if (_messagePresenter != nil)
+		{
+			OCLogDebug(@"Removing Message Presenter for FileProvider %@", self);
+			[core.messageQueue removePresenter:_messagePresenter];
+		}
+
 		OCLogDebug(@"Returning OCCore for FileProvider %@", self);
 		[[OCCoreManager sharedCoreManager] returnCoreForBookmark:self.bookmark completionHandler:nil];
 	}
@@ -391,56 +398,56 @@
 		// Detect collission with existing items
 		OCItem *existingItem;
 
-		FPLogCmd(@"Creating folder %@ inside %@", directoryName, parentItem.path);
-
-		if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
-		{
-			FPLogCmd(@"Completed with collission with existingItem=%@ (locally detected)", existingItem);
-			if (@available(iOS 13.3, *))
-			{
-				completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
-			}
-			else
-			{
-				completionHandler(nil, [OCError(OCErrorItemAlreadyExists) translatedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
-			}
-			return;
-		}
+//		FPLogCmd(@"Creating folder %@ inside %@", directoryName, parentItem.path);
+//
+//		if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
+//		{
+//			FPLogCmd(@"Completed with collission with existingItem=%@ (locally detected)", existingItem);
+//			if (@available(iOS 13.3, *))
+//			{
+//				completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
+//			}
+//			else
+//			{
+//				completionHandler(nil, [OCError(OCErrorItemAlreadyExists) translatedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
+//			}
+//			return;
+//		}
 
 		[self.core createFolder:directoryName inside:parentItem options:@{
-//			OCCoreOptionPlaceholderCompletionHandler : [^(NSError * _Nullable error, OCItem * _Nullable item) {
-//				FPLogCmd(@"Completed placeholder creation with item=%@, error=%@", item, error);
-//
-//				completionHandler(item, [error translatedError]);
-//			} copy]
+			OCCoreOptionPlaceholderCompletionHandler : [^(NSError * _Nullable error, OCItem * _Nullable item) {
+				FPLogCmd(@"Completed placeholder creation with item=%@, error=%@", item, error);
+
+				completionHandler(item, [error translatedError]);
+			} copy]
 		} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
-			if (error != nil)
-			{
-				if (error.HTTPStatus.code == OCHTTPStatusCodeMETHOD_NOT_ALLOWED)
-				{
-					// Folder already exists on the server
-					OCItem *existingItem;
-
-					if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
-					{
-						FPLogCmd(@"Completed with collission with existingItem=%@ (server response)", existingItem);
-						if (@available(iOS 13.3, *))
-						{
-							completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
-						}
-						else
-						{
-							completionHandler(nil, [OCError(OCErrorItemAlreadyExists) translatedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
-
-						}
-						return;
-					}
-				}
-			}
-
-			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
-
-			completionHandler(item, [error translatedError]);
+//			if (error != nil)
+//			{
+//				if (error.HTTPStatus.code == OCHTTPStatusCodeMETHOD_NOT_ALLOWED)
+//				{
+//					// Folder already exists on the server
+//					OCItem *existingItem;
+//
+//					if ((existingItem = [self.core cachedItemInParent:parentItem withName:directoryName isDirectory:YES error:NULL]) != nil)
+//					{
+//						FPLogCmd(@"Completed with collission with existingItem=%@ (server response)", existingItem);
+//						if (@available(iOS 13.3, *))
+//						{
+//							completionHandler(nil, [NSError fileProviderErrorForCollisionWithItem:existingItem]); // This is what we should do according to docs
+//						}
+//						else
+//						{
+//							completionHandler(nil, [OCError(OCErrorItemAlreadyExists) translatedError]); // This is what we need to do to avoid users running into issues using the broken Files "Duplicate" action
+//
+//						}
+//						return;
+//					}
+//				}
+//			}
+//
+//			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
+//
+//			completionHandler(item, [error translatedError]);
 		}];
 	}
 	else
@@ -907,6 +914,12 @@
 						core.delegate = self;
 					} completionHandler:^(OCCore *core, NSError *error) {
 						self->_core = core;
+
+						if ((self->_messagePresenter = [[NotificationMessagePresenter alloc] initForBookmarkUUID:core.bookmark.uuid]) != nil)
+						{
+							[core.messageQueue addPresenter:self->_messagePresenter];
+						}
+
 						OCSyncExecDone(waitForCore);
 					}];
 				});

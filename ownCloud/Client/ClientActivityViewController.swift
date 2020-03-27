@@ -50,10 +50,17 @@ class ClientActivityViewController: UITableViewController, Themeable {
 
 				messageSelector = MessageSelector(from: core.messageQueue, filter: { (message) in
 					return (message.bookmarkUUID == bookmarkUUID)
-				}, handler: { (messages) in
+				}, handler: { [weak self] (messages) in
 					OnMainThread {
-						self.messages = messages
-						self.setNeedsDataReload()
+						self?.messages = messages
+						if let tabBarItem = self?.navigationController?.tabBarItem {
+							if let messages = messages, messages.count > 0 {
+								tabBarItem.badgeValue = "\(messages.count)"
+							} else {
+								tabBarItem.badgeValue = nil
+							}
+						}
+						self?.setNeedsDataReload()
 					}
 				})
 			}
@@ -258,4 +265,17 @@ class ClientActivityViewController: UITableViewController, Themeable {
 				return nil
 		}
 	}
+//
+//	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//		switch ActivitySection(rawValue: section) {
+//			case .messages:
+//				return "Messages".localized
+//
+//			case .activities:
+//				return "Tasks".localized
+//
+//			default:
+//				return nil
+//		}
+//	}
 }

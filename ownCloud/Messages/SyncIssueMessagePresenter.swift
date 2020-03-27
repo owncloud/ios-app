@@ -31,8 +31,8 @@ class SyncIssueMessagePresenter: OCMessagePresenter {
 	}
 
 	override func presentationPriority(for message: OCMessage) -> OCMessagePresentationPriority {
-		if message.syncIssue != nil {
-			return .high
+		if message.syncIssue != nil, message.bookmarkUUID == clientRootViewController.core?.bookmark.uuid {
+			return .low
 		}
 
 		return .wontPresent

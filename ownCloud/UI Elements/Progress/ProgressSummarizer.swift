@@ -56,7 +56,7 @@ private struct ProgressSummaryNotificationObserver {
 
 class ProgressSummarizer: NSObject {
 	// MARK: - Init & Deinit
-	private var observerContextTarget : Int = 0
+	static private var observerContextTarget : Int = 0
 	private var observerContext : UnsafeMutableRawPointer?
 
 	var trackedProgress : [Progress] = []
@@ -64,7 +64,7 @@ class ProgressSummarizer: NSObject {
 	var trackedProgressByTypeCount : [ OCEventType : Int ] = [ : ]
 
 	override init() {
-		observerContext = UnsafeMutableRawPointer(&observerContextTarget)
+		observerContext = UnsafeMutableRawPointer(&ProgressSummarizer.observerContextTarget)
 
 		super.init()
 	}

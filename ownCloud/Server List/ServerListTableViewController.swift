@@ -260,7 +260,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		showBookmarkUI()
 	}
 
-	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, removeAuthDataFromCopy: Bool = true) {
+	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, autosolveErrorOnSuccess: NSError? = nil, removeAuthDataFromCopy: Bool = true) {
 		let bookmarkViewController : BookmarkViewController = BookmarkViewController(bookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: bookmarkViewController)
 
@@ -279,6 +279,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		if attemptLoginOnSuccess {
 			bookmarkViewController.userActionCompletionHandler = { [weak self] (bookmark, success) in
 				if success, let bookmark = bookmark, let self = self {
+					if let error = autosolveErrorOnSuccess as Error? {
+						OCMessageQueue.global.resolveIssues(forError: error, forBookmarkUUID: bookmark.uuid)
+					}
 					self.connect(to: bookmark, lastVisibleItemId: nil, animated: true)
 				}
 			}
@@ -689,9 +692,9 @@ extension ServerListTableViewController : ClientRootViewControllerAuthentication
 	}
 }
 
-let ownCloudOpenAccountActivityType       = "com.owncloud.ios-app.openAccount"
-let ownCloudOpenAccountPath               = "openAccount"
-let ownCloudOpenAccountAccountUuidKey         = "accountUuid"
+let ownCloudOpenAccountActivityType     = "com.owncloud.ios-app.openAccount"
+let ownCloudOpenAccountPath           	= "openAccount"
+let ownCloudOpenAccountAccountUuidKey	= "accountUuid"
 
 extension OCBookmark {
 	var openAccountUserActivity: NSUserActivity {

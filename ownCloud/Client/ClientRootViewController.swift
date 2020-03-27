@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 protocol ClientRootViewControllerAuthenticationDelegate : class {
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?)
@@ -43,6 +44,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 	var toolbar : UIToolbar?
 
 	var messagePresenter : SyncIssueMessagePresenter?
+	var notificationPresenter : NotificationMessagePresenter?
+	var issueMessagePresenter : CardIssueMessagePresenter?
 
 	var pasteboardChangedCounter = 0
 
@@ -72,7 +75,11 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		super.init(nibName: nil, bundle: nil)
 
-		messagePresenter = SyncIssueMessagePresenter(for: self)
+		// messagePresenter = SyncIssueMessagePresenter(for: self)
+		notificationPresenter = NotificationMessagePresenter(forBookmarkUUID: bookmark.uuid)
+		issueMessagePresenter = CardIssueMessagePresenter(with: bookmark.uuid as OCBookmarkUUID, presenter: { [weak self] (viewController) in
+			self?.presentAlertAsCard(viewController: viewController, withHandle: false, dismissable: true)
+		})
 
 		progressSummarizer = ProgressSummarizer.shared(forBookmark: inBookmark)
 		if progressSummarizer != nil {
@@ -150,6 +157,14 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 			if let messagePresenter = self.messagePresenter {
 				core?.messageQueue.add(messagePresenter)
+			}
+
+			if let notificationPresenter = self.notificationPresenter {
+				core?.messageQueue.add(notificationPresenter)
+			}
+
+			if let issueMessagePresenter = self.issueMessagePresenter {
+				core?.messageQueue.add(issueMessagePresenter)
 			}
 
 			// Remove skip available offline when user opens the bookmark
@@ -503,6 +518,25 @@ extension ClientRootViewController : OCCoreDelegate {
 			}
 
 			if !queueCompletionHandlerScheduled {
+				queueCompletionHandler()
+			}
+		}
+	}
+
+	func presentAlertAsCard(viewController: UIViewController, withHandle: Bool = false, dismissable: Bool = true) {
+		alertQueue.async { [weak self] (queueCompletionHandler) in
+			if let startViewController = self {
+				var hostViewController : UIViewController = startViewController
+
+				while hostViewController.presentedViewController != nil,
+				      hostViewController.presentedViewController?.isBeingDismissed == false {
+					hostViewController = hostViewController.presentedViewController!
+				}
+
+				hostViewController.present(asCard: viewController, animated: true, withHandle: withHandle, dismissable: dismissable, completion: {
+					queueCompletionHandler()
+				})
+			} else {
 				queueCompletionHandler()
 			}
 		}
