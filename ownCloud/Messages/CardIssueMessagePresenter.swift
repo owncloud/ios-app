@@ -24,9 +24,13 @@ class CardIssueMessagePresenter: OCMessagePresenter {
 	var bookmarkUUID : OCBookmarkUUID
 	var presenter : (UIViewController) -> Void
 
-	init(with bookmarkUUID: OCBookmarkUUID, presenter: @escaping (UIViewController) -> Void) {
+	var isShowingCard : Bool = false
+	var oneCardLimit : Bool
+
+	init(with bookmarkUUID: OCBookmarkUUID, limitToSingleCard: Bool, presenter: @escaping (UIViewController) -> Void) {
 
 		self.bookmarkUUID = bookmarkUUID
+		self.oneCardLimit = limitToSingleCard
 		self.presenter = presenter
 
 		super.init()
@@ -35,7 +39,7 @@ class CardIssueMessagePresenter: OCMessagePresenter {
 	}
 
 	override func presentationPriority(for message: OCMessage) -> OCMessagePresentationPriority {
-		if message.syncIssue != nil, let messageBookmarkUUID = message.bookmarkUUID, let bookmarkUUID = bookmarkUUID as UUID?, messageBookmarkUUID == bookmarkUUID {
+		if message.syncIssue != nil, let messageBookmarkUUID = message.bookmarkUUID, let bookmarkUUID = bookmarkUUID as UUID?, messageBookmarkUUID == bookmarkUUID, !oneCardLimit || (oneCardLimit && !isShowingCard) {
 			return .high
 		}
 
@@ -47,7 +51,8 @@ class CardIssueMessagePresenter: OCMessagePresenter {
 
 		if let choices = message.syncIssue?.choices {
 			for choice in choices {
-				let option = AlertOption(label: choice.label, type: choice.type, handler: { (_, _) in
+				let option = AlertOption(label: choice.label, type: choice.type, handler: { [weak self] (_, _) in
+					self?.isShowingCard = false
 					completionHandler(true, choice)
 				})
 
@@ -56,13 +61,19 @@ class CardIssueMessagePresenter: OCMessagePresenter {
 		}
 
 		if options.count == 0 {
-			options.append(AlertOption(label: "OK".localized, type: .default, handler: { (_, _) in }))
+			options.append(AlertOption(label: "OK".localized, type: .default, handler: { [weak self] (_, _) in
+				self?.isShowingCard = false
+				completionHandler(true, nil)
+			}))
 		}
 
 		if let syncIssue = message.syncIssue {
-			let alertViewController = AlertViewController(localizedTitle: syncIssue.localizedTitle, localizedDescription: syncIssue.localizedDescription ?? "", options: options, dismissHandler: {
+			let alertViewController = AlertViewController(localizedTitle: syncIssue.localizedTitle, localizedDescription: syncIssue.localizedDescription ?? "", options: options, dismissHandler: { [weak self] in
+				self?.isShowingCard = false
 				completionHandler(true, nil)
 			})
+
+			self.isShowingCard = true
 
 			self.presenter(alertViewController)
 		}

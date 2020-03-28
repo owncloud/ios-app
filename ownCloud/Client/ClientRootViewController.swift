@@ -77,7 +77,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		// messagePresenter = SyncIssueMessagePresenter(for: self)
 		notificationPresenter = NotificationMessagePresenter(forBookmarkUUID: bookmark.uuid)
-		issueMessagePresenter = CardIssueMessagePresenter(with: bookmark.uuid as OCBookmarkUUID, presenter: { [weak self] (viewController) in
+		issueMessagePresenter = CardIssueMessagePresenter(with: bookmark.uuid as OCBookmarkUUID, limitToSingleCard: true, presenter: { [weak self] (viewController) in
 			self?.presentAlertAsCard(viewController: viewController, withHandle: false, dismissable: true)
 		})
 
