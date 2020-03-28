@@ -66,9 +66,13 @@ class ImageDisplayViewController : DisplayViewController {
 										  kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels] as CFDictionary
 				serialQueue.async {
 					if let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) {
-						completion(downsampledImage)
+						OnMainThread {
+							completion(downsampledImage)
+						}
 					} else {
-						completion(nil)
+						OnMainThread {
+							completion(nil)
+						}
 					}
 				}
 			}
@@ -83,10 +87,12 @@ class ImageDisplayViewController : DisplayViewController {
 			activityIndicatorView.startAnimating()
 
 			downSampleImage {(downsampledImage) in
-				OnMainThread {
+				self.activityIndicatorView.stopAnimating()
 
-					self.activityIndicatorView.stopAnimating()
-					if downsampledImage != nil {
+				if downsampledImage != nil {
+					let image = UIImage(cgImage: downsampledImage!)
+
+					if self.scrollView == nil {
 						self.scrollView = ImageScrollView(frame: .zero)
 						self.scrollView?.translatesAutoresizingMaskIntoConstraints = false
 
@@ -106,7 +112,6 @@ class ImageDisplayViewController : DisplayViewController {
 							self.activityIndicatorView.widthAnchor.constraint(equalTo: self.activityIndicatorView.heightAnchor)
 							])
 
-						let image = UIImage(cgImage: downsampledImage!)
 						self.scrollView?.display(image: image, inSize: self.view.bounds.size)
 
 						self.tapToZoomGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.tapToZoom))
@@ -118,11 +123,13 @@ class ImageDisplayViewController : DisplayViewController {
 
 						self.tapToZoomGestureRecognizer.delegate = self
 						self.showHideBarsTapGestureRecognizer.delegate = self
-
-						completion(true)
 					} else {
-						completion(false)
+						self.scrollView?.display(image: image, inSize: self.view.bounds.size)
 					}
+
+					completion(true)
+				} else {
+					completion(false)
 				}
 			}
 
@@ -191,13 +198,13 @@ extension ImageDisplayViewController: DisplayExtension {
 				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
 
 				if matches > 0 {
-					return OCExtensionPriority.locationMatch
+					return .locationMatch
 				}
 			}
 
-			return OCExtensionPriority.noMatch
+			return .noMatch
 		} catch {
-			return OCExtensionPriority.noMatch
+			return .noMatch
 		}
 	}
 	static var displayExtensionIdentifier: String = "org.owncloud.image"
