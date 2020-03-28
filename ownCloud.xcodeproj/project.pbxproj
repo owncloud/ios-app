@@ -1454,10 +1454,10 @@
 				6E5FC171221590B000F60846 /* DisplayHostViewController.swift */,
 				DC3DEC7A22AFA1F000F3352D /* DownloadItemsHUDViewController.swift */,
 				DCBF0A5E2280393A00465530 /* PDF */,
-				4C82D06E22C9384700835F0B /* Media */,
 				DCBF0A5F2280394B00465530 /* Image */,
+				4C82D06E22C9384700835F0B /* Media */,
+				DCEC3DF5242F89B20076B43C /* QuickLook */,
 				DCBF0A602280395F00465530 /* WebView */,
-				4C9BFA2223158C3F0059CA3E /* PreviewViewController.swift */,
 			);
 			path = Viewer;
 			sourceTree = "<group>";
@@ -2322,6 +2322,14 @@
 				DCE93FF321FCA434000E14F2 /* libzip.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		DCEC3DF5242F89B20076B43C /* QuickLook */ = {
+			isa = PBXGroup;
+			children = (
+				4C9BFA2223158C3F0059CA3E /* PreviewViewController.swift */,
+			);
+			path = QuickLook;
 			sourceTree = "<group>";
 		};
 		DCEE1C9523A0EAA300FE8D98 /* Offers */ = {
