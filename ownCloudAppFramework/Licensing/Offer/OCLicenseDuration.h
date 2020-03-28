@@ -40,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,readonly) NSTimeInterval duration;
 @property(nonatomic,readonly) NSString *localizedDescription;
+@property(nonatomic,readonly) NSString *localizedDescriptionSingular;
 
 - (instancetype)initWithUnit:(OCLicenseDurationUnit)unit length:(OCLicenseDurationLength)length;
 

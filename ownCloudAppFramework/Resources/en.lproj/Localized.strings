@@ -7,3 +7,19 @@
 */
 
 "Purchases are not allowed on this device." = "Purchases are not allowed on this device.";
+
+"day" = "day"
+"%lu day" = "%lu day";
+"%lu days" = "%lu days";
+
+"week" = "week";
+"%lu week" = "%lu week";
+"%lu weeks" = "%lu weeks";
+
+"month" = "month";
+"%lu month" = "%lu month";
+"%lu months" = "%lu months";
+
+"year" = "year";
+"%lu year" = "%lu year";
+"%lu years" = "%lu years";
