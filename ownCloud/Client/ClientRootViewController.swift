@@ -146,6 +146,19 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		Theme.shared.unregister(client: self)
 
+		// Remove message presenters
+		if let messagePresenter = self.messagePresenter {
+			core?.messageQueue.remove(messagePresenter)
+		}
+
+		if let notificationPresenter = self.notificationPresenter {
+			core?.messageQueue.remove(notificationPresenter)
+		}
+
+		if let issueMessagePresenter = self.issueMessagePresenter {
+			core?.messageQueue.remove(issueMessagePresenter)
+		}
+
 		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 	}
 
@@ -155,6 +168,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 			self.core = core
 			core?.delegate = self
 
+			// Add message presenters
 			if let messagePresenter = self.messagePresenter {
 				core?.messageQueue.add(messagePresenter)
 			}

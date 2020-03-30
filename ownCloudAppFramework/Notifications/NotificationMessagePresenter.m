@@ -16,10 +16,10 @@
  *
  */
 
-#import "NotificationMessagePresenter.h"
 #import <UIKit/UIKit.h>
 #import <UserNotifications/UserNotifications.h>
-#import "NotificationManager.h"
+
+#import "NotificationMessagePresenter.h"
 
 @implementation NotificationMessagePresenter
 
@@ -56,12 +56,14 @@
 		{
 			UNMutableNotificationContent *content = [UNMutableNotificationContent new];
 
+			content.categoryIdentifier = message.categoryIdentifier;
+
 			content.title = message.syncIssue.localizedTitle;
 			content.body = message.syncIssue.localizedDescription;
 
 			UNNotificationRequest *request;
 
-			request = [UNNotificationRequest requestWithIdentifier:message.uuid.UUIDString content:content trigger:nil];
+			request = [UNNotificationRequest requestWithIdentifier:ComposeNotificationIdentifier(NotificationMessagePresenter, message.uuid.UUIDString) content:content trigger:nil];
 
 			[NotificationManager.sharedNotificationManager addNotificationRequest:request withCompletionHandler:^(NSError * _Nonnull error) {
 				OCLogDebug(@"Notification error: %@", error);
@@ -70,6 +72,41 @@
 			}];
 		}
 	}];
+}
+
++ (void)handleNotificationCenter:(nonnull UNUserNotificationCenter *)center response:(nonnull UNNotificationResponse *)response identifier:(nonnull NSString *)identifier completionHandler:(nonnull dispatch_block_t)completionHandler
+{
+	OCMessageUUID messageUUID;
+
+	if ((messageUUID = [[NSUUID alloc] initWithUUIDString:identifier]) != nil)
+	{
+		OCMessage *message;
+
+		if ((message = [OCMessageQueue.globalQueue messageWithUUID:messageUUID]) != nil)
+		{
+			if ([response.actionIdentifier isEqual:UNNotificationDefaultActionIdentifier])
+			{
+				// User tapped notification
+			}
+			else if ([response.actionIdentifier isEqual:UNNotificationDismissActionIdentifier])
+			{
+				// User dismissed notification
+			}
+			else
+			{
+				// User made a choice
+				for (OCSyncIssueChoice *choice in message.syncIssue.choices)
+				{
+					if ([choice.identifier isEqual:response.actionIdentifier])
+					{
+						[OCMessageQueue.globalQueue resolveMessage:message withChoice:choice];
+					}
+				}
+			}
+		}
+	}
+
+	completionHandler();
 }
 
 @end

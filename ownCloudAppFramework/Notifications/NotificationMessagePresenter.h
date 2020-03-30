@@ -17,10 +17,11 @@
  */
 
 #import <ownCloudSDK/ownCloudSDK.h>
+#import "NotificationManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NotificationMessagePresenter : OCMessagePresenter
+@interface NotificationMessagePresenter : OCMessagePresenter <NotificationResponseHandler>
 
 @property(strong,readonly) OCBookmarkUUID bookmarkUUID;
 

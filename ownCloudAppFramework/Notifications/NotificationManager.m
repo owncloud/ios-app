@@ -58,8 +58,39 @@
 	[UNUserNotificationCenter.currentNotificationCenter setDelegate:nil];
 }
 
+#pragma mark - Category registration
+- (void)registerCategories
+{
+	NSMutableSet<UNNotificationCategory *> *categories = [NSMutableSet new];
+
+	for (OCSyncIssueTemplate *template in OCSyncIssueTemplate.templates)
+	{
+		NSMutableArray<UNNotificationAction *> *actions = [NSMutableArray new];
+		UNNotificationCategory *category = nil;
+
+		for (OCSyncIssueChoice *choice in template.choices)
+		{
+			UNNotificationAction *action;
+
+			if ((action = [UNNotificationAction actionWithIdentifier:choice.identifier
+									   title:choice.label
+									 options:((choice.type == OCIssueChoiceTypeDestructive) ? UNNotificationActionOptionDestructive : UNNotificationActionOptionNone)]) != nil)
+			{
+				[actions addObject:action];
+			}
+		}
+
+		if ((category = [UNNotificationCategory categoryWithIdentifier:template.identifier actions:actions intentIdentifiers:@[] options:UNNotificationCategoryOptionHiddenPreviewsShowTitle|UNNotificationCategoryOptionHiddenPreviewsShowSubtitle]) != nil)
+		{
+			[categories addObject:category];
+		}
+	}
+
+	[UNUserNotificationCenter.currentNotificationCenter setNotificationCategories:categories];
+}
+
 #pragma mark - Notification methods
-- (void)addNotificationRequest:(UNNotificationRequest *)notificationRequest withCompletionHandler:(void (^)(NSError *error))completionHandler;
+- (void)addNotificationRequest:(UNNotificationRequest *)notificationRequest withCompletionHandler:(void (^)(NSError *error))completionHandler
 {
 	[UNUserNotificationCenter.currentNotificationCenter addNotificationRequest:notificationRequest withCompletionHandler:completionHandler];
 }
@@ -68,6 +99,29 @@
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 {
 	completionHandler(UNNotificationPresentationOptionAlert|UNNotificationPresentationOptionBadge|UNNotificationPresentationOptionSound);
+}
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler
+{
+	NSString *composedIdentifier = response.notification.request.identifier;
+	NSArray<NSString *> *components;
+
+	if (((components = [composedIdentifier componentsSeparatedByString:@":"]) != nil) && (components.count >= 2))
+	{
+		NSString *handlerClassName = [components firstObject];
+		NSString *notificationIdentifier = [[components subarrayWithRange:NSMakeRange(1, components.count-1)] componentsJoinedByString:@":"];
+
+		Class<NotificationResponseHandler> handlerClass = NSClassFromString(handlerClassName);
+
+		if ([handlerClass conformsToProtocol:@protocol(NotificationResponseHandler)])
+		{
+			[handlerClass handleNotificationCenter:center response:response identifier:notificationIdentifier completionHandler:completionHandler];
+			return;
+		}
+	}
+
+	OCLogError(@"Could not route notification response %@", response);
+	completionHandler();
 }
 
 @end

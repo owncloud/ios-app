@@ -25,8 +25,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic,readonly,class,strong) NotificationManager *sharedNotificationManager;
 
+- (void)registerCategories;
+
 - (void)addNotificationRequest:(UNNotificationRequest *)notificationRequest withCompletionHandler:(void (^)(NSError *error))completionHandler;
 
+@end
+
+#define ComposeNotificationIdentifier(aClass,identifier) [NSStringFromClass(aClass.class) stringByAppendingFormat:@":%@", identifier]
+
+@protocol NotificationResponseHandler <NSObject>
++ (void)handleNotificationCenter:(UNUserNotificationCenter *)center response:(UNNotificationResponse *)response identifier:(NSString *)identifier completionHandler:(dispatch_block_t)completionHandler;
 @end
 
 NS_ASSUME_NONNULL_END

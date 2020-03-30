@@ -33,6 +33,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Set up logging (incl. stderr redirection) and log launch time, app version, build number and commit
 		Log.log("ownCloud \(VendorServices.shared.appVersion) (\(VendorServices.shared.appBuildNumber)) #\(LastGitCommit() ?? "unknown") finished launching with log settings: \(Log.logOptionStatus)")
 
+		// Set up notification categories
+		NotificationManager.shared.registerCategories()
+
 		// Set up license management
 		OCLicenseManager.shared.setupLicenseManagement()
 

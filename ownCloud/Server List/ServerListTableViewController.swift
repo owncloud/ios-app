@@ -102,6 +102,54 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 
 		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenAppVersion)
+
+		messageCountSelector = MessageSelector(filter: nil, handler: { [weak self] (messages) in
+			var countByBookmarkUUID : [UUID? : Int ] = [:]
+
+			if let messages = messages {
+				for message in messages {
+					if let count = countByBookmarkUUID[message.bookmarkUUID] {
+						countByBookmarkUUID[message.bookmarkUUID] = count + 1
+					} else {
+						countByBookmarkUUID[message.bookmarkUUID] = 1
+					}
+				}
+			}
+
+			OnMainThread {
+				self?.messageCountByBookmarkUUID = countByBookmarkUUID
+			}
+		})
+	}
+
+	var messageCountSelector : MessageSelector?
+
+	static let BookmarkMessageCountChanged = NSNotification.Name("boomark.message-count.changed")
+
+	typealias ServerListTableMessageCountByUUID = [UUID? : Int ]
+
+	var messageCountByBookmarkUUID : ServerListTableMessageCountByUUID = [:] {
+		didSet {
+			// Notify cells about changed counts
+			NotificationCenter.default.post(Notification(name: ServerListTableViewController.BookmarkMessageCountChanged, object: messageCountByBookmarkUUID, userInfo: nil))
+
+			// Update app badge count
+			var totalNotificationCount = messageCountByBookmarkUUID[nil] ?? 0 // Global notifications
+
+			for bookmark in OCBookmarkManager.shared.bookmarks {
+				if let count = messageCountByBookmarkUUID[bookmark.uuid] {
+					totalNotificationCount += count
+				}
+			}
+
+			UNUserNotificationCenter.current().requestAuthorization(options: .badge) { (granted, _) in
+				if granted {
+					OnMainThread {
+						UIApplication.shared.applicationIconBadgeNumber = totalNotificationCount
+					}
+				}
+			}
+		}
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -359,6 +407,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 							// Success! We can now remove the bookmark
 							self.ignoreServerListChanges = true
 
+							OCMessageQueue.global.dequeueAllMessages(forBookmarkUUID: bookmark.uuid)
+
 							OCBookmarkManager.shared.removeBookmark(bookmark)
 
 							self.tableView.performBatchUpdates({
@@ -571,9 +621,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 
 		if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-			bookmarkCell.titleLabel.text = bookmark.shortName
-			bookmarkCell.detailLabel.text = (bookmark.originURL != nil) ? bookmark.originURL!.absoluteString : bookmark.url?.absoluteString
-			bookmarkCell.accessibilityIdentifier = "server-bookmark-cell"
+			bookmarkCell.bookmark = bookmark
+			bookmarkCell.updateMessageBadge(count: messageCountByBookmarkUUID[bookmark.uuid] ?? 0)
 		}
 
 		return bookmarkCell

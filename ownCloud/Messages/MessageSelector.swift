@@ -25,7 +25,7 @@ typealias MessageSelectorChangeHandler = (_ messages: [OCMessage]?) -> Void
 class MessageSelector: NSObject {
 	private var observer : NSKeyValueObservation?
 	private var rateLimiter : OCRateLimiter
-	private var filter : MessageSelectorFilter
+	private var filter : MessageSelectorFilter?
 
 	var queue : OCMessageQueue?
 	var handler : MessageSelectorChangeHandler?
@@ -37,7 +37,7 @@ class MessageSelector: NSObject {
 		}
 	}
 
-	init(from messageQueue: OCMessageQueue, filter messageFilter: @escaping MessageSelectorFilter, handler: MessageSelectorChangeHandler?) {
+	init(from messageQueue: OCMessageQueue = .global, filter messageFilter: MessageSelectorFilter?, handler: MessageSelectorChangeHandler?) {
 		rateLimiter = OCRateLimiter(minimumTime: 0.2)
 
 		filter = messageFilter
@@ -55,7 +55,7 @@ class MessageSelector: NSObject {
 
 	private func updateFromQueue() {
 		if let messages = queue?.messages {
-			let filteredMessages = messages.filter(self.filter)
+			let filteredMessages = (filter != nil) ? messages.filter(filter!) : messages
 			var filteredMessageUUIDs : [OCMessageUUID] = []
 
 			for message in filteredMessages {
