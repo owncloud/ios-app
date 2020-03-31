@@ -306,6 +306,9 @@ class MediaUploadSettingsSection: SettingsSection {
 		accountSelectionViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
 																						   target: accountSelectionViewController,
 																						   action: #selector(accountSelectionViewController.dismissAnimated))
+		accountSelectionViewController.didDismissAction = { [weak self] (viewController) in
+			self?.updateDynamicUI()
+		}
 
 		let accountsSection = StaticTableViewSection(headerTitle: "Accounts".localized)
 
@@ -354,12 +357,24 @@ class MediaUploadSettingsSection: SettingsSection {
 
 												OnMainThread {
 													let directoryPickerViewController = ClientDirectoryPickerViewController(core: core, path: "/", selectButtonTitle: "Select Upload Path".localized, avoidConflictsWith: [], choiceHandler: { (selectedDirectory) in
-														if selectedDirectory != nil {
-															self?.userDefaults.instantUploadPath = selectedDirectory?.path
-														}
+														var success = false
 														OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 
-														completion(selectedDirectory != nil)
+														if let directory = selectedDirectory {
+															if directory.permissions.contains(.createFile) {
+																print("Can create files")
+																self?.userDefaults.instantUploadPath = selectedDirectory?.path
+																success = true
+															} else {
+																OnMainThread {
+																	let alert = ThemedAlertController(title: "Missing permissions".localized, message: "This permission is needed to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
+																	alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+																	self?.viewController?.present(alert, animated: true, completion: nil)
+																}
+															}
+														}
+
+														completion(success)
 													})
 													navigationController?.pushViewController(directoryPickerViewController, animated: true)
 												}

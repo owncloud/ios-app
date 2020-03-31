@@ -1,5 +1,13 @@
 # ChangeLog
 
+## Release version 1.3.1 (March 2020)
+
+- Fix: Shortcut - Save Action (#622)
+- Fix: Markup Documents (#617, #618
+- Fix: Offline Usage (#3828)
+- Fix: Available Offline (PR #616)
+- Fix: Permissions (#623)
+
 ## Release version 1.3.0 (February 2020)
 
 - Document Scanner on iOS 13 (PR #494)
