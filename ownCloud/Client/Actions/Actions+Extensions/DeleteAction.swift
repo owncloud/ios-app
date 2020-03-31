@@ -38,7 +38,7 @@ class DeleteAction : Action {
 			}
 		}
 
-		if forContext.items.filter({return $0.isRoot}).count > 0 {
+		if forContext.items.filter({return $0.isRoot || !$0.permissions.contains(.delete)}).count > 0 {
 			return .none
 
 		}

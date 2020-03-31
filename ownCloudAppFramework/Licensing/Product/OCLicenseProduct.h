@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)productWithIdentifier:(OCLicenseProductIdentifier)identifier name:(NSString *)localizedName description:(nullable NSString *)localizedDescription contents:(NSArray<OCLicenseFeatureIdentifier> *)contents;
 
 #pragma mark - Tools
-+ (NSString *)stringForType:(OCLicenseType)type;
++ (NSString *)stringForType:(OCLicenseType)type; //!< Convenience method for debugging purposes/logging - no user-facing strings
 
 @end
 
