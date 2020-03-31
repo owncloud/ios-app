@@ -29,4 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+extern NSNotificationName NotificationMessagePresenterShowMessageNotification; //!< Posted if a user taps on a notification, with the OCMessage as Notification.object
+
 NS_ASSUME_NONNULL_END

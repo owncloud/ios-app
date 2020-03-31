@@ -45,7 +45,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 	var messagePresenter : SyncIssueMessagePresenter?
 	var notificationPresenter : NotificationMessagePresenter?
-	var issueMessagePresenter : CardIssueMessagePresenter?
+	var cardMessagePresenter : CardIssueMessagePresenter?
 
 	var pasteboardChangedCounter = 0
 
@@ -77,7 +77,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 
 		// messagePresenter = SyncIssueMessagePresenter(for: self)
 		notificationPresenter = NotificationMessagePresenter(forBookmarkUUID: bookmark.uuid)
-		issueMessagePresenter = CardIssueMessagePresenter(with: bookmark.uuid as OCBookmarkUUID, limitToSingleCard: true, presenter: { [weak self] (viewController) in
+		cardMessagePresenter = CardIssueMessagePresenter(with: bookmark.uuid as OCBookmarkUUID, limitToSingleCard: true, presenter: { [weak self] (viewController) in
 			self?.presentAlertAsCard(viewController: viewController, withHandle: false, dismissable: true)
 		})
 
@@ -155,8 +155,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 			core?.messageQueue.remove(notificationPresenter)
 		}
 
-		if let issueMessagePresenter = self.issueMessagePresenter {
-			core?.messageQueue.remove(issueMessagePresenter)
+		if let cardMessagePresenter = self.cardMessagePresenter {
+			core?.messageQueue.remove(cardMessagePresenter)
 		}
 
 		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
@@ -177,8 +177,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 				core?.messageQueue.add(notificationPresenter)
 			}
 
-			if let issueMessagePresenter = self.issueMessagePresenter {
-				core?.messageQueue.add(issueMessagePresenter)
+			if let cardMessagePresenter = self.cardMessagePresenter {
+				core?.messageQueue.add(cardMessagePresenter)
 			}
 
 			// Remove skip available offline when user opens the bookmark

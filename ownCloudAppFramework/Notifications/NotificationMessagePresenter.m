@@ -27,7 +27,7 @@
 {
 	if ((self = [super init]) != nil)
 	{
-		self.identifier = @"localNotification";
+		self.identifier = [@"localNotification" stringByAppendingFormat:@".%@", bookmarkUUID.UUIDString];
 		_bookmarkUUID = bookmarkUUID;
 	}
 
@@ -47,7 +47,7 @@
 	return (OCMessagePresentationPriorityWontPresent);
 }
 
-- (void)present:(OCMessage *)message completionHandler:(void (^)(BOOL, OCSyncIssueChoice * _Nullable))completionHandler
+- (void)present:(OCMessage *)message completionHandler:(void (^)(OCMessagePresentationResult, OCSyncIssueChoice * _Nullable))completionHandler
 {
 	UNUserNotificationCenter *center = UNUserNotificationCenter.currentNotificationCenter;
 
@@ -68,10 +68,21 @@
 			[NotificationManager.sharedNotificationManager addNotificationRequest:request withCompletionHandler:^(NSError * _Nonnull error) {
 				OCLogDebug(@"Notification error: %@", error);
 
-				completionHandler((error == nil), nil);
+				completionHandler(((error == nil) ? (OCMessagePresentationResultDidPresent|OCMessagePresentationResultRequiresEndNotification) : OCMessagePresentationResultDidNotPresent), nil);
 			}];
 		}
 	}];
+}
+
+- (void)endPresentationOfMessage:(OCMessage *)message
+{
+	NSString *notificationIdentifier;
+
+	if ((notificationIdentifier = ComposeNotificationIdentifier(NotificationMessagePresenter, message.uuid.UUIDString)) != nil)
+	{
+		[UNUserNotificationCenter.currentNotificationCenter removePendingNotificationRequestsWithIdentifiers:@[ notificationIdentifier ]];
+		[UNUserNotificationCenter.currentNotificationCenter removeDeliveredNotificationsWithIdentifiers:@[ notificationIdentifier ]];
+	}
 }
 
 + (void)handleNotificationCenter:(nonnull UNUserNotificationCenter *)center response:(nonnull UNNotificationResponse *)response identifier:(nonnull NSString *)identifier completionHandler:(nonnull dispatch_block_t)completionHandler
@@ -87,10 +98,13 @@
 			if ([response.actionIdentifier isEqual:UNNotificationDefaultActionIdentifier])
 			{
 				// User tapped notification
+				OCLogDebug(@"User tapped notification %@", message);
+				[NSNotificationCenter.defaultCenter postNotificationName:NotificationMessagePresenterShowMessageNotification object:message];
 			}
 			else if ([response.actionIdentifier isEqual:UNNotificationDismissActionIdentifier])
 			{
 				// User dismissed notification
+				OCLogDebug(@"User dismissed notification %@", message);
 			}
 			else
 			{
@@ -110,3 +124,5 @@
 }
 
 @end
+
+NSNotificationName NotificationMessagePresenterShowMessageNotification = @"NotificationMessagePresenterShowMessage";

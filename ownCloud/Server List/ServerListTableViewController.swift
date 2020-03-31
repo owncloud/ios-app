@@ -170,6 +170,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		super.viewDidAppear(animated)
 
+		ClientSessionManager.shared.add(delegate: self)
+
 		updateNoServerMessageVisibility()
 
 		let settingsBarButtonItem = UIBarButtonItem(title: "Settings".localized, style: UIBarButtonItem.Style.plain, target: self, action: #selector(settings))
@@ -226,6 +228,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		super.viewWillDisappear(animated)
 
 		self.navigationController?.setToolbarHidden(true, animated: animated)
+
+		ClientSessionManager.shared.remove(delegate: self)
 
 		Theme.shared.unregister(client: self)
 	}
@@ -459,7 +463,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		return OCBookmarkManager.isLocked(bookmark: bookmark, presentAlertOn: presentAlert ? self : nil)
 	}
 
-	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool) {
+	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage? = nil) {
 		if isLocked(bookmark: bookmark) {
 			return
 		}
@@ -468,7 +472,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			return
 		}
 
-		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+		let clientRootViewController = ClientSessionManager.shared.startSession(for: bookmark)!
 
 		let bookmarkRow = self.tableView.cellForRow(at: indexPath)
 		let activityIndicator = UIActivityIndicatorView(style: .white)
@@ -508,6 +512,13 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 					navigationController.present(clientRootViewController, animated: animated, completion: {
 						self.resetPreviousBookmarkSelection(bookmark)
+
+						// Present message if one was provided
+						if let message = message, let cardMessagePresenter = clientRootViewController.cardMessagePresenter {
+							OnMainThread { // Wait for next runloop cycle
+								OCMessageQueue.global.present(message, with: cardMessagePresenter)
+							}
+						}
 					})
 				}
 			}
@@ -738,6 +749,16 @@ extension ServerListTableViewController : ClientRootViewControllerAuthentication
 						     removeAuthDataFromCopy: true)
 			}
 		})
+	}
+}
+
+extension ServerListTableViewController : ClientSessionManagerDelegate {
+	func canOpenSession(for bookmark: OCBookmark) -> Bool {
+		return !isLocked(bookmark: bookmark) && (presentedViewController == nil)
+	}
+
+	func openSession(for bookmark: OCBookmark, present message: OCMessage?) {
+		self.connect(to: bookmark, lastVisibleItemId: nil, animated: true, present: message)
 	}
 }
 

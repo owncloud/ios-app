@@ -27,7 +27,7 @@ class SyncIssueMessagePresenter: OCMessagePresenter {
 
 		super.init()
 
-		self.identifier = OCMessagePresenterIdentifier(rawValue: "syncIssuePresenter")
+		self.identifier = OCMessagePresenterIdentifier(rawValue: "syncIssuePresenter.\(rootViewController.bookmark.uuid.uuidString)")
 	}
 
 	override func presentationPriority(for message: OCMessage) -> OCMessagePresentationPriority {
@@ -38,16 +38,16 @@ class SyncIssueMessagePresenter: OCMessagePresenter {
 		return .wontPresent
 	}
 
-	override func present(_ message: OCMessage, completionHandler: @escaping (Bool, OCSyncIssueChoice?) -> Void) {
+	override func present(_ message: OCMessage, completionHandler: @escaping (OCMessagePresentationResult, OCSyncIssueChoice?) -> Void) {
 		if let messageQueue = queue {
 			if let issue = OCIssue(from: message, from: messageQueue), let core = self.clientRootViewController.core {
 				self.clientRootViewController.core(core, handleError: nil, issue: issue)
 
-				completionHandler(true, nil)
+				completionHandler(.didPresent, nil)
 				return
 			}
 		}
 
-		completionHandler(false, nil)
+		completionHandler([], nil)
 	}
 }

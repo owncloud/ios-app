@@ -35,7 +35,7 @@ class CardIssueMessagePresenter: OCMessagePresenter {
 
 		super.init()
 
-		self.identifier = OCMessagePresenterIdentifier(rawValue: "card")
+		self.identifier = OCMessagePresenterIdentifier(rawValue: "card.\(bookmarkUUID.uuidString)")
 	}
 
 	override func presentationPriority(for message: OCMessage) -> OCMessagePresentationPriority {
@@ -46,14 +46,14 @@ class CardIssueMessagePresenter: OCMessagePresenter {
 		return .wontPresent
 	}
 
-	override func present(_ message: OCMessage, completionHandler: @escaping (Bool, OCSyncIssueChoice?) -> Void) {
+	override func present(_ message: OCMessage, completionHandler: @escaping (OCMessagePresentationResult, OCSyncIssueChoice?) -> Void) {
 		var options : [AlertOption] = []
 
 		if let choices = message.syncIssue?.choices {
 			for choice in choices {
 				let option = AlertOption(label: choice.label, type: choice.type, handler: { [weak self] (_, _) in
 					self?.isShowingCard = false
-					completionHandler(true, choice)
+					completionHandler(.didPresent, choice)
 				})
 
 				options.append(option)
@@ -63,14 +63,14 @@ class CardIssueMessagePresenter: OCMessagePresenter {
 		if options.count == 0 {
 			options.append(AlertOption(label: "OK".localized, type: .default, handler: { [weak self] (_, _) in
 				self?.isShowingCard = false
-				completionHandler(true, nil)
+				completionHandler(.didPresent, nil)
 			}))
 		}
 
 		if let syncIssue = message.syncIssue {
 			let alertViewController = AlertViewController(localizedTitle: syncIssue.localizedTitle, localizedDescription: syncIssue.localizedDescription ?? "", options: options, dismissHandler: { [weak self] in
 				self?.isShowingCard = false
-				completionHandler(true, nil)
+				completionHandler(.didPresent, nil)
 			})
 
 			self.isShowingCard = true
