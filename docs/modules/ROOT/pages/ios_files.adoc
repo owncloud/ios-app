@@ -33,6 +33,7 @@ The actions available for files are:
 * Duplicate
 * Copy
 * Delete
+* Make Available Offline
 
 However, file actions are handled slightly differently, depending on whether one or multiple files have been selected.
 You can see the differences in the two images below.
@@ -43,7 +44,7 @@ The image below on the right, shows the move icon row for _multiple-selected_ fi
 [cols=","]
 |===
 |*Individual File Actions*
-image:file-actions-dialog.png[File actions dialog for individual files in ownCloud's iOS App.]
+image:file-actions.jpg[File actions dialog for individual files in ownCloud's iOS App.]
 |*Multiple-Selected File Actions*
 image:file-actions-multiple-files-selected.png[File actions dialog for multiple-selected files in ownCloud's iOS App.]
 |===
@@ -154,6 +155,7 @@ When working with folders, click the plus icon near the top right-hand corner, a
 * xref:create-folder[Create folder]
 * xref:upload-files[Upload files]
 * xref:upload-file-from-your-photo-library[Upload file from your photo library]
+* xref:make-available-offline[Make available offline]
 
 image:directory-actions.png[Folder actions in ownCloud's iOS App.]
 
@@ -167,6 +169,10 @@ image:create-new-folder.png[How to create a new folder in ownCloud's iOS App.]
 
 To upload files or any time from your device to your ownCloud server, click btn:[Upload file].
 You will then be able to select or browse through files from any app that exposes data to the iOS files app.
+
+=== Make Available Offline
+
+Please see xref:ios_available_offline.adoc[the Offline Storage section].
 
 ==== Upload File From Your Photo Library
 
