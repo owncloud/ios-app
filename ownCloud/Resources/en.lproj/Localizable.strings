@@ -539,17 +539,8 @@
 "Subscribe Now" = "Subscribe Now";
 "Free" = "Free";
 
-"day" = "day";
-"%lu days" = "%lu days";
-
-"week" = "week";
-"%lu weeks" = "%lu weeks";
-
-"month" = "month";
-"%lu months" = "%lu months";
-
-"year" = "year";
-"%lu years" = "%lu years";
+"%@ / %@" = "%@ / %@";
+"after free %@ trial" = "after free %@ trial";
 
 /* Example usage: "Try [14 days] for free." */
 "Try %@ for free." = "Try %@ for free.";
