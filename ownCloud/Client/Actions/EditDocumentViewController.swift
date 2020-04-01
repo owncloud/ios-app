@@ -54,9 +54,23 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		Theme.shared.register(client: self, applyImmediately: true)
 
 		if let core = core, let path = item.path {
-			itemTracker = core.trackItem(atPath: path, trackingHandler: { [weak self](error, item, _) in
+			itemTracker = core.trackItem(atPath: path, trackingHandler: { [weak self, weak core](error, item, _) in
 				if let item = item, let self = self {
+					var refreshPreview = false
+
+					if let core = core {
+						if item.contentDifferent(than: self.item, in: core) {
+							refreshPreview = true
+						}
+					}
+
 					self.item = item
+
+					if refreshPreview {
+						OnMainThread {
+							self.reloadData()
+						}
+					}
 				} else if item == nil {
 
 					OnMainThread {
@@ -183,9 +197,9 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+	override func viewDidLoad() {
+		super.viewDidLoad()
+	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.navigationController?.navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
@@ -195,22 +209,22 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 @available(iOS 13.0, *)
 extension EditDocumentViewController: QLPreviewControllerDataSource, QLPreviewControllerDelegate {
-    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
 		return 1
-    }
+	}
 
-    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
 		return source as QLPreviewItem
-    }
+	}
 
 	func previewController(_ controller: QLPreviewController, editingModeFor previewItem: QLPreviewItem) -> QLPreviewItemEditingMode {
 		return .createCopy
-    }
+	}
 
-    func previewController(_ controller: QLPreviewController, didUpdateContentsOf previewItem: QLPreviewItem) {
-    }
+	func previewController(_ controller: QLPreviewController, didUpdateContentsOf previewItem: QLPreviewItem) {
+	}
 
-    func previewController(_ controller: QLPreviewController, didSaveEditedCopyOf previewItem: QLPreviewItem, at modifiedContentsURL: URL) {
+	func previewController(_ controller: QLPreviewController, didSaveEditedCopyOf previewItem: QLPreviewItem, at modifiedContentsURL: URL) {
 		self.modifiedContentsURL = modifiedContentsURL
 		if self.dismissedViewWithoutSaving, let savingMode = self.savingMode {
 			self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
