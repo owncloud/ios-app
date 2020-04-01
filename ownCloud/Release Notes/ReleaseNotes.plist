@@ -333,6 +333,49 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>1.3.2</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>iPad: Mouse and Trackpad support</string>
+					<key>Subtitle</key>
+					<string>With iPadOS 13.4 we supporting mouse and trackpads</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageData</key>
+					<string>iVBORw0KGgoAAAANSUhEUgAAADEAAAAtCAYAAAAHiIP8AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAEh0kAAA/2QACZakAAAhkAAOgAQADAAAAAQABAACgAgAEAAAAAQAAADGgAwAEAAAAAQAAAC0AAAAA6QpOKgAAAAlwSFlzAAALKwAACz8B0YJydgAAAo9JREFUaAXtmT1oVEEQx5MYMIIGURKDIabQTrCJ2mhhhEQwqdILamelhSCI2hhBrARTSzDY+QWpQooUabQyISpopSjiR6GI3+LH738E8uR277152bfX7MDvbm92Zmdm397evnctLUnSDKQZyM5Aa/aDo70F3UkYhm2wDmLIH4J8gEWYhLvglUZF7MJrFubhOjyDrxBD2gjSBYNwGmbgGJhExT2Ccyavaox7GPY5HAWT7Mf6JawxeVVnfISh71uHP4XDDatThfbdjP0LtMzqxKnEahO8rbNunuIdobXEO10p+IrQMvrtcmiiTjuWc3n7imhirvbQqQj7nFXjka5ENfNqH7Xd7lLIowOrQ7AH1sMr0NFhCaLJJSJdLhltDD8l/dfBNDodI8rIT5w2uxxDfydOEOQ29LqCoRuFB7DV019KHbIInXqvFchCR/qpAnaFTUIWcZaozl9URzYH0e1z6EupQhZx2JjBiNHeax6qCB0YN3ijuDv63Wq7NlQRZe74vtjTdXuEKuI7wz9xh/BqH3p7jB2hilDYSUPsz9jeMtg3NA1ZxASRHjeMttJ5nub7lY+ra4Us4hupaMfJW1ZXsLm6urT/9w5ZhEZ+AXvhwnKbt5roLnEOhuBMTRPwpYoDoHadi8t08a6t9w2U2cFwy5cqishG1boPtvazA2fboZdTduxo7VREtKnOCZSuRM4ERev2XYkfZLA2Whb5gXSfop1UedWJr4jXWG6vs26eYgehP4HOXIVFTnLoLuxRreE4w98pE+ImTjoqbCzjHNBHT090CtjtG1OPy32i50VTcAA0C09Bh7wYomWuI8sg7ITj4L0SjYrAryYDvOpBWB/E/OPxI/EW4B7o+5AkzUCMGfgHlthT/vALVHcAAAAASUVORK5CYII=</string>
+					<key>ImageSystemName</key>
+					<string>dot.square</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Shortcut - Save Action</string>
+					<key>Subtitle</key>
+					<string>Fixed saving, when device is in flight mode.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageData</key>
+					<string>iVBORw0KGgoAAAANSUhEUgAAADcAAABACAYAAAC+/O8/AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAABDrcAAAOywAEcK0AAA+4AAOgAQADAAAAAQABAACgAgAEAAAAAQAAADegAwAEAAAAAQAAAEAAAAAA8o3R7QAAAAlwSFlzAAALQgAACx8Ba/0IRgAABHZJREFUaAXtmFuITVEYx5lxv99zGbmMwYNLopRbijzJrTwpxu2BB5cXlFCaQi5PikTxIIUwTxiXxiWSFOLBkGTcLzHI/fb7M6t2p33O+fbZe8+Zqf3Vr7PP2v/1rfV9Z621v30aNUosyUCSgSQDSQaSDCQZiCIDhThpEoWj+uRDQZXBJ/gM26AZNHhTECfgKpRAEZyECmgJDdYUWDmch1aeKLQ0j/i0eyT1+9IFdo5pegNzs3YBVtLQ2jU2hE8X2Fkmm2npuQAvomsTR2CNc3CqTHeAAp++XWjbXHtvGp9ffDTeJgV4CHrDcngGqfabhg/wMfVGlN+H4+w6/IAaeO/Da9oOQAuwmgLcCS/Bz6fG0ph3YBxEbvqFq2AFaNnVtTVlwPnwCoIkzjTPYlT6VfJtd5nAWOsk/PaNX1/tJWUt3/acCXS1TsIanHR/rE5j1GkO1jnbhTFOODbX5izENoMYHde34FRk74HBUcRc34JbS1DTIZKTWQ9Qi7VH9MsiDKEZTd91MBPepvGjOWgukZke2qrsVUXEZa1xfB92ZRlAwd+CSGpRVQblcAYirwzw6WwvF/fA7w3CafTpiu1LXIcKUIEdh2zVPZJQpmX4HUYZvbgAL6LXLx7YFNgxOAeZXlsCO07p0IPvb0AHSRBzAV6gU6AAdRwfhbgDUzF+GrTENGZQcwFW0tG8ZTYhvgzZ1j+SUKY3jBroG8KLAtSZsM/ioy0ivRT2tIhDaIbQ9yvMDeHDddWc9egocg3pPrtzQ9nUnrPYDERjLEKPpjnXt+Gwpy3s5UMcDLU4OYVIS9Ni6xHp7Vm/hNV2IHwCHa0dsuiWcf8GaA9nNZ1gysTqrMr/Do+gewy9DPrJaH7BJIPWIilF9AJKLGKn6cvFI7AEqJPqCtyEdpDOOnHjKWxPJwjYPh+9/ncxLcdU3/1o0C9iCVBvxw+gAtLtVz1etNe058LaQhy8huFhHBXTuRosAQ5C9xb2Q6opyzodc8pyirNFfH8DI1Lac/o6gF7PQdnKZhMQfIONHqESpMfLSk9brpfT6fgORubqwK/fPBqv+d3waZtD229QMgrhKqjwNp1m6DJZOTfXZBJ47zXxfslwXcU9aw13EK32626YCgNhGETxB5OqJs3FZNbgTM48ojKutRxLYTbolKxzK4hxxMX4Hg86JfNicQb3k4gu5yWq2kHjDC6fcf0buyEGZz6YrMHpOdU27z/F/zl8inoeKplqIJKqIMfJ9aGfktzN2t/6KFDVsQou1KLyx295/KBdfx0cgyA2BfEs0N+IqaaHfweYCJvhFZgsaNWg7Ol47wh+S7oz7UthK2wBiy1CtAN2wTOfDqp2tGpU6dz3uV+nTSWM9gQsxbZKNK2CSGtF/MVqA/BeDZkCXMB9vbbkcx8zfG6m8usx+AVYSrv2Tqj3Mfrn1fozugLcAG5/L+Fafw2omI7V3IBxDtIb5zo99TjRC6sqe52M5uoebU5WF8FpYgWgU7YpVILqzsSSDCQZSDKQZCDJQJKBEBn4C7hrtbpGJWzdAAAAAElFTkSuQmCC</string>
+					<key>ImageSystemName</key>
+					<string>bandage</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Fix: Keep open Files up-to-date</string>
+					<key>Subtitle</key>
+					<string>Open items will be automatically updated if the content was changed</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageData</key>
+					<string>iVBORw0KGgoAAAANSUhEUgAAADcAAABACAYAAAC+/O8/AAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAABDrcAAAOywAEcK0AAA+4AAOgAQADAAAAAQABAACgAgAEAAAAAQAAADegAwAEAAAAAQAAAEAAAAAA8o3R7QAAAAlwSFlzAAALQgAACx8Ba/0IRgAABHZJREFUaAXtmFuITVEYx5lxv99zGbmMwYNLopRbijzJrTwpxu2BB5cXlFCaQi5PikTxIIUwTxiXxiWSFOLBkGTcLzHI/fb7M6t2p33O+fbZe8+Zqf3Vr7PP2v/1rfV9Z621v30aNUosyUCSgSQDSQaSDCQZiCIDhThpEoWj+uRDQZXBJ/gM26AZNHhTECfgKpRAEZyECmgJDdYUWDmch1aeKLQ0j/i0eyT1+9IFdo5pegNzs3YBVtLQ2jU2hE8X2Fkmm2npuQAvomsTR2CNc3CqTHeAAp++XWjbXHtvGp9ffDTeJgV4CHrDcngGqfabhg/wMfVGlN+H4+w6/IAaeO/Da9oOQAuwmgLcCS/Bz6fG0ph3YBxEbvqFq2AFaNnVtTVlwPnwCoIkzjTPYlT6VfJtd5nAWOsk/PaNX1/tJWUt3/acCXS1TsIanHR/rE5j1GkO1jnbhTFOODbX5izENoMYHde34FRk74HBUcRc34JbS1DTIZKTWQ9Qi7VH9MsiDKEZTd91MBPepvGjOWgukZke2qrsVUXEZa1xfB92ZRlAwd+CSGpRVQblcAYirwzw6WwvF/fA7w3CafTpiu1LXIcKUIEdh2zVPZJQpmX4HUYZvbgAL6LXLx7YFNgxOAeZXlsCO07p0IPvb0AHSRBzAV6gU6AAdRwfhbgDUzF+GrTENGZQcwFW0tG8ZTYhvgzZ1j+SUKY3jBroG8KLAtSZsM/ioy0ivRT2tIhDaIbQ9yvMDeHDddWc9egocg3pPrtzQ9nUnrPYDERjLEKPpjnXt+Gwpy3s5UMcDLU4OYVIS9Ni6xHp7Vm/hNV2IHwCHa0dsuiWcf8GaA9nNZ1gysTqrMr/Do+gewy9DPrJaH7BJIPWIilF9AJKLGKn6cvFI7AEqJPqCtyEdpDOOnHjKWxPJwjYPh+9/ncxLcdU3/1o0C9iCVBvxw+gAtLtVz1etNe058LaQhy8huFhHBXTuRosAQ5C9xb2Q6opyzodc8pyirNFfH8DI1Lac/o6gF7PQdnKZhMQfIONHqESpMfLSk9brpfT6fgORubqwK/fPBqv+d3waZtD229QMgrhKqjwNp1m6DJZOTfXZBJ47zXxfslwXcU9aw13EK32626YCgNhGETxB5OqJs3FZNbgTM48ojKutRxLYTbolKxzK4hxxMX4Hg86JfNicQb3k4gu5yWq2kHjDC6fcf0buyEGZz6YrMHpOdU27z/F/zl8inoeKplqIJKqIMfJ9aGfktzN2t/6KFDVsQou1KLyx295/KBdfx0cgyA2BfEs0N+IqaaHfweYCJvhFZgsaNWg7Ol47wh+S7oz7UthK2wBiy1CtAN2wTOfDqp2tGpU6dz3uV+nTSWM9gQsxbZKNK2CSGtF/MVqA/BeDZkCXMB9vbbkcx8zfG6m8usx+AVYSrv2Tqj3Mfrn1fozugLcAG5/L+Fafw2omI7V3IBxDtIb5zo99TjRC6sqe52M5uoebU5WF8FpYgWgU7YpVILqzsSSDCQZSDKQZCDJQJKBEBn4C7hrtbpGJWzdAAAAAElFTkSuQmCC</string>
+					<key>ImageSystemName</key>
+					<string>bandage</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
