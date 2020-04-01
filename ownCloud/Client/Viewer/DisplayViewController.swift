@@ -160,6 +160,11 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		metadataInfoLabel = UILabel()
 		cancelButton = ThemeButton(type: .custom)
 		showPreviewButton = ThemeButton(type: .custom)
+
+		if #available(iOS 13.4, *) {
+			PointerEffect.install(on: cancelButton!, effectStyle: .highlight)
+			PointerEffect.install(on: showPreviewButton!, effectStyle: .highlight)
+		}
 		infoLabel = UILabel()
 		progressView = UIProgressView(progressViewStyle: .bar)
 
