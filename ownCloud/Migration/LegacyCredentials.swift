@@ -69,4 +69,38 @@ class OCCredentialsDto : NSObject, NSCoding {
 			self.authenticationMethod = authMethod
 		}
 	}
+	
+	func oauth2Data() -> Data? {
+
+		var serializedData : Data? = nil
+		
+		// Generate OCBookmark compatible authentication data blob, but since we can't reliably get information on when
+		// OAuth2 token was generated we force it's refresh by declaring access token as expired
+		//
+		// See oC SDK class OCAuthenticationMethodOAuth2 for further reference
+		//
+		if self.authenticationMethod == .bearerToken,
+			let accessToken = self.accessToken,
+			let refreshToken = self.refreshToken,
+			let tokenType = self.tokenType,
+			let user = self.userName {
+			let tokenResponseDict : [String : Any] = [
+				"access_token" : accessToken,
+				"refresh_token" : refreshToken,
+				"expires_in" : 0,
+				"token_type" : tokenType,
+				"user_id" : user
+			]
+			
+			let authenticationDataDict : [String : Any] = [
+				"expirationDate" : Date(),
+				"bearerString" : "Bearer \(accessToken)",
+				"tokenResponse" : tokenResponseDict
+			]
+			
+			serializedData = try? PropertyListSerialization.data(fromPropertyList: authenticationDataDict, format: .binary, options: 0)
+		}
+		
+		return serializedData
+	}
 }

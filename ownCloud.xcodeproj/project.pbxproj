@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0229C3E724339BDB00C12952 /* MigrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0229C3E624339BDB00C12952 /* MigrationViewController.swift */; };
+		0229C3EE24339F3B00C12952 /* MigrationActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0229C3ED24339F3B00C12952 /* MigrationActivityCell.swift */; };
 		0241AC13242AAC910047478A /* LegacyCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0241AC12242AAC910047478A /* LegacyCredentials.swift */; };
 		02A0F4CB240E67B8004B64B4 /* Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A0F4CA240E67B8004B64B4 /* Migration.swift */; };
 		2308F94321467F6200CF0B91 /* ClientDirectoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */; };
@@ -743,6 +745,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0229C3E624339BDB00C12952 /* MigrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationViewController.swift; sourceTree = "<group>"; };
+		0229C3ED24339F3B00C12952 /* MigrationActivityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationActivityCell.swift; sourceTree = "<group>"; };
 		0241AC12242AAC910047478A /* LegacyCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyCredentials.swift; sourceTree = "<group>"; };
 		02A0F4CA240E67B8004B64B4 /* Migration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Migration.swift; sourceTree = "<group>"; };
 		03AE98EEF23B4F4F2C0FDD0F /* Pods-ownCloudTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1287,6 +1291,8 @@
 			children = (
 				0241AC12242AAC910047478A /* LegacyCredentials.swift */,
 				02A0F4CA240E67B8004B64B4 /* Migration.swift */,
+				0229C3E624339BDB00C12952 /* MigrationViewController.swift */,
+				0229C3ED24339F3B00C12952 /* MigrationActivityCell.swift */,
 			);
 			path = Migration;
 			sourceTree = "<group>";
@@ -3262,6 +3268,7 @@
 				02A0F4CB240E67B8004B64B4 /* Migration.swift in Sources */,
 				DCDC209C2399A4CF003CFF5B /* LicenseRequirements.swift in Sources */,
 				DC018F8C20A1060A00135198 /* ProgressHUDViewController.swift in Sources */,
+				0229C3E724339BDB00C12952 /* MigrationViewController.swift in Sources */,
 				4CB8ADE922DF6DE200F1FEBC /* AVAsset+Extension.swift in Sources */,
 				39CC8B01228C8A950020253B /* MediaUploadSettingsSection.swift in Sources */,
 				DC7DBA29207F71D600E7337D /* VectorImage.swift in Sources */,
@@ -3356,6 +3363,7 @@
 				4C51727F22DE04BD001BC97F /* ScheduledTaskManager.swift in Sources */,
 				39BC9C3023DB831F0097C52D /* DocumentEditingAction.swift in Sources */,
 				DC85493421831B0B00782BA8 /* Tools.swift in Sources */,
+				0229C3EE24339F3B00C12952 /* MigrationActivityCell.swift in Sources */,
 				DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */,
 				39E98B452279ACF5009911F1 /* PublicLinkEditTableViewController.swift in Sources */,
 				4C63F0E5231A91230088E8CA /* UIImageView+Thumbnails.swift in Sources */,

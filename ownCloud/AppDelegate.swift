@@ -122,10 +122,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Set background refresh interval
 		UIApplication.shared.setMinimumBackgroundFetchInterval(
 			UIApplication.backgroundFetchIntervalMinimum)
-		
-		if Migration.shared.legacyDataFound {
-			Migration.shared.migrateAccountsAndSettings()
-		}
 
 		return true
 	}

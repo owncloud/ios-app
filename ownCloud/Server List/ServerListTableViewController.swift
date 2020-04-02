@@ -102,6 +102,16 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 
 		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenAppVersion)
+	
+		if Migration.shared.legacyDataFound {
+			let migrationViewController = MigrationViewController()
+			let navigationController = ThemeNavigationController(rootViewController: migrationViewController)
+			migrationViewController.migrationFinishedHandler = {
+				Migration.shared.wipeLegacyData()
+			}
+
+			self.present(navigationController, animated: false)
+		}
 	}
 
 	override func viewWillAppear(_ animated: Bool) {

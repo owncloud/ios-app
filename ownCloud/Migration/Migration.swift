@@ -18,6 +18,40 @@
 
 import Foundation
 import ownCloudSDK
+import ownCloudApp
+import ownCloudAppShared
+import Photos
+
+// TODO: Somehow this stuff is not found by Xcode, although ownCloudAppShared is linked:-(
+class OCItemTracker: NSObject {
+
+	var itemTracking : OCCoreItemTracking?
+
+	public func item(for bookmark: OCBookmark, at path: String, completionHandler: @escaping (_ error: Error?, _ core: OCCore?, _ item: OCItem?) -> Void) {
+
+		OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
+			if error == nil, let core = core {
+				self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
+					if isInitial {
+						self.itemTracking = nil
+					}
+					completionHandler(error, core, item)
+				})
+			} else {
+				completionHandler(error, nil, nil)
+			}
+		})
+	}
+}
+
+class MigrationActivity {
+	enum State {
+		case initiated, finished, failed
+	}
+	var title: String?
+	var description: String?
+	var state : State = .initiated
+}
 
 class Migration {
 	
@@ -32,8 +66,12 @@ class Migration {
 		}
 	}
 	
+	static let ActivityUpdateNotification = NSNotification.Name(rawValue: "MigrationActivityUpdateNotification")
+	static let FinishedNotification = NSNotification.Name(rawValue: "MigrationFinishedNotification")
+
 	private static let legacyDbFilename = "DB.sqlite"
 	private static let legacyCacheFolder = "cache_folder"
+	private static let legacyInstantUploadFolder = "/InstantUpload"
 
 	static let shared = Migration()
 	
@@ -72,6 +110,8 @@ class Migration {
 		}
 	}
 	
+	private let migrationQueue = DispatchQueue(label: "com.owncloud.migration-queue")
+	
 	func migrateAccountsAndSettings() {
 		
 		guard let legacyDbURL = self.legacyDataDirectoryURL?.appendingPathComponent(Migration.legacyDbFilename) else { return }
@@ -85,44 +125,41 @@ class Migration {
 							var error : NSError? = nil
 							
 							resultSet.iterate( { (result, line, rowDict, stop) in
-								if let userId = rowDict["id"] as? Int,
-									let serverURL = rowDict["url"] as? String,
-									let credentials = self.getCredentialsDataItem(for: userId) {
-									
-									let bookmark = OCBookmark()
-									bookmark.url = URL(string: serverURL)
-									
-									let connection = OCConnection(bookmark: bookmark)
-									var options : [OCAuthenticationMethodKey : Any] = [:]
-									
-									switch credentials.authenticationMethod {
-									case .basicHttpAuth:
-
-										connection.prepareForSetup(options: nil) { (issue, _, _, preferredAuthenticationMethods) in
-											// TODO: Check for issues
-											
-											if let methods = preferredAuthenticationMethods, methods.contains(OCAuthenticationMethodIdentifier.oAuth2) {
-												// TODO: If server supports OAut 2.0 -> Move to OAuth 2.0
-											}
-											
-											options[.usernameKey] = credentials.userName
-											options[.passphraseKey] = credentials.accessToken
-											
-											connection.generateAuthenticationData(withMethod: OCAuthenticationMethodIdentifier.basicAuth, options: options) { (error, authMethodIdentifier, authMethodData) in
-												if error == nil {
-													bookmark.authenticationMethodIdentifier = authMethodIdentifier
-													bookmark.authenticationData = authMethodData
-													self.finishMigration(of: bookmark, userId: userId, accountDictionary: rowDict)
-												}
-											}
-										}
+								self.migrationQueue.async {
+									if let userId = rowDict["id"] as? Int,
+										let serverURL = rowDict["url"] as? String,
+										let credentials = self.getCredentialsDataItem(for: userId) {
 										
-									case .bearerToken:
-										break
-									case .samlWebSSO:
-										break
-									default:
-										 break
+										let bookmark = OCBookmark()
+										bookmark.url = URL(string: serverURL)
+										let connection = OCConnection(bookmark: bookmark)
+										
+										let bookmarkActivity = "\(credentials.userName ?? "")@\(bookmark.url?.absoluteString ?? "")"
+
+										self.postAccountMigrationNotification(activity: bookmarkActivity)
+																				
+										if let authMethods = self.setup(connection: connection) {
+											
+											// Generate authorization data
+											self.authorize(bookmark: bookmark, using: connection, credentials: credentials, supportedAuthMethods: authMethods)
+											
+											// Delete old auth data from the keychain
+											//self.removeCredentials(for: userId)
+											
+											// Save the bookmark
+											OCBookmarkManager.shared.addBookmark(bookmark)
+											OCBookmarkManager.shared.saveBookmarks()
+											
+											// For the active account, migrate instant upload settings
+											if let activeAccount = rowDict["activeaccount"] as? Int, activeAccount == 1 {
+												self.migrateInstantUploadSettings(for: bookmark, userId: userId, accountDictionary: rowDict)
+											}
+											
+											self.postAccountMigrationNotification(activity: bookmarkActivity, state: .finished)
+
+										} else {
+											self.postAccountMigrationNotification(activity: bookmarkActivity, state: .failed)
+										}
 									}
 								}
 
@@ -134,15 +171,31 @@ class Migration {
 						db.execute(usersQuery)
 					}
 					
-					// Check if the passcode is set
-					let passcodeQuery = OCSQLiteQuery(selectingColumns: ["passcode"], fromTable: "passcode", where: nil, orderBy: "id DESC", limit: "1") { (_, err, _, resultSet) in
-						if let dict = try? resultSet?.nextRowDictionary(), let passcode = dict?["passcode"] as? Stringa {
-							AppLockManager.shared.passcode = passcode
+					self.migrationQueue.async {
+						// Check if the passcode is set
+						let passcodeQuery = OCSQLiteQuery(selectingColumns: ["passcode"], fromTable: "passcode", where: nil, orderBy: "id DESC", limit: "1") { (_, err, _, resultSet) in
+							if let dict = try? resultSet?.nextRowDictionary(), let passcode = dict?["passcode"] as? String {
+								self.postAccountMigrationNotification(activity: "App Passcode", state: .initiated)
+								if passcode.count == 4 && passcode.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil {
+									AppLockManager.shared.passcode = passcode
+									AppLockManager.shared.lockEnabled = true
+									self.postAccountMigrationNotification(activity: "App Passcode", state: .finished)
+								} else {
+									self.postAccountMigrationNotification(activity: "App Passcode", state: .failed)
+								}
+							}
+						}
+						if let query = passcodeQuery {
+							db.execute(query)
 						}
 					}
-					if let query = passcodeQuery {
-						db.execute(query)
+					
+					self.migrationQueue.async {
+						DispatchQueue.main.async {
+							NotificationCenter.default.post(name: Migration.FinishedNotification, object: nil)
+						}
 					}
+
 				}
 			}
 		}
@@ -150,31 +203,190 @@ class Migration {
 	
 	// MARK: - Private helpers
 	
-	private func finishMigration(of bookmark:OCBookmark, userId:Int, accountDictionary: [String : Any]) {
+	private func setup(connection:OCConnection) ->  [OCAuthenticationMethodIdentifier]? {
+		let connectGroup = DispatchGroup()
+		var supportedAuthMethods: [OCAuthenticationMethodIdentifier]? = nil
 		
-		// Delete old auth data from the keychain
-		self.removeCredentials(for: userId)
-		
-		// Check if we are dealing with an active account
-		if let activeAccount = accountDictionary["activeaccount"] as? Int, activeAccount == 1 {
-			// TODO: Migrate instant upload settings
+		func connectAndAuthorize() {
+			connectGroup.enter()
+			connection.prepareForSetup(options: nil) { (issue, _, supportedAuthenticationMethods, _) in
+				supportedAuthMethods = supportedAuthenticationMethods
+				
+				if let issue = issue, issue.level != .error, supportedAuthMethods == nil {
+					issue.approve()
+					connectAndAuthorize()
+				}
+				connectGroup.leave()
+			}
 		}
+
+		connectAndAuthorize()
 		
-		OCBookmarkManager.shared.addBookmark(bookmark)
-		OCBookmarkManager.shared.saveBookmarks()
+		connectGroup.wait()
+		
+		return supportedAuthMethods
 	}
 	
-	private func wipeLegacyData() {
+	private func authorize(bookmark:OCBookmark, using connection:OCConnection, credentials:OCCredentialsDto, supportedAuthMethods:[OCAuthenticationMethodIdentifier]) {
+		
+		var authMethod = OCAuthenticationMethodIdentifier.basicAuth
+		var options : [OCAuthenticationMethodKey : Any] = [:]
+		
+		var unsupportedAuthMethod = false
+		
+		switch credentials.authenticationMethod {
+		case .basicHttpAuth:
+			// If server supports OAuth2, switch basic auth user to this more secure method
+			if supportedAuthMethods.contains(OCAuthenticationMethodIdentifier.oAuth2) {
+				authMethod = OCAuthenticationMethodIdentifier.oAuth2
+			}
+
+		case .bearerToken:
+			if supportedAuthMethods.contains(OCAuthenticationMethodIdentifier.oAuth2) {
+				authMethod = OCAuthenticationMethodIdentifier.oAuth2
+				// Migrate OAuth2 data if possible. Note that the below method forces token expiration and subsequent refresh
+				if let authData = credentials.oauth2Data() {
+					bookmark.authenticationMethodIdentifier = authMethod
+					bookmark.authenticationData = authData
+				}
+			} else {
+				unsupportedAuthMethod = true
+			}
+
+		case .samlWebSSO:
+			// If server supports OAuth2, switch basic auth user to this more secure method
+			if supportedAuthMethods.contains(OCAuthenticationMethodIdentifier.oAuth2) {
+				authMethod = OCAuthenticationMethodIdentifier.oAuth2
+			} else {
+				unsupportedAuthMethod = true
+			}
+		default:
+			 break
+		}
+		
+		if unsupportedAuthMethod == false {
+			// In case we use OAuth2 and we had already required auth data, finalize account migration
+			if bookmark.authenticationData == nil {
+				// For basic auth, set userName and password
+				if authMethod == OCAuthenticationMethodIdentifier.basicAuth {
+					options[.usernameKey] = credentials.userName
+					options[.passphraseKey] = credentials.accessToken
+				}
+				
+				if authMethod == OCAuthenticationMethodIdentifier.oAuth2 {
+					// TODO: Set parent view controller to display a webview with auth server UI
+					options[.presentingViewControllerKey] = nil
+				}
+				
+				let semaphore = DispatchSemaphore(value: 0)
+				connection.generateAuthenticationData(withMethod: authMethod, options: options) { (error, authMethodIdentifier, authMethodData) in
+					if error == nil {
+						bookmark.authenticationMethodIdentifier = authMethodIdentifier
+						bookmark.authenticationData = authMethodData
+					}
+					semaphore.signal()
+				}
+				semaphore.wait()
+			}
+		}
+	}
+	
+	private func postAccountMigrationNotification(activity:String, state:MigrationActivity.State = .initiated) {
+		DispatchQueue.main.async {
+			let migrationActivity = MigrationActivity()
+			migrationActivity.title = activity
+			migrationActivity.state = state
+			switch state {
+			case .initiated:
+				migrationActivity.description = "Migrating"
+			case .finished:
+				migrationActivity.description = "Migrated"
+			case .failed:
+				migrationActivity.description = "Failed to migrate"
+			}
+			NotificationCenter.default.post(name: Migration.ActivityUpdateNotification, object: migrationActivity)
+		}
+	}
+	
+	private func migrateInstantUploadSettings(for bookmark:OCBookmark, userId:Int, accountDictionary: [String : Any]) {
+		// In the legacy app only active account could have been used for instant photo / video upload
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
+		
+		guard let legacyInstantPhotoUploadActive = accountDictionary["image_instant_upload"] as? Int else { return }
+		
+		guard let legacyInstantVideoUploadActive = accountDictionary["video_instant_upload"] as? Int else { return }
+		
+		guard PHPhotoLibrary.authorizationStatus() == .authorized else { return }
+		
+		// If one of the instant upload options is active, check and request if needed photo library permissions
+		if legacyInstantPhotoUploadActive > 0 || legacyInstantVideoUploadActive > 0 {
+			
+			let activityName = "Instant Upload Settings"
+			
+			postAccountMigrationNotification(activity: activityName)
+			
+			func setupInstantUpload() {
+				userDefaults.instantUploadPath = Migration.legacyInstantUploadFolder
+				userDefaults.instantUploadBookmarkUUID = bookmark.uuid
+				
+				userDefaults.instantUploadPhotos = legacyInstantPhotoUploadActive > 0 ? true : false
+				userDefaults.instantUploadVideos = legacyInstantVideoUploadActive > 0 ? true : false
+				
+				if let legacyLastPhotoUploadTimeInterval = accountDictionary["timestamp_last_instant_upload_image"] as? TimeInterval, legacyLastPhotoUploadTimeInterval > 0 {
+					let timestamp = Date(timeIntervalSince1970: legacyLastPhotoUploadTimeInterval)
+					userDefaults.instantUploadPhotosAfter = timestamp
+				}
+				
+				if let legacyLastVideoUploadTimeInterval = accountDictionary["timestamp_last_instant_upload_video"] as? TimeInterval, legacyLastVideoUploadTimeInterval > 0 {
+					let timestamp = Date(timeIntervalSince1970: legacyLastVideoUploadTimeInterval)
+					userDefaults.instantUploadVideosAfter = timestamp
+				}
+				
+				self.postAccountMigrationNotification(activity: activityName, state: .finished)
+			}
+			
+			// In the legacy app the instant upload folder was hardcoded to \InstantUpload
+			// So, check if the directory is present and create it if it is absent
+			var uploadFolderAvailable = false
+			let trackItemGroup = DispatchGroup()
+			trackItemGroup.enter()
+			OCItemTracker().item(for: bookmark, at: "/") { (error, core, rootItem) in
+				if rootItem != nil {
+					trackItemGroup.enter()
+					OCItemTracker().item(for: bookmark, at: Migration.legacyInstantUploadFolder) { (error, core, item) in
+						if error == nil {
+							if item == nil {
+								trackItemGroup.enter()
+								core?.createFolder(Migration.legacyInstantUploadFolder, inside: rootItem!, options: nil, resultHandler: { (error, _, _, _) in
+									uploadFolderAvailable = (error == nil)
+									trackItemGroup.leave()
+								})
+							}  else {
+								uploadFolderAvailable = true
+							}
+						}
+						trackItemGroup.leave()
+					}
+				}
+				trackItemGroup.leave()
+			}
+			
+			trackItemGroup.wait()
+			
+			if uploadFolderAvailable == true {
+				setupInstantUpload()
+			} else {
+				self.postAccountMigrationNotification(activity: activityName, state: .failed)
+			}
+		}
+		
+	}
+	
+	func wipeLegacyData() {
 		var isDirectory: ObjCBool = false
 		if let legacyDataPath = self.legacyDataDirectoryURL?.path {
 			if FileManager.default.fileExists(atPath: legacyDataPath, isDirectory: &isDirectory) {
-				if isDirectory.boolValue == true {
-					if let contents = try? FileManager.default.contentsOfDirectory(atPath: legacyDataPath) {
-						for filePath in contents {
-							try? FileManager.default.removeItem(atPath: filePath)
-						}
-					}
-				}
+				try? FileManager.default.removeItem(atPath: legacyDataPath)
 			}
 		}
 	}
@@ -218,10 +430,7 @@ class Migration {
 		let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
 									kSecAttrAccessGroup as String: fullGroupId,
 									kSecAttrAccount as String: "\(userId)"]
-		let status = SecItemCopyMatching(query as CFDictionary, nil)
-		if status != errSecSuccess {
-			 SecItemDelete(query as CFDictionary)
-		}
+		SecItemDelete(query as CFDictionary)
 	}
 	
 	private func readAppEntitlements() -> Entitlements? {
