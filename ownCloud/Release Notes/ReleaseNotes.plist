@@ -364,7 +364,7 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 				</dict>
 				<dict>
 					<key>Title</key>
-					<string>Fix: Keep open Files up-to-date</string>
+					<string>Fix: Keep open files up-to-date</string>
 					<key>Subtitle</key>
 					<string>Open items will be automatically updated if the content was changed</string>
 					<key>Type</key>
