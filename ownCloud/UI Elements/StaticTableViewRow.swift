@@ -145,6 +145,10 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			self.cell?.accessoryView = accessoryView
 		}
 
+		if #available(iOS 13.4, *), let cell = self.cell {
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
+		}
+
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey) as? UIColor
 			self?.cell?.accessoryView?.tintColor = themeCollection.tableRowColors.labelColor
@@ -165,11 +169,15 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.identifier = identifier
 
-		self.cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.accessoryView = accessoryView
 		self.cell?.accessibilityIdentifier = identifier
+
+		if #available(iOS 13.4, *), let cell = self.cell {
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
+		}
 
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
@@ -240,6 +248,10 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			])
 		}
 
+		if #available(iOS 13.4, *), let cell = self.cell {
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
+		}
+
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			self?.cell?.imageView?.tintColor = themeCollection.tableRowColors.value(forKeyPath: imageTintColorKey) as? UIColor
 		})
@@ -257,6 +269,10 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		self.cell?.accessoryType = accessoryType
 
 		self.cell?.accessibilityIdentifier = identifier
+
+		if #available(iOS 13.4, *), let cell = self.cell {
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
+		}
 
 		self.action = subtitleRowWithAction
 
@@ -294,6 +310,10 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			self.cell?.accessibilityIdentifier = groupIdentifier + "." + accessibilityIdentifier
 		}
 
+		if #available(iOS 13.4, *), let cell = self.cell {
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
+		}
+
 		self.groupIdentifier = groupIdentifier
 		self.value = value
 
@@ -323,6 +343,10 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		if subtitle != nil {
 			self.cell?.detailTextLabel?.text = subtitle
 			self.cell?.detailTextLabel?.numberOfLines = 0
+		}
+
+		if #available(iOS 13.4, *), let cell = self.cell {
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
 		}
 
 		if let accessibilityIdentifier : String = identifier {
@@ -530,7 +554,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 			image = image?.paddedTo(width: imageWidth)
 		}
 
-		self.cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
+		self.cell = ThemeTableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
 		self.cell?.textLabel?.textAlignment = alignment
 		self.cell?.imageView?.image = image
@@ -539,6 +563,10 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		}
 
 		self.cell?.accessibilityIdentifier = identifier
+
+		if #available(iOS 13.4, *), let cell = self.cell {
+			PointerEffect.install(on: cell.contentView, effectStyle: .hover)
+		}
 
 		themeApplierToken = Theme.shared.add(applier: { [weak self] (_, themeCollection, _) in
 			var textColor, selectedTextColor, backgroundColor, selectedBackgroundColor : UIColor?
