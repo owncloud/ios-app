@@ -21,11 +21,9 @@ import ownCloudSDK
 
 extension UIWindow {
     func display(itemWithID Identifier:String, in bookmark:OCBookmark) {
-        if let rootViewController = self.rootViewController as? ThemeNavigationController
-        {
+        if let rootViewController = self.rootViewController as? ThemeNavigationController {
             rootViewController.popToRootViewController(animated: false)
-            if let serverListController = rootViewController.topViewController as? ServerListTableViewController
-            {
+            if let serverListController = rootViewController.topViewController as? ServerListTableViewController {
                 if serverListController.presentedViewController != nil {
                     serverListController.presentedViewController?.dismiss(animated: false, completion: {
                         serverListController.connect(to: bookmark, lastVisibleItemId: Identifier, animated: false)
