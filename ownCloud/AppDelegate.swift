@@ -154,19 +154,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
 	}
-    
+
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
             let url = userActivity.webpageURL else {
                 return false
         }
-        
-        url.retrieveLinkedItem(with: { (item, bookmark, error) in
+
+        url.retrieveLinkedItem(with: { (item, bookmark, _) in
             if let itemID = item?.localID, let bookmark = bookmark {
                 application.currentWindow()?.display(itemWithID: itemID, in: bookmark)
             }
         })
-        
+
         return true
     }
 

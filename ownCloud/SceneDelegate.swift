@@ -80,10 +80,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let urlContext = URLContexts.first {
             if urlContext.url.scheme == "owncloud" {
-                
-                if let _ = urlContext.url.privateLinkItemID() {
-                    
-                    urlContext.url.retrieveLinkedItem(with: { (item, bookmark, error) in
+
+				if urlContext.url.privateLinkItemID() != nil {
+                    urlContext.url.retrieveLinkedItem(with: { (item, bookmark, _) in
                         if let itemID = item?.localID, let bookmark = bookmark, let windowScene = scene as? UIWindowScene {
                             windowScene.windows.first?.display(itemWithID: itemID, in: bookmark)
                         }
@@ -94,14 +93,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         }
     }
-    
+
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
             let url = userActivity.webpageURL else {
                 return
         }
-        
-        url.retrieveLinkedItem(with: { (item, bookmark, error) in
+
+        url.retrieveLinkedItem(with: { (item, bookmark, _) in
             if let itemID = item?.localID, let bookmark = bookmark, let windowScene = scene as? UIWindowScene {
                 windowScene.windows.first?.display(itemWithID: itemID, in: bookmark)
             }

@@ -44,43 +44,43 @@ extension URL {
 
 		return progress
 	}
-    
+
     func privateLinkItemID() -> String? {
-        
+
 		// Check if the link URL has format https://<server>/f/<item_id>
         if self.pathComponents.count > 2 {
             if self.pathComponents[self.pathComponents.count - 2] == "f" {
                 return self.pathComponents.last
             }
         }
-        
+
         return nil
     }
-    
-    @discardableResult func retrieveLinkedItem(with completion: @escaping (_ item:OCItem?, _ bookmark:OCBookmark?, _ error:Error?)->Void, replaceScheme:Bool = false) -> Bool {
+
+    @discardableResult func retrieveLinkedItem(with completion: @escaping (_ item:OCItem?, _ bookmark:OCBookmark?, _ error:Error?) -> Void, replaceScheme:Bool = false) -> Bool {
         // Check if the link is private ones and has item ID
-        guard let _ = self.privateLinkItemID() else {
+        guard self.privateLinkItemID() != nil else {
             return false
         }
-        
+
         // Find matching bookmarks
 		let bookmarks = OCBookmarkManager.shared.bookmarks.filter({$0.url?.host == self.host})
-		
+
 		var matchedBookmark: OCBookmark?
 		var foundItem: OCItem?
 		var lastError: Error?
-		
+
 		let group = DispatchGroup()
-		
+
 		for bookmark in bookmarks {
-			
+
 			if foundItem == nil {
 				var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
 				// E.g. if we would like to use app URL scheme (owncloud://) instead of universal link, to make it work with oC SDK, we need to change scheme back to the original bookmark URL scheme
 				if replaceScheme {
 					components?.scheme = bookmark.url?.scheme
 				}
-				
+
 				if let privateLinkURL = components?.url {
 					group.enter()
 					OCCoreManager.shared.requestCore(for: bookmark, setup: nil) { (core, error) in
@@ -101,7 +101,7 @@ extension URL {
 				}
 			}
 		}
-		
+
 		group.notify(queue: DispatchQueue.main) {
 			if foundItem != nil {
 				completion(foundItem, matchedBookmark, nil)
@@ -109,7 +109,7 @@ extension URL {
 				completion(nil, nil, lastError)
 			}
 		}
-		
+
         return true
     }
 }
