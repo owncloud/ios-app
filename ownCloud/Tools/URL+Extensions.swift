@@ -73,7 +73,6 @@ extension URL {
 		let group = DispatchGroup()
 		
 		for bookmark in bookmarks {
-			matchedBookmark = bookmark
 			
 			if foundItem == nil {
 				var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
@@ -87,7 +86,10 @@ extension URL {
 					OCCoreManager.shared.requestCore(for: bookmark, setup: nil) { (core, error) in
 						if core != nil {
 							core?.retrieveItem(forPrivateLink: privateLinkURL, completionHandler: { (error, item) in
-								foundItem = item
+								if foundItem == nil {
+									foundItem = item
+									matchedBookmark = bookmark
+								}
 								lastError = error
 								OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 								group.leave()
