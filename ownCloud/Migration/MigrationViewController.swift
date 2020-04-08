@@ -19,39 +19,39 @@
 import UIKit
 
 class MigrationViewController: UITableViewController, Themeable {
-	
+
 	var activities = [MigrationActivity]()
-	
-	var migrationFinishedHandler: (()->Void)?
-	
+
+	var migrationFinishedHandler: (() -> Void)?
+
 	var doneBarButtonItem: UIBarButtonItem?
-	
+
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: Migration.ActivityUpdateNotification, object: nil)
 		NotificationCenter.default.removeObserver(self, name: Migration.FinishedNotification, object: nil)
 		Theme.shared.unregister(client: self)
 	}
-	
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
+
 		self.title = "Account Migration"
 
 		self.tableView.register(MigrationActivityCell.self, forCellReuseIdentifier: MigrationActivityCell.identifier)
 		self.tableView.rowHeight = UITableView.automaticDimension
 		self.tableView.estimatedRowHeight = 80
 		self.tableView.allowsSelection = false
-		
+
 		doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(finishMigration))
 		self.navigationItem.rightBarButtonItem = doneBarButtonItem
 		doneBarButtonItem?.isEnabled = false
 
 		Theme.shared.register(client: self, applyImmediately: true)
-		
+
 		NotificationCenter.default.addObserver(self, selector: #selector(handleActivityNotification), name: Migration.ActivityUpdateNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handleMigrationFinishedNotification), name: Migration.FinishedNotification, object: nil)
 	}
-	
+
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		Migration.shared.migrateAccountsAndSettings()
@@ -60,15 +60,15 @@ class MigrationViewController: UITableViewController, Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
 	}
-	
+
 	// MARK: - User Actions
-	
+
 	@IBAction func finishMigration() {
 		self.dismiss(animated: true) {
 			self.migrationFinishedHandler?()
 		}
 	}
-	
+
 	// MARK: - Table view data source
 
 	override func numberOfSections(in tableView: UITableView) -> Int {
@@ -91,17 +91,17 @@ class MigrationViewController: UITableViewController, Themeable {
 
 		return cell
 	}
-	
+
 	@objc func handleActivityNotification(_ notification: Notification) {
 		if let updatedActivity = notification.object as? MigrationActivity {
-			
+
 			let index = self.activities.firstIndex { (activity) -> Bool in
 				if activity.title == updatedActivity.title {
 					return true
 				}
 				return false
 			}
-			
+
 			if index != nil {
 				self.activities[index!] = updatedActivity
 				self.tableView.reloadRows(at: [IndexPath(row: index!, section: 0)], with: .automatic)
@@ -111,7 +111,7 @@ class MigrationViewController: UITableViewController, Themeable {
 			}
 		}
 	}
-	
+
 	@objc func handleMigrationFinishedNotification(_ notification: Notification) {
 		self.doneBarButtonItem?.isEnabled = true
 	}

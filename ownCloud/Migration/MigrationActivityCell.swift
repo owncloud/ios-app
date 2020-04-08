@@ -19,15 +19,15 @@
 import UIKit
 
 class MigrationActivityCell: ThemeTableViewCell {
-	
+
 	static let identifier = "migration-activity-cell"
-	
+
 	var activity : MigrationActivity? {
 		didSet {
 			if let activity = self.activity {
 				titleLabel.text = activity.title
 				descriptionLabel.text = activity.description
-				
+
 				switch activity.state {
 				case .initiated:
 					activityView.startAnimating()
@@ -41,7 +41,7 @@ class MigrationActivityCell: ThemeTableViewCell {
 			}
 		}
 	}
-	
+
 	var titleLabel = UILabel()
 	var descriptionLabel = UILabel()
 	var activityView = UIActivityIndicatorView(style: .whiteLarge)
@@ -56,9 +56,9 @@ class MigrationActivityCell: ThemeTableViewCell {
 	}
 
 	func prepareViewAndConstraints() {
-		
+
 		self.accessoryType = .none
-		
+
 		activityView.hidesWhenStopped = true
 
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -93,7 +93,7 @@ class MigrationActivityCell: ThemeTableViewCell {
 	}
 
 	// MARK: - Themeing
-	
+
 	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
 		let itemState = ThemeItemState(selected: self.isSelected)
 
@@ -101,4 +101,3 @@ class MigrationActivityCell: ThemeTableViewCell {
 		self.descriptionLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
 	}
 }
-

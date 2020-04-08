@@ -20,7 +20,7 @@ import Foundation
 
 @objc(OCCredentialsDto)
 class OCCredentialsDto : NSObject, NSCoding {
-	
+
 	enum AuthenticationMethod : Int, RawRepresentable {
 		case unknown = 0
 		case none = 1
@@ -28,7 +28,7 @@ class OCCredentialsDto : NSObject, NSCoding {
 		case bearerToken = 3
 		case samlWebSSO = 4
 	}
-	
+
 	var userId: String?
 	var baseURL: String?
 	var userName: String?
@@ -41,7 +41,7 @@ class OCCredentialsDto : NSObject, NSCoding {
 	var tokenType: String?
 
 	var userDisplayName: String?
-	
+
 	func encode(with coder: NSCoder) {
 		coder.encode(self.userId, forKey: "userId")
 		coder.encode(self.baseURL, forKey: "baseURL")
@@ -53,7 +53,7 @@ class OCCredentialsDto : NSObject, NSCoding {
 		coder.encode(self.userDisplayName, forKey: "userDisplayName")
 		coder.encode(self.authenticationMethod, forKey: "authenticationMethod")
 	}
-	
+
 	required init?(coder: NSCoder) {
 		self.userId = coder.decodeObject(forKey: "userId") as? String
 		self.baseURL = coder.decodeObject(forKey: "baseURL") as? String
@@ -63,17 +63,17 @@ class OCCredentialsDto : NSObject, NSCoding {
 		self.expiresIn = coder.decodeObject(forKey: "expiresIn") as? String
 		self.tokenType = coder.decodeObject(forKey: "tokenType") as? String
 		self.userDisplayName = coder.decodeObject(forKey: "userDisplayName") as? String
-		
+
 		let authMethodValue = coder.decodeInteger(forKey: "authenticationMethod")
 		if  let authMethod = AuthenticationMethod(rawValue: authMethodValue) {
 			self.authenticationMethod = authMethod
 		}
 	}
-	
+
 	func oauth2Data() -> Data? {
 
-		var serializedData : Data? = nil
-		
+		var serializedData : Data?
+
 		// Generate OCBookmark compatible authentication data blob, but since we can't reliably get information on when
 		// OAuth2 token was generated we force it's refresh by declaring access token as expired
 		//
@@ -83,24 +83,25 @@ class OCCredentialsDto : NSObject, NSCoding {
 			let accessToken = self.accessToken,
 			let refreshToken = self.refreshToken,
 			let tokenType = self.tokenType,
-			let user = self.userName {
+			let user = self.userName,
+			let expiresIn = self.expiresIn {
 			let tokenResponseDict : [String : Any] = [
 				"access_token" : accessToken,
 				"refresh_token" : refreshToken,
-				"expires_in" : 0,
+				"expires_in" : expiresIn,
 				"token_type" : tokenType,
 				"user_id" : user
 			]
-			
+
 			let authenticationDataDict : [String : Any] = [
 				"expirationDate" : Date(),
 				"bearerString" : "Bearer \(accessToken)",
 				"tokenResponse" : tokenResponseDict
 			]
-			
+
 			serializedData = try? PropertyListSerialization.data(fromPropertyList: authenticationDataDict, format: .binary, options: 0)
 		}
-		
+
 		return serializedData
 	}
 }

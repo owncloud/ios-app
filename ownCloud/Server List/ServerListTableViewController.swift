@@ -102,7 +102,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 
 		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenAppVersion)
-	
+
 		if Migration.shared.legacyDataFound {
 			let migrationViewController = MigrationViewController()
 			let navigationController = ThemeNavigationController(rootViewController: migrationViewController)
