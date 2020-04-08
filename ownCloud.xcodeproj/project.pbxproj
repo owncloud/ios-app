@@ -60,6 +60,7 @@
 		395E16FF22F172C900DE89A1 /* CreateFolderIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 395E16FE22F172C900DE89A1 /* CreateFolderIntentHandler.swift */; };
 		39607CBC2225D480007B386D /* UITableViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39607CBB2225D480007B386D /* UITableViewController+Extension.swift */; };
 		3961281622F8730A0087BD3A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3961281522F8730A0087BD3A /* SceneDelegate.swift */; };
+		39664ADA242CD3A800B6121A /* PointerEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39664AD9242CD3A800B6121A /* PointerEffect.swift */; };
 		3968C881239C54AC00AC28AC /* ReleaseNotesHostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3968C879239C54AC00AC28AC /* ReleaseNotesHostViewController.swift */; };
 		3968C882239C54AD00AC28AC /* ReleaseNotesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3968C87A239C54AC00AC28AC /* ReleaseNotesTableViewController.swift */; };
 		3968C883239C54AD00AC28AC /* ReleaseNotes.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3968C87B239C54AC00AC28AC /* ReleaseNotes.plist */; };
@@ -227,7 +228,6 @@
 		DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC2565E8225F5A1900828AA5 /* UserNotifications.framework */; };
 		DC27A18E20CA9F66008ACB6C /* OCItem+FileProviderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A18D20CA9F66008ACB6C /* OCItem+FileProviderItem.m */; };
 		DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
-		DC27A19120CAA0BA008ACB6C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC27A19020CAA0BA008ACB6C /* MobileCoreServices.framework */; };
 		DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC27A19C20CAB602008ACB6C /* FileProviderInterfaceManager.swift */; };
 		DC27A1A520CBEF85008ACB6C /* OCBookmark+FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */; };
 		DC27A1A820CC095C008ACB6C /* OCCore+FileProviderTools.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A720CC095C008ACB6C /* OCCore+FileProviderTools.m */; };
@@ -380,6 +380,7 @@
 		DCE5E8B82080D8D9005F60CE /* OCItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE5E8B72080D8D9005F60CE /* OCItem+Extension.swift */; };
 		DCE974B2207E3AF80069FC2B /* ThemeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */; };
 		DCE974BC207EACA60069FC2B /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */; };
+		DCEC3DEA242F66740076B43C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC27A19020CAA0BA008ACB6C /* MobileCoreServices.framework */; };
 		DCEE1C9C23A0EADD00FE8D98 /* LicenseOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEE1C9B23A0EADD00FE8D98 /* LicenseOfferView.swift */; };
 		DCF4F17920519F8C00189B9A /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */; };
 		DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */; };
@@ -794,6 +795,7 @@
 		395E16FE22F172C900DE89A1 /* CreateFolderIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFolderIntentHandler.swift; sourceTree = "<group>"; };
 		39607CBB2225D480007B386D /* UITableViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewController+Extension.swift"; sourceTree = "<group>"; };
 		3961281522F8730A0087BD3A /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		39664AD9242CD3A800B6121A /* PointerEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointerEffect.swift; sourceTree = "<group>"; };
 		3968C879239C54AC00AC28AC /* ReleaseNotesHostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleaseNotesHostViewController.swift; sourceTree = "<group>"; };
 		3968C87A239C54AC00AC28AC /* ReleaseNotesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleaseNotesTableViewController.swift; sourceTree = "<group>"; };
 		3968C87B239C54AC00AC28AC /* ReleaseNotes.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ReleaseNotes.plist; sourceTree = "<group>"; };
@@ -1146,6 +1148,7 @@
 		DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libzip.xcodeproj; path = external/libzip/libzip.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeNavigationController.swift; sourceTree = "<group>"; };
 		DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		DCEC3DE3242F665D0076B43C /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		DCEE1C9B23A0EADD00FE8D98 /* LicenseOfferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseOfferView.swift; sourceTree = "<group>"; };
 		DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewController.swift; sourceTree = "<group>"; };
 		DCF4F17A20519F9D00189B9A /* StaticTableViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewSection.swift; sourceTree = "<group>"; };
@@ -1262,8 +1265,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCC085812293F66D008CC05C /* ownCloudApp.framework in Frameworks */,
+				DCEC3DEA242F66740076B43C /* MobileCoreServices.framework in Frameworks */,
 				DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */,
-				DC27A19120CAA0BA008ACB6C /* MobileCoreServices.framework in Frameworks */,
 				DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1453,10 +1456,10 @@
 				6E5FC171221590B000F60846 /* DisplayHostViewController.swift */,
 				DC3DEC7A22AFA1F000F3352D /* DownloadItemsHUDViewController.swift */,
 				DCBF0A5E2280393A00465530 /* PDF */,
-				4C82D06E22C9384700835F0B /* Media */,
 				DCBF0A5F2280394B00465530 /* Image */,
+				4C82D06E22C9384700835F0B /* Media */,
+				DCEC3DF5242F89B20076B43C /* QuickLook */,
 				DCBF0A602280395F00465530 /* WebView */,
-				4C9BFA2223158C3F0059CA3E /* PreviewViewController.swift */,
 			);
 			path = Viewer;
 			sourceTree = "<group>";
@@ -2058,6 +2061,7 @@
 		DC85573220513CC700189B9A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DCEC3DE3242F665D0076B43C /* CoreServices.framework */,
 				DC080CF0238C8D850044C5D2 /* StoreKit.framework */,
 				DC2565E8225F5A1900828AA5 /* UserNotifications.framework */,
 				DC27A19020CAA0BA008ACB6C /* MobileCoreServices.framework */,
@@ -2322,6 +2326,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		DCEC3DF5242F89B20076B43C /* QuickLook */ = {
+			isa = PBXGroup;
+			children = (
+				4C9BFA2223158C3F0059CA3E /* PreviewViewController.swift */,
+			);
+			path = QuickLook;
+			sourceTree = "<group>";
+		};
 		DCEE1C9523A0EAA300FE8D98 /* Offers */ = {
 			isa = PBXGroup;
 			children = (
@@ -2361,6 +2373,7 @@
 				3998F5D422411EDF00B66713 /* BorderedLabel.swift */,
 				39B289A7226F1EE000BE0E11 /* MessageView.swift */,
 				396BE4C92289500E00B254A9 /* RoundedLabel.swift */,
+				39664AD9242CD3A800B6121A /* PointerEffect.swift */,
 			);
 			path = "UI Elements";
 			sourceTree = "<group>";
@@ -3323,6 +3336,7 @@
 				4C464BF32187AF1500D30602 /* PDFOutlineViewController.swift in Sources */,
 				DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */,
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
+				39664ADA242CD3A800B6121A /* PointerEffect.swift in Sources */,
 				4C51727E22DE04BD001BC97F /* BackgroundFetchUpdateTaskAction.swift in Sources */,
 				4C05D8A5238708D40073EF50 /* MediaUploadStorage.swift in Sources */,
 				236735A621217C3500E5834A /* MoreViewController.swift in Sources */,
@@ -3806,8 +3820,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				APP_SHORT_VERSION = 1.3.1;
-				APP_VERSION = 155;
+				APP_SHORT_VERSION = 1.3.2;
+				APP_VERSION = 157;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -3869,8 +3883,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				APP_SHORT_VERSION = 1.3.1;
-				APP_VERSION = 155;
+				APP_SHORT_VERSION = 1.3.2;
+				APP_VERSION = 157;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -3924,8 +3938,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_SHORT_VERSION = 1.3.1;
-				APP_VERSION = 155;
+				APP_SHORT_VERSION = 1.3.2;
+				APP_VERSION = 157;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -3953,8 +3967,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_SHORT_VERSION = 1.3.1;
-				APP_VERSION = 155;
+				APP_SHORT_VERSION = 1.3.2;
+				APP_VERSION = 157;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

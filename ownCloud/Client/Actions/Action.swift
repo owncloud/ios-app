@@ -459,28 +459,28 @@ private extension Action {
 		}
 
 		if hasUserGroupSharing {
-			let addGroupRow = StaticTableViewRow(rowWithAction: { [weak presentingController, weak context] (_, _) in
+			let addGroupRow = StaticTableViewRow(buttonWithAction: { [weak presentingController, weak context] (_, _) in
 				if let context = context, let presentingController = presentingController, let core = context.core {
 					let sharingViewController = GroupSharingTableViewController(core: core, item: item)
 					sharingViewController.shares = shares
 
 					self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
 				}
-			}, title: userTitle, subtitle: nil, image: UIImage(named: "group"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
+			}, title: userTitle, style: .plain, image: UIImage(named: "group"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
 			shareRows.append(addGroupRow)
 		} else if item.isShareable {
 			shareRows.append(self.shareAsGroupRow(item: item, presentingController: presentingController, context: context))
 		}
 
 		if hasLinkSharing, let core = context.core, core.connection.capabilities?.publicSharingEnabled == true {
-			let addGroupRow = StaticTableViewRow(rowWithAction: { [weak presentingController, weak context] (_, _) in
+			let addGroupRow = StaticTableViewRow(buttonWithAction: { [weak presentingController, weak context] (_, _) in
 				if let context = context, let presentingController = presentingController {
 					let sharingViewController = PublicLinkTableViewController(core: core, item: item)
 					sharingViewController.shares = shares
 
 					self.dismiss(presentingController: presentingController, andPresent: sharingViewController, on: context.viewController)
 				}
-			}, title: linkTitle, subtitle: nil, image: UIImage(named: "link"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
+			}, title: linkTitle, style: .plain, image: UIImage(named: "link"), imageWidth: Action.staticRowImageWidth, alignment: .left, accessoryType: .disclosureIndicator)
 			shareRows.append(addGroupRow)
 		} else if let publicLinkRow = self.shareAsPublicLinkRow(item: item, presentingController: presentingController, context: context) {
 			shareRows.append(publicLinkRow)
