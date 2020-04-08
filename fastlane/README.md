@@ -36,9 +36,19 @@ Ad-Hoc Distribution IPA generation
 fastlane ios screenshots
 ```
 Generate the screenshots for the AppStore
-### ios build_ipa_enterprise_in_house
+### ios owncloud_online_build
 ```
-fastlane ios build_ipa_enterprise_in_house
+fastlane ios owncloud_online_build
+```
+
+### ios owncloud_enterprise_build
+```
+fastlane ios owncloud_enterprise_build
+```
+
+### ios build_ipa_in_house
+```
+fastlane ios build_ipa_in_house
 ```
 In-House Enterprise IPA generation
 
