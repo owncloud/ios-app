@@ -112,7 +112,7 @@ class Migration {
 
 	private let migrationQueue = DispatchQueue(label: "com.owncloud.migration-queue")
 
-	func migrateAccountsAndSettings() {
+	func migrateAccountsAndSettings(_ parentViewController:UIViewController? = nil) {
 
 		guard let legacyDbURL = self.legacyDataDirectoryURL?.appendingPathComponent(Migration.legacyDbFilename) else { return }
 
@@ -141,10 +141,14 @@ class Migration {
 										if let authMethods = self.setup(connection: connection) {
 
 											// Generate authorization data
-											self.authorize(bookmark: bookmark, using: connection, credentials: credentials, supportedAuthMethods: authMethods)
+											self.authorize(bookmark: bookmark,
+														   using: connection,
+														   credentials: credentials,
+														   supportedAuthMethods: authMethods,
+														   parentViewController: parentViewController)
 
 											// Delete old auth data from the keychain
-											//self.removeCredentials(for: userId)
+											self.removeCredentials(for: userId)
 
 											// Save the bookmark
 											OCBookmarkManager.shared.addBookmark(bookmark)
@@ -227,7 +231,11 @@ class Migration {
 		return supportedAuthMethods
 	}
 
-	private func authorize(bookmark:OCBookmark, using connection:OCConnection, credentials:OCCredentialsDto, supportedAuthMethods:[OCAuthenticationMethodIdentifier]) {
+	private func authorize(bookmark:OCBookmark,
+						   using connection:OCConnection,
+						   credentials:OCCredentialsDto,
+						   supportedAuthMethods:[OCAuthenticationMethodIdentifier],
+						   parentViewController:UIViewController? = nil) {
 
 		var authMethod = OCAuthenticationMethodIdentifier.basicAuth
 		var options : [OCAuthenticationMethodKey : Any] = [:]
@@ -246,8 +254,7 @@ class Migration {
 				authMethod = OCAuthenticationMethodIdentifier.oAuth2
 				// Migrate OAuth2 data if possible. Note that the below method forces token expiration and subsequent refresh
 				if let authData = credentials.oauth2Data() {
-					bookmark.authenticationMethodIdentifier = authMethod
-					bookmark.authenticationData = authData
+					//bookmark.authenticationData = authData
 				}
 			} else {
 				unsupportedAuthMethod = true
@@ -264,6 +271,8 @@ class Migration {
 			 break
 		}
 
+		bookmark.authenticationMethodIdentifier = authMethod
+
 		if unsupportedAuthMethod == false {
 			// In case we use OAuth2 and we had already required auth data, finalize account migration
 			if bookmark.authenticationData == nil {
@@ -274,8 +283,8 @@ class Migration {
 				}
 
 				if authMethod == OCAuthenticationMethodIdentifier.oAuth2 {
-					// TODO: Set parent view controller to display a webview with auth server UI
-					options[.presentingViewControllerKey] = nil
+					// Set parent view controller to display a webview with auth server UI
+					options[.presentingViewControllerKey] = parentViewController
 				}
 
 				let semaphore = DispatchSemaphore(value: 0)

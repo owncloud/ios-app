@@ -54,7 +54,7 @@ class MigrationViewController: UITableViewController, Themeable {
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		Migration.shared.migrateAccountsAndSettings()
+		Migration.shared.migrateAccountsAndSettings(self)
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
