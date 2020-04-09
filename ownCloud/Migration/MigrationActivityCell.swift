@@ -32,10 +32,16 @@ class MigrationActivityCell: ThemeTableViewCell {
 				case .initiated:
 					activityView.startAnimating()
 				case .finished:
-					// TODO: Indicate with an appropriate icon, that the activity has finished successfully
+					if #available(iOS 13, *) {
+						self.successImageView.isHidden = false
+						self.successImageView.image = UIImage(systemName: "checkmark.circle")?.tinted(with: UIColor.green)
+					}
 					activityView.stopAnimating()
 				case .failed:
-					// TODO: Indicate with an appropriate icon, that the activity has failed
+					if #available(iOS 13, *) {
+						self.successImageView.isHidden = false
+						self.successImageView.image = UIImage(systemName: "multiply.circle")?.tinted(with: UIColor.red)
+					}
 					activityView.stopAnimating()
 				}
 			}
@@ -45,6 +51,7 @@ class MigrationActivityCell: ThemeTableViewCell {
 	var titleLabel = UILabel()
 	var descriptionLabel = UILabel()
 	var activityView = UIActivityIndicatorView(style: .whiteLarge)
+	var successImageView = UIImageView()
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -64,6 +71,8 @@ class MigrationActivityCell: ThemeTableViewCell {
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
 		activityView.translatesAutoresizingMaskIntoConstraints = false
+		successImageView.translatesAutoresizingMaskIntoConstraints = false
+		successImageView.isHidden = true
 
 		titleLabel.font = .systemFont(ofSize: 17, weight: .semibold)
 		descriptionLabel.font = .systemFont(ofSize: 14)
@@ -72,6 +81,7 @@ class MigrationActivityCell: ThemeTableViewCell {
 		self.contentView.addSubview(titleLabel)
 		self.contentView.addSubview(descriptionLabel)
 		self.contentView.addSubview(activityView)
+		self.contentView.addSubview(successImageView)
 
 		activityView.setContentHuggingPriority(.required, for: .horizontal)
 
@@ -88,7 +98,12 @@ class MigrationActivityCell: ThemeTableViewCell {
 
 			activityView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 			activityView.widthAnchor.constraint(equalToConstant: 50),
-			activityView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor)
+			activityView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
+
+			successImageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+			successImageView.widthAnchor.constraint(equalToConstant: 20),
+			successImageView.heightAnchor.constraint(equalTo: successImageView.widthAnchor),
+			successImageView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -10)
 		])
 	}
 
