@@ -60,7 +60,9 @@ class OCCredentialsDto : NSObject, NSCoding {
 		self.userName = coder.decodeObject(forKey: "userName") as? String
 		self.accessToken = coder.decodeObject(forKey: "accessToken") as? String
 		self.refreshToken = coder.decodeObject(forKey: "refreshToken") as? String
-		self.expiresIn = coder.decodeObject(forKey: "expiresIn") as? String
+		if let expiresIn = coder.decodeObject(forKey: "expiresIn") as? Int {
+			self.expiresIn = String(expiresIn)
+		}
 		self.tokenType = coder.decodeObject(forKey: "tokenType") as? String
 		self.userDisplayName = coder.decodeObject(forKey: "userDisplayName") as? String
 
@@ -94,7 +96,7 @@ class OCCredentialsDto : NSObject, NSCoding {
 			]
 
 			let authenticationDataDict : [String : Any] = [
-				"expirationDate" : Date(),
+				"expirationDate" : Date.distantFuture,
 				"bearerString" : "Bearer \(accessToken)",
 				"tokenResponse" : tokenResponseDict
 			]
