@@ -254,7 +254,7 @@ class Migration {
 				authMethod = OCAuthenticationMethodIdentifier.oAuth2
 				// Migrate OAuth2 data if possible. Note that the below method forces token expiration and subsequent refresh
 				if let authData = credentials.oauth2Data() {
-					//bookmark.authenticationData = authData
+					bookmark.authenticationData = authData
 				}
 			} else {
 				unsupportedAuthMethod = true
