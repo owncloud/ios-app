@@ -34,13 +34,13 @@ class MigrationActivityCell: ThemeTableViewCell {
 				case .finished:
 					if #available(iOS 13, *) {
 						self.successImageView.isHidden = false
-						self.successImageView.image = UIImage(systemName: "checkmark.circle")?.tinted(with: UIColor.green)
+						self.successImageView.image = UIImage(systemName: "checkmark.circle")?.tinted(with: UIColor.systemGreen)
 					}
 					activityView.stopAnimating()
 				case .failed:
 					if #available(iOS 13, *) {
 						self.successImageView.isHidden = false
-						self.successImageView.image = UIImage(systemName: "multiply.circle")?.tinted(with: UIColor.red)
+						self.successImageView.image = UIImage(systemName: "multiply.circle")?.tinted(with: UIColor.systemRed)
 					}
 					activityView.stopAnimating()
 				}
@@ -101,7 +101,7 @@ class MigrationActivityCell: ThemeTableViewCell {
 			activityView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
 
 			successImageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
-			successImageView.widthAnchor.constraint(equalToConstant: 20),
+			successImageView.widthAnchor.constraint(equalToConstant: 30),
 			successImageView.heightAnchor.constraint(equalTo: successImageView.widthAnchor),
 			successImageView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -10)
 		])
