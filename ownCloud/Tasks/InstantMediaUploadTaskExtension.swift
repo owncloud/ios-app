@@ -73,7 +73,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 		if photoAssets.count > 0 {
 			MediaUploadQueue.shared.addUploads(Array(photoAssets), for: bookmark, at: path)
-			userDefaults.instantUploadPhotosAfter = photoAssets.last?.modificationDate
+			userDefaults.instantUploadPhotosAfter = photoAssets.last?.creationDate
             Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Last added photo asset modification date: \(String(describing: userDefaults.instantUploadPhotosAfter))")
 		}
 
@@ -95,7 +95,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 		if videoAssets.count > 0 {
 			MediaUploadQueue.shared.addUploads(videoAssets, for: bookmark, at: path)
-			userDefaults.instantUploadVideosAfter = videoAssets.last?.modificationDate
+			userDefaults.instantUploadVideosAfter = videoAssets.last?.creationDate
             Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Last added video asset modification date: \(String(describing: userDefaults.instantUploadPhotosAfter))")
 		}
 	}
@@ -129,13 +129,13 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 			let fetchOptions = PHFetchOptions()
 
 			if let date = createdAfter {
-				let creationDatePredicate = NSPredicate(format: "modificationDate > %@", date as NSDate)
+				let creationDatePredicate = NSPredicate(format: "creationDate > %@", date as NSDate)
 				fetchOptions.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [mediaTypesPredicate, creationDatePredicate])
 			} else {
 				fetchOptions.predicate = mediaTypesPredicate
 			}
 
-			let sort = NSSortDescriptor(key: "modificationDate", ascending: true)
+			let sort = NSSortDescriptor(key: "creationDate", ascending: true)
 			fetchOptions.sortDescriptors = [sort]
 
             Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Fetching assets with options \(fetchOptions.debugDescription)")
