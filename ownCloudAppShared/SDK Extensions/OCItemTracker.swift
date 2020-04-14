@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class OCItemTracker: NSObject {
+public class OCItemTracker: NSObject {
 
 	var itemTracking : OCCoreItemTracking?
 

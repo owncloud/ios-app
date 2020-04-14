@@ -22,28 +22,6 @@ import ownCloudApp
 import ownCloudAppShared
 import Photos
 
-// TODO: Somehow this stuff is not found by Xcode, although ownCloudAppShared is linked:-(
-class OCItemTracker: NSObject {
-
-	var itemTracking : OCCoreItemTracking?
-
-	public func item(for bookmark: OCBookmark, at path: String, completionHandler: @escaping (_ error: Error?, _ core: OCCore?, _ item: OCItem?) -> Void) {
-
-		OCCoreManager.shared.requestCore(for: bookmark, setup: nil, completionHandler: { (core, error) in
-			if error == nil, let core = core {
-				self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
-					if isInitial {
-						self.itemTracking = nil
-					}
-					completionHandler(error, core, item)
-				})
-			} else {
-				completionHandler(error, nil, nil)
-			}
-		})
-	}
-}
-
 class MigrationActivity {
 	enum State {
 		case initiated, finished, failed
