@@ -78,14 +78,12 @@ class Migration {
 	// MARK: - Public API
 
 	var legacyDataFound : Bool {
-		get {
-			var isDirectory : ObjCBool = false
-			if let directoryPath = self.legacyDataDirectoryURL?.path {
-				let pathExists = FileManager.default.fileExists(atPath: directoryPath, isDirectory: &isDirectory)
-				return (pathExists && isDirectory.boolValue == true)
-			}
-			return false
+		var isDirectory : ObjCBool = false
+		if let directoryPath = self.legacyDataDirectoryURL?.path {
+			let pathExists = FileManager.default.fileExists(atPath: directoryPath, isDirectory: &isDirectory)
+			return (pathExists && isDirectory.boolValue == true)
 		}
+		return false
 	}
 
 	private let migrationQueue = DispatchQueue(label: "com.owncloud.migration-queue")
@@ -130,7 +128,6 @@ class Migration {
 
 											// Save the bookmark
 											OCBookmarkManager.shared.addBookmark(bookmark)
-											OCBookmarkManager.shared.saveBookmarks()
 
 											// For the active account, migrate instant upload settings
 											if let activeAccount = rowDict["activeaccount"] as? Int, activeAccount == 1 {
