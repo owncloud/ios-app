@@ -23,12 +23,19 @@ import ownCloudAppShared
 import Photos
 
 class MigrationActivity {
+	
 	enum State {
 		case initiated, finished, failed
 	}
+	
+	enum ActivityType {
+		case account, settings, passcode
+	}
+	
 	var title: String?
 	var description: String?
-	var state : State = .initiated
+	var state: State = .initiated
+	var type: ActivityType = .account
 }
 
 class Migration {
@@ -120,7 +127,7 @@ class Migration {
 
 										let bookmarkActivity = "\(credentials.userName ?? "")@\(bookmark.url?.absoluteString ?? "")"
 
-										self.postAccountMigrationNotification(activity: bookmarkActivity)
+										self.postAccountMigrationNotification(activity: bookmarkActivity, type: .account)
 
 										if let authMethods = self.setup(connection: connection) {
 
@@ -144,10 +151,10 @@ class Migration {
 
 											Log.debug(tagged: ["MIGRATION"], "Bookmark successfully added")
 
-											self.postAccountMigrationNotification(activity: bookmarkActivity, state: .finished)
+											self.postAccountMigrationNotification(activity: bookmarkActivity, state: .finished, type: .account)
 
 										} else {
-											self.postAccountMigrationNotification(activity: bookmarkActivity, state: .failed)
+											self.postAccountMigrationNotification(activity: bookmarkActivity, state: .failed, type: .account)
 										}
 									}
 								}
@@ -164,14 +171,14 @@ class Migration {
 						// Check if the passcode is set
 						let passcodeQuery = OCSQLiteQuery(selectingColumns: ["passcode"], fromTable: "passcode", where: nil, orderBy: "id DESC", limit: "1") { (_, _, _, resultSet) in
 							if let dict = try? resultSet?.nextRowDictionary(), let passcode = dict?["passcode"] as? String {
-								self.postAccountMigrationNotification(activity: "App Passcode", state: .initiated)
+								self.postAccountMigrationNotification(activity: "App Passcode", state: .initiated, type: .passcode)
 								Log.debug(tagged: ["MIGRATION"], "Migrating passcode lock")
 								if passcode.count == 4 && passcode.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil {
 									AppLockManager.shared.passcode = passcode
 									AppLockManager.shared.lockEnabled = true
-									self.postAccountMigrationNotification(activity: "App Passcode", state: .finished)
+									self.postAccountMigrationNotification(activity: "App Passcode", state: .finished, type: .passcode)
 								} else {
-									self.postAccountMigrationNotification(activity: "App Passcode", state: .failed)
+									self.postAccountMigrationNotification(activity: "App Passcode", state: .failed, type: .passcode)
 									Log.error(tagged: ["MIGRATION"], "Passcode is invalid")
 								}
 							}
@@ -306,11 +313,14 @@ class Migration {
 		}
 	}
 
-	private func postAccountMigrationNotification(activity:String, state:MigrationActivity.State = .initiated) {
+	private func postAccountMigrationNotification(activity:String, state:MigrationActivity.State = .initiated, type:MigrationActivity.ActivityType = .account) {
 		DispatchQueue.main.async {
+
 			let migrationActivity = MigrationActivity()
 			migrationActivity.title = activity
 			migrationActivity.state = state
+			migrationActivity.type = type
+
 			switch state {
 			case .initiated:
 				migrationActivity.description = "Migrating"
@@ -340,7 +350,7 @@ class Migration {
 
 			let activityName = "Instant Upload Settings"
 
-			postAccountMigrationNotification(activity: activityName)
+			postAccountMigrationNotification(activity: activityName, type: .settings)
 
 			func setupInstantUpload() {
 				userDefaults.instantUploadPath = Migration.legacyInstantUploadFolder
@@ -359,7 +369,7 @@ class Migration {
 					userDefaults.instantUploadVideosAfter = timestamp
 				}
 
-				self.postAccountMigrationNotification(activity: activityName, state: .finished)
+				self.postAccountMigrationNotification(activity: activityName, state: .finished, type: .settings)
 			}
 
 			// In the legacy app the instant upload folder was hardcoded to \InstantUpload
@@ -394,7 +404,7 @@ class Migration {
 				setupInstantUpload()
 			} else {
 				Log.error(tagged: ["MIGRATION"], "Folder \(Migration.legacyInstantUploadFolder) was not found and couldn't be created")
-				self.postAccountMigrationNotification(activity: activityName, state: .failed)
+				self.postAccountMigrationNotification(activity: activityName, state: .failed, type: .settings)
 			}
 		}
 

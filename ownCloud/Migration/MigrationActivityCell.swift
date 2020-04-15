@@ -32,13 +32,22 @@ class MigrationActivityCell: ThemeTableViewCell {
 				case .initiated:
 					activityView.startAnimating()
 				case .finished:
-					self.successImageView.isHidden = false
-					self.successImageView.image = UIImage(named: "checkmark_circle")?.tinted(with: UIColor.systemGreen)
+					self.statusImageView.isHidden = false
+					self.statusImageView.image = UIImage(named: "checkmark_circle")?.tinted(with: UIColor.systemGreen)
 					activityView.stopAnimating()
 				case .failed:
-					self.successImageView.isHidden = false
-					self.successImageView.image = UIImage(named: "multiply_circle")?.tinted(with: UIColor.systemRed)
+					self.statusImageView.isHidden = false
+					self.statusImageView.image = UIImage(named: "multiply_circle")?.tinted(with: UIColor.systemRed)
 					activityView.stopAnimating()
+				}
+				
+				switch activity.type {
+				case .account:
+					self.activityImageView.image = UIImage(named: "person_circle")?.tinted(with: UIColor.white)
+				case .settings:
+					self.activityImageView.image = UIImage(named: "gear")?.tinted(with: UIColor.white)
+				case .passcode:
+					self.activityImageView.image = UIImage(named: "shield_lock")?.tinted(with: UIColor.white)
 				}
 			}
 		}
@@ -47,7 +56,8 @@ class MigrationActivityCell: ThemeTableViewCell {
 	var titleLabel = UILabel()
 	var descriptionLabel = UILabel()
 	var activityView = UIActivityIndicatorView(style: .whiteLarge)
-	var successImageView = UIImageView()
+	var statusImageView = UIImageView()
+	var activityImageView = UIImageView()
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -67,39 +77,47 @@ class MigrationActivityCell: ThemeTableViewCell {
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
 		activityView.translatesAutoresizingMaskIntoConstraints = false
-		successImageView.translatesAutoresizingMaskIntoConstraints = false
-		successImageView.isHidden = true
+		statusImageView.translatesAutoresizingMaskIntoConstraints = false
+		statusImageView.isHidden = true
+		activityImageView.translatesAutoresizingMaskIntoConstraints = false
 
-		titleLabel.font = .systemFont(ofSize: 17, weight: .semibold)
-		descriptionLabel.font = .systemFont(ofSize: 14)
+		titleLabel.font = .systemFont(ofSize: 15, weight: .semibold)
+		descriptionLabel.font = .systemFont(ofSize: 12)
 		descriptionLabel.textColor = .gray
 
 		self.contentView.addSubview(titleLabel)
 		self.contentView.addSubview(descriptionLabel)
 		self.contentView.addSubview(activityView)
-		self.contentView.addSubview(successImageView)
+		self.contentView.addSubview(statusImageView)
+		self.contentView.addSubview(activityImageView)
 
 		activityView.setContentHuggingPriority(.required, for: .horizontal)
 
 		NSLayoutConstraint.activate([
+
+			activityImageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+			activityImageView.widthAnchor.constraint(equalToConstant: 30),
+			activityImageView.heightAnchor.constraint(equalTo: activityImageView.widthAnchor),
+			activityImageView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 10),
+
 			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20),
 			titleLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -5),
 			descriptionLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -20),
 
-			titleLabel.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 20),
-			descriptionLabel.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 20),
+			titleLabel.leftAnchor.constraint(equalTo: self.activityImageView.rightAnchor, constant: 20),
+			descriptionLabel.leftAnchor.constraint(equalTo: self.activityImageView.rightAnchor, constant: 20),
 
-			titleLabel.rightAnchor.constraint(equalTo: activityView.leftAnchor, constant: -20),
-			descriptionLabel.rightAnchor.constraint(equalTo: activityView.leftAnchor, constant: -20),
+			titleLabel.rightAnchor.constraint(equalTo: activityView.leftAnchor, constant: -10),
+			descriptionLabel.rightAnchor.constraint(equalTo: activityView.leftAnchor, constant: -10),
 
 			activityView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 			activityView.widthAnchor.constraint(equalToConstant: 50),
 			activityView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
 
-			successImageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
-			successImageView.widthAnchor.constraint(equalToConstant: 30),
-			successImageView.heightAnchor.constraint(equalTo: successImageView.widthAnchor),
-			successImageView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -10)
+			statusImageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+			statusImageView.widthAnchor.constraint(equalToConstant: 20),
+			statusImageView.heightAnchor.constraint(equalTo: statusImageView.widthAnchor),
+			statusImageView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -15)
 		])
 	}
 
