@@ -96,7 +96,13 @@ class Migration {
 			let db = OCSQLiteDB(url: legacyDbURL)
 			db.open(with: .readOnly) { (_, err) in
 				if err == nil {
+					Log.debug(tagged: ["MIGRATION"], "Legacy database successfully opened")
 					let queryResultHandler : OCSQLiteDBResultHandler = { (db, error, transaction, resultSet) in
+
+						if error != nil {
+							Log.error(tagged: ["MIGRATION"], "Failed to fetch users table from legacy database with error: \(String(describing: error))")
+						}
+
 						if let resultSet = resultSet {
 							var error : NSError?
 
@@ -105,6 +111,8 @@ class Migration {
 									if let userId = rowDict["id"] as? Int,
 										let serverURL = rowDict["url"] as? String,
 										let credentials = self.getCredentialsDataItem(for: userId) {
+
+										Log.debug(tagged: ["MIGRATION"], "Migrating account data for user id \(userId)")
 
 										let bookmark = OCBookmark()
 										bookmark.url = URL(string: serverURL)
@@ -134,6 +142,8 @@ class Migration {
 												self.migrateInstantUploadSettings(for: bookmark, userId: userId, accountDictionary: rowDict)
 											}
 
+											Log.debug(tagged: ["MIGRATION"], "Bookmark successfully added")
+
 											self.postAccountMigrationNotification(activity: bookmarkActivity, state: .finished)
 
 										} else {
@@ -155,12 +165,14 @@ class Migration {
 						let passcodeQuery = OCSQLiteQuery(selectingColumns: ["passcode"], fromTable: "passcode", where: nil, orderBy: "id DESC", limit: "1") { (_, _, _, resultSet) in
 							if let dict = try? resultSet?.nextRowDictionary(), let passcode = dict?["passcode"] as? String {
 								self.postAccountMigrationNotification(activity: "App Passcode", state: .initiated)
+								Log.debug(tagged: ["MIGRATION"], "Migrating passcode lock")
 								if passcode.count == 4 && passcode.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil {
 									AppLockManager.shared.passcode = passcode
 									AppLockManager.shared.lockEnabled = true
 									self.postAccountMigrationNotification(activity: "App Passcode", state: .finished)
 								} else {
 									self.postAccountMigrationNotification(activity: "App Passcode", state: .failed)
+									Log.error(tagged: ["MIGRATION"], "Passcode is invalid")
 								}
 							}
 						}
@@ -175,6 +187,8 @@ class Migration {
 						}
 					}
 
+				} else {
+					Log.error(tagged: ["MIGRATION"], "Couldn't open legacy database, error \(String(describing: err))")
 				}
 			}
 		}
@@ -191,11 +205,21 @@ class Migration {
 			connection.prepareForSetup(options: nil) { (issue, _, supportedAuthenticationMethods, _) in
 				supportedAuthMethods = supportedAuthenticationMethods
 
-				if let issue = issue, issue.level != .error, supportedAuthMethods == nil {
-					issue.approve()
-					connectAndAuthorize()
+				if let issue = issue {
+					if issue.level != .error, supportedAuthMethods == nil {
+						issue.approve()
+						connectAndAuthorize()
+
+						Log.warning(tagged: ["MIGRATION"], "Recoverable issue during connection setup, approving: \(issue)")
+					}
+
+					if issue.level == .error {
+						Log.error(tagged: ["MIGRATION"], "Issue raised during connection setup: \(issue)")
+					}
 				}
+
 				connectGroup.leave()
+
 			}
 		}
 
@@ -221,6 +245,7 @@ class Migration {
 		case .basicHttpAuth:
 			// If server supports OAuth2, switch basic auth user to this more secure method
 			if supportedAuthMethods.contains(OCAuthenticationMethodIdentifier.oAuth2) {
+				Log.debug(tagged: ["MIGRATION"], "Converting basic auth to OAuth2")
 				authMethod = OCAuthenticationMethodIdentifier.oAuth2
 			}
 
@@ -229,6 +254,7 @@ class Migration {
 				authMethod = OCAuthenticationMethodIdentifier.oAuth2
 				// Migrate OAuth2 data if possible. Note that the below method forces token expiration and subsequent refresh
 				if let authData = credentials.oauth2Data() {
+					Log.debug(tagged: ["MIGRATION"], "OAuth2 data found, adding it to the bookmark")
 					bookmark.authenticationData = authData
 				}
 			} else {
@@ -238,6 +264,7 @@ class Migration {
 		case .samlWebSSO:
 			// If server supports OAuth2, switch basic auth user to this more secure method
 			if supportedAuthMethods.contains(OCAuthenticationMethodIdentifier.oAuth2) {
+				Log.debug(tagged: ["MIGRATION"], "Converting SAML SSO to OAuth2")
 				authMethod = OCAuthenticationMethodIdentifier.oAuth2
 			} else {
 				unsupportedAuthMethod = true
@@ -267,11 +294,15 @@ class Migration {
 					if error == nil {
 						bookmark.authenticationMethodIdentifier = authMethodIdentifier
 						bookmark.authenticationData = authMethodData
+					} else {
+						Log.error(tagged: ["MIGRATION"], "Failed to generate authentication data")
 					}
 					semaphore.signal()
 				}
 				semaphore.wait()
 			}
+		} else {
+			Log.warning(tagged: ["MIGRATION"], "Can't convert auth data for the account since auth method not supported by the server")
 		}
 	}
 
@@ -304,6 +335,8 @@ class Migration {
 
 		// If one of the instant upload options is active, check and request if needed photo library permissions
 		if legacyInstantPhotoUploadActive > 0 || legacyInstantVideoUploadActive > 0 {
+
+            Log.debug(tagged: ["MIGRATION"], "Migrating instant media upload settings")
 
 			let activityName = "Instant Upload Settings"
 
@@ -360,6 +393,7 @@ class Migration {
 			if uploadFolderAvailable == true {
 				setupInstantUpload()
 			} else {
+				Log.error(tagged: ["MIGRATION"], "Folder \(Migration.legacyInstantUploadFolder) was not found and couldn't be created")
 				self.postAccountMigrationNotification(activity: activityName, state: .failed)
 			}
 		}
@@ -370,7 +404,12 @@ class Migration {
 		var isDirectory: ObjCBool = false
 		if let legacyDataPath = self.legacyDataDirectoryURL?.path {
 			if FileManager.default.fileExists(atPath: legacyDataPath, isDirectory: &isDirectory) {
-				try? FileManager.default.removeItem(atPath: legacyDataPath)
+				do {
+					try FileManager.default.removeItem(atPath: legacyDataPath)
+					Log.debug(tagged: ["MIGRATION"], "Removed legacy cache and database")
+				} catch {
+					Log.error(tagged: ["MIGRATION"], "Failed to remove legacy data (database, cached files)")
+				}
 			}
 		}
 	}
@@ -394,6 +433,7 @@ class Migration {
 			guard let existingItem = item as? [String : Any],
 				let credentialsData = existingItem[kSecValueData as String] as? Data
 			else {
+				Log.error(tagged: ["MIGRATION"], "Failed to fetch credentials for user id \(userId) from the keychain")
 				return nil
 			}
 
@@ -414,7 +454,10 @@ class Migration {
 		let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
 									kSecAttrAccessGroup as String: fullGroupId,
 									kSecAttrAccount as String: "\(userId)"]
-		SecItemDelete(query as CFDictionary)
+		let status = SecItemDelete(query as CFDictionary)
+		if status != errSecSuccess {
+			Log.error(tagged: ["MIGRATION"], "Failed to delete credentials for user id \(userId) from keychain")
+		}
 	}
 
 	private func readAppEntitlements() -> Entitlements? {
