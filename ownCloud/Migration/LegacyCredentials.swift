@@ -96,7 +96,7 @@ class OCCredentialsDto : NSObject, NSCoding {
 			]
 
 			let authenticationDataDict : [String : Any] = [
-				"expirationDate" : Date.distantFuture,
+				"expirationDate" : Date.distantPast,
 				"bearerString" : "Bearer \(accessToken)",
 				"tokenResponse" : tokenResponseDict
 			]
