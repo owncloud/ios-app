@@ -32,16 +32,12 @@ class MigrationActivityCell: ThemeTableViewCell {
 				case .initiated:
 					activityView.startAnimating()
 				case .finished:
-					if #available(iOS 13, *) {
-						self.successImageView.isHidden = false
-						self.successImageView.image = UIImage(systemName: "checkmark.circle")?.tinted(with: UIColor.systemGreen)
-					}
+					self.successImageView.isHidden = false
+					self.successImageView.image = UIImage(named: "checkmark_circle")?.tinted(with: UIColor.systemGreen)
 					activityView.stopAnimating()
 				case .failed:
-					if #available(iOS 13, *) {
-						self.successImageView.isHidden = false
-						self.successImageView.image = UIImage(systemName: "multiply.circle")?.tinted(with: UIColor.systemRed)
-					}
+					self.successImageView.isHidden = false
+					self.successImageView.image = UIImage(named: "multiply_circle")?.tinted(with: UIColor.systemRed)
 					activityView.stopAnimating()
 				}
 			}
