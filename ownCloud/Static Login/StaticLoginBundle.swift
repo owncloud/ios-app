@@ -28,7 +28,7 @@ class StaticLoginBundle: NSObject {
 
 	var profiles : [StaticLoginProfile] = []
 
-	static var demoBundle : StaticLoginBundle {
+	static var defaultBundle : StaticLoginBundle {
 		let bundle = StaticLoginBundle()
 
 		if let themingValues = VendorServices.shared.brandingProperties {

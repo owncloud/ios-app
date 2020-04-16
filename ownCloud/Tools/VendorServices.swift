@@ -81,19 +81,22 @@ class VendorServices : NSObject {
 	}
 
 	var appName: String {
-		if let themingValues = self.brandingProperties, let bundleValues = themingValues["Bundle"] as? NSDictionary, let organizationName = bundleValues["organizationName"] as? String {
+		if let themingValues = self.brandingProperties, let bundleValues = themingValues["Bundle"] as? NSDictionary, let organizationName = bundleValues["appName"] as? String {
 			return organizationName
 		}
 
 		return OCAppIdentity.shared.appName ?? "App"
 	}
 
-	var feedbackMail: String {
-		if let themingValues = self.brandingProperties, let bundleValues = themingValues["Bundle"] as? NSDictionary, let organizationName = bundleValues["organizationName"] as? String {
-			return organizationName
+	var feedbackMail: String? {
+		if let bundleValues = self.brandingProperties, let feedbackMail = bundleValues["feedbackMail"] as? String {
+			return feedbackMail
+		}
+		if let feedbackMail = MoreSettingsSection.classSetting(forOCClassSettingsKey: .feedbackEmail) as? String {
+			return feedbackMail
 		}
 
-		return OCAppIdentity.shared.appName ?? "App"
+		return nil
 	}
 
 	var isBetaBuild: Bool {
@@ -174,8 +177,8 @@ class VendorServices : NSObject {
 			buildType = "beta".localized
 		}
 
-		guard let feedbackEmail = MoreSettingsSection.classSetting(forOCClassSettingsKey: .feedbackEmail) as? String else {
-				return
+		guard let feedbackEmail = self.feedbackMail else {
+			return
 		}
 		self.sendMail(to: feedbackEmail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(self.appName)", message: nil, from: viewController)
 	}

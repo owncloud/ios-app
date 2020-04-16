@@ -30,7 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			var navigationController: UINavigationController?
 
 			if VendorServices.shared.isBranded, VendorServices.shared.hasBrandedLogin {
-				let staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.demoBundle)
+				let staticLoginViewController = StaticLoginViewController(with: StaticLoginBundle.defaultBundle)
 				navigationController = ThemeNavigationController(rootViewController: staticLoginViewController)
 				navigationController?.setNavigationBarHidden(true, animated: false)
 			} else {

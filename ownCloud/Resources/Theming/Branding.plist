@@ -14,6 +14,8 @@
 		<string>brand-background.jpg</string>
 		<key>organizationName</key>
 		<string>ownCloud.online</string>
+		<key>appName</key>
+		<string>ownCloud.online</string>
 	</dict>
 	<key>Profiles</key>
 	<array>
@@ -539,6 +541,12 @@
 				<string>gray</string>
 				<key>searchBarActivityIndicatorViewStyle</key>
 				<string>white</string>
+				<key>interfaceStyle</key>
+				<string>light</string>
+				<key>keyboardAppearance</key>
+				<string>light</string>
+				<key>backgroundBlurEffectStyle</key>
+				<string>light</string>
 			</dict>
 		</dict>
 	</array>

@@ -560,7 +560,12 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			self.showBookmarkInfoUI(bookmark)
 		}
 		menuItems.append(manage)
-		let delete = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+
+		var destructiveTitle = "Delete".localized
+		if VendorServices.shared.isBranded {
+			destructiveTitle = "Logout".localized
+		}
+		let delete = UIAction(title: destructiveTitle, image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
 			self.delete(bookmark: bookmark, at: indexPath ) {
 				OnMainThread {
 					self.tableView.performBatchUpdates({
@@ -615,7 +620,12 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 
-		let deleteRowAction = UITableViewRowAction(style: .destructive, title: "Delete".localized, handler: { (_, indexPath) in
+		var destructiveTitle = "Delete".localized
+		if VendorServices.shared.isBranded {
+			destructiveTitle = "Logout".localized
+		}
+
+		let deleteRowAction = UITableViewRowAction(style: .destructive, title: destructiveTitle, handler: { (_, indexPath) in
 			if let bookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
 				self.delete(bookmark: bookmark, at: indexPath ) {
 					OnMainThread {

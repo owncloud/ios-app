@@ -336,9 +336,6 @@ class ClientItemCell: ThemeTableViewCell {
 			} else {
 				if availableOfflineCoverage == .none {
 					cloudStatusIcon = nil
-					NSLayoutConstraint.activate([
-						cloudStatusIconView.widthAnchor.constraint(equalToConstant: 0)
-					])
 				} else {
 					cloudStatusIcon = UIImage(named: "cloud-available-offline")
 				}

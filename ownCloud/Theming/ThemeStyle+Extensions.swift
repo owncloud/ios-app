@@ -192,9 +192,11 @@ extension ThemeStyle {
 		if let brandingURL = VendorServices.shared.brandingURL {
 			let themeProvider = ThemeProvider(plist: brandingURL)
 
+			var isDefault = true
 			for theme in themeProvider.themes {
-				let themeExtension = theme.themeStyleExtension(isDefault: true)
+				let themeExtension = theme.themeStyleExtension(isDefault: isDefault)
 				OCExtensionManager.shared.addExtension(themeExtension)
+				isDefault = false
 			}
 		} else {
 			OCExtensionManager.shared.addExtension(ThemeStyle.ownCloudLight.themeStyleExtension())
