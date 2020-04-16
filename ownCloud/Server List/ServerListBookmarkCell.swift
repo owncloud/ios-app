@@ -35,6 +35,10 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 	func prepareViewAndConstraints() {
 		self.selectionStyle = .default
 
+		if #available(iOS 13.4, *) {
+			PointerEffect.install(on: self.contentView, effectStyle: .hover)
+		}
+
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
 		iconView.translatesAutoresizingMaskIntoConstraints = false

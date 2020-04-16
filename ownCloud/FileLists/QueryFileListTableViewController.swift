@@ -303,9 +303,10 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
-		core?.stop(query)
 		queryStateObservation?.invalidate()
 		queryStateObservation = nil
+
+		core?.stop(query)
 
 		queryProgressSummary = nil
 
