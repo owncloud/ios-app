@@ -536,13 +536,13 @@ class BookmarkViewController: StaticTableViewController {
 							case .create:
 								// Add bookmark
 								OCBookmarkManager.shared.addBookmark(bookmark)
-								OCBookmarkManager.shared.saveBookmarks()
 
 							case .edit:
 								// Update original bookmark
 								self?.originalBookmark?.setValuesFrom(bookmark)
-								OCBookmarkManager.shared.saveBookmarks()
-								OCBookmarkManager.shared.postChangeNotification()
+								if !OCBookmarkManager.shared.updateBookmark(bookmark) {
+									Log.error("Changes to \(bookmark) not saved as it's not tracked by OCBookmarkManager!")
+								}
 							}
 
 							let userActionCompletionHandler = strongSelf.userActionCompletionHandler

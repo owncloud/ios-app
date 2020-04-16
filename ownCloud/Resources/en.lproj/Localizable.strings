@@ -83,7 +83,7 @@
 "Sort by" = "Sort by";
 
 "name" = "name";
-"type" = "type";
+"kind" = "kind";
 "size" = "size";
 "date" = "date";
 "Search this folder" = "Search this folder";
