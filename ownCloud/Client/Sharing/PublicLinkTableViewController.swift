@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import MobileCoreServices
 
 class PublicLinkTableViewController: SharingTableViewController {
 
@@ -31,6 +32,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 		super.viewDidLoad()
 
 		messageView = MessageView(add: self.view)
+		tableView.dragDelegate = self
 
 		self.navigationItem.title = "Links".localized
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
@@ -296,5 +298,20 @@ class PublicLinkTableViewController: SharingTableViewController {
 		}
 
 		return linkName
+	}
+}
+
+// MARK: - Drag delegate
+extension PublicLinkTableViewController: UITableViewDragDelegate {
+
+	func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+		if let share = share(at: indexPath), let url = share.url {
+			let itemProvider = NSItemProvider(item: url as URL as NSSecureCoding, typeIdentifier: kUTTypeURL as String)
+				let dragItem = UIDragItem(itemProvider: itemProvider)
+
+			return [dragItem]
+		}
+
+		return []
 	}
 }

@@ -154,7 +154,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 					self?.activeTextField = textField
 				}
 			}
-			}, placeholder: "Public Link".localized, value: linkName, secureTextEntry: false, keyboardType: .default, autocorrectionType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .done, inputAccessoryView: inputToolbar, identifier: "name-text-row", actionEvent: UIControl.Event.editingDidEnd)
+			}, placeholder: "Public Link".localized, value: linkName, secureTextEntry: false, keyboardType: .default, autocorrectionType: .default, enablesReturnKeyAutomatically: true, returnKeyType: .done, inputAccessoryView: inputToolbar, identifier: "name-text-row", actionEvent: UIControl.Event.editingDidEnd, clearButtonMode: .always)
 
 		section.add(row: nameRow)
 		self.addSection(section)
@@ -650,8 +650,11 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 
 		if let permissionMask = permissionMask {
 			let share = OCShare(publicLinkToPath: self.share.itemPath, linkName: shareName, permissions: permissionMask, password: password, expiration: expiration)
-			self.core.createShare(share, options: nil, completionHandler: { (error, _) in
+			self.core.createShare(share, options: nil, completionHandler: { (error, createdShare) in
 				if error == nil {
+					if let shareURL = createdShare?.url {
+						UIPasteboard.general.url = shareURL
+					}
 					OnMainThread {
 						self.dismissAnimated()
 					}
