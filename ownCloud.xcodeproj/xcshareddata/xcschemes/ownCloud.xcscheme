@@ -71,20 +71,6 @@
                BlueprintName = "ownCloudTests"
                ReferencedContainer = "container:ownCloud.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "CreateFolderTests">
-               </Test>
-               <Test
-                  Identifier = "DeleteBookmarkTests">
-               </Test>
-               <Test
-                  Identifier = "FileListTests">
-               </Test>
-               <Test
-                  Identifier = "SettingsTests">
-               </Test>
-            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "NO">
@@ -153,6 +139,11 @@
             key = "CG_NUMERICS_SHOW_BACKTRACE"
             value = "1"
             isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:authentication-oauth2.oa2-expiration-override-seconds"
+            value = "10"
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:authentication-oauth2.oa2-browser-session-class"

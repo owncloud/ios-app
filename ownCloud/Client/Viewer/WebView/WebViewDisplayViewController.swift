@@ -39,30 +39,39 @@ class WebViewDisplayViewController: DisplayViewController {
 				return
 			}
 
-			let configuration: WKWebViewConfiguration = WKWebViewConfiguration()
+			if self.webView == nil {
+				let configuration: WKWebViewConfiguration = WKWebViewConfiguration()
 
-			configuration.preferences.javaScriptEnabled = true
+				configuration.preferences.javaScriptEnabled = true
 
-			if blockList != nil {
+				if blockList != nil {
 
-				configuration.userContentController.add(blockList!)
+					configuration.userContentController.add(blockList!)
 
-				self.webView = WKWebView(frame: .zero, configuration: configuration)
-				self.webView?.scrollView.bouncesZoom = false
-				self.webView?.translatesAutoresizingMaskIntoConstraints = false
-				self.view.addSubview(self.webView!)
+					self.webView = WKWebView(frame: .zero, configuration: configuration)
 
-				NSLayoutConstraint.activate([
-					self.webView!.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-					self.webView!.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-					self.webView!.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
-					self.webView!.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor)
-					])
+					if let webView = self.webView {
+						let layoutGuide = self.view.safeAreaLayoutGuide
 
+						webView.scrollView.bouncesZoom = false
+						webView.translatesAutoresizingMaskIntoConstraints = false
+						self.view.addSubview(webView)
+
+						NSLayoutConstraint.activate([
+							webView.topAnchor.constraint(equalTo: layoutGuide.topAnchor),
+							webView.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor),
+							webView.rightAnchor.constraint(equalTo: layoutGuide.rightAnchor),
+							webView.leftAnchor.constraint(equalTo: layoutGuide.leftAnchor)
+						])
+
+						webView.loadFileURL(source, allowingReadAccessTo: source)
+
+						self.fullScreenGesture.delegate = self
+						webView.addGestureRecognizer(self.fullScreenGesture)
+					}
+				}
+			} else {
 				self.webView?.loadFileURL(source, allowingReadAccessTo: source)
-
-				self.fullScreenGesture.delegate = self
-				self.webView?.addGestureRecognizer(self.fullScreenGesture)
 			}
 
 			completion(true)
@@ -123,13 +132,13 @@ extension WebViewDisplayViewController: DisplayExtension {
 				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
 
 				if matches > 0 {
-					return OCExtensionPriority.locationMatch
+					return .locationMatch
 				}
 			}
 
-			return OCExtensionPriority.noMatch
+			return .noMatch
 		} catch {
-			return OCExtensionPriority.noMatch
+			return .noMatch
 		}
 	}
 	static var displayExtensionIdentifier: String = "org.owncloud.webview"

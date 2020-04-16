@@ -56,7 +56,7 @@ private struct ProgressSummaryNotificationObserver {
 
 class ProgressSummarizer: NSObject {
 	// MARK: - Init & Deinit
-	private var observerContextTarget : Int = 0
+	static private var observerContextTarget : Int = 0
 	private var observerContext : UnsafeMutableRawPointer?
 
 	var trackedProgress : [Progress] = []
@@ -64,7 +64,7 @@ class ProgressSummarizer: NSObject {
 	var trackedProgressByTypeCount : [ OCEventType : Int ] = [ : ]
 
 	override init() {
-		observerContext = UnsafeMutableRawPointer(&observerContextTarget)
+		observerContext = UnsafeMutableRawPointer(&ProgressSummarizer.observerContextTarget)
 
 		super.init()
 	}
@@ -415,7 +415,7 @@ class ProgressSummarizer: NSObject {
 											multiMessage = NSString(format:"Updating %ld items…".localized as NSString, sameTypeCount) as String
 
 										case .createShare, .updateShare, .deleteShare, .decideOnShare: break
-										case .none, .retrieveThumbnail, .retrieveItemList, .retrieveShares, .issueResponse, .filterFiles: break
+										case .none, .retrieveThumbnail, .retrieveItemList, .retrieveShares, .issueResponse, .filterFiles, .wakeupSyncRecord: break
 									}
 
 									if multiMessage != nil {

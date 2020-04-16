@@ -99,7 +99,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		if let connectionStatus = core?.connectionStatus {
 			var connectionShortDescription = core?.connectionStatusShortDescription
 
-			connectionShortDescription = connectionShortDescription != nil ? (connectionShortDescription! + ". ") : ""
+			connectionShortDescription = connectionShortDescription != nil ? (connectionShortDescription!.hasSuffix(".") ? connectionShortDescription! + " " : connectionShortDescription! + ". ") : ""
 
 			switch connectionStatus {
 				case .online:
@@ -394,6 +394,10 @@ extension ClientRootViewController : OCCoreDelegate {
 					if bookmark.isTokenBased == true {
 						authFailureTitle = "Access denied".localized
 						authFailureMessage = "The connection's access token has expired or become invalid. Sign in again to re-gain access.".localized
+
+						if let localizedDescription = nsError.userInfo[NSLocalizedDescriptionKey] {
+							authFailureMessage = "\(authFailureMessage!)\n\n(\(localizedDescription))"
+						}
 					} else {
 						authFailureMessage = "The server declined access with the credentials stored for this connection.".localized
 					}

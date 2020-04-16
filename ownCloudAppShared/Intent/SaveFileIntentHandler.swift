@@ -65,28 +65,46 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 				newFilename = changedFilename
 			}
 		}
+		let filePath = path + newFilename
 
+		// Check if given save path exists
 		OCItemTracker().item(for: bookmark, at: path) { (error, core, item) in
 			if error == nil, let targetItem = item {
-				if core?.importFileNamed(newFilename,
-										at: targetItem,
-										from: fileURL,
-										isSecurityScoped: true,
-										options: [OCCoreOption.importByCopying : true],
-										placeholderCompletionHandler: { (error, item) in
-											if error != nil {
-												completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
-											}
-				},
-										resultHandler: { (error, _ core, _ item, _) in
-											if error != nil {
-												completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
-											} else {
-												completion(SaveFileIntentResponse.success(filePath: item?.path ?? ""))
-											}
-				}
-					) == nil {
-					completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+				// Check if file already exists
+				OCItemTracker().item(for: bookmark, at: filePath) { (error, core, fileItem) in
+					OnBackgroundQueue {
+						if error == nil, let core = core, let fileItem = fileItem, let parentItem = fileItem.parentItem(from: core) {
+							// File already exists
+							if intent.shouldOverwrite?.boolValue == true {
+								core.reportLocalModification(of: fileItem, parentItem: parentItem, withContentsOfFileAt: fileURL, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: { (error, item) in
+									if error != nil {
+										completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+									} else {	completion(SaveFileIntentResponse.success(filePath: item?.path ?? ""))
+									}
+								},
+															 resultHandler: nil)
+							} else {
+								completion(SaveFileIntentResponse(code: .overwriteFailure, userActivity: nil))
+							}
+						} else if core != nil {
+							// File does NOT exists => import file
+							core?.importFileNamed(newFilename,
+												  at: targetItem,
+												  from: fileURL,
+												  isSecurityScoped: true,
+												  options: [OCCoreOption.importByCopying : true],
+												  placeholderCompletionHandler: { (error, item) in
+													if error != nil {
+														completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+													} else {	completion(SaveFileIntentResponse.success(filePath: item?.path ?? ""))
+													}
+							},
+												  resultHandler: nil
+							)
+						} else {
+							completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+						}
+					}
 				}
 			} else if core != nil {
 				completion(SaveFileIntentResponse(code: .pathFailure, userActivity: nil))
@@ -130,6 +148,14 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 
 	public func resolveFileextension(for intent: SaveFileIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		completion(INStringResolutionResult.success(with: intent.fileextension ?? ""))
+	}
+
+	public func resolveShouldOverwrite(for intent: SaveFileIntent, with completion: @escaping (INBooleanResolutionResult) -> Void) {
+		var shouldOverwrite = false
+		if let overwrite = intent.shouldOverwrite?.boolValue {
+			shouldOverwrite = overwrite
+		}
+		completion(INBooleanResolutionResult.success(with: shouldOverwrite))
 	}
 }
 

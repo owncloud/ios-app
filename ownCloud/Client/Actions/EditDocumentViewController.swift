@@ -28,6 +28,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	var savingMode: QLPreviewItemEditingMode?
 	var itemTracker: OCCoreItemTracking?
 	var modifiedContentsURL: URL?
+	var dismissedViewWithoutSaving: Bool = false
 
 	var source: URL {
 		didSet {
@@ -53,9 +54,23 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		Theme.shared.register(client: self, applyImmediately: true)
 
 		if let core = core, let path = item.path {
-			itemTracker = core.trackItem(atPath: path, trackingHandler: { [weak self](error, item, _) in
+			itemTracker = core.trackItem(atPath: path, trackingHandler: { [weak self, weak core](error, item, _) in
 				if let item = item, let self = self {
+					var refreshPreview = false
+
+					if let core = core {
+						if item.contentDifferent(than: self.item, in: core) {
+							refreshPreview = true
+						}
+					}
+
 					self.item = item
+
+					if refreshPreview {
+						OnMainThread {
+							self.reloadData()
+						}
+					}
 				} else if item == nil {
 
 					OnMainThread {
@@ -89,6 +104,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 						self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
 					} else if let savingMode = self.savingMode, savingMode == .createCopy {
 						self.saveModifiedContents(at: self.source, savingMode: savingMode)
+					} else {
+						self.dismissedViewWithoutSaving = true
 					}
 				}
 			}
@@ -98,6 +115,8 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 					self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
 				} else if let savingMode = self.savingMode, savingMode == .createCopy {
 					self.saveModifiedContents(at: self.source, savingMode: savingMode)
+				} else {
+					self.dismissedViewWithoutSaving = true
 				}
 			}
 		}
@@ -108,17 +127,20 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 													message: nil,
 													preferredStyle: .alert)
 
-		alertController.addAction(UIAlertAction(title: "Overwrite original".localized, style: .default, handler: { (_) in
-			self.savingMode = .updateContents
+		if item.permissions.contains(.writable) {
+			alertController.addAction(UIAlertAction(title: "Overwrite original".localized, style: .default, handler: { (_) in
+				self.savingMode = .updateContents
 
-			completion?(.updateContents)
-		}))
+				completion?(.updateContents)
+			}))
+		}
+		if let core = core, item.parentItem(from: core)?.permissions.contains(.createFile) == true {
+			alertController.addAction(UIAlertAction(title: "Save as copy".localized, style: .default, handler: { (_) in
+				self.savingMode = .createCopy
 
-		alertController.addAction(UIAlertAction(title: "Save as copy".localized, style: .default, handler: { (_) in
-			self.savingMode = .createCopy
-
-			completion?(.createCopy)
-		}))
+				completion?(.createCopy)
+			}))
+		}
 
 		alertController.addAction(UIAlertAction(title: "Discard changes".localized, style: .destructive, handler: { (_) in
 			self.savingMode = .disabled
@@ -133,19 +155,19 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		switch savingMode {
 		case .createCopy:
 			if let core = core, let parentItem = item.parentItem(from: core) {
-				self.core?.importFileNamed(item.name, at: parentItem, from: url, isSecurityScoped: true, options: [ .automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue, OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+				self.core?.importFileNamed(item.name, at: parentItem, from: url, isSecurityScoped: true, options: [ .automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue, OCCoreOption.importByCopying : true], placeholderCompletionHandler: { (error, item) in
 					if let error = error {
 						self.present(error: error, title: "Saving edited file failed".localized)
 					}
-				})
+				}, resultHandler: nil)
 			}
 		case .updateContents:
 			if let core = core, let parentItem = item.parentItem(from: core) {
-				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: { (error, item) in
 					if let error = error {
 						self.present(error: error, title: "Saving edited file failed".localized)
 					}
-				})
+				}, resultHandler: nil)
 			}
 		default:
 			break
@@ -175,9 +197,9 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+	override func viewDidLoad() {
+		super.viewDidLoad()
+	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.navigationController?.navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
@@ -187,22 +209,25 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 @available(iOS 13.0, *)
 extension EditDocumentViewController: QLPreviewControllerDataSource, QLPreviewControllerDelegate {
-    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
 		return 1
-    }
+	}
 
-    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
 		return source as QLPreviewItem
-    }
+	}
 
 	func previewController(_ controller: QLPreviewController, editingModeFor previewItem: QLPreviewItem) -> QLPreviewItemEditingMode {
 		return .createCopy
-    }
+	}
 
-    func previewController(_ controller: QLPreviewController, didUpdateContentsOf previewItem: QLPreviewItem) {
-    }
+	func previewController(_ controller: QLPreviewController, didUpdateContentsOf previewItem: QLPreviewItem) {
+	}
 
-    func previewController(_ controller: QLPreviewController, didSaveEditedCopyOf previewItem: QLPreviewItem, at modifiedContentsURL: URL) {
+	func previewController(_ controller: QLPreviewController, didSaveEditedCopyOf previewItem: QLPreviewItem, at modifiedContentsURL: URL) {
 		self.modifiedContentsURL = modifiedContentsURL
+		if self.dismissedViewWithoutSaving, let savingMode = self.savingMode {
+			self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)
+		}
 	}
 }
