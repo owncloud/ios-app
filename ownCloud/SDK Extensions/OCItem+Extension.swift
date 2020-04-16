@@ -338,8 +338,8 @@ extension OCItem {
 			// Different item
 			(item.localID != localID) ||
 
-			// File contents (and therefore likely metadata) differs
-			(item.itemVersionIdentifier != itemVersionIdentifier) ||
+			// Content deemed different
+			contentDifferent(than: item, in: core) ||
 
 			// File name differs
 			(item.name != name) ||
@@ -357,6 +357,24 @@ extension OCItem {
 			// Sharing attributes differ
 			(item.shareTypesMask != shareTypesMask) ||
 			(item.permissions != permissions) // these contain sharing info, too
+		)
+	}
+
+	func contentDifferent(than item: OCItem?, in core: OCCore? = nil) -> Bool {
+		guard let item = item else {
+			return true
+		}
+
+		return (
+			// Different item
+			(item.localID != localID) ||
+
+			// File contents (and therefore likely metadata) differs
+			(item.itemVersionIdentifier != itemVersionIdentifier) 		|| // remote item
+			(item.localCopyVersionIdentifier != localCopyVersionIdentifier) || // local copy
+
+			// Size differs
+			(item.size != size)
 		)
 	}
 }
