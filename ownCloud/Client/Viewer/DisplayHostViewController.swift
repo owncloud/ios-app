@@ -80,12 +80,13 @@ class DisplayHostViewController: UIPageViewController {
 	}
 
 	deinit {
+		queryObservation?.invalidate()
+
 		if queryStarted {
 			core?.stop(query)
 			queryStarted = false
 		}
 
-		queryObservation?.invalidate()
 		Theme.shared.unregister(client: self)
 	}
 

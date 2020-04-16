@@ -57,7 +57,7 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 	}
 
 	// MARK: - Constants
-	let sideButtonsSize: CGSize = CGSize(width: 22.0, height: 22.0)
+	let sideButtonsSize: CGSize = CGSize(width: 44.0, height: 44.0)
 	let leftPadding: CGFloat = 20.0
 	let rightPadding: CGFloat = 20.0
 	let topPadding: CGFloat = 10.0
@@ -177,6 +177,9 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 			selectButton.setImage(UIImage(named: "select"), for: .normal)
 			selectButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
 			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .touchUpInside)
+			if #available(iOS 13.4, *) {
+				selectButton.isPointerInteractionEnabled = true
+			}
 
 			NSLayoutConstraint.activate([
 				selectButton.centerYAnchor.constraint(equalTo: self.centerYAnchor),
