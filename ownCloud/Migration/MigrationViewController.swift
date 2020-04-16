@@ -35,11 +35,11 @@ class MigrationViewController: UITableViewController, Themeable {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.title = "Account Migration"
+		self.title = "Account Migration".localized
 
 		self.tableView.register(MigrationActivityCell.self, forCellReuseIdentifier: MigrationActivityCell.identifier)
 		self.tableView.rowHeight = UITableView.automaticDimension
-		self.tableView.estimatedRowHeight = 80
+		self.tableView.estimatedRowHeight = 80.0
 		self.tableView.allowsSelection = false
 
 		doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(finishMigration))
@@ -59,6 +59,7 @@ class MigrationViewController: UITableViewController, Themeable {
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.tableView.applyThemeCollection(collection)
+		self.tableView.separatorColor = self.tableView.backgroundColor
 	}
 
 	// MARK: - User Actions

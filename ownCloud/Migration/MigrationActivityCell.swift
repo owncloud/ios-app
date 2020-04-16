@@ -20,6 +20,11 @@ import UIKit
 
 class MigrationActivityCell: ThemeTableViewCell {
 
+	static let verticalMargin: CGFloat = 20.0
+	static let horizontalMargin: CGFloat = 10.0
+	static let horizontalSpace: CGFloat = 15.0
+	static let verticalSpace: CGFloat = 5.0
+
 	static let identifier = "migration-activity-cell"
 
 	var activity : MigrationActivity? {
@@ -40,14 +45,14 @@ class MigrationActivityCell: ThemeTableViewCell {
 					self.statusImageView.image = UIImage(named: "multiply_circle")?.tinted(with: UIColor.systemRed)
 					activityView.stopAnimating()
 				}
-				
+
 				switch activity.type {
 				case .account:
-					self.activityImageView.image = UIImage(named: "person_circle")?.tinted(with: UIColor.white)
+					self.activityTypeImageView.image = UIImage(named: "person_circle")?.withRenderingMode(.alwaysTemplate)
 				case .settings:
-					self.activityImageView.image = UIImage(named: "gear")?.tinted(with: UIColor.white)
+					self.activityTypeImageView.image = UIImage(named: "gear")?.withRenderingMode(.alwaysTemplate)
 				case .passcode:
-					self.activityImageView.image = UIImage(named: "shield_lock")?.tinted(with: UIColor.white)
+					self.activityTypeImageView.image = UIImage(named: "lock_shield")?.withRenderingMode(.alwaysTemplate)
 				}
 			}
 		}
@@ -55,9 +60,9 @@ class MigrationActivityCell: ThemeTableViewCell {
 
 	var titleLabel = UILabel()
 	var descriptionLabel = UILabel()
-	var activityView = UIActivityIndicatorView(style: .whiteLarge)
+	var activityView = UIActivityIndicatorView(style: .white)
 	var statusImageView = UIImageView()
-	var activityImageView = UIImageView()
+	var activityTypeImageView = UIImageView()
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -77,47 +82,52 @@ class MigrationActivityCell: ThemeTableViewCell {
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
 		activityView.translatesAutoresizingMaskIntoConstraints = false
+
 		statusImageView.translatesAutoresizingMaskIntoConstraints = false
 		statusImageView.isHidden = true
-		activityImageView.translatesAutoresizingMaskIntoConstraints = false
+		statusImageView.contentMode = .scaleAspectFit
 
-		titleLabel.font = .systemFont(ofSize: 15, weight: .semibold)
-		descriptionLabel.font = .systemFont(ofSize: 12)
-		descriptionLabel.textColor = .gray
+		activityTypeImageView.translatesAutoresizingMaskIntoConstraints = false
+		activityTypeImageView.contentMode = .scaleAspectFit
+
+		titleLabel.font = UIFont.preferredFont(forTextStyle: .callout)
+		titleLabel.adjustsFontForContentSizeCategory = true
+		titleLabel.lineBreakMode = .byTruncatingMiddle
+
+		descriptionLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+		descriptionLabel.adjustsFontForContentSizeCategory = true
 
 		self.contentView.addSubview(titleLabel)
 		self.contentView.addSubview(descriptionLabel)
 		self.contentView.addSubview(activityView)
 		self.contentView.addSubview(statusImageView)
-		self.contentView.addSubview(activityImageView)
-
-		activityView.setContentHuggingPriority(.required, for: .horizontal)
+		self.contentView.addSubview(activityTypeImageView)
 
 		NSLayoutConstraint.activate([
 
-			activityImageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
-			activityImageView.widthAnchor.constraint(equalToConstant: 30),
-			activityImageView.heightAnchor.constraint(equalTo: activityImageView.widthAnchor),
-			activityImageView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: 10),
+			activityTypeImageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+			activityTypeImageView.widthAnchor.constraint(equalToConstant: 35.0),
+			activityTypeImageView.heightAnchor.constraint(equalTo: activityTypeImageView.widthAnchor),
+			activityTypeImageView.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: MigrationActivityCell.horizontalMargin),
 
-			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20),
-			titleLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -5),
-			descriptionLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -20),
+			titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: MigrationActivityCell.verticalMargin),
+			titleLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -MigrationActivityCell.verticalSpace),
+			descriptionLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -MigrationActivityCell.verticalMargin),
 
-			titleLabel.leftAnchor.constraint(equalTo: self.activityImageView.rightAnchor, constant: 20),
-			descriptionLabel.leftAnchor.constraint(equalTo: self.activityImageView.rightAnchor, constant: 20),
+			titleLabel.leftAnchor.constraint(equalTo: self.activityTypeImageView.rightAnchor, constant: MigrationActivityCell.horizontalSpace),
+			descriptionLabel.leftAnchor.constraint(equalTo: self.activityTypeImageView.rightAnchor, constant: MigrationActivityCell.horizontalSpace),
 
-			titleLabel.rightAnchor.constraint(equalTo: activityView.leftAnchor, constant: -10),
-			descriptionLabel.rightAnchor.constraint(equalTo: activityView.leftAnchor, constant: -10),
+			titleLabel.rightAnchor.constraint(equalTo: activityView.leftAnchor, constant: -MigrationActivityCell.horizontalSpace),
+			descriptionLabel.rightAnchor.constraint(equalTo: activityView.leftAnchor, constant: -MigrationActivityCell.horizontalSpace),
 
 			activityView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
-			activityView.widthAnchor.constraint(equalToConstant: 50),
-			activityView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
+			activityView.widthAnchor.constraint(equalToConstant: 30.0),
+			activityView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -MigrationActivityCell.horizontalMargin),
 
 			statusImageView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
-			statusImageView.widthAnchor.constraint(equalToConstant: 20),
+			statusImageView.widthAnchor.constraint(equalToConstant: 20.0),
 			statusImageView.heightAnchor.constraint(equalTo: statusImageView.widthAnchor),
-			statusImageView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -15)
+			statusImageView.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -MigrationActivityCell.horizontalMargin)
 		])
 	}
 
@@ -126,7 +136,8 @@ class MigrationActivityCell: ThemeTableViewCell {
 	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection) {
 		let itemState = ThemeItemState(selected: self.isSelected)
 
-		self.titleLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
-		self.descriptionLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
+		self.titleLabel.applyThemeCollection(collection, itemStyle: .title, itemState: itemState)
+		self.descriptionLabel.applyThemeCollection(collection, itemStyle: .message, itemState: itemState)
+		activityTypeImageView.tintColor = collection.tableRowColors.symbolColor
 	}
 }

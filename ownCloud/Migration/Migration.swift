@@ -23,33 +23,33 @@ import ownCloudAppShared
 import Photos
 
 class MigrationActivity {
-	
+
 	enum State {
 		case initiated, finished, failed
 	}
-	
+
 	enum ActivityType {
 		case account, settings, passcode
 	}
-	
+
 	var title: String?
 	var description: String?
 	var state: State = .initiated
 	var type: ActivityType = .account
 }
 
-class Migration {
+struct Entitlements : Codable {
 
-	struct Entitlements : Codable {
+	var appGroups : [String]?
+	var keychainAccessGroups : [String]?
 
-		var appGroups : [String]?
-		var keychainAccessGroups : [String]?
-
-		enum CodingKeys: String, CodingKey {
-			case appGroups = "com.apple.security.application-groups"
-			case keychainAccessGroups = "keychain-access-groups"
-		}
+	enum CodingKeys: String, CodingKey {
+		case appGroups = "com.apple.security.application-groups"
+		case keychainAccessGroups = "keychain-access-groups"
 	}
+}
+
+class Migration {
 
 	static let ActivityUpdateNotification = NSNotification.Name(rawValue: "MigrationActivityUpdateNotification")
 	static let FinishedNotification = NSNotification.Name(rawValue: "MigrationFinishedNotification")
@@ -171,14 +171,18 @@ class Migration {
 						// Check if the passcode is set
 						let passcodeQuery = OCSQLiteQuery(selectingColumns: ["passcode"], fromTable: "passcode", where: nil, orderBy: "id DESC", limit: "1") { (_, _, _, resultSet) in
 							if let dict = try? resultSet?.nextRowDictionary(), let passcode = dict?["passcode"] as? String {
-								self.postAccountMigrationNotification(activity: "App Passcode", state: .initiated, type: .passcode)
+
+								let activityName = "App Passcode".localized
+								self.postAccountMigrationNotification(activity: activityName, state: .initiated, type: .passcode)
+
 								Log.debug(tagged: ["MIGRATION"], "Migrating passcode lock")
+
 								if passcode.count == 4 && passcode.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil {
 									AppLockManager.shared.passcode = passcode
 									AppLockManager.shared.lockEnabled = true
-									self.postAccountMigrationNotification(activity: "App Passcode", state: .finished, type: .passcode)
+									self.postAccountMigrationNotification(activity: activityName, state: .finished, type: .passcode)
 								} else {
-									self.postAccountMigrationNotification(activity: "App Passcode", state: .failed, type: .passcode)
+									self.postAccountMigrationNotification(activity: activityName, state: .failed, type: .passcode)
 									Log.error(tagged: ["MIGRATION"], "Passcode is invalid")
 								}
 							}
@@ -323,11 +327,11 @@ class Migration {
 
 			switch state {
 			case .initiated:
-				migrationActivity.description = "Migrating"
+				migrationActivity.description = "Migrating".localized
 			case .finished:
-				migrationActivity.description = "Migrated"
+				migrationActivity.description = "Migrated".localized
 			case .failed:
-				migrationActivity.description = "Failed to migrate"
+				migrationActivity.description = "Failed to migrate".localized
 			}
 			NotificationCenter.default.post(name: Migration.ActivityUpdateNotification, object: migrationActivity)
 		}
@@ -348,7 +352,7 @@ class Migration {
 
             Log.debug(tagged: ["MIGRATION"], "Migrating instant media upload settings")
 
-			let activityName = "Instant Upload Settings"
+			let activityName = "Instant Upload Settings".localized
 
 			postAccountMigrationNotification(activity: activityName, type: .settings)
 
