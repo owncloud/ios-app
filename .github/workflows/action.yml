@@ -26,7 +26,7 @@ jobs:
       - name: Build and Test
         run: |
           pod install
-          xcodebuild clean test -project ownCloud.xcworkspace -scheme ownCloud -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
+          xcodebuild clean test -workspace ownCloud.xcworkspace -scheme ownCloud -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
         env:
           destination: ${{ matrix.destination }}
       - name: Archive Failed Tests artifacts
