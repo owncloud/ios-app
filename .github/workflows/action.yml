@@ -1,4 +1,4 @@
-name: CI
+name: CI Testing
 # This workflow is triggered on pushes to the repository.
 on:
   push:
@@ -27,11 +27,12 @@ jobs:
         run: /usr/bin/xcodebuild -version
       - name: Install Cocoapods
         run: gem install cocoapods
+      - name: Run Pod Install
+        run: pod install
+      - name: List Directory
+        run: ls -la
       - name: Build and Test
-        run: |
-          pod install
-          ls -la
-          xcodebuild clean build -workspace ownCloud.xcworkspace -scheme ownCloud -configuration Debug -destination "${destination}"
+        run: xcodebuild clean test -workspace ownCloud.xcworkspace -scheme ownCloud -configuration Debug -destination "${destination}"
         env:
           destination: ${{ matrix.destination }}
       - name: Archive Failed Tests artifacts
