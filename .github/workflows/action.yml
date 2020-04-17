@@ -27,6 +27,7 @@ jobs:
         run: gem install cocoapods
       - name: Build and Test
         run: |
+          pod install
           ls -la
           xcodebuild clean build -workspace ownCloud.xcworkspace -scheme ownCloud -configuration Debug -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
         env:
