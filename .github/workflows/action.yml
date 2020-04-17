@@ -22,7 +22,7 @@ jobs:
         with:
           submodules: true
       - name: Create Failure Directory
-        run: mkdir FailureDiffs
+        run: mkdir Artifacts
       - name: Select Xcode
         run: sudo xcode-select -switch /Applications/Xcode_11.4.app
       - name: Xcode version
@@ -37,9 +37,8 @@ jobs:
         run: xcodebuild clean test -workspace ownCloud.xcworkspace -scheme ownCloud -configuration Debug -destination "${destination}"
         env:
           destination: ${{ matrix.destination }}
-      - name: Archive Failed Tests artifacts
-        if: failure()
+      - name: Archive Failed Tests Artifacts
         uses: actions/upload-artifact@v1
         with:
-          name: FailureDiff
-          path: FailureDiffs
+          name: CI-Artifacts
+          path: Artifacts
