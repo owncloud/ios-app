@@ -43,7 +43,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		var loginMaskSection : StaticTableViewSection
 
 		loginMaskSection = StaticTableViewSection(headerTitle: nil, identifier: "loginMaskSection")
-		loginMaskSection.addStaticHeader(title: profile.welcome!, message: profile.prompt)
+		loginMaskSection.addStaticHeader(title: profile.welcome!, message: profile.promptForPasswordAuth)
 
 		loginMaskSection.add(row: StaticTableViewRow(textFieldWithAction: { [weak self] (row, _, _) in
 			if let value = row.value as? String {
@@ -76,7 +76,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		var tokenMaskSection : StaticTableViewSection
 
 		tokenMaskSection = StaticTableViewSection(headerTitle: nil, identifier: "tokenMaskSection")
-		tokenMaskSection.addStaticHeader(title: profile.name!, message: profile.prompt)
+		tokenMaskSection.addStaticHeader(title: profile.name!, message: profile.promptForTokenAuth)
 
 		if VendorServices.shared.canAddAccount {
 			let (proceedButton, cancelButton) = tokenMaskSection.addButtonFooter(proceedLabel: "Continue", cancelLabel: "Cancel")

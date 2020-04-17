@@ -441,7 +441,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
 
 		let bookmarkRow = self.tableView.cellForRow(at: indexPath)
-		let activityIndicator = UIActivityIndicatorView(style: .white)
+		let activityIndicator = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 
 		var bookmarkRowAccessoryView : UIView?
 

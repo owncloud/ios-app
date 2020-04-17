@@ -29,7 +29,8 @@ class StaticLoginProfile: NSObject {
 	var identifier : StaticLoginProfileIdentifier?
 
 	var name : String?
-	var prompt : String?
+	var promptForPasswordAuth : String?
+	var promptForTokenAuth : String?
 	var welcome : String?
 	var customLogoName : String?
 

@@ -50,7 +50,14 @@ class StaticLoginBundle: NSObject {
 							staticloginProfile.name = name
 						}
 						if let prompt = profile["prompt"] as? String {
-							staticloginProfile.prompt = prompt
+							staticloginProfile.promptForPasswordAuth = prompt
+							staticloginProfile.promptForTokenAuth = prompt
+						}
+						if let promptForPasswordAuth = profile["promptForPasswordAuth"] as? String {
+							staticloginProfile.promptForPasswordAuth = promptForPasswordAuth
+						}
+						if let promptForTokenAuth = profile["promptForTokenAuth"] as? String {
+							staticloginProfile.promptForTokenAuth = promptForTokenAuth
 						}
 						if let welcome = profile["welcome"] as? String {
 							staticloginProfile.welcome = welcome

@@ -28,6 +28,10 @@
 			<string>Welcome to ownCloud.online</string>
 			<key>prompt</key>
 			<string>Enter your username and password:</string>
+			<key>promptForPasswordAuth</key>
+			<string>Enter your username and password:</string>
+			<key>promptForTokenAuth</key>
+			<string>Please log in to authorize the app.</string>
 			<key>bookmarkName</key>
 			<string>ownCloud.online</string>
 			<key>url</key>
