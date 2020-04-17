@@ -19,13 +19,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Bundle Install
-        run: bundle install
-      - name: Install Cocoapods
-        run: gem install cocoapods
+      - name: Select Xcode
+        run: sudo xcode-select -switch /Applications/Xcode_11.4.app
+      - name: Xcode version
+        run: /usr/bin/xcodebuild -version
       - name: Build and Test
         run: |
-          pod install
           ls -la
           xcodebuild clean build -workspace ownCloud.xcworkspace -scheme ownCloud -configuration Debug -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
         env:
