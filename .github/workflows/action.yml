@@ -19,6 +19,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+        submodules: true
       - name: Select Xcode
         run: sudo xcode-select -switch /Applications/Xcode_11.4.app
       - name: Xcode version
