@@ -24,7 +24,7 @@ jobs:
       - name: Install Cocoapods
         run: gem install cocoapods
       - name: Build and Test
-        run: bundle exec fastlane scan --destination "${destination}" --scheme "ownCloud"
+        run: xcodebuild clean test -project ownCloud.xcodeproj -scheme ownCloud -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
         env:
           destination: ${{ matrix.destination }}
           DEVELOPER_DIR: ${{ matrix.xcode }}
