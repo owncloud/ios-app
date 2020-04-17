@@ -25,8 +25,8 @@ jobs:
         run: gem install cocoapods
       - name: Build and Test
         run: |
-        pod install
-        xcodebuild clean test -project ownCloud.xcodeproj -scheme ownCloud -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
+          pod install
+          xcodebuild clean test -project ownCloud.xcodeproj -scheme ownCloud -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
         env:
           destination: ${{ matrix.destination }}
       - name: Archive Failed Tests artifacts
