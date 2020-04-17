@@ -1,0 +1,39 @@
+name: CI
+# This workflow is triggered on pushes to the repository.
+on:
+  push:
+    branches:
+    - fix/*
+    - feature/*
+
+jobs:
+  test:
+    # Job name is Test
+    name: Test
+    # This job runs on macOS
+    runs-on: macOS-latest
+    strategy:
+      matrix:
+        destination: ['platform=iOS Simulator,OS=13.4,name=iPhone 11']
+        xcode: ['/Applications/Xcode_11.4.app/Contents/Developer']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Bundle Install
+        run: bundle install
+      - name: Dependencies
+        run: |
+          bundle exec pod install
+        env:
+          DEVELOPER_DIR: ${{ matrix.xcode }}
+      - name: Build and test
+        run: bundle exec fastlane scan --destination "${destination}" --scheme "ownCloud"
+        env:
+          destination: ${{ matrix.destination }}
+          DEVELOPER_DIR: ${{ matrix.xcode }}
+      - name: Archive Failed Tests artifacts
+        if: failure()
+        uses: actions/upload-artifact@v1
+        with:
+          name: FailureDiff
+          path: ownCloudAppTests/FailureDiffs
