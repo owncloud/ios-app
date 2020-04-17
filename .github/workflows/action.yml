@@ -23,6 +23,8 @@ jobs:
           submodules: true
       - name: Create Failure Directory
         run: mkdir TestResults
+      - name: Install XCTestHTMLReport
+        run: curl -s https://raw.githubusercontent.com/TitouanVanBelle/XCTestHTMLReport/master/install.sh
       - name: Select Xcode
         run: sudo xcode-select -switch /Applications/Xcode_11.4.app
       - name: Xcode version
@@ -37,6 +39,8 @@ jobs:
         run: xcodebuild clean test -workspace ownCloud.xcworkspace -scheme ownCloud -configuration Debug -destination "${destination}" -resultBundlePath TestResults
         env:
           destination: ${{ matrix.destination }}
+      - name: Create XCTestHTMLReport
+        run: xchtmlreport -r TestResults
       - name: Archive Tests Artifacts
         uses: actions/upload-artifact@v1
         with:
