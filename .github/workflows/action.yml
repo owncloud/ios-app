@@ -18,7 +18,7 @@ jobs:
         xcode: ['/Applications/Xcode_11.4.app/Contents/Developer']
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
         submodules: true
       - name: Select Xcode
         run: sudo xcode-select -switch /Applications/Xcode_11.4.app
