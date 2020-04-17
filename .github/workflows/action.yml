@@ -23,6 +23,8 @@ jobs:
         run: sudo xcode-select -switch /Applications/Xcode_11.4.app
       - name: Xcode version
         run: /usr/bin/xcodebuild -version
+      - name: Install Cocoapods
+        run: gem install cocoapods
       - name: Build and Test
         run: |
           ls -la
