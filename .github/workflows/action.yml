@@ -41,10 +41,10 @@ jobs:
           destination: ${{ matrix.destination }}
       - name: Create XCTestHTMLReport
         if: failure()
-          run: xchtmlreport -r TestResults/XCTestResults
+        run: xchtmlreport -r TestResults/XCTestResults
       - name: Upload XCTestHTMLReport Artifacts
         if: failure()
         uses: actions/upload-artifact@v1
         with:
-          name: XCTest HTML Report
+          name: XCTest Report
           path: TestResults/index.html
