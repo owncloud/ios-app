@@ -36,11 +36,11 @@ jobs:
       - name: List Directory
         run: ls -la
       - name: Build and Test
-        run: xcodebuild clean test -workspace ownCloud.xcworkspace -scheme ownCloud -configuration Debug -destination "${destination}" -resultBundlePath TestResults
+        run: xcodebuild clean test -workspace ownCloud.xcworkspace -scheme ownCloud -configuration Debug -destination "${destination}" -resultBundlePath TestResults/XCTestResults
         env:
           destination: ${{ matrix.destination }}
       - name: Create XCTestHTMLReport
-        run: xchtmlreport -r TestResults
+        run: xchtmlreport -r TestResults/XCTestResults
       - name: Archive Tests Artifacts
         if: failure()
         uses: actions/upload-artifact@v1
