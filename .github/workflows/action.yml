@@ -40,7 +40,8 @@ jobs:
         env:
           destination: ${{ matrix.destination }}
       - name: Create XCTestHTMLReport
-        run: xchtmlreport -r TestResults/XCTestResults
+        if: failure()
+          run: xchtmlreport -r TestResults/XCTestResults
       - name: Archive Tests Artifacts
         if: failure()
         uses: actions/upload-artifact@v1
