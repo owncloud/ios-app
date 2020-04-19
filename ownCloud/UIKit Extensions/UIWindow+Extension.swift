@@ -25,7 +25,7 @@ extension UIWindow {
             rootViewController.popToRootViewController(animated: false)
             if let serverListController = rootViewController.topViewController as? ServerListTableViewController {
                 if serverListController.presentedViewController != nil {
-                    serverListController.presentedViewController?.dismiss(animated: false, completion: {
+                    serverListController.dismiss(animated: false, completion: {
                         serverListController.connect(to: bookmark, lastVisibleItemId: Identifier, animated: false)
                     })
                 } else {
