@@ -162,9 +162,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         url.retrieveLinkedItem(with: { (item, bookmark, error) in
-			
+
 			guard let window = application.currentWindow() else { return }
-			
+
 			if item == nil {
 				let alert = UIAlertController.alertControllerForLinkResolution(error: error)
 				window.rootViewController?.present(alert, animated: true)
