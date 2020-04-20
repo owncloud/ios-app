@@ -100,10 +100,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 return
         }
 
-        url.retrieveLinkedItem(with: { (item, bookmark, _) in
-            if let itemID = item?.localID, let bookmark = bookmark, let windowScene = scene as? UIWindowScene {
-                windowScene.windows.first?.display(itemWithID: itemID, in: bookmark)
-            }
+        url.retrieveLinkedItem(with: { (item, bookmark, error) in
+
+			guard let windowScene = scene as? UIWindowScene else { return }
+
+			guard let window =  windowScene.windows.first else { return }
+
+			if item == nil {
+				let alert = UIAlertController.alertControllerForLinkResolution(error: error)
+				window.rootViewController?.present(alert, animated: true)
+			} else {
+				if let itemID = item?.localID, let bookmark = bookmark {
+					windowScene.windows.first?.display(itemWithID: itemID, in: bookmark)
+				}
+			}
         })
     }
 }

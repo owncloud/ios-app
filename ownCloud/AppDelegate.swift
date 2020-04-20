@@ -161,10 +161,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 return false
         }
 
-        url.retrieveLinkedItem(with: { (item, bookmark, _) in
-            if let itemID = item?.localID, let bookmark = bookmark {
-                application.currentWindow()?.display(itemWithID: itemID, in: bookmark)
-            }
+        url.retrieveLinkedItem(with: { (item, bookmark, error) in
+			
+			guard let window = application.currentWindow() else { return }
+			
+			if item == nil {
+				let alert = UIAlertController.alertControllerForLinkResolution(error: error)
+				window.rootViewController?.present(alert, animated: true)
+			} else {
+				if let itemID = item?.localID, let bookmark = bookmark {
+					window.display(itemWithID: itemID, in: bookmark)
+				}
+			}
         })
 
         return true
