@@ -390,6 +390,10 @@ extension ClientRootViewController : OCCoreDelegate {
 					if bookmark.isTokenBased == true {
 						authFailureTitle = "Access denied".localized
 						authFailureMessage = "The connection's access token has expired or become invalid. Sign in again to re-gain access.".localized
+
+						if let localizedDescription = nsError.userInfo[NSLocalizedDescriptionKey] {
+							authFailureMessage = "\(authFailureMessage!)\n\n(\(localizedDescription))"
+						}
 					} else {
 						authFailureMessage = "The server declined access with the credentials stored for this connection.".localized
 					}

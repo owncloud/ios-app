@@ -190,46 +190,55 @@ class MediaUploadQueue : OCActivitySource {
 								}
 
 								// Found a job which requires an import operation
+								var tracking : OCCoreItemTracking?
+
 								if let asset = self.fetchAsset(with: assetId), let path = job.targetPath {
 
 									importGroup.enter()
 
 									// Convert target path to the OCItem object
-									var tracking = core.trackItem(atPath: path) { (_, item, isInitial) in
+									tracking = core.trackItem(atPath: path) { (_, item, isInitial) in
+										OnBackgroundQueue {
+											if isInitial == true {
 
-										if isInitial == true {
+												defer {
+													importGroup.leave()
+												}
 
-											defer {
-												importGroup.leave()
-											}
+												if let rootItem = item {
+													// Perform asset import
+													if let itemLocalId = self.importAsset(asset: asset, using: core, at: rootItem, uploadCompletion: {
 
-											if let rootItem = item {
-												// Perform asset import
-												if let itemLocalId = self.importAsset(asset: asset, using: core, at: rootItem, uploadCompletion: {
+														// Now upload is done and the job can be removed completely
+														bookmark.modifyMediaUploadStorage { (storage) -> MediaUploadStorage in
+															storage.removeJob(with: assetId, targetPath: path)
+															return storage
+														}
 
-													// Now upload is done and the job can be removed completely
-													bookmark.modifyMediaUploadStorage { (storage) -> MediaUploadStorage in
-														storage.removeJob(with: assetId, targetPath: path)
-														return storage
-													}
+													})?.localID as OCLocalID? {
 
-												})?.localID as OCLocalID? {
+														// Update import activity
+														self.updateActivityAfterFinishedImport(for: core)
 
-													// Update import activity
-													self.updateActivityAfterFinishedImport(for: core)
-
-													// Update media upload storage object
-													bookmark.modifyMediaUploadStorage { (storage) in
-														storage.update(localItemID: itemLocalId, assetId: assetId, targetPath: path)
-														return storage
+														// Update media upload storage object
+														bookmark.modifyMediaUploadStorage { (storage) in
+															storage.update(localItemID: itemLocalId, assetId: assetId, targetPath: path)
+															return storage
+														}
 													}
 												}
 											}
 										}
 									}
+
+									if tracking == nil {
+										importGroup.leave()
+									}
 								}
 
 								importGroup.wait()
+
+								Log.debug("Releasing tracking object \(String(describing: tracking))") // Make sure "tracking" is not prematurely dropped - otherwise the handler may never be called and we wait forever
 							}
 						}
 					}
