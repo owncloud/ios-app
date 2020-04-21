@@ -48,3 +48,15 @@ jobs:
         with:
           name: XCTest Report
           path: TestResults/index.html
+      - name: Rocket.Chat Notification
+        uses: RocketChat/Rocket.Chat.GitHub.Action.Notification@master
+        if: failure()
+        with:
+          type: ${{ job.status }}
+          job_name: '*iOS-App CI-Testing Result*'
+          mention: 'here'
+          mention_if: 'failure'
+          channel: '#mobile-ios-ci'
+          url: ${{ secrets.ROCKETCHAT_WEBHOOK }}
+          commit: true
+          token: ${{ secrets.GITHUB_TOKEN }}
