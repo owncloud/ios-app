@@ -26,6 +26,7 @@ struct DisplayViewConfiguration {
 }
 
 enum DisplayViewState {
+	case initial
 	case hasNetworkConnection
 	case noNetworkConnection
 	case downloading(progress: Progress)
@@ -60,14 +61,20 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 		didSet {
 			if let core = core {
-				coreConnectionStatusObservation = core.observe(\OCCore.connectionStatus, options: [.initial, .new]) { [weak self] (core, _) in
-					guard let state = self?.state, case DisplayViewState.notSupportedMimeType = state else {
-						if core.connectionStatus == .online {
-							self?.state = .hasNetworkConnection
-						} else {
-							self?.state = .noNetworkConnection
-						}
 
+				func updateState() {
+					if core.connectionStatus == .online {
+						self.state = .hasNetworkConnection
+					} else {
+						self.state = .noNetworkConnection
+					}
+				}
+
+				updateState()
+
+				coreConnectionStatusObservation = core.observe(\OCCore.connectionStatus, options: [.initial, .new]) { [weak self] (_, _) in
+					guard let state = self?.state, case DisplayViewState.notSupportedMimeType = state else {
+						updateState()
 						return
 					}
 				}
@@ -108,7 +115,15 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	var shallShowPreview = true
 
-	private var state: DisplayViewState = .hasNetworkConnection {
+	private var state: DisplayViewState = .initial {
+		willSet {
+			switch (newValue, state) {
+			case (.hasNetworkConnection, .noNetworkConnection) :
+				updateSource()
+			default:
+				break
+			}
+		}
 		didSet {
 			switch self.state {
 			case .downloading(let progress):
@@ -295,33 +310,39 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		guard let core = core, let item = item else {
 			return
 		}
-
-		if let downloadProgress = core.downloadItem(item, options: [
-			.returnImmediatelyIfOfflineOrUnavailable : true,
-			.addTemporaryClaimForPurpose 		 : OCCoreClaimPurpose.view.rawValue
-		], resultHandler: { [weak self] (error, _, latestItem, file) in
-			guard error == nil else {
-				OnMainThread {
-					if (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
-						self?.state = .noNetworkConnection
-					} else {
-						self?.state = .errorDownloading(error: error!)
+		
+		switch self.state {
+		case .hasNetworkConnection:
+			if let downloadProgress = core.downloadItem(item, options: [
+				.returnImmediatelyIfOfflineOrUnavailable : true,
+				.addTemporaryClaimForPurpose 		 : OCCoreClaimPurpose.view.rawValue
+			], resultHandler: { [weak self] (error, _, latestItem, file) in
+				guard error == nil else {
+					OnMainThread {
+						if (error as NSError?)?.isOCError(withCode: .itemNotAvailableOffline) == true {
+							self?.state = .noNetworkConnection
+						} else {
+							self?.state = .errorDownloading(error: error!)
+						}
 					}
+					return
 				}
-				return
+				self?.state = .downloadFinished
+
+				self?.item = latestItem
+				self?.source = file?.url
+
+				if let claim = file?.claim, let item = latestItem, let self = self {
+					self.core?.remove(claim, on: item, afterDeallocationOf: [self])
+				}
+			}) {
+				self.state = .downloading(progress: downloadProgress)
+
+				self.progressSummarizer?.startTracking(progress: downloadProgress)
 			}
-			self?.state = .downloadFinished
 
-			self?.item = latestItem
-			self?.source = file?.url
-
-			if let claim = file?.claim, let item = latestItem, let self = self {
-				self.core?.remove(claim, on: item, afterDeallocationOf: [self])
-			}
-		}) {
-			self.state = .downloading(progress: downloadProgress)
-
-			self.progressSummarizer?.startTracking(progress: downloadProgress)
+		default:
+			break
 		}
 	}
 
@@ -376,6 +397,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			case .downloadFinished:
 				self.cancelButton?.isHidden = true
 				self.progressView?.isHidden = true
+			default:
+				break
 			}
 		}
 	}
@@ -489,6 +512,30 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
+	private func updateSource() {
+		guard let item = self.item else { return }
+
+		if source == nil || ((lastSourceItemVersion != nil) && (item.itemVersionIdentifier != lastSourceItemVersion) && !item.syncActivity.contains(.downloading)) || item.locallyModified /* || item.localCopyVersionIdentifier != item.itemVersionIdentifier */ {
+			if requiresLocalItemCopy {
+				if core?.localCopy(of: item) == nil { /* || item.localCopyVersionIdentifier != item.itemVersionIdentifier { */
+					self.downloadItem(sender: nil)
+				} else {
+					core?.registerUsage(of: item, completionHandler: nil)
+					if let core = core, let file = item.file(with: core) {
+						self.source = file.url
+					}
+				}
+			} else {
+				core?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (error, url, authHeaders) in
+					if error == nil {
+						self.httpAuthHeaders = authHeaders
+						self.source = url
+					}
+				})
+			}
+		}
+	}
+
 	func present(item: OCItem) {
 		guard self.view != nil, item.removed == false else {
 			return
@@ -506,27 +553,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 				self.startQuery()
 
-				if source == nil || ((lastSourceItemVersion != nil) && (item.itemVersionIdentifier != lastSourceItemVersion) && !item.syncActivity.contains(.downloading)) || item.locallyModified /* || item.localCopyVersionIdentifier != item.itemVersionIdentifier */ {
-					if requiresLocalItemCopy {
-						if core?.localCopy(of: item) == nil { /* || item.localCopyVersionIdentifier != item.itemVersionIdentifier { */
-							self.downloadItem(sender: nil)
-						} else {
-							core?.registerUsage(of: item, completionHandler: nil)
-							if let core = core, let file = item.file(with: core) {
-								self.source = file.url
-							}
-						}
-					} else {
-						core?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (error, url, authHeaders) in
-							if error == nil {
-								self.httpAuthHeaders = authHeaders
-								self.source = url
-							}
-						})
-					}
-				}
-
-				self.updateNavigationBarItems()
+				updateSource()
 		}
 	}
 
