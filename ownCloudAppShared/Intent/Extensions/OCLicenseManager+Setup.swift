@@ -61,18 +61,44 @@ public extension OCLicenseManager {
 		register(OCLicenseProduct(identifier: .bundlePro, name: "Pro Features".localized, description: "Unlock all Pro Features.".localized, contents: [.documentScanner, .shortcuts, .documentMarkup]))
 
 		// Set up App Store License Provider
-		let appStoreLicenseProvider = OCLicenseAppStoreProvider(items: [
-			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentscanner", productIdentifier: .singleDocumentScanner),
-			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.shortcuts", productIdentifier: .singleShortcuts),
-			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentmarkup", productIdentifier: .singleDocumentMarkup),
-			OCLicenseAppStoreItem.subscription(withAppStoreIdentifier: "bundle.pro", productIdentifier: .bundlePro, trialDuration: OCLicenseDuration(unit: .day, length: 14))
-		])
+		if let disableAppStoreLicensing = classSetting(forOCClassSettingsKey: .disableAppStoreLicensing) as? Bool, disableAppStoreLicensing == false {
+			let appStoreLicenseProvider = OCLicenseAppStoreProvider(items: [
+				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentscanner", productIdentifier: .singleDocumentScanner),
+				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.shortcuts", productIdentifier: .singleShortcuts),
+				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentmarkup", productIdentifier: .singleDocumentMarkup),
+				OCLicenseAppStoreItem.subscription(withAppStoreIdentifier: "bundle.pro", productIdentifier: .bundlePro, trialDuration: OCLicenseDuration(unit: .day, length: 14))
+			])
 
-		add(appStoreLicenseProvider)
+			add(appStoreLicenseProvider)
+		}
 
 		// Set up Enterprise Provider
-		let enterpriseProvider = OCLicenseEnterpriseProvider(unlockedProductIdentifiers: [.bundlePro])
+		if let disableEnterpriseLicensing = classSetting(forOCClassSettingsKey: .disableEnterpriseLicensing) as? Bool, disableEnterpriseLicensing == false {
+			let enterpriseProvider = OCLicenseEnterpriseProvider(unlockedProductIdentifiers: [.bundlePro])
 
-		add(enterpriseProvider)
+			add(enterpriseProvider)
+		}
+	}
+}
+
+public extension OCClassSettingsIdentifier {
+	static var licensing : OCClassSettingsIdentifier { return OCClassSettingsIdentifier(rawValue: "licensing") }
+}
+
+public extension OCClassSettingsKey {
+	static var disableAppStoreLicensing : OCClassSettingsKey { return OCClassSettingsKey(rawValue: "disable-appstore-licensing") }
+	static var disableEnterpriseLicensing : OCClassSettingsKey { return OCClassSettingsKey(rawValue: "disable-enterprise-licensing") }
+}
+
+extension OCLicenseManager : OCClassSettingsSupport {
+	public static var classSettingsIdentifier: OCClassSettingsIdentifier {
+		return .licensing
+	}
+
+	public static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
+		return [
+			.disableAppStoreLicensing : false,
+			.disableEnterpriseLicensing : false
+		]
 	}
 }

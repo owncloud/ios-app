@@ -196,11 +196,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 	OCTLogDebug(@[@"Start"], @"Initiating products refresh");
 
-	[self refreshProductsWithCompletionHandler:^(NSError * _Nullable error) {
-		OCTLogDebug(@[@"Start"], @"Products refresh completed with error=%@", error);
-		completionHandler(weakSelf, error);
-	}];
-
+	// Transaction observation
 	if (!_setupTransactionObserver)
 	{
 		// Did setup
@@ -213,6 +209,12 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 		// Add termination notification observer
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_processWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
 	}
+
+	// Refresh products
+	[self refreshProductsWithCompletionHandler:^(NSError * _Nullable error) {
+		OCTLogDebug(@[@"Start"], @"Products refresh completed with error=%@", error);
+		completionHandler(weakSelf, error);
+	}];
 
 	// Load & refresh receipt as needed
 	OCTLogDebug(@[@"Start"], @"Loading receipt");
