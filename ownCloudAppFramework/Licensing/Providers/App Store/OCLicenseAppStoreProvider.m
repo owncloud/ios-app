@@ -56,6 +56,8 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 {
 	if ((self = [super initWithIdentifier:OCLicenseProviderIdentifierAppStore]) != nil)
 	{
+		OCTLogDebug(@[@"Init"], @"Initializing App Store Provider with items %@", items);
+
 		_items = items;
 		_offerStateByAppStoreProductIdentifier = [NSMutableDictionary new];
 
@@ -66,6 +68,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 		__weak OCLicenseAppStoreProvider *weakSelf = self;
 
 		[OCIPNotificationCenter.sharedNotificationCenter addObserver:self forName:OCIPCNotificationNameLicenseAppStoreProviderDataChanged withHandler:^(OCIPNotificationCenter * _Nonnull notificationCenter, id  _Nonnull observer, OCIPCNotificationName  _Nonnull notificationName) {
+			OCLogDebug(@"Received AppStoreProviderDataChanged notification");
 			[weakSelf loadReceipt];
 		}];
 	}
@@ -81,7 +84,11 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 #pragma mark - Purchases allowed
 - (BOOL)purchasesAllowed
 {
-	return (SKPaymentQueue.canMakePayments);
+	BOOL purchasesAllowed = SKPaymentQueue.canMakePayments;
+
+	OCLogDebug(@"purchasesAllowed=%d", purchasesAllowed);
+
+	return (purchasesAllowed);
 }
 
 #pragma mark - Mapping
@@ -111,14 +118,19 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 #pragma mark - Transaction access
 - (void)retrieveTransactionsWithCompletionHandler:(void (^)(NSError * _Nullable, NSArray<OCLicenseTransaction *> * _Nullable))completionHandler
 {
+	OCTLogDebug(@[@"RetrieveTransactions"], @"Started retrieval..");
+
 	if (self.receipt == nil)
 	{
+		OCTLogDebug(@[@"RetrieveTransactions"], @"No receipt found - restoring purchases");
 		[self restorePurchasesWithCompletionHandler:^(NSError * _Nullable error) {
+			OCTLogDebug(@[@"RetrieveTransactions"], @"Restore completed with error=%@, receipt=%@", error, self.receipt);
 			completionHandler(error, [self _transactionsFromReceipt:self.receipt]);
 		}];
 	}
 	else
 	{
+		OCTLogDebug(@[@"RetrieveTransactions"], @"Completed with existing receipt=%@", self.receipt);
 		completionHandler(nil, [self _transactionsFromReceipt:self.receipt]);
 	}
 }
@@ -171,16 +183,21 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 #pragma mark - Start providing
 - (void)startProvidingWithCompletionHandler:(OCLicenseProviderCompletionHandler)completionHandler
 {
+	OCTLogDebug(@[@"Start"], @"Start providing");
+
 	if (!SKPaymentQueue.canMakePayments)
 	{
-		OCLogWarning(@"SKPaymentQueue: can't make payments");
+		OCTLogWarning(@[@"Start"], @"SKPaymentQueue: can't make payments");
 		completionHandler(self, nil);
 		return;
 	}
 
 	__weak OCLicenseAppStoreProvider *weakSelf = self;
 
+	OCTLogDebug(@[@"Start"], @"Initiating products refresh");
+
 	[self refreshProductsWithCompletionHandler:^(NSError * _Nullable error) {
+		OCTLogDebug(@[@"Start"], @"Products refresh completed with error=%@", error);
 		completionHandler(weakSelf, error);
 	}];
 
@@ -190,6 +207,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 		_setupTransactionObserver = YES;
 
 		// Add the provider as transaction observer
+		OCTLogDebug(@[@"Start"], @"Adding SKPaymentQueue transaction observer");
 		[SKPaymentQueue.defaultQueue addTransactionObserver:self]; // needs to be called in -[UIApplicationDelegate application:didFinishLaunchingWithOptions:] to not miss a transaction
 
 		// Add termination notification observer
@@ -197,7 +215,10 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 	}
 
 	// Load & refresh receipt as needed
+	OCTLogDebug(@[@"Start"], @"Loading receipt");
 	[self loadReceipt];
+
+	OCTLogDebug(@[@"Start"], @"Reloading receipt if needed");
 	[self reloadReceiptIfNeeded];
 }
 
@@ -218,19 +239,21 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 - (void)loadReceipt
 {
+	OCTLogDebug(@[@"LoadReceipt"], @"Loading App Store Receipt");
+
 	OCLicenseAppStoreReceipt *receipt = OCLicenseAppStoreReceipt.defaultReceipt;
 	OCLicenseAppStoreReceiptParseError parseError;
 
 	if ((parseError = [receipt parse]) != OCLicenseAppStoreReceiptParseErrorNone)
 	{
-		OCLogError(@"Error %ld parsing App Store receipt.", (long)parseError);
+		OCTLogError(@[@"LoadReceipt"], @"Error %ld parsing App Store receipt.", (long)parseError);
 	}
 
 	[self willChangeValueForKey:@"receipt"];
 	_receipt = receipt;
 	[self didChangeValueForKey:@"receipt"];
 
-	OCLogDebug(@"App Store Receipt loaded: %@", _receipt);
+	OCTLogDebug(@[@"LoadReceipt"], @"App Store Receipt loaded: %@", _receipt);
 
 	[self recomputeEntitlements];
 	[self recomputeOffers];
@@ -238,6 +261,8 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 - (void)setReceiptNeedsReload
 {
+	OCTLogDebug(@[@"SetReceiptNeedsReload"], @"setReceiptNeedsReload was called");
+
 	@synchronized(self)
 	{
 		_appStoreReceiptNeedsReload = YES;
@@ -250,6 +275,8 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 - (void)reloadReceiptIfNeeded
 {
+	OCTLogDebug(@[@"ReloadReceiptIfNeeded"], @"reloadReceiptIfNeeded was called");
+
 	OCLicenseAppStoreReceipt *receipt = self.receipt;
 	BOOL needsReload = NO;
 
@@ -258,6 +285,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 		if ((receipt.expirationDate != nil) && (receipt.expirationDate.timeIntervalSinceNow < 0))
 		{
 			// Receipt expired
+			OCTLogDebug(@[@"ReloadReceiptIfNeeded"], @"Receipt expired as of %@ - reload needed", receipt.expirationDate);
 			needsReload = YES;
 		}
 		else
@@ -268,6 +296,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 				   ([iap.subscriptionExpirationDate timeIntervalSinceDate:receipt.creationDate] > 0)) // The receipt was created before the IAP has expired
 				{
 					// Subscription expired
+					OCTLogDebug(@[@"ReloadReceiptIfNeeded"], @"Subscription %@ expired as of %@ - reload needed", iap.productID, iap.subscriptionExpirationDate);
 					needsReload = YES;
 					break;
 				}
@@ -285,17 +314,18 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 	if (needsReload || reloadRequested)
 	{
-		OCLogDebug(@"App Store Receipt needs reload");
+		OCTLogDebug(@[@"ReloadReceiptIfNeeded"], @"App Store Receipt needsReload=%d and reloadRequested=%d", needsReload, reloadRequested);
 
 		[self restorePurchasesWithCompletionHandler:^(NSError * _Nullable error) {
-			OCLogDebug(@"Restored purchases with error=%@", error);
+			OCTLogDebug(@[@"ReloadReceiptIfNeeded"], @"Restored purchases with error=%@", error);
 
 			if (error != nil)
 			{
-				OCLogError(@"Error restoring purchases: %@", error);
+				OCTLogError(@[@"ReloadReceiptIfNeeded"], @"Error restoring purchases: %@", error);
 				return;
 			}
 
+			OCTLogDebug(@[@"ReloadReceiptIfNeeded"], @"Loading receipt");
 			[self loadReceipt];
 		}];
 	}
@@ -309,6 +339,8 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 - (void)stopProvidingWithCompletionHandler:(OCLicenseProviderCompletionHandler)completionHandler
 {
+	OCTLogDebug(@[@"Stop"], @"Stopping provider");
+
 	// Cancel product request if still ongoing
 	if (_request != nil)
 	{
@@ -319,6 +351,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 	if (_setupTransactionObserver)
 	{
 		// Remove provider as transaction observer
+		OCTLogDebug(@[@"Stop"], @"Removing transaction observer");
 		[SKPaymentQueue.defaultQueue removeTransactionObserver:self];
 
 		// Remove termination notification observer
@@ -331,6 +364,8 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 {
 	OCLicenseAppStoreReceipt *receipt = _receipt;
 	NSMutableArray<OCLicenseEntitlement *> *entitlements = [NSMutableArray new];
+
+	OCTLogDebug(@[@"Entitlements"], @"Recomputing entitlements…");
 
 	for (OCLicenseAppStoreItem *item in self.items)
 	{
@@ -388,6 +423,8 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 {
 	// Create offers from items
 	NSMutableArray<OCLicenseOffer *> *offers = [NSMutableArray new];
+
+	OCTLogDebug(@[@"Offers"], @"Recomputing offers…");
 
 	for (OCLicenseAppStoreItem *item in _items)
 	{
@@ -498,6 +535,8 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 		[appStoreIdentifiers addObject:item.identifier];
 	}
 
+	OCTLogDebug(@[@"RefreshProducts"], @"Refreshing products %@…", appStoreIdentifiers);
+
 	// Store completion handler and start request if needed
 	@synchronized(self)
 	{
@@ -526,18 +565,26 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 - (void)refreshProductsIfNeededWithCompletionHandler:(OCLicenseAppStoreRefreshProductsCompletionHandler)completionHandler
 {
+	OCTLogDebug(@[@"RefreshProducts"], @"Refreshing products if needed");
+
 	if ((self.offers.count == 0) && self.purchasesAllowed)
 	{
+		OCTLogDebug(@[@"RefreshProducts"], @"Refreshing products as there are no offers available");
+
 		[self refreshProductsWithCompletionHandler:completionHandler];
 	}
 	else
 	{
+		OCTLogDebug(@[@"RefreshProducts"], @"Offers available - not refreshing products");
+
 		completionHandler(nil);
 	}
 }
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
 {
+	OCTLogDebug(@[@"RefreshProducts"], @"Request %@ received response %@", request, response);
+
 	// Called on success
 	self.response = response;
 
@@ -563,7 +610,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 	@synchronized(self)
 	{
-		OCLogDebug(@"App Store request %@ finished", request);
+		OCTLogDebug(@[@"Request"], @"App Store request %@ finished", request);
 
 		if (_productsRefreshCompletionHandler != nil)
 		{
@@ -583,7 +630,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 	// Called last on error
 	@synchronized(self)
 	{
-		OCLogWarning(@"App Store request %@ failed with error %@", request, error);
+		OCTLogError(@[@"Request"], @"App Store request %@ failed with error %@", request, error);
 
 		if (_productsRefreshCompletionHandler != nil)
 		{
@@ -603,7 +650,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 {
 	SKPayment *payment;
 
-	OCLogDebug(@"Requesting payment for %@ (productIdentifier=%@)", product, product.productIdentifier);
+	OCTLogDebug(@[@"Payment"], @"Requesting payment for %@ (productIdentifier=%@)", product, product.productIdentifier);
 
 	if ((product != nil) && ((payment = [SKPayment paymentWithProduct:product]) != nil))
 	{
@@ -615,7 +662,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 // Sent when the transaction array has changed (additions or state changes).  Client should check state of transactions and finish as appropriate.
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray<SKPaymentTransaction *> *)transactions
 {
-	OCLogDebug(@"Payment queue updated with transactions %@", transactions);
+	OCTLogDebug(@[@"Payment"], @"Payment queue updated with transactions %@", transactions);
 
 	for (SKPaymentTransaction *originalTransaction in transactions)
 	{
@@ -624,12 +671,16 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 		NSError *error = nil;
 		BOOL finishTransaction = NO;
 
+		OCTLogDebug(@[@"Payment"], @"Handling transaction %@ (%@)", transaction, transaction.transactionIdentifier);
+
 		// Restored transaction => use the original transaction if available
 		if ((transaction.transactionState == SKPaymentTransactionStateRestored) && (transaction.originalTransaction != nil))
 		{
 			// Transaction has been restored
 			transaction = transaction.originalTransaction;
 			finishTransaction = YES;
+
+			OCTLogDebug(@[@"Payment"], @"Transaction has been restored - henceforth working with originalTransaction %@ (%@)", transaction, transaction.transactionIdentifier);
 		}
 
 		// Fall back to any existing offer state
@@ -651,29 +702,38 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 		{
 			case SKPaymentTransactionStatePurchasing:
 				offerState = OCLicenseOfferStateInProgress;
+
+				OCTLogDebug(@[@"Payment"], @"TransactionState=Purchasing for %@ (%@)", transaction, transaction.transactionIdentifier);
+
 				// Calling finishTransaction here throws an exception (via documentation)
 			break;
 
 			case SKPaymentTransactionStateDeferred:
 				offerState = OCLicenseOfferStateInProgress;
+
+				OCTLogDebug(@[@"Payment"], @"TransactionState=Deferred for %@ (%@)", transaction, transaction.transactionIdentifier);
 			break;
 
 			case SKPaymentTransactionStatePurchased:
 				offerState = OCLicenseOfferStateCommitted;
 				finishTransaction = YES;
+
+				OCTLogDebug(@[@"Payment"], @"TransactionState=Purchased for %@ (%@)", transaction, transaction.transactionIdentifier);
 			break;
 
 			case SKPaymentTransactionStateFailed:
-				OCLogError(@"Transaction failed with error=%@", transaction.error);
-
 				error = transaction.error;
 
 				offerState = OCLicenseOfferStateUncommitted;
 				finishTransaction = YES;
+
+				OCTLogError(@[@"Payment"], @"TransactionState=Failed for %@ (%@), error=%@", transaction, transaction.transactionIdentifier, transaction.error);
 			break;
 
 			case SKPaymentTransactionStateRestored:
-				OCLogWarning(@"Restored App Store transaction without original? %@ %@", transaction, transaction.originalTransaction);
+				finishTransaction = YES;
+
+				OCTLogWarning(@[@"Payment"], @"TransactionState=Restored for %@ (%@) - original: %@ (%@)", transaction, transaction.transactionIdentifier, originalTransaction, originalTransaction.transactionIdentifier);
 			break;
 		}
 
@@ -699,6 +759,8 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 		}
 
 		// Finish transaction and remove it from the SKPaymentQueue
+		OCTLogDebug(@[@"Payment"], @"Finishing (%d) transaction %@ (%@)", finishTransaction, originalTransaction, originalTransaction.transactionIdentifier);
+
 		if (finishTransaction)
 		{
 			[SKPaymentQueue.defaultQueue finishTransaction:originalTransaction];
@@ -707,7 +769,9 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 		// Reload receipt
 		if ((appStoreProductIdentifier != nil) && finishTransaction && (offerState == OCLicenseOfferStateCommitted))
 		{
+			OCTLogDebug(@[@"Payment"], @"Reloading receipt");
 			[self loadReceipt];
+
 			[self _ipcNotifyToReloadReceipt];
 		}
 
@@ -729,7 +793,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 #pragma mark - Restore IAPs
 - (void)restorePurchasesWithCompletionHandler:(OCLicenseAppStoreRestorePurchasesCompletionHandler)completionHandler
 {
-	OCLogDebug(@"Restoring purchases");
+	OCTLogDebug(@[@"RestorePurchases"], @"Restoring purchases…");
 
 	@synchronized(self)
 	{
@@ -755,7 +819,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 - (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error
 {
-	OCLogWarning(@"Payment queue restore failed with error %@", error);
+	OCTLogError(@[@"RestorePurchases"], @"Payment queue restore failed with error %@", error);
 
 	@synchronized(self)
 	{
@@ -772,7 +836,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 - (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
 {
-	OCLogDebug(@"Payment queue restore completed successfully");
+	OCTLogDebug(@[@"RestorePurchases"], @"Payment queue restore completed successfully");
 
 	@synchronized(self)
 	{
