@@ -317,6 +317,8 @@
 		DCB44D852186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */; };
 		DCB44D87218718BA00DAA4CC /* VendorServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB44D86218718BA00DAA4CC /* VendorServices.swift */; };
 		DCB504DD221EF07F007638BE /* status-flash.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCB504D7221EF07E007638BE /* status-flash.tvg */; };
+		DCB6C4D72453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6C4D62453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift */; };
+		DCB6C4DE24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6C4DD24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift */; };
 		DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */; };
 		DCC085652293F1FD008CC05C /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
 		DCC0856E2293F1FD008CC05C /* ownCloudApp.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC0855E2293F1FD008CC05C /* ownCloudApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1078,6 +1080,8 @@
 		DCB44D842186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeStyle+DefaultStyles.swift"; sourceTree = "<group>"; };
 		DCB44D86218718BA00DAA4CC /* VendorServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VendorServices.swift; sourceTree = "<group>"; };
 		DCB504D7221EF07E007638BE /* status-flash.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "status-flash.tvg"; path = "img/filetypes-tvg/status-flash.tvg"; sourceTree = SOURCE_ROOT; };
+		DCB6C4D62453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientAuthenticationUpdater.swift; sourceTree = "<group>"; };
+		DCB6C4DD24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientAuthenticationUpdaterViewController.swift; sourceTree = "<group>"; };
 		DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySettingsSection.swift; sourceTree = "<group>"; };
 		DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ownCloudApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC0855E2293F1FD008CC05C /* ownCloudApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ownCloudApp.h; sourceTree = "<group>"; };
@@ -1877,6 +1881,8 @@
 				DC63208221FCAC1E007EC0A8 /* ClientActivityViewController.swift */,
 				DC3BE0DD2077CC13002A0AC0 /* ClientRootViewController.swift */,
 				DC3BE0DC2077CC13002A0AC0 /* ClientQueryViewController.swift */,
+				DCB6C4D62453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift */,
+				DCB6C4DD24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift */,
 				23FA23E520BFD3D8009A6D73 /* SortBar.swift */,
 				4C6B780F2226B83300C5F3DB /* PhotoAlbumTableViewController.swift */,
 				4C6B78112226B86300C5F3DB /* PhotoAlbumTableViewCell.swift */,
@@ -3355,6 +3361,7 @@
 				39BC9C3023DB831F0097C52D /* DocumentEditingAction.swift in Sources */,
 				DC85493421831B0B00782BA8 /* Tools.swift in Sources */,
 				DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */,
+				DCB6C4D72453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift in Sources */,
 				39E98B452279ACF5009911F1 /* PublicLinkEditTableViewController.swift in Sources */,
 				4C63F0E5231A91230088E8CA /* UIImageView+Thumbnails.swift in Sources */,
 				39265BB223D9987500B0C4CA /* MediaEditingAction.swift in Sources */,
@@ -3391,6 +3398,7 @@
 				397754F82327A33500119FCB /* OpenSceneAction.swift in Sources */,
 				4CAF783C2282FD40000C85CF /* FileManager+Extension.swift in Sources */,
 				DCEE1C9C23A0EADD00FE8D98 /* LicenseOfferView.swift in Sources */,
+				DCB6C4DE24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift in Sources */,
 				6E3A104D219D6F0100F90C96 /* DuplicateAction.swift in Sources */,
 				DC1B270A209CF0D3004715E1 /* ConnectionIssueViewController.swift in Sources */,
 				DC0B37972051681600189B9A /* ThemeButton.swift in Sources */,

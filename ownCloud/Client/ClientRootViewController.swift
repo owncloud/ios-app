@@ -449,9 +449,30 @@ extension ClientRootViewController : OCCoreDelegate {
 						alertController.addAction(UIAlertAction(title: "Sign in".localized, style: .default, handler: { (_) in
 							queueCompletionHandler()
 
-							if let authDelegate = self?.authDelegate, let self = self, let nsError = nsError {
-								authDelegate.handleAuthError(for: self, error: nsError, editBookmark: editBookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
+							var notifyAuthDelegate = true
+
+							if let bookmark = self?.bookmark {
+								let updater = ClientAuthenticationUpdater(with: bookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
+
+								if updater.canUpdateInline, let self = self {
+									notifyAuthDelegate = false
+
+									updater.updateAuthenticationData(on: self, completion: { (error) in
+										if error == nil {
+											OCSynchronized(self) {
+												self.skipAuthorizationFailure = false // Auth failure fixed -> allow new failures to prompt for sign in again
+											}
+										}
+									})
+								}
 							}
+
+							if notifyAuthDelegate {
+								if let authDelegate = self?.authDelegate, let self = self, let nsError = nsError {
+									authDelegate.handleAuthError(for: self, error: nsError, editBookmark: editBookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
+								}
+							}
+
 						}))
 					}
 
