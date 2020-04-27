@@ -123,9 +123,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UIApplication.shared.setMinimumBackgroundFetchInterval(
 			UIApplication.backgroundFetchIntervalMinimum)
 
-        // Set UNUserNotificationCenterDelegate
-        UNUserNotificationCenter.current().delegate = self
-
 		return true
 	}
 
