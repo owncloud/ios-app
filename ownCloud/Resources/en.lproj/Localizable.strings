@@ -426,6 +426,8 @@
 "shared" = "shared";
 "Owner" = "Owner";
 "Private Link" = "Private Link";
+"Created Public Link" = "Created Public Link";
+"URL was copied to the clipboard" = "URL was copied to the clipboard";
 
 /* Quick Access view */
 "Quick Access" = "Quick Access";

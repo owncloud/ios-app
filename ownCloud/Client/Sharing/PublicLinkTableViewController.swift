@@ -173,6 +173,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 					OnMainThread {
 						let privateLinkRow = StaticTableViewRow(buttonWithAction: { (row, _) in
 							UIPasteboard.general.url = url
+							NotificationManager.showNotification(title: "Private Link".localized, body: "URL was copied to the clipboard".localized, identifier: "PublicLinkCreation")
 							row.cell?.textLabel?.text = url.absoluteString
 							row.cell?.textLabel?.font = UIFont.systemFont(ofSize: 15.0)
 							row.cell?.textLabel?.textColor = Theme.shared.activeCollection.tableRowColors.secondaryLabelColor
@@ -231,6 +232,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 				UITableViewRowAction(style: .normal, title: "Copy".localized, handler: { (_, _) in
 					if let shareURL = share.url {
 						UIPasteboard.general.url = shareURL
+						NotificationManager.showNotification(title: share.name ?? "Public Link".localized, body: "URL was copied to the clipboard".localized, identifier: "PublicLinkCreation")
 					}
 				})
 			]

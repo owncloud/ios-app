@@ -22,7 +22,7 @@ import ownCloudApp
 import ownCloudAppShared
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
 	var window: ThemeWindow?
 	var serverListTableViewController: ServerListTableViewController?
@@ -123,6 +123,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UIApplication.shared.setMinimumBackgroundFetchInterval(
 			UIApplication.backgroundFetchIntervalMinimum)
 
+        // Set UNUserNotificationCenterDelegate
+        UNUserNotificationCenter.current().delegate = self
+
 		return true
 	}
 
@@ -166,4 +169,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	@available(iOS 13.0, *)
 	func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
 	}
+
+	// MARK: Notification Center Delegate
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .badge, .sound])
+
+		// Remove delivered notifications immediately from the center, because we want to show them only In-App and not in the global notification center
+		center.removeAllDeliveredNotifications()
+    }
 }
