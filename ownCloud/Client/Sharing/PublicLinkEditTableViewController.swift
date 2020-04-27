@@ -654,7 +654,7 @@ class PublicLinkEditTableViewController: StaticTableViewController {
 				if error == nil {
 					if let shareURL = createdShare?.url {
 						UIPasteboard.general.url = shareURL
-						NotificationManager.showNotification(title: "Created Public Link".localized, body: "URL was copied to the clipboard".localized, identifier: "PublicLinkCreation")
+						_ = NotificationViewController(on: self, title: "Created Public Link".localized, subtitle: "URL was copied to the clipboard".localized)
 					}
 					OnMainThread {
 						self.dismissAnimated()
