@@ -36,10 +36,15 @@ class AlertOption : NSObject {
 }
 
 class AlertView: UIView, Themeable {
+	var localizedHeader : String?
+
 	var localizedTitle : String
 	var localizedDescription : String
 
 	var options : [AlertOption]
+
+	var headerLabel : UILabel = UILabel()
+	var headerContainer : UIView = UIView()
 
 	var titleLabel : UILabel = UILabel()
 	var descriptionLabel : UILabel = UILabel()
@@ -47,7 +52,8 @@ class AlertView: UIView, Themeable {
 
 	var optionViews : [ThemeButton] = []
 
-	init(localizedTitle: String, localizedDescription: String, options: [AlertOption]) {
+	init(localizedHeader: String? = nil, localizedTitle: String, localizedDescription: String, options: [AlertOption]) {
+		self.localizedHeader = localizedHeader
 		self.localizedTitle = localizedTitle
 		self.localizedDescription = localizedDescription
 		self.options = options
@@ -97,15 +103,22 @@ class AlertView: UIView, Themeable {
 	}
 
 	func prepareViewAndConstraints() {
+		headerLabel.numberOfLines = 1
+		headerLabel.translatesAutoresizingMaskIntoConstraints = false
 		titleLabel.numberOfLines = 0
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		descriptionLabel.numberOfLines = 0
 		descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
 
+		headerLabel.text = localizedHeader
 		titleLabel.text = localizedTitle
 		descriptionLabel.text = localizedDescription
 
+		headerLabel.font = .systemFont(ofSize: 14, weight: .regular)
+		headerLabel.textColor = .gray
+
 		titleLabel.font = .systemFont(ofSize: 17, weight: .semibold)
+
 		descriptionLabel.font = .systemFont(ofSize: 14)
 		descriptionLabel.textColor = .gray
 
@@ -129,15 +142,38 @@ class AlertView: UIView, Themeable {
 		self.addSubview(descriptionLabel)
 		self.addSubview(optionStackView)
 
+		headerLabel.setContentHuggingPriority(.required, for: .vertical)
 		titleLabel.setContentHuggingPriority(.required, for: .vertical)
 		descriptionLabel.setContentHuggingPriority(.required, for: .vertical)
+
+		headerLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 		titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 		descriptionLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
 		let enclosure = self.safeAreaLayoutGuide
 
+		if localizedHeader != nil {
+			headerContainer.translatesAutoresizingMaskIntoConstraints = false
+			headerContainer.setContentCompressionResistancePriority(.required, for: .vertical)
+			headerContainer.setContentHuggingPriority(.required, for: .vertical)
+
+			headerContainer.addSubview(headerLabel)
+			self.addSubview(headerContainer)
+
+			NSLayoutConstraint.activate([
+				headerLabel.leftAnchor.constraint(equalTo: headerContainer.leftAnchor, constant: 20),
+				headerLabel.rightAnchor.constraint(equalTo: headerContainer.rightAnchor, constant: -20),
+				headerLabel.topAnchor.constraint(equalTo: headerContainer.topAnchor, constant: 7),
+				headerLabel.bottomAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: -7),
+
+				headerContainer.topAnchor.constraint(equalTo: enclosure.topAnchor),
+				headerContainer.leftAnchor.constraint(equalTo: enclosure.leftAnchor),
+				headerContainer.rightAnchor.constraint(equalTo: enclosure.rightAnchor)
+			])
+		}
+
 		NSLayoutConstraint.activate([
-			titleLabel.topAnchor.constraint(equalTo: enclosure.topAnchor, constant: 20),
+			titleLabel.topAnchor.constraint(equalTo: ((localizedHeader != nil) ? headerContainer.bottomAnchor : enclosure.topAnchor), constant: 20),
 			titleLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -5),
 			descriptionLabel.bottomAnchor.constraint(equalTo: optionStackView.topAnchor, constant: -20),
 			optionStackView.bottomAnchor.constraint(equalTo: enclosure.bottomAnchor, constant: -20),
@@ -154,8 +190,12 @@ class AlertView: UIView, Themeable {
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		self.headerLabel.applyThemeCollection(collection)
 		self.titleLabel.applyThemeCollection(collection)
 		self.descriptionLabel.applyThemeCollection(collection)
+
+		self.headerContainer.backgroundColor = collection.navigationBarColors.backgroundColor
+		self.headerLabel.textColor = collection.navigationBarColors.secondaryLabelColor
 
 		var idx : Int = 0
 

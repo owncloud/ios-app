@@ -21,8 +21,8 @@ import ownCloudSDK
 import ownCloudApp
 
 protocol ClientSessionManagerDelegate : class {
-	func canOpenSession(for bookmark: OCBookmark) -> Bool
-	func openSession(for bookmark: OCBookmark, present message: OCMessage?)
+	func canPresent(bookmark: OCBookmark, message: OCMessage?) -> OCMessagePresentationPriority
+	func present(bookmark: OCBookmark, message: OCMessage?)
 }
 
 class ClientSessionManager: NSObject {
@@ -70,32 +70,31 @@ class ClientSessionManager: NSObject {
 
 	@objc func showMessage(notification: Notification) {
 		if let message = notification.object as? OCMessage {
-			// Find active client session
-			var targetClient : ClientRootViewController?
+			// Ask delegates if they can open a session to present the issue
+			if let bookmarkUUID = message.bookmarkUUID, let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
+				let delegates = self.delegates.allObjects
 
-			if let bookmarkUUID = message.bookmarkUUID {
-				if let clients = self.clientViewControllersByBookmarkUUID[bookmarkUUID], clients.count > 0 {
-					targetClient = clients.anyObject
-				}
-			}
+				OnMainThread {
+					var presentationDelegate : ClientSessionManagerDelegate?
+					var presentationPriority : OCMessagePresentationPriority = .wontPresent
 
-			if let cardMessagePresenter = targetClient?.cardMessagePresenter {
-				// Present in active client session
-				OCMessageQueue.global.present(message, with: cardMessagePresenter)
-			} else {
-				// Ask delegates if they can open a session to present the issue
-				if let bookmarkUUID = message.bookmarkUUID, let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
-					let delegates = self.delegates.allObjects
+					// Find the best place for presentation
+					for delegate in delegates {
+						if let delegate = delegate as? ClientSessionManagerDelegate {
+							let priority : OCMessagePresentationPriority = delegate.canPresent(bookmark: bookmark, message: message)
 
-					OnMainThread {
-						for delegate in delegates {
-							if let delegate = delegate as? ClientSessionManagerDelegate {
-								if delegate.canOpenSession(for: bookmark) {
-									delegate.openSession(for: bookmark, present: message)
-									return
+							if priority != .wontPresent {
+								if priority.rawValue > presentationPriority.rawValue {
+									presentationDelegate = delegate
+									presentationPriority = priority
 								}
 							}
 						}
+					}
+
+					// Present
+					if presentationPriority != .wontPresent, let presentationDelegate = presentationDelegate {
+						presentationDelegate.present(bookmark: bookmark, message: message)
 					}
 				}
 			}

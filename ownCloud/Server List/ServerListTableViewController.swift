@@ -514,13 +514,23 @@ class ServerListTableViewController: UITableViewController, Themeable {
 						self.resetPreviousBookmarkSelection(bookmark)
 
 						// Present message if one was provided
-						if let message = message, let cardMessagePresenter = clientRootViewController.cardMessagePresenter {
-							OnMainThread { // Wait for next runloop cycle
-								OCMessageQueue.global.present(message, with: cardMessagePresenter)
-							}
+						if let message = message {
+							self.presentInClient(message: message)
 						}
 					})
 				}
+			}
+		}
+	}
+
+	var clientViewController : ClientRootViewController? {
+		return self.presentedViewController as? ClientRootViewController
+	}
+
+	func presentInClient(message: OCMessage) {
+		if let cardMessagePresenter = clientViewController?.cardMessagePresenter {
+			OnMainThread { // Wait for next runloop cycle
+				OCMessageQueue.global.present(message, with: cardMessagePresenter)
 			}
 		}
 	}
@@ -753,12 +763,38 @@ extension ServerListTableViewController : ClientRootViewControllerAuthentication
 }
 
 extension ServerListTableViewController : ClientSessionManagerDelegate {
-	func canOpenSession(for bookmark: OCBookmark) -> Bool {
-		return !isLocked(bookmark: bookmark) && (presentedViewController == nil)
+	func canPresent(bookmark: OCBookmark, message: OCMessage?) -> OCMessagePresentationPriority {
+		if let themeWindow = self.viewIfLoaded?.window as? ThemeWindow, themeWindow.themeWindowInForeground {
+			if !isLocked(bookmark: bookmark) {
+				if presentedViewController == nil {
+					return .high
+				} else {
+					if let clientViewController = self.clientViewController {
+						if clientViewController.bookmark.uuid == bookmark.uuid {
+							return .high
+						} else {
+							return .default
+						}
+					}
+				}
+			}
+
+			return .low
+		}
+
+		return .wontPresent
 	}
 
-	func openSession(for bookmark: OCBookmark, present message: OCMessage?) {
-		self.connect(to: bookmark, lastVisibleItemId: nil, animated: true, present: message)
+	func present(bookmark: OCBookmark, message: OCMessage?) {
+		OnMainThread {
+			if self.presentedViewController == nil {
+				self.connect(to: bookmark, lastVisibleItemId: nil, animated: true, present: message)
+			} else {
+				if self.clientViewController != nil, let message = message {
+					self.presentInClient(message: message)
+				}
+			}
+		}
 	}
 }
 

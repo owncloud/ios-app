@@ -19,6 +19,7 @@
 import UIKit
 
 class AlertViewController: UIViewController, Themeable {
+	var localizedHeader : String?
 	var localizedTitle : String
 	var localizedDescription : String
 
@@ -29,7 +30,8 @@ class AlertViewController: UIViewController, Themeable {
 
 	var dismissHandler : (() -> Void)?
 
-	init(localizedTitle: String, localizedDescription: String, options: [AlertOption], dismissHandler: (() -> Void)? = nil) {
+	init(localizedHeader: String? = nil, localizedTitle: String, localizedDescription: String, options: [AlertOption], dismissHandler: (() -> Void)? = nil) {
+		self.localizedHeader = localizedHeader
 		self.localizedTitle = localizedTitle
 		self.localizedDescription = localizedDescription
 		self.options = options
@@ -54,7 +56,7 @@ class AlertViewController: UIViewController, Themeable {
 	}
 
 	override func loadView() {
-		alertView = AlertView(localizedTitle: localizedTitle, localizedDescription: localizedDescription, options: options)
+		alertView = AlertView(localizedHeader: localizedHeader, localizedTitle: localizedTitle, localizedDescription: localizedDescription, options: options)
 		self.view = alertView
 	}
 

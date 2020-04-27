@@ -205,6 +205,11 @@
             value = "false"
             isEnabled = "NO">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:connection.connection-allowed-authentication-methods"
+            value = "[com.owncloud.basicauth]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
          <AdditionalOption

@@ -21,14 +21,15 @@ import ownCloudSDK
 
 class CardIssueMessagePresenter: OCMessagePresenter {
 
+	typealias CardIssueMessagePresenterViewControllerPresenter = (UIViewController) -> Void
+
 	var bookmarkUUID : OCBookmarkUUID
-	var presenter : (UIViewController) -> Void
+	var presenter : CardIssueMessagePresenterViewControllerPresenter
 
 	var isShowingCard : Bool = false
 	var oneCardLimit : Bool
 
-	init(with bookmarkUUID: OCBookmarkUUID, limitToSingleCard: Bool, presenter: @escaping (UIViewController) -> Void) {
-
+	init(with bookmarkUUID: OCBookmarkUUID, limitToSingleCard: Bool, presenter: @escaping CardIssueMessagePresenterViewControllerPresenter) {
 		self.bookmarkUUID = bookmarkUUID
 		self.oneCardLimit = limitToSingleCard
 		self.presenter = presenter
@@ -68,7 +69,15 @@ class CardIssueMessagePresenter: OCMessagePresenter {
 		}
 
 		if let syncIssue = message.syncIssue {
-			let alertViewController = AlertViewController(localizedTitle: syncIssue.localizedTitle, localizedDescription: syncIssue.localizedDescription ?? "", options: options, dismissHandler: { [weak self] in
+			var localizedHeader : String?
+
+			if let messageBookmarkUUID = message.bookmarkUUID, (bookmarkUUID as UUID) != messageBookmarkUUID {
+				if let messageBookmark = OCBookmarkManager.shared.bookmark(for: messageBookmarkUUID) {
+					localizedHeader = messageBookmark.shortName
+				}
+			}
+
+			let alertViewController = AlertViewController(localizedHeader: localizedHeader, localizedTitle: syncIssue.localizedTitle, localizedDescription: syncIssue.localizedDescription ?? "", options: options, dismissHandler: { [weak self] in
 				self?.isShowingCard = false
 				completionHandler(.didPresent, nil)
 			})
