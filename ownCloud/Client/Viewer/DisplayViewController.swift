@@ -39,7 +39,7 @@ protocol DisplayViewEditingDelegate: class {
 	func save(item: OCItem, fileURL newVersion: URL)
 }
 
-class DisplayViewController: UIViewController, OCQueryDelegate {
+class DisplayViewController: UIViewController, OCQueryDelegate, DisplayViewControllerProtocol {
 	private let iconImageSize: CGSize = CGSize(width: 200.0, height: 200.0)
 	private let bottomMarginToYAxis: CGFloat = -60.0
 	private let verticalSpacing: CGFloat = 10.0
@@ -543,6 +543,12 @@ extension DisplayViewController {
 		self.core = configuration.core
 		self.state = configuration.state
 	}
+
+	func willLooseFocus() {
+	}
+
+	func willBecomeFocus() {
+	}
 }
 
 // MARK: - Themeable implementation
@@ -555,4 +561,9 @@ extension DisplayViewController : Themeable {
 		infoLabel?.applyThemeCollection(collection)
 		self.view.backgroundColor = collection.tableBackgroundColor
 	}
+}
+
+@objc protocol DisplayViewControllerProtocol {
+    @objc optional func willLooseFocus()
+    @objc optional func willBecomeFocus()
 }
