@@ -120,13 +120,22 @@ extension PHAsset {
 	'filename' and PHAssetResource.originalFilename is only used as fallback.
 	*/
 	private var assetFileName: String? {
-		let filename: String? = self.value(forKey: "filename") as? String
 
-		if filename != nil {
-			return filename
+		var names = [String]()
+
+		if let originalName = self.primaryResource?.originalFilename {
+			names.append(originalName)
 		}
 
-		return self.primaryResource?.originalFilename
+		if let phAssetName = self.value(forKey: "filename") as? String {
+			names.append(phAssetName)
+		}
+
+		if let imgName = names.filter({$0.lowercased().hasPrefix("img")}).first {
+			return imgName
+		} else {
+			return names.first
+		}
 	}
 
 	/**
