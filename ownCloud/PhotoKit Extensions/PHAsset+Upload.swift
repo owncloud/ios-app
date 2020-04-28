@@ -49,6 +49,9 @@ extension PHAssetResource {
 		}
 	}
 
+	/**
+	Method for export of the resource to disk (not used right now but could be used later export RAW images and video-clips tied to live photo assets)
+	*/
 	public func export(to targetURL:URL? = nil, completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
 
 		let options = PHAssetResourceRequestOptions()
