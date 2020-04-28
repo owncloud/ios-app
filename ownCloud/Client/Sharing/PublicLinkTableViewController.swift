@@ -174,17 +174,17 @@ class PublicLinkTableViewController: SharingTableViewController {
 						let privateLinkRow = StaticTableViewRow(buttonWithAction: { (row, _) in
 							UIPasteboard.general.url = url
 
-							_ = NotificationViewController(on: self, title: "Private Link".localized, subtitle: "URL was copied to the clipboard".localized)
 							row.cell?.textLabel?.text = url.absoluteString
 							row.cell?.textLabel?.font = UIFont.systemFont(ofSize: 15.0)
 							row.cell?.textLabel?.textColor = Theme.shared.activeCollection.tableRowColors.secondaryLabelColor
 							row.cell?.textLabel?.numberOfLines = 0
-							DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+
+							_ = NotificationHUDViewController(on: self, title: "Private Link".localized, subtitle: "URL was copied to the clipboard".localized, completion: {
 								row.cell?.textLabel?.text = "Copy Private Link".localized
 								row.cell?.textLabel?.font = UIFont.systemFont(ofSize: 17.0)
 								row.cell?.textLabel?.textColor = Theme.shared.activeCollection.tintColor
 								row.cell?.textLabel?.numberOfLines = 1
-							}
+							})
 						}, title: "Copy Private Link".localized, style: .plain)
 						rows.append(privateLinkRow)
 
@@ -234,7 +234,7 @@ class PublicLinkTableViewController: SharingTableViewController {
 					if let shareURL = share.url {
 						UIPasteboard.general.url = shareURL
 
-						_ = NotificationViewController(on: self, title: share.name ?? "Public Link".localized, subtitle: "URL was copied to the clipboard".localized)
+						_ = NotificationHUDViewController(on: self, title: share.name ?? "Public Link".localized, subtitle: "URL was copied to the clipboard".localized)
 					}
 				})
 			]

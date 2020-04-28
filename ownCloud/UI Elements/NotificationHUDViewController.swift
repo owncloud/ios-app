@@ -1,5 +1,5 @@
 //
-//  NotificationViewController.swift
+//  NotificationHUDViewController.swift
 //  ownCloud
 //
 //  Created by Matthias Hühne on 27.04.20.
@@ -18,22 +18,26 @@
 
 import UIKit
 
-class NotificationViewController: UIViewController {
+class NotificationHUDViewController: UIViewController {
 
+	typealias NotificationHUDDismissCompletionHandler = (() -> Void)
+	var completionHandler : NotificationHUDDismissCompletionHandler?
 	var onViewController : UIViewController
 	var notificationContainer : UIView?
 	var blurEffectView : UIVisualEffectView?
 	var titleLabel : UILabel?
 	var subtitleLabel : UILabel?
-	var transitionAnimator = ProgressHUDViewControllerAnimator()
+	var transitionAnimator = NotificationHUDViewControllerAnimator()
 	var presenting : Bool = false
 	var actionWaitGroup = DispatchGroup()
 	var tapGestureRecognizer : UITapGestureRecognizer!
+	let dismissalTimeInterval = 3.0
 
-	init(on viewController: UIViewController, title: String, subtitle: String) {
+	init(on viewController: UIViewController, title: String, subtitle: String, completion: (() -> Void)? = nil) {
 		self.onViewController = viewController
 		super.init(nibName: nil, bundle: nil)
 
+		completionHandler = completion
 		self.modalPresentationStyle = .overCurrentContext
 		self.transitioningDelegate = transitionAnimator
 		self.tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissOnTap))
@@ -66,8 +70,10 @@ class NotificationViewController: UIViewController {
 
 				viewController?.present(self, animated: true) {
 
-					OnMainThread(async: true, after: 3.0, inline: false) {
-						self.dismiss()
+					OnMainThread(async: true, after: self.dismissalTimeInterval, inline: false) {
+						self.dismiss {
+							self.completionHandler?()
+						}
 					}
 					self.actionWaitGroup.leave()
 				}
@@ -80,6 +86,10 @@ class NotificationViewController: UIViewController {
 		notificationContainer = UIView()
 		notificationContainer?.translatesAutoresizingMaskIntoConstraints = false
 		notificationContainer?.layer.cornerRadius = 10
+		notificationContainer?.layer.shadowColor = UIColor.black.cgColor
+		notificationContainer?.layer.shadowOpacity = 0.3
+		notificationContainer?.layer.shadowOffset = .zero
+		notificationContainer?.layer.shadowRadius = 10
 
 		let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
 		blurEffectView = UIVisualEffectView(effect: blurEffect)
@@ -128,7 +138,9 @@ class NotificationViewController: UIViewController {
 	}
 
 	@objc func dismissOnTap() {
-		self.dismiss()
+		self.dismiss {
+			self.completionHandler?()
+		}
 	}
 
 	func dismiss(completion: (() -> Void)? = nil) {
@@ -145,5 +157,68 @@ class NotificationViewController: UIViewController {
 			}
 		}
 	}
+}
 
+internal class NotificationHUDViewControllerAnimator : NSObject, UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning {
+	var isDismissing : Bool = false
+	let duration = 0.4
+
+	// MARK: - UIViewControllerTransitioningDelegate
+	func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+		isDismissing = true
+		return self
+	}
+
+	func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+		isDismissing = false
+		return self
+	}
+
+	// MARK: - UIViewControllerAnimatedTransitioning
+	func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+		return duration
+	}
+
+	func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+		let containerView = transitionContext.containerView
+
+		if isDismissing {
+			if let fromView = transitionContext.view(forKey: .from) {
+				let fromViewController = transitionContext.viewController(forKey: .from)
+
+				if fromViewController != nil {
+					fromView.frame = transitionContext.initialFrame(for: fromViewController!)
+				}
+
+				containerView.addSubview(fromView)
+
+				UIView.animate(withDuration: duration, animations: {
+					fromView.alpha = 0
+					fromView.frame.origin.y = -100
+				}, completion: { (_) in
+					transitionContext.completeTransition(true)
+				})
+			}
+		} else {
+			if let toView = transitionContext.view(forKey: .to) {
+				let toViewController = transitionContext.viewController(forKey: .to)
+
+				if toViewController != nil {
+					toView.frame = transitionContext.finalFrame(for: toViewController!)
+				}
+
+				containerView.addSubview(toView)
+
+				toView.alpha = 0
+				toView.frame.origin.y = -100
+
+				UIView.animate(withDuration: duration, animations: {
+					toView.alpha = 1
+					toView.frame.origin.y = 0
+				}, completion: { (_) in
+					transitionContext.completeTransition(true)
+				})
+			}
+		}
+	}
 }
