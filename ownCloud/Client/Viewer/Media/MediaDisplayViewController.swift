@@ -39,6 +39,8 @@ class MediaDisplayViewController : DisplayViewController {
 	private var mediaItemTitle: String?
 	private var mediaItemArtist: String?
 
+	private var hasFocus: Bool = false
+
 	deinit {
 		playerStatusObservation?.invalidate()
 		playerItemStatusObservation?.invalidate()
@@ -61,6 +63,16 @@ class MediaDisplayViewController : DisplayViewController {
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+
+		hasFocus = true
+		player?.play()
+	}
+
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+
+		hasFocus = false
+		player?.pause()
 	}
 
 	override func viewSafeAreaInsetsDidChange() {
@@ -150,7 +162,9 @@ class MediaDisplayViewController : DisplayViewController {
 						try? AVAudioSession.sharedInstance().setCategory(.playback)
 						try? AVAudioSession.sharedInstance().setActive(true)
 
-						self?.player?.play()
+						if (self?.hasFocus)! {
+							self?.player?.play()
+						}
 
 						self?.updateNowPlayingInfoCenter()
 
