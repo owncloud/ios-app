@@ -1,8 +1,8 @@
-#Script to resign your iOS ownCloud App
+# Script to resign your iOS ownCloud App
 
 This script allows you to resign the ownCloud App IPA file with a different Apple certificate.
 
-##Certificates
+## Certificates
 
 1. We need to generate on the Apple Developer Portal the following App IDs with App Group Enable Services:
 	- com.yourcompany.ios-app
@@ -14,7 +14,7 @@ This script allows you to resign the ownCloud App IPA file with a different Appl
 4. Generate the mobile provisioning (App Store or Ad-Hoc) for both App IDs using a Distribution certificate (this certificate must be installed on the computer and its common name will be used as parameter on the script)
 
 
-##Instructions
+## Instructions
 
 1. Rename your `.ipa` file to `unsigned.ipa`
 2. Put the `unsigned.ipa` on the folder `App/ad-hoc/` or `App/app-store/`
