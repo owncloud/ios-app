@@ -104,7 +104,6 @@ class DisplayHostViewController: UIPageViewController {
 				let currentIndex = items.firstIndex(where: {$0.localID == initialID}) {
 				self.displayedIndex = currentIndex
 				displayController.itemIndex = currentIndex
-				displayController.willBecomeFocus()
 			}
 		}
 
@@ -306,11 +305,6 @@ extension DisplayHostViewController: UIPageViewControllerDelegate {
 	func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
 
 		let previousViewController = previousViewControllers[0]
-
-		if let currentMediaController = previousViewController as? DisplayViewController {
-			currentMediaController.willLooseFocus()
-		}
-
 		previousViewController.didMove(toParent: nil)
 
 		if completed, let viewControllerToTransition = self.viewControllerToTansition {
@@ -319,7 +313,6 @@ extension DisplayHostViewController: UIPageViewControllerDelegate {
 			}
 			viewControllerToTransition.didMove(toParent: self)
 			viewControllerToTransition.updateNavigationBarItems()
-			viewControllerToTansition?.willBecomeFocus()
 		}
 	}
 

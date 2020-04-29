@@ -63,6 +63,16 @@ class MediaDisplayViewController : DisplayViewController {
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
+
+		hasFocus = true
+		player?.play()
+	}
+
+	override func viewDidDisappear(_ animated: Bool) {
+		super.viewDidDisappear(animated)
+
+		hasFocus = false
+		player?.pause()
 	}
 
 	override func viewSafeAreaInsetsDidChange() {
@@ -333,16 +343,6 @@ class MediaDisplayViewController : DisplayViewController {
 
 		MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
 		updateNowPlayingTimeline()
-	}
-
-	override func willLooseFocus() {
-		hasFocus = false
-		player?.pause()
-	}
-
-	override func willBecomeFocus() {
-		hasFocus = true
-		player?.play()
 	}
 }
 
