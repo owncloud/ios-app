@@ -113,6 +113,11 @@ extension PHAsset {
 		return resources.first { types.contains($0.type)} ?? resources.first
 	}
 
+	private var isEdited: Bool {
+		let resources = PHAssetResource.assetResources(for: self)
+		return resources.contains(where: {$0.type == .fullSizePhoto})
+	}
+
 	/**
 	This property tries to find an original fileName usually starting with IMG_ prefix. Unfortunatelly Photos framework messes up names and in some cases,
 	PHAssetResource.originalFilename will return a name based on local identifier of asset (sort of UUID) although at the same time it stores a URL starting
@@ -180,16 +185,30 @@ extension PHAsset {
 		requestOptions.isNetworkAccessAllowed = true
 		requestOptions.version = .original
 
+		// Pick edited version of the photo when available
+		if self.isEdited {
+			requestOptions.version = .current
+		}
+
 		// Fetch photo asset data
 		PHImageManager.default().requestImageData(for: self, options: requestOptions) { (imageData, typeIdentifier, _, info) in
 			var outError: Error?
 			var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName)
 			if let data = imageData, let ciImage = CIImage(data: data), let uti = typeIdentifier {
+
+				// Do we have to deal with JPEG data?
+				let jpegDataReturned = (uti == String(kUTTypeJPEG))
+
 				// Check if image has to be converted to JPEG
-				if utisToConvert.contains(uti) {
+				if utisToConvert.contains(uti) && !jpegDataReturned {
 					exportURL = exportURL.deletingPathExtension().appendingPathExtension("jpg")
 					outError = ciImage.convert(targetURL: exportURL, outputFormat: .JPEG)
 				} else {
+					// We could have been passed a fileName of the primary image which could be HEIC, but since here we might deal
+					// with edited image which is returned as jpeg, so we might need to change file extension eventually
+					if exportURL.pathExtension != "jpg" && jpegDataReturned {
+						exportURL = exportURL.deletingPathExtension().appendingPathExtension("jpg")
+					}
 					// No conversion -> just write a file to disk
 					do {
 						try data.write(to: exportURL)
