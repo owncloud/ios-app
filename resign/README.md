@@ -9,10 +9,10 @@ Decide if you want to sign the app for Ad-Hoc (`ad-hoc`) installation or for the
 	- `com.yourcompany.ios-app`
 	- `com.yourcompany.ios-app.ownCloud-File-Provider`
 	- `com.yourcompany.ios-app.ownCloud-Intent`
-	This IDs must match with `Bundle Identifier` value for the related Xcode target.
+This IDs must match with `Bundle Identifier` value for the related Xcode target.
 2. Generate one App Group:
 	- `group.com.yourcompany.ios-app`
-	Please keep the prefix `group.` and append the bundle identifier of the app target. 
+Please keep the prefix `group.` and append the bundle identifier of the app target. 
 3. Edit the App IDs and assign the App Group created on step 2.
 4. Generate the mobile provisioning (App Store or Ad-Hoc) for both App IDs using a Distribution certificate (this certificate must be installed on the computer and its common name will be used as parameter on the script)
 
@@ -31,4 +31,4 @@ Decide if you want to sign the app for Ad-Hoc (`ad-hoc`) installation or for the
 5. Execute the script
 	- `sh resignOwncloudApp "COMMON NAME DISTRIBUTION CERT" "ad-hoc"`
 	- `sh resignOwncloudApp "COMMON NAME DISTRIBUTION CERT" "app-store"`
-	Replace `"COMMON NAME DISTRIBUTION CERT"` with the name of your certificate, e.g. `"iPhone Distribution: YOUR COMPANY"`.
+Replace `"COMMON NAME DISTRIBUTION CERT"` with the name of your certificate, e.g. `"iPhone Distribution: YOUR COMPANY"`.
