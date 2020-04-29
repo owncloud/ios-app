@@ -103,9 +103,9 @@ extension PHAsset {
 
 		switch mediaType {
 		case .video:
-			types = [.video, .fullSizeVideo]
+			types = [.video]
 		case .image:
-			types = [.photo, .fullSizePhoto]
+			types = [.photo]
 		default:
 			break
 		}
@@ -178,6 +178,7 @@ extension PHAsset {
 		// Allow to fetch photo asset from network (e.g. in case of iCloud library)
 		let requestOptions = PHImageRequestOptions()
 		requestOptions.isNetworkAccessAllowed = true
+		requestOptions.version = .original
 
 		// Fetch photo asset data
 		PHImageManager.default().requestImageData(for: self, options: requestOptions) { (imageData, typeIdentifier, _, info) in
