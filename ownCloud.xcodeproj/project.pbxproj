@@ -1279,6 +1279,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		021C386C2459C0BB002091C6 /* PhotoKit Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4CB8ADDD22DF5D3700F1FEBC /* PHPhotoLibrary+Extension.swift */,
+				4CB8ADE222DF6BA700F1FEBC /* PHAsset+Upload.swift */,
+			);
+			path = "PhotoKit Extensions";
+			sourceTree = "<group>";
+		};
 		23031768205AA1DB006C4DAF /* Issues */ = {
 			isa = PBXGroup;
 			children = (
@@ -1349,8 +1358,7 @@
 				DCF4F1622051927200189B9A /* UI Elements */,
 				239F1314205A69240029F186 /* UIKit Extensions */,
 				DCE5E8B62080D8B8005F60CE /* SDK Extensions */,
-				4CB8ADE422DF6BE300F1FEBC /* CoreImage Extensions */,
-				4CB8ADD722DF5CD100F1FEBC /* PhotoKit Extensions */,
+				4CB8ADD722DF5CD100F1FEBC /* Media Uploads */,
 				DCF4F1872052BA3500189B9A /* Tools */,
 				DC27A19B20CAB5D7008ACB6C /* FileProvider Integration */,
 				DC85573120513C7500189B9A /* Resources */,
@@ -1617,16 +1625,16 @@
 			path = Media;
 			sourceTree = "<group>";
 		};
-		4CB8ADD722DF5CD100F1FEBC /* PhotoKit Extensions */ = {
+		4CB8ADD722DF5CD100F1FEBC /* Media Uploads */ = {
 			isa = PBXGroup;
 			children = (
-				4CB8ADDD22DF5D3700F1FEBC /* PHPhotoLibrary+Extension.swift */,
-				4CB8ADE222DF6BA700F1FEBC /* PHAsset+Upload.swift */,
+				021C386C2459C0BB002091C6 /* PhotoKit Extensions */,
+				4CB8ADE422DF6BE300F1FEBC /* CoreImage Extensions */,
 				4CC4A21822FB4F4C00AE7E2C /* MediaUploadQueue.swift */,
 				4C96463B238489E4003278B7 /* MediaUploadActivity.swift */,
 				4C05D8A4238708D40073EF50 /* MediaUploadStorage.swift */,
 			);
-			path = "PhotoKit Extensions";
+			path = "Media Uploads";
 			sourceTree = "<group>";
 		};
 		4CB8ADE422DF6BE300F1FEBC /* CoreImage Extensions */ = {
