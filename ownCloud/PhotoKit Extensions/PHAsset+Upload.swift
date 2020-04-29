@@ -286,6 +286,7 @@ extension PHAsset {
 			uploadProgress = sourceURL.upload(with: core,
 											  at: rootItem,
 											  alternativeName: fileName,
+											  modificationDate: self.creationDate,
 											  importByCopy: copySource,
 											  placeholderHandler: { (item, error) in
 												if !copySource && error != nil {
