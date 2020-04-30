@@ -117,7 +117,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	private var state: DisplayViewState = .initial {
 		didSet {
-			switch (self.state) {
+			switch self.state {
 			case .downloading(let progress):
 				self.downloadProgress = progress
 			case .notSupportedMimeType:
