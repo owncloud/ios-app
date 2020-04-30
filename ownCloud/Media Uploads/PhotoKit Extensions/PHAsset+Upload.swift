@@ -257,10 +257,10 @@ extension PHAsset {
 		var resourceToExport:PHAssetResource?
 		var outError: Error?
 
-		// For edited photo pick the edited version
+		// For edited video pick the edited version
 		resourceToExport = resources.filter({$0.type == .fullSizeVideo}).first
 
-		// If edited photo is not avaialable, pick the original
+		// If edited video is not avaialable, pick the original
 		if resourceToExport == nil {
 			resourceToExport = resources.filter({$0.type == .video}).first
 		}
@@ -282,7 +282,7 @@ extension PHAsset {
 		if utisToConvert.contains(resource.uniformTypeIdentifier) {
 			exportURL = exportURL.deletingPathExtension().appendingPathExtension("mp4")
 
-			// Allow to fetch photo asset from network (e.g. in case of iCloud library)
+			// Allow to fetch video asset from network (e.g. in case of iCloud library)
 			let videoRequestOptions = PHVideoRequestOptions()
 			videoRequestOptions.isNetworkAccessAllowed = true
 			// Take care that in case of edited video, the edited content is used
