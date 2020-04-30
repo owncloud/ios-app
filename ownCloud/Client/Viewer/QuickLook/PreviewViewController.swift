@@ -60,15 +60,20 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 
 	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
 		if source != nil {
+			if self.qlPreviewController?.dataSource === self {
+				// Reload
+				self.qlPreviewController?.reloadData()
+			} else {
+				// First display
+				self.showHideBarsTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showHideBars))
+				self.showHideBarsTapGestureRecognizer.delegate = self
+				self.showHideBarsTapGestureRecognizer.delaysTouchesBegan = true
+				self.qlPreviewController?.view.gestureRecognizers?.forEach({ $0.delegate = self })
+				self.qlPreviewController?.view?.addGestureRecognizer(self.showHideBarsTapGestureRecognizer)
 
-			self.showHideBarsTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showHideBars))
-			self.showHideBarsTapGestureRecognizer.delegate = self
-			self.showHideBarsTapGestureRecognizer.delaysTouchesBegan = true
-			self.qlPreviewController?.view.gestureRecognizers?.forEach({ $0.delegate = self })
-			self.qlPreviewController?.view?.addGestureRecognizer(self.showHideBarsTapGestureRecognizer)
-
-			self.qlPreviewController?.dataSource = self
-			self.qlPreviewController?.view.isHidden = false
+				self.qlPreviewController?.dataSource = self
+				self.qlPreviewController?.view.isHidden = false
+			}
 
 			completion(true)
 		} else {
@@ -129,13 +134,13 @@ extension PreviewViewController: DisplayExtension {
 				let matches = supportedFormatsRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count))
 
 				if matches > 0 {
-					return OCExtensionPriority.locationMatch
+					return .locationMatch
 				}
 			}
 
-			return OCExtensionPriority.noMatch
+			return .noMatch
 		} catch {
-			return OCExtensionPriority.noMatch
+			return .noMatch
 		}
 	}
 

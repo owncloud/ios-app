@@ -83,7 +83,7 @@
 "Sort by" = "Sort by";
 
 "name" = "name";
-"type" = "type";
+"kind" = "kind";
 "size" = "size";
 "date" = "date";
 "Search this folder" = "Search this folder";
@@ -235,8 +235,9 @@
 "Increase Slider Value" = "Increase Slider Value";
 
 /* Display settings */
-"Display settings" = "Display settings";
+"Advanced settings" = "Advanced settings";
 "Show hidden files and folders" = "Show hidden files and folders";
+"Prevent dragging of files and folders" = "Prevent dragging of files and folders";
 
 /* Passcode Messages */
 
@@ -426,6 +427,8 @@
 "shared" = "shared";
 "Owner" = "Owner";
 "Private Link" = "Private Link";
+"Created Public Link" = "Created Public Link";
+"URL was copied to the clipboard" = "URL was copied to the clipboard";
 
 /* Quick Access view */
 "Quick Access" = "Quick Access";
@@ -539,17 +542,8 @@
 "Subscribe Now" = "Subscribe Now";
 "Free" = "Free";
 
-"day" = "day";
-"%lu days" = "%lu days";
-
-"week" = "week";
-"%lu weeks" = "%lu weeks";
-
-"month" = "month";
-"%lu months" = "%lu months";
-
-"year" = "year";
-"%lu years" = "%lu years";
+"%@ / %@" = "%@ / %@";
+"after free %@ trial" = "after free %@ trial";
 
 /* Example usage: "Try [14 days] for free." */
 "Try %@ for free." = "Try %@ for free.";
