@@ -32,9 +32,9 @@ usage()
 if [ $# -lt 2 ]; then
   usage
 fi
-#if [ $2 != "ad-hoc" -o $2 != "app-store" ]; then
-#  usage
-#fi
+if ! [[ "$2" =~ ^(ad-hoc|app-store)$ ]]; then
+  usage
+fi
 
 echo
 echo "${BOLD}${SUCCESS}ownCloud iOS-App Resigning${NC}"
