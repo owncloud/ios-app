@@ -49,23 +49,35 @@ extension PHAssetResource {
 		}
 	}
 
-	/**
-	Method for export of the resource to disk (not used right now but could be used later export RAW images and video-clips tied to live photo assets)
-	*/
-	public func export(to targetURL:URL? = nil, completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
-
-		let options = PHAssetResourceRequestOptions()
-		options.isNetworkAccessAllowed = true
-
-		let exportURL = targetURL != nil ? targetURL! : URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(self.originalFilename)
-
-		if self.isPhoto || self.isVideo {
-			PHAssetResourceManager.default().writeData(for: self, toFile: exportURL, options: options) { (error) in
-				completionHandler(exportURL, error)
-			}
-		} else {
-			completionHandler(exportURL, NSError(ocError: .internal))
+	var fileExtension: String {
+		var ext = ""
+		// Append correct file extension to export URL
+		switch self.uniformTypeIdentifier {
+		case AVFileType.jpg.rawValue:
+			ext = "jpg"
+		case String(kUTTypePNG):
+			ext = "png"
+		case String(kUTTypeGIF):
+			ext = "gif"
+		case AVFileType.heic.rawValue:
+			ext = "heic"
+		case AVFileType.heif.rawValue:
+			ext = "heif"
+		case AVFileType.mov.rawValue:
+			ext = "mov"
+		case AVFileType.mp4.rawValue:
+			ext = "mp4"
+		case AVFileType.m4v.rawValue:
+			ext = "m4v"
+		case String(kUTTypeTIFF):
+			ext = "tiff"
+		case String(kUTTypeRawImage):
+			ext = "dng"
+		default:
+			break
 		}
+
+		return ext.uppercased()
 	}
 }
 
@@ -174,86 +186,111 @@ extension PHAsset {
 
 	/**
 	Method for exporting phot assets using PHImageManager
+	- parameter resources: array of PHAssetResource objects belonging to PHAsset
 	- parameter fileName: name for the exported asset including file extension
 	- parameter utisToConvert: list of file UTIs for image formats which shall be converted to JPEG format
 	- parameter completionHandler: called when the file is written to disk or if an error occurs
 	*/
-	func exportPhoto(fileName:String, utisToConvert:[String] = [], completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
+	func exportPhoto(resources:[PHAssetResource], fileName:String, utisToConvert:[String] = [], completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
 
-		// Allow to fetch photo asset from network (e.g. in case of iCloud library)
-		let requestOptions = PHImageRequestOptions()
+		var resourceToExport:PHAssetResource?
+		var outError: Error?
+
+		// For edited photo pick the edited version
+		resourceToExport = resources.filter({$0.type == .fullSizePhoto}).first
+
+		// If edited photo is not avaialable, pick the original
+		resourceToExport = resources.filter({$0.type == .photo}).first
+
+		// No resource found?
+		guard let resource = resourceToExport else {
+			completionHandler(nil, NSError(ocError: .internal))
+			return
+		}
+
+		// Allow to request resource underlying data from network (iCloud in this case)
+		let requestOptions = PHAssetResourceRequestOptions()
 		requestOptions.isNetworkAccessAllowed = true
-		requestOptions.version = .original
 
-		// Pick edited version of the photo when available
-		if self.isEdited {
-			requestOptions.version = .current
-		}
+		// Prepare export URL and remove path extension which will depend on output format
+		var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension()
 
-		// Fetch photo asset data
-		PHImageManager.default().requestImageData(for: self, options: requestOptions) { (imageData, typeIdentifier, _, info) in
-			var outError: Error?
-			var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName)
-			if let data = imageData, let ciImage = CIImage(data: data), let uti = typeIdentifier {
+		// Check if conversion is required?
+		if utisToConvert.contains(resource.uniformTypeIdentifier) {
 
-				// Do we have to deal with JPEG data?
-				let jpegDataReturned = (uti == String(kUTTypeJPEG))
-
-				// Check if image has to be converted to JPEG
-				if utisToConvert.contains(uti) && !jpegDataReturned {
-					exportURL = exportURL.deletingPathExtension().appendingPathExtension("jpg")
+			// Since conversion to JPEG is desired, we have first to get the actual data
+			var assetData = Data()
+			PHAssetResourceManager.default().requestData(for: resource, options:requestOptions, dataReceivedHandler: { (chunk) in
+				assetData.append(chunk)
+			}, completionHandler: { (error) in
+				outError = error
+				if error == nil, let ciImage = CIImage(data: assetData) {
+					exportURL = exportURL.appendingPathExtension("jpg")
 					outError = ciImage.convert(targetURL: exportURL, outputFormat: .JPEG)
-				} else {
-					// We could have been passed a fileName of the primary image which could be HEIC, but since here we might deal
-					// with edited image which is returned as jpeg, so we might need to change file extension eventually
-					if exportURL.pathExtension != "jpg" && jpegDataReturned {
-						exportURL = exportURL.deletingPathExtension().appendingPathExtension("jpg")
-					}
-					// No conversion -> just write a file to disk
-					do {
-						try data.write(to: exportURL)
-					} catch let error as NSError {
-						outError = error
-					}
 				}
-			} else {
-				outError = info?[PHImageErrorKey] as? Error
-			}
+				completionHandler(exportURL, outError)
+			})
+		} else {
+			// Append correct file extension to export URL
+			exportURL = exportURL.appendingPathExtension(resource.fileExtension)
 
-			completionHandler(exportURL, outError)
+			// Write the file to disc
+			PHAssetResourceManager.default().writeData(for: resource, toFile: exportURL, options: requestOptions) { (error) in
+				outError = error
+				completionHandler(exportURL, outError)
+			}
 		}
+
 	}
 
 	/**
-	Method for exporting video assets using PHImageManager and AVAssetExportSession
+	Method for exporting video assets
+	- parameter resources: array of PHAssetResource objects belonging to PHAsset
 	- parameter fileName: name for the exported asset including file extension
 	- parameter utisToConvert: list of file UTIs for media formats which shall be converted to MP4 format
 	- parameter completionHandler: called when the file is written to disk or if an error occurs
 	*/
-	func exportVideo(fileName:String, utisToConvert:[String] = [], completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
-		var outError : Error?
-		if self.mediaType == .video {
-			// Allow to fetch video from the network (e.g. iCloud photo library)
-			let options = PHVideoRequestOptions()
-			options.isNetworkAccessAllowed = true
-			options.deliveryMode = .highQualityFormat
+	func exportVideo(resources:[PHAssetResource], fileName:String, utisToConvert:[String] = [], completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
 
-			var exportURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
+		var resourceToExport:PHAssetResource?
+		var outError: Error?
 
-			var outputFileType = AVFileType.mov
+		// For edited photo pick the edited version
+		resourceToExport = resources.filter({$0.type == .fullSizeVideo}).first
 
-			// Convert to MP4 if desired
-			if utisToConvert.contains(outputFileType.rawValue) {
-				outputFileType = AVFileType.mp4
-				exportURL = exportURL.deletingPathExtension().appendingPathExtension("mp4")
-			}
+		// If edited photo is not avaialable, pick the original
+		resourceToExport = resources.filter({$0.type == .video}).first
+
+		// No resource found?
+		guard let resource = resourceToExport else {
+			completionHandler(nil, NSError(ocError: .internal))
+			return
+		}
+
+		// Allow to request resource underlying data from network (iCloud in this case)
+		let requestOptions = PHAssetResourceRequestOptions()
+		requestOptions.isNetworkAccessAllowed = true
+
+		// Prepare export URL and remove path extension which will depend on output format
+		var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension()
+
+		// Check if conversion is required?
+		if utisToConvert.contains(resource.uniformTypeIdentifier) {
+			exportURL = exportURL.deletingPathExtension().appendingPathExtension("mp4")
+
+			// Allow to fetch photo asset from network (e.g. in case of iCloud library)
+			let videoRequestOptions = PHVideoRequestOptions()
+			videoRequestOptions.isNetworkAccessAllowed = true
+			// Take care that in case of edited video, the edited content is used
+			videoRequestOptions.version = .current
+			videoRequestOptions.deliveryMode = .highQualityFormat
 
 			// Request AVAssetExport session (can be also done with requestAVAsset() in conjunction with AVAssetWriter for more fine-grained control)
-			PHImageManager.default().requestExportSession(forVideo: self, options: options, exportPreset: AVAssetExportPresetPassthrough) { (session, info) in
+			PHImageManager.default().requestExportSession(forVideo: self, options: videoRequestOptions, exportPreset: AVAssetExportPresetPassthrough) { (session, info) in
 				outError = info?[PHImageErrorKey] as? Error
 				if let session = session {
 					session.outputURL = exportURL
-					session.outputFileType = outputFileType
+					session.outputFileType = AVFileType.mp4
 					session.exportAsynchronously {
 						completionHandler(exportURL, outError)
 					}
@@ -262,7 +299,13 @@ extension PHAsset {
 				}
 			}
 		} else {
-			completionHandler(nil, NSError(ocError: .internal))
+			// Append correct file extension to export URL
+			exportURL = exportURL.appendingPathExtension(resource.fileExtension)
+
+			// Write the file to disc
+			PHAssetResourceManager.default().writeData(for: resource, toFile: exportURL, options: requestOptions) { (error) in
+				completionHandler(exportURL, error)
+			}
 		}
 	}
 
@@ -348,18 +391,20 @@ extension PHAsset {
 			var exportedAssetURL: URL?
 			var outError: Error?
 
+			let assetResources = PHAssetResource.assetResources(for: self)
+
 			// Synchronously export asset
 			let semaphore = DispatchSemaphore(value: 0)
 			_ = autoreleasepool {
 
 				if self.mediaType == .image {
-					exportPhoto(fileName: assetName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
+					exportPhoto(resources: assetResources, fileName: assetName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
 						exportedAssetURL = url
 						outError = error
 						semaphore.signal()
 					})
 				} else if self.mediaType == .video {
-					exportVideo(fileName: assetName, utisToConvert: utisToConvert) { (url, error) in
+					exportVideo(resources: assetResources, fileName: assetName, utisToConvert: utisToConvert) { (url, error) in
 						exportedAssetURL = url
 						outError = error
 						semaphore.signal()
