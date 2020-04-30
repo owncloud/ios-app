@@ -200,7 +200,9 @@ extension PHAsset {
 		resourceToExport = resources.filter({$0.type == .fullSizePhoto}).first
 
 		// If edited photo is not avaialable, pick the original
-		resourceToExport = resources.filter({$0.type == .photo}).first
+		if resourceToExport == nil {
+			resourceToExport = resources.filter({$0.type == .photo}).first
+		}
 
 		// No resource found?
 		guard let resource = resourceToExport else {
@@ -259,7 +261,9 @@ extension PHAsset {
 		resourceToExport = resources.filter({$0.type == .fullSizeVideo}).first
 
 		// If edited photo is not avaialable, pick the original
-		resourceToExport = resources.filter({$0.type == .video}).first
+		if resourceToExport == nil {
+			resourceToExport = resources.filter({$0.type == .video}).first
+		}
 
 		// No resource found?
 		guard let resource = resourceToExport else {
