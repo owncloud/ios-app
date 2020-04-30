@@ -116,20 +116,14 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	var shallShowPreview = true
 
 	private var state: DisplayViewState = .initial {
-		willSet {
-			switch (newValue, state) {
-			case (.hasNetworkConnection, .noNetworkConnection) :
-				updateSource()
-			default:
-				break
-			}
-		}
 		didSet {
-			switch self.state {
+			switch (self.state) {
 			case .downloading(let progress):
 				self.downloadProgress = progress
 			case .notSupportedMimeType:
 				shallShowPreview = false
+			case .hasNetworkConnection:
+				updateSource()
 			default:
 				self.downloadProgress = nil
 			}
@@ -310,7 +304,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		guard let core = core, let item = item else {
 			return
 		}
-		
+
 		switch self.state {
 		case .hasNetworkConnection:
 			if let downloadProgress = core.downloadItem(item, options: [
