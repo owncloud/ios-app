@@ -64,9 +64,19 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 				func updateState() {
 					if core.connectionStatus == .online {
-						self.state = .hasNetworkConnection
+						switch self.state {
+						case .noNetworkConnection:
+							self.state = .hasNetworkConnection
+						default:
+							break
+						}
 					} else {
-						self.state = .noNetworkConnection
+						switch self.state {
+						case .hasNetworkConnection:
+							self.state = .noNetworkConnection
+						default:
+							break
+						}
 					}
 				}
 
