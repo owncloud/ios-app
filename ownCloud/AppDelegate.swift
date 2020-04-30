@@ -127,12 +127,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-		var copyBeforeUsing = true
-		if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
-			copyBeforeUsing = !shouldOpenInPlace
-		}
 
-		ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountUI()
+		if url.matchesAppScheme {
+			openLink(in: app, with: url)
+		} else {
+			var copyBeforeUsing = true
+			if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
+				copyBeforeUsing = !shouldOpenInPlace
+			}
+
+			ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountUI()
+		}
 
 		return true
 	}
@@ -161,19 +166,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 return false
         }
 
-        url.retrieveLinkedItem(with: { (item, bookmark, error) in
-
-			guard let window = application.currentWindow() else { return }
-
-			if item == nil {
-				let alert = UIAlertController.alertControllerForLinkResolution(error: error)
-				window.rootViewController?.present(alert, animated: true)
-			} else {
-				if let itemID = item?.localID, let bookmark = bookmark {
-					window.display(itemWithID: itemID, in: bookmark)
-				}
-			}
-        })
+		openLink(in: application, with: url)
 
         return true
     }
@@ -188,5 +181,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	@available(iOS 13.0, *)
 	func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+	}
+
+	private func openLink(in application:UIApplication, with url:URL) {
+        url.retrieveLinkedItem(with: { (item, bookmark, error) in
+
+			guard let window = application.currentWindow() else { return }
+
+			if item == nil {
+				let alert = UIAlertController.alertControllerForLinkResolution(error: error)
+				window.rootViewController?.present(alert, animated: true)
+			} else {
+				if let itemID = item?.localID, let bookmark = bookmark {
+					window.display(itemWithID: itemID, in: bookmark)
+				}
+			}
+        })
 	}
 }
