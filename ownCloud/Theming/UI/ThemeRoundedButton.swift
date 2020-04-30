@@ -23,13 +23,13 @@ class ThemeRoundedButton: ThemeButton {
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 
-		self.buttonCornerRadius = -1
+		self.buttonCornerRadius = .round
 	}
 
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 
-		self.buttonCornerRadius = -1
+		self.buttonCornerRadius = .round
 	}
 
 }
