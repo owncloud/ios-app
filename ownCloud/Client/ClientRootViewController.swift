@@ -105,10 +105,10 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 				case .online:
 					summary = nil
 
-				case .offline:
-					summary?.message = "\(connectionShortDescription!)Contents from cache.".localized
+				case .connecting:
+					summary?.message = "Connecting…".localized
 
-				case .unavailable:
+				case .offline, .unavailable:
 					summary?.message = "\(connectionShortDescription!)Contents from cache.".localized
 			}
 		}
@@ -151,8 +151,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 				self.coreReady(lastVisibleItemId)
 			}
 
-			// Start showing connection status with a delay of 1 second, so "Offline" doesn't flash briefly
-			OnMainThread(after: 1.0) { [weak self] () in
+			// Start showing connection status
+			OnMainThread { [weak self] () in
 				self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
 					self?.updateConnectionStatusSummary()
 				})
