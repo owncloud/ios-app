@@ -42,7 +42,7 @@ class OpenInAction: Action {
 			return
 		}
 
-		let hudViewController = DownloadItemsHUDViewController(core: core, downloadItems: context.items) { [weak hostViewController] (error, files) in
+		let hudViewController = DownloadItemsHUDViewController(core: core, downloadItems: context.items) { [weak hostViewController] (error, downloadedItems) in
 			if let error = error {
 				if (error as NSError).isOCError(withCode: .cancelled) {
 					return
@@ -53,10 +53,10 @@ class OpenInAction: Action {
 
 				hostViewController?.present(alertController, animated: true)
 			} else {
-				guard let files = files, files.count > 0, let viewController = hostViewController else { return }
+				guard let downloadedItems = downloadedItems, downloadedItems.count > 0, let viewController = hostViewController else { return }
 				// UIDocumentInteractionController can only be used with a single file
-				if files.count == 1 {
-					if let fileURL = files.first?.url {
+				if downloadedItems.count == 1 {
+					if let fileURL = downloadedItems.first?.file.url {
 						// Make sure self is around until interactionControllerDispatchGroup.leave() is called by the documentInteractionControllerDidDismissOptionsMenu delegate method implementation
 						self.interactionControllerDispatchGroup = DispatchGroup()
 						self.interactionControllerDispatchGroup?.enter()
@@ -90,8 +90,8 @@ class OpenInAction: Action {
 					}
 				} else {
 					// Handle multiple files with a fallback solution
-					let urls = files.map { (file) -> URL in
-						return file.url!
+					let urls = downloadedItems.map { (item) -> URL in
+						return item.file.url!
 					}
 					let activityController = UIActivityViewController(activityItems: urls, applicationActivities: nil)
 

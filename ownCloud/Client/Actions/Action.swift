@@ -173,12 +173,19 @@ class Action : NSObject {
 
 	// MARK: - Provide Card view controller
 
-	class func cardViewController(for item: OCItem, with context: ActionContext, progressHandler: ActionProgressHandler? = nil, completionHandler: ((Action, Error?) -> Void)? = nil) -> UIViewController? {
+	class func cardViewController(for items: [OCItem], with context: ActionContext, progressHandler: ActionProgressHandler? = nil, completionHandler: ((Action, Error?) -> Void)? = nil) -> UIViewController? {
 		guard let core = context.core else { return nil }
 
 		let tableViewController = MoreStaticTableViewController(style: .grouped)
-		let header = MoreViewHeader(for: item, with: core)
-		let moreViewController = MoreViewController(item: item, core: core, header: header, viewController: tableViewController)
+
+		var moreViewController : MoreViewController!
+
+		if items.count > 1 {
+			let header = MoreViewHeader(title: String(format: "%ld Items Selected".localized, items.count))
+			moreViewController = MoreViewController(core: core, header: header, viewController: tableViewController)
+		} else if let item = items.first {
+			let header = MoreViewHeader(for: item, with: core)
+			moreViewController = MoreViewController(core: core, header: header, viewController: tableViewController)
 
 		if core.connectionStatus == .online {
 			if core.connection.capabilities?.sharingAPIEnabled == 1 {
@@ -213,6 +220,7 @@ class Action : NSObject {
 					tableViewController.insertSection(StaticTableViewSection(headerTitle: nil, footerTitle: nil, identifier: "share-section", rows: [publicLinkRow]), at: 0, animated: false)
 				}
 			}
+		}
 		}
 
 		let title = NSAttributedString(string: "Actions".localized, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .heavy)])

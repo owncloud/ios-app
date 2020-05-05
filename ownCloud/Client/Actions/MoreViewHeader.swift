@@ -38,6 +38,7 @@ class MoreViewHeader: UIView {
 	var item: OCItem
 	weak var core: OCCore?
 	var url: URL?
+	var titleString: String?
 
 	init(for item: OCItem, with core: OCCore, favorite: Bool = true, adaptBackgroundColor: Bool = false, showActivityIndicator: Bool = false) {
 		self.item = item
@@ -68,6 +69,30 @@ class MoreViewHeader: UIView {
 		self.adaptBackgroundColor = false
 		self.item = OCItem()
 		self.url = url
+
+		iconView = UIImageView()
+		titleLabel = UILabel()
+		detailLabel = UILabel()
+		labelContainerView = UIView()
+		favoriteButton = UIButton()
+		activityIndicator = UIActivityIndicatorView(style: .white)
+
+		super.init(frame: .zero)
+
+		self.translatesAutoresizingMaskIntoConstraints = false
+
+		Theme.shared.register(client: self)
+
+		render()
+	}
+
+	init(title : String) {
+		self.showFavoriteButton = false
+		self.showActivityIndicator = false
+		self.adaptBackgroundColor = false
+		self.item = OCItem()
+		self.url = nil
+		titleString = title
 
 		iconView = UIImageView()
 		titleLabel = UILabel()
@@ -181,6 +206,8 @@ class MoreViewHeader: UIView {
 			} catch {
 				print("Error: \(error)")
 			}
+		} else if let titleString = titleString {
+			titleLabel.attributedText = NSAttributedString(string: titleString, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
 		} else {
 			titleLabel.attributedText = NSAttributedString(string: item.name ?? "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
 

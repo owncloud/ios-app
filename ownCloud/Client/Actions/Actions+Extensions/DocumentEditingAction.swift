@@ -65,7 +65,7 @@ class DocumentEditingAction : Action {
 			return
 		}
 
-		let hudViewController = DownloadItemsHUDViewController(core: core, downloadItems: context.items) { [weak hostViewController] (error, files) in
+		let hudViewController = DownloadItemsHUDViewController(core: core, downloadItems: context.items) { [weak hostViewController] (error, downloadedItems) in
 			if let error = error {
 				if (error as NSError).isOCError(withCode: .cancelled) {
 					return
@@ -76,8 +76,8 @@ class DocumentEditingAction : Action {
 
 				hostViewController?.present(alertController, animated: true)
 			} else {
-				guard let files = files, files.count > 0, let viewController = hostViewController else { return }
-				if let fileURL = files.first?.url, let item = self.context.items.first {
+				guard let downloadedItems = downloadedItems, downloadedItems.count > 0, let viewController = hostViewController else { return }
+				if let fileURL = downloadedItems.first?.file.url, let item = self.context.items.first {
 					let editDocumentViewController = EditDocumentViewController(with: fileURL, item: item, core: self.core)
 					let navigationController = ThemeNavigationController(rootViewController: editDocumentViewController)
 					navigationController.modalPresentationStyle = .overFullScreen

@@ -20,9 +20,23 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface DownloadItem : NSObject
+{
+	OCFile *_file;
+	OCItem *_item;
+}
+
+@property(strong,nonatomic) OCFile *file;
+@property(strong,nonatomic) OCItem *item;
+
+- (instancetype)initWithFile:(OCFile *)file item:(OCItem *)item;
+
+@end
+
 @interface ZIPArchive : NSObject
 
 + (NSError *)compressContentsOf:(NSURL *)sourceDirectory asZipFile:(NSURL *)zipFileURL;
++ (nullable NSError *)compressContentsOfItems:(NSArray<DownloadItem *> *)sourceDirectorie fromBasePath:(NSString *)basePath asZipFile:(NSURL *)zipFileURL withPassword:(nullable NSString *)password;
 
 @end
 

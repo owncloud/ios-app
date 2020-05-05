@@ -396,7 +396,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
 		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: sender)
 
-		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: nil) {
+		if let moreViewController = Action.cardViewController(for: [item], with: actionContext, completionHandler: nil) {
 			self.present(asCard: moreViewController, animated: true)
 		}
 	}

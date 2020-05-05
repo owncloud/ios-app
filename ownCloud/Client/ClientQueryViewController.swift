@@ -52,6 +52,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	var copyMultipleBarButtonItem: UIBarButtonItem?
 	var openMultipleBarButtonItem: UIBarButtonItem?
 
+	var folderActionMultipleBarButton: UIBarButtonItem?
 	var folderActionBarButton: UIBarButtonItem?
 	var plusBarButton: UIBarButtonItem?
 	var selectDeselectAllButtonItem: UIBarButtonItem?
@@ -140,6 +141,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		self.tableView.dragInteractionEnabled = true
 		self.tableView.allowsMultipleSelectionDuringEditing = true
 
+		folderActionMultipleBarButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(multipleMoreBarButtonPressed))
 		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(moreBarButtonPressed))
 		folderActionBarButton?.accessibilityIdentifier = "client.folder-action"
 		plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(plusBarButtonPressed))
@@ -151,6 +153,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		exitMultipleSelectionBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(exitMultipleSelection))
 
 		// Create bar button items for the toolbar
+		deleteMultipleBarButtonItem?.isEnabled = true
 		deleteMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"trash"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: DeleteAction.identifier!)
 		deleteMultipleBarButtonItem?.isEnabled = false
 
@@ -381,6 +384,8 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 				for item in toolbarItems {
 					if self.actions?.contains(where: {type(of:$0).identifier == item.actionIdentifier}) ?? false {
 						item.isEnabled = true
+					} else if item.isEqual(folderActionMultipleBarButton) {
+						item.isEnabled = true
 					} else {
 						item.isEnabled = false
 					}
@@ -444,9 +449,9 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 			flexibleSpaceBarButton,
 			copyMultipleBarButtonItem!,
 			flexibleSpaceBarButton,
-			duplicateMultipleBarButtonItem!,
+			deleteMultipleBarButtonItem!,
 			flexibleSpaceBarButton,
-			deleteMultipleBarButtonItem!])
+			folderActionMultipleBarButton!])
 	}
 
 	@objc func actOnMultipleItems(_ sender: UIButton) {
@@ -566,7 +571,37 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreFolder)
 		let actionContext = ActionContext(viewController: self, core: core, query: query, items: [rootItem], location: actionsLocation, sender: sender)
 
-		if let moreViewController = Action.cardViewController(for: rootItem, with: actionContext, progressHandler: makeActionProgressHandler()) {
+		if let moreViewController = Action.cardViewController(for: [rootItem], with: actionContext, progressHandler: makeActionProgressHandler()) {
+			self.present(asCard: moreViewController, animated: true)
+		}
+	}
+
+	@objc func multipleMoreBarButtonPressed(_ sender: UIBarButtonItem) {
+		guard let core = core else {
+			return
+		}
+
+		var selectedItems = [OCItem]()
+
+		// Do we have selected items?
+		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
+			if selectedIndexPaths.count > 0 {
+
+				// Get array of OCItems from selected table view index paths
+				for indexPath in selectedIndexPaths {
+					if let item = itemAt(indexPath: indexPath) {
+						selectedItems.append(item)
+					}
+				}
+			}
+		}
+
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreFolder)
+		let actionContext = ActionContext(viewController: self, core: core, query: query, items: selectedItems, location: actionsLocation, sender: sender)
+
+		print("--> multipleMoreBarButtonPressed \(selectedItems)")
+
+		if let moreViewController = Action.cardViewController(for: selectedItems, with: actionContext, progressHandler: makeActionProgressHandler()) {
 			self.present(asCard: moreViewController, animated: true)
 		}
 	}

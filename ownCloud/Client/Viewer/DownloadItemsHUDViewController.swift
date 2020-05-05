@@ -18,12 +18,13 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
-typealias DownloadItemsHUDViewControllerCompletionHandler = (Error?, [OCFile]?) -> Void
+typealias DownloadItemsHUDViewControllerCompletionHandler = (Error?, [DownloadItem]?) -> Void
 
 class DownloadItemsHUDViewController: CardViewController {
 	var items : [OCItem]
-	var downloadedFiles : [OCFile] = [OCFile]()
+	var downloadedItems : [DownloadItem] = [DownloadItem]()
 	var downloadError : Error?
 	var downloadProgress : [Progress] = [Progress]()
 	var completion : DownloadItemsHUDViewControllerCompletionHandler?
@@ -123,7 +124,7 @@ class DownloadItemsHUDViewController: CardViewController {
 				if core.localCopy(of: item) != nil {
 					if let file = item.file(with: core) {
 						core.registerUsage(of: item, completionHandler: nil)
-						downloadedFiles.append(file)
+						downloadedItems.append(DownloadItem(file: file, item: item))
 
 						return false
 					}
@@ -145,7 +146,6 @@ class DownloadItemsHUDViewController: CardViewController {
 
 				for item in items {
 					downloadGroup.enter()
-
 					if let progress = core.downloadItem(item, options: [
 						.returnImmediatelyIfOfflineOrUnavailable : true,
 						.addTemporaryClaimForPurpose 		 : OCCoreClaimPurpose.view.rawValue
@@ -155,7 +155,7 @@ class DownloadItemsHUDViewController: CardViewController {
 							self.downloadError = error
 						} else {
 							if let file = file {
-								self.downloadedFiles.append(file)
+								self.downloadedItems.append(DownloadItem(file: file, item: item))
 
 								if let claim = file.claim {
 									self.core?.remove(claim, on: item, afterDeallocationOf: [self])
@@ -180,7 +180,7 @@ class DownloadItemsHUDViewController: CardViewController {
 									if let error = self.downloadError {
 										self.completed(with: error)
 									} else {
-										self.completed(files: self.downloadedFiles)
+										self.completed(items: self.downloadedItems)
 									}
 								})
 							}
@@ -189,7 +189,7 @@ class DownloadItemsHUDViewController: CardViewController {
 				})
 			} else {
 				// Done
-				completed(files: downloadedFiles)
+				completed(items: downloadedItems)
 			}
 		} else {
 			// No core
@@ -197,9 +197,9 @@ class DownloadItemsHUDViewController: CardViewController {
 		}
 	}
 
-	func completed(with error: Error? = nil, files: [OCFile]? = nil) {
+	func completed(with error: Error? = nil, items: [DownloadItem]? = nil) {
 		if let completion = completion {
-			completion(error, files)
+			completion(error, items)
 			self.completion = nil
 		}
 	}

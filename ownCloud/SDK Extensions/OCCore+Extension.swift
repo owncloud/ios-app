@@ -143,4 +143,21 @@ extension OCCore {
 
 		return parentItems.reversed()
 	}
+
+	func retrieveSubItems(for item: OCItem, completionHandler: ((_ items: [OCItem]?) -> Void)? = nil) {
+		var newHandler = completionHandler
+		let subitemsQuery = OCQuery(condition: .require([
+			.where(.path, startsWith: item.path!)
+		]), inputFilter:nil)
+
+		var items : [OCItem]?
+
+			subitemsQuery.changesAvailableNotificationHandler = { [weak self] query in
+				items = query.queryResults
+				self?.stop(query)
+				newHandler?(items)
+				newHandler = nil
+			}
+		self.start(subitemsQuery)
+	}
 }
