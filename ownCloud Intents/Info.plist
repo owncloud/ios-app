@@ -30,6 +30,7 @@
 			<array/>
 			<key>IntentsSupported</key>
 			<array>
+				<string>CompressPathItemsIntent</string>
 				<string>CreateFolderIntent</string>
 				<string>DeletePathItemIntent</string>
 				<string>GetAccountIntent</string>

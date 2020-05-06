@@ -40,6 +40,8 @@ class IntentHandler: INExtension {
 			return PathExistsIntentHandler()
 		} else if intent is DeletePathItemIntent {
 			return DeletePathItemIntentHandler()
+		} else if intent is CompressPathItemsIntent {
+			return CompressPathItemsIntentHandler()
 		}
 
 		fatalError("Unhandled intent type: \(intent)")

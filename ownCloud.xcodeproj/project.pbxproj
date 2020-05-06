@@ -79,6 +79,7 @@
 		3998F5D3224102FE00B66713 /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D2224102FE00B66713 /* UITableView+Extension.swift */; };
 		3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D422411EDF00B66713 /* BorderedLabel.swift */; };
 		3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */; };
+		39999DF224629FA800880D45 /* OCCore+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A513AB22674E56002CF1AA /* OCCore+Extension.swift */; };
 		399A4C002317CC460027DDD6 /* AppLockHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399A4BFF2317CC460027DDD6 /* AppLockHelper.swift */; };
 		399A4C032317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399A4C022317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift */; };
 		399A4C1023190ADF0027DDD6 /* PathExistsIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399A4C0F23190ADF0027DDD6 /* PathExistsIntentHandler.swift */; };
@@ -106,6 +107,7 @@
 		39E2FDED21FDEC7500F0117F /* ServerListTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */; };
 		39E2FE0021FF814A00F0117F /* ThemeRoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */; };
 		39E42D1C2315288B00B82AC3 /* KeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E42D1B2315288B00B82AC3 /* KeyCommands.swift */; };
+		39E49DBF24619CB40069414A /* CompressPathItemsIntentHandler .swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E49DBE24619CB40069414A /* CompressPathItemsIntentHandler .swift */; };
 		39E6DE84233CC39A008DAE04 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 39057AAA233BA7A60008E6C0 /* Intents.intentdefinition */; };
 		39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E6DE85233CDF1E008DAE04 /* OCItemTracker.swift */; };
 		39E98B3E22797D1B009911F1 /* PublicLinkTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E98B3D22797D1B009911F1 /* PublicLinkTableViewController.swift */; };
@@ -849,6 +851,7 @@
 		39E2FDEC21FDEC7500F0117F /* ServerListTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListTableHeaderView.swift; sourceTree = "<group>"; };
 		39E2FDFF21FF814A00F0117F /* ThemeRoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeRoundedButton.swift; sourceTree = "<group>"; };
 		39E42D1B2315288B00B82AC3 /* KeyCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCommands.swift; sourceTree = "<group>"; };
+		39E49DBE24619CB40069414A /* CompressPathItemsIntentHandler .swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CompressPathItemsIntentHandler .swift"; sourceTree = "<group>"; };
 		39E6DE85233CDF1E008DAE04 /* OCItemTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCItemTracker.swift; sourceTree = "<group>"; };
 		39E98B3D22797D1B009911F1 /* PublicLinkTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicLinkTableViewController.swift; sourceTree = "<group>"; };
 		39E98B442279ACF5009911F1 /* PublicLinkEditTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicLinkEditTableViewController.swift; sourceTree = "<group>"; };
@@ -1540,6 +1543,7 @@
 				39A5C3A0231566D9009D9EE3 /* GetFileInfoIntentHandler.swift */,
 				399A4C0F23190ADF0027DDD6 /* PathExistsIntentHandler.swift */,
 				3984F56B2319202200DC2639 /* DeletePathItemIntentHandler.swift */,
+				39E49DBE24619CB40069414A /* CompressPathItemsIntentHandler .swift */,
 			);
 			path = Intent;
 			sourceTree = "<group>";
@@ -3493,7 +3497,9 @@
 				397754E223279EED00119FCB /* OCItem+Extension.swift in Sources */,
 				39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */,
 				39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */,
+				39999DF224629FA800880D45 /* OCCore+Extension.swift in Sources */,
 				393D2B3F23FEB6DC00ED4F8C /* DispatchQueueTools.swift in Sources */,
+				39E49DBF24619CB40069414A /* CompressPathItemsIntentHandler .swift in Sources */,
 				3984F5712319202200DC2639 /* DeletePathItemIntentHandler.swift in Sources */,
 				39F689AC22F0206900E63429 /* OCBookmark+Extension.swift in Sources */,
 				395E16FF22F172C900DE89A1 /* CreateFolderIntentHandler.swift in Sources */,

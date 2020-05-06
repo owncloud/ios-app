@@ -126,11 +126,11 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>K5U8aR</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>19D76</string>
+	<string>19E266</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>11C504</string>
+	<string>11E146</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>11.3.1</string>
+	<string>11.4</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -2505,6 +2505,287 @@
 			<string>Custom</string>
 			<key>INIntentVerb</key>
 			<string>Get</string>
+		</dict>
+		<dict>
+			<key>INIntentCategory</key>
+			<string>generic</string>
+			<key>INIntentConfigurable</key>
+			<true/>
+			<key>INIntentDescription</key>
+			<string>Compress the given path items into a zip file</string>
+			<key>INIntentDescriptionID</key>
+			<string>hgRmHs</string>
+			<key>INIntentLastParameterTag</key>
+			<integer>8</integer>
+			<key>INIntentManagedParameterCombinations</key>
+			<dict>
+				<key>pathItems,account,filename</key>
+				<dict>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Compress ${pathItems} of ${account}to ${filename}</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>oBIFKF</string>
+					<key>INIntentParameterCombinationUpdatesLinked</key>
+					<true/>
+				</dict>
+			</dict>
+			<key>INIntentName</key>
+			<string>CompressPathItems</string>
+			<key>INIntentParameterCombinations</key>
+			<dict>
+				<key>pathItems,account,filename</key>
+				<dict>
+					<key>INIntentParameterCombinationIsLinked</key>
+					<true/>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Compress ${pathItems} of ${account}to ${filename}</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>yaob48</string>
+				</dict>
+			</dict>
+			<key>INIntentParameters</key>
+			<array>
+				<dict>
+					<key>INIntentParameterDisplayName</key>
+					<string>Path Items</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>YnFYyb</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>1</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>pathItems</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Enter at minimum one path to which should be compressed</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>X1OVs4</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsMultipleValues</key>
+					<true/>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>7</integer>
+					<key>INIntentParameterType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterCustomDisambiguation</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Account</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>gmaNlp</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>2</integer>
+					<key>INIntentParameterName</key>
+					<string>account</string>
+					<key>INIntentParameterObjectType</key>
+					<string>Account</string>
+					<key>INIntentParameterObjectTypeNamespace</key>
+					<string>K5U8aR</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${account}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>gMfROG</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Which one?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>IWGvu6</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationSelection</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${account}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>Og0voM</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsDynamicEnumeration</key>
+					<true/>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>5</integer>
+					<key>INIntentParameterType</key>
+					<string>Object</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterDisplayName</key>
+					<string>Filename (optional)</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>dPSUsQ</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>3</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>filename</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Enter a file name for the compressed file</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>nHQ237</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>8</integer>
+					<key>INIntentParameterType</key>
+					<string>String</string>
+				</dict>
+			</array>
+			<key>INIntentResponse</key>
+			<dict>
+				<key>INIntentResponseCodes</key>
+				<array>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>success</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeName</key>
+						<string>failure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>Pn1D1B</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>App is currently locked by pass code. Please disable pass code to proceed.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>25zMZv</string>
+						<key>INIntentResponseCodeName</key>
+						<string>authenticationRequired</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>bDZ7q6</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The account with the given UUID does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>llOtTJ</string>
+						<key>INIntentResponseCodeName</key>
+						<string>accountFailure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>h7Yg4L</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Shortcuts support is disabled. Please open the app and enable Shortcuts in Settings.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>XlVjYV</string>
+						<key>INIntentResponseCodeName</key>
+						<string>disabled</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>Ra4dpr</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>This action is a Pro Feature and currently not unlocked. For more information and available unlocking options, please see Settings &gt; Pro Features &gt; Shortcuts.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>1kJ8De</string>
+						<key>INIntentResponseCodeName</key>
+						<string>unlicensed</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>The given path does not exists</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>NlhMFB</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>The given path does not exists</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>GzUAMf</string>
+						<key>INIntentResponseCodeName</key>
+						<string>pathFailure</string>
+					</dict>
+				</array>
+				<key>INIntentResponseLastParameterTag</key>
+				<integer>2</integer>
+				<key>INIntentResponseOutput</key>
+				<string>file</string>
+				<key>INIntentResponseParameters</key>
+				<array>
+					<dict>
+						<key>INIntentResponseParameterDisplayName</key>
+						<string>File</string>
+						<key>INIntentResponseParameterDisplayNameID</key>
+						<string>7g5hLt</string>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>1</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>file</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>2</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>File</string>
+					</dict>
+				</array>
+			</dict>
+			<key>INIntentTitle</key>
+			<string>Compress Path Items</string>
+			<key>INIntentTitleID</key>
+			<string>3CMRXn</string>
+			<key>INIntentType</key>
+			<string>Custom</string>
+			<key>INIntentVerb</key>
+			<string>Do</string>
 		</dict>
 	</array>
 	<key>INTypes</key>

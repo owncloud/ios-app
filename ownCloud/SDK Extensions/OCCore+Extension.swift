@@ -18,6 +18,7 @@
 
 import Foundation
 import ownCloudSDK
+import ownCloudApp
 
 extension OCCore {
 
@@ -159,5 +160,21 @@ extension OCCore {
 				newHandler = nil
 			}
 		self.start(subitemsQuery)
+	}
+
+	func localFile(for item: OCItem, completionHandler: @escaping (_ item: DownloadItem?) -> Void) {
+		if self.localCopy(of: item) == nil {
+			self.downloadItem(item, options: [ .returnImmediatelyIfOfflineOrUnavailable : true ], resultHandler: { (error, core, item, file) in
+				if error == nil, let item = item, let file = item.file(with: core) {
+					completionHandler(DownloadItem(file: file, item: item))
+				} else {
+					completionHandler(nil)
+				}
+			})
+		} else if let file = item.file(with: self) {
+			completionHandler(DownloadItem(file: file, item: item))
+		} else {
+			completionHandler(nil)
+		}
 	}
 }

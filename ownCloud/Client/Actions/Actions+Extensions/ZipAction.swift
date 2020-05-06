@@ -31,6 +31,8 @@ class ZipAction: Action {
 		return .afterMiddle
 	}
 
+	let defaultZipName = "Archive.zip".localized
+
 	override func run() {
 		guard context.items.count > 0, let hostViewController = context.viewController, let core = self.core else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
@@ -100,10 +102,10 @@ class ZipAction: Action {
 			} else {
 				guard let unifiedItems = unifiedItems, unifiedItems.count > 0, let viewController = hostViewController else { return }
 
-				var zipName = "Archive.zip"
+				var zipName = self.defaultZipName
 
 				if self.context.items.count == 1, let item = self.context.items.first {
-					zipName = String(format: "%@.zip", item.name ?? "Archive.zip")
+					zipName = String(format: "%@.zip", item.name ?? self.defaultZipName)
 				}
 
 				let renameViewController = NamingViewController(with: nil, core: self.core, defaultName: zipName, stringValidator: { name in
@@ -119,13 +121,17 @@ class ZipAction: Action {
 							let zipURL = FileManager.default.temporaryDirectory.appendingPathComponent(newName)
 							let error = ZIPArchive.compressContents(of: unifiedItems, fromBasePath: parentItem.path ?? "", asZipFile: zipURL, withPassword: nil)
 
-							print("--> error \(error)")
 								if !self.upload(itemURL: zipURL, to: parentItem, name: zipURL.lastPathComponent) {
 									self.completed(with: NSError(ocError: .internal))
 									return
 								} else {
 									self.completed()
 								}
+
+							do {
+								try FileManager.default.removeItem(at: zipURL)
+							} catch {
+							}
 						}
 					}
 				})

@@ -64,6 +64,7 @@
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
+		<string>CompressPathItemsIntent</string>
 		<string>CreateFolderIntent</string>
 		<string>DeletePathItemIntent</string>
 		<string>GetAccountIntent</string>
