@@ -1,5 +1,5 @@
 //
-//  ZipAction.swift
+//  CompressAction.swift
 //  ownCloud
 //
 //  Created by Matthias Hühne on 05/04/2020.
@@ -19,15 +19,19 @@
 import ownCloudSDK
 import ownCloudApp
 
-class ZipAction: Action {
-	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.zip") }
+class CompressAction: Action {
+	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.compress") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String { return "Compress as ZIP file".localized }
+	override class var name : String { return "Compress".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .toolbar, .keyboardShortcut] }
 	override class var keyCommand : String? { return "Z" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
+		if forContext.items.count == 1, forContext.items.first?.mimeType == "application/zip" {
+			return .none
+		}
+
 		return .afterMiddle
 	}
 
@@ -122,16 +126,13 @@ class ZipAction: Action {
 							let error = ZIPArchive.compressContents(of: unifiedItems, fromBasePath: parentItem.path ?? "", asZipFile: zipURL, withPassword: nil)
 
 								if !self.upload(itemURL: zipURL, to: parentItem, name: zipURL.lastPathComponent) {
+									self.removeFiles(url: zipURL)
 									self.completed(with: NSError(ocError: .internal))
 									return
 								} else {
+									self.removeFiles(url: zipURL)
 									self.completed()
 								}
-
-							do {
-								try FileManager.default.removeItem(at: zipURL)
-							} catch {
-							}
 						}
 					}
 				})
@@ -146,6 +147,13 @@ class ZipAction: Action {
 		}
 
 		hudViewController.presentHUDOn(viewController: hostViewController)
+	}
+
+	private func removeFiles(url : URL) {
+		do {
+			try FileManager.default.removeItem(at: url)
+		} catch {
+		}
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {

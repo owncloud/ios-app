@@ -33,10 +33,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface ZipFileItem : NSObject
+{
+	NSString *_filepath;
+	BOOL _isDirectory;
+	NSString *_absolutePath;
+}
+
+@property(strong,nonatomic) NSString *filepath;
+@property(assign,nonatomic) BOOL isDirectory;
+@property(strong,nonatomic) NSString *absolutePath;
+
+- (instancetype)initWithFilepath:(NSString *)filepath isDirectory:(BOOL)isDirectory absolutePath:(NSString *)absolutePath;
+
+@end
+
 @interface ZIPArchive : NSObject
 
 + (NSError *)compressContentsOf:(NSURL *)sourceDirectory asZipFile:(NSURL *)zipFileURL;
 + (nullable NSError *)compressContentsOfItems:(NSArray<DownloadItem *> *)sourceDirectorie fromBasePath:(NSString *)basePath asZipFile:(NSURL *)zipFileURL withPassword:(nullable NSString *)password;
++ (NSArray<ZipFileItem *> *)uncompressContentsOfZipFile:(NSURL *)zipFileURL parentItem:(OCItem *)parentItem withPassword:(nullable NSString *)password withCore:(OCCore *)core;
 
 @end
 

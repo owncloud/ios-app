@@ -80,6 +80,7 @@
 		3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D422411EDF00B66713 /* BorderedLabel.swift */; };
 		3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */; };
 		39999DF224629FA800880D45 /* OCCore+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A513AB22674E56002CF1AA /* OCCore+Extension.swift */; };
+		39999DF42462D57800880D45 /* UncompressAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39999DF32462D57800880D45 /* UncompressAction.swift */; };
 		399A4C002317CC460027DDD6 /* AppLockHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399A4BFF2317CC460027DDD6 /* AppLockHelper.swift */; };
 		399A4C032317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399A4C022317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift */; };
 		399A4C1023190ADF0027DDD6 /* PathExistsIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399A4C0F23190ADF0027DDD6 /* PathExistsIntentHandler.swift */; };
@@ -94,7 +95,7 @@
 		39B289A8226F1EE000BE0E11 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B289A7226F1EE000BE0E11 /* MessageView.swift */; };
 		39B9675022BE0FBA0074DB22 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 593A821320C7D4C5000E2A90 /* Localizable.strings */; };
 		39BC9C3023DB831F0097C52D /* DocumentEditingAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CD755123D787E400193950 /* DocumentEditingAction.swift */; };
-		39BCDD7F246006AD00FE3D23 /* ZipAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BCDD79246006AC00FE3D23 /* ZipAction.swift */; };
+		39BCDD7F246006AD00FE3D23 /* CompressAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BCDD79246006AC00FE3D23 /* CompressAction.swift */; };
 		39BCDD812460858300FE3D23 /* CompressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BCDD802460858200FE3D23 /* CompressViewController.swift */; };
 		39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BE385C23435AFE0062A2FE /* String+Extension.swift */; };
 		39CC8AE6228C12100020253B /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8AE5228C12100020253B /* Array+Extension.swift */; };
@@ -823,6 +824,7 @@
 		3998F5D2224102FE00B66713 /* UITableView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
 		3998F5D422411EDF00B66713 /* BorderedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedLabel.swift; sourceTree = "<group>"; };
 		3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCCertificate+Extension.swift"; sourceTree = "<group>"; };
+		39999DF32462D57800880D45 /* UncompressAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UncompressAction.swift; sourceTree = "<group>"; };
 		399A4BFF2317CC460027DDD6 /* AppLockHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockHelper.swift; sourceTree = "<group>"; };
 		399A4C022317D1ED0027DDD6 /* OCBookmarkManager+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCBookmarkManager+Extension.swift"; sourceTree = "<group>"; };
 		399A4C0F23190ADF0027DDD6 /* PathExistsIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathExistsIntentHandler.swift; sourceTree = "<group>"; };
@@ -837,7 +839,7 @@
 		39AFC3D0225E72FB00A6D3AE /* GroupSharingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSharingTableViewController.swift; sourceTree = "<group>"; };
 		39AFC3D7225E79CD00A6D3AE /* GroupSharingEditTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSharingEditTableViewController.swift; sourceTree = "<group>"; };
 		39B289A7226F1EE000BE0E11 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
-		39BCDD79246006AC00FE3D23 /* ZipAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZipAction.swift; sourceTree = "<group>"; };
+		39BCDD79246006AC00FE3D23 /* CompressAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompressAction.swift; sourceTree = "<group>"; };
 		39BCDD802460858200FE3D23 /* CompressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompressViewController.swift; sourceTree = "<group>"; };
 		39BE385C23435AFE0062A2FE /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		39CC8AE5228C12100020253B /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
@@ -1746,6 +1748,7 @@
 		6E586CF52199A70100F680C4 /* Actions+Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				39999DF32462D57800880D45 /* UncompressAction.swift */,
 				39265BB123D9987500B0C4CA /* MediaEditingAction.swift */,
 				39CD755123D787E400193950 /* DocumentEditingAction.swift */,
 				397754F22327A33500119FCB /* OpenSceneAction.swift */,
@@ -1767,7 +1770,7 @@
 				DC62514B225D254500736874 /* UploadBaseAction.swift */,
 				DC625147225CEB2C00736874 /* UploadFileAction.swift */,
 				DC625149225CEB4300736874 /* UploadMediaAction.swift */,
-				39BCDD79246006AC00FE3D23 /* ZipAction.swift */,
+				39BCDD79246006AC00FE3D23 /* CompressAction.swift */,
 			);
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
@@ -3279,6 +3282,7 @@
 				4C464BF12187AF1500D30602 /* PDFTocTableViewCell.swift in Sources */,
 				DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */,
 				DC63208321FCAC1E007EC0A8 /* ClientActivityViewController.swift in Sources */,
+				39999DF42462D57800880D45 /* UncompressAction.swift in Sources */,
 				DC3DEC7E22B03ACD00F3352D /* CardPresentationController.swift in Sources */,
 				4C464BF62187AF1500D30602 /* PDFTocItem.swift in Sources */,
 				6E3A103E219D5BBA00F90C96 /* RenameAction.swift in Sources */,
@@ -3378,7 +3382,7 @@
 				394804DA225CBDBA00AA8183 /* BreadCrumbTableViewController.swift in Sources */,
 				4C235CEE21F88C0300A989A8 /* UIViewController+Extension.swift in Sources */,
 				DC27A19D20CAB602008ACB6C /* FileProviderInterfaceManager.swift in Sources */,
-				39BCDD7F246006AD00FE3D23 /* ZipAction.swift in Sources */,
+				39BCDD7F246006AD00FE3D23 /* CompressAction.swift in Sources */,
 				4C51727D22DE04BD001BC97F /* ScheduledTaskExtension.swift in Sources */,
 				DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */,
 				23EC77582137F3DD0032D4E6 /* PDFViewerViewController.swift in Sources */,
