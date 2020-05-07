@@ -18,9 +18,9 @@
 
 import UIKit
 
-extension UIAlertController {
+extension ThemedAlertController {
 
-	class func alertControllerForLinkResolution(error:Error?) -> UIAlertController {
+	class func alertControllerForLinkResolution(error:Error?) -> ThemedAlertController {
 
 		var message = "Couldn't find an item corresponding to a private link. If there is no internet connection, eventually it was not yet retrieved from the server".localized
 

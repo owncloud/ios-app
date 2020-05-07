@@ -185,12 +185,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	private func openLink(in application:UIApplication, with url:URL) {
         url.retrieveLinkedItem(with: { (item, bookmark, error) in
-
 			guard let window = application.currentWindow() else { return }
 
 			if item == nil {
-				let alert = UIAlertController.alertControllerForLinkResolution(error: error)
-				window.rootViewController?.present(alert, animated: true)
+				let alertController = ThemedAlertController.alertControllerForLinkResolution(error: error)
+				window.rootViewController?.topMostViewController.present(alertController, animated: true)
+
 			} else {
 				if let itemID = item?.localID, let bookmark = bookmark {
 					window.display(itemWithID: itemID, in: bookmark)
