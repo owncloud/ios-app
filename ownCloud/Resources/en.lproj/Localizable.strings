@@ -295,6 +295,7 @@
 "Could not get the picture" = "Could not get the picture";
 "Downloading" = "Downloading";
 "File couldn't be opened" = "File couldn't be opened";
+"Connecting..." = "Connecting...";
 
 /* PDF Viewer */
 "Resume" = "Resume";

@@ -394,6 +394,8 @@ class DisplayViewController: UIViewController {
 				hideProgressIndicators()
 				self.showPreviewButton.isHidden = true
 			case .connecting:
+				self.infoLabel.isHidden = false
+				self.infoLabel.text = "Connecting...".localized
 				break
 
 			case .offline:
