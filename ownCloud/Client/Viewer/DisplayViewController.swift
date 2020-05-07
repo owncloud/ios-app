@@ -40,7 +40,10 @@ protocol DisplayViewEditingDelegate: class {
 	func save(item: OCItem, fileURL newVersion: URL)
 }
 
-class DisplayViewController: UIViewController, OCQueryDelegate {
+class DisplayViewController: UIViewController {
+
+	var item: OCItem?
+	var itemIndex: Int?
 
 	private let iconImageSize: CGSize = CGSize(width: 200.0, height: 200.0)
 	private let bottomMargin: CGFloat = 60.0
@@ -48,12 +51,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	private let horizontalSpacing: CGFloat = 10
 	private let progressViewVerticalSpacing: CGFloat = 20.0
 
-	// MARK: - Configuration
-
-	var item: OCItem?
-	var itemIndex: Int?
-
-	var connectionStatus: OCCoreConnectionStatus? {
+	private var connectionStatus: OCCoreConnectionStatus? {
 		didSet {
 			if let status = connectionStatus {
 				switch status {
@@ -74,6 +72,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	}
 
 	private var coreConnectionStatusObservation : NSKeyValueObservation?
+
 	weak var core: OCCore? {
 		willSet {
 			coreConnectionStatusObservation?.invalidate()
@@ -88,13 +87,12 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
-	// This shall be set to false if DisplayViewController sublass is able to handle streamed data (e.g. audio, video)
-	var requiresLocalItemCopy: Bool = true
-
 	private var lastSourceItemVersion : OCItemVersionIdentifier?
 	private var lastSourceItemModificationDate : Date?
 
 	var progressSummarizer : ProgressSummarizer?
+
+	private var query : OCQuery?
 
 	var source: URL? {
 		didSet {
@@ -134,7 +132,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
-	// MARK: - Views
+	// MARK: - Subviews / UI elements
 
 	private var iconImageView = UIImageView()
 	private var progressView = UIProgressView(progressViewStyle: .bar)
@@ -143,10 +141,12 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 	private var showPreviewButton = ThemeButton(type: .custom)
 	private var infoLabel = UILabel()
 
-	// MARK: - Delegate
+	// MARK: - Editing delegate
+
 	weak var editingDelegate: DisplayViewEditingDelegate?
 
-	// MARK: - Init & Deinit
+	// MARK: - Initialization and de-initialization
+
 	required init() {
 		super.init(nibName: nil, bundle: nil)
 	}
@@ -161,7 +161,8 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		self.stopQuery()
 	}
 
-	// MARK: - Controller lifecycle
+	// MARK: - View Controller lifecycle
+
 	override func loadView() {
 		super.loadView()
 
@@ -233,7 +234,6 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
 		Theme.shared.register(client: self)
 	}
 
@@ -242,23 +242,33 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		self.updateUI()
 	}
 
-	func updateNavigationBarItems() {
-		if let parent = parent, let itemName = item?.name {
-			parent.navigationItem.title = itemName
+	// MARK: - Public API
 
-			if shallDisplayMoreButtonInToolbar, let queryState = query?.state {
-				if queryState != .targetRemoved {
-					let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(optionsBarButtonPressed))
-					actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
-					parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
-				} else {
-					parent.navigationItem.rightBarButtonItem = nil
-				}
+	func present(item: OCItem) {
+		guard item.removed == false else {
+			return
+		}
+
+		self.item = item
+		metadataInfoLabel.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
+
+		if let core = self.core {
+			if core.localCopy(of: item) == nil {
+				iconImageView.setThumbnailImage(using: core, from: item, with: iconImageSize, avoidSystemThumbnails: true)
+			}
+
+			if iconImageView.image == nil {
+				iconImageView.image = item.icon(fitInSize:iconImageSize)
 			}
 		}
+
+		updateSource()
+		startQuery()
+		updateNavigationBarItems()
 	}
 
-	// MARK: - Download actions
+	// MARK: - Actions which can be triggered by the user
+
 	@objc func cancelDownload(sender: Any?) {
 		if downloadProgress != nil {
 			downloadProgress?.cancel()
@@ -306,12 +316,60 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
+	@objc func optionsBarButtonPressed(_ sender: UIBarButtonItem) {
+		guard let core = core, let item = item else {
+			return
+		}
+
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: sender)
+
+		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: nil) {
+			self.present(asCard: moreViewController, animated: true)
+		}
+	}
+
+	// MARK: - Methods to be overriden in subclasses
+
 	func renderSpecificView(completion: @escaping  (_ success:Bool) -> Void) {
 		// This function is intended to be overwritten by the subclases to implement a custom view based on the source property.s
 		fatalError("*** Subclass must implement renderSpecificView() method ***")
 	}
 
-	func hideItemMetadataUIElements() {
+	// Override in subclasses and implement specific checks if required
+	func canPreviewCurrentItem() -> Bool {
+		// Only subclasses can render a preview, superclass can't
+		if type(of: self) === DisplayViewController.self {
+			return false
+		}
+
+		return true
+	}
+
+	// Can be overriden in subclasses e.g. if item can be previewed without downloadint it (e.g. streamable video
+	func requiresLocalCopyForPreview() -> Bool {
+		return true
+	}
+
+	// MARK: - UI management
+
+	func updateNavigationBarItems() {
+		if let parent = parent, let itemName = item?.name {
+			parent.navigationItem.title = itemName
+
+			if shallDisplayMoreButtonInToolbar, let queryState = query?.state {
+				if queryState != .targetRemoved {
+					let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+					actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
+					parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
+				} else {
+					parent.navigationItem.rightBarButtonItem = nil
+				}
+			}
+		}
+	}
+
+	private func hideItemMetadataUIElements() {
 		iconImageView.isHidden = true
 		progressView.isHidden = true
 		metadataInfoLabel.isHidden = true
@@ -381,23 +439,9 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
-	@objc func optionsBarButtonPressed(_ sender: UIBarButtonItem) {
-		guard let core = core, let item = item else {
-			return
-		}
-
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .moreItem)
-		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: sender)
-
-		if let moreViewController = Action.cardViewController(for: item, with: actionContext, completionHandler: nil) {
-			self.present(asCard: moreViewController, animated: true)
-		}
-	}
-
 	// MARK: - Query management
-	private var query : OCQuery?
 
-	func startQuery() {
+	private func startQuery() {
 		if query == nil, let item = item, let core = core {
 			query = OCQuery(item: item)
 
@@ -408,7 +452,7 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
-	func stopQuery() {
+	private func stopQuery() {
 		if let core = core, let query = query {
 			self.query = nil
 			query.delegate = nil
@@ -416,10 +460,57 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 		}
 	}
 
-	// MARK: - Query handling
-	// (not in an extension, so subclasses can override these as needed)
+	private func updateSource() {
+		guard let item = self.item else { return }
+
+		guard canPreviewCurrentItem() == true else { return }
+
+		// If we don't need to download item, just get direct URL (e.g. for video which can be streamed)
+		if source == nil && requiresLocalCopyForPreview() == false {
+			core?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (error, url, authHeaders) in
+				if error == nil {
+					self.httpAuthHeaders = authHeaders
+					self.source = url
+				}
+			})
+			return
+		}
+
+		// Bail out if the download is already in progress
+		guard item.syncActivity.contains(.downloading) == false else { return }
+
+		var shallUpdateItem = false
+
+		// Item version mismatch?
+		if (lastSourceItemVersion != nil) && (item.itemVersionIdentifier != lastSourceItemVersion) {
+			shallUpdateItem = true
+		}
+
+		// Item locally modified or source URL is missing?
+		if item.locallyModified || source == nil {
+			shallUpdateItem = true
+		}
+
+		if shallUpdateItem == true {
+			if core?.localCopy(of: item) == nil {
+				self.downloadItem(sender: nil)
+			} else {
+				// We already have a local copy, just modify item's last used timestamp
+				core?.registerUsage(of: item, completionHandler: nil)
+				if let core = core, let file = item.file(with: core) {
+					self.source = file.url
+				}
+			}
+		}
+	}
+}
+
+extension DisplayViewController : OCQueryDelegate {
+
 	func query(_ query: OCQuery, failedWithError error: Error) {
-		// Not applicable atm
+		// At the moment running query can inform the preview that item has changed or has been removed
+		// Or we can get query error callback e.g. in case connection is lost etc. but if we still have an item,
+		// user should be able to see it. Probably we won't provide much benefit by presenting such errors here.
 	}
 
 	func queryHasChangesAvailable(_ query: OCQuery) {
@@ -479,86 +570,9 @@ class DisplayViewController: UIViewController, OCQueryDelegate {
 			}
 		}
 	}
-
-	private func updateSource() {
-		guard let item = self.item else { return }
-
-		guard canPreviewCurrentItem() == true else { return }
-
-		// If we don't need to download item, just get direct URL (e.g. for video which can be streamed)
-		if source == nil && requiresLocalItemCopy == false {
-			core?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (error, url, authHeaders) in
-				if error == nil {
-					self.httpAuthHeaders = authHeaders
-					self.source = url
-				}
-			})
-			return
-		}
-
-		// Bail out if the download is already in progress
-		guard item.syncActivity.contains(.downloading) == false else { return }
-
-		var shallUpdateItem = false
-
-		// Item version mismatch?
-		if (lastSourceItemVersion != nil) && (item.itemVersionIdentifier != lastSourceItemVersion) {
-			shallUpdateItem = true
-		}
-
-		// Item locally modified or source URL is missing?
-		if item.locallyModified || source == nil {
-			shallUpdateItem = true
-		}
-
-		if shallUpdateItem == true {
-			if core?.localCopy(of: item) == nil {
-				self.downloadItem(sender: nil)
-			} else {
-				// We already have a local copy, just modify item's last used timestamp
-				core?.registerUsage(of: item, completionHandler: nil)
-				if let core = core, let file = item.file(with: core) {
-					self.source = file.url
-				}
-			}
-		}
-	}
-
-	func present(item: OCItem) {
-		guard item.removed == false else {
-			return
-		}
-
-		self.item = item
-		metadataInfoLabel.text = item.sizeLocalized + " - " + item.lastModifiedLocalized
-
-		if let core = self.core {
-			if core.localCopy(of: item) == nil {
-				iconImageView.setThumbnailImage(using: core, from: item, with: iconImageSize, avoidSystemThumbnails: true)
-			}
-
-			if iconImageView.image == nil {
-				iconImageView.image = item.icon(fitInSize:iconImageSize)
-			}
-		}
-
-		updateSource()
-		startQuery()
-		updateNavigationBarItems()
-	}
-
-	// Override in subclasses and implement specific checks if required
-	func canPreviewCurrentItem() -> Bool {
-		// Only subclasses can render a preview, superclass can't
-		if type(of: self) === DisplayViewController.self {
-			return false
-		}
-
-		return true
-	}
 }
 
-// MARK: - Public API
+// MARK: - Configuration
 
 extension DisplayViewController {
 	func configure(_ configuration: DisplayViewConfiguration) {

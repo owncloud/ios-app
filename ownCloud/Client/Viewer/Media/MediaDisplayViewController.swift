@@ -52,7 +52,6 @@ class MediaDisplayViewController : DisplayViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.requiresLocalItemCopy = !(OCAppIdentity.shared.userDefaults?.streamingEnabled ?? false)
 
 		NotificationCenter.default.addObserver(self, selector: #selector(handleDidEnterBackgroundNotification), name: UIApplication.didEnterBackgroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handleWillEnterForegroundNotification), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -78,6 +77,10 @@ class MediaDisplayViewController : DisplayViewController {
 		}
 
 		self.view.layoutIfNeeded()
+	}
+
+	override func requiresLocalCopyForPreview() -> Bool {
+		return !(OCAppIdentity.shared.userDefaults?.streamingEnabled ?? false)
 	}
 
 	override func renderSpecificView(completion: @escaping (Bool) -> Void) {
