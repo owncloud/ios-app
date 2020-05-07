@@ -71,7 +71,7 @@ extension URL {
         return nil
     }
 
-    @discardableResult func retrieveLinkedItem(with completion: @escaping (_ item:OCItem?, _ bookmark:OCBookmark?, _ error:Error?) -> Void, replaceScheme:Bool = false) -> Bool {
+	@discardableResult func retrieveLinkedItem(with completion: @escaping (_ item:OCItem?, _ bookmark:OCBookmark?, _ error:Error?, _ connectionStatus:OCCoreConnectionStatus) -> Void) -> Bool {
         // Check if the link is private ones and has item ID
         guard self.privateLinkItemID() != nil else {
             return false
@@ -83,6 +83,7 @@ extension URL {
 		var matchedBookmark: OCBookmark?
 		var foundItem: OCItem?
 		var lastError: Error?
+		var connectionStatus: OCCoreConnectionStatus = .offline
 
 		let group = DispatchGroup()
 
@@ -91,14 +92,13 @@ extension URL {
 			if foundItem == nil {
 				var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
 				// E.g. if we would like to use app URL scheme (owncloud://) instead of universal link, to make it work with oC SDK, we need to change scheme back to the original bookmark URL scheme
-				if replaceScheme {
-					components?.scheme = bookmark.url?.scheme
-				}
+				components?.scheme = bookmark.url?.scheme
 
 				if let privateLinkURL = components?.url {
 					group.enter()
 					OCCoreManager.shared.requestCore(for: bookmark, setup: nil) { (core, error) in
 						if core != nil {
+							connectionStatus = core!.connectionStatus
 							core?.retrieveItem(forPrivateLink: privateLinkURL, completionHandler: { (error, item) in
 								if foundItem == nil {
 									foundItem = item
@@ -118,12 +118,39 @@ extension URL {
 
 		group.notify(queue: DispatchQueue.main) {
 			if foundItem != nil {
-				completion(foundItem, matchedBookmark, nil)
+				completion(foundItem, matchedBookmark, nil, connectionStatus)
 			} else {
-				completion(nil, nil, lastError)
+				completion(nil, nil, lastError, connectionStatus)
 			}
 		}
 
         return true
     }
+
+	func resolveAndPresent(in window:UIWindow) {
+
+		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
+		hud?.present(on: window.rootViewController?.topMostViewController, label: "Resolving link…".localized)
+
+		self.retrieveLinkedItem(with: { (item, bookmark, _, connectionStatus) in
+
+			let completion = {
+				if item == nil {
+					let alertController = ThemedAlertController.alertControllerForLinkResolution(connected: connectionStatus == .online)
+					window.rootViewController?.topMostViewController.present(alertController, animated: true)
+
+				} else {
+					if let itemID = item?.localID, let bookmark = bookmark {
+						window.display(itemWithID: itemID, in: bookmark)
+					}
+				}
+			}
+
+			if hud != nil {
+				hud?.dismiss(completion: completion)
+			} else {
+				completion()
+			}
+        })
+	}
 }

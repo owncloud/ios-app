@@ -82,18 +82,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if urlContext.url.scheme == "owncloud" {
 
 				if urlContext.url.privateLinkItemID() != nil {
-                    urlContext.url.retrieveLinkedItem(with: { (item, bookmark, error) in
-						guard let windowScene = scene as? UIWindowScene else { return }
 
-                        if let itemID = item?.localID, let bookmark = bookmark {
-                            windowScene.windows.first?.display(itemWithID: itemID, in: bookmark)
-                        }
+					guard let windowScene = scene as? UIWindowScene else { return }
+					
+					guard let window =  windowScene.windows.first else { return }
 
-						if item == nil {
-							let alertController = ThemedAlertController.alertControllerForLinkResolution(error: error)
-							windowScene.windows.first?.rootViewController?.topMostViewController.present(alertController, animated: true)
-						}
-                    }, replaceScheme: true)
+					urlContext.url.resolveAndPresent(in: window)
                 }
             } else {
                 ImportFilesController(url: urlContext.url, copyBeforeUsing: urlContext.options.openInPlace).accountUI()
@@ -107,20 +101,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 return
         }
 
-        url.retrieveLinkedItem(with: { (item, bookmark, error) in
+		guard let windowScene = scene as? UIWindowScene else { return }
 
-			guard let windowScene = scene as? UIWindowScene else { return }
+		guard let window =  windowScene.windows.first else { return }
 
-			guard let window =  windowScene.windows.first else { return }
-
-			if item == nil {
-				let alertController = ThemedAlertController.alertControllerForLinkResolution(error: error)
-				window.rootViewController?.topMostViewController.present(alertController, animated: true)
-			} else {
-				if let itemID = item?.localID, let bookmark = bookmark {
-					windowScene.windows.first?.display(itemWithID: itemID, in: bookmark)
-				}
-			}
-        })
+		url.resolveAndPresent(in: window)
     }
 }

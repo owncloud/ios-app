@@ -20,16 +20,17 @@ import UIKit
 
 extension ThemedAlertController {
 
-	class func alertControllerForLinkResolution(error:Error?) -> ThemedAlertController {
+	class func alertControllerForLinkResolution(connected:Bool) -> ThemedAlertController {
 
-		var message = "Couldn't find an item corresponding to a private link. If there is no internet connection, eventually it was not yet retrieved from the server".localized
+		var message = ""
 
-		if let errorMessage = error?.localizedDescription {
-			message += "\n\n"
-			message += errorMessage
+		if !connected {
+			message = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.".localized
+		} else {
+			message = "Couldn't resolve a private link since the item is not known to the server.".localized
 		}
 
-		let alert = ThemedAlertController(title: "Link not resolved".localized, message: message, preferredStyle: .alert)
+		let alert = ThemedAlertController(title: "Link resolution failed".localized, message: message, preferredStyle: .alert)
 
 		let okAction = UIAlertAction(title: "OK", style: .default)
 

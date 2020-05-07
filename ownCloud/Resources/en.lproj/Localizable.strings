@@ -594,5 +594,7 @@
 "subscription" = "subscription";
 
 /* Universal Links */
-"Link not resolved" = "Link not resolved";
-"Couldn't find an item corresponding to a private link. If there is no internet connection, eventually it was not yet retrieved from the server" = "Couldn't find an item corresponding to a private link. If there is no internet connection, eventually it was not yet retrieved from the server";
+"Resolving link…" = "Resolving link…";
+"Link resolution failed" = "Link resolution failed";
+"Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.";
+"Couldn't resolve a private link since the item is not known to the server." = "Couldn't resolve a private link since the item is not known to the server.";

@@ -129,7 +129,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
 
 		if url.matchesAppScheme {
-			openLink(in: app, with: url)
+			guard let window = app.currentWindow() else { return false }
+
+			url.resolveAndPresent(in: window)
 		} else {
 			var copyBeforeUsing = true
 			if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
@@ -166,7 +168,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 return false
         }
 
-		openLink(in: application, with: url)
+		guard let window = application.currentWindow() else { return false }
+
+		url.resolveAndPresent(in: window)
 
         return true
     }
@@ -181,21 +185,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	@available(iOS 13.0, *)
 	func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-	}
-
-	private func openLink(in application:UIApplication, with url:URL) {
-        url.retrieveLinkedItem(with: { (item, bookmark, error) in
-			guard let window = application.currentWindow() else { return }
-
-			if item == nil {
-				let alertController = ThemedAlertController.alertControllerForLinkResolution(error: error)
-				window.rootViewController?.topMostViewController.present(alertController, animated: true)
-
-			} else {
-				if let itemID = item?.localID, let bookmark = bookmark {
-					window.display(itemWithID: itemID, in: bookmark)
-				}
-			}
-        })
 	}
 }
