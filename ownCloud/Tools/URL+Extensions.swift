@@ -71,7 +71,7 @@ extension URL {
         return nil
     }
 
-	@discardableResult func retrieveLinkedItem(with completion: @escaping (_ item:OCItem?, _ bookmark:OCBookmark?, _ error:Error?, _ connectionStatus:OCCoreConnectionStatus) -> Void) -> Bool {
+	@discardableResult func retrieveLinkedItem(with completion: @escaping (_ item:OCItem?, _ bookmark:OCBookmark?, _ error:Error?, _ connected:Bool) -> Void) -> Bool {
         // Check if the link is private ones and has item ID
         guard self.privateLinkItemID() != nil else {
             return false
@@ -83,7 +83,7 @@ extension URL {
 		var matchedBookmark: OCBookmark?
 		var foundItem: OCItem?
 		var lastError: Error?
-		var connectionStatus: OCCoreConnectionStatus = .offline
+		var internetReachable = false
 
 		let group = DispatchGroup()
 
@@ -98,7 +98,7 @@ extension URL {
 					group.enter()
 					OCCoreManager.shared.requestCore(for: bookmark, setup: nil) { (core, error) in
 						if core != nil {
-							connectionStatus = core!.connectionStatus
+							internetReachable = core!.connectionStatusSignals.contains(.reachable)
 							core?.retrieveItem(forPrivateLink: privateLinkURL, completionHandler: { (error, item) in
 								if foundItem == nil {
 									foundItem = item
@@ -118,9 +118,9 @@ extension URL {
 
 		group.notify(queue: DispatchQueue.main) {
 			if foundItem != nil {
-				completion(foundItem, matchedBookmark, nil, connectionStatus)
+				completion(foundItem, matchedBookmark, nil, internetReachable)
 			} else {
-				completion(nil, nil, lastError, connectionStatus)
+				completion(nil, nil, lastError, internetReachable)
 			}
 		}
 
@@ -132,11 +132,11 @@ extension URL {
 		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
 		hud?.present(on: window.rootViewController?.topMostViewController, label: "Resolving link…".localized)
 
-		self.retrieveLinkedItem(with: { (item, bookmark, _, connectionStatus) in
+		self.retrieveLinkedItem(with: { (item, bookmark, _, internetReachable) in
 
 			let completion = {
 				if item == nil {
-					let alertController = ThemedAlertController.alertControllerForLinkResolution(offline: connectionStatus == .offline)
+					let alertController = ThemedAlertController.alertControllerForLinkResolution(offline: internetReachable == false)
 					window.rootViewController?.topMostViewController.present(alertController, animated: true)
 
 				} else {
