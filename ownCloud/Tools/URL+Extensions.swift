@@ -136,7 +136,7 @@ extension URL {
 
 			let completion = {
 				if item == nil {
-					let alertController = ThemedAlertController.alertControllerForLinkResolution(connected: connectionStatus == .online)
+					let alertController = ThemedAlertController.alertControllerForLinkResolution(offline: connectionStatus == .offline)
 					window.rootViewController?.topMostViewController.present(alertController, animated: true)
 
 				} else {
