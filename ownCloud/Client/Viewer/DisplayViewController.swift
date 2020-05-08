@@ -62,8 +62,9 @@ class DisplayViewController: UIViewController {
 					stopQuery()
 				case .online:
 					self.state = .online
-					updateSource()
-					startQuery()
+					self.updateSource()
+					self.startQuery()
+
 				default:
 					break
 				}
@@ -81,7 +82,9 @@ class DisplayViewController: UIViewController {
 		didSet {
 			if let core = core {
 				coreConnectionStatusObservation = core.observe(\OCCore.connectionStatus, options: [.initial, .new]) { [weak self] (_, _) in
-					self?.connectionStatus = core.connectionStatus
+					OnMainThread {
+						self?.connectionStatus = core.connectionStatus
+					}
 				}
 			}
 		}
@@ -140,6 +143,7 @@ class DisplayViewController: UIViewController {
 	private var metadataInfoLabel = UILabel()
 	private var showPreviewButton = ThemeButton(type: .custom)
 	private var infoLabel = UILabel()
+	private var connectionActivityView = UIActivityIndicatorView(style: .white)
 
 	// MARK: - Editing delegate
 
@@ -205,6 +209,10 @@ class DisplayViewController: UIViewController {
 		infoLabel.font = UIFont.preferredFont(forTextStyle: .headline)
 		view.addSubview(infoLabel)
 
+		connectionActivityView.translatesAutoresizingMaskIntoConstraints = false
+		connectionActivityView.hidesWhenStopped = true
+		view.addSubview(connectionActivityView)
+
 		NSLayoutConstraint.activate([
 			iconImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
 			iconImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: -bottomMargin),
@@ -228,7 +236,10 @@ class DisplayViewController: UIViewController {
 
 			infoLabel.centerXAnchor.constraint(equalTo: metadataInfoLabel.centerXAnchor),
 			infoLabel.topAnchor.constraint(equalTo: metadataInfoLabel.bottomAnchor, constant: verticalSpacing),
-			infoLabel.widthAnchor.constraint(equalTo: iconImageView.widthAnchor)
+			infoLabel.widthAnchor.constraint(equalTo: iconImageView.widthAnchor),
+
+			connectionActivityView.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
+			connectionActivityView.topAnchor.constraint(equalTo: infoLabel.bottomAnchor, constant: verticalSpacing)
 		])
 	}
 
@@ -264,6 +275,7 @@ class DisplayViewController: UIViewController {
 
 		updateSource()
 		startQuery()
+
 		updateNavigationBarItems()
 	}
 
@@ -369,15 +381,6 @@ class DisplayViewController: UIViewController {
 		}
 	}
 
-	private func hideItemMetadataUIElements() {
-		iconImageView.isHidden = true
-		progressView.isHidden = true
-		metadataInfoLabel.isHidden = true
-		infoLabel.isHidden = true
-		cancelButton.isHidden = true
-		showPreviewButton.isHidden = true
-	}
-
 	private func updateUI() {
 
 		func hideProgressIndicators() {
@@ -388,56 +391,64 @@ class DisplayViewController: UIViewController {
 			self.infoLabel.isHidden = true
 		}
 
-		OnMainThread(inline: true) {
-			switch self.state {
-			case .initial, .online:
-				hideProgressIndicators()
-				self.showPreviewButton.isHidden = true
+		switch self.state {
+		case .initial:
+			hideProgressIndicators()
+			showPreviewButton.isHidden = true
 
-			case .connecting:
-				self.infoLabel.isHidden = false
-				self.infoLabel.text = "Connecting...".localized
+		case .online:
+			connectionActivityView.stopAnimating()
+			hideProgressIndicators()
+			showPreviewButton.isHidden = true
 
-			case .offline:
-				self.progressView.isHidden = true
-				self.cancelButton.isHidden = true
-				self.showPreviewButton.isHidden = true
-				self.infoLabel.isHidden = false
-				self.infoLabel.text = "Network unavailable".localized
-
-			case .downloadFailed, .downloadCanceled:
-				if self.connectionStatus == .online {
-					hideProgressIndicators()
-				}
-
-			case .downloadInProgress:
-				self.progressView.isHidden = false
-				self.cancelButton.isHidden = false
-				self.infoLabel.isHidden = true
-				self.showPreviewButton.isHidden = true
-
-			case .downloadFinished:
-				self.cancelButton.isHidden = true
-				self.progressView.isHidden = true
-				if self.canPreviewCurrentItem() {
-					self.iconImageView.isHidden = true
-					self.hideItemMetadataUIElements()
-				} else {
-					self.showPreviewButton.isHidden = true
-				}
-
-			case .previewFailed:
-				self.iconImageView.isHidden = false
-				self.infoLabel.text = "File couldn't be opened".localized
-				self.infoLabel.isHidden = false
-			}
-
-			if let item = self.item, self.canPreviewCurrentItem() == false, self.state == .online {
+			if let item = self.item, self.canPreviewCurrentItem() == false {
 				if self.core?.localCopy(of:item) == nil {
-					self.showPreviewButton.isHidden = false
-					self.showPreviewButton.setTitle("Download".localized, for: .normal)
+					showPreviewButton.isHidden = false
+					showPreviewButton.setTitle("Download".localized, for: .normal)
 				}
 			}
+
+		case .connecting:
+			infoLabel.isHidden = false
+			infoLabel.text = "Connecting...".localized
+			connectionActivityView.startAnimating()
+
+		case .offline:
+			connectionActivityView.stopAnimating()
+			progressView.isHidden = true
+			cancelButton.isHidden = true
+			showPreviewButton.isHidden = true
+			infoLabel.isHidden = false
+			infoLabel.text = "Network unavailable".localized
+
+		case .downloadFailed, .downloadCanceled:
+			if self.connectionStatus == .online {
+				hideProgressIndicators()
+			}
+
+		case .downloadInProgress:
+			progressView.isHidden = false
+			cancelButton.isHidden = false
+			infoLabel.isHidden = true
+			showPreviewButton.isHidden = true
+
+		case .downloadFinished:
+			cancelButton.isHidden = true
+			progressView.isHidden = true
+			showPreviewButton.isHidden = true
+
+			if self.canPreviewCurrentItem() {
+				iconImageView.isHidden = true
+				progressView.isHidden = true
+				metadataInfoLabel.isHidden = true
+				infoLabel.isHidden = true
+				cancelButton.isHidden = true
+			}
+
+		case .previewFailed:
+			iconImageView.isHidden = false
+			infoLabel.text = "File couldn't be opened".localized
+			infoLabel.isHidden = false
 		}
 	}
 
