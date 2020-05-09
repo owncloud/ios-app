@@ -24,6 +24,8 @@ import ownCloudAppShared
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+	private let delayForLinkResolution = 0.2
+
 	var window: ThemeWindow?
 	var serverListTableViewController: ServerListTableViewController?
 
@@ -131,7 +133,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		if url.matchesAppScheme {
 			guard let window = app.currentWindow() else { return false }
 
-			url.resolveAndPresent(in: window)
+			openPrivateLink(url: url, in: window)
+
 		} else {
 			var copyBeforeUsing = true
 			if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
@@ -170,7 +173,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		guard let window = application.currentWindow() else { return false }
 
-		url.resolveAndPresent(in: window)
+		openPrivateLink(url: url, in: window)
 
         return true
     }
@@ -185,5 +188,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	@available(iOS 13.0, *)
 	func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+	}
+
+	private func openPrivateLink(url:URL, in window:UIWindow) {
+		if UIApplication.shared.applicationState == .background {
+			// If the app is already running, just start link resolution
+			url.resolveAndPresent(in: window)
+		} else {
+			// Delay a resolution of private link on cold launch, since it could be that we would otherwise interfer
+			// with activities of the just instantiated ServerListTableViewController
+			OnMainThread(after:delayForLinkResolution) {
+				url.resolveAndPresent(in: window)
+			}
+		}
 	}
 }
