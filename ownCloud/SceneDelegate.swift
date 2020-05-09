@@ -37,15 +37,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			window?.makeKeyAndVisible()
 		}
 
-        if let userActivity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
-            if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
-                OnMainThread {
-                    self.scene(scene, continue: userActivity)
-                }
-            } else {
-                configure(window: window, with: userActivity)
-            }
-        }
+		// Was the app launched with registered URL scheme?
+		if let urlContext = connectionOptions.urlContexts.first {
+			if urlContext.url.matchesAppScheme {
+				openPrivateLink(url: urlContext.url, in: scene)
+			} else {
+				ImportFilesController(url: urlContext.url, copyBeforeUsing: urlContext.options.openInPlace).accountUI()
+			}
+		} else  if let userActivity = connectionOptions.userActivities.first ?? session.stateRestorationActivity {
+			if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
+				OnMainThread {
+					self.scene(scene, continue: userActivity)
+				}
+			} else {
+				configure(window: window, with: userActivity)
+			}
+		}
 	}
 
 	func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
@@ -79,16 +86,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let urlContext = URLContexts.first {
-            if urlContext.url.scheme == "owncloud" {
-
-				if urlContext.url.privateLinkItemID() != nil {
-
-					guard let windowScene = scene as? UIWindowScene else { return }
-					
-					guard let window =  windowScene.windows.first else { return }
-
-					urlContext.url.resolveAndPresent(in: window)
-                }
+			if urlContext.url.matchesAppScheme {
+				openPrivateLink(url: urlContext.url, in: scene)
             } else {
                 ImportFilesController(url: urlContext.url, copyBeforeUsing: urlContext.options.openInPlace).accountUI()
             }
@@ -107,4 +106,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 		url.resolveAndPresent(in: window)
     }
+
+	private func openPrivateLink(url:URL, in scene:UIScene?) {
+		if url.privateLinkItemID() != nil {
+
+			guard let windowScene = scene as? UIWindowScene else { return }
+
+			guard let window =  windowScene.windows.first else { return }
+
+			url.resolveAndPresent(in: window)
+		}
+	}
 }
