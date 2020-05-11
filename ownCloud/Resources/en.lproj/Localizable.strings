@@ -286,6 +286,8 @@
 "No actions available" = "No actions available";
 "No actions are available for this folder, possibly because of missing permissions." = "No actions are available for this folder, possibly because of missing permissions.";
 
+"Close actions menu" = "Close actions menu";
+
 /* Directory Picker Messages */
 "Move here" = "Move here";
 
