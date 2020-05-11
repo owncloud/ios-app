@@ -160,6 +160,14 @@ class PasscodeViewController: UIViewController, Themeable {
 		self.screenBlurringEnabled = { self.screenBlurringEnabled }()
 		self.errorMessageLabel?.minimumScaleFactor = 0.5
 		self.errorMessageLabel?.adjustsFontSizeToFitWidth = true
+
+		if #available(iOS 13.4, *) {
+			for button in keypadButtons! {
+				PointerEffect.install(on: button, effectStyle: .highlight)
+			}
+			PointerEffect.install(on: cancelButton!, effectStyle: .highlight)
+			PointerEffect.install(on: deleteButton!, effectStyle: .highlight)
+		}
 	}
 
 	override func viewWillAppear(_ animated: Bool) {

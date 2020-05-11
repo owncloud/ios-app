@@ -63,6 +63,10 @@ class PDFThumbnailCollectionViewCell: UICollectionViewCell {
         pageLabel!.rightAnchor.constraint(equalTo: imageView!.rightAnchor).isActive = true
         pageLabel!.leftAnchor.constraint(equalTo: imageView!.leftAnchor).isActive = true
         pageLabel!.heightAnchor.constraint(equalTo: imageView!.heightAnchor, multiplier:pageLabelHeightMultiplier).isActive = true
+
+		if #available(iOS 13.4, *) {
+			PointerEffect.install(on: self, effectStyle: .hoverScaled)
+		}
     }
 
     override func prepareForReuse() {
