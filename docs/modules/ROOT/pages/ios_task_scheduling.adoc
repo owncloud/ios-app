@@ -1,0 +1,34 @@
+= Task Scheduling
+
+Background tasks are scheduled based on the app's current context, and that context is based on a combination of factors. 
+These factors include:
+
+* Is the app backgrounded or in the foreground?
+* Is WiFi available?
+* Is the device in Low Power Mode?
+* Is the device connected to external power?
+* Has the photo library changed?
+
+== Tasks 
+
+Currently, two tasks are available:
+
+* *Instant photo uploads:* This task is triggered when:
+** The photo library has new photos, and;
+** The user is connected to a WiFi network
+* *Bookmark update task:* This task is triggered by the background fetch event scheduled by iOS
+
+=== Instant Photo Upload
+
+There are some things to be aware of, regarding Instant Photo Upload.
+
+* Photo and video upload can be enabled and disabled separately.
+* Before instant media upload can begin, the account and upload path have to be selected
+* Changes in the photo library are detected when the app goes into the foreground.
+* If a user removes the folder specified for instant upload, the upload task silently exits.
+* When a user first activates instant upload, the timestamp of the activation is stored and compared against the creation date of the assets to be uploaded. 
+  As soon as one asset is successfully uploaded, its creation timestamp is used to update the instant upload activation timestamp. This:
+** Prevents assets being uploaded twice
+** Removes the need to keep track of uploaded items in a database
+** Please note, that already uploaded and edited asset is not going to be uploaded again
+* Media conversion settings are taken into account by instant upload feature.

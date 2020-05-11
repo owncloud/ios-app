@@ -17,7 +17,35 @@ This document provides an overview over the available sections and variables.
 	- `is-beta-build`: Controls if the app is built for beta or release purposes.
 		- type: Bool
 		- default: `false`
-	
+		
+## Bookmarks
+
+- **Section ID**: `bookmark`
+
+- **Variables**:
+	- `default-url`: Set a default server URL.
+		- type: String
+		- default: `""`
+	- `url-editable`: Being able to edit the server URL in the URL TextField.
+		- type: Bool
+		- default: `true`
+
+
+## Display Settings
+
+- **Section ID**: `display`
+
+- **Variables**:
+	- `show-hidden-files`: Controls whether hidden files (i.e. files starting with `.` ) should also be shown
+		- type: Bool
+		- default: `false`
+	- `sort-folders-first`: Controls whether folders are shown at the top
+		- type: Bool
+		- default: `false`
+	- `prevent-dragging-files`: Controls whether drag and drop should be prevented for items inside the app 
+		- type: Bool
+		- default: `false`
+
 ## Feedback
 
 - **Section ID**: `feedback`
@@ -35,16 +63,12 @@ This document provides an overview over the available sections and variables.
 	- send-feedback-enabled : Send an email to feedback-email with some feedback.
 		- type: Bool
 		-default: `true`
-		
-## Bookmarks
 
-- **Section ID**: `bookmark`
+## Shortcuts
+
+- **Section ID**: `shortcuts`
 
 - **Variables**:
-	- `default-url`: Set a default server URL.
-		- type: String
-		- default: `""`
-	- `url-editable`: Being able to edit the server URL in the URL TextField.
+	- `enabled`: Controls whether Shortcuts support is enabled
 		- type: Bool
 		- default: `true`
-

@@ -57,6 +57,7 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 
 	// MARK: - Display settings
 	@objc func displaySettingsChanged() {
+		query.sortComparator = sortMethod.comparator(direction: sortDirection)
 		DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 	}
 

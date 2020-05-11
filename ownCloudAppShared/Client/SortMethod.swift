@@ -18,6 +18,7 @@
 
 import Foundation
 import ownCloudSDK
+import ownCloudApp
 
 public typealias OCSort = Comparator
 
@@ -70,6 +71,23 @@ public enum SortMethod: Int {
 			return leftName.caseInsensitiveCompare(rightName)
 		}
 
+		let itemTypeComparator : OCSort = { (left, right) in
+			let leftItem = left as? OCItem
+			let rightItem = right as? OCItem
+
+			if let leftItemType = leftItem?.type, let rightItemType = rightItem?.type {
+				if leftItemType != rightItemType {
+					if leftItemType == .collection, rightItemType == .file {
+						return .orderedAscending
+					} else {
+						return .orderedDescending
+					}
+				}
+			}
+
+			return .orderedSame
+		}
+
 		switch self {
 		case .size:
 			comparator = { (left, right) in
@@ -86,7 +104,6 @@ public enum SortMethod: Int {
 			}
 		case .alphabetically:
 			comparator = alphabeticComparator
-			combinedComparator = alphabeticComparator
 		case .kind:
 			comparator = { (left, right) in
 				let leftItem = left as? OCItem
@@ -97,14 +114,10 @@ public enum SortMethod: Int {
 
 				var result : ComparisonResult = leftKind.compare(rightKind)
 
-				if let leftItemType = leftItem?.type, let rightItemType = rightItem?.type {
-					if leftItemType != rightItemType {
-						if leftItemType == .collection, rightItemType == .file {
-							result = .orderedAscending
-						} else {
-							result = .orderedDescending
-						}
-					}
+				let typeResult = itemTypeComparator(left, right)
+
+				if typeResult != .orderedSame {
+					result = typeResult
 				}
 
 				if direction == .descendant {
@@ -159,10 +172,18 @@ public enum SortMethod: Int {
 
 		if combinedComparator == nil {
 			combinedComparator = { (left, right) in
-				var result : ComparisonResult = comparator(left, right)
+				var result : ComparisonResult = .orderedSame
+
+				if DisplaySettings.shared.sortFoldersFirst {
+					result = itemTypeComparator(left, right)
+				}
 
 				if result == .orderedSame {
-					result = alphabeticComparator(left, right)
+					result = comparator(left, right)
+
+					if result == .orderedSame, self != .alphabetically {
+						result = alphabeticComparator(left, right)
+					}
 				}
 
 				return result

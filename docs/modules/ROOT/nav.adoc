@@ -9,6 +9,7 @@
 ** xref:ios_files_integration.adoc[iOS Files App and 3rd Party Apps]
 ** xref:ios_settings.adoc[Settings]
 
+* xref:ios_task_scheduling.adoc[Task Scheduling]
 * xref:ios_mdm.adoc[Mobile Device Management (MDM)]
 * xref:ios_security.adoc[Security]
 * xref:ios_troubleshooting.adoc[Troubleshooting]
