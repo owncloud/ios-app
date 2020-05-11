@@ -55,64 +55,98 @@ class UncompressAction: Action {
 
 		let hudViewController = DownloadItemsHUDViewController(core: core, downloadItems: context.items as [OCItem]) { [weak hostViewController] (error, downloadedItems) in
 
-			if let downloadedItems = downloadedItems, let downloadedItem = downloadedItems.first, error == nil, let fileItem = self.context.items.first, let parentItem = fileItem.parentItem(from: core), let fileURL = downloadedItem.file.url, let parentPath = parentItem.path, let fileName = fileItem.path {
+			if let downloadedItems = downloadedItems, let downloadedItem = downloadedItems.first, error == nil, let fileItem = self.context.items.first, let parentItem = fileItem.parentItem(from: core), let fileURL = downloadedItem.file.url {
 
-				print("--> uncompress \(fileURL)")
+				if ZIPArchive.isZipFileEncrypted(fileURL) {
+					let alertController = UIAlertController(title: "Enter Password".localized, message: "The file is protected with a password.\nPlease enter the password to uncompress the file.".localized, preferredStyle: .alert)
+					alertController.addTextField { textField in
+						textField.placeholder = "Password".localized
+						textField.isSecureTextEntry = true
+					}
+					let confirmAction = UIAlertAction(title: "OK".localized, style: .default) { [weak alertController] _ in
+						guard let alertController = alertController, let textField = alertController.textFields?.first, let password = textField.text else { return }
 
-				let zipItems = ZIPArchive.uncompressContents(ofZipFile: fileURL, parentItem: parentItem, withPassword: nil, with: core)
-/*
-				for item in zipItems {
-					print("--> \(item.filepath) \(item.isDirectory) \(item.absolutePath)")
-				}*/
+						if ZIPArchive.checkPassword(password, forZipFile: fileURL) == true {
+							self.uncompressContents(of: fileURL, fileItem: fileItem, parentItem: parentItem, password: password, core: core)
+						} else {
+							let alert = UIAlertController(title: "Wrong Password".localized, message: "The entered password was not correct!".localized, preferredStyle: .alert)
 
-				let collectionItems = zipItems.filter { (item) -> Bool in
-					return item.isDirectory
-				}
+							alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { _ in
+								self.completed()
+							}))
 
-				let fileItems = zipItems.filter { (item) -> Bool in
-					return !item.isDirectory
-				}
-				let fileName = ((fileName as NSString).lastPathComponent as NSString).deletingPathExtension
-
-				let dispatchGroup = DispatchGroup()
-
-				core.createFolder(fileName, inside: parentItem, options: [
-					.returnImmediatelyIfOfflineOrUnavailable : true,
-					.addTemporaryClaimForPurpose 		 : OCCoreClaimPurpose.view.rawValue
-				]) { (error, subcore, containerItem, _) in
-
-					guard let containerItem = containerItem else { return }
-					var lastItem = containerItem
-					for collectionItem in collectionItems {
-						OnMainThread {
-							dispatchGroup.enter()
-							let newFolderPath = (collectionItem.filepath as NSString).lastPathComponent
-
-							var insideItem = containerItem
-							if let lastpath = lastItem.path, lastpath.hasSuffix(collectionItem.filepath) {
-								insideItem = lastItem
-							}
-							print("--> create folder \(newFolderPath) in \(insideItem.path) \(collectionItem.filepath)")
-
-							subcore.createFolder(newFolderPath, inside: insideItem, options: [
-								.returnImmediatelyIfOfflineOrUnavailable : true,
-								.addTemporaryClaimForPurpose 		 : OCCoreClaimPurpose.view.rawValue
-							]) { (error, core, item, _) in
-								print("create folder finished \(item?.path)")
-								if let item = item {
-									lastItem = item
-								}
-								dispatchGroup.leave()
-							}
-							dispatchGroup.wait()
+							hostViewController?.present(alert, animated: true, completion: nil)
 						}
 					}
+					alertController.addAction(confirmAction)
+					let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { _ in
+						self.completed()
+					})
+					alertController.addAction(cancelAction)
+
+					hostViewController?.present(alertController, animated: true, completion: nil)
+				} else {
+					self.uncompressContents(of: fileURL, fileItem: fileItem, parentItem: parentItem, password: nil, core: core)
 				}
 			}
-
 		}
 
 		hudViewController.presentHUDOn(viewController: hostViewController)
+	}
+
+	func uncompressContents(of zipFile: URL, fileItem: OCItem, parentItem: OCItem, password: String?, core: OCCore) {
+		if let parentPath = parentItem.path, let fileName = fileItem.path {
+			let zipItems = ZIPArchive.uncompressContents(ofZipFile: zipFile, parentItem: parentItem, withPassword: nil, with: core)
+			/*
+			for item in zipItems {
+			print("--> \(item.filepath) \(item.isDirectory) \(item.absolutePath)")
+			}*/
+
+			let collectionItems = zipItems.filter { (item) -> Bool in
+				return item.isDirectory
+			}
+
+			let fileItems = zipItems.filter { (item) -> Bool in
+				return !item.isDirectory
+			}
+			let fileName = ((fileName as NSString).lastPathComponent as NSString).deletingPathExtension
+
+			let dispatchGroup = DispatchGroup()
+			// Todo: Should be repleaced by SDK function!
+			core.createFolder(fileName, inside: parentItem, options: [
+				.returnImmediatelyIfOfflineOrUnavailable : true,
+				.addTemporaryClaimForPurpose 		 : OCCoreClaimPurpose.view.rawValue
+			]) { (error, subcore, containerItem, _) in
+
+				guard let containerItem = containerItem else { return }
+				var lastItem = containerItem
+				for collectionItem in collectionItems {
+					OnMainThread {
+						dispatchGroup.enter()
+						let newFolderPath = (collectionItem.filepath as NSString).lastPathComponent
+
+						var insideItem = containerItem
+						if let lastpath = lastItem.path, lastpath.hasSuffix(collectionItem.filepath) {
+							insideItem = lastItem
+						}
+						print("--> create folder \(newFolderPath) in \(insideItem.path) \(collectionItem.filepath)")
+
+						subcore.createFolder(newFolderPath, inside: insideItem, options: [
+							.returnImmediatelyIfOfflineOrUnavailable : true,
+							.addTemporaryClaimForPurpose 		 : OCCoreClaimPurpose.view.rawValue
+						]) { (error, core, item, _) in
+							print("create folder finished \(item?.path)")
+							if let item = item {
+								lastItem = item
+							}
+							dispatchGroup.leave()
+						}
+						dispatchGroup.wait()
+						self.completed()
+					}
+				}
+			}
+		}
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
@@ -120,7 +154,7 @@ class UncompressAction: Action {
 			if #available(iOS 13.0, *) {
 				return UIImage(systemName: "cube.box")?.tinted(with: Theme.shared.activeCollection.tintColor)
 			} else {
-				// Fallback on earlier versions
+				return UIImage(named: "cube")?.tinted(with: Theme.shared.activeCollection.tintColor)
 			}
 		}
 

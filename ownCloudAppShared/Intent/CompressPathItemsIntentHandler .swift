@@ -103,9 +103,13 @@ public class CompressPathItemsIntentHandler: NSObject, CompressPathItemsIntentHa
 			} else if unifiedItems.count == 1, let item = unifiedItems.first?.item {
 				zipFileName = String(format: "%@.zip", item.name ?? defaultZipName)
 			}
+			var password: String? = nil
+			if let intentPassword = intent.password, intentPassword.count > 0 {
+				password = intentPassword
+			}
 
 			let zipURL = FileManager.default.temporaryDirectory.appendingPathComponent(zipFileName)
-			let error = ZIPArchive.compressContents(of: unifiedItems, fromBasePath: "/", asZipFile: zipURL, withPassword: nil)
+			let error = ZIPArchive.compressContents(of: unifiedItems, fromBasePath: "/", asZipFile: zipURL, withPassword: password)
 
 			let file = INFile(fileURL: zipURL, filename: zipFileName, typeIdentifier: nil)
 			completion(CompressPathItemsIntentResponse.success(file: file))
@@ -146,6 +150,11 @@ public class CompressPathItemsIntentHandler: NSObject, CompressPathItemsIntentHa
 	public func resolveFilename(for intent: CompressPathItemsIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
 		completion(INStringResolutionResult.success(with: intent.filename ?? ""))
 	}
+
+	public func resolvePassword(for intent: CompressPathItemsIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+		completion(INStringResolutionResult.success(with: intent.password ?? ""))
+	}
+
 }
 
 @available(iOS 13.0, *)

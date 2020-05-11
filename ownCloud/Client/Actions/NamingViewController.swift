@@ -25,19 +25,20 @@ typealias StringValidatorHandler = (String) -> StringValidatorResult
 class NamingViewController: UIViewController, Themeable {
 	weak var item: OCItem?
 	weak var core: OCCore?
-	var completion: (String?, NamingViewController) -> Void
+	typealias NamingCompletionHandler = (String?, NamingViewController) -> Void
+	var completion: NamingCompletionHandler
 	var stringValidator: StringValidatorHandler?
 	var defaultName: String?
 
 	private var blurView: UIVisualEffectView
 
-	private var stackView: UIStackView
+	var stackView: UIStackView
 
 	private var thumbnailContainer: UIView
 	private var thumbnailImageView: UIImageView
 
-	private var nameContainer: UIView
-	private var nameTextField: UITextField
+	var nameContainer: UIView
+	var nameTextField: UITextField
 
 	private var textfieldTopAnchorConstraint: NSLayoutConstraint
 	private var textfieldCenterYAnchorConstraint: NSLayoutConstraint
@@ -52,7 +53,7 @@ class NamingViewController: UIViewController, Themeable {
 
 	private let thumbnailSize = CGSize(width: 150.0, height: 150.0)
 
-	init(with item: OCItem? = nil, core: OCCore? = nil, defaultName: String? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
+	public init(with item: OCItem? = nil, core: OCCore? = nil, defaultName: String? = nil, stringValidator: StringValidatorHandler? = nil, completion: @escaping (String?, NamingViewController) -> Void) {
 		self.item = item
 		self.core = core
 		self.completion = completion

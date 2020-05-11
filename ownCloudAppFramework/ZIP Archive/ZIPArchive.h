@@ -53,6 +53,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSError *)compressContentsOf:(NSURL *)sourceDirectory asZipFile:(NSURL *)zipFileURL;
 + (nullable NSError *)compressContentsOfItems:(NSArray<DownloadItem *> *)sourceDirectorie fromBasePath:(NSString *)basePath asZipFile:(NSURL *)zipFileURL withPassword:(nullable NSString *)password;
 + (NSArray<ZipFileItem *> *)uncompressContentsOfZipFile:(NSURL *)zipFileURL parentItem:(OCItem *)parentItem withPassword:(nullable NSString *)password withCore:(OCCore *)core;
++ (BOOL)isZipFileEncrypted:(NSURL *)zipFileURL;
++ (BOOL)checkPassword:(NSString *)password forZipFile:(NSURL *)zipFileURL;
 
 @end
 

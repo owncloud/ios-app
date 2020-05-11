@@ -112,27 +112,26 @@ class CompressAction: Action {
 					zipName = String(format: "%@.zip", item.name ?? self.defaultZipName)
 				}
 
-				let renameViewController = NamingViewController(with: nil, core: self.core, defaultName: zipName, stringValidator: { name in
+				let renameViewController = CompressViewController(with: nil, core: self.core, defaultName: zipName, stringValidator: { name in
 					if name.contains("/") || name.contains("\\") {
 						return (false, "File name cannot contain / or \\".localized)
 					} else {
 						return (true, nil)
 					}
-				}, completion: { newName, _ in
-
+				}, completion: { newName, password, _ in
 					OnBackgroundQueue {
 						if let newName = newName, error == nil, let fileItem = self.context.items.first, let parentItem = fileItem.parentItem(from: core) {
 							let zipURL = FileManager.default.temporaryDirectory.appendingPathComponent(newName)
-							let error = ZIPArchive.compressContents(of: unifiedItems, fromBasePath: parentItem.path ?? "", asZipFile: zipURL, withPassword: nil)
+							let error = ZIPArchive.compressContents(of: unifiedItems, fromBasePath: parentItem.path ?? "", asZipFile: zipURL, withPassword: password)
 
-								if !self.upload(itemURL: zipURL, to: parentItem, name: zipURL.lastPathComponent) {
-									self.removeFiles(url: zipURL)
-									self.completed(with: NSError(ocError: .internal))
-									return
-								} else {
-									self.removeFiles(url: zipURL)
-									self.completed()
-								}
+							if !self.upload(itemURL: zipURL, to: parentItem, name: zipURL.lastPathComponent) {
+								self.removeFiles(url: zipURL)
+								self.completed(with: NSError(ocError: .internal))
+								return
+							} else {
+								self.removeFiles(url: zipURL)
+								self.completed()
+							}
 						}
 					}
 				})
@@ -161,7 +160,7 @@ class CompressAction: Action {
 			if #available(iOS 13.0, *) {
 				return UIImage(systemName: "cube.box")?.tinted(with: Theme.shared.activeCollection.tintColor)
 			} else {
-				// Fallback on earlier versions
+				return UIImage(named: "cube")?.tinted(with: Theme.shared.activeCollection.tintColor)
 			}
 		}
 
@@ -169,7 +168,6 @@ class CompressAction: Action {
 	}
 
 	internal func upload(itemURL: URL, to rootItem: OCItem, name: String) -> Bool {
-
 		if core != nil, let progress = itemURL.upload(with: core, at: rootItem) {
 			self.publish(progress: progress)
 			return true

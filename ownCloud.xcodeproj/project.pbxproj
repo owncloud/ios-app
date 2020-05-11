@@ -1748,7 +1748,6 @@
 		6E586CF52199A70100F680C4 /* Actions+Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				39999DF32462D57800880D45 /* UncompressAction.swift */,
 				39265BB123D9987500B0C4CA /* MediaEditingAction.swift */,
 				39CD755123D787E400193950 /* DocumentEditingAction.swift */,
 				397754F22327A33500119FCB /* OpenSceneAction.swift */,
@@ -1771,6 +1770,7 @@
 				DC625147225CEB2C00736874 /* UploadFileAction.swift */,
 				DC625149225CEB4300736874 /* UploadMediaAction.swift */,
 				39BCDD79246006AC00FE3D23 /* CompressAction.swift */,
+				39999DF32462D57800880D45 /* UncompressAction.swift */,
 			);
 			path = "Actions+Extensions";
 			sourceTree = "<group>";

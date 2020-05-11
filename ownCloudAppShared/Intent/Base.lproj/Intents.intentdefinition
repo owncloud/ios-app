@@ -2516,15 +2516,15 @@
 			<key>INIntentDescriptionID</key>
 			<string>hgRmHs</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>8</integer>
+			<integer>9</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>pathItems,account,filename</key>
+				<key>pathItems,account,filename,password</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>Compress ${pathItems} of ${account}to ${filename}</string>
+					<string>Compress ${pathItems} of ${account}</string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>oBIFKF</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>
@@ -2535,16 +2535,18 @@
 			<string>CompressPathItems</string>
 			<key>INIntentParameterCombinations</key>
 			<dict>
-				<key>pathItems,account,filename</key>
+				<key>pathItems,account,filename,password</key>
 				<dict>
 					<key>INIntentParameterCombinationIsLinked</key>
+					<true/>
+					<key>INIntentParameterCombinationIsPrimary</key>
 					<true/>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>Compress ${pathItems} of ${account}to ${filename}</string>
+					<string>Compress ${pathItems} of ${account}</string>
 					<key>INIntentParameterCombinationTitleID</key>
-					<string>yaob48</string>
+					<string>x0Cl4V</string>
 				</dict>
 			</dict>
 			<key>INIntentParameters</key>
@@ -2648,11 +2650,45 @@
 				</dict>
 				<dict>
 					<key>INIntentParameterDisplayName</key>
+					<string>Password (optional)</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>n2gH1U</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>3</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>password</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Enter a password for the file, if needed</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>P4MF3Y</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>9</integer>
+					<key>INIntentParameterType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterDisplayName</key>
 					<string>Filename (optional)</string>
 					<key>INIntentParameterDisplayNameID</key>
 					<string>dPSUsQ</string>
 					<key>INIntentParameterDisplayPriority</key>
-					<integer>3</integer>
+					<integer>4</integer>
 					<key>INIntentParameterMetadata</key>
 					<dict>
 						<key>INIntentParameterMetadataCapitalization</key>

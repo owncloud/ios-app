@@ -280,6 +280,9 @@
 
 	if ((zipArchive = zip_open(zipFileURL.path.UTF8String, ZIP_RDONLY, &zipError)) != NULL)
 	{
+		if (password != nil) {
+			zip_set_default_password(zipArchive, (const char*)[password UTF8String]);
+		}
 		NSURL *tmpURL = [zipFileURL URLByDeletingPathExtension];
 
 		[NSFileManager.defaultManager createDirectoryAtURL:tmpURL withIntermediateDirectories:NO attributes:nil error:nil];
@@ -303,32 +306,33 @@
 					   [NSFileManager.defaultManager createDirectoryAtURL:[tmpURL URLByAppendingPathComponent:[NSString stringWithUTF8String:sb.name]] withIntermediateDirectories:NO attributes:nil error:nil];
 				   } else {
 					   NSLog(@"--> read file: %s", sb.name);
+
 					   zf = zip_fopen_index(zipArchive, i, 0);
 					   if (!zf) {
 						   error = ErrorFromZipArchive(zipArchive);
 						   OCLogError(@"Error opening zip file %@", error);
-					   }
-
-					   NSMutableData *data = [NSMutableData new];
-					   sum = 0;
-					   while (sum != sb.size) {
-						   len = zip_fread(zf, buf, 100);
-						   if (len < 0) {
-							   error = ErrorFromZipArchive(zipArchive);
-							   OCLogError(@"Error reading zip file %@", error);
+					   } else {
+						   NSMutableData *data = [NSMutableData new];
+						   sum = 0;
+						   while (sum != sb.size) {
+							   len = zip_fread(zf, buf, 100);
+							   if (len < 0) {
+								   error = ErrorFromZipArchive(zipArchive);
+								   OCLogError(@"Error reading zip file %@", error);
+							   }
+							   [data appendBytes:buf length:len];
+							   sum += len;
 						   }
-						   [data appendBytes:buf length:len];
-						   sum += len;
+
+						   [NSFileManager.defaultManager createFileAtPath:filePath contents:data attributes:nil];
+
+						   ZipFileItem *item = [[ZipFileItem alloc] initWithFilepath:[NSString stringWithUTF8String:sb.name] isDirectory:NO absolutePath:filePath];
+						   [zipItems addObject:item];
+
+						   NSLog(@"--> zipitems %@", zipItems);
+
+						   zip_fclose(zf);
 					   }
-
-					   [NSFileManager.defaultManager createFileAtPath:filePath contents:data attributes:nil];
-
-					   ZipFileItem *item = [[ZipFileItem alloc] initWithFilepath:[NSString stringWithUTF8String:sb.name] isDirectory:NO absolutePath:filePath];
-					   [zipItems addObject:item];
-
-					   NSLog(@"--> zipitems %@", zipItems);
-
-					   zip_fclose(zf);
 				   }
 			   } else {
 				   printf("File[%s] Line[%d]/n", __FILE__, __LINE__);
@@ -348,6 +352,58 @@
 
 	return zipItems;
 	//return (error);
+}
+
++ (BOOL)isZipFileEncrypted:(NSURL *)zipFileURL
+{
+	zip_t *zipArchive = NULL;
+	int zipError = ZIP_ER_OK;
+
+	if ((zipArchive = zip_open(zipFileURL.path.UTF8String, ZIP_RDONLY, &zipError)) != NULL)
+	{
+		struct zip_file *zf;
+		zf = zip_fopen_index(zipArchive, 0, 0);
+		if (!zf) {
+			return YES;
+		}
+
+		if (zip_close(zipArchive) < 0)
+		{
+			// Error
+			zip_discard(zipArchive);
+		}
+	}
+
+	return NO;
+}
+
++ (BOOL)checkPassword:(NSString *)password forZipFile:(NSURL *)zipFileURL
+{
+	zip_t *zipArchive = NULL;
+	int zipError = ZIP_ER_OK;
+
+	if ((zipArchive = zip_open(zipFileURL.path.UTF8String, ZIP_RDONLY, &zipError)) != NULL)
+	{
+		struct zip_file *zf;
+		zf = zip_fopen_index_encrypted(zipArchive, 0, 0, (const char*)[password UTF8String]);
+		if (zf) {
+			if (zip_close(zipArchive) < 0)
+			{
+				// Error
+				zip_discard(zipArchive);
+			}
+
+			return YES;
+		}
+
+		if (zip_close(zipArchive) < 0)
+		{
+			// Error
+			zip_discard(zipArchive);
+		}
+	}
+
+	return NO;
 }
 
 @end

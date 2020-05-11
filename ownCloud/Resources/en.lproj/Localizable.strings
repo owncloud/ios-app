@@ -593,3 +593,12 @@
 "trial" = "trial";
 "purchase" = "purchase";
 "subscription" = "subscription";
+
+/* Compress / Uncompress */
+"Enter Password" = "Enter Password";
+"The file is protected with a password.\nPlease enter the password to uncompress the file." = "The file is protected with a password.\nPlease enter the password to uncompress the file.";
+"Wrong Password" = "Wrong Password";
+"The entered password was not correct!" = "The entered password was not correct!";
+"Compress" = "Compress";
+"Uncompress" = "Uncompress";
+"Protect file with password" = "Protect file with password";
