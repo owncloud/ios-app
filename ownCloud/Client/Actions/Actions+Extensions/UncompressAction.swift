@@ -55,10 +55,10 @@ class UncompressAction: Action {
 
 		let hudViewController = DownloadItemsHUDViewController(core: core, downloadItems: context.items as [OCItem]) { [weak hostViewController] (error, downloadedItems) in
 
-			if let downloadedItems = downloadedItems, let downloadedItem = downloadedItems.first, error == nil, let fileItem = self.context.items.first, let parentItem = fileItem.parentItem(from: core), let fileURL = downloadedItem.file.url {
+			if let downloadedItems = downloadedItems, let downloadedItem = downloadedItems.first, error == nil, let fileItem = self.context.items.first, let filename = fileItem.name, let parentItem = fileItem.parentItem(from: core), let fileURL = downloadedItem.file.url {
 
 				if ZIPArchive.isZipFileEncrypted(fileURL) {
-					let alertController = UIAlertController(title: "Enter Password".localized, message: "The file is protected with a password.\nPlease enter the password to uncompress the file.".localized, preferredStyle: .alert)
+					let alertController = UIAlertController(title: "Enter Password".localized, message: String(format: "The document \"%@\" is password protected.\nPlease enter the password to uncompress the document.".localized, filename), preferredStyle: .alert)
 					alertController.addTextField { textField in
 						textField.placeholder = "Password".localized
 						textField.isSecureTextEntry = true
@@ -69,7 +69,7 @@ class UncompressAction: Action {
 						if ZIPArchive.checkPassword(password, forZipFile: fileURL) == true {
 							self.uncompressContents(of: fileURL, fileItem: fileItem, parentItem: parentItem, password: password, core: core)
 						} else {
-							let alert = UIAlertController(title: "Wrong Password".localized, message: "The entered password was not correct!".localized, preferredStyle: .alert)
+							let alert = UIAlertController(title: "Wrong Password".localized, message: "The archive could not be uncompressed with the provided password.".localized, preferredStyle: .alert)
 
 							alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { _ in
 								self.completed()

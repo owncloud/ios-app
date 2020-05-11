@@ -103,7 +103,7 @@ public class CompressPathItemsIntentHandler: NSObject, CompressPathItemsIntentHa
 			} else if unifiedItems.count == 1, let item = unifiedItems.first?.item {
 				zipFileName = String(format: "%@.zip", item.name ?? defaultZipName)
 			}
-			var password: String? = nil
+			var password: String?
 			if let intentPassword = intent.password, intentPassword.count > 0 {
 				password = intentPassword
 			}
