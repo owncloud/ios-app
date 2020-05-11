@@ -599,3 +599,6 @@
 "trial" = "trial";
 "purchase" = "purchase";
 "subscription" = "subscription";
+
+/* Misc. accessibility */
+"Enter multiple selection" = "Enter multiple selection";
