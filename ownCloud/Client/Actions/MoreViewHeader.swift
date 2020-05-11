@@ -246,11 +246,11 @@ class MoreViewHeader: UIView {
 		if item.isFavorite == true {
 			favoriteButton.setImage(UIImage(named: "star"), for: .normal)
 			favoriteButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
-			favoriteButton.accessibilityLabel = "Favorite item".localized
+			favoriteButton.accessibilityLabel = "Unfavorite item".localized
 		} else {
 			favoriteButton.setImage(UIImage(named: "unstar"), for: .normal)
 			favoriteButton.tintColor = Theme.shared.activeCollection.favoriteDisabledColor
-			favoriteButton.accessibilityLabel = "Unfavorite item".localized
+			favoriteButton.accessibilityLabel = "Favorite item".localized
 		}
 	}
 }
