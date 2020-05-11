@@ -136,7 +136,9 @@ extension URL {
 
 			let completion = {
 				if item == nil {
-					let alertController = ThemedAlertController.alertControllerForLinkResolution(offline: internetReachable == false)
+					let isOffline = internetReachable == false
+					let accountFound = bookmark != nil
+					let alertController = ThemedAlertController.alertControllerForUnresolvedLink(offline: isOffline, accountFound: accountFound)
 					window.rootViewController?.topMostViewController.present(alertController, animated: true)
 
 				} else {

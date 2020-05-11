@@ -20,11 +20,13 @@ import UIKit
 
 extension ThemedAlertController {
 
-	class func alertControllerForLinkResolution(offline:Bool) -> ThemedAlertController {
+	class func alertControllerForUnresolvedLink(offline:Bool, accountFound:Bool) -> ThemedAlertController {
 
 		var message = ""
 
-		if offline {
+		if !accountFound {
+			message = "Link points to an account bookmark which is not configured in the app.".localized
+		} else if offline {
 			message = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.".localized
 		} else {
 			message = "Couldn't resolve a private link since the item is not known to the server.".localized
