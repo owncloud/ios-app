@@ -360,6 +360,9 @@ class DisplayViewController: UIViewController {
 
 	// Can be overriden in subclasses e.g. if item can be previewed without downloadint it (e.g. streamable video
 	func requiresLocalCopyForPreview() -> Bool {
+		if type(of: self) === DisplayViewController.self {
+			return false
+		}
 		return true
 	}
 
@@ -476,8 +479,6 @@ class DisplayViewController: UIViewController {
 	private func updateSource() {
 		guard let item = self.item else { return }
 
-		guard canPreviewCurrentItem() == true else { return }
-
 		// If we don't need to download item, just get direct URL (e.g. for video which can be streamed)
 		if source == nil && requiresLocalCopyForPreview() == false {
 			core?.provideDirectURL(for: item, allowFileURL: true, completionHandler: { (error, url, authHeaders) in
@@ -488,6 +489,9 @@ class DisplayViewController: UIViewController {
 			})
 			return
 		}
+
+		// Don't download automatically if the file can't be previewed
+		guard requiresLocalCopyForPreview() == true else { return }
 
 		// Bail out if the download is already in progress
 		guard item.syncActivity.contains(.downloading) == false else { return }
