@@ -102,6 +102,8 @@ extension URL {
 							core?.retrieveItem(forPrivateLink: privateLinkURL, completionHandler: { (error, item) in
 								if foundItem == nil {
 									foundItem = item
+								}
+								if components?.host == bookmark.url?.host {
 									matchedBookmark = bookmark
 								}
 								lastError = error
@@ -117,11 +119,7 @@ extension URL {
 		}
 
 		group.notify(queue: DispatchQueue.main) {
-			if foundItem != nil {
-				completion(foundItem, matchedBookmark, nil, internetReachable)
-			} else {
-				completion(nil, nil, lastError, internetReachable)
-			}
+			completion(foundItem, matchedBookmark, lastError, internetReachable)
 		}
 
         return true
