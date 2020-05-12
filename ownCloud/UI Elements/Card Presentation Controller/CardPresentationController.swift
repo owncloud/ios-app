@@ -207,6 +207,8 @@ final class CardPresentationController: UIPresentationController, Themeable {
 		dragHandleView.accessibilityLabel = "Close actions menu".localized
 		dragHandleView.isAccessibilityElement = true
 		dragHandleView.accessibilityFrame = dragHandleView.frame.insetBy(dx: -20, dy: -10)
+
+		PointerEffect.install(on: dragHandleView, effectStyle: .hoverScaled)
 	}
 
 	// MARK: - Dismissal
