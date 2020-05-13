@@ -598,3 +598,4 @@
 "Migrating" = "Migrating";
 "Migrated" = "Migrated";
 "Failed to migrate" = "Failed to migrate";
+"Failed to access legacy user data" = "Failed to access legacy user data";

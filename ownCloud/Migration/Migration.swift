@@ -200,6 +200,14 @@ class Migration {
 
 				} else {
 					Log.error(tagged: ["MIGRATION"], "Couldn't open legacy database, error \(String(describing: err))")
+
+					DispatchQueue.main.async {
+						let alertController = ThemedAlertController(with: "Failed to access legacy user data".localized, message: err!.localizedDescription, action: {() in
+							NotificationCenter.default.post(name: Migration.FinishedNotification, object: nil)
+						})
+
+						parentViewController?.present(alertController, animated: true)
+					}
 				}
 			}
 		}
