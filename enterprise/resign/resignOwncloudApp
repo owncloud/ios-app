@@ -22,9 +22,14 @@ NC="$(tput sgr0)" # No Color
 usage()
 {
   echo "Usage:  $0 CERTIFICATE_IDENTITY METHOD"
-  echo "        $0 \"Certificate Name\" ad-hoc"
-  echo "        $0 \"Certificate Name\" app-store"
+  echo "        $0 \"Certificate Identity\" ad-hoc"
+  echo "        $0 \"Certificate Identity\" app-store"
   echo "Version: ${VERSION}"
+  echo ""
+  echo "Found Certificate Identities:"
+  echo "     Fingerprint                              \"Certificate Identity\""
+  echo "     -----------------------------------------------------------------"
+  security find-identity -pcodesigning -v
   exit 1
 }
 
@@ -40,6 +45,8 @@ echo
 echo "${BOLD}${SUCCESS}ownCloud iOS-App Resigning${NC}"
 echo "Version ${VERSION}"
 echo
+echo "${SUCCESS}Starting resign process…${NC}"
+echo ""
 
 #Define variables
 IDENTITY=$1
@@ -47,16 +54,9 @@ METHOD=$2
 BUILD_DIR="App"
 NAME_FINAL_IPA="signed.ipa"
 UNSIGNED_IPA="$BUILD_DIR/$METHOD/unsigned.ipa"
-
-#Start
-printf "${SUCCESS}Starting resign process…${NC}"
-echo ""
+ERROR_SHA1=0
 FINAL_IPA="$BUILD_DIR/$METHOD/$NAME_FINAL_IPA"
-echo "final ipa: $FINAL_IPA"
-echo "unsigned ipa: $UNSIGNED_IPA"
-
 APPTEMP="$BUILD_DIR/$METHOD/apptemp"
-echo "build directory: $APPTEMP"
 APPPAYLOAD="$APPTEMP/Payload"
 APPDIR="$APPPAYLOAD/ownCloud.app"
 PROVISIONING_DIR="Provisioning Files"
@@ -72,7 +72,6 @@ declare -a BUNDLEIDS=();
 
 # Delete previous temporal app folder if exist
 if [ -d  "$APPTEMP" ]; then
-    echo "Removing previous temporal app folder"
     rm -rf "$APPTEMP"
 fi
 
@@ -81,13 +80,45 @@ if [ ! -f "$UNSIGNED_IPA" ]; then
     exit 1
 fi
 
+# Get certificate SHA-1
+CERT_SHA_1=`security find-certificate -c "$IDENTITY" -Z | grep "^SHA-1" | cut -d: -f 2 | xargs`
+# Create temp directory
+mkdir $APPTEMP
+
+echo "${UNDERLINED}${SUCCESS}Checking Provisioning Profiles:${NOTUNDERLINED}"
+
 for a in "${MOBILEPROVISIONS[@]}"
 do
     if [ ! -f "./$a" ]; then
-    echo "Error: can't find $a in the current directory"
+    echo "${WARN}Error: can't find $a in the current directory${NC}"
     exit 1
+else    
+	# Convert provisioning profile to plist
+	security cms -D -i "$a" > "$APPTEMP/tmp.plist"
+	# Get provisioning SHA-1
+	PROV_SHA_1=`/usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:0" $APPTEMP/tmp.plist | openssl x509 -inform der -fingerprint | grep "^SHA1" | cut -d= -f 2 | ruby -ne 'puts $_.split(":").join'`
+
+	if [ "$CERT_SHA_1" = "$PROV_SHA_1" ]; then
+  		echo "${SUCCESS}Provisioning fingerprint matches with certificate:${NC}"
+	  	echo "${INFO}$a${NC}"
+  		echo ""
+		else
+  		echo ""
+	  	echo "${WARN}The provisioning fingerprint does not match with the certificate fingerprint:${NC}"
+  		echo "Provisioning Profile:	  	${INFO}$a${NC}"
+	  	echo "Certificate Fingerprint:  	${INFO}$CERT_SHA_1${NC}"
+	  	echo "Provisioning Fingerprint: 	${INFO}$PROV_SHA_1${NC}"
+  		ERROR_SHA1=1
+	fi
 fi
 done
+
+if [ "$ERROR_SHA1" = 1 ]; then
+	echo ""
+	echo "Please check that you are using the correct certificate identity and the provisioning profile was signed with the chosen certificate identity."
+	echo "${WARN}Exit resigning. Please fix the errors above.${NC}"
+	exit
+fi
 
 export PATH=$PATH:/usr/libexec
 
@@ -95,6 +126,12 @@ export PATH=$PATH:/usr/libexec
 echo "${SUCCESS}Unzipping ipa…${NC}"
 echo ""
 unzip -q "$UNSIGNED_IPA" -d "$APPTEMP" || { echo "${WARN}Failed to unzip ipa file${NC}"; exit 1; }
+
+
+# Profile
+# security cms -D -i ~/Downloads/App.mobileprovision > ~/Downloads/App.plist
+# /usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:0" ~/Downloads/App.plist | openssl x509 -inform der -fingerprint | grep "^SHA1" | cut -d= -f 2 | ruby -ne 'puts $_.split(":").join'
+
 
 for (( i=0; i<${#MOBILEPROVISIONS[@]}; i++ ));
 do
