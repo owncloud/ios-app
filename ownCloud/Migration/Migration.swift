@@ -116,8 +116,7 @@ class Migration {
 							resultSet.iterate({ (_, _, rowDict, _) in
 								self.migrationQueue.async {
 									if let userId = rowDict["id"] as? Int,
-										let serverURL = rowDict["url"] as? String,
-										let credentials = self.getCredentialsDataItem(for: userId) {
+										let serverURL = rowDict["url"] as? String {
 
 										Log.debug(tagged: ["MIGRATION"], "Migrating account data for user id \(userId)")
 
@@ -125,11 +124,13 @@ class Migration {
 										bookmark.url = URL(string: serverURL)
 										let connection = OCConnection(bookmark: bookmark)
 
-										let bookmarkActivity = "\(credentials.userName ?? "")@\(bookmark.url?.absoluteString ?? "")"
+										let userCredentials = self.getCredentialsDataItem(for: userId)
+
+										let bookmarkActivity = "\(userCredentials?.userName ?? "")@\(bookmark.url?.absoluteString ?? "")"
 
 										self.postAccountMigrationNotification(activity: bookmarkActivity, type: .account)
 
-										if let authMethods = self.setup(connection: connection) {
+										if let authMethods = self.setup(connection: connection), let credentials = userCredentials {
 
 											// Generate authorization data
 											self.authorize(bookmark: bookmark,
