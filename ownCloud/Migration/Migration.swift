@@ -130,7 +130,7 @@ class Migration {
 
 										self.postAccountMigrationNotification(activity: bookmarkActivity, type: .account)
 
-										if let authMethods = self.setup(connection: connection), let credentials = userCredentials {
+										if let authMethods = self.setup(connection: connection, parentViewController: parentViewController), let credentials = userCredentials {
 
 											// Generate authorization data
 											self.authorize(bookmark: bookmark,
@@ -216,7 +216,7 @@ class Migration {
 
 	// MARK: - Private helpers
 
-	private func setup(connection:OCConnection) -> [OCAuthenticationMethodIdentifier]? {
+	private func setup(connection:OCConnection, parentViewController:UIViewController? = nil) -> [OCAuthenticationMethodIdentifier]? {
 		let connectGroup = DispatchGroup()
 		var supportedAuthMethods: [OCAuthenticationMethodIdentifier]?
 
@@ -225,21 +225,46 @@ class Migration {
 			connection.prepareForSetup(options: nil) { (issue, _, supportedAuthenticationMethods, _) in
 				supportedAuthMethods = supportedAuthenticationMethods
 
-				if let issue = issue {
-					if issue.level != .error, supportedAuthMethods == nil {
-						issue.approve()
-						connectAndAuthorize()
-
-						Log.warning(tagged: ["MIGRATION"], "Recoverable issue during connection setup, approving: \(issue)")
-					}
-
-					if issue.level == .error {
-						Log.error(tagged: ["MIGRATION"], "Issue raised during connection setup: \(issue)")
-					}
+				if supportedAuthMethods != nil {
+					connectGroup.leave()
+					return
 				}
 
-				connectGroup.leave()
+				guard let issue = issue else {
+					connectGroup.leave()
+					return
+				}
 
+				guard issue.level != .error else {
+					Log.error(tagged: ["MIGRATION"], "Issue raised during connection setup: \(issue)")
+					connectGroup.leave()
+					return
+				}
+
+				let displayIssues = issue.prepareForDisplay()
+
+				guard displayIssues.displayLevel.rawValue >= OCIssueLevel.warning.rawValue else {
+					connectGroup.leave()
+					return
+				}
+
+				// Present issues if the level is >= warning
+				DispatchQueue.main.async {
+					let issuesViewController = ConnectionIssueViewController(displayIssues: displayIssues, completion: { (response) in
+						switch response {
+							case .cancel:
+								issue.reject()
+							case .approve:
+								issue.approve()
+								connectAndAuthorize()
+							case .dismiss:
+								break
+						}
+						connectGroup.leave()
+					})
+
+					parentViewController?.present(issuesViewController, animated: true, completion: nil)
+				}
 			}
 		}
 
