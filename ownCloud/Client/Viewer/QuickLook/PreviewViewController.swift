@@ -100,7 +100,7 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 		return source != nil ? 1 : 0
 	}
 
-	// MARK: - QLPreviewControllerDelegate
+	// MARK: - QLPreviewControllerDataSource
 	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
 		return source! as QLPreviewItem
 	}

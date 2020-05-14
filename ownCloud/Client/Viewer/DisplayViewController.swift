@@ -122,7 +122,9 @@ class DisplayViewController: UIViewController {
 	private var state: DisplayViewState = .initial {
 		didSet {
 			if oldValue != self.state {
-				self.updateUI()
+				OnMainThread(inline: true) {
+					self.updateUI()
+				}
 			}
 		}
 	}
@@ -250,6 +252,12 @@ class DisplayViewController: UIViewController {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+
+		updateSource()
+		startQuery()
+
+		updateNavigationBarItems()
+
 		self.updateUI()
 	}
 
@@ -272,11 +280,6 @@ class DisplayViewController: UIViewController {
 				iconImageView.image = item.icon(fitInSize:iconImageSize)
 			}
 		}
-
-		updateSource()
-		startQuery()
-
-		updateNavigationBarItems()
 	}
 
 	// MARK: - Actions which can be triggered by the user
