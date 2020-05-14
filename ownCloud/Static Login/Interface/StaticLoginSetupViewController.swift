@@ -264,7 +264,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		super.viewWillAppear(animated)
 	}
 
-	func determineSupportedAuthMethod() {
+	func determineSupportedAuthMethod(_ isInitialRequest: Bool = true) {
 		let connection = OCConnection(bookmark: bookmark)
 		connection.prepareForSetup(options: nil, completionHandler: { (connectionIssue, _, _, preferredAuthenticationMethods) in
 			var proceed : Bool = true
@@ -272,7 +272,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			if let issue = connectionIssue {
 				proceed = self.show(issue: issue, proceed: { () in
 					OnMainThread {
-						//	self.determineSupportedAuthMethod()
+						if isInitialRequest {
+							self.determineSupportedAuthMethod(false)
+						}
 					}
 				}, cancel: { () in
 					OnMainThread {
@@ -281,60 +283,65 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 				})
 			}
 
-			// Determine authentication method
-			// - use the most preferred one by default
-			var useAuthMethod = preferredAuthenticationMethods?.first
+			if proceed {
+				// Determine authentication method
+				// - use the most preferred one by default
+				var useAuthMethod = preferredAuthenticationMethods?.first
 
-			// - if a limit is imposed on the allowed authentication methods, use the most preferred authentication method that's also available
-			if let allowedAuthenticationMethods = self.profile.allowedAuthenticationMethods, let preferredAuthenticationMethods = preferredAuthenticationMethods {
-				useAuthMethod = nil
+				// - if a limit is imposed on the allowed authentication methods, use the most preferred authentication method that's also available
+				if let allowedAuthenticationMethods = self.profile.allowedAuthenticationMethods, let preferredAuthenticationMethods = preferredAuthenticationMethods {
+					useAuthMethod = nil
 
-				for preferredAuthenticationMethod in preferredAuthenticationMethods {
-					if allowedAuthenticationMethods.contains(preferredAuthenticationMethod) {
-						useAuthMethod = preferredAuthenticationMethod
-						break
+					for preferredAuthenticationMethod in preferredAuthenticationMethods {
+						if allowedAuthenticationMethods.contains(preferredAuthenticationMethod) {
+							useAuthMethod = preferredAuthenticationMethod
+							break
+						}
 					}
 				}
-			}
 
-			var authMethodKnown = false
+				var authMethodKnown = false
 
-			if proceed, preferredAuthenticationMethods != nil, let authenticationMethod = useAuthMethod, let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethod) {
+				if proceed, preferredAuthenticationMethods != nil, let authenticationMethod = useAuthMethod, let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethod) {
 
-				self.bookmark.authenticationMethodIdentifier = useAuthMethod
-				authMethodKnown = true
+					self.bookmark.authenticationMethodIdentifier = useAuthMethod
+					authMethodKnown = true
 
-				OnMainThread {
-					self.tableView.performBatchUpdates({
-						self.removeSection(self.busySection!, animated: true)
+					OnMainThread {
+						self.tableView.performBatchUpdates({
+							self.removeSection(self.busySection!, animated: true)
 
-						let authMethodType = authenticationMethodClass.type as OCAuthenticationMethodType
-						switch authMethodType {
-						case .passphrase:
-							self.addSection(self.loginMaskSection(), animated: true)
-
-						case .token:
-							self.addSection(self.tokenMaskSection(), animated: true)
-						}
-					}, completion: nil)
+							let authMethodType = authenticationMethodClass.type as OCAuthenticationMethodType
+							switch authMethodType {
+							case .passphrase:
+								if self.sectionForIdentifier("loginMaskSection") == nil {
+									self.addSection(self.loginMaskSection(), animated: true)
+								}
+							case .token:
+								if self.sectionForIdentifier("tokenMaskSection") == nil {
+									self.addSection(self.tokenMaskSection(), animated: true)
+								}
+							}
+						}, completion: nil)
+					}
 				}
-			}
 
-			if !authMethodKnown {
-				self.bookmark.authenticationMethodIdentifier = nil
+				if !authMethodKnown {
+					self.bookmark.authenticationMethodIdentifier = nil
 
-				OnMainThread {
-					let alert = ThemedAlertController(title: "Server error".localized,
-									  message: ((preferredAuthenticationMethods != nil) && (preferredAuthenticationMethods!.count > 0)) ?
-									  		"The server doesn't support any allowed authentication method.".localized :
-									  		"The server doesn't support any known and allowed authentication method found.".localized,
-									  preferredStyle: .alert)
+					OnMainThread {
+						let alert = ThemedAlertController(title: "Server error".localized,
+														  message: ((preferredAuthenticationMethods != nil) && (preferredAuthenticationMethods!.count > 0)) ?
+															"The server doesn't support any allowed authentication method.".localized :
+															"The server doesn't support any known and allowed authentication method found.".localized,
+														  preferredStyle: .alert)
 
-					alert.addAction(UIAlertAction(title: "Retry detection".localized, style: .default, handler: { (_) in
-						self.determineSupportedAuthMethod()
-					}))
+						alert.addAction(UIAlertAction(title: "Retry detection".localized, style: .default, handler: { (_) in
+							self.determineSupportedAuthMethod()
+						}))
 
-					self.present(alert, animated: true, completion: nil)
+						self.present(alert, animated: true, completion: nil)
+					}
 				}
 			}
 		})
@@ -349,6 +356,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 						switch response {
 							case .cancel:
 								issue?.reject()
+								cancel?()
 
 							case .approve:
 								issue?.approve()
