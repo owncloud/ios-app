@@ -180,7 +180,7 @@ extension MoreSettingsSection : OCClassSettingsSupport {
 			return [ .appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
 					 .feedbackEmail: "ios-app@owncloud.com",
 					 .recommendToFriendEnabled: !VendorServices.shared.isBranded,
-					 .sendFeedbackEnabled: !VendorServices.shared.isBranded
+					 .sendFeedbackEnabled: (VendorServices.shared.feedbackMail?.count ?? 0 > 0)
 			]
 		}
 

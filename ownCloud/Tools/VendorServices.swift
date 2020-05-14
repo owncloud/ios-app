@@ -81,7 +81,7 @@ class VendorServices : NSObject {
 	}
 
 	var appName: String {
-		if let themingValues = self.brandingProperties, let bundleValues = themingValues["Bundle"] as? NSDictionary, let organizationName = bundleValues["appName"] as? String {
+		if let bundleValues = self.brandingProperties, let organizationName = bundleValues["organizationName"] as? String {
 			return organizationName
 		}
 
@@ -124,7 +124,7 @@ class VendorServices : NSObject {
 	}
 
 	var hasBrandedLogin: Bool {
-		if let themingValues = self.brandingProperties, let bundleValues = themingValues["Bundle"] as? NSDictionary, bundleValues["organizationLogoName"] != nil, bundleValues["organizationBackgroundName"] != nil, bundleValues["organizationName"] != nil {
+		if let bundleValues = self.brandingProperties, bundleValues["organizationName"] != nil {
 			return true
 		}
 

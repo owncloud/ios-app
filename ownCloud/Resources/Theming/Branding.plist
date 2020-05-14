@@ -2,21 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>organizationName</key>
+	<string>ownCloud.online</string>
 	<key>canAddAccount</key>
-	<false/>
+	<true/>
 	<key>feedbackMail</key>
 	<string>support@owncloud.online</string>
-	<key>Bundle</key>
-	<dict>
-		<key>organizationLogoName</key>
-		<string>bookmark-logo</string>
-		<key>organizationBackgroundName</key>
-		<string>brand-background.jpg</string>
-		<key>organizationName</key>
-		<string>ownCloud.online</string>
-		<key>appName</key>
-		<string>ownCloud.online</string>
-	</dict>
 	<key>Profiles</key>
 	<array>
 		<dict>
@@ -35,7 +26,7 @@
 			<key>bookmarkName</key>
 			<string>ownCloud.online</string>
 			<key>url</key>
-			<string>https://ollikkowbo322.owncloud.online/</string>
+			<string>https://demo.owncloud.com</string>
 			<key>maxBookmarkCount</key>
 			<integer>1</integer>
 			<key>allowedAuthenticationMethods</key>

@@ -20,8 +20,8 @@ import UIKit
 import ownCloudSDK
 
 class StaticLoginBundle: NSObject {
-	var organizationLogoName : String?
-	var organizationBackgroundName : String?
+	var organizationLogoImage : UIImage?
+	var organizationBackgroundImage : UIImage?
 	var organizationName : String?
 
 	var loginThemeStyleID : ThemeStyleIdentifier?
@@ -31,14 +31,14 @@ class StaticLoginBundle: NSObject {
 	static var defaultBundle : StaticLoginBundle {
 		let bundle = StaticLoginBundle()
 
-		if let themingValues = VendorServices.shared.brandingProperties {
-			if let bundleValues = themingValues["Bundle"] as? NSDictionary, let organizationLogoName = bundleValues["organizationLogoName"] as? String, let organizationBackgroundName = bundleValues["organizationBackgroundName"] as? String, let organizationName = bundleValues["organizationName"] as? String {
+		if let bundleValues = VendorServices.shared.brandingProperties {
+			if let logoImage = UIImage(named: "bookmark-logo.png"), let backgroundImage = UIImage(named: "brand-background.jpg"), let organizationName = bundleValues["organizationName"] as? String {
 				bundle.organizationName = organizationName
-				bundle.organizationLogoName = organizationLogoName
-				bundle.organizationBackgroundName = organizationBackgroundName
+				bundle.organizationLogoImage = logoImage
+				bundle.organizationBackgroundImage = backgroundImage
 			}
 
-			if let profileValues = themingValues["Profiles"] as? NSArray {
+			if let profileValues = bundleValues["Profiles"] as? NSArray {
 				let profiles = profileValues.map { (profile) -> StaticLoginProfile? in
 					if let profile = profile as? NSDictionary {
 						let staticloginProfile = StaticLoginProfile()

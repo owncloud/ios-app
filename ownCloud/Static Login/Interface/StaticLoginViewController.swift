@@ -93,7 +93,6 @@ class StaticLoginViewController: UIViewController, Themeable {
 					]
 				}
 			}
-
 			self.navigationController?.setToolbarHidden(!toolbarShown, animated: true)
 		}
 	}
@@ -173,16 +172,17 @@ class StaticLoginViewController: UIViewController, Themeable {
 
 		OCItem.registerIcons()
 
-		if let organizationLogoName = loginBundle.organizationLogoName {
-			let image = UIImage(named: organizationLogoName)
-			headerLogoView?.image = image
+		if let organizationLogoImage = loginBundle.organizationLogoImage {
+			headerLogoView?.image = organizationLogoImage
 			headerLogoView?.contentMode = .scaleAspectFit
 		}
 
-		if let organizationBackgroundName = loginBundle.organizationBackgroundName {
-			backgroundImageView?.image = UIImage(named: organizationBackgroundName)
+		if let organizationBackgroundImage = loginBundle.organizationBackgroundImage {
+			backgroundImageView?.image = organizationBackgroundImage
 			backgroundImageView?.contentMode = .scaleAspectFill
 		}
+
+		self.navigationController?.toolbar.isTranslucent = false
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -267,7 +267,7 @@ class StaticLoginViewController: UIViewController, Themeable {
 	func buildBookmarkSelector() -> UIViewController {
 		var serverList : ServerListTableViewController?
 
-		if OCBookmarkManager.shared.bookmarks.count > 1 {
+		if OCBookmarkManager.shared.bookmarks.count > 1 || VendorServices.shared.canAddAccount {
 			serverList = StaticLoginServerListViewController(style: .grouped)
 			(serverList as? StaticLoginServerListViewController)?.staticLoginViewController = self
 		} else {

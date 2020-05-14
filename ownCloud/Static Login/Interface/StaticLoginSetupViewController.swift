@@ -60,7 +60,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 			loginMaskSection.add(row: passwordRow)
 		}
 
-		if VendorServices.shared.canAddAccount {
+		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
 			let (proceedButton, cancelButton) = loginMaskSection.addButtonFooter(proceedLabel: "Login", cancelLabel: "Cancel")
 			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
 			cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
