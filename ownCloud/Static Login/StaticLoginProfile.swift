@@ -22,23 +22,15 @@ import ownCloudSDK
 typealias StaticLoginProfileIdentifier = String
 
 class StaticLoginProfile: NSObject {
-	static let unlimitedBookmarks : Int = 0
-
 	static let staticLoginProfileIdentifierKey : String = "static-login-profile-identifier"
 
 	var identifier : StaticLoginProfileIdentifier?
-
 	var name : String?
 	var promptForPasswordAuth : String?
 	var promptForTokenAuth : String?
 	var welcome : String?
-	var customLogoName : String?
-
 	var bookmarkName : String?
-
 	var url : URL?
 	var allowedAuthenticationMethods : [OCAuthenticationMethodIdentifier]?
-	var maxBookmarkCount : Int = StaticLoginProfile.unlimitedBookmarks
-
 	var themeStyleID : ThemeStyleIdentifier?
 }

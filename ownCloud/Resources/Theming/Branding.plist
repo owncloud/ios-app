@@ -17,8 +17,6 @@
 			<string>ownCloud.online</string>
 			<key>welcome</key>
 			<string>Welcome to ownCloud.online</string>
-			<key>prompt</key>
-			<string>Enter your username and password:</string>
 			<key>promptForPasswordAuth</key>
 			<string>Enter your username and password:</string>
 			<key>promptForTokenAuth</key>
@@ -27,8 +25,6 @@
 			<string>ownCloud.online</string>
 			<key>url</key>
 			<string>https://demo.owncloud.com</string>
-			<key>maxBookmarkCount</key>
-			<integer>1</integer>
 			<key>allowedAuthenticationMethods</key>
 			<array>
 				<string>com.owncloud.basicauth</string>

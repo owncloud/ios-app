@@ -49,8 +49,7 @@ class StaticLoginBundle: NSObject {
 						if let name = profile["name"] as? String {
 							staticloginProfile.name = name
 						}
-						if let prompt = profile["prompt"] as? String {
-							staticloginProfile.promptForPasswordAuth = prompt
+						if let prompt = profile["promptForTokenAuth"] as? String {
 							staticloginProfile.promptForTokenAuth = prompt
 						}
 						if let promptForPasswordAuth = profile["promptForPasswordAuth"] as? String {
@@ -62,9 +61,6 @@ class StaticLoginBundle: NSObject {
 						if let welcome = profile["welcome"] as? String {
 							staticloginProfile.welcome = welcome
 						}
-						if let customLogoName = profile["customLogoName"] as? String {
-							staticloginProfile.customLogoName = customLogoName
-						}
 						if let bookmarkName = profile["bookmarkName"] as? String {
 							staticloginProfile.bookmarkName = bookmarkName
 						}
@@ -73,9 +69,6 @@ class StaticLoginBundle: NSObject {
 						}
 						if let allowedAuthenticationMethods = profile["allowedAuthenticationMethods"] as? NSArray {
 							staticloginProfile.allowedAuthenticationMethods = allowedAuthenticationMethods as? [OCAuthenticationMethodIdentifier]
-						}
-						if let maxBookmarkCount = profile["maxBookmarkCount"] as? Int {
-							staticloginProfile.maxBookmarkCount = maxBookmarkCount
 						}
 
 						return staticloginProfile
