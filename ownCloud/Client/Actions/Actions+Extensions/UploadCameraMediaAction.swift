@@ -39,7 +39,6 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 
 		imagePickerViewController.sourceType = .camera
 		imagePickerViewController.mediaTypes = cameraMediaTypes
-		imagePickerViewController.allowsEditing = true
 		imagePickerViewController.delegate = self
 
 		viewController.present(imagePickerViewController, animated: true)
@@ -61,11 +60,7 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 
 		if type == String(kUTTypeImage) {
 			// Retrieve UIImage
-			image = info[.editedImage] as? UIImage
-
-			if image == nil {
-				image = info[.originalImage] as? UIImage
-			}
+			image = info[.originalImage] as? UIImage
 
 			// TODO: Get the meta-data
 			//let metaData = info[.mediaMetadata]
