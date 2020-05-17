@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0233F45E246E9D960095A799 /* UploadCameraMediaAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */; };
 		2308F94321467F6200CF0B91 /* ClientDirectoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */; };
 		232B01F42126B0CE00366FA0 /* MoreViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */; };
 		232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F52126B10900366FA0 /* MoreStaticTableViewController.swift */; };
@@ -743,6 +744,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = UploadCameraMediaAction.swift; sourceTree = "<group>"; };
 		03AE98EEF23B4F4F2C0FDD0F /* Pods-ownCloudTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientDirectoryPickerViewController.swift; sourceTree = "<group>"; };
 		232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreViewHeader.swift; sourceTree = "<group>"; };
@@ -1758,6 +1760,7 @@
 				DC62514B225D254500736874 /* UploadBaseAction.swift */,
 				DC625147225CEB2C00736874 /* UploadFileAction.swift */,
 				DC625149225CEB4300736874 /* UploadMediaAction.swift */,
+				0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */,
 			);
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
@@ -3291,6 +3294,7 @@
 				396BE4CA2289500E00B254A9 /* RoundedLabel.swift in Sources */,
 				394E1FFF233E43F5009D2897 /* LinksAction.swift in Sources */,
 				396C82FB2319AFDD00938262 /* CollaborateAction.swift in Sources */,
+				0233F45E246E9D960095A799 /* UploadCameraMediaAction.swift in Sources */,
 				DC854936218331CF00782BA8 /* UserInterfaceSettingsSection.swift in Sources */,
 				DC0030CB2350B75000BB8570 /* ScanViewController.swift in Sources */,
 				4C464BF42187AF1500D30602 /* PDFSearchTableViewCell.swift in Sources */,
