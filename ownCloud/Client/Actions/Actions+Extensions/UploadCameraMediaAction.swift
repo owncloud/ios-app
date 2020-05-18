@@ -26,7 +26,7 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 
 	typealias CameraCaptureCompletionHandler = (_ imageURL:URL?, _ alternativeName:String?, _ deleteImportedFile:Bool) -> Void
 
-	let imagePickerViewController = UIImagePickerController()
+	let imagePickerController = UIImagePickerController()
 	var completionHandler: CameraCaptureCompletionHandler?
 
 	static private let dateFormatter: DateFormatter = {
@@ -39,21 +39,23 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 	func present(on viewController:UIViewController, with completion:@escaping CameraCaptureCompletionHandler) {
 		self.completionHandler = completion
 
+		// Check if camera is available
 		guard UIImagePickerController.isSourceTypeAvailable(.camera),
 			let cameraMediaTypes = UIImagePickerController.availableMediaTypes(for: .camera) else {
 				return
 		}
 
-		imagePickerViewController.sourceType = .camera
-		imagePickerViewController.mediaTypes = cameraMediaTypes
-		imagePickerViewController.delegate = self
-		imagePickerViewController.videoQuality = .typeHigh
+		// Setup UIImagePickerController
+		imagePickerController.sourceType = .camera
+		imagePickerController.mediaTypes = cameraMediaTypes
+		imagePickerController.delegate = self
+		imagePickerController.videoQuality = .typeHigh
 
-		viewController.present(imagePickerViewController, animated: true)
+		viewController.present(imagePickerController, animated: true)
 	}
 
 	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-		imagePickerViewController.dismiss(animated: true)
+		imagePickerController.dismiss(animated: true)
 
 		var image: UIImage?
 		var outputURL: URL?
@@ -62,11 +64,13 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 		var preferMP4 = false
 		var deleteImportedFile = true
 
+		// Check user settings concerning preferred media export formats
 		if let userDefaults = OCAppIdentity.shared.userDefaults {
 			preferHEIC = !userDefaults.convertHeic
 			preferMP4 = userDefaults.convertVideosToMP4
 		}
 
+		// Perform media export on a background queue
 		OnBackgroundQueue {
 			defer {
 				OnMainThread {
@@ -77,6 +81,7 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 			// Retrieve media type
 			guard let type = info[.mediaType] as? String else { return }
 
+			// Generate a timestamp string which will be used in the name of uploaded media
 			let timeStamp = CameraViewPresenter.dateFormatter.string(from: Date())
 
 			if type == String(kUTTypeImage) {
@@ -84,6 +89,7 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 				image = info[.originalImage] as? UIImage
 
 				let fileName = "Photo-\(timeStamp)"
+
 				let ext = preferHEIC ? "heic" : "jpg"
 				let uti = preferHEIC ? AVFileType.heic as CFString : kUTTypeJPEG
 				outputURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).appendingPathExtension(ext)
@@ -111,8 +117,8 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 
 				let fileName = "Video-\(timeStamp)"
 
-				// Convert video to MPEG4 first
 				if preferMP4 {
+					// Convert video clip to MPEG4 first
 					outputURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).appendingPathExtension("mp4")
 					guard let url = outputURL else { return }
 
@@ -122,14 +128,13 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 					}
 
 				} else {
-					// Upload video as is
+					// Upload video clip as is
 					deleteImportedFile = false
 					outputURL = videoURL
 					alternativeName = "\(fileName).\(videoURL.pathExtension)"
 				}
 			}
 		}
-
 	}
 }
 
@@ -167,6 +172,8 @@ class UploadCameraMediaAction: UploadBaseAction, UIImagePickerControllerDelegate
 					if error != nil {
 						Log.error(tagged: ["CAMERA_UPLOAD"], "Failed to import media with error: \(String(describing: error))")
 					}
+
+					// Delete the media file if it was temporarily generated (this action was responsible for creating it)
 					if shallDelete {
 						do {
 							try FileManager.default.removeItem(at: url)
