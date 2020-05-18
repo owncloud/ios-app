@@ -144,8 +144,8 @@ class UploadCameraMediaAction: UploadBaseAction, UIImagePickerControllerDelegate
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Take photo or video".localized }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut] }
-	override class var keyCommand : String? { return "P" }
-	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
+	override class var keyCommand : String? { return "3" }
+	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .shift] }
 
 	var cameraPresenter = CameraViewPresenter()
 
