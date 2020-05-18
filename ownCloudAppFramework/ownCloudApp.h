@@ -52,5 +52,7 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 
 #import <ownCloudApp/OCLicenseEnterpriseProvider.h>
 
+#import <ownCloudApp/OCLicenseEMMProvider.h>
+
 #import <ownCloudApp/OCLicenseEnvironment.h>
 #import <ownCloudApp/OCCore+LicenseEnvironment.h>
