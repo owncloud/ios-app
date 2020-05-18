@@ -29,6 +29,13 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 	let imagePickerViewController = UIImagePickerController()
 	var completionHandler: CameraCaptureCompletionHandler?
 
+	static private let dateFormatter: DateFormatter = {
+		let dateFormatter: DateFormatter =  DateFormatter()
+		dateFormatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
+		dateFormatter.locale = Locale(identifier:"enUSPOSIX")
+		return dateFormatter
+	}()
+
 	func present(on viewController:UIViewController, with completion:@escaping CameraCaptureCompletionHandler) {
 		self.completionHandler = completion
 
@@ -70,11 +77,13 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 			// Retrieve media type
 			guard let type = info[.mediaType] as? String else { return }
 
+			let timeStamp = CameraViewPresenter.dateFormatter.string(from: Date())
+
 			if type == String(kUTTypeImage) {
 				// Retrieve UIImage
 				image = info[.originalImage] as? UIImage
 
-				let fileName = "camera_shot"
+				let fileName = "Photo-\(timeStamp)"
 				let ext = preferHEIC ? "heic" : "jpg"
 				let uti = preferHEIC ? AVFileType.heic as CFString : kUTTypeJPEG
 				outputURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).appendingPathExtension(ext)
@@ -100,7 +109,7 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 			} else if type == String(kUTTypeMovie) {
 				guard let videoURL = info[.mediaURL] as? URL else { return }
 
-				let fileName = "video-clip"
+				let fileName = "Video-\(timeStamp)"
 
 				// Convert video to MPEG4 first
 				if preferMP4 {
@@ -152,16 +161,23 @@ class UploadCameraMediaAction: UploadBaseAction, UIImagePickerControllerDelegate
 			return
 		}
 
-		cameraPresenter.present(on: viewController) { (localImageURL, alternativeName, shallDelete) in
-			if let url = localImageURL, let core = self.core {
-				if let progress = url.upload(with: core, at: rootItem, alternativeName: alternativeName, placeholderHandler: { (_, _) in
+		cameraPresenter.present(on: viewController) { (localMediaURL, alternativeName, shallDelete) in
+			if let url = localMediaURL, let core = self.core {
+				if let progress = url.upload(with: core, at: rootItem, alternativeName: alternativeName, placeholderHandler: { (_, error) in
+					if error != nil {
+						Log.error(tagged: ["CAMERA_UPLOAD"], "Failed to import media with error: \(String(describing: error))")
+					}
 					if shallDelete {
-						try? FileManager.default.removeItem(at: url)
+						do {
+							try FileManager.default.removeItem(at: url)
+						} catch {
+							Log.error(tagged: ["CAMERA_UPLOAD"], "Failed to delete temporary media filed")
+						}
 					}
 				}) {
 					self.publish(progress: progress)
 				} else {
-					Log.debug("Error setting up upload of \(Log.mask(url.lastPathComponent)) to \(Log.mask(rootItem.path))")
+					Log.error(tagged: ["CAMERA_UPLOAD"], "Error setting up upload of \(Log.mask(url.lastPathComponent)) to \(Log.mask(rootItem.path))")
 				}
 			}
 			self.completed()
