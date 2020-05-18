@@ -1,0 +1,233 @@
+#! /bin/bash
+
+ # Copyright (C) 2020, ownCloud GmbH.
+ #
+ # This code is covered by the GNU Public License Version 3.
+ #
+ # For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ # You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+
+VERSION="1.0.0"
+
+#Define output formats
+BOLD="$(tput bold)"
+UNDERLINED="$(tput smul)"
+NOTUNDERLINED="$(tput rmul)"
+WARN="$(tput setaf 1)"
+SUCCESS="$(tput setaf 2)"
+INFO="$(tput setaf 3)"
+NC="$(tput sgr0)" # No Color
+
+
+usage()
+{
+  echo "Usage:  $0 CERTIFICATE_IDENTITY METHOD"
+  echo "        $0 \"Certificate Identity\" ad-hoc"
+  echo "        $0 \"Certificate Identity\" app-store"
+  echo "Version: ${VERSION}"
+  echo ""
+  echo "Found Certificate Identities:"
+  echo "     Fingerprint                              \"Certificate Identity\""
+  echo "     -----------------------------------------------------------------"
+  security find-identity -pcodesigning -v
+  exit 1
+}
+
+#Check if all required parameters exist
+if [ $# -lt 2 ]; then
+  usage
+fi
+if ! [[ "$2" =~ ^(ad-hoc|app-store)$ ]]; then
+  usage
+fi
+
+echo
+echo "${BOLD}${SUCCESS}ownCloud iOS-App Resigning${NC}"
+echo "Version ${VERSION}"
+echo
+echo "${SUCCESS}Starting resign process…${NC}"
+echo ""
+
+#Define variables
+IDENTITY=$1
+METHOD=$2
+BUILD_DIR="App"
+NAME_FINAL_IPA="signed.ipa"
+UNSIGNED_IPA="$BUILD_DIR/$METHOD/unsigned.ipa"
+ERROR_SHA1=0
+FINAL_IPA="$BUILD_DIR/$METHOD/$NAME_FINAL_IPA"
+APPTEMP="$BUILD_DIR/$METHOD/apptemp"
+APPPAYLOAD="$APPTEMP/Payload"
+APPDIR="$APPPAYLOAD/ownCloud.app"
+PROVISIONING_DIR="Provisioning Files"
+
+DISTRIBUTION_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/App.mobileprovision"
+FILEPROVIDER_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/FileProvider.mobileprovision"
+INTENT_MOBILEPROVISION="$PROVISIONING_DIR/$METHOD/Intent.mobileprovision"
+
+declare -a MOBILEPROVISIONS=(       "$DISTRIBUTION_MOBILEPROVISION"    "$FILEPROVIDER_MOBILEPROVISION"  "$INTENT_MOBILEPROVISION"  );
+declare -a ENTITLEMENTS=(   "ownCloud.entitlements"  "ownCloud_File_Provider.entitlements" "ownCloud_Intents.entitlements" );
+declare -a LOCATIONS=(      "$APPDIR"   "$APPDIR/PlugIns/ownCloud File Provider.appex"  "$APPDIR/PlugIns/ownCloud Intents.appex" );
+declare -a BUNDLEIDS=();
+
+# Delete previous temporal app folder if exist
+if [ -d  "$APPTEMP" ]; then
+    rm -rf "$APPTEMP"
+fi
+
+if [ ! -f "$UNSIGNED_IPA" ]; then
+    echo "${WARN}Error: can't find $UNSIGNED_IPA in the current directory${NC}"
+    exit 1
+fi
+
+# Get certificate SHA-1
+CERT_SHA_1=`security find-certificate -c "$IDENTITY" -Z | grep "^SHA-1" | cut -d: -f 2 | xargs`
+# Create temp directory
+mkdir $APPTEMP
+
+echo "${UNDERLINED}${SUCCESS}Checking Provisioning Profiles:${NOTUNDERLINED}"
+
+for a in "${MOBILEPROVISIONS[@]}"
+do
+    if [ ! -f "./$a" ]; then
+    echo "${WARN}Error: can't find $a in the current directory${NC}"
+    exit 1
+else    
+	# Convert provisioning profile to plist
+	security cms -D -i "$a" > "$APPTEMP/tmp.plist"
+	# Get provisioning SHA-1
+	PROV_SHA_1=`/usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:0" $APPTEMP/tmp.plist | openssl x509 -inform der -fingerprint | grep "^SHA1" | cut -d= -f 2 | ruby -ne 'puts $_.split(":").join'`
+
+	if [ "$CERT_SHA_1" = "$PROV_SHA_1" ]; then
+  		echo "${SUCCESS}Provisioning fingerprint matches with certificate:${NC}"
+	  	echo "${INFO}$a${NC}"
+  		echo ""
+		else
+  		echo ""
+	  	echo "${WARN}The provisioning fingerprint does not match with the certificate fingerprint:${NC}"
+  		echo "Provisioning Profile:	  	${INFO}$a${NC}"
+	  	echo "Certificate Fingerprint:  	${INFO}$CERT_SHA_1${NC}"
+	  	echo "Provisioning Fingerprint: 	${INFO}$PROV_SHA_1${NC}"
+  		ERROR_SHA1=1
+	fi
+fi
+done
+
+if [ "$ERROR_SHA1" = 1 ]; then
+	echo ""
+	echo "Please check that you are using the correct certificate identity and the provisioning profile was signed with the chosen certificate identity."
+	echo "${WARN}Exit resigning. Please fix the errors above.${NC}"
+	exit
+fi
+
+export PATH=$PATH:/usr/libexec
+
+# Unzip ipa
+echo "${SUCCESS}Unzipping ipa…${NC}"
+echo ""
+unzip -q "$UNSIGNED_IPA" -d "$APPTEMP" || { echo "${WARN}Failed to unzip ipa file${NC}"; exit 1; }
+
+
+# Profile
+# security cms -D -i ~/Downloads/App.mobileprovision > ~/Downloads/App.plist
+# /usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:0" ~/Downloads/App.plist | openssl x509 -inform der -fingerprint | grep "^SHA1" | cut -d= -f 2 | ruby -ne 'puts $_.split(":").join'
+
+
+for (( i=0; i<${#MOBILEPROVISIONS[@]}; i++ ));
+do
+    echo "${UNDERLINED}${SUCCESS}Module:${NOTUNDERLINED}"
+    echo "${INFO}${LOCATIONS[$i]}${NC}"
+    echo ""
+    echo "Provisioning: ${INFO}${MOBILEPROVISIONS[$i]}${NC}"
+    echo "Entitlements: ${INFO}${ENTITLEMENTS[$i]}${NC}"
+    echo ""
+
+    # Duplicate each mobile provision as embedded.mobileprovision and move to correct destination folder
+    cp "${MOBILEPROVISIONS[$i]}" "$BUILD_DIR/$METHOD/embedded.mobileprovision"
+
+    {
+      mv "$BUILD_DIR/$METHOD/embedded.mobileprovision" "${LOCATIONS[$i]}"
+    } || { # catch
+      echo "${WARN}ERROR${NC}"
+    }
+
+    echo "${SUCCESS}Creating entitlements…${NC}"
+    # Create all the necessary entitlements
+    PlistBuddy -x -c "print :Entitlements " /dev/stdin <<< $(security cms -D -i "./${MOBILEPROVISIONS[$i]}") > "${ENTITLEMENTS[$i]}"
+    TEAMID=`PlistBuddy -c "print com.apple.developer.team-identifier " "${ENTITLEMENTS[$i]}"`
+    echo "TeamId: ${INFO}$TEAMID${NC}"
+    APPGROUP=`PlistBuddy -c "print com.apple.security.application-groups:0 " "${ENTITLEMENTS[$i]}"`
+    echo "AppGroup: ${INFO}$APPGROUP${NC}"
+    APP_ID_PREFIX=`PlistBuddy -c "print :ApplicationIdentifierPrefix:0" /dev/stdin <<< $(security cms -D -i "./${MOBILEPROVISIONS[$i]}") `
+    echo "ApplicationIdentifierPrefix: ${INFO}$APP_ID_PREFIX${NC}"
+
+    # Modify entitlements
+    PlistBuddy -c "Set keychain-access-groups:0 $APP_ID_PREFIX.$APPGROUP" "${ENTITLEMENTS[$i]}"
+
+    echo ""
+    echo "${SUCCESS}Modify ${INFO}${LOCATIONS[$i]}/Info.plist${NC}…"
+    # Modify Info.plists
+    BUNDLEID=( `PlistBuddy -c "print application-identifier " ${ENTITLEMENTS[$i]} | sed 's/^.\{11\}//'` )
+    echo "Set Bundle ID: ${INFO}${BUNDLEID}${NC}"
+    PlistBuddy -c "Set CFBundleIdentifier ${BUNDLEID}" "${LOCATIONS[$i]}/Info.plist"
+
+    # Modify Info.plists with ownCloud custom variables
+    PlistBuddy -c "Set OCAppGroupIdentifier $APPGROUP" "${LOCATIONS[$i]}/Info.plist"
+    PlistBuddy -c "Set OCKeychainAccessGroupIdentifier $APPGROUP" "${LOCATIONS[$i]}/Info.plist"
+    PlistBuddy -c "Set OCAppIdentifierPrefix $APP_ID_PREFIX." "${LOCATIONS[$i]}/Info.plist"
+
+    # Remove old Code Signatures
+    rm -rf "${LOCATIONS[$i]}/_CodeSignature"
+
+    echo  ""
+done
+
+echo "${SUCCESS}Resign App, Extensions and Frameworks…${NC}"
+echo ""
+
+#Resign Swift & Frameworks Libraries
+ls "${APPDIR}/Frameworks" | while read file
+do
+    /usr/bin/codesign -fv -s "$IDENTITY" "${APPDIR}/Frameworks/$file" --entitlements "${ENTITLEMENTS[0]}"
+done
+
+# Resign everything
+for (( i=(${#MOBILEPROVISIONS[@]} - 1); i>=0; i-- ));
+do
+    /usr/bin/codesign -fv -s "$IDENTITY" "${LOCATIONS[$i]}" --entitlements "${ENTITLEMENTS[$i]}"
+done
+
+
+# Generate new Payload
+echo ""
+echo "${SUCCESS}Packing new ipa…${NC}"
+pushd "$APPTEMP"
+zip -q -r "$NAME_FINAL_IPA" *
+popd
+
+mv "$APPTEMP/$NAME_FINAL_IPA" $FINAL_IPA
+
+echo ""
+echo "${SUCCESS}Removing temporal items…${NC}"
+
+# Delete temporal payload folder
+echo "Removing temporal folder $APPTEMP"
+rm -rf "$APPTEMP"
+echo "Removing payload folder $APPPAYLOAD"
+rm -rf "$APPPAYLOAD"
+
+# Delete temporal entitlements files
+for (( i=0; i<${#ENTITLEMENTS[@]}; i++ ));
+do
+    if [ -f  "${ENTITLEMENTS[$i]}" ]; then
+    echo "Removing temporal ${ENTITLEMENTS[$i]}"
+    rm -rf "${ENTITLEMENTS[$i]}"
+    fi
+
+done
+
+echo
+echo "${SUCCESS}Signed file:${NC} ${FINAL_IPA}"
+echo
+echo "${BOLD}${SUCCESS}Signing complete.${NC}"
+echo

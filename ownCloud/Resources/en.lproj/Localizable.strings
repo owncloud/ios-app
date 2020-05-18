@@ -237,6 +237,7 @@
 /* Display settings */
 "Advanced settings" = "Advanced settings";
 "Show hidden files and folders" = "Show hidden files and folders";
+"Show folders at the top" = "Show folders at the top";
 "Prevent dragging of files and folders" = "Prevent dragging of files and folders";
 
 /* Passcode Messages */
@@ -295,6 +296,7 @@
 "Could not get the picture" = "Could not get the picture";
 "Downloading" = "Downloading";
 "File couldn't be opened" = "File couldn't be opened";
+"Connecting..." = "Connecting...";
 
 /* PDF Viewer */
 "Resume" = "Resume";
@@ -427,6 +429,8 @@
 "shared" = "shared";
 "Owner" = "Owner";
 "Private Link" = "Private Link";
+"Created Public Link" = "Created Public Link";
+"URL was copied to the clipboard" = "URL was copied to the clipboard";
 
 /* Quick Access view */
 "Quick Access" = "Quick Access";
@@ -592,3 +596,10 @@
 "trial" = "trial";
 "purchase" = "purchase";
 "subscription" = "subscription";
+
+/* Universal Links */
+"Resolving link…" = "Resolving link…";
+"Link resolution failed" = "Link resolution failed";
+"Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.";
+"Couldn't resolve a private link since the item is not known to the server." = "Couldn't resolve a private link since the item is not known to the server.";
+"Link points to an account bookmark which is not configured in the app." = "Link points to an account bookmark which is not configured in the app.";
