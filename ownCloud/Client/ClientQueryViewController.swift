@@ -615,6 +615,14 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 				let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
 				self.updateFooter(text: totalSize)
 			}
+
+			if #available(iOS 13.0, *) {
+				if  let tabBarController = self.tabBarController as? ClientRootViewController {
+					// Use parent folder for UI state restoration
+					let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: tabBarController.bookmark)
+					view.window?.windowScene?.userActivity = activity.openItemUserActivity
+				}
+			}
 		}
 	}
 
