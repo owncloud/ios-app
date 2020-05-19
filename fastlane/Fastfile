@@ -63,20 +63,72 @@ platform :ios do
       )
     end
 
-  desc "In-House Enterprise IPA generation"
-   lane :build_ipa_enterprise_in_house do
+  lane :owncloud_emm_build do
+    build_ipa_in_house(
+      ENTERPRISE_APP_ID: "com.owncloud.ios-app.emm",
+      ENTERPRISE_APP_PROFILE: "ownCloud iOS-App EMM AppStore",
+      ENTERPRISE_FP_ID: "com.owncloud.ios-app.emm.ownCloud-File-Provider",
+      ENTERPRISE_FP_PROFILE: "ownCloud iOS-App EMM File Provider AppStore",
+      ENTERPRISE_INTENT_ID: "com.owncloud.ios-app.emm.ownCloud-Intents",
+      ENTERPRISE_INTENT_PROFILE: "ownCloud iOS-App EMM Intents AppStore",
+      ENTERPRISE_APP_FW_ID: "com.owncloud.ownCloudApp.emm",
+      ENTERPRISE_APP_SHARED_ID: "com.owncloud.ownCloudAppShared.emm",
+      ENTERPRISE_TEAM: "4AP2STM4H5",
+      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
+      APP_GROUP_IDENTIFIERS: "group.owncloud.ios-app.emm",
+      EXPORT_METHOD: "app-store"
+    )
+  end
 
-    ENTERPRISE_APP_ID = "com.owncloud.enterprise.ios-app"
-    ENTERPRISE_APP_PROFILE = "Enterprise Distribution iOS Neo"
-    ENTERPRISE_FP_ID = "com.owncloud.enterprise.ios-app.ownCloud-File-Provider"
-    ENTERPRISE_FP_PROFILE = "Enterprise Distribution iOS Neo File Provider"
-    ENTERPRISE_FP_UI_ID = "com.owncloud.enterprise.ios-app.ownCloud-File-ProviderUI"
-    ENTERPRISE_FP_UI_PROFILE = "Enterprise Distribution iOS Neo File ProviderUI"
-    ENTERPRISE_INTENT_ID = "com.owncloud.enterprise.ios-app.ownCloud-Intents"
-    ENTERPRISE_INTENT_PROFILE = "Enterprise Distribution iOS Neo Intent"
-    ENTERPRISE_APP_FW_ID = "com.owncloud.enterprise.ownCloudApp"
-    ENTERPRISE_TEAM = "5QNK8L2PSC"
-    ENTERPRISE_IDENTITY = "iPhone Distribution: ownCloud GmbH"
+lane :owncloud_online_build do
+  build_ipa_in_house(
+    ENTERPRISE_APP_ID: "online.owncloud.ios-app",
+    ENTERPRISE_APP_PROFILE: "ownCloud online AppStore",
+    ENTERPRISE_FP_ID: "online.owncloud.ios-app.DocumentProvider",
+    ENTERPRISE_FP_PROFILE: "ownCloud online AppStore DocumentProvider",
+    ENTERPRISE_INTENT_ID: "online.owncloud.ios-app.Intents",
+    ENTERPRISE_INTENT_PROFILE: "ownCloud online AppStore Intents",
+    ENTERPRISE_APP_FW_ID: "online.owncloud.ios-app.ownCloudApp",
+    ENTERPRISE_APP_SHARED_ID: "online.owncloud.ios-app.ownCloudAppShared",
+    ENTERPRISE_TEAM: "4AP2STM4H5",
+    ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
+    APP_GROUP_IDENTIFIERS: "group.online.owncloud.ios-app",
+    EXPORT_METHOD: "app-store"
+  )
+end
+
+  lane :owncloud_enterprise_build do
+    build_ipa_in_house(
+      ENTERPRISE_APP_ID: "com.owncloud.enterprise.ios-app",
+      ENTERPRISE_APP_PROFILE: "Enterprise Distribution iOS Neo",
+      ENTERPRISE_FP_ID: "com.owncloud.enterprise.ios-app.ownCloud-File-Provider",
+      ENTERPRISE_FP_PROFILE: "Enterprise Distribution iOS Neo File Provider",
+      ENTERPRISE_INTENT_ID: "com.owncloud.enterprise.ios-app.ownCloud-Intents",
+      ENTERPRISE_INTENT_PROFILE: "Enterprise Distribution iOS Neo Intent",
+      ENTERPRISE_APP_FW_ID: "com.owncloud.enterprise.ownCloudApp",
+      ENTERPRISE_APP_SHARED_ID: "com.owncloud.enterprise.ownCloudAppShared",
+      ENTERPRISE_TEAM: "5QNK8L2PSC",
+      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
+      APP_GROUP_IDENTIFIERS: "group.com.owncloud.enterprise.ios-app",
+      EXPORT_METHOD: "enterprise"
+    )
+  end
+
+  desc "In-House Enterprise IPA generation"
+   lane :build_ipa_in_house do |values|
+
+    ENTERPRISE_APP_ID = values[:ENTERPRISE_APP_ID]
+    ENTERPRISE_APP_PROFILE = values[:ENTERPRISE_APP_PROFILE]
+    ENTERPRISE_FP_ID = values[:ENTERPRISE_FP_ID]
+    ENTERPRISE_FP_PROFILE = values[:ENTERPRISE_FP_PROFILE]
+    ENTERPRISE_INTENT_ID = values[:ENTERPRISE_INTENT_ID]
+    ENTERPRISE_INTENT_PROFILE = values[:ENTERPRISE_INTENT_PROFILE]
+    ENTERPRISE_APP_FW_ID = values[:ENTERPRISE_APP_FW_ID]
+    ENTERPRISE_APP_SHARED_ID = values[:ENTERPRISE_APP_SHARED_ID]
+    ENTERPRISE_TEAM = values[:ENTERPRISE_TEAM]
+    ENTERPRISE_IDENTITY = values[:ENTERPRISE_IDENTITY]
+    APP_GROUP_IDENTIFIERS = values[:APP_GROUP_IDENTIFIERS]
+    EXPORT_METHOD = values[:EXPORT_METHOD]
 
     update_app_identifier(
       xcodeproj: "ownCloud.xcodeproj",
@@ -92,14 +144,14 @@ platform :ios do
 
     update_app_identifier(
       xcodeproj: "ownCloud.xcodeproj",
-      plist_path: "ownCloud File ProviderUI/Info.plist",
-      app_identifier: ENTERPRISE_FP_UI_ID
+      plist_path: "ownCloudAppFramework/Resources/Info.plist",
+      app_identifier: ENTERPRISE_APP_FW_ID
     )
 
     update_app_identifier(
       xcodeproj: "ownCloud.xcodeproj",
       plist_path: "ownCloudAppFramework/Resources/Info.plist",
-      app_identifier: ENTERPRISE_APP_FW_ID
+      app_identifier: ENTERPRISE_APP_SHARED_ID
     )
 
     update_app_identifier(
@@ -110,25 +162,25 @@ platform :ios do
 
     update_app_group_identifiers(
       entitlements_file: "ownCloud/ownCloud.entitlements",
-      app_group_identifiers: ["group.com.owncloud.enterprise.ios-app"]
+      app_group_identifiers: [APP_GROUP_IDENTIFIERS]
     )
 
     update_app_group_identifiers(
       entitlements_file: "ownCloud File Provider/ownCloud_File_Provider.entitlements",
-      app_group_identifiers: ["group.com.owncloud.enterprise.ios-app"]
+      app_group_identifiers: [APP_GROUP_IDENTIFIERS]
     )
 
     update_app_group_identifiers(
       entitlements_file: "ownCloud Intents/ownCloud Intents.entitlements",
-      app_group_identifiers: ["group.com.owncloud.enterprise.ios-app"]
+      app_group_identifiers: [APP_GROUP_IDENTIFIERS]
     )
 
-    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCAppGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
-    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
-    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "NSExtension", subkey: "NSExtensionFileProviderDocumentGroup", value: "group.com.owncloud.enterprise.ios-app")
+    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "NSExtension", subkey: "NSExtensionFileProviderDocumentGroup", value: APP_GROUP_IDENTIFIERS)
 
-    set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCAppGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
-    set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
+    set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
 
     automatic_code_signing(
       path: "ownCloud.xcodeproj",
@@ -155,16 +207,6 @@ platform :ios do
       use_automatic_signing: false,
       team_id: ENTERPRISE_TEAM,
       code_sign_identity: ENTERPRISE_IDENTITY,
-      profile_name: ENTERPRISE_FP_UI_PROFILE,
-      bundle_identifier: ENTERPRISE_FP_UI_ID,
-      targets: ["ownCloud File ProviderUI"]
-    )
-
-    automatic_code_signing(
-      path: "ownCloud.xcodeproj",
-      use_automatic_signing: false,
-      team_id: ENTERPRISE_TEAM,
-      code_sign_identity: ENTERPRISE_IDENTITY,
       profile_name: ENTERPRISE_INTENT_PROFILE,
       bundle_identifier: ENTERPRISE_INTENT_ID,
       targets: ["ownCloud Intents"]
@@ -177,6 +219,15 @@ platform :ios do
       code_sign_identity: ENTERPRISE_IDENTITY,
       bundle_identifier: ENTERPRISE_APP_FW_ID,
       targets: ["ownCloudApp"]
+    )
+
+    automatic_code_signing(
+      path: "ownCloud.xcodeproj",
+      use_automatic_signing: false,
+      team_id: ENTERPRISE_TEAM,
+      code_sign_identity: ENTERPRISE_IDENTITY,
+      bundle_identifier: ENTERPRISE_APP_SHARED_ID,
+      targets: ["ownCloudAppShared"]
     )
 
     # Add a badge with the latest short commit hash to the app icon
@@ -206,13 +257,12 @@ platform :ios do
       scheme: "ownCloud",
       configuration: "Debug",
       codesigning_identity: ENTERPRISE_IDENTITY,
-      export_method: "enterprise",
+      export_method: EXPORT_METHOD,
       export_options: {
-        method: "enterprise",
+        method: EXPORT_METHOD,
         provisioningProfiles: {
           ENTERPRISE_APP_ID => ENTERPRISE_APP_PROFILE,
 	        ENTERPRISE_FP_ID => ENTERPRISE_FP_PROFILE,
-	        ENTERPRISE_FP_UI_ID => ENTERPRISE_FP_UI_PROFILE,
 	        ENTERPRISE_INTENT_ID => ENTERPRISE_INTENT_PROFILE
         }
       }
