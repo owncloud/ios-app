@@ -72,8 +72,8 @@ class LicenseOfferView: UIView, Themeable {
 
 	private let titleLabelSize : CGFloat = 20
 	private let descriptionLabelSize : CGFloat = 17
-	private let tryLabelSize : CGFloat = 17
-	private let priceLabelSize : CGFloat = 15
+	private let tryLabelSize : CGFloat = 15
+	private let priceLabelSize : CGFloat = 17
 
 	func buildView() {
 		titleLabel = UILabel()
@@ -137,14 +137,14 @@ class LicenseOfferView: UIView, Themeable {
 			guard let purchaseButton = purchaseButton else { return }
 
 			var pricingLabelText : String = ""
-			var trialTextLength : Int = 0
+			var boldTextLength : Int = 0
 
 			if let trialDuration = offer.trialDuration, offer.state(in: environment) != .expired {
-				pricingLabelText = NSString(format: "Try %@ for free.".localized as NSString, trialDuration.localizedDescription) as String
+				pricingLabelText = NSString(format: "%@ / %@".localized as NSString, offer.localizedPriceTag, offer.subscriptionTermDuration.localizedDescription) as String
 				pricingLabelText = "\(pricingLabelText)\n"
-				trialTextLength = pricingLabelText.count
+				boldTextLength = pricingLabelText.count
 
-				pricingLabelText = pricingLabelText.appendingFormat("Then %@ / %@.".localized, offer.localizedPriceTag, offer.subscriptionTermDuration.localizedDescription)
+				pricingLabelText = pricingLabelText.appendingFormat("after free %@ trial".localized as NSString, trialDuration.localizedDescriptionSingular) as String
 			} else {
 				// No trial available (either in general, or because user already has subscribed once)
 				pricingLabelText = pricingLabelText.appendingFormat("%@ / %@ – starting immediately".localized, offer.localizedPriceTag, offer.subscriptionTermDuration.localizedDescription)
@@ -154,12 +154,12 @@ class LicenseOfferView: UIView, Themeable {
 			paragraphStyle.lineHeightMultiple = 1.5
 
 			let formattedPricingLabelText = NSMutableAttributedString(string: pricingLabelText, attributes: [
-				.font : UIFont.systemFont(ofSize: priceLabelSize),
+				.font : UIFont.systemFont(ofSize: tryLabelSize),
 				.paragraphStyle : paragraphStyle
 			])
 
-			if trialTextLength > 0 {
-				formattedPricingLabelText.addAttribute(.font, value: UIFont.systemFont(ofSize: tryLabelSize, weight: .bold), range: NSRange(location: 0, length: trialTextLength))
+			if boldTextLength > 0 {
+				formattedPricingLabelText.addAttribute(.font, value: UIFont.systemFont(ofSize: priceLabelSize, weight: .bold), range: NSRange(location: 0, length: boldTextLength))
 			}
 
 			pricingLabel.attributedText = formattedPricingLabelText

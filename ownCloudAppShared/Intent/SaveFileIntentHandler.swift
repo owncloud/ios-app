@@ -76,13 +76,13 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 						if error == nil, let core = core, let fileItem = fileItem, let parentItem = fileItem.parentItem(from: core) {
 							// File already exists
 							if intent.shouldOverwrite?.boolValue == true {
-								core.reportLocalModification(of: fileItem, parentItem: parentItem, withContentsOfFileAt: fileURL, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil,
-															 resultHandler: { (error, _ core, _ item, _) in
-																if error != nil {
-																	completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
-																} else {	completion(SaveFileIntentResponse.success(filePath: item?.path ?? ""))
-																}
-								})
+								core.reportLocalModification(of: fileItem, parentItem: parentItem, withContentsOfFileAt: fileURL, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: { (error, item) in
+									if error != nil {
+										completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
+									} else {	completion(SaveFileIntentResponse.success(filePath: item?.path ?? ""))
+									}
+								},
+															 resultHandler: nil)
 							} else {
 								completion(SaveFileIntentResponse(code: .overwriteFailure, userActivity: nil))
 							}
@@ -93,13 +93,13 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling {
 												  from: fileURL,
 												  isSecurityScoped: true,
 												  options: [OCCoreOption.importByCopying : true],
-												  placeholderCompletionHandler: nil,
-												  resultHandler: { (error, _ core, _ item, _) in
+												  placeholderCompletionHandler: { (error, item) in
 													if error != nil {
 														completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
 													} else {	completion(SaveFileIntentResponse.success(filePath: item?.path ?? ""))
 													}
-							}
+							},
+												  resultHandler: nil
 							)
 						} else {
 							completion(SaveFileIntentResponse(code: .failure, userActivity: nil))
