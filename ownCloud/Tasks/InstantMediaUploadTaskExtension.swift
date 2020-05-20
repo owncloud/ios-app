@@ -61,7 +61,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 		// Add photo assets
 		if let uploadPhotosAfter = userDefaults.instantUploadPhotosAfter {
-			let fetchResult = self.fetchAssetsFromCameraRoll(.images, createdAfter: uploadPhotosAfter)
+			let fetchResult = self.fetchAssetsFromCameraRoll(with: [.image], createdAfter: uploadPhotosAfter)
 			if fetchResult != nil {
 				fetchResult!.enumerateObjects({ (asset, _, _) in
 					photoAssets.append(asset)
@@ -83,7 +83,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 		// Add video assets
 		if let uploadVideosAfter = userDefaults.instantUploadVideosAfter {
-			let fetchResult = self.fetchAssetsFromCameraRoll(.videos, createdAfter: uploadVideosAfter)
+			let fetchResult = self.fetchAssetsFromCameraRoll(with: [.image], createdAfter: uploadVideosAfter)
 			if fetchResult != nil {
 				fetchResult!.enumerateObjects({ (asset, _, _) in
 					videoAssets.append(asset)
@@ -100,7 +100,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		}
 	}
 
-	private func fetchAssetsFromCameraRoll(_ mediaType:MediaType, createdAfter:Date? = nil) -> PHFetchResult<PHAsset>? {
+	private func fetchAssetsFromCameraRoll(with mediaTypes:[PHAssetMediaType], createdAfter:Date? = nil) -> PHFetchResult<PHAsset>? {
 
 		guard PHPhotoLibrary.authorizationStatus() == .authorized else { return nil }
 
@@ -114,13 +114,11 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 			var typePredicatesArray = [NSPredicate]()
 
-			switch mediaType {
-			case .images:
+			if mediaTypes.contains(.image) {
 				typePredicatesArray.append(imageTypePredicate)
-			case .videos:
-				typePredicatesArray.append(videoTypePredicate)
-			case .imagesAndVideos:
-				typePredicatesArray.append(imageTypePredicate)
+			}
+
+			if mediaTypes.contains(.video) {
 				typePredicatesArray.append(videoTypePredicate)
 			}
 
