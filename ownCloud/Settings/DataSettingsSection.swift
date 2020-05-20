@@ -1,25 +1,52 @@
 //
-//  StorageSettingsSection.swift
+//  DataSettingsSection.swift
 //  ownCloud
 //
 //  Created by Felix Schwarz on 30.07.19.
 //  Copyright © 2019 ownCloud GmbH. All rights reserved.
 //
 
+/*
+ * Copyright (C) 2019, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
 import UIKit
 import ownCloudSDK
 
-class StorageSettingsSection: SettingsSection {
+class DataSettingsSection: SettingsSection {
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
 
-		self.headerTitle = "Storage".localized
+		self.headerTitle = "Data usage".localized
+
+		cellularRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
+			self?.pushCellularSettings()
+		}, title: "Cellular transfers".localized, value: self.cellularSummary, accessoryType: .disclosureIndicator, identifier: "storage-use-cellular")
+
+		self.add(row: cellularRow!)
 
 		localCopyExpirationRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 			self?.pushLocalCopyExpirationSettings()
 		}, title: "Delete unused local copies".localized, value: self.localCopyExpirationSummary, accessoryType: .disclosureIndicator, identifier: "storage-downloaded-files")
 
 		self.add(row: localCopyExpirationRow!)
+	}
+
+	// MARK: - Cellular data properties
+	var cellularRow : StaticTableViewRow?
+
+	var cellularSummary : String {
+		if let masterEnabled = OCCellularManager.shared.switch(withIdentifier: .master)?.allowed, masterEnabled {
+			return "enabled".localized
+		} else {
+			return "off".localized
+		}
 	}
 
 	// MARK: - Local copy expiration properties
@@ -65,6 +92,17 @@ class StorageSettingsSection: SettingsSection {
 		} else {
 			return "never".localized
 		}
+	}
+
+	// MARK: - Cellular settings UI
+	func pushCellularSettings() {
+		let cellularSettingsViewController = CellularSettingsViewController(style: .grouped)
+
+		cellularSettingsViewController.changeHandler = { [weak self] in
+			self?.cellularRow?.cell?.detailTextLabel?.text = self?.cellularSummary
+		}
+
+		self.viewController?.navigationController?.pushViewController(cellularSettingsViewController, animated: true)
 	}
 
 	// MARK: - Local copy expiration UI
