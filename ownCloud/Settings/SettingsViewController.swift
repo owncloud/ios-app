@@ -30,7 +30,6 @@ class SettingsViewController: StaticTableViewController {
 			self.addSection(DataSettingsSection(userDefaults: userDefaults))
 			self.addSection(DisplaySettingsSection(userDefaults: userDefaults))
 			self.addSection(MediaFilesSettingsSection(userDefaults: userDefaults))
-			self.addSection(MediaUploadSettingsSection(userDefaults: userDefaults))
 
 			if #available(iOS 13, *) {
 				self.addSection(PurchasesSettingsSection(userDefaults: userDefaults))

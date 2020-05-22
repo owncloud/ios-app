@@ -37,6 +37,7 @@ extension UserDefaults {
 
 class MediaFilesSettingsSection: SettingsSection {
 	private var enableStreamingSwitchRow: StaticTableViewRow?
+	private var mediaUploadSettingsRow : StaticTableViewRow?
 
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
@@ -51,5 +52,16 @@ class MediaFilesSettingsSection: SettingsSection {
 			}, title: "Streaming Enabled".localized, value: self.userDefaults.streamingEnabled)
 
 		self.add(row: enableStreamingSwitchRow!)
+
+		mediaUploadSettingsRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
+			self?.pushMediaUploadSettings()
+		}, title: "Media Upload".localized, value: "", accessoryType: .disclosureIndicator)
+
+		self.add(row: mediaUploadSettingsRow!)
+	}
+
+	private func pushMediaUploadSettings() {
+		let mediaUploadSettingsViewController = MediaUploadSettingsViewController(style: .grouped)
+		self.viewController?.navigationController?.pushViewController(mediaUploadSettingsViewController, animated: true)
 	}
 }

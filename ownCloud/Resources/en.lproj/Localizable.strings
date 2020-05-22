@@ -458,6 +458,8 @@
 
 /* Photo upload settings */
 "Media Upload" = "Media Upload";
+"Media Export" = "Media Export";
+"Auto Upload" = "Auto Upload";
 "Convert HEIC to JPEG" = "Convert HEIC to JPEG";
 "Convert videos to MP4" = "Convert videos to MP4";
 "Preserve original media file names" = "Preserve original media file names";
