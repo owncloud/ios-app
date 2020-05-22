@@ -264,6 +264,7 @@
 		DC4C575D233958B70098BAE9 /* FixedHeightImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4C575C233958B70098BAE9 /* FixedHeightImageView.swift */; };
 		DC4FEAE7209E3A7700D4476B /* OCIssue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE6209E3A7700D4476B /* OCIssue+Extension.swift */; };
 		DC4FEAEA209E48E800D4476B /* DispatchQueueTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */; };
+		DC51FD922475715F0069AB79 /* CellularSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC51FD912475715F0069AB79 /* CellularSettingsViewController.swift */; };
 		DC576EC022647A070087316D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DC576EC222647A070087316D /* Localizable.strings */; };
 		DC625141225C904700736874 /* NSError+MessageResolution.m in Sources */ = {isa = PBXBuildFile; fileRef = DC625140225C904700736874 /* NSError+MessageResolution.m */; };
 		DC625148225CEB2C00736874 /* UploadFileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC625147225CEB2C00736874 /* UploadFileAction.swift */; };
@@ -339,7 +340,7 @@
 		DCC8536023CE1AF8007BA3EB /* PurchasesSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC8535F23CE1AF8007BA3EB /* PurchasesSettingsSection.swift */; };
 		DCD1300A23A191C000255779 /* LicenseOfferButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD1300923A191C000255779 /* LicenseOfferButton.swift */; };
 		DCD1301123A23F4E00255779 /* OCLicenseManager+AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD1301023A23F4E00255779 /* OCLicenseManager+AppStore.swift */; };
-		DCD2D40622F06ECA0071FB8F /* StorageSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD2D40522F06ECA0071FB8F /* StorageSettingsSection.swift */; };
+		DCD2D40622F06ECA0071FB8F /* DataSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD2D40522F06ECA0071FB8F /* DataSettingsSection.swift */; };
 		DCD8109A23984AF2003B0053 /* OCLicenseDuration.h in Headers */ = {isa = PBXBuildFile; fileRef = DCD810922398492C003B0053 /* OCLicenseDuration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCD8109B23984AF6003B0053 /* OCLicenseDuration.m in Sources */ = {isa = PBXBuildFile; fileRef = DCD810932398492C003B0053 /* OCLicenseDuration.m */; };
 		DCD9B87B2379612B00691929 /* OCLicenseManager+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = DCD9B873237960E600691929 /* OCLicenseManager+Internal.h */; };
@@ -1026,6 +1027,7 @@
 		DC4C575C233958B70098BAE9 /* FixedHeightImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedHeightImageView.swift; sourceTree = "<group>"; };
 		DC4FEAE6209E3A7700D4476B /* OCIssue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCIssue+Extension.swift"; sourceTree = "<group>"; };
 		DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueTools.swift; sourceTree = "<group>"; };
+		DC51FD912475715F0069AB79 /* CellularSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellularSettingsViewController.swift; sourceTree = "<group>"; };
 		DC576EC122647A070087316D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DC62513F225C904700736874 /* NSError+MessageResolution.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSError+MessageResolution.h"; sourceTree = "<group>"; };
 		DC625140225C904700736874 /* NSError+MessageResolution.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSError+MessageResolution.m"; sourceTree = "<group>"; };
@@ -1109,7 +1111,7 @@
 		DCC8535F23CE1AF8007BA3EB /* PurchasesSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasesSettingsSection.swift; sourceTree = "<group>"; };
 		DCD1300923A191C000255779 /* LicenseOfferButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseOfferButton.swift; sourceTree = "<group>"; };
 		DCD1301023A23F4E00255779 /* OCLicenseManager+AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCLicenseManager+AppStore.swift"; sourceTree = "<group>"; };
-		DCD2D40522F06ECA0071FB8F /* StorageSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageSettingsSection.swift; sourceTree = "<group>"; };
+		DCD2D40522F06ECA0071FB8F /* DataSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSettingsSection.swift; sourceTree = "<group>"; };
 		DCD344A5205BD0C000189B9A /* openssl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = openssl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "ios-sdk/ownCloudUI/openssl/framework/openssl.xcodeproj"; sourceTree = "<group>"; };
 		DCD810922398492C003B0053 /* OCLicenseDuration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseDuration.h; sourceTree = "<group>"; };
@@ -2399,8 +2401,9 @@
 				23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */,
 				593BAB3F209ADFB900023634 /* Passcode */,
 				233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */,
-				DCD2D40522F06ECA0071FB8F /* StorageSettingsSection.swift */,
 				DC854935218331CF00782BA8 /* UserInterfaceSettingsSection.swift */,
+				DCD2D40522F06ECA0071FB8F /* DataSettingsSection.swift */,
+				DC51FD912475715F0069AB79 /* CellularSettingsViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -3406,8 +3409,9 @@
 				DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */,
 				DC243BFF2317B446004FBB5C /* ThemeWindow.swift in Sources */,
 				39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */,
+				DC51FD922475715F0069AB79 /* CellularSettingsViewController.swift in Sources */,
 				DCC8536023CE1AF8007BA3EB /* PurchasesSettingsSection.swift in Sources */,
-				DCD2D40622F06ECA0071FB8F /* StorageSettingsSection.swift in Sources */,
+				DCD2D40622F06ECA0071FB8F /* DataSettingsSection.swift in Sources */,
 				39B289A8226F1EE000BE0E11 /* MessageView.swift in Sources */,
 				4C464BF22187AF1500D30602 /* PDFSearchViewController.swift in Sources */,
 				DC3393A422E0A75C00DD3DA4 /* ClientItemResolvingCell.swift in Sources */,
