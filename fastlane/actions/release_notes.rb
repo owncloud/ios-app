@@ -1,4 +1,4 @@
-module Fastlane
+  module Fastlane
   module Actions
     module SharedValues
       RELEASE_NOTES_CUSTOM_VALUE = :RELEASE_NOTES_CUSTOM_VALUE
@@ -6,12 +6,54 @@ module Fastlane
 
     class ReleaseNotesAction < Action
       def self.run(params)
-        # fastlane will take care of reading in the parameter and fetching the environment variable:
-        UI.message "Parameter API Token: #{params[:api_token]}"
+        require "plist"
+        require 'xcodeproj'
 
-        # sh "shellcommand ./path"
+        begin
+            # Load .xcodeproj
+            project_path = params[:xcodeproj]
+            project = Xcodeproj::Project.open(project_path)
 
-        # Actions.lane_context[SharedValues::RELEASE_NOTES_CUSTOM_VALUE] = "my_val"
+            # Fetch the build configuration objects
+            configs = project.objects.select { |obj| obj.isa == 'XCBuildConfiguration'}
+            UI.user_error!("Not found XCBuildConfiguration from xcodeproj") unless configs.count > 0
+            app_version = ''
+
+            configs.each do |c|
+              if c.build_settings[params[:version_key]] != ''
+                app_version = c.build_settings[params[:version_key]]
+                UI.success("Found #{params[:version_key]} #{app_version}")
+                break
+              end
+            end
+
+            # Parse Plist
+          path = File.expand_path(params[:path])
+
+          plist = File.open(path) { |f| Plist.parse_xml(f) }
+          output = ''
+          versions = plist["Versions"]
+
+          versions.each { |item|
+            if item["Version"] == app_version
+              version = item["ReleaseNotes"]
+              UI.success("Found Release Notes for #{app_version}")
+              version.each { |subitem|
+                output += "• " + subitem["Title"] + "\n" + subitem["Subtitle"] + "\n\n"
+              }
+            end
+          }
+
+          if output != ''
+            File.write('fastlane/metadata/en-US/release_notes.txt', output)
+          end
+
+          Actions.lane_context[SharedValues::RELEASE_NOTES_CUSTOM_VALUE] = output
+
+          return output
+        rescue => ex
+          UI.error(ex)
+        end
       end
 
       #####################################################
@@ -19,40 +61,39 @@ module Fastlane
       #####################################################
 
       def self.description
-        "A short description with <= 80 characters of what this action does"
+        "Reads all release notes for the given version and returns a string"
       end
 
       def self.details
-        # Optional:
-        # this is your chance to provide a more detailed description of this action
-        "You can use this action to do cool things..."
+        "Reads all release notes for the given version and returns a string (VERSION, PLIST_PATH)"
       end
 
       def self.available_options
-        # Define all options your action supports.
-
-        # Below a few examples
         [
-          FastlaneCore::ConfigItem.new(key: :api_token,
-                                       env_name: "FL_RELEASE_NOTES_API_TOKEN", # The name of the environment variable
-                                       description: "API Token for ReleaseNotesAction", # a short description of this parameter
+          FastlaneCore::ConfigItem.new(key: :xcodeproj,
+                                       env_name: "FL_UPDATE_APPICON_PROJECT_PATH",
+                                       description: "Path to your Xcode project",
+                                       default_value: Dir['*.xcodeproj'].first,
                                        verify_block: proc do |value|
-                                          UI.user_error!("No API token for ReleaseNotesAction given, pass using `api_token: 'token'`") unless (value and not value.empty?)
-                                          # UI.user_error!("Couldn't find file at path '#{value}'") unless File.exist?(value)
+                                         UI.user_error!("Please pass the path to the project, not the workspace") unless value.end_with?(".xcodeproj")
+                                         UI.user_error!("Could not find Xcode project") unless File.exist?(value)
                                        end),
-          FastlaneCore::ConfigItem.new(key: :development,
-                                       env_name: "FL_RELEASE_NOTES_DEVELOPMENT",
-                                       description: "Create a development certificate instead of a distribution one",
-                                       is_string: false, # true: verifies the input is a string, false: every kind of value
-                                       default_value: false) # the default value if the user didn't provide one
+          FastlaneCore::ConfigItem.new(key: :version_key,
+                                       env_name: 'FL_APPVERSION_KEY',
+                                       description: 'Key in XCBuildConfiguration for the version string'),
+          FastlaneCore::ConfigItem.new(key: :path,
+                                       env_name: "FL_GET_INFO_PLIST_PATH",
+                                       description: "Path to plist file you want to read",
+                                       optional: false,
+                                       verify_block: proc do |value|
+                                         UI.user_error!("Couldn't find plist file at path '#{value}'") unless File.exist?(value)
+                                       end)
         ]
       end
 
       def self.output
-        # Define the shared values you are going to provide
-        # Example
         [
-          ['RELEASE_NOTES_CUSTOM_VALUE', 'A description of what this value contains']
+          ['RELEASE_NOTES_CUSTOM_VALUE', 'Release Notes String e.g. New Feature: Description']
         ]
       end
 
@@ -62,19 +103,10 @@ module Fastlane
 
       def self.authors
         # So no one will ever forget your contribution to fastlane :) You are awesome btw!
-        ["Your GitHub/Twitter Name"]
+        ["Matthias Hühne"]
       end
 
       def self.is_supported?(platform)
-        # you can do things like
-        #
-        #  true
-        #
-        #  platform == :ios
-        #
-        #  [:ios, :mac].include?(platform)
-        #
-
         platform == :ios
       end
     end
