@@ -91,7 +91,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 		// Add video assets
 		if let uploadVideosAfter = userDefaults.instantUploadVideosAfter {
-			let fetchResult = self.fetchAssetsFromCameraRoll(with: [.image], createdAfter: uploadVideosAfter)
+			let fetchResult = self.fetchAssetsFromCameraRoll(with: [.video], createdAfter: uploadVideosAfter)
 			if fetchResult != nil {
 				fetchResult!.enumerateObjects({ (asset, _, _) in
 					videoAssets.append(asset)
