@@ -168,16 +168,16 @@ platform :ios do
   lane :owncloud_regular_build do
     build_ipa_in_house(
       ENTERPRISE_APP_ID: "com.owncloud.ios-app",
-      ENTERPRISE_APP_PROFILE: "match AdHoc com.owncloud.ios-app",
+      ENTERPRISE_APP_PROFILE: "match AppStore com.owncloud.ios-app",
       ENTERPRISE_FP_ID: "com.owncloud.ios-app.ownCloud-File-Provider",
-      ENTERPRISE_FP_PROFILE: "match AdHoc com.owncloud.ios-app.ownCloud-File-Provider",
+      ENTERPRISE_FP_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-File-Provider",
       ENTERPRISE_INTENT_ID: "com.owncloud.ios-app.ownCloud-Intents",
-      ENTERPRISE_INTENT_PROFILE: "match AdHoc com.owncloud.ios-app.ownCloud-Intents",
+      ENTERPRISE_INTENT_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-Intents",
       ENTERPRISE_APP_FW_ID: "com.owncloud.ownCloudApp",
       ENTERPRISE_APP_SHARED_ID: "com.owncloud.ownCloudAppShare",
       ENTERPRISE_TEAM: "4AP2STM4H5",
-      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
-      APP_GROUP_IDENTIFIERS: "group.owncloud.ios-app",
+      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH (4AP2STM4H5)",
+      APP_GROUP_IDENTIFIERS: "group.com.owncloud.ios-app",
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
       BETA_APP_ICON: false
@@ -187,16 +187,16 @@ platform :ios do
   lane :owncloud_emm_build do
     build_ipa_in_house(
       ENTERPRISE_APP_ID: "com.owncloud.ios-app.emm",
-      ENTERPRISE_APP_PROFILE: "ownCloud iOS-App EMM AppStore",
+      ENTERPRISE_APP_PROFILE: "match AppStore com.owncloud.ios-app.emm",
       ENTERPRISE_FP_ID: "com.owncloud.ios-app.emm.ownCloud-File-Provider",
-      ENTERPRISE_FP_PROFILE: "ownCloud iOS-App EMM File Provider AppStore",
+      ENTERPRISE_FP_PROFILE: "match AppStore com.owncloud.ios-app.emm.ownCloud-File-Provider",
       ENTERPRISE_INTENT_ID: "com.owncloud.ios-app.emm.ownCloud-Intents",
-      ENTERPRISE_INTENT_PROFILE: "ownCloud iOS-App EMM Intents AppStore",
+      ENTERPRISE_INTENT_PROFILE: "match AppStore com.owncloud.ios-app.emm.ownCloud-Intents",
       ENTERPRISE_APP_FW_ID: "com.owncloud.ownCloudApp.emm",
       ENTERPRISE_APP_SHARED_ID: "com.owncloud.ownCloudAppShared.emm",
       ENTERPRISE_TEAM: "4AP2STM4H5",
-      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
-      APP_GROUP_IDENTIFIERS: "group.owncloud.ios-app.emm",
+      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH (4AP2STM4H5)",
+      APP_GROUP_IDENTIFIERS: "group.com.owncloud.ios-app.emm",
       EXPORT_METHOD: "app-store",
       CONFIGURATION: "Release",
       BETA_APP_ICON: false
