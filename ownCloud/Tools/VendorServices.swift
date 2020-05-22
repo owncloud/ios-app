@@ -54,6 +54,14 @@ class VendorServices : NSObject {
 		return false
 	}
 
+	var isEMMVersion: Bool {
+		if let isEMMVersion = Bundle.main.bundleIdentifier?.hasSuffix(".emm") {
+			return isEMMVersion
+		}
+
+		return false
+	}
+
 	var showBetaWarning: Bool {
 		if let showBetaWarning = self.classSetting(forOCClassSettingsKey: .showBetaWarning) as? Bool {
 			return showBetaWarning
@@ -88,11 +96,16 @@ class VendorServices : NSObject {
 			buildType = "beta".localized
 		}
 
+		var appSuffix = ""
+		if self.isEMMVersion {
+			appSuffix = "-EMM"
+		}
+
 		guard let feedbackEmail = MoreSettingsSection.classSetting(forOCClassSettingsKey: .feedbackEmail) as? String,
 			let appName = OCAppIdentity.shared.appName else {
 				return
 		}
-		self.sendMail(to: feedbackEmail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(appName)", message: nil, from: viewController)
+		self.sendMail(to: feedbackEmail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(appName)\(appSuffix)", message: nil, from: viewController)
 	}
 
 	func sendMail(to: String?, subject: String?, message: String?, from viewController: UIViewController) {
