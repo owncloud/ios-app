@@ -25,9 +25,13 @@ extension URL {
 		return false
 	}
 
-	func upload(with core:OCCore?, at rootItem:OCItem, alternativeName:String? = nil, modificationDate:Date? = nil, importByCopy:Bool = false, placeholderHandler:UploadHandler? = nil, completionHandler:UploadHandler? = nil) -> Progress? {
+	func upload(with core:OCCore?, at rootItem:OCItem, alternativeName:String? = nil, modificationDate:Date? = nil, importByCopy:Bool = false, cellularSwithIdentifier:OCCellularSwitchIdentifier? = nil, placeholderHandler:UploadHandler? = nil, completionHandler:UploadHandler? = nil) -> Progress? {
 		let fileName = alternativeName != nil ? alternativeName! : self.lastPathComponent
 		var importOptions : [OCCoreOption : Any] = [OCCoreOption.importByCopying : importByCopy, OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue]
+
+		if cellularSwithIdentifier != nil {
+			importOptions[OCCoreOption.dependsOnCellularSwitch] = cellularSwithIdentifier
+		}
 
 		if let modificationDate = modificationDate {
 			importOptions[OCCoreOption.lastModifiedDate] = modificationDate

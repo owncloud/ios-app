@@ -61,6 +61,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		ScheduledTaskManager.shared.setup()
 
+		MediaUploadQueue.shared.setup()
+
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)

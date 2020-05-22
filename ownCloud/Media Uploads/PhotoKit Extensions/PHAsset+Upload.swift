@@ -354,6 +354,7 @@ extension PHAsset {
 											  alternativeName: fileName,
 											  modificationDate: self.creationDate,
 											  importByCopy: copySource,
+											  cellularSwithIdentifier: MediaUploadQueue.mediaUploadCellularSwitchIdentifier,
 											  placeholderHandler: { (item, error) in
 												if !copySource && error != nil {
 													// Delete the temporary asset file in case of critical error
