@@ -28,31 +28,35 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.instant_media_upload") }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.appDidComeToForeground] }
-	override class var features : [String : Any]? { return [ FeatureKeys.photoLibraryChanged : true, FeatureKeys.runOnWifi : true] }
+	override class var features : [String : Any]? { return [ FeatureKeys.photoLibraryChanged : true] }
 
 	private var uploadDirectoryTracking: OCCoreItemTracking?
 
 	override func run(background:Bool) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
-		guard userDefaults.instantUploadPhotos == true || userDefaults.instantUploadVideos == true else { return }
+		if  userDefaults.instantUploadPhotos == true {
+			if let bookmarkUUID = userDefaults.instantPhotoUploadBookmarkUUID, let path = userDefaults.instantPhotoUploadPath {
+				if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
+					uploadPhotoAssets(for: bookmark, at: path)
+				}
+			} else {
+				Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant photo upload enabled, but bookmark or path not configured")
+			}
+		}
 
-		guard let bookmarkUUID = userDefaults.instantUploadBookmarkUUID else {
-            Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant media upload enabled, but bookmark not configured")
-            return
-        }
-
-		guard let path = userDefaults.instantUploadPath else {
-            Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant media upload enabled, but path not configured")
-            return
-        }
-
-		if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
-			uploadMediaAssets(for: bookmark, at: path)
+		if  userDefaults.instantUploadVideos == true {
+			if let bookmarkUUID = userDefaults.instantVideoUploadBookmarkUUID, let path = userDefaults.instantVideoUploadPath {
+				if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
+					uploadVideoAssets(for: bookmark, at: path)
+				}
+			} else {
+				Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant video upload enabled, but bookmark or path not configured")
+			}
 		}
 	}
 
-	private func uploadMediaAssets(for bookmark:OCBookmark, at path:String) {
+	private func uploadPhotoAssets(for bookmark:OCBookmark, at path:String) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
 		var photoAssets = [PHAsset]()
@@ -76,6 +80,10 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 			userDefaults.instantUploadPhotosAfter = photoAssets.last?.creationDate
             Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Last added photo asset modification date: \(String(describing: userDefaults.instantUploadPhotosAfter))")
 		}
+	}
+
+	private func uploadVideoAssets(for bookmark:OCBookmark, at path:String) {
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
 		var videoAssets = [PHAsset]()
 

@@ -468,7 +468,8 @@
 "Account" = "Account";
 "Accounts" = "Accounts";
 "Select account" = "Select account";
-"Upload Path" = "Upload Path";
+"Photo upload path" = "Photo upload path";
+"Video upload path" = "Video upload path";
 "Select Upload Path" = "Select Upload Path";
 "Auto upload of media was disabled since configured account / folder was not found" = "Auto upload of media was disabled since configured account / folder was not found";
 "Importing %@ media files for upload" = "Importing %@ media files for upload";
