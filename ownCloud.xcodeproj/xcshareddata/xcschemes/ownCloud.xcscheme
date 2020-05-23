@@ -211,8 +211,8 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:http.prefixed-http-logging"
-            value = "false"
+            key = "oc:log.log-maximum-message-size"
+            value = "100000"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
