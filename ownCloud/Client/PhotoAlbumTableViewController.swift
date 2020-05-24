@@ -46,8 +46,8 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 	class PhotoAlbum {
 		var name: String?
 		var count: Int?
-		var thumbnail: UIImage?
 		var collection: PHAssetCollection?
+		var thumbnailAsset: PHAsset?
 
 		var countString : String {
 			if count != nil {
@@ -60,18 +60,16 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 	var albums = [PhotoAlbum]()
 
-	var fetchAlbumQueue = DispatchQueue(label: "com.owncloud.photoalbum.queue", qos: DispatchQoS.userInitiated)
-
-	// The queue which is used to fetch thumbnails uses lowest priority, to ensure that scrolling is smooth
-	var fetchAlbumThumbnailsQueue = DispatchQueue(label: "com.owncloud.photoalbum.queue", qos: DispatchQoS.background)
-
 	// This is used just to pass the selection callback to PhotoSelectionViewController when an album is selected
-	var selectionCallback :PhotosSelectedCallback?
+	var selectionCallback: PhotosSelectedCallback?
+
+	private let activityIndicatorView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 
 	// MARK: - UIViewController lifecycle
 
 	deinit {
 		Theme.shared.unregister(client: self)
+		PhotoAlbumTableViewCell.stopCachingThumbnails()
 	}
 
 	override func viewDidLoad() {
@@ -82,6 +80,9 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 		self.tableView.rowHeight = PhotoAlbumTableViewCell.cellHeight
 		self.tableView.register(PhotoAlbumTableViewCell.self, forCellReuseIdentifier: PhotoAlbumTableViewCell.identifier)
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
+
+		activityIndicatorView.hidesWhenStopped = true
+		self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: activityIndicatorView)
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -116,8 +117,8 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 		let album = albums[indexPath.row]
 		cell?.titleLabel.text = album.name
 		cell?.countLabel.text = album.countString
-		cell?.thumbnailImageView.image = album.thumbnail
 		cell?.selectionStyle = .default
+		cell?.thumbnailAsset = album.thumbnailAsset
 
 		return cell!
 	}
@@ -133,28 +134,14 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 	// MARK: - Asset collections fetching
 
-	fileprivate func updateAlbumThumbnails() {
-		// We do it on background view since fetchThumbnailAsset() is quite expensive, getThumbnailImage() is quite quick though
-		fetchAlbumThumbnailsQueue.async {
-			for row in 0..<self.albums.count {
-				let album = self.albums[row]
-				if let asset = album.collection?.fetchThumbnailAsset() {
-					self.getThumbnailImage(from: asset, completion: { (image) in
-						album.thumbnail = image
-						OnMainThread {
-							self.tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
-						}
-					})
-				}
-			}
-		}
-	}
-
 	fileprivate func fetchAlbums() {
 
 		guard albums.count == 0 else { return }
 
 		func fetchCollections(_ type:PHAssetCollectionType) {
+
+			var tempAlbums = [PhotoAlbum]()
+
 			let collections = PHAssetCollection.fetchAssetCollections(with: type, subtype: .albumRegular, options: nil)
 			collections.enumerateObjects { (collection, _, _) in
 				//self.addAlbum(from: assetCollection)
@@ -164,12 +151,23 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 					album.collection = collection
 					album.name = collection.localizedTitle
 					album.count = count
+					album.thumbnailAsset = album.collection?.fetchThumbnailAsset()
+					tempAlbums.append(album)
+				}
+			}
+
+			OnMainThread {
+				for album in tempAlbums {
 					self.albums.append(album)
+					let indexPath = IndexPath(row: (self.albums.count - 1), section: 0)
+					self.tableView.insertRows(at: [indexPath], with: .automatic)
 				}
 			}
 		}
 
-		fetchAlbumQueue.async {
+		activityIndicatorView.startAnimating()
+
+		OnBackgroundQueue {
 			// Fetch smart albums
 			fetchCollections(.smartAlbum)
 
@@ -177,34 +175,8 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 			fetchCollections(.album)
 
 			OnMainThread {
-				self.tableView.reloadData()
+				self.activityIndicatorView.stopAnimating()
 			}
-
-			self.updateAlbumThumbnails()
-		}
-	}
-
-	fileprivate func getThumbnailImage(from asset:PHAsset, completion:@escaping (_ image:UIImage?) -> Void) {
-		let imageManager = PHImageManager.default()
-
-		// Setup request options
-		let options = PHImageRequestOptions()
-		options.deliveryMode = PHImageRequestOptionsDeliveryMode.fastFormat
-		options.isSynchronous = false
-		options.isNetworkAccessAllowed = true
-		options.resizeMode = .exact
-		let cropSideLength : CGFloat = min(CGFloat(asset.pixelWidth), CGFloat(asset.pixelHeight))
-		let square = CGRect(x: 0, y: 0, width: cropSideLength, height: cropSideLength)
-		let transform = CGAffineTransform(scaleX: 1.0 / CGFloat(asset.pixelWidth), y: 1.0 / CGFloat(asset.pixelHeight))
-		let cropRect = square.applying(transform)
-		options.normalizedCropRect = cropRect
-
-		// Consider retina scale factor, since target size has to be provided in pixels
-		let scale = UIScreen.main.scale
-		let thumbnailHeight = PhotoAlbumTableViewCell.thumbnailHeight
-		let thumbnailSize = CGSize(width: thumbnailHeight * scale, height: thumbnailHeight * scale)
-		imageManager.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFill, options: options) { (image, _) in
-			completion(image)
 		}
 	}
 }
