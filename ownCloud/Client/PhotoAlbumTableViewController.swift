@@ -138,11 +138,11 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 		guard albums.count == 0 else { return }
 
-		func fetchCollections(_ type:PHAssetCollectionType) {
+		func fetchCollections(_ type:PHAssetCollectionType, _ albumSubtype:PHAssetCollectionSubtype = .albumRegular) {
 
 			var tempAlbums = [PhotoAlbum]()
 
-			let collections = PHAssetCollection.fetchAssetCollections(with: type, subtype: .albumRegular, options: nil)
+			let collections = PHAssetCollection.fetchAssetCollections(with: type, subtype: albumSubtype, options: nil)
 			collections.enumerateObjects { (collection, _, _) in
 				//self.addAlbum(from: assetCollection)
 				let count = collection.assetCount
@@ -173,6 +173,11 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 			// Fetch user albums / collections
 			fetchCollections(.album)
+
+			// Fetch cloud albums
+			fetchCollections(.album, .albumCloudShared)
+
+			fetchCollections(.album, .albumMyPhotoStream)
 
 			OnMainThread {
 				self.activityIndicatorView.stopAnimating()

@@ -50,9 +50,13 @@ extension PHAssetResource {
 	}
 
 	var fileExtension: String {
+		return PHAssetResource.fileExtension(from: self.uniformTypeIdentifier)
+	}
+
+	static func fileExtension(from uti:String) -> String {
 		var ext = ""
 		// Append correct file extension to export URL
-		switch self.uniformTypeIdentifier {
+		switch uti {
 		case AVFileType.jpg.rawValue:
 			ext = "jpg"
 		case String(kUTTypePNG):
@@ -242,7 +246,44 @@ extension PHAsset {
 				completionHandler(exportURL, outError)
 			}
 		}
+	}
 
+	/**
+	Method for exporting phot assets using PHImageManager
+	- parameter fileName: name for the exported asset including file extension
+	- parameter utisToConvert: list of file UTIs for image formats which shall be converted to JPEG format
+	- parameter completionHandler: called when the file is written to disk or if an error occurs
+	*/
+	func exportPhoto(fileName:String, utisToConvert:[String] = [], completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
+
+		var outError: Error?
+		var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension()
+
+		let requestOptions = PHImageRequestOptions()
+		requestOptions.isNetworkAccessAllowed = true
+		requestOptions.deliveryMode = .highQualityFormat
+		requestOptions.version = .current
+		requestOptions.resizeMode = .none
+
+		PHImageManager.default().requestImageData(for: self, options: requestOptions) { (imageData, utiIdentifier, _, info) in
+			outError = info?[PHImageErrorKey] as? Error
+			if let data = imageData, let uti = utiIdentifier {
+				if utisToConvert.contains(uti) {
+					if let ciImage = CIImage(data: data) {
+						exportURL = exportURL.appendingPathExtension("jpg")
+						outError = ciImage.convert(targetURL: exportURL, outputFormat: .JPEG)
+					}
+				} else {
+					exportURL = exportURL.appendingPathExtension(PHAssetResource.fileExtension(from: uti))
+					do {
+						try data.write(to: exportURL)
+					} catch {
+						outError = error
+					}
+				}
+			}
+			completionHandler(exportURL, outError)
+		}
 	}
 
 	/**
@@ -309,6 +350,44 @@ extension PHAsset {
 			// Write the file to disc
 			PHAssetResourceManager.default().writeData(for: resource, toFile: exportURL, options: requestOptions) { (error) in
 				completionHandler(exportURL, error)
+			}
+		}
+	}
+
+	/**
+	Method for exporting video assets
+	- parameter fileName: name for the exported asset including file extension
+	- parameter utisToConvert: list of file UTIs for media formats which shall be converted to MP4 format
+	- parameter completionHandler: called when the file is written to disk or if an error occurs
+	*/
+	func exportVideo(fileName:String, utisToConvert:[String] = [], completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
+
+		var outError: Error?
+		var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName)
+
+		let videoRequestOptions = PHVideoRequestOptions()
+		videoRequestOptions.isNetworkAccessAllowed = true
+		// Take care that in case of edited video, the edited content is used
+		videoRequestOptions.version = .current
+		videoRequestOptions.deliveryMode = .highQualityFormat
+
+		// Request AVAssetExport session (can be also done with requestAVAsset() in conjunction with AVAssetWriter for more fine-grained control)
+		PHImageManager.default().requestExportSession(forVideo: self, options: videoRequestOptions, exportPreset: AVAssetExportPresetPassthrough) { (session, info) in
+			outError = info?[PHImageErrorKey] as? Error
+			if let session = session {
+
+				if utisToConvert.contains(AVFileType.mov.rawValue) {
+					exportURL = exportURL.deletingPathExtension().appendingPathExtension("mp4")
+					session.outputFileType = AVFileType.mp4
+				}
+
+				session.outputURL = exportURL
+				session.outputFileType = AVFileType.mov
+				session.exportAsynchronously {
+					completionHandler(exportURL, outError)
+				}
+			} else {
+				completionHandler(exportURL, outError)
 			}
 		}
 	}
@@ -396,31 +475,50 @@ extension PHAsset {
 			var exportedAssetURL: URL?
 			var outError: Error?
 
-			let assetResources = PHAssetResource.assetResources(for: self)
-
-			// Synchronously export asset
-			let semaphore = DispatchSemaphore(value: 0)
 			_ = autoreleasepool {
+				let assetResources = PHAssetResource.assetResources(for: self)
 
-				if self.mediaType == .image {
-					exportPhoto(resources: assetResources, fileName: assetName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
-						exportedAssetURL = url
-						outError = error
-						semaphore.signal()
-					})
-				} else if self.mediaType == .video {
-					exportVideo(resources: assetResources, fileName: assetName, utisToConvert: utisToConvert) { (url, error) in
-						exportedAssetURL = url
-						outError = error
+				// Synchronously export asset
+				let semaphore = DispatchSemaphore(value: 0)
+				if assetResources.count > 0 {
+					// We have actual data on the device and we can export it directly
+					if self.mediaType == .image {
+						exportPhoto(resources: assetResources, fileName: assetName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
+							exportedAssetURL = url
+							outError = error
+							semaphore.signal()
+						})
+					} else if self.mediaType == .video {
+						exportVideo(resources: assetResources, fileName: assetName, utisToConvert: utisToConvert) { (url, error) in
+							exportedAssetURL = url
+							outError = error
+							semaphore.signal()
+						}
+					} else {
+						outError = NSError(ocError: .internal)
 						semaphore.signal()
 					}
 				} else {
-					outError = NSError(ocError: .internal)
-					semaphore.signal()
+					// It could be that we don't have any asset resources locally e.g. since we have to deal with an asset from a cloud album
+					if self.mediaType == .image {
+						exportPhoto(fileName: assetName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
+							exportedAssetURL = url
+							outError = error
+							semaphore.signal()
+						})
+					} else if self.mediaType == .video {
+						exportVideo(fileName: assetName, utisToConvert: utisToConvert) { (url, error) in
+							exportedAssetURL = url
+							outError = error
+							semaphore.signal()
+						}
+					} else {
+						outError = NSError(ocError: .internal)
+						semaphore.signal()
+					}
 				}
-
+				semaphore.wait()
 			}
-			semaphore.wait()
 
 			// Do we have an error at export stage?
 			if outError != nil {
