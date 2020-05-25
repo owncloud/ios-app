@@ -29,7 +29,7 @@ class MoreViewHeader: UIView {
 	private var showsIcon : Bool = true
 
 	var thumbnailSize = CGSize(width: 60, height: 60)
-	let favoriteSize = CGSize(width: 24, height: 24)
+	let favoriteSize = CGSize(width: 44, height: 44)
 
 	var showFavoriteButton: Bool
 	var showActivityIndicator: Bool
@@ -140,6 +140,9 @@ class MoreViewHeader: UIView {
 			updateFavoriteButtonImage()
 			favoriteButton.addTarget(self, action: #selector(toogleFavoriteState), for: UIControl.Event.touchUpInside)
 			self.addSubview(favoriteButton)
+			if #available(iOS 13.4, *) {
+				favoriteButton.isPointerInteractionEnabled = true
+			}
 
 			NSLayoutConstraint.activate([
 				favoriteButton.widthAnchor.constraint(equalToConstant: favoriteSize.width),
@@ -243,9 +246,11 @@ class MoreViewHeader: UIView {
 		if item.isFavorite == true {
 			favoriteButton.setImage(UIImage(named: "star"), for: .normal)
 			favoriteButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
+			favoriteButton.accessibilityLabel = "Unfavorite item".localized
 		} else {
 			favoriteButton.setImage(UIImage(named: "unstar"), for: .normal)
 			favoriteButton.tintColor = Theme.shared.activeCollection.favoriteDisabledColor
+			favoriteButton.accessibilityLabel = "Favorite item".localized
 		}
 	}
 }

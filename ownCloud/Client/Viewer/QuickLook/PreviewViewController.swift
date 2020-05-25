@@ -100,12 +100,13 @@ class PreviewViewController : DisplayViewController, QLPreviewControllerDataSour
 		return source != nil ? 1 : 0
 	}
 
-	// MARK: - QLPreviewControllerDelegate
+	// MARK: - QLPreviewControllerDataSource
 	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
 		return source! as QLPreviewItem
 	}
 
-	override func canPreview(url:URL) -> Bool {
+	override func canPreviewCurrentItem() -> Bool {
+		guard let url = self.source else { return false }
 		return QLPreviewController.canPreview(url as QLPreviewItem)
 	}
 }

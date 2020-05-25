@@ -83,7 +83,7 @@
 "Sort by" = "Sort by";
 
 "name" = "name";
-"type" = "type";
+"kind" = "kind";
 "size" = "size";
 "date" = "date";
 "Search this folder" = "Search this folder";
@@ -235,8 +235,10 @@
 "Increase Slider Value" = "Increase Slider Value";
 
 /* Display settings */
-"Display settings" = "Display settings";
+"Advanced settings" = "Advanced settings";
 "Show hidden files and folders" = "Show hidden files and folders";
+"Show folders at the top" = "Show folders at the top";
+"Prevent dragging of files and folders" = "Prevent dragging of files and folders";
 
 /* Passcode Messages */
 
@@ -284,6 +286,11 @@
 "No actions available" = "No actions available";
 "No actions are available for this folder, possibly because of missing permissions." = "No actions are available for this folder, possibly because of missing permissions.";
 
+"Close actions menu" = "Close actions menu";
+
+"Favorite item" = "Favorite item";
+"Unfavorite item" = "Unfavorite item";
+
 /* Directory Picker Messages */
 "Move here" = "Move here";
 
@@ -294,6 +301,7 @@
 "Could not get the picture" = "Could not get the picture";
 "Downloading" = "Downloading";
 "File couldn't be opened" = "File couldn't be opened";
+"Connecting..." = "Connecting...";
 
 /* PDF Viewer */
 "Resume" = "Resume";
@@ -426,6 +434,8 @@
 "shared" = "shared";
 "Owner" = "Owner";
 "Private Link" = "Private Link";
+"Created Public Link" = "Created Public Link";
+"URL was copied to the clipboard" = "URL was copied to the clipboard";
 
 /* Quick Access view */
 "Quick Access" = "Quick Access";
@@ -539,17 +549,8 @@
 "Subscribe Now" = "Subscribe Now";
 "Free" = "Free";
 
-"day" = "day";
-"%lu days" = "%lu days";
-
-"week" = "week";
-"%lu weeks" = "%lu weeks";
-
-"month" = "month";
-"%lu months" = "%lu months";
-
-"year" = "year";
-"%lu years" = "%lu years";
+"%@ / %@" = "%@ / %@";
+"after free %@ trial" = "after free %@ trial";
 
 /* Example usage: "Try [14 days] for free." */
 "Try %@ for free." = "Try %@ for free.";
@@ -599,3 +600,13 @@
 "trial" = "trial";
 "purchase" = "purchase";
 "subscription" = "subscription";
+
+/* Misc. accessibility */
+"Enter multiple selection" = "Enter multiple selection";
+
+/* Universal Links */
+"Resolving link…" = "Resolving link…";
+"Link resolution failed" = "Link resolution failed";
+"Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.";
+"Couldn't resolve a private link since the item is not known to the server." = "Couldn't resolve a private link since the item is not known to the server.";
+"Link points to an account bookmark which is not configured in the app." = "Link points to an account bookmark which is not configured in the app.";

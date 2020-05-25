@@ -37,14 +37,15 @@ class SettingsTests: XCTestCase {
 		EarlGrey.selectElement(with: grey_accessibilityID("theme")).assert(grey_sufficientlyVisible())
 		EarlGrey.selectElement(with: grey_accessibilityID("logging")).assert(grey_sufficientlyVisible())
 	}
-	
+
 	/*
-	* PASSED if: Show hidden files and folders are displayed as part of the "Display Settings" section of Settings
+	* PASSED if: Show hidden files and folders, Drag Files are displayed as part of the "Advanced Settings" section of Settings
 	*/
 	func testCheckDisplaySettings () {
-		
+
 		//Assert
 		EarlGrey.selectElement(with: grey_accessibilityID("show-hidden-files-switch")).assert(grey_sufficientlyVisible())
+		EarlGrey.selectElement(with: grey_accessibilityID("prevent-dragging-files-switch")).assert(grey_sufficientlyVisible())
 	}
 	
 	/*

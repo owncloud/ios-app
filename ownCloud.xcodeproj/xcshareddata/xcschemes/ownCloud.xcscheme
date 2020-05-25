@@ -141,6 +141,11 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:authentication-oauth2.oa2-expiration-override-seconds"
+            value = "10"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:authentication-oauth2.oa2-browser-session-class"
             value = "string:UIWebView"
             isEnabled = "NO">

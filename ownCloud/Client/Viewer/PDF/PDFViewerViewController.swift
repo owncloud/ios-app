@@ -91,7 +91,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	static var customMatcher: OCExtensionCustomContextMatcher?
 	static var displayExtensionIdentifier: String = "org.owncloud.pdfViewer.default"
-	static var supportedMimeTypes: [String]? = ["application/pdf"]
+	static var supportedMimeTypes: [String]? = ["application/pdf", "application/illustrator"]
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 
 	deinit {

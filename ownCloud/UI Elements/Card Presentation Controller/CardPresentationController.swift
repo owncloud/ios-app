@@ -115,6 +115,7 @@ final class CardPresentationController: UIPresentationController, Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		overStretchView.backgroundColor = collection.tableGroupBackgroundColor
 		dragHandleView.backgroundColor = collection.tableSeparatorColor
+
 	}
 
 	private func offset(for position: CardPosition, translatedBy: CGFloat = 0, allowOverStretch: Bool = false) -> CGFloat {
@@ -201,6 +202,13 @@ final class CardPresentationController: UIPresentationController, Themeable {
 				overStretchView.heightAnchor.constraint(equalTo: containerView.heightAnchor)
 			])
 		}
+
+		dragHandleView.accessibilityTraits = [.button]
+		dragHandleView.accessibilityLabel = "Close actions menu".localized
+		dragHandleView.isAccessibilityElement = true
+		dragHandleView.accessibilityFrame = dragHandleView.frame.insetBy(dx: -20, dy: -10)
+
+		PointerEffect.install(on: dragHandleView, effectStyle: .hoverScaled)
 	}
 
 	// MARK: - Dismissal

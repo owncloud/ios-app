@@ -75,7 +75,9 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 			@"application/vnd.oasis.opendocument.spreadsheet-template" 	: @"org.oasis-open.opendocument.spreadsheet-template",
 
 			@"application/vnd.oasis.opendocument.formula" 			: @"org.oasis-open.opendocument.formula",
-			@"application/vnd.oasis.opendocument.formula-template" 		: @"org.oasis-open.opendocument.formula-template"
+			@"application/vnd.oasis.opendocument.formula-template" 		: @"org.oasis-open.opendocument.formula-template",
+
+			@"application/illustrator"					: @"com.adobe.illustrator.ai-image"
 		};
 	});
 
@@ -173,7 +175,7 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 		}
 		else
 		{
-			uti = (__bridge NSString *)kUTTypeItem;
+			uti = (__bridge NSString *)kUTTypeData;
 		}
 
 		OCLogDebug(@"Converted %@ MIMEType %@ to UTI %@", self.name, self.mimeType, uti);

@@ -24,7 +24,7 @@ protocol ClientRootViewControllerAuthenticationDelegate : class {
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?)
 }
 
-class ClientRootViewController: UITabBarController, UINavigationControllerDelegate {
+class ClientRootViewController: UITabBarController {
 
 	// MARK: - Constants
 	let folderButtonsSize: CGSize = CGSize(width: 25.0, height: 25.0)
@@ -116,10 +116,10 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 				case .online:
 					summary = nil
 
-				case .offline:
-					summary?.message = "\(connectionShortDescription!)Contents from cache.".localized
+				case .connecting:
+					summary?.message = "Connecting…".localized
 
-				case .unavailable:
+				case .offline, .unavailable:
 					summary?.message = "\(connectionShortDescription!)Contents from cache.".localized
 			}
 		}
@@ -188,8 +188,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 				self.coreReady(lastVisibleItemId)
 			}
 
-			// Start showing connection status with a delay of 1 second, so "Offline" doesn't flash briefly
-			OnMainThread(after: 1.0) { [weak self] () in
+			// Start showing connection status
+			OnMainThread { [weak self] () in
 				self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
 					self?.updateConnectionStatusSummary()
 				})
@@ -217,7 +217,6 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		Theme.shared.add(tvgResourceFor: "status-flash")
 
 		filesNavigationController = ThemeNavigationController()
-		filesNavigationController?.delegate = self
 		filesNavigationController?.navigationBar.isTranslucent = false
 		filesNavigationController?.tabBarItem.title = "Browse".localized
 		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: folderButtonsSize)
@@ -297,6 +296,10 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 					if viewController == emptyViewController {
 						OnMainThread {
 							self?.closeClient()
+							if #available(iOS 13.0, *) {
+								// Prevent re-opening of items on next launch in case user has returned to the bookmark list
+								self?.view.window?.windowScene?.userActivity = nil
+							}
 						}
 					}
 
@@ -330,13 +333,6 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		}
 	}
 
-	func navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) {
-		// if the emptyViewController will show, because the push button in ClientQueryViewController was triggered, push immediately to the ServerListTableViewController, because emptyViewController is only a helper for showing the "Back" button in ClientQueryViewController
-		if willShow.isEqual(emptyViewController) {
-			self.closeClient()
-		}
-	}
-
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
 		progressBarHeightConstraint?.constant = -1 * (self.tabBar.bounds.height)
@@ -352,7 +348,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 					let query = OCQuery(forPath: "/")
 					let queryViewController = ClientQueryViewController(core: core, query: query)
 
-					if error == nil, let item = item {
+					if error == nil, let item = item, item.isRoot == false {
 						// get all parent items for the item and rebuild all underlaying ClientQueryViewController for this items in the navigation stack
 						let parentItems = core.retrieveParentItems(for: item)
 
@@ -431,6 +427,10 @@ extension ClientRootViewController : OCCoreDelegate {
 					if bookmark.isTokenBased == true {
 						authFailureTitle = "Access denied".localized
 						authFailureMessage = "The connection's access token has expired or become invalid. Sign in again to re-gain access.".localized
+
+						if let localizedDescription = nsError.userInfo[NSLocalizedDescriptionKey] {
+							authFailureMessage = "\(authFailureMessage!)\n\n(\(localizedDescription))"
+						}
 					} else {
 						authFailureMessage = "The server declined access with the credentials stored for this connection.".localized
 					}
