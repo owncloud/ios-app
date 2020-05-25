@@ -20,6 +20,24 @@ import Photos
 import ownCloudSDK
 import CoreServices
 
+extension URL {
+	var audioVideoAssetType : AVFileType? {
+		let ext = self.pathExtension.lowercased()
+		switch ext {
+		case "mov":
+			return AVFileType.mov
+		case "mp4":
+			return AVFileType.mp4
+		case "m4v":
+			return AVFileType.m4v
+		case "3gp", "3gpp", "sdv":
+			return AVFileType.mobile3GPP
+		default:
+			return nil
+		}
+	}
+}
+
 extension String {
 	// If we have a name like IMG_00123.jpg, then only 00123 shall be returned
 	// If the name doesn't start with IMG or img, return nil
@@ -296,7 +314,6 @@ extension PHAsset {
 	func exportVideo(resources:[PHAssetResource], fileName:String, utisToConvert:[String] = [], completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
 
 		var resourceToExport:PHAssetResource?
-		var outError: Error?
 
 		// For edited video pick the edited version
 		resourceToExport = resources.filter({$0.type == .fullSizeVideo}).first
@@ -317,33 +334,14 @@ extension PHAsset {
 		requestOptions.isNetworkAccessAllowed = true
 
 		// Prepare export URL and remove path extension which will depend on output format
-		var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension()
 
 		// Check if conversion is required?
 		if utisToConvert.contains(resource.uniformTypeIdentifier) {
-			exportURL = exportURL.deletingPathExtension().appendingPathExtension("mp4")
-
-			// Allow to fetch video asset from network (e.g. in case of iCloud library)
-			let videoRequestOptions = PHVideoRequestOptions()
-			videoRequestOptions.isNetworkAccessAllowed = true
-			// Take care that in case of edited video, the edited content is used
-			videoRequestOptions.version = .current
-			videoRequestOptions.deliveryMode = .highQualityFormat
-
-			// Request AVAssetExport session (can be also done with requestAVAsset() in conjunction with AVAssetWriter for more fine-grained control)
-			PHImageManager.default().requestExportSession(forVideo: self, options: videoRequestOptions, exportPreset: AVAssetExportPresetPassthrough) { (session, info) in
-				outError = info?[PHImageErrorKey] as? Error
-				if let session = session {
-					session.outputURL = exportURL
-					session.outputFileType = AVFileType.mp4
-					session.exportAsynchronously {
-						completionHandler(exportURL, outError)
-					}
-				} else {
-					completionHandler(exportURL, outError)
-				}
+			exportVideo(fileName: fileName, utisToConvert: utisToConvert) { (url, error) in
+				completionHandler(url, error)
 			}
 		} else {
+			var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension()
 			// Append correct file extension to export URL
 			exportURL = exportURL.appendingPathExtension(resource.fileExtension)
 
@@ -374,17 +372,25 @@ extension PHAsset {
 		// Request AVAssetExport session (can be also done with requestAVAsset() in conjunction with AVAssetWriter for more fine-grained control)
 		PHImageManager.default().requestExportSession(forVideo: self, options: videoRequestOptions, exportPreset: AVAssetExportPresetPassthrough) { (session, info) in
 			outError = info?[PHImageErrorKey] as? Error
-			if let session = session {
+			if let session = session, let defaultFileType = exportURL.audioVideoAssetType {
+
+				var fileType: AVFileType = defaultFileType
 
 				if utisToConvert.contains(AVFileType.mov.rawValue) {
 					exportURL = exportURL.deletingPathExtension().appendingPathExtension("mp4")
-					session.outputFileType = AVFileType.mp4
+					fileType = AVFileType.mp4
 				}
 
-				session.outputURL = exportURL
-				session.outputFileType = AVFileType.mov
-				session.exportAsynchronously {
-					completionHandler(exportURL, outError)
+				session.determineCompatibleFileTypes { (compatibleFileTypes) in
+					if compatibleFileTypes.contains(fileType) {
+						session.outputURL = exportURL
+						session.outputFileType = fileType
+						session.exportAsynchronously {
+							completionHandler(exportURL, outError)
+						}
+					} else {
+						completionHandler(nil, outError)
+					}
 				}
 			} else {
 				completionHandler(exportURL, outError)
@@ -465,10 +471,6 @@ extension PHAsset {
 
 		Log.debug(tagged: ["MEDIA_UPLOAD"], "Prepare uploading asset ID \(self.localIdentifier), type:\(self.mediaType), subtypes:\(self.mediaSubtypes), sourceType:\(self.sourceType), creationDate:\(String(describing: self.creationDate)), modificationDate:\(String(describing: self.modificationDate)), favorite:\(self.isFavorite), hidden:\(self.isHidden)")
 
-		// Prepare progress object for importing full size asset from photo library
-		let importProgress = Progress(totalUnitCount: 100)
-		importProgress.localizedDescription = "Importing from photo library".localized
-
 		var uploadResult:(OCItem?, Error?)?
 
 		if let assetName = self.assetFileName {
@@ -520,16 +522,23 @@ extension PHAsset {
 				semaphore.wait()
 			}
 
-			// Do we have an error at export stage?
-			if outError != nil {
-				Log.error(tagged: ["MEDIA_UPLOAD"], "Asset export failed for asset with UTI \(String(describing: self.primaryResource?.uniformTypeIdentifier)) ID \(String(describing: self.primaryResource?.assetLocalIdentifier)), error: \(String(describing: outError))")
+			guard outError == nil else {
+				Log.error(tagged: ["MEDIA_UPLOAD"], "Asset export failed for asset with identifier: \(self.localIdentifier), type: \(self.mediaType == .video ? "video" : "photo"), error: \(String(describing: outError))")
 				uploadResult = (nil, outError)
-			} else {
-				// Perform actual upload
-				if let uploadURL = exportedAssetURL {
-					uploadResult = performUpload(sourceURL: uploadURL, copySource: false)
-				}
+				// Call completion handler to avoid having media upload jobs stalled forever
+				uploadCompleteHandler?()
+				return uploadResult
 			}
+
+			guard let uploadURL = exportedAssetURL else {
+				Log.warning(tagged: ["MEDIA_UPLOAD"], "Missing export URL for asset with identifier: \(self.localIdentifier)")
+				// Call completion handler to avoid having media upload jobs stalled forever
+				uploadCompleteHandler?()
+				uploadResult = (nil, nil)
+				return uploadResult
+			}
+
+			uploadResult = performUpload(sourceURL: uploadURL, copySource: false)
 
 		} else {
 			Log.error(tagged: ["MEDIA_UPLOAD"], "Primary resource not found for asset ID \(self.localIdentifier)")
