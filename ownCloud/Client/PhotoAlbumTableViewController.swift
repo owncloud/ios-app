@@ -48,6 +48,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 		var count: Int?
 		var collection: PHAssetCollection?
 		var thumbnailAsset: PHAsset?
+		var subtype: PHAssetCollectionSubtype = .albumRegular
 
 		var countString : String {
 			if count != nil {
@@ -152,7 +153,15 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 					album.name = collection.localizedTitle
 					album.count = count
 					album.thumbnailAsset = album.collection?.fetchThumbnailAsset()
+					album.subtype = collection.assetCollectionSubtype
 					tempAlbums.append(album)
+				}
+			}
+
+			// Make sure that camera roll is shown first among smart albums
+			if type == .smartAlbum {
+				tempAlbums.sort { (album1, _) -> Bool in
+					return album1.subtype == .smartAlbumUserLibrary
 				}
 			}
 
