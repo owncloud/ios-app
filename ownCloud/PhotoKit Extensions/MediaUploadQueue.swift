@@ -311,7 +311,7 @@ class MediaUploadQueue : OCActivitySource {
 
 	private func publishImportActivity(for core:OCCore, itemCount:Int) {
 		let activityId = "MediaUploadQueue:\(UUID())"
-		self.uploadActivity = MediaUploadActivity(identifier: activityId, assetCount: itemCount)
+        self.uploadActivity = MediaUploadActivity(identifier: activityId, assetCount: itemCount)
 		core.activityManager.update(OCActivityUpdate.publishingActivity(for: self))
 	}
 

@@ -674,6 +674,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 			case SKPaymentTransactionStateRestored:
 				OCLogWarning(@"Restored App Store transaction without original? %@ %@", transaction, transaction.originalTransaction);
+				finishTransaction = YES;
 			break;
 		}
 

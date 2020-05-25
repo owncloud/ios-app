@@ -317,10 +317,10 @@ extension OCItem {
 
 				if completionHandler == nil {
 					parentItem = item
-					waitGroup?.leave()
 				} else {
 					completionHandler?(error, item)
 				}
+				waitGroup?.leave()
 			}
 
 			waitGroup?.wait()
