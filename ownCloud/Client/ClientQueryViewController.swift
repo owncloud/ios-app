@@ -152,18 +152,23 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 		// Create bar button items for the toolbar
 		deleteMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"trash"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: DeleteAction.identifier!)
+		deleteMultipleBarButtonItem?.accessibilityLabel = "Delete".localized
 		deleteMultipleBarButtonItem?.isEnabled = false
 
 		moveMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"folder"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: MoveAction.identifier!)
+		moveMultipleBarButtonItem?.accessibilityLabel = "Move".localized
 		moveMultipleBarButtonItem?.isEnabled = false
 
 		duplicateMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "duplicate-file"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: DuplicateAction.identifier!)
+		duplicateMultipleBarButtonItem?.accessibilityLabel = "Duplicate".localized
 		duplicateMultipleBarButtonItem?.isEnabled = false
 
 		copyMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "copy-file"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: CopyAction.identifier!)
+		copyMultipleBarButtonItem?.accessibilityLabel = "Copy".localized
 		copyMultipleBarButtonItem?.isEnabled = false
 
 		openMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "open-in"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: OpenInAction.identifier!)
+		openMultipleBarButtonItem?.accessibilityLabel = "Open in".localized
 		openMultipleBarButtonItem?.isEnabled = false
 
 		quotaLabel.textAlignment = .center
@@ -614,6 +619,14 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 			if query.queryPath != "/" {
 				let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
 				self.updateFooter(text: totalSize)
+			}
+
+			if #available(iOS 13.0, *) {
+				if  let tabBarController = self.tabBarController as? ClientRootViewController {
+					// Use parent folder for UI state restoration
+					let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: tabBarController.bookmark)
+					view.window?.windowScene?.userActivity = activity.openItemUserActivity
+				}
 			}
 		}
 	}

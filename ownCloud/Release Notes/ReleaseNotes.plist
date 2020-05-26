@@ -376,6 +376,12 @@ On iPadOS 13 all windows will be restored, after the app was launched.</string>
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>11.4</string>
+			<key>ReleaseNotes</key>
+			<array/>
+		</dict>
 	</array>
 </dict>
 </plist>
