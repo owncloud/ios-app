@@ -20,7 +20,11 @@ import UIKit
 import ownCloudSDK
 
 typealias MessageSelectorFilter = (_ message: OCMessage) -> Bool
-typealias MessageSelectorChangeHandler = (_ messages: [OCMessage]?) -> Void
+typealias MessageSelectorChangeHandler = (_ messages: [OCMessage]?, _ groups : [MessageGroup]?) -> Void
+
+extension OCMessageCategoryIdentifier {
+	static let other : OCMessageCategoryIdentifier = OCMessageCategoryIdentifier(rawValue: "_other")
+}
 
 class MessageSelector: NSObject {
 	private var observer : NSKeyValueObservation?
@@ -29,19 +33,22 @@ class MessageSelector: NSObject {
 
 	var queue : OCMessageQueue?
 	var handler : MessageSelectorChangeHandler?
+	private var provideGroupedSelection : Bool = false
 
 	private var selectionUUIDs : [OCMessageUUID] = []
 	var selection : [OCMessage]? {
 		didSet {
-			self.handler?(selection)
+			self.handler?(selection, groupedSelection)
 		}
 	}
+	var groupedSelection : [MessageGroup]?
 
-	init(from messageQueue: OCMessageQueue = .global, filter messageFilter: MessageSelectorFilter?, handler: MessageSelectorChangeHandler?) {
+	init(from messageQueue: OCMessageQueue = .global, filter messageFilter: MessageSelectorFilter?, provideGroupedSelection: Bool = false, handler: MessageSelectorChangeHandler?) {
 		rateLimiter = OCRateLimiter(minimumTime: 0.2)
 
 		filter = messageFilter
 		queue = messageQueue
+		self.provideGroupedSelection = provideGroupedSelection
 		self.handler = handler
 
 		super.init()
@@ -63,11 +70,36 @@ class MessageSelector: NSObject {
 			}
 
 			if (filteredMessageUUIDs.count != selectionUUIDs.count) || !filteredMessageUUIDs.elementsEqual(selectionUUIDs) {
+				if provideGroupedSelection {
+					var messageGroupsByIdentifier : [OCMessageCategoryIdentifier : MessageGroup] = [:]
+					var messageGroups : [MessageGroup] = []
+
+					for message in filteredMessages {
+						let categoryIdentifier : OCMessageCategoryIdentifier = message.categoryIdentifier ?? .other
+						var messageGroup : MessageGroup?
+
+						messageGroup = messageGroupsByIdentifier[categoryIdentifier]
+
+						if messageGroup == nil {
+							messageGroup = MessageGroup(with: message)
+
+							if let messageGroup = messageGroup {
+								messageGroupsByIdentifier[categoryIdentifier] = messageGroup
+								messageGroups.append(messageGroup)
+							}
+						} else {
+							messageGroup?.messages.append(message)
+						}
+					}
+
+					groupedSelection = messageGroups
+				}
 				selectionUUIDs = filteredMessageUUIDs
 				selection = filteredMessages
 			}
 		} else {
 			selectionUUIDs = []
+			groupedSelection = nil
 			selection = nil
 		}
 	}

@@ -103,7 +103,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenAppVersion)
 
-		messageCountSelector = MessageSelector(filter: nil, handler: { [weak self] (messages) in
+		messageCountSelector = MessageSelector(filter: nil, handler: { [weak self] (messages, _) in
 			var countByBookmarkUUID : [UUID? : Int ] = [:]
 
 			if let messages = messages {

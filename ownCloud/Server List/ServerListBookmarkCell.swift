@@ -108,7 +108,7 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 				if directMessageCountTrackingEnabled {
 					messageSelector = MessageSelector(from: .global, filter: { (message) -> Bool in
 						return (message.bookmarkUUID == bookmark.uuid)
-					}, handler: { [weak self] (messages) in
+					}, handler: { [weak self] (messages, _) in
 						OnMainThread {
 							self?.updateMessageBadge(count: (messages != nil) ? messages!.count : 0)
 						}

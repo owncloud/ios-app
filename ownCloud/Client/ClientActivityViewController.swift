@@ -27,9 +27,9 @@
 import UIKit
 import ownCloudSDK
 
-class ClientActivityViewController: UITableViewController, Themeable {
+class ClientActivityViewController: UITableViewController, Themeable, MessageGroupCellDelegate {
 	enum ActivitySection : Int, CaseIterable {
-		case messages
+		case messageGroups
 		case activities
 	}
 
@@ -50,12 +50,11 @@ class ClientActivityViewController: UITableViewController, Themeable {
 
 				messageSelector = MessageSelector(from: core.messageQueue, filter: { (message) in
 					return (message.bookmarkUUID == bookmarkUUID)
-				}, handler: { [weak self] (messages) in
+				}, provideGroupedSelection: true, handler: { [weak self] (messages, _) in
 					OnMainThread {
-						self?.messages = messages
 						if let tabBarItem = self?.navigationController?.tabBarItem {
-							if let messages = messages, messages.count > 0 {
-								tabBarItem.badgeValue = "\(messages.count)"
+							if let messageCount = messages?.count, messageCount > 0 {
+								tabBarItem.badgeValue = "\(messageCount)"
 							} else {
 								tabBarItem.badgeValue = nil
 							}
@@ -68,7 +67,7 @@ class ClientActivityViewController: UITableViewController, Themeable {
 	}
 
 	var messageSelector : MessageSelector?
-	var messages : [OCMessage]?
+	var messageGroups : [MessageGroup]?
 
 	var activities : [OCActivity]?
 	var isOnScreen : Bool = false {
@@ -147,6 +146,7 @@ class ClientActivityViewController: UITableViewController, Themeable {
 			needsDataReload = false
 
 			activities = core?.activityManager.activities
+			messageGroups = messageSelector?.groupedSelection
 			self.tableView.reloadData()
 		}
 	}
@@ -155,7 +155,7 @@ class ClientActivityViewController: UITableViewController, Themeable {
 		super.viewDidLoad()
 
 		self.tableView.register(ClientActivityCell.self, forCellReuseIdentifier: "activity-cell")
-		self.tableView.register(MessageCell.self, forCellReuseIdentifier: "message-cell")
+		self.tableView.register(MessageGroupCell.self, forCellReuseIdentifier: "message-group-cell")
 		self.tableView.rowHeight = UITableView.automaticDimension
 		self.tableView.estimatedRowHeight = 80
 
@@ -184,6 +184,19 @@ class ClientActivityViewController: UITableViewController, Themeable {
 		super.viewWillDisappear(animated)
 	}
 
+	// MARK: - MessageGroupCell delegate
+	func cell(_ cell: MessageGroupCell, showMessagesLike likeMessage: OCMessage) {
+		if let core = core, let likeMessageCategoryID = likeMessage.categoryIdentifier {
+			let bookmarkUUID = core.bookmark.uuid
+
+			let messageTableViewController = MessageTableViewController(with: core, messageFilter: { (message) -> Bool in
+				return (message.categoryIdentifier == likeMessageCategoryID) && (message.bookmarkUUID == bookmarkUUID)
+			})
+
+			self.navigationController?.pushViewController(messageTableViewController, animated: true)
+		}
+	}
+
 	// MARK: - Table view data source
 
 	override func numberOfSections(in tableView: UITableView) -> Int {
@@ -191,10 +204,9 @@ class ClientActivityViewController: UITableViewController, Themeable {
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		// #warning Incomplete implementation, return the number of rows
 		switch ActivitySection(rawValue: section) {
-			case .messages:
-				return messages?.count ?? 0
+			case .messageGroups:
+				return messageGroups?.count ?? 0
 
 			case .activities:
 				return activities?.count ?? 0
@@ -206,14 +218,16 @@ class ClientActivityViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		switch ActivitySection(rawValue: indexPath.section) {
-			case .messages:
-				guard let cell = tableView.dequeueReusableCell(withIdentifier: "message-cell", for: indexPath) as? MessageCell else {
+			case .messageGroups:
+				guard let cell = tableView.dequeueReusableCell(withIdentifier: "message-group-cell", for: indexPath) as? MessageGroupCell else {
 					return UITableViewCell()
 				}
 
-				if let messages = messages, indexPath.row < messages.count {
-					cell.message = messages[indexPath.row]
+				if let messageGroups = messageGroups, indexPath.row < messageGroups.count {
+					cell.messageGroup = messageGroups[indexPath.row]
 				}
+
+				cell.delegate = self
 
 				return cell
 
@@ -233,49 +247,11 @@ class ClientActivityViewController: UITableViewController, Themeable {
 		}
 	}
 
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		switch ActivitySection(rawValue: indexPath.section) {
-			case .messages:
-				if let messages = messages, indexPath.row < messages.count {
-					if let core = core, let coreDelegate = core.delegate, let queue = messageSelector?.queue {
-						coreDelegate.core(core, handleError: nil, issue: OCIssue(from: messages[indexPath.row], from: queue))
-					}
-				}
-
-			default: break
-		}
-	}
-
 	override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-		switch ActivitySection(rawValue: indexPath.section) {
-			case .messages:
-				return true
-
-			default:
-				return false
-		}
+		return false
 	}
 
 	override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-		switch ActivitySection(rawValue: indexPath.section) {
-			case .messages:
-				return indexPath
-
-			default:
-				return nil
-		}
+		return nil
 	}
-//
-//	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//		switch ActivitySection(rawValue: section) {
-//			case .messages:
-//				return "Messages".localized
-//
-//			case .activities:
-//				return "Tasks".localized
-//
-//			default:
-//				return nil
-//		}
-//	}
 }
