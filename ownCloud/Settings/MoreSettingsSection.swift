@@ -44,7 +44,7 @@ class MoreSettingsSection: SettingsSection {
 		}
 
 		var appSuffix = ""
-		if VendorServices.shared.isEMMVersion {
+		if OCLicenseEMMProvider.isEMMVersion {
 			appSuffix = "-EMM"
 		}
 

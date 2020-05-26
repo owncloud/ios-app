@@ -19,6 +19,7 @@
 import UIKit
 import MessageUI
 import ownCloudSDK
+import ownCloudApp
 
 class VendorServices : NSObject {
 	// MARK: - App version information
@@ -49,14 +50,6 @@ class VendorServices : NSObject {
 	var isBetaBuild: Bool {
 		if let isBetaBuild = self.classSetting(forOCClassSettingsKey: .isBetaBuild) as? Bool {
 			return isBetaBuild
-		}
-
-		return false
-	}
-
-	var isEMMVersion: Bool {
-		if let isEMMVersion = Bundle.main.bundleIdentifier?.hasSuffix(".emm") {
-			return isEMMVersion
 		}
 
 		return false
@@ -97,7 +90,7 @@ class VendorServices : NSObject {
 		}
 
 		var appSuffix = ""
-		if self.isEMMVersion {
+		if OCLicenseEMMProvider.isEMMVersion {
 			appSuffix = "-EMM"
 		}
 
