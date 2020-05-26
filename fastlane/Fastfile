@@ -144,8 +144,12 @@ platform :ios do
 
         if build_emm_app
           puts("Build EMM iOS App…")
+          # Set EMM App-Icon before build
+          sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon-regular.appiconset/"
+          sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon-emm.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
+
           # Build App
-          owncloud_emm_build()
+          #owncloud_emm_build()
 
           # Deliver
           if deliver
@@ -154,12 +158,13 @@ platform :ios do
               skip_metadata: false,
               submit_for_review: false,
               ignore_language_directory_validation: true,
-              skip_binary_upload: false,
+              skip_binary_upload: true,
               force: true,
               overwrite_screenshots: create_screenshots,
               app_identifier: "com.owncloud.ios-app.emm",
               skip_app_version_update: true,
-              ipa: "ownCloud.ipa"
+              ipa: "ownCloud.ipa",
+              description: "metadata/en-us/description-emm.txt"
             )
           end
       end
