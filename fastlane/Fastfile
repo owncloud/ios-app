@@ -144,12 +144,20 @@ platform :ios do
 
         if build_emm_app
           puts("Build EMM iOS App…")
-          # Set EMM App-Icon before build
+          # Set EMM App-Icon for App Build
           sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon-regular.appiconset/"
           sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon-emm.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
 
+          # Set EMM Description
+          sh "mv metadata/en-us/description.txt metadata/en-us/description-regular.txt"
+          sh "mv metadata/en-us/description-emm.txt metadata/en-us/description.txt"
+
+          # Set EMM App-Icon for AppStore Connect
+          sh "mv metadata/app_icon.jpg metadata/app_icon-regular.jpg"
+          sh "mv metadata/app_icon-emm.jpg metadata/app_icon.jpg"
+
           # Build App
-          #owncloud_emm_build()
+          owncloud_emm_build()
 
           # Deliver
           if deliver
@@ -163,8 +171,7 @@ platform :ios do
               overwrite_screenshots: create_screenshots,
               app_identifier: "com.owncloud.ios-app.emm",
               skip_app_version_update: true,
-              ipa: "ownCloud.ipa",
-              description: "metadata/en-us/description-emm.txt"
+              ipa: "ownCloud.ipa"
             )
           end
       end
