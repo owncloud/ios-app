@@ -74,7 +74,11 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 	}
 
 	@objc func addAccount() {
-		if let viewController = staticLoginViewController?.buildProfileSetupSelector(title: "Add account".localized, includeCancelOption: true) {
+		if staticLoginViewController?.loginBundle.profiles.count == 1, let profile = staticLoginViewController?.loginBundle.profiles.first {
+			if let setupViewController = staticLoginViewController?.buildSetupViewController(for: profile) {
+				self.navigationController?.pushViewController(setupViewController, animated: true)
+			}
+		} else if let viewController = staticLoginViewController?.buildProfileSetupSelector(title: "Add account".localized, includeCancelOption: true) {
 			self.navigationController?.pushViewController(viewController, animated: false)
 		}
 	}
