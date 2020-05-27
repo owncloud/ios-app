@@ -76,9 +76,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 		var tokenMaskSection : StaticTableViewSection
 
 		tokenMaskSection = StaticTableViewSection(headerTitle: nil, identifier: "tokenMaskSection")
-		tokenMaskSection.addStaticHeader(title: profile.name!, message: profile.promptForTokenAuth)
+		tokenMaskSection.addStaticHeader(title: profile.welcome!, message: profile.promptForTokenAuth)
 
-		if VendorServices.shared.canAddAccount {
+		if VendorServices.shared.canAddAccount, OCBookmarkManager.shared.bookmarks.count > 0 {
 			let (proceedButton, cancelButton) = tokenMaskSection.addButtonFooter(proceedLabel: "Continue", cancelLabel: "Cancel")
 			proceedButton?.addTarget(self, action: #selector(self.startAuthentication), for: .touchUpInside)
 			cancelButton?.addTarget(self, action: #selector(self.cancel(_:)), for: .touchUpInside)
