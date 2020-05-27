@@ -166,7 +166,7 @@ platform :ios do
               skip_metadata: false,
               submit_for_review: false,
               ignore_language_directory_validation: true,
-              skip_binary_upload: true,
+              skip_binary_upload: false,
               force: true,
               overwrite_screenshots: create_screenshots,
               app_identifier: "com.owncloud.ios-app.emm",
