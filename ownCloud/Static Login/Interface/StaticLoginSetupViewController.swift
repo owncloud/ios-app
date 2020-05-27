@@ -21,7 +21,7 @@ import UIKit
 
 class StaticLoginSetupViewController : StaticLoginStepViewController {
 	var profile : StaticLoginProfile
-	var bookmark : OCBookmark
+	var bookmark : OCBookmark?
 
 	private var username : String?
 	private var password : String?
@@ -30,7 +30,9 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 	init(loginViewController theLoginViewController: StaticLoginViewController, profile theProfile: StaticLoginProfile) {
 		profile = theProfile
-		bookmark = OCBookmark(for: profile.url!)
+		if let url = profile.url {
+			bookmark = OCBookmark(for: url)
+		}
 
 		super.init(loginViewController: theLoginViewController)
 	}
@@ -139,6 +141,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	}
 
 	@objc func startAuthentication(_ sender: Any?) {
+		guard let bookmark = self.bookmark else { return }
 		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
 
 		let connection = OCConnection(bookmark: bookmark)
@@ -175,12 +178,12 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 					}
 					hud?.dismiss(completion: {
 						if error == nil {
-							self.bookmark.authenticationMethodIdentifier = authMethodIdentifier
-							self.bookmark.authenticationData = authMethodData
-							self.bookmark.name = self.profile.bookmarkName
-							self.bookmark.userInfo[StaticLoginProfile.staticLoginProfileIdentifierKey] = self.profile.identifier
+							bookmark.authenticationMethodIdentifier = authMethodIdentifier
+							bookmark.authenticationData = authMethodData
+							bookmark.name = self.profile.bookmarkName
+							bookmark.userInfo[StaticLoginProfile.staticLoginProfileIdentifierKey] = self.profile.identifier
 
-							OCBookmarkManager.shared.addBookmark(self.bookmark)
+							OCBookmarkManager.shared.addBookmark(bookmark)
 
 							self.loginViewController?.showFirstScreen()
 							//self.pushSuccessViewController()
@@ -244,6 +247,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	}
 
 	@objc func connectToBookmark() {
+		guard let bookmark = self.bookmark else { return }
 		self.loginViewController?.openBookmark(bookmark, closeHandler: {
 			self.loginViewController?.showFirstScreen()
 		})
@@ -251,6 +255,15 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		guard self.bookmark != nil else {
+			let alertController = ThemedAlertController(title: "Missing Profile URL", message: String(format: "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM.", profile.name ?? ""), preferredStyle: .alert)
+
+			alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+
+			self.loginViewController?.present(alertController, animated: true, completion: nil)
+			return
+		}
 
 		busySection = self.busySection(message: "Contacting server…".localized)
 
@@ -265,6 +278,8 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 	}
 
 	func determineSupportedAuthMethod(_ isInitialRequest: Bool = true) {
+		guard let bookmark = self.bookmark else { return }
+
 		let connection = OCConnection(bookmark: bookmark)
 		connection.prepareForSetup(options: nil, completionHandler: { (connectionIssue, _, _, preferredAuthenticationMethods) in
 			var proceed : Bool = true
@@ -304,7 +319,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 
 				if proceed, preferredAuthenticationMethods != nil, let authenticationMethod = useAuthMethod, let authenticationMethodClass = OCAuthenticationMethod.registeredAuthenticationMethod(forIdentifier: authenticationMethod) {
 
-					self.bookmark.authenticationMethodIdentifier = useAuthMethod
+					bookmark.authenticationMethodIdentifier = useAuthMethod
 					authMethodKnown = true
 
 					OnMainThread {
@@ -327,7 +342,7 @@ class StaticLoginSetupViewController : StaticLoginStepViewController {
 				}
 
 				if !authMethodKnown {
-					self.bookmark.authenticationMethodIdentifier = nil
+					bookmark.authenticationMethodIdentifier = nil
 
 					OnMainThread {
 						let alert = ThemedAlertController(title: "Server error".localized,

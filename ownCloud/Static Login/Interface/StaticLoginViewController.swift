@@ -203,7 +203,7 @@ class StaticLoginViewController: UIViewController, Themeable {
 			// Setup flow
 			if loginBundle.profiles.count > 1 {
 				// Profile setup selector
-				firstViewController = buildProfileSetupSelector(title: "Welcome")
+				firstViewController = buildProfileSetupSelector(title: "Welcome".localized)
 			} else {
 				// Single Profile setup
 				firstViewController = buildSetupViewController(for: loginBundle.profiles.first!)
