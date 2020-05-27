@@ -386,7 +386,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 							OCBookmarkManager.shared.removeBookmark(bookmark)
 
 							completion?()
-							self.ignoreServerListChanges = false
 							self.updateNoServerMessageVisibility()
 						}
 

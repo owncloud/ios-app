@@ -106,4 +106,10 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 	func openBookmark(_ bookmark: OCBookmark, closeHandler: (() -> Void)? = nil) {
 		self.staticLoginViewController?.openBookmark(bookmark, closeHandler: closeHandler)
 	}
+
+	override func updateNoServerMessageVisibility() {
+		if OCBookmarkManager.shared.bookmarks.count == 0 {
+			self.staticLoginViewController?.showFirstScreen()
+		}
+	}
 }
