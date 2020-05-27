@@ -214,6 +214,8 @@
 		DC080CF3238C92480044C5D2 /* OCLicenseAppStoreItem.m in Sources */ = {isa = PBXBuildFile; fileRef = DC080CE8238BD71F0044C5D2 /* OCLicenseAppStoreItem.m */; };
 		DC0B379420514E4700189B9A /* ServerListBookmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */; };
 		DC0B37972051681600189B9A /* ThemeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0B37962051681600189B9A /* ThemeButton.swift */; };
+		DC0BC3AB247E56E9005E136A /* AlertCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0BC3AA247E56E9005E136A /* AlertCollectionViewController.swift */; };
+		DC0BC3B2247E56FF005E136A /* AlertCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0BC3B1247E56FF005E136A /* AlertCollectionViewCell.swift */; };
 		DC136582208223F000FC0F60 /* OCBookmark+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */; };
 		DC18898E218A773700CFB3F9 /* ownCloudMocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC0196A620F754CA00C41B78 /* ownCloudMocking.framework */; };
 		DC1B2707209CF0D3004715E1 /* IssuesDismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1B26FE209CF0D2004715E1 /* IssuesDismissalAnimator.swift */; };
@@ -994,6 +996,8 @@
 		DC0B379320514E4700189B9A /* ServerListBookmarkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListBookmarkCell.swift; sourceTree = "<group>"; };
 		DC0B37952051541C00189B9A /* ownCloud.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ownCloud.entitlements; sourceTree = "<group>"; };
 		DC0B37962051681600189B9A /* ThemeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeButton.swift; sourceTree = "<group>"; };
+		DC0BC3AA247E56E9005E136A /* AlertCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertCollectionViewController.swift; sourceTree = "<group>"; };
+		DC0BC3B1247E56FF005E136A /* AlertCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertCollectionViewCell.swift; sourceTree = "<group>"; };
 		DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCBookmark+Extension.swift"; sourceTree = "<group>"; };
 		DC1AC7CF2319ADAE002B7892 /* ScanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanViewController.swift; sourceTree = "<group>"; };
 		DC1B26FE209CF0D2004715E1 /* IssuesDismissalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssuesDismissalAnimator.swift; sourceTree = "<group>"; };
@@ -2255,6 +2259,8 @@
 			children = (
 				DCC832F7242CC94D00153F8C /* AlertView.swift */,
 				DCC83303242CF3AC00153F8C /* AlertViewController.swift */,
+				DC0BC3B1247E56FF005E136A /* AlertCollectionViewCell.swift */,
+				DC0BC3AA247E56E9005E136A /* AlertCollectionViewController.swift */,
 				DCC832F5242CC5F700153F8C /* CardIssueMessagePresenter.swift */,
 				DCC832DA242BB44F00153F8C /* SyncIssueMessagePresenter.swift */,
 				DC9C1AEB247C76470067895A /* MessageGroupCell.swift */,
@@ -3317,6 +3323,7 @@
 				4C7295D8228C384E00FA4E68 /* LogFilesViewController.swift in Sources */,
 				DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */,
 				4CB8ADE622DF6C2B00F1FEBC /* CIImage+Extensions.swift in Sources */,
+				DC0BC3B2247E56FF005E136A /* AlertCollectionViewCell.swift in Sources */,
 				DC33939D22E076E300DD3DA4 /* MakeUnavailableOfflineAction.swift in Sources */,
 				3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */,
 				6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */,
@@ -3433,6 +3440,7 @@
 				DC85493421831B0B00782BA8 /* Tools.swift in Sources */,
 				DCFED972208095E200A2D984 /* ClientItemCell.swift in Sources */,
 				39E98B452279ACF5009911F1 /* PublicLinkEditTableViewController.swift in Sources */,
+				DC0BC3AB247E56E9005E136A /* AlertCollectionViewController.swift in Sources */,
 				4C63F0E5231A91230088E8CA /* UIImageView+Thumbnails.swift in Sources */,
 				39265BB223D9987500B0C4CA /* MediaEditingAction.swift in Sources */,
 				3998F5D522411EDF00B66713 /* BorderedLabel.swift in Sources */,
