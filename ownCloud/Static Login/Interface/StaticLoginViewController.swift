@@ -183,6 +183,7 @@ class StaticLoginViewController: UIViewController, Themeable {
 		}
 
 		self.navigationController?.toolbar.isTranslucent = false
+		self.toolbarShown = true
 	}
 
 	override func viewWillAppear(_ animated: Bool) {

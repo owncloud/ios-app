@@ -30,8 +30,6 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		staticLoginViewController?.toolbarShown = true
-
 		if VendorServices.shared.canAddAccount {
 			let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addAccount))
 			addServerBarButtonItem.accessibilityLabel = "Add account".localized
@@ -51,8 +49,6 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 			self.staticLoginViewController?.toolbarItems = items
 		}
 		self.staticLoginViewController?.toolbarItems = items
-
-		staticLoginViewController?.toolbarShown = false
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
