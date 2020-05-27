@@ -25,47 +25,45 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
-		self.tableView.register(ThemeTableViewCell.self, forCellReuseIdentifier: "login-cell")
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
 		staticLoginViewController?.toolbarShown = true
+
+		if VendorServices.shared.canAddAccount {
+			let addServerBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.add, target: self, action: #selector(addAccount))
+			addServerBarButtonItem.accessibilityLabel = "Add account".localized
+			addServerBarButtonItem.accessibilityIdentifier = "addAccount"
+			var items = self.staticLoginViewController?.toolbarItems
+			items?.insert(addServerBarButtonItem, at: 0)
+			self.staticLoginViewController?.toolbarItems = items
+		}
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 
+		var items = self.staticLoginViewController?.toolbarItems
+		if items?.count ?? 0 > 0, items?.first?.accessibilityIdentifier == "addAccount" {
+			items?.remove(at: 0)
+			self.staticLoginViewController?.toolbarItems = items
+		}
+		self.staticLoginViewController?.toolbarItems = items
+
 		staticLoginViewController?.toolbarShown = false
 	}
 
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
-		if OCBookmarkManager.shared.bookmarks.count == 0 {
-			return 0
-		}
-
-		if VendorServices.shared.canAddAccount {
-			return super.tableView(tableView, numberOfRowsInSection: section) + 1
-		}
-
-		return super.tableView(tableView, numberOfRowsInSection: section)
-	}
-
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "login-cell", for: indexPath) as? ThemeTableViewCell else {
-			return ThemeTableViewCell()
+		guard let bookmarkCell = self.tableView.dequeueReusableCell(withIdentifier: "bookmark-cell", for: indexPath) as? ServerListBookmarkCell else {
+			return ServerListBookmarkCell()
 		}
 
-		if indexPath.row < OCBookmarkManager.shared.bookmarks.count {
-			if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-				bookmarkCell.textLabel?.text = bookmark.shortName
-			}
-		} else if VendorServices.shared.canAddAccount {
-			bookmarkCell.textLabel?.text = "Add account".localized
-			bookmarkCell.accessoryType = .disclosureIndicator
+		if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
+			bookmarkCell.titleLabel.text =  bookmark.shortName
+			bookmarkCell.detailLabel.text = bookmark.displayName ?? bookmark.userName
+			bookmarkCell.accessibilityIdentifier = "server-bookmark-cell"
 		}
 
 		return bookmarkCell
@@ -79,13 +77,9 @@ class StaticLoginServerListViewController: ServerListTableViewController {
 		return headerView
 	}
 
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if indexPath.row < OCBookmarkManager.shared.bookmarks.count {
-			super.tableView(tableView, didSelectRowAt: indexPath)
-		} else {
-			if let viewController = staticLoginViewController?.buildProfileSetupSelector(title: "Add account".localized, includeCancelOption: true) {
-				self.navigationController?.pushViewController(viewController, animated: false)
-			}
+	@objc func addAccount() {
+		if let viewController = staticLoginViewController?.buildProfileSetupSelector(title: "Add account".localized, includeCancelOption: true) {
+			self.navigationController?.pushViewController(viewController, animated: false)
 		}
 	}
 
