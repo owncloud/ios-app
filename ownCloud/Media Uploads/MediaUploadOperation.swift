@@ -54,7 +54,7 @@ class MediaUploadOperation : Operation {
 			}
 		}
 
-		// Cancellation check-point #1
+		// Cancellation checkpoint #1
 		if self.isCancelled {
 			return
 		}
@@ -66,6 +66,11 @@ class MediaUploadOperation : Operation {
 		guard let asset = self.fetchAsset(with: assetId) else {
 			// Otherwise remove the job
 			removeUploadJob(with: path)
+			return
+		}
+
+		// Cancellation checkpoint #2
+		if self.isCancelled {
 			return
 		}
 
@@ -83,7 +88,7 @@ class MediaUploadOperation : Operation {
 				return
 			}
 
-			// Cancellation checkpoint #2
+			// Cancellation checkpoint #3
 			if self.isCancelled {
 				return
 			}

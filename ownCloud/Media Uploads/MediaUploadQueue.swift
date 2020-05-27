@@ -51,6 +51,7 @@ class MediaUploadQueue : OCActivitySource {
 	func setup() {
 		let mediaCellularSwitch = OCCellularSwitch(identifier: MediaUploadQueue.mediaUploadCellularSwitchIdentifier, localizedName: "Media Upload".localized, defaultValue: true, maximumTransferSize: 0)
 		OCCellularManager.shared.registerSwitch(mediaCellularSwitch)
+		importQueue.qualityOfService = .utility
 	}
 
 	func addUpload(_ asset:PHAsset, for bookmark:OCBookmark, at path:String) {
