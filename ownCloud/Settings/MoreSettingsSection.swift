@@ -59,8 +59,9 @@ class MoreSettingsSection: SettingsSection {
 	private func createRows() {
 
 		helpRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-			let url = VendorServices.shared.helpURL
-			self?.openSFWebViewWithConfirmation(for: url!)
+			if let url = VendorServices.shared.helpURL {
+				self?.openSFWebViewWithConfirmation(for: url)
+			}
 		}, title: "Help".localized, accessoryType: .disclosureIndicator, identifier: "help")
 
 		sendFeedbackRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
@@ -76,8 +77,9 @@ class MoreSettingsSection: SettingsSection {
 		}, title: "Recommend to a friend".localized, accessoryType: .disclosureIndicator, identifier: "recommend-friend")
 
 		privacyPolicyRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
-			let url = VendorServices.shared.privacyURL
-			self?.openSFWebViewWithConfirmation(for: url!)
+			if let url = VendorServices.shared.privacyURL {
+				self?.openSFWebViewWithConfirmation(for: url)
+			}
 		}, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator, identifier: "privacy-policy")
 
 		termsOfUseRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
@@ -130,7 +132,11 @@ class MoreSettingsSection: SettingsSection {
 
 	// MARK: - Update UI
 	func updateUI() {
-		var rows = [helpRow!]
+		var rows : [StaticTableViewRow] = []
+
+		if VendorServices.shared.helpURL != nil {
+			rows.append(helpRow!)
+		}
 
 		if let sendFeedbackEnabled = self.classSetting(forOCClassSettingsKey: .sendFeedbackEnabled) as? Bool, sendFeedbackEnabled {
 			rows.append(sendFeedbackRow!)
@@ -140,7 +146,11 @@ class MoreSettingsSection: SettingsSection {
 			rows.append(recommendRow!)
 		}
 
-		rows.append(contentsOf: [privacyPolicyRow!, termsOfUseRow!, acknowledgementsRow!])
+		if VendorServices.shared.privacyURL != nil {
+			rows.append(privacyPolicyRow!)
+		}
+
+		rows.append(contentsOf: [termsOfUseRow!, acknowledgementsRow!])
 
 		add(rows: rows)
 	}

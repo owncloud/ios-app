@@ -65,16 +65,18 @@ class VendorServices : NSObject {
 	}
 
 	var helpURL: URL? {
-		if let themingValues = self.brandingProperties, let urls = themingValues["URLs"] as? NSDictionary, let help = urls["Help"] as? String {
-			return URL(string: help)
+		if let themingValues = self.brandingProperties {
+			guard let urls = themingValues["URLs"] as? NSDictionary, let help = urls["Help"] as? String, let url = URL(string: help) else { return nil }
+			return url
 		}
 
 		return URL(string: "https://www.owncloud.com/help")
 	}
 
 	var privacyURL: URL? {
-		if let themingValues = self.brandingProperties, let urls = themingValues["URLs"] as? NSDictionary, let privacy = urls["Privacy"] as? String {
-			return URL(string: privacy)
+		if let themingValues = self.brandingProperties {
+			guard let urls = themingValues["URLs"] as? NSDictionary, let privacy = urls["Privacy"] as? String, let url = URL(string: privacy) else { return nil }
+			return url
 		}
 
 		return URL(string: "https://owncloud.org/privacy-policy/")
