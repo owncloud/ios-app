@@ -287,6 +287,11 @@
 "No actions available" = "No actions available";
 "No actions are available for this folder, possibly because of missing permissions." = "No actions are available for this folder, possibly because of missing permissions.";
 
+"Close actions menu" = "Close actions menu";
+
+"Favorite item" = "Favorite item";
+"Unfavorite item" = "Unfavorite item";
+
 /* Directory Picker Messages */
 "Move here" = "Move here";
 
@@ -297,6 +302,7 @@
 "Could not get the picture" = "Could not get the picture";
 "Downloading" = "Downloading";
 "File couldn't be opened" = "File couldn't be opened";
+"Connecting..." = "Connecting...";
 
 /* PDF Viewer */
 "Resume" = "Resume";
@@ -595,3 +601,13 @@
 "trial" = "trial";
 "purchase" = "purchase";
 "subscription" = "subscription";
+
+/* Misc. accessibility */
+"Enter multiple selection" = "Enter multiple selection";
+
+/* Universal Links */
+"Resolving link…" = "Resolving link…";
+"Link resolution failed" = "Link resolution failed";
+"Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.";
+"Couldn't resolve a private link since the item is not known to the server." = "Couldn't resolve a private link since the item is not known to the server.";
+"Link points to an account bookmark which is not configured in the app." = "Link points to an account bookmark which is not configured in the app.";

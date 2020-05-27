@@ -429,9 +429,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			activityIndicator.startAnimating()
 		}
 
-		if #available(iOS 13.0, *) {
-			view.window?.windowScene?.userActivity = bookmark.openAccountUserActivity
-		}
 		self.setLastSelectedBookmark(bookmark, openedBlock: {
 			activityIndicator.stopAnimating()
 			bookmarkRow?.accessoryView = bookmarkRowAccessoryView
