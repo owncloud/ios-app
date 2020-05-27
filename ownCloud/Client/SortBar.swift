@@ -177,6 +177,7 @@ class SortBar: UIView, Themeable, UIPopoverPresentationControllerDelegate {
 			selectButton.setImage(UIImage(named: "select"), for: .normal)
 			selectButton.tintColor = Theme.shared.activeCollection.favoriteEnabledColor
 			selectButton.addTarget(self, action: #selector(toggleSelectMode), for: .touchUpInside)
+			selectButton.accessibilityLabel = "Enter multiple selection".localized
 			if #available(iOS 13.4, *) {
 				selectButton.isPointerInteractionEnabled = true
 			}
