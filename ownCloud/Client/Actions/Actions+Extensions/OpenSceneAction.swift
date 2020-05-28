@@ -57,6 +57,6 @@ class OpenSceneAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		return UIImage(systemName: "uiwindow.split.2x1")?.tinted(with: Theme.shared.activeCollection.tintColor)
+		return UIImage(systemName: "uiwindow.split.2x1")?.withRenderingMode(.alwaysTemplate)
 	}
 }

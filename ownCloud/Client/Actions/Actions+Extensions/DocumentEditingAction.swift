@@ -93,7 +93,7 @@ class DocumentEditingAction : Action {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .moreItem || location == .moreFolder || location == .contextMenuItem {
-			return UIImage(systemName: "pencil.tip.crop.circle")?.tinted(with: Theme.shared.activeCollection.tintColor)
+			return UIImage(systemName: "pencil.tip.crop.circle")?.withRenderingMode(.alwaysTemplate)
 		}
 
 		return nil

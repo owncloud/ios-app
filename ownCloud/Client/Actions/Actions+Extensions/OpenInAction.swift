@@ -123,7 +123,7 @@ class OpenInAction: Action {
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .moreItem || location == .moreFolder || location == .contextMenuItem {
 			if #available(iOS 13.0, *) {
-				return UIImage(systemName: "square.and.arrow.up")
+				return UIImage(systemName: "square.and.arrow.up")?.withRenderingMode(.alwaysTemplate)
 			}
 
 			return UIImage(named: "open-in")

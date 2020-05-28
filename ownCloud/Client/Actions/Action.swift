@@ -368,12 +368,10 @@ class Action : NSObject {
 	@available(iOS 13.0, *)
 	func provideUIMenuAction() -> UIAction? {
 		var attribute = UIMenuElement.Attributes(rawValue: 0)
-		var tintColor = Theme.shared.activeCollection.tableRowColors.labelColor
 		if actionExtension.category == .destructive {
 			attribute = .destructive
-			tintColor = UIColor.red
 		}
-		return UIAction(title: self.actionExtension.name, image: self.icon?.tinted(with: tintColor), attributes: attribute) { _ in
+		return UIAction(title: self.actionExtension.name, image: self.icon, attributes: attribute) { _ in
 			self.perform()
 		}
 	}
