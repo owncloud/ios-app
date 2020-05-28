@@ -91,24 +91,27 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 				let fileName = "Photo-\(timeStamp)"
 
 				let ext = preferHEIC ? "heic" : "jpg"
-				let uti = preferHEIC ? AVFileType.heic as CFString : kUTTypeJPEG
+				let uti = preferHEIC ? AVFileType.heic : AVFileType.jpg
 				outputURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).appendingPathExtension(ext)
 
 				guard let url = outputURL else { return }
 
-				// For HEIC use AVFileType.heic as CFString instead of kUTTypeJPEG
-				let destination = CGImageDestinationCreateWithURL(url as CFURL, uti, 1, nil)
+				Log.debug(tagged: ["CAMERA_UPLOAD"], "Creating CGImageDestination with URL \(url)")
 
-				guard let dst = destination,
-					let cgImage = image?.cgImage,
-					let metaData = info[.mediaMetadata] as? NSDictionary else {
-						outputURL = nil
-						return
+				let destination = CGImageDestinationCreateWithURL(url as CFURL, uti as CFString, 1, nil)
+
+				guard let dst = destination, let cgImage = image?.cgImage else {
+					Log.error(tagged: ["CAMERA_UPLOAD"], "Destination or image is not valid")
+					outputURL = nil
+					return
 				}
+
+				let metaData = info[.mediaMetadata] as? NSDictionary
 
 				CGImageDestinationAddImage(dst, cgImage, metaData)
 
 				if !CGImageDestinationFinalize(dst) {
+					Log.error(tagged: ["CAMERA_UPLOAD"], "Couldn't finish writing image")
 					outputURL = nil
 				}
 
@@ -124,6 +127,7 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 
 					let avAsset = AVAsset(url: videoURL)
 					if !avAsset.exportVideo(targetURL: url, type: .mp4) {
+						Log.error(tagged: ["CAMERA_UPLOAD"], "Failed to export video as MP4")
 						outputURL = nil
 					}
 
