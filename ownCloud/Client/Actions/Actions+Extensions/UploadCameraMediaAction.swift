@@ -28,6 +28,7 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 
 	let imagePickerController = UIImagePickerController()
 	var completionHandler: CameraCaptureCompletionHandler?
+	var parentViewController: UIViewController?
 
 	static private let dateFormatter: DateFormatter = {
 		let dateFormatter: DateFormatter =  DateFormatter()
@@ -38,6 +39,7 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 
 	func present(on viewController:UIViewController, with completion:@escaping CameraCaptureCompletionHandler) {
 		self.completionHandler = completion
+		self.parentViewController = viewController
 
 		// Check if camera is available
 		guard UIImagePickerController.isSourceTypeAvailable(.camera),
@@ -55,7 +57,10 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 	}
 
 	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+
 		imagePickerController.dismiss(animated: true)
+
+		let hud = ProgressHUDViewController(on: self.parentViewController, label: "Saving".localized)
 
 		var image: UIImage?
 		var outputURL: URL?
@@ -74,6 +79,7 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 		OnBackgroundQueue {
 			defer {
 				OnMainThread {
+					hud.dismiss()
 					self.completionHandler?(outputURL, alternativeName, deleteImportedFile)
 				}
 			}
