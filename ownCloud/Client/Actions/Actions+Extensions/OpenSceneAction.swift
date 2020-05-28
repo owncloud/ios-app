@@ -25,7 +25,7 @@ class OpenSceneAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openscene") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Open in a new Window".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "O" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .shift] }
 
@@ -34,7 +34,7 @@ class OpenSceneAction: Action {
 
 		if UIDevice.current.isIpad() {
 			if forContext.items.count == 1 {
-				return .first
+				return .beforeMiddle
 			}
 		}
 

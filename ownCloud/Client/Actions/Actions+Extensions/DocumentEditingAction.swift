@@ -25,7 +25,7 @@ class DocumentEditingAction : Action {
 	override class var name : String? { return "Markup".localized }
 	override class var keyCommand : String? { return "E" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut, .contextMenuItem] }
 	class var supportedMimeTypes : [String] { return ["image", "pdf"] }
 	class var excludedMimeTypes : [String] { return ["image/x-dcraw", "image/heic"] }
 	override class var licenseRequirements: LicenseRequirements? { return LicenseRequirements(feature: .documentMarkup) }
@@ -92,7 +92,7 @@ class DocumentEditingAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder {
+		if location == .moreItem || location == .moreFolder || location == .contextMenuItem {
 			return UIImage(systemName: "pencil.tip.crop.circle")?.tinted(with: Theme.shared.activeCollection.tintColor)
 		}
 

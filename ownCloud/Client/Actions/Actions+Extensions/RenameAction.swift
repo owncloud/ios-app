@@ -24,7 +24,7 @@ class RenameAction : Action {
 	override class var name : String? { return "Rename".localized }
 	override class var keyCommand : String? { return "\r" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut, .contextMenuItem] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -85,7 +85,7 @@ class RenameAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder {
+		if location == .moreItem || location == .moreFolder || location == .contextMenuItem {
 			return UIImage(named: "folder")
 		}
 
