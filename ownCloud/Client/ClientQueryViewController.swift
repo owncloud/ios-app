@@ -296,7 +296,7 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		})
 
 		let menuItems = actions.compactMap({$0.provideUIMenuAction()})
-		return UIMenu(title: item.name ?? "", children: menuItems)
+		return UIMenu(title: "", children: menuItems)
 	}
 
 	func updateToolbarItemsForDropping(_ draggingValues: [OCItemDraggingValue]) {
