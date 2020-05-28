@@ -124,8 +124,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 
 		// Set background refresh interval
-		UIApplication.shared.setMinimumBackgroundFetchInterval(
-			UIApplication.backgroundFetchIntervalMinimum)
+		guard #available(iOS 13, *) else {
+			UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+			return true
+		}
 
 		return true
 	}

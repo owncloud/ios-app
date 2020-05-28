@@ -176,7 +176,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 		activityIndicatorView.startAnimating()
 
-		OnBackgroundQueue {
+		DispatchQueue.global(qos: .utility).async {
 			// Fetch smart albums
 			fetchCollections(.smartAlbum)
 

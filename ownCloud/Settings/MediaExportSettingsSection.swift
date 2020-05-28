@@ -28,8 +28,6 @@ extension UserDefaults {
 		case PreserveOriginalFilenames = "preserve-original-filenames"
 	}
 
-	static let MediaUploadSettingsChangedNotification = NSNotification.Name("settings.media-upload-settings-changed")
-
 	public var convertHeic: Bool {
 		set {
 			self.set(newValue, forKey: MediaExportKeys.ConvertHEICtoJPEGKey.rawValue)

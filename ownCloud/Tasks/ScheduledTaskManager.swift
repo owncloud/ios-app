@@ -7,7 +7,7 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
+* Copyright (C) 2020, ownCloud GmbH.
 *
 * This code is covered by the GNU Public License Version 3.
 *
@@ -21,6 +21,8 @@ import UIKit
 import Network
 import Photos
 import ownCloudSDK
+import BackgroundTasks
+import CoreLocation
 
 class ScheduledTaskManager : NSObject {
 	enum State {
@@ -106,6 +108,10 @@ class ScheduledTaskManager : NSObject {
 		}
 	}
 
+	var activeProcessingTask: Any?
+
+	let locationManager = CLLocationManager()
+
 	private override init() {
 		super.init()
 	}
@@ -119,6 +125,7 @@ class ScheduledTaskManager : NSObject {
 	}
 
 	func setup() {
+
 		// Monitor app states
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationStateChange), name: UIApplication.didEnterBackgroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationStateChange), name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -140,6 +147,24 @@ class ScheduledTaskManager : NSObject {
 		checkPowerState()
 
 		startMonitoringPhotoLibraryChangesIfNecessary()
+
+		locationManager.delegate = self
+
+		startLocationMonitoringIfAuthorized()
+
+		if #available(iOS 13, *) {
+			BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.owncloud.background-task.instant-media-refresh", using: nil) { (task) in
+				if let refreshTask = task as? BGAppRefreshTask {
+					self.handleMediaRefresh(task: refreshTask)
+				}
+			}
+
+			BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.owncloud.background-task.instant-media-upload", using: nil) { (task) in
+				if let processingTask = task as? BGProcessingTask {
+					self.handleMediaUpload(task: processingTask)
+				}
+			}
+		}
 	}
 
 	// MARK: - Notifications handling
@@ -150,8 +175,9 @@ class ScheduledTaskManager : NSObject {
 			state = .foreground
 		case UIApplication.didEnterBackgroundNotification:
 			state = .background
-			// TODO: Find a better way how to prevent multiple invocation of instant upload tasks
-			photoLibraryChangeDetected = false
+			if #available(iOS 13, *) {
+				scheduleMediaRefreshTask()
+			}
 		default:
 			break
 		}
@@ -166,12 +192,13 @@ class ScheduledTaskManager : NSObject {
 			startMonitoringPhotoLibraryChangesIfNecessary()
 		} else {
 			stopMonitoringPhotoLibraryChanges()
+			stopLocationMonitoring()
 		}
 	}
 
 	// MARK: - Background fetching
 
-	func backgroundFetch(completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+	func backgroundFetch(completionHandler: ((UIBackgroundFetchResult) -> Void)? = nil) {
 		self.state = .backgroundFetch
 		scheduleTasks(fetchCompletion: completionHandler)
 	}
@@ -184,8 +211,10 @@ class ScheduledTaskManager : NSObject {
 
 		// Add requirements
 		var requirements = [String : Bool]()
+		var preferences = [String : Bool]()
+
 		if self.wifiDetected {
-			requirements[ScheduledTaskAction.FeatureKeys.runOnWifi] = true
+			preferences[ScheduledTaskAction.FeatureKeys.runOnWifi] = true
 		}
 		if self.lowBatteryDetected {
 			requirements[ScheduledTaskAction.FeatureKeys.runOnLowBattery] = true
@@ -197,13 +226,15 @@ class ScheduledTaskManager : NSObject {
 			requirements[ScheduledTaskAction.FeatureKeys.photoLibraryChanged] = true
 		}
 
-		return OCExtensionContext(location: location, requirements: requirements, preferences: nil)
+		return OCExtensionContext(location: location, requirements: requirements, preferences: preferences)
 	}
 
 	private func scheduleTasks(fetchCompletion:((UIBackgroundFetchResult) -> Void)? = nil, completion:((_ scheduledTaskCount:Int) -> Void)? = nil) {
 
 		let state = self.state
 		let context = self.getCurrentContext()
+
+		photoLibraryChangeDetected = false
 
 		// Find a task to run
 		if let matches = try? OCExtensionManager.shared.provideExtensions(for: context) {
@@ -230,12 +261,20 @@ class ScheduledTaskManager : NSObject {
 					}
 
 					let backgroundExecution = state == .background
-					if backgroundExecution {
-						task.runUntil = Date().addingTimeInterval(UIApplication.shared.backgroundTimeRemaining)
-					}
+
 					if state == .backgroundFetch {
 						bgFetchGroup.enter()
 					}
+
+					if #available(iOS 13, *) {
+						if let processingTask = activeProcessingTask as? BGProcessingTask, let instantUploadTask = task as? InstantMediaUploadTaskExtension {
+							instantUploadTask.completion = { _ in
+								Log.log(tagged: ["TASK_MANAGER"], "BGProcessingTask completed")
+								processingTask.setTaskCompleted(success: true)
+							}
+						}
+					}
+
 					queue.async {
 						task.run(background: backgroundExecution)
 					}
@@ -271,6 +310,66 @@ class ScheduledTaskManager : NSObject {
 	}
 }
 
+// MARK: - Background tasks handling for iOS >= 13
+
+@available(iOS 13, *)
+extension ScheduledTaskManager {
+
+	static let backgroundRefreshInterval = TimeInterval(20 * 60)
+
+	func scheduleMediaRefreshTask() {
+
+        let request = BGAppRefreshTaskRequest(identifier: "com.owncloud.background-task.instant-media-refresh")
+		request.earliestBeginDate = Date(timeIntervalSinceNow: ScheduledTaskManager.backgroundRefreshInterval)
+		do {
+			try BGTaskScheduler.shared.submit(request)
+		} catch {
+			Log.error(tagged: ["TASK_MANAGER"], "Failed to submit BGAppRefreshTask request")
+		}
+	}
+
+	func scheduleMediaUploadTask() {
+        let request = BGProcessingTaskRequest(identifier: "com.owncloud.background-task.instant-media-upload")
+		// At least to do export of media assets and import them into sync engine, we don't need connectivity
+        request.requiresNetworkConnectivity = false
+		do {
+			try BGTaskScheduler.shared.submit(request)
+		} catch {
+			Log.error(tagged: ["TASK_MANAGER"], "Failed to submit BGProcessingTask request")
+		}
+	}
+
+	func handleMediaRefresh(task: BGAppRefreshTask) {
+
+		Log.log(tagged: ["TASK_MANAGER"], "BGAppRefreshTask launched")
+
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
+
+		self.backgroundFetch()
+
+		if shallMonitorPhotoLibraryChanges() && userDefaults.backgroundMediaUploadsEnabled {
+
+			if checkForNewAssets() {
+				scheduleMediaUploadTask()
+			}
+
+			// Schedule the next refresh
+			scheduleMediaRefreshTask()
+		}
+		task.setTaskCompleted(success: true)
+	}
+
+	func handleMediaUpload(task: BGProcessingTask) {
+		Log.log(tagged: ["TASK_MANAGER"], "BGProcessingTask launched")
+
+		// This will kick-in task scheduling
+		activeProcessingTask = task
+		photoLibraryChangeDetected = true
+	}
+}
+
+// MARK: - PHPhotoLibraryChangeObserver implementation
+
 extension ScheduledTaskManager : PHPhotoLibraryChangeObserver {
 
 	// MARK: - PHPhotoLibraryChangeObserver
@@ -303,5 +402,73 @@ extension ScheduledTaskManager : PHPhotoLibraryChangeObserver {
 			PHPhotoLibrary.shared().unregisterChangeObserver(self)
 			monitoringPhotoLibrary = false
 		}
+	}
+
+	private func checkForNewAssets() -> Bool {
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return false }
+
+		// Get timestamps for last successfully uploaded media assets
+		var lastUploadedMediaTimestamps = [Date]()
+		if let timestamp = userDefaults.instantUploadPhotosAfter {
+			lastUploadedMediaTimestamps.append(timestamp)
+		}
+		if let timestamp = userDefaults.instantUploadVideosAfter {
+			lastUploadedMediaTimestamps.append(timestamp)
+		}
+
+		// We need at least one earlier timestamp, to check if there are new media assets available
+		guard lastUploadedMediaTimestamps.count > 0 else { return false }
+		lastUploadedMediaTimestamps.sort(by: >)
+		let earliestTimestamp = lastUploadedMediaTimestamps.first!
+
+		// At least one not yet uploaded media asset found?
+		if let result = PHAsset.fetchAssetsFromCameraRoll(with: [.image, .video], createdAfter: earliestTimestamp, fetchLimit: 1), result.count > 0 {
+			return true
+		}
+
+		return false
+	}
+}
+
+extension ScheduledTaskManager : CLLocationManagerDelegate {
+
+	@discardableResult func startLocationMonitoringIfAuthorized() -> Bool {
+		if CLLocationManager.authorizationStatus() == .authorizedAlways {
+			self.locationManager.startMonitoringSignificantLocationChanges()
+			return true
+		} else {
+			return false
+		}
+	}
+
+	func stopLocationMonitoring() {
+		if CLLocationManager.authorizationStatus() == .authorizedAlways || CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+			locationManager.stopMonitoringSignificantLocationChanges()
+		}
+	}
+
+	func requestLocationAuthorization() -> Bool {
+		let currentStatus = CLLocationManager.authorizationStatus()
+		if currentStatus == .notDetermined || currentStatus == .authorizedWhenInUse {
+			self.locationManager.requestAlwaysAuthorization()
+			return true
+		}
+		return false
+	}
+
+	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+		if shallMonitorPhotoLibraryChanges() {
+			if checkForNewAssets() {
+				photoLibraryChangeDetected = true
+			}
+		}
+	}
+
+	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+		guard shallMonitorPhotoLibraryChanges() == true else { return }
+
+		guard status == .authorizedAlways else { return }
+
+		locationManager.startMonitoringSignificantLocationChanges()
 	}
 }

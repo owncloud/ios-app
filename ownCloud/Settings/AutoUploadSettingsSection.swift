@@ -23,6 +23,8 @@ import ownCloudAppShared
 
 extension UserDefaults {
 
+	static let MediaUploadSettingsChangedNotification = NSNotification.Name("settings.media-upload-settings-changed")
+
 	enum AutoUploadKeys : String {
 		case InstantUploadPhotosKey = "instant-upload-photos"
 		case InstantUploadVideosKey = "instant-upload-videos"
@@ -90,6 +92,9 @@ extension UserDefaults {
 
 		set {
 			self.set(newValue, forKey: AutoUploadKeys.InstantPhotoUploadPathKey.rawValue)
+			if newValue == nil {
+				self.removeObject(forKey: AutoUploadKeys.InstantLegacyUploadPathKey.rawValue)
+			}
 		}
 
 		get {
@@ -101,6 +106,9 @@ extension UserDefaults {
 
 		set {
 			self.set(newValue, forKey: AutoUploadKeys.InstantVideoUploadPathKey.rawValue)
+			if newValue == nil {
+				self.removeObject(forKey: AutoUploadKeys.InstantLegacyUploadPathKey.rawValue)
+			}
 		}
 
 		get {
@@ -178,6 +186,14 @@ class AutoUploadSettingsSection: SettingsSection {
 				}
 				}, title: "Auto Upload Videos".localized, value: self.userDefaults.instantUploadVideos)
 
+			instantUploadPhotosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
+				if let convertSwitch = sender as? UISwitch {
+					self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (switchState) in
+						self?.setupPhotoAutoUpload(enabled: switchState)
+					})
+				}
+				}, title: "Auto Upload Photos".localized, value: self.userDefaults.instantUploadPhotos)
+
 			photoBookmarkAndPathSelectionRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
 				self?.showAccountSelectionViewController(for: .photo)
 				}, title: "Photo upload path".localized, subtitle: "", accessoryType: .disclosureIndicator, identifier: AutoUploadSettingsSection.photoUploadBookmarkAndPathSelectionRowIdentifier)
@@ -194,24 +210,29 @@ class AutoUploadSettingsSection: SettingsSection {
 	}
 
 	private func setupPhotoAutoUpload(enabled:Bool) {
-		userDefaults.instantUploadPhotos = enabled
-		userDefaults.instantUploadPhotosAfter = enabled ? Date() : nil
 
-		if enabled == true, userDefaults.instantPhotoUploadPath == nil || userDefaults.instantPhotoUploadBookmarkUUID == nil {
-			showAccountSelectionViewController(for: .photo)
-		} else {
+		if !enabled {
+			userDefaults.resetInstantPhotoUploadConfiguration()
 			postSettingsChangedNotification()
+		} else {
+			userDefaults.instantUploadPhotos = true
+			userDefaults.instantUploadPhotosAfter = Date()
+			if userDefaults.instantPhotoUploadPath == nil || userDefaults.instantPhotoUploadBookmarkUUID == nil {
+				showAccountSelectionViewController(for: .photo)
+			}
 		}
 	}
 
 	private func setupVideoAutoUpload(enabled:Bool) {
-		userDefaults.instantUploadVideos = enabled
-		userDefaults.instantUploadVideosAfter = enabled ? Date() : nil
-
-		if enabled == true, userDefaults.instantVideoUploadPath == nil || userDefaults.instantVideoUploadBookmarkUUID == nil {
-			showAccountSelectionViewController(for: .video)
-		} else {
+		if !enabled {
+			userDefaults.resetInstantVideoUploadConfiguration()
 			postSettingsChangedNotification()
+		} else {
+			userDefaults.instantUploadVideos = true
+			userDefaults.instantUploadVideosAfter = Date()
+			if userDefaults.instantVideoUploadPath == nil || userDefaults.instantVideoUploadBookmarkUUID == nil {
+				showAccountSelectionViewController(for: .video)
+			}
 		}
 	}
 

@@ -19,6 +19,7 @@
 import Foundation
 import ownCloudSDK
 import Photos
+import UserNotifications
 
 class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
@@ -27,7 +28,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 	}
 
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.instant_media_upload") }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.appDidComeToForeground] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.appDidComeToForeground, .appDidBecomeBackgrounded] }
 	override class var features : [String : Any]? { return [ FeatureKeys.photoLibraryChanged : true] }
 
 	private var uploadDirectoryTracking: OCCoreItemTracking?
@@ -35,10 +36,12 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 	override func run(background:Bool) {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
+		var enqueuedAssetCount = 0
+
 		if  userDefaults.instantUploadPhotos == true {
 			if let bookmarkUUID = userDefaults.instantPhotoUploadBookmarkUUID, let path = userDefaults.instantPhotoUploadPath {
 				if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
-					uploadPhotoAssets(for: bookmark, at: path)
+					enqueuedAssetCount += uploadPhotoAssets(for: bookmark, at: path)
 				}
 			} else {
 				Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant photo upload enabled, but bookmark or path not configured")
@@ -48,16 +51,45 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 		if  userDefaults.instantUploadVideos == true {
 			if let bookmarkUUID = userDefaults.instantVideoUploadBookmarkUUID, let path = userDefaults.instantVideoUploadPath {
 				if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
-					uploadVideoAssets(for: bookmark, at: path)
+					enqueuedAssetCount += uploadVideoAssets(for: bookmark, at: path)
 				}
 			} else {
 				Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant video upload enabled, but bookmark or path not configured")
 			}
 		}
+
+		if background == true && enqueuedAssetCount > 0 {
+
+			func postMediaUploadsEnqueudNotification() {
+				let center = UNUserNotificationCenter.current()
+				let content = UNMutableNotificationContent()
+
+				content.title = "Background uploads".localized
+				content.body = String(format: "Scheduled upload of %ld media assets".localized, enqueuedAssetCount)
+
+				let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.0, repeats: false)
+
+				let identifier = "com.ownloud.instant-media-upload-notification"
+				let request = UNNotificationRequest(identifier: identifier,
+							  content: content, trigger: trigger)
+				center.add(request, withCompletionHandler: { (error) in
+				  if error != nil {
+					Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Failed to schedule local user notification")
+				  }
+				})
+			}
+
+			let center = UNUserNotificationCenter.current()
+			center.getNotificationSettings(completionHandler: { (settings) in
+				if settings.authorizationStatus == .authorized {
+					postMediaUploadsEnqueudNotification()
+				}
+			})
+		}
 	}
 
-	private func uploadPhotoAssets(for bookmark:OCBookmark, at path:String) {
-		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
+	private func uploadPhotoAssets(for bookmark:OCBookmark, at path:String) -> Int {
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return 0 }
 
 		var photoAssets = [PHAsset]()
 
@@ -80,10 +112,12 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 			userDefaults.instantUploadPhotosAfter = photoAssets.last?.creationDate
             Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Last added photo asset modification date: \(String(describing: userDefaults.instantUploadPhotosAfter))")
 		}
+
+		return photoAssets.count
 	}
 
-	private func uploadVideoAssets(for bookmark:OCBookmark, at path:String) {
-		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
+	private func uploadVideoAssets(for bookmark:OCBookmark, at path:String) -> Int {
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return 0 }
 
 		var videoAssets = [PHAsset]()
 
@@ -106,6 +140,8 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 			userDefaults.instantUploadVideosAfter = videoAssets.last?.creationDate
             Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Last added video asset modification date: \(String(describing: userDefaults.instantUploadPhotosAfter))")
 		}
+
+		return videoAssets.count
 	}
 
 	private func showFeatureDisabledAlert() {

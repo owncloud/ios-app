@@ -21,3 +21,6 @@
 "NSPhotoLibraryAddUsageDescription" = "This permission is needed to upload photos and videos from your photo library.";
 "NSPhotoLibraryUsageDescription" = "This permission is needed to upload photos and videos from your photo library.";
 
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in background";
+"NSLocationAlwaysUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in background";
+"NSLocationWhenInUseUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in background";
