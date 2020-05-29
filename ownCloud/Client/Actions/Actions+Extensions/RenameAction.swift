@@ -79,7 +79,7 @@ class RenameAction : Action {
 		renameViewController.navigationItem.title = "Rename".localized
 
 		let navigationController = ThemeNavigationController(rootViewController: renameViewController)
-		navigationController.modalPresentationStyle = .overFullScreen
+		navigationController.modalPresentationStyle = .formSheet
 
 		viewController.present(navigationController, animated: true)
 	}
