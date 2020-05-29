@@ -214,6 +214,7 @@ class AutoUploadSettingsSection: SettingsSection {
 		if !enabled {
 			userDefaults.resetInstantPhotoUploadConfiguration()
 			postSettingsChangedNotification()
+			updateDynamicUI()
 		} else {
 			userDefaults.instantUploadPhotos = true
 			userDefaults.instantUploadPhotosAfter = Date()
@@ -227,6 +228,7 @@ class AutoUploadSettingsSection: SettingsSection {
 		if !enabled {
 			userDefaults.resetInstantVideoUploadConfiguration()
 			postSettingsChangedNotification()
+			updateDynamicUI()
 		} else {
 			userDefaults.instantUploadVideos = true
 			userDefaults.instantUploadVideosAfter = Date()

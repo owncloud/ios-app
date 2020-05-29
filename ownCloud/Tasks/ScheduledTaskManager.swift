@@ -449,11 +449,15 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
 
 	func requestLocationAuthorization() -> Bool {
 		let currentStatus = CLLocationManager.authorizationStatus()
-		if currentStatus == .notDetermined || currentStatus == .authorizedWhenInUse {
+		switch currentStatus {
+		case .notDetermined, .authorizedWhenInUse:
 			self.locationManager.requestAlwaysAuthorization()
 			return true
+		case .authorizedAlways:
+			return true
+		default:
+			return false
 		}
-		return false
 	}
 
 	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
