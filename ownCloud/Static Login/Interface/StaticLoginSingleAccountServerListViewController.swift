@@ -54,6 +54,12 @@ class StaticLoginSingleAccountServerListViewController: ServerListTableViewContr
 		self.tableView.register(ServerListToolCell.self, forCellReuseIdentifier: "tool-cell")
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		staticLoginViewController?.toolbarShown = false
+	}
+
 	override func numberOfSections(in tableView: UITableView) -> Int {
 		return SingleAccountSection.allCases.count
 	}
