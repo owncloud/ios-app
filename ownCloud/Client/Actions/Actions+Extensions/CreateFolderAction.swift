@@ -91,7 +91,7 @@ class CreateFolderAction : Action {
 				createFolderVC.navigationItem.title = "Create folder".localized
 
 				let createFolderNavigationVC = ThemeNavigationController(rootViewController: createFolderVC)
-				createFolderNavigationVC.modalPresentationStyle = .overFullScreen
+				createFolderNavigationVC.modalPresentationStyle = .formSheet
 
 				viewController.present(createFolderNavigationVC, animated: true)
 			}
