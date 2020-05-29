@@ -95,7 +95,7 @@ class MediaUploadOperation : Operation {
 
 			// Perform asset import
 			importGroup.enter()
-			if let itemLocalId = self.importAsset(asset: asset, at: item, uploadCompletion: {
+			if let itemLocalId = self.importAsset(asset: asset, with:core, at: item, uploadCompletion: {
 				// Import successful
 				self.removeUploadJob(with: path)
 				importGroup.leave()
@@ -146,9 +146,7 @@ class MediaUploadOperation : Operation {
 		return nil
 	}
 
-	private func importAsset(asset:PHAsset, at rootItem:OCItem, uploadCompletion: @escaping () -> Void) -> OCItem? {
-
-		guard let core = self.core else { return nil }
+	private func importAsset(asset:PHAsset, with core:OCCore, at rootItem:OCItem, uploadCompletion: @escaping () -> Void) -> OCItem? {
 
 		// Determine the list of preferred media formats
 		var utisToConvert = [String]()

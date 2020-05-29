@@ -178,6 +178,19 @@ extension PHAsset {
 	}
 
 	/**
+	OCCellurSwitch identifier which shall be used to control if the asset shall be uploaded using cellular data
+	*/
+	private var cellSwitchIdentifier: OCCellularSwitchIdentifier? {
+		var identifier: OCCellularSwitchIdentifier? = nil
+		if self.mediaType == .image {
+			identifier = MediaUploadQueue.photoUploadCellularSwitchIdentifier
+		} else if self.mediaType == .video {
+			identifier = MediaUploadQueue.videoUploadCellularSwitchIdentifier
+		}
+		return identifier
+	}
+
+	/**
 	File name for media upload created in the same way legacy oC app did it (without extension)
 	- Image names: IMG_0123.jpg will become Photo-yyyy-MM-dd-HH-mm-ss_0123.jpg for example
 	- Video names are going to be similar but prefixed with Video- instead of Photo-
@@ -399,6 +412,44 @@ extension PHAsset {
 	}
 
 	/**
+	Method for exporting asset and handling the cases where the file might be not available locally
+
+	- parameter fileName: name for the exported asset including file extension
+	- parameter utisToConvert: list of file UTIs for media formats which shall be converted
+	- parameter completion: called when the file is written to disk or if an error occurs
+	*/
+	func export(fileName:String, utisToConvert:[String] = [], completion:@escaping (_ url:URL?, _ error:Error?) -> Void) {
+		let assetResources = PHAssetResource.assetResources(for: self)
+		if assetResources.count > 0 {
+			// We have actual data on the device and we can export it directly
+			if self.mediaType == .image {
+				exportPhoto(resources: assetResources, fileName: fileName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
+					completion(url, error)
+				})
+			} else if self.mediaType == .video {
+				exportVideo(resources: assetResources, fileName: fileName, utisToConvert: utisToConvert) { (url, error) in
+					completion(url, error)
+				}
+			} else {
+				completion(nil, NSError(ocError: .internal))
+			}
+		} else {
+			// It could be that we don't have any asset resources locally e.g. since we have to deal with an asset from a cloud album
+			if self.mediaType == .image {
+				exportPhoto(fileName: fileName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
+					completion(url, error)
+				})
+			} else if self.mediaType == .video {
+				exportVideo(fileName: fileName, utisToConvert: utisToConvert) { (url, error) in
+					completion(url, error)
+				}
+			} else {
+				completion(nil, NSError(ocError: .internal))
+			}
+		}
+	}
+
+	/**
 	Method for uploading assets from photo library to oC instance
 	- parameter core: Reference to the core to be used for the upload
 	- parameter rootItem: Directory item where the media file shall be uploaded
@@ -410,7 +461,7 @@ extension PHAsset {
 	*/
 	func upload(with core:OCCore?, at rootItem:OCItem, utisToConvert:[String] = [], preserveOriginalName:Bool = true, progressHandler:((_ progress:Progress) -> Void)? = nil, uploadCompleteHandler:(() -> Void)? = nil) -> (OCItem?, Error?)? {
 
-		func performUpload(sourceURL:URL, copySource:Bool) -> (OCItem?, Error?)? {
+		func performUpload(sourceURL:URL, copySource:Bool, cellularSwitchIdentifier:OCCellularSwitchIdentifier?) -> (OCItem?, Error?)? {
 
 			@discardableResult func removeSourceFile() -> Bool {
 				do {
@@ -439,7 +490,7 @@ extension PHAsset {
 											  alternativeName: fileName,
 											  modificationDate: self.creationDate,
 											  importByCopy: copySource,
-											  cellularSwithIdentifier: MediaUploadQueue.mediaUploadCellularSwitchIdentifier,
+											  cellularSwithIdentifier: cellularSwitchIdentifier,
 											  placeholderHandler: { (item, error) in
 												if !copySource && error != nil {
 													// Delete the temporary asset file in case of critical error
@@ -452,12 +503,12 @@ extension PHAsset {
 												}
 												importResult = (item, error)
 												importSemaphore.signal()
+												uploadCompleteHandler?()
 
 			}, completionHandler: { (_, _) in
 				if uploadProgress != nil {
 					progressHandler?(uploadProgress!)
 				}
-				uploadCompleteHandler?()
 			})
 
 			if uploadProgress != nil {
@@ -478,46 +529,13 @@ extension PHAsset {
 			var outError: Error?
 
 			_ = autoreleasepool {
-				let assetResources = PHAssetResource.assetResources(for: self)
 
 				// Synchronously export asset
 				let semaphore = DispatchSemaphore(value: 0)
-				if assetResources.count > 0 {
-					// We have actual data on the device and we can export it directly
-					if self.mediaType == .image {
-						exportPhoto(resources: assetResources, fileName: assetName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
-							exportedAssetURL = url
-							outError = error
-							semaphore.signal()
-						})
-					} else if self.mediaType == .video {
-						exportVideo(resources: assetResources, fileName: assetName, utisToConvert: utisToConvert) { (url, error) in
-							exportedAssetURL = url
-							outError = error
-							semaphore.signal()
-						}
-					} else {
-						outError = NSError(ocError: .internal)
-						semaphore.signal()
-					}
-				} else {
-					// It could be that we don't have any asset resources locally e.g. since we have to deal with an asset from a cloud album
-					if self.mediaType == .image {
-						exportPhoto(fileName: assetName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
-							exportedAssetURL = url
-							outError = error
-							semaphore.signal()
-						})
-					} else if self.mediaType == .video {
-						exportVideo(fileName: assetName, utisToConvert: utisToConvert) { (url, error) in
-							exportedAssetURL = url
-							outError = error
-							semaphore.signal()
-						}
-					} else {
-						outError = NSError(ocError: .internal)
-						semaphore.signal()
-					}
+				export(fileName: assetName, utisToConvert: utisToConvert) { (url, error) in
+					exportedAssetURL = url
+					outError = error
+					semaphore.signal()
 				}
 				semaphore.wait()
 			}
@@ -538,7 +556,7 @@ extension PHAsset {
 				return uploadResult
 			}
 
-			uploadResult = performUpload(sourceURL: uploadURL, copySource: false)
+			uploadResult = performUpload(sourceURL: uploadURL, copySource: false, cellularSwitchIdentifier: self.cellSwitchIdentifier)
 
 		} else {
 			Log.error(tagged: ["MEDIA_UPLOAD"], "Primary resource not found for asset ID \(self.localIdentifier)")

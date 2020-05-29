@@ -473,6 +473,8 @@
 "Select Upload Path" = "Select Upload Path";
 "Auto upload of media was disabled since configured account / folder was not found" = "Auto upload of media was disabled since configured account / folder was not found";
 "Importing %@ media files for upload" = "Importing %@ media files for upload";
+"Photo upload" = "Photo upload";
+"Video upload" = "Video upload";
 
 /* Background media uploads */
 "Background uploads" = "Background uploads";
