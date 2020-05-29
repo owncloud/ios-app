@@ -234,8 +234,6 @@ class ScheduledTaskManager : NSObject {
 		let state = self.state
 		let context = self.getCurrentContext()
 
-		photoLibraryChangeDetected = false
-
 		// Find a task to run
 		if let matches = try? OCExtensionManager.shared.provideExtensions(for: context) {
 			var bgFetchedNewDataTasks = 0
@@ -298,6 +296,11 @@ class ScheduledTaskManager : NSObject {
 		} else {
 			completion?(0)
 		}
+
+		if 	photoLibraryChangeDetected {
+			photoLibraryChangeDetected = false
+		}
+
 	}
 
 	private func checkPowerState() {
@@ -407,6 +410,8 @@ extension ScheduledTaskManager : PHPhotoLibraryChangeObserver {
 	private func checkForNewAssets() -> Bool {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return false }
 
+		Log.debug(tagged: ["TASK_MANAGER", "MEDIA_UPLOAD"], "Checking for new assets")
+
 		// Get timestamps for last successfully uploaded media assets
 		var lastUploadedMediaTimestamps = [Date]()
 		if let timestamp = userDefaults.instantUploadPhotosAfter {
@@ -422,11 +427,13 @@ extension ScheduledTaskManager : PHPhotoLibraryChangeObserver {
 		let earliestTimestamp = lastUploadedMediaTimestamps.first!
 
 		// At least one not yet uploaded media asset found?
-		if let result = PHAsset.fetchAssetsFromCameraRoll(with: [.image, .video], createdAfter: earliestTimestamp, fetchLimit: 1), result.count > 0 {
-			return true
+		guard let result = PHAsset.fetchAssetsFromCameraRoll(with: [.image, .video], createdAfter: earliestTimestamp, fetchLimit: 1) else {
+			return false
 		}
 
-		return false
+		Log.debug(tagged: ["TASK_MANAGER", "MEDIA_UPLOAD"], "\(result.count) new assets found ")
+
+		return result.count > 0 ? true : false
 	}
 }
 
@@ -434,6 +441,7 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
 
 	@discardableResult func startLocationMonitoringIfAuthorized() -> Bool {
 		if CLLocationManager.authorizationStatus() == .authorizedAlways {
+			Log.debug(tagged: ["TASK_MANAGER", "MEDIA_UPLOAD"], "Significant location monitoring has started")
 			self.locationManager.startMonitoringSignificantLocationChanges()
 			return true
 		} else {
@@ -461,6 +469,8 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
 	}
 
 	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+		Log.debug(tagged: ["TASK_MANAGER", "MEDIA_UPLOAD"], "Significant location change event")
+
 		if shallMonitorPhotoLibraryChanges() {
 			if checkForNewAssets() {
 				photoLibraryChangeDetected = true
