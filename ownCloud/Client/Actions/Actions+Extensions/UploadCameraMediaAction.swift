@@ -87,6 +87,8 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 			// Retrieve media type
 			guard let type = info[.mediaType] as? String else { return }
 
+			Log.debug(tagged: ["CAMERA_UPLOAD"], "UIImagePickerController info dictionary: \(info.debugDescription)")
+
 			// Generate a timestamp string which will be used in the name of uploaded media
 			let timeStamp = CameraViewPresenter.dateFormatter.string(from: Date())
 
@@ -106,8 +108,14 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 
 				let destination = CGImageDestinationCreateWithURL(url as CFURL, uti as CFString, 1, nil)
 
-				guard let dst = destination, let cgImage = image?.cgImage else {
-					Log.error(tagged: ["CAMERA_UPLOAD"], "Destination or image is not valid")
+				guard let cgImage = image?.cgImage else {
+					Log.error(tagged: ["CAMERA_UPLOAD"], "Image is not valid")
+					outputURL = nil
+					return
+				}
+
+				guard let dst = destination else {
+					Log.error(tagged: ["CAMERA_UPLOAD"], "Destination is not valid")
 					outputURL = nil
 					return
 				}
@@ -119,6 +127,8 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 				if !CGImageDestinationFinalize(dst) {
 					Log.error(tagged: ["CAMERA_UPLOAD"], "Couldn't finish writing image")
 					outputURL = nil
+				} else {
+					Log.log(tagged: ["CAMERA_UPLOAD"], "Finalized writing image with UTI \(uti) to disk")
 				}
 
 			} else if type == String(kUTTypeMovie) {
@@ -131,10 +141,14 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 					outputURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).appendingPathExtension("mp4")
 					guard let url = outputURL else { return }
 
+					Log.debug(tagged: ["CAMERA_UPLOAD"], "Exporting video to \(url)")
+
 					let avAsset = AVAsset(url: videoURL)
 					if !avAsset.exportVideo(targetURL: url, type: .mp4) {
 						Log.error(tagged: ["CAMERA_UPLOAD"], "Failed to export video as MP4")
 						outputURL = nil
+					} else {
+						Log.debug(tagged: ["CAMERA_UPLOAD"], "Video export finished")
 					}
 
 				} else {
@@ -142,6 +156,7 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 					deleteImportedFile = false
 					outputURL = videoURL
 					alternativeName = "\(fileName).\(videoURL.pathExtension)"
+					Log.debug(tagged: ["CAMERA_UPLOAD"], "Use video directly from URL: \(videoURL)")
 				}
 			}
 		}
