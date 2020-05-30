@@ -64,7 +64,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 				if let enableSwitch = sender as? UISwitch {
 					userDefaults.backgroundMediaUploadsEnabled = enableSwitch.isOn
 				}
-				}, title: "Enable background uploads".localized, value: self.userDefaults.backgroundMediaUploadsEnabled)
+				}, title: "Use background refresh".localized, value: self.userDefaults.backgroundMediaUploadsEnabled)
 
 			self.add(row: backgroundUploadsRow!)
 		}
@@ -133,7 +133,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 
 		if #available(iOS 13, *) {
 			footerText += " "
-			footerText += "Otherwise background media uploads would depend on how often do you use the app.".localized
+			footerText += "Otherwise background media uploads using background refresh technology would depend on how often do you use the app.".localized
 		}
 		self.footerTitle = footerText
 
