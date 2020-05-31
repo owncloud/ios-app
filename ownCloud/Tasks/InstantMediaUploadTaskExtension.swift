@@ -7,7 +7,7 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
+* Copyright (C) 2020, ownCloud GmbH.
 *
 * This code is covered by the GNU Public License Version 3.
 *
@@ -60,31 +60,9 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 		if background == true && enqueuedAssetCount > 0 {
 
-			func postMediaUploadsEnqueudNotification() {
-				let center = UNUserNotificationCenter.current()
-				let content = UNMutableNotificationContent()
-
-				content.title = "Background uploads".localized
-				content.body = String(format: "Scheduled upload of %ld media assets".localized, enqueuedAssetCount)
-
-				let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.0, repeats: false)
-
-				let identifier = "com.ownloud.instant-media-upload-notification"
-				let request = UNNotificationRequest(identifier: identifier,
-							  content: content, trigger: trigger)
-				center.add(request, withCompletionHandler: { (error) in
-				  if error != nil {
-					Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Failed to schedule local user notification")
-				  }
-				})
-			}
-
-			let center = UNUserNotificationCenter.current()
-			center.getNotificationSettings(completionHandler: { (settings) in
-				if settings.authorizationStatus == .authorized {
-					postMediaUploadsEnqueudNotification()
-				}
-			})
+			let title = "Background uploads".localized
+			let body = String(format: "Scheduled upload of %ld media assets".localized, enqueuedAssetCount)
+			UNUserNotificationCenter.postLocalNotification(with: "com.ownloud.instant-media-upload-notification", title: title, body: body)
 		}
 	}
 
