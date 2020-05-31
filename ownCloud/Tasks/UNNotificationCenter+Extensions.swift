@@ -19,7 +19,7 @@
 import UserNotifications
 
 extension UNUserNotificationCenter {
-	class func postLocalNotification(with identifier:String, title:String, body:String, after:TimeInterval = 0.5, completion:((Error?)->Void)? = nil) {
+	class func postLocalNotification(with identifier:String, title:String, body:String, after:TimeInterval = 0.5, completion:((Error?) -> Void)? = nil) {
 		let center = Self.current()
 		center.getNotificationSettings(completionHandler: { (settings) in
 			if settings.authorizationStatus == .authorized {

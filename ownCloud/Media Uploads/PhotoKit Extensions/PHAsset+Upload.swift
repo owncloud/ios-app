@@ -181,7 +181,7 @@ extension PHAsset {
 	OCCellurSwitch identifier which shall be used to control if the asset shall be uploaded using cellular data
 	*/
 	private var cellSwitchIdentifier: OCCellularSwitchIdentifier? {
-		var identifier: OCCellularSwitchIdentifier? = nil
+		var identifier: OCCellularSwitchIdentifier?
 		if self.mediaType == .image {
 			identifier = MediaUploadQueue.photoUploadCellularSwitchIdentifier
 		} else if self.mediaType == .video {
