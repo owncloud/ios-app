@@ -125,7 +125,7 @@ class Migration {
 										let connection = OCConnection(bookmark: bookmark)
 
 										if let userCredentials = self.getCredentialsDataItem(for: userId) {
-											let bookmarkActivity = "\(userCredentials.userName ?? "")@\(bookmark.url?.absoluteString ?? "")"
+											let bookmarkActivity = "\(userCredentials.userDisplayName ?? userCredentials.userName ?? "")@\(bookmark.url?.absoluteString ?? "")"
 
 											self.postAccountMigrationNotification(activity: bookmarkActivity, type: .account)
 

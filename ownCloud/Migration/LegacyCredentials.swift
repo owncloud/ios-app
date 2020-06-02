@@ -85,7 +85,7 @@ class OCCredentialsDto : NSObject, NSCoding {
 			let accessToken = self.accessToken,
 			let refreshToken = self.refreshToken,
 			let tokenType = self.tokenType,
-			let user = self.userName,
+			let user = self.userDisplayName ?? self.userName,
 			let expiresIn = self.expiresIn {
 			let tokenResponseDict : [String : Any] = [
 				"access_token" : accessToken,
