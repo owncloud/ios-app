@@ -124,38 +124,38 @@ class Migration {
 										bookmark.url = URL(string: serverURL)
 										let connection = OCConnection(bookmark: bookmark)
 
-										let userCredentials = self.getCredentialsDataItem(for: userId)
+										if let userCredentials = self.getCredentialsDataItem(for: userId) {
+											let bookmarkActivity = "\(userCredentials.userName ?? "")@\(bookmark.url?.absoluteString ?? "")"
 
-										let bookmarkActivity = "\(userCredentials?.userName ?? "")@\(bookmark.url?.absoluteString ?? "")"
+											self.postAccountMigrationNotification(activity: bookmarkActivity, type: .account)
 
-										self.postAccountMigrationNotification(activity: bookmarkActivity, type: .account)
+											if let authMethods = self.setup(connection: connection, parentViewController: parentViewController) {
 
-										if let authMethods = self.setup(connection: connection, parentViewController: parentViewController), let credentials = userCredentials {
+												// Generate authorization data
+												self.authorize(bookmark: bookmark,
+															   using: connection,
+															   credentials: userCredentials,
+															   supportedAuthMethods: authMethods,
+															   parentViewController: parentViewController)
 
-											// Generate authorization data
-											self.authorize(bookmark: bookmark,
-														   using: connection,
-														   credentials: credentials,
-														   supportedAuthMethods: authMethods,
-														   parentViewController: parentViewController)
+												// Delete old auth data from the keychain
+												self.removeCredentials(for: userId)
 
-											// Delete old auth data from the keychain
-											self.removeCredentials(for: userId)
+												// Save the bookmark
+												OCBookmarkManager.shared.addBookmark(bookmark)
 
-											// Save the bookmark
-											OCBookmarkManager.shared.addBookmark(bookmark)
+												// For the active account, migrate instant upload settings
+												if let activeAccount = rowDict["activeaccount"] as? Int, activeAccount == 1 {
+													self.migrateInstantUploadSettings(for: bookmark, userId: userId, accountDictionary: rowDict)
+												}
 
-											// For the active account, migrate instant upload settings
-											if let activeAccount = rowDict["activeaccount"] as? Int, activeAccount == 1 {
-												self.migrateInstantUploadSettings(for: bookmark, userId: userId, accountDictionary: rowDict)
+												Log.debug(tagged: ["MIGRATION"], "Bookmark successfully added")
+
+												self.postAccountMigrationNotification(activity: bookmarkActivity, state: .finished, type: .account)
+
+											} else {
+												self.postAccountMigrationNotification(activity: bookmarkActivity, state: .failed, type: .account)
 											}
-
-											Log.debug(tagged: ["MIGRATION"], "Bookmark successfully added")
-
-											self.postAccountMigrationNotification(activity: bookmarkActivity, state: .finished, type: .account)
-
-										} else {
-											self.postAccountMigrationNotification(activity: bookmarkActivity, state: .failed, type: .account)
 										}
 									}
 								}
