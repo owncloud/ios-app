@@ -75,6 +75,15 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 			preferMP4 = userDefaults.convertVideosToMP4
 		}
 
+		// Check if HEIC is supported on this device if it is preferred output format
+		if preferHEIC {
+			let supportedOutputImageUTIs = CGImageDestinationCopyTypeIdentifiers() as NSArray
+			preferHEIC = supportedOutputImageUTIs.contains(AVFileType.heic)
+			if preferHEIC == false {
+				Log.warning(tagged: ["CAMERA_UPLOAD"], "CGImageDestination doesn't support HEIC")
+			}
+		}
+
 		// Perform media export on a background queue
 		OnBackgroundQueue {
 			defer {
