@@ -24,7 +24,7 @@ class FavoriteAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.favorite") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String? { return "Favorite".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "F" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .shift] }
 
@@ -55,7 +55,7 @@ class FavoriteAction : Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem {
+		if location == .moreItem || location == .contextMenuItem {
 			return UIImage(named: "star")
 		}
 
