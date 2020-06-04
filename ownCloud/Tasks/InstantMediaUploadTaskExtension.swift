@@ -28,7 +28,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 	}
 
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.instant_media_upload") }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.appDidComeToForeground, .appDidBecomeBackgrounded] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.appDidComeToForeground, .appDidBecomeBackgrounded, .appBackgroundFetch] }
 	override class var features : [String : Any]? { return [ FeatureKeys.photoLibraryChanged : true] }
 
 	private var uploadDirectoryTracking: OCCoreItemTracking?
@@ -58,7 +58,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 			}
 		}
 
-		if background == true && enqueuedAssetCount > 0 {
+		if enqueuedAssetCount > 0 {
 
 			let title = "Background uploads".localized
 			let body = String(format: "Scheduled upload of %ld media assets".localized, enqueuedAssetCount)

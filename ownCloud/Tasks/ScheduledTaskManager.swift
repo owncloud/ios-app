@@ -80,14 +80,6 @@ class ScheduledTaskManager : NSObject {
 		}
 	}
 
-	private var photoLibraryChangeDetected = false {
-		didSet {
-			if self.photoLibraryChangeDetected != oldValue && self.photoLibraryChangeDetected == true {
-				scheduleTasks()
-			}
-		}
-	}
-
 	private var wifiMonitorQueue: DispatchQueue?
 	private var wifiMonitor : Any?
 	private var monitoringPhotoLibrary = false
@@ -107,8 +99,6 @@ class ScheduledTaskManager : NSObject {
 			}
 		}
 	}
-
-	var activeProcessingTask: Any?
 
 	let locationManager = CLLocationManager()
 
@@ -153,15 +143,9 @@ class ScheduledTaskManager : NSObject {
 		startLocationMonitoringIfAuthorized()
 
 		if #available(iOS 13, *) {
-			BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.owncloud.background-task.instant-media-refresh", using: nil) { (task) in
+			BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.owncloud.background-refresh-task", using: nil) { (task) in
 				if let refreshTask = task as? BGAppRefreshTask {
 					self.handleMediaRefresh(task: refreshTask)
-				}
-			}
-
-			BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.owncloud.background-task.instant-media-upload", using: nil) { (task) in
-				if let processingTask = task as? BGProcessingTask {
-					self.handleMediaUpload(task: processingTask)
 				}
 			}
 		}
@@ -222,7 +206,7 @@ class ScheduledTaskManager : NSObject {
 		if self.externalPowerConnected {
 			requirements[ScheduledTaskAction.FeatureKeys.runOnExternalPower] = true
 		}
-		if self.photoLibraryChangeDetected {
+		if shallMonitorPhotoLibraryChanges() && checkForNewAssets() {
 			requirements[ScheduledTaskAction.FeatureKeys.photoLibraryChanged] = true
 		}
 
@@ -264,15 +248,6 @@ class ScheduledTaskManager : NSObject {
 						bgFetchGroup.enter()
 					}
 
-					if #available(iOS 13, *) {
-						if let processingTask = activeProcessingTask as? BGProcessingTask, let instantUploadTask = task as? InstantMediaUploadTaskExtension {
-							instantUploadTask.completion = { _ in
-								Log.log(tagged: ["TASK_MANAGER"], "BGProcessingTask completed")
-								processingTask.setTaskCompleted(success: true)
-							}
-						}
-					}
-
 					queue.async {
 						task.run(background: backgroundExecution)
 					}
@@ -296,11 +271,6 @@ class ScheduledTaskManager : NSObject {
 		} else {
 			completion?(0)
 		}
-
-		if 	photoLibraryChangeDetected {
-			photoLibraryChangeDetected = false
-		}
-
 	}
 
 	private func checkPowerState() {
@@ -322,23 +292,12 @@ extension ScheduledTaskManager {
 
 	func scheduleMediaRefreshTask() {
 
-        let request = BGAppRefreshTaskRequest(identifier: "com.owncloud.background-task.instant-media-refresh")
+        let request = BGAppRefreshTaskRequest(identifier: "com.owncloud.background-refresh-task")
 		request.earliestBeginDate = Date(timeIntervalSinceNow: ScheduledTaskManager.backgroundRefreshInterval)
 		do {
 			try BGTaskScheduler.shared.submit(request)
 		} catch {
 			Log.error(tagged: ["TASK_MANAGER"], "Failed to submit BGAppRefreshTask request")
-		}
-	}
-
-	func scheduleMediaUploadTask() {
-        let request = BGProcessingTaskRequest(identifier: "com.owncloud.background-task.instant-media-upload")
-		// At least to do export of media assets and import them into sync engine, we don't need connectivity
-        request.requiresNetworkConnectivity = false
-		do {
-			try BGTaskScheduler.shared.submit(request)
-		} catch {
-			Log.error(tagged: ["TASK_MANAGER"], "Failed to submit BGProcessingTask request")
 		}
 	}
 
@@ -348,26 +307,19 @@ extension ScheduledTaskManager {
 
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
-		self.backgroundFetch()
+		OnMainThread {
+			self.backgroundFetch()
+		}
 
 		if shallMonitorPhotoLibraryChanges() && userDefaults.backgroundMediaUploadsEnabled {
 
-			if checkForNewAssets() {
-				scheduleMediaUploadTask()
-			}
+			scheduleTasks()
 
 			// Schedule the next refresh
 			scheduleMediaRefreshTask()
 		}
+
 		task.setTaskCompleted(success: true)
-	}
-
-	func handleMediaUpload(task: BGProcessingTask) {
-		Log.log(tagged: ["TASK_MANAGER"], "BGProcessingTask launched")
-
-		// This will kick-in task scheduling
-		activeProcessingTask = task
-		photoLibraryChangeDetected = true
 	}
 }
 
@@ -378,7 +330,7 @@ extension ScheduledTaskManager : PHPhotoLibraryChangeObserver {
 	// MARK: - PHPhotoLibraryChangeObserver
 
 	func photoLibraryDidChange(_ changeInstance: PHChange) {
-		photoLibraryChangeDetected = true
+		scheduleTasks()
 	}
 
 	// MARK: - Helper methods
@@ -403,14 +355,11 @@ extension ScheduledTaskManager : PHPhotoLibraryChangeObserver {
 	private func stopMonitoringPhotoLibraryChanges() {
 		if monitoringPhotoLibrary {
 			PHPhotoLibrary.shared().unregisterChangeObserver(self)
-			monitoringPhotoLibrary = false
 		}
 	}
 
 	private func checkForNewAssets() -> Bool {
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return false }
-
-		Log.debug(tagged: ["TASK_MANAGER", "MEDIA_UPLOAD"], "Checking for new assets")
 
 		// Get timestamps for last successfully uploaded media assets
 		var lastUploadedMediaTimestamps = [Date]()
@@ -427,13 +376,14 @@ extension ScheduledTaskManager : PHPhotoLibraryChangeObserver {
 		let earliestTimestamp = lastUploadedMediaTimestamps.first!
 
 		// At least one not yet uploaded media asset found?
-		guard let result = PHAsset.fetchAssetsFromCameraRoll(with: [.image, .video], createdAfter: earliestTimestamp, fetchLimit: 1) else {
-			return false
+		var assetCount = 0
+		if let result = PHAsset.fetchAssetsFromCameraRoll(with: [.image, .video], createdAfter: earliestTimestamp, fetchLimit: 1) {
+			assetCount = result.count
 		}
 
-		Log.debug(tagged: ["TASK_MANAGER", "MEDIA_UPLOAD"], "\(result.count) new assets found ")
+		Log.debug(tagged: ["TASK_MANAGER", "MEDIA_UPLOAD"], "\(assetCount) new assets found ")
 
-		return result.count > 0 ? true : false
+		return assetCount > 0 ? true : false
 	}
 }
 
@@ -472,9 +422,7 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
 		Log.debug(tagged: ["TASK_MANAGER", "MEDIA_UPLOAD"], "Significant location change event")
 
 		if shallMonitorPhotoLibraryChanges() {
-			if checkForNewAssets() {
-				photoLibraryChangeDetected = true
-			}
+			scheduleTasks()
 		}
 	}
 

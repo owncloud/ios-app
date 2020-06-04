@@ -4,8 +4,7 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.owncloud.background-task.instant-media-refresh</string>
-		<string>com.owncloud.background-task.instant-media-upload</string>
+		<string>com.owncloud.background-refresh-task</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
@@ -130,7 +129,6 @@
 		<string>audio</string>
 		<string>fetch</string>
 		<string>location</string>
-		<string>processing</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
