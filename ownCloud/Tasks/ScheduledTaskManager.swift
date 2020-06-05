@@ -102,6 +102,10 @@ class ScheduledTaskManager : NSObject {
 
 	let locationManager = CLLocationManager()
 
+	private let taskQueue = DispatchQueue(label: "com.owncloud.task-scheduler.queue", qos: .background, attributes: .concurrent)
+
+	private var activeRefreshTask: Any?
+
 	private override init() {
 		super.init()
 	}
@@ -145,7 +149,7 @@ class ScheduledTaskManager : NSObject {
 		if #available(iOS 13, *) {
 			BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.owncloud.background-refresh-task", using: nil) { (task) in
 				if let refreshTask = task as? BGAppRefreshTask {
-					self.handleMediaRefresh(task: refreshTask)
+					self.handleBackgroundRefresh(task: refreshTask)
 				}
 			}
 		}
@@ -160,7 +164,7 @@ class ScheduledTaskManager : NSObject {
 		case UIApplication.didEnterBackgroundNotification:
 			state = .background
 			if #available(iOS 13, *) {
-				scheduleMediaRefreshTask()
+				scheduleBackgroundRefreshTask()
 			}
 		default:
 			break
@@ -207,7 +211,11 @@ class ScheduledTaskManager : NSObject {
 			requirements[ScheduledTaskAction.FeatureKeys.runOnExternalPower] = true
 		}
 		if shallMonitorPhotoLibraryChanges() && checkForNewAssets() {
-			requirements[ScheduledTaskAction.FeatureKeys.photoLibraryChanged] = true
+			if self.state == .backgroundFetch, let userDefaults = OCAppIdentity.shared.userDefaults {
+				requirements[ScheduledTaskAction.FeatureKeys.photoLibraryChanged] = userDefaults.backgroundMediaUploadsEnabled
+			} else {
+				requirements[ScheduledTaskAction.FeatureKeys.photoLibraryChanged] = true
+			}
 		}
 
 		return OCExtensionContext(location: location, requirements: requirements, preferences: preferences)
@@ -222,8 +230,6 @@ class ScheduledTaskManager : NSObject {
 		if let matches = try? OCExtensionManager.shared.provideExtensions(for: context) {
 			var bgFetchedNewDataTasks = 0
 			var bgFailedTasks = 0
-			let bgFetchGroup = DispatchGroup()
-			let queue = DispatchQueue.global(qos: .background)
 
 			for match in matches {
 				if let task = match.extension.provideObject(for: context) as? ScheduledTaskAction {
@@ -238,25 +244,22 @@ class ScheduledTaskManager : NSObject {
 							default:
 								break
 							}
-							bgFetchGroup.leave()
 						}
 					}
 
 					let backgroundExecution = state == .background
 
-					if state == .backgroundFetch {
-						bgFetchGroup.enter()
-					}
-
-					queue.async {
+					taskQueue.async {
 						task.run(background: backgroundExecution)
 					}
 				}
 			}
 
-			// Report background fetch result back to the OS
-			if state == .backgroundFetch {
-				bgFetchGroup.notify(queue: queue, execute: {
+			Log.debug(tagged: ["TASK_MANAGER"], "Scheduled \(matches.count) tasks")
+
+			taskQueue.async(flags: .barrier) {
+				// Report background fetch result back to the OS
+				if state == .backgroundFetch {
 					if bgFetchedNewDataTasks > 0 {
 						fetchCompletion?(.newData)
 					} else if bgFailedTasks > 0 {
@@ -264,7 +267,19 @@ class ScheduledTaskManager : NSObject {
 					} else {
 						fetchCompletion?(.noData)
 					}
-				})
+
+					if #available(iOS 13, *) {
+						if let activeTask = self.activeRefreshTask as? BGAppRefreshTask {
+							// Schedule the next refresh
+							self.scheduleBackgroundRefreshTask()
+
+							activeTask.setTaskCompleted(success: true)
+
+							self.activeRefreshTask = nil
+						}
+					}
+				}
+				Log.debug(tagged: ["TASK_MANAGER"], "All tasks executed")
 			}
 
 			completion?(matches.count)
@@ -288,38 +303,27 @@ class ScheduledTaskManager : NSObject {
 @available(iOS 13, *)
 extension ScheduledTaskManager {
 
-	static let backgroundRefreshInterval = TimeInterval(20 * 60)
+	static let backgroundRefreshInterval = TimeInterval(15 * 60)
 
-	func scheduleMediaRefreshTask() {
+	func scheduleBackgroundRefreshTask() {
 
         let request = BGAppRefreshTaskRequest(identifier: "com.owncloud.background-refresh-task")
 		request.earliestBeginDate = Date(timeIntervalSinceNow: ScheduledTaskManager.backgroundRefreshInterval)
 		do {
 			try BGTaskScheduler.shared.submit(request)
 		} catch {
+			// Submitting new task if there is already one in the queue will fail.
+			// iOS permitts 1 pending refresh task at a time and up to 10 processing tasks
 			Log.error(tagged: ["TASK_MANAGER"], "Failed to submit BGAppRefreshTask request")
 		}
 	}
 
-	func handleMediaRefresh(task: BGAppRefreshTask) {
+	func handleBackgroundRefresh(task: BGAppRefreshTask) {
 
 		Log.log(tagged: ["TASK_MANAGER"], "BGAppRefreshTask launched")
 
-		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
-
-		OnMainThread {
-			self.backgroundFetch()
-		}
-
-		if shallMonitorPhotoLibraryChanges() && userDefaults.backgroundMediaUploadsEnabled {
-
-			scheduleTasks()
-
-			// Schedule the next refresh
-			scheduleMediaRefreshTask()
-		}
-
-		task.setTaskCompleted(success: true)
+		self.activeRefreshTask = task
+		self.backgroundFetch()
 	}
 }
 
