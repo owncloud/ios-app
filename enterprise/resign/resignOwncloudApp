@@ -97,6 +97,7 @@ else
 	security cms -D -i "$a" > "$APPTEMP/tmp.plist"
 	# Get provisioning SHA-1
 	PROV_SHA_1=`/usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:0" $APPTEMP/tmp.plist | openssl x509 -inform der -fingerprint | grep "^SHA1" | cut -d= -f 2 | ruby -ne 'puts $_.split(":").join'`
+  rm -f "$APPTEMP/tmp.plist"
 
 	if [ "$CERT_SHA_1" = "$PROV_SHA_1" ]; then
   		echo "${SUCCESS}Provisioning fingerprint matches with certificate:${NC}"
