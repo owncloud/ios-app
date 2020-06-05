@@ -175,11 +175,12 @@ do
     PlistBuddy -c "Set OCAppGroupIdentifier $APPGROUP" "${LOCATIONS[$i]}/Info.plist"
     PlistBuddy -c "Set OCKeychainAccessGroupIdentifier $APPGROUP" "${LOCATIONS[$i]}/Info.plist"
     PlistBuddy -c "Set OCAppIdentifierPrefix $APP_ID_PREFIX." "${LOCATIONS[$i]}/Info.plist"
+    PlistBuddy -c "Set NSExtension:NSExtensionFileProviderDocumentGroup $APPGROUP" "${LOCATIONS[$i]}/Info.plist"
 
     # Remove old Code Signatures
     rm -rf "${LOCATIONS[$i]}/_CodeSignature"
 
-    echo  ""
+    echo  ""$APPGROUP
 done
 
 echo "${SUCCESS}Resign App, Extensions and Frameworks…${NC}"
@@ -188,7 +189,7 @@ echo ""
 #Resign Swift & Frameworks Libraries
 ls "${APPDIR}/Frameworks" | while read file
 do
-    /usr/bin/codesign -fv -s "$IDENTITY" "${APPDIR}/Frameworks/$file" --entitlements "${ENTITLEMENTS[0]}"
+    /usr/bin/codesign -fv -s "$IDENTITY" "${APPDIR}/Frameworks/$file" #--entitlements "${ENTITLEMENTS[0]}"
 done
 
 # Resign everything
