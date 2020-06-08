@@ -289,11 +289,17 @@
 "Close Window" = "Close Window";
 "Open in a new Window" = "Open in a new Window";
 "Open in Window" = "Open in Window";
+"Take photo or video" = "Take photo or video";
 
 "Preparing…" = "Preparing…";
 
 "No actions available" = "No actions available";
 "No actions are available for this folder, possibly because of missing permissions." = "No actions are available for this folder, possibly because of missing permissions.";
+
+"Close actions menu" = "Close actions menu";
+"Favorited" = "Favorited";
+"Favorite item" = "Favorite item";
+"Unfavorite item" = "Unfavorite item";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";
@@ -623,6 +629,9 @@
 "trial" = "trial";
 "purchase" = "purchase";
 "subscription" = "subscription";
+
+/* Misc. accessibility */
+"Enter multiple selection" = "Enter multiple selection";
 
 /* Universal Links */
 "Resolving link…" = "Resolving link…";

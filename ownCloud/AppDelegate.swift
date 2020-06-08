@@ -80,6 +80,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(CopyAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
+		OCExtensionManager.shared.addExtension(UploadCameraMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
 		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)

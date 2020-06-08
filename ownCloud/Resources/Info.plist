@@ -73,6 +73,8 @@
 	<string>This permission is needed for uploading media files to your server.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This permission is needed to scan documents.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This permission is needed to record videos</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Unlock the app without entering the passcode.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
