@@ -64,7 +64,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 				if let enableSwitch = sender as? UISwitch {
 					userDefaults.backgroundMediaUploadsEnabled = enableSwitch.isOn
 				}
-				}, title: "Use background refresh".localized, value: self.userDefaults.backgroundMediaUploadsEnabled)
+				}, title: "Use background refresh".localized, value: self.userDefaults.backgroundMediaUploadsEnabled, identifier: "background-refresh")
 
 			self.add(row: backgroundUploadsRow!)
 		}
@@ -72,7 +72,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		// Add option to enable background location updates which will trigger background media uploads
 		var locationServicesRowTitle: String = ""
 		if #available(iOS 13, *) {
-			locationServicesRowTitle = "Improve background uploading".localized
+			locationServicesRowTitle = "Improve with location information".localized
 		} else {
 			locationServicesRowTitle = "Enable background uploads".localized
 		}
@@ -89,7 +89,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 					ScheduledTaskManager.shared.stopLocationMonitoring()
 				}
 			}
-			}, title: locationServicesRowTitle, value: currentAuthStatus)
+			}, title: locationServicesRowTitle, value: currentAuthStatus, identifier: "background-location")
 
 		self.add(row: backgroundLocationRow!)
 
@@ -109,7 +109,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 				}
 
 			}
-			}, title: "Background upload notifications".localized, value: false)
+			}, title: "Background upload notifications".localized, value: false, identifier: "background-upload-notifications")
 
 		self.add(row: notificationsRow!)
 

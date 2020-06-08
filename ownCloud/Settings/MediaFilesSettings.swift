@@ -49,13 +49,13 @@ class MediaFilesSettingsSection: SettingsSection {
 			if let enableSwitch = sender as? UISwitch {
 				self?.userDefaults.streamingEnabled = enableSwitch.isOn
 			}
-			}, title: "Streaming Enabled".localized, value: self.userDefaults.streamingEnabled)
+			}, title: "Streaming Enabled".localized, value: self.userDefaults.streamingEnabled, identifier: "streaming-enabled")
 
 		self.add(row: enableStreamingSwitchRow!)
 
 		mediaUploadSettingsRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 			self?.pushMediaUploadSettings()
-		}, title: "Media Upload".localized, value: "", accessoryType: .disclosureIndicator)
+		}, title: "Media Upload".localized, value: "", accessoryType: .disclosureIndicator, identifier: "media-upload")
 
 		self.add(row: mediaUploadSettingsRow!)
 	}

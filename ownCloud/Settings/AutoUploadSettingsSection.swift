@@ -176,7 +176,7 @@ class AutoUploadSettingsSection: SettingsSection {
 						self?.setupPhotoAutoUpload(enabled: switchState)
 					})
 				}
-				}, title: "Auto Upload Photos".localized, value: self.userDefaults.instantUploadPhotos)
+				}, title: "Auto Upload Photos".localized, value: self.userDefaults.instantUploadPhotos, identifier: "auto-upload-photos")
 
 			instantUploadVideosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 				if let convertSwitch = sender as? UISwitch {
@@ -184,15 +184,7 @@ class AutoUploadSettingsSection: SettingsSection {
 						self?.setupVideoAutoUpload(enabled: switchState)
 					})
 				}
-				}, title: "Auto Upload Videos".localized, value: self.userDefaults.instantUploadVideos)
-
-			instantUploadPhotosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
-				if let convertSwitch = sender as? UISwitch {
-					self?.changeAndRequestPhotoLibraryAccessForOption(optionSwitch: convertSwitch, completion: { (switchState) in
-						self?.setupPhotoAutoUpload(enabled: switchState)
-					})
-				}
-				}, title: "Auto Upload Photos".localized, value: self.userDefaults.instantUploadPhotos)
+				}, title: "Auto Upload Videos".localized, value: self.userDefaults.instantUploadVideos, identifier: "auto-upload-videos")
 
 			photoBookmarkAndPathSelectionRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
 				self?.showAccountSelectionViewController(for: .photo)
