@@ -60,8 +60,27 @@ class SettingsTests: XCTestCase {
 		EarlGrey.selectElement(with:grey_accessibilityID("convert_to_mp4")).assert(grey_sufficientlyVisible())
 		EarlGrey.selectElement(with:grey_accessibilityID("preserve_media_file_names")).assert(grey_sufficientlyVisible())
 
+		// Make sure instant uploads section is not visible if no bookmark is configured
+		EarlGrey.selectElement(with: grey_text("Auto Upload".localized)).assert(grey_notVisible())
+		EarlGrey.selectElement(with: grey_text("Background uploads".localized)).assert(grey_notVisible())
+
 		//Reset status
 		EarlGrey.selectElement(with: grey_text("Settings".localized)).perform(grey_tap())
+	}
+
+	func testMediaBackgroundUploadsSettings() {
+		if let bookmark: OCBookmark = UtilsTests.getBookmark() {
+			OCBookmarkManager.shared.addBookmark(bookmark)
+			// Open media upload settings section
+			EarlGrey.selectElement(with:grey_accessibilityID("media-upload")).using(searchAction: grey_scrollInDirection(GREYDirection.down, 350), onElementWithMatcher: grey_kindOfClass(UITableView.self)).perform(grey_tap())
+
+			EarlGrey.selectElement(with:grey_accessibilityID("auto-upload-photos")).assert(grey_sufficientlyVisible())
+			EarlGrey.selectElement(with:grey_accessibilityID("auto-upload-videos")).assert(grey_sufficientlyVisible())
+
+			//Reset status
+			EarlGrey.selectElement(with: grey_text("Settings".localized)).perform(grey_tap())
+			OCBookmarkManager.shared.removeBookmark(bookmark)
+		}
 	}
 
 	/*
