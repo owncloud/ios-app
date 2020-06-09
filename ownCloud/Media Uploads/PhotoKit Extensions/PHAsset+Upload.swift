@@ -343,7 +343,7 @@ extension PHAsset {
 			// in the PhotoLibrary which is named after original image
 			var fileName = sourceURL.lastPathComponent
 			if !preserveOriginalName {
-				fileName = "\(self.ocStyleUploadFileName(with: sourceURL.lastPathComponent.imageFileNameSuffix)).\(sourceURL.pathExtension)"
+				fileName = "\(self.ocStyleUploadFileName(with: sourceURL.deletingPathExtension().lastPathComponent.imageFileNameSuffix)).\(sourceURL.pathExtension)"
 			}
 
 			// Synchronously import media file into the OCCore and schedule upload
