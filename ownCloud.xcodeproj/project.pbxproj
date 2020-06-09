@@ -145,7 +145,6 @@
 		4CB8ADE022DF5EC500F1FEBC /* UIAlertViewController+SystemPermissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB8ADDF22DF5EC500F1FEBC /* UIAlertViewController+SystemPermissions.swift */; };
 		4CB8ADE322DF6BA700F1FEBC /* PHAsset+Upload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB8ADE222DF6BA700F1FEBC /* PHAsset+Upload.swift */; };
 		4CB8ADE622DF6C2B00F1FEBC /* CIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB8ADE522DF6C2B00F1FEBC /* CIImage+Extensions.swift */; };
-		4CB8ADE922DF6DE200F1FEBC /* AVAsset+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB8ADE822DF6DE200F1FEBC /* AVAsset+Extension.swift */; };
 		4CC46D212284C677009E938F /* BookmarkInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */; };
 		4CC4A21222FA20AD00AE7E2C /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC4A21122FA20AD00AE7E2C /* URL+Extensions.swift */; };
 		4CC4A21922FB4F4C00AE7E2C /* MediaUploadQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC4A21822FB4F4C00AE7E2C /* MediaUploadQueue.swift */; };
@@ -889,7 +888,6 @@
 		4CB8ADDF22DF5EC500F1FEBC /* UIAlertViewController+SystemPermissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertViewController+SystemPermissions.swift"; sourceTree = "<group>"; };
 		4CB8ADE222DF6BA700F1FEBC /* PHAsset+Upload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHAsset+Upload.swift"; sourceTree = "<group>"; };
 		4CB8ADE522DF6C2B00F1FEBC /* CIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CIImage+Extensions.swift"; sourceTree = "<group>"; };
-		4CB8ADE822DF6DE200F1FEBC /* AVAsset+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVAsset+Extension.swift"; sourceTree = "<group>"; };
 		4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkInfoViewController.swift; sourceTree = "<group>"; };
 		4CC4A21122FA20AD00AE7E2C /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
 		4CC4A21822FB4F4C00AE7E2C /* MediaUploadQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadQueue.swift; sourceTree = "<group>"; };
@@ -1289,6 +1287,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		021C386C2459C0BB002091C6 /* PhotoKit Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4CB8ADDD22DF5D3700F1FEBC /* PHPhotoLibrary+Extension.swift */,
+				4CB8ADE222DF6BA700F1FEBC /* PHAsset+Upload.swift */,
+			);
+			path = "PhotoKit Extensions";
+			sourceTree = "<group>";
+		};
 		23031768205AA1DB006C4DAF /* Issues */ = {
 			isa = PBXGroup;
 			children = (
@@ -1359,9 +1366,7 @@
 				DCF4F1622051927200189B9A /* UI Elements */,
 				239F1314205A69240029F186 /* UIKit Extensions */,
 				DCE5E8B62080D8B8005F60CE /* SDK Extensions */,
-				4CB8ADE422DF6BE300F1FEBC /* CoreImage Extensions */,
-				4CB8ADE722DF6DC400F1FEBC /* AVFoundation Extensions */,
-				4CB8ADD722DF5CD100F1FEBC /* PhotoKit Extensions */,
+				4CB8ADD722DF5CD100F1FEBC /* Media Uploads */,
 				DCF4F1872052BA3500189B9A /* Tools */,
 				DC27A19B20CAB5D7008ACB6C /* FileProvider Integration */,
 				DC85573120513C7500189B9A /* Resources */,
@@ -1630,16 +1635,16 @@
 			path = Media;
 			sourceTree = "<group>";
 		};
-		4CB8ADD722DF5CD100F1FEBC /* PhotoKit Extensions */ = {
+		4CB8ADD722DF5CD100F1FEBC /* Media Uploads */ = {
 			isa = PBXGroup;
 			children = (
-				4CB8ADDD22DF5D3700F1FEBC /* PHPhotoLibrary+Extension.swift */,
-				4CB8ADE222DF6BA700F1FEBC /* PHAsset+Upload.swift */,
+				021C386C2459C0BB002091C6 /* PhotoKit Extensions */,
+				4CB8ADE422DF6BE300F1FEBC /* CoreImage Extensions */,
 				4CC4A21822FB4F4C00AE7E2C /* MediaUploadQueue.swift */,
 				4C96463B238489E4003278B7 /* MediaUploadActivity.swift */,
 				4C05D8A4238708D40073EF50 /* MediaUploadStorage.swift */,
 			);
-			path = "PhotoKit Extensions";
+			path = "Media Uploads";
 			sourceTree = "<group>";
 		};
 		4CB8ADE422DF6BE300F1FEBC /* CoreImage Extensions */ = {
@@ -1648,14 +1653,6 @@
 				4CB8ADE522DF6C2B00F1FEBC /* CIImage+Extensions.swift */,
 			);
 			path = "CoreImage Extensions";
-			sourceTree = "<group>";
-		};
-		4CB8ADE722DF6DC400F1FEBC /* AVFoundation Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				4CB8ADE822DF6DE200F1FEBC /* AVAsset+Extension.swift */,
-			);
-			path = "AVFoundation Extensions";
 			sourceTree = "<group>";
 		};
 		59056CAB22414F3C00A18A22 /* ownCloudScreenshotsTests */ = {
@@ -3272,7 +3269,6 @@
 				23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */,
 				DCDC209C2399A4CF003CFF5B /* LicenseRequirements.swift in Sources */,
 				DC018F8C20A1060A00135198 /* ProgressHUDViewController.swift in Sources */,
-				4CB8ADE922DF6DE200F1FEBC /* AVAsset+Extension.swift in Sources */,
 				39CC8B01228C8A950020253B /* MediaUploadSettingsSection.swift in Sources */,
 				DC7DBA29207F71D600E7337D /* VectorImage.swift in Sources */,
 				4C464BF12187AF1500D30602 /* PDFTocTableViewCell.swift in Sources */,

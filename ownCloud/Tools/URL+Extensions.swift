@@ -12,7 +12,6 @@ import ownCloudSDK
 typealias UploadHandler = (OCItem?, Error?) -> Void
 
 extension URL {
-
 	var matchesAppScheme : Bool {
 		guard
 			let urlTypes = Bundle.main.object(forInfoDictionaryKey: "CFBundleURLTypes") as? [Any],
@@ -26,9 +25,13 @@ extension URL {
 		return false
 	}
 
-	func upload(with core:OCCore?, at rootItem:OCItem, alternativeName:String? = nil, importByCopy:Bool = false, placeholderHandler:UploadHandler? = nil, completionHandler:UploadHandler? = nil) -> Progress? {
+	func upload(with core:OCCore?, at rootItem:OCItem, alternativeName:String? = nil, modificationDate:Date? = nil, importByCopy:Bool = false, placeholderHandler:UploadHandler? = nil, completionHandler:UploadHandler? = nil) -> Progress? {
 		let fileName = alternativeName != nil ? alternativeName! : self.lastPathComponent
-		let importOptions : [OCCoreOption : Any] = [OCCoreOption.importByCopying : importByCopy, OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue]
+		var importOptions : [OCCoreOption : Any] = [OCCoreOption.importByCopying : importByCopy, OCCoreOption.automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue]
+
+		if let modificationDate = modificationDate {
+			importOptions[OCCoreOption.lastModifiedDate] = modificationDate
+		}
 
 		var progress:Progress?
 
@@ -59,25 +62,25 @@ extension URL {
 		return progress
 	}
 
-    func privateLinkItemID() -> String? {
+	func privateLinkItemID() -> String? {
 
 		// Check if the link URL has format https://<server>/f/<item_id>
-        if self.pathComponents.count > 2 {
-            if self.pathComponents[self.pathComponents.count - 2] == "f" {
-                return self.pathComponents.last
-            }
-        }
+		if self.pathComponents.count > 2 {
+			if self.pathComponents[self.pathComponents.count - 2] == "f" {
+				return self.pathComponents.last
+			}
+		}
 
-        return nil
-    }
+		return nil
+	}
 
 	@discardableResult func retrieveLinkedItem(with completion: @escaping (_ item:OCItem?, _ bookmark:OCBookmark?, _ error:Error?, _ connected:Bool) -> Void) -> Bool {
-        // Check if the link is private ones and has item ID
-        guard self.privateLinkItemID() != nil else {
-            return false
-        }
+		// Check if the link is private ones and has item ID
+		guard self.privateLinkItemID() != nil else {
+			return false
+		}
 
-        // Find matching bookmarks
+		// Find matching bookmarks
 		let bookmarks = OCBookmarkManager.shared.bookmarks.filter({$0.url?.host == self.host})
 
 		var matchedBookmark: OCBookmark?
@@ -122,8 +125,8 @@ extension URL {
 			completion(foundItem, matchedBookmark, lastError, internetReachable)
 		}
 
-        return true
-    }
+		return true
+	}
 
 	func resolveAndPresent(in window:UIWindow) {
 
@@ -151,6 +154,6 @@ extension URL {
 			} else {
 				completion()
 			}
-        })
+		})
 	}
 }
