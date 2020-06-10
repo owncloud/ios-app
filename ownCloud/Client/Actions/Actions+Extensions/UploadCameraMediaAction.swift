@@ -22,6 +22,48 @@ import MobileCoreServices
 import ImageIO
 import AVFoundation
 
+extension AVAsset {
+     func exportVideo(targetURL:URL, type:AVFileType) -> Bool {
+          if self.isExportable {
+               let group = DispatchGroup()
+               let preset = AVAssetExportPresetHighestQuality
+               var compatiblePreset = false
+               var exportSuccess = false
+
+               group.enter()
+               AVAssetExportSession.determineCompatibility(ofExportPreset: preset, with: self, outputFileType: type, completionHandler: { (isCompatible) in
+                    compatiblePreset = isCompatible
+                    group.leave()
+               })
+
+               group.wait()
+
+               if compatiblePreset {
+                    guard let export = AVAssetExportSession(asset: self, presetName: preset) else {
+                         return false
+                    }
+                   
+                    // Configure export session
+                    export.outputFileType = type
+                    export.outputURL = targetURL
+
+                    // Start export
+                    group.enter()
+                    export.exportAsynchronously {
+                         exportSuccess = (export.status == .completed)
+                         group.leave()
+                    }
+
+                    group.wait()
+               }
+
+               return exportSuccess
+          }
+
+          return false
+     }
+}
+
 class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
 	typealias CameraCaptureCompletionHandler = (_ imageURL:URL?, _ alternativeName:String?, _ deleteImportedFile:Bool) -> Void
