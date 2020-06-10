@@ -61,6 +61,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		ScheduledTaskManager.shared.setup()
 
+        AppStatistics.shared.update()
+
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
@@ -107,6 +109,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
 		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 		OCExtensionManager.shared.addExtension(PendingMediaUploadTaskExtension.taskExtension)
+        OCExtensionManager.shared.addExtension(RequestReviewTaskExtension.taskExtension)
 
 		// Theming
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
