@@ -437,4 +437,10 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
 
 		locationManager.startMonitoringSignificantLocationChanges()
 	}
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        if let error = error as? CLError, error.code == .denied {
+            locationManager.stopMonitoringSignificantLocationChanges()
+        }
+    }
 }
