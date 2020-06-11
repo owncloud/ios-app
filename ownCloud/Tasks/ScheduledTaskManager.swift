@@ -144,8 +144,6 @@ class ScheduledTaskManager : NSObject {
 
 		locationManager.delegate = self
 
-		startLocationMonitoringIfAuthorized()
-
 		if #available(iOS 13, *) {
 			BGTaskScheduler.shared.register(forTaskWithIdentifier: "com.owncloud.background-refresh-task", using: nil) { (task) in
 				if let refreshTask = task as? BGAppRefreshTask {
@@ -161,8 +159,10 @@ class ScheduledTaskManager : NSObject {
 		switch notificaton.name {
 		case UIApplication.didBecomeActiveNotification:
 			state = .foreground
+            stopLocationMonitoring()
 		case UIApplication.didEnterBackgroundNotification:
 			state = .background
+            startLocationMonitoringIfAuthorized()
 			if #available(iOS 13, *) {
 				scheduleBackgroundRefreshTask()
 			}
@@ -393,10 +393,21 @@ extension ScheduledTaskManager : PHPhotoLibraryChangeObserver {
 
 extension ScheduledTaskManager : CLLocationManagerDelegate {
 
+    private func startLocationTracking() {
+        //locationManager.startMonitoringSignificantLocationChanges()
+        locationManager.startMonitoringVisits()
+
+    }
+
+    private func stopLocationTracking() {
+        //locationManager.stopMonitoringSignificantLocationChanges()
+        locationManager.stopMonitoringVisits()
+    }
+
 	@discardableResult func startLocationMonitoringIfAuthorized() -> Bool {
 		if CLLocationManager.authorizationStatus() == .authorizedAlways {
 			Log.debug(tagged: ["TASK_MANAGER", "MEDIA_UPLOAD"], "Significant location monitoring has started")
-			self.locationManager.startMonitoringSignificantLocationChanges()
+			startLocationTracking()
 			return true
 		} else {
 			return false
@@ -405,7 +416,7 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
 
 	func stopLocationMonitoring() {
 		if CLLocationManager.authorizationStatus() == .authorizedAlways || CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
-			locationManager.stopMonitoringSignificantLocationChanges()
+			stopLocationTracking()
 		}
 	}
 
@@ -430,17 +441,25 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
 		}
 	}
 
+    func locationManager(_ manager: CLLocationManager, didVisit visit: CLVisit) {
+        Log.debug(tagged: ["TASK_MANAGER", "MEDIA_UPLOAD"], "Location visit event")
+
+        if shallMonitorPhotoLibraryChanges() {
+            scheduleTasks()
+        }
+    }
+
 	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
 		guard shallMonitorPhotoLibraryChanges() == true else { return }
 
 		guard status == .authorizedAlways else { return }
 
-		locationManager.startMonitoringSignificantLocationChanges()
+		startLocationTracking()
 	}
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         if let error = error as? CLError, error.code == .denied {
-            locationManager.stopMonitoringSignificantLocationChanges()
+            stopLocationTracking()
         }
     }
 }
