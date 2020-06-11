@@ -19,6 +19,7 @@
 import UIKit
 import MessageUI
 import ownCloudSDK
+import ownCloudAppShared
 
 class VendorServices : NSObject {
 	// MARK: - App version information
@@ -122,6 +123,26 @@ class VendorServices : NSObject {
 			viewController.present(alert, animated: true)
 		}
 	}
+
+    func considerReviewPrompt() {
+        guard
+            let reviewPromptEnabled = self.classSetting(forOCClassSettingsKey: .enableReviewPrompt) as? Bool,
+            reviewPromptEnabled == true else {
+            return
+        }
+
+        // Make sure there is at least one bookmark configured, to not bother users who have never configured any accounts
+        guard OCBookmarkManager.shared.bookmarks.count > 0 else { return }
+
+        // Make sure at least 14 days have elapsed since the first launch of the app
+        guard AppStatistics.shared.timeIntervalSinceFirstLaunch.days >= 14 else { return }
+
+        // Make sure at least 7 days have elapsed since first launch of current version
+        guard AppStatistics.shared.timeIntervalSinceUpdate.days >= 7 else { return }
+
+        // Make sure at least 230 have elapsed since last prompting
+        AppStatistics.shared.requestAppStoreReview(onceInDays: 230)
+    }
 }
 
 extension VendorServices: MFMailComposeViewControllerDelegate {
@@ -139,6 +160,7 @@ extension OCClassSettingsKey {
 	static let showBetaWarning = OCClassSettingsKey("show-beta-warning")
 	static let isBetaBuild = OCClassSettingsKey("is-beta-build")
 	static let enableUIAnimations = OCClassSettingsKey("enable-ui-animations")
+    static let enableReviewPrompt = OCClassSettingsKey("enable-review-prompt")
 }
 
 extension VendorServices : OCClassSettingsSupport {
@@ -146,7 +168,7 @@ extension VendorServices : OCClassSettingsSupport {
 
 	static func defaultSettings(forIdentifier identifier: OCClassSettingsIdentifier) -> [OCClassSettingsKey : Any]? {
 		if identifier == .app {
-			return [ .isBetaBuild : false, .showBetaWarning : false, .enableUIAnimations: true ]
+            return [ .isBetaBuild : false, .showBetaWarning : false, .enableUIAnimations: true, .enableReviewPrompt: true]
 		}
 
 		return nil

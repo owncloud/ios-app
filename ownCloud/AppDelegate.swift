@@ -109,7 +109,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
 		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
 		OCExtensionManager.shared.addExtension(PendingMediaUploadTaskExtension.taskExtension)
-        OCExtensionManager.shared.addExtension(RequestReviewTaskExtension.taskExtension)
 
 		// Theming
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
