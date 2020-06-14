@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0233F45E246E9D960095A799 /* UploadCameraMediaAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */; };
 		02072E6023E46022006548A7 /* UIWindow+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02072E5F23E46022006548A7 /* UIWindow+Extension.swift */; };
+		0233F45E246E9D960095A799 /* UploadCameraMediaAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */; };
 		0269F589244DED02002E9D99 /* UIAlertController+UniversalLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0269F588244DED02002E9D99 /* UIAlertController+UniversalLinks.swift */; };
 		2308F94321467F6200CF0B91 /* ClientDirectoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */; };
 		232B01F42126B0CE00366FA0 /* MoreViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232B01F32126B0CE00366FA0 /* MoreViewHeader.swift */; };
@@ -338,7 +338,6 @@
 		DCC6565B20C9B7E400110A97 /* DocumentActionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC6565A20C9B7E400110A97 /* DocumentActionViewController.m */; };
 		DCC6565E20C9B7E400110A97 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCC6565C20C9B7E400110A97 /* MainInterface.storyboard */; };
 		DCC6566520C9B7E400110A97 /* ownCloud File Provider.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DCC6564620C9B7E300110A97 /* ownCloud File Provider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		DCC832DB242BB44F00153F8C /* SyncIssueMessagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC832DA242BB44F00153F8C /* SyncIssueMessagePresenter.swift */; };
 		DCC832DE242C0C3700153F8C /* DisplaySleepPreventer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC832DD242C0C3700153F8C /* DisplaySleepPreventer.swift */; };
 		DCC832E2242C0EAC00153F8C /* MessageSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC832E1242C0EAC00153F8C /* MessageSelector.swift */; };
 		DCC832F1242CC27B00153F8C /* NotificationMessagePresenter.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC832E6242CB18700153F8C /* NotificationMessagePresenter.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -759,8 +758,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = UploadCameraMediaAction.swift; sourceTree = "<group>"; };
 		02072E5F23E46022006548A7 /* UIWindow+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Extension.swift"; sourceTree = "<group>"; };
+		0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = UploadCameraMediaAction.swift; sourceTree = "<group>"; };
 		0269F588244DED02002E9D99 /* UIAlertController+UniversalLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+UniversalLinks.swift"; sourceTree = "<group>"; };
 		03AE98EEF23B4F4F2C0FDD0F /* Pods-ownCloudTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientDirectoryPickerViewController.swift; sourceTree = "<group>"; };
@@ -1044,6 +1043,7 @@
 		DC4FEAE6209E3A7700D4476B /* OCIssue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCIssue+Extension.swift"; sourceTree = "<group>"; };
 		DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueTools.swift; sourceTree = "<group>"; };
 		DC576EC122647A070087316D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DC5D9E742496512400BFFE8E /* MessageQueueExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageQueueExample.swift; sourceTree = "<group>"; };
 		DC62513F225C904700736874 /* NSError+MessageResolution.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSError+MessageResolution.h"; sourceTree = "<group>"; };
 		DC625140225C904700736874 /* NSError+MessageResolution.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSError+MessageResolution.m"; sourceTree = "<group>"; };
 		DC625147225CEB2C00736874 /* UploadFileAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadFileAction.swift; sourceTree = "<group>"; };
@@ -1123,7 +1123,6 @@
 		DCC6565A20C9B7E400110A97 /* DocumentActionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DocumentActionViewController.m; sourceTree = "<group>"; };
 		DCC6565D20C9B7E400110A97 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		DCC6565F20C9B7E400110A97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DCC832DA242BB44F00153F8C /* SyncIssueMessagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncIssueMessagePresenter.swift; sourceTree = "<group>"; };
 		DCC832DD242C0C3700153F8C /* DisplaySleepPreventer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySleepPreventer.swift; sourceTree = "<group>"; };
 		DCC832E1242C0EAC00153F8C /* MessageSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageSelector.swift; sourceTree = "<group>"; };
 		DCC832E6242CB18700153F8C /* NotificationMessagePresenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationMessagePresenter.h; sourceTree = "<group>"; };
@@ -2256,11 +2255,11 @@
 				DCC832F7242CC94D00153F8C /* AlertView.swift */,
 				DCC83303242CF3AC00153F8C /* AlertViewController.swift */,
 				DCC832F5242CC5F700153F8C /* CardIssueMessagePresenter.swift */,
-				DCC832DA242BB44F00153F8C /* SyncIssueMessagePresenter.swift */,
 				DC9C1AEB247C76470067895A /* MessageGroupCell.swift */,
 				DC4D5A09247C1398008ADDB6 /* MessageGroup.swift */,
 				DCC832E1242C0EAC00153F8C /* MessageSelector.swift */,
 				DCD954DE247D62FA00E184E6 /* MessageTableViewController.swift */,
+				DC5D9E742496512400BFFE8E /* MessageQueueExample.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -3478,7 +3477,6 @@
 				DC4D5A0A247C1398008ADDB6 /* MessageGroup.swift in Sources */,
 				39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */,
 				DCC8536023CE1AF8007BA3EB /* PurchasesSettingsSection.swift in Sources */,
-				DCC832DB242BB44F00153F8C /* SyncIssueMessagePresenter.swift in Sources */,
 				DCD2D40622F06ECA0071FB8F /* StorageSettingsSection.swift in Sources */,
 				39B289A8226F1EE000BE0E11 /* MessageView.swift in Sources */,
 				4C464BF22187AF1500D30602 /* PDFSearchViewController.swift in Sources */,

@@ -63,7 +63,7 @@
 {
 	NSMutableSet<UNNotificationCategory *> *categories = [NSMutableSet new];
 
-	for (OCSyncIssueTemplate *template in OCSyncIssueTemplate.templates)
+	for (OCMessageTemplate *template in OCMessageTemplate.templates)
 	{
 		NSMutableArray<UNNotificationAction *> *actions = [NSMutableArray new];
 		UNNotificationCategory *category = nil;

@@ -26,7 +26,7 @@ class MessageGroup: NSObject {
 	var groupTitle : String? {
 		get {
 			// Derive group title
-			if let identifier = identifier, let issueTemplate = OCSyncIssueTemplate(forIdentifier: OCSyncIssueTemplateIdentifier(rawValue: identifier.rawValue)) {
+			if let identifier = identifier, let issueTemplate = OCMessageTemplate(forIdentifier: OCMessageTemplateIdentifier(rawValue: identifier.rawValue)) {
 				_groupTitle = issueTemplate.categoryName
 			}
 

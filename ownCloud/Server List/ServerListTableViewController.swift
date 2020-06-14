@@ -108,10 +108,12 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 			if let messages = messages {
 				for message in messages {
-					if let count = countByBookmarkUUID[message.bookmarkUUID] {
-						countByBookmarkUUID[message.bookmarkUUID] = count + 1
-					} else {
-						countByBookmarkUUID[message.bookmarkUUID] = 1
+					if !message.resolved {
+						if let count = countByBookmarkUUID[message.bookmarkUUID] {
+							countByBookmarkUUID[message.bookmarkUUID] = count + 1
+						} else {
+							countByBookmarkUUID[message.bookmarkUUID] = 1
+						}
 					}
 				}
 			}

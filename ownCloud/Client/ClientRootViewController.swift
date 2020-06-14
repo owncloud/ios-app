@@ -43,7 +43,6 @@ class ClientRootViewController: UITabBarController {
 	var progressSummarizer : ProgressSummarizer?
 	var toolbar : UIToolbar?
 
-	var messagePresenter : SyncIssueMessagePresenter?
 	var notificationPresenter : NotificationMessagePresenter?
 	var cardMessagePresenter : CardIssueMessagePresenter?
 
@@ -75,7 +74,6 @@ class ClientRootViewController: UITabBarController {
 
 		super.init(nibName: nil, bundle: nil)
 
-		// messagePresenter = SyncIssueMessagePresenter(for: self)
 		notificationPresenter = NotificationMessagePresenter(forBookmarkUUID: bookmark.uuid)
 		cardMessagePresenter = CardIssueMessagePresenter(with: bookmark.uuid as OCBookmarkUUID, limitToSingleCard: true, presenter: { [weak self] (viewController) in
 			self?.presentAlertAsCard(viewController: viewController, withHandle: false, dismissable: true)
@@ -147,16 +145,12 @@ class ClientRootViewController: UITabBarController {
 		Theme.shared.unregister(client: self)
 
 		// Remove message presenters
-		if let messagePresenter = self.messagePresenter {
-			core?.messageQueue.remove(messagePresenter)
-		}
-
 		if let notificationPresenter = self.notificationPresenter {
-			core?.messageQueue.remove(notificationPresenter)
+			core?.messageQueue.remove(presenter: notificationPresenter)
 		}
 
 		if let cardMessagePresenter = self.cardMessagePresenter {
-			core?.messageQueue.remove(cardMessagePresenter)
+			core?.messageQueue.remove(presenter: cardMessagePresenter)
 		}
 
 		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
@@ -169,16 +163,12 @@ class ClientRootViewController: UITabBarController {
 			core?.delegate = self
 
 			// Add message presenters
-			if let messagePresenter = self.messagePresenter {
-				core?.messageQueue.add(messagePresenter)
-			}
-
 			if let notificationPresenter = self.notificationPresenter {
-				core?.messageQueue.add(notificationPresenter)
+				core?.messageQueue.add(presenter: notificationPresenter)
 			}
 
 			if let cardMessagePresenter = self.cardMessagePresenter {
-				core?.messageQueue.add(cardMessagePresenter)
+				core?.messageQueue.add(presenter: cardMessagePresenter)
 			}
 
 			// Remove skip available offline when user opens the bookmark

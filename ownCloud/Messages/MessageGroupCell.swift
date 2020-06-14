@@ -80,13 +80,13 @@ class MessageGroupCell: ThemeTableViewCell {
 		let messages = messageGroup.messages
 		let multiMessage = messages.count > 1
 
-		if let choices = message.syncIssue?.choices {
+		if let choices = message.choices {
 			for choice in choices {
 				let option = AlertOption(label: choice.label, type: choice.type, handler: { [weak self] (_, _) in
 					if let applyAllSwitch = self?.applyAllSwitch, applyAllSwitch.isOn {
 						if let messages = self?.messageGroup?.messages {
 							for message in messages {
-								if let messageChoice = message.syncIssue?.choice(withIdentifier: choice.identifier) {
+								if let messageChoice = message.choice(withIdentifier: choice.identifier) {
 									queue.resolveMessage(message, with: messageChoice)
 								}
 							}
@@ -100,7 +100,7 @@ class MessageGroupCell: ThemeTableViewCell {
 			}
 		}
 
-		if let title = message.syncIssue?.localizedTitle, let description = message.syncIssue?.localizedDescription {
+		if let title = message.localizedTitle, let description = message.localizedDescription {
 			if containerView == nil {
 				containerView = UIView()
 				containerView?.translatesAutoresizingMaskIntoConstraints = false

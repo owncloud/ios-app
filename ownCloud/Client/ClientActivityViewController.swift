@@ -49,7 +49,7 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 				NotificationCenter.default.addObserver(self, selector: #selector(handleActivityNotification(_:)), name: core.activityManager.activityUpdateNotificationName, object: nil)
 
 				messageSelector = MessageSelector(from: core.messageQueue, filter: { (message) in
-					return (message.bookmarkUUID == bookmarkUUID)
+					return (message.bookmarkUUID == bookmarkUUID) && !message.resolved
 				}, provideGroupedSelection: true, handler: { [weak self] (messages, _) in
 					OnMainThread {
 						if let tabBarItem = self?.navigationController?.tabBarItem {
@@ -190,7 +190,7 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 			let bookmarkUUID = core.bookmark.uuid
 
 			let messageTableViewController = MessageTableViewController(with: core, messageFilter: { (message) -> Bool in
-				return (message.categoryIdentifier == likeMessageCategoryID) && (message.bookmarkUUID == bookmarkUUID)
+				return (message.categoryIdentifier == likeMessageCategoryID) && (message.bookmarkUUID == bookmarkUUID) && !message.resolved
 			})
 
 			self.navigationController?.pushViewController(messageTableViewController, animated: true)

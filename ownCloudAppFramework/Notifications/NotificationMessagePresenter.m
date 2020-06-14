@@ -36,18 +36,15 @@
 
 - (OCMessagePresentationPriority)presentationPriorityFor:(OCMessage *)message
 {
-	if (message.syncIssue != nil)
+	if ((message.localizedTitle != nil) && (message.choices != nil) && [message.bookmarkUUID isEqual:_bookmarkUUID])
 	{
-		if ([message.bookmarkUUID isEqual:_bookmarkUUID])
-		{
-			return (OCMessagePresentationPriorityDefault);
-		}
+		return (OCMessagePresentationPriorityDefault);
 	}
 
 	return (OCMessagePresentationPriorityWontPresent);
 }
 
-- (void)present:(OCMessage *)message completionHandler:(void (^)(OCMessagePresentationResult, OCSyncIssueChoice * _Nullable))completionHandler
+- (void)present:(OCMessage *)message completionHandler:(void (^)(OCMessagePresentationResult, OCMessageChoice * _Nullable))completionHandler
 {
 	UNUserNotificationCenter *center = UNUserNotificationCenter.currentNotificationCenter;
 
@@ -56,10 +53,17 @@
 		{
 			UNMutableNotificationContent *content = [UNMutableNotificationContent new];
 
-			content.categoryIdentifier = message.categoryIdentifier;
+			if (message.categoryIdentifier != nil)
+			{
+				content.categoryIdentifier = message.categoryIdentifier;
+			}
 
-			content.title = message.syncIssue.localizedTitle;
-			content.body = message.syncIssue.localizedDescription;
+			content.title = message.localizedTitle;
+
+			if (message.localizedDescription != nil)
+			{
+				content.body = message.localizedDescription;
+			}
 
 			UNNotificationRequest *request;
 
@@ -109,7 +113,7 @@
 			else
 			{
 				// User made a choice
-				for (OCSyncIssueChoice *choice in message.syncIssue.choices)
+				for (OCMessageChoice *choice in message.choices)
 				{
 					if ([choice.identifier isEqual:response.actionIdentifier])
 					{

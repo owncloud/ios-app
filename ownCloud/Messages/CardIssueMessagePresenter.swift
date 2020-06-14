@@ -40,17 +40,17 @@ class CardIssueMessagePresenter: OCMessagePresenter {
 	}
 
 	override func presentationPriority(for message: OCMessage) -> OCMessagePresentationPriority {
-		if message.syncIssue != nil, let messageBookmarkUUID = message.bookmarkUUID, let bookmarkUUID = bookmarkUUID as UUID?, messageBookmarkUUID == bookmarkUUID, !oneCardLimit || (oneCardLimit && !isShowingCard) {
+		if message.localizedTitle != nil, let messageBookmarkUUID = message.bookmarkUUID, let bookmarkUUID = bookmarkUUID as UUID?, messageBookmarkUUID == bookmarkUUID, !oneCardLimit || (oneCardLimit && !isShowingCard) {
 			return .high
 		}
 
 		return .wontPresent
 	}
 
-	override func present(_ message: OCMessage, completionHandler: @escaping (OCMessagePresentationResult, OCSyncIssueChoice?) -> Void) {
+	override func present(_ message: OCMessage, completionHandler: @escaping (OCMessagePresentationResult, OCMessageChoice?) -> Void) {
 		var options : [AlertOption] = []
 
-		if let choices = message.syncIssue?.choices {
+		if let choices = message.choices {
 			for choice in choices {
 				let option = AlertOption(label: choice.label, type: choice.type, handler: { [weak self] (_, _) in
 					self?.isShowingCard = false
@@ -68,7 +68,7 @@ class CardIssueMessagePresenter: OCMessagePresenter {
 			}))
 		}
 
-		if let syncIssue = message.syncIssue {
+		if let localizedTitle = message.localizedTitle {
 			var localizedHeader : String?
 
 			if let messageBookmarkUUID = message.bookmarkUUID, (bookmarkUUID as UUID) != messageBookmarkUUID {
@@ -77,7 +77,7 @@ class CardIssueMessagePresenter: OCMessagePresenter {
 				}
 			}
 
-			let alertViewController = AlertViewController(localizedHeader: localizedHeader, localizedTitle: syncIssue.localizedTitle, localizedDescription: syncIssue.localizedDescription ?? "", options: options, dismissHandler: { [weak self] in
+			let alertViewController = AlertViewController(localizedHeader: localizedHeader, localizedTitle: localizedTitle, localizedDescription: message.localizedDescription ?? "", options: options, dismissHandler: { [weak self] in
 				self?.isShowingCard = false
 				completionHandler(.didPresent, nil)
 			})

@@ -75,16 +75,19 @@ class MessageSelector: NSObject {
 					var messageGroups : [MessageGroup] = []
 
 					for message in filteredMessages {
-						let categoryIdentifier : OCMessageCategoryIdentifier = message.categoryIdentifier ?? .other
 						var messageGroup : MessageGroup?
 
-						messageGroup = messageGroupsByIdentifier[categoryIdentifier]
+						if let categoryIdentifier = message.categoryIdentifier {
+							messageGroup = messageGroupsByIdentifier[categoryIdentifier]
+						}
 
 						if messageGroup == nil {
 							messageGroup = MessageGroup(with: message)
 
 							if let messageGroup = messageGroup {
-								messageGroupsByIdentifier[categoryIdentifier] = messageGroup
+								if let categoryIdentifier = message.categoryIdentifier {
+									messageGroupsByIdentifier[categoryIdentifier] = messageGroup
+								}
 								messageGroups.append(messageGroup)
 							}
 						} else {
