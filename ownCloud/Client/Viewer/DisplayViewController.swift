@@ -282,6 +282,16 @@ class DisplayViewController: UIViewController {
 				iconImageView.image = item.icon(fitInSize:iconImageSize)
 			}
 		}
+
+		if self.source != nil, item.locallyModified == true {
+			OnMainThread {
+				self.renderSpecificView(completion: { (success) in
+					if !success {
+						self.state = .previewFailed
+					}
+				})
+			}
+		}
 	}
 
 	// MARK: - Actions which can be triggered by the user
