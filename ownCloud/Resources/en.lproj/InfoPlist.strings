@@ -20,4 +20,4 @@
 "NSAppleMusicUsageDescription" = "This permission is needed for uploading media files to your server.";
 "NSPhotoLibraryAddUsageDescription" = "This permission is needed to upload photos and videos from your photo library.";
 "NSPhotoLibraryUsageDescription" = "This permission is needed to upload photos and videos from your photo library.";
-
+"NSMicrophoneUsageDescription" = "This permission is needed to record videos"

@@ -1,5 +1,5 @@
 //
-//  UploadPhotosAction.swift
+//  UploadMediaAction.swift
 //  ownCloud
 //
 //  Created by Felix Schwarz on 09.04.19.

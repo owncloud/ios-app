@@ -20,6 +20,7 @@ import Foundation
 import ownCloudSDK
 import Photos
 import MobileCoreServices
+import AVFoundation
 
 class MediaUploadQueue : OCActivitySource {
 	private var uploadActivity: MediaUploadActivity?
@@ -283,18 +284,20 @@ class MediaUploadQueue : OCActivitySource {
 	private func importAsset(asset:PHAsset, using core:OCCore, at rootItem:OCItem, uploadCompletion: @escaping () -> Void) -> OCItem? {
 
 		// Determine the list of preferred media formats
-		var prefferedMediaOutputFormats = [String]()
+		var utisToConvert = [String]()
+		var preserveOriginalNames = false
 
 		if let userDefaults = OCAppIdentity.shared.userDefaults {
 			if userDefaults.convertHeic {
-				prefferedMediaOutputFormats.append(String(kUTTypeJPEG))
+				utisToConvert.append(AVFileType.heic.rawValue)
 			}
 			if userDefaults.convertVideosToMP4 {
-				prefferedMediaOutputFormats.append(String(kUTTypeMPEG4))
+				utisToConvert.append(AVFileType.mov.rawValue)
 			}
+			preserveOriginalNames = userDefaults.preserveOriginalMediaFileNames
 		}
 
-		if let result = asset.upload(with: core, at: rootItem, preferredFormats: prefferedMediaOutputFormats, progressHandler: nil, uploadCompleteHandler: {
+		if let result = asset.upload(with: core, at: rootItem, utisToConvert: utisToConvert, preserveOriginalName: preserveOriginalNames, progressHandler: nil, uploadCompleteHandler: {
 			uploadCompletion()
 		}) {
 			if let error = result.1 {

@@ -271,6 +271,34 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		}
 	}
 
+	@available(iOS 13.0, *)
+	override func tableView(_ tableView: UITableView,
+	contextMenuConfigurationForRowAt indexPath: IndexPath,
+	point: CGPoint) -> UIContextMenuConfiguration? {
+
+		guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath), let cell = tableView.cellForRow(at: indexPath) else {
+			return nil
+		}
+
+		return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+			return self.makeContextMenu(for: indexPath, core: core, item: item, with: cell)
+		})
+	}
+
+	@available(iOS 13.0, *)
+	func makeContextMenu(for indexPath: IndexPath, core: OCCore, item: OCItem, with cell: UITableViewCell) -> UIMenu {
+
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .contextMenuItem)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: cell)
+		let actions = Action.sortedApplicableActions(for: actionContext)
+		actions.forEach({
+			$0.progressHandler = makeActionProgressHandler()
+		})
+
+		let menuItems = actions.compactMap({$0.provideUIMenuAction()})
+		return UIMenu(title: "", children: menuItems)
+	}
+
 	func updateToolbarItemsForDropping(_ draggingValues: [OCItemDraggingValue]) {
 		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
 		guard let toolbarItems = tabBarController.toolbar?.items else { return }

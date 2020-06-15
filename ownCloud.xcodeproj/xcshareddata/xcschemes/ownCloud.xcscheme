@@ -216,8 +216,28 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "oc:log.log-format"
+            value = "string:json"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.log-format"
+            value = "string:json-composed"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "oc:connection.allow-background-url-sessions"
             value = "false"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:connection.connection-allowed-authentication-methods"
+            value = "[com.owncloud.openid-connect,com.owncloud.oauth2]"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:connection.connection-allowed-authentication-methods"
+            value = "[com.owncloud.basicauth]"
             isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>

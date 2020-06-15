@@ -32,6 +32,7 @@ enum ActionPosition : Int {
 	case none = -1
 
 	case first = 100
+	case nearFirst = 150
 	case beforeMiddle = 200
 	case middle = 300
 	case afterMiddle = 400
@@ -61,6 +62,7 @@ extension OCExtensionLocationIdentifier {
 	static let toolbar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("toolbar") //!< Present in a toolbar
 	static let folderAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("folderAction") //!< Present in the alert sheet when the folder action bar button is pressed
 	static let keyboardShortcut: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("keyboardShortcut") //!< Currently used for UIKeyCommand
+	static let contextMenuItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuItem") //!< Used in UIMenu
 }
 
 class ActionExtension: OCExtension {
@@ -361,6 +363,17 @@ class Action : NSObject {
 			uiCompletionHandler(false)
 			self.perform()
 		})
+	}
+
+	@available(iOS 13.0, *)
+	func provideUIMenuAction() -> UIAction? {
+		var attribute = UIMenuElement.Attributes(rawValue: 0)
+		if actionExtension.category == .destructive {
+			attribute = .destructive
+		}
+		return UIAction(title: self.actionExtension.name, image: self.icon, attributes: attribute) { _ in
+			self.perform()
+		}
 	}
 
 	func provideAlertAction() -> UIAlertAction? {

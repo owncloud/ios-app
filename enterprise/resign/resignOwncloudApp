@@ -97,6 +97,7 @@ else
 	security cms -D -i "$a" > "$APPTEMP/tmp.plist"
 	# Get provisioning SHA-1
 	PROV_SHA_1=`/usr/libexec/PlistBuddy -c "Print :DeveloperCertificates:0" $APPTEMP/tmp.plist | openssl x509 -inform der -fingerprint | grep "^SHA1" | cut -d= -f 2 | ruby -ne 'puts $_.split(":").join'`
+  rm -f "$APPTEMP/tmp.plist"
 
 	if [ "$CERT_SHA_1" = "$PROV_SHA_1" ]; then
   		echo "${SUCCESS}Provisioning fingerprint matches with certificate:${NC}"
@@ -175,11 +176,12 @@ do
     PlistBuddy -c "Set OCAppGroupIdentifier $APPGROUP" "${LOCATIONS[$i]}/Info.plist"
     PlistBuddy -c "Set OCKeychainAccessGroupIdentifier $APPGROUP" "${LOCATIONS[$i]}/Info.plist"
     PlistBuddy -c "Set OCAppIdentifierPrefix $APP_ID_PREFIX." "${LOCATIONS[$i]}/Info.plist"
+    PlistBuddy -c "Set NSExtension:NSExtensionFileProviderDocumentGroup $APPGROUP" "${LOCATIONS[$i]}/Info.plist"
 
     # Remove old Code Signatures
     rm -rf "${LOCATIONS[$i]}/_CodeSignature"
 
-    echo  ""
+    echo  ""$APPGROUP
 done
 
 echo "${SUCCESS}Resign App, Extensions and Frameworks…${NC}"
@@ -188,7 +190,7 @@ echo ""
 #Resign Swift & Frameworks Libraries
 ls "${APPDIR}/Frameworks" | while read file
 do
-    /usr/bin/codesign -fv -s "$IDENTITY" "${APPDIR}/Frameworks/$file" --entitlements "${ENTITLEMENTS[0]}"
+    /usr/bin/codesign -fv -s "$IDENTITY" "${APPDIR}/Frameworks/$file" #--entitlements "${ENTITLEMENTS[0]}"
 done
 
 # Resign everything
