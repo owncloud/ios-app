@@ -25,10 +25,6 @@ class PendingMediaUploadTaskExtension : ScheduledTaskAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.pending_media_upload") }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.appDidComeToForeground] }
 
-	private var uploadDirectoryTracking: OCCoreItemTracking?
-	private weak var weakCore: OCCore?
-	private var coreUpdatesHandler: OCCoreItemListFetchUpdatesCompletionHandler?
-
 	override func run(background:Bool) {
 
 		Log.debug(tagged: ["REMAINING_MEDIA_UPLOAD"], "Preparing...")
