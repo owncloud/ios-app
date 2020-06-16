@@ -13,6 +13,10 @@ import ownCloudSDK
 import QuickLookThumbnailing
 #endif
 
+protocol ItemContainer {
+	var item : OCItem? { get }
+}
+
 extension UIImageView {
 
 	private func cacheThumbnail(image: UIImage, size:CGSize, for item:OCItem, in core:OCCore) {
@@ -21,9 +25,9 @@ extension UIImageView {
 
 		let specID = item.mimeType != nil ? item.mimeType! : "_none_"
 		let event = OCEvent(type: .retrieveThumbnail,
-							userInfo: [OCEventUserInfoKey(rawValue: "specID") : NSString(string: specID), OCEventUserInfoKey.itemVersionIdentifier : itemVersionIdentifier],
-							ephermalUserInfo: nil,
-							result: nil)
+				    userInfo: [OCEventUserInfoKey(rawValue: "specID") : NSString(string: specID), .itemVersionIdentifier : itemVersionIdentifier],
+				    ephermalUserInfo: nil,
+				    result: nil)
 
 		let thumbnail = OCItemThumbnail()
 		thumbnail.itemVersionIdentifier = item.itemVersionIdentifier
@@ -38,7 +42,7 @@ extension UIImageView {
 		core.handle(event, sender: self)
 	}
 
-	@discardableResult func setThumbnailImage(using core:OCCore, from item:OCItem, with size:CGSize, avoidSystemThumbnails:Bool = false, progressHandler:((_ progress:Progress) -> Void)? = nil) -> Progress? {
+	@discardableResult func setThumbnailImage(using core: OCCore, from requestItem: OCItem, with size: CGSize, avoidSystemThumbnails: Bool = false, itemContainer: ItemContainer? = nil, progressHandler: ((_ progress:Progress) -> Void)? = nil) -> Progress? {
 
 		weak var weakCore = core
 
@@ -49,14 +53,17 @@ extension UIImageView {
 				var types : QLThumbnailGenerator.Request.RepresentationTypes?
 				types = [.lowQualityThumbnail, .thumbnail]
 
-				if let itemURL = weakCore?.localURL(for: item) {
+				if let itemURL = weakCore?.localURL(for: requestItem) {
 					let thumbnailRequest = QLThumbnailGenerator.Request(fileAt: itemURL, size: size, scale: UIScreen.main.scale, representationTypes:types!)
 
 					QLThumbnailGenerator.shared.generateBestRepresentation(for: thumbnailRequest) { [weak self] (representation, error) in
-						if let representation = representation, let self = self, let core = weakCore, error == nil {
-							self.cacheThumbnail(image: representation.uiImage, size:size, for: item, in: core)
-							OnMainThread {
-								self.image = representation.uiImage
+						if let image = representation?.uiImage, let self = self, let core = weakCore, error == nil {
+							self.cacheThumbnail(image: image, size:size, for: requestItem, in: core)
+
+							if (itemContainer == nil) || ((itemContainer != nil) && itemContainer?.item?.itemVersionIdentifier == requestItem.itemVersionIdentifier) {
+								OnMainThread {
+									self.image = image
+								}
 							}
 						}
 					}
@@ -67,7 +74,7 @@ extension UIImageView {
 
 		let displayThumbnail = { (thumbnail: OCItemThumbnail?) in
 			_ = thumbnail?.requestImage(for: size, scale: 0, withCompletionHandler: { (thumbnail, error, _, image) in
-				if error == nil, image != nil, item.itemVersionIdentifier == thumbnail?.itemVersionIdentifier {
+				if error == nil, image != nil, (itemContainer == nil) || ((itemContainer != nil) && itemContainer?.item?.itemVersionIdentifier == thumbnail?.itemVersionIdentifier) {
 					OnMainThread {
 						self.image = image
 					}
@@ -75,20 +82,20 @@ extension UIImageView {
 			})
 		}
 
-		if item.thumbnailAvailability == .available {
-			if let thumbnail = item.thumbnail {
+		if requestItem.thumbnailAvailability == .available {
+			if let thumbnail = requestItem.thumbnail {
 				displayThumbnail(thumbnail)
 			}
 			return nil
 		}
 
-		if item.thumbnailAvailability != .none {
+		if requestItem.thumbnailAvailability != .none {
 
-			let activeThumbnailRequestProgress = weakCore?.retrieveThumbnail(for: item, maximumSize: size, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, progress) in
+			let activeThumbnailRequestProgress = weakCore?.retrieveThumbnail(for: requestItem, maximumSize: size, scale: 0, retrieveHandler: { (_, _, _, thumbnail, _, progress) in
 
 				// Did we get valid thumbnail?
 				if thumbnail != nil {
-					item.thumbnail = thumbnail
+					requestItem.thumbnail = thumbnail
 					displayThumbnail(thumbnail)
 				} else if avoidSystemThumbnails == false {
 					// No thumbnail returned by the core, try QuickLook thumbnailing on iOS 13
