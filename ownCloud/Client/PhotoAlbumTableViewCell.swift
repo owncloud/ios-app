@@ -37,17 +37,16 @@ class PhotoAlbumTableViewCell: ThemeTableViewCell {
 	var titleLabel = UILabel()
 	var countLabel = UILabel()
 
+	weak var imageCachingManager: PHCachingImageManager?
 	var thumbnailRequestID: PHImageRequestID?
-
-	static let imageCachingManager = PHCachingImageManager()
 
 	var thumbnailAsset: PHAsset? {
 		didSet {
 			if let asset = thumbnailAsset {
 				let size = PhotoAlbumTableViewCell.thumbnailSize
 				let requestOptions = imageRequestOptions(for: asset)
-				PhotoAlbumTableViewCell.imageCachingManager.startCachingImages(for: [asset], targetSize: size, contentMode: .aspectFill, options: requestOptions)
-				thumbnailRequestID = PhotoAlbumTableViewCell.imageCachingManager.requestImage(for: asset,
+				imageCachingManager?.startCachingImages(for: [asset], targetSize: size, contentMode: .aspectFill, options: requestOptions)
+				thumbnailRequestID = imageCachingManager?.requestImage(for: asset,
 													  targetSize: size,
 													  contentMode: .aspectFill,
 													  options: requestOptions) {[weak self] (image, _) in
@@ -55,15 +54,11 @@ class PhotoAlbumTableViewCell: ThemeTableViewCell {
 				}
 			} else {
 				if self.thumbnailRequestID != nil {
-					PHImageManager.default().cancelImageRequest(self.thumbnailRequestID!)
+					imageCachingManager?.cancelImageRequest(self.thumbnailRequestID!)
 					thumbnailRequestID = nil
 				}
 			}
 		}
-	}
-
-	static func stopCachingThumbnails() {
-		PhotoAlbumTableViewCell.imageCachingManager.stopCachingImagesForAllAssets()
 	}
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

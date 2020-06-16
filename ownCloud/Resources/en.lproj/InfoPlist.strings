@@ -20,7 +20,7 @@
 "NSAppleMusicUsageDescription" = "This permission is needed for uploading media files to your server.";
 "NSPhotoLibraryAddUsageDescription" = "This permission is needed to upload photos and videos from your photo library.";
 "NSPhotoLibraryUsageDescription" = "This permission is needed to upload photos and videos from your photo library.";
-"NSLocationAlwaysAndWhenInUseUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in background";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in the background.";
 "NSLocationAlwaysUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in background";
 "NSLocationWhenInUseUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in background";
 "NSMicrophoneUsageDescription" = "This permission is needed to record videos"

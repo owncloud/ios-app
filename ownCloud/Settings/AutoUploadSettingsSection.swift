@@ -302,7 +302,7 @@ class AutoUploadSettingsSection: SettingsSection {
 				optionSwitch.isOn = granted
 
 				if !granted {
-					let alert = UIAlertController.alertControllerForPhotoLibraryAuthorizationInSettings()
+					let alert = ThemedAlertController.alertControllerForPhotoLibraryAuthorizationInSettings()
 					self.viewController?.present(alert, animated: true)
 				}
 

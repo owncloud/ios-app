@@ -133,7 +133,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 
 		if #available(iOS 13, *) {
 			footerText += " "
-			footerText += "Otherwise background media uploads using background refresh technology would depend on how often do you use the app.".localized
+			footerText += "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app.".localized
 		}
 		self.footerTitle = footerText
 

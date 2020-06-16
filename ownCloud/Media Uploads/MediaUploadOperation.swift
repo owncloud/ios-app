@@ -26,6 +26,7 @@ class MediaUploadOperation : Operation {
 	private weak var core: OCCore?
 	private var mediaUploadJob: MediaUploadJob
 	private var assetId: String
+	private var itemTracking : OCCoreItemTracking?
 
 	init(core:OCCore, mediaUploadJob:MediaUploadJob, assetId:String) {
 		self.core = core
@@ -79,9 +80,13 @@ class MediaUploadOperation : Operation {
 		// Track the target path
 		importGroup.enter()
 
-		OCItemTracker().item(for: core.bookmark, at: path) { (_, _, item) in
+		self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
 			defer {
 				importGroup.leave()
+			}
+
+			if isInitial {
+				self.itemTracking = nil
 			}
 
 			guard let item = item else {
@@ -107,7 +112,7 @@ class MediaUploadOperation : Operation {
 					return storage
 				}
 			}
-		}
+		})
 
 		importGroup.wait()
 	}

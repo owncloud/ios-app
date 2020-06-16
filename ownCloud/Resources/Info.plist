@@ -78,11 +78,11 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>Unlock the app without entering the passcode.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This permission is needed to enable auto-upload of photos and videos in background</string>
+	<string>This permission is needed to enable auto-upload of photos and videos in the background.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This permission is needed to enable auto-upload of photos and videos in background</string>
+	<string>This permission is needed to enable auto-upload of photos and videos in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This permission is needed to enable auto-upload of photos and videos in background</string>
+	<string>This permission is needed to enable auto-upload of photos and videos in the background.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This permission is needed to upload photos and videos from your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

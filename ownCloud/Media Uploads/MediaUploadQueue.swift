@@ -22,10 +22,12 @@ import Photos
 import MobileCoreServices
 import AVFoundation
 
-class MediaUploadQueue : OCActivitySource {
+extension OCCellularSwitchIdentifier {
+    static let photoUploadCellularSwitchIdentifier = OCCellularSwitchIdentifier(rawValue: "cellular-photo-upload")
+    static let videoUploadCellularSwitchIdentifier = OCCellularSwitchIdentifier(rawValue: "video-photo-upload")
+}
 
-	static let photoUploadCellularSwitchIdentifier = OCCellularSwitchIdentifier(rawValue: "cellular-photo-upload")
-	static let videoUploadCellularSwitchIdentifier = OCCellularSwitchIdentifier(rawValue: "video-photo-upload")
+class MediaUploadQueue : OCActivitySource {
 
 	private var uploadActivity: MediaUploadActivity?
 
@@ -50,8 +52,8 @@ class MediaUploadQueue : OCActivitySource {
 	// MARK: - Public interface
 
 	func setup() {
-		let photoCellularSwitch = OCCellularSwitch(identifier: MediaUploadQueue.photoUploadCellularSwitchIdentifier, localizedName: "Photo upload".localized, defaultValue: true, maximumTransferSize: 0)
-		let videoCellularSwitch = OCCellularSwitch(identifier: MediaUploadQueue.videoUploadCellularSwitchIdentifier, localizedName: "Video upload".localized, defaultValue: true, maximumTransferSize: 0)
+		let photoCellularSwitch = OCCellularSwitch(identifier: .photoUploadCellularSwitchIdentifier, localizedName: "Photo upload".localized, defaultValue: true, maximumTransferSize: 0)
+		let videoCellularSwitch = OCCellularSwitch(identifier: .videoUploadCellularSwitchIdentifier, localizedName: "Video upload".localized, defaultValue: true, maximumTransferSize: 0)
 
 		OCCellularManager.shared.registerSwitch(photoCellularSwitch)
 		OCCellularManager.shared.registerSwitch(videoCellularSwitch)

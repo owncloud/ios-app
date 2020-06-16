@@ -60,6 +60,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 	}
 
 	var albums = [PhotoAlbum]()
+	let imageCachingManager = PHCachingImageManager()
 
 	// This is used just to pass the selection callback to PhotoSelectionViewController when an album is selected
 	var selectionCallback: PhotosSelectedCallback?
@@ -70,7 +71,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 
 	deinit {
 		Theme.shared.unregister(client: self)
-		PhotoAlbumTableViewCell.stopCachingThumbnails()
+		imageCachingManager.stopCachingImagesForAllAssets()
 	}
 
 	override func viewDidLoad() {
@@ -116,6 +117,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: PhotoAlbumTableViewCell.identifier, for: indexPath) as? PhotoAlbumTableViewCell
 		let album = albums[indexPath.row]
+		cell?.imageCachingManager = self.imageCachingManager
 		cell?.titleLabel.text = album.name
 		cell?.countLabel.text = album.countString
 		cell?.selectionStyle = .default

@@ -490,7 +490,7 @@
 "Background upload notifications" = "Background upload notifications";
 "if you would like background media uploads to be more reliable, you should enable background location updates." = "if you would like background media uploads to be more reliable, you should enable background location updates.";
 "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked." = "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked.";
-"Otherwise background media uploads using background refresh technology would depend on how often do you use the app." = "Otherwise background media uploads using background refresh technology would depend on how often do you use the app.";
+"Otherwise background media uploads using background refresh technology would depend on how frequently you use the app." = "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app.";
 "Location permission denied" = "Location permission denied";
 "Please re-enable location acquisition in system settings" = "Please re-enable location acquisition in system settings";
 "Scheduled upload of %ld media assets" = "Scheduled upload of %ld media assets";

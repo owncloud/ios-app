@@ -183,9 +183,9 @@ extension PHAsset {
 	private var cellSwitchIdentifier: OCCellularSwitchIdentifier? {
 		var identifier: OCCellularSwitchIdentifier?
 		if self.mediaType == .image {
-			identifier = MediaUploadQueue.photoUploadCellularSwitchIdentifier
+			identifier = .photoUploadCellularSwitchIdentifier
 		} else if self.mediaType == .video {
-			identifier = MediaUploadQueue.videoUploadCellularSwitchIdentifier
+			identifier = .videoUploadCellularSwitchIdentifier
 		}
 		return identifier
 	}
@@ -490,7 +490,7 @@ extension PHAsset {
 											  alternativeName: fileName,
 											  modificationDate: self.creationDate,
 											  importByCopy: copySource,
-											  cellularSwithIdentifier: cellularSwitchIdentifier,
+											  cellularSwitchIdentifier: cellularSwitchIdentifier,
 											  placeholderHandler: { (item, error) in
 												if !copySource && error != nil {
 													// Delete the temporary asset file in case of critical error
