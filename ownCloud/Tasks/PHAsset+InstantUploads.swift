@@ -56,7 +56,7 @@ extension PHAsset {
 			fetchOptions.sortDescriptors = [sort]
 			fetchOptions.fetchLimit = fetchLimit
 
-            Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Fetching assets with options \(fetchOptions.debugDescription)")
+            Log.debug("Fetching assets with options \(fetchOptions.debugDescription)")
 
 			return PHAsset.fetchAssets(in: cameraRoll, options: fetchOptions)
 		}

@@ -226,12 +226,16 @@ class ScheduledTaskManager : NSObject {
 		let state = self.state
 		let context = self.getCurrentContext()
 
+		Log.debug(tagged: ["TASK_MANAGER"], "Scheduling tasks in state \(state), location id: \(state.locationIdentifier())")
+
 		// Find a task to run
 		if let matches = try? OCExtensionManager.shared.provideExtensions(for: context) {
 			var bgFetchedNewDataTasks = 0
 			var bgFailedTasks = 0
 
 			for match in matches {
+				Log.debug(tagged: ["TASK_MANAGER"], "Task extension match: \(match.extension.identifier)")
+
 				if let task = match.extension.provideObject(for: context) as? ScheduledTaskAction {
 					// Set completion handler for the task performing background fetch
 					if state == .backgroundFetch {
@@ -438,6 +442,8 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
 
 		if shallMonitorPhotoLibraryChanges() {
 			scheduleTasks()
+		} else {
+			Log.warning(tagged: ["TASK_MANAGER"], "Significant location change event without access to photo library")
 		}
 	}
 
@@ -446,7 +452,9 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
 
         if shallMonitorPhotoLibraryChanges() {
             scheduleTasks()
-        }
+		} else {
+			Log.warning(tagged: ["TASK_MANAGER"], "Location visit event without access to photo library")
+		}
     }
 
 	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {

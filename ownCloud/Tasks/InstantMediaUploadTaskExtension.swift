@@ -34,6 +34,8 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 	private var uploadDirectoryTracking: OCCoreItemTracking?
 
 	override func run(background:Bool) {
+		Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Task started")
+
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
 		var enqueuedAssetCount = 0
@@ -64,6 +66,8 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 			let body = String(format: "Scheduled upload of %ld media assets".localized, enqueuedAssetCount)
 			UNUserNotificationCenter.postLocalNotification(with: "com.ownloud.instant-media-upload-notification", title: title, body: body)
 		}
+
+		Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Task finished")
 	}
 
 	private func uploadPhotoAssets(for bookmark:OCBookmark, at path:String) -> Int {
