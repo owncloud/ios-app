@@ -16,18 +16,11 @@
  *
  */
 
-/*
-	UI integration ideas:
-	- alert-badge inline in file list view, based on syncIssue.syncRecordID
-	- badge on activity tab icon
-	- badge next to bookmark
-	- user notification with issue
-*/
-
 import UIKit
 import ownCloudSDK
 
-class ClientActivityViewController: UITableViewController, Themeable, MessageGroupCellDelegate {
+class ClientActivityViewController: UITableViewController, Themeable, MessageGroupCellDelegate, ClientActivityCellDelegate {
+
 	enum ActivitySection : Int, CaseIterable {
 		case messageGroups
 		case activities
@@ -44,29 +37,12 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 
 		didSet {
 			if let core = core {
-				let bookmarkUUID = core.bookmark.uuid
-
 				NotificationCenter.default.addObserver(self, selector: #selector(handleActivityNotification(_:)), name: core.activityManager.activityUpdateNotificationName, object: nil)
-
-				messageSelector = MessageSelector(from: core.messageQueue, filter: { (message) in
-					return (message.bookmarkUUID == bookmarkUUID) && !message.resolved
-				}, provideGroupedSelection: true, handler: { [weak self] (messages, _) in
-					OnMainThread {
-						if let tabBarItem = self?.navigationController?.tabBarItem {
-							if let messageCount = messages?.count, messageCount > 0 {
-								tabBarItem.badgeValue = "\(messageCount)"
-							} else {
-								tabBarItem.badgeValue = nil
-							}
-						}
-						self?.setNeedsDataReload()
-					}
-				})
 			}
 		}
 	}
 
-	var messageSelector : MessageSelector?
+	weak var messageSelector : MessageSelector?
 	var messageGroups : [MessageGroup]?
 
 	var activities : [OCActivity]?
@@ -134,6 +110,18 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 		}
 	}
 
+	func handleMessagesUpdates(messages: [OCMessage]?, groups : [MessageGroup]?) {
+		if let tabBarItem = self.navigationController?.tabBarItem {
+			if let messageCount = messages?.count, messageCount > 0 {
+				tabBarItem.badgeValue = "\(messageCount)"
+			} else {
+				tabBarItem.badgeValue = nil
+			}
+		}
+
+		self.setNeedsDataReload()
+	}
+
 	var needsDataReload : Bool = true
 
 	func setNeedsDataReload() {
@@ -197,6 +185,24 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 		}
 	}
 
+	// MARK: - ClientActivityCell delegate
+	func showMessage(for activity: OCActivity) {
+		if let syncRecordActivity = activity as? OCSyncRecordActivity,
+		   let firstMatchingMessage = messageSelector?.selection?.first(where: { (message) -> Bool in
+			return message.syncIssue?.syncRecordID == syncRecordActivity.recordID
+		}) {
+			firstMatchingMessage.showInApp()
+		}
+ 	}
+
+	func hasMessage(for activity: OCActivity) -> Bool {
+		guard let syncRecordActivity = activity as? OCSyncRecordActivity else {
+			return false
+		}
+
+		return messageSelector?.syncRecordIDsInSelection?.contains(syncRecordActivity.recordID) ?? false
+	}
+
 	// MARK: - Table view data source
 
 	override func numberOfSections(in tableView: UITableView) -> Int {
@@ -235,6 +241,8 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 				guard let cell = tableView.dequeueReusableCell(withIdentifier: "activity-cell", for: indexPath) as? ClientActivityCell else {
 					return UITableViewCell()
 				}
+
+				cell.delegate = self
 
 				if let activities = activities, indexPath.row < activities.count {
 					cell.activity = activities[indexPath.row]

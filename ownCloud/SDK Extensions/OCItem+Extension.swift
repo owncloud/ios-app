@@ -346,6 +346,7 @@ extension OCItem {
 
 			// Upload/Download status differs
 			(item.syncActivity != syncActivity) ||
+			(item.activeSyncRecordIDs != activeSyncRecordIDs) ||
 
 			// Cloud status differs
 			(item.cloudStatus != cloudStatus) ||

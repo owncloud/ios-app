@@ -36,7 +36,7 @@ class MessageTableViewController: UITableViewController, Themeable {
 
 		self.core = core
 
-		messageSelector = MessageSelector(from: core.messageQueue, filter: messageFilter, provideGroupedSelection: false, handler: { [weak self] (_, _) in
+		messageSelector = MessageSelector(from: core.messageQueue, filter: messageFilter, handler: { [weak self] (_, _, _) in
 			OnMainThread {
 				self?.setNeedsDataReload()
 			}

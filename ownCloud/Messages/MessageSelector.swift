@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 
 typealias MessageSelectorFilter = (_ message: OCMessage) -> Bool
-typealias MessageSelectorChangeHandler = (_ messages: [OCMessage]?, _ groups : [MessageGroup]?) -> Void
+typealias MessageSelectorChangeHandler = (_ messages: [OCMessage]?, _ groups : [MessageGroup]?, _ syncRecordIDs : Set<OCSyncRecordID>?) -> Void
 
 extension OCMessageCategoryIdentifier {
 	static let other : OCMessageCategoryIdentifier = OCMessageCategoryIdentifier(rawValue: "_other")
@@ -34,21 +34,24 @@ class MessageSelector: NSObject {
 	var queue : OCMessageQueue?
 	var handler : MessageSelectorChangeHandler?
 	private var provideGroupedSelection : Bool = false
+	private var provideSyncRecordIDs : Bool = false
 
 	private var selectionUUIDs : [OCMessageUUID] = []
 	var selection : [OCMessage]? {
 		didSet {
-			self.handler?(selection, groupedSelection)
+			self.handler?(selection, groupedSelection, syncRecordIDsInSelection)
 		}
 	}
 	var groupedSelection : [MessageGroup]?
+	var syncRecordIDsInSelection : Set<OCSyncRecordID>?
 
-	init(from messageQueue: OCMessageQueue = .global, filter messageFilter: MessageSelectorFilter?, provideGroupedSelection: Bool = false, handler: MessageSelectorChangeHandler?) {
+	init(from messageQueue: OCMessageQueue = .global, filter messageFilter: MessageSelectorFilter?, provideGroupedSelection: Bool = false, provideSyncRecordIDs: Bool = false, handler: MessageSelectorChangeHandler?) {
 		rateLimiter = OCRateLimiter(minimumTime: 0.2)
 
 		filter = messageFilter
 		queue = messageQueue
 		self.provideGroupedSelection = provideGroupedSelection
+		self.provideSyncRecordIDs = provideSyncRecordIDs
 		self.handler = handler
 
 		super.init()
@@ -97,6 +100,22 @@ class MessageSelector: NSObject {
 
 					groupedSelection = messageGroups
 				}
+
+				if provideSyncRecordIDs {
+					var syncRecordIDs : Set<OCSyncRecordID>?
+
+					for message in filteredMessages {
+						if let messageSyncRecordID = message.syncIssue?.syncRecordID {
+							if syncRecordIDs == nil {
+								syncRecordIDs = Set()
+							}
+							syncRecordIDs!.insert(messageSyncRecordID)
+						}
+					}
+
+					syncRecordIDsInSelection = syncRecordIDs
+				}
+
 				selectionUUIDs = filteredMessageUUIDs
 				selection = filteredMessages
 			}
