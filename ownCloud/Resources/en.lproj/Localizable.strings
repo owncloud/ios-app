@@ -264,6 +264,8 @@
 
 "Forbidden Characters" = "Forbidden Characters";
 "File name cannot contain / or \\" = "File name cannot contain / or \\";
+"Item with same name already exists" = "Item with same name already exists";
+"An item with the same name already exists in this location." = "An item with the same name already exists in this location.";
 "New Folder" = "New Folder";
 "Folder name" = "Folder name";
 "Rename" ="Rename";
