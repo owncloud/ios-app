@@ -19,6 +19,7 @@
 import UIKit
 import CoreLocation
 import UserNotifications
+import ownCloudSDK
 
 extension UserDefaults {
 
@@ -52,6 +53,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 
 	private var backgroundUploadsRow: StaticTableViewRow?
 	private var backgroundLocationRow: StaticTableViewRow?
+	private var backgroundURLSessionRow: StaticTableViewRow?
 	private var notificationsRow: StaticTableViewRow?
 
 	override init(userDefaults: UserDefaults) {
@@ -122,6 +124,15 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 				}
 			}
 		})
+
+		// Add option to force-enable background URL sessions in the app
+		backgroundURLSessionRow = StaticTableViewRow(switchWithAction: { (_, sender) in
+			if let enableSwitch = sender as? UISwitch {
+				OCConnection.setUserPreferenceValue(enableSwitch.isOn as NSNumber, forClassSettingsKey: .connectionForceBackgroundURLSessions)
+			}
+		}, title: "Background transfers (experimental)".localized, value: (OCConnection.classSetting(forOCClassSettingsKey: .connectionForceBackgroundURLSessions) as? Bool) ?? false, identifier: "background-force-background-nsurlsession")
+
+		self.add(row: backgroundURLSessionRow!)
 
 		// Add section footer with detailed explanations
 		var footerText = ""
