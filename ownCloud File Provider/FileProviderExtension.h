@@ -19,7 +19,7 @@
 #import <FileProvider/FileProvider.h>
 #import <ownCloudSDK/ownCloudSDK.h>
 
-@interface FileProviderExtension : NSFileProviderExtension <OCCoreDelegate, OCLogTagging>
+@interface FileProviderExtension : NSFileProviderExtension <OCCoreDelegate, OCClassSettingsSupport, OCLogTagging>
 {
 	OCCore *_core;
 	OCBookmark *_bookmark;
@@ -31,6 +31,9 @@
 @end
 
 extern OCClaimExplicitIdentifier OCClaimExplicitIdentifierFileProvider;
+
+extern OCClassSettingsIdentifier OCClassSettingsIdentifierFileProvider;
+extern OCClassSettingsKey OCClassSettingsKeyFileProviderSkipLocalErrorChecks;
 
 #define FPLogCmdBegin(command, format,...) \
 	NSString *actionLogCmdUUID = nil; \
