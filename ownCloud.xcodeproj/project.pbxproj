@@ -2343,13 +2343,6 @@
 			path = Transactions;
 			sourceTree = "<group>";
 		};
-		DCDC20952399A4AB003CFF5B /* Licensing Controller */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Licensing Controller";
-			sourceTree = "<group>";
-		};
 		DCDC20A32399A720003CFF5B /* Core Integration */ = {
 			isa = PBXGroup;
 			children = (
@@ -2421,7 +2414,6 @@
 		DCF4F1622051927200189B9A /* UI Elements */ = {
 			isa = PBXGroup;
 			children = (
-				DCDC20952399A4AB003CFF5B /* Licensing Controller */,
 				DC297959226E4C9200E01BC7 /* Push Presentation Controller */,
 				2366821521144DCD0045EF72 /* Card Presentation Controller */,
 				DCF4F17820519F8C00189B9A /* StaticTableViewController.swift */,

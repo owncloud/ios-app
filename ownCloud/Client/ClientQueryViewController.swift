@@ -296,7 +296,24 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		})
 
 		let menuItems = actions.compactMap({$0.provideUIMenuAction()})
-		return UIMenu(title: "", children: menuItems)
+		let mainMenu = UIMenu(title: "", identifier: UIMenu.Identifier("context"), options: .displayInline, children: menuItems)
+
+		if core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1 {
+			// Share Items
+			let sharingActionsLocation = OCExtensionLocation(ofType: .action, identifier: .contextMenuSharingItem)
+			let sharingActionContext = ActionContext(viewController: self, core: core, items: [item], location: sharingActionsLocation, sender: cell)
+			let sharingActions = Action.sortedApplicableActions(for: sharingActionContext)
+			sharingActions.forEach({
+				$0.progressHandler = makeActionProgressHandler()
+			})
+
+			let sharingItems = sharingActions.compactMap({$0.provideUIMenuAction()})
+			let shareMenu = UIMenu(title: "", identifier: UIMenu.Identifier("sharing"), options: .displayInline, children: sharingItems)
+
+			return UIMenu(title: "", children: [shareMenu, mainMenu])
+		}
+
+		return UIMenu(title: "", children: [mainMenu])
 	}
 
 	func updateToolbarItemsForDropping(_ draggingValues: [OCItemDraggingValue]) {
