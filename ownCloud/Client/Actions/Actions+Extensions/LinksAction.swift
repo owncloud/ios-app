@@ -23,7 +23,7 @@ class LinksAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.links") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return "Links".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut, .contextMenuItem] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut, .contextMenuSharingItem] }
 	override class var keyCommand : String? { return "L" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
