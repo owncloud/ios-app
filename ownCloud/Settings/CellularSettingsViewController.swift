@@ -31,7 +31,7 @@ class CellularSettingsViewController: StaticTableViewController {
 					OCCellularManager.shared.switch(withIdentifier: identifier)?.allowed = allow
 				}
 
-				if identifier == .master {
+				if identifier == .main {
 					self?.updateSwitchesVisibility()
 				}
 
@@ -47,16 +47,16 @@ class CellularSettingsViewController: StaticTableViewController {
 
 		navigationItem.title = "Cellular transfers".localized
 
-		let masterSection = StaticTableViewSection(headerTitle: "General".localized, footerTitle: "Features and components not listed here may continue to use cellular data unless you turn off access to cellular for the entire app in the iOS Settings app.".localized, identifier: "master-section", rows: [
-			buildRow(for: .master)!
+		let mainSection = StaticTableViewSection(headerTitle: "General".localized, footerTitle: "Features and components not listed here may continue to use cellular data unless you turn off access to cellular for the entire app in the iOS Settings app.".localized, identifier: "main-section", rows: [
+			buildRow(for: .main)!
 		])
 
-		addSection(masterSection)
+		addSection(mainSection)
 
 		switchesSection = StaticTableViewSection(headerTitle: "By feature".localized, identifier: "options-section")
 
 		for cellularSwitch in OCCellularManager.shared.switches {
-			if cellularSwitch.identifier != .master, cellularSwitch.localizedName != nil, let switchRow = buildRow(for: cellularSwitch.identifier) {
+			if cellularSwitch.identifier != .main, cellularSwitch.localizedName != nil, let switchRow = buildRow(for: cellularSwitch.identifier) {
 				switchesSection?.add(row: switchRow)
 			}
 		}
@@ -67,7 +67,7 @@ class CellularSettingsViewController: StaticTableViewController {
 	private var switchesSection : StaticTableViewSection?
 
 	private func updateSwitchesVisibility(animated: Bool = true) {
-		if OCCellularManager.shared.switch(withIdentifier: .master)?.allowed == true {
+		if OCCellularManager.shared.switch(withIdentifier: .main)?.allowed == true {
 			if switchesSection?.attached == false, let switchesSection = switchesSection {
 				addSection(switchesSection, animated: animated)
 			}

@@ -42,7 +42,7 @@ class DataSettingsSection: SettingsSection {
 	var cellularRow : StaticTableViewRow?
 
 	var cellularSummary : String {
-		if let masterEnabled = OCCellularManager.shared.switch(withIdentifier: .master)?.allowed, masterEnabled {
+		if let mainEnabled = OCCellularManager.shared.switch(withIdentifier: .main)?.allowed, mainEnabled {
 			return "enabled".localized
 		} else {
 			return "off".localized
