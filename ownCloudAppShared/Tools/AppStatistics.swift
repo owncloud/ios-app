@@ -49,11 +49,11 @@ public class AppStatistics {
 	public static let shared = AppStatistics()
 
 	public var timeIntervalSinceFirstLaunch: TimeInterval {
-		return launchDate.timeIntervalSinceNow
+		return -launchDate.timeIntervalSinceNow
 	}
 
 	public var timeIntervalSinceUpdate: TimeInterval {
-		return updateDate.timeIntervalSinceNow
+		return -updateDate.timeIntervalSinceNow
 	}
 
 	private var appVersion: String? {
