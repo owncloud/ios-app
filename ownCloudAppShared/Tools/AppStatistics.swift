@@ -101,7 +101,7 @@ public class AppStatistics {
 
 		if onceInDays > 0 {
 			if let lastPromptDate = self.lastReviewPromptDate {
-				if lastPromptDate.timeIntervalSinceNow.days < onceInDays {
+				if -lastPromptDate.timeIntervalSinceNow.days < onceInDays {
 					shallRequest = false
 				}
 			}
