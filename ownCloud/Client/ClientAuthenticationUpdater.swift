@@ -49,7 +49,7 @@ class ClientAuthenticationUpdater: NSObject {
 	}
 
 	var canUpdateInline : Bool {
-		return isTokenBased || (!isTokenBased && (bookmark.userName != nil))
+		return (isTokenBased || (!isTokenBased && (bookmark.userName != nil))) && (preferredAuthenticationMethodIdentifiers != nil) && ((preferredAuthenticationMethodIdentifiers?.count ?? 0) > 0)
 	}
 
 	func updateAuthenticationData(on viewController: UIViewController, completion: ((Error?) -> Void)? = nil) {

@@ -369,6 +369,8 @@ extension ClientRootViewController : OCCoreDelegate {
 		let editBookmark = self.bookmark
 		var nsError = error as NSError?
 
+		Log.debug("Received error \(nsError?.description ?? "nil")), issue \(issue?.description ?? "nil")")
+
 		if nsError == nil, let issueNSError = issue?.error as NSError? {
 			// Turn issues that are just converted authorization errors back into errors and discard the issue
 			if issueNSError.isOCError(withCode: .authorizationFailed) ||
@@ -378,6 +380,8 @@ extension ClientRootViewController : OCCoreDelegate {
 				issue = nil
 			}
 		}
+
+		Log.debug("Received error \(nsError?.description ?? "nil")), issue \(issue?.description ?? "nil")")
 
 		if let nsError = nsError {
 			if nsError.isOCError(withCode: .authorizationFailed) {
@@ -422,6 +426,7 @@ extension ClientRootViewController : OCCoreDelegate {
 				}
 
 				if doSkip {
+					Log.debug("Skip authorization failure")
 					return
 				}
 			}
@@ -522,18 +527,30 @@ extension ClientRootViewController : OCCoreDelegate {
 			}
 		}
 
+		Log.debug("Handling error \(String(describing: error)) / \(String(describing: issue)) with isAuthFailure=\(isAuthFailure), bookmarkURL= \(String(describing: self.bookmark.url)), authFailureHasEditOption=\(authFailureHasEditOption), authFailureIgnoreStyle=\(authFailureIgnoreStyle), authFailureIgnoreLabel=\(authFailureIgnoreLabel), authFailureMessage=\(String(describing: authFailureMessage))")
+
 		if isAuthFailure {
 			if let bookmarkURL = self.bookmark.url {
+				// Clone bookmark
 				let clonedBookmark = OCBookmark(for: bookmarkURL)
+
+				// Carry over permission for plain HTTP connections
+				clonedBookmark.userInfo[OCBookmarkUserInfoKey.allowHTTPConnection] =  self.bookmark.userInfo[OCBookmarkUserInfoKey.allowHTTPConnection]
+
+				// Create connection
  				let connection = OCConnection(bookmark: clonedBookmark)
 
-				connection.prepareForSetup(options: nil, completionHandler: { (_, _, _, preferredMethods) in
-					// Log.debug("supportedMethods: \(String(describing: supportedMethods)), preferredMethods: \(String(describing: preferredMethods))")
+				connection.prepareForSetup(options: nil, completionHandler: { (issue, suggestedURL, supportedMethods, preferredMethods) in
+					Log.debug("Preparing for handling authentication error: issue=\(issue?.description ?? "nil"), suggestedURL=\(suggestedURL?.absoluteString ?? "nil"), supportedMethods: \(supportedMethods?.description ?? "nil"), preferredMethods: \(preferredMethods?.description ?? "nil"), existingAuthMethod: \(self.bookmark.authenticationMethodIdentifier?.rawValue ?? "nil"))")
 
-					if let preferredMethods = preferredMethods, preferredMethods.count > 0,
-					   let existingAuthMethods = self.bookmark.authenticationMethodIdentifier,
-					   !preferredMethods.contains(existingAuthMethods) {
-						// Authentication method no longer supported
+					if let preferredMethods = preferredMethods, preferredMethods.count > 0 {
+						if let existingAuthMethod = self.bookmark.authenticationMethodIdentifier, !preferredMethods.contains(existingAuthMethod) {
+							// Authentication method no longer supported
+							self.bookmark.scanForAuthenticationMethodsRequired = true // Mark bookmark as requiring a scan for available authentication methods before editing
+							OCBookmarkManager.shared.updateBookmark(self.bookmark)
+						}
+					} else {
+						// Supported authentication methods unclear -> rescan
 						self.bookmark.scanForAuthenticationMethodsRequired = true // Mark bookmark as requiring a scan for available authentication methods before editing
 						OCBookmarkManager.shared.updateBookmark(self.bookmark)
 					}
