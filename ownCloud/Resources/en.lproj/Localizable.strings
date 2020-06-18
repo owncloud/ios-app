@@ -494,7 +494,6 @@
 "Location permission denied" = "Location permission denied";
 "Please re-enable location acquisition in system settings" = "Please re-enable location acquisition in system settings";
 "Scheduled upload of %ld media assets" = "Scheduled upload of %ld media assets";
-"Background transfers (experimental)" = "Background transfers (experimental)";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Creating %ld folders…";
