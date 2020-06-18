@@ -19,6 +19,7 @@
 import UIKit
 import Photos
 import PhotosUI
+import ownCloudApp
 
 private extension UICollectionView {
 	func indexPathsForElements(in rect: CGRect) -> [IndexPath] {
@@ -349,7 +350,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 
 @available(iOS 13, *) extension PhotoSelectionViewController {
 	override func collectionView(_ collectionView: UICollectionView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
-		return true
+		return !DisplaySettings.shared.preventDraggingFiles
 	}
 }
 

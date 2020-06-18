@@ -788,7 +788,7 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 
 @available(iOS 13, *) extension ClientQueryViewController {
 	override func tableView(_ tableView: UITableView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
-		return true
+		return !DisplaySettings.shared.preventDraggingFiles
 	}
 
 	override func tableView(_ tableView: UITableView, didBeginMultipleSelectionInteractionAt indexPath: IndexPath) {
