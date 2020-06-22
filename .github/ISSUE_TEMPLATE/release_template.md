@@ -1,6 +1,3 @@
-<!--
-This is the template to release a new version on the App Store
--->
 ---
 name: Release
 about: List of checklist to accomplish for the ownCloud team to finish the release process
@@ -18,6 +15,7 @@ Release a new version
 - [ ] [GIT] Create branch `release/[major].[minor].[patch]` (freeze the code)
 - [ ] [DEV] Update `APP_SHORT_VERSION` `[major].[minor].[patch]` in [ownCloud.xcodeproj/project.pbxproj](https://github.com/owncloud/ios-app/blob/master/ownCloud.xcodeproj/project.pbxproj)
 - [ ] [TRFX] Update translations from transifex branch.
+- [ ] [TRFX] Check for missing translations. Ping @cscherm
 - [ ] [DIS] Update [changelog](https://github.com/owncloud/ios-app/blob/master/CHANGELOG.md)
 - [ ] [DEV] Update In-App Release Notes (changelog) in ownCloud/Release Notes/ReleaseNotes.plist
 - [ ] [QA] Design Test plan

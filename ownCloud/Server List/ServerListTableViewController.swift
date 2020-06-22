@@ -139,6 +139,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		if showBetaWarning {
 			considerBetaWarning()
 		}
+
+        if !shownFirstTime {
+            VendorServices.shared.considerReviewPrompt()
+        }
 	}
 
 	@objc func considerAutoLogin() -> Bool {

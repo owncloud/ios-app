@@ -57,6 +57,6 @@ class DiscardSceneAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		return UIImage(systemName: "xmark.square")?.tinted(with: Theme.shared.activeCollection.tintColor)
+		return UIImage(systemName: "xmark.square")?.withRenderingMode(.alwaysTemplate)
 	}
 }

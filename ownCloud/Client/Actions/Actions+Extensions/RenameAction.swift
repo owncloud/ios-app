@@ -24,7 +24,7 @@ class RenameAction : Action {
 	override class var name : String? { return "Rename".localized }
 	override class var keyCommand : String? { return "\r" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreFolder, .keyboardShortcut, .contextMenuItem] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -79,14 +79,19 @@ class RenameAction : Action {
 		renameViewController.navigationItem.title = "Rename".localized
 
 		let navigationController = ThemeNavigationController(rootViewController: renameViewController)
-		navigationController.modalPresentationStyle = .overFullScreen
+		navigationController.modalPresentationStyle = .formSheet
 
 		viewController.present(navigationController, animated: true)
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		if location == .moreItem || location == .moreFolder {
-			return UIImage(named: "folder")
+		if location == .moreItem || location == .moreFolder || location == .contextMenuItem {
+
+			if #available(iOS 13.0, *) {
+				return UIImage(systemName: "pencil")?.withRenderingMode(.alwaysTemplate)
+			} else {
+				return UIImage(named: "folder")
+			}
 		}
 
 		return nil
