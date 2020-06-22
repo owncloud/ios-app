@@ -33,8 +33,8 @@ class ThemeProvider: NSObject {
 			self.genericColors = generic
 
 			for theme in themes {
-				if let identifier = theme["Identifier"] as? String, let name = theme["Name"] as? String, let style = theme["ThemeStyle"] as? String, let themeStyle = ThemeCollectionStyle(rawValue: style), let colors = theme["Colors"] as? NSDictionary, let darkBrandColor = theme["darkBrandColor"] as? String, let lightBrandColor = theme["lightBrandColor"] as? String {
-					let newTheme = ThemeStyle(styleIdentifier: identifier, localizedName: name.localized, lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, customizedColorsByPath: nil, customColors: colors, genericColors: generic)
+				if let identifier = theme["Identifier"] as? String, let name = theme["Name"] as? String, let style = theme["ThemeStyle"] as? String, let themeStyle = ThemeCollectionStyle(rawValue: style), let colors = theme["Colors"] as? NSDictionary, let darkBrandColor = theme["darkBrandColor"] as? String, let lightBrandColor = theme["lightBrandColor"] as? String, let styles = theme["Styles"] as? NSDictionary {
+					let newTheme = ThemeStyle(styleIdentifier: identifier, localizedName: name.localized, lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, customizedColorsByPath: nil, customColors: colors, genericColors: generic, interfaceStyles: styles)
 					self.themes.append(newTheme)
 				}
 			}
