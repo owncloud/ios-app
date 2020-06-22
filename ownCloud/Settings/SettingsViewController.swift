@@ -39,4 +39,9 @@ class SettingsViewController: StaticTableViewController {
 			self.addSection(MoreSettingsSection(userDefaults: userDefaults))
 		}
 	}
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        VendorServices.shared.considerReviewPrompt()
+    }
 }
