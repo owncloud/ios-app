@@ -19,6 +19,7 @@
 import UIKit
 import MessageUI
 import ownCloudSDK
+import ownCloudApp
 import ownCloudAppShared
 
 class VendorServices : NSObject {
@@ -89,11 +90,16 @@ class VendorServices : NSObject {
 			buildType = "beta".localized
 		}
 
+		var appSuffix = ""
+		if OCLicenseEMMProvider.isEMMVersion {
+			appSuffix = "-EMM"
+		}
+
 		guard let feedbackEmail = MoreSettingsSection.classSetting(forOCClassSettingsKey: .feedbackEmail) as? String,
 			let appName = OCAppIdentity.shared.appName else {
 				return
 		}
-		self.sendMail(to: feedbackEmail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(appName)", message: nil, from: viewController)
+		self.sendMail(to: feedbackEmail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(appName)\(appSuffix)", message: nil, from: viewController)
 	}
 
 	func sendMail(to: String?, subject: String?, message: String?, from viewController: UIViewController) {
