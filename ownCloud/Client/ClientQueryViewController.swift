@@ -528,22 +528,20 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	// MARK: - Navigation Bar Actions
 	@objc func multipleSelectionButtonPressed() {
 
-		if !self.tableView.isEditing {
-			if #available(iOS 13, *) {
-				self.tableView.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
-			}
-
-			updateMultiSelectionUI()
-			self.tableView.setEditing(true, animated: true)
-			sortBar?.showSelectButton = false
-
-			populateToolbar()
-
-			self.navigationItem.leftBarButtonItem = selectDeselectAllButtonItem!
-			self.navigationItem.rightBarButtonItems = [exitMultipleSelectionBarButtonItem!]
-
-			updateMultiSelectionUI()
+		if #available(iOS 13, *) {
+			self.tableView.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
 		}
+
+		updateMultiSelectionUI()
+		self.tableView.setEditing(true, animated: true)
+		sortBar?.showSelectButton = false
+
+		populateToolbar()
+
+		self.navigationItem.leftBarButtonItem = selectDeselectAllButtonItem!
+		self.navigationItem.rightBarButtonItems = [exitMultipleSelectionBarButtonItem!]
+
+		updateMultiSelectionUI()
 	}
 
 	@objc func exitMultipleSelection() {
@@ -785,6 +783,16 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 				}
 			}
 		}
+	}
+}
+
+@available(iOS 13, *) extension ClientQueryViewController {
+	override func tableView(_ tableView: UITableView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
+		return !DisplaySettings.shared.preventDraggingFiles
+	}
+
+	override func tableView(_ tableView: UITableView, didBeginMultipleSelectionInteractionAt indexPath: IndexPath) {
+		multipleSelectionButtonPressed()
 	}
 }
 
