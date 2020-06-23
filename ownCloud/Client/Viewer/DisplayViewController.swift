@@ -45,6 +45,8 @@ class DisplayViewController: UIViewController {
 	var item: OCItem?
 	var itemIndex: Int?
 
+	private let moreButtonTag = 777
+
 	private let iconImageSize: CGSize = CGSize(width: 200.0, height: 200.0)
 	private let bottomMargin: CGFloat = 60.0
 	private let verticalSpacing: CGFloat = 10.0
@@ -280,6 +282,16 @@ class DisplayViewController: UIViewController {
 				iconImageView.image = item.icon(fitInSize:iconImageSize)
 			}
 		}
+
+		if self.source != nil, item.locallyModified == true {
+			OnMainThread {
+				self.renderSpecificView(completion: { (success) in
+					if !success {
+						self.state = .previewFailed
+					}
+				})
+			}
+		}
 	}
 
 	// MARK: - Actions which can be triggered by the user
@@ -372,16 +384,38 @@ class DisplayViewController: UIViewController {
 	// MARK: - UI management
 
 	func updateNavigationBarItems() {
+
 		if let parent = parent, let itemName = item?.name {
+
+			func checkActionsButtonPresence() -> Bool {
+				if let items = parent.navigationItem.rightBarButtonItems {
+					return items.filter({$0.tag == moreButtonTag}).count > 0
+				}
+				return false
+			}
+
 			parent.navigationItem.title = itemName
 
 			if shallDisplayMoreButtonInToolbar, let queryState = query?.state {
 				if queryState != .targetRemoved {
-					let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(optionsBarButtonPressed))
-					actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
-					parent.navigationItem.rightBarButtonItem = actionsBarButtonItem
+
+					if checkActionsButtonPresence() == false {
+						let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(optionsBarButtonPressed))
+						actionsBarButtonItem.tag = moreButtonTag
+						actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
+
+						var items = [UIBarButtonItem]()
+						if let previousItems = parent.navigationItem.rightBarButtonItems {
+							items.append(contentsOf: previousItems)
+						}
+						items.insert(actionsBarButtonItem, at: 0)
+						parent.navigationItem.rightBarButtonItems = items
+					}
+
 				} else {
-					parent.navigationItem.rightBarButtonItem = nil
+					parent.navigationItem.rightBarButtonItems?.removeAll(where: { (buttonItem) -> Bool in
+						return buttonItem.tag == moreButtonTag
+					})
 				}
 			}
 		}
