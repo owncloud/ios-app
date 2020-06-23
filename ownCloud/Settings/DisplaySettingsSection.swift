@@ -42,6 +42,6 @@ class DisplaySettingsSection: SettingsSection {
 			if let disableDragging = row.value as? Bool {
 				DisplaySettings.shared.preventDraggingFiles = disableDragging
 			}
-		}, title: "Prevent gestures".localized, subtitle: "Prevent dragging of files and folders and multiselection with fingers".localized, value: DisplaySettings.shared.preventDraggingFiles, identifier: "prevent-dragging-files-switch"))
+		}, title: "Prevent gestures".localized, subtitle: "Prevent dragging of files and folders and multiselection using system defined gestures".localized, value: DisplaySettings.shared.preventDraggingFiles, identifier: "prevent-dragging-files-switch"))
 	}
 }
