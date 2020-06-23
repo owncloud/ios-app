@@ -152,18 +152,23 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 		// Create bar button items for the toolbar
 		deleteMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"trash"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: DeleteAction.identifier!)
+		deleteMultipleBarButtonItem?.accessibilityLabel = "Delete".localized
 		deleteMultipleBarButtonItem?.isEnabled = false
 
 		moveMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"folder"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: MoveAction.identifier!)
+		moveMultipleBarButtonItem?.accessibilityLabel = "Move".localized
 		moveMultipleBarButtonItem?.isEnabled = false
 
 		duplicateMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "duplicate-file"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: DuplicateAction.identifier!)
+		duplicateMultipleBarButtonItem?.accessibilityLabel = "Duplicate".localized
 		duplicateMultipleBarButtonItem?.isEnabled = false
 
 		copyMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "copy-file"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: CopyAction.identifier!)
+		copyMultipleBarButtonItem?.accessibilityLabel = "Copy".localized
 		copyMultipleBarButtonItem?.isEnabled = false
 
 		openMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "open-in"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: OpenInAction.identifier!)
+		openMultipleBarButtonItem?.accessibilityLabel = "Open in".localized
 		openMultipleBarButtonItem?.isEnabled = false
 
 		quotaLabel.textAlignment = .center
@@ -264,6 +269,51 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		} else {
 			return UITableViewDropProposal(operation: .copy)
 		}
+	}
+
+	@available(iOS 13.0, *)
+	override func tableView(_ tableView: UITableView,
+	contextMenuConfigurationForRowAt indexPath: IndexPath,
+	point: CGPoint) -> UIContextMenuConfiguration? {
+
+		guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath), let cell = tableView.cellForRow(at: indexPath) else {
+			return nil
+		}
+
+		return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+			return self.makeContextMenu(for: indexPath, core: core, item: item, with: cell)
+		})
+	}
+
+	@available(iOS 13.0, *)
+	func makeContextMenu(for indexPath: IndexPath, core: OCCore, item: OCItem, with cell: UITableViewCell) -> UIMenu {
+
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .contextMenuItem)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: cell)
+		let actions = Action.sortedApplicableActions(for: actionContext)
+		actions.forEach({
+			$0.progressHandler = makeActionProgressHandler()
+		})
+
+		let menuItems = actions.compactMap({$0.provideUIMenuAction()})
+		let mainMenu = UIMenu(title: "", identifier: UIMenu.Identifier("context"), options: .displayInline, children: menuItems)
+
+		if core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1 {
+			// Share Items
+			let sharingActionsLocation = OCExtensionLocation(ofType: .action, identifier: .contextMenuSharingItem)
+			let sharingActionContext = ActionContext(viewController: self, core: core, items: [item], location: sharingActionsLocation, sender: cell)
+			let sharingActions = Action.sortedApplicableActions(for: sharingActionContext)
+			sharingActions.forEach({
+				$0.progressHandler = makeActionProgressHandler()
+			})
+
+			let sharingItems = sharingActions.compactMap({$0.provideUIMenuAction()})
+			let shareMenu = UIMenu(title: "", identifier: UIMenu.Identifier("sharing"), options: .displayInline, children: sharingItems)
+
+			return UIMenu(title: "", children: [shareMenu, mainMenu])
+		}
+
+		return UIMenu(title: "", children: [mainMenu])
 	}
 
 	func updateToolbarItemsForDropping(_ draggingValues: [OCItemDraggingValue]) {
@@ -478,22 +528,20 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	// MARK: - Navigation Bar Actions
 	@objc func multipleSelectionButtonPressed() {
 
-		if !self.tableView.isEditing {
-			if #available(iOS 13, *) {
-				self.tableView.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
-			}
-
-			updateMultiSelectionUI()
-			self.tableView.setEditing(true, animated: true)
-			sortBar?.showSelectButton = false
-
-			populateToolbar()
-
-			self.navigationItem.leftBarButtonItem = selectDeselectAllButtonItem!
-			self.navigationItem.rightBarButtonItems = [exitMultipleSelectionBarButtonItem!]
-
-			updateMultiSelectionUI()
+		if #available(iOS 13, *) {
+			self.tableView.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
 		}
+
+		updateMultiSelectionUI()
+		self.tableView.setEditing(true, animated: true)
+		sortBar?.showSelectButton = false
+
+		populateToolbar()
+
+		self.navigationItem.leftBarButtonItem = selectDeselectAllButtonItem!
+		self.navigationItem.rightBarButtonItems = [exitMultipleSelectionBarButtonItem!]
+
+		updateMultiSelectionUI()
 	}
 
 	@objc func exitMultipleSelection() {
@@ -615,6 +663,14 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 				let totalSize = String(format: "Total: %@".localized, rootItem.sizeLocalized)
 				self.updateFooter(text: totalSize)
 			}
+
+			if #available(iOS 13.0, *) {
+				if  let tabBarController = self.tabBarController as? ClientRootViewController {
+					// Use parent folder for UI state restoration
+					let activity = OpenItemUserActivity(detailItem: rootItem, detailBookmark: tabBarController.bookmark)
+					view.window?.windowScene?.userActivity = activity.openItemUserActivity
+				}
+			}
 		}
 	}
 
@@ -727,6 +783,16 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 				}
 			}
 		}
+	}
+}
+
+@available(iOS 13, *) extension ClientQueryViewController {
+	override func tableView(_ tableView: UITableView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
+		return !DisplaySettings.shared.preventDraggingFiles
+	}
+
+	override func tableView(_ tableView: UITableView, didBeginMultipleSelectionInteractionAt indexPath: IndexPath) {
+		multipleSelectionButtonPressed()
 	}
 }
 

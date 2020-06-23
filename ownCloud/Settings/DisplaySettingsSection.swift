@@ -33,9 +33,15 @@ class DisplaySettingsSection: SettingsSection {
 		}, title: "Show hidden files and folders".localized, value: DisplaySettings.shared.showHiddenFiles, identifier: "show-hidden-files-switch"))
 
 		self.add(row: StaticTableViewRow(switchWithAction: { (row, _) in
+			if let newSortFolderFirst = row.value as? Bool {
+				DisplaySettings.shared.sortFoldersFirst = newSortFolderFirst
+			}
+		}, title: "Show folders at the top".localized, value: DisplaySettings.shared.sortFoldersFirst, identifier: "sort-folders-first"))
+
+		self.add(row: StaticTableViewRow(switchWithAction: { (row, _) in
 			if let disableDragging = row.value as? Bool {
 				DisplaySettings.shared.preventDraggingFiles = disableDragging
 			}
-		}, title: "Prevent dragging of files and folders".localized, value: DisplaySettings.shared.preventDraggingFiles, identifier: "prevent-dragging-files-switch"))
+		}, title: "Prevent gestures".localized, subtitle: "Prevent dragging of files and folders and multiselection using system defined gestures".localized, value: DisplaySettings.shared.preventDraggingFiles, identifier: "prevent-dragging-files-switch"))
 	}
 }

@@ -20,10 +20,10 @@ import UIKit
 import ownCloudSDK
 
 protocol ClientRootViewControllerAuthenticationDelegate : class {
-	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?)
+	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?)
 }
 
-class ClientRootViewController: UITabBarController, UINavigationControllerDelegate {
+class ClientRootViewController: UITabBarController {
 
 	// MARK: - Constants
 	let folderButtonsSize: CGSize = CGSize(width: 25.0, height: 25.0)
@@ -105,10 +105,10 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 				case .online:
 					summary = nil
 
-				case .offline:
-					summary?.message = "\(connectionShortDescription!)Contents from cache.".localized
+				case .connecting:
+					summary?.message = "Connecting…".localized
 
-				case .unavailable:
+				case .offline, .unavailable:
 					summary?.message = "\(connectionShortDescription!)Contents from cache.".localized
 			}
 		}
@@ -151,8 +151,8 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 				self.coreReady(lastVisibleItemId)
 			}
 
-			// Start showing connection status with a delay of 1 second, so "Offline" doesn't flash briefly
-			OnMainThread(after: 1.0) { [weak self] () in
+			// Start showing connection status
+			OnMainThread { [weak self] () in
 				self?.connectionStatusObservation = core?.observe(\OCCore.connectionStatus, options: [.initial], changeHandler: { [weak self] (_, _) in
 					self?.updateConnectionStatusSummary()
 				})
@@ -180,7 +180,6 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		Theme.shared.add(tvgResourceFor: "status-flash")
 
 		filesNavigationController = ThemeNavigationController()
-		filesNavigationController?.delegate = self
 		filesNavigationController?.navigationBar.isTranslucent = false
 		filesNavigationController?.tabBarItem.title = "Browse".localized
 		filesNavigationController?.tabBarItem.image = Theme.shared.image(for: "folder", size: folderButtonsSize)
@@ -260,6 +259,10 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 					if viewController == emptyViewController {
 						OnMainThread {
 							self?.closeClient()
+							if #available(iOS 13.0, *) {
+								// Prevent re-opening of items on next launch in case user has returned to the bookmark list
+								self?.view.window?.windowScene?.userActivity = nil
+							}
 						}
 					}
 
@@ -293,13 +296,6 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 		}
 	}
 
-	func navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) {
-		// if the emptyViewController will show, because the push button in ClientQueryViewController was triggered, push immediately to the ServerListTableViewController, because emptyViewController is only a helper for showing the "Back" button in ClientQueryViewController
-		if willShow.isEqual(emptyViewController) {
-			self.closeClient()
-		}
-	}
-
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
 		progressBarHeightConstraint?.constant = -1 * (self.tabBar.bounds.height)
@@ -315,7 +311,7 @@ class ClientRootViewController: UITabBarController, UINavigationControllerDelega
 					let query = OCQuery(forPath: "/")
 					let queryViewController = ClientQueryViewController(core: core, query: query)
 
-					if error == nil, let item = item {
+					if error == nil, let item = item, item.isRoot == false {
 						// get all parent items for the item and rebuild all underlaying ClientQueryViewController for this items in the navigation stack
 						let parentItems = core.retrieveParentItems(for: item)
 
@@ -368,10 +364,12 @@ extension ClientRootViewController : OCCoreDelegate {
 		var authFailureMessage : String?
 		var authFailureTitle : String = "Authorization failed".localized
 		var authFailureHasEditOption : Bool = true
-		var authFailureIgnoreLabel = "Ignore".localized
+		var authFailureIgnoreLabel = "Continue offline".localized
 		var authFailureIgnoreStyle = UIAlertAction.Style.destructive
 		let editBookmark = self.bookmark
 		var nsError = error as NSError?
+
+		Log.debug("Received error \(nsError?.description ?? "nil")), issue \(issue?.description ?? "nil")")
 
 		if nsError == nil, let issueNSError = issue?.error as NSError? {
 			// Turn issues that are just converted authorization errors back into errors and discard the issue
@@ -382,6 +380,8 @@ extension ClientRootViewController : OCCoreDelegate {
 				issue = nil
 			}
 		}
+
+		Log.debug("Received error \(nsError?.description ?? "nil")), issue \(issue?.description ?? "nil")")
 
 		if let nsError = nsError {
 			if nsError.isOCError(withCode: .authorizationFailed) {
@@ -416,7 +416,7 @@ extension ClientRootViewController : OCCoreDelegate {
 				// Make sure only the first auth failure will actually lead to an alert
 				// (otherwise alerts could keep getting enqueued while the first alert is being shown,
 				// and then be presented even though they're no longer relevant). It's ok to only show
-				// an alert for the first auth failure, because the options are "Ignore" (=> no longer show them)
+				// an alert for the first auth failure, because the options are "Continue offline" (=> no longer show them)
 				// and "Edit" (=> log out, go to bookmark editing)
 				var doSkip = false
 
@@ -426,81 +426,140 @@ extension ClientRootViewController : OCCoreDelegate {
 				}
 
 				if doSkip {
+					Log.debug("Skip authorization failure")
 					return
 				}
 			}
 		}
 
-		alertQueue.async { [weak self] (queueCompletionHandler) in
-			var presentIssue : OCIssue? = issue
-			var queueCompletionHandlerScheduled : Bool = false
+		let presentAlert : (_ authFailureHasEditOption: Bool, _ authFailureIgnoreStyle: UIAlertAction.Style, _ authFailureIgnoreLabel: String, _ authFailureMessage: String?, _ preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?) -> Void = { (authFailureHasEditOption, authFailureIgnoreStyle, authFailureIgnoreLabel, authFailureMessage, preferredAuthenticationMethods) in
+			self.alertQueue.async { [weak self] (queueCompletionHandler) in
+				var presentIssue : OCIssue? = issue
+				var queueCompletionHandlerScheduled : Bool = false
 
-			if isAuthFailure {
-				let alertController = ThemedAlertController(title: authFailureTitle,
-									message: authFailureMessage,
-									preferredStyle: .alert)
+				if isAuthFailure {
+					let alertController = ThemedAlertController(title: authFailureTitle,
+										message: authFailureMessage,
+										preferredStyle: .alert)
 
-				alertController.addAction(UIAlertAction(title: authFailureIgnoreLabel, style: authFailureIgnoreStyle, handler: { (_) in
-					queueCompletionHandler()
-				}))
-
-				if authFailureHasEditOption {
-					alertController.addAction(UIAlertAction(title: "Sign in".localized, style: .default, handler: { (_) in
+					alertController.addAction(UIAlertAction(title: authFailureIgnoreLabel, style: authFailureIgnoreStyle, handler: { (_) in
 						queueCompletionHandler()
-
-						if let authDelegate = self?.authDelegate, let self = self, let nsError = nsError {
-							authDelegate.handleAuthError(for: self, error: nsError, editBookmark: editBookmark)
-						}
 					}))
-				}
 
-				self?.present(alertController, animated: true, completion: nil)
-				queueCompletionHandlerScheduled = true
+					if authFailureHasEditOption {
+						alertController.addAction(UIAlertAction(title: "Sign in".localized, style: .default, handler: { (_) in
+							queueCompletionHandler()
 
-				return
-			}
+							var notifyAuthDelegate = true
 
-			if issue == nil, let error = error {
-				presentIssue = OCIssue(forError: error, level: .error, issueHandler: nil)
-			}
+							if let bookmark = self?.bookmark {
+								let updater = ClientAuthenticationUpdater(with: bookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
 
-			if presentIssue != nil {
-				var presentViewController : UIViewController?
+								if updater.canUpdateInline, let self = self {
+									notifyAuthDelegate = false
 
-				if presentIssue?.type == .multipleChoice {
-					presentViewController = ThemedAlertController(with: presentIssue!, completion: queueCompletionHandler)
-				} else {
-					presentViewController = ConnectionIssueViewController(displayIssues: presentIssue?.prepareForDisplay(), completion: { (response) in
- 						switch response {
-							case .cancel:
-								presentIssue?.reject()
+									updater.updateAuthenticationData(on: self, completion: { (error) in
+										if error == nil {
+											OCSynchronized(self) {
+												self.skipAuthorizationFailure = false // Auth failure fixed -> allow new failures to prompt for sign in again
+											}
+										}
+									})
+								}
+							}
 
-							case .approve:
-								presentIssue?.approve()
+							if notifyAuthDelegate {
+								if let authDelegate = self?.authDelegate, let self = self, let nsError = nsError {
+									authDelegate.handleAuthError(for: self, error: nsError, editBookmark: editBookmark, preferredAuthenticationMethods: preferredAuthenticationMethods)
+								}
+							}
 
-							case .dismiss: break
-						}
-						queueCompletionHandler()
-					})
-				}
-
-				if presentViewController != nil, let startViewController = self {
-					var hostViewController : UIViewController = startViewController
-
-					while hostViewController.presentedViewController != nil,
-					      hostViewController.presentedViewController?.isBeingDismissed == false {
-						hostViewController = hostViewController.presentedViewController!
+						}))
 					}
 
+					self?.present(alertController, animated: true, completion: nil)
 					queueCompletionHandlerScheduled = true
 
-					hostViewController.present(presentViewController!, animated: true, completion: nil)
+					return
+				}
+
+				if issue == nil, let error = error {
+					presentIssue = OCIssue(forError: error, level: .error, issueHandler: nil)
+				}
+
+				if presentIssue != nil {
+					var presentViewController : UIViewController?
+
+					if presentIssue?.type == .multipleChoice {
+						presentViewController = ThemedAlertController(with: presentIssue!, completion: queueCompletionHandler)
+					} else {
+						presentViewController = ConnectionIssueViewController(displayIssues: presentIssue?.prepareForDisplay(), completion: { (response) in
+							switch response {
+								case .cancel:
+									presentIssue?.reject()
+
+								case .approve:
+									presentIssue?.approve()
+
+								case .dismiss: break
+							}
+							queueCompletionHandler()
+						})
+					}
+
+					if presentViewController != nil, let startViewController = self {
+						var hostViewController : UIViewController = startViewController
+
+						while hostViewController.presentedViewController != nil,
+						      hostViewController.presentedViewController?.isBeingDismissed == false {
+							hostViewController = hostViewController.presentedViewController!
+						}
+
+						queueCompletionHandlerScheduled = true
+
+						hostViewController.present(presentViewController!, animated: true, completion: nil)
+					}
+				}
+
+				if !queueCompletionHandlerScheduled {
+					queueCompletionHandler()
 				}
 			}
+		}
 
-			if !queueCompletionHandlerScheduled {
-				queueCompletionHandler()
+		Log.debug("Handling error \(String(describing: error)) / \(String(describing: issue)) with isAuthFailure=\(isAuthFailure), bookmarkURL= \(String(describing: self.bookmark.url)), authFailureHasEditOption=\(authFailureHasEditOption), authFailureIgnoreStyle=\(authFailureIgnoreStyle), authFailureIgnoreLabel=\(authFailureIgnoreLabel), authFailureMessage=\(String(describing: authFailureMessage))")
+
+		if isAuthFailure {
+			if let bookmarkURL = self.bookmark.url {
+				// Clone bookmark
+				let clonedBookmark = OCBookmark(for: bookmarkURL)
+
+				// Carry over permission for plain HTTP connections
+				clonedBookmark.userInfo[OCBookmarkUserInfoKey.allowHTTPConnection] =  self.bookmark.userInfo[OCBookmarkUserInfoKey.allowHTTPConnection]
+
+				// Create connection
+ 				let connection = OCConnection(bookmark: clonedBookmark)
+
+				connection.prepareForSetup(options: nil, completionHandler: { (issue, suggestedURL, supportedMethods, preferredMethods) in
+					Log.debug("Preparing for handling authentication error: issue=\(issue?.description ?? "nil"), suggestedURL=\(suggestedURL?.absoluteString ?? "nil"), supportedMethods: \(supportedMethods?.description ?? "nil"), preferredMethods: \(preferredMethods?.description ?? "nil"), existingAuthMethod: \(self.bookmark.authenticationMethodIdentifier?.rawValue ?? "nil"))")
+
+					if let preferredMethods = preferredMethods, preferredMethods.count > 0 {
+						if let existingAuthMethod = self.bookmark.authenticationMethodIdentifier, !preferredMethods.contains(existingAuthMethod) {
+							// Authentication method no longer supported
+							self.bookmark.scanForAuthenticationMethodsRequired = true // Mark bookmark as requiring a scan for available authentication methods before editing
+							OCBookmarkManager.shared.updateBookmark(self.bookmark)
+						}
+					} else {
+						// Supported authentication methods unclear -> rescan
+						self.bookmark.scanForAuthenticationMethodsRequired = true // Mark bookmark as requiring a scan for available authentication methods before editing
+						OCBookmarkManager.shared.updateBookmark(self.bookmark)
+					}
+
+					presentAlert(authFailureHasEditOption, authFailureIgnoreStyle, authFailureIgnoreLabel, authFailureMessage, preferredMethods)
+				})
 			}
+		} else {
+			presentAlert(authFailureHasEditOption, authFailureIgnoreStyle, authFailureIgnoreLabel, authFailureMessage, nil)
 		}
 	}
 }

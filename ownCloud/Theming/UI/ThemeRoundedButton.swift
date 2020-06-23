@@ -22,20 +22,14 @@ class ThemeRoundedButton: ThemeButton {
 
 	override init(frame: CGRect) {
 		super.init(frame: frame)
-		styleButton()
+
+		self.buttonCornerRadius = .round
 	}
 
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
-		styleButton()
-	}
 
-	private func styleButton() {
-		if self.frame.size.height < self.frame.size.width {
-			self.layer.cornerRadius = round(self.frame.size.height / 2)
-		} else {
-			self.layer.cornerRadius = round(self.frame.size.width / 2)
-		}
+		self.buttonCornerRadius = .round
 	}
 
 }

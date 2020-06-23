@@ -184,9 +184,12 @@ class ScheduledTaskManager : NSObject {
 
 		// Add requirements
 		var requirements = [String : Bool]()
-		if self.wifiDetected {
-			requirements[ScheduledTaskAction.FeatureKeys.runOnWifi] = true
-		}
+        var preferences = [String : Bool]()
+
+        if self.wifiDetected {
+            preferences[ScheduledTaskAction.FeatureKeys.runOnWifi] = true
+        }
+
 		if self.lowBatteryDetected {
 			requirements[ScheduledTaskAction.FeatureKeys.runOnLowBattery] = true
 		}
@@ -197,7 +200,7 @@ class ScheduledTaskManager : NSObject {
 			requirements[ScheduledTaskAction.FeatureKeys.photoLibraryChanged] = true
 		}
 
-		return OCExtensionContext(location: location, requirements: requirements, preferences: nil)
+		return OCExtensionContext(location: location, requirements: requirements, preferences: preferences)
 	}
 
 	private func scheduleTasks(fetchCompletion:((UIBackgroundFetchResult) -> Void)? = nil, completion:((_ scheduledTaskCount:Int) -> Void)? = nil) {

@@ -122,7 +122,6 @@
 "The connection's access token has expired or become invalid. Sign in again to re-gain access." = "The connection's access token has expired or become invalid. Sign in again to re-gain access.";
 "No authentication data has been found for this connection." = "No authentication data has been found for this connection.";
 "Sign in" = "Sign in";
-"Ignore" = "Ignore";
 "Continue offline" = "Continue offline";
 "Media upload in the previous session was incomplete since the application was terminated" = "Media upload in the previous session was incomplete since the application was terminated";
 
@@ -237,7 +236,9 @@
 /* Display settings */
 "Advanced settings" = "Advanced settings";
 "Show hidden files and folders" = "Show hidden files and folders";
-"Prevent dragging of files and folders" = "Prevent dragging of files and folders";
+"Show folders at the top" = "Show folders at the top";
+"Prevent gestures" = "Prevent gestures";
+"Prevent dragging of files and folders and multiselection using system defined gestures" = "Prevent dragging of files and folders and multiselection using system defined gestures";
 
 /* Passcode Messages */
 
@@ -279,11 +280,17 @@
 "Close Window" = "Close Window";
 "Open in a new Window" = "Open in a new Window";
 "Open in Window" = "Open in Window";
+"Take photo or video" = "Take photo or video";
 
 "Preparing…" = "Preparing…";
 
 "No actions available" = "No actions available";
 "No actions are available for this folder, possibly because of missing permissions." = "No actions are available for this folder, possibly because of missing permissions.";
+
+"Close actions menu" = "Close actions menu";
+"Favorited" = "Favorited";
+"Favorite item" = "Favorite item";
+"Unfavorite item" = "Unfavorite item";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";
@@ -295,6 +302,7 @@
 "Could not get the picture" = "Could not get the picture";
 "Downloading" = "Downloading";
 "File couldn't be opened" = "File couldn't be opened";
+"Connecting..." = "Connecting...";
 
 /* PDF Viewer */
 "Resume" = "Resume";
@@ -449,6 +457,7 @@
 "Media Upload" = "Media Upload";
 "Convert HEIC to JPEG" = "Convert HEIC to JPEG";
 "Convert videos to MP4" = "Convert videos to MP4";
+"Preserve original media file names" = "Preserve original media file names";
 "Auto Upload Photos" = "Auto Upload Photos";
 "Auto Upload Videos" = "Auto Upload Videos";
 "Account" = "Account";
@@ -593,3 +602,13 @@
 "trial" = "trial";
 "purchase" = "purchase";
 "subscription" = "subscription";
+
+/* Misc. accessibility */
+"Enter multiple selection" = "Enter multiple selection";
+
+/* Universal Links */
+"Resolving link…" = "Resolving link…";
+"Link resolution failed" = "Link resolution failed";
+"Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.";
+"Couldn't resolve a private link since the item is not known to the server." = "Couldn't resolve a private link since the item is not known to the server.";
+"Link points to an account bookmark which is not configured in the app." = "Link points to an account bookmark which is not configured in the app.";

@@ -94,6 +94,15 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		}
 	}
 
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		// Activate editing mode by faking a tap on pencil icon. Unfortunately that's the only way to do it apparently
+		OnMainThread(after:0.5) {
+			guard let markupButton = self.navigationItem.rightBarButtonItems?.filter({$0.customView != nil}).first?.customView as? UIButton else { return }
+			markupButton.sendActions(for: .touchUpInside)
+		}
+	}
+
 	@objc func dismissAnimated() {
 		self.setEditing(false, animated: false)
 
@@ -155,7 +164,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		switch savingMode {
 		case .createCopy:
 			if let core = core, let parentItem = item.parentItem(from: core) {
-				self.core?.importFileNamed(item.name, at: parentItem, from: url, isSecurityScoped: true, options: [ .automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue, OCCoreOption.importByCopying : true], placeholderCompletionHandler: { (error, item) in
+				self.core?.importFileNamed(item.name, at: parentItem, from: url, isSecurityScoped: true, options: [ .automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue, OCCoreOption.importByCopying : true], placeholderCompletionHandler: { (error, _) in
 					if let error = error {
 						self.present(error: error, title: "Saving edited file failed".localized)
 					}
@@ -163,7 +172,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 			}
 		case .updateContents:
 			if let core = core, let parentItem = item.parentItem(from: core) {
-				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: { (error, item) in
+				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: { (error, _) in
 					if let error = error {
 						self.present(error: error, title: "Saving edited file failed".localized)
 					}

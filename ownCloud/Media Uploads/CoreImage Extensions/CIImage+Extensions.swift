@@ -20,18 +20,28 @@ import CoreImage
 
 extension CIImage {
 
+	enum ImageExportError : Error {
+		case missingRepresentation
+	}
+
 	enum OutputImageFormat { case HEIF, JPEG}
 
-	func convert(targetURL:URL, outputFormat:OutputImageFormat) -> Bool {
+	func convert(targetURL:URL, outputFormat:OutputImageFormat) -> Error? {
+
 		// Conversion to JPEG required
 		let colorSpace = CGColorSpaceCreateDeviceRGB()
 		var ciContext = CIContext()
 		var imageData : Data?
+		var outError: Error?
 
 		func cleanUpCoreImageRessources() {
 			// Release memory consuming resources
 			imageData = nil
 			ciContext.clearCaches()
+		}
+
+		defer {
+			cleanUpCoreImageRessources()
 		}
 
 		switch outputFormat {
@@ -43,15 +53,15 @@ extension CIImage {
 
 		if imageData != nil {
 			do {
-				// First write an image to a file stored in temporary directory
 				try imageData!.write(to: targetURL)
-				cleanUpCoreImageRessources()
-				return true
-			} catch {
-				cleanUpCoreImageRessources()
+			} catch let error as NSError {
+				outError = error
 			}
+		} else {
+			outError = ImageExportError.missingRepresentation
 		}
 
-		return false
+		return outError
+
 	}
 }

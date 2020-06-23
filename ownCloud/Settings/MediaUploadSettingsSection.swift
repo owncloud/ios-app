@@ -31,6 +31,7 @@ extension UserDefaults {
 		case InstantUploadPathKey = "instant-upload-path"
 		case InstantUploadPhotosAfterDateKey = "instant-upload-photos-after-date"
 		case InstantUploadVideosAfterDateKey = "instant-upload-videos-after-date"
+		case PreserveOriginalFilenames = "preserve-original-filenames"
 	}
 
 	static let MediaUploadSettingsChangedNotification = NSNotification.Name("settings.media-upload-settings-changed")
@@ -51,9 +52,17 @@ extension UserDefaults {
 		}
 
 		get {
-            // TODO: MPEG-4 conversion is broken in iOS13, revisit it again in later releases
-            //return self.bool(forKey: MediaUploadKeys.ConvertVideosToMP4Key.rawValue)
-            return false
+            return self.bool(forKey: MediaUploadKeys.ConvertVideosToMP4Key.rawValue)
+		}
+	}
+
+	public var preserveOriginalMediaFileNames: Bool {
+		set {
+			self.set(newValue, forKey: MediaUploadKeys.PreserveOriginalFilenames.rawValue)
+		}
+
+		get {
+			return self.bool(forKey: MediaUploadKeys.PreserveOriginalFilenames.rawValue)
 		}
 	}
 
@@ -136,6 +145,8 @@ class MediaUploadSettingsSection: SettingsSection {
 
 	private var convertPhotosSwitchRow: StaticTableViewRow?
 	private var convertVideosSwitchRow: StaticTableViewRow?
+	private var preserveMediaFileNamesSwitchRow: StaticTableViewRow?
+
 	private var instantUploadPhotosRow: StaticTableViewRow?
 	private var instantUploadVideosRow: StaticTableViewRow?
 
@@ -170,9 +181,15 @@ class MediaUploadSettingsSection: SettingsSection {
 			}
 			}, title: "Convert videos to MP4".localized, value: self.userDefaults.convertVideosToMP4, identifier: "convert_to_mp4")
 
+		preserveMediaFileNamesSwitchRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
+			if let convertSwitch = sender as? UISwitch {
+				self?.userDefaults.preserveOriginalMediaFileNames = convertSwitch.isOn
+			}
+			}, title: "Preserve original media file names".localized, value: self.userDefaults.preserveOriginalMediaFileNames, identifier: "preserve_media_file_names")
+
 		self.add(row: convertPhotosSwitchRow!)
-        // TODO: MPEG-4 conversion is broken in iOS13, revisit it again in later releases
-		//self.add(row: convertVideosSwitchRow!)
+		self.add(row: convertVideosSwitchRow!)
+		self.add(row: preserveMediaFileNamesSwitchRow!)
 
 		// Instant upload requires at least one configured account
 		if OCBookmarkManager.shared.bookmarks.count > 0 {

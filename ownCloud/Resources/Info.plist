@@ -35,6 +35,19 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(APP_SHORT_VERSION)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>com.owncloud.com</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>owncloud</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(APP_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -56,6 +69,8 @@
 	<string>This permission is needed for uploading media files to your server.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This permission is needed to scan documents.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This permission is needed to record videos</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Unlock the app without entering the passcode.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

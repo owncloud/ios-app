@@ -24,6 +24,8 @@ import ownCloudAppShared
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+	private let delayForLinkResolution = 0.2
+
 	var window: ThemeWindow?
 	var serverListTableViewController: ServerListTableViewController?
 
@@ -59,6 +61,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		ScheduledTaskManager.shared.setup()
 
+        AppStatistics.shared.update()
+
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
@@ -76,6 +80,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(CopyAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadFileAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
+		OCExtensionManager.shared.addExtension(UploadCameraMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
 		OCExtensionManager.shared.addExtension(InstantMediaUploadTaskExtension.taskExtension)
@@ -127,12 +132,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-		var copyBeforeUsing = true
-		if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
-			copyBeforeUsing = !shouldOpenInPlace
-		}
 
-		ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountUI()
+		if url.matchesAppScheme {
+			guard let window = app.currentWindow() else { return false }
+
+			openPrivateLink(url: url, in: window)
+
+		} else {
+			var copyBeforeUsing = true
+			if let shouldOpenInPlace = options[UIApplication.OpenURLOptionsKey.openInPlace] as? Bool {
+				copyBeforeUsing = !shouldOpenInPlace
+			}
+
+			ImportFilesController(url: url, copyBeforeUsing: copyBeforeUsing).accountUI()
+		}
 
 		return true
 	}
@@ -155,6 +168,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCCoreManager.shared.handleEvents(forBackgroundURLSession: identifier, completionHandler: completionHandler)
 	}
 
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+            let url = userActivity.webpageURL else {
+                return false
+        }
+
+		guard let window = application.currentWindow() else { return false }
+
+		openPrivateLink(url: url, in: window)
+
+        return true
+    }
+
 	// MARK: UISceneSession Lifecycle
 	@available(iOS 13.0, *)
 	func application(_ application: UIApplication,
@@ -165,5 +191,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	@available(iOS 13.0, *)
 	func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+	}
+
+	private func openPrivateLink(url:URL, in window:UIWindow) {
+		if UIApplication.shared.applicationState == .background {
+			// If the app is already running, just start link resolution
+			url.resolveAndPresent(in: window)
+		} else {
+			// Delay a resolution of private link on cold launch, since it could be that we would otherwise interfer
+			// with activities of the just instantiated ServerListTableViewController
+			OnMainThread(after:delayForLinkResolution) {
+				url.resolveAndPresent(in: window)
+			}
+		}
 	}
 }

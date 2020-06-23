@@ -139,6 +139,10 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		if showBetaWarning {
 			considerBetaWarning()
 		}
+
+        if !shownFirstTime {
+            VendorServices.shared.considerReviewPrompt()
+        }
 	}
 
 	@objc func considerAutoLogin() -> Bool {
@@ -429,9 +433,6 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			activityIndicator.startAnimating()
 		}
 
-		if #available(iOS 13.0, *) {
-			view.window?.windowScene?.userActivity = bookmark.openAccountUserActivity
-		}
 		self.setLastSelectedBookmark(bookmark, openedBlock: {
 			activityIndicator.stopAnimating()
 			bookmarkRow?.accessoryView = bookmarkRowAccessoryView
@@ -676,7 +677,7 @@ extension OCBookmarkManager {
 }
 
 extension ServerListTableViewController : ClientRootViewControllerAuthenticationDelegate {
-	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?) {
+	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?) {
 		clientViewController.closeClient(completion: { [weak self] in
 			if let editBookmark = editBookmark {
 				// Bring up bookmark editing UI
