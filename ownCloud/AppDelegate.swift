@@ -128,6 +128,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UIApplication.shared.setMinimumBackgroundFetchInterval(
 			UIApplication.backgroundFetchIntervalMinimum)
 
+		setupAndHandleCrashReports()
+
 		return true
 	}
 
@@ -205,4 +207,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 		}
 	}
+}
+
+import CrashReporter
+
+extension AppDelegate {
+  func setupAndHandleCrashReports() {
+	let configuration = PLCrashReporterConfig.defaultConfiguration()
+    guard let crashReporter = PLCrashReporter(configuration: configuration) else {
+            return
+        }
+
+    if crashReporter.hasPendingCrashReport() {
+      if let crashData = try? crashReporter.loadPendingCrashReportDataAndReturnError(), let crashReport = try? PLCrashReport(data: crashData) {
+        if let report = PLCrashReportTextFormatter.stringValue(for: crashReport, with: PLCrashReportTextFormatiOS) {
+          Log.error(tagged: ["CRASH_REPORTER"], report)
+        }
+      }
+      crashReporter.purgePendingCrashReport()
+    }
+
+    crashReporter.enable()
+  }
 }
