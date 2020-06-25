@@ -60,7 +60,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 			}
 		}
 
-		if enqueuedAssetCount > 0 {
+		if enqueuedAssetCount > 0 && userDefaults.backgroundMediaUploadsNotificationsEnabled {
 
 			let title = "Background uploads".localized
 			let body = String(format: "Scheduled upload of %ld media assets".localized, enqueuedAssetCount)

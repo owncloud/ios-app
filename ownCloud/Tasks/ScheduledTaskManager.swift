@@ -409,7 +409,9 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
     }
 
 	@discardableResult func startLocationMonitoringIfAuthorized() -> Bool {
-		if CLLocationManager.authorizationStatus() == .authorizedAlways {
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return false }
+
+		if CLLocationManager.authorizationStatus() == .authorizedAlways && userDefaults.backgroundMediaUploadsLocationUpdatesEnabled {
 			Log.debug(tagged: ["TASK_MANAGER", "MEDIA_UPLOAD"], "Significant location monitoring has started")
 			startLocationTracking()
 			return true
@@ -458,9 +460,16 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
     }
 
 	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-		guard shallMonitorPhotoLibraryChanges() == true else { return }
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
-		guard status == .authorizedAlways else { return }
+		guard status == .authorizedAlways else {
+			userDefaults.backgroundMediaUploadsLocationUpdatesEnabled = false
+			return
+		}
+
+		userDefaults.backgroundMediaUploadsLocationUpdatesEnabled = true
+
+		guard shallMonitorPhotoLibraryChanges() == true else { return }
 
 		startLocationTracking()
 	}
@@ -468,6 +477,9 @@ extension ScheduledTaskManager : CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         if let error = error as? CLError, error.code == .denied {
             stopLocationTracking()
+			if let userDefaults = OCAppIdentity.shared.userDefaults {
+				userDefaults.backgroundMediaUploadsLocationUpdatesEnabled = false
+			}
         }
     }
 }

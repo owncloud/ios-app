@@ -26,6 +26,7 @@ extension UserDefaults {
 	enum BackgroundUploadsKeys : String {
 		case MediaUploadsEnabled = "background-media-uploads-enabled"
 		case MediaUploadsNotificationsEnabled = "background-media-uploads-notifications-enabled"
+		case MediaUploadsLocationUpdatesEnabled = "background-media-uploads-location-updates-enabled"
 	}
 
 	public var backgroundMediaUploadsEnabled: Bool {
@@ -45,6 +46,16 @@ extension UserDefaults {
 
 		get {
 			return self.bool(forKey: BackgroundUploadsKeys.MediaUploadsNotificationsEnabled.rawValue)
+		}
+	}
+
+	public var backgroundMediaUploadsLocationUpdatesEnabled: Bool {
+		set {
+			self.set(newValue, forKey: BackgroundUploadsKeys.MediaUploadsLocationUpdatesEnabled.rawValue)
+		}
+
+		get {
+			return self.bool(forKey: BackgroundUploadsKeys.MediaUploadsLocationUpdatesEnabled.rawValue)
 		}
 	}
 }
@@ -89,8 +100,9 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 				} else {
 					ScheduledTaskManager.shared.stopLocationMonitoring()
 				}
+				userDefaults.backgroundMediaUploadsLocationUpdatesEnabled = enableSwitch.isOn
 			}
-			}, title: locationServicesRowTitle, value: currentAuthStatus, identifier: "background-location")
+		}, title: locationServicesRowTitle, value: (currentAuthStatus && userDefaults.backgroundMediaUploadsLocationUpdatesEnabled), identifier: "background-location")
 
 		self.add(row: backgroundLocationRow!)
 
@@ -103,10 +115,16 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 					center.getNotificationSettings(completionHandler: { (settings) in
 						if settings.authorizationStatus == .notDetermined {
 							center.requestAuthorization(options: [.alert]) { (granted, _) in
-								enableSwitch.isOn = granted
+								OnMainThread {
+									enableSwitch.isOn = granted
+									userDefaults.backgroundMediaUploadsNotificationsEnabled = granted
+								}
+
 							}
 						}
 					})
+				} else {
+					userDefaults.backgroundMediaUploadsNotificationsEnabled = false
 				}
 
 			}
@@ -117,10 +135,8 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		// Update notifications option
 		let center = UNUserNotificationCenter.current()
 		center.getNotificationSettings(completionHandler: { (settings) in
-			if settings.authorizationStatus == .authorized {
-				OnMainThread {
-					self.notificationsRow?.value = true
-				}
+			OnMainThread {
+				self.notificationsRow?.value = userDefaults.backgroundMediaUploadsNotificationsEnabled && settings.authorizationStatus == .authorized
 			}
 		})
 
