@@ -19,9 +19,12 @@
 import UIKit
 import ownCloudSDK
 
-extension OCBookmark {
-	static let OCBookmarkDisplayName : OCBookmarkUserInfoKey = OCBookmarkUserInfoKey(rawValue: "OCBookmarkDisplayName")
+extension OCBookmarkUserInfoKey {
+	static var displayName : OCBookmarkUserInfoKey { OCBookmarkUserInfoKey(rawValue: "OCBookmarkDisplayName") }
+	static var scanForAuthenticationMethodsRequired : OCBookmarkUserInfoKey { OCBookmarkUserInfoKey(rawValue: "OCBookmarkScanForAuthenticationMethodsRequired") }
+}
 
+extension OCBookmark {
 	var userName : String? {
 		if let authenticationData = self.authenticationData,
 		   let authenticationMethodIdentifier = self.authenticationMethodIdentifier,
@@ -35,11 +38,11 @@ extension OCBookmark {
 
 	var displayName : String? {
 		get {
-			return self.userInfo.object(forKey: OCBookmark.OCBookmarkDisplayName) as? String
+			return self.userInfo.object(forKey: OCBookmarkUserInfoKey.displayName ) as? String
 		}
 
 		set {
-			self.userInfo[OCBookmark.OCBookmarkDisplayName] = newValue
+			self.userInfo[OCBookmarkUserInfoKey.displayName] = newValue
 		}
 	}
 
@@ -77,4 +80,13 @@ extension OCBookmark {
 		return nil
 	}
 
+	var scanForAuthenticationMethodsRequired : Bool? {
+		get {
+			return self.userInfo.object(forKey: OCBookmarkUserInfoKey.scanForAuthenticationMethodsRequired ) as? Bool
+		}
+
+		set {
+			self.userInfo[OCBookmarkUserInfoKey.scanForAuthenticationMethodsRequired] = newValue
+		}
+	}
 }

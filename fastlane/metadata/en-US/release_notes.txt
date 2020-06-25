@@ -1,0 +1,9 @@
+• iPad: Mouse and Trackpad support
+With iPadOS 13.4 we supporting mouse and trackpads
+
+• Fix: Shortcut - Save Action
+Fixed saving, when device is in flight mode.
+
+• Fix: Keep open files up-to-date
+Open items will be automatically updated if the content was changed
+
