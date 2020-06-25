@@ -102,6 +102,16 @@ class AlertView: UIView, Themeable {
 		option.handler(self, option)
 	}
 
+	private let headerTextHorizontalInset : CGFloat = 20
+	private let headerTextVerticalInset : CGFloat = 7
+	private let titleAndDescriptionSpacing : CGFloat = 5
+	private let contentPadding : CGFloat = 20
+	private let optionInnerSpacing : CGFloat = 10
+
+	private let headerLabelFontSize : CGFloat = 14
+	private let titleLabelFontSize : CGFloat = 17
+	private let descriptionLabelFontSize : CGFloat = 14
+
 	func prepareViewAndConstraints() {
 		headerLabel.numberOfLines = 1
 		headerLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -114,12 +124,12 @@ class AlertView: UIView, Themeable {
 		titleLabel.text = localizedTitle
 		descriptionLabel.text = localizedDescription
 
-		headerLabel.font = .systemFont(ofSize: 14, weight: .regular)
+		headerLabel.font = .systemFont(ofSize: headerLabelFontSize, weight: .regular)
 		headerLabel.textColor = .gray
 
-		titleLabel.font = .systemFont(ofSize: 17, weight: .semibold)
+		titleLabel.font = .systemFont(ofSize: titleLabelFontSize, weight: .semibold)
 
-		descriptionLabel.font = .systemFont(ofSize: 14)
+		descriptionLabel.font = .systemFont(ofSize: descriptionLabelFontSize)
 		descriptionLabel.textColor = .gray
 
 		createOptionViews()
@@ -133,7 +143,7 @@ class AlertView: UIView, Themeable {
 		optionStackView.setContentHuggingPriority(.required, for: .horizontal)
 		optionStackView.distribution = .fillEqually
 		optionStackView.axis = .horizontal
-		optionStackView.spacing = 10
+		optionStackView.spacing = optionInnerSpacing
 
 		self.setContentCompressionResistancePriority(.required, for: .vertical)
 		self.setContentHuggingPriority(.required, for: .vertical)
@@ -161,10 +171,10 @@ class AlertView: UIView, Themeable {
 			self.addSubview(headerContainer)
 
 			NSLayoutConstraint.activate([
-				headerLabel.leftAnchor.constraint(equalTo: headerContainer.leftAnchor, constant: 20),
-				headerLabel.rightAnchor.constraint(equalTo: headerContainer.rightAnchor, constant: -20),
-				headerLabel.topAnchor.constraint(equalTo: headerContainer.topAnchor, constant: 7),
-				headerLabel.bottomAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: -7),
+				headerLabel.leftAnchor.constraint(equalTo: headerContainer.leftAnchor, constant: headerTextHorizontalInset),
+				headerLabel.rightAnchor.constraint(equalTo: headerContainer.rightAnchor, constant: -headerTextHorizontalInset),
+				headerLabel.topAnchor.constraint(equalTo: headerContainer.topAnchor, constant: headerTextVerticalInset),
+				headerLabel.bottomAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: -headerTextVerticalInset),
 
 				headerContainer.topAnchor.constraint(equalTo: enclosure.topAnchor),
 				headerContainer.leftAnchor.constraint(equalTo: enclosure.leftAnchor),
@@ -173,19 +183,19 @@ class AlertView: UIView, Themeable {
 		}
 
 		NSLayoutConstraint.activate([
-			titleLabel.topAnchor.constraint(equalTo: ((localizedHeader != nil) ? headerContainer.bottomAnchor : enclosure.topAnchor), constant: 20),
-			titleLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -5),
-			descriptionLabel.bottomAnchor.constraint(equalTo: optionStackView.topAnchor, constant: -20),
-			optionStackView.bottomAnchor.constraint(equalTo: enclosure.bottomAnchor, constant: -20),
+			titleLabel.topAnchor.constraint(equalTo: ((localizedHeader != nil) ? headerContainer.bottomAnchor : enclosure.topAnchor), constant: contentPadding),
+			titleLabel.bottomAnchor.constraint(equalTo: descriptionLabel.topAnchor, constant: -titleAndDescriptionSpacing),
+			descriptionLabel.bottomAnchor.constraint(equalTo: optionStackView.topAnchor, constant: -contentPadding),
+			optionStackView.bottomAnchor.constraint(equalTo: enclosure.bottomAnchor, constant: -contentPadding),
 
-			titleLabel.leftAnchor.constraint(equalTo: enclosure.leftAnchor, constant: 20),
-			titleLabel.rightAnchor.constraint(equalTo: enclosure.rightAnchor, constant: -20),
+			titleLabel.leftAnchor.constraint(equalTo: enclosure.leftAnchor, constant: contentPadding),
+			titleLabel.rightAnchor.constraint(equalTo: enclosure.rightAnchor, constant: -contentPadding),
 
-			descriptionLabel.leftAnchor.constraint(equalTo: enclosure.leftAnchor, constant: 20),
-			descriptionLabel.rightAnchor.constraint(equalTo: enclosure.rightAnchor, constant: -20),
+			descriptionLabel.leftAnchor.constraint(equalTo: enclosure.leftAnchor, constant: contentPadding),
+			descriptionLabel.rightAnchor.constraint(equalTo: enclosure.rightAnchor, constant: -contentPadding),
 
-			optionStackView.leftAnchor.constraint(equalTo: enclosure.leftAnchor, constant: 20),
-			optionStackView.rightAnchor.constraint(equalTo: enclosure.rightAnchor, constant: -20)
+			optionStackView.leftAnchor.constraint(equalTo: enclosure.leftAnchor, constant: contentPadding),
+			optionStackView.rightAnchor.constraint(equalTo: enclosure.rightAnchor, constant: -contentPadding)
 		])
 	}
 

@@ -62,6 +62,13 @@ class MessageGroupCell: ThemeTableViewCell {
 
 	var noBottomSpacing : Bool = false
 
+	private let applyAllSwitchVerticalInset : CGFloat = 10
+	private let applyAllSwitchHorizontalInset : CGFloat = 20
+	private let applyAllSwitchHorizontalSpacing : CGFloat = 10
+	private let showAllSwitchHorizontalInset : CGFloat = 20
+	private let alertSpacing : CGFloat = 20
+	private let alertRadius : CGFloat = 10
+
 	func updateWith(_ messageGroup: MessageGroup, queue: OCMessageQueue) {
 		var options : [AlertOption] = []
 
@@ -109,7 +116,7 @@ class MessageGroupCell: ThemeTableViewCell {
 			alertView = AlertView(localizedTitle: title, localizedDescription: description, options: options)
 			alertView?.translatesAutoresizingMaskIntoConstraints = false
 
-			containerView?.layer.cornerRadius = 10
+			containerView?.layer.cornerRadius = alertRadius
 			containerView?.layer.masksToBounds = true
 			containerView?.backgroundColor = UIColor(white: 0.70, alpha: 0.15)
 
@@ -152,7 +159,7 @@ class MessageGroupCell: ThemeTableViewCell {
 				if showAllLabel == nil {
 					showAllLabel = UIButton(type: .system)
 					showAllLabel?.translatesAutoresizingMaskIntoConstraints = false
-					showAllLabel?.setTitle("Show all", for: .normal)
+					showAllLabel?.setTitle("Show all".localized, for: .normal)
 					showAllLabel?.addTarget(self, action: #selector(showAllIssues), for: .primaryActionTriggered)
 
 					applyAllContainer?.addSubview(showAllLabel!)
@@ -160,15 +167,15 @@ class MessageGroupCell: ThemeTableViewCell {
 
 				if setupLayout, let applyAllContainer = applyAllContainer, let applyAllSwitch = applyAllSwitch, let applyAllLabel = applyAllLabel, let showAllLabel = showAllLabel {
 					NSLayoutConstraint.activate([
-						applyAllSwitch.topAnchor.constraint(equalTo: applyAllContainer.topAnchor, constant: 10),
-						applyAllSwitch.leftAnchor.constraint(equalTo: applyAllContainer.leftAnchor, constant: 20),
-						applyAllSwitch.bottomAnchor.constraint(equalTo: applyAllContainer.bottomAnchor, constant: -10),
+						applyAllSwitch.topAnchor.constraint(equalTo: applyAllContainer.topAnchor, constant: applyAllSwitchVerticalInset),
+						applyAllSwitch.leftAnchor.constraint(equalTo: applyAllContainer.leftAnchor, constant: applyAllSwitchHorizontalInset),
+						applyAllSwitch.bottomAnchor.constraint(equalTo: applyAllContainer.bottomAnchor, constant: -applyAllSwitchVerticalInset),
 
-						applyAllLabel.leftAnchor.constraint(equalTo: applyAllSwitch.rightAnchor, constant: 10),
+						applyAllLabel.leftAnchor.constraint(equalTo: applyAllSwitch.rightAnchor, constant: applyAllSwitchHorizontalSpacing),
 						applyAllLabel.centerYAnchor.constraint(equalTo: applyAllSwitch.centerYAnchor),
 
-						showAllLabel.leftAnchor.constraint(greaterThanOrEqualTo: applyAllLabel.rightAnchor, constant: 20),
-						showAllLabel.rightAnchor.constraint(equalTo: applyAllContainer.rightAnchor, constant: -20),
+						showAllLabel.leftAnchor.constraint(greaterThanOrEqualTo: applyAllLabel.rightAnchor, constant: showAllSwitchHorizontalInset),
+						showAllLabel.rightAnchor.constraint(equalTo: applyAllContainer.rightAnchor, constant: -showAllSwitchHorizontalInset),
 						showAllLabel.centerYAnchor.constraint(equalTo: applyAllSwitch.centerYAnchor)
 					])
 				}
@@ -187,10 +194,10 @@ class MessageGroupCell: ThemeTableViewCell {
 				}
 
 				NSLayoutConstraint.activate([
-					containerView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 20),
-					containerView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20),
-					containerView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
-					containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: noBottomSpacing ? 0 : -20),
+					containerView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: alertSpacing),
+					containerView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -alertSpacing),
+					containerView.topAnchor.constraint(equalTo: self.topAnchor, constant: alertSpacing),
+					containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: noBottomSpacing ? 0 : -alertSpacing),
 
 					alertView.leftAnchor.constraint(equalTo: containerView.leftAnchor),
 					alertView.rightAnchor.constraint(equalTo: containerView.rightAnchor),
@@ -219,7 +226,7 @@ class MessageGroupCell: ThemeTableViewCell {
 	}
 
 	@objc func applyAllSwitchChanged() {
-		badgeLabel?.labelText = "+ \((messageGroup?.messages.count ?? 0) - 1) more"
+		badgeLabel?.labelText = NSString(format: "+ %ld more".localized as NSString, ((messageGroup?.messages.count ?? 0) - 1)) as String
 
 		if let applyAllOn = self.applyAllSwitch?.isOn, let badgeLabel = badgeLabel, badgeLabel.isHidden != !applyAllOn {
 			badgeLabel.alpha = applyAllOn ? 0 : 1

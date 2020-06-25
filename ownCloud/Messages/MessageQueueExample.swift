@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 
 /*
-		// Example of using this example:
+		// Example of using the MessageQueueExample:
 
 		MessageQueueExample.shared.postMessage("One-off message"", 			withResponseHandling: false, preventDuplicates: true, bookmark: OCBookmarkManager.shared.bookmarks.first!)
 		MessageQueueExample.shared.postMessage("One-off message (duplicate)"", 		withResponseHandling: false, preventDuplicates: true, bookmark: OCBookmarkManager.shared.bookmarks.first!)

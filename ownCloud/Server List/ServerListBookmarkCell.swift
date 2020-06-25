@@ -88,11 +88,11 @@ class ServerListBookmarkCell : ThemeTableViewCell {
 
 		Theme.shared.add(tvgResourceFor: "owncloud-logo")
 
-		NotificationCenter.default.addObserver(self, selector: #selector(ServerListBookmarkCell.updateMessageBadgeFrom(notification:)), name: ServerListTableViewController.BookmarkMessageCountChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(ServerListBookmarkCell.updateMessageBadgeFrom(notification:)), name: .BookmarkMessageCountChanged, object: nil)
 	}
 
 	deinit {
-		NotificationCenter.default.removeObserver(self, name: ServerListTableViewController.BookmarkMessageCountChanged, object: nil)
+		NotificationCenter.default.removeObserver(self, name: .BookmarkMessageCountChanged, object: nil)
 	}
 
 	// MARK: - Content updates

@@ -129,6 +129,11 @@
 "All done" = "All done";
 "No pending messages or ongoing actions." = "No pending messages or ongoing actions.";
 
+"Show all" = "Show all";
+"+ %ld more" = "+ %ld more";
+"Apply choice to all similar issues" = "Apply choice to all similar issues";
+"Apply to all" = "Apply to all";
+
 /* Server List*/
 "Cancel" = "Cancel";
 "OK" = "OK";

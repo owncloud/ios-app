@@ -126,14 +126,12 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 	var messageCountSelector : MessageSelector?
 
-	static let BookmarkMessageCountChanged = NSNotification.Name("boomark.message-count.changed")
-
 	typealias ServerListTableMessageCountByUUID = [UUID? : Int ]
 
 	var messageCountByBookmarkUUID : ServerListTableMessageCountByUUID = [:] {
 		didSet {
 			// Notify cells about changed counts
-			NotificationCenter.default.post(Notification(name: ServerListTableViewController.BookmarkMessageCountChanged, object: messageCountByBookmarkUUID, userInfo: nil))
+			NotificationCenter.default.post(Notification(name: .BookmarkMessageCountChanged, object: messageCountByBookmarkUUID, userInfo: nil))
 
 			// Update app badge count
 			var totalNotificationCount = messageCountByBookmarkUUID[nil] ?? 0 // Global notifications
@@ -826,5 +824,8 @@ extension ServerListTableViewController: UITableViewDragDelegate {
 
 		return []
 	}
+}
 
+extension NSNotification.Name {
+	static let BookmarkMessageCountChanged = NSNotification.Name("boomark.message-count.changed")
 }
