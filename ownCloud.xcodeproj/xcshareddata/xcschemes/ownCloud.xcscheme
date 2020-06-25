@@ -208,7 +208,7 @@
          <EnvironmentVariable
             key = "oc:log.log-single-lined"
             value = "false"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.log-format"

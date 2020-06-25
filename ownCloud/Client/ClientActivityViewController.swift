@@ -135,9 +135,18 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 
 			activities = core?.activityManager.activities
 			messageGroups = messageSelector?.groupedSelection
+
 			self.tableView.reloadData()
+
+			if (activities?.count ?? 0) == 0, (messageGroups?.count ?? 0) == 0 {
+				self.messageView?.message(show: true, imageName: "status-flash", title: "All done".localized, message: "No pending messages or ongoing actions.".localized)
+			} else {
+				self.messageView?.message(show: false)
+			}
 		}
 	}
+
+	var messageView : MessageView?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -148,6 +157,8 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 		self.tableView.estimatedRowHeight = 80
 
 		Theme.shared.register(client: self, applyImmediately: true)
+
+		messageView = MessageView(add: self.view)
 	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
