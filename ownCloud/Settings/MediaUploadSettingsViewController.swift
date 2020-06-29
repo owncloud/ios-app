@@ -29,7 +29,8 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 			self.addSection(MediaExportSettingsSection(userDefaults: userDefaults))
 			if OCBookmarkManager.shared.bookmarks.count > 0 {
 				self.addSection(AutoUploadSettingsSection(userDefaults: userDefaults))
-				self.addSection(BackgroundUploadsSettingsSection(userDefaults: userDefaults))
+				// TODO: Re-add this section when we re-gain an ability to run background NSURLSessions
+				//self.addSection(BackgroundUploadsSettingsSection(userDefaults: userDefaults))
 			}
 		}
 	}

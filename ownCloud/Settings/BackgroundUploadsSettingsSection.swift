@@ -84,7 +84,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 		// Add option to enable background location updates which will trigger background media uploads
 		var locationServicesRowTitle: String = ""
 		if #available(iOS 13, *) {
-			locationServicesRowTitle = "Improve with location information".localized
+			locationServicesRowTitle = "Use background location updates".localized
 		} else {
 			locationServicesRowTitle = "Enable background uploads".localized
 		}

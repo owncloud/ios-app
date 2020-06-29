@@ -486,7 +486,7 @@
 "Background uploads" = "Background uploads";
 "Use background refresh" = "Use background refresh";
 "Enable background uploads" = "Enable background uploads";
-"Improve with location information" = "Improve with location information";
+"Use background location updates" = "Use background location updates";
 "Background upload notifications" = "Background upload notifications";
 "if you would like background media uploads to be more reliable, you should enable background location updates." = "if you would like background media uploads to be more reliable, you should enable background location updates.";
 "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked." = "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked.";
