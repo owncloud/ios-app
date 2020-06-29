@@ -80,7 +80,7 @@ class MediaUploadOperation : Operation {
 		// Track the target path
 		importGroup.enter()
 
-		self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
+		self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (_, item, isInitial) in
 			defer {
 				importGroup.leave()
 			}

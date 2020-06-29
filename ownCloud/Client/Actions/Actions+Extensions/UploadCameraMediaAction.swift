@@ -43,8 +43,8 @@ extension AVAsset {
                     guard let export = AVAssetExportSession(asset: self, presetName: preset) else {
                          return false
                     }
-                   
-                    // Configure export session
+
+					// Configure export session
                     export.outputFileType = type
                     export.outputURL = targetURL
 
