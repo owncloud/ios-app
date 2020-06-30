@@ -237,6 +237,7 @@
 
 "Cellular transfers" = "Cellular transfers";
 "Features and components not listed here may continue to use cellular data unless you turn off access to cellular for the entire app in the iOS Settings app." = "Features and components not listed here may continue to use cellular data unless you turn off access to cellular for the entire app in the iOS Settings app.";
+"Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information." = "Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information.";
 "General" = "General";
 "By feature" = "By feature";
 

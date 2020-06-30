@@ -19,7 +19,6 @@
 import UIKit
 import ownCloudSDK
 import Photos
-import MobileCoreServices
 
 class UploadMediaAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadphotos") }

@@ -359,14 +359,8 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 			if sortDirection == .descendant {
 				indexTitles.reverse()
 			}
-			if #available(iOS 12.0, *) {
-				if Int(tableView.estimatedRowHeight) * self.items.count > Int(tableView.visibleSize.height), indexTitles.count > 1 {
-					return indexTitles
-				}
-			} else {
-				if indexTitles.count > 1 {
-					return indexTitles
-				}
+			if Int(tableView.estimatedRowHeight) * self.items.count > Int(tableView.visibleSize.height), indexTitles.count > 1 {
+				return indexTitles
 			}
 		}
 

@@ -19,7 +19,6 @@
 import Foundation
 import ownCloudSDK
 import Photos
-import MobileCoreServices
 import AVFoundation
 
 class MediaUploadQueue : OCActivitySource {

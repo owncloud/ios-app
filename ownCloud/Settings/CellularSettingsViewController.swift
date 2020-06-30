@@ -47,21 +47,29 @@ class CellularSettingsViewController: StaticTableViewController {
 
 		navigationItem.title = "Cellular transfers".localized
 
-		let mainSection = StaticTableViewSection(headerTitle: "General".localized, footerTitle: "Features and components not listed here may continue to use cellular data unless you turn off access to cellular for the entire app in the iOS Settings app.".localized, identifier: "main-section", rows: [
-			buildRow(for: .main)!
-		])
+		if OCConnection.allowCellular {
+			let mainSection = StaticTableViewSection(headerTitle: "General".localized, footerTitle: "Features and components not listed here may continue to use cellular data unless you turn off access to cellular for the entire app in the iOS Settings app.".localized, identifier: "main-section", rows: [
+				buildRow(for: .main)!
+			])
 
-		addSection(mainSection)
+			addSection(mainSection)
 
-		switchesSection = StaticTableViewSection(headerTitle: "By feature".localized, identifier: "options-section")
+			switchesSection = StaticTableViewSection(headerTitle: "By feature".localized, identifier: "options-section")
 
-		for cellularSwitch in OCCellularManager.shared.switches {
-			if cellularSwitch.identifier != .main, cellularSwitch.localizedName != nil, let switchRow = buildRow(for: cellularSwitch.identifier) {
-				switchesSection?.add(row: switchRow)
+			for cellularSwitch in OCCellularManager.shared.switches {
+				if cellularSwitch.identifier != .main, cellularSwitch.localizedName != nil, let switchRow = buildRow(for: cellularSwitch.identifier) {
+					switchesSection?.add(row: switchRow)
+				}
 			}
-		}
 
-		updateSwitchesVisibility(animated: false)
+			updateSwitchesVisibility(animated: false)
+		} else {
+			let cellularDisabledSection = StaticTableViewSection(headerTitle: "General".localized, identifier: "cellular-disabled-section", rows: [
+				StaticTableViewRow(label: "Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information.".localized)
+			])
+
+			addSection(cellularDisabledSection)
+		}
 	}
 
 	private var switchesSection : StaticTableViewSection?
