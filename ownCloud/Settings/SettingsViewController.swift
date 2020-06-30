@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 class SettingsViewController: StaticTableViewController {
 	override func viewDidLoad() {
@@ -32,11 +33,16 @@ class SettingsViewController: StaticTableViewController {
 			self.addSection(MediaFilesSettingsSection(userDefaults: userDefaults))
 			self.addSection(MediaUploadSettingsSection(userDefaults: userDefaults))
 
-			if #available(iOS 13, *) {
+			if #available(iOS 13, *), !OCLicenseEMMProvider.isEMMVersion {
 				self.addSection(PurchasesSettingsSection(userDefaults: userDefaults))
 			}
 
 			self.addSection(MoreSettingsSection(userDefaults: userDefaults))
 		}
 	}
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        VendorServices.shared.considerReviewPrompt()
+    }
 }

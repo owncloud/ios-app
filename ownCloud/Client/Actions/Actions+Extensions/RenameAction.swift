@@ -86,7 +86,12 @@ class RenameAction : Action {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		if location == .moreItem || location == .moreFolder || location == .contextMenuItem {
-			return UIImage(named: "folder")
+
+			if #available(iOS 13.0, *) {
+				return UIImage(systemName: "pencil")?.withRenderingMode(.alwaysTemplate)
+			} else {
+				return UIImage(named: "folder")
+			}
 		}
 
 		return nil

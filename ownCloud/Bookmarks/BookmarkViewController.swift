@@ -90,6 +90,11 @@ class BookmarkViewController: StaticTableViewController {
 			bookmark?.authenticationData = nil
 		}
 
+		if bookmark?.scanForAuthenticationMethodsRequired == true {
+			bookmark?.authenticationMethodIdentifier = nil
+			bookmark?.authenticationData = nil
+		}
+
 		originalBookmark = editBookmark // Save original bookmark (if any)
 
 		// Super init
@@ -248,7 +253,7 @@ class BookmarkViewController: StaticTableViewController {
 					}
 				}
 
-				self.usernameRow?.enabled = false
+				self.usernameRow?.enabled = (bookmark?.authenticationMethodIdentifier == nil)
 
 				self.navigationItem.title = "Edit account".localized
 				self.navigationItem.rightBarButtonItem = saveBarButtonItem
@@ -268,6 +273,12 @@ class BookmarkViewController: StaticTableViewController {
 
 		// Update contents
 		self.composeSectionsAndRows(animated: false)
+
+		if let bookmark = bookmark, bookmark.scanForAuthenticationMethodsRequired == true, bookmark.authenticationMethodIdentifier == nil {
+			OnMainThread {
+				self.handleContinue()
+			}
+		}
 	}
 
 	required init?(coder aDecoder: NSCoder) {
@@ -446,6 +457,7 @@ class BookmarkViewController: StaticTableViewController {
 				if error == nil {
 					self.bookmark?.authenticationMethodIdentifier = authMethodIdentifier
 					self.bookmark?.authenticationData = authMethodData
+					self.bookmark?.scanForAuthenticationMethodsRequired = false
 					OnMainThread {
 						hud?.updateLabel(with: "Fetching user information…".localized)
 					}

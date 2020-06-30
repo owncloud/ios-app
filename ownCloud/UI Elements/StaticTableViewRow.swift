@@ -503,7 +503,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Switches
-	convenience init(switchWithAction action: StaticTableViewRowAction?, title: String, value switchValue: Bool = false, identifier: String? = nil) {
+	convenience init(switchWithAction action: StaticTableViewRowAction?, title: String, subtitle: String? = nil, value switchValue: Bool = false, identifier: String? = nil) {
 		self.init()
 		type = .switchButton
 
@@ -511,7 +511,14 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		let switchView = UISwitch()
 
-		self.cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
+		if let subtitle = subtitle {
+			self.cell = ThemeTableViewCell(style: .subtitle, reuseIdentifier: nil)
+			self.cell?.detailTextLabel?.text = subtitle
+			self.cell?.detailTextLabel?.numberOfLines = 0
+		} else {
+			self.cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
+		}
+
 		self.cell?.selectionStyle = .none
 		self.cell?.textLabel?.text = title
 		self.cell?.accessoryView = switchView

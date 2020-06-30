@@ -25,7 +25,7 @@ protocol ClientItemCellDelegate: class {
 
 }
 
-class ClientItemCell: ThemeTableViewCell {
+class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	private let horizontalMargin : CGFloat = 15
 	private let verticalLabelMargin : CGFloat = 10
 	private let verticalIconMargin : CGFloat = 10
@@ -272,7 +272,7 @@ class ClientItemCell: ThemeTableViewCell {
 		self.iconView.image = iconImage
 
   		if let core = core {
- 			activeThumbnailRequestProgress = self.iconView.setThumbnailImage(using: core, from: item, with: thumbnailSize, progressHandler: { [weak self] (progress) in
+ 			activeThumbnailRequestProgress = self.iconView.setThumbnailImage(using: core, from: item, with: thumbnailSize, itemContainer: self, progressHandler: { [weak self] (progress) in
  				if self?.activeThumbnailRequestProgress === progress {
  					self?.activeThumbnailRequestProgress = nil
  				}

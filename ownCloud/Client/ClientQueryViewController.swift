@@ -296,7 +296,24 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		})
 
 		let menuItems = actions.compactMap({$0.provideUIMenuAction()})
-		return UIMenu(title: "", children: menuItems)
+		let mainMenu = UIMenu(title: "", identifier: UIMenu.Identifier("context"), options: .displayInline, children: menuItems)
+
+		if core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1 {
+			// Share Items
+			let sharingActionsLocation = OCExtensionLocation(ofType: .action, identifier: .contextMenuSharingItem)
+			let sharingActionContext = ActionContext(viewController: self, core: core, items: [item], location: sharingActionsLocation, sender: cell)
+			let sharingActions = Action.sortedApplicableActions(for: sharingActionContext)
+			sharingActions.forEach({
+				$0.progressHandler = makeActionProgressHandler()
+			})
+
+			let sharingItems = sharingActions.compactMap({$0.provideUIMenuAction()})
+			let shareMenu = UIMenu(title: "", identifier: UIMenu.Identifier("sharing"), options: .displayInline, children: sharingItems)
+
+			return UIMenu(title: "", children: [shareMenu, mainMenu])
+		}
+
+		return UIMenu(title: "", children: [mainMenu])
 	}
 
 	func updateToolbarItemsForDropping(_ draggingValues: [OCItemDraggingValue]) {
@@ -511,22 +528,20 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	// MARK: - Navigation Bar Actions
 	@objc func multipleSelectionButtonPressed() {
 
-		if !self.tableView.isEditing {
-			if #available(iOS 13, *) {
-				self.tableView.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
-			}
-
-			updateMultiSelectionUI()
-			self.tableView.setEditing(true, animated: true)
-			sortBar?.showSelectButton = false
-
-			populateToolbar()
-
-			self.navigationItem.leftBarButtonItem = selectDeselectAllButtonItem!
-			self.navigationItem.rightBarButtonItems = [exitMultipleSelectionBarButtonItem!]
-
-			updateMultiSelectionUI()
+		if #available(iOS 13, *) {
+			self.tableView.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
 		}
+
+		updateMultiSelectionUI()
+		self.tableView.setEditing(true, animated: true)
+		sortBar?.showSelectButton = false
+
+		populateToolbar()
+
+		self.navigationItem.leftBarButtonItem = selectDeselectAllButtonItem!
+		self.navigationItem.rightBarButtonItems = [exitMultipleSelectionBarButtonItem!]
+
+		updateMultiSelectionUI()
 	}
 
 	@objc func exitMultipleSelection() {
@@ -768,6 +783,16 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 				}
 			}
 		}
+	}
+}
+
+@available(iOS 13, *) extension ClientQueryViewController {
+	override func tableView(_ tableView: UITableView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
+		return !DisplaySettings.shared.preventDraggingFiles
+	}
+
+	override func tableView(_ tableView: UITableView, didBeginMultipleSelectionInteractionAt indexPath: IndexPath) {
+		multipleSelectionButtonPressed()
 	}
 }
 
