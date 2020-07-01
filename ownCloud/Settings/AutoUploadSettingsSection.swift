@@ -92,9 +92,6 @@ extension UserDefaults {
 
 		set {
 			self.set(newValue, forKey: AutoUploadKeys.InstantPhotoUploadPathKey.rawValue)
-			if newValue == nil {
-				self.removeObject(forKey: AutoUploadKeys.InstantLegacyUploadPathKey.rawValue)
-			}
 		}
 
 		get {
@@ -106,9 +103,6 @@ extension UserDefaults {
 
 		set {
 			self.set(newValue, forKey: AutoUploadKeys.InstantVideoUploadPathKey.rawValue)
-			if newValue == nil {
-				self.removeObject(forKey: AutoUploadKeys.InstantLegacyUploadPathKey.rawValue)
-			}
 		}
 
 		get {
