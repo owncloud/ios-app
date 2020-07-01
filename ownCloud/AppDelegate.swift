@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 import ownCloudAppShared
+import CrashReporter
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -208,8 +209,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		}
 	}
 }
-
-import CrashReporter
 
 extension AppDelegate {
   func setupAndHandleCrashReports() {
