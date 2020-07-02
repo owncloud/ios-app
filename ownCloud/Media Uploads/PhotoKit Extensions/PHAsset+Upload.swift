@@ -20,6 +20,24 @@ import Photos
 import ownCloudSDK
 import CoreServices
 
+extension URL {
+	var audioVideoAssetType : AVFileType? {
+		let ext = self.pathExtension.lowercased()
+		switch ext {
+		case "mov":
+			return AVFileType.mov
+		case "mp4":
+			return AVFileType.mp4
+		case "m4v":
+			return AVFileType.m4v
+		case "3gp", "3gpp", "sdv":
+			return AVFileType.mobile3GPP
+		default:
+			return nil
+		}
+	}
+}
+
 extension String {
 	// If we have a name like IMG_00123.jpg, then only 00123 shall be returned
 	// If the name doesn't start with IMG or img, return nil
@@ -50,9 +68,13 @@ extension PHAssetResource {
 	}
 
 	var fileExtension: String {
+		return PHAssetResource.fileExtension(from: self.uniformTypeIdentifier)
+	}
+
+	static func fileExtension(from uti:String) -> String {
 		var ext = ""
 		// Append correct file extension to export URL
-		switch self.uniformTypeIdentifier {
+		switch uti {
 		case AVFileType.jpg.rawValue:
 			ext = "jpg"
 		case String(kUTTypePNG):
@@ -156,6 +178,19 @@ extension PHAsset {
 	}
 
 	/**
+	OCCellurSwitch identifier which shall be used to control if the asset shall be uploaded using cellular data
+	*/
+	private var cellSwitchIdentifier: OCCellularSwitchIdentifier? {
+		var identifier: OCCellularSwitchIdentifier?
+		if self.mediaType == .image {
+			identifier = .photoUploadCellularSwitchIdentifier
+		} else if self.mediaType == .video {
+			identifier = .videoUploadCellularSwitchIdentifier
+		}
+		return identifier
+	}
+
+	/**
 	File name for media upload created in the same way legacy oC app did it (without extension)
 	- Image names: IMG_0123.jpg will become Photo-yyyy-MM-dd-HH-mm-ss_0123.jpg for example
 	- Video names are going to be similar but prefixed with Video- instead of Photo-
@@ -242,7 +277,44 @@ extension PHAsset {
 				completionHandler(exportURL, outError)
 			}
 		}
+	}
 
+	/**
+	Method for exporting phot assets using PHImageManager
+	- parameter fileName: name for the exported asset including file extension
+	- parameter utisToConvert: list of file UTIs for image formats which shall be converted to JPEG format
+	- parameter completionHandler: called when the file is written to disk or if an error occurs
+	*/
+	func exportPhoto(fileName:String, utisToConvert:[String] = [], completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
+
+		var outError: Error?
+		var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension()
+
+		let requestOptions = PHImageRequestOptions()
+		requestOptions.isNetworkAccessAllowed = true
+		requestOptions.deliveryMode = .highQualityFormat
+		requestOptions.version = .current
+		requestOptions.resizeMode = .none
+
+		PHImageManager.default().requestImageData(for: self, options: requestOptions) { (imageData, utiIdentifier, _, info) in
+			outError = info?[PHImageErrorKey] as? Error
+			if let data = imageData, let uti = utiIdentifier {
+				if utisToConvert.contains(uti) {
+					if let ciImage = CIImage(data: data) {
+						exportURL = exportURL.appendingPathExtension("jpg")
+						outError = ciImage.convert(targetURL: exportURL, outputFormat: .JPEG)
+					}
+				} else {
+					exportURL = exportURL.appendingPathExtension(PHAssetResource.fileExtension(from: uti))
+					do {
+						try data.write(to: exportURL)
+					} catch {
+						outError = error
+					}
+				}
+			}
+			completionHandler(exportURL, outError)
+		}
 	}
 
 	/**
@@ -255,7 +327,6 @@ extension PHAsset {
 	func exportVideo(resources:[PHAssetResource], fileName:String, utisToConvert:[String] = [], completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
 
 		var resourceToExport:PHAssetResource?
-		var outError: Error?
 
 		// For edited video pick the edited version
 		resourceToExport = resources.filter({$0.type == .fullSizeVideo}).first
@@ -276,39 +347,104 @@ extension PHAsset {
 		requestOptions.isNetworkAccessAllowed = true
 
 		// Prepare export URL and remove path extension which will depend on output format
-		var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension()
 
 		// Check if conversion is required?
 		if utisToConvert.contains(resource.uniformTypeIdentifier) {
-			exportURL = exportURL.deletingPathExtension().appendingPathExtension("mp4")
-
-			// Allow to fetch video asset from network (e.g. in case of iCloud library)
-			let videoRequestOptions = PHVideoRequestOptions()
-			videoRequestOptions.isNetworkAccessAllowed = true
-			// Take care that in case of edited video, the edited content is used
-			videoRequestOptions.version = .current
-			videoRequestOptions.deliveryMode = .highQualityFormat
-
-			// Request AVAssetExport session (can be also done with requestAVAsset() in conjunction with AVAssetWriter for more fine-grained control)
-			PHImageManager.default().requestExportSession(forVideo: self, options: videoRequestOptions, exportPreset: AVAssetExportPresetPassthrough) { (session, info) in
-				outError = info?[PHImageErrorKey] as? Error
-				if let session = session {
-					session.outputURL = exportURL
-					session.outputFileType = AVFileType.mp4
-					session.exportAsynchronously {
-						completionHandler(exportURL, outError)
-					}
-				} else {
-					completionHandler(exportURL, outError)
-				}
+			exportVideo(fileName: fileName, utisToConvert: utisToConvert) { (url, error) in
+				completionHandler(url, error)
 			}
 		} else {
+			var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName).deletingPathExtension()
 			// Append correct file extension to export URL
 			exportURL = exportURL.appendingPathExtension(resource.fileExtension)
 
 			// Write the file to disc
 			PHAssetResourceManager.default().writeData(for: resource, toFile: exportURL, options: requestOptions) { (error) in
 				completionHandler(exportURL, error)
+			}
+		}
+	}
+
+	/**
+	Method for exporting video assets
+	- parameter fileName: name for the exported asset including file extension
+	- parameter utisToConvert: list of file UTIs for media formats which shall be converted to MP4 format
+	- parameter completionHandler: called when the file is written to disk or if an error occurs
+	*/
+	func exportVideo(fileName:String, utisToConvert:[String] = [], completionHandler: @escaping (_ url:URL?, _ error:Error?) -> Void) {
+
+		var outError: Error?
+		var exportURL = URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent(fileName)
+
+		let videoRequestOptions = PHVideoRequestOptions()
+		videoRequestOptions.isNetworkAccessAllowed = true
+		// Take care that in case of edited video, the edited content is used
+		videoRequestOptions.version = .current
+		videoRequestOptions.deliveryMode = .highQualityFormat
+
+		// Request AVAssetExport session (can be also done with requestAVAsset() in conjunction with AVAssetWriter for more fine-grained control)
+		PHImageManager.default().requestExportSession(forVideo: self, options: videoRequestOptions, exportPreset: AVAssetExportPresetPassthrough) { (session, info) in
+			outError = info?[PHImageErrorKey] as? Error
+			if let session = session, let defaultFileType = exportURL.audioVideoAssetType {
+
+				var fileType: AVFileType = defaultFileType
+
+				if utisToConvert.contains(AVFileType.mov.rawValue) {
+					exportURL = exportURL.deletingPathExtension().appendingPathExtension("mp4")
+					fileType = AVFileType.mp4
+				}
+
+				session.determineCompatibleFileTypes { (compatibleFileTypes) in
+					if compatibleFileTypes.contains(fileType) {
+						session.outputURL = exportURL
+						session.outputFileType = fileType
+						session.exportAsynchronously {
+							completionHandler(exportURL, outError)
+						}
+					} else {
+						completionHandler(nil, outError)
+					}
+				}
+			} else {
+				completionHandler(exportURL, outError)
+			}
+		}
+	}
+
+	/**
+	Method for exporting asset and handling the cases where the file might be not available locally
+
+	- parameter fileName: name for the exported asset including file extension
+	- parameter utisToConvert: list of file UTIs for media formats which shall be converted
+	- parameter completion: called when the file is written to disk or if an error occurs
+	*/
+	func export(fileName:String, utisToConvert:[String] = [], completion:@escaping (_ url:URL?, _ error:Error?) -> Void) {
+		let assetResources = PHAssetResource.assetResources(for: self)
+		if assetResources.count > 0 {
+			// We have actual data on the device and we can export it directly
+			if self.mediaType == .image {
+				exportPhoto(resources: assetResources, fileName: fileName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
+					completion(url, error)
+				})
+			} else if self.mediaType == .video {
+				exportVideo(resources: assetResources, fileName: fileName, utisToConvert: utisToConvert) { (url, error) in
+					completion(url, error)
+				}
+			} else {
+				completion(nil, NSError(ocError: .internal))
+			}
+		} else {
+			// It could be that we don't have any asset resources locally e.g. since we have to deal with an asset from a cloud album
+			if self.mediaType == .image {
+				exportPhoto(fileName: fileName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
+					completion(url, error)
+				})
+			} else if self.mediaType == .video {
+				exportVideo(fileName: fileName, utisToConvert: utisToConvert) { (url, error) in
+					completion(url, error)
+				}
+			} else {
+				completion(nil, NSError(ocError: .internal))
 			}
 		}
 	}
@@ -325,7 +461,7 @@ extension PHAsset {
 	*/
 	func upload(with core:OCCore?, at rootItem:OCItem, utisToConvert:[String] = [], preserveOriginalName:Bool = true, progressHandler:((_ progress:Progress) -> Void)? = nil, uploadCompleteHandler:(() -> Void)? = nil) -> (OCItem?, Error?)? {
 
-		func performUpload(sourceURL:URL, copySource:Bool) -> (OCItem?, Error?)? {
+		func performUpload(sourceURL:URL, copySource:Bool, cellularSwitchIdentifier:OCCellularSwitchIdentifier?) -> (OCItem?, Error?)? {
 
 			@discardableResult func removeSourceFile() -> Bool {
 				do {
@@ -343,7 +479,7 @@ extension PHAsset {
 			// in the PhotoLibrary which is named after original image
 			var fileName = sourceURL.lastPathComponent
 			if !preserveOriginalName {
-				fileName = "\(self.ocStyleUploadFileName(with: sourceURL.deletingPathExtension().lastPathComponent.imageFileNameSuffix)).\(sourceURL.pathExtension)"
+                fileName = "\(self.ocStyleUploadFileName(with: sourceURL.deletingPathExtension().lastPathComponent.imageFileNameSuffix)).\(sourceURL.pathExtension)"
 			}
 
 			// Synchronously import media file into the OCCore and schedule upload
@@ -354,6 +490,7 @@ extension PHAsset {
 											  alternativeName: fileName,
 											  modificationDate: self.creationDate,
 											  importByCopy: copySource,
+											  cellularSwitchIdentifier: cellularSwitchIdentifier,
 											  placeholderHandler: { (item, error) in
 												if !copySource && error != nil {
 													// Delete the temporary asset file in case of critical error
@@ -366,12 +503,12 @@ extension PHAsset {
 												}
 												importResult = (item, error)
 												importSemaphore.signal()
+												uploadCompleteHandler?()
 
 			}, completionHandler: { (_, _) in
 				if uploadProgress != nil {
 					progressHandler?(uploadProgress!)
 				}
-				uploadCompleteHandler?()
 			})
 
 			if uploadProgress != nil {
@@ -385,52 +522,41 @@ extension PHAsset {
 
 		Log.debug(tagged: ["MEDIA_UPLOAD"], "Prepare uploading asset ID \(self.localIdentifier), type:\(self.mediaType), subtypes:\(self.mediaSubtypes), sourceType:\(self.sourceType), creationDate:\(String(describing: self.creationDate)), modificationDate:\(String(describing: self.modificationDate)), favorite:\(self.isFavorite), hidden:\(self.isHidden)")
 
-		// Prepare progress object for importing full size asset from photo library
-		let importProgress = Progress(totalUnitCount: 100)
-		importProgress.localizedDescription = "Importing from photo library".localized
-
 		var uploadResult:(OCItem?, Error?)?
 
 		if let assetName = self.assetFileName {
 			var exportedAssetURL: URL?
 			var outError: Error?
 
-			let assetResources = PHAssetResource.assetResources(for: self)
-
-			// Synchronously export asset
-			let semaphore = DispatchSemaphore(value: 0)
 			_ = autoreleasepool {
 
-				if self.mediaType == .image {
-					exportPhoto(resources: assetResources, fileName: assetName, utisToConvert: utisToConvert, completionHandler: { (url, error) in
-						exportedAssetURL = url
-						outError = error
-						semaphore.signal()
-					})
-				} else if self.mediaType == .video {
-					exportVideo(resources: assetResources, fileName: assetName, utisToConvert: utisToConvert) { (url, error) in
-						exportedAssetURL = url
-						outError = error
-						semaphore.signal()
-					}
-				} else {
-					outError = NSError(ocError: .internal)
+				// Synchronously export asset
+				let semaphore = DispatchSemaphore(value: 0)
+				export(fileName: assetName, utisToConvert: utisToConvert) { (url, error) in
+					exportedAssetURL = url
+					outError = error
 					semaphore.signal()
 				}
-
+				semaphore.wait()
 			}
-			semaphore.wait()
 
-			// Do we have an error at export stage?
-			if outError != nil {
-				Log.error(tagged: ["MEDIA_UPLOAD"], "Asset export failed for asset with UTI \(String(describing: self.primaryResource?.uniformTypeIdentifier)) ID \(String(describing: self.primaryResource?.assetLocalIdentifier)), error: \(String(describing: outError))")
+			guard outError == nil else {
+				Log.error(tagged: ["MEDIA_UPLOAD"], "Asset export failed for asset with identifier: \(self.localIdentifier), type: \(self.mediaType == .video ? "video" : "photo"), error: \(String(describing: outError))")
 				uploadResult = (nil, outError)
-			} else {
-				// Perform actual upload
-				if let uploadURL = exportedAssetURL {
-					uploadResult = performUpload(sourceURL: uploadURL, copySource: false)
-				}
+				// Call completion handler to avoid having media upload jobs stalled forever
+				uploadCompleteHandler?()
+				return uploadResult
 			}
+
+			guard let uploadURL = exportedAssetURL else {
+				Log.warning(tagged: ["MEDIA_UPLOAD"], "Missing export URL for asset with identifier: \(self.localIdentifier)")
+				// Call completion handler to avoid having media upload jobs stalled forever
+				uploadCompleteHandler?()
+				uploadResult = (nil, nil)
+				return uploadResult
+			}
+
+			uploadResult = performUpload(sourceURL: uploadURL, copySource: false, cellularSwitchIdentifier: self.cellSwitchIdentifier)
 
 		} else {
 			Log.error(tagged: ["MEDIA_UPLOAD"], "Primary resource not found for asset ID \(self.localIdentifier)")

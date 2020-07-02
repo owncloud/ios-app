@@ -136,6 +136,11 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
+            key = "MTC_MAX_HIT_COUNT"
+            value = "9999"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "CG_NUMERICS_SHOW_BACKTRACE"
             value = "1"
             isEnabled = "YES">

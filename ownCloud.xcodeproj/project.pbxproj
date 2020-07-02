@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		02072E6023E46022006548A7 /* UIWindow+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02072E5F23E46022006548A7 /* UIWindow+Extension.swift */; };
 		0233F45E246E9D960095A799 /* UploadCameraMediaAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */; };
+		025FC720247810AB009307A7 /* MediaUploadSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC71F247810AB009307A7 /* MediaUploadSettingsViewController.swift */; };
+		025FC7272478123E009307A7 /* MediaExportSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC7262478123E009307A7 /* MediaExportSettingsSection.swift */; };
+		025FC72924781659009307A7 /* AutoUploadSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC72824781659009307A7 /* AutoUploadSettingsSection.swift */; };
+		025FC73A247BF8BE009307A7 /* PHAsset+InstantUploads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC739247BF8BE009307A7 /* PHAsset+InstantUploads.swift */; };
+		025FC742247D5004009307A7 /* MediaUploadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC741247D5004009307A7 /* MediaUploadOperation.swift */; };
+		025FC745247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC744247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift */; };
+		02633EFF2483D2EB00B5F58F /* UNNotificationCenter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02633EFE2483D2EB00B5F58F /* UNNotificationCenter+Extensions.swift */; };
 		0269F589244DED02002E9D99 /* UIAlertController+UniversalLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0269F588244DED02002E9D99 /* UIAlertController+UniversalLinks.swift */; };
 		0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0287DD7C249131E000C912CA /* AppStatistics.swift */; };
 		2308F94321467F6200CF0B91 /* ClientDirectoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2308F93C21467F6200CF0B91 /* ClientDirectoryPickerViewController.swift */; };
@@ -99,7 +106,6 @@
 		39BC9C3023DB831F0097C52D /* DocumentEditingAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CD755123D787E400193950 /* DocumentEditingAction.swift */; };
 		39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BE385C23435AFE0062A2FE /* String+Extension.swift */; };
 		39CC8AE6228C12100020253B /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8AE5228C12100020253B /* Array+Extension.swift */; };
-		39CC8B01228C8A950020253B /* MediaUploadSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8B00228C8A950020253B /* MediaUploadSettingsSection.swift */; };
 		39CC8B37228D5B890020253B /* ShareClientItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8B36228D5B890020253B /* ShareClientItemCell.swift */; };
 		39CD755423D8392D00193950 /* EditDocumentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CD755323D8392D00193950 /* EditDocumentViewController.swift */; };
 		39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */; };
@@ -268,6 +274,7 @@
 		DC4C575D233958B70098BAE9 /* FixedHeightImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4C575C233958B70098BAE9 /* FixedHeightImageView.swift */; };
 		DC4FEAE7209E3A7700D4476B /* OCIssue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE6209E3A7700D4476B /* OCIssue+Extension.swift */; };
 		DC4FEAEA209E48E800D4476B /* DispatchQueueTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */; };
+		DC51FD922475715F0069AB79 /* CellularSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC51FD912475715F0069AB79 /* CellularSettingsViewController.swift */; };
 		DC576EC022647A070087316D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DC576EC222647A070087316D /* Localizable.strings */; };
 		DC625141225C904700736874 /* NSError+MessageResolution.m in Sources */ = {isa = PBXBuildFile; fileRef = DC625140225C904700736874 /* NSError+MessageResolution.m */; };
 		DC625148225CEB2C00736874 /* UploadFileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC625147225CEB2C00736874 /* UploadFileAction.swift */; };
@@ -345,7 +352,7 @@
 		DCC8536023CE1AF8007BA3EB /* PurchasesSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC8535F23CE1AF8007BA3EB /* PurchasesSettingsSection.swift */; };
 		DCD1300A23A191C000255779 /* LicenseOfferButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD1300923A191C000255779 /* LicenseOfferButton.swift */; };
 		DCD1301123A23F4E00255779 /* OCLicenseManager+AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD1301023A23F4E00255779 /* OCLicenseManager+AppStore.swift */; };
-		DCD2D40622F06ECA0071FB8F /* StorageSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD2D40522F06ECA0071FB8F /* StorageSettingsSection.swift */; };
+		DCD2D40622F06ECA0071FB8F /* DataSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD2D40522F06ECA0071FB8F /* DataSettingsSection.swift */; };
 		DCD8109A23984AF2003B0053 /* OCLicenseDuration.h in Headers */ = {isa = PBXBuildFile; fileRef = DCD810922398492C003B0053 /* OCLicenseDuration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCD8109B23984AF6003B0053 /* OCLicenseDuration.m in Sources */ = {isa = PBXBuildFile; fileRef = DCD810932398492C003B0053 /* OCLicenseDuration.m */; };
 		DCD9B87B2379612B00691929 /* OCLicenseManager+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = DCD9B873237960E600691929 /* OCLicenseManager+Internal.h */; };
@@ -752,6 +759,13 @@
 /* Begin PBXFileReference section */
 		02072E5F23E46022006548A7 /* UIWindow+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Extension.swift"; sourceTree = "<group>"; };
 		0233F45D246E9D960095A799 /* UploadCameraMediaAction.swift */ = {isa = PBXFileReference; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = UploadCameraMediaAction.swift; sourceTree = "<group>"; };
+		025FC71F247810AB009307A7 /* MediaUploadSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadSettingsViewController.swift; sourceTree = "<group>"; };
+		025FC7262478123E009307A7 /* MediaExportSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaExportSettingsSection.swift; sourceTree = "<group>"; };
+		025FC72824781659009307A7 /* AutoUploadSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoUploadSettingsSection.swift; sourceTree = "<group>"; };
+		025FC739247BF8BE009307A7 /* PHAsset+InstantUploads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHAsset+InstantUploads.swift"; sourceTree = "<group>"; };
+		025FC741247D5004009307A7 /* MediaUploadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadOperation.swift; sourceTree = "<group>"; };
+		025FC744247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundUploadsSettingsSection.swift; sourceTree = "<group>"; };
+		02633EFE2483D2EB00B5F58F /* UNNotificationCenter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UNNotificationCenter+Extensions.swift"; sourceTree = "<group>"; };
 		0269F588244DED02002E9D99 /* UIAlertController+UniversalLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+UniversalLinks.swift"; sourceTree = "<group>"; };
 		0287DD7C249131E000C912CA /* AppStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStatistics.swift; sourceTree = "<group>"; };
 		03AE98EEF23B4F4F2C0FDD0F /* Pods-ownCloudTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ownCloudTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ownCloudTests/Pods-ownCloudTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -846,7 +860,6 @@
 		39B289A7226F1EE000BE0E11 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		39BE385C23435AFE0062A2FE /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		39CC8AE5228C12100020253B /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
-		39CC8B00228C8A950020253B /* MediaUploadSettingsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaUploadSettingsSection.swift; sourceTree = "<group>"; };
 		39CC8B36228D5B890020253B /* ShareClientItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareClientItemCell.swift; sourceTree = "<group>"; };
 		39CD755123D787E400193950 /* DocumentEditingAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentEditingAction.swift; sourceTree = "<group>"; };
 		39CD755323D8392D00193950 /* EditDocumentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDocumentViewController.swift; sourceTree = "<group>"; };
@@ -1036,6 +1049,7 @@
 		DC4C575C233958B70098BAE9 /* FixedHeightImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedHeightImageView.swift; sourceTree = "<group>"; };
 		DC4FEAE6209E3A7700D4476B /* OCIssue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCIssue+Extension.swift"; sourceTree = "<group>"; };
 		DC4FEAE9209E48E800D4476B /* DispatchQueueTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueTools.swift; sourceTree = "<group>"; };
+		DC51FD912475715F0069AB79 /* CellularSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellularSettingsViewController.swift; sourceTree = "<group>"; };
 		DC576EC122647A070087316D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DC62513F225C904700736874 /* NSError+MessageResolution.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSError+MessageResolution.h"; sourceTree = "<group>"; };
 		DC625140225C904700736874 /* NSError+MessageResolution.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSError+MessageResolution.m"; sourceTree = "<group>"; };
@@ -1121,7 +1135,7 @@
 		DCC8535F23CE1AF8007BA3EB /* PurchasesSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchasesSettingsSection.swift; sourceTree = "<group>"; };
 		DCD1300923A191C000255779 /* LicenseOfferButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseOfferButton.swift; sourceTree = "<group>"; };
 		DCD1301023A23F4E00255779 /* OCLicenseManager+AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCLicenseManager+AppStore.swift"; sourceTree = "<group>"; };
-		DCD2D40522F06ECA0071FB8F /* StorageSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageSettingsSection.swift; sourceTree = "<group>"; };
+		DCD2D40522F06ECA0071FB8F /* DataSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSettingsSection.swift; sourceTree = "<group>"; };
 		DCD344A5205BD0C000189B9A /* openssl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = openssl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCD344AF205BD0FA00189B9A /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "ios-sdk/ownCloudUI/openssl/framework/openssl.xcodeproj"; sourceTree = "<group>"; };
 		DCD810922398492C003B0053 /* OCLicenseDuration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseDuration.h; sourceTree = "<group>"; };
@@ -1629,11 +1643,13 @@
 		4C51727422DE04BD001BC97F /* Tasks */ = {
 			isa = PBXGroup;
 			children = (
+				02633EFE2483D2EB00B5F58F /* UNNotificationCenter+Extensions.swift */,
 				4C51727522DE04BD001BC97F /* ScheduledTaskExtension.swift */,
 				4C51727622DE04BD001BC97F /* BackgroundFetchUpdateTaskAction.swift */,
 				4C51727722DE04BD001BC97F /* ScheduledTaskManager.swift */,
 				4C11EE5A22E88D4200B84869 /* InstantMediaUploadTaskExtension.swift */,
 				4C3E17DA234DBF9A000D7BA8 /* PendingMediaUploadTaskExtension.swift */,
+				025FC739247BF8BE009307A7 /* PHAsset+InstantUploads.swift */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -1652,6 +1668,7 @@
 				021C386C2459C0BB002091C6 /* PhotoKit Extensions */,
 				4CB8ADE422DF6BE300F1FEBC /* CoreImage Extensions */,
 				4CC4A21822FB4F4C00AE7E2C /* MediaUploadQueue.swift */,
+				025FC741247D5004009307A7 /* MediaUploadOperation.swift */,
 				4C96463B238489E4003278B7 /* MediaUploadActivity.swift */,
 				4C05D8A4238708D40073EF50 /* MediaUploadStorage.swift */,
 			);
@@ -2419,13 +2436,17 @@
 				4C7295D7228C384E00FA4E68 /* LogFilesViewController.swift */,
 				DC6CF7FA219446050013B9F9 /* LogSettingsViewController.swift */,
 				4C88041722E78D790016CBA9 /* MediaFilesSettings.swift */,
-				39CC8B00228C8A950020253B /* MediaUploadSettingsSection.swift */,
 				DCC8535F23CE1AF8007BA3EB /* PurchasesSettingsSection.swift */,
 				23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */,
 				593BAB3F209ADFB900023634 /* Passcode */,
 				233E0FD72099F11D00C3D8D5 /* SecuritySettingsSection.swift */,
-				DCD2D40522F06ECA0071FB8F /* StorageSettingsSection.swift */,
 				DC854935218331CF00782BA8 /* UserInterfaceSettingsSection.swift */,
+				DCD2D40522F06ECA0071FB8F /* DataSettingsSection.swift */,
+				DC51FD912475715F0069AB79 /* CellularSettingsViewController.swift */,
+				025FC71F247810AB009307A7 /* MediaUploadSettingsViewController.swift */,
+				025FC7262478123E009307A7 /* MediaExportSettingsSection.swift */,
+				025FC72824781659009307A7 /* AutoUploadSettingsSection.swift */,
+				025FC744247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -3285,6 +3306,7 @@
 				3998F5D72241486F00B66713 /* OCCertificate+Extension.swift in Sources */,
 				6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */,
 				DC8EB271239308E5009148F9 /* LicenseOffersViewController.swift in Sources */,
+				025FC742247D5004009307A7 /* MediaUploadOperation.swift in Sources */,
 				4C11EE5B22E88D4200B84869 /* InstantMediaUploadTaskExtension.swift in Sources */,
 				DC6CF7FB219446050013B9F9 /* LogSettingsViewController.swift in Sources */,
 				39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */,
@@ -3293,10 +3315,10 @@
 				23EC775D2137FB6B0032D4E6 /* WebViewDisplayViewController.swift in Sources */,
 				DCDC209C2399A4CF003CFF5B /* LicenseRequirements.swift in Sources */,
 				DC018F8C20A1060A00135198 /* ProgressHUDViewController.swift in Sources */,
-				39CC8B01228C8A950020253B /* MediaUploadSettingsSection.swift in Sources */,
 				DC7DBA29207F71D600E7337D /* VectorImage.swift in Sources */,
 				4C464BF12187AF1500D30602 /* PDFTocTableViewCell.swift in Sources */,
 				DC1B270C209CF34B004715E1 /* BookmarkViewController.swift in Sources */,
+				025FC745247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift in Sources */,
 				DC63208321FCAC1E007EC0A8 /* ClientActivityViewController.swift in Sources */,
 				DC3DEC7E22B03ACD00F3352D /* CardPresentationController.swift in Sources */,
 				4C464BF62187AF1500D30602 /* PDFTocItem.swift in Sources */,
@@ -3352,6 +3374,7 @@
 				DC63208521FCEBE9007EC0A8 /* ClientActivityCell.swift in Sources */,
 				DC62514A225CEB4300736874 /* UploadMediaAction.swift in Sources */,
 				39AFC3D1225E72FB00A6D3AE /* GroupSharingTableViewController.swift in Sources */,
+				025FC72924781659009307A7 /* AutoUploadSettingsSection.swift in Sources */,
 				DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */,
 				39A5135322608836002CF1AA /* OCShare+Extension.swift in Sources */,
 				39E42D1C2315288B00B82AC3 /* KeyCommands.swift in Sources */,
@@ -3381,6 +3404,7 @@
 				4C464BEF2187AF1500D30602 /* PDFThumbnailCollectionViewCell.swift in Sources */,
 				232B01F62126B10900366FA0 /* MoreStaticTableViewController.swift in Sources */,
 				4C96463C238489E4003278B7 /* MediaUploadActivity.swift in Sources */,
+				02633EFF2483D2EB00B5F58F /* UNNotificationCenter+Extensions.swift in Sources */,
 				6E91F37E21ECA6FD009436D2 /* CopyAction.swift in Sources */,
 				4CC4A21922FB4F4C00AE7E2C /* MediaUploadQueue.swift in Sources */,
 				593BAB97209F8A0500023634 /* AppLockManager.swift in Sources */,
@@ -3408,6 +3432,8 @@
 				239F1319205A693A0029F186 /* UIColor+Extension.swift in Sources */,
 				23EC775B2137F3DD0032D4E6 /* OCExtensionType+Extension.swift in Sources */,
 				4C88041822E78D790016CBA9 /* MediaFilesSettings.swift in Sources */,
+				025FC7272478123E009307A7 /* MediaExportSettingsSection.swift in Sources */,
+				025FC720247810AB009307A7 /* MediaUploadSettingsViewController.swift in Sources */,
 				DC3BE0E12077CD4B002A0AC0 /* Synchronized.swift in Sources */,
 				DCE5E8B82080D8D9005F60CE /* OCItem+Extension.swift in Sources */,
 				4CB8ADDE22DF5D3700F1FEBC /* PHPhotoLibrary+Extension.swift in Sources */,
@@ -3418,6 +3444,7 @@
 				DC42244C207CAFBB0006A2A6 /* ThemeCollection.swift in Sources */,
 				DC68057A212EAB5E006C3B1F /* ThemeCertificateViewController.swift in Sources */,
 				DCFED9BA20809B8900A2D984 /* ThemeTVGResource.swift in Sources */,
+				025FC73A247BF8BE009307A7 /* PHAsset+InstantUploads.swift in Sources */,
 				399DD7C722A691BC00B45EB2 /* UnshareAction.swift in Sources */,
 				6E37F48B2188B27D00CF16CA /* Action.swift in Sources */,
 				DC3BE0DE2077CC14002A0AC0 /* ClientQueryViewController.swift in Sources */,
@@ -3436,8 +3463,9 @@
 				DCF4F17B20519F9D00189B9A /* StaticTableViewSection.swift in Sources */,
 				DC243BFF2317B446004FBB5C /* ThemeWindow.swift in Sources */,
 				39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */,
+				DC51FD922475715F0069AB79 /* CellularSettingsViewController.swift in Sources */,
 				DCC8536023CE1AF8007BA3EB /* PurchasesSettingsSection.swift in Sources */,
-				DCD2D40622F06ECA0071FB8F /* StorageSettingsSection.swift in Sources */,
+				DCD2D40622F06ECA0071FB8F /* DataSettingsSection.swift in Sources */,
 				39B289A8226F1EE000BE0E11 /* MessageView.swift in Sources */,
 				4C464BF22187AF1500D30602 /* PDFSearchViewController.swift in Sources */,
 				DC3393A422E0A75C00DD3DA4 /* ClientItemResolvingCell.swift in Sources */,

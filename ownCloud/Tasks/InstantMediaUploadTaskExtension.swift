@@ -7,7 +7,7 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
+* Copyright (C) 2020, ownCloud GmbH.
 *
 * This code is covered by the GNU Public License Version 3.
 *
@@ -19,6 +19,7 @@
 import Foundation
 import ownCloudSDK
 import Photos
+import UserNotifications
 
 class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
@@ -27,33 +28,50 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 	}
 
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.instant_media_upload") }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.appDidComeToForeground] }
-	override class var features : [String : Any]? { return [ FeatureKeys.photoLibraryChanged : true, FeatureKeys.runOnWifi : true] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.appDidComeToForeground, .appDidBecomeBackgrounded, .appBackgroundFetch] }
+	override class var features : [String : Any]? { return [ FeatureKeys.photoLibraryChanged : true] }
 
 	private var uploadDirectoryTracking: OCCoreItemTracking?
 
 	override func run(background:Bool) {
+		Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Task started")
+
 		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
 
-		guard userDefaults.instantUploadPhotos == true || userDefaults.instantUploadVideos == true else { return }
+		var enqueuedAssetCount = 0
 
-		guard let bookmarkUUID = userDefaults.instantUploadBookmarkUUID else {
-            Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant media upload enabled, but bookmark not configured")
-            return
-        }
-
-		guard let path = userDefaults.instantUploadPath else {
-            Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant media upload enabled, but path not configured")
-            return
-        }
-
-		if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
-			uploadMediaAssets(for: bookmark, at: path)
+		if  userDefaults.instantUploadPhotos == true {
+			if let bookmarkUUID = userDefaults.instantPhotoUploadBookmarkUUID, let path = userDefaults.instantPhotoUploadPath {
+				if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
+					enqueuedAssetCount += uploadPhotoAssets(for: bookmark, at: path)
+				}
+			} else {
+				Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant photo upload enabled, but bookmark or path not configured")
+			}
 		}
+
+		if  userDefaults.instantUploadVideos == true {
+			if let bookmarkUUID = userDefaults.instantVideoUploadBookmarkUUID, let path = userDefaults.instantVideoUploadPath {
+				if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
+					enqueuedAssetCount += uploadVideoAssets(for: bookmark, at: path)
+				}
+			} else {
+				Log.warning(tagged: ["INSTANT_MEDIA_UPLOAD"], "Instant video upload enabled, but bookmark or path not configured")
+			}
+		}
+
+		if enqueuedAssetCount > 0 && userDefaults.backgroundMediaUploadsNotificationsEnabled {
+
+			let title = "Background uploads".localized
+			let body = String(format: "Scheduled upload of %ld media assets".localized, enqueuedAssetCount)
+			UNUserNotificationCenter.postLocalNotification(with: "com.ownloud.instant-media-upload-notification", title: title, body: body)
+		}
+
+		Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Task finished")
 	}
 
-	private func uploadMediaAssets(for bookmark:OCBookmark, at path:String) {
-		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return }
+	private func uploadPhotoAssets(for bookmark:OCBookmark, at path:String) -> Int {
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return 0 }
 
 		var photoAssets = [PHAsset]()
 
@@ -61,7 +79,7 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 
 		// Add photo assets
 		if let uploadPhotosAfter = userDefaults.instantUploadPhotosAfter {
-			let fetchResult = self.fetchAssetsFromCameraRoll(.images, createdAfter: uploadPhotosAfter)
+			let fetchResult = PHAsset.fetchAssetsFromCameraRoll(with: [.image], createdAfter: uploadPhotosAfter)
 			if fetchResult != nil {
 				fetchResult!.enumerateObjects({ (asset, _, _) in
 					photoAssets.append(asset)
@@ -77,13 +95,19 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
             Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Last added photo asset modification date: \(String(describing: userDefaults.instantUploadPhotosAfter))")
 		}
 
+		return photoAssets.count
+	}
+
+	private func uploadVideoAssets(for bookmark:OCBookmark, at path:String) -> Int {
+		guard let userDefaults = OCAppIdentity.shared.userDefaults else { return 0 }
+
 		var videoAssets = [PHAsset]()
 
         Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Fetching videos created after \(String(describing: userDefaults.instantUploadVideosAfter))")
 
 		// Add video assets
 		if let uploadVideosAfter = userDefaults.instantUploadVideosAfter {
-			let fetchResult = self.fetchAssetsFromCameraRoll(.videos, createdAfter: uploadVideosAfter)
+			let fetchResult = PHAsset.fetchAssetsFromCameraRoll(with: [.video], createdAfter: uploadVideosAfter)
 			if fetchResult != nil {
 				fetchResult!.enumerateObjects({ (asset, _, _) in
 					videoAssets.append(asset)
@@ -98,59 +122,8 @@ class InstantMediaUploadTaskExtension : ScheduledTaskAction {
 			userDefaults.instantUploadVideosAfter = videoAssets.last?.creationDate
             Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Last added video asset modification date: \(String(describing: userDefaults.instantUploadPhotosAfter))")
 		}
+
+		return videoAssets.count
 	}
 
-	private func fetchAssetsFromCameraRoll(_ mediaType:MediaType, createdAfter:Date? = nil) -> PHFetchResult<PHAsset>? {
-
-		guard PHPhotoLibrary.authorizationStatus() == .authorized else { return nil }
-
-		let collectionResult = PHAssetCollection.fetchAssetCollections(with: .smartAlbum,
-																	   subtype: .smartAlbumUserLibrary,
-																	   options: nil)
-
-		if let cameraRoll = collectionResult.firstObject {
-			let imageTypePredicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
-			let videoTypePredicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.video.rawValue)
-
-			var typePredicatesArray = [NSPredicate]()
-
-			switch mediaType {
-			case .images:
-				typePredicatesArray.append(imageTypePredicate)
-			case .videos:
-				typePredicatesArray.append(videoTypePredicate)
-			case .imagesAndVideos:
-				typePredicatesArray.append(imageTypePredicate)
-				typePredicatesArray.append(videoTypePredicate)
-			}
-
-			let mediaTypesPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: typePredicatesArray)
-
-			let fetchOptions = PHFetchOptions()
-
-			if let date = createdAfter {
-				let creationDatePredicate = NSPredicate(format: "creationDate > %@", date as NSDate)
-				fetchOptions.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [mediaTypesPredicate, creationDatePredicate])
-			} else {
-				fetchOptions.predicate = mediaTypesPredicate
-			}
-
-			let sort = NSSortDescriptor(key: "creationDate", ascending: true)
-			fetchOptions.sortDescriptors = [sort]
-
-            Log.debug(tagged: ["INSTANT_MEDIA_UPLOAD"], "Fetching assets with options \(fetchOptions.debugDescription)")
-
-			return PHAsset.fetchAssets(in: cameraRoll, options: fetchOptions)
-		}
-
-		return nil
-	}
-
-	private func showFeatureDisabledAlert() {
-		OnMainThread {
-			let alertController = ThemedAlertController(with: "Auto upload disabled".localized,
-																	message: "Auto upload of media was disabled since configured account / folder was not found".localized)
-			UIApplication.shared.currentWindow()?.rootViewController?.present(alertController, animated: true, completion: nil)
-		}
-	}
 }
