@@ -43,8 +43,13 @@ class MoreSettingsSection: SettingsSection {
 			buildType = "beta".localized
 		}
 
-		let localizedFooter = "%@ %@ version %@ build %@ (app: %@, sdk: %@)".localized
-		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName ?? "App", buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit, OCAppIdentity.shared.sdkCommit ?? "unknown")
+		var appSuffix = ""
+		if OCLicenseEMMProvider.isEMMVersion {
+			appSuffix = "-EMM"
+		}
+
+		let localizedFooter = "%@%@ %@ version %@ build %@ (app: %@, sdk: %@)".localized
+		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName ?? "App", appSuffix, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit, OCAppIdentity.shared.sdkCommit ?? "unknown")
 
 		self.footerTitle = footerTitle
 

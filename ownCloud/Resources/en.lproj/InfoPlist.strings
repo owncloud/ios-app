@@ -23,4 +23,4 @@
 "NSLocationAlwaysAndWhenInUseUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in the background.";
 "NSLocationAlwaysUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in background";
 "NSLocationWhenInUseUsageDescription" = "This permission is needed to enable auto-upload of photos and videos in background";
-"NSMicrophoneUsageDescription" = "This permission is needed to record videos"
+"NSMicrophoneUsageDescription" = "This permission is needed to record videos";

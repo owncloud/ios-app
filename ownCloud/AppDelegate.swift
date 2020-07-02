@@ -62,6 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		ScheduledTaskManager.shared.setup()
 
 		MediaUploadQueue.shared.setup()
+		AppStatistics.shared.update()
 
 		// Display Extensions
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)

@@ -63,20 +63,212 @@ platform :ios do
       )
     end
 
-  desc "In-House Enterprise IPA generation"
-   lane :build_ipa_enterprise_in_house do
+    desc "Create Release Notes, Screenshots, Build, Upload of regular iOS App and EMM App"
+      lane :release_on_appstore do |options|
 
-    ENTERPRISE_APP_ID = "com.owncloud.enterprise.ios-app"
-    ENTERPRISE_APP_PROFILE = "Enterprise Distribution iOS Neo"
-    ENTERPRISE_FP_ID = "com.owncloud.enterprise.ios-app.ownCloud-File-Provider"
-    ENTERPRISE_FP_PROFILE = "Enterprise Distribution iOS Neo File Provider"
-    ENTERPRISE_FP_UI_ID = "com.owncloud.enterprise.ios-app.ownCloud-File-ProviderUI"
-    ENTERPRISE_FP_UI_PROFILE = "Enterprise Distribution iOS Neo File ProviderUI"
-    ENTERPRISE_INTENT_ID = "com.owncloud.enterprise.ios-app.ownCloud-Intents"
-    ENTERPRISE_INTENT_PROFILE = "Enterprise Distribution iOS Neo Intent"
-    ENTERPRISE_APP_FW_ID = "com.owncloud.enterprise.ownCloudApp"
-    ENTERPRISE_TEAM = "5QNK8L2PSC"
-    ENTERPRISE_IDENTITY = "iPhone Distribution: ownCloud GmbH"
+        # Set options, which action should not performed, by default all actions will be performed
+        # Disable all options: fastlane release_on_appstore create_release_notes:false create_screenshots:false deliver:false build_regular_app:false build_emm_app:false
+        create_release_notes = true
+        if options[:create_release_notes] == false
+          create_release_notes = options[:create_release_notes]
+        end
+
+        create_screenshots = true
+        skip_screenshots = false
+        if options[:create_screenshots] == false
+          create_screenshots = options[:create_screenshots]
+          skip_screenshots = true
+        end
+
+        deliver = true
+        if options[:deliver] == false
+          deliver = options[:deliver]
+        end
+
+        build_regular_app = true
+        if options[:build_regular_app] == false
+          build_regular_app = options[:build_regular_app]
+        end
+
+        build_emm_app = true
+        if options[:build_emm_app] == false
+          build_emm_app = options[:build_emm_app]
+        end
+
+        # Create Release Notes
+        if create_release_notes
+          puts("Creating Release Notes…")
+          release_notes(
+            xcodeproj: "ownCloud.xcodeproj",
+            version_key: "APP_SHORT_VERSION",
+            path: "ownCloud/Release Notes/ReleaseNotes.plist"
+          )
+        end
+
+        # Create Screenshots
+        if create_screenshots
+          puts("Creating Screenshots…")
+          reset_simulators
+          snapshot
+          frameit(white: false, path: './fastlane/screenshots')
+        end
+
+        # Push Release Notes or Screenshot changes to git
+        if create_release_notes || create_screenshots
+          puts("Push changes to git…")
+          push_to_git_remote
+        end
+
+        # Update Bundle IDs and Build App
+        if build_regular_app
+          puts("Build regular iOS App…")
+          # Build App
+          owncloud_regular_build()
+
+          # Deliver
+          if deliver
+            deliver(
+              skip_screenshots: skip_screenshots,
+              skip_metadata: false,
+              submit_for_review: false,
+              ignore_language_directory_validation: true,
+              skip_binary_upload: false,
+              force: true,
+              overwrite_screenshots: create_screenshots,
+              app_identifier: "com.owncloud.ios-app",
+              skip_app_version_update: true,
+              ipa: "ownCloud.ipa"
+            )
+          end
+        end
+
+        if build_emm_app
+          puts("Build EMM iOS App…")
+          # Set EMM App-Icon for App Build
+          sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon-regular.appiconset/"
+          sh "mv ../ownCloud/Resources/Assets.xcassets/AppIcon-emm.appiconset/ ../ownCloud/Resources/Assets.xcassets/AppIcon.appiconset/"
+
+          # Set EMM Description
+          sh "mv metadata/en-us/description.txt metadata/en-us/description-regular.txt"
+          sh "mv metadata/en-us/description-emm.txt metadata/en-us/description.txt"
+
+          # Set EMM App-Icon for AppStore Connect
+          sh "mv metadata/app_icon.jpg metadata/app_icon-regular.jpg"
+          sh "mv metadata/app_icon-emm.jpg metadata/app_icon.jpg"
+
+          # Build App
+          owncloud_emm_build()
+
+          # Deliver
+          if deliver
+            deliver(
+              skip_screenshots: skip_screenshots,
+              skip_metadata: false,
+              submit_for_review: false,
+              ignore_language_directory_validation: true,
+              skip_binary_upload: false,
+              force: true,
+              overwrite_screenshots: create_screenshots,
+              app_identifier: "com.owncloud.ios-app.emm",
+              skip_app_version_update: true,
+              ipa: "ownCloud.ipa"
+            )
+          end
+      end
+  end
+
+  lane :owncloud_regular_build do
+    build_ipa_in_house(
+      ENTERPRISE_APP_ID: "com.owncloud.ios-app",
+      ENTERPRISE_APP_PROFILE: "match AppStore com.owncloud.ios-app",
+      ENTERPRISE_FP_ID: "com.owncloud.ios-app.ownCloud-File-Provider",
+      ENTERPRISE_FP_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-File-Provider",
+      ENTERPRISE_INTENT_ID: "com.owncloud.ios-app.ownCloud-Intents",
+      ENTERPRISE_INTENT_PROFILE: "match AppStore com.owncloud.ios-app.ownCloud-Intents",
+      ENTERPRISE_APP_FW_ID: "com.owncloud.ownCloudApp",
+      ENTERPRISE_APP_SHARED_ID: "com.owncloud.ownCloudAppShare",
+      ENTERPRISE_TEAM: "4AP2STM4H5",
+      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH (4AP2STM4H5)",
+      APP_GROUP_IDENTIFIERS: "group.com.owncloud.ios-app",
+      EXPORT_METHOD: "app-store",
+      CONFIGURATION: "Release",
+      BETA_APP_ICON: false
+    )
+  end
+
+  lane :owncloud_emm_build do
+    build_ipa_in_house(
+      ENTERPRISE_APP_ID: "com.owncloud.ios-app.emm",
+      ENTERPRISE_APP_PROFILE: "match AppStore com.owncloud.ios-app.emm",
+      ENTERPRISE_FP_ID: "com.owncloud.ios-app.emm.ownCloud-File-Provider",
+      ENTERPRISE_FP_PROFILE: "match AppStore com.owncloud.ios-app.emm.ownCloud-File-Provider",
+      ENTERPRISE_INTENT_ID: "com.owncloud.ios-app.emm.ownCloud-Intents",
+      ENTERPRISE_INTENT_PROFILE: "match AppStore com.owncloud.ios-app.emm.ownCloud-Intents",
+      ENTERPRISE_APP_FW_ID: "com.owncloud.ownCloudApp.emm",
+      ENTERPRISE_APP_SHARED_ID: "com.owncloud.ownCloudAppShared.emm",
+      ENTERPRISE_TEAM: "4AP2STM4H5",
+      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH (4AP2STM4H5)",
+      APP_GROUP_IDENTIFIERS: "group.com.owncloud.ios-app.emm",
+      EXPORT_METHOD: "app-store",
+      CONFIGURATION: "Release",
+      BETA_APP_ICON: false
+    )
+  end
+
+lane :owncloud_online_build do
+  build_ipa_in_house(
+    ENTERPRISE_APP_ID: "online.owncloud.ios-app",
+    ENTERPRISE_APP_PROFILE: "ownCloud online AppStore",
+    ENTERPRISE_FP_ID: "online.owncloud.ios-app.DocumentProvider",
+    ENTERPRISE_FP_PROFILE: "ownCloud online AppStore DocumentProvider",
+    ENTERPRISE_INTENT_ID: "online.owncloud.ios-app.Intents",
+    ENTERPRISE_INTENT_PROFILE: "ownCloud online AppStore Intents",
+    ENTERPRISE_APP_FW_ID: "online.owncloud.ios-app.ownCloudApp",
+    ENTERPRISE_APP_SHARED_ID: "online.owncloud.ios-app.ownCloudAppShared",
+    ENTERPRISE_TEAM: "4AP2STM4H5",
+    ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
+    APP_GROUP_IDENTIFIERS: "group.online.owncloud.ios-app",
+    EXPORT_METHOD: "app-store",
+    CONFIGURATION: "Debug",
+    BETA_APP_ICON: true
+  )
+end
+
+  lane :owncloud_enterprise_build do
+    build_ipa_in_house(
+      ENTERPRISE_APP_ID: "com.owncloud.enterprise.ios-app",
+      ENTERPRISE_APP_PROFILE: "Enterprise Distribution iOS Neo",
+      ENTERPRISE_FP_ID: "com.owncloud.enterprise.ios-app.ownCloud-File-Provider",
+      ENTERPRISE_FP_PROFILE: "Enterprise Distribution iOS Neo File Provider",
+      ENTERPRISE_INTENT_ID: "com.owncloud.enterprise.ios-app.ownCloud-Intents",
+      ENTERPRISE_INTENT_PROFILE: "Enterprise Distribution iOS Neo Intent",
+      ENTERPRISE_APP_FW_ID: "com.owncloud.enterprise.ownCloudApp",
+      ENTERPRISE_APP_SHARED_ID: "com.owncloud.enterprise.ownCloudAppShared",
+      ENTERPRISE_TEAM: "5QNK8L2PSC",
+      ENTERPRISE_IDENTITY: "iPhone Distribution: ownCloud GmbH",
+      APP_GROUP_IDENTIFIERS: "group.com.owncloud.enterprise.ios-app",
+      EXPORT_METHOD: "enterprise",
+      CONFIGURATION: "Debug",
+      BETA_APP_ICON: true
+    )
+  end
+
+  desc "In-House Enterprise IPA generation"
+   lane :build_ipa_in_house do |values|
+
+    ENTERPRISE_APP_ID = values[:ENTERPRISE_APP_ID]
+    ENTERPRISE_APP_PROFILE = values[:ENTERPRISE_APP_PROFILE]
+    ENTERPRISE_FP_ID = values[:ENTERPRISE_FP_ID]
+    ENTERPRISE_FP_PROFILE = values[:ENTERPRISE_FP_PROFILE]
+    ENTERPRISE_INTENT_ID = values[:ENTERPRISE_INTENT_ID]
+    ENTERPRISE_INTENT_PROFILE = values[:ENTERPRISE_INTENT_PROFILE]
+    ENTERPRISE_APP_FW_ID = values[:ENTERPRISE_APP_FW_ID]
+    ENTERPRISE_APP_SHARED_ID = values[:ENTERPRISE_APP_SHARED_ID]
+    ENTERPRISE_TEAM = values[:ENTERPRISE_TEAM]
+    ENTERPRISE_IDENTITY = values[:ENTERPRISE_IDENTITY]
+    APP_GROUP_IDENTIFIERS = values[:APP_GROUP_IDENTIFIERS]
+    EXPORT_METHOD = values[:EXPORT_METHOD]
+    CONFIGURATION = values[:CONFIGURATION]
 
     update_app_identifier(
       xcodeproj: "ownCloud.xcodeproj",
@@ -92,14 +284,14 @@ platform :ios do
 
     update_app_identifier(
       xcodeproj: "ownCloud.xcodeproj",
-      plist_path: "ownCloud File ProviderUI/Info.plist",
-      app_identifier: ENTERPRISE_FP_UI_ID
+      plist_path: "ownCloudAppFramework/Resources/Info.plist",
+      app_identifier: ENTERPRISE_APP_FW_ID
     )
 
     update_app_identifier(
       xcodeproj: "ownCloud.xcodeproj",
       plist_path: "ownCloudAppFramework/Resources/Info.plist",
-      app_identifier: ENTERPRISE_APP_FW_ID
+      app_identifier: ENTERPRISE_APP_SHARED_ID
     )
 
     update_app_identifier(
@@ -110,25 +302,25 @@ platform :ios do
 
     update_app_group_identifiers(
       entitlements_file: "ownCloud/ownCloud.entitlements",
-      app_group_identifiers: ["group.com.owncloud.enterprise.ios-app"]
+      app_group_identifiers: [APP_GROUP_IDENTIFIERS]
     )
 
     update_app_group_identifiers(
       entitlements_file: "ownCloud File Provider/ownCloud_File_Provider.entitlements",
-      app_group_identifiers: ["group.com.owncloud.enterprise.ios-app"]
+      app_group_identifiers: [APP_GROUP_IDENTIFIERS]
     )
 
     update_app_group_identifiers(
       entitlements_file: "ownCloud Intents/ownCloud Intents.entitlements",
-      app_group_identifiers: ["group.com.owncloud.enterprise.ios-app"]
+      app_group_identifiers: [APP_GROUP_IDENTIFIERS]
     )
 
-    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCAppGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
-    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
-    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "NSExtension", subkey: "NSExtensionFileProviderDocumentGroup", value: "group.com.owncloud.enterprise.ios-app")
+    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud File Provider/Info.plist", key: "NSExtension", subkey: "NSExtensionFileProviderDocumentGroup", value: APP_GROUP_IDENTIFIERS)
 
-    set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCAppGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
-    set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: "group.com.owncloud.enterprise.ios-app")
+    set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCAppGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
+    set_info_plist_value(path: "ownCloud Intents/Info.plist", key: "OCKeychainAccessGroupIdentifier", value: APP_GROUP_IDENTIFIERS)
 
     automatic_code_signing(
       path: "ownCloud.xcodeproj",
@@ -155,16 +347,6 @@ platform :ios do
       use_automatic_signing: false,
       team_id: ENTERPRISE_TEAM,
       code_sign_identity: ENTERPRISE_IDENTITY,
-      profile_name: ENTERPRISE_FP_UI_PROFILE,
-      bundle_identifier: ENTERPRISE_FP_UI_ID,
-      targets: ["ownCloud File ProviderUI"]
-    )
-
-    automatic_code_signing(
-      path: "ownCloud.xcodeproj",
-      use_automatic_signing: false,
-      team_id: ENTERPRISE_TEAM,
-      code_sign_identity: ENTERPRISE_IDENTITY,
       profile_name: ENTERPRISE_INTENT_PROFILE,
       bundle_identifier: ENTERPRISE_INTENT_ID,
       targets: ["ownCloud Intents"]
@@ -179,6 +361,15 @@ platform :ios do
       targets: ["ownCloudApp"]
     )
 
+    automatic_code_signing(
+      path: "ownCloud.xcodeproj",
+      use_automatic_signing: false,
+      team_id: ENTERPRISE_TEAM,
+      code_sign_identity: ENTERPRISE_IDENTITY,
+      bundle_identifier: ENTERPRISE_APP_SHARED_ID,
+      targets: ["ownCloudAppShared"]
+    )
+
     # Add a badge with the latest short commit hash to the app icon
     build_number = app_version(
       xcodeproj: "ownCloud.xcodeproj",
@@ -190,29 +381,30 @@ platform :ios do
       version_key: "APP_SHORT_VERSION"
     )
 
-    commit = last_git_commit
-    short_hash = commit[:abbreviated_commit_hash] # short sha of commit
-    sh "brew install librsvg"
-    sh "brew unlink pango"
-    sh "brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/7cf3b63be191cb2ce4cd86f4406915128ec97432/Formula/pango.rb"
-    sh "brew switch pango 1.42.4_1 "
-    sh "sed -e \"s/\#version#/" + version + "/\" -e \"s/\#githash#/" + short_hash + "/\" badge.svg > badge_tmp.svg"
-    sh "rsvg-convert badge_tmp.svg > badge.png"
-    sh "badge --custom badge.png --glob /../**/*.appiconset/*.{png,PNG}"
+    if values[:BETA_APP_ICON]
+      commit = last_git_commit
+      short_hash = commit[:abbreviated_commit_hash] # short sha of commit
+      sh "brew install librsvg"
+      sh "brew unlink pango"
+      sh "brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/7cf3b63be191cb2ce4cd86f4406915128ec97432/Formula/pango.rb"
+      sh "brew switch pango 1.42.4_1 "
+      sh "sed -e \"s/\#version#/" + version + "/\" -e \"s/\#githash#/" + short_hash + "/\" badge.svg > badge_tmp.svg"
+      sh "rsvg-convert badge_tmp.svg > badge.png"
+      sh "badge --custom badge.png --glob /../**/*.appiconset/*.{png,PNG}"
+    end
 
     #Create the build
     gym(
       workspace: "ownCloud.xcworkspace",
       scheme: "ownCloud",
-      configuration: "Debug",
+      configuration: CONFIGURATION,
       codesigning_identity: ENTERPRISE_IDENTITY,
-      export_method: "enterprise",
+      export_method: EXPORT_METHOD,
       export_options: {
-        method: "enterprise",
+        method: EXPORT_METHOD,
         provisioningProfiles: {
           ENTERPRISE_APP_ID => ENTERPRISE_APP_PROFILE,
 	        ENTERPRISE_FP_ID => ENTERPRISE_FP_PROFILE,
-	        ENTERPRISE_FP_UI_ID => ENTERPRISE_FP_UI_PROFILE,
 	        ENTERPRISE_INTENT_ID => ENTERPRISE_INTENT_PROFILE
         }
       }

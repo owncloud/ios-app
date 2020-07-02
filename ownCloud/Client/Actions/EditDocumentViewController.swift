@@ -94,6 +94,15 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		}
 	}
 
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		// Activate editing mode by faking a tap on pencil icon. Unfortunately that's the only way to do it apparently
+		OnMainThread(after:0.5) {
+			guard let markupButton = self.navigationItem.rightBarButtonItems?.filter({$0.customView != nil}).first?.customView as? UIButton else { return }
+			markupButton.sendActions(for: .touchUpInside)
+		}
+	}
+
 	@objc func dismissAnimated() {
 		self.setEditing(false, animated: false)
 

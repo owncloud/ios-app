@@ -153,13 +153,16 @@ do
     }
 
     echo "${SUCCESS}Creating entitlements…${NC}"
-    # Create all the necessary entitlements
-    PlistBuddy -x -c "print :Entitlements " /dev/stdin <<< $(security cms -D -i "./${MOBILEPROVISIONS[$i]}") > "${ENTITLEMENTS[$i]}"
-    TEAMID=`PlistBuddy -c "print com.apple.developer.team-identifier " "${ENTITLEMENTS[$i]}"`
+    # Get entitlements from provisioning profile
+    PlistBuddy -x -c "print :Entitlements " /dev/stdin <<< $(security cms -D -i "./${MOBILEPROVISIONS[$i]}") > "${ENTITLEMENTS[$i]}.tmp"
+    # Get all entitlements from app binary
+    codesign -d --entitlements :- "${LOCATIONS[$i]}" > "${ENTITLEMENTS[$i]}"
+    
+    TEAMID=`PlistBuddy -c "print com.apple.developer.team-identifier " "${ENTITLEMENTS[$i]}.tmp"`
     echo "TeamId: ${INFO}$TEAMID${NC}"
-    APPGROUP=`PlistBuddy -c "print com.apple.security.application-groups:0 " "${ENTITLEMENTS[$i]}"`
+    APPGROUP=`PlistBuddy -c "print com.apple.security.application-groups:0 " "${ENTITLEMENTS[$i]}.tmp"`
     echo "AppGroup: ${INFO}$APPGROUP${NC}"
-    APP_ID_PREFIX=`PlistBuddy -c "print :ApplicationIdentifierPrefix:0" /dev/stdin <<< $(security cms -D -i "./${MOBILEPROVISIONS[$i]}") `
+    APP_ID_PREFIX=`PlistBuddy -c "print :ApplicationIdentifierPrefix:0" /dev/stdin <<< $(security cms -D -i "./${MOBILEPROVISIONS[$i]}")`
     echo "ApplicationIdentifierPrefix: ${INFO}$APP_ID_PREFIX${NC}"
 
     # Modify entitlements
@@ -168,15 +171,21 @@ do
     echo ""
     echo "${SUCCESS}Modify ${INFO}${LOCATIONS[$i]}/Info.plist${NC}…"
     # Modify Info.plists
-    BUNDLEID=( `PlistBuddy -c "print application-identifier " ${ENTITLEMENTS[$i]} | sed 's/^.\{11\}//'` )
+    BUNDLEID=( `PlistBuddy -c "print application-identifier " ${ENTITLEMENTS[$i]}.tmp | sed 's/^.\{11\}//'` )
     echo "Set Bundle ID: ${INFO}${BUNDLEID}${NC}"
     PlistBuddy -c "Set CFBundleIdentifier ${BUNDLEID}" "${LOCATIONS[$i]}/Info.plist"
+    PlistBuddy -c "Set application-identifier ${TEAMID}.${BUNDLEID}" "${ENTITLEMENTS[$i]}"
 
     # Modify Info.plists with ownCloud custom variables
     PlistBuddy -c "Set OCAppGroupIdentifier $APPGROUP" "${LOCATIONS[$i]}/Info.plist"
+    PlistBuddy -c "Set com.apple.security.application-groups:0 ${APPGROUP}" "${ENTITLEMENTS[$i]}"
     PlistBuddy -c "Set OCKeychainAccessGroupIdentifier $APPGROUP" "${LOCATIONS[$i]}/Info.plist"
+    PlistBuddy -c "Set com.apple.security.application-groups:0 ${APPGROUP}" "${ENTITLEMENTS[$i]}"
     PlistBuddy -c "Set OCAppIdentifierPrefix $APP_ID_PREFIX." "${LOCATIONS[$i]}/Info.plist"
-    PlistBuddy -c "Set NSExtension:NSExtensionFileProviderDocumentGroup $APPGROUP" "${LOCATIONS[$i]}/Info.plist"
+    PlistBuddy -c "Set com.apple.developer.team-identifier ${TEAMID}" "${ENTITLEMENTS[$i]}"
+    if [[ "${ENTITLEMENTS[$i]}" =~ ^(ownCloud_File_Provider.entitlements)$ ]]; then
+	    PlistBuddy -c "Set NSExtension:NSExtensionFileProviderDocumentGroup $APPGROUP" "${LOCATIONS[$i]}/Info.plist"
+	fi
 
     # Remove old Code Signatures
     rm -rf "${LOCATIONS[$i]}/_CodeSignature"
@@ -222,8 +231,9 @@ rm -rf "$APPPAYLOAD"
 for (( i=0; i<${#ENTITLEMENTS[@]}; i++ ));
 do
     if [ -f  "${ENTITLEMENTS[$i]}" ]; then
-    echo "Removing temporal ${ENTITLEMENTS[$i]}"
-    rm -rf "${ENTITLEMENTS[$i]}"
+    	echo "Removing temporal ${ENTITLEMENTS[$i]}"
+    	rm -rf "${ENTITLEMENTS[$i]}"
+    	rm -rf "${ENTITLEMENTS[$i]}.tmp"
     fi
 
 done
