@@ -103,7 +103,9 @@ class ImageMetadataParser {
 			kCGImagePropertyPixelHeight,
 			kCGImagePropertyPixelWidth,
 			kCGImagePropertyDPIHeight,
-			kCGImagePropertyDPIWidth]
+			kCGImagePropertyDPIWidth,
+			kCGImagePropertyColorModel,
+			kCGImagePropertyDepth]
 		mapping[.exifAuxSection] = [
 			kCGImagePropertyExifAuxLensModel,
 			kCGImagePropertyExifAuxLensID,
@@ -274,14 +276,12 @@ class ImageMetadataParser {
 
 		// Image details
 		transformers[kCGImagePropertyProfileName] = {(value) in return MetadataItem(name: "Profile".localized, value: value as? String ?? "") }
-
 		transformers[kCGImagePropertyPixelHeight] = {(value) in return MetadataItem(name: "Height".localized, value: "\(value) px") }
-
 		transformers[kCGImagePropertyPixelWidth] = {(value) in return MetadataItem(name: "Width".localized, value: "\(value) px") }
-
 		transformers[kCGImagePropertyDPIHeight] = {(value) in return MetadataItem(name: "DPI vertical".localized, value: "\(value)") }
-
 		transformers[kCGImagePropertyDPIWidth] = {(value) in return MetadataItem(name: "DPI horizontal".localized, value: "\(value)") }
+		transformers[kCGImagePropertyColorModel] = {(value) in return MetadataItem(name: "Color model".localized, value: "\(value)") }
+		transformers[kCGImagePropertyDepth] = {(value) in return MetadataItem(name: "Depth".localized, value: "\(value) bits/channel") }
 
 		// Exif Aux info
 		transformers[kCGImagePropertyExifAuxLensModel] = {(value) in return MetadataItem(name: "Lens model".localized, value: "\(value)") }
@@ -341,6 +341,7 @@ class ImageMetadataViewController: StaticTableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.tableView.allowsSelection = false
+		self.tableView.separatorStyle = .none
 
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
 
@@ -364,6 +365,27 @@ class ImageMetadataViewController: StaticTableViewController {
 					self.addSection(tableSection)
 				}
 			}
+
+			OnBackgroundQueue {
+				if let histogram = self.histogramImage(for: url) {
+					let section = StaticTableViewSection(headerTitle: "Histogram")
+					let imageView = UIImageView(image: histogram)
+					let row = StaticTableViewRow(customView: imageView)
+					OnMainThread {
+						section.add(row: row)
+						self.addSection(section)
+					}
+				}
+			}
 		}
+	}
+
+	private func histogramImage(for url:URL) -> UIImage? {
+		let ciImage = CIImage(contentsOf: url)
+		let histImage = ciImage?.applyingFilter("CIAreaHistogram", parameters: ["inputCount" : 256, "inputScale" : 10.0])
+		guard let outputImage = histImage?.applyingFilter("CIHistogramDisplayFilter") else {
+			return nil
+		}
+		return UIImage(ciImage: outputImage)
 	}
 }
