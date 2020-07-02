@@ -35,6 +35,7 @@ class ImageMetadataParser {
 		case captureParameters
 		case timestamps
 		case imageDetails
+		case exifAuxSection
 
 		var description: String {
 			switch self {
@@ -46,13 +47,18 @@ class ImageMetadataParser {
 				return "Time".localized
 			case .imageDetails:
 				return "Image details".localized
+			case .exifAuxSection:
+				return "EXIF aux info".localized
 			}
 		}
 
-		var sectionKey: String? {
-			if self == .imageDetails {
+		var subdictionaryKey: String? {
+			switch self {
+			case .imageDetails:
 				return nil
-			} else {
+			case .exifAuxSection:
+				return kCGImagePropertyExifAuxDictionary as String
+			default:
 				return kCGImagePropertyExifDictionary as String
 			}
 		}
@@ -77,6 +83,7 @@ class ImageMetadataParser {
 			kCGImagePropertyExifAuxLensInfo]
 		mapping[.captureParameters] = [
 			kCGImagePropertyExifFocalLength,
+			kCGImagePropertyExifFocalLenIn35mmFilm,
 			kCGImagePropertyExifShutterSpeedValue,
 			kCGImagePropertyExifApertureValue,
 			kCGImagePropertyExifISOSpeed,
@@ -97,6 +104,15 @@ class ImageMetadataParser {
 			kCGImagePropertyPixelWidth,
 			kCGImagePropertyDPIHeight,
 			kCGImagePropertyDPIWidth]
+		mapping[.exifAuxSection] = [
+			kCGImagePropertyExifAuxLensModel,
+			kCGImagePropertyExifAuxLensID,
+			kCGImagePropertyExifAuxLensSerialNumber,
+			kCGImagePropertyExifAuxSerialNumber,
+			kCGImagePropertyExifAuxFlashCompensation,
+			kCGImagePropertyExifAuxOwnerName,
+			kCGImagePropertyExifAuxFirmware
+		]
 
 		return mapping
 	}()
@@ -105,21 +121,38 @@ class ImageMetadataParser {
 		var transformers = [CFString : MetadataValueTransformer]()
 
 		// Camera Details
-		transformers[kCGImagePropertyExifLensMake] = {(value) in return MetadataItem(name: "Camera make".localized, value: value as? String ?? "") }
+		transformers[kCGImagePropertyExifLensMake] = {(value) in return MetadataItem(name: "Lens make".localized, value: value as? String ?? "") }
 
-		transformers[kCGImagePropertyExifLensModel] = {(value) in return MetadataItem(name: "Camera model".localized, value: value as? String ?? "") }
+		transformers[kCGImagePropertyExifLensModel] = {(value) in return MetadataItem(name: "Lens model".localized, value: value as? String ?? "") }
 
-		transformers[kCGImagePropertyExifAuxLensInfo] = {(value) in return MetadataItem(name: "Camera aux".localized, value: value as? String ?? "") }
+		transformers[kCGImagePropertyExifAuxLensInfo] = {(value) in return MetadataItem(name: "Lens info".localized, value: value as? String ?? "") }
 
 		// Capture parameters
-		transformers[kCGImagePropertyExifFocalLength] = {(value)
-			in return MetadataItem(name: "Focal length".localized, value: "\(value)") }
+		transformers[kCGImagePropertyExifFocalLength] = {(value) in
+			return MetadataItem(name: "Focal length".localized, value: "\(value) mm")
+		}
 
-		transformers[kCGImagePropertyExifShutterSpeedValue] = {(value)
-			in return MetadataItem(name: "Shutter speed".localized, value: "\(value)") }
+		transformers[kCGImagePropertyExifFocalLenIn35mmFilm] = {(value) in
+			return MetadataItem(name: "Focal length @ 35 mm".localized, value: "\(value) mm")
+		}
 
-		transformers[kCGImagePropertyExifApertureValue] = {(value)
-			in return MetadataItem(name: "Aperture".localized, value: "\(value)") }
+		transformers[kCGImagePropertyExifShutterSpeedValue] = {(value) in
+			var Tv: Double = 0
+			if let apexValue = value as? Double {
+				// TODO: Would be nice to covert this to a fraction like 1/125 etc
+				Tv = round(pow(2.0, -apexValue) * 10000) / 10000
+			}
+			return MetadataItem(name: "Shutter speed".localized, value: "\(Tv) s")
+		}
+
+		transformers[kCGImagePropertyExifApertureValue] = {(value) in
+			var aperture: Double = 0
+			if let apexValue = value as? Double {
+				aperture = round(pow(2.0, apexValue / 2.0) * 10) / 10
+			}
+
+			return MetadataItem(name: "Aperture".localized, value: "f/\(aperture)")
+		}
 
 		transformers[kCGImagePropertyExifISOSpeed] = {(value)
 			in return MetadataItem(name: "ISO".localized, value: "\(value)") }
@@ -242,9 +275,22 @@ class ImageMetadataParser {
 		// Image details
 		transformers[kCGImagePropertyProfileName] = {(value) in return MetadataItem(name: "Profile".localized, value: value as? String ?? "") }
 
-		transformers[kCGImagePropertyPixelHeight] = {(value) in return MetadataItem(name: "Height".localized, value: "\(value)") }
+		transformers[kCGImagePropertyPixelHeight] = {(value) in return MetadataItem(name: "Height".localized, value: "\(value) px") }
 
-		transformers[kCGImagePropertyPixelWidth] = {(value) in return MetadataItem(name: "Width".localized, value: "\(value)") }
+		transformers[kCGImagePropertyPixelWidth] = {(value) in return MetadataItem(name: "Width".localized, value: "\(value) px") }
+
+		transformers[kCGImagePropertyDPIHeight] = {(value) in return MetadataItem(name: "DPI vertical".localized, value: "\(value)") }
+
+		transformers[kCGImagePropertyDPIWidth] = {(value) in return MetadataItem(name: "DPI horizontal".localized, value: "\(value)") }
+
+		// Exif Aux info
+		transformers[kCGImagePropertyExifAuxLensModel] = {(value) in return MetadataItem(name: "Lens model".localized, value: "\(value)") }
+		transformers[kCGImagePropertyExifAuxLensID] = {(value) in return MetadataItem(name: "Lens ID".localized, value: "\(value)") }
+		transformers[kCGImagePropertyExifAuxLensSerialNumber] = {(value) in return MetadataItem(name: "Lens serial".localized, value: "\(value)") }
+		transformers[kCGImagePropertyExifAuxSerialNumber] = {(value) in return MetadataItem(name: "Serial Nr.".localized, value: "\(value)") }
+		transformers[kCGImagePropertyExifAuxFlashCompensation] = {(value) in return MetadataItem(name: "Flash compensation".localized, value: "\(value)") }
+		transformers[kCGImagePropertyExifAuxOwnerName] = {(value) in return MetadataItem(name: "Owner".localized, value: "\(value)") }
+		transformers[kCGImagePropertyExifAuxFirmware] = {(value) in return MetadataItem(name: "Firmware".localized, value: "\(value)") }
 
 		return transformers
 	}()
@@ -258,7 +304,7 @@ class ImageMetadataParser {
 
 		for identifier in MetadataSectionIdentifier.allCases {
 			var properties: [String : Any]?
-			if let sectionKey = identifier.sectionKey {
+			if let sectionKey = identifier.subdictionaryKey {
 				properties = imageProperties[sectionKey] as? [String : Any]
 			} else {
 				properties = imageProperties
@@ -306,10 +352,17 @@ class ImageMetadataViewController: StaticTableViewController {
 
 				for item in section.items {
 					let row = StaticTableViewRow(subtitleRowWithAction: nil, title: item.name, subtitle: item.value, style: .value2, accessoryType: .none, identifier: "\(section.identifier)-\(item.name)")
+					row.cell?.textLabel?.numberOfLines = 0
+					row.cell?.textLabel?.lineBreakMode = .byWordWrapping
+					row.cell?.detailTextLabel?.numberOfLines = 0
+					row.cell?.detailTextLabel?.lineBreakMode = .byWordWrapping
+
 					tableSection.add(row: row)
 				}
 
-				self.addSection(tableSection)
+				if tableSection.rows.count > 0 {
+					self.addSection(tableSection)
+				}
 			}
 		}
 	}
