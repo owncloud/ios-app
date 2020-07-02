@@ -99,6 +99,10 @@ class AlertView: UIView, Themeable {
 	@objc func optionSelected(sender: ThemeButton) {
 		let option = options[sender.tag]
 
+		self.selectOption(option: option)
+	}
+
+	func selectOption(option: AlertOption) {
 		option.handler(self, option)
 	}
 

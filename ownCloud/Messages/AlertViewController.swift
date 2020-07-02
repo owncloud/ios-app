@@ -64,6 +64,11 @@ class AlertViewController: UIViewController, Themeable {
 		Theme.shared.register(client: self, applyImmediately: true)
 	}
 
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		becomeFirstResponder()
+	}
+
 	override func viewDidDisappear(_ animated: Bool) {
 		super.viewDidDisappear(animated)
 
