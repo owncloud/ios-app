@@ -247,7 +247,7 @@ class AutoUploadSettingsSection: SettingsSection {
 		self.remove(rowWithIdentifier: AutoUploadSettingsSection.photoUploadBookmarkAndPathSelectionRowIdentifier)
 		self.remove(rowWithIdentifier: AutoUploadSettingsSection.videoUploadBookmarkAndPathSelectionRowIdentifier)
 
-		if let bookmark = getSelectedBookmark(for: .photo), let path = userDefaults.instantPhotoUploadPath {
+		if let bookmark = getSelectedBookmark(for: .photo), let path = userDefaults.instantPhotoUploadPath, userDefaults.instantUploadPhotos == true {
 			OCItemTracker().item(for: bookmark, at: path) { (error, _, pathItem) in
 				guard error == nil else { return }
 
@@ -268,7 +268,7 @@ class AutoUploadSettingsSection: SettingsSection {
 			self.instantUploadPhotosRow?.value = self.userDefaults.instantUploadPhotos
 		}
 
-		if let bookmark = getSelectedBookmark(for: .video), let path = userDefaults.instantVideoUploadPath {
+		if let bookmark = getSelectedBookmark(for: .video), let path = userDefaults.instantVideoUploadPath, userDefaults.instantUploadVideos == true {
 			OCItemTracker().item(for: bookmark, at: path) { (error, _, pathItem) in
 				guard error == nil else { return }
 
