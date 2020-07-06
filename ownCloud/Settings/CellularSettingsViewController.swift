@@ -22,6 +22,21 @@ import ownCloudSDK
 class CellularSettingsViewController: StaticTableViewController {
 	var changeHandler : (() -> Void)?
 
+	private func updateCellularDataFooter() {
+		var footerTitle = "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app.".localized
+
+		if let mainSwitchAllowed = OCCellularManager.shared.switch(withIdentifier: .main)?.allowed, mainSwitchAllowed {
+			footerTitle = ""
+		}
+
+		if let section = self.sectionForIdentifier("main-section") {
+			if footerTitle != section.footerTitle {
+				section.footerTitle = footerTitle
+				tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+			}
+		}
+	}
+
 	private func buildRow(for identifier: OCCellularSwitchIdentifier) -> StaticTableViewRow? {
 		var row : StaticTableViewRow?
 
@@ -32,6 +47,7 @@ class CellularSettingsViewController: StaticTableViewController {
 				}
 
 				if identifier == .main {
+					self?.updateCellularDataFooter()
 					self?.updateSwitchesVisibility()
 				}
 
@@ -48,11 +64,13 @@ class CellularSettingsViewController: StaticTableViewController {
 		navigationItem.title = "Cellular transfers".localized
 
 		if OCConnection.allowCellular {
-			let mainSection = StaticTableViewSection(headerTitle: "General".localized, footerTitle: "Features and components not listed here may continue to use cellular data unless you turn off access to cellular for the entire app in the iOS Settings app.".localized, identifier: "main-section", rows: [
+			let mainSection = StaticTableViewSection(headerTitle: "General".localized, footerTitle: "".localized, identifier: "main-section", rows: [
 				buildRow(for: .main)!
 			])
 
 			addSection(mainSection)
+
+			updateCellularDataFooter()
 
 			switchesSection = StaticTableViewSection(headerTitle: "By feature".localized, identifier: "options-section")
 
