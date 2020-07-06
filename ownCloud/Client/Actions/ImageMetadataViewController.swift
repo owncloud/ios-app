@@ -81,9 +81,8 @@ class ImageMetadataParser {
 
 		case cameraDetails
 		case captureParameters
-		case timestamps
-		case imageDetails
 		case exifAuxSection
+		case timestamps
 
 		var description: String {
 			switch self {
@@ -93,8 +92,6 @@ class ImageMetadataParser {
 				return "Capture settings".localized
 			case .timestamps:
 				return "Time".localized
-			case .imageDetails:
-				return "Image details".localized
 			case .exifAuxSection:
 				return "EXIF aux info".localized
 			}
@@ -102,8 +99,6 @@ class ImageMetadataParser {
 
 		var subdictionaryKey: String? {
 			switch self {
-			case .imageDetails:
-				return nil
 			case .exifAuxSection:
 				return kCGImagePropertyExifAuxDictionary as String
 			default:
@@ -128,7 +123,11 @@ class ImageMetadataParser {
 		var location: CLLocation?
 		var size = CGSize.zero
 		var profile: String?
+		var dpi: Int?
+		var colorModel: String?
+		var depth: Int?
 		var info: String?
+		var keywords: [String]?
 	}
 
 	private lazy var itemMapping: [MetadataSectionIdentifier : [CFString]] = {
@@ -157,15 +156,6 @@ class ImageMetadataParser {
 			kCGImagePropertyExifDateTimeOriginal,
 			kCGImagePropertyExifDateTimeDigitized
 		]
-
-		mapping[.imageDetails] = [
-			kCGImagePropertyProfileName,
-			kCGImagePropertyPixelHeight,
-			kCGImagePropertyPixelWidth,
-			kCGImagePropertyDPIHeight,
-			kCGImagePropertyDPIWidth,
-			kCGImagePropertyColorModel,
-			kCGImagePropertyDepth]
 
 		mapping[.exifAuxSection] = [
 			kCGImagePropertyExifAuxLensModel,
@@ -349,15 +339,6 @@ class ImageMetadataParser {
 			return MetadataItem(name: "Digitized date".localized, value: convertedTimestamp)
 		}
 
-		// Image details
-		transformers[kCGImagePropertyProfileName] = {(value) in return MetadataItem(name: "Profile".localized, value: value as? String ?? "") }
-		transformers[kCGImagePropertyPixelHeight] = {(value) in return MetadataItem(name: "Height".localized, value: "\(value) px") }
-		transformers[kCGImagePropertyPixelWidth] = {(value) in return MetadataItem(name: "Width".localized, value: "\(value) px") }
-		transformers[kCGImagePropertyDPIHeight] = {(value) in return MetadataItem(name: "DPI vertical".localized, value: "\(value)") }
-		transformers[kCGImagePropertyDPIWidth] = {(value) in return MetadataItem(name: "DPI horizontal".localized, value: "\(value)") }
-		transformers[kCGImagePropertyColorModel] = {(value) in return MetadataItem(name: "Color model".localized, value: "\(value)") }
-		transformers[kCGImagePropertyDepth] = {(value) in return MetadataItem(name: "Depth".localized, value: "\(value) bits/channel") }
-
 		// Exif Aux info
 		transformers[kCGImagePropertyExifAuxLensModel] = {(value) in return MetadataItem(name: "Lens model".localized, value: "\(value)") }
 		transformers[kCGImagePropertyExifAuxLensID] = {(value) in return MetadataItem(name: "Lens ID".localized, value: "\(value)") }
@@ -405,6 +386,27 @@ class ImageMetadataParser {
 			result.sections.append(section)
 		}
 
+		// Image details
+		if let profile = imageProperties[kCGImagePropertyProfileName as String] as? String {
+			result.profile = profile
+		}
+
+		if let height = imageProperties[kCGImagePropertyPixelHeight as String] as? CGFloat,
+			let width = imageProperties[kCGImagePropertyPixelWidth as String] as? CGFloat {
+			result.size = CGSize(width: width, height: height)
+		}
+
+		if let dpi = imageProperties[kCGImagePropertyDPIHeight as String] as? Int {
+			result.dpi = dpi
+		}
+
+		if let colorModel = imageProperties[kCGImagePropertyColorModel as String] as? String,
+			let depth = imageProperties[kCGImagePropertyDepth as String] as? Int {
+			result.colorModel = colorModel
+			result.depth = depth
+		}
+
+		// GPS Data
 		if let gpsDictionary = imageProperties[kCGImagePropertyGPSDictionary as String] as? [String : Any] {
 			if let latitude = gpsDictionary[kCGImagePropertyGPSLatitude as String] as? Double,
 				let longitude = gpsDictionary[kCGImagePropertyGPSLongitude as String] as? Double,
@@ -433,6 +435,11 @@ class ImageMetadataParser {
 			}
 		}
 
+		// IPTC stuff
+		if let iptcDictionary = imageProperties[kCGImagePropertyIPTCDictionary as String] as? [String : Any] {
+			result.keywords = iptcDictionary[kCGImagePropertyIPTCKeywords as String] as? [String]
+		}
+
 		return result
 	}
 
@@ -447,6 +454,16 @@ class ImageMetadataViewController: StaticTableViewController {
 	private var imageProperties: [String : Any]?
 
 	let gpsSection = StaticTableViewSection(headerTitle: "GPS Location".localized)
+
+	class func createMetadataRow(with title:String, subtitle:String, identifier:String) -> StaticTableViewRow {
+		let row = StaticTableViewRow(subtitleRowWithAction: nil, title: title, subtitle: subtitle, style: .value2, accessoryType: .none, identifier: identifier)
+		row.cell?.textLabel?.numberOfLines = 0
+		row.cell?.textLabel?.lineBreakMode = .byWordWrapping
+		row.cell?.detailTextLabel?.numberOfLines = 0
+		row.cell?.detailTextLabel?.lineBreakMode = .byWordWrapping
+
+		return row
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -464,18 +481,45 @@ class ImageMetadataViewController: StaticTableViewController {
 						let tableSection = StaticTableViewSection(headerTitle: "\(section.identifier)")
 
 						for item in section.items {
-							let row = StaticTableViewRow(subtitleRowWithAction: nil, title: item.name, subtitle: item.value, style: .value2, accessoryType: .none, identifier: "\(section.identifier)-\(item.name)")
-							row.cell?.textLabel?.numberOfLines = 0
-							row.cell?.textLabel?.lineBreakMode = .byWordWrapping
-							row.cell?.detailTextLabel?.numberOfLines = 0
-							row.cell?.detailTextLabel?.lineBreakMode = .byWordWrapping
-
+							let row = ImageMetadataViewController.createMetadataRow(with: item.name, subtitle: item.value, identifier: "\(section.identifier)-\(item.name)")
 							tableSection.add(row: row)
 						}
 
 						if tableSection.rows.count > 0 {
 							self.addSection(tableSection)
 						}
+					}
+
+					let imageDetailsSection = StaticTableViewSection(headerTitle: "Image details".localized)
+					if let profile = result.profile {
+						let profileRow = ImageMetadataViewController.createMetadataRow(with: "Profile".localized, subtitle: profile, identifier: "image-profile")
+						imageDetailsSection.add(row: profileRow)
+					}
+
+					let mp = round((result.size.width * result.size.height) / 1000_000.0 * 10.0) / 10.0
+					let size = "\(Int(result.size.width)) x \(Int(result.size.height)) px (\(mp) MP)"
+					let sizeRow = ImageMetadataViewController.createMetadataRow(with: "Size".localized, subtitle: size, identifier: "image-size")
+					imageDetailsSection.add(row: sizeRow)
+
+					if let dpi = result.dpi {
+						let dpiString = "\(dpi) DPI"
+						let dpiRow = ImageMetadataViewController.createMetadataRow(with: "Density".localized, subtitle: dpiString, identifier: "image-dpi")
+						imageDetailsSection.add(row: dpiRow)
+					}
+
+					if let colorModel = result.colorModel, let depth = result.depth {
+						let colorInfo = "\(colorModel) (\(depth) bits/channel)"
+						let colorInfoRow = ImageMetadataViewController.createMetadataRow(with: "Color model".localized, subtitle: colorInfo, identifier: "image-color-info")
+						imageDetailsSection.add(row: colorInfoRow)
+					}
+
+					self.addSection(imageDetailsSection)
+
+					if let keywords = result.keywords?.joined(separator: ",") {
+						let section = StaticTableViewSection(headerTitle: "Authoring".localized)
+						let keywordsRow = ImageMetadataViewController.createMetadataRow(with: "Keywords".localized, subtitle: keywords, identifier: "iptc-keywords")
+						section.add(row: keywordsRow)
+						self.addSection(section)
 					}
 				}
 
