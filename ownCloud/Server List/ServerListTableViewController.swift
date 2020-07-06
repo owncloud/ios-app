@@ -103,6 +103,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenAppVersion)
 
+		messageCountByBookmarkUUID = [:] // Initial update of app badge icon
+
 		messageCountSelector = MessageSelector(filter: nil, handler: { [weak self] (messages, _, _) in
 			var countByBookmarkUUID : [UUID? : Int ] = [:]
 
