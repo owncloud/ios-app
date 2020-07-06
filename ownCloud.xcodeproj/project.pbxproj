@@ -74,7 +74,6 @@
 		396C82FB2319AFDD00938262 /* CollaborateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396C82FA2319AFDD00938262 /* CollaborateAction.swift */; };
 		396D7C6523224A53002380C1 /* DiscardSceneAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396D7C5F23224A53002380C1 /* DiscardSceneAction.swift */; };
 		3971B48F221B23FE006FB441 /* ThemeableColoredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3971B48E221B23FE006FB441 /* ThemeableColoredView.swift */; };
-		397754E223279EED00119FCB /* OCItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754E123279EED00119FCB /* OCItem+Extension.swift */; };
 		397754F82327A33500119FCB /* OpenSceneAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754F22327A33500119FCB /* OpenSceneAction.swift */; };
 		3984F5712319202200DC2639 /* DeletePathItemIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3984F56B2319202200DC2639 /* DeletePathItemIntentHandler.swift */; };
 		39878B7421FB1DE800DBF693 /* UINavigationController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39878B7321FB1DE800DBF693 /* UINavigationController+Extension.swift */; };
@@ -327,6 +326,8 @@
 		DCB504DD221EF07F007638BE /* status-flash.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCB504D7221EF07E007638BE /* status-flash.tvg */; };
 		DCB6C4D72453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6C4D62453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift */; };
 		DCB6C4DE24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6C4DD24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift */; };
+		DCBD8EA824B3751900D92E1F /* OCItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754E123279EED00119FCB /* OCItem+Extension.swift */; };
+		DCBD8EAA24B3755B00D92E1F /* OCItem+AppExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBD8EA924B3755B00D92E1F /* OCItem+AppExtension.swift */; };
 		DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */; };
 		DCC085652293F1FD008CC05C /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
 		DCC0856E2293F1FD008CC05C /* ownCloudApp.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC0855E2293F1FD008CC05C /* ownCloudApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -399,7 +400,6 @@
 		DCE5E8B32080D781005F60CE /* text-vcard.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89E2080D780005F60CE /* text-vcard.tvg */; };
 		DCE5E8B42080D781005F60CE /* folder-shared.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89F2080D780005F60CE /* folder-shared.tvg */; };
 		DCE5E8B52080D781005F60CE /* x-office-presentation.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */; };
-		DCE5E8B82080D8D9005F60CE /* OCItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE5E8B72080D8D9005F60CE /* OCItem+Extension.swift */; };
 		DCE974B2207E3AF80069FC2B /* ThemeNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */; };
 		DCE974BC207EACA60069FC2B /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */; };
 		DCEC3DEA242F66740076B43C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC27A19020CAA0BA008ACB6C /* MobileCoreServices.framework */; };
@@ -1111,6 +1111,7 @@
 		DCB504D7221EF07E007638BE /* status-flash.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "status-flash.tvg"; path = "img/filetypes-tvg/status-flash.tvg"; sourceTree = SOURCE_ROOT; };
 		DCB6C4D62453A6CA00C1EAE1 /* ClientAuthenticationUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientAuthenticationUpdater.swift; sourceTree = "<group>"; };
 		DCB6C4DD24559B1600C1EAE1 /* ClientAuthenticationUpdaterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientAuthenticationUpdaterViewController.swift; sourceTree = "<group>"; };
+		DCBD8EA924B3755B00D92E1F /* OCItem+AppExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCItem+AppExtension.swift"; sourceTree = "<group>"; };
 		DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySettingsSection.swift; sourceTree = "<group>"; };
 		DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ownCloudApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC0855E2293F1FD008CC05C /* ownCloudApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ownCloudApp.h; sourceTree = "<group>"; };
@@ -1189,7 +1190,6 @@
 		DCE5E89E2080D780005F60CE /* text-vcard.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-vcard.tvg"; path = "img/filetypes-tvg/text-vcard.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E89F2080D780005F60CE /* folder-shared.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-shared.tvg"; path = "img/filetypes-tvg/folder-shared.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "x-office-presentation.tvg"; path = "img/filetypes-tvg/x-office-presentation.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E8B72080D8D9005F60CE /* OCItem+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCItem+Extension.swift"; sourceTree = "<group>"; };
 		DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libzip.xcodeproj; path = external/libzip/libzip.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeNavigationController.swift; sourceTree = "<group>"; };
 		DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
@@ -2388,8 +2388,8 @@
 		DCE5E8B62080D8B8005F60CE /* SDK Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				DCBD8EA924B3755B00D92E1F /* OCItem+AppExtension.swift */,
 				23EC77572137F3DD0032D4E6 /* OCExtensionType+Extension.swift */,
-				DCE5E8B72080D8D9005F60CE /* OCItem+Extension.swift */,
 				DC136581208223F000FC0F60 /* OCBookmark+Extension.swift */,
 				DC4FEAE6209E3A7700D4476B /* OCIssue+Extension.swift */,
 				3998F5D62241486F00B66713 /* OCCertificate+Extension.swift */,
@@ -3432,6 +3432,7 @@
 				DC85572C20513B8C00189B9A /* ServerListTableViewController.swift in Sources */,
 				233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */,
 				39664ADA242CD3A800B6121A /* PointerEffect.swift in Sources */,
+				DCBD8EAA24B3755B00D92E1F /* OCItem+AppExtension.swift in Sources */,
 				4C51727E22DE04BD001BC97F /* BackgroundFetchUpdateTaskAction.swift in Sources */,
 				4C05D8A5238708D40073EF50 /* MediaUploadStorage.swift in Sources */,
 				236735A621217C3500E5834A /* MoreViewController.swift in Sources */,
@@ -3469,7 +3470,6 @@
 				23EC775B2137F3DD0032D4E6 /* OCExtensionType+Extension.swift in Sources */,
 				4C88041822E78D790016CBA9 /* MediaFilesSettings.swift in Sources */,
 				DC3BE0E12077CD4B002A0AC0 /* Synchronized.swift in Sources */,
-				DCE5E8B82080D8D9005F60CE /* OCItem+Extension.swift in Sources */,
 				4CB8ADDE22DF5D3700F1FEBC /* PHPhotoLibrary+Extension.swift in Sources */,
 				DCB44D852186FEF700DAA4CC /* ThemeStyle+DefaultStyles.swift in Sources */,
 				597A404920AD59EF00B028B2 /* AppLockWindow.swift in Sources */,
@@ -3580,8 +3580,8 @@
 				395E16FA22F03CAF00DE89A1 /* GetFileIntentHandler.swift in Sources */,
 				DCDC0AD123CD18D200DFE36D /* OCLicenseManager+Setup.swift in Sources */,
 				399725E1233DF39300FC3B94 /* Calendar+Extension.swift in Sources */,
-				397754E223279EED00119FCB /* OCItem+Extension.swift in Sources */,
 				39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */,
+				DCBD8EA824B3751900D92E1F /* OCItem+Extension.swift in Sources */,
 				39E6DE86233CDF1E008DAE04 /* OCItemTracker.swift in Sources */,
 				393D2B3F23FEB6DC00ED4F8C /* DispatchQueueTools.swift in Sources */,
 				3984F5712319202200DC2639 /* DeletePathItemIntentHandler.swift in Sources */,
