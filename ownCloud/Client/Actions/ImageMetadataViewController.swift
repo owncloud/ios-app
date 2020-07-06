@@ -17,12 +17,60 @@
 */
 
 import UIKit
+import CoreLocation
+import MapKit
+import Contacts
+
+extension CLLocation {
+	var dmsLatitude: String {
+		let direction = self.coordinate.latitude >= 0 ? "N" : "S"
+		return dms(from: self.coordinate.latitude) + "\"\(direction)"
+	}
+
+	var dmsLongitude: String {
+		let direction = self.coordinate.longitude >= 0 ? "E" : "W"
+		return dms(from: self.coordinate.longitude) + "\"\(direction)"
+	}
+
+	private func dms(from coordinate:CLLocationDegrees) -> String {
+		var seconds = Int(coordinate * 3600)
+		let degrees = seconds / 3600
+		seconds = abs(seconds % 3600)
+		let minutes = seconds / 60
+		seconds %= 60
+
+		return String(format:"%d° %d' %d ", abs(degrees), minutes, seconds)
+	}
+}
+
+extension CLPlacemark {
+	var formattedAddress : String? {
+		if let address = self.postalAddress {
+			return CNPostalAddressFormatter().string(from: address)
+		}
+		return nil
+	}
+}
 
 class ImageMetadataParser {
 
 	typealias MetadataValueTransformer = (Any) -> MetadataItem
 
 	static let shared = ImageMetadataParser()
+
+	private lazy var exifDateFormatter: DateFormatter = {
+		let formatter = DateFormatter()
+		formatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
+		return formatter
+	}()
+
+	private lazy var displayDateFormatter: DateFormatter = {
+		let formatter = DateFormatter()
+		formatter.dateStyle = .medium
+		formatter.timeStyle = .medium
+		formatter.locale = Locale.current
+		return formatter
+	}()
 
 	enum MetadataParseError : Error {
 		case InvailidInput
@@ -72,6 +120,15 @@ class ImageMetadataParser {
 	struct MetadataItem {
 		var name: String
 		var value: String
+		var key: CFString?
+	}
+
+	struct ParseResult {
+		var sections = [MetadataSection]()
+		var location: CLLocation?
+		var size = CGSize.zero
+		var profile: String?
+		var info: String?
 	}
 
 	private lazy var itemMapping: [MetadataSectionIdentifier : [CFString]] = {
@@ -81,6 +138,7 @@ class ImageMetadataParser {
 			kCGImagePropertyExifLensMake,
 			kCGImagePropertyExifLensModel,
 			kCGImagePropertyExifAuxLensInfo]
+
 		mapping[.captureParameters] = [
 			kCGImagePropertyExifFocalLength,
 			kCGImagePropertyExifFocalLenIn35mmFilm,
@@ -94,10 +152,12 @@ class ImageMetadataParser {
 			kCGImagePropertyExifWhiteBalance,
 			kCGImagePropertyExifColorSpace
 			]
+
 		mapping[.timestamps] = [
 			kCGImagePropertyExifDateTimeOriginal,
 			kCGImagePropertyExifDateTimeDigitized
 		]
+
 		mapping[.imageDetails] = [
 			kCGImagePropertyProfileName,
 			kCGImagePropertyPixelHeight,
@@ -106,6 +166,7 @@ class ImageMetadataParser {
 			kCGImagePropertyDPIWidth,
 			kCGImagePropertyColorModel,
 			kCGImagePropertyDepth]
+
 		mapping[.exifAuxSection] = [
 			kCGImagePropertyExifAuxLensModel,
 			kCGImagePropertyExifAuxLensID,
@@ -113,8 +174,7 @@ class ImageMetadataParser {
 			kCGImagePropertyExifAuxSerialNumber,
 			kCGImagePropertyExifAuxFlashCompensation,
 			kCGImagePropertyExifAuxOwnerName,
-			kCGImagePropertyExifAuxFirmware
-		]
+			kCGImagePropertyExifAuxFirmware]
 
 		return mapping
 	}()
@@ -141,7 +201,6 @@ class ImageMetadataParser {
 		transformers[kCGImagePropertyExifShutterSpeedValue] = {(value) in
 			var Tv: Double = 0
 			if let apexValue = value as? Double {
-				// TODO: Would be nice to covert this to a fraction like 1/125 etc
 				Tv = round(pow(2.0, -apexValue) * 10000) / 10000
 			}
 			return MetadataItem(name: "Shutter speed".localized, value: "\(Tv) s")
@@ -270,9 +329,25 @@ class ImageMetadataParser {
 		}
 
 		// Time
-		transformers[kCGImagePropertyExifDateTimeOriginal] = {(value) in return MetadataItem(name: "Original date".localized, value: value as? String ?? "") }
+		transformers[kCGImagePropertyExifDateTimeOriginal] = {(value) in
+			var convertedTimestamp : String = ""
+			if let exifTimestamp = value as? String {
+				if let date = self.exifDateFormatter.date(from: exifTimestamp) {
+					convertedTimestamp = self.displayDateFormatter.string(from: date)
+				}
+			}
+			return MetadataItem(name: "Original date".localized, value: convertedTimestamp)
+		}
 
-		transformers[kCGImagePropertyExifDateTimeDigitized] = {(value) in return MetadataItem(name: "Digitized date".localized, value: value as? String ?? "") }
+		transformers[kCGImagePropertyExifDateTimeDigitized] = {(value) in
+			var convertedTimestamp : String = ""
+			if let exifTimestamp = value as? String {
+				if let date = self.exifDateFormatter.date(from: exifTimestamp) {
+					convertedTimestamp = self.displayDateFormatter.string(from: date)
+				}
+			}
+			return MetadataItem(name: "Digitized date".localized, value: convertedTimestamp)
+		}
 
 		// Image details
 		transformers[kCGImagePropertyProfileName] = {(value) in return MetadataItem(name: "Profile".localized, value: value as? String ?? "") }
@@ -292,15 +367,20 @@ class ImageMetadataParser {
 		transformers[kCGImagePropertyExifAuxOwnerName] = {(value) in return MetadataItem(name: "Owner".localized, value: "\(value)") }
 		transformers[kCGImagePropertyExifAuxFirmware] = {(value) in return MetadataItem(name: "Firmware".localized, value: "\(value)") }
 
+		// GPS Info
+		transformers[kCGImagePropertyGPSLatitude] = {(value) in return MetadataItem(name: "Latitude".localized, value: "\(value)", key: kCGImagePropertyGPSLatitude) }
+		transformers[kCGImagePropertyGPSLongitude] = {(value) in return MetadataItem(name: "Longitude".localized, value: "\(value)", key: kCGImagePropertyGPSLongitude) }
+		transformers[kCGImagePropertyGPSAltitude] = {(value) in return MetadataItem(name: "Altitude".localized, value: "\(value)") }
+
 		return transformers
 	}()
 
-	func parse(url:URL) throws -> [MetadataSection] {
+	func parse(url:URL) throws -> ParseResult {
 		guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else { throw MetadataParseError.InvailidInput }
 
 		guard let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [String : Any] else { throw MetadataParseError.MetadataMissing }
 
-		var sections = [MetadataSection]()
+		var result = ParseResult()
 
 		for identifier in MetadataSectionIdentifier.allCases {
 			var properties: [String : Any]?
@@ -322,10 +402,38 @@ class ImageMetadataParser {
 			}
 			section.items = items
 
-			sections.append(section)
+			result.sections.append(section)
 		}
 
-		return sections
+		if let gpsDictionary = imageProperties[kCGImagePropertyGPSDictionary as String] as? [String : Any] {
+			if let latitude = gpsDictionary[kCGImagePropertyGPSLatitude as String] as? Double,
+				let longitude = gpsDictionary[kCGImagePropertyGPSLongitude as String] as? Double,
+				let latRef = gpsDictionary[kCGImagePropertyGPSLatitudeRef as String] as? String,
+				let longRef = gpsDictionary[kCGImagePropertyGPSLongitudeRef as String] as? String {
+				var coordinate = CLLocationCoordinate2D()
+				// Latitude: North - positive, South - negative
+				coordinate.latitude = latRef == "N" ? latitude : -latitude
+				// Longitude: East - positive, West - negative
+				coordinate.longitude = longRef == "E" ? longitude : -longitude
+
+				var altitude: CLLocationDistance?
+
+				if let gpsAltitude = gpsDictionary[kCGImagePropertyGPSAltitude as String] as? Double,
+					let gpsAltitudeRef = gpsDictionary[kCGImagePropertyGPSAltitudeRef as String] as? Int {
+					// Altitude: measured in meters
+					// AltitudeRef: 0 - Sea level, 1 - Sea level reference (negative)
+					altitude = gpsAltitudeRef == 0 ? gpsAltitude : -gpsAltitude
+				}
+
+				if altitude == nil {
+					result.location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+				} else {
+					result.location = CLLocation(coordinate: coordinate, altitude: altitude!, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())
+				}
+			}
+		}
+
+		return result
 	}
 
 }
@@ -338,6 +446,8 @@ class ImageMetadataViewController: StaticTableViewController {
 	}
 	private var imageProperties: [String : Any]?
 
+	let gpsSection = StaticTableViewSection(headerTitle: "GPS Location".localized)
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.tableView.allowsSelection = false
@@ -347,31 +457,70 @@ class ImageMetadataViewController: StaticTableViewController {
 
 		guard let url = self.imageURL else { return }
 
-		if let sections = try? ImageMetadataParser.shared.parse(url: url) {
-			for section in sections {
-				let tableSection = StaticTableViewSection(headerTitle: "\(section.identifier)")
+		OnBackgroundQueue {
+			if let result = try? ImageMetadataParser.shared.parse(url: url) {
+				OnMainThread {
+					for section in result.sections {
+						let tableSection = StaticTableViewSection(headerTitle: "\(section.identifier)")
 
-				for item in section.items {
-					let row = StaticTableViewRow(subtitleRowWithAction: nil, title: item.name, subtitle: item.value, style: .value2, accessoryType: .none, identifier: "\(section.identifier)-\(item.name)")
-					row.cell?.textLabel?.numberOfLines = 0
-					row.cell?.textLabel?.lineBreakMode = .byWordWrapping
-					row.cell?.detailTextLabel?.numberOfLines = 0
-					row.cell?.detailTextLabel?.lineBreakMode = .byWordWrapping
+						for item in section.items {
+							let row = StaticTableViewRow(subtitleRowWithAction: nil, title: item.name, subtitle: item.value, style: .value2, accessoryType: .none, identifier: "\(section.identifier)-\(item.name)")
+							row.cell?.textLabel?.numberOfLines = 0
+							row.cell?.textLabel?.lineBreakMode = .byWordWrapping
+							row.cell?.detailTextLabel?.numberOfLines = 0
+							row.cell?.detailTextLabel?.lineBreakMode = .byWordWrapping
 
-					tableSection.add(row: row)
+							tableSection.add(row: row)
+						}
+
+						if tableSection.rows.count > 0 {
+							self.addSection(tableSection)
+						}
+					}
 				}
 
-				if tableSection.rows.count > 0 {
-					self.addSection(tableSection)
-				}
-			}
+				if let location = result.location {
 
-			OnBackgroundQueue {
-				if let histogram = self.histogramImage(for: url) {
-					let section = StaticTableViewSection(headerTitle: "Histogram")
-					let imageView = UIImageView(image: histogram)
-					let row = StaticTableViewRow(customView: imageView)
 					OnMainThread {
+						let latLongRow = StaticTableViewRow(subtitleRowWithAction: nil, title: "Coordinates".localized, subtitle: "\(location.dmsLatitude), \(location.dmsLongitude)", style: .value2, accessoryType: .none, identifier: "location-gps-lat-long")
+						self.gpsSection.add(row: latLongRow)
+
+						if location.altitude != 0 {
+							let altitudeRow = StaticTableViewRow(subtitleRowWithAction: nil, title: "Altitude".localized, subtitle: "\(location.altitude) m", style: .value2, accessoryType: .none, identifier: "location-gps-alt")
+							self.gpsSection.add(row: altitudeRow)
+						}
+
+						let mapView = MKMapView(frame: CGRect.zero)
+						mapView.isUserInteractionEnabled = false
+						let span = MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2)
+						let region = MKCoordinateRegion(center: location.coordinate, span: span)
+						mapView.setRegion(region, animated: false)
+
+						let annotation = MKPointAnnotation()
+						annotation.coordinate = location.coordinate
+						mapView.addAnnotation(annotation)
+
+						let mapRow = StaticTableViewRow(customView: mapView, fixedHeight: 120.0)
+						self.gpsSection.add(row: mapRow)
+						self.addSection(self.gpsSection)
+					}
+
+					self.lookup(location: location) { (placemark) in
+						if let address = placemark?.formattedAddress {
+							OnMainThread {
+								let placeRow = StaticTableViewRow(subtitleRowWithAction: nil, title: "Place".localized, subtitle: address, style: .value2, accessoryType: .none, identifier: "location-place")
+								self.gpsSection.add(row: placeRow)
+							}
+						}
+					}
+				}
+
+				if let histogram = self.histogramImage(for: url) {
+					OnMainThread {
+						let section = StaticTableViewSection(headerTitle: "Histogram")
+						let imageView = UIImageView(image: histogram)
+						let row = StaticTableViewRow(customView: imageView)
+
 						section.add(row: row)
 						self.addSection(section)
 					}
@@ -387,5 +536,22 @@ class ImageMetadataViewController: StaticTableViewController {
 			return nil
 		}
 		return UIImage(ciImage: outputImage)
+	}
+
+	private func lookup(location:CLLocation, completionHandler: @escaping (CLPlacemark?)
+	-> Void) {
+        let geocoder = CLGeocoder()
+
+        // Look up the location and pass it to the completion handler
+        geocoder.reverseGeocodeLocation(location,
+                    completionHandler: { (placemarks, error) in
+            if error == nil {
+                let firstLocation = placemarks?[0]
+                completionHandler(firstLocation)
+            } else {
+	         // An error occurred during geocoding.
+                completionHandler(nil)
+            }
+        })
 	}
 }
