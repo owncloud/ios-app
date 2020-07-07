@@ -33,25 +33,11 @@ class MoreSettingsSection: SettingsSection {
 	private var privacyPolicyRow: StaticTableViewRow?
 	private var termsOfUseRow: StaticTableViewRow?
 	private var acknowledgementsRow: StaticTableViewRow?
+	private var appVersionRow: StaticTableViewRow?
 
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
 		self.headerTitle = "More".localized
-
-		var buildType = "release".localized
-		if VendorServices.shared.isBetaBuild {
-			buildType = "beta".localized
-		}
-
-		var appSuffix = ""
-		if OCLicenseEMMProvider.isEMMVersion {
-			appSuffix = "-EMM"
-		}
-
-		let localizedFooter = "%@%@ %@ version %@ build %@ (app: %@, sdk: %@)".localized
-		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName ?? "App", appSuffix, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit, OCAppIdentity.shared.sdkCommit ?? "unknown")
-
-		self.footerTitle = footerTitle
 
 		self.identifier = "settings-more-section"
 
@@ -131,6 +117,26 @@ class MoreSettingsSection: SettingsSection {
 				}
 			})
 		}, title: "Acknowledgements".localized, accessoryType: .disclosureIndicator, identifier: "acknowledgements")
+
+		var buildType = "release".localized
+		if VendorServices.shared.isBetaBuild {
+			buildType = "beta".localized
+		}
+
+		var appSuffix = ""
+		if OCLicenseEMMProvider.isEMMVersion {
+			appSuffix = "-EMM"
+		}
+
+		let localizedFooter = "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)".localized
+		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName ?? "App", appSuffix, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit, OCAppIdentity.shared.sdkCommit ?? "unknown")
+
+		appVersionRow = StaticTableViewRow(rowWithAction: { (_, _) in
+			UIPasteboard.general.string = footerTitle
+			guard let viewController = self.viewController else { return }
+			_ = NotificationHUDViewController(on: viewController, title: "App Version".localized, subtitle: "Version informations were copied to the clipboard".localized, completion: {
+			})
+		}, title: "App Version".localized, subtitle: footerTitle, identifier: "app-version")
 	}
 
 	// MARK: - Update UI
@@ -145,7 +151,7 @@ class MoreSettingsSection: SettingsSection {
 			rows.append(recommendRow!)
 		}
 
-		rows.append(contentsOf: [privacyPolicyRow!, termsOfUseRow!, acknowledgementsRow!])
+		rows.append(contentsOf: [privacyPolicyRow!, termsOfUseRow!, acknowledgementsRow!, appVersionRow!])
 
 		add(rows: rows)
 	}

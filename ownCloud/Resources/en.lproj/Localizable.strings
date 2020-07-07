@@ -176,6 +176,8 @@
 "%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@ %@ version %@ build %@ (app: %@, sdk: %@)";
 "beta" = "beta";
 "release" = "release";
+"App Version" = "App Version";
+"Version informations were copied to the clipboard" = "Version informations were copied to the clipboard";
 
 
 /* User Interface Settings */
