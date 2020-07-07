@@ -41,21 +41,8 @@ struct OCItemDraggingValue {
 }
 
 class ClientQueryViewController: QueryFileListTableViewController, UIDropInteractionDelegate, UIPopoverPresentationControllerDelegate {
-	var selectedItemIds = Set<OCLocalID>()
-
-	var actions : [Action]?
-
-	let flexibleSpaceBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-	var deleteMultipleBarButtonItem: UIBarButtonItem?
-	var moveMultipleBarButtonItem: UIBarButtonItem?
-	var duplicateMultipleBarButtonItem: UIBarButtonItem?
-	var copyMultipleBarButtonItem: UIBarButtonItem?
-	var openMultipleBarButtonItem: UIBarButtonItem?
-
 	var folderActionBarButton: UIBarButtonItem?
 	var plusBarButton: UIBarButtonItem?
-	var selectDeselectAllButtonItem: UIBarButtonItem?
-	var exitMultipleSelectionBarButtonItem: UIBarButtonItem?
 
 	var quotaLabel = UILabel()
 	var quotaObservation : NSKeyValueObservation?
@@ -138,7 +125,6 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		self.tableView.dragDelegate = self
 		self.tableView.dropDelegate = self
 		self.tableView.dragInteractionEnabled = true
-		self.tableView.allowsMultipleSelectionDuringEditing = true
 
 		folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(moreBarButtonPressed))
 		folderActionBarButton?.accessibilityIdentifier = "client.folder-action"
@@ -147,35 +133,9 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 
 		self.navigationItem.rightBarButtonItems = [folderActionBarButton!, plusBarButton!]
 
-		selectDeselectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
-		exitMultipleSelectionBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(exitMultipleSelection))
-
-		// Create bar button items for the toolbar
-		deleteMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"trash"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: DeleteAction.identifier!)
-		deleteMultipleBarButtonItem?.accessibilityLabel = "Delete".localized
-		deleteMultipleBarButtonItem?.isEnabled = false
-
-		moveMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named:"folder"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: MoveAction.identifier!)
-		moveMultipleBarButtonItem?.accessibilityLabel = "Move".localized
-		moveMultipleBarButtonItem?.isEnabled = false
-
-		duplicateMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "duplicate-file"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: DuplicateAction.identifier!)
-		duplicateMultipleBarButtonItem?.accessibilityLabel = "Duplicate".localized
-		duplicateMultipleBarButtonItem?.isEnabled = false
-
-		copyMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "copy-file"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: CopyAction.identifier!)
-		copyMultipleBarButtonItem?.accessibilityLabel = "Copy".localized
-		copyMultipleBarButtonItem?.isEnabled = false
-
-		openMultipleBarButtonItem = UIBarButtonItem(image: UIImage(named: "open-in"), target: self as AnyObject, action: #selector(actOnMultipleItems), dropTarget: self, actionIdentifier: OpenInAction.identifier!)
-		openMultipleBarButtonItem?.accessibilityLabel = "Open in".localized
-		openMultipleBarButtonItem?.isEnabled = false
-
 		quotaLabel.textAlignment = .center
 		quotaLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
 		quotaLabel.numberOfLines = 0
-
-		sortBar?.showSelectButton = true
 	}
 
 	private var viewControllerVisible : Bool = false
@@ -207,20 +167,6 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	}
 
 	// MARK: - Table view delegate
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		// If not in multiple-selection mode, just navigate to the file or folder (collection)
-		if !self.tableView.isEditing {
-			super.tableView(tableView, didSelectRowAt: indexPath)
-		} else {
-			updateMultiSelectionUI()
-		}
-	}
-
-	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-		if tableView.isEditing {
-			updateMultiSelectionUI()
-		}
-	}
 
 	override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
 		return true
@@ -235,23 +181,6 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 			}
 		}
 		return true
-	}
-
- 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath), let cell = tableView.cellForRow(at: indexPath) else {
-			return nil
-		}
-
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .tableRow)
-		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: cell)
-		let actions = Action.sortedApplicableActions(for: actionContext)
-		actions.forEach({
-			$0.progressHandler = makeActionProgressHandler()
-		})
-
-		let contextualActions = actions.compactMap({$0.provideContextualAction()})
-		let configuration = UISwipeActionsConfiguration(actions: contextualActions)
-		return configuration
 	}
 
 	func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
@@ -269,51 +198,6 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		} else {
 			return UITableViewDropProposal(operation: .copy)
 		}
-	}
-
-	@available(iOS 13.0, *)
-	override func tableView(_ tableView: UITableView,
-	contextMenuConfigurationForRowAt indexPath: IndexPath,
-	point: CGPoint) -> UIContextMenuConfiguration? {
-
-		guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath), let cell = tableView.cellForRow(at: indexPath) else {
-			return nil
-		}
-
-		return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
-			return self.makeContextMenu(for: indexPath, core: core, item: item, with: cell)
-		})
-	}
-
-	@available(iOS 13.0, *)
-	func makeContextMenu(for indexPath: IndexPath, core: OCCore, item: OCItem, with cell: UITableViewCell) -> UIMenu {
-
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .contextMenuItem)
-		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: cell)
-		let actions = Action.sortedApplicableActions(for: actionContext)
-		actions.forEach({
-			$0.progressHandler = makeActionProgressHandler()
-		})
-
-		let menuItems = actions.compactMap({$0.provideUIMenuAction()})
-		let mainMenu = UIMenu(title: "", identifier: UIMenu.Identifier("context"), options: .displayInline, children: menuItems)
-
-		if core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1 {
-			// Share Items
-			let sharingActionsLocation = OCExtensionLocation(ofType: .action, identifier: .contextMenuSharingItem)
-			let sharingActionContext = ActionContext(viewController: self, core: core, items: [item], location: sharingActionsLocation, sender: cell)
-			let sharingActions = Action.sortedApplicableActions(for: sharingActionContext)
-			sharingActions.forEach({
-				$0.progressHandler = makeActionProgressHandler()
-			})
-
-			let sharingItems = sharingActions.compactMap({$0.provideUIMenuAction()})
-			let shareMenu = UIMenu(title: "", identifier: UIMenu.Identifier("sharing"), options: .displayInline, children: sharingItems)
-
-			return UIMenu(title: "", children: [shareMenu, mainMenu])
-		}
-
-		return UIMenu(title: "", children: [mainMenu])
 	}
 
 	func updateToolbarItemsForDropping(_ draggingValues: [OCItemDraggingValue]) {
@@ -396,174 +280,12 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		}
 	}
 
-	// MARK: - Toolbar actions handling multiple selected items
-	fileprivate func updateSelectDeselectAllButton() {
-		var selectedCount = 0
-		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
-			selectedCount = selectedIndexPaths.count
-		}
-
-		if selectedCount == self.items.count {
-			selectDeselectAllButtonItem?.title = "Deselect All".localized
-			selectDeselectAllButtonItem?.target = self
-			selectDeselectAllButtonItem?.action = #selector(deselectAllItems)
-		} else {
-			selectDeselectAllButtonItem?.title = "Select All".localized
-			selectDeselectAllButtonItem?.target = self
-			selectDeselectAllButtonItem?.action = #selector(selectAllItems)
-		}
-	}
-
-	fileprivate func updateActions(for selectedItems:[OCItem]) {
-		guard let tabBarController = self.tabBarController as? ClientRootViewController else { return }
-
-		guard let toolbarItems = tabBarController.toolbar?.items else { return }
-
-		if selectedItems.count > 0 {
-			if let core = self.core {
-				// Get possible associated actions
-				let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .toolbar)
-				let actionContext = ActionContext(viewController: self, core: core, query: query, items: selectedItems, location: actionsLocation)
-
-				self.actions = Action.sortedApplicableActions(for: actionContext)
-
-				// Enable / disable tool-bar items depending on action availability
-				for item in toolbarItems {
-					if self.actions?.contains(where: {type(of:$0).identifier == item.actionIdentifier}) ?? false {
-						item.isEnabled = true
-					} else {
-						item.isEnabled = false
-					}
-				}
-			}
-
-		} else {
-			self.actions = nil
-			for item in toolbarItems {
-				item.isEnabled = false
-			}
-		}
-
-	}
-
-	fileprivate func updateMultiSelectionUI() {
-
-		updateSelectDeselectAllButton()
-
-		var selectedItems = [OCItem]()
-
-		// Do we have selected items?
-		if let selectedIndexPaths = self.tableView.indexPathsForSelectedRows {
-			if selectedIndexPaths.count > 0 {
-
-				// Get array of OCItems from selected table view index paths
-				selectedItemIds.removeAll()
-				for indexPath in selectedIndexPaths {
-					if let item = itemAt(indexPath: indexPath) {
-						selectedItems.append(item)
-
-						if let localID = item.localID as OCLocalID? {
-							selectedItemIds.insert(localID)
-						}
-					}
-				}
-			}
-		}
-
-		updateActions(for: selectedItems)
-	}
-
-	func leaveMultipleSelection() {
-		self.tableView.setEditing(false, animated: true)
+	override func leaveMultipleSelection() {
+		super.leaveMultipleSelection()
 		self.navigationItem.rightBarButtonItems = [folderActionBarButton!, plusBarButton!]
-		self.navigationItem.leftBarButtonItem = nil
-		selectedItemIds.removeAll()
-		removeToolbar()
-		sortBar?.showSelectButton = true
-
-		if #available(iOS 13, *) {
-			self.tableView.overrideUserInterfaceStyle = .unspecified
-		}
-	}
-
-	func populateToolbar() {
-		self.populateToolbar(with: [
-			openMultipleBarButtonItem!,
-			flexibleSpaceBarButton,
-			moveMultipleBarButtonItem!,
-			flexibleSpaceBarButton,
-			copyMultipleBarButtonItem!,
-			flexibleSpaceBarButton,
-			duplicateMultipleBarButtonItem!,
-			flexibleSpaceBarButton,
-			deleteMultipleBarButtonItem!])
-	}
-
-	@objc func actOnMultipleItems(_ sender: UIButton) {
-		// Find associated action
-		if let action = self.actions?.first(where: {type(of:$0).identifier == sender.actionIdentifier}) {
-			// Configure progress handler
-			action.context.sender = self.tabBarController
-			action.progressHandler = makeActionProgressHandler()
-
-			action.completionHandler = { [weak self] (_, _) in
-				OnMainThread {
-					self?.leaveMultipleSelection()
-				}
-			}
-
-			// Execute the action
-			action.perform()
-		}
-	}
-
-	override func toggleSelectMode() {
-		if !tableView.isEditing {
-			multipleSelectionButtonPressed()
-		} else {
-			exitMultipleSelection()
-		}
 	}
 
 	// MARK: - Navigation Bar Actions
-	@objc func multipleSelectionButtonPressed() {
-
-		if #available(iOS 13, *) {
-			self.tableView.overrideUserInterfaceStyle = Theme.shared.activeCollection.interfaceStyle.userInterfaceStyle
-		}
-
-		updateMultiSelectionUI()
-		self.tableView.setEditing(true, animated: true)
-		sortBar?.showSelectButton = false
-
-		populateToolbar()
-
-		self.navigationItem.leftBarButtonItem = selectDeselectAllButtonItem!
-		self.navigationItem.rightBarButtonItems = [exitMultipleSelectionBarButtonItem!]
-
-		updateMultiSelectionUI()
-	}
-
-	@objc func exitMultipleSelection() {
-		leaveMultipleSelection()
-	}
-
-	@objc func selectAllItems(_ sender: UIBarButtonItem) {
-		(0..<self.items.count).map { (item) -> IndexPath in
-			return IndexPath(item: item, section: 0)
-			}.forEach { (indexPath) in
-				self.tableView.selectRow(at: indexPath, animated: true, scrollPosition: .none)
-		}
-		updateMultiSelectionUI()
-	}
-
-	@objc func deselectAllItems(_ sender: UIBarButtonItem) {
-
-		self.tableView.indexPathsForSelectedRows?.forEach({ (indexPath) in
-			self.tableView.deselectRow(at: indexPath, animated: true)
-		})
-		updateMultiSelectionUI()
-	}
 
 	@objc func plusBarButtonPressed(_ sender: UIBarButtonItem) {
 		let controller = ThemedAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -783,16 +505,6 @@ extension ClientQueryViewController: UITableViewDropDelegate {
 				}
 			}
 		}
-	}
-}
-
-@available(iOS 13, *) extension ClientQueryViewController {
-	override func tableView(_ tableView: UITableView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
-		return !DisplaySettings.shared.preventDraggingFiles
-	}
-
-	override func tableView(_ tableView: UITableView, didBeginMultipleSelectionInteractionAt indexPath: IndexPath) {
-		multipleSelectionButtonPressed()
 	}
 }
 
