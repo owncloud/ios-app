@@ -20,7 +20,7 @@ import UIKit
 import AVKit
 import MediaPlayer
 import ownCloudSDK
-import MobileCoreServices
+import CoreServices
 
 class MediaDisplayViewController : DisplayViewController {
 

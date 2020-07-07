@@ -18,7 +18,7 @@
 
 import UIKit
 import ownCloudSDK
-import MobileCoreServices
+import CoreServices
 import ImageIO
 import AVFoundation
 

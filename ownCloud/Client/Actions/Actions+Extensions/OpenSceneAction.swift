@@ -18,7 +18,6 @@
 
 import UIKit
 import ownCloudSDK
-import MobileCoreServices
 
 @available(iOS 13.0, *)
 class OpenSceneAction: Action {

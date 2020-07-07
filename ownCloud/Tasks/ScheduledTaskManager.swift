@@ -112,9 +112,7 @@ class ScheduledTaskManager : NSObject {
 
 	deinit {
 		NotificationCenter.default.removeObserver(self)
-		if #available(iOS 12, *) {
-			(wifiMonitor as? NWPathMonitor)?.cancel()
-		}
+		(wifiMonitor as? NWPathMonitor)?.cancel()
 		stopMonitoringPhotoLibraryChanges()
 	}
 
@@ -127,16 +125,14 @@ class ScheduledTaskManager : NSObject {
 		// Monitor media upload settings changes
 		NotificationCenter.default.addObserver(self, selector: #selector(mediaUploadSettingsDidChange), name: UserDefaults.MediaUploadSettingsChangedNotification, object: nil)
 
-		// In iOS12 or later, activate Wifi monitoring
-		if #available(iOS 12, *) {
-			wifiMonitorQueue = DispatchQueue(label: "com.owncloud.scheduled_task_mgr.wifi_monitor")
-			wifiMonitor = NWPathMonitor(requiredInterfaceType: .wifi)
-			(wifiMonitor as? NWPathMonitor)?.pathUpdateHandler = { [weak self] path in
-				// Use "inexpensive" WiFi only (not behind a cellular hot-spot)
-				self?.wifiDetected = (path.status == .satisfied && !path.isExpensive)
-			}
-			(wifiMonitor as? NWPathMonitor)?.start(queue: wifiMonitorQueue!)
+		// Activate Wifi monitoring
+		wifiMonitorQueue = DispatchQueue(label: "com.owncloud.scheduled_task_mgr.wifi_monitor")
+		wifiMonitor = NWPathMonitor(requiredInterfaceType: .wifi)
+		(wifiMonitor as? NWPathMonitor)?.pathUpdateHandler = { [weak self] path in
+			// Use "inexpensive" WiFi only (not behind a cellular hot-spot)
+			self?.wifiDetected = (path.status == .satisfied && !path.isExpensive)
 		}
+		(wifiMonitor as? NWPathMonitor)?.start(queue: wifiMonitorQueue!)
 
 		checkPowerState()
 

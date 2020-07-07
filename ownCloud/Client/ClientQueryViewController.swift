@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 import ownCloudApp
-import MobileCoreServices
+import CoreServices
 
 typealias ClientActionVieDidAppearHandler = () -> Void
 typealias ClientActionCompletionHandler = (_ actionPerformed: Bool) -> Void
