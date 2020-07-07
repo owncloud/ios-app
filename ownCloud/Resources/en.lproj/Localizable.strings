@@ -233,13 +233,23 @@
 "Really reset log file?" = "Really reset log file?";
 "This action can't be undone." = "This action can't be undone.";
 
-/* Storage settings */
+/* Data usage settings */
+"Data usage" = "Data usage";
 "Delete unused local copies" = "Delete unused local copies";
 "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app.";
 "never" = "never";
 "after %@" = "after %@";
 "Decrease Slider Value" = "Decrease Slider Value";
 "Increase Slider Value" = "Increase Slider Value";
+
+"Cellular transfers" = "Cellular transfers";
+"Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app." = "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app.";
+"Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information." = "Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information.";
+"General" = "General";
+"By feature" = "By feature";
+
+"off" = "off";
+"enabled" = "enabled";
 
 /* Display settings */
 "Advanced settings" = "Advanced settings";
@@ -465,6 +475,8 @@
 
 /* Photo upload settings */
 "Media Upload" = "Media Upload";
+"Media Export" = "Media Export";
+"Auto Upload" = "Auto Upload";
 "Convert HEIC to JPEG" = "Convert HEIC to JPEG";
 "Convert videos to MP4" = "Convert videos to MP4";
 "Preserve original media file names" = "Preserve original media file names";
@@ -473,10 +485,26 @@
 "Account" = "Account";
 "Accounts" = "Accounts";
 "Select account" = "Select account";
-"Upload Path" = "Upload Path";
+"Photo upload path" = "Photo upload path";
+"Video upload path" = "Video upload path";
 "Select Upload Path" = "Select Upload Path";
 "Auto upload of media was disabled since configured account / folder was not found" = "Auto upload of media was disabled since configured account / folder was not found";
 "Importing %@ media files for upload" = "Importing %@ media files for upload";
+"Photo upload" = "Photo upload";
+"Video upload" = "Video upload";
+
+/* Background media uploads */
+"Background uploads" = "Background uploads";
+"Use background refresh" = "Use background refresh";
+"Enable background uploads" = "Enable background uploads";
+"Use background location updates" = "Use background location updates";
+"Background upload notifications" = "Background upload notifications";
+"if you would like background media uploads to be more reliable, you should enable background location updates." = "if you would like background media uploads to be more reliable, you should enable background location updates.";
+"Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked." = "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked.";
+"Otherwise background media uploads using background refresh technology would depend on how frequently you use the app." = "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app.";
+"Location permission denied" = "Location permission denied";
+"Please re-enable location acquisition in system settings" = "Please re-enable location acquisition in system settings";
+"Scheduled upload of %ld media assets" = "Scheduled upload of %ld media assets";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Creating %ld folders…";

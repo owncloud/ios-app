@@ -17,22 +17,37 @@
  */
 
 #import "NSNumber+OCSyncAnchorData.h"
+#import <ownCloudSDK/ownCloudSDK.h>
 
 @implementation NSNumber (OCSyncAnchorData)
 
 + (instancetype)numberFromSyncAnchorData:(NSFileProviderSyncAnchor)syncAnchor
 {
+	NSNumber *syncAnchorNumber = nil;
 	if (syncAnchor != nil)
 	{
-		return ([NSKeyedUnarchiver unarchiveObjectWithData:syncAnchor]);
+		NSError *error = nil;
+
+		if ((syncAnchorNumber = [NSKeyedUnarchiver unarchivedObjectOfClass:NSNumber.class fromData:syncAnchor error:&error]) == nil)
+		{
+			OCLogError(@"Error decoding sync anchor number: %@", error);
+		}
 	}
 
-	return (nil);
+	return (syncAnchorNumber);
 }
 
 - (NSFileProviderSyncAnchor)syncAnchorData
 {
-	return ([NSKeyedArchiver archivedDataWithRootObject:self]);
+	NSData *syncAnchorData = nil;
+	NSError *error = nil;
+
+	if ((syncAnchorData = [NSKeyedArchiver archivedDataWithRootObject:self requiringSecureCoding:YES error:&error]) == nil)
+	{
+		OCLogError(@"Error encoding sync anchor number: %@", error);
+	}
+
+	return (syncAnchorData);
 }
 
 @end

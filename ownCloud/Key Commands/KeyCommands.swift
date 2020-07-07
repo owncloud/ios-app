@@ -19,7 +19,6 @@
 import UIKit
 import ownCloudSDK
 import ownCloudAppShared
-import MobileCoreServices
 
 extension ServerListTableViewController {
 	override var keyCommands: [UIKeyCommand]? {

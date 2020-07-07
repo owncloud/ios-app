@@ -18,7 +18,7 @@
 
 import UIKit
 import ownCloudSDK
-import MobileCoreServices
+import CoreServices
 
 class UploadFileAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadfile") }
