@@ -226,6 +226,23 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 	}
 
+ 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+		guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath), let cell = tableView.cellForRow(at: indexPath) else {
+			return nil
+		}
+
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .tableRow)
+		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: cell)
+		let actions = Action.sortedApplicableActions(for: actionContext)
+		actions.forEach({
+			$0.progressHandler = makeActionProgressHandler()
+		})
+
+		let contextualActions = actions.compactMap({$0.provideContextualAction()})
+		let configuration = UISwipeActionsConfiguration(actions: contextualActions)
+		return configuration
+	}
+
 	@discardableResult func open(item: OCItem, animated: Bool, pushViewController: Bool = true) -> ClientQueryViewController? {
 		if let core = self.core {
 			if #available(iOS 13.0, *) {

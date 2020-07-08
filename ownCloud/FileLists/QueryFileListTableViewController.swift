@@ -426,23 +426,6 @@ class QueryFileListTableViewController: FileListTableViewController, SortBarDele
 		return 0
 	}
 
- 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		guard let core = self.core, let item : OCItem = itemAt(indexPath: indexPath), let cell = tableView.cellForRow(at: indexPath) else {
-			return nil
-		}
-
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .tableRow)
-		let actionContext = ActionContext(viewController: self, core: core, items: [item], location: actionsLocation, sender: cell)
-		let actions = Action.sortedApplicableActions(for: actionContext)
-		actions.forEach({
-			$0.progressHandler = makeActionProgressHandler()
-		})
-
-		let contextualActions = actions.compactMap({$0.provideContextualAction()})
-		let configuration = UISwipeActionsConfiguration(actions: contextualActions)
-		return configuration
-	}
-
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		// If not in multiple-selection mode, just navigate to the file or folder (collection)
 		if !self.tableView.isEditing {
