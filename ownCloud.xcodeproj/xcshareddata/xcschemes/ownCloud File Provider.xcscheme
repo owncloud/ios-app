@@ -107,9 +107,9 @@
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
       <RemoteRunnable
-         runnableDebuggingMode = "1"
+         runnableDebuggingMode = "0"
          BundleIdentifier = "com.apple.DocumentsApp"
-         RemotePath = "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/Applications/Files.app">
+         RemotePath = "/var/containers/Bundle/Application/49F649CD-249E-42AC-8D2C-9ABCDFF5D294/Files.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference

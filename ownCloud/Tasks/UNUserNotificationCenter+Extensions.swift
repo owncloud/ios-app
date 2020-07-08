@@ -1,5 +1,5 @@
 //
-//  UNNotificationCenter+Extensions.swift
+//  UNUserNotificationCenter+Extensions.swift
 //  ownCloud
 //
 //  Created by Michael Neuwert on 31.05.20.
@@ -17,11 +17,11 @@
 */
 
 import UserNotifications
+import ownCloudApp
 
 extension UNUserNotificationCenter {
 	class func postLocalNotification(with identifier:String, title:String, body:String, after:TimeInterval = 0.5, completion:((Error?) -> Void)? = nil) {
-		let center = Self.current()
-		center.getNotificationSettings(completionHandler: { (settings) in
+		NotificationManager.shared.getNotificationSettings(completionHandler: { (settings) in
 			if settings.authorizationStatus == .authorized {
 				let content = UNMutableNotificationContent()
 
@@ -32,7 +32,8 @@ extension UNUserNotificationCenter {
 
 				let request = UNNotificationRequest(identifier: identifier,
 							  content: content, trigger: trigger)
-				center.add(request, withCompletionHandler: { (error) in
+
+				NotificationManager.shared.add(request, withCompletionHandler: { (error) in
 					completion?(error)
 				})
 			}

@@ -29,6 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)addNotificationRequest:(UNNotificationRequest *)notificationRequest withCompletionHandler:(void (^)(NSError *error))completionHandler;
 
+- (void)getNotificationSettingsWithCompletionHandler:(void (^)(UNNotificationSettings *settings))completionHandler;
+
+- (void)requestAuthorizationWithOptions:(UNAuthorizationOptions)options completionHandler:(void (^)(BOOL granted, NSError *__nullable error))completionHandler;
 @end
 
 #define ComposeNotificationIdentifier(aClass,identifier) [NSStringFromClass(aClass.class) stringByAppendingFormat:@":%@", identifier]

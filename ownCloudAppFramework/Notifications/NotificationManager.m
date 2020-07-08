@@ -95,6 +95,16 @@
 	[UNUserNotificationCenter.currentNotificationCenter addNotificationRequest:notificationRequest withCompletionHandler:completionHandler];
 }
 
+- (void)getNotificationSettingsWithCompletionHandler:(void (^)(UNNotificationSettings *settings))completionHandler
+{
+	[UNUserNotificationCenter.currentNotificationCenter getNotificationSettingsWithCompletionHandler:completionHandler];
+}
+
+- (void)requestAuthorizationWithOptions:(UNAuthorizationOptions)options completionHandler:(void (^)(BOOL granted, NSError *__nullable error))completionHandler
+{
+	[UNUserNotificationCenter.currentNotificationCenter requestAuthorizationWithOptions:options completionHandler:completionHandler];
+}
+
 #pragma mark - Delegate
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 {

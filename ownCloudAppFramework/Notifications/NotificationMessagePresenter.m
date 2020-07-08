@@ -20,6 +20,7 @@
 #import <UserNotifications/UserNotifications.h>
 
 #import "NotificationMessagePresenter.h"
+#import "OCBookmark+AppExtensions.h"
 
 @implementation NotificationMessagePresenter
 
@@ -58,7 +59,20 @@
 				content.categoryIdentifier = message.categoryIdentifier;
 			}
 
-			content.title = message.localizedTitle;
+			OCBookmark *bookmark;
+
+			if ((OCBookmarkManager.sharedBookmarkManager.bookmarks.count > 1) &&
+			    (((bookmark = [OCBookmarkManager.sharedBookmarkManager bookmarkForUUID:message.bookmarkUUID]) != nil) &&
+			     (bookmark.shortName != nil))
+			   )
+			{
+				content.title = bookmark.shortName;
+				content.subtitle = message.localizedTitle;
+			}
+			else
+			{
+				content.title = message.localizedTitle;
+			}
 
 			if (message.localizedDescription != nil)
 			{

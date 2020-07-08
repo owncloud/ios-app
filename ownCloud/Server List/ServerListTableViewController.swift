@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import PocketSVG
 
 class ServerListTableViewController: UITableViewController, Themeable {
@@ -144,7 +145,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 				}
 			}
 
-			UNUserNotificationCenter.current().requestAuthorization(options: .badge) { (granted, _) in
+			NotificationManager.shared.requestAuthorization(options: .badge) { (granted, _) in
 				if granted {
 					OnMainThread {
 						UIApplication.shared.applicationIconBadgeNumber = totalNotificationCount

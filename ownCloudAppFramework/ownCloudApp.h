@@ -29,6 +29,7 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 #import <ownCloudApp/DisplaySettings.h>
 #import <ownCloudApp/NSData+Encoding.h>
 #import <ownCloudApp/OCCore+BundleImport.h>
+#import <ownCloudApp/OCBookmark+AppExtensions.h>
 #import <ownCloudApp/NSObject+AnnotatedProperties.h>
 #import <ownCloudApp/ZIPArchive.h>
 
