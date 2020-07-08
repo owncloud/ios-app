@@ -129,13 +129,12 @@ class MoreSettingsSection: SettingsSection {
 		}
 
 		let localizedFooter = "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)".localized
-		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName ?? "App", appSuffix, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit, OCAppIdentity.shared.sdkCommit ?? "unknown")
+		let footerTitle = String(format: localizedFooter, OCAppIdentity.shared.appName ?? "App", appSuffix, buildType, VendorServices.shared.appVersion, VendorServices.shared.appBuildNumber, VendorServices.shared.lastGitCommit, OCAppIdentity.shared.sdkCommit ?? "unknown".localized)
 
 		appVersionRow = StaticTableViewRow(rowWithAction: { (_, _) in
 			UIPasteboard.general.string = footerTitle
 			guard let viewController = self.viewController else { return }
-			_ = NotificationHUDViewController(on: viewController, title: "App Version".localized, subtitle: "Version informations were copied to the clipboard".localized, completion: {
-			})
+			_ = NotificationHUDViewController(on: viewController, title: "App Version".localized, subtitle: "Version informations were copied to the clipboard".localized, completion: nil)
 		}, title: "App Version".localized, subtitle: footerTitle, identifier: "app-version")
 	}
 
