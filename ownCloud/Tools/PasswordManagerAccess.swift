@@ -17,7 +17,7 @@
  */
 
 import UIKit
-import MobileCoreServices
+import CoreServices
 
 let PasswordManagerAccessErrorDomain : NSErrorDomain = "PasswordManagerAccessErrorDomain"
 

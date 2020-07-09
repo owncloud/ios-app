@@ -19,13 +19,20 @@
 import Foundation
 import ownCloudSDK
 import Photos
-import MobileCoreServices
 import AVFoundation
 
+extension OCCellularSwitchIdentifier {
+    static let photoUploadCellularSwitchIdentifier = OCCellularSwitchIdentifier(rawValue: "cellular-photo-upload")
+    static let videoUploadCellularSwitchIdentifier = OCCellularSwitchIdentifier(rawValue: "video-photo-upload")
+}
+
 class MediaUploadQueue : OCActivitySource {
+
 	private var uploadActivity: MediaUploadActivity?
 
 	static var shared = MediaUploadQueue()
+
+	let importQueue = OperationQueue()
 
 	// MARK: - OCActivitySource protocol implementation
 
@@ -42,6 +49,16 @@ class MediaUploadQueue : OCActivitySource {
 	}
 
 	// MARK: - Public interface
+
+	func setup() {
+		let photoCellularSwitch = OCCellularSwitch(identifier: .photoUploadCellularSwitchIdentifier, localizedName: "Photo upload".localized, defaultValue: true, maximumTransferSize: 0)
+		let videoCellularSwitch = OCCellularSwitch(identifier: .videoUploadCellularSwitchIdentifier, localizedName: "Video upload".localized, defaultValue: true, maximumTransferSize: 0)
+
+		OCCellularManager.shared.registerSwitch(photoCellularSwitch)
+		OCCellularManager.shared.registerSwitch(videoCellularSwitch)
+
+		importQueue.qualityOfService = .utility
+	}
 
 	func addUpload(_ asset:PHAsset, for bookmark:OCBookmark, at path:String) {
 
@@ -61,6 +78,10 @@ class MediaUploadQueue : OCActivitySource {
 			return storage
 		}
 		self.setNeedsScheduling(in: bookmark)
+	}
+
+	func cancelUploads() {
+		importQueue.cancelAllOperations()
 	}
 
 	private var _needsSchedulingCountByBookmarkUUID : [UUID : Int] = [:]
@@ -142,14 +163,12 @@ class MediaUploadQueue : OCActivitySource {
 
 				// Create background task used to continue media upload in the background
 				let backgroundTask = OCBackgroundTask(name: "com.owncloud.media-upload-task", expirationHandler: { (bgTask) in
-					Log.warning("UploadMediaAction background task expired")
+					Log.warning("MediaUploadQueue background task expired")
+					self.importQueue.cancelAllOperations()
 					bgTask.end()
 				}).start()
 
-				let queue = DispatchQueue.global(qos: .background)
-				let importGroup = DispatchGroup()
-
-				queue.async {
+				OnBackgroundQueue {
 					// Make copies to avoid side effects of caching that KVS might perform
 					let assetIDQueue : [String] = uploadStorage.queue
 					let jobsByAssetID : [String : [MediaUploadJob]] = uploadStorage.jobs
@@ -172,142 +191,26 @@ class MediaUploadQueue : OCActivitySource {
 									return
 								}
 
-								// Skip jobs for which local item IDs are valid and known in the scope of the current bookmark
-								if let localID = job.scheduledUploadLocalID {
-									if let existingItem = self.findItem(in: core, for: localID as String) {
-										// If item is found and it's not a placeholder, upload was finished
-										if existingItem.isPlaceholder == false {
-											// Now upload is done and the job can be removed completely
-											if let itemPath = existingItem.path {
-												bookmark.modifyMediaUploadStorage { (storage) -> MediaUploadStorage in
-													storage.removeJob(with: assetId, targetPath: itemPath)
-													return storage
-												}
-											}
-										}
-										// Otherwise if isPlaceholder property is true, then upload is still ongoing, just skip it here
-										continue
-									}
+								// Create an upload operation and schedule it
+								let operation = MediaUploadOperation(core: core, mediaUploadJob: job, assetId: assetId)
+								operation.completionBlock = {
+									// Update import activity
+									self.updateActivityAfterFinishedImport(for: core)
 								}
+								self.importQueue.addOperation(operation)
 
-								// Found a job which requires an import operation
-								var tracking : OCCoreItemTracking?
-
-								if let asset = self.fetchAsset(with: assetId), let path = job.targetPath {
-
-									importGroup.enter()
-
-									// Convert target path to the OCItem object
-									tracking = core.trackItem(atPath: path) { (_, item, isInitial) in
-										OnBackgroundQueue {
-											if isInitial == true {
-
-												defer {
-													importGroup.leave()
-												}
-
-												if let rootItem = item {
-													// Perform asset import
-													if let itemLocalId = self.importAsset(asset: asset, using: core, at: rootItem, uploadCompletion: {
-
-														// Now upload is done and the job can be removed completely
-														bookmark.modifyMediaUploadStorage { (storage) -> MediaUploadStorage in
-															storage.removeJob(with: assetId, targetPath: path)
-															return storage
-														}
-
-													})?.localID as OCLocalID? {
-
-														// Update import activity
-														self.updateActivityAfterFinishedImport(for: core)
-
-														// Update media upload storage object
-														bookmark.modifyMediaUploadStorage { (storage) in
-															storage.update(localItemID: itemLocalId, assetId: assetId, targetPath: path)
-															return storage
-														}
-													}
-												}
-											}
-										}
-									}
-
-									if tracking == nil {
-										importGroup.leave()
-									}
-								}
-
-								importGroup.wait()
-
-								Log.debug("Releasing tracking object \(String(describing: tracking))") // Make sure "tracking" is not prematurely dropped - otherwise the handler may never be called and we wait forever
 							}
 						}
 					}
 
 					// Wait until all to-be-uploaded assets are processed
-					importGroup.notify(queue: queue, execute: {
-						// Finish background task
-						backgroundTask?.end()
-						finalizeImport()
-					})
+					self.importQueue.waitUntilAllOperationsAreFinished()
+					// Finish background task
+					backgroundTask?.end()
+					finalizeImport()
 				}
 			}
 		})
-	}
-
-	// MARK: - Private helper methods
-
-	private func findItem(in core:OCCore, for localID:String) -> OCItem? {
-		guard let database = core.vault.database else { return nil }
-		var foundItem: OCItem?
-
-		let semaphore = DispatchSemaphore(value: 0)
-
-		database.retrieveCacheItem(forLocalID: localID, completionHandler: { (_, _, _, item) in
-			foundItem = item
-			semaphore.signal()
-		})
-
-		semaphore.wait()
-
-		return foundItem
-	}
-
-	private func fetchAsset(with assetID:String) -> PHAsset? {
-		let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [assetID], options: nil)
-		if fetchResult.count > 0 {
-			return fetchResult.object(at: 0)
-		}
-		return nil
-	}
-
-	private func importAsset(asset:PHAsset, using core:OCCore, at rootItem:OCItem, uploadCompletion: @escaping () -> Void) -> OCItem? {
-
-		// Determine the list of preferred media formats
-		var utisToConvert = [String]()
-		var preserveOriginalNames = false
-
-		if let userDefaults = OCAppIdentity.shared.userDefaults {
-			if userDefaults.convertHeic {
-				utisToConvert.append(AVFileType.heic.rawValue)
-			}
-			if userDefaults.convertVideosToMP4 {
-				utisToConvert.append(AVFileType.mov.rawValue)
-			}
-			preserveOriginalNames = userDefaults.preserveOriginalMediaFileNames
-		}
-
-		if let result = asset.upload(with: core, at: rootItem, utisToConvert: utisToConvert, preserveOriginalName: preserveOriginalNames, progressHandler: nil, uploadCompleteHandler: {
-			uploadCompletion()
-		}) {
-			if let error = result.1 {
-				Log.error("Asset upload failed with error \(error)")
-			}
-
-			return result.0
-		}
-
-		return nil
 	}
 
 	// MARK: - Activity management

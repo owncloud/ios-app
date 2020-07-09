@@ -136,6 +136,11 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
+            key = "MTC_MAX_HIT_COUNT"
+            value = "9999"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "CG_NUMERICS_SHOW_BACKTRACE"
             value = "1"
             isEnabled = "YES">
@@ -208,6 +213,11 @@
          <EnvironmentVariable
             key = "oc:log.log-single-lined"
             value = "false"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.log-maximum-message-size"
+            value = "100000"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable

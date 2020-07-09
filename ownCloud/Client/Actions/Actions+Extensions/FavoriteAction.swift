@@ -18,7 +18,6 @@
 
 import Foundation
 import ownCloudSDK
-import MobileCoreServices
 
 class FavoriteAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.favorite") }

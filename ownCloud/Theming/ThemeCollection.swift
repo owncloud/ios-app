@@ -78,7 +78,6 @@ enum ThemeCollectionInterfaceStyle : String, CaseIterable {
 	case light
 	case unspecified
 
-	@available(iOS 12.0, *)
 	var userInterfaceStyle : UIUserInterfaceStyle {
 		switch self {
 			case .dark: return .dark
