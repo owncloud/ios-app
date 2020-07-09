@@ -18,7 +18,7 @@
 
 import UIKit
 import ownCloudSDK
-import MobileCoreServices
+import CoreServices
 
 protocol DisplayExtension where Self: DisplayViewController {
 
