@@ -85,6 +85,7 @@ class ImageMetadataParser {
 		case exifAuxSection
 		case timestamps
 		case iptcSection
+		case tiffSection
 
 		var description: String {
 			switch self {
@@ -98,6 +99,8 @@ class ImageMetadataParser {
 				return "EXIF aux info".localized
 			case .iptcSection:
 				return "Authoring".localized
+			case .tiffSection:
+				return "TIFF".localized
 			}
 		}
 
@@ -107,6 +110,8 @@ class ImageMetadataParser {
 				return kCGImagePropertyExifAuxDictionary as String
 			case .iptcSection:
 				return kCGImagePropertyIPTCDictionary as String
+			case .tiffSection:
+				return kCGImagePropertyTIFFDictionary as String
 			default:
 				return kCGImagePropertyExifDictionary as String
 			}
@@ -174,6 +179,20 @@ class ImageMetadataParser {
 			kCGImagePropertyIPTCKeywords,
 			kCGImagePropertyIPTCCopyrightNotice,
 			kCGImagePropertyIPTCCreatorContactInfo
+		]
+
+		mapping[.tiffSection] = [
+			kCGImagePropertyTIFFCompression,
+			kCGImagePropertyTIFFPhotometricInterpretation,
+			kCGImagePropertyTIFFDocumentName,
+			kCGImagePropertyTIFFImageDescription,
+			kCGImagePropertyTIFFMake,
+			kCGImagePropertyTIFFModel,
+			kCGImagePropertyTIFFOrientation,
+			kCGImagePropertyTIFFSoftware,
+			kCGImagePropertyTIFFArtist,
+			kCGImagePropertyTIFFCopyright,
+			kCGImagePropertyTIFFWhitePoint
 		]
 
 		return mapping
@@ -412,6 +431,9 @@ class ImageMetadataParser {
 				for metadataItem in metadataItems {
 					if let value = properties?[metadataItem as String] {
 						if let transformer = self.valueTransformers[metadataItem] {
+							items.append(transformer(value))
+						} else {
+							let transformer: MetadataValueTransformer = {(value) in return MetadataItem(name: metadataItem as String, value: "\(value)") }
 							items.append(transformer(value))
 						}
 					}
