@@ -20,6 +20,7 @@ import UIKit
 import CoreLocation
 import MapKit
 import Contacts
+import ownCloudSDK
 
 extension CLLocation {
 	var dmsLatitude: String {
@@ -83,6 +84,7 @@ class ImageMetadataParser {
 		case captureParameters
 		case exifAuxSection
 		case timestamps
+		case iptcSection
 
 		var description: String {
 			switch self {
@@ -94,6 +96,8 @@ class ImageMetadataParser {
 				return "Time".localized
 			case .exifAuxSection:
 				return "EXIF aux info".localized
+			case .iptcSection:
+				return "Authoring".localized
 			}
 		}
 
@@ -101,6 +105,8 @@ class ImageMetadataParser {
 			switch self {
 			case .exifAuxSection:
 				return kCGImagePropertyExifAuxDictionary as String
+			case .iptcSection:
+				return kCGImagePropertyIPTCDictionary as String
 			default:
 				return kCGImagePropertyExifDictionary as String
 			}
@@ -126,8 +132,6 @@ class ImageMetadataParser {
 		var dpi: Int?
 		var colorModel: String?
 		var depth: Int?
-		var info: String?
-		var keywords: [String]?
 	}
 
 	private lazy var itemMapping: [MetadataSectionIdentifier : [CFString]] = {
@@ -165,6 +169,12 @@ class ImageMetadataParser {
 			kCGImagePropertyExifAuxFlashCompensation,
 			kCGImagePropertyExifAuxOwnerName,
 			kCGImagePropertyExifAuxFirmware]
+
+		mapping[.iptcSection] = [
+			kCGImagePropertyIPTCKeywords,
+			kCGImagePropertyIPTCCopyrightNotice,
+			kCGImagePropertyIPTCCreatorContactInfo
+		]
 
 		return mapping
 	}()
@@ -348,10 +358,36 @@ class ImageMetadataParser {
 		transformers[kCGImagePropertyExifAuxOwnerName] = {(value) in return MetadataItem(name: "Owner".localized, value: "\(value)") }
 		transformers[kCGImagePropertyExifAuxFirmware] = {(value) in return MetadataItem(name: "Firmware".localized, value: "\(value)") }
 
-		// GPS Info
-		transformers[kCGImagePropertyGPSLatitude] = {(value) in return MetadataItem(name: "Latitude".localized, value: "\(value)", key: kCGImagePropertyGPSLatitude) }
-		transformers[kCGImagePropertyGPSLongitude] = {(value) in return MetadataItem(name: "Longitude".localized, value: "\(value)", key: kCGImagePropertyGPSLongitude) }
-		transformers[kCGImagePropertyGPSAltitude] = {(value) in return MetadataItem(name: "Altitude".localized, value: "\(value)") }
+		// IPTC / XMP meta-data
+		transformers[kCGImagePropertyIPTCKeywords] = {(value) in
+			var keywords = ""
+			if let keywordArray = value as? [String] {
+				keywords = keywordArray.joined(separator: ",")
+			}
+			return MetadataItem(name: "Keywords".localized, value: "\(keywords)")
+		}
+		transformers[kCGImagePropertyIPTCCopyrightNotice] = {(value) in return MetadataItem(name: "Copyright".localized, value: "\(value)") }
+		transformers[kCGImagePropertyIPTCCreatorContactInfo] = {(value) in
+			var contactDetails = [String]()
+			if let contactDict = value as? [String : String] {
+
+				if let email = contactDict[kCGImagePropertyIPTCContactInfoEmails as String] {
+					contactDetails.append(email)
+				}
+
+				if let web = contactDict[kCGImagePropertyIPTCContactInfoWebURLs as String] {
+					contactDetails.append(web)
+				}
+
+				if let phone = contactDict[kCGImagePropertyIPTCContactInfoPhones as String] {
+					contactDetails.append(phone)
+				}
+
+			}
+			return MetadataItem(name: "Contact info".localized, value: "\(contactDetails.joined(separator: ","))")
+		}
+		transformers[kCGImagePropertyIPTCRightsUsageTerms] = {(value) in return MetadataItem(name: "Usage terms".localized, value: "\(value)") }
+		transformers[kCGImagePropertyIPTCScene] = {(value) in return MetadataItem(name: "Scene".localized, value: "\(value)") }
 
 		return transformers
 	}()
@@ -435,25 +471,32 @@ class ImageMetadataParser {
 			}
 		}
 
-		// IPTC stuff
-		if let iptcDictionary = imageProperties[kCGImagePropertyIPTCDictionary as String] as? [String : Any] {
-			result.keywords = iptcDictionary[kCGImagePropertyIPTCKeywords as String] as? [String]
-		}
-
 		return result
 	}
 
 }
 
 class ImageMetadataViewController: StaticTableViewController {
-	var imageURL: URL? {
-		didSet {
-			self.title = imageURL?.lastPathComponent
-		}
-	}
+
+	weak var core : OCCore?
+	var item : OCItem
+	var imageURL: URL
+
 	private var imageProperties: [String : Any]?
 
 	let gpsSection = StaticTableViewSection(headerTitle: "GPS Location".localized)
+
+	public init(core inCore: OCCore, item inItem: OCItem, url:URL) {
+		core = inCore
+		item = inItem
+		imageURL = url
+
+		super.init(style: .grouped)
+	}
+
+	required init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
 	class func createMetadataRow(with title:String, subtitle:String, identifier:String) -> StaticTableViewRow {
 		let row = StaticTableViewRow(subtitleRowWithAction: nil, title: title, subtitle: subtitle, style: .value2, accessoryType: .none, identifier: identifier)
@@ -469,28 +512,22 @@ class ImageMetadataViewController: StaticTableViewController {
 		super.viewDidLoad()
 		self.tableView.allowsSelection = false
 		self.tableView.separatorStyle = .none
+		self.navigationItem.title = "Image metadata".localized
 
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
 
-		guard let url = self.imageURL else { return }
+		guard let core = self.core else { return }
+
+		let headerView = MoreViewHeader(for: item, with: core, favorite: false)
+		self.tableView.tableHeaderView = headerView
+		self.tableView.layoutTableHeaderView()
 
 		OnBackgroundQueue {
-			if let result = try? ImageMetadataParser.shared.parse(url: url) {
+			if let result = try? ImageMetadataParser.shared.parse(url: self.imageURL) {
+
 				OnMainThread {
-					for section in result.sections {
-						let tableSection = StaticTableViewSection(headerTitle: "\(section.identifier)")
-
-						for item in section.items {
-							let row = ImageMetadataViewController.createMetadataRow(with: item.name, subtitle: item.value, identifier: "\(section.identifier)-\(item.name)")
-							tableSection.add(row: row)
-						}
-
-						if tableSection.rows.count > 0 {
-							self.addSection(tableSection)
-						}
-					}
-
 					let imageDetailsSection = StaticTableViewSection(headerTitle: "Image details".localized)
+
 					if let profile = result.profile {
 						let profileRow = ImageMetadataViewController.createMetadataRow(with: "Profile".localized, subtitle: profile, identifier: "image-profile")
 						imageDetailsSection.add(row: profileRow)
@@ -515,11 +552,17 @@ class ImageMetadataViewController: StaticTableViewController {
 
 					self.addSection(imageDetailsSection)
 
-					if let keywords = result.keywords?.joined(separator: ",") {
-						let section = StaticTableViewSection(headerTitle: "Authoring".localized)
-						let keywordsRow = ImageMetadataViewController.createMetadataRow(with: "Keywords".localized, subtitle: keywords, identifier: "iptc-keywords")
-						section.add(row: keywordsRow)
-						self.addSection(section)
+					for section in result.sections {
+						let tableSection = StaticTableViewSection(headerTitle: "\(section.identifier)")
+
+						for item in section.items {
+							let row = ImageMetadataViewController.createMetadataRow(with: item.name, subtitle: item.value, identifier: "\(section.identifier)-\(item.name)")
+							tableSection.add(row: row)
+						}
+
+						if tableSection.rows.count > 0 {
+							self.addSection(tableSection)
+						}
 					}
 				}
 
@@ -552,14 +595,14 @@ class ImageMetadataViewController: StaticTableViewController {
 					self.lookup(location: location) { (placemark) in
 						if let address = placemark?.formattedAddress {
 							OnMainThread {
-								let placeRow = StaticTableViewRow(subtitleRowWithAction: nil, title: "Place".localized, subtitle: address, style: .value2, accessoryType: .none, identifier: "location-place")
+								let placeRow = ImageMetadataViewController.createMetadataRow(with: "Place".localized, subtitle: "\(address)", identifier: "location-place")
 								self.gpsSection.add(row: placeRow)
 							}
 						}
 					}
 				}
 
-				if let histogram = self.histogramImage(for: url) {
+				if let histogram = self.histogramImage(for: self.imageURL) {
 					OnMainThread {
 						let section = StaticTableViewSection(headerTitle: "Histogram")
 						let imageView = UIImageView(image: histogram)
@@ -571,6 +614,7 @@ class ImageMetadataViewController: StaticTableViewController {
 				}
 			}
 		}
+
 	}
 
 	private func histogramImage(for url:URL) -> UIImage? {

@@ -71,9 +71,8 @@ class DisplayExifMetadataAction : Action {
 			} else {
 				guard let files = files, files.count > 0, let viewController = hostViewController else { return }
 
-				if let sourceURL = files.first?.url {
-					let metadataViewController = ImageMetadataViewController(style: .grouped)
-					metadataViewController.imageURL = sourceURL
+				if let item = self.context.items.first, let sourceURL = files.first?.url {
+					let metadataViewController = ImageMetadataViewController(core: core, item: item, url: sourceURL)
 					let navigationController = ThemeNavigationController(rootViewController: metadataViewController)
 					navigationController.modalPresentationStyle = .overFullScreen
 					viewController.present(navigationController, animated: true)
