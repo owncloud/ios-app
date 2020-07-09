@@ -408,6 +408,22 @@ class ImageMetadataParser {
 		transformers[kCGImagePropertyIPTCRightsUsageTerms] = {(value) in return MetadataItem(name: "Usage terms".localized, value: "\(value)") }
 		transformers[kCGImagePropertyIPTCScene] = {(value) in return MetadataItem(name: "Scene".localized, value: "\(value)") }
 
+		// TIFF
+		transformers[kCGImagePropertyTIFFPhotometricInterpretation] = {(value) in
+			var textValue = "none"
+			if let piValue = value as? Int {
+				switch piValue {
+				case 2:
+					textValue = "RGB"
+				case 6:
+					textValue = "YCbCr"
+				default:
+					break
+				}
+			}
+			return MetadataItem(name: "Photometric interpretation".localized, value: textValue)
+		}
+
 		return transformers
 	}()
 
