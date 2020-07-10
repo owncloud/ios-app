@@ -152,7 +152,7 @@ class ImageMetadataParser {
 			kCGImagePropertyExifFocalLenIn35mmFilm,
 			kCGImagePropertyExifShutterSpeedValue,
 			kCGImagePropertyExifApertureValue,
-			kCGImagePropertyExifISOSpeed,
+			kCGImagePropertyExifISOSpeedRatings,
 			kCGImagePropertyExifExposureProgram,
 			kCGImagePropertyExifMeteringMode,
 			kCGImagePropertyExifExposureBiasValue,
@@ -188,7 +188,6 @@ class ImageMetadataParser {
 			kCGImagePropertyTIFFImageDescription,
 			kCGImagePropertyTIFFMake,
 			kCGImagePropertyTIFFModel,
-			kCGImagePropertyTIFFOrientation,
 			kCGImagePropertyTIFFSoftware,
 			kCGImagePropertyTIFFArtist,
 			kCGImagePropertyTIFFCopyright,
@@ -234,8 +233,13 @@ class ImageMetadataParser {
 			return MetadataItem(name: "Aperture".localized, value: "f/\(aperture)")
 		}
 
-		transformers[kCGImagePropertyExifISOSpeed] = {(value)
-			in return MetadataItem(name: "ISO".localized, value: "\(value)") }
+		transformers[kCGImagePropertyExifISOSpeedRatings] = {(value) in
+			var isoValue = ""
+			if let isoSpeedRatings = value as? [Int], isoSpeedRatings.count > 0 {
+				isoValue = "\(isoSpeedRatings[0])"
+			}
+			return MetadataItem(name: "ISO".localized, value: "\(isoValue)")
+		}
 
 		transformers[kCGImagePropertyExifExposureProgram] = {(value) in
 
@@ -424,6 +428,8 @@ class ImageMetadataParser {
 			return MetadataItem(name: "Photometric interpretation".localized, value: textValue)
 		}
 
+		transformers[kCGImagePropertyTIFFImageDescription ] = {(value) in return MetadataItem(name: "Description".localized, value: "\(value)") }
+
 		return transformers
 	}()
 
@@ -447,7 +453,10 @@ class ImageMetadataParser {
 				for metadataItem in metadataItems {
 					if let value = properties?[metadataItem as String] {
 						if let transformer = self.valueTransformers[metadataItem] {
-							items.append(transformer(value))
+							let item = transformer(value)
+							if item.value.isEmpty == false {
+								items.append(item)
+							}
 						} else {
 							let transformer: MetadataValueTransformer = {(value) in return MetadataItem(name: metadataItem as String, value: "\(value)") }
 							items.append(transformer(value))
@@ -522,7 +531,8 @@ class ImageMetadataViewController: StaticTableViewController {
 
 	private var imageProperties: [String : Any]?
 
-	let gpsSection = StaticTableViewSection(headerTitle: "GPS Location".localized)
+	private let gpsSection = StaticTableViewSection(headerTitle: "GPS Location".localized)
+	private let activityIndicatorView = UIActivityIndicatorView(style: Theme.shared.activeCollection.activityIndicatorViewStyle)
 
 	public init(core inCore: OCCore, item inItem: OCItem, url:URL) {
 		core = inCore
@@ -559,6 +569,11 @@ class ImageMetadataViewController: StaticTableViewController {
 		let headerView = MoreViewHeader(for: item, with: core, favorite: false)
 		self.tableView.tableHeaderView = headerView
 		self.tableView.layoutTableHeaderView()
+
+		activityIndicatorView.hidesWhenStopped = true
+		self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: activityIndicatorView)
+
+		activityIndicatorView.startAnimating()
 
 		OnBackgroundQueue {
 			if let result = try? ImageMetadataParser.shared.parse(url: self.imageURL) {
@@ -602,6 +617,8 @@ class ImageMetadataViewController: StaticTableViewController {
 							self.addSection(tableSection)
 						}
 					}
+
+					self.activityIndicatorView.stopAnimating()
 				}
 
 				if let location = result.location {
