@@ -285,8 +285,17 @@ class ImageMetadataParser {
 			return MetadataItem(name: "Metering".localized, value: modeString)
 		}
 
-		transformers[kCGImagePropertyExifExposureBiasValue] = {(value)
-				in return MetadataItem(name: "Exposure bias".localized, value: "\(value)") }
+		transformers[kCGImagePropertyExifExposureBiasValue] = {(value) in
+			var bias = ""
+			if let expBias = value as? Double {
+				if expBias >= 0.0 {
+					bias = String(format: "+%.2f EV", expBias)
+				} else {
+					bias = String(format: "%.2f EV", expBias)
+				}
+			}
+			return MetadataItem(name: "Exposure bias".localized, value: "\(bias)")
+		}
 
 		transformers[kCGImagePropertyExifFlash] = {(value)
 			in
@@ -525,6 +534,9 @@ class ImageMetadataParser {
 
 class ImageMetadataViewController: StaticTableViewController {
 
+	private static let mapHeight: CGFloat = 180.0
+	private static let mapSpan = 0.1
+
 	weak var core : OCCore?
 	var item : OCItem
 	var imageURL: URL
@@ -578,6 +590,42 @@ class ImageMetadataViewController: StaticTableViewController {
 		OnBackgroundQueue {
 			if let result = try? ImageMetadataParser.shared.parse(url: self.imageURL) {
 
+				if let location = result.location {
+
+					OnMainThread {
+						let latLongRow = StaticTableViewRow(subtitleRowWithAction: nil, title: "Coordinates".localized, subtitle: "\(location.dmsLatitude), \(location.dmsLongitude)", style: .value2, accessoryType: .none, identifier: "location-gps-lat-long")
+						self.gpsSection.add(row: latLongRow)
+
+						if location.altitude != 0 {
+							let altitudeRow = StaticTableViewRow(subtitleRowWithAction: nil, title: "Altitude".localized, subtitle: "\(location.altitude) m", style: .value2, accessoryType: .none, identifier: "location-gps-alt")
+							self.gpsSection.add(row: altitudeRow)
+						}
+
+						let mapView = MKMapView(frame: CGRect.zero)
+						mapView.isUserInteractionEnabled = false
+						let span = MKCoordinateSpan(latitudeDelta: ImageMetadataViewController.mapSpan, longitudeDelta: ImageMetadataViewController.mapSpan)
+						let region = MKCoordinateRegion(center: location.coordinate, span: span)
+						mapView.setRegion(region, animated: false)
+
+						let annotation = MKPointAnnotation()
+						annotation.coordinate = location.coordinate
+						mapView.addAnnotation(annotation)
+
+						let mapRow = StaticTableViewRow(customView: mapView, fixedHeight: ImageMetadataViewController.mapHeight)
+						self.gpsSection.add(row: mapRow)
+						self.addSection(self.gpsSection)
+					}
+
+					self.lookup(location: location) { (placemark) in
+						if let address = placemark?.formattedAddress {
+							OnMainThread {
+								let placeRow = ImageMetadataViewController.createMetadataRow(with: "Place".localized, subtitle: "\(address)", identifier: "location-place")
+								self.gpsSection.add(row: placeRow)
+							}
+						}
+					}
+				}
+
 				OnMainThread {
 					let imageDetailsSection = StaticTableViewSection(headerTitle: "Image details".localized)
 
@@ -619,42 +667,6 @@ class ImageMetadataViewController: StaticTableViewController {
 					}
 
 					self.activityIndicatorView.stopAnimating()
-				}
-
-				if let location = result.location {
-
-					OnMainThread {
-						let latLongRow = StaticTableViewRow(subtitleRowWithAction: nil, title: "Coordinates".localized, subtitle: "\(location.dmsLatitude), \(location.dmsLongitude)", style: .value2, accessoryType: .none, identifier: "location-gps-lat-long")
-						self.gpsSection.add(row: latLongRow)
-
-						if location.altitude != 0 {
-							let altitudeRow = StaticTableViewRow(subtitleRowWithAction: nil, title: "Altitude".localized, subtitle: "\(location.altitude) m", style: .value2, accessoryType: .none, identifier: "location-gps-alt")
-							self.gpsSection.add(row: altitudeRow)
-						}
-
-						let mapView = MKMapView(frame: CGRect.zero)
-						mapView.isUserInteractionEnabled = false
-						let span = MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2)
-						let region = MKCoordinateRegion(center: location.coordinate, span: span)
-						mapView.setRegion(region, animated: false)
-
-						let annotation = MKPointAnnotation()
-						annotation.coordinate = location.coordinate
-						mapView.addAnnotation(annotation)
-
-						let mapRow = StaticTableViewRow(customView: mapView, fixedHeight: 120.0)
-						self.gpsSection.add(row: mapRow)
-						self.addSection(self.gpsSection)
-					}
-
-					self.lookup(location: location) { (placemark) in
-						if let address = placemark?.formattedAddress {
-							OnMainThread {
-								let placeRow = ImageMetadataViewController.createMetadataRow(with: "Place".localized, subtitle: "\(address)", identifier: "location-place")
-								self.gpsSection.add(row: placeRow)
-							}
-						}
-					}
 				}
 
 				if let histogram = self.histogramImage(for: self.imageURL) {
