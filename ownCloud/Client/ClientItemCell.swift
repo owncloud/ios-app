@@ -473,6 +473,7 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 			self.progressView?.progress = progress
 
 			moreButton.isHidden = true
+			messageButton.isHidden = true
 		} else {
 			moreButton.isHidden = hasMessageForItem
 			messageButton.isHidden = !hasMessageForItem
