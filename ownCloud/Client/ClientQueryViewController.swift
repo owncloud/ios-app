@@ -48,10 +48,18 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 	var quotaObservation : NSKeyValueObservation?
 	var titleButtonThemeApplierToken : ThemeApplierToken?
 
+	weak var clientRootViewController : ClientRootViewController?
+
 	private var _actionProgressHandler : ActionProgressHandler?
 
 	// MARK: - Init & Deinit
-	public override init(core inCore: OCCore, query inQuery: OCQuery) {
+	public override convenience init(core inCore: OCCore, query inQuery: OCQuery) {
+		self.init(core: inCore, query: inQuery, rootViewController: nil)
+	}
+
+	public init(core inCore: OCCore, query inQuery: OCQuery, rootViewController: ClientRootViewController?) {
+		clientRootViewController = rootViewController
+
 		super.init(core: inCore, query: inQuery)
 
 		let lastPathComponent = (query.queryPath as NSString?)!.lastPathComponent
@@ -376,6 +384,36 @@ class ClientQueryViewController: QueryFileListTableViewController, UIDropInterac
 		}
 
 		return self.itemAt(indexPath: indexPath)
+	}
+
+	override func hasMessage(for item: OCItem) -> Bool {
+		guard let activeSyncRecordIDs = item.activeSyncRecordIDs, let syncRecordIDsWithMessages = clientRootViewController?.syncRecordIDsWithMessages else {
+			return false
+		}
+
+		return syncRecordIDsWithMessages.contains { (syncRecordID) -> Bool in
+			return activeSyncRecordIDs.contains(syncRecordID)
+		}
+	}
+
+	override func messageButtonTapped(cell: ClientItemCell) {
+		if let item = cell.item {
+			self.showMessageFor(item: item)
+		}
+	}
+
+	// MARK: - Show message for item
+	func showMessageFor(item: OCItem) {
+		if let messages = clientRootViewController?.messageSelector?.selection,
+		   let firstMatchingMessage = messages.first(where: { (message) -> Bool in
+			guard let syncRecordID = message.syncIssue?.syncRecordID, let containsSyncRecordID = item.activeSyncRecordIDs?.contains(syncRecordID) else {
+				return false
+			}
+
+			return containsSyncRecordID
+		}) {
+			firstMatchingMessage.showInApp()
+		}
 	}
 
 	// MARK: - Updates

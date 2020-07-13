@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 protocol ClientRootViewControllerAuthenticationDelegate : class {
 	func handleAuthError(for clientViewController: ClientRootViewController, error: NSError, editBookmark: OCBookmark?, preferredAuthenticationMethods: [OCAuthenticationMethodIdentifier]?)
@@ -42,6 +43,9 @@ class ClientRootViewController: UITabBarController {
 	var progressSummarizer : ProgressSummarizer?
 	var toolbar : UIToolbar?
 
+	var notificationPresenter : NotificationMessagePresenter?
+	var cardMessagePresenter : CardIssueMessagePresenter?
+
 	var pasteboardChangedCounter = 0
 
 	weak var authDelegate : ClientRootViewControllerAuthenticationDelegate?
@@ -63,12 +67,19 @@ class ClientRootViewController: UITabBarController {
 		}
 	}
 
+	var messageSelector : MessageSelector?
+
 	var alertQueue : OCAsyncSequentialQueue = OCAsyncSequentialQueue()
 
 	init(bookmark inBookmark: OCBookmark) {
 		bookmark = inBookmark
 
 		super.init(nibName: nil, bundle: nil)
+
+		notificationPresenter = NotificationMessagePresenter(forBookmarkUUID: bookmark.uuid)
+		cardMessagePresenter = CardIssueMessagePresenter(with: bookmark.uuid as OCBookmarkUUID, limitToSingleCard: true, presenter: { [weak self] (viewController) in
+			self?.presentAlertAsCard(viewController: viewController, withHandle: false, dismissable: true)
+		})
 
 		progressSummarizer = ProgressSummarizer.shared(forBookmark: inBookmark)
 		if progressSummarizer != nil {
@@ -135,6 +146,15 @@ class ClientRootViewController: UITabBarController {
 
 		Theme.shared.unregister(client: self)
 
+		// Remove message presenters
+		if let notificationPresenter = self.notificationPresenter {
+			core?.messageQueue.remove(presenter: notificationPresenter)
+		}
+
+		if let cardMessagePresenter = self.cardMessagePresenter {
+			core?.messageQueue.remove(presenter: cardMessagePresenter)
+		}
+
 		OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 	}
 
@@ -143,6 +163,15 @@ class ClientRootViewController: UITabBarController {
 		OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, _) in
 			self.core = core
 			core?.delegate = self
+
+			// Add message presenters
+			if let notificationPresenter = self.notificationPresenter {
+				core?.messageQueue.add(presenter: notificationPresenter)
+			}
+
+			if let cardMessagePresenter = self.cardMessagePresenter {
+				core?.messageQueue.add(presenter: cardMessagePresenter)
+			}
 
 			// Remove skip available offline when user opens the bookmark
 			core?.vault.keyValueStore?.storeObject(nil, forKey: .coreSkipAvailableOfflineKey)
@@ -247,7 +276,7 @@ class ClientRootViewController: UITabBarController {
 					self.createFileListStack(for: localItemId)
 				} else {
 					let query = OCQuery(forPath: "/")
-					let queryViewController = ClientQueryViewController(core: core, query: query)
+					let queryViewController = ClientQueryViewController(core: core, query: query, rootViewController: self)
 					// Because we have nested UINavigationControllers (first one from ServerListTableViewController and each item UITabBarController needs it own UINavigationController), we have to fake the UINavigationController logic. Here we insert the emptyViewController, because in the UI should appear a "Back" button if the root of the queryViewController is shown. Therefore we put at first the emptyViewController inside and at the same time the queryViewController. Now, the back button is shown and if the users push the "Back" button the ServerListTableViewController is shown. This logic can be found in navigationController(_: UINavigationController, willShow: UIViewController, animated: Bool) below.
 					self.filesNavigationController?.setViewControllers([self.emptyViewController, queryViewController], animated: false)
 				}
@@ -268,8 +297,19 @@ class ClientRootViewController: UITabBarController {
 
 					return (viewController != emptyViewController)
 				}
+
+				let bookmarkUUID = core.bookmark.uuid
+
 				self.activityViewController?.core = core
 				self.libraryViewController?.core = core
+
+				self.messageSelector = MessageSelector(from: core.messageQueue, filter: { (message) in
+					return (message.bookmarkUUID == bookmarkUUID) && !message.resolved
+				}, provideGroupedSelection: true, provideSyncRecordIDs: true, handler: { [weak self] (messages, groups, syncRecordIDs) in
+					self?.updateMessageSelectionWith(messages: messages, groups: groups, syncRecordIDs: syncRecordIDs)
+				})
+
+				self.activityViewController?.messageSelector = self.messageSelector
 
 				self.connectionInitializedObservation = core.observe(\OCCore.connection.connectionInitializationPhaseCompleted, options: [.initial], changeHandler: { [weak self] (core, _) in
 					if core.connection.connectionInitializationPhaseCompleted {
@@ -303,13 +343,29 @@ class ClientRootViewController: UITabBarController {
 //		self.view.setNeedsLayout()
 	}
 
+	func updateMessageSelectionWith(messages: [OCMessage]?, groups : [MessageGroup]?, syncRecordIDs : Set<OCSyncRecordID>?) {
+		OnMainThread {
+			self.activityViewController?.handleMessagesUpdates(messages: messages, groups: groups)
+
+			if syncRecordIDs != self.syncRecordIDsWithMessages {
+				self.syncRecordIDsWithMessages = syncRecordIDs
+			}
+		}
+	}
+
+	var syncRecordIDsWithMessages : Set<OCSyncRecordID>? {
+		didSet {
+			NotificationCenter.default.post(name: .ClientSyncRecordIDsWithMessagesChanged, object: self.core)
+		}
+	}
+
 	func createFileListStack(for itemLocalID: String) {
 		if let core = core {
 			// retrieve the item for the item id
 			core.retrieveItemFromDatabase(forLocalID: itemLocalID, completionHandler: { (error, _, item) in
 				OnMainThread {
 					let query = OCQuery(forPath: "/")
-					let queryViewController = ClientQueryViewController(core: core, query: query)
+					let queryViewController = ClientQueryViewController(core: core, query: query, rootViewController: self)
 
 					if error == nil, let item = item, item.isRoot == false {
 						// get all parent items for the item and rebuild all underlaying ClientQueryViewController for this items in the navigation stack
@@ -562,6 +618,25 @@ extension ClientRootViewController : OCCoreDelegate {
 			presentAlert(authFailureHasEditOption, authFailureIgnoreStyle, authFailureIgnoreLabel, authFailureMessage, nil)
 		}
 	}
+
+	func presentAlertAsCard(viewController: UIViewController, withHandle: Bool = false, dismissable: Bool = true) {
+		alertQueue.async { [weak self] (queueCompletionHandler) in
+			if let startViewController = self {
+				var hostViewController : UIViewController = startViewController
+
+				while hostViewController.presentedViewController != nil,
+				      hostViewController.presentedViewController?.isBeingDismissed == false {
+					hostViewController = hostViewController.presentedViewController!
+				}
+
+				hostViewController.present(asCard: viewController, animated: true, withHandle: withHandle, dismissable: dismissable, completion: {
+					queueCompletionHandler()
+				})
+			} else {
+				queueCompletionHandler()
+			}
+		}
+	}
 }
 
 extension ClientRootViewController: UITabBarControllerDelegate {
@@ -579,4 +654,8 @@ extension ClientRootViewController: UITabBarControllerDelegate {
 
 		return true
 	}
+}
+
+extension NSNotification.Name {
+	static let ClientSyncRecordIDsWithMessagesChanged = NSNotification.Name(rawValue: "client-sync-record-ids-with-messages-changed")
 }

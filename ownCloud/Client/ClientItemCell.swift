@@ -22,7 +22,9 @@ import ownCloudSDK
 protocol ClientItemCellDelegate: class {
 
 	func moreButtonTapped(cell: ClientItemCell)
+	func messageButtonTapped(cell: ClientItemCell)
 
+	func hasMessage(for item: OCItem) -> Bool
 }
 
 class ClientItemCell: ThemeTableViewCell, ItemContainer {
@@ -49,6 +51,7 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	var sharedStatusIconView : UIImageView = UIImageView()
 	var publicLinkStatusIconView : UIImageView = UIImageView()
 	var moreButton : UIButton = UIButton()
+	var messageButton : UIButton = UIButton()
 	var progressView : ProgressView?
 
 	var moreButtonWidthConstraint : NSLayoutConstraint?
@@ -62,6 +65,8 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	var cloudStatusIconViewRightMarginConstraint : NSLayoutConstraint?
 
 	var activeThumbnailRequestProgress : Progress?
+
+	var hasMessageForItem : Bool = false
 
 	var isMoreButtonPermanentlyHidden = false {
 		didSet {
@@ -97,6 +102,8 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 
 		NotificationCenter.default.addObserver(self, selector: #selector(updateAvailableOfflineStatus(_:)), name: .OCCoreItemPoliciesChanged, object: OCItemPolicyKind.availableOffline)
 
+		NotificationCenter.default.addObserver(self, selector: #selector(updateHasMessage(_:)), name: .ClientSyncRecordIDsWithMessagesChanged, object: nil)
+
 		if #available(iOS 13.4, *) {
 			PointerEffect.install(on: self.contentView, effectStyle: .hover)
 		}
@@ -108,7 +115,11 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 
 	deinit {
 		NotificationCenter.default.removeObserver(self, name: .OCCoreItemPoliciesChanged, object: OCItemPolicyKind.availableOffline)
+
+		NotificationCenter.default.removeObserver(self, name: .ClientSyncRecordIDsWithMessagesChanged, object: nil)
+
 		self.localID = nil
+		self.core = nil
 	}
 
 	func prepareViewAndConstraints() {
@@ -120,6 +131,8 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		iconView.contentMode = .scaleAspectFit
 
 		moreButton.translatesAutoresizingMaskIntoConstraints = false
+
+		messageButton.translatesAutoresizingMaskIntoConstraints = false
 
 		cloudStatusIconView.translatesAutoresizingMaskIntoConstraints = false
 		cloudStatusIconView.contentMode = .center
@@ -147,6 +160,7 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		self.contentView.addSubview(publicLinkStatusIconView)
 		self.contentView.addSubview(cloudStatusIconView)
 		self.contentView.addSubview(moreButton)
+		self.contentView.addSubview(messageButton)
 
 		moreButton.setImage(UIImage(named: "more-dots"), for: .normal)
 		moreButton.contentMode = .center
@@ -154,7 +168,15 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 			moreButton.isPointerInteractionEnabled = true
 		}
 
+		messageButton.setTitle("⚠️", for: .normal)
+		messageButton.contentMode = .center
+		if #available(iOS 13.4, *) {
+			messageButton.isPointerInteractionEnabled = true
+		}
+		messageButton.isHidden = true
+
 		moreButton.addTarget(self, action: #selector(moreButtonTapped), for: .touchUpInside)
+		messageButton.addTarget(self, action: #selector(messageButtonTapped), for: .touchUpInside)
 
 		sharedStatusIconView.setContentHuggingPriority(.required, for: .vertical)
 		sharedStatusIconView.setContentHuggingPriority(.required, for: .horizontal)
@@ -222,7 +244,12 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 			moreButton.topAnchor.constraint(equalTo: self.contentView.topAnchor),
 			moreButton.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 			moreButtonWidthConstraint!,
-			moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor)
+			moreButton.rightAnchor.constraint(equalTo: self.contentView.rightAnchor),
+
+			messageButton.leftAnchor.constraint(equalTo: moreButton.leftAnchor),
+			messageButton.rightAnchor.constraint(equalTo: moreButton.rightAnchor),
+			messageButton.topAnchor.constraint(equalTo: moreButton.topAnchor),
+			messageButton.bottomAnchor.constraint(equalTo: moreButton.bottomAnchor)
 		])
 	}
 
@@ -266,6 +293,9 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		if activeThumbnailRequestProgress != nil {
 			activeThumbnailRequestProgress?.cancel()
 		}
+
+		// Set has message
+		self.hasMessageForItem = delegate?.hasMessage(for: item) ?? false
 
 		// Set the icon and initiate thumbnail generation
 		iconImage = item.icon(fitInSize: iconSize)
@@ -312,7 +342,7 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 
 		self.moreButton.accessibilityLabel = (item.name != nil) ? (item.name! + " " + "Actions".localized) : "Actions".localized
 
-		self.updateProgress()
+		self.updateStatus()
 	}
 
 	func updateCloudStatusIcon(with item: OCItem?) {
@@ -370,6 +400,25 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 		}
 	}
 
+	// MARK: - Has Message tracking
+	@objc func updateHasMessage(_ notification: Notification) {
+		if let notificationCore = notification.object as? OCCore, let core = self.core, notificationCore === core {
+			OnMainThread { [weak self] in
+				let oldMessageForItem = self?.hasMessageForItem ?? false
+
+				if let item = self?.item, let hasMessage = self?.delegate?.hasMessage(for: item) {
+					self?.hasMessageForItem = hasMessage
+				} else {
+					self?.hasMessageForItem = false
+				}
+
+				if oldMessageForItem != self?.hasMessageForItem {
+					self?.updateStatus()
+				}
+			}
+		}
+	}
+
 	// MARK: - Progress
 	var localID : OCLocalID? {
 		willSet {
@@ -388,15 +437,15 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	@objc func progressChangedForItem(_ notification : Notification) {
 		if notification.object as? NSString == localID {
 			OnMainThread {
-				self.updateProgress()
+				self.updateStatus()
 			}
 		}
 	}
 
-	func updateProgress() {
+	func updateStatus() {
 		var progress : Progress?
 
-		if let item = item, (item.syncActivity.rawValue & (OCItemSyncActivity.downloading.rawValue | OCItemSyncActivity.uploading.rawValue) != 0) {
+		if let item = item, (item.syncActivity.rawValue & (OCItemSyncActivity.downloading.rawValue | OCItemSyncActivity.uploading.rawValue) != 0), !hasMessageForItem {
 			progress = self.core?.progress(for: item, matching: .none)?.first
 
 			if progress == nil {
@@ -424,8 +473,11 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 			self.progressView?.progress = progress
 
 			moreButton.isHidden = true
+			messageButton.isHidden = true
 		} else {
-			moreButton.isHidden = false
+			moreButton.isHidden = hasMessageForItem
+			messageButton.isHidden = !hasMessageForItem
+
 			progressView?.removeFromSuperview()
 			progressView = nil
 		}
@@ -476,5 +528,8 @@ class ClientItemCell: ThemeTableViewCell, ItemContainer {
 	// MARK: - Actions
 	@objc func moreButtonTapped() {
 		self.delegate?.moreButtonTapped(cell: self)
+	}
+	@objc func messageButtonTapped() {
+		self.delegate?.messageButtonTapped(cell: self)
 	}
 }

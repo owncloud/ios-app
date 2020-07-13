@@ -79,6 +79,13 @@ class FileListTableViewController: UITableViewController, ClientItemCellDelegate
 		}
 	}
 
+	func messageButtonTapped(cell: ClientItemCell) {
+	}
+
+	func hasMessage(for item: OCItem) -> Bool {
+		return false
+	}
+
 	// MARK: - Visibility handling
 	private var viewControllerVisible : Bool = false
 

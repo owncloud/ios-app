@@ -55,6 +55,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		}
 	}
 
+	private func set(scene: UIScene, inForeground: Bool) {
+		if let windowScene = scene as? UIWindowScene {
+			for window in windowScene.windows {
+				if let themeWindow = window as? ThemeWindow {
+					themeWindow.themeWindowInForeground = true
+				}
+			}
+		}
+	}
+
+	func sceneWillEnterForeground(_ scene: UIScene) {
+		self.set(scene: scene, inForeground: true)
+	}
+
+	func sceneDidEnterBackground(_ scene: UIScene) {
+		self.set(scene: scene, inForeground: false)
+	}
+
 	func stateRestorationActivity(for scene: UIScene) -> NSUserActivity? {
 		return scene.userActivity
 	}

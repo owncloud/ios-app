@@ -165,6 +165,8 @@ class DisplayViewController: UIViewController {
 
 	deinit {
 		coreConnectionStatusObservation?.invalidate()
+		coreConnectionStatusObservation = nil
+
 		Theme.shared.unregister(client: self)
 		self.stopQuery()
 	}

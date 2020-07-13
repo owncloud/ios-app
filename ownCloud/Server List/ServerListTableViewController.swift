@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import PocketSVG
 
 class ServerListTableViewController: UITableViewController, Themeable {
@@ -102,6 +103,56 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 
 		ReleaseNotesDatasource.setUserPreferenceValue(NSString(utf8String: VendorServices.shared.appVersion), forClassSettingsKey: .lastSeenAppVersion)
+
+		messageCountByBookmarkUUID = [:] // Initial update of app badge icon
+
+		messageCountSelector = MessageSelector(filter: nil, handler: { [weak self] (messages, _, _) in
+			var countByBookmarkUUID : [UUID? : Int ] = [:]
+
+			if let messages = messages {
+				for message in messages {
+					if !message.resolved {
+						if let count = countByBookmarkUUID[message.bookmarkUUID] {
+							countByBookmarkUUID[message.bookmarkUUID] = count + 1
+						} else {
+							countByBookmarkUUID[message.bookmarkUUID] = 1
+						}
+					}
+				}
+			}
+
+			OnMainThread {
+				self?.messageCountByBookmarkUUID = countByBookmarkUUID
+			}
+		})
+	}
+
+	var messageCountSelector : MessageSelector?
+
+	typealias ServerListTableMessageCountByUUID = [UUID? : Int ]
+
+	var messageCountByBookmarkUUID : ServerListTableMessageCountByUUID = [:] {
+		didSet {
+			// Notify cells about changed counts
+			NotificationCenter.default.post(Notification(name: .BookmarkMessageCountChanged, object: messageCountByBookmarkUUID, userInfo: nil))
+
+			// Update app badge count
+			var totalNotificationCount = messageCountByBookmarkUUID[nil] ?? 0 // Global notifications
+
+			for bookmark in OCBookmarkManager.shared.bookmarks {
+				if let count = messageCountByBookmarkUUID[bookmark.uuid] {
+					totalNotificationCount += count
+				}
+			}
+
+			NotificationManager.shared.requestAuthorization(options: .badge) { (granted, _) in
+				if granted {
+					OnMainThread {
+						UIApplication.shared.applicationIconBadgeNumber = totalNotificationCount
+					}
+				}
+			}
+		}
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -121,6 +172,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		var showBetaWarning = VendorServices.shared.showBetaWarning
 
 		super.viewDidAppear(animated)
+
+		ClientSessionManager.shared.add(delegate: self)
 
 		updateNoServerMessageVisibility()
 
@@ -182,6 +235,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		super.viewWillDisappear(animated)
 
 		self.navigationController?.setToolbarHidden(true, animated: animated)
+
+		ClientSessionManager.shared.remove(delegate: self)
 
 		Theme.shared.unregister(client: self)
 	}
@@ -264,7 +319,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		showBookmarkUI()
 	}
 
-	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, removeAuthDataFromCopy: Bool = true) {
+	func showBookmarkUI(edit bookmark: OCBookmark? = nil, performContinue: Bool = false, attemptLoginOnSuccess: Bool = false, autosolveErrorOnSuccess: NSError? = nil, removeAuthDataFromCopy: Bool = true) {
 		let bookmarkViewController : BookmarkViewController = BookmarkViewController(bookmark, removeAuthDataFromCopy: removeAuthDataFromCopy)
 		let navigationController : ThemeNavigationController = ThemeNavigationController(rootViewController: bookmarkViewController)
 
@@ -283,6 +338,9 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		if attemptLoginOnSuccess {
 			bookmarkViewController.userActionCompletionHandler = { [weak self] (bookmark, success) in
 				if success, let bookmark = bookmark, let self = self {
+					if let error = autosolveErrorOnSuccess as Error? {
+						OCMessageQueue.global.resolveIssues(forError: error, forBookmarkUUID: bookmark.uuid)
+					}
 					self.connect(to: bookmark, lastVisibleItemId: nil, animated: true)
 				}
 			}
@@ -360,6 +418,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 							// Success! We can now remove the bookmark
 							self.ignoreServerListChanges = true
 
+							OCMessageQueue.global.dequeueAllMessages(forBookmarkUUID: bookmark.uuid)
+
 							OCBookmarkManager.shared.removeBookmark(bookmark)
 
 							self.tableView.performBatchUpdates({
@@ -410,7 +470,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		return OCBookmarkManager.isLocked(bookmark: bookmark, presentAlertOn: presentAlert ? self : nil)
 	}
 
-	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool) {
+	func connect(to bookmark: OCBookmark, lastVisibleItemId: String?, animated: Bool, present message: OCMessage? = nil) {
 		if isLocked(bookmark: bookmark) {
 			return
 		}
@@ -419,7 +479,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			return
 		}
 
-		let clientRootViewController = ClientRootViewController(bookmark: bookmark)
+		let clientRootViewController = ClientSessionManager.shared.startSession(for: bookmark)!
 
 		let bookmarkRow = self.tableView.cellForRow(at: indexPath)
 		let activityIndicator = UIActivityIndicatorView(style: .white)
@@ -456,8 +516,25 @@ class ServerListTableViewController: UITableViewController, Themeable {
 
 					navigationController.present(clientRootViewController, animated: animated, completion: {
 						self.resetPreviousBookmarkSelection(bookmark)
+
+						// Present message if one was provided
+						if let message = message {
+							self.presentInClient(message: message)
+						}
 					})
 				}
+			}
+		}
+	}
+
+	var clientViewController : ClientRootViewController? {
+		return self.presentedViewController as? ClientRootViewController
+	}
+
+	func presentInClient(message: OCMessage) {
+		if let cardMessagePresenter = clientViewController?.cardMessagePresenter {
+			OnMainThread { // Wait for next runloop cycle
+				OCMessageQueue.global.present(message, with: cardMessagePresenter)
 			}
 		}
 	}
@@ -569,9 +646,8 @@ class ServerListTableViewController: UITableViewController, Themeable {
 		}
 
 		if let bookmark : OCBookmark = OCBookmarkManager.shared.bookmark(at: UInt(indexPath.row)) {
-			bookmarkCell.titleLabel.text = bookmark.shortName
-			bookmarkCell.detailLabel.text = (bookmark.originURL != nil) ? bookmark.originURL!.absoluteString : bookmark.url?.absoluteString
-			bookmarkCell.accessibilityIdentifier = "server-bookmark-cell"
+			bookmarkCell.bookmark = bookmark
+			bookmarkCell.updateMessageBadge(count: messageCountByBookmarkUUID[bookmark.uuid] ?? 0)
 		}
 
 		return bookmarkCell
@@ -690,9 +766,45 @@ extension ServerListTableViewController : ClientRootViewControllerAuthentication
 	}
 }
 
-let ownCloudOpenAccountActivityType       = "com.owncloud.ios-app.openAccount"
-let ownCloudOpenAccountPath               = "openAccount"
-let ownCloudOpenAccountAccountUuidKey         = "accountUuid"
+extension ServerListTableViewController : ClientSessionManagerDelegate {
+	func canPresent(bookmark: OCBookmark, message: OCMessage?) -> OCMessagePresentationPriority {
+		if let themeWindow = self.viewIfLoaded?.window as? ThemeWindow, themeWindow.themeWindowInForeground {
+			if !isLocked(bookmark: bookmark) {
+				if presentedViewController == nil {
+					return .high
+				} else {
+					if let clientViewController = self.clientViewController {
+						if clientViewController.bookmark.uuid == bookmark.uuid {
+							return .high
+						} else {
+							return .default
+						}
+					}
+				}
+			}
+
+			return .low
+		}
+
+		return .wontPresent
+	}
+
+	func present(bookmark: OCBookmark, message: OCMessage?) {
+		OnMainThread {
+			if self.presentedViewController == nil {
+				self.connect(to: bookmark, lastVisibleItemId: nil, animated: true, present: message)
+			} else {
+				if self.clientViewController != nil, let message = message {
+					self.presentInClient(message: message)
+				}
+			}
+		}
+	}
+}
+
+let ownCloudOpenAccountActivityType     = "com.owncloud.ios-app.openAccount"
+let ownCloudOpenAccountPath           	= "openAccount"
+let ownCloudOpenAccountAccountUuidKey	= "accountUuid"
 
 extension OCBookmark {
 	var openAccountUserActivity: NSUserActivity {
@@ -719,5 +831,8 @@ extension ServerListTableViewController: UITableViewDragDelegate {
 
 		return []
 	}
+}
 
+extension NSNotification.Name {
+	static let BookmarkMessageCountChanged = NSNotification.Name("boomark.message-count.changed")
 }

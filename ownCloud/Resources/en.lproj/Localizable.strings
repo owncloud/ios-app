@@ -125,6 +125,14 @@
 "Continue offline" = "Continue offline";
 "Media upload in the previous session was incomplete since the application was terminated" = "Media upload in the previous session was incomplete since the application was terminated";
 
+"All done" = "All done";
+"No pending messages or ongoing actions." = "No pending messages or ongoing actions.";
+
+"Show all" = "Show all";
+"+ %ld more" = "+ %ld more";
+"Apply choice to all similar issues" = "Apply choice to all similar issues";
+"Apply to all" = "Apply to all";
+
 /* Server List*/
 "Cancel" = "Cancel";
 "OK" = "OK";
@@ -276,6 +284,8 @@
 
 "Forbidden Characters" = "Forbidden Characters";
 "File name cannot contain / or \\" = "File name cannot contain / or \\";
+"Item with same name already exists" = "Item with same name already exists";
+"An item with the same name already exists in this location." = "An item with the same name already exists in this location.";
 "New Folder" = "New Folder";
 "Folder name" = "Folder name";
 "Rename" ="Rename";
