@@ -47,7 +47,7 @@ extension CLLocation {
 extension CLPlacemark {
 	var formattedAddress : String? {
 		if let address = self.postalAddress {
-			return CNPostalAddressFormatter().string(from: address)
+			return CNPostalAddressFormatter().string(from: address).split(separator: "\n").joined(separator: ", ")
 		}
 		return nil
 	}
@@ -394,7 +394,7 @@ class ImageMetadataParser {
 		transformers[kCGImagePropertyIPTCKeywords] = {(value) in
 			var keywords = ""
 			if let keywordArray = value as? [String] {
-				keywords = keywordArray.joined(separator: ",")
+				keywords = keywordArray.joined(separator: ", ")
 			}
 			return MetadataItem(name: "Keywords".localized, value: "\(keywords)")
 		}
@@ -416,7 +416,7 @@ class ImageMetadataParser {
 				}
 
 			}
-			return MetadataItem(name: "Contact info".localized, value: "\(contactDetails.joined(separator: ","))")
+			return MetadataItem(name: "Contact info".localized, value: "\(contactDetails.joined(separator: ", "))")
 		}
 		transformers[kCGImagePropertyIPTCRightsUsageTerms] = {(value) in return MetadataItem(name: "Usage terms".localized, value: "\(value)") }
 		transformers[kCGImagePropertyIPTCScene] = {(value) in return MetadataItem(name: "Scene".localized, value: "\(value)") }
