@@ -114,7 +114,6 @@
 "Not now" = "Not now";
 "Upload file" = "Upload file";
 "Upload files" = "Upload files";
-"Ignore" = "Ignore";
 "Authorization failed" = "Authorization failed";
 "The server declined access with the credentials stored for this connection." = "The server declined access with the credentials stored for this connection.";
 "No matches" = "No matches";
@@ -243,7 +242,7 @@
 "File name cannot contain / or \\" = "File name cannot contain / or \\";
 "New Folder" = "New Folder";
 "Folder name" = "Folder name";
-"Rename" =" Rename";
+"Rename" = "Rename";
 "Create folder" =" Create folder";
 "Duplicate" = "Duplicate";
 "Move" = "Move";

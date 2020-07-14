@@ -39,6 +39,8 @@
 	<true/>
 	<key>OCKeychainAccessGroupIdentifier</key>
 	<string>group.com.owncloud.ios-app</string>
+	<key>OCAppComponentIdentifier</key>
+	<string>fileProviderExtension</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

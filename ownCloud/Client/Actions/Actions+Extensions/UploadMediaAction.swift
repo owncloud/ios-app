@@ -1,5 +1,5 @@
 //
-//  UploadPhotosAction.swift
+//  UploadMediaAction.swift
 //  ownCloud
 //
 //  Created by Felix Schwarz on 09.04.19.
@@ -19,7 +19,6 @@
 import UIKit
 import ownCloudSDK
 import Photos
-import MobileCoreServices
 
 class UploadMediaAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadphotos") }

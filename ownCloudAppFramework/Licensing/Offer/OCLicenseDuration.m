@@ -121,6 +121,68 @@
 	return (nil);
 }
 
+- (NSString *)localizedDescriptionSingular
+{
+	NSString *format = nil;
+
+	switch (_unit)
+	{
+		case OCLicenseDurationUnitDay:
+			if (_length == 1)
+			{
+				format = OCLocalized(@"day");
+			}
+			else
+			{
+				format = OCLocalized(@"%lu day");
+			}
+		break;
+
+		case OCLicenseDurationUnitWeek:
+			if (_length == 1)
+			{
+				format = OCLocalized(@"week");
+			}
+			else
+			{
+				format = OCLocalized(@"%lu week");
+			}
+		break;
+
+		case OCLicenseDurationUnitMonth:
+			if (_length == 1)
+			{
+				format = OCLocalized(@"month");
+			}
+			else
+			{
+				format = OCLocalized(@"%lu month");
+			}
+		break;
+
+		case OCLicenseDurationUnitYear:
+			if (_length == 1)
+			{
+				format = OCLocalized(@"year");
+			}
+			else
+			{
+				format = OCLocalized(@"%lu year");
+			}
+		break;
+
+		case OCLicenseDurationUnitNone:
+		break;
+	}
+
+	if (format != nil)
+	{
+		return ([NSString stringWithFormat:format, _length]);
+	}
+
+	return (nil);
+}
+
 - (NSDate *)dateWithDurationAddedTo:(NSDate *)date
 {
 	// TODO: Create more sophisticated implementation that computes the _precise_ date, so that 1 Jan + 1 month = 1 Feb, 10 Feb 2019 + 1 year = 10 Feb 2020

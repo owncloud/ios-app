@@ -134,7 +134,12 @@ class ReleaseNotesHostViewController: UIViewController {
 	}
 
 	@objc func rateApp() {
-		SKStoreReviewController.requestReview()
+		guard let appStoreLink =  MoreSettingsSection.classSetting(forOCClassSettingsKey: .appStoreLink) as? String else { return }
+
+		guard let reviewURL = URL(string: "\(appStoreLink)&action=write-review") else { return }
+
+		guard UIApplication.shared.canOpenURL(reviewURL) else { return }
+		UIApplication.shared.open(reviewURL)
 	}
 }
 

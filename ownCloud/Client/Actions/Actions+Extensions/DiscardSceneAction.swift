@@ -18,7 +18,6 @@
 
 import UIKit
 import ownCloudSDK
-import MobileCoreServices
 
 @available(iOS 13.0, *)
 class DiscardSceneAction: Action {
@@ -57,6 +56,6 @@ class DiscardSceneAction: Action {
 	}
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		return UIImage(systemName: "xmark.square")?.tinted(with: Theme.shared.activeCollection.tintColor)
+		return UIImage(systemName: "xmark.square")?.withRenderingMode(.alwaysTemplate)
 	}
 }

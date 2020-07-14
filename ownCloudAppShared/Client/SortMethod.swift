@@ -18,6 +18,7 @@
 
 import Foundation
 import ownCloudSDK
+import ownCloudApp
 
 public typealias OCSort = Comparator
 
@@ -29,12 +30,12 @@ public enum SortDirection: Int {
 public enum SortMethod: Int {
 
 	case alphabetically = 0
-	case type = 1
+	case kind = 1
 	case size = 2
 	case date = 3
 	case shared = 4
 
-	public static var all: [SortMethod] = [alphabetically, type, size, date, shared]
+	public static var all: [SortMethod] = [alphabetically, kind, size, date, shared]
 
 	public func localizedName() -> String {
 		var name = ""
@@ -42,8 +43,8 @@ public enum SortMethod: Int {
 		switch self {
 		case .alphabetically:
 			name = "name".localized
-		case .type:
-			name = "type".localized
+		case .kind:
+			name = "kind".localized
 		case .size:
 			name = "size".localized
 		case .date:
@@ -70,6 +71,23 @@ public enum SortMethod: Int {
 			return leftName.caseInsensitiveCompare(rightName)
 		}
 
+		let itemTypeComparator : OCSort = { (left, right) in
+			let leftItem = left as? OCItem
+			let rightItem = right as? OCItem
+
+			if let leftItemType = leftItem?.type, let rightItemType = rightItem?.type {
+				if leftItemType != rightItemType {
+					if leftItemType == .collection, rightItemType == .file {
+						return .orderedAscending
+					} else {
+						return .orderedDescending
+					}
+				}
+			}
+
+			return .orderedSame
+		}
+
 		switch self {
 		case .size:
 			comparator = { (left, right) in
@@ -86,35 +104,31 @@ public enum SortMethod: Int {
 			}
 		case .alphabetically:
 			comparator = alphabeticComparator
-			combinedComparator = alphabeticComparator
-		case .type:
+		case .kind:
 			comparator = { (left, right) in
 				let leftItem = left as? OCItem
 				let rightItem = right as? OCItem
 
-				var leftMimeType = leftItem?.mimeType
-				var rightMimeType = rightItem?.mimeType
+				let leftKind = leftItem?.fileExtension ?? leftItem?.mimeType ?? "_various"
+				let rightKind = rightItem?.fileExtension ?? rightItem?.mimeType ?? "_various"
 
-				if leftItem?.type == OCItemType.collection {
-					leftMimeType = "folder"
+				var result : ComparisonResult = leftKind.compare(rightKind)
+
+				let typeResult = itemTypeComparator(left, right)
+
+				if typeResult != .orderedSame {
+					result = typeResult
 				}
 
-				if rightItem?.type == OCItemType.collection {
-					rightMimeType = "folder"
-				}
-
-				if leftMimeType == nil {
-					leftMimeType = "various"
-				}
-
-				if rightMimeType == nil {
-					rightMimeType = "various"
-				}
 				if direction == .descendant {
-					return rightMimeType!.compare(leftMimeType!)
+					if result == .orderedDescending {
+						result = .orderedAscending
+					} else if result == .orderedAscending {
+						result = .orderedDescending
+					}
 				}
 
-				return leftMimeType!.compare(rightMimeType!)
+				return result
 			}
 		case .shared:
 			comparator = { (left, right) in
@@ -158,10 +172,18 @@ public enum SortMethod: Int {
 
 		if combinedComparator == nil {
 			combinedComparator = { (left, right) in
-				var result : ComparisonResult = comparator(left, right)
+				var result : ComparisonResult = .orderedSame
+
+				if DisplaySettings.shared.sortFoldersFirst {
+					result = itemTypeComparator(left, right)
+				}
 
 				if result == .orderedSame {
-					result = alphabeticComparator(left, right)
+					result = comparator(left, right)
+
+					if result == .orderedSame, self != .alphabetically {
+						result = alphabeticComparator(left, right)
+					}
 				}
 
 				return result

@@ -54,9 +54,23 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		Theme.shared.register(client: self, applyImmediately: true)
 
 		if let core = core, let path = item.path {
-			itemTracker = core.trackItem(atPath: path, trackingHandler: { [weak self](error, item, _) in
+			itemTracker = core.trackItem(atPath: path, trackingHandler: { [weak self, weak core](error, item, _) in
 				if let item = item, let self = self {
+					var refreshPreview = false
+
+					if let core = core {
+						if item.contentDifferent(than: self.item, in: core) {
+							refreshPreview = true
+						}
+					}
+
 					self.item = item
+
+					if refreshPreview {
+						OnMainThread {
+							self.reloadData()
+						}
+					}
 				} else if item == nil {
 
 					OnMainThread {
@@ -77,6 +91,15 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 					}
 				}
 			})
+		}
+	}
+
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		// Activate editing mode by faking a tap on pencil icon. Unfortunately that's the only way to do it apparently
+		OnMainThread(after:0.5) {
+			guard let markupButton = self.navigationItem.rightBarButtonItems?.filter({$0.customView != nil}).first?.customView as? UIButton else { return }
+			markupButton.sendActions(for: .touchUpInside)
 		}
 	}
 
@@ -141,19 +164,19 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		switch savingMode {
 		case .createCopy:
 			if let core = core, let parentItem = item.parentItem(from: core) {
-				self.core?.importFileNamed(item.name, at: parentItem, from: url, isSecurityScoped: true, options: [ .automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue, OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+				self.core?.importFileNamed(item.name, at: parentItem, from: url, isSecurityScoped: true, options: [ .automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue, OCCoreOption.importByCopying : true], placeholderCompletionHandler: { (error, _) in
 					if let error = error {
 						self.present(error: error, title: "Saving edited file failed".localized)
 					}
-				})
+				}, resultHandler: nil)
 			}
 		case .updateContents:
 			if let core = core, let parentItem = item.parentItem(from: core) {
-				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _ core, _ item, _) in
+				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: { (error, _) in
 					if let error = error {
 						self.present(error: error, title: "Saving edited file failed".localized)
 					}
-				})
+				}, resultHandler: nil)
 			}
 		default:
 			break
@@ -183,9 +206,9 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		Theme.shared.unregister(client: self)
 	}
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+	override func viewDidLoad() {
+		super.viewDidLoad()
+	}
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.navigationController?.navigationBar.backgroundColor = collection.navigationBarColors.backgroundColor
@@ -195,22 +218,22 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 @available(iOS 13.0, *)
 extension EditDocumentViewController: QLPreviewControllerDataSource, QLPreviewControllerDelegate {
-    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+	func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
 		return 1
-    }
+	}
 
-    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+	func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
 		return source as QLPreviewItem
-    }
+	}
 
 	func previewController(_ controller: QLPreviewController, editingModeFor previewItem: QLPreviewItem) -> QLPreviewItemEditingMode {
 		return .createCopy
-    }
+	}
 
-    func previewController(_ controller: QLPreviewController, didUpdateContentsOf previewItem: QLPreviewItem) {
-    }
+	func previewController(_ controller: QLPreviewController, didUpdateContentsOf previewItem: QLPreviewItem) {
+	}
 
-    func previewController(_ controller: QLPreviewController, didSaveEditedCopyOf previewItem: QLPreviewItem, at modifiedContentsURL: URL) {
+	func previewController(_ controller: QLPreviewController, didSaveEditedCopyOf previewItem: QLPreviewItem, at modifiedContentsURL: URL) {
 		self.modifiedContentsURL = modifiedContentsURL
 		if self.dismissedViewWithoutSaving, let savingMode = self.savingMode {
 			self.saveModifiedContents(at: modifiedContentsURL, savingMode: savingMode)

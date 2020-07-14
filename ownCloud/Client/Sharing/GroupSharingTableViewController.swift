@@ -82,7 +82,7 @@ class GroupSharingTableViewController: SharingTableViewController, UISearchResul
 			searchController = UISearchController(searchResultsController: nil)
 			searchController?.searchResultsUpdater = self
 			searchController?.hidesNavigationBarDuringPresentation = true
-			searchController?.dimsBackgroundDuringPresentation = false
+			searchController?.obscuresBackgroundDuringPresentation = false
 			searchController?.searchBar.delegate = self
 			navigationItem.hidesSearchBarWhenScrolling = false
 			navigationItem.searchController = searchController
