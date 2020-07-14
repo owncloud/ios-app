@@ -44,8 +44,6 @@
 {
 	NSDictionary *bundleInfoDict = [[NSBundle bundleForClass:[FileProviderExtension class]] infoDictionary];
 
-	_fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
-
 	OCCoreManager.sharedCoreManager.memoryConfiguration = OCCoreMemoryConfigurationMinimum;
 
 	OCAppIdentity.sharedAppIdentity.appIdentifierPrefix = bundleInfoDict[@"OCAppIdentifierPrefix"];
@@ -53,6 +51,7 @@
 	OCAppIdentity.sharedAppIdentity.appGroupIdentifier = bundleInfoDict[@"OCAppGroupIdentifier"];
 
 	if (self = [super init]) {
+		_fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
 		_fileManager = [NSFileManager new];
 	}
 
@@ -585,11 +584,10 @@
 		if (isImportingFromVault)
 		{
 			NSFileProviderItemIdentifier sourceItemIdentifier;
-			NSFileProviderItem sourceItem;
 
 			// Determine source item
 			if (((sourceItemIdentifier = [self persistentIdentifierForItemAtURL:readURL]) != nil) &&
-			    ((sourceItem = [self itemForIdentifier:sourceItemIdentifier error:nil]) != nil))
+			    ([self itemForIdentifier:sourceItemIdentifier error:nil] != nil))
 			{
 				importByCopying = YES;
 			}
@@ -800,12 +798,18 @@
 
 			if ( !unlocked || (unlocked && [[lockDate dateByAddingTimeInterval:lockDelay] compare:[NSDate date]] == NSOrderedAscending))
 			{
-				*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
+				if (error != NULL)
+				{
+					*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
+				}
 
 				return (nil);
 			}
 		} else if ((unlockData != nil) && ![[NSKeyedUnarchiver unarchivedObjectOfClass:NSNumber.class fromData:unlockData error:NULL] boolValue]) {
-			*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
+			if (error != NULL)
+			{
+				*error = [NSError errorWithDomain:NSFileProviderErrorDomain code:NSFileProviderErrorNotAuthenticated userInfo:nil];
+			}
 
 			return (nil);
 		}

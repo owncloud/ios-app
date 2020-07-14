@@ -118,7 +118,7 @@
 		return ([NSString stringWithFormat:format, _length]);
 	}
 
-	return (nil);
+	return (@"unknown");
 }
 
 - (NSString *)localizedDescriptionSingular
@@ -180,7 +180,7 @@
 		return ([NSString stringWithFormat:format, _length]);
 	}
 
-	return (nil);
+	return (@"unknown");
 }
 
 - (NSDate *)dateWithDurationAddedTo:(NSDate *)date
