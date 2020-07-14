@@ -109,6 +109,7 @@ class ServerListTableViewController: UITableViewController, Themeable {
 			migrationViewController.migrationFinishedHandler = {
 				Migration.shared.wipeLegacyData()
 			}
+			navigationController.modalPresentationStyle = .fullScreen
 
 			self.present(navigationController, animated: false)
 		}
