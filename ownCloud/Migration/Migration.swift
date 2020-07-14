@@ -170,7 +170,7 @@ class Migration {
 
 					self.migrationQueue.async {
 						// Check if the passcode is set
-						let passcodeQuery = OCSQLiteQuery(selectingColumns: ["passcode"], fromTable: "passcode", where: nil, orderBy: "id DESC", limit: "1") { (_, _, _, resultSet) in
+						let passcodeQuery = OCSQLiteQuery(selectingColumns: ["passcode", "is_touch_id"], fromTable: "passcode", where: nil, orderBy: "id DESC", limit: "1") { (_, _, _, resultSet) in
 							if let dict = try? resultSet?.nextRowDictionary(), let passcode = dict?["passcode"] as? String {
 
 								let activityName = "App Passcode".localized
@@ -181,6 +181,11 @@ class Migration {
 								if passcode.count == 4 && passcode.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil {
 									AppLockManager.shared.passcode = passcode
 									AppLockManager.shared.lockEnabled = true
+
+									if let biometricalIdEnabled = dict?["is_touch_id"] as? Bool {
+										AppLockManager.shared.biometricalSecurityEnabled = biometricalIdEnabled
+									}
+
 									self.postAccountMigrationNotification(activity: activityName, state: .finished, type: .passcode)
 								} else {
 									self.postAccountMigrationNotification(activity: activityName, state: .failed, type: .passcode)
