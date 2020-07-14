@@ -3,40 +3,19 @@
 <plist version="1.0">
 <dict>
 	<key>organizationName</key>
-	<string>ownCloud.online</string>
+	<string></string>
 	<key>canAddAccount</key>
 	<true/>
 	<key>feedbackMail</key>
-	<string>support@owncloud.online</string>
+	<string></string>
 	<key>Profiles</key>
-	<array>
-		<dict>
-			<key>identifier</key>
-			<string>ownCloud.online</string>
-			<key>name</key>
-			<string>ownCloud.online</string>
-			<key>welcome</key>
-			<string>Welcome to ownCloud.online</string>
-			<key>promptForPasswordAuth</key>
-			<string>Enter your username and password:</string>
-			<key>promptForTokenAuth</key>
-			<string>Please log in to authorize the app.</string>
-			<key>bookmarkName</key>
-			<string>ownCloud.online</string>
-			<key>url</key>
-			<string>https://demo.owncloud.com</string>
-			<key>allowedAuthenticationMethods</key>
-			<array>
-				<string>com.owncloud.basicauth</string>
-			</array>
-		</dict>
-	</array>
+	<array/>
 	<key>URLs</key>
 	<dict>
 		<key>Help</key>
-		<string>https://owncloud.online/faq/</string>
+		<string></string>
 		<key>Privacy</key>
-		<string>https://owncloud.online/privacy-policy/</string>
+		<string></string>
 	</dict>
 	<key>Generic</key>
 	<dict>

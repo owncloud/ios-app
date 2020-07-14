@@ -67,7 +67,7 @@ class VendorServices : NSObject {
 	}
 
 	var helpURL: URL? {
-		if let themingValues = self.brandingProperties {
+		if self.isBranded, let themingValues = self.brandingProperties {
 			guard let urls = themingValues["URLs"] as? NSDictionary, let help = urls["Help"] as? String, let url = URL(string: help) else { return nil }
 			return url
 		}
@@ -76,7 +76,7 @@ class VendorServices : NSObject {
 	}
 
 	var privacyURL: URL? {
-		if let themingValues = self.brandingProperties {
+		if self.isBranded, let themingValues = self.brandingProperties {
 			guard let urls = themingValues["URLs"] as? NSDictionary, let privacy = urls["Privacy"] as? String, let url = URL(string: privacy) else { return nil }
 			return url
 		}
@@ -85,18 +85,26 @@ class VendorServices : NSObject {
 	}
 
 	var appName: String {
-		if let bundleValues = self.brandingProperties, let organizationName = bundleValues["organizationName"] as? String {
+		if self.isBranded, let bundleValues = self.brandingProperties, let organizationName = bundleValues["organizationName"] as? String {
 			return organizationName
 		}
 
 		return OCAppIdentity.shared.appName ?? "App"
 	}
 
-	var feedbackMail: String? {
-		if let bundleValues = self.brandingProperties, let feedbackMail = bundleValues["feedbackMail"] as? String {
-			return feedbackMail
+	var feedbackMailEnabled: Bool {
+		if self.isBranded, let bundleValues = self.brandingProperties {
+			guard bundleValues["feedbackMail"] != nil else { return false }
+			return true
 		}
-		if let feedbackMail = MoreSettingsSection.classSetting(forOCClassSettingsKey: .feedbackEmail) as? String {
+
+		return true
+	}
+
+	var feedbackMail: String? {
+		if self.isBranded, let bundleValues = self.brandingProperties, let feedbackMail = bundleValues["feedbackMail"] as? String {
+			return feedbackMail
+		} else if let feedbackMail = MoreSettingsSection.classSetting(forOCClassSettingsKey: .feedbackEmail) as? String {
 			return feedbackMail
 		}
 
@@ -136,8 +144,8 @@ class VendorServices : NSObject {
 	}
 
 	var canAddAccount: Bool {
-		if let themingValues = self.brandingProperties, let canAddAccount = themingValues["canAddAccount"] as? Bool {
-			if canAddAccount, VendorServices.shared.hasBrandedProfiles {
+		if self.isBranded, let themingValues = self.brandingProperties, let canAddAccount = themingValues["canAddAccount"] as? Bool {
+			if canAddAccount, self.hasBrandedProfiles {
 				return true
 			}
 
@@ -189,7 +197,7 @@ class VendorServices : NSObject {
 		guard let feedbackEmail = self.feedbackMail else {
 			return
 		}
-		self.sendMail(to: feedbackEmail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(appName)\(appSuffix)", message: nil, from: viewController)
+		self.sendMail(to: feedbackEmail, subject: "\(self.appVersion) (\(self.appBuildNumber)) \(buildType) \(self.appName)\(appSuffix)", message: nil, from: viewController)
 	}
 
 	func sendMail(to: String?, subject: String?, message: String?, from viewController: UIViewController) {

@@ -189,7 +189,7 @@ extension ThemeStyle {
 	}
 
 	static func registerDefaultStyles() {
-		if let brandingURL = VendorServices.shared.brandingURL {
+		if VendorServices.shared.isBranded, let brandingURL = VendorServices.shared.brandingURL {
 			let themeProvider = ThemeProvider(plist: brandingURL)
 
 			var isDefault = true
