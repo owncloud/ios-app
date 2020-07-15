@@ -82,7 +82,7 @@ class ClientDirectoryPickerViewController: ClientQueryViewController {
 			return .orderedSame
 		}
 
-		super.init(core: inCore, query: targetDirectoryQuery)
+		super.init(core: inCore, query: targetDirectoryQuery, rootViewController: nil)
 
 		self.directoryPath = path
 

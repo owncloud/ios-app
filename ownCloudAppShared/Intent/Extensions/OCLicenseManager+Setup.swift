@@ -61,18 +61,25 @@ public extension OCLicenseManager {
 		register(OCLicenseProduct(identifier: .bundlePro, name: "Pro Features".localized, description: "Unlock all Pro Features.".localized, contents: [.documentScanner, .shortcuts, .documentMarkup]))
 
 		// Set up App Store License Provider
-		let appStoreLicenseProvider = OCLicenseAppStoreProvider(items: [
-			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentscanner", productIdentifier: .singleDocumentScanner),
-			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.shortcuts", productIdentifier: .singleShortcuts),
-			OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentmarkup", productIdentifier: .singleDocumentMarkup),
-			OCLicenseAppStoreItem.subscription(withAppStoreIdentifier: "bundle.pro", productIdentifier: .bundlePro, trialDuration: OCLicenseDuration(unit: .day, length: 14))
-		])
+		if !OCLicenseEMMProvider.isEMMVersion { // only add AppStore IAP provider (and IAPs) if this is not the EMM version (which is supposed to already include all of them)
+			let appStoreLicenseProvider = OCLicenseAppStoreProvider(items: [
+				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentscanner", productIdentifier: .singleDocumentScanner),
+				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.shortcuts", productIdentifier: .singleShortcuts),
+				OCLicenseAppStoreItem.nonConsumableIAP(withAppStoreIdentifier: "single.documentmarkup", productIdentifier: .singleDocumentMarkup),
+				OCLicenseAppStoreItem.subscription(withAppStoreIdentifier: "bundle.pro", productIdentifier: .bundlePro, trialDuration: OCLicenseDuration(unit: .day, length: 14))
+			])
 
-		add(appStoreLicenseProvider)
+			add(appStoreLicenseProvider)
+		}
 
 		// Set up Enterprise Provider
 		let enterpriseProvider = OCLicenseEnterpriseProvider(unlockedProductIdentifiers: [.bundlePro])
 
 		add(enterpriseProvider)
+
+		// Set up EMM Provider
+		let emmProvider = OCLicenseEMMProvider(unlockedProductIdentifiers: [.bundlePro])
+
+		add(emmProvider)
 	}
 }

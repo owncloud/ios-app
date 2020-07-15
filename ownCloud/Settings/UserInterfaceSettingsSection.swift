@@ -34,7 +34,9 @@ class UserInterfaceSettingsSection: SettingsSection {
 			self?.pushThemeStyleSelector()
 			}, title: "Theme".localized, value: ThemeStyle.displayName, accessoryType: .disclosureIndicator, identifier: "theme")
 
-		self.add(row: themeRow!)
+		if !VendorServices.shared.isBranded {
+			self.add(row: themeRow!)
+		}
 
 		loggingRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 			self?.pushLogSettings()

@@ -30,7 +30,7 @@ class LicenseOfferButton: ThemeButton {
 		self.buttonFont = UIFont.systemFont(ofSize: UIFont.labelFontSize)
 		self.buttonVerticalPadding = -5
 		self.buttonHorizontalPadding = 23
-		self.buttonCornerRadius = -1
+		self.buttonCornerRadius = .round
 
 		originalTitle = title
 		self.setTitle(title, for: .normal)
@@ -47,7 +47,7 @@ class LicenseOfferButton: ThemeButton {
 		self.buttonFont = UIFont.systemFont(ofSize: UIFont.labelFontSize)
 
 		self.buttonVerticalPadding = 15
-		self.buttonCornerRadius = 10
+		self.buttonCornerRadius = .medium
 
 		self.setTitle(title, for: .normal)
 

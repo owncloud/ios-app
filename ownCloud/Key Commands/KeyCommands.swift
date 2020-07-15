@@ -19,7 +19,6 @@
 import UIKit
 import ownCloudSDK
 import ownCloudAppShared
-import MobileCoreServices
 
 extension ServerListTableViewController {
 	override var keyCommands: [UIKeyCommand]? {
@@ -1068,4 +1067,58 @@ extension DisplayHostViewController {
 			setViewControllers([previousViewController], direction: .reverse, animated: false, completion: nil)
 		}
     }
+}
+
+extension AlertViewController {
+	override var keyCommands: [UIKeyCommand]? {
+		var commands : [UIKeyCommand] = []
+		var index : Int = 1
+		var defaultCommand : UIKeyCommand?
+
+		if options.count == 1, let option = options.first {
+			defaultCommand = UIKeyCommand(input: "\r", modifierFlags: [], action: #selector(chooseDefaultOption), discoverabilityTitle: option.label)
+		} else {
+			for option in options {
+				if option.type == .default {
+					defaultCommand = UIKeyCommand(input: "\r", modifierFlags: [], action: #selector(chooseDefaultOption), discoverabilityTitle: option.label)
+				} else {
+					let command = UIKeyCommand(input: "\(index)", modifierFlags: .command, action: #selector(chooseOption(_:)), discoverabilityTitle: option.label)
+					commands.append(command)
+				}
+
+				index += 1
+			}
+		}
+
+		if let defaultCommand = defaultCommand {
+			commands.append(defaultCommand)
+		}
+
+		return commands
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
+	}
+
+	@objc func chooseDefaultOption() {
+		for option in options {
+			if option.type == .default {
+				alertView?.selectOption(option: option)
+				return
+			}
+		}
+
+		if let firstOption = options.first {
+			alertView?.selectOption(option: firstOption)
+		}
+	}
+
+	@objc func chooseOption(_ sender: Any?) {
+		if let command = sender as? UIKeyCommand, let input = command.input, let intInput = Int(input) {
+			let offset = intInput - 1
+
+			alertView?.selectOption(option: self.options[offset])
+		}
+	}
 }

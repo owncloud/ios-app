@@ -107,9 +107,9 @@
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
       <RemoteRunnable
-         runnableDebuggingMode = "1"
-         BundleIdentifier = "com.owncloud.ios-app"
-         RemotePath = "/Users/felix/Library/Developer/CoreSimulator/Devices/348A2D78-5A15-4E50-8EAF-1170115BC798/data/Containers/Bundle/Application/AD282E5C-E658-4707-8C08-A292831061C2/ownCloud.app">
+         runnableDebuggingMode = "0"
+         BundleIdentifier = "com.apple.DocumentsApp"
+         RemotePath = "/var/containers/Bundle/Application/49F649CD-249E-42AC-8D2C-9ABCDFF5D294/Files.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
@@ -135,6 +135,11 @@
             key = "oc:log.log-colored"
             value = "true"
             isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:file-provider.skip-local-error-checks"
+            value = "true"
+            isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>

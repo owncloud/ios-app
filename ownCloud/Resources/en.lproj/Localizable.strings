@@ -61,6 +61,8 @@
 "Server name" = "Server name";
 "Server Password" = "Server Password";
 "Server Username" = "Server Username";
+"Show accounts" = "Show accounts";
+"Setup complete" = "Setup complete";
 
 /* Client */
 "Browse" = "Browse";
@@ -83,7 +85,7 @@
 "Sort by" = "Sort by";
 
 "name" = "name";
-"type" = "type";
+"kind" = "kind";
 "size" = "size";
 "date" = "date";
 "Search this folder" = "Search this folder";
@@ -92,6 +94,12 @@
 
 "%@ of %@ used" = "%@ of %@ used";
 "Total: %@" = "Total: %@";
+
+/* Static Login Setup */
+"Server error" = "Server error";
+"The server doesn't support any allowed authentication method." = "The server doesn't support any allowed authentication method.";
+"The server doesn't support any known and allowed authentication method found." = "The server doesn't support any known and allowed authentication method found.";
+"Retry detection" = "Retry detection";
 
 /* Client Messages */
 "Empty folder" = "Empty folder";
@@ -122,9 +130,16 @@
 "The connection's access token has expired or become invalid. Sign in again to re-gain access." = "The connection's access token has expired or become invalid. Sign in again to re-gain access.";
 "No authentication data has been found for this connection." = "No authentication data has been found for this connection.";
 "Sign in" = "Sign in";
-"Ignore" = "Ignore";
 "Continue offline" = "Continue offline";
 "Media upload in the previous session was incomplete since the application was terminated" = "Media upload in the previous session was incomplete since the application was terminated";
+
+"All done" = "All done";
+"No pending messages or ongoing actions." = "No pending messages or ongoing actions.";
+
+"Show all" = "Show all";
+"+ %ld more" = "+ %ld more";
+"Apply choice to all similar issues" = "Apply choice to all similar issues";
+"Apply to all" = "Apply to all";
 
 /* Server List*/
 "Cancel" = "Cancel";
@@ -132,10 +147,11 @@
 
 "'%@' is currently locked" = "'%@' is currently locked";
 "An operation is currently performed that prevents connecting to '%@'. Please try again later." = "An operation is currently performed that prevents connecting to '%@'. Please try again later.";
-"Really delete '%@'?" = "Really delete '%@'?";
-"This will also delete all locally stored file copies." = "This will also delete all locally stored file copies.";
+"Do you really want to disconnect from your '%@' account?" = "Do you really want to disconnect from your '%@' account?";
+"This will remove all locally stored file copies from your device." = "This will remove all locally stored file copies from your device.";
 "Delete" = "Delete";
-"Deletion of '%@' failed" = "Deletion of '%@' failed";
+"Remove" = "Remove";
+"Removing of '%@' failed" = "Removing of '%@' failed";
 "Accounts" = "Accounts";
 
 "Help" = "Help";
@@ -174,9 +190,11 @@
 "You need to configure an email account first to be able to send emails." = "You need to configure an email account first to be able to send emails.";
 "Do you want to open the following URL?" = "Do you want to open the following URL?";
 
-"%@ %@ version %@ build %@ (app: %@, sdk: %@)" = "%@ %@ version %@ build %@ (app: %@, sdk: %@)";
+"%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)" = "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)";
 "beta" = "beta";
 "release" = "release";
+"App Version" = "App Version";
+"Version informations were copied to the clipboard" = "Version informations were copied to the clipboard";
 
 
 /* User Interface Settings */
@@ -226,7 +244,8 @@
 "Really reset log file?" = "Really reset log file?";
 "This action can't be undone." = "This action can't be undone.";
 
-/* Storage settings */
+/* Data usage settings */
+"Data usage" = "Data usage";
 "Delete unused local copies" = "Delete unused local copies";
 "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app.";
 "never" = "never";
@@ -234,9 +253,21 @@
 "Decrease Slider Value" = "Decrease Slider Value";
 "Increase Slider Value" = "Increase Slider Value";
 
+"Cellular transfers" = "Cellular transfers";
+"Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app." = "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app.";
+"Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information." = "Cellular transfers have been disabled via MDM configuration. Please contact your administrator for more information.";
+"General" = "General";
+"By feature" = "By feature";
+
+"off" = "off";
+"enabled" = "enabled";
+
 /* Display settings */
-"Display settings" = "Display settings";
+"Advanced settings" = "Advanced settings";
 "Show hidden files and folders" = "Show hidden files and folders";
+"Show folders at the top" = "Show folders at the top";
+"Prevent gestures" = "Prevent gestures";
+"Prevent dragging of files and folders and multiselection using system defined gestures" = "Prevent dragging of files and folders and multiselection using system defined gestures";
 
 /* Passcode Messages */
 
@@ -262,6 +293,8 @@
 
 "Forbidden Characters" = "Forbidden Characters";
 "File name cannot contain / or \\" = "File name cannot contain / or \\";
+"Item with same name already exists" = "Item with same name already exists";
+"An item with the same name already exists in this location." = "An item with the same name already exists in this location.";
 "New Folder" = "New Folder";
 "Folder name" = "Folder name";
 "Rename" ="Rename";
@@ -278,11 +311,17 @@
 "Close Window" = "Close Window";
 "Open in a new Window" = "Open in a new Window";
 "Open in Window" = "Open in Window";
+"Take photo or video" = "Take photo or video";
 
 "Preparing…" = "Preparing…";
 
 "No actions available" = "No actions available";
 "No actions are available for this folder, possibly because of missing permissions." = "No actions are available for this folder, possibly because of missing permissions.";
+
+"Close actions menu" = "Close actions menu";
+"Favorited" = "Favorited";
+"Favorite item" = "Favorite item";
+"Unfavorite item" = "Unfavorite item";
 
 /* Directory Picker Messages */
 "Move here" = "Move here";
@@ -294,6 +333,7 @@
 "Could not get the picture" = "Could not get the picture";
 "Downloading" = "Downloading";
 "File couldn't be opened" = "File couldn't be opened";
+"Connecting..." = "Connecting...";
 
 /* PDF Viewer */
 "Resume" = "Resume";
@@ -426,6 +466,8 @@
 "shared" = "shared";
 "Owner" = "Owner";
 "Private Link" = "Private Link";
+"Created Public Link" = "Created Public Link";
+"URL was copied to the clipboard" = "URL was copied to the clipboard";
 
 /* Quick Access view */
 "Quick Access" = "Quick Access";
@@ -444,17 +486,36 @@
 
 /* Photo upload settings */
 "Media Upload" = "Media Upload";
+"Media Export" = "Media Export";
+"Auto Upload" = "Auto Upload";
 "Convert HEIC to JPEG" = "Convert HEIC to JPEG";
 "Convert videos to MP4" = "Convert videos to MP4";
+"Preserve original media file names" = "Preserve original media file names";
 "Auto Upload Photos" = "Auto Upload Photos";
 "Auto Upload Videos" = "Auto Upload Videos";
 "Account" = "Account";
 "Accounts" = "Accounts";
 "Select account" = "Select account";
-"Upload Path" = "Upload Path";
+"Photo upload path" = "Photo upload path";
+"Video upload path" = "Video upload path";
 "Select Upload Path" = "Select Upload Path";
 "Auto upload of media was disabled since configured account / folder was not found" = "Auto upload of media was disabled since configured account / folder was not found";
 "Importing %@ media files for upload" = "Importing %@ media files for upload";
+"Photo upload" = "Photo upload";
+"Video upload" = "Video upload";
+
+/* Background media uploads */
+"Background uploads" = "Background uploads";
+"Use background refresh" = "Use background refresh";
+"Enable background uploads" = "Enable background uploads";
+"Use background location updates" = "Use background location updates";
+"Background upload notifications" = "Background upload notifications";
+"if you would like background media uploads to be more reliable, you should enable background location updates." = "if you would like background media uploads to be more reliable, you should enable background location updates.";
+"Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked." = "Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked.";
+"Otherwise background media uploads using background refresh technology would depend on how frequently you use the app." = "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app.";
+"Location permission denied" = "Location permission denied";
+"Please re-enable location acquisition in system settings" = "Please re-enable location acquisition in system settings";
+"Scheduled upload of %ld media assets" = "Scheduled upload of %ld media assets";
 
 /* Progress summarizer */
 "Creating %ld folders…" = "Creating %ld folders…";
@@ -496,6 +557,9 @@
 /* Import File */
 "Save File" = "Save File";
 "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." = "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once.";
+
+/* Single Account */
+"You are connected as\n%@ to %@" = "You are connected as\n%@ to %@";
 
 /* Release Notes */
 "Proceed" = "Proceed";
@@ -599,3 +663,13 @@
 "Migrated" = "Migrated";
 "Failed to migrate" = "Failed to migrate";
 "Failed to access legacy user data" = "Failed to access legacy user data";
+
+/* Misc. accessibility */
+"Enter multiple selection" = "Enter multiple selection";
+
+/* Universal Links */
+"Resolving link…" = "Resolving link…";
+"Link resolution failed" = "Link resolution failed";
+"Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.";
+"Couldn't resolve a private link since the item is not known to the server." = "Couldn't resolve a private link since the item is not known to the server.";
+"Link points to an account bookmark which is not configured in the app." = "Link points to an account bookmark which is not configured in the app.";

@@ -36,6 +36,21 @@ Ad-Hoc Distribution IPA generation
 fastlane ios screenshots
 ```
 Generate the screenshots for the AppStore
+### ios release_on_appstore
+```
+fastlane ios release_on_appstore
+```
+Create Release Notes, Screenshots, Build, Upload of regular iOS App and EMM App
+### ios owncloud_regular_build
+```
+fastlane ios owncloud_regular_build
+```
+
+### ios owncloud_emm_build
+```
+fastlane ios owncloud_emm_build
+```
+
 ### ios owncloud_online_build
 ```
 fastlane ios owncloud_online_build

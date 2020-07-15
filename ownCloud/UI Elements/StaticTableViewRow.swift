@@ -378,9 +378,14 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	// MARK: - Text Field
 	public var textField : UITextField?
 
-	convenience init(textFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = .default, autocorrectionType: UITextAutocorrectionType = .default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = .default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = .editingChanged) {
+	convenience init(textFieldWithAction action: StaticTableViewRowTextAction?, placeholder placeholderString: String = "", value textValue: String = "", secureTextEntry : Bool = false, keyboardType: UIKeyboardType = .default, autocorrectionType: UITextAutocorrectionType = .default, autocapitalizationType: UITextAutocapitalizationType = UITextAutocapitalizationType.none, enablesReturnKeyAutomatically: Bool = true, returnKeyType : UIReturnKeyType = .default, inputAccessoryView : UIView? = nil, identifier : String? = nil, accessibilityLabel: String? = nil, actionEvent: UIControl.Event = .editingChanged, clearButtonMode : UITextField.ViewMode = .never ) {
 		self.init()
-		type = .text
+
+		if secureTextEntry {
+			type = .secureText
+		} else {
+			type = .text
+		}
 
 		self.identifier = identifier
 
@@ -405,6 +410,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		cellTextField.inputAccessoryView = inputAccessoryView
 		cellTextField.text = textValue
 		cellTextField.accessibilityIdentifier = identifier
+		cellTextField.clearButtonMode = clearButtonMode
 
 		cellTextField.addTarget(self, action: #selector(textFieldContentChanged(_:)), for: actionEvent)
 
@@ -449,7 +455,6 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 				identifier : identifier,
 				accessibilityLabel: accessibilityLabel,
 				actionEvent: actionEvent)
-		type = .secureText
 	}
 
 	@objc func textFieldContentChanged(_ sender: UITextField) {
@@ -502,7 +507,7 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Switches
-	convenience init(switchWithAction action: StaticTableViewRowAction?, title: String, value switchValue: Bool = false, identifier: String? = nil) {
+	convenience init(switchWithAction action: StaticTableViewRowAction?, title: String, subtitle: String? = nil, value switchValue: Bool = false, identifier: String? = nil) {
 		self.init()
 		type = .switchButton
 
@@ -510,7 +515,14 @@ class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		let switchView = UISwitch()
 
-		self.cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
+		if let subtitle = subtitle {
+			self.cell = ThemeTableViewCell(style: .subtitle, reuseIdentifier: nil)
+			self.cell?.detailTextLabel?.text = subtitle
+			self.cell?.detailTextLabel?.numberOfLines = 0
+		} else {
+			self.cell = ThemeTableViewCell(style: .default, reuseIdentifier: nil)
+		}
+
 		self.cell?.selectionStyle = .none
 		self.cell?.textLabel?.text = title
 		self.cell?.accessoryView = switchView

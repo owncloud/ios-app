@@ -17,6 +17,7 @@
 */
 
 import UIKit
+import Photos
 
 class PhotoAlbumTableViewCell: ThemeTableViewCell {
 	static let identifier = "PhotoAlbumTableViewCell"
@@ -25,9 +26,40 @@ class PhotoAlbumTableViewCell: ThemeTableViewCell {
 	fileprivate let margin: CGFloat = 4.0
 	static let thumbnailHeight = (cellHeight * 0.9).rounded(.towardZero)
 
+	private static var thumbnailSize: CGSize = {
+		let scale = UIScreen.main.scale
+		let thumbnailHeight = PhotoAlbumTableViewCell.thumbnailHeight
+		let thumbnailSize = CGSize(width: thumbnailHeight * scale, height: thumbnailHeight * scale)
+		return thumbnailSize
+	}()
+
 	var thumbnailImageView = UIImageView()
 	var titleLabel = UILabel()
 	var countLabel = UILabel()
+
+	weak var imageCachingManager: PHCachingImageManager?
+	var thumbnailRequestID: PHImageRequestID?
+
+	var thumbnailAsset: PHAsset? {
+		didSet {
+			if let asset = thumbnailAsset {
+				let size = PhotoAlbumTableViewCell.thumbnailSize
+				let requestOptions = imageRequestOptions(for: asset)
+				imageCachingManager?.startCachingImages(for: [asset], targetSize: size, contentMode: .aspectFill, options: requestOptions)
+				thumbnailRequestID = imageCachingManager?.requestImage(for: asset,
+													  targetSize: size,
+													  contentMode: .aspectFill,
+													  options: requestOptions) {[weak self] (image, _) in
+														self?.thumbnailImageView.image = image
+				}
+			} else {
+				if self.thumbnailRequestID != nil {
+					imageCachingManager?.cancelImageRequest(self.thumbnailRequestID!)
+					thumbnailRequestID = nil
+				}
+			}
+		}
+	}
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -87,5 +119,26 @@ class PhotoAlbumTableViewCell: ThemeTableViewCell {
 		self.titleLabel.text = nil
 		self.countLabel.text = nil
 		self.thumbnailImageView.image = nil
+		self.thumbnailAsset = nil
+	}
+
+	private func cropRect(for asset:PHAsset) -> CGRect {
+		let cropSideLength : CGFloat = min(CGFloat(asset.pixelWidth), CGFloat(asset.pixelHeight))
+		let square = CGRect(x: 0, y: 0, width: cropSideLength, height: cropSideLength)
+		let transform = CGAffineTransform(scaleX: 1.0 / CGFloat(asset.pixelWidth), y: 1.0 / CGFloat(asset.pixelHeight))
+		let cropRect = square.applying(transform)
+
+		return cropRect
+	}
+
+	private func imageRequestOptions(for thumbnailAsset:PHAsset) -> PHImageRequestOptions {
+		let options = PHImageRequestOptions()
+		options.deliveryMode = PHImageRequestOptionsDeliveryMode.fastFormat
+		options.isSynchronous = false
+		options.isNetworkAccessAllowed = true
+		options.resizeMode = .exact
+		options.normalizedCropRect = cropRect(for: thumbnailAsset)
+
+		return options
 	}
 }

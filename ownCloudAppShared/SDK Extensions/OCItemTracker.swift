@@ -30,8 +30,9 @@ public class OCItemTracker: NSObject {
 				self.itemTracking = core.trackItem(atPath: path, trackingHandler: { (error, item, isInitial) in
 					if isInitial {
 						self.itemTracking = nil
+						completionHandler(error, core, item)
+						OCCoreManager.shared.returnCore(for: bookmark, completionHandler: nil)
 					}
-					completionHandler(error, core, item)
 				})
 			} else {
 				completionHandler(error, nil, nil)

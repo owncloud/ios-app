@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-typealias StringValidatorResult = (Bool, String?)
+typealias StringValidatorResult = (Bool, String?, String?)
 typealias StringValidatorHandler = (String) -> StringValidatorResult
 
 class NamingViewController: UIViewController, Themeable {
@@ -287,7 +287,7 @@ class NamingViewController: UIViewController, Themeable {
 			}
 		} else {
 			if let stringValidator = self.stringValidator {
-				let (validationPassed, validationErrorMessage) = stringValidator(nameTextField.text!)
+				let (validationPassed, validationErrorTitle, validationErrorMessage) = stringValidator(nameTextField.text!)
 
 				if validationPassed {
 					nameTextField.resignFirstResponder()
@@ -295,7 +295,7 @@ class NamingViewController: UIViewController, Themeable {
 						self.completion(self.nameTextField.text!, self)
 					}
 				} else {
-					let controller = ThemedAlertController(title: "Forbidden Characters".localized, message: validationErrorMessage, preferredStyle: .alert)
+					let controller = ThemedAlertController(title: validationErrorTitle ?? "Forbidden Characters".localized, message: validationErrorMessage, preferredStyle: .alert)
 					controller.view.accessibilityIdentifier = "forbidden-characters-alert"
 					let okAction = UIAlertAction(title: "OK".localized, style: .default)
 					controller.addAction(okAction)

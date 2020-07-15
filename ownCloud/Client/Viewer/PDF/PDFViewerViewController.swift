@@ -91,7 +91,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 
 	static var customMatcher: OCExtensionCustomContextMatcher?
 	static var displayExtensionIdentifier: String = "org.owncloud.pdfViewer.default"
-	static var supportedMimeTypes: [String]? = ["application/pdf"]
+	static var supportedMimeTypes: [String]? = ["application/pdf", "application/illustrator"]
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
 
 	deinit {
@@ -173,8 +173,6 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension {
 	// MARK: - View lifecycle management
 
 	override func viewDidLoad() {
-		shallDisplayMoreButtonInToolbar = false
-
 		super.viewDidLoad()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(handlePageChanged), name: .PDFViewPageChanged, object: nil)
